@@ -1,0 +1,44 @@
+[
+  {
+    "path": "sol-b-b3-remaining-1/performance-1.json",
+    "count": 100,
+    "concurrency": 10,
+    "min": 12.700000047683716,
+    "p50": 42.799999952316284,
+    "p90": 70.70000004768372,
+    "p95": 78.5,
+    "p99": 82.89999997615814,
+    "max": 84.80000007152557,
+    "errors": [],
+    "source": "e9e78e47c349a0c23b3542dc68945d1f976f76c6edbb8bee61c817a3aebd084b",
+    "cpu": 2
+  },
+  {
+    "path": "sol-b-b3-attempt-2/performance-2.json",
+    "count": 100,
+    "concurrency": 10,
+    "min": 19.600000023841858,
+    "p50": 47.700000047683716,
+    "p90": 68.39999997615814,
+    "p95": 85.19999992847443,
+    "p99": 98.5,
+    "max": 98.60000002384186,
+    "errors": [],
+    "source": "e9e78e47c349a0c23b3542dc68945d1f976f76c6edbb8bee61c817a3aebd084b",
+    "cpu": 2
+  },
+  {
+    "path": "sol-b-b3-attempt-2/performance-1.json",
+    "count": 100,
+    "concurrency": 10,
+    "min": 21.399999976158142,
+    "p50": 55.39999997615814,
+    "p90": 98,
+    "p95": 109.10000002384186,
+    "p99": 138.20000004768372,
+    "max": 139.39999997615814,
+    "errors": [],
+    "source": "e9e78e47c349a0c23b3542dc68945d1f976f76c6edbb8bee61c817a3aebd084b",
+    "cpu": 2
+  }
+]

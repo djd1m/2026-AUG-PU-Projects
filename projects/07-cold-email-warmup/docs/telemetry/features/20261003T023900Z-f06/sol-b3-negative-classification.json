@@ -1,0 +1,954 @@
+{
+  "http": [
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/reports/NTLmFVQdXgrCZRDZcCwe-mWE1I-WWS_G0qyDXl3H2po",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/partner",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/partner",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/evidence/compare",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/reports/e41c4846-71f9-4a29-8bc8-1e9a6424ca03/revoke",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/billing/intents/1a633897-0f64-447e-a4b3-fa1bbff4c525",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/api/app",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-crossbrowser-1",
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-crossbrowser-1",
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/reports/p8nDZDu9h9qd_EsMhl8ZCGBJytWT98rk7NaG-cwI8zA",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-crossbrowser-1",
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-crossbrowser-1",
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-crossbrowser-1",
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-crossbrowser-1",
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/reports/GvS6XagKidbBcnuHvi7pqZFBSokSudYAHY-dxXWs5e4",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-crossbrowser-1",
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-crossbrowser-1",
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-extra-1",
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-extra-1",
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-extra-2",
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-extra-2",
+      "engine": "chromium-1440",
+      "phase": "complete-tenant-zero-effects",
+      "path": "/api/mailboxes/ae94b62a-1da9-4b2c-b058-c7b1024ccbf5",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-extra-2",
+      "engine": "chromium-1440",
+      "phase": "complete-tenant-zero-effects",
+      "path": "/api/campaigns/fd834b05-35f6-41e3-a973-747fabca28b7",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-extra-2",
+      "engine": "chromium-1440",
+      "phase": "complete-tenant-zero-effects",
+      "path": "/api/evidence/compare",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-extra-2",
+      "engine": "chromium-1440",
+      "phase": "complete-tenant-zero-effects",
+      "path": "/api/reports/41dd2b0b-50b4-477d-9c06-32c70c56bf66/revoke",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-extra-2",
+      "engine": "chromium-1440",
+      "phase": "complete-tenant-zero-effects",
+      "path": "/api/mailboxes/ae94b62a-1da9-4b2c-b058-c7b1024ccbf5/consents",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-extra-2",
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-extra-2",
+      "engine": "chromium-390",
+      "phase": "complete-tenant-zero-effects",
+      "path": "/api/mailboxes/1727a297-9734-4634-97c2-df34dce96fe4",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-extra-2",
+      "engine": "chromium-390",
+      "phase": "complete-tenant-zero-effects",
+      "path": "/api/campaigns/f5370844-cf94-49a2-a378-9ccce513379d",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-extra-2",
+      "engine": "chromium-390",
+      "phase": "complete-tenant-zero-effects",
+      "path": "/api/evidence/compare",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-extra-2",
+      "engine": "chromium-390",
+      "phase": "complete-tenant-zero-effects",
+      "path": "/api/reports/7d7a7d33-4379-4dbf-9376-b962a7a70cb1/revoke",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-extra-2",
+      "engine": "chromium-390",
+      "phase": "complete-tenant-zero-effects",
+      "path": "/api/mailboxes/1727a297-9734-4634-97c2-df34dce96fe4/consents",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-1",
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-1",
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/partner",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-1",
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-1",
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/partner",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-2",
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-2",
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-3",
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-3",
+      "engine": "chromium-1440",
+      "phase": "campaign-invalid-escaped-edit",
+      "path": "/api/campaigns",
+      "status": 400,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-3",
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-3",
+      "engine": "chromium-390",
+      "phase": "campaign-invalid-escaped-edit",
+      "path": "/api/campaigns",
+      "status": 400,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-1440",
+      "phase": "campaign-invalid-escaped-edit",
+      "path": "/api/campaigns",
+      "status": 400,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-1440",
+      "phase": "tenant-full-effects",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-1440",
+      "phase": "tenant-full-effects",
+      "path": "/api/mailboxes/ae94b62a-1da9-4b2c-b058-c7b1024ccbf5",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-1440",
+      "phase": "tenant-full-effects",
+      "path": "/api/campaigns/fd834b05-35f6-41e3-a973-747fabca28b7",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-1440",
+      "phase": "tenant-full-effects",
+      "path": "/api/evidence/compare",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-1440",
+      "phase": "tenant-full-effects",
+      "path": "/api/reports/41dd2b0b-50b4-477d-9c06-32c70c56bf66/revoke",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-1440",
+      "phase": "tenant-full-effects",
+      "path": "/api/mailboxes/ae94b62a-1da9-4b2c-b058-c7b1024ccbf5/consents",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-1440",
+      "phase": "tenant-full-effects",
+      "path": "/reports/qEzsz--i0PNXYm2fo_IkvUC7PnvlS9C21wH-3uwNmzs",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-1440",
+      "phase": "partner-idempotency-self-referral",
+      "path": "/api/partner",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-1440",
+      "phase": "partner-idempotency-self-referral",
+      "path": "/api/billing/checkout",
+      "status": 400,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-390",
+      "phase": "campaign-invalid-escaped-edit",
+      "path": "/api/campaigns",
+      "status": 400,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-390",
+      "phase": "tenant-full-effects",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-390",
+      "phase": "tenant-full-effects",
+      "path": "/api/mailboxes/1727a297-9734-4634-97c2-df34dce96fe4",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-390",
+      "phase": "tenant-full-effects",
+      "path": "/api/campaigns/f5370844-cf94-49a2-a378-9ccce513379d",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-390",
+      "phase": "tenant-full-effects",
+      "path": "/api/evidence/compare",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-390",
+      "phase": "tenant-full-effects",
+      "path": "/api/reports/7d7a7d33-4379-4dbf-9376-b962a7a70cb1/revoke",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-390",
+      "phase": "tenant-full-effects",
+      "path": "/api/mailboxes/1727a297-9734-4634-97c2-df34dce96fe4/consents",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-390",
+      "phase": "tenant-full-effects",
+      "path": "/reports/oOLaOaArkQ72ShyVT0uOzzsyvOd5MdEWh2qve3qaMHc",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-390",
+      "phase": "partner-idempotency-self-referral",
+      "path": "/api/partner",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "engine": "chromium-390",
+      "phase": "partner-idempotency-self-referral",
+      "path": "/api/billing/checkout",
+      "status": 400,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/reports/jw0DC8E6pubIqE8vNPzF9lWPAa1359Mj9qDzbmWJNE8",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "chromium-390",
+      "phase": "partner-checkout",
+      "path": "/api/partner",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "chromium-390",
+      "phase": "tenant-boundaries",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "chromium-390",
+      "phase": "tenant-boundaries",
+      "path": "/api/partner",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "chromium-390",
+      "phase": "tenant-boundaries",
+      "path": "/api/mailboxes/5b070c85-d0a3-45b1-bffa-4d1c05064d5e",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "chromium-390",
+      "phase": "tenant-boundaries",
+      "path": "/api/campaigns/6f4bccd6-4bd5-4cff-801a-9d407b0397e0",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "chromium-390",
+      "phase": "tenant-boundaries",
+      "path": "/api/evidence/compare",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "chromium-390",
+      "phase": "tenant-boundaries",
+      "path": "/api/reports/33548724-b108-4366-89b1-cdd7a36c0c1a/revoke",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "chromium-390",
+      "phase": "tenant-boundaries",
+      "path": "/api/billing/intents/763b4f1a-c428-494c-93a2-badd7ae962c9",
+      "status": 404,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "chromium-390",
+      "phase": "tenant-boundaries",
+      "path": "/api/mailboxes/5b070c85-d0a3-45b1-bffa-4d1c05064d5e/consents",
+      "status": 404,
+      "method": "POST",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "chromium-390",
+      "phase": "late-real-response-logout",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "chromium-390",
+      "phase": "late-real-response-logout",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "chromium-390",
+      "phase": "late-real-response-logout",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "chromium-390",
+      "phase": "late-real-response-logout",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "chromium-390",
+      "phase": "expired401",
+      "path": "/api/app",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "chromium-390",
+      "phase": "expired401",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true,
+      "reason": "asserted negative/security path"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/api/auth/register",
+      "status": 429,
+      "method": "POST",
+      "expected": true,
+      "reason": "real registration fixture rate exhaustion, preserved incomplete attempt"
+    }
+  ],
+  "unexpected_http": [],
+  "request_failures": "Actual ERR_ABORTED from deliberate session invalidation; ERR_INTERNET_DISCONNECTED from deliberate offline test; preserve per-attempt records.",
+  "page_errors": [
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "errors": []
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "errors": []
+    },
+    {
+      "attempt": "sol-b-b3-focused-3",
+      "errors": []
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "errors": []
+    },
+    {
+      "attempt": "sol-b-b3-crossbrowser-1",
+      "errors": []
+    },
+    {
+      "attempt": "sol-b-b3-focused-1",
+      "errors": []
+    },
+    {
+      "attempt": "sol-b-b3-extra-1",
+      "errors": []
+    },
+    {
+      "attempt": "sol-b-b3-extra-2",
+      "errors": []
+    },
+    {
+      "attempt": "sol-b-b3-focused-2",
+      "errors": []
+    }
+  ]
+}

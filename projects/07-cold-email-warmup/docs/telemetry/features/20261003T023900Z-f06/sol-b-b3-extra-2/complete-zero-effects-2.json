@@ -1,0 +1,404 @@
+{
+  "target": "4ea5b811-a21f-48cb-8a22-19e8152f655c",
+  "before": {
+    "suppression": [],
+    "enrollments": [],
+    "jobs": [],
+    "consents": [
+      {
+        "scope": "campaign",
+        "revoked_at": "2026-10-03T05:12:53.362Z"
+      }
+    ],
+    "grants": 1,
+    "mailboxes": [
+      {
+        "id": "1727a297-9734-4634-97c2-df34dce96fe4",
+        "label": "FOCUSED_F06B_PRIVATE",
+        "state": "quarantined",
+        "daily_limit": 7,
+        "effective_limit": 7
+      }
+    ],
+    "campaigns": [
+      {
+        "id": "f5370844-cf94-49a2-a378-9ccce513379d",
+        "state": "draft",
+        "content_version": 2,
+        "recipient_fingerprint": "2a184cbb284a26b2fd7795144235330b0a6acb824f814a605bdc205633b1852b"
+      }
+    ],
+    "evidence": [
+      {
+        "id": "06452473-7bd8-4359-a5b5-e6a671820b42",
+        "evidence": {
+          "unit": "count",
+          "metric": "inbox_placement",
+          "direction": "higher",
+          "numerator": 20,
+          "reference": "FOCUSED_PRIVATE_REFERENCE",
+          "sourceUrl": "https://evidence.example.test/a",
+          "windowEnd": "2026-10-01T04:12:53.647Z",
+          "observedAt": "2026-10-01T04:12:53.647Z",
+          "denominator": 40,
+          "windowStart": "2026-09-30T04:12:53.647Z",
+          "manualVerified": true
+        }
+      },
+      {
+        "id": "1d669f89-7300-4954-a488-6580e831655e",
+        "evidence": {
+          "unit": "count",
+          "metric": "inbox_placement",
+          "direction": "higher",
+          "numerator": 30,
+          "reference": "FOCUSED_PRIVATE_REFERENCE",
+          "sourceUrl": "https://evidence.example.test/b",
+          "windowEnd": "2026-10-03T04:12:53.647Z",
+          "observedAt": "2026-10-03T04:12:53.647Z",
+          "denominator": 40,
+          "windowStart": "2026-10-02T04:12:53.647Z",
+          "manualVerified": true
+        }
+      },
+      {
+        "id": "c11241d8-6904-4b40-9682-5bef79b8fa83",
+        "evidence": {
+          "unit": "count",
+          "metric": "inbox_placement",
+          "direction": "higher",
+          "numerator": 10,
+          "reference": "FOCUSED_PRIVATE_REFERENCE",
+          "sourceUrl": "https://evidence.example.test/a",
+          "windowEnd": "2026-10-02T04:12:53.647Z",
+          "observedAt": "2026-10-02T04:12:53.647Z",
+          "denominator": 40,
+          "windowStart": "2026-10-01T04:12:53.647Z",
+          "manualVerified": true
+        }
+      },
+      {
+        "id": "dfffb298-8471-469a-b1db-fd262d7bd775",
+        "evidence": {
+          "unit": "count",
+          "metric": "inbox_placement",
+          "direction": "higher",
+          "numerator": 10,
+          "reference": "FOCUSED_PRIVATE_REFERENCE",
+          "sourceUrl": "https://evidence.example.test/a",
+          "windowEnd": "2026-09-22T04:12:53.647Z",
+          "observedAt": "2026-09-22T04:12:53.647Z",
+          "denominator": 40,
+          "windowStart": "2026-09-21T04:12:53.647Z",
+          "manualVerified": true
+        }
+      },
+      {
+        "id": "e003697d-9f4e-421a-bb7b-dbc3e3ce0ecd",
+        "evidence": {
+          "unit": "count",
+          "metric": "inbox_placement",
+          "direction": "higher",
+          "numerator": 30,
+          "reference": "FOCUSED_PRIVATE_REFERENCE",
+          "sourceUrl": "https://evidence.example.test/a",
+          "windowEnd": "2026-10-03T04:12:53.647Z",
+          "observedAt": "2026-10-03T04:12:53.647Z",
+          "denominator": 40,
+          "windowStart": "2026-10-02T04:12:53.647Z",
+          "manualVerified": true
+        }
+      },
+      {
+        "id": "f50c098a-4ca1-42a6-ab88-6a58839920ee",
+        "evidence": {
+          "unit": "count",
+          "metric": "inbox_placement",
+          "direction": "higher",
+          "numerator": 20,
+          "reference": "FOCUSED_PRIVATE_REFERENCE",
+          "sourceUrl": "https://evidence.example.test/a",
+          "windowEnd": "2026-09-23T04:12:53.647Z",
+          "observedAt": "2026-09-23T04:12:53.647Z",
+          "denominator": 40,
+          "windowStart": "2026-09-22T04:12:53.647Z",
+          "manualVerified": true
+        }
+      }
+    ],
+    "reports": [
+      {
+        "id": "7d7a7d33-4379-4dbf-9376-b962a7a70cb1",
+        "revoked_at": "2026-10-03T05:13:01.209Z",
+        "baseline_id": "c11241d8-6904-4b40-9682-5bef79b8fa83",
+        "latest_id": "e003697d-9f4e-421a-bb7b-dbc3e3ce0ecd",
+        "snapshot": {
+          "unit": "count",
+          "title": "Observed metric improvement",
+          "latest": {
+            "numerator": 30,
+            "windowEnd": "2026-10-03T04:12:53.647Z",
+            "observedAt": "2026-10-03T04:12:53.647Z",
+            "denominator": 40,
+            "windowStart": "2026-10-02T04:12:53.647Z"
+          },
+          "metric": "inbox_placement",
+          "display": "ratios",
+          "baseline": {
+            "numerator": 10,
+            "windowEnd": "2026-10-02T04:12:53.647Z",
+            "observedAt": "2026-10-02T04:12:53.647Z",
+            "denominator": 40,
+            "windowStart": "2026-10-01T04:12:53.647Z"
+          },
+          "direction": "higher",
+          "provenance": "manual/user-confirmed",
+          "sourceOrigin": "https://evidence.example.test"
+        }
+      }
+    ],
+    "events": [
+      {
+        "id": "1a7dccd9-39f1-4553-bd78-b7705b6bb7c3",
+        "report_id": "7d7a7d33-4379-4dbf-9376-b962a7a70cb1",
+        "kind": "copy"
+      },
+      {
+        "id": "476b0369-b74e-403d-af2a-a840b293a813",
+        "report_id": "7d7a7d33-4379-4dbf-9376-b962a7a70cb1",
+        "kind": "share"
+      },
+      {
+        "id": "e00ab868-96fa-470c-9b34-ff137367ace7",
+        "report_id": "7d7a7d33-4379-4dbf-9376-b962a7a70cb1",
+        "kind": "link"
+      }
+    ],
+    "intents": [
+      {
+        "id": "42137b22-f8db-48a8-bab2-b80aac0b986d",
+        "state": "succeeded",
+        "applied_version": 2
+      }
+    ],
+    "partner": {
+      "code": "0jwe3dSTpvQ-C6m3Jf739lBw",
+      "active": true
+    },
+    "conversions": []
+  },
+  "after": {
+    "suppression": [],
+    "enrollments": [],
+    "jobs": [],
+    "consents": [
+      {
+        "scope": "campaign",
+        "revoked_at": "2026-10-03T05:12:53.362Z"
+      }
+    ],
+    "grants": 1,
+    "mailboxes": [
+      {
+        "id": "1727a297-9734-4634-97c2-df34dce96fe4",
+        "label": "FOCUSED_F06B_PRIVATE",
+        "state": "quarantined",
+        "daily_limit": 7,
+        "effective_limit": 7
+      }
+    ],
+    "campaigns": [
+      {
+        "id": "f5370844-cf94-49a2-a378-9ccce513379d",
+        "state": "draft",
+        "content_version": 2,
+        "recipient_fingerprint": "2a184cbb284a26b2fd7795144235330b0a6acb824f814a605bdc205633b1852b"
+      }
+    ],
+    "evidence": [
+      {
+        "id": "06452473-7bd8-4359-a5b5-e6a671820b42",
+        "evidence": {
+          "unit": "count",
+          "metric": "inbox_placement",
+          "direction": "higher",
+          "numerator": 20,
+          "reference": "FOCUSED_PRIVATE_REFERENCE",
+          "sourceUrl": "https://evidence.example.test/a",
+          "windowEnd": "2026-10-01T04:12:53.647Z",
+          "observedAt": "2026-10-01T04:12:53.647Z",
+          "denominator": 40,
+          "windowStart": "2026-09-30T04:12:53.647Z",
+          "manualVerified": true
+        }
+      },
+      {
+        "id": "1d669f89-7300-4954-a488-6580e831655e",
+        "evidence": {
+          "unit": "count",
+          "metric": "inbox_placement",
+          "direction": "higher",
+          "numerator": 30,
+          "reference": "FOCUSED_PRIVATE_REFERENCE",
+          "sourceUrl": "https://evidence.example.test/b",
+          "windowEnd": "2026-10-03T04:12:53.647Z",
+          "observedAt": "2026-10-03T04:12:53.647Z",
+          "denominator": 40,
+          "windowStart": "2026-10-02T04:12:53.647Z",
+          "manualVerified": true
+        }
+      },
+      {
+        "id": "c11241d8-6904-4b40-9682-5bef79b8fa83",
+        "evidence": {
+          "unit": "count",
+          "metric": "inbox_placement",
+          "direction": "higher",
+          "numerator": 10,
+          "reference": "FOCUSED_PRIVATE_REFERENCE",
+          "sourceUrl": "https://evidence.example.test/a",
+          "windowEnd": "2026-10-02T04:12:53.647Z",
+          "observedAt": "2026-10-02T04:12:53.647Z",
+          "denominator": 40,
+          "windowStart": "2026-10-01T04:12:53.647Z",
+          "manualVerified": true
+        }
+      },
+      {
+        "id": "dfffb298-8471-469a-b1db-fd262d7bd775",
+        "evidence": {
+          "unit": "count",
+          "metric": "inbox_placement",
+          "direction": "higher",
+          "numerator": 10,
+          "reference": "FOCUSED_PRIVATE_REFERENCE",
+          "sourceUrl": "https://evidence.example.test/a",
+          "windowEnd": "2026-09-22T04:12:53.647Z",
+          "observedAt": "2026-09-22T04:12:53.647Z",
+          "denominator": 40,
+          "windowStart": "2026-09-21T04:12:53.647Z",
+          "manualVerified": true
+        }
+      },
+      {
+        "id": "e003697d-9f4e-421a-bb7b-dbc3e3ce0ecd",
+        "evidence": {
+          "unit": "count",
+          "metric": "inbox_placement",
+          "direction": "higher",
+          "numerator": 30,
+          "reference": "FOCUSED_PRIVATE_REFERENCE",
+          "sourceUrl": "https://evidence.example.test/a",
+          "windowEnd": "2026-10-03T04:12:53.647Z",
+          "observedAt": "2026-10-03T04:12:53.647Z",
+          "denominator": 40,
+          "windowStart": "2026-10-02T04:12:53.647Z",
+          "manualVerified": true
+        }
+      },
+      {
+        "id": "f50c098a-4ca1-42a6-ab88-6a58839920ee",
+        "evidence": {
+          "unit": "count",
+          "metric": "inbox_placement",
+          "direction": "higher",
+          "numerator": 20,
+          "reference": "FOCUSED_PRIVATE_REFERENCE",
+          "sourceUrl": "https://evidence.example.test/a",
+          "windowEnd": "2026-09-23T04:12:53.647Z",
+          "observedAt": "2026-09-23T04:12:53.647Z",
+          "denominator": 40,
+          "windowStart": "2026-09-22T04:12:53.647Z",
+          "manualVerified": true
+        }
+      }
+    ],
+    "reports": [
+      {
+        "id": "7d7a7d33-4379-4dbf-9376-b962a7a70cb1",
+        "revoked_at": "2026-10-03T05:13:01.209Z",
+        "baseline_id": "c11241d8-6904-4b40-9682-5bef79b8fa83",
+        "latest_id": "e003697d-9f4e-421a-bb7b-dbc3e3ce0ecd",
+        "snapshot": {
+          "unit": "count",
+          "title": "Observed metric improvement",
+          "latest": {
+            "numerator": 30,
+            "windowEnd": "2026-10-03T04:12:53.647Z",
+            "observedAt": "2026-10-03T04:12:53.647Z",
+            "denominator": 40,
+            "windowStart": "2026-10-02T04:12:53.647Z"
+          },
+          "metric": "inbox_placement",
+          "display": "ratios",
+          "baseline": {
+            "numerator": 10,
+            "windowEnd": "2026-10-02T04:12:53.647Z",
+            "observedAt": "2026-10-02T04:12:53.647Z",
+            "denominator": 40,
+            "windowStart": "2026-10-01T04:12:53.647Z"
+          },
+          "direction": "higher",
+          "provenance": "manual/user-confirmed",
+          "sourceOrigin": "https://evidence.example.test"
+        }
+      }
+    ],
+    "events": [
+      {
+        "id": "1a7dccd9-39f1-4553-bd78-b7705b6bb7c3",
+        "report_id": "7d7a7d33-4379-4dbf-9376-b962a7a70cb1",
+        "kind": "copy"
+      },
+      {
+        "id": "476b0369-b74e-403d-af2a-a840b293a813",
+        "report_id": "7d7a7d33-4379-4dbf-9376-b962a7a70cb1",
+        "kind": "share"
+      },
+      {
+        "id": "e00ab868-96fa-470c-9b34-ff137367ace7",
+        "report_id": "7d7a7d33-4379-4dbf-9376-b962a7a70cb1",
+        "kind": "link"
+      }
+    ],
+    "intents": [
+      {
+        "id": "42137b22-f8db-48a8-bab2-b80aac0b986d",
+        "state": "succeeded",
+        "applied_version": 2
+      }
+    ],
+    "partner": {
+      "code": "0jwe3dSTpvQ-C6m3Jf739lBw",
+      "active": true
+    },
+    "conversions": []
+  },
+  "negatives": [
+    {
+      "path": "/api/mailboxes/1727a297-9734-4634-97c2-df34dce96fe4",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "path": "/api/campaigns/f5370844-cf94-49a2-a378-9ccce513379d",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "path": "/api/evidence/compare",
+      "method": "POST",
+      "status": 404
+    },
+    {
+      "path": "/api/reports/7d7a7d33-4379-4dbf-9376-b962a7a70cb1/revoke",
+      "method": "POST",
+      "status": 404
+    },
+    {
+      "path": "/api/mailboxes/1727a297-9734-4634-97c2-df34dce96fe4/consents",
+      "method": "POST",
+      "status": 404
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+[
+  {
+    "attempt": "sol-b-b3-attempt-2",
+    "tenant": "4e0a0c2f-da82-46e3-9d23-e50793ca1eb2",
+    "at": "2026-10-03T05:07:36.939843+00:00",
+    "exit": 0,
+    "effects": {
+      "ok": true,
+      "result": {
+        "suppression": [
+          {
+            "recipient_hash": "cd0661a7cbae8f94dbd380c41b5bb6996fa70d3ec4109a2f2408708ce3be41a1"
+          },
+          {
+            "recipient_hash": "eb46163cdc178851f4b9d756e9e9ad67e263b2a9a961d489c8553466fa27f2f7"
+          }
+        ],
+        "enrollments": [
+          {
+            "id": "62719220-563d-4555-9238-2377a3158341",
+            "state": "suppressed"
+          },
+          {
+            "id": "b60eae39-9363-4c8e-bbb7-b9b0c722302e",
+            "state": "suppressed"
+          },
+          {
+            "id": "d11362d8-0e11-4090-9ebc-1b3efe4f6bab",
+            "state": "replied"
+          }
+        ],
+        "jobs": [
+          {
+            "state": "cancelled",
+            "count": 3
+          },
+          {
+            "state": "submitted",
+            "count": 3
+          }
+        ],
+        "consents": [
+          {
+            "scope": "pool",
+            "revoked_at": "2026-10-03T05:01:46.546Z"
+          },
+          {
+            "scope": "campaign",
+            "revoked_at": "2026-10-03T05:01:51.103Z"
+          }
+        ],
+        "grants": 1
+      }
+    }
+  },
+  {
+    "attempt": "sol-b-b3-attempt-2",
+    "tenant": "21275428-e1bc-4d4f-bb0d-205f42bc3fc8",
+    "at": "2026-10-03T05:07:37.309817+00:00",
+    "exit": 0,
+    "effects": {
+      "ok": true,
+      "result": {
+        "suppression": [
+          {
+            "recipient_hash": "cd0661a7cbae8f94dbd380c41b5bb6996fa70d3ec4109a2f2408708ce3be41a1"
+          },
+          {
+            "recipient_hash": "eb46163cdc178851f4b9d756e9e9ad67e263b2a9a961d489c8553466fa27f2f7"
+          }
+        ],
+        "enrollments": [
+          {
+            "id": "d0c8a0cf-c9a8-4c78-9ee8-212051e44219",
+            "state": "replied"
+          },
+          {
+            "id": "d83f7aba-c451-4b8e-a943-f6bd21671c4b",
+            "state": "suppressed"
+          },
+          {
+            "id": "de1d8e95-46a0-4d50-afab-383a6e3c4f96",
+            "state": "suppressed"
+          }
+        ],
+        "jobs": [
+          {
+            "state": "cancelled",
+            "count": 3
+          },
+          {
+            "state": "submitted",
+            "count": 3
+          }
+        ],
+        "consents": [
+          {
+            "scope": "pool",
+            "revoked_at": "2026-10-03T05:02:07.440Z"
+          },
+          {
+            "scope": "campaign",
+            "revoked_at": "2026-10-03T05:02:12.425Z"
+          }
+        ],
+        "grants": 0
+      }
+    }
+  },
+  {
+    "attempt": "sol-b-b3-remaining-1",
+    "tenant": "54d6bf4e-ef28-4312-b6a0-f2bbd5181181",
+    "at": "2026-10-03T05:07:37.716732+00:00",
+    "exit": 0,
+    "effects": {
+      "ok": true,
+      "result": {
+        "suppression": [
+          {
+            "recipient_hash": "cd0661a7cbae8f94dbd380c41b5bb6996fa70d3ec4109a2f2408708ce3be41a1"
+          },
+          {
+            "recipient_hash": "eb46163cdc178851f4b9d756e9e9ad67e263b2a9a961d489c8553466fa27f2f7"
+          }
+        ],
+        "enrollments": [
+          {
+            "id": "9478344e-cad3-48d3-b26c-0de0a4288265",
+            "state": "replied"
+          },
+          {
+            "id": "96d69f5c-bbf3-4d1a-ae99-d4ccdc33eaed",
+            "state": "suppressed"
+          },
+          {
+            "id": "e7691aa9-45fc-46e1-a213-2a20e9265003",
+            "state": "suppressed"
+          }
+        ],
+        "jobs": [
+          {
+            "state": "cancelled",
+            "count": 3
+          },
+          {
+            "state": "submitted",
+            "count": 3
+          }
+        ],
+        "consents": [
+          {
+            "scope": "pool",
+            "revoked_at": "2026-10-03T05:03:45.282Z"
+          },
+          {
+            "scope": "campaign",
+            "revoked_at": "2026-10-03T05:03:49.709Z"
+          }
+        ],
+        "grants": 1
+      }
+    }
+  }
+]

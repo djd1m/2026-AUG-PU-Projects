@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/tmp/n7-f06b-final/projects/07-cold-email-warmup/scripts/ui/f06-run.py", line 54, in <module>
+    call(['env','N7_F06_BINDING_PREFIX='+prefix,'python3',str(ROOT/'scripts/check-f06b-r1-snapshot.py'),'verify'])
+  File "/tmp/n7-f06b-final/projects/07-cold-email-warmup/scripts/ui/f06-run.py", line 24, in call
+    def call(args, **kw): return subprocess.run(args,check=True,capture_output=True,**kw)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['env', 'N7_F06_BINDING_PREFIX=sol-b-r2', 'python3', '/tmp/n7-f06b-final/projects/07-cold-email-warmup/scripts/check-f06b-r1-snapshot.py', 'verify']' returned non-zero exit status 1.

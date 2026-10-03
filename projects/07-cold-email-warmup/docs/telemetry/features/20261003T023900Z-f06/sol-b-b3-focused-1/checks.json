@@ -1,0 +1,1728 @@
+{
+  "status": "failed",
+  "started_at": "2026-10-03T05:08:11.899Z",
+  "source": "e9e78e47c349a0c23b3542dc68945d1f976f76c6edbb8bee61c817a3aebd084b",
+  "build": "455e80941dc8bc0c0dd7cca1a2f9b1388e1275b7f8b85fdf716993fdcb1ca27f",
+  "engines": [
+    {
+      "name": "chromium",
+      "width": 1440,
+      "height": 900,
+      "version": "153.0.8010.12"
+    },
+    {
+      "name": "chromium",
+      "width": 390,
+      "height": 844,
+      "version": "153.0.8010.12"
+    }
+  ],
+  "checks": [
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "name": "overview credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "name": "overview no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "name": "reduced motion",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "Обзор keyboard focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "Обзор title focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "every field has an accessible label",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Обзор credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Обзор no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "Ящики keyboard focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "Ящики title focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "every field has an accessible label",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Ящики credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Ящики no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "Кампании keyboard focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "Кампании title focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "every field has an accessible label",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Кампании credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Кампании no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "Наблюдения keyboard focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "Наблюдения title focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "every field has an accessible label",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Наблюдения credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Наблюдения no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "Тариф keyboard focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "Тариф title focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "every field has an accessible label",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Тариф credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Тариф no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "Партнёр keyboard focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "Партнёр title focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "every field has an accessible label",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Партнёр credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Партнёр no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "unavailable-network",
+      "name": "actual network unavailable actionable",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "unavailable-network",
+      "name": "error feedback focused",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "unavailable-network",
+      "name": "unavailable credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "unavailable-network",
+      "name": "unavailable no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox-limits-invalid",
+      "name": "native required fields block empty submit",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "name": "overview credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "name": "overview no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "name": "reduced motion",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "Обзор keyboard focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "Обзор title focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "every field has an accessible label",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Обзор credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Обзор no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "Ящики keyboard focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "Ящики title focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "every field has an accessible label",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Ящики credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Ящики no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "Кампании keyboard focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "Кампании title focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "every field has an accessible label",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Кампании credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Кампании no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "Наблюдения keyboard focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "Наблюдения title focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "every field has an accessible label",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Наблюдения credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Наблюдения no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "Тариф keyboard focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "Тариф title focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "every field has an accessible label",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Тариф credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Тариф no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "Партнёр keyboard focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "Партнёр title focus",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "every field has an accessible label",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Партнёр credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "name": "focused-empty-Партнёр no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "unavailable-network",
+      "name": "actual network unavailable actionable",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "unavailable-network",
+      "name": "error feedback focused",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "unavailable-network",
+      "name": "unavailable credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "unavailable-network",
+      "name": "unavailable no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox-limits-invalid",
+      "name": "native required fields block empty submit",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "classification",
+      "name": "no unexpected HTTP errors",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "classification",
+      "name": "no unexpected console errors",
+      "pass": false
+    }
+  ],
+  "http": [
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/login",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/billing/status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/partner",
+      "status": 404,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "unavailable-network",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "unavailable-network",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "unavailable-network",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "unavailable-network",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/auth/login",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/billing/status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/partner",
+      "status": 404,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "unavailable-network",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "unavailable-network",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "unavailable-network",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "unavailable-network",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    }
+  ],
+  "console": [
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "url": "http://127.0.0.1:18709/api/auth/me",
+      "http_status": "401",
+      "kind": "error",
+      "expected": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "url": "http://127.0.0.1:18709/api/partner",
+      "http_status": "404",
+      "kind": "error",
+      "expected": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "unavailable-network",
+      "url": "http://127.0.0.1:18709/api/app",
+      "http_status": null,
+      "kind": "error",
+      "expected": false
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "url": "http://127.0.0.1:18709/api/auth/me",
+      "http_status": "401",
+      "kind": "error",
+      "expected": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "url": "http://127.0.0.1:18709/api/partner",
+      "http_status": "404",
+      "kind": "error",
+      "expected": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "unavailable-network",
+      "url": "http://127.0.0.1:18709/api/app",
+      "http_status": null,
+      "kind": "error",
+      "expected": false
+    }
+  ],
+  "page_errors": [],
+  "screenshots": [
+    "chromium-1440-overview.png",
+    "chromium-1440-focused-empty-Обзор.png",
+    "chromium-1440-focused-empty-Ящики.png",
+    "chromium-1440-focused-empty-Кампании.png",
+    "chromium-1440-focused-empty-Наблюдения.png",
+    "chromium-1440-focused-empty-Тариф.png",
+    "chromium-1440-focused-empty-Партнёр.png",
+    "chromium-1440-unavailable.png",
+    "chromium-390-overview.png",
+    "chromium-390-focused-empty-Обзор.png",
+    "chromium-390-focused-empty-Ящики.png",
+    "chromium-390-focused-empty-Кампании.png",
+    "chromium-390-focused-empty-Наблюдения.png",
+    "chromium-390-focused-empty-Тариф.png",
+    "chromium-390-focused-empty-Партнёр.png",
+    "chromium-390-unavailable.png"
+  ],
+  "failures": [
+    {
+      "engine": "chromium-1440",
+      "phase": "unavailable-network",
+      "kind": "requestfailed",
+      "path": "/api/app",
+      "reason": "net::ERR_INTERNET_DISCONNECTED"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox-limits-invalid",
+      "group": "focused-gaps",
+      "kind": "TimeoutError",
+      "assertion": null
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "unavailable-network",
+      "kind": "requestfailed",
+      "path": "/api/app",
+      "reason": "net::ERR_INTERNET_DISCONNECTED"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox-limits-invalid",
+      "group": "focused-gaps",
+      "kind": "TimeoutError",
+      "assertion": null
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "classification",
+      "kind": "AssertionError",
+      "assertion": "no unexpected console errors"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "classification",
+      "kind": "AssertionError",
+      "assertion": "no unexpected console errors"
+    }
+  ],
+  "cleanup": {
+    "own_contexts_closed": true,
+    "bridge_closed": true,
+    "sockets_destroyed": true,
+    "shared_browser_server_preserved": true
+  },
+  "bridge_requests": [
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/billing/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/partner",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/billing/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/partner",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    }
+  ],
+  "layout": [
+    {
+      "engine": "chromium-1440",
+      "name": "overview",
+      "width": 1440,
+      "body": 1440,
+      "root": 1440
+    },
+    {
+      "engine": "chromium-1440",
+      "name": "focused-empty-Обзор",
+      "width": 1440,
+      "body": 1440,
+      "root": 1440
+    },
+    {
+      "engine": "chromium-1440",
+      "name": "focused-empty-Ящики",
+      "width": 1440,
+      "body": 1440,
+      "root": 1440
+    },
+    {
+      "engine": "chromium-1440",
+      "name": "focused-empty-Кампании",
+      "width": 1440,
+      "body": 1440,
+      "root": 1440
+    },
+    {
+      "engine": "chromium-1440",
+      "name": "focused-empty-Наблюдения",
+      "width": 1440,
+      "body": 1440,
+      "root": 1440
+    },
+    {
+      "engine": "chromium-1440",
+      "name": "focused-empty-Тариф",
+      "width": 1440,
+      "body": 1440,
+      "root": 1440
+    },
+    {
+      "engine": "chromium-1440",
+      "name": "focused-empty-Партнёр",
+      "width": 1440,
+      "body": 1440,
+      "root": 1440
+    },
+    {
+      "engine": "chromium-1440",
+      "name": "unavailable",
+      "width": 1440,
+      "body": 1440,
+      "root": 1440
+    },
+    {
+      "engine": "chromium-390",
+      "name": "overview",
+      "width": 390,
+      "body": 390,
+      "root": 390
+    },
+    {
+      "engine": "chromium-390",
+      "name": "focused-empty-Обзор",
+      "width": 390,
+      "body": 390,
+      "root": 390
+    },
+    {
+      "engine": "chromium-390",
+      "name": "focused-empty-Ящики",
+      "width": 390,
+      "body": 390,
+      "root": 390
+    },
+    {
+      "engine": "chromium-390",
+      "name": "focused-empty-Кампании",
+      "width": 390,
+      "body": 390,
+      "root": 390
+    },
+    {
+      "engine": "chromium-390",
+      "name": "focused-empty-Наблюдения",
+      "width": 390,
+      "body": 390,
+      "root": 390
+    },
+    {
+      "engine": "chromium-390",
+      "name": "focused-empty-Тариф",
+      "width": 390,
+      "body": 390,
+      "root": 390
+    },
+    {
+      "engine": "chromium-390",
+      "name": "focused-empty-Партнёр",
+      "width": 390,
+      "body": 390,
+      "root": 390
+    },
+    {
+      "engine": "chromium-390",
+      "name": "unavailable",
+      "width": 390,
+      "body": 390,
+      "root": 390
+    }
+  ],
+  "http_errors": [
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/partner",
+      "status": 404,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "keyboard-labels-empty",
+      "path": "/api/partner",
+      "status": 404,
+      "method": "GET",
+      "expected": true
+    }
+  ],
+  "finished_at": "2026-10-03T05:08:40.928Z"
+}

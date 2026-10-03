@@ -1,0 +1,393 @@
+{
+  "run_id": "20261003T023900Z-f06",
+  "work_unit_id": "n7-f06b-final-sol",
+  "attempt_id": "b3",
+  "source_revision": "f048a69490947fac943ad56d1f796220ccb5040b",
+  "spec_sha256": "72b44888ddab0405d955084d572130649fbdddc70b33d53a364db7dd80f05de5",
+  "started_at": "2026-10-03T04:59:18.805427+00:00",
+  "budget_seconds": 1500,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "trace_path": "/tmp/n7-f06b-final/projects/07-cold-email-warmup/docs/telemetry/features/20261003T023900Z-f06/sol-b3-receipt.md",
+  "trace_prelaunch": "absent",
+  "profile": "compact-quality-first-v2",
+  "status": "failed",
+  "tier": "XL",
+  "scope": "B1\u20134 actual matrix only",
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host actual model/effort/usage/cost export unavailable",
+    "Active time intervals not fully measured"
+  ],
+  "delegation": [],
+  "fallback": null,
+  "attempts": [
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "status": "failed",
+      "checks": 146,
+      "passed": 145,
+      "failed": [
+        {
+          "engine": "chromium-390",
+          "phase": "manual-evidence",
+          "name": "public-report no overflow",
+          "pass": false
+        }
+      ],
+      "failures": [
+        {
+          "engine": "chromium-1440",
+          "phase": "late-real-response-logout",
+          "kind": "requestfailed",
+          "path": "/api/evidence",
+          "reason": "net::ERR_ABORTED"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "expired401",
+          "kind": "requestfailed",
+          "path": "/api/app",
+          "reason": "net::ERR_ABORTED"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "manual-evidence",
+          "kind": "AssertionError",
+          "assertion": "public-report no overflow"
+        }
+      ],
+      "exit": 1,
+      "started_at": "2026-10-03T05:01:42.368Z",
+      "finished_at": "2026-10-03T05:02:14.987Z"
+    },
+    {
+      "attempt": "sol-b-b3-crossbrowser-1",
+      "status": "failed",
+      "checks": 61,
+      "passed": 59,
+      "failed": [
+        {
+          "engine": "firefox-390",
+          "phase": "manual-evidence",
+          "name": "public-report no overflow",
+          "pass": false
+        },
+        {
+          "engine": "webkit-390",
+          "phase": "manual-evidence",
+          "name": "public-report no overflow",
+          "pass": false
+        }
+      ],
+      "failures": [
+        {
+          "engine": "firefox-390",
+          "phase": "manual-evidence",
+          "kind": "AssertionError",
+          "assertion": "public-report no overflow"
+        },
+        {
+          "engine": "webkit-390",
+          "phase": "manual-evidence",
+          "kind": "AssertionError",
+          "assertion": "public-report no overflow"
+        }
+      ],
+      "exit": 1,
+      "started_at": "2026-10-03T05:07:16.600Z",
+      "finished_at": "2026-10-03T05:07:35.591Z"
+    },
+    {
+      "attempt": "sol-b-b3-extra-1",
+      "status": "failed",
+      "checks": 9,
+      "passed": 9,
+      "failed": [],
+      "failures": [
+        {
+          "engine": "chromium-1440",
+          "phase": "complete-tenant-zero-effects",
+          "group": "final-bounded-gaps",
+          "kind": "AssertionError",
+          "assertion": "operator fixture effects"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "complete-tenant-zero-effects",
+          "group": "final-bounded-gaps",
+          "kind": "AssertionError",
+          "assertion": "operator fixture effects"
+        }
+      ],
+      "exit": 1,
+      "started_at": "2026-10-03T05:14:52.386Z",
+      "finished_at": "2026-10-03T05:14:57.639Z"
+    },
+    {
+      "attempt": "sol-b-b3-extra-2",
+      "status": "pass",
+      "checks": 51,
+      "passed": 51,
+      "failed": [],
+      "failures": [],
+      "exit": 0,
+      "started_at": "2026-10-03T05:15:43.917Z",
+      "finished_at": "2026-10-03T05:15:56.157Z"
+    },
+    {
+      "attempt": "sol-b-b3-focused-1",
+      "status": "failed",
+      "checks": 78,
+      "passed": 77,
+      "failed": [
+        {
+          "engine": "chromium-390",
+          "phase": "classification",
+          "name": "no unexpected console errors",
+          "pass": false
+        }
+      ],
+      "failures": [
+        {
+          "engine": "chromium-1440",
+          "phase": "unavailable-network",
+          "kind": "requestfailed",
+          "path": "/api/app",
+          "reason": "net::ERR_INTERNET_DISCONNECTED"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "mailbox-limits-invalid",
+          "group": "focused-gaps",
+          "kind": "TimeoutError",
+          "assertion": null
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "unavailable-network",
+          "kind": "requestfailed",
+          "path": "/api/app",
+          "reason": "net::ERR_INTERNET_DISCONNECTED"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "mailbox-limits-invalid",
+          "group": "focused-gaps",
+          "kind": "TimeoutError",
+          "assertion": null
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "classification",
+          "kind": "AssertionError",
+          "assertion": "no unexpected console errors"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "classification",
+          "kind": "AssertionError",
+          "assertion": "no unexpected console errors"
+        }
+      ],
+      "exit": 1,
+      "started_at": "2026-10-03T05:08:11.899Z",
+      "finished_at": "2026-10-03T05:08:40.928Z"
+    },
+    {
+      "attempt": "sol-b-b3-focused-2",
+      "status": "failed",
+      "checks": 15,
+      "passed": 15,
+      "failed": [],
+      "failures": [
+        {
+          "engine": "chromium-1440",
+          "phase": "mailbox-limits-invalid",
+          "group": "focused-gaps",
+          "kind": "TimeoutError",
+          "assertion": null
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "mailbox-limits-invalid",
+          "group": "focused-gaps",
+          "kind": "TimeoutError",
+          "assertion": null
+        }
+      ],
+      "exit": 1,
+      "started_at": "2026-10-03T05:09:39.375Z",
+      "finished_at": "2026-10-03T05:10:04.767Z"
+    },
+    {
+      "attempt": "sol-b-b3-focused-3",
+      "status": "failed",
+      "checks": 31,
+      "passed": 29,
+      "failed": [
+        {
+          "engine": "chromium-1440",
+          "phase": "campaign-invalid-escaped-edit",
+          "name": "campaign error actionable",
+          "pass": false
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "campaign-invalid-escaped-edit",
+          "name": "campaign error actionable",
+          "pass": false
+        }
+      ],
+      "failures": [
+        {
+          "engine": "chromium-1440",
+          "phase": "campaign-invalid-escaped-edit",
+          "kind": "AssertionError",
+          "assertion": "campaign error actionable"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "campaign-invalid-escaped-edit",
+          "group": "focused-gaps",
+          "kind": "AssertionError",
+          "assertion": "campaign error actionable"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "campaign-invalid-escaped-edit",
+          "kind": "AssertionError",
+          "assertion": "campaign error actionable"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "campaign-invalid-escaped-edit",
+          "group": "focused-gaps",
+          "kind": "AssertionError",
+          "assertion": "campaign error actionable"
+        }
+      ],
+      "exit": 1,
+      "started_at": "2026-10-03T05:11:14.580Z",
+      "finished_at": "2026-10-03T05:11:21.733Z"
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "status": "failed",
+      "checks": 169,
+      "passed": 168,
+      "failed": [
+        {
+          "engine": "chromium-390",
+          "phase": "explicit-copy-link-idempotent-refresh",
+          "name": "focused-public no overflow",
+          "pass": false
+        }
+      ],
+      "failures": [
+        {
+          "engine": "chromium-390",
+          "phase": "explicit-copy-link-idempotent-refresh",
+          "kind": "AssertionError",
+          "assertion": "focused-public no overflow"
+        }
+      ],
+      "exit": 1,
+      "started_at": "2026-10-03T05:12:33.387Z",
+      "finished_at": "2026-10-03T05:13:03.858Z"
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "status": "failed",
+      "checks": 96,
+      "passed": 95,
+      "failed": [
+        {
+          "engine": "chromium-390",
+          "phase": "manual-evidence",
+          "name": "public-report no overflow",
+          "pass": false
+        }
+      ],
+      "failures": [
+        {
+          "engine": "chromium-390",
+          "phase": "manual-evidence",
+          "kind": "AssertionError",
+          "assertion": "public-report no overflow"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "late-real-response-logout",
+          "kind": "requestfailed",
+          "path": "/api/evidence",
+          "reason": "net::ERR_ABORTED"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "expired401",
+          "kind": "requestfailed",
+          "path": "/api/app",
+          "reason": "net::ERR_ABORTED"
+        },
+        {
+          "engine": "firefox-390",
+          "phase": "auth",
+          "kind": "TimeoutError",
+          "assertion": null
+        }
+      ],
+      "exit": 1,
+      "started_at": "2026-10-03T05:03:41.137Z",
+      "finished_at": "2026-10-03T05:04:15.477Z"
+    },
+    {
+      "attempt": "sol-b-b3-true-login-1",
+      "status": "failed",
+      "checks": 11,
+      "passed": 11,
+      "failed": [],
+      "failures": [
+        {
+          "engine": "chromium-1440",
+          "phase": "true-ui-explicit-login",
+          "group": "actual-ui-login",
+          "kind": "TimeoutError",
+          "assertion": null
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "true-ui-explicit-login",
+          "group": "actual-ui-login",
+          "kind": "TimeoutError",
+          "assertion": null
+        }
+      ],
+      "exit": 1,
+      "started_at": "2026-10-03T05:18:50.137Z",
+      "finished_at": "2026-10-03T05:19:16.872Z"
+    },
+    {
+      "attempt": "sol-b-b3-true-login-2",
+      "status": "pass",
+      "checks": 19,
+      "passed": 19,
+      "failed": [],
+      "failures": [],
+      "exit": 0,
+      "started_at": "2026-10-03T05:21:18.772Z",
+      "finished_at": "2026-10-03T05:21:26.203Z"
+    }
+  ],
+  "ended_at": "2026-10-03T05:22:47.956310+00:00",
+  "elapsed_wall_seconds": 1409.150883,
+  "active_wall_seconds": null,
+  "mandatory_remaining": [
+    "F06B-003 mobile public report overflow",
+    "Fresh independent Astra B review (coordinator next)"
+  ],
+  "accepted": false
+}

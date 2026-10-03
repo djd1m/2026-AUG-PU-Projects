@@ -1,0 +1,30 @@
+{
+  "foreign": [
+    {
+      "path": "/api/mailboxes/5b070c85-d0a3-45b1-bffa-4d1c05064d5e",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "path": "/api/campaigns/6f4bccd6-4bd5-4cff-801a-9d407b0397e0",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "path": "/api/evidence/compare",
+      "method": "POST",
+      "status": 404
+    },
+    {
+      "path": "/api/reports/33548724-b108-4366-89b1-cdd7a36c0c1a/revoke",
+      "method": "POST",
+      "status": 404
+    },
+    {
+      "path": "/api/billing/intents/763b4f1a-c428-494c-93a2-badd7ae962c9",
+      "method": "GET",
+      "status": 404
+    }
+  ],
+  "denied_mutation_zero_effects": true
+}

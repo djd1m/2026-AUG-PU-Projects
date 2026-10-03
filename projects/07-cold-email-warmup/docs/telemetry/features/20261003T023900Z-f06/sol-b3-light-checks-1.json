@@ -1,0 +1,42 @@
+[
+  {
+    "file": "scripts/ui/f06-audit.py",
+    "check": "AST",
+    "exit": 0
+  },
+  {
+    "file": "scripts/ui/f06-fixture.mjs",
+    "check": "node syntax",
+    "exit": 0
+  },
+  {
+    "file": "scripts/ui/f06-run.py",
+    "check": "AST",
+    "exit": 0
+  },
+  {
+    "file": "scripts/ui/f06-journey.mjs",
+    "check": "node syntax",
+    "exit": 0
+  },
+  {
+    "file": "scripts/ui/f06-security.mjs",
+    "check": "node syntax",
+    "exit": 0
+  },
+  {
+    "file": "scripts/ui/f06-unsubscribe-probe.py",
+    "check": "AST",
+    "exit": 0
+  },
+  {
+    "file": "scripts/ui/f06-unsubscribe-probe.mjs",
+    "check": "node syntax",
+    "exit": 0
+  },
+  {
+    "file": "scripts/ui/f06-browser.mjs",
+    "check": "node syntax",
+    "exit": 0
+  }
+]

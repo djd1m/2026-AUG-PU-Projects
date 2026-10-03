@@ -1,0 +1,57 @@
+{
+  "seed_auth": true,
+  "group": "crossbrowser",
+  "status": "ready",
+  "at": "2026-10-03T05:07:15.807538+00:00",
+  "source_revision": "03c8952488baa781e88fe54a41d891d2c6aa8e9a",
+  "source_sha256": "e9e78e47c349a0c23b3542dc68945d1f976f76c6edbb8bee61c817a3aebd084b",
+  "source_files_matched": 93,
+  "image_id": "sha256:4a0935cfa92622f453ef0b922d3b119099a20b066e5ac7880dec0f2d67ee70fb",
+  "build_sha256": "455e80941dc8bc0c0dd7cca1a2f9b1388e1275b7f8b85fdf716993fdcb1ca27f",
+  "spec_sha256": "72b44888ddab0405d955084d572130649fbdddc70b33d53a364db7dd80f05de5",
+  "scripts": {
+    "f06-b3-focused.mjs": "a88de0067aa1cdd3956947b821cec8736082feb1e9fa8776115ead06224ed4f6",
+    "f06-audit.py": "a3595ea8c1591275b59983af59dd5057f003633d44aeb7cc902ac0c2d3978755",
+    "f06-fixture.mjs": "d4de42916da3e58eb92c479fddd357d832a3a44d6aff34da850ff6d047b141c6",
+    "f06-run.py": "43179d09f6b6fb83ea69273849af11569976e2f2b70a31e162c12a2f3aa03e6e",
+    "f06-journey.mjs": "5b0da60e0b7fd03d4dffff1e93246a6a86484b6de53288cfc8f42005b3393d9e",
+    "f06-security.mjs": "b8e011c18270ca204e78f2f892404aa628fcf7faed97aba3dbf56c498e7fc773",
+    "f06-unsubscribe-probe.py": "c1e26091e1e2610460e2a424259f9f17762564b449091b6bee5e77a796ff39b7",
+    "f06-unsubscribe-probe.mjs": "a32b671965c2bcc46946ac6650b36e6093cf69849cdb08c8da8c67a94be66b76",
+    "f06-browser.mjs": "f5d66d42d08ffa1cc44365f16e1d0940a11778643d07308aefa06d4002a50ec2"
+  },
+  "environment": {
+    "cpu": 2,
+    "origin": "http://127.0.0.1:18709",
+    "web": "n7f06a-web-1",
+    "db_no_host_ports": true,
+    "browser_container": "codex-ui-playwright",
+    "playwright": "1.63.0",
+    "ws": "ws://127.0.0.1:9320/"
+  },
+  "input_names": [
+    "N7_UI_EVIDENCE",
+    "SESSION_HMAC_KEY_FILE",
+    "CREDENTIAL_KEYRING_FILE",
+    "RECIPIENT_HASH_KEY_FILE",
+    "DATABASE_PASSWORD_FILE"
+  ],
+  "command_as_data": [
+    "docker",
+    "exec",
+    "-i",
+    "-e",
+    "N7_UI_EVIDENCE=/opt/browser/n7-f06b-20261003T023900Z-b3-crossbrowser-1",
+    "codex-ui-playwright",
+    "node",
+    "/opt/browser/n7-f06b-20261003T023900Z-b3-crossbrowser-1/f06-browser.mjs"
+  ],
+  "effects": [
+    "own TEST tenant UI mutations",
+    "trusted accepted local fixture poll/sink/provider",
+    "own network attach only if absent; detach in finally",
+    "own contexts/bridge/sockets close; shared browser server stays running"
+  ],
+  "evidence_destination": "/tmp/n7-f06b-final/projects/07-cold-email-warmup/docs/telemetry/features/20261003T023900Z-f06/sol-b-b3-crossbrowser-1",
+  "secrets": "operator and runtime values remain in web process; never browser/logs"
+}

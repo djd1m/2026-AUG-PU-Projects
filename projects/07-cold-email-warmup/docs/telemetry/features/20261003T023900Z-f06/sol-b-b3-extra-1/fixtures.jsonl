@@ -1,0 +1,4 @@
+{"at": "2026-10-03T05:14:53.824145+00:00", "input": {"action": "auth-seed"}, "exit": 0, "output": {"ok": true, "credentials": "suppressed"}}
+{"at": "2026-10-03T05:14:55.016493+00:00", "input": {"action": "effects", "tenant": "38abd648-6fe6-47e9-b4f4-51e78b1250a3"}, "exit": 1, "output": {"ok": false, "kind": "error", "code": "42703"}}
+{"at": "2026-10-03T05:14:56.542750+00:00", "input": {"action": "auth-seed"}, "exit": 0, "output": {"ok": true, "credentials": "suppressed"}}
+{"at": "2026-10-03T05:14:57.616501+00:00", "input": {"action": "effects", "tenant": "4ea5b811-a21f-48cb-8a22-19e8152f655c"}, "exit": 1, "output": {"ok": false, "kind": "error", "code": "42703"}}

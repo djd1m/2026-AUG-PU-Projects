@@ -1,0 +1,2711 @@
+{
+  "status": "failed",
+  "started_at": "2026-10-03T05:07:16.600Z",
+  "source": "e9e78e47c349a0c23b3542dc68945d1f976f76c6edbb8bee61c817a3aebd084b",
+  "build": "455e80941dc8bc0c0dd7cca1a2f9b1388e1275b7f8b85fdf716993fdcb1ca27f",
+  "engines": [
+    {
+      "name": "firefox",
+      "width": 390,
+      "height": 844,
+      "version": "155.0"
+    },
+    {
+      "name": "webkit",
+      "width": 390,
+      "height": 844,
+      "version": "26.6"
+    }
+  ],
+  "checks": [
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "name": "overview credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "name": "overview no overflow",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "name": "reduced motion",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "empty history",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "share initially blocked",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "manual verification default unchecked",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "manual verification default unchecked",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "two manual observations persisted",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "Сравнить выбранную пару HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "share eligible after real comparison",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "Создать публичный отчёт HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "public report origin only",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "public-report credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "public-report no overflow",
+      "pass": false
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "evidence credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "evidence no overflow",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "report persists after reload",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "Отозвать ссылку HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "public revoke404",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "reload credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "reload no overflow",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "Выйти HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "logout401",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "login200",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "signin-cabinet credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "signin-cabinet no overflow",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "name": "session existed",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "name": "overview credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "name": "overview no overflow",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "name": "reduced motion",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "empty history",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "share initially blocked",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "manual verification default unchecked",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "manual verification default unchecked",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "two manual observations persisted",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "Сравнить выбранную пару HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "share eligible after real comparison",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "Создать публичный отчёт HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "public report origin only",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "public-report credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "public-report no overflow",
+      "pass": false
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "evidence credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "evidence no overflow",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "report persists after reload",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "Отозвать ссылку HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "public revoke404",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "reload credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "reload no overflow",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "Выйти HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "logout401",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "login200",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "signin-cabinet credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "signin-cabinet no overflow",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "name": "session existed",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "classification",
+      "name": "no unexpected HTTP errors",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "classification",
+      "name": "no unexpected console errors",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "classification",
+      "name": "no page errors",
+      "pass": true
+    }
+  ],
+  "http": [
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/api/auth/login",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence/compare",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports/a7069e12-5128-42d3-8328-0a6ed5b73ad5/events",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports/a7069e12-5128-42d3-8328-0a6ed5b73ad5/revoke",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/reports/p8nDZDu9h9qd_EsMhl8ZCGBJytWT98rk7NaG-cwI8zA",
+      "status": 404,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/logout",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/login",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/api/auth/login",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence/compare",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports/0813cf9b-e829-49e6-aceb-5c0abea0cf90/events",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports/0813cf9b-e829-49e6-aceb-5c0abea0cf90/revoke",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/reports/GvS6XagKidbBcnuHvi7pqZFBSokSudYAHY-dxXWs5e4",
+      "status": 404,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/logout",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/login",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    }
+  ],
+  "console": [
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "url": "http://127.0.0.1:18709/api/auth/me",
+      "http_status": "401",
+      "kind": "error",
+      "expected": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "url": "http://127.0.0.1:18709/reports/GvS6XagKidbBcnuHvi7pqZFBSokSudYAHY-dxXWs5e4",
+      "http_status": "404",
+      "kind": "error",
+      "expected": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "url": "http://127.0.0.1:18709/api/auth/me",
+      "http_status": "401",
+      "kind": "error",
+      "expected": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "url": "http://127.0.0.1:18709/api/auth/me",
+      "http_status": "401",
+      "kind": "error",
+      "expected": true
+    }
+  ],
+  "page_errors": [],
+  "screenshots": [
+    "firefox-390-overview.png",
+    "firefox-390-public-report.png",
+    "firefox-390-evidence.png",
+    "firefox-390-reload.png",
+    "firefox-390-signin-cabinet.png",
+    "webkit-390-overview.png",
+    "webkit-390-public-report.png",
+    "webkit-390-evidence.png",
+    "webkit-390-reload.png",
+    "webkit-390-signin-cabinet.png"
+  ],
+  "failures": [
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "kind": "AssertionError",
+      "assertion": "public-report no overflow"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "kind": "AssertionError",
+      "assertion": "public-report no overflow"
+    }
+  ],
+  "cleanup": {
+    "own_contexts_closed": true,
+    "bridge_closed": true,
+    "sockets_destroyed": true,
+    "shared_browser_server_preserved": true
+  },
+  "bridge_requests": [
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/favicon.ico",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence/compare",
+      "method": "POST"
+    },
+    {
+      "path": "/api/reports",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports/a7069e12-5128-42d3-8328-0a6ed5b73ad5/events",
+      "method": "POST"
+    },
+    {
+      "path": "/reports/p8nDZDu9h9qd_EsMhl8ZCGBJytWT98rk7NaG-cwI8zA",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports/a7069e12-5128-42d3-8328-0a6ed5b73ad5/revoke",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/p8nDZDu9h9qd_EsMhl8ZCGBJytWT98rk7NaG-cwI8zA",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/logout",
+      "method": "POST"
+    },
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence/compare",
+      "method": "POST"
+    },
+    {
+      "path": "/api/reports",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports/0813cf9b-e829-49e6-aceb-5c0abea0cf90/events",
+      "method": "POST"
+    },
+    {
+      "path": "/reports/GvS6XagKidbBcnuHvi7pqZFBSokSudYAHY-dxXWs5e4",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports/0813cf9b-e829-49e6-aceb-5c0abea0cf90/revoke",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/GvS6XagKidbBcnuHvi7pqZFBSokSudYAHY-dxXWs5e4",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/logout",
+      "method": "POST"
+    },
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    }
+  ],
+  "layout": [
+    {
+      "engine": "firefox-390",
+      "name": "overview",
+      "width": 390,
+      "body": 390,
+      "root": 390
+    },
+    {
+      "engine": "firefox-390",
+      "name": "public-report",
+      "width": 390,
+      "body": 740,
+      "root": 748
+    },
+    {
+      "engine": "firefox-390",
+      "name": "evidence",
+      "width": 390,
+      "body": 390,
+      "root": 390
+    },
+    {
+      "engine": "firefox-390",
+      "name": "reload",
+      "width": 390,
+      "body": 390,
+      "root": 390
+    },
+    {
+      "engine": "firefox-390",
+      "name": "signin-cabinet",
+      "width": 390,
+      "body": 390,
+      "root": 390
+    },
+    {
+      "engine": "webkit-390",
+      "name": "overview",
+      "width": 390,
+      "body": 390,
+      "root": 390
+    },
+    {
+      "engine": "webkit-390",
+      "name": "public-report",
+      "width": 390,
+      "body": 596,
+      "root": 604
+    },
+    {
+      "engine": "webkit-390",
+      "name": "evidence",
+      "width": 390,
+      "body": 390,
+      "root": 390
+    },
+    {
+      "engine": "webkit-390",
+      "name": "reload",
+      "width": 390,
+      "body": 390,
+      "root": 390
+    },
+    {
+      "engine": "webkit-390",
+      "name": "signin-cabinet",
+      "width": 390,
+      "body": 390,
+      "root": 390
+    }
+  ],
+  "http_errors": [
+    {
+      "engine": "firefox-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/reports/p8nDZDu9h9qd_EsMhl8ZCGBJytWT98rk7NaG-cwI8zA",
+      "status": 404,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/reports/GvS6XagKidbBcnuHvi7pqZFBSokSudYAHY-dxXWs5e4",
+      "status": 404,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "manual-evidence",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true
+    }
+  ],
+  "finished_at": "2026-10-03T05:07:35.591Z"
+}
