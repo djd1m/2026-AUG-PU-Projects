@@ -1,0 +1,17 @@
+{
+  "recorded_at": "2026-10-03T03:52:53.967043+00:00",
+  "tool": "GitHub connector create_pull_request",
+  "repository": "djd1m/2026-AUG-PU-Projects",
+  "base": "claude/install-npm-packages-n7l3m5",
+  "head": "feature/08-interior-ai",
+  "draft": true,
+  "result": "not_created",
+  "http_status": 403,
+  "message": "Resource not accessible by integration",
+  "fallback_observation": {
+    "gh_available": false,
+    "git_transport": "ssh",
+    "https_credential_helper_configured": false
+  },
+  "secrets_read_or_output": false
+}
