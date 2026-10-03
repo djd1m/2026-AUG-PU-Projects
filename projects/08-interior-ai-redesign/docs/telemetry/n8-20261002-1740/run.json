@@ -27,8 +27,8 @@
   "host_version": null,
   "billing_mode": "unknown",
   "started_at": "2026-10-02T17:43:28.390084+00:00",
-  "ended_at": "2026-10-03T03:55:52.556690+00:00",
-  "status": "blocked",
+  "ended_at": null,
+  "status": "running",
   "acceptance_evidence": [
     "docs/telemetry/n8-20261002-1740/cjm-sol-1-receipt.md",
     "docs/telemetry/n8-20261002-1740/phase1-gates.json",
@@ -81,8 +81,8 @@
     "No baseline cost comparison",
     "Host version not exposed"
   ],
-  "current_stage": "external_acceptance_and_pr_access_blocked",
-  "last_observed_at": "2026-10-03T03:55:52.556690+00:00",
+  "current_stage": "replicate_transition_prepare",
+  "last_observed_at": "2026-10-03T06:18:56.642607+00:00",
   "actual_models_observed": {
     "native_coordinator": null,
     "f01_coder": "gpt-6.1-sol",
@@ -90,9 +90,9 @@
     "f01_corrector": "gpt-6.1-sol",
     "f02a_coder": "gpt-6.1-sol"
   },
-  "current_work_unit": "n8-delivery-handoff-1",
+  "current_work_unit": "n8-replicate-transition",
   "latest_reconciled_at": "2026-10-03T03:55:52.556690+00:00",
-  "current_source_revision": "02f850f4d67ed2a09ea84efc6ac982f5030b4042",
+  "current_source_revision": "dfb5d80984a4fdb3ad2abf77933ddcc49a2382cf",
   "stage_evidence_note": "Run passport summary refreshed from source-bound individual receipts. Historical stage receipts/checkcounts retained; no global all-gates pass or modelcost inferred.",
   "external_blockers": [
     "F05: no CUDA devices/runtime, safe offlineweights/GPUdependency verification and licensed12x3corpus notprovisioned; geometry/performance unmeasured",
@@ -101,5 +101,15 @@
   ],
   "delivery_artifact_uri": "https://github.com/djd1m/2026-AUG-PU-Projects/tree/feature/08-interior-ai/projects/08-interior-ai-redesign",
   "draft_pr_uri": null,
-  "final_revision_note": "Last pushed source before this terminal metadata commit; product runtime source remains8030270f, reviewed7docs correctionfe2572a7. Final metadata commit will be reported by coordinator separately."
+  "final_revision_note": "Last pushed source before this terminal metadata commit; product runtime source remains8030270f, reviewed7docs correctionfe2572a7. Final metadata commit will be reported by coordinator separately.",
+  "resumption": {
+    "observed_at": "2026-10-03T06:18:56.642607+00:00",
+    "previous_terminal_state": "blocked",
+    "previous_ended_at": "2026-10-03T03:55:52.556690+00:00",
+    "authorization": "docs/decisions-owner.md",
+    "brief": "docs/plans/replicate-transition-brief.md",
+    "next_step": "Astra PLAN, then validated bounded Sol implementation and fresh Astra REVIEW",
+    "owner": "root until explicit coordinator handoff",
+    "elapsed_wall_note": "Previous measured elapsed preserved; recompute on next terminal from original started_at, do not erase blocked interval."
+  }
 }
