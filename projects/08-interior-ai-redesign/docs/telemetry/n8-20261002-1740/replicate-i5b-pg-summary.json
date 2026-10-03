@@ -1,0 +1,54 @@
+{
+  "started_at": "2026-10-03T12:01:15.158673+00:00",
+  "finished_at": "2026-10-03T12:01:48.390988+00:00",
+  "elapsed_seconds": 33.23231352295261,
+  "source_revision": "cd4df7d605a778c1cf417fe4ac77b5c553995c75",
+  "image": "n8-ui-e2e-6:8030270f cached + exact readonlysourceoverlays",
+  "cpu_total": 2,
+  "published_ports": [],
+  "results": [
+    {
+      "name": "port-preflight",
+      "exit_code": 0,
+      "elapsed_seconds": 1.34608945006039,
+      "log": "replicate-i5b-pg-port-preflight.log"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "elapsed_seconds": 5.976234824047424,
+      "log": "replicate-i5b-pg-db-start.log"
+    },
+    {
+      "name": "binding",
+      "exit_code": 0,
+      "elapsed_seconds": 1.2980991730000824,
+      "log": "replicate-i5b-pg-binding.log"
+    },
+    {
+      "name": "hosted-quality-pg16",
+      "exit_code": 0,
+      "elapsed_seconds": 17.77584616607055,
+      "log": "replicate-i5b-pg-hosted-quality-pg16.log"
+    },
+    {
+      "name": "quality-pg16",
+      "exit_code": 0,
+      "elapsed_seconds": 3.6354524670168757,
+      "log": "replicate-i5b-pg-quality-pg16.log"
+    },
+    {
+      "name": "sharing-pg16",
+      "exit_code": 1,
+      "elapsed_seconds": 2.2450385610572994,
+      "log": "replicate-i5b-pg-sharing-pg16.log"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "elapsed_seconds": 0.9448446769965813,
+      "log": "replicate-i5b-pg-cleanup.log"
+    }
+  ],
+  "overall_exit": 1
+}
