@@ -1,6 +1,6 @@
 {
   "work_unit_id": "n8-f03b-closure",
-  "status": "running",
+  "status": "completed",
   "source_revision": "480126f71d1a7701c9cfed404b67837b56c38740",
   "cli_session_id": 55220,
   "started_at": "2026-10-02T23:54:57Z",
@@ -11,5 +11,11 @@
   "usage": null,
   "cost": null,
   "evidence": "/tmp/n8-f03b-closure/runtime.log host banner",
-  "budget_seconds": 300
+  "budget_seconds": 300,
+  "verdict": "ACCEPT",
+  "finished_at": "2026-10-02T23:56:23Z",
+  "wrapper_exit_code": 0,
+  "wrapper_duration_ms": 86000,
+  "reviewer_observation_duration_ms": 58698,
+  "reviewer_last_observation": "2026-10-02T23:56:08.697681Z"
 }

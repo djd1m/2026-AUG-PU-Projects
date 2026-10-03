@@ -50,7 +50,7 @@
       "id": "f03-payments",
       "name": "Verified package and partner attribution",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "f02-generation"
@@ -58,13 +58,23 @@
       "expected_files": [
         "web/payments.js"
       ],
-      "blockers": []
+      "blockers": [],
+      "acceptance": "docs/features/f03a/acceptance.md + docs/features/f03b/acceptance.md; software only, no live provider calls",
+      "files": [
+        "web/payments.js",
+        "web/provider.js",
+        "web/attribution.js",
+        "web/partners.js",
+        "db/004-payments.sql",
+        "db/005-attribution.sql",
+        "scripts/partner.js"
+      ]
     },
     {
       "id": "f04-product-ui",
       "name": "Comparison gallery branded sharing and opt-in pages",
       "priority": "mvp",
-      "status": "planned",
+      "status": "in_progress",
       "complexity": "complex",
       "depends_on": [
         "f02-generation",
@@ -110,5 +120,5 @@
       "blockers": []
     }
   ],
-  "last_completed": "f02-generation"
+  "last_completed": "f03-payments"
 }
