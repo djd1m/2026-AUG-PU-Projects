@@ -1,0 +1,33 @@
+{
+  "status": "running",
+  "run_id": "20261003T023900Z-f06",
+  "work_unit_id": "n7-f06b-sol",
+  "attempt_id": "b1",
+  "started_at": "2026-10-03T03:50:52.367684+00:00",
+  "source_revision": "a76175a812bfe3c137029b425d413a69639a25d7",
+  "source_sha256": "932e7e0b5f8d3189ab8256f1858bd0b74389c91504775f4e2a8be704da67d1de",
+  "spec_sha256": "72b44888ddab0405d955084d572130649fbdddc70b33d53a364db7dd80f05de5",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "gaps": [
+    "host actual model proof pending",
+    "usage and cost unavailable"
+  ],
+  "route": {
+    "mechanical_existing": "L; existing route.txt exit 1",
+    "harness_only_probe": "S; lower bound only",
+    "substantive": "XL",
+    "scope": "B1\u20134 approved exact F06 scope",
+    "authority": "owner explicit local MVP autonomy; one writer, no agents"
+  },
+  "source_files_verified": 93,
+  "image_id": "sha256:a65867e3f1af46b3f4d8a4894a002397ce4a84f890b22b6d0d10d44d1eaa2f7f",
+  "cpu_limit": 2.0,
+  "db_no_host_ports": true,
+  "web_loopback_only": true,
+  "ui_network_already_attached": false
+}
