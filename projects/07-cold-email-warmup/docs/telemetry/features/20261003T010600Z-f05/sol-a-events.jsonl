@@ -1,2 +1,4 @@
 {"at": "2026-10-03T01:05:59.581517+00:00", "stage": "prepare", "route": "XL", "mechanical_exit": 1, "approval": "OWN-N7-002", "model_requested": "gpt-6.1-sol", "actual_model": null, "usage": null, "cost": null, "reason": "host evidence pending; no agents"}
 {"at": "2026-10-03T01:16:19.965181+00:00", "stage": "implement", "event": "source_freeze_ready", "checks": "type lint build unit0", "heavy": "pending parent grant"}
+{"at": "2026-10-03T01:19:56.770463+00:00", "stage": "e2e", "preflight": "ready", "source": "aa9c658e771182454b1ea72c1d026b42aca917ef", "heavy": "running", "external_actions": false}
+{"at": "2026-10-03T01:22:15.432271+00:00", "stage": "author_complete", "heavy_exit": 0, "tests": {"unit": 20, "fullPG": 98, "restoredF05": 7}, "mutation_exit": 1, "restored": true, "independent_review": "pending parent", "usage": null, "cost": null}

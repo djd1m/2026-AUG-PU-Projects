@@ -1,0 +1,75 @@
+
+> n7-cold-email-warmup@0.1.0 test:f05a
+> tsx --test --test-concurrency=1 tests/billing-integration.test.ts
+
+TAP version 13
+# Subtest: F05 A1–A6 real PostgreSQL HTTP and canonical race gates
+    # Subtest: A2 explicit priority, cookie failure reasons, self/inactive and tenant404
+    ok 1 - A2 explicit priority, cookie failure reasons, self/inactive and tenant404
+      ---
+      duration_ms: 224.96841
+      type: 'test'
+      ...
+    # Subtest: A3 parallel HTTP idempotency, immutable payload, crash recovery and disabled zero-state
+    ok 2 - A3 parallel HTTP idempotency, immutable payload, crash recovery and disabled zero-state
+      ---
+      duration_ms: 351.770845
+      type: 'test'
+      ...
+    # Subtest: A4/5 HTTP canonical success, frozen attribution, replay fixed expiry, two buyers and cancellation
+    ok 3 - A4/5 HTTP canonical success, frozen attribution, replay fixed expiry, two buyers and cancellation
+      ---
+      duration_ms: 376.168695
+      type: 'test'
+      ...
+    # Subtest: A4 canonical mismatch, unavailable503, bounded callback, stale cancel/expiry barriers
+    not ok 4 - A4 canonical mismatch, unavailable503, bounded callback, stale cancel/expiry barriers
+      ---
+      duration_ms: 310.03714
+      type: 'test'
+      location: '/app/tests/billing-integration.test.ts:1:8940'
+      failureType: 'testCodeFailure'
+      error: 'Missing expected rejection.'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      stack: |-
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async TestContext.<anonymous> (/app/tests/billing-integration.test.ts:83:103)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (/app/tests/billing-integration.test.ts:72:3)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: A1 concurrent free/team mailbox limits and post-lock expiry, existing edit retained
+    ok 5 - A1 concurrent free/team mailbox limits and post-lock expiry, existing edit retained
+      ---
+      duration_ms: 269.166377
+      type: 'test'
+      ...
+    # Subtest: A1 campaign concurrency and active duplicate after expiry
+    ok 6 - A1 campaign concurrency and active duplicate after expiry
+      ---
+      duration_ms: 388.676378
+      type: 'test'
+      ...
+    1..6
+not ok 1 - F05 A1–A6 real PostgreSQL HTTP and canonical race gates
+  ---
+  duration_ms: 3502.80006
+  type: 'test'
+  location: '/app/tests/billing-integration.test.ts:1:666'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 7
+# suites 0
+# pass 5
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4218.398306
+
+Mutant exit: 1

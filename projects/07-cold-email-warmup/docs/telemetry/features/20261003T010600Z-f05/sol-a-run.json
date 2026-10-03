@@ -6,7 +6,7 @@
   "source_revision": "33a165cfcc31cd33f3f3288624cc58c59cb4c3d2",
   "started_at": "2026-10-03T01:04:50.471832+00:00",
   "deadline": "2026-10-03T01:29:50.471832+00:00",
-  "stage": "implement",
+  "stage": "author_complete",
   "requested_model": "gpt-6.1-sol",
   "requested_effort": "high",
   "actual_model": null,
@@ -32,10 +32,17 @@
     "lint": 0,
     "build": 0,
     "unit": 0,
-    "realPG": null,
-    "mutation": null,
-    "image": null,
-    "secrets": null
+    "realPG": 0,
+    "mutation": 0,
+    "image": 0,
+    "secrets": 0
   },
-  "independent_review": "pending parent fresh Astra"
+  "independent_review": "pending parent fresh Astra",
+  "finished_at": "2026-10-03T01:22:15.432271+00:00",
+  "duration_seconds": 1044.960439,
+  "build_revision": "aa9c658e771182454b1ea72c1d026b42aca917ef",
+  "source_digest": "8aa82afff798b81bb15eec602077b258ebb21eb271d4bb7723073a2d21771abd",
+  "image_id": "sha256:50e4d665d6e64f05a152052300a3ec53e677adfa4c8854e38f7d58972a335ea6",
+  "acceptance_duration_seconds": null,
+  "acceptance_duration_gap": "Parent fresh Astra acceptance pending; duration_seconds measures author delivery only."
 }

@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-03T01:18:32.676695+00:00",
+  "status": "ready",
+  "source_revision": "aa9c658e771182454b1ea72c1d026b42aca917ef",
+  "image_id": "sha256:50e4d665d6e64f05a152052300a3ec53e677adfa4c8854e38f7d58972a335ea6",
+  "environment": "n7f05a loopback18707 privatePG",
+  "inputs": [
+    "local_test provider",
+    "own random runtime secrets",
+    "migration010"
+  ],
+  "test_command": "docker compose -p n7f05a exec -T web npm run test:integration",
+  "environment_available": true,
+  "expected_effects": [
+    "local fixture payments and entitlements only",
+    "test tenant resets"
+  ],
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

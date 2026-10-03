@@ -1,0 +1,275 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "implement",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261003T010600Z-f05",
+    "work_unit_id": "n7-f05a-sol",
+    "current_attempt_id": "implement-a1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/features/20261003T010600Z-f05/sol-a-run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/features/20261003T010600Z-f05/sol-a-events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "33a165cfcc31cd33f3f3288624cc58c59cb4c3d2",
+    "current_revision": "aa9c658e771182454b1ea72c1d026b42aca917ef",
+    "build_revision": "aa9c658e771182454b1ea72c1d026b42aca917ef",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/features/f05-evidence-billing-growth/01-specification.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/features/f05-evidence-billing-growth/03-architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "aa9c658e771182454b1ea72c1d026b42aca917ef",
+      "observed_revision": "aa9c658e771182454b1ea72c1d026b42aca917ef",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "f46fb91e7717f2a21237e56549ddfb2b8d831b792f130685c08d3a44297142b4",
+    "scope": [
+      "A1 server limits",
+      "A2 frozen attribution",
+      "A3 immutable checkout",
+      "A4 canonical provider",
+      "A5 unique entitlement and conversion",
+      "A6 runtime failure/race/mutation evidence"
+    ],
+    "exclusions": [
+      "B evidence/public reports",
+      "F06 whole browser",
+      "live charges/email/network/deploy"
+    ],
+    "action_limits": [
+      "sole writer no agents",
+      "CPU2 own stack loopback18707 no DB ports",
+      "deadline01:29:50"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-A1",
+        "required": true
+      },
+      {
+        "id": "AC-A2",
+        "required": true
+      },
+      {
+        "id": "AC-A3",
+        "required": true
+      },
+      {
+        "id": "AC-A4",
+        "required": true
+      },
+      {
+        "id": "AC-A5",
+        "required": true
+      },
+      {
+        "id": "AC-A6",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "docs/features/f05-evidence-billing-growth/reuse-a.md"
+          }
+        },
+        "provenance": "exact donor revisions and SHA256 verified in reuse-a.md",
+        "useful_fragment": "N6 intent-before-provider, N3 minor amounts and verification; N7 auth/Origin/operator",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "retain license context; reject Next coupling and live HTTP"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No forecast requested; owner hard1500s budget is a bound, not measured prediction",
+      "scope_revision": "f46fb91e7717f2a21237e56549ddfb2b8d831b792f130685c08d3a44297142b4",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [
+        "B",
+        "F06"
+      ],
+      "external_expectations": [
+        "owner hard1500s"
+      ],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "stage": "plan",
+      "scope_revision": "f46fb91e7717f2a21237e56549ddfb2b8d831b792f130685c08d3a44297142b4",
+      "substantive_rationale": "XL money and entitlement invariants; fullSPARC owner approved; B excluded",
+      "risk_tier": "XL",
+      "script_input": "src/billing/service.ts db/010-billing.sql",
+      "exit_code": 1
+    },
+    {
+      "stage": "implement",
+      "scope_revision": "f46fb91e7717f2a21237e56549ddfb2b8d831b792f130685c08d3a44297142b4",
+      "substantive_rationale": "XL money and entitlement invariants; fullSPARC owner approved; B excluded",
+      "risk_tier": "XL",
+      "script_input": "src/billing/service.ts db/010-billing.sql",
+      "exit_code": 1
+    }
+  ],
+  "approval": {
+    "requirement": "required",
+    "reason": "XL owner approval, already covered by OWN-N7-002 and explicit work order",
+    "evidence": {
+      "id": "OWN-N7-002",
+      "path": {
+        "root": "project",
+        "path": "docs/decisions-owner.md"
+      },
+      "plan_revision": "f46fb91e7717f2a21237e56549ddfb2b8d831b792f130685c08d3a44297142b4",
+      "covers": [
+        "plan",
+        "team",
+        "roles",
+        "models",
+        "skills"
+      ]
+    }
+  },
+  "preflight": {
+    "at": "2026-10-03T01:18:32.676695+00:00",
+    "status": "ready",
+    "source_revision": "aa9c658e771182454b1ea72c1d026b42aca917ef",
+    "image_id": "sha256:50e4d665d6e64f05a152052300a3ec53e677adfa4c8854e38f7d58972a335ea6",
+    "environment": "n7f05a loopback18707 privatePG",
+    "inputs": [
+      "local_test provider",
+      "own random runtime secrets",
+      "migration010"
+    ],
+    "test_command": "docker compose -p n7f05a exec -T web npm run test:integration",
+    "environment_available": true,
+    "expected_effects": [
+      "local fixture payments and entitlements only",
+      "test tenant resets"
+    ],
+    "external_actions_executed": false,
+    "e2e_claim": "pass",
+    "evidence_root": {
+      "root": "project",
+      "path": "docs/telemetry/features/20261003T010600Z-f05"
+    }
+  },
+  "attempts": [
+    {
+      "id": "implement-a1",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "n7-f05a-sol",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/features/f05-evidence-billing-growth/implementation-a.md"
+        },
+        {
+          "root": "project",
+          "path": "docs/telemetry/features/20261003T010600Z-f05/sol-a-receipt.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [
+    {
+      "ac_id": "AC-A1",
+      "outcome": "pass",
+      "command": "bash scripts/check-f05a-heavy.sh",
+      "exit_code": 0,
+      "source_revision": "aa9c658e771182454b1ea72c1d026b42aca917ef",
+      "receipt_id": "sol-a"
+    },
+    {
+      "ac_id": "AC-A2",
+      "outcome": "pass",
+      "command": "bash scripts/check-f05a-heavy.sh",
+      "exit_code": 0,
+      "source_revision": "aa9c658e771182454b1ea72c1d026b42aca917ef",
+      "receipt_id": "sol-a"
+    },
+    {
+      "ac_id": "AC-A3",
+      "outcome": "pass",
+      "command": "bash scripts/check-f05a-heavy.sh",
+      "exit_code": 0,
+      "source_revision": "aa9c658e771182454b1ea72c1d026b42aca917ef",
+      "receipt_id": "sol-a"
+    },
+    {
+      "ac_id": "AC-A4",
+      "outcome": "pass",
+      "command": "bash scripts/check-f05a-heavy.sh",
+      "exit_code": 0,
+      "source_revision": "aa9c658e771182454b1ea72c1d026b42aca917ef",
+      "receipt_id": "sol-a"
+    },
+    {
+      "ac_id": "AC-A5",
+      "outcome": "pass",
+      "command": "bash scripts/check-f05a-heavy.sh",
+      "exit_code": 0,
+      "source_revision": "aa9c658e771182454b1ea72c1d026b42aca917ef",
+      "receipt_id": "sol-a"
+    },
+    {
+      "ac_id": "AC-A6",
+      "outcome": "pass",
+      "command": "bash scripts/check-f05a-heavy.sh",
+      "exit_code": 0,
+      "source_revision": "aa9c658e771182454b1ea72c1d026b42aca917ef",
+      "receipt_id": "sol-a"
+    }
+  ],
+  "receipts": [
+    {
+      "id": "sol-a",
+      "work_unit_id": "n7-f05a-sol",
+      "path": {
+        "root": "project",
+        "path": "docs/telemetry/features/20261003T010600Z-f05/sol-a-receipt.md"
+      },
+      "sha256": "48e8a459855854f0b12e50cd0ae2bc08918fdbb085c1e8fc6bd0e874e9ac6b1e",
+      "launch": {
+        "root": "project",
+        "path": "docs/telemetry/features/20261003T010600Z-f05/sol-a-launch.json"
+      },
+      "launch_sha256": "653329491d7158357705196fac549f5a4d27ada0ce8db8401cb3a950b5545bef"
+    }
+  ],
+  "delivery": null
+}
