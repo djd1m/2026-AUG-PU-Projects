@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: A6 central401 clears private state, aborts pending, redirects; late success/error stay obsolete
+ok 1 - A6 central401 clears private state, aborts pending, redirects; late success/error stay obsolete
+  ---
+  duration_ms: 41.053905
+  ...
+# Subtest: A1 session change fences old identity and body-resolution race
+ok 2 - A1 session change fences old identity and body-resolution race
+  ---
+  duration_ms: 4.607802
+  ...
+# Subtest: A1 late action catch/finally cannot change fresh UI or release its pending bound
+ok 3 - A1 late action catch/finally cannot change fresh UI or release its pending bound
+  ---
+  duration_ms: 0.77772
+  ...
+# Subtest: A6 product source security: explicit assets, same-origin shell, no private storage/untrusted HTML/operator access
+ok 4 - A6 product source security: explicit assets, same-origin shell, no private storage/untrusted HTML/operator access
+  ---
+  duration_ms: 2.089341
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 551.998667

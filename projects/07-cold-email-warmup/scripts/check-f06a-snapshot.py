@@ -24,6 +24,7 @@ else:
   for relative,sha in build.items():
    actual=command('docker','compose','-p','n7f06a','exec','-T','web','sha256sum','/app/'+relative).split()[0];assert actual==sha,relative
   for relative,sha in source.items():
+   if relative=='Dockerfile':continue # build input; existing Dockerfile does not copy itself into image
    actual=command('docker','compose','-p','n7f06a','exec','-T','web','sha256sum','/app/'+relative).split()[0];assert actual==sha,relative
   logs=command('docker','compose','-p','n7f06a','logs','--no-color');assert 'N7_F06_PRIVATE_' not in logs
-  (e/'sol-a-image-receipt.json').write_text(json.dumps({'at':now,'source_revision':revision,'source_sha256':source_sha,'image_id':image,'image_matches_container':True,'exact_source_and_build_files':True,'db_no_ports':True,'loopback18709':True,'canary_logs_absent':True,'asset_entrypoint':'/assets/app.js','shell':'/app'},indent=2)+'\n')
+  (e/'sol-a-image-receipt.json').write_text(json.dumps({'at':now,'source_revision':revision,'source_sha256':source_sha,'image_id':image,'image_matches_container':True,'exact_source_and_build_files':True,'dockerfile_build_input_sha256':source['Dockerfile'],'dockerfile_in_image':False,'db_no_ports':True,'loopback18709':True,'canary_logs_absent':True,'asset_entrypoint':'/assets/app.js','shell':'/app'},indent=2)+'\n')

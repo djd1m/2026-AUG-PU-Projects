@@ -1,0 +1,47 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            BuildKit is currently disabled; enable it by removing the DOCKER_BUILDKIT=0
+            environment-variable.
+
+Sending build context to Docker daemon  806.9kB
+Step 1/12 : FROM node:22.20.0-bookworm-slim
+ ---> b21fe589dfbe
+Step 2/12 : WORKDIR /app
+ ---> Using cache
+ ---> 957acab97279
+Step 3/12 : COPY package.json package-lock.json ./
+ ---> Using cache
+ ---> a777a3594c4f
+Step 4/12 : RUN npm ci --no-audit --no-fund
+ ---> Using cache
+ ---> 7d23e750862b
+Step 5/12 : COPY tsconfig*.json eslint.config.js ./
+ ---> Using cache
+ ---> 79edfec56ce0
+Step 6/12 : COPY src ./src
+ ---> 61d5958eda5f
+Step 7/12 : COPY db ./db
+ ---> c02d7a343f61
+Step 8/12 : COPY tests ./tests
+ ---> 578da977bbdb
+Step 9/12 : RUN npm run build
+ ---> Running in eab91c0c61c2
+
+> n7-cold-email-warmup@0.1.0 build
+> tsc -p tsconfig.build.json
+
+ ---> Removed intermediate container eab91c0c61c2
+ ---> c73d7d1ef2db
+Step 10/12 : USER node
+ ---> Running in b4544c630f13
+ ---> Removed intermediate container b4544c630f13
+ ---> dc57ea8c11af
+Step 11/12 : EXPOSE 3000
+ ---> Running in 17eaf5d77a09
+ ---> Removed intermediate container 17eaf5d77a09
+ ---> 2d87a46f3d52
+Step 12/12 : CMD ["node", "dist/main.js"]
+ ---> Running in f79be61bb09d
+ ---> Removed intermediate container f79be61bb09d
+ ---> 79c996d66355
+Successfully built 79c996d66355
+Successfully tagged n7f06a-web:latest
