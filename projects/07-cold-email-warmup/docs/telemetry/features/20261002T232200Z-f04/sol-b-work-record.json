@@ -8,8 +8,9 @@
   "project_root": "/tmp/n7-f04b-sol/projects/07-cold-email-warmup",
   "source": {
     "baseline_revision": "c6cbbbfe8250ca37833d397ab1c8aced9e604789",
-    "current_revision": "87388f016d38f0a08b815f94655b7541e136136d",
-    "spec_sha256": "6deaa2f48d531ca66b71abb9f1b90794836cc4ab80eab557076863b92de74a38"
+    "current_revision": "ff9692093aa21b32aa40809c2d9bf9ca4746e1cc",
+    "spec_sha256": "6deaa2f48d531ca66b71abb9f1b90794836cc4ab80eab557076863b92de74a38",
+    "build_revision": "ff9692093aa21b32aa40809c2d9bf9ca4746e1cc"
   },
   "scope": [
     "AC-B1",
@@ -56,18 +57,52 @@
     }
   ],
   "preflight": {
-    "status": "not_applicable",
-    "reason": "implementation frozen; actual runtime starts only after heavy grant and source/build/input readiness recorded"
+    "status": "ready",
+    "checked_at": "2026-10-03T00:30:21.118027+00:00",
+    "source_revision": "ff9692093aa21b32aa40809c2d9bf9ca4746e1cc",
+    "source_sha256": "1ff22a25883ff5534792121bcf9a15c21c4970b2b3d2a907967d8adf24663e84",
+    "build_sha256": "5695138755f8e978d249c9059e3d60e9c1d5d39041cfb10fb60935aa5822dc14",
+    "environment": "n7f04b dedicated PostgreSQL16.10 internal network, web127.0.0.1:18706; runtimeNode22.20.0; globalflock acquired00:29:37; CPU2; disk/RAM/port preflight passed",
+    "inputs": [
+      "own runtime-generated secret files (values suppressed)",
+      "explicit local_test fixture operator seed in integration test",
+      "source/build frozen ff969209"
+    ],
+    "command_as_data": "docker compose -p n7f04b exec -T web npm run test:integration",
+    "expected_effects": "own database fixture CRUD, local HTTP stop flows; no external mail",
+    "evidence_root": "docs/telemetry/features/20261002T232200Z-f04",
+    "environment_available": true,
+    "external_actions_executed": false,
+    "e2e_claim": "local HTTP/PG implementation pass; browser F06 out of scope",
+    "browser": "not_applicable; F06 pending",
+    "image_id": "sha256:aa1ce9e037d73d9ca1032d3d0f665e9cd7f7396e4cd026aa5ac26df40a59eded"
   },
   "telemetry": {
     "events": "sol-b-events.jsonl",
     "receipt": "sol-b-receipt.md"
   },
   "checks": {
-    "diff_check": 0,
-    "python_compile": 0,
-    "shell_syntax": 0,
-    "type_lint_build_unit_pg_mutation": "pending"
+    "required_runtime_gates_passed": true,
+    "unit": {
+      "pass": 18,
+      "exit_code": 0
+    },
+    "pg_full": {
+      "pass": 80,
+      "exit_code": 0
+    },
+    "pg_restored": {
+      "pass": 14,
+      "exit_code": 0
+    },
+    "type_lint_build": 0,
+    "mutation_harness": 0,
+    "mutation_expected_exit": 1,
+    "secret_scan": 0,
+    "source_image": 0,
+    "independent_review": "parent pending"
   },
-  "prepared_at": "2026-10-03T00:27:38.040642+00:00"
+  "prepared_at": "2026-10-03T00:27:38.040642+00:00",
+  "terminal_receipt": "sol-b-receipt.md",
+  "completed_at": "2026-10-03T00:35:11.202776+00:00"
 }
