@@ -2,7 +2,7 @@ import { randomBytes } from 'node:crypto';
 import type { Pool } from 'pg';
 import { HttpError } from '../errors.js';
 import { currentEntitlement } from '../billing/plans.js';
-import { METRICS,UUID,keyInput,type Observation } from '../evidence/input.js';
+import { METRICS,UUID,uuidInput,keyInput,type Observation } from '../evidence/input.js';
 import { compare,DAY } from '../evidence/compare.js';
 import { evidenceTransaction,ownObservation,serverNow } from '../evidence/store.js';
 export interface PublicSnapshot {
@@ -23,7 +23,7 @@ export class ReportStore {
  constructor(readonly pool:Pool){}
  async share(tenant:string,input:Record<string,unknown>) {
   if(Object.keys(input).length!==3 || typeof input.baselineId!=='string' || typeof input.latestId!=='string') throw new HttpError(400,'invalid_input');
-  const key=keyInput(input.idempotencyKey),baselineId=input.baselineId,latestId=input.latestId;
+  const key=keyInput(input.idempotencyKey),baselineId=uuidInput(input.baselineId),latestId=uuidInput(input.latestId);
   return evidenceTransaction(this.pool,tenant,async db=>{
    const baseline=await ownObservation(db,tenant,baselineId),latest=await ownObservation(db,tenant,latestId);
    const existing=(await db.query('SELECT id,token,baseline_id,latest_id FROM evidence_report WHERE tenant_id=$1 AND idempotency_key=$2',[tenant,key])).rows[0];
@@ -60,15 +60,15 @@ export class ReportStore {
   if(!result.rowCount) throw new HttpError(404,'not_found');return {revoked:true};
  }
  async event(tenant:string,id:string,input:Record<string,unknown>) {
-  if(Object.keys(input).length!==2 || !['copy','link'].includes(String(input.kind))) throw new HttpError(400,'invalid_input');
-  const key=keyInput(input.idempotencyKey);
-  if(!UUID.test(id)) throw new HttpError(404,'not_found');
+  if(Object.keys(input).length!==2 || typeof input.kind!=='string' || !['copy','link'].includes(input.kind)) throw new HttpError(400,'invalid_input');
+  const key=keyInput(input.idempotencyKey),kind=input.kind;
+  id=uuidInput(id);
   return evidenceTransaction(this.pool,tenant,async db=>{
    if(!(await db.query('SELECT id FROM evidence_report WHERE tenant_id=$1 AND id=$2 AND revoked_at IS NULL',[tenant,id])).rowCount) throw new HttpError(404,'not_found');
    const prior=(await db.query('SELECT report_id,kind FROM evidence_event WHERE tenant_id=$1 AND idempotency_key=$2',[tenant,key])).rows[0];
-   if(prior) {if(prior.report_id!==id || prior.kind!==input.kind) throw new HttpError(409,'idempotency_conflict');return {recorded:true};}
+   if(prior) {if(prior.report_id!==id || prior.kind!==kind) throw new HttpError(409,'idempotency_conflict');return {recorded:true};}
    if(Number((await db.query('SELECT count(*) FROM evidence_event WHERE tenant_id=$1',[tenant])).rows[0].count)>=600) throw new HttpError(409,'history_limit');
-   await db.query('INSERT INTO evidence_event(tenant_id,report_id,kind,idempotency_key) VALUES($1,$2,$3,$4)',[tenant,id,input.kind,key]);return {recorded:true};
+   await db.query('INSERT INTO evidence_event(tenant_id,report_id,kind,idempotency_key) VALUES($1,$2,$3,$4)',[tenant,id,kind,key]);return {recorded:true};
   });
  }
  async events(tenant:string,limit:number,offset:number) {

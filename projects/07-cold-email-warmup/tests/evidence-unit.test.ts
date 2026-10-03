@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
+import type { Pool } from 'pg';
+import { HttpError } from '../src/errors.js';
 import { test } from 'node:test';
-import { observationInput,pageInput,type Observation } from '../src/evidence/input.js';
+import { observationInput,pageInput,uuidInput,type Observation } from '../src/evidence/input.js';
 import { compare } from '../src/evidence/compare.js';
-import { publicProjection,reportHtml } from '../src/growth/reports.js';
+import { publicProjection,reportHtml,ReportStore } from '../src/growth/reports.js';
 const now=Date.parse('2026-10-03T00:00:00.000Z');
 const day=86400000;
 function observation(end:number,numerator=10,denominator=30):Observation {
@@ -45,4 +47,18 @@ test('B3/B4 explicit public whitelist, escaping, historical copy and exactly one
 test('B5 bounded history pagination',()=>{
  assert.deepEqual(pageInput('/api/evidence'),{limit:50,offset:0});assert.deepEqual(pageInput('/api/evidence?limit=100&offset=10000'),{limit:100,offset:10000});
  for(const query of ['limit=101','limit=0','offset=10001','offset=-1','limit=NaN']) assert.throws(()=>pageInput('/?'+query));
+});
+
+test('F1 primitive enums reject array/object/null before any write',async()=>{
+ const invalid=[['higher'],['lower'],{},null,new String('higher')];
+ for(const direction of invalid) assert.throws(()=>observationInput({...observation(now),direction}),e=>e instanceof HttpError && e.status===400);
+ let calls=0;const store=new ReportStore({connect:async()=>{calls++;throw new Error('unexpected database access');}} as unknown as Pool);
+ for(const kind of [['copy'],['link'],{},null,new String('copy')]) await assert.rejects(store.event('tenant','ABCDEFAB-1234-1234-1234-ABCDEFABCDEF',{kind,idempotencyKey:'enumtest01'}),e=>e instanceof HttpError && e.status===400);
+ assert.equal(calls,0);
+ assert.equal(observationInput({...observation(now),direction:'lower'}).direction,'lower');
+});
+test('F2 validated UUID uses canonical lowercase identity',()=>{
+ const lower='abcdefab-1234-1234-1234-abcdefabcdef';
+ for(const id of [lower,lower.toUpperCase(),'aBcDeFaB-1234-1234-1234-aBcDeFaBcDeF']) assert.equal(uuidInput(id),lower);
+ assert.throws(()=>uuidInput('invalid'),e=>e instanceof HttpError && e.status===404);
 });
