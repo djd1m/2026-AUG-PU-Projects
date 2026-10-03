@@ -159,6 +159,41 @@ test('F07 I1 real PostgreSQL immutable one-shot submission and spend authority',
       assert.equal(results.filter(r=>r.status==='rejected'&&r.reason.code==='submission_fence_expired').length,2);
       assert.equal(await reserved(id),'0');assert.equal(await count('SELECT count(*)::int AS n FROM provider_submission'),0);
     });
+    await t.test('UTC rollover while blocked on envelope retries both contenders with current-day ticket',async()=>{
+      await reset();now=new Date('2026-10-03T23:59:50Z');
+      const c=await start(),id=await envelope(),before=await job(c.job_id);
+      const results=await blockedRace('SELECT id FROM provider_spend_budget WHERE id=$1 FOR UPDATE',[id],
+        [()=>api().authorize(c,binding(id)),()=>api().authorize(c,binding(id))],()=>{
+          // The helper has observed both real PG lock waits before this clock change.
+          now=new Date('2026-10-04T00:00:10Z');
+        });
+      assert.equal(results.filter(r=>r.status==='fulfilled').length,2);
+      assert.equal(results.filter(r=>r.value.authorized===true).length,1);
+      assert.equal(results.filter(r=>r.value.authorized===false&&r.value.code==='submission_no_replay').length,1);
+      assert.equal(await count('SELECT count(*)::int AS n FROM provider_submission'),1);
+      assert.equal(await reserved(id),'300000');
+      const after=await job(c.job_id),s=await submission(c.job_id);
+      const tickets=(await pool.query('SELECT *,day::text AS utc_day FROM attempt_ticket WHERE job_id=$1 ORDER BY day',[c.job_id])).rows;
+      assert.equal(tickets.length,2);assert.equal(tickets.filter(ticket=>ticket.superseded).length,1);
+      const [old,current]=tickets;
+      assert.equal(old.id,before.first_ticket_id);assert.equal(old.utc_day,'2026-10-03');assert.equal(old.superseded,true);
+      assert.equal(current.utc_day,'2026-10-04');assert.equal(current.superseded,false);
+      assert.ok(current.consumed_at);assert.equal(current.consumed_at.getTime(),now.getTime());
+      assert.notEqual(current.id,before.first_ticket_id);
+      assert.equal(after.first_ticket_id,current.id);assert.equal(s.attempt_ticket_id,current.id);
+      for(const result of results)assert.equal(result.value.submission.attempt_ticket_id,current.id);
+      assert.equal(after.attempts,1);assert.equal(after.attempts,before.attempts);
+      assert.equal(s.attempt_number,c.attempt);assert.equal(old.attempt_number,c.attempt);assert.equal(current.attempt_number,c.attempt);
+      assert.equal(after.fence,before.fence);assert.equal(s.submission_fence,c.fence);
+      assert.equal(after.attempt_deadline.getTime(),before.attempt_deadline.getTime());
+      assert.equal(s.attempt_deadline.getTime(),before.attempt_deadline.getTime());
+      assert.deepEqual((await pool.query('SELECT bucket,owner,day::text AS utc_day,count FROM attempt_budget ORDER BY day,bucket')).rows,[
+        {bucket:'account',owner:c.account_id,utc_day:'2026-10-03',count:1},
+        {bucket:'platform',owner:'platform',utc_day:'2026-10-03',count:1},
+        {bucket:'account',owner:c.account_id,utc_day:'2026-10-04',count:1},
+        {bucket:'platform',owner:'platform',utc_day:'2026-10-04',count:1}
+      ]);
+    });
     await t.test('CAS-stage SQL failure rolls back reservation identity and midnight ticket changes',async()=>{
       await reset();now=new Date('2026-10-03T23:59:50Z');const c=await start(),id=await envelope();now=new Date(now.getTime()+20000);
       await pool.query(`CREATE FUNCTION reject_f07_cas() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
