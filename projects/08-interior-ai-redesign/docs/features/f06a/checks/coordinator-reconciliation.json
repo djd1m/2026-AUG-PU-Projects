@@ -17,7 +17,7 @@
     },
     {
       "path": "docs/features/f06a/acceptance-map.md",
-      "sha256": "69fa31491839ce1c0b495c761cc6b45846392450235f7ebeeb9da95402d95bd6"
+      "sha256": "11fe72f472260300c7da7f02133e96a2a9e94dc2488fbcbea5bcdc456ce01f29"
     },
     {
       "path": "docs/features/f06a/operations.md",
@@ -38,5 +38,13 @@
   ],
   "scope": "Coordinator reconciliation of later actual browser/restore evidence; historical author18checks unchanged",
   "usage": null,
-  "cost": null
+  "cost": null,
+  "correction": {
+    "recorded_at": "2026-10-03T03:42:29.075815+00:00",
+    "finding": "P2 PAY-01 provider acceptance falsely implied by coordinator substitution",
+    "old_doc_sha256": "69fa31491839ce1c0b495c761cc6b45846392450235f7ebeeb9da95402d95bd6",
+    "new_doc_sha256": "11fe72f472260300c7da7f02133e96a2a9e94dc2488fbcbea5bcdc456ce01f29",
+    "scope": "Exactly one status cell; real provider pending retained; other6docs hashes unchanged",
+    "verification": "Literal one occurrence replaced, all7doc hashes verified; no runtime/source change"
+  }
 }
