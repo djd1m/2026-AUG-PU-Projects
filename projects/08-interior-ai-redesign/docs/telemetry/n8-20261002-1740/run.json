@@ -81,8 +81,8 @@
     "No baseline cost comparison",
     "Host version not exposed"
   ],
-  "current_stage": "replicate_I2_accepted_prepare_I3",
-  "last_observed_at": "2026-10-03T08:38:38.943146+00:00",
+  "current_stage": "replicate_I3_R01_correction_prepare",
+  "last_observed_at": "2026-10-03T09:11:50.553367+00:00",
   "actual_models_observed": {
     "native_coordinator": null,
     "f01_coder": "gpt-6.1-sol",
@@ -97,11 +97,13 @@
     "replicate_i1_r01_coder": "gpt-6.1-sol",
     "replicate_i1_r01_reviewer": "gpt-6-astra",
     "replicate_i2_coder": "gpt-6.1-sol",
-    "replicate_i2_reviewer": "gpt-6-astra"
+    "replicate_i2_reviewer": "gpt-6-astra",
+    "replicate_i3_coder": "gpt-6.1-sol",
+    "replicate_i3_reviewer": "gpt-6-astra"
   },
-  "current_work_unit": "n8-replicate-i2-review",
+  "current_work_unit": "n8-replicate-i3-review",
   "latest_reconciled_at": "2026-10-03T03:55:52.556690+00:00",
-  "current_source_revision": "7395d7a5cdd977b0c5feebbd5487a18ef70db451",
+  "current_source_revision": "5a16a2273956e8d29c5d45979c89c81870f4f587",
   "stage_evidence_note": "Run passport summary refreshed from source-bound individual receipts. Historical stage receipts/checkcounts retained; no global all-gates pass or modelcost inferred.",
   "external_blockers": [
     "F05: no CUDA devices/runtime, safe offlineweights/GPUdependency verification and licensed12x3corpus notprovisioned; geometry/performance unmeasured",
