@@ -148,3 +148,7 @@ Canonical FR006/007 разбиты на A durable ingestion/rescan и B unsubscr
 ### F04a принят
 
 Aef86f20: отдельные физические и семантические идентичности, атомарный курсор и остановка, bounded rescan/tail. Исправлена найденная P1: хвост теперь имеет собственную неизменную границу. Unit16/PG66/restored15, fresh Astra ACCEPT. Первый reviewer не доставил receipt — неуспешная попытка сохранена; новый reviewer доставил обе записи за190.7с. Далее F04b реализует capability unsubscribe, operator complaints и durable local poll без реальной почты.
+
+## F04 завершён
+
+12/12 AC, finalsource06ed2f9d, unit18/fullPG91/restoredowner11. Publicunsubscribe иoperatorcomplaints атомарны; durablelocalpoll сохраняет курсор, H/tailH и fence владельца/поколения. Fresh Astra закрывает оба подтверждённых дефекта. Реальная почта отключена; следующий F05 — localbilling, evidence и growth, затем F06 настоящий browserкабинет и PR.

@@ -12,26 +12,28 @@
   "profile": "compact-quality-first-v2",
   "policy_version": "compact-quality-first-v2",
   "baseline_revision": "2ff44de2",
-  "final_revision": null,
+  "final_revision": "06ed2f9d271b416e2f75ccb95f309bb7d1acde1c",
   "spec_sha256": "6deaa2f48d531ca66b71abb9f1b90794836cc4ab80eab557076863b92de74a38",
   "started_at": "2026-10-02T23:21:22.746199+00:00",
-  "ended_at": null,
-  "status": "in_progress",
-  "current_stage": "F04a accepted; F04b IMPLEMENT next",
+  "ended_at": "2026-10-03T01:01:46.135213+00:00",
+  "status": "completed",
+  "current_stage": "F04a/F04b accepted; next F05",
   "actual_model": null,
   "usage": null,
   "cost": null,
   "missing_data": [
-    "Native coordinator actual model/usage unavailable; child host proof collected per attempt."
+    "Native coordinator model/usage, stage active/wait partition and aggregate cost unavailable; host-confirmed child models/rawusage in runtime JSON."
   ],
   "quality": {
-    "required_gates_passed": false,
-    "ac_met": 6,
+    "required_gates_passed": true,
+    "ac_met": 12,
     "ac_total": 12,
     "confirmed_findings_by_severity": {
-      "P1": 1
+      "P1": 1,
+      "P2": 1
     },
-    "followup_status": "P1 tail horizon closed; A accepted fresh review; B pending"
+    "followup_status": "Both findings closed by fresh independent review; original missing receipt remains failed history"
   },
-  "intermediate_revision": "aef86f201f79605286d7a66c22d6d94228e216db"
+  "intermediate_revision": "aef86f201f79605286d7a66c22d6d94228e216db",
+  "elapsed_ms": 6023389
 }

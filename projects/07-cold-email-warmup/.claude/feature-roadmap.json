@@ -75,7 +75,7 @@
       "number": 4,
       "name": "IMAP replies, unsubscribe and complaints",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "f03-dispatch-pool-campaign"
@@ -90,15 +90,16 @@
         "FR-n7-007"
       ],
       "sprint": "local-mvp",
-      "current_slice": "F04a accepted; F04b public stops/local polling next",
-      "slice_a_accepted_revision": "aef86f201f79605286d7a66c22d6d94228e216db"
+      "current_slice": "F04a/F04b accepted",
+      "slice_a_accepted_revision": "aef86f201f79605286d7a66c22d6d94228e216db",
+      "accepted_revision": "06ed2f9d271b416e2f75ccb95f309bb7d1acde1c"
     },
     {
       "id": "f05-evidence-billing-growth",
       "number": 5,
       "name": "Evidence, local billing, attribution and reports",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "pending",
       "complexity": "complex",
       "depends_on": [
         "f04-reply-suppression"
@@ -139,5 +140,5 @@
       "sprint": "local-mvp"
     }
   ],
-  "last_completed": "f03-dispatch-pool-campaign"
+  "last_completed": "f04-reply-suppression"
 }
