@@ -3,7 +3,7 @@
 История F01 на 2026-10-02: F01 (авторизация и приватные загрузки) собран и проверен в изолированном Docker с PostgreSQL16: 12 unit и 8 integration passed, npm audit — 0 уязвимостей. F01 принят после двух исправлений очистки/mutation harness и отдельного исправления Compose, каждое проверено независимой Astra; новая realPG suite —9tests, unit/harness —14. Локальный host HTTP и фактическая изоляция DB проверены. Текущие программные приёмки F02 и F03a приведены ниже; реальная GPU-геометрия и итоговый app E2E ещё не пройдены. Формат заимствован из walkthrough N5/N6 по прямой просьбе владельца; их runtime факты сюда не переносятся.
 
 ## Кто выполняет работу
-Web принимает фото, хранит аккаунт/платежи и показывает результат. PostgreSQL хранит очередь и ledger кредитов. Отдельный Python GPU-worker строит depth-карту и запускает Stable Diffusion + ControlNet. Ни OpenAI image generation, ни внешний API генерации не заменяют эту цепочку. Реальная доступность CUDA на текущем host не подтверждена.
+Web принимает фото, хранит аккаунт/платежи и показывает результат. PostgreSQL хранит очередь и ledger кредитов. Отдельный Python GPU-worker строит depth-карту и запускает Stable Diffusion + ControlNet. Это исторический локальный путь F02. Принятая hosted-граница F07 с Node22/Replicate описана ниже; она не доказывает реальную геометрию. Реальная доступность CUDA на текущем host не подтверждена.
 
 ## 1. Фото
 Пользователь входит и загружает JPEG/PNG/WebP. Web проверяет magic bytes,≤10MB/20MP, декодирует и удаляет EXIF. Файл получает случайный UUID в приватном томе; чужой аккаунт не может прочитать его URL. Точные пределы байтов/пикселей, EXIF/orientation и изоляция двух аккаунтов реально проверены тестами F01 на ревизии `29b070be`; итоговая приёмка F01 закрыта на `187a14a5`, см. `features/f01/acceptance.md`.
@@ -87,7 +87,11 @@ Product8030270f received fresh Astra logout-control ACCEPT. Actual UI6 then pass
 F06a Sol resumed the interrupted writer in a new trace, actualSol6.1high; source8030270f, author907.026s, wrapper03:32:07Zexit0,18docs checks/41AC/174links passed. Author receipt preserves its earlier pendingUI/restore view. Coordinator reconciled the subsequently delivered actual evidence into the seven current documents; historical checks/hashes were not rewritten. Fresh independent Astra review is required on this integrated source. Usage/cost/provider-resolved model remain null.
 
 
-## Replicate transition — I1 accepted (2026-10-03)
+## История принятых границ F07 (2026-10-03)
+
+Состояния «next/pending» в следующих записях относятся к времени их приёмки; текущая сводка I1→I6 и оставшиеся gates приведены ниже.
+
+### Replicate transition — I1 accepted (2026-10-03)
 
 The hosted-provider plan passed independent Astra validation before implementation. I1 adds immutable one-shot submission authority and a separate, default-disabled spend envelope; it sends no HTTP requests. Sol6.1/high implementation and the one test-only correction were independently reviewed by Astra/high. The final real PostgreSQL16 TAP run passed16 tests (15 child scenarios plus their parent), including two contenders blocked across UTC midnight. Four protected product files remained unchanged during correction. Original review and runtime failures remain in telemetry; the narrow closure is [i1-r01-closure.md](features/f07-replicate/i1-r01-closure.md). The reviewer reached its verdict before a180-second timeout, then saved required artifacts in a70.615-second delivery-only continuation.
 
@@ -122,3 +126,26 @@ Explicit hosted worker now reconstructs the immutable request before recovery GE
 ### 2026-10-03 — Replicate I4c cleanup accepted
 
 Existing maintenance now claims bounded cleanup under account→job→submission locks and cleanup fence/lease, sends cancel once then GET across passes, and retains unresolved retention/crash uncertainty without output/refund authority. Freshreview found only a test token fixture defect; corrected actualPG14/14 plus unchanged authority16/lifecycle18/worker22/jobs21 pass. [Narrow closure](features/f07-replicate/i4c-r1-closure.md) ACCEPT, actualAstra/high138.427s. No liveprovider call or erasure/quality claim. NextI6a actual send-CAS mutation, I6b hosted mock browser wiring/config, I7 fullregression/docs and I8 actualUI.
+
+## Текущая цепочка I1→I6 и передача I7/I8 — 2026-10-03
+
+Источник документации `be450153910208e2c043de24f7efab540b052c82`; исходная F07 specification SHA сохранена. Сначала независимая Astra валидация закрыла план, затем ограниченные Sol6.1/high реализации и Astra ревью приняли следующие границы. Это роли/подтверждённые receipts, не доказательство неизвестной host-модели каждой попытки; метаданные и расход остаются null там, где хост их не передал.
+
+| Граница | Что принято | Доказательство |
+|---|---|---|
+| I1 | DB007, одно durable CAS-разрешение и консервативная spend reservation | [I1/R1 closure](features/f07-replicate/i1-r01-closure.md) |
+| I2 | Фиксированный HTTPS transport, один create, ID/GET/cancel, safe errors | [I2 review](features/f07-replicate/i2-review.md) |
+| I3 | Приватный data URI, строгий download/DNS/codec/import, собственные артефакты | [I3/R1 closure](features/f07-replicate/i3-r01-closure.md) |
+| I4a | Reclaim с исходными ticket/deadline, fencing/terminal/delete/release | [I4a/F1 closure](features/f07-replicate/i4a-f1-closure.md) |
+| I5a/I5b | DB008 closed null-provenance completion, actual bytes/corpus/public guards | [I5a/F1 closure](features/f07-replicate/i5a-f1-closure.md), [I5b review](features/f07-replicate/i5b-review.md) |
+| I4b/I4c | Node worker/reconstruction/uncertain winner protection; bounded cleanup | [I4b/R1 closure](features/f07-replicate/i4b-r1-closure.md), [I4c/R1 closure](features/f07-replicate/i4c-r1-closure.md) |
+| I6a | Настоящий send-CAS mutant: baseline0, ровно2POST вместо1 → exit1, restored0 | [I6a review](features/f07-replicate/i6a-review.md) |
+| I6b | Mock browser/config/profile wiring, R1/R2/R3 closures;5 registrations,13 main reservations | [R1 closure](features/f07-replicate/i6b-r1-closure.md), [R3 closure](features/f07-replicate/i6b-r3-closure.md) |
+
+Отдельный Node worker передаёт только очищенный512 JPEG data URI в pinned depth model. PostgreSQL авторизует единственный POST после CAS; неизвестный исход не разрешает replay. Известный ID продолжается GET с теми же ticket/attempt/deadline и новым fence. Depth/output импортируются в приватные UUID-файлы; atomic completion оставляет quality unverified и hardware/warm/inference/bill null. Shared real-mode predicate допускает controlnet OR replicate, но mock unverified не может публиковаться.
+
+Cleanup отдельно включается точным opt-in, по умолчанию false.30s claim, одна сохранённая cancel-попытка, затем GET в следующих проходах до submitting+1h; crash может означать несделанный cancel. Unresolved/done не означают erasure/refund. Reservation и daily tickets не уменьшаются. Не появляются секреты web/browser, GPU fallback, upgrades или auto-envelope.
+
+[I7 план](features/f07-replicate/i7-check-plan.md) задаёт механическую полную регрессию, сейчас **pending at docs author time** на родительском worktree/source8890e0b7; здесь runtime/logs не читаются и counts не придумываются. [I7 документация](features/f07-replicate/i7-documentation.md) передаёт текущий канон и11 literal test-title mappings. Родитель затем сверяет runtime, проводит fresh whole-feature Astra review и I8 actual52main+2disabled browser с fresh preflight. После I8 его собственная БД должна дать representative hosted-row backup/restore. Исторические42+2 и21tables/451rows сохранены и не закрывают новые gates.
+
+Реальные лицензия/privacy/safety/corpus/billing и paid pilot/performance остаются открыты при authorized spend0.36creates/12USD — предложение, не разрешение/гарантия. Warm30/p95≤25s не измерено; fixtures доказывают software только. PR403 известен, PR не создан; draft не release. Оригинальные failure/timeout logs и receipts не переписаны.

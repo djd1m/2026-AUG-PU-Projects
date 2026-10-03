@@ -2,6 +2,8 @@
 
 Source: PD-SCOPE-001, PD-CJM-001, PD-QUALITY-001, PD-MONEY-001, `decisions-owner.md`. Revised only against independent review findings1–6; design AC are not test passes. Stable AC IDs below map individually to named scenarios in `test-scenarios.md`.
 
+2026-10-03 I7 documentation reconciliation, source `be450153910208e2c043de24f7efab540b052c82`. Accepted I1–I6 includes R1/R2/R3 closures; I7 full runtime is pending at author time on parent-owned source `8890e0b7`. Fresh whole-feature review and I8 actual52 main+2 disabled browser/hosted-row restore remain pending. Historical proof retains its tested revision; this update does not declare F07/full MVP ready. F07 original [specification](features/f07-replicate/01_specification.md) is preserved byte-for-byte; hosted specialization is recorded in [ADR-006](ADR.md#adr-006--hosted-depth-inference-and-conservative-remote-effects).
+
 ### FR-auth-1
 
 - **AUTH-01:** Register/login accept canonical email and passwords of12–128 characters; shorter/longer values reject. Unique email and trial ledger grant exactly1 trial credit even under concurrent registration.
@@ -19,13 +21,13 @@ Source: PD-SCOPE-001, PD-CJM-001, PD-QUALITY-001, PD-MONEY-001, `decisions-owner
 - **JOB-01:** POST upload_id/style/idempotency_key validates owner and style warm/minimal/afrohemian/playful, returns202+job_id before inference. Same owner/key/body returns original job without new effects, changed body409.
 - **JOB-02:** Admission atomically reserves1 credit, job and first attempt ticket, checking billing_hold=false under account lock. Both UTC budget buckets are incremented together; exhaustion refuses429 without job/credit effects. Tickets conservatively consume daily capacity even if not executed; unused tickets are never refunded.
 - **JOB-03:** Queue expires60s after admission; job hard deadline is admission+360s. Each started attempt has deadline=min(start+180s,job deadline), heartbeat10s, lease30s, max2 started attempts. Deadlines are enforced regardless of healthy heartbeats; no third attempt.
-- **JOB-04:** Retry claims a new ticket atomically before inference. Retry capacity exhaustion, queued expiry, deadline, deletion, quality rejection or final failure marks job failed and releases reserved credit exactly once; late fence cannot attach output or double release.
+- **JOB-04:** Local fixture/controlnet retry claims a new ticket atomically before inference. Hosted known-ID reclaim uses only GET, the same consumed ticket/attempt and original deadline under a new fence. Durable submitting without ID or ambiguous submission never replays; no second hosted create after submission, even after provider failure/cancellation. Retry capacity exhaustion, queued expiry, deadline, deletion, quality rejection or final failure marks job failed and releases reserved credit exactly once; late fence cannot attach output or double release.
 - **JOB-05:** Status fetch error shows unknown, never running; refresh by stable job_id resumes actual state without another reserve.
 
 ### FR-geometry-1
 
-- **GEOM-01:** Real worker uses pinned SD+ControlNet-depth with depth derived from normalized input. Every output stores immutable generation evidence: input/output/depth/config hashes, all model revisions, seed, mode, worker source revision, hardware, queue/inference timings. No silent fixture/CPU fallback.
-- **GEOM-02:** Acceptance corpus≥12 rooms×3 styles requires zero added/removed openings and anchors displaced≤2% image diagonal; retain licensed inputs, paired outputs, anchors, source/config/model/hardware and independent reviewer evidence. Unmeasured remains unknown.
+- **GEOM-01:** Explicit controlnet uses pinned local SD+ControlNet-depth; explicit replicate uses the pinned hosted depth API with depth derived from sanitized input. Both bind immutable input/output/depth/config hashes, seed, mode and worker source. Local evidence retains model revisions/hardware/warm/inference; hosted v1 binds model/version/contract, submission/prediction/request, original/transmitted hashes and numeric transform, with provider hardware/warm/inference/billing explicitly null. DB queue time and measured local elapsed time have separate sources. No fabricated local manifest, GPU fallback or model upgrade.
+- **GEOM-02:** Acceptance corpus≥12 rooms×3 styles requires zero added/removed openings and anchors displaced≤2% image diagonal; retain licensed inputs, paired outputs, anchors, source/config/model and independent reviewer evidence. Local hardware is recorded; hosted unavailable hardware is explicitly null, which cannot establish PERF-03 warm performance. Unmeasured remains unknown.
 - **GEOM-03:** New results are unverified. Operator-only quality review records actor/time/decision/evidence digest/output hash and corpus report digest; acceptance requires real mode, complete immutable generation evidence and matching bytes. Ordinary account, fixture, missing evidence or changed output cannot be accepted/published. Rejection revokes shares and releases credit once.
 
 ### FR-gallery-1
@@ -73,7 +75,7 @@ Source: PD-SCOPE-001, PD-CJM-001, PD-QUALITY-001, PD-MONEY-001, `decisions-owner
 ### NFR-security-1
 
 - **SEC-01:** Startup fails before serving on missing/invalid DB/session secret/storage/runtime/provider-mode configuration; production refuses fixture provider/worker, weak/default credentials or public database mapping. No browser secret/env values.
-- **SEC-02:** All writes enforce owner/origin/SQL parameterization/UUID boundaries; public/JSON request bodies≤16KiB except image upload10MiB; public API≤120/IP/min then429. Logs redact credentials/raw bodies; provider response≤64KiB and5s. Node/worker containers≤2CPU and DB connections≤10 per process.
+- **SEC-02:** All writes enforce owner/origin/SQL parameterization/UUID boundaries; public/JSON request bodies≤16KiB except image upload10MiB; public API≤120/IP/min then429. Logs redact credentials/raw bodies; provider response≤64KiB and5s except the explicit Replicate SEC-02 specialization: response≤512KiB (bounded data-URI echo), request≤384KiB, sanitized JPEG≤256KiB, each call≤5s and original remaining deadline. Hosted depth/output import is HTTPS allowlisted/DNS-pinned,≤10MiB/20MP/single frame per artifact; no redirects or forwarded provider auth. Node/worker containers≤2CPU and DB connections≤10 per process.
 - **SEC-03:** Mandatory negative controls must fail when owner guard, payment idempotency, budget or fixture-quality exclusion is removed; restore source after each controlled mutation.
 
 ### NFR-performance-1
@@ -86,4 +88,4 @@ Source: PD-SCOPE-001, PD-CJM-001, PD-QUALITY-001, PD-MONEY-001, `decisions-owner
 FR-LOOK-001 accepted: large room canvas plus clear hierarchy. FR-LOOK-002 accepted: desktop two-column workspace and mobile single-column CTA. FR-LOOK-003 accepted: gallery/package navigation and text≥16px. Internal source path unmeasured due auth; CJM A is independent workflow, not exact source reproduction.
 
 ## Acceptance and evidence
-Every requirement has an Algorithm block in Pseudocode and each AC has its own named mapping. Required real Postgres races, negative cases, browser E2E and guard mutations stay mandatory. GPU corpus/performance, deployment and paid effects retain separate status; fixtures cannot satisfy real GPU criteria.
+Every requirement has an Algorithm block in Pseudocode and each AC has its own named mapping. Required real Postgres races, negative cases, browser E2E and guard mutations stay mandatory. GPU corpus/performance, deployment and paid effects retain separate status; fixtures cannot satisfy real quality/performance criteria. Hosted admission requires exact private server configuration and an existing authorized spend envelope; none is automatically provisioned. Reserved spend and daily capacity never decrement on ambiguity/failure/cancel. Real provider license/privacy/safety/corpus/billing ceilings remain pilot-pending with authorized spend0. Proposed36 creates/12USD is neither approval nor a provider billing guarantee.

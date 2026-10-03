@@ -214,7 +214,7 @@ Then at most1 reserve/ticket/job; exhausted/held requests create none and no par
 Scenario: Job timeout and crash recovery
 Given queued job at60s, healthy-heartbeat attempt at180s, crashed lease and job at360s
 When sweeper/worker claims or finishes
-Then expired work is fenced/failed and process cancelled; no late success, no third attempt; status reads never wait for inference
+Then expired work is fenced/failed; local process is cancelled and hosted known ID gets best-effort bounded cleanup; no late success, no third attempt; status reads never wait for inference
 
 @FR-redesign-1 @JOB-04
 Scenario: Retry limit and release races
@@ -230,14 +230,14 @@ Then unknown during outage; fresh GET resumes server state with same job and unc
 
 @FR-geometry-1 @GEOM-01
 Scenario: Generation provenance boundary
-Given real/fixture modes, missing CUDA/models or missing provenance field
+Given explicit controlnet/replicate/fixture modes, missing required local CUDA/models or hosted pins/acceptances/envelope, or missing provenance field
 When generate and persist result
-Then real unavailable fails explicitly; fixture labelled; successful result bound to exact bytes and complete evidence
+Then unavailable selected mode fails explicitly without fallback; fixture labelled; successful result binds exact bytes and mode-specific complete evidence, with hosted hardware/warm/inference/bill explicitly null
 
 @FR-geometry-1 @GEOM-02
 Scenario: Real geometry corpus
 Given 12 real rooms with annotated openings/anchors and3 styles
-When run actual GPU generation and independent measurement
+When run actual selected depth-conditioned generation and independent measurement
 Then 36 valid pairs meet all thresholds; fixture or missing evidence cannot pass
 
 @FR-geometry-1 @GEOM-03
@@ -382,7 +382,7 @@ Then each unsafe case refuses before socket; safe isolated config starts; no sec
 Scenario: Security limits injection and leak matrix
 Given foreign origins, SQL/path/HTML injection, oversize public/provider bodies,121 requests/min and error containing secrets
 When exercise routes and inspect safe logs/config
-Then no bypass/execution/leak; size413 or provider503 and rate429; bounded resources; DB not published
+Then no bypass/execution/leak; size413 or provider503 and rate429; other provider64KiB, Replicate response512KiB/request384KiB and5s/original deadline; imported media10MiB/20MP/single frame; bounded resources; DB not published
 
 @NFR-security-1 @SEC-03
 Scenario: Security guard mutation controls
@@ -407,3 +407,11 @@ Scenario: Measured GPU performance cohort
 Given real warm/cold/fixture samples and missing metadata
 When calculate nearest-rank p95 on valid warm cohort
 Then eligible cohort requires n≥30 real warm jobs with complete provenance and nearest-rank p95≤25s; valid cohort with p95>25s FAILS performance acceptance; unavailable/ineligible cohort remains UNKNOWN; report queue separately
+
+## Hosted BDD references — accepted software, 2026-10-03
+
+All11 original SC-US scenarios/subcase matrices remain in the unchanged [F07 specification](features/f07-replicate/01_specification.md); exact AC→literal test anchors plus complete suite/subcase references are in [05_completion](features/f07-replicate/05_completion.md#bdd-and-subcase-references). This adds coverage references rather than renaming original scenarios or tests. Durable CAS/response-loss/known recovery/deadline/hold/delete/media/corpus/ticket/leak cases use actual production paths with mocked provider HTTP; they are software evidence only.
+
+Actual send-CAS mutation uses the same durable submitting identity twice, requires exactly1 POST, and removes only concrete no-replay/CAS guards in a disposable copy to require intended assertion failure at actual2; restored source green/hash-equal. Cleanup requires one30s fenced claim, one cancel request then GET later, submitting+1h unresolved boundary and no erasure/refund/revival. I6b R1/R2/R3 preserves real DOM hold/delete/private hashes; accepted mode predicate is controlnet OR replicate, actual hosted mock is unverified/publication denied.
+
+I7 full32nonPG+13PG/Python/static/mutations is parent-owned pending at this author freeze; fresh whole-feature review and I8 actual52+2 browser plus representative hosted-row restore remain pending. Historical42+2 and21table451row restore cannot substitute. PERF-03 warm30/p95≤25s remains unchanged/unmeasured. Provider/license/privacy/safety/corpus/billing/pilot real evidence is pending, externalspend0.

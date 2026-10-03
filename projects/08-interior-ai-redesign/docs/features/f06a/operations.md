@@ -1,11 +1,13 @@
 # F06a operations handoff — commands are inert
 
-Source `8030270f023d83c9cdd597c4578517a1b58b4b35`; run `n8-20261002-1740`.
-This writer executes no container, SQL, backup, restore, network or provider command. **Actual restore receipt: pending coordinator execution after the browser matrix.** Commands below target only the coordinator's already owned synthetic PostgreSQL16 fixture, never a user/production database. They are standard tools, not a new restore engine. Independent documentation completion does not complete F06/MVP.
+Historical procedure source `8030270f023d83c9cdd597c4578517a1b58b4b35`; run `n8-20261002-1740`.
+
+2026-10-03 I7 documentation reconciliation, source `be450153910208e2c043de24f7efab540b052c82`. Accepted I1–I6 includes R1/R2/R3 closures; I7 full runtime is pending at author time on parent-owned source `8890e0b7`. Fresh whole-feature review and I8 actual52 main+2 disabled browser/hosted-row restore remain pending. Historical proof retains its tested revision; this update does not declare F07/full MVP ready. Current hosted operator instructions are below; the retained six-migration procedure is historical and must not be executed unchanged for the eight-migration I8 stand.
+This writer executes no container, SQL, backup, restore, network or provider command. **Original author-time restore status was pending; the later pre-hosted receipt is retained at the end. New hosted-row restore remains pending after I8.** Commands below target only the coordinator's already owned synthetic PostgreSQL16 fixture, never a user/production database. They are standard tools, not a new restore engine. Independent documentation completion does not complete F06/MVP.
 
 ## Local processes and boundaries
 
-See [English](../../README/en.md) / [Russian README](../../README/ru.md) for source-checked commands and configuration names. [compose.yaml](../../../compose.yaml) contains db/web/maintenance, disabled provider/inference and total CPU2; only loopback web is published. It migrates on web startup using [scripts/migrate.js](../../../scripts/migrate.js), all six [SQL migrations](../../../db/). There is no `deployment/compose.yml`, deploy script or inference Compose service. From project cwd the port checker takes `compose.yaml` (or `scripts/ui/compose.e2e.yml` for the browser stand), not a directory that would imply `docker-compose.yml`; retain the same private interpolation environment.
+See [English](../../README/en.md) / [Russian README](../../README/ru.md) for source-checked commands and configuration names. [compose.yaml](../../../compose.yaml) contains db/web/maintenance, disabled provider/inference and total CPU2; only loopback web is published. It migrates on web startup using [scripts/migrate.js](../../../scripts/migrate.js), all six [SQL migrations](../../../db/). There is no `deployment/compose.yml` or deploy script. The historical base stack had no inference service; current optional one-shot profiles are documented below. From project cwd the port checker takes `compose.yaml` (or `scripts/ui/compose.e2e.yml` for the browser stand), not a directory that would imply `docker-compose.yml`; retain the same private interpolation environment.
 
 Full configured source stack: privately provision Node22/locked npm dependencies, PG16 and storage outside `web/`; run migrations, normal server, maintenance and separate `scripts/worker.js` with the same database/private volume. Web keeps `WORKER_MODE=disabled`; worker explicitly selects fixture/controlnet with immutable revision/seed. Local provider fixture needs explicit nonproduction `PROVIDER_MODE=fixture`; normal server runs the payment-create loop. Base Compose fixes provider disabled, so enable the configured separate process or an operator-reviewed local override rather than assume interpolation enables payments. No override is authored here.
 
@@ -13,7 +15,7 @@ Full configured source stack: privately provision Node22/locked npm dependencies
 
 Private media includes normalized input UUIDs plus `outputs`, `depths`, `configs` and composites. Preserve that volume alongside DB backup for a real rollback: a DB dump alone cannot restore image bytes. Tombstoned/rejected media is denied immediately; periodic maintenance retries physical cleanup within the required hour. Do not manually purge referenced files, quality evidence, ledger, tickets or payment records.
 
-## Owned synthetic backup/restore procedure
+## Historical six-migration synthetic backup/restore procedure
 
 Run only after browser evidence is captured and the coordinator confirms it still owns the exact stand. The current stand must contain linked synthetic accounts/uploads/jobs/ledger/payment intents; no substitute empty database counts. Use local container Unix-socket authentication, never a password argument, connection URL, env dump or shell tracing. PostgreSQL tools below are the existing PG16 container tools. Keep raw dump outside Git, mode0600, never `cat`/print/archive it in receipts.
 
@@ -165,7 +167,7 @@ rm -- "$N8_DUMP"
 flock -u 9
 ```
 
-## Rollback and release gates
+## Historical pre-hosted rollback and release gates
 
 Stop new admissions/writers under operator control; retain DB/private media and let active fenced work finish or time out. Roll back only a compatible image/source revision; inspect migration compatibility rather than run a destructive down migration. All six migrations are versioned by `schema_migration`; no down-migration CLI exists. Never rewrite ledger/payment history, clear permanent hold, recycle attempt tickets or edit historical receipts. Monetary discrepancies need operator review, not automatic money movement.
 
@@ -176,3 +178,17 @@ Before aggregate delivery: actual complete 1440/390 browser plus disabled-provid
 ## Later measured restore evidence
 
 [Coordinator receipt](../../telemetry/n8-20261002-1740/n8-f06-restore-1-receipt.md) records actual standard pg_dump/pg_restore into distinct owned DB:21tables/451rows, full-row aggregate digests and constraints match, source unchanged,16.145s. Separate quiescent synthetic media tar recovery:10files/8243bytes,127ms. Rawdump/archives/restoretarget removed; original temporary UI stack removed only after this independent check. No restored-pair application restart, live DB/media recovery, old-schema rollback or production RPO/RTO is claimed. Commands above remain inert documentation; measured coordinator orchestration used all-table aggregate digests rather than the illustrative nonsecret projection query.
+
+## Current hosted operation — eight migrations, 2026-10-03
+
+Use Node22/PG16, actual [.env.example](../../../.env.example), [compose](../../../compose.yaml), [workerConfig](../../../scripts/worker.js) and [cleanup config](../../../web/replicate-worker-config.js); commands remain inert in this docs-only handback. Base web/maintenance keep WORKER_MODE=disabled and no Replicate token. Default REPLICATE_WORKER_MODE=disabled and REPLICATE_CLEANUP_ENABLED=false. Optional replicate-worker/replicate-cleanup profiles are --once/restart=no; each adds0.25CPU, so WEB_CPUS=0.50 for one or0.25 for both retains aggregate2CPU. No automatic envelope, restart/retry scheduler or paid start.
+
+Separate direct worker uses WORKER_MODE=replicate, WORKER_SOURCE_REVISION (40–64 lowercase hex), WORKER_SEED (0..2147483647), exact REPLICATE_MODEL/REPLICATE_VERSION/REPLICATE_CONTRACT_SHA, private REPLICATE_API_TOKEN, existing REPLICATE_SPEND_BUDGET_ID and REPLICATE_AUTHORIZATION_SHA/REPLICATE_PRIVACY_ACCEPTANCE_SHA/REPLICATE_LICENSE_ACCEPTANCE_SHA/REPLICATE_SAFETY_ACCEPTANCE_SHA/REPLICATE_BILLING_ACCEPTANCE_SHA. Pins are listed in [model provenance](../../model-provenance-candidates.md). DB must independently match unrevoked in-window nonzero authorized envelope; token/env presence is not approval. No secret enters serializable config or web/browser; token is private WeakMap identity.
+
+Standalone cleanup uses common validated server config with WORKER_MODE=disabled. Absent or exact false opt-in returns common config unchanged; exact true plus pins/token enables GET/cancel only, without spend/acceptance/seed/source fields. Other opt-ins fail safely. Cleanup-only config cannot create or obtain generation settings. Actual registered hosted config also permits cleanup, independently of revoked spend/hold/expired job. Claims take account→job→submission locks,30s cleanup lease/fence. One committed cancel request precedes its sole send; later passes GET only. Crash may leave cancel unsent. Whole remote action window≤5s/pass, max100 sequential rows/one scan; no inner retry/poll. Stop by submitting_at+1h and retain unresolved state. Done/observed canceled does not guarantee erasure or free billing.
+
+Reconcile using stored opaque identity/state/deadline and actual provider billing evidence when separately authorized; no ID guessing/list lookup, new POST, ledger reversal, reserved spend decrement or ticket refund. Disable admission, preserve all remote identities/private bytes/receipts, allow bounded cleanup and operator review. Existing `node --env-file=/private/roomkind-worker.env scripts/worker.js --once` and `node --env-file=/private/roomkind-cleanup.env scripts/maintenance.js --once` are explicit operator commands, not permission to invoke here.
+
+I8 must first complete actual52+2 browser on its exact owned image/DB. Then adapt the retained standard dump/restore procedure to **eight** migrations and quiesce optional hosted writers too; do not relax existing ownership/comment/schema/secret/mutex checks. The parent must include representative provider_submission, provider_spend_budget and hosted generation_evidence with linked job/ticket/ledger/media, compare complete schema/constraints/immutable identity/reservations before/after/restored and retain safe digests plus cleanup receipt. No empty DB or prior21table/451row receipt substitutes. I7 does not author or execute a new restore engine.
+
+Fresh whole-feature review, I7 runtime reconciliation, I8 browser/restore, real provider license/privacy/safety/corpus/billing/performance and any permitted draft PR remain parent-owned. Known PR403/no PR; draft is not release. Proposed36 creates/12USD remains unapproved; authorized external spend0. No full MVP acceptance.

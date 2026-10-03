@@ -1,0 +1,41 @@
+TRACE contour=project specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/Specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/Pseudocode.md
+COUNT requirements=13 algorithms=13 missing-algorithm=0 orphan-algorithm=0
+PASS contour=project bidirectional traceability complete
+TRACE contour=f01 specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f01/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f01/02_pseudocode.md
+NOT-ESTABLISHED contour=f01 role=specification path=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f01/01_specification.md missing or unreadable
+TRACE contour=f02a specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f02a/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f02a/02_pseudocode.md
+NOT-ESTABLISHED contour=f02a role=specification path=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f02a/01_specification.md missing or unreadable
+TRACE contour=f02b specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f02b/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f02b/02_pseudocode.md
+NOT-ESTABLISHED contour=f02b role=specification path=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f02b/01_specification.md missing or unreadable
+TRACE contour=f03a specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f03a/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f03a/02_pseudocode.md
+NOT-ESTABLISHED contour=f03a role=specification path=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f03a/01_specification.md missing or unreadable
+TRACE contour=f03a-fix specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f03a-fix/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f03a-fix/02_pseudocode.md
+NOT-ESTABLISHED contour=f03a-fix role=specification path=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f03a-fix/01_specification.md missing or unreadable
+TRACE contour=f03b specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f03b/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f03b/02_pseudocode.md
+NOT-ESTABLISHED contour=f03b role=specification path=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f03b/01_specification.md missing or unreadable
+TRACE contour=f03b-fix specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f03b-fix/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f03b-fix/02_pseudocode.md
+NOT-ESTABLISHED contour=f03b-fix role=specification path=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f03b-fix/01_specification.md missing or unreadable
+TRACE contour=f04a specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f04a/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f04a/02_pseudocode.md
+NOT-ESTABLISHED contour=f04a role=specification path=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f04a/01_specification.md missing or unreadable
+TRACE contour=f04b specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f04b/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f04b/02_pseudocode.md
+NOT-ESTABLISHED contour=f04b role=specification path=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f04b/01_specification.md missing or unreadable
+TRACE contour=f04b-fix specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f04b-fix/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f04b-fix/02_pseudocode.md
+NOT-ESTABLISHED contour=f04b-fix role=specification path=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f04b-fix/01_specification.md missing or unreadable
+TRACE contour=f05 specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f05/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f05/02_pseudocode.md
+NOT-ESTABLISHED contour=f05 role=specification path=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f05/01_specification.md missing or unreadable
+TRACE contour=f06a specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f06a/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f06a/02_pseudocode.md
+NOT-ESTABLISHED contour=f06a role=specification path=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f06a/01_specification.md missing or unreadable
+TRACE contour=f06a-restore specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f06a-restore/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f06a-restore/02_pseudocode.md
+NOT-ESTABLISHED contour=f06a-restore role=specification path=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f06a-restore/01_specification.md missing or unreadable
+TRACE contour=f07-replicate specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f07-replicate/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/f07-replicate/02_pseudocode.md
+COUNT requirements=20 algorithms=20 missing-algorithm=0 orphan-algorithm=0
+PASS contour=f07-replicate bidirectional traceability complete
+TRACE contour=ui-auth-order-fix specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/ui-auth-order-fix/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/ui-auth-order-fix/02_pseudocode.md
+NOT-ESTABLISHED contour=ui-auth-order-fix role=specification path=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/ui-auth-order-fix/01_specification.md missing or unreadable
+TRACE contour=ui-logout-fix specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/ui-logout-fix/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/ui-logout-fix/02_pseudocode.md
+NOT-ESTABLISHED contour=ui-logout-fix role=specification path=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/ui-logout-fix/01_specification.md missing or unreadable
+TRACE contour=ui-payment-fix specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/ui-payment-fix/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/ui-payment-fix/02_pseudocode.md
+NOT-ESTABLISHED contour=ui-payment-fix role=specification path=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/ui-payment-fix/01_specification.md missing or unreadable
+TRACE contour=ui-upload-fix specification=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/ui-upload-fix/01_specification.md pseudocode=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/ui-upload-fix/02_pseudocode.md
+NOT-ESTABLISHED contour=ui-upload-fix role=specification path=/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign/docs/features/ui-upload-fix/01_specification.md missing or unreadable
+VERDICT traceability=NOT-ESTABLISHED features=18 gaps=0 inconclusive=17

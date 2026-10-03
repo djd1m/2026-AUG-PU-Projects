@@ -2,7 +2,9 @@
 
 [English](en.md) · [41 критерий приёмки](../features/f06a/acceptance-map.md) · [Эксплуатация](../features/f06a/operations.md)
 
-Источник: `8030270f023d83c9cdd597c4578517a1b58b4b35`; прогон `n8-20261002-1740`.
+Исторический источник: `8030270f023d83c9cdd597c4578517a1b58b4b35`; прогон `n8-20261002-1740`.
+
+Текущий источник документации `be450153910208e2c043de24f7efab540b052c82`, сверено2026-10-03. F07 I1–I6/R1/R2/R3 приняты как software; I7 полная регрессия, fresh whole-feature review и I8 actual52 основных+2 disabled checks с hosted-row restore ожидают родителя. Исторические UI6/restore ниже относятся к pre-hosted source. Полный MVP не готов.
 Программные F01–F04 приняты с привязкой к исходникам. UI6 фактически прошёл42 основных проверки на1440/390 и2 проверки отдельно перезапущенного сервера с отключёнными платежами. Восстановление собственной синтетической БД и файлов прошло. F05 GPU, реальная приёмка провайдера и общий F06/MVP остаются открыты; deployment не выполнен.
 
 ## Реализованное поведение
@@ -46,7 +48,7 @@ node --env-file=/private/roomkind-web.env scripts/queue-status.js
 
 В [package.json](../../package.json) существуют `npm run migrate`, `npm start`, `npm run sweep`, `npm run lint`, `npm run build`, `npm test`, `npm run test:integration`, `npm run test:boundaries`, `npm run test:mutation`. `build`/`lint` — syntax/static check; `npm test` проверяет только foundation boundaries/media, не всю последующую PG/browser/GPU матрицу. Остальные gates — в receipts и [test-scenarios](../test-scenarios.md).
 
-[compose.yaml](../../compose.yaml) содержит локальные db/web/maintenance, с фиксированными disabled payment/inference, суммарным CPU 2, внутренней БД и loopback web. Inference-сервиса в нём нет. После port-conflict check и захвата существующего heavy mutex координатора:
+[compose.yaml](../../compose.yaml) содержит локальные db/web/maintenance, с default disabled payment/inference, default CPU2, внутренней БД и loopback web. Текущие optional профили `replicate-worker`/`replicate-cleanup` — явные одноразовые сервисы; hosted-конфигурация ниже. После port-conflict check и захвата существующего heavy mutex координатора:
 
 Для этих Compose-команд и port checker приватно подготовить игнорируемый проектный `.env` с теми же выбранными `WEB_PORT` и interpolation variables. Checker принимает фактический путь Compose; аргумент-каталог ищет отсутствующий `docker-compose.yml`. `.env` не печатать.
 
@@ -56,7 +58,7 @@ docker compose --env-file .env -f compose.yaml config --quiet
 docker compose --env-file .env -f compose.yaml up -d --build
 ```
 
-Worker запускается отдельным процессом с общей приватной БД/хранилищем. В его приватном env задать `WORKER_MODE=fixture` либо явно `controlnet`, source revision и seed; у web оставить worker disabled. Fixture использует Python/Pillow и делает маркированную демонстрацию, без вывода о геометрии. ControlNet требует CUDA, вручную подготовленные pinned локальные веса/manifest, safetensors, лицензии и хеши; скачивания или CPU/fixture fallback нет. Фактическая GPU provisioning/security/corpus/latency заблокирована.
+Worker запускается отдельным процессом с общей приватной БД/хранилищем. В его приватном env задать `WORKER_MODE=fixture`, явно `controlnet` либо отдельно разрешённый `replicate`, source revision и seed; у web оставить worker disabled. Fixture использует Python/Pillow и делает маркированную демонстрацию, без вывода о геометрии. ControlNet требует CUDA, вручную подготовленные pinned локальные веса/manifest, safetensors, лицензии и хеши; скачивания или CPU/fixture fallback нет. Фактическая GPU provisioning/security/corpus/latency заблокирована.
 
 ```sh
 node --env-file=/private/roomkind-worker.env scripts/worker.js --once
@@ -77,4 +79,21 @@ Payment fixture поддерживает `success`, `cancel`, `refund` толь�
 
 [Эксплуатация](../features/f06a/operations.md) описывает inert restore собственной синтетической PG, private volume/rollback и gates. Для реальной GPU-приёмки нужны ≥12 лицензированных комнат ×3 стиля, ноль новых/пропавших openings, anchors ≤2% диагонали, плюс ≥30 actual warm jobs с p95 inference ≤25 с и отдельным queue time. Draft PR направляется в `claude/install-npm-packages-n7l3m5`; создание main, merge/deployment не разрешены. [Completion](../Completion.md) сохраняет условия приёмки и полномочия.
 
-Последние доказательства координатора: [F04 acceptance](../features/f04b/acceptance.md), [браузерный receipt](../telemetry/n8-20261002-1740/n8-ui-e2e-6-receipt.md), [восстановление](../telemetry/n8-20261002-1740/n8-f06-restore-1-receipt.md). Исторические неудачи1–5 и авторская проверка сохранены.
+Исторические pre-hosted доказательства координатора: [F04 acceptance](../features/f04b/acceptance.md), [браузерный receipt](../telemetry/n8-20261002-1740/n8-ui-e2e-6-receipt.md), [восстановление](../telemetry/n8-20261002-1740/n8-f06-restore-1-receipt.md). Исторические неудачи1–5 и авторская проверка сохранены.
+
+## Hosted depth worker — передача отключённой реализации
+
+Принятый Node22/PG16 путь применяет восемь миграций (007 submission/spend,008 hosted evidence), явно выбирает `replicate` и не требует Python/GPU. Вход — очищенный приватный JPEG data URI; строгий HTTPS/public-IP-pinned download копирует depth/output в приватные артефакты. После durable CAS разрешён один POST; неопределённый исход не разрешает replay. Известный ID продолжается с исходными ticket/deadline; capacity и reserved provider budget не уменьшаются. Возврат пользовательского кредита не означает refund провайдера. Hosted результат остаётся unverified; классификация controlnet OR replicate сама не разрешает публикацию. Browser mock запрещает публикацию и не доказывает геометрию.
+
+| Серверные имена из .env.example | Назначение |
+|---|---|
+| `REPLICATE_WORKER_MODE`, `REPLICATE_CLEANUP_ENABLED`, `WEB_CPUS` | Optional Compose worker (default disabled), отдельный cleanup (default false), суммарный CPU |
+| `REPLICATE_MODEL`, `REPLICATE_VERSION`, `REPLICATE_CONTRACT_SHA` | Точные public pins в [model provenance](../model-provenance-candidates.md), без upgrade/fallback |
+| `REPLICATE_API_TOKEN`, `REPLICATE_SPEND_BUDGET_ID` | Приватный worker/cleanup token и UUID уже разрешённого DB envelope; не web/browser и не auto-provisioning |
+| `REPLICATE_AUTHORIZATION_SHA`, `REPLICATE_PRIVACY_ACCEPTANCE_SHA`, `REPLICATE_LICENSE_ACCEPTANCE_SHA`, `REPLICATE_SAFETY_ACCEPTANCE_SHA`, `REPLICATE_BILLING_ACCEPTANCE_SHA` | Обязательные acceptance digests worker; env не заменяет реального разрешения |
+
+Прямой worker `WORKER_MODE=replicate` требует common validated config, source revision40–64 lowercase hex и seed0..2147483647. Существующий `scripts/worker.js --once` читает приватный env. Optional Compose profiles имеют restart=no и --once; каждый добавляет0.25CPU, поэтому WEB_CPUS=0.50 для одного либо0.25 для обоих сохраняет суммарные2CPU. Web/base maintenance оставляют worker disabled, provider token туда не передаётся. Paid start не разрешён.
+
+Отдельный `scripts/maintenance.js --once` с worker disabled разрешает cleanup только при точном true плюс pins/token/common config; absent/false возвращает common config неизменным. Spend/acceptance/seed/source settings не нужны, create невозможен. Token хранится в приватном WeakMap.30s fenced claim сохраняет один cancel request перед единственной отправкой, далее проходы GET до submitting+1h; crash может означать, что cancel не отправлен. Unresolved/done не гарантируют erasure/refund.
+
+Replicate SEC-02: response512KiB/request384KiB/call≤5s, прочие providers64KiB неизменны; media≤10MiB/20MP/single frame. Hardware/warm/inference/billing провайдера и источники остаются null; local elapsed/DB queue измеряются отдельно. Реальные license/privacy/safety/corpus/billing controls и pilot ожидают проверки при authorized spend0.36creates/12USD — предложение, не разрешение/гарантия. Warm≥30/p95≤25s неизменно и не измерено. Родитель отвечает за I7 reconciliation, fresh review, I8 browser, затем representative hosted-row restore и разрешённую draft-попытку. Известен внешний PR403, PR отсутствует; draft не release. [I7 handback](../features/f07-replicate/i7-documentation.md).

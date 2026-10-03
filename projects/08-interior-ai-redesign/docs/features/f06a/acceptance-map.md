@@ -1,8 +1,10 @@
 # F06a — individual acceptance/evidence map
 
 Requirements: [Specification](../../Specification.md), individual [named scenarios](../../test-scenarios.md).
-Current documentation/product source: `8030270f023d83c9cdd597c4578517a1b58b4b35`; run `n8-20261002-1740`.
+Historical documentation/product source: `8030270f023d83c9cdd597c4578517a1b58b4b35`; run `n8-20261002-1740`.
 Exactly **41 stable AC rows** follow. Status describes available evidence, not an aggregate PASS. All runtime counts below are historical observations reused from accepted receipts, **not checks run by this documentation writer**. Accepted source revisions differ; their snapshots identify the versions actually tested. Current source links identify implementation; they do not silently promote historic evidence to a fresh whole-stack run. [Check metadata](checks/validation.json) binds this map, source and evidence hashes when validation finishes.
+
+2026-10-03 I7 documentation reconciliation, source `be450153910208e2c043de24f7efab540b052c82`. Accepted I1–I6 includes R1/R2/R3 closures; I7 full runtime is pending at author time on parent-owned source `8890e0b7`. Fresh whole-feature review and I8 actual52 main+2 disabled browser/hosted-row restore remain pending. Historical proof retains its tested revision; this update does not declare F07/full MVP ready. Current F07 delta is below; the41 stable IDs and historical receipts remain unchanged.
 
 ## Evidence index and bounds
 
@@ -67,10 +69,18 @@ The actual browser failures [1](../../telemetry/n8-20261002-1740/n8-ui-e2e-1-rec
 | PERF-02 | UTC old ticket replacement/current capacity/deadline | [web/jobs.js](../../../web/jobs.js) | [F02a](../f02a/acceptance.md) | Accepted realPG software |
 | PERF-03 | ≥30 actual warm GPU p95≤25s with provenance/queue separate | [worker/engine.py](../../../worker/engine.py) | [F02b](../f02b/acceptance.md) | Blocked F05; actual warm sample/hardware/provenance evidence absent |
 
-## Aggregate status
+## Historical pre-hosted aggregate status
 
 F01/F02/F03 accepted software and F04a backend are reusable evidence. F04 local software is accepted after actual UI6; F05, fullF06 and MVP are **not done**. GEOM-01 actual engine execution, GEOM-02 measured quality, GEOM-03 real acceptance and PERF-03 warm inference require real pinned GPU/runtime evidence; synthetic fixtures cannot satisfy them. Hosted-checkout code/verified fixture does not establish real provider acceptance. External provider effects, spend, deployment, mail and GPU rental/download remain outside authorization.
 
 The [owned synthetic restore procedure](operations.md) is accompanied by the later [actual coordinator receipt](../../telemetry/n8-20261002-1740/n8-f06-restore-1-receipt.md):21tables/451rows, constraints/source unchanged;10private syntheticfiles recovered. No recovered-pair application restart or production RPO/RTO is claimed. Documentation-only validation checks all41 mappings, local links/command/env source references, scope/diff and hashes; it does not re-run backend/PG/browser suites. Parent owns final independent review/integration and source reconciliation for later evidence.
 
 Coordinator reconciliation after author freeze: UI6 source8030270f/build19ea9d39,42main+2disabled checks passed, ownstack cleanup0. Author checks/hashes describe its earlier document bytes; coordinator hash/link/41AC checks separately bind this update. RealGPU/provider boundaries above remain unchanged.
+
+## Current hosted delta to the41 criteria — 2026-10-03
+
+The [F07 actual11-AC coverage](../f07-replicate/05_completion.md#criterion-coverage) and [I7 handback](../f07-replicate/i7-documentation.md) complement this map; no historical UI6/backend count is a fresh hosted pass. JOB-03/04 and PERF-01/02 gain one-shot durable authorization, no replay on ambiguity, known-ID same-ticket/original-deadline recovery and conservative reserved spend. GALLERY-03 gains fenced cancel/GET cleanup without erasure/refund assurance. GEOM-01 gains separate closed hosted evidence/null provider metrics; GEOM-02/03 retain actual licensed36-pair independent geometry requirements. PUBLIC-01/02/03, BADGE-01/02 and SHARE-03 retain owner/quality/hold/consent/final delivery checks with controlnet OR replicate classification; mocks remain unverified/publication denied.
+
+SEC-01 gains explicit default-disabled worker and default-false independent cleanup/private WeakMap config, exact pins/acceptances/existing envelope with no web token or auto-envelope. SEC-02 specializes Replicate response512KiB/request384KiB/call5s, media10MiB/20MP/single frame/public-IP-pinned HTTPS; other provider64KiB stays. SEC-03 gains accepted actual send-CAS mutant0/1/0 ([I6a review](../f07-replicate/i6a-review.md)) in addition to existing mutations. Unlisted auth/upload/payment/partner criteria retain their requirements and historical proof, pending current full regression reconciliation.
+
+I7 runtime source8890e0b7, fresh whole-feature Astra review and I8 actual52+2 browser are pending. R3 accepted harness uses5 registrations/13 main reservations, not a rate-limit exemption. New representative hosted-row restore follows I8; prior21table451row restore predates007/008. GEOM-02/03 actual quality and PERF-03 warm≥30/p95≤25s remain unmeasured; no GPU fallback or model upgrade. Real provider/license/privacy/safety/corpus/billing pilot remains pending, externalspend0;36creates/12USD proposal is not approval. Known PR403/no PR, draft is not release; F07/full MVP not ready.

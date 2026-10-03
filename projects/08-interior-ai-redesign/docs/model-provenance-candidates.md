@@ -25,3 +25,11 @@ Pin all three repositories to the observed revisions or document an explicit rev
 ## Acceptance still pending
 
 Model provenance hash and deterministic seed are reproducibility inputs. Quality remains measured on at least12 room photos×3 styles, and performance requires at least30 actual GPU jobs on recorded hardware. No fixture, model-card claim, or successful metadata fetch closes either gate.
+
+## Hosted candidate — accepted software pins, 2026-10-03
+
+This dated addition specializes the local-only deployment assumption above; the historical2026-10-02 metadata/license/loading observations are retained. F07 uses `jagilley/controlnet-depth2img`, immutable version `922c7bb67b87ec32cbc2fd11b1d5f94f0ba4f5519c4dbd02856376444127cc60`, closed schema contract SHA `3d94bb6e59e6a90e24a0504abb4c06c055f7619372e2c36313f42de5d86e99bc`. [Preserved research/schema capture](features/f07-replicate/replicate-research.md) establishes depth-conditioned capability and depth0/generated1 schema intent, not measured deployed quality/order or license/privacy/safety acceptance. I7 performs no new network verification.
+
+Actual accepted code pins are in [transport](../web/replicate.js) and [worker config](../web/replicate-worker-config.js). Input is sanitized512 JPEG data URI; returned depth/output bytes are privately imported and hash-bound to original/transmitted transform/request. Fixed settings: one sample, image_resolution='512', detect_resolution512, ddim_steps30, scale7.5, eta0 and trusted seed. Four prompts are server-owned. No silent model/version upgrades, generic prompt-only substitution or GPU/CPU/fixture fallback.
+
+Hosted evidence has a separate v1 contract and `measured-hosted-corpus-v1` operator report; no local revision/manifest fabrication. Provider hardware, warm status, inference time and billed amount remain null; measured local elapsed/DB queue are distinct. Mocks prove software only. Local safety checker remains a local requirement; hosted safety enforcement/content policy cannot be inferred from it. Real model license, privacy transfer/retention, corpus rights/annotations/independent measurements, safety and billing controls remain pilot-pending with0 authorized spend. Proposed12 rooms×3 styles/36 creates/12USD is not approval or a provider guarantee. Warm≥30/p95≤25s remains unchanged/unmeasured.

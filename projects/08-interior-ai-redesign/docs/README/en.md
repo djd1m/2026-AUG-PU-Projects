@@ -2,7 +2,9 @@
 
 [Русский](ru.md) · [41 acceptance criteria](../features/f06a/acceptance-map.md) · [Operations](../features/f06a/operations.md)
 
-Source: `8030270f023d83c9cdd597c4578517a1b58b4b35`; run `n8-20261002-1740`.
+Historical source: `8030270f023d83c9cdd597c4578517a1b58b4b35`; run `n8-20261002-1740`.
+
+Current documentation source `be450153910208e2c043de24f7efab540b052c82`, reconciled2026-10-03. F07 I1–I6/R1/R2/R3 software slices accepted; I7 full runtime, fresh whole-feature review and I8 actual52 main+2 disabled checks plus hosted-row restore remain pending at author time. Historical UI6/restore proof below applies to its pre-hosted source. Full MVP is not ready.
 F01–F04 local software is accepted with source-bound receipts. Actual UI6 passed42 main checks at1440/390 and2 checks against a separately restarted disabled-payment server. Synthetic database and private-file restore checks passed. Real GPU quality/performance, real provider acceptance and aggregate F06/MVP remain pending; this package is not a deployment.
 
 ## Implemented behavior
@@ -46,7 +48,7 @@ node --env-file=/private/roomkind-web.env scripts/queue-status.js
 
 `npm run migrate`, `npm start`, `npm run sweep`, `npm run lint`, `npm run build`, `npm test`, `npm run test:integration`, `npm run test:boundaries`, `npm run test:mutation` exist in [package.json](../../package.json). `build`/`lint` are syntax/static checks; `npm test` runs foundation boundaries/media only, not the complete later PG/browser/GPU matrix. See accepted receipts and [test scenarios](../test-scenarios.md) for those gates.
 
-[compose.yaml](../../compose.yaml) is the local db/web/maintenance stack, with payments and inference fixed to disabled, total configured CPU 2, internal DB and loopback web. It has no inference service. After checking port conflicts and acquiring the coordinator's existing heavy mutex:
+[compose.yaml](../../compose.yaml) is the local db/web/maintenance stack, with default payments/inference disabled, default CPU2, internal DB and loopback web. Current optional `replicate-worker`/`replicate-cleanup` profiles are explicit one-shot services; see hosted configuration below. After checking port conflicts and acquiring the coordinator's existing heavy mutex:
 
 Prepare the ignored project `.env` privately for these Compose commands and the port checker; it contains the same selected `WEB_PORT` and interpolation variables. The checker accepts the actual Compose file path (a directory argument would look for a nonexistent `docker-compose.yml`). Do not print `.env`.
 
@@ -56,7 +58,7 @@ docker compose --env-file .env -f compose.yaml config --quiet
 docker compose --env-file .env -f compose.yaml up -d --build
 ```
 
-The source-configured worker is a separate process sharing the same private storage/database; privately give its env `WORKER_MODE=fixture` or explicitly `controlnet`, source revision and seed. Keep the web env's worker mode disabled. Fixture uses Python/Pillow and creates visibly marked demonstrations; it does not infer room geometry. ControlNet requires CUDA and operator-provisioned pinned local weights/manifest, safetensors, licenses and file hashes; no download or CPU/fixture fallback. Current GPU provisioning/security/corpus/latency are blocked.
+The source-configured worker is a separate process sharing the same private storage/database; privately give its env `WORKER_MODE=fixture`, explicitly `controlnet`, or separately authorized `replicate`, source revision and seed. Keep the web env's worker mode disabled. Fixture uses Python/Pillow and creates visibly marked demonstrations; it does not infer room geometry. ControlNet requires CUDA and operator-provisioned pinned local weights/manifest, safetensors, licenses and file hashes; no download or CPU/fixture fallback. Current GPU provisioning/security/corpus/latency are blocked.
 
 ```sh
 node --env-file=/private/roomkind-worker.env scripts/worker.js --once
@@ -77,4 +79,21 @@ Exact routes are in [web/app.js](../../web/app.js): register/login/logout; `GET 
 
 [Operations](../features/f06a/operations.md) provides inert owned synthetic PG backup/restore, private-volume/rollback and gate instructions. Full GPU acceptance needs ≥12 licensed rooms ×3 styles with zero added/removed openings and anchor shift ≤2% diagonal, plus ≥30 actual warm jobs with p95 inference ≤25 seconds and queue time separate. Draft PR base is `claude/install-npm-packages-n7l3m5`; no main creation, merge or deployment is authorized. [Completion](../Completion.md) keeps acceptance/deployment authority and pending gates explicit.
 
-Latest coordinator evidence: [F04 acceptance](../features/f04b/acceptance.md), [actual browser receipt](../telemetry/n8-20261002-1740/n8-ui-e2e-6-receipt.md), [owned restore receipt](../telemetry/n8-20261002-1740/n8-f06-restore-1-receipt.md). Historical failures1–5 and author validation remain unchanged.
+Historical pre-hosted coordinator evidence: [F04 acceptance](../features/f04b/acceptance.md), [actual browser receipt](../telemetry/n8-20261002-1740/n8-ui-e2e-6-receipt.md), [owned restore receipt](../telemetry/n8-20261002-1740/n8-f06-restore-1-receipt.md). Historical failures1–5 and author validation remain unchanged.
+
+## Hosted depth worker — disabled software handoff
+
+The accepted Node22/PG16 path uses eight migrations (007 submission/spend,008 hosted evidence) and explicit `replicate`, without Python/GPU requirements. Input is a sanitized private JPEG data URI; strict HTTPS/public-IP-pinned delivery copies depth/output into private artifacts. One POST follows durable CAS; ambiguous outcomes never replay. Known ID recovery keeps the original ticket/deadline; capacity and reserved provider budget never decrement. Customer credit release is not provider refund. Hosted results remain unverified; mode classification controlnet OR replicate alone grants no publication. Mock browser results deny publication and prove no real geometry.
+
+| Server-only names from .env.example | Purpose |
+|---|---|
+| `REPLICATE_WORKER_MODE`, `REPLICATE_CLEANUP_ENABLED`, `WEB_CPUS` | Optional Compose worker selection (default disabled), independent cleanup (default false), aggregate CPU cap |
+| `REPLICATE_MODEL`, `REPLICATE_VERSION`, `REPLICATE_CONTRACT_SHA` | Exact public pins in [model provenance](../model-provenance-candidates.md); no upgrades/fallback |
+| `REPLICATE_API_TOKEN`, `REPLICATE_SPEND_BUDGET_ID` | Private worker/cleanup token and already authorized DB envelope UUID; never web/browser or auto-provisioned |
+| `REPLICATE_AUTHORIZATION_SHA`, `REPLICATE_PRIVACY_ACCEPTANCE_SHA`, `REPLICATE_LICENSE_ACCEPTANCE_SHA`, `REPLICATE_SAFETY_ACCEPTANCE_SHA`, `REPLICATE_BILLING_ACCEPTANCE_SHA` | Required worker acceptance digests; env presence cannot replace real approval |
+
+Direct worker `WORKER_MODE=replicate` also requires common validated config, source revision40–64 lowercase hex and seed0..2147483647. Existing `scripts/worker.js --once` uses that private env. Optional Compose profiles have restart=no and --once; each adds0.25CPU, so WEB_CPUS=0.50 for one or0.25 for both retains total2CPU. Web/base maintenance keep worker disabled and receive no provider token. No paid start is authorized.
+
+Standalone `scripts/maintenance.js --once` with worker disabled accepts cleanup only when exact true plus pins/token/common config; absent/false returns common config unchanged. Cleanup needs no spend/acceptance/seed/source settings and cannot create. Token stays in a private WeakMap. A30s fenced claim persists one cancel request before its sole invocation, then later passes GET until submitting+1h; a crash can mean cancel was not sent. Unresolved/done is not an erasure/refund guarantee.
+
+Replicate SEC-02 is response512KiB/request384KiB/call≤5s, other providers64KiB unchanged; media≤10MiB/20MP/single frame. Provider hardware/warm/inference/billing and sources remain null; local elapsed/DB queue are separate measurements. Real license/privacy/safety/corpus/billing controls and pilot remain pending at authorized spend0. Proposed36 creates/12USD is not approval or guaranteed billing. Warm≥30/p95≤25s remains unchanged/unmeasured. Parent owns I7 reconciliation, fresh review, I8 browser then representative hosted-row restore and any permitted draft attempt. Known external PR403: no PR exists; draft is not release. [I7 handback](../features/f07-replicate/i7-documentation.md).

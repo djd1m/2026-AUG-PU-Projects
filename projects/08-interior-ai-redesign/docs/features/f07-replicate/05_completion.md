@@ -1,26 +1,44 @@
 # F07 — Completion, test contract and later pilot
 
-PLAN output only; implementation, independent validation/review and real provider gates pending. Source e2dded9898d8b00f2fa5613e5f5d3fb63281715b. No test results below are claimed executed by this planner except the separately captured document gate.
+Original PLAN source e2dded9898d8b00f2fa5613e5f5d3fb63281715b retained in history. Updated2026-10-03 on source be450153910208e2c043de24f7efab540b052c82 after accepted I1–I6/R1/R2/R3. Original01 specification SHA256 2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad is unchanged. I7 runtime/source8890e0b7, whole-feature fresh Astra review and I8 actual52+2 browser/hosted-row restore are pending at docs-author freeze; parent reconciles later. This author executes document gates only, never claims runtime or full F07/MVP PASS.
 
-## Planned criterion coverage
+## Criterion coverage
 
-Populate exact `## Criterion coverage` vendor table with existing test files/titles after implementation; do not run completion gate against nonexistent planned tests and call it pass.
-
-| AC id | Planned test file | Exact planned test title |
-|---|---|---|
-| AC-f07-replicate-1 | tests/replicate.integration.test.js | hosted success binds one ticket and private evidence |
+| Criterion | Test file | Test title |
+|-----------|-----------|------------|
+| AC-f07-replicate-1 | tests/replicate-generation.integration.test.js | real I1 create poll I3 bytes and I5a atomic private completion |
 | AC-f07-replicate-2 | tests/replicate.test.js | missing hosted authorization makes zero creates |
-| AC-f07-replicate-3 | tests/replicate.integration.test.js | lost create response never creates twice |
-| AC-f07-replicate-4 | tests/replicate.integration.test.js | two reclaimers resume one identity under original deadline |
-| AC-f07-replicate-5 | tests/replicate.integration.test.js | queued and remote deadlines survive healthy heartbeat |
-| AC-f07-replicate-6 | tests/replicate.integration.test.js | hold and deletion fence remote work without double release |
+| AC-f07-replicate-3 | tests/replicate-send-cas.integration.test.js | failed first response is ambiguous and second create emits no POST |
+| AC-f07-replicate-4 | tests/replicate-lifecycle.integration.test.js | two reclaimers have one winner, same consumed ticket/attempt/deadline and only new job fence |
+| AC-f07-replicate-5 | tests/replicate-lifecycle.integration.test.js | attempt deadline after expired lease terminalizes on maintenance/get/fail/claim and releases exactly once |
+| AC-f07-replicate-6 | tests/replicate-generation.integration.test.js | hold before CAS denies, hold after CAS allows already authorized private work |
 | AC-f07-replicate-7 | tests/replicate-media.test.js | hostile delivery URLs and image bombs never publish |
-| AC-f07-replicate-8 | tests/replicate-quality.test.js | mixed or synthetic hosted corpus cannot authorize publication |
-| AC-f07-replicate-9 | tests/replicate.integration.test.js | hosted recovery and midnight preserve conservative tickets |
+| AC-f07-replicate-8 | tests/replicate-quality.test.js | guard oracle: synthetic hosted corpus cannot be accepted |
+| AC-f07-replicate-9 | tests/replicate.integration.test.js | midnight submission replaces consumed ticket once without moving attempt or deadline |
 | AC-f07-replicate-10 | tests/replicate.test.js | provider bodies and unknown metrics cannot leak or become measurements |
-| AC-f07-replicate-11 | tests/replicate.test.js plus source-bound completion receipts | hosted mode remains disabled without activation evidence |
+| AC-f07-replicate-11 | tests/replicate.test.js | hosted mode remains disabled without activation evidence |
 
-Each named test contains all subcases in01/04, not one representative. Assert literal thresholds180000/360000/60000/30000/10000/10485760/20000000, not expectations imported from production constants. Real PG tests kill processes at submitting/ID/commit boundaries, count actual POSTs in injected transport and exact ledger/ticket/evidence rows.
+Each row is an existing literal test-title anchor, not a claim that one test closes every subcase or that all11 AC passed. Full BDD coverage requires the adjacent suites/references below. AC11's disabled-mode test covers only activation refusal; its mandatory full regression, fresh whole-feature review and actual browser parts remain pending. A vendor completion exit0 establishes table/file/title traceability only; it cannot advance feature completion without those proofs.
+
+## BDD and subcase references
+
+The unchanged [01 specification](01_specification.md) owns all11 named SC-US scenarios and thresholds; [04 failure matrix](04_refinement.md#failure-and-race-matrix) owns the additional boundary injections. Every scenario maps below to existing files and accepted handbacks. Titles are kept verbatim; test execution/source snapshots are in slice receipts, not inferred from their names.
+
+| AC / original BDD | Complete adjacent suite references and boundaries |
+|---|---|
+| 1 / SC-US-001-1 | [worker PG](../../../tests/replicate-generation.integration.test.js), [evidence PG](../../../tests/replicate-evidence.integration.test.js), [worker units](../../../tests/replicate-generation.test.js): actual I1→I2→I3→I5a mock flow, one POST/ticket/reserve, private four hashes, atomic unverified evidence/null metrics |
+| 2 / SC-US-001-2 | [transport](../../../tests/replicate.test.js), [worker config](../../../tests/replicate-worker-config.test.js), [authority PG](../../../tests/replicate.integration.test.js), [worker PG](../../../tests/replicate-generation.integration.test.js), [UI fixture](../../../tests/ui-replicate-fixture.test.js): missing/invalid pins/token/acceptances/envelope/seed/source, zero/revoked/exhausted envelope, production fixture; zero create |
+| 3 / SC-US-002-1 | [transport](../../../tests/replicate.test.js), [send-CAS PG](../../../tests/replicate-send-cas.integration.test.js), [authority PG](../../../tests/replicate.integration.test.js), [lifecycle PG](../../../tests/replicate-lifecycle.integration.test.js): lost/malformed/oversized POST, durable commit-before-send, lost ID acknowledgment/conflict, submitting/ambiguous no replay, unique release and retained spend/tickets. [I6a proof](i6a-review.md) exercises actual duplicate send-CAS, not syntax failure |
+| 4 / SC-US-002-2 | [lifecycle PG](../../../tests/replicate-lifecycle.integration.test.js), [worker PG](../../../tests/replicate-generation.integration.test.js), [evidence PG](../../../tests/replicate-evidence.integration.test.js): two reclaimers/new fence/original ticket/deadline, GET-only reconstruction, stale completion, late cleanup ID and referenced/unknown-commit winner preservation |
+| 5 / SC-US-002-3 | [transport](../../../tests/replicate.test.js), [lifecycle PG](../../../tests/replicate-lifecycle.integration.test.js), [evidence PG](../../../tests/replicate-evidence.integration.test.js), [cleanup PG](../../../tests/replicate-cleanup.integration.test.js), existing [jobs PG](../../../tests/jobs.integration.test.js):60s queue/180s attempt/360s job/30s lease/10s heartbeat,429/5xx/timeout, post-lock deadline, one release; cancel/GET/success cannot revive or refund |
+| 6 / SC-US-001-3 | [worker PG](../../../tests/replicate-generation.integration.test.js), [lifecycle PG](../../../tests/replicate-lifecycle.integration.test.js), [evidence PG](../../../tests/replicate-evidence.integration.test.js), [hosted quality PG](../../../tests/replicate-quality.integration.test.js), [cleanup PG](../../../tests/replicate-cleanup.integration.test.js), [UI R1/R2](../../../tests/ui-replicate-corrections.test.js): hold before/after CAS, delete during send/import/commit, immediate404/fence, unique customer release, cleanup-only late identity, public/cache/hold denial; no erasure assertion |
+| 7 / SC-US-001-4 | [media](../../../tests/replicate-media.test.js), [worker PG](../../../tests/replicate-generation.integration.test.js), [quality PG](../../../tests/replicate-quality.integration.test.js): userinfo/ports/suffix/IP/all DNS answers/rebind/redirect/TLS/auth, MIME/magic/encoding/stream/bomb/20MP/animation/APNG/count/dimensions, exact crop, exclusive own-file cleanup; existing owner/private tests plus I8 two-account/deletion checks |
+| 8 / SC-US-001-5 | [quality units](../../../tests/replicate-quality.test.js), [quality PG](../../../tests/replicate-quality.integration.test.js), [evidence units](../../../tests/replicate-evidence.test.js), [old quality PG](../../../tests/quality.integration.test.js), [UI publication](../../../tests/ui-replicate-publication.test.js):12 distinct inputs×3 styles, source/version/config/hash/substitution/changed artifacts/aliases/attestation/geometry matrix, local/fixture separation, unverified denied. Synthetic valid report shapes exercise software only; actual licensed measured36-pair corpus pending |
+| 9 / SC-US-002-4 | [authority PG](../../../tests/replicate.integration.test.js), [lifecycle PG](../../../tests/replicate-lifecycle.integration.test.js), [worker PG](../../../tests/replicate-generation.integration.test.js), existing [jobs PG](../../../tests/jobs.integration.test.js): last-slot/credit/envelope races, UTC post-lock rollover/replacement/exhaustion/rollback, same-ticket recovery, no hosted second create, immutable conservative counters/reservation and unique release |
+| 10 / SC-US-002-5 | [transport](../../../tests/replicate.test.js), [evidence units](../../../tests/replicate-evidence.test.js), [worker config](../../../tests/replicate-worker-config.test.js), [cleanup units](../../../tests/replicate-cleanup.test.js), [UI fixture](../../../tests/ui-replicate-fixture.test.js): closed/sensitive payload denial, fixed errors/opaque IDs, nonenumerable WeakMap token, null provider values/sources even for invented0/false, config serialization and default-disabled web |
+| 11 / SC-US-002-6 | [I7 required plan](i7-check-plan.md), [I6a accepted actual mutation](i6a-review.md), [I6b R3 closure](i6b-r3-closure.md), [I7 docs handback](i7-documentation.md):32nonPG+13PG/Python/static/existing mutations pending parent runtime reconciliation, fresh spec-bound whole-feature review pending, actual52main+2disabled I8 browser/preflight and hosted restore pending; prior42+2 does not substitute; real pilot/release unapproved |
+
+This matrix also covers04's rollback-before-CAS, kill-after-commit, late-ID/identity-commit loss, two-reclaimer/hold/delete/deadline/cancel-race, transport/media/schema/depth, uncertain completion, midnight and fabricated-report boundaries. Tests assert literal limits; no threshold was weakened or test renamed here. Actual deployed output order/safety/license/privacy/cost/quality/performance remains pilot-pending, not closed by mocks.
 
 ## Required checks after implementation
 
@@ -50,4 +68,4 @@ Per job retain provider/model/version/ID, source/build, exact configuration/seed
 
 Implementation can be accepted as disabled software after mandatory local gates; full MVP cannot pass without real quality/performance/safety/provider readiness. Default hosted disabled. To roll back: stop new hosted admission, preserve DB/private artifacts/receipts and remote identities, drain or locally terminal/cancel known active work, reconcile ambiguous costs. Old binary may not understand replicate mode/rows: do not blindly roll it back against007; use compatibility build or isolated restored snapshot after explicit review. Never erase customer ledger or remote submission records.
 
-Canonical update files are listed in03 and occur only after plan acceptance. Coordinator integrates, assigns validator then I1 bounded writer; no commit/push required from planner. All unknown usage/cost remains null. PLAN machine traceability is naming evidence only, not semantic validation or product acceptance.
+Canonical files listed in03 are reconciled by I7 after accepted slices. Original PLAN/validation/research and failure history remain unchanged. Coordinator owns runtime reconciliation, fresh whole-feature review, I8 browser/hosted restore and any permitted draft attempt; no commit/push by this author. All unknown usage/cost remains null. PLAN machine traceability is naming evidence only, not semantic validation or product acceptance.

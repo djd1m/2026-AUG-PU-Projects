@@ -1,0 +1,105 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i7-docs",
+  "source_revision": "be450153910208e2c043de24f7efab540b052c82",
+  "spec_sha256": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+  "launch_sha256": "5a223342d2897cbadaf89753b341fa7171124b817a02938fa1adb1ece250cda3",
+  "docs_snapshot": [
+    {
+      "path": "docs/Specification.md",
+      "sha256": "b68d8a93d38dadcf91657ac39f0dc89725fc7e1a3b082e2f57366c355a250807"
+    },
+    {
+      "path": "docs/Pseudocode.md",
+      "sha256": "50723cd3f7f57b849e28243a55d594532d214de00c69710a5a8a3d812134572c"
+    },
+    {
+      "path": "docs/Architecture.md",
+      "sha256": "fb6704576ef57bbc6e2ff7278eb7c70ab8f24bf4ae213903f992049fcbf75aa5"
+    },
+    {
+      "path": "docs/Refinement.md",
+      "sha256": "b89526a6828c38baff231d0ef84383e06fae7e0f863587a3f1adf0b86e9bd286"
+    },
+    {
+      "path": "docs/Completion.md",
+      "sha256": "3836e9be486cca5ed146a3f19a31153282de9a7078c0301b4d5d360160a6e724"
+    },
+    {
+      "path": "docs/ADR.md",
+      "sha256": "20253f6bbe01378ff31b0b501a3ae1774046820f58bf799c87c2bc5fa15bb6ae"
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "648cb4f48215794504708800d1266e7b61cb9e74be222859798cab8b4d267ae8"
+    },
+    {
+      "path": "docs/pipeline-walkthrough.md",
+      "sha256": "c215195782c18140738cc33651f9143c28052266a1d15b4e2ab5723f702bf5bb"
+    },
+    {
+      "path": "docs/model-provenance-candidates.md",
+      "sha256": "6bc6e99a86ccc2ede0fab9abde07c05fe57f5d747a21f9e0a2b184c642fc36ba"
+    },
+    {
+      "path": "docs/features/f06a/operations.md",
+      "sha256": "54c962b6e05e8371240b7cc8c2fce29fbcdf8bb1d45e865067343a5a45e18511"
+    },
+    {
+      "path": "docs/test-scenarios.md",
+      "sha256": "ad802e6e4c352f914b9824e1cc5e4e96fa111c918f8c1fb6988163b5e61a26d3"
+    },
+    {
+      "path": "docs/features/f06a/acceptance-map.md",
+      "sha256": "ce27d979e5a2f6182c0882d2199e56aa38da4bfa77db7e58f467378a6be6ecdd"
+    },
+    {
+      "path": "docs/README/en.md",
+      "sha256": "8abc6237585e95c3c78fa7c81ffe1f55730d6ceeadd7a459d9f9f960a200b7ab"
+    },
+    {
+      "path": "docs/README/ru.md",
+      "sha256": "a5f7aad1952bf39057516973586106d18d4a4e2a34f1d1ab310427e37ab982d7"
+    },
+    {
+      "path": "docs/features/f07-replicate/05_completion.md",
+      "sha256": "efc546f8462c312262259cf157c6a9de5bc57931278e6d02f7ddffc3b5c68fca"
+    },
+    {
+      "path": "docs/features/f07-replicate/i7-documentation.md",
+      "sha256": "2314a892c930148e4245856a21c3076111bbd3d56aaf7342a14091b5fea910c0"
+    }
+  ],
+  "protected_sources": [
+    {
+      "path": "docs/features/f07-replicate/01_specification.md",
+      "sha256": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad"
+    },
+    {
+      "path": "docs/features/f07-replicate/02_pseudocode.md",
+      "sha256": "19a86156135d7751e7414e9a406070c990686d6ec8c095448549be012a10572d"
+    },
+    {
+      "path": "docs/features/f07-replicate/03_architecture.md",
+      "sha256": "c14c88440c537afcb1c09fe4d843c253c3e0ed4e0c904105fc3297e6fe9803b9"
+    },
+    {
+      "path": "docs/features/f07-replicate/04_refinement.md",
+      "sha256": "43fcc7495be1b92be9537f4c9d9e57fe57b574e7e8e9522c5428af21aff9e02e"
+    },
+    {
+      "path": "docs/features/f07-replicate/replicate-research.md",
+      "sha256": "a3246fd4d5e0184b62b8bada1ab162e9f6785c228e895d244df8989d758e4a2d"
+    },
+    {
+      "path": "docs/features/f07-replicate/validation-report.md",
+      "sha256": "69bb791ed3ee076331430d7481568e7bb63e0b767a42dd1381a8603304a40ca3"
+    }
+  ],
+  "all_other_tracked_files_unchanged": {
+    "count": 2059,
+    "sha256_of_sorted_path_digest_map": "9af6735e0f174056dd9147c7f80bda4acc7bc0087c963388ae7576cdfb5fab82",
+    "baseline": "git source_revision plus pre-edit hash map; every byte compared"
+  },
+  "source_md_diff_sha256": "ec106dd2bba1edfff58bca461b5cced72185546f1377bf01907165450f666d33"
+}
