@@ -7,6 +7,8 @@ import { createJobs } from '../web/jobs.js';
 import { UUID } from '../web/boundaries.js';
 import { prepareStorage, sweepOrphans } from '../web/media.js';
 import { prepareArtifacts } from '../web/generation.js';
+import { createReplicateCleanup } from '../web/replicate-cleanup.js';
+import { readReplicateCleanupConfig } from '../web/replicate-worker-config.js';
 
 // Output storage is disjoint from upload UUIDs: the F01 sweep only knows upload rows.
 export async function prepareOutputStorage(dir) {
@@ -52,9 +54,10 @@ export async function maintenancePass(pool,config) {
   const now=(await pool.query('SELECT clock_timestamp() AS now')).rows[0].now.getTime();
   await sweepOrphans(pool,config.storageDir,now);
   await sweepOutputs(pool,config.storageDir,now);
+  await createReplicateCleanup(pool,config).pass();
 }
 async function main() {
-  const config=readConfig(); const pool=createPool(config.databaseUrl);
+  const config=readReplicateCleanupConfig(readConfig(),process.env); const pool=createPool(config.databaseUrl);
   let stopping=false; for(const signal of ['SIGINT','SIGTERM']) process.once(signal,()=>{stopping=true;});
   try {
     await prepareStorage(config.storageDir); await prepareOutputStorage(config.storageDir);

@@ -1,6 +1,7 @@
 import { REPLICATE_MODEL, REPLICATE_VERSION, REPLICATE_CONTRACT_SHA } from './replicate.js';
 
 const secrets=new WeakMap();
+const cleanupOnly=new WeakSet();
 export const REPLICATE_ACCEPTANCES=Object.freeze(['authorization_sha','privacy_acceptance_sha',
   'license_acceptance_sha','safety_acceptance_sha','billing_acceptance_sha']);
 const prompts=Object.freeze({
@@ -11,6 +12,17 @@ const prompts=Object.freeze({
 });
 const geometry=' Preserve the existing room geometry, walls, ceiling, floor, doors, windows and openings. Keep their positions and proportions unchanged. Preserve the camera viewpoint and structural anchors.';
 const deny=()=>{throw new Error('replicate_config_denied');};
+// Independent opt-in permits only maintenance GET/cancel, including revoked work.
+export function readReplicateCleanupConfig(common,env) {
+  if(env.REPLICATE_CLEANUP_ENABLED===undefined||env.REPLICATE_CLEANUP_ENABLED==='false')return common;
+  if(env.REPLICATE_CLEANUP_ENABLED!=='true'||env.REPLICATE_MODEL!==REPLICATE_MODEL||
+    env.REPLICATE_VERSION!==REPLICATE_VERSION||env.REPLICATE_CONTRACT_SHA!==REPLICATE_CONTRACT_SHA||
+    typeof env.REPLICATE_API_TOKEN!=='string'||!/^[\x21-\x7e]{1,512}(?![\s\S])/.test(env.REPLICATE_API_TOKEN))deny();
+  const config=Object.freeze({...common,replicateCleanupEnabled:true});
+  secrets.set(config,env.REPLICATE_API_TOKEN);cleanupOnly.add(config);return config;
+}
+export const replicateCleanupEnabled=config=>secrets.has(config)&&
+  (cleanupOnly.has(config)||config.workerMode==='replicate');
 export function readReplicateWorkerConfig(common,env) {
   if(env.WORKER_MODE!=='replicate'||env.REPLICATE_MODEL!==REPLICATE_MODEL||
     env.REPLICATE_VERSION!==REPLICATE_VERSION||env.REPLICATE_CONTRACT_SHA!==REPLICATE_CONTRACT_SHA||
@@ -34,7 +46,7 @@ export function replicateTransportConfig(config) {
     contractSha:REPLICATE_CONTRACT_SHA},'token',{value:token}));
 }
 export function replicateSettings(config,style) {
-  if(!secrets.has(config)||!Object.hasOwn(prompts,style))deny();
+  if(!secrets.has(config)||cleanupOnly.has(config)||!Object.hasOwn(prompts,style))deny();
   return Object.freeze({prompt:prompts[style]+geometry,a_prompt:'high quality, detailed interior photography',
     n_prompt:'changed geometry, added openings, removed openings, distorted walls, distorted perspective, low quality',
     num_samples:'1',image_resolution:'512',detect_resolution:512,ddim_steps:30,scale:7.5,eta:0,seed:config.seed});
