@@ -169,3 +169,5 @@ F05b fresh Astra REQUEST_CHANGES (373.944s): F1 primitive enum types and F2 UUID
 F05b F1/F2 corrected in24b93fe6, author677.513s. FullPG109/unit27/restored11,three exact mutantsRED,canary/sourceimagePASS. Fresh targeted Astra closure next; F06 pending.
 
 F05 accepted12/12 onf0fb8556: fresh Astra293.623s closesF1/F2. Final109PG/unit27/restored11 and80sourceinputs PASS. /next now selects F06cabinet/fullDockerbrowser/docs/PR.
+
+/next→/go F06 launched on52ae6bcf: realCJM A cabinet then fullDockerbrowser/perf/docs/PR. Plan in docs/features/f06-cabinet-e2e-delivery, telemetry 20261003T023900Z-f06. Ownerautonomy persists, no live activation/deployment.

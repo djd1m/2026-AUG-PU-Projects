@@ -1,0 +1,7 @@
+# F06 validation and risk checks
+
+All12AC have explicit outputs and measurablegates. Cross-read canonical NFR-n7-002/FR-LOOK-001 +Architecture securityboundaries +top-levelAC-N7-001..012. SelectedCJMalreadyapproved, no newvisualresearch/approval. AimplementsrealUI notJSONtechnicalconsole; Bexecutesrealjourney notstaticprototype. ExistingbackendAC remainaccepted unlessspecificintegrationchange affects them.
+
+Main defects toprevent: late401/oldresponses overwrite freshsession; doubleclick inconsistentidempotency; consentversionstale; placeholderrowsmistakenreal; reportsprivateprovenance leakage; testpaymentUIclaimscanonicalsuccesswithoutoperator; clipboardfallbackrecordseventdespitefailedaction; browserinterceptionfakesbackend; ChromiumCDPbodyeviction or fixtureordering falsefailure. UIrequesthelper/testharness design addressesboundedretries/currentepoch/durableDOMobservations. Serverauthorization unchanged.
+
+Mechanical ROUTE is lowerbound; substantiveXL retained and OWN-N7-002 coverspublishedimplementation. Companion read-only preflight immediatelybeforeactualHTTP/browser. Needexactsource/build/allowedfixtureseffects/evidencedestination. Fullmandatorytype/lint/build/unit/PG+securitytests on changedcandidate, meaningfulguardmutation. B browser/perf/delivery cannotbepassedbyAcodepresence. Test failures remain inhistory, narrowfix then freshreview. Forecast insufficient_data beyondperattempt ceilings, no measuredspeedupclaim.

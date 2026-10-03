@@ -126,7 +126,7 @@
       "number": 6,
       "name": "Persistent cabinet, full browser and delivery gates",
       "priority": "mvp",
-      "status": "planned",
+      "status": "in_progress",
       "complexity": "complex",
       "depends_on": [
         "f05-evidence-billing-growth"
@@ -139,7 +139,8 @@
       "requirements": [
         "NFR-n7-002"
       ],
-      "sprint": "local-mvp"
+      "sprint": "local-mvp",
+      "current_slice": "F06a persistent cabinet"
     }
   ],
   "last_completed": "f05-evidence-billing-growth"
