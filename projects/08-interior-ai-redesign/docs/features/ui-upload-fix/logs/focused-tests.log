@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: evicted CDP body is never read; fresh DOM UUID binds to authenticated owner metadata
+ok 1 - evicted CDP body is never read; fresh DOM UUID binds to authenticated owner metadata
+  ---
+  duration_ms: 8.869263
+  type: 'test'
+  ...
+# Subtest: stale selected upload cannot satisfy a new successful POST
+ok 2 - stale selected upload cannot satisfy a new successful POST
+  ---
+  duration_ms: 3.809362
+  type: 'test'
+  ...
+# Subtest: existing owner UUID absent from DOM still cannot count as fresh
+ok 3 - existing owner UUID absent from DOM still cannot count as fresh
+  ---
+  duration_ms: 3.266121
+  type: 'test'
+  ...
+# Subtest: previous DOM UUID absent from owner list still cannot count as fresh
+ok 4 - previous DOM UUID absent from owner list still cannot count as fresh
+  ---
+  duration_ms: 3.182031
+  type: 'test'
+  ...
+# Subtest: non-UUID selection is rejected
+ok 5 - non-UUID selection is rejected
+  ---
+  duration_ms: 2.559711
+  type: 'test'
+  ...
+# Subtest: failed POST is rejected before DOM or metadata can imply success
+ok 6 - failed POST is rejected before DOM or metadata can imply success
+  ---
+  duration_ms: 4.698352
+  type: 'test'
+  ...
+# Subtest: new DOM UUID must match the single new owner entry
+ok 7 - new DOM UUID must match the single new owner entry
+  ---
+  duration_ms: 4.511212
+  type: 'test'
+  ...
+# Subtest: missing or ambiguous new owner metadata fails
+ok 8 - missing or ambiguous new owner metadata fails
+  ---
+  duration_ms: 7.381692
+  type: 'test'
+  ...
+# Subtest: missing dimensions, MIME or creation time fails
+ok 9 - missing dimensions, MIME or creation time fails
+  ---
+  duration_ms: 19.865687
+  type: 'test'
+  ...
+# Subtest: unauthenticated owner response and missing owner list fail closed
+ok 10 - unauthenticated owner response and missing owner list fail closed
+  ---
+  duration_ms: 7.743353
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 84.42905
