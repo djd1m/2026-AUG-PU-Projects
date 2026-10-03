@@ -156,3 +156,6 @@ Aef86f20: отдельные физические и семантические 
 ## F05: платежи и доказательный рост
 
 План docs/features/f05-evidence-billing-growth/: A локальный independentprovider/intent/entitlement/attribution, B manualobservations/anonymousreport/serverbadge. Серверныеfree/teamлимиты3/3 и10/10, TEST100minorRUB30days; лимит почты30нерастёт. N3/N6узкиеpatternsпроверены; сетьпровайдеранеактивируется. ПубличныйreportполучаеттолькоwhitelistбезPII, latest7days/baseline28days/n30guardобязательны.
+
+
+F05a author candidate integrated8dd916ba: local TEST billing/limits/attribution; unit20,PG98,canonical-fence mutantRED/restored7,canary/sourceimagePASS. Author process1107.306s, actualSol6.1/high hostproof in F05 sol-a-runtime.json. FreshAstra review pending; B/F06 pending, no live charge.
