@@ -8,7 +8,7 @@
   "identity": {
     "run_id": "20261003T064351Z-release-gate",
     "work_unit_id": "release-gate-feature",
-    "current_attempt_id": "implementation-1"
+    "current_attempt_id": "review-1"
   },
   "telemetry": {
     "run": {
@@ -164,6 +164,14 @@
     {
       "id": "implementation-1",
       "status": "completed"
+    },
+    {
+      "id": "offline-validation-1",
+      "status": "completed"
+    },
+    {
+      "id": "review-1",
+      "status": "completed"
     }
   ],
   "work_units": [
@@ -178,7 +186,16 @@
     }
   ],
   "pause": null,
-  "checks": [],
+  "checks": [
+    {
+      "name": "offline-composite",
+      "status": "passed",
+      "evidence": {
+        "root": "project",
+        "path": "tests/artifacts/release-gate/offline-completion.json"
+      }
+    }
+  ],
   "receipts": [],
   "delivery": null,
   "ownership": []

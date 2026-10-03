@@ -1,0 +1,383 @@
+
+> n6b-rag-class@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json && npm run typecheck --workspace @n6b/web
+
+
+> @n6b/web@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+ RUN  v3.2.7 /app
+
+ ✓ packages/rag/tests/unit/guards.test.ts (16 tests) 65ms
+ ✓ packages/rag/tests/unit/keys-and-refusal.test.ts (39 tests) 160ms
+ ✓ apps/web/tests/unit/config.test.ts (78 tests) 51ms
+stderr | packages/rag/tests/unit/release-gate.test.ts > F16 REL-02 budget and paid boundary > missing live gate and fake mode refuse before runtime
+NOT_EXECUTED: explicit live/seed gate or required configuration missing/invalid. No paid call.
+
+stderr | packages/rag/tests/unit/release-gate.test.ts > F16 REL-04 CJM offline protocol boundary > missing prerequisites exit2 without requests
+NOT_EXECUTED: explicit issued base, grant, foreign origin, fixed source/question/evidence, owner DB and fresh report required.
+
+ ✓ packages/rag/tests/unit/release-gate.test.ts (37 tests) 999ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 frozen HTML contains every exact corpus paragraph; evidence is present  854ms
+stderr | apps/web/tests/unit/auth-handler.test.ts > регистрация и вход — порядок проверок (Pseudocode «Register and login») > нет X-Forwarded-For → 503 и ни одной попытки bcrypt
+auth: адрес клиента недоступен — запрос не через прокси; вход отклонён
+
+stderr | apps/web/tests/unit/auth-handler.test.ts > GET /api/health (NFR-n6b-5) > 200 только при ответившей БД; иначе 503 без текста ошибки
+health: проверка не прошла: Error
+
+ ✓ apps/web/tests/unit/auth-handler.test.ts (18 tests) 573ms
+   ✓ регистрация и вход — порядок проверок (Pseudocode «Register and login») > фиктивный хэш — настоящий bcrypt той же стоимости 12, что и регистрация  362ms
+ ✓ apps/web/tests/unit/widget-handler.test.ts (34 tests) 165ms
+ ✓ apps/web/tests/unit/handover-handler.test.ts (9 tests) 124ms
+ ✓ apps/web/tests/unit/jobs-handler.test.ts (11 tests) 57ms
+ ✓ packages/rag/tests/unit/provider.test.ts (16 tests) 68ms
+ ✓ services/worker/tests/unit/job-guards.test.ts (9 tests) 61ms
+ ✓ apps/web/tests/unit/metrics-verifier.test.ts (28 tests) 105ms
+ ✓ packages/rag/tests/unit/answer-flow.test.ts (12 tests) 48ms
+ ✓ apps/web/tests/unit/referral-handler.test.ts (7 tests) 124ms
+ ✓ services/worker/tests/unit/crawl-site-correction.test.ts (19 tests) 107ms
+ ✓ apps/web/tests/unit/studio-handler.test.ts (8 tests) 88ms
+ ✓ packages/rag/tests/unit/live-factory.test.ts (6 tests) 1030ms
+   ✓ F-2: живая дверь читает окружение процесса сама и один раз > нет предела или предел пустой/выше int4/персональный > общего → ConfigError с именем переменной  438ms
+ ✓ packages/rag/tests/unit/guards-index.test.ts (5 tests) 27ms
+ ✓ apps/web/tests/unit/demo-view.test.ts (6 tests) 78ms
+ ✓ apps/web/tests/unit/demo-handler.test.ts (34 tests) 72ms
+ ✓ apps/web/tests/unit/publish-handler.test.ts (24 tests) 86ms
+ ✓ packages/rag/tests/unit/site-safety.test.ts (42 tests) 139ms
+ ✓ apps/web/tests/unit/config-wiring.test.ts (19 tests) 123ms
+ ✓ apps/web/tests/unit/ask-handler.test.ts (17 tests) 40ms
+stdout | services/worker/tests/unit/crawl-rules.test.ts > RFC9309 robots > R1: adversarial wildcard finishes under external deadline and leaves heartbeat/ceiling responsive
+R1 bounded CPU/heartbeat: {
+  heartbeats: [33m12[39m,
+  matches: [33m588[39m,
+  elapsedMs: [33m29.88883100000004[39m,
+  ceiling: [33mtrue[39m
+}
+
+ ✓ services/worker/tests/unit/crawl-rules.test.ts (7 tests) 446ms
+   ✓ RFC9309 robots > R1: adversarial wildcard finishes under external deadline and leaves heartbeat/ceiling responsive  418ms
+ ✓ apps/web/tests/unit/metrics-handler.test.ts (9 tests) 45ms
+ ✓ packages/rag/tests/unit/chunk.test.ts (12 tests) 19713ms
+   ✓ countTokens (js-tiktoken cl100k_base) > считает токены, а не символы: пустая строка — 0, русский текст дороже английского той же длины  861ms
+   ✓ splitIntoChunks > русский: каждая часть ≤ 500 токенов, tokens и sha256 точные, весь текст покрыт  1004ms
+   ✓ splitIntoChunks > перекрытие: следующая часть начинается с хвоста предыдущей, хвост 1…80 токенов  581ms
+   ✓ splitIntoChunks > абзац без переносов режется по предложениям; сплошная строка 20 000 символов — окнами, быстро  3196ms
+   ✓ splitIntoChunks > повторяющиеся абзацы внутри документа схлопываются: хэши уникальны (unique(document_id, text_sha256))  305ms
+   ✓ splitIntoChunks > F-1: один большой документ уступает таймеру внутри абзаца; async = sync, Unicode и cap  13454ms
+ ✓ packages/rag/tests/unit/answer-citations.test.ts (12 tests) 35ms
+ ✓ apps/web/tests/unit/source-management-handler.test.ts (5 tests) 46ms
+ ✓ apps/web/tests/unit/pdf-handler.test.ts (6 tests) 265ms
+ ✓ apps/web/tests/unit/publication-validation.test.ts (59 tests) 70ms
+ ✓ services/worker/tests/unit/retention.test.ts (3 tests) 53ms
+ ✓ apps/web/tests/unit/referral-cookie.test.ts (12 tests) 39ms
+ ✓ services/worker/tests/unit/pdf-extract.test.ts (6 tests) 600ms
+   ✓ real pdfjs local bytes > 301 pages fail before writes, 300 pages are allowed and empty pages skipped  321ms
+ ✓ apps/web/tests/unit/auth-client.test.ts (8 tests) 48ms
+ ✓ apps/web/tests/unit/publish-bot-ui.test.ts (3 tests) 60ms
+ ✓ apps/web/tests/unit/handover-ui.test.ts (3 tests) 32ms
+ ✓ apps/web/tests/unit/create-bot-ui.test.ts (4 tests) 61ms
+ ✓ apps/web/tests/unit/ip.test.ts (10 tests) 54ms
+ ✓ apps/web/tests/unit/source-management-ui.test.ts (2 tests) 36ms
+ ✓ packages/db/tests/unit/enums-vs-migrations.test.ts (14 tests) 44ms
+ ❯ services/worker/tests/unit/boot.test.ts (7 tests | 7 failed) 12043ms
+   × worker: отказ старта без конфигурации > SC-US-016-2: пустое окружение → exit 1 и имя переменной 1803ms
+     → expected 'node:internal/modules/esm/resolve:275…' to contain 'DATABASE_URL_SERVICE не задан'
+   × worker: отказ старта без конфигурации > SC-US-016-2: пустая строка предела → exit 1 с именем, значение не печатается 1852ms
+     → expected 'node:internal/modules/esm/resolve:275…' to contain 'LIMIT_EMBED_TOKENS_GLOBAL_DAY задан п…'
+   × worker: отказ старта без конфигурации > персональный предел больше общего → exit 1 1823ms
+     → expected 'node:internal/modules/esm/resolve:275…' to contain 'LIMIT_EMBED_TOKENS_ACCOUNT_DAY'
+   × worker: отказ старта без конфигурации > F-3 (08_review.md): предел больше int4 → exit 1 с именем при старте 1673ms
+     → expected 'node:internal/modules/esm/resolve:275…' to contain 'LIMIT_EMBED_TOKENS_ACCOUNT_DAY больше…'
+   × worker: отказ старта без конфигурации > F-3: воркер со строкой подключения кабинета (n6b_app_tenant) → exit 1, пароль не печатается 1637ms
+     → expected 'node:internal/modules/esm/resolve:275…' to contain 'DATABASE_URL_SERVICE'
+   × worker: отказ старта без конфигурации > chunk-embed: без любого из пределов двери (не эмбеддингов) воркер не стартует — exit 1 с именем 1502ms
+     → LIMIT_ANSWER_VISITOR_DAY: expected 'node:internal/modules/esm/resolve:275…' to contain 'LIMIT_ANSWER_VISITOR_DAY не задан'
+   × worker: отказ старта без конфигурации > chunk-embed: пределы двери с персональным больше общего → exit 1 при старте, а не на первой задаче 1745ms
+     → expected 'node:internal/modules/esm/resolve:275…' to contain 'LIMIT_SANDBOX_ACCOUNT_DAY'
+ ✓ apps/web/tests/unit/bots-handler.test.ts (3 tests) 29ms
+ ✓ apps/web/tests/unit/studio-clients-ui.test.ts (2 tests) 26ms
+ ✓ services/worker/tests/unit/source-management-loop.test.ts (1 test) 20ms
+ ✓ apps/web/tests/unit/publication-guard.test.ts (1 test) 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  services/worker/tests/unit/boot.test.ts > worker: отказ старта без конфигурации > SC-US-016-2: пустое окружение → exit 1 и имя переменной
+AssertionError: expected 'node:internal/modules/esm/resolve:275…' to contain 'DATABASE_URL_SERVICE не задан'
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- DATABASE_URL_SERVICE не задан[39m
+[31m+ node:internal/modules/esm/resolve:275[39m
+[31m+     throw new ERR_MODULE_NOT_FOUND([39m
+[31m+           ^[39m
+[31m+[39m
+[31m+ Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/node_modules/@n6b/db/dist/index.js' imported from /app/services/worker/src/main.ts[39m
+[31m+     at finalizeResolution (node:internal/modules/esm/resolve:275:11)[39m
+[31m+     at moduleResolve (node:internal/modules/esm/resolve:861:10)[39m
+[31m+     at defaultResolve (node:internal/modules/esm/resolve:985:11)[39m
+[31m+     at #cachedDefaultResolve (node:internal/modules/esm/loader:747:20)[39m
+[31m+     at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:783:38)[39m
+[31m+     at nextStep (node:internal/modules/customization_hooks:189:26)[39m
+[31m+     at resolveBaseSync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)[39m
+[31m+     at resolveDirectorySync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)[39m
+[31m+     at resolveTsPathsSync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)[39m
+[31m+     at resolve (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {[39m
+[31m+   code: 'ERR_MODULE_NOT_FOUND',[39m
+[31m+   url: 'file:///app/node_modules/@n6b/db/dist/index.js'[39m
+[31m+ }[39m
+[31m+[39m
+[31m+ Node.js v22.22.3[39m
+[31m+[39m
+
+ ❯ services/worker/tests/unit/boot.test.ts:33:22
+     31|     const r = run({});
+     32|     expect(r.status).toBe(1);
+     33|     expect(r.stderr).toContain('DATABASE_URL_SERVICE не задан');
+       |                      ^
+     34|   });
+     35| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  services/worker/tests/unit/boot.test.ts > worker: отказ старта без конфигурации > SC-US-016-2: пустая строка предела → exit 1 с именем, значение не печатается
+AssertionError: expected 'node:internal/modules/esm/resolve:275…' to contain 'LIMIT_EMBED_TOKENS_GLOBAL_DAY задан п…'
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- LIMIT_EMBED_TOKENS_GLOBAL_DAY задан пустым[39m
+[31m+ node:internal/modules/esm/resolve:275[39m
+[31m+     throw new ERR_MODULE_NOT_FOUND([39m
+[31m+           ^[39m
+[31m+[39m
+[31m+ Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/node_modules/@n6b/db/dist/index.js' imported from /app/services/worker/src/main.ts[39m
+[31m+     at finalizeResolution (node:internal/modules/esm/resolve:275:11)[39m
+[31m+     at moduleResolve (node:internal/modules/esm/resolve:861:10)[39m
+[31m+     at defaultResolve (node:internal/modules/esm/resolve:985:11)[39m
+[31m+     at #cachedDefaultResolve (node:internal/modules/esm/loader:747:20)[39m
+[31m+     at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:783:38)[39m
+[31m+     at nextStep (node:internal/modules/customization_hooks:189:26)[39m
+[31m+     at resolveBaseSync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)[39m
+[31m+     at resolveDirectorySync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)[39m
+[31m+     at resolveTsPathsSync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)[39m
+[31m+     at resolve (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {[39m
+[31m+   code: 'ERR_MODULE_NOT_FOUND',[39m
+[31m+   url: 'file:///app/node_modules/@n6b/db/dist/index.js'[39m
+[31m+ }[39m
+[31m+[39m
+[31m+ Node.js v22.22.3[39m
+[31m+[39m
+
+ ❯ services/worker/tests/unit/boot.test.ts:39:22
+     37|     const r = run({ ...VALID, LIMIT_EMBED_TOKENS_GLOBAL_DAY: '' });
+     38|     expect(r.status).toBe(1);
+     39|     expect(r.stderr).toContain('LIMIT_EMBED_TOKENS_GLOBAL_DAY задан пу…
+       |                      ^
+     40|     expect(r.stderr).not.toContain('sk-or-test-placeholder');
+     41|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  services/worker/tests/unit/boot.test.ts > worker: отказ старта без конфигурации > персональный предел больше общего → exit 1
+AssertionError: expected 'node:internal/modules/esm/resolve:275…' to contain 'LIMIT_EMBED_TOKENS_ACCOUNT_DAY'
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- LIMIT_EMBED_TOKENS_ACCOUNT_DAY[39m
+[31m+ node:internal/modules/esm/resolve:275[39m
+[31m+     throw new ERR_MODULE_NOT_FOUND([39m
+[31m+           ^[39m
+[31m+[39m
+[31m+ Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/node_modules/@n6b/db/dist/index.js' imported from /app/services/worker/src/main.ts[39m
+[31m+     at finalizeResolution (node:internal/modules/esm/resolve:275:11)[39m
+[31m+     at moduleResolve (node:internal/modules/esm/resolve:861:10)[39m
+[31m+     at defaultResolve (node:internal/modules/esm/resolve:985:11)[39m
+[31m+     at #cachedDefaultResolve (node:internal/modules/esm/loader:747:20)[39m
+[31m+     at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:783:38)[39m
+[31m+     at nextStep (node:internal/modules/customization_hooks:189:26)[39m
+[31m+     at resolveBaseSync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)[39m
+[31m+     at resolveDirectorySync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)[39m
+[31m+     at resolveTsPathsSync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)[39m
+[31m+     at resolve (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {[39m
+[31m+   code: 'ERR_MODULE_NOT_FOUND',[39m
+[31m+   url: 'file:///app/node_modules/@n6b/db/dist/index.js'[39m
+[31m+ }[39m
+[31m+[39m
+[31m+ Node.js v22.22.3[39m
+[31m+[39m
+
+ ❯ services/worker/tests/unit/boot.test.ts:46:22
+     44|     const r = run({ ...VALID, LIMIT_EMBED_TOKENS_ACCOUNT_DAY: '3000000…
+     45|     expect(r.status).toBe(1);
+     46|     expect(r.stderr).toContain('LIMIT_EMBED_TOKENS_ACCOUNT_DAY');
+       |                      ^
+     47|   });
+     48| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  services/worker/tests/unit/boot.test.ts > worker: отказ старта без конфигурации > F-3 (08_review.md): предел больше int4 → exit 1 с именем при старте
+AssertionError: expected 'node:internal/modules/esm/resolve:275…' to contain 'LIMIT_EMBED_TOKENS_ACCOUNT_DAY больше…'
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- LIMIT_EMBED_TOKENS_ACCOUNT_DAY больше 2147483647[39m
+[31m+ node:internal/modules/esm/resolve:275[39m
+[31m+     throw new ERR_MODULE_NOT_FOUND([39m
+[31m+           ^[39m
+[31m+[39m
+[31m+ Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/node_modules/@n6b/db/dist/index.js' imported from /app/services/worker/src/main.ts[39m
+[31m+     at finalizeResolution (node:internal/modules/esm/resolve:275:11)[39m
+[31m+     at moduleResolve (node:internal/modules/esm/resolve:861:10)[39m
+[31m+     at defaultResolve (node:internal/modules/esm/resolve:985:11)[39m
+[31m+     at #cachedDefaultResolve (node:internal/modules/esm/loader:747:20)[39m
+[31m+     at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:783:38)[39m
+[31m+     at nextStep (node:internal/modules/customization_hooks:189:26)[39m
+[31m+     at resolveBaseSync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)[39m
+[31m+     at resolveDirectorySync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)[39m
+[31m+     at resolveTsPathsSync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)[39m
+[31m+     at resolve (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {[39m
+[31m+   code: 'ERR_MODULE_NOT_FOUND',[39m
+[31m+   url: 'file:///app/node_modules/@n6b/db/dist/index.js'[39m
+[31m+ }[39m
+[31m+[39m
+[31m+ Node.js v22.22.3[39m
+[31m+[39m
+
+ ❯ services/worker/tests/unit/boot.test.ts:52:22
+     50|     const r = run({ ...VALID, LIMIT_EMBED_TOKENS_ACCOUNT_DAY: '2147483…
+     51|     expect(r.status).toBe(1);
+     52|     expect(r.stderr).toContain('LIMIT_EMBED_TOKENS_ACCOUNT_DAY больше …
+       |                      ^
+     53|   });
+     54| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  services/worker/tests/unit/boot.test.ts > worker: отказ старта без конфигурации > F-3: воркер со строкой подключения кабинета (n6b_app_tenant) → exit 1, пароль не печатается
+AssertionError: expected 'node:internal/modules/esm/resolve:275…' to contain 'DATABASE_URL_SERVICE'
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- DATABASE_URL_SERVICE[39m
+[31m+ node:internal/modules/esm/resolve:275[39m
+[31m+     throw new ERR_MODULE_NOT_FOUND([39m
+[31m+           ^[39m
+[31m+[39m
+[31m+ Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/node_modules/@n6b/db/dist/index.js' imported from /app/services/worker/src/main.ts[39m
+[31m+     at finalizeResolution (node:internal/modules/esm/resolve:275:11)[39m
+[31m+     at moduleResolve (node:internal/modules/esm/resolve:861:10)[39m
+[31m+     at defaultResolve (node:internal/modules/esm/resolve:985:11)[39m
+[31m+     at #cachedDefaultResolve (node:internal/modules/esm/loader:747:20)[39m
+[31m+     at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:783:38)[39m
+[31m+     at nextStep (node:internal/modules/customization_hooks:189:26)[39m
+[31m+     at resolveBaseSync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)[39m
+[31m+     at resolveDirectorySync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)[39m
+[31m+     at resolveTsPathsSync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)[39m
+[31m+     at resolve (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {[39m
+[31m+   code: 'ERR_MODULE_NOT_FOUND',[39m
+[31m+   url: 'file:///app/node_modules/@n6b/db/dist/index.js'[39m
+[31m+ }[39m
+[31m+[39m
+[31m+ Node.js v22.22.3[39m
+[31m+[39m
+
+ ❯ services/worker/tests/unit/boot.test.ts:58:22
+     56|     const r = run({ ...VALID, DATABASE_URL_SERVICE: 'postgresql://n6b_…
+     57|     expect(r.status).toBe(1);
+     58|     expect(r.stderr).toContain('DATABASE_URL_SERVICE');
+       |                      ^
+     59|     expect(r.stderr).not.toContain('secretpw');
+     60|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  services/worker/tests/unit/boot.test.ts > worker: отказ старта без конфигурации > chunk-embed: без любого из пределов двери (не эмбеддингов) воркер не стартует — exit 1 с именем
+AssertionError: LIMIT_ANSWER_VISITOR_DAY: expected 'node:internal/modules/esm/resolve:275…' to contain 'LIMIT_ANSWER_VISITOR_DAY не задан'
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- LIMIT_ANSWER_VISITOR_DAY не задан[39m
+[31m+ node:internal/modules/esm/resolve:275[39m
+[31m+     throw new ERR_MODULE_NOT_FOUND([39m
+[31m+           ^[39m
+[31m+[39m
+[31m+ Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/node_modules/@n6b/db/dist/index.js' imported from /app/services/worker/src/main.ts[39m
+[31m+     at finalizeResolution (node:internal/modules/esm/resolve:275:11)[39m
+[31m+     at moduleResolve (node:internal/modules/esm/resolve:861:10)[39m
+[31m+     at defaultResolve (node:internal/modules/esm/resolve:985:11)[39m
+[31m+     at #cachedDefaultResolve (node:internal/modules/esm/loader:747:20)[39m
+[31m+     at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:783:38)[39m
+[31m+     at nextStep (node:internal/modules/customization_hooks:189:26)[39m
+[31m+     at resolveBaseSync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)[39m
+[31m+     at resolveDirectorySync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)[39m
+[31m+     at resolveTsPathsSync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)[39m
+[31m+     at resolve (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {[39m
+[31m+   code: 'ERR_MODULE_NOT_FOUND',[39m
+[31m+   url: 'file:///app/node_modules/@n6b/db/dist/index.js'[39m
+[31m+ }[39m
+[31m+[39m
+[31m+ Node.js v22.22.3[39m
+[31m+[39m
+
+ ❯ services/worker/tests/unit/boot.test.ts:69:30
+     67|       const r = run(env);
+     68|       expect(r.status, name).toBe(1);
+     69|       expect(r.stderr, name).toContain(`${name} не задан`);
+       |                              ^
+     70|       expect(r.stderr).not.toContain('sk-or-test-placeholder');
+     71|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  services/worker/tests/unit/boot.test.ts > worker: отказ старта без конфигурации > chunk-embed: пределы двери с персональным больше общего → exit 1 при старте, а не на первой задаче
+AssertionError: expected 'node:internal/modules/esm/resolve:275…' to contain 'LIMIT_SANDBOX_ACCOUNT_DAY'
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- LIMIT_SANDBOX_ACCOUNT_DAY[39m
+[31m+ node:internal/modules/esm/resolve:275[39m
+[31m+     throw new ERR_MODULE_NOT_FOUND([39m
+[31m+           ^[39m
+[31m+[39m
+[31m+ Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/node_modules/@n6b/db/dist/index.js' imported from /app/services/worker/src/main.ts[39m
+[31m+     at finalizeResolution (node:internal/modules/esm/resolve:275:11)[39m
+[31m+     at moduleResolve (node:internal/modules/esm/resolve:861:10)[39m
+[31m+     at defaultResolve (node:internal/modules/esm/resolve:985:11)[39m
+[31m+     at #cachedDefaultResolve (node:internal/modules/esm/loader:747:20)[39m
+[31m+     at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:783:38)[39m
+[31m+     at nextStep (node:internal/modules/customization_hooks:189:26)[39m
+[31m+     at resolveBaseSync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)[39m
+[31m+     at resolveDirectorySync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)[39m
+[31m+     at resolveTsPathsSync (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)[39m
+[31m+     at resolve (file:///app/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {[39m
+[31m+   code: 'ERR_MODULE_NOT_FOUND',[39m
+[31m+   url: 'file:///app/node_modules/@n6b/db/dist/index.js'[39m
+[31m+ }[39m
+[31m+[39m
+[31m+ Node.js v22.22.3[39m
+[31m+[39m
+
+ ❯ services/worker/tests/unit/boot.test.ts:77:22
+     75|     const r = run({ ...VALID, LIMIT_SANDBOX_ACCOUNT_DAY: '5000' });
+     76|     expect(r.status).toBe(1);
+     77|     expect(r.stderr).toContain('LIMIT_SANDBOX_ACCOUNT_DAY');
+       |                      ^
+     78|   });
+     79| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  1 failed | 44 passed (45)
+      Tests  7 failed | 676 passed (683)
+   Start at  07:11:58
+   Duration  39.14s (transform 3.26s, setup 0ms, collect 15.56s, tests 38.17s, environment 19ms, prepare 8.52s)
+

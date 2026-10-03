@@ -1,0 +1,10 @@
+{
+  "status": "failed",
+  "passed": 676,
+  "failed": 7,
+  "new_release_tests_passed": 37,
+  "cause": "Coordinator ran direct vitest without package pretest; seven existing worker boot tests ERR_MODULE_NOT_FOUND @n6b/db/dist/index.js",
+  "product_change": false,
+  "next": "Run existing npm pretest then only seven boot tests on identical image/overlay; preserve676unchangedgreen",
+  "source_revision": "0c6fb48e"
+}
