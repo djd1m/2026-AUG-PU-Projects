@@ -5,7 +5,7 @@
   "batch_id": "n6b-n7-n8-20261002",
   "project": "projects/08-interior-ai-redesign",
   "feature": "replicate-mvp",
-  "pipeline": "replicate \u2192 next \u2192 go",
+  "pipeline": "replicate → next → go",
   "tier": "XL",
   "risk_flags": [
     "payments",
@@ -59,7 +59,7 @@
     "false_positive_findings": null,
     "known_defects_missed": null,
     "regressions": null,
-    "followup_status": "F01\u2013F04 local software and F06a docs accepted; actual42+2UI and synthetic21table/10file restore passed. FullF05/F06/MVP blocked by realGPU acceptance; realprovider and deploymentsecurity remain release gates. Draft PR create rejected403 by GitHub integration; branch/body ready, no PR exists.",
+    "followup_status": "F01–F04 local software and F06a docs accepted; actual42+2UI and synthetic21table/10file restore passed. FullF05/F06/MVP blocked by realGPU acceptance; realprovider and deploymentsecurity remain release gates. Draft PR create rejected403 by GitHub integration; branch/body ready, no PR exists.",
     "open_code_findings_by_severity": {
       "high": 0,
       "medium": 0,
@@ -81,8 +81,8 @@
     "No baseline cost comparison",
     "Host version not exposed"
   ],
-  "current_stage": "replicate_I4a_F1_correction_prepare",
-  "last_observed_at": "2026-10-03T10:04:26.556668+00:00",
+  "current_stage": "replicate_I4a_accepted_prepare_hosted_evidence_completion",
+  "last_observed_at": "2026-10-03T10:05:38.967479+00:00",
   "actual_models_observed": {
     "native_coordinator": null,
     "f01_coder": "gpt-6.1-sol",
@@ -104,9 +104,9 @@
     "replicate_i4a_coder": "gpt-6.1-sol",
     "replicate_i4a_reviewer": "gpt-6-astra"
   },
-  "current_work_unit": "n8-replicate-i4a-review",
+  "current_work_unit": "n8-replicate-i4a-f1",
   "latest_reconciled_at": "2026-10-03T03:55:52.556690+00:00",
-  "current_source_revision": "00e19123117e729f05c1f591abef6998f6fe3bd6",
+  "current_source_revision": "38d870e6bb4089d92f1fa6c84e7893a326bf2cab",
   "stage_evidence_note": "Run passport summary refreshed from source-bound individual receipts. Historical stage receipts/checkcounts retained; no global all-gates pass or modelcost inferred.",
   "external_blockers": [
     "F05: no CUDA devices/runtime, safe offlineweights/GPUdependency verification and licensed12x3corpus notprovisioned; geometry/performance unmeasured",
