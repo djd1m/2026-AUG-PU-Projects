@@ -12,7 +12,7 @@
   "started_at": "2026-10-03T02:41:50.928106+00:00",
   "ended_at": null,
   "status": "in_progress",
-  "current_stage": "A R1 corrected; original timeout preserved, evidence recovery delivered; fresh R1 review next",
+  "current_stage": "A accepted after R1 closure; B actual browser/performance next",
   "actual_model": null,
   "usage": null,
   "cost": null,
@@ -21,11 +21,12 @@
   ],
   "quality": {
     "required_gates_passed": false,
-    "ac_met": 0,
+    "ac_met": 6,
     "ac_total": 12
   },
   "author_a_runtime": "sol-a-runtime.json",
   "review_a_runtime": "astra-a-runtime.json",
   "author_a_r1_runtime": "sol-a-r1-runtime.json",
-  "author_a_r1_delivery_runtime": "sol-a-r1-delivery-runtime.json"
+  "author_a_r1_delivery_runtime": "sol-a-r1-delivery-runtime.json",
+  "review_a_r1_attempts": "review-a-r1-attempts.json"
 }
