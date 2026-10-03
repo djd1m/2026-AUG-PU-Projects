@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-03T05:59:17.666957+00:00",
+  "verdict": "ACCEPT B1\u2013B4 togetherwithreview-b.md",
+  "finding": "F06B003 CLOSED",
+  "process_exit": 124,
+  "process_elapsed_seconds": 240.00138412497472,
+  "delivery": "Both substantive terminal review/receipt files written beforeprocessdeadline; receiptgatePASS. Process timeout preserved, no claimed clean process exit.",
+  "source": "23ace43766374596f61877ed025f39f8a3033a38",
+  "source_sha256": "1144c60cfff6a30ae94be77971274102d5239adbfc8b19f3ee7f7f47f7d98e6a",
+  "build_sha256": "2b5c0c6b974feff5774b064f1fe038a3ff4345e9eb520c089945987ed107774c",
+  "image": "sha256:e04c5647ca2e18e97a104b8ee348a1fc5880c9310d3a102371504571e066aeeb",
+  "pending": [
+    "B5 finaldocs/toolkit",
+    "B6 PR/delivery"
+  ]
+}

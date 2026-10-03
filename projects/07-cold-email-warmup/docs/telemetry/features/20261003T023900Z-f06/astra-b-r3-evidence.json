@@ -1,0 +1,149 @@
+{
+  "run_id": "20261003T023900Z-f06",
+  "work_unit_id": "n7-f06b-r3-astra",
+  "attempt_id": "review-b-r3",
+  "source_revision": "23ace43766374596f61877ed025f39f8a3033a38",
+  "source_sha256": "1144c60cfff6a30ae94be77971274102d5239adbfc8b19f3ee7f7f47f7d98e6a",
+  "build_sha256": "2b5c0c6b974feff5774b064f1fe038a3ff4345e9eb520c089945987ed107774c",
+  "launch_sha256": "abbd9e8c5395221826a459ab91a801ac21a07cfa6b43f69357690867e2de01ef",
+  "source_files_verified": 93,
+  "r2_changed_inputs": [
+    "src/growth/reports.ts"
+  ],
+  "copied_script_hash_mismatches": [],
+  "checks": {
+    "total": 218,
+    "passed": 218
+  },
+  "layout": [
+    {
+      "engine": "chromium-1440",
+      "name": "ratios-public-report",
+      "width": 1440,
+      "body": 1408,
+      "root": 1440
+    },
+    {
+      "engine": "chromium-1440",
+      "name": "raw_counts-public-report",
+      "width": 1440,
+      "body": 1408,
+      "root": 1440
+    },
+    {
+      "engine": "chromium-390",
+      "name": "ratios-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "chromium-390",
+      "name": "ratios-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "chromium-390",
+      "name": "raw_counts-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "chromium-390",
+      "name": "raw_counts-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "firefox-390",
+      "name": "ratios-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "firefox-390",
+      "name": "ratios-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "firefox-390",
+      "name": "raw_counts-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "firefox-390",
+      "name": "raw_counts-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "webkit-390",
+      "name": "ratios-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "webkit-390",
+      "name": "ratios-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "webkit-390",
+      "name": "raw_counts-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "webkit-390",
+      "name": "raw_counts-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    }
+  ],
+  "page_errors": [],
+  "failures": [],
+  "console_exact_engine_phase_path_status_matches": true,
+  "console_counts": {
+    "anonymous401": 3,
+    "revoked404": 6
+  },
+  "cleanup": {
+    "own_contexts_closed": true,
+    "bridge_closed": true,
+    "sockets_destroyed": true,
+    "shared_browser_server_preserved": true
+  },
+  "pngs_inspected": [
+    "firefox-390-raw_counts-public-report-end.png",
+    "chromium-1440-raw_counts-public-report.png"
+  ],
+  "artifacts_sha256": {
+    "docs/features/f06-cabinet-e2e-delivery/review-b-r3.md": "36dea511fe2d2cef692d94a5a86c9879116109b74a57a327f0e96141435fc8e8",
+    "docs/telemetry/features/20261003T023900Z-f06/astra-b-r3-receipt.md": "34f3e2e5239554c673d2cf669f8a8f4522a73bbdcc63b598a029563c1a1d11b4",
+    "docs/telemetry/features/20261003T023900Z-f06/sol-b-r3-readable-image-receipt.json": "6b9c065f88749a0f725a16f187c1e95ec4f0c2dd295318de4f9f69da0a3d8294",
+    "docs/telemetry/features/20261003T023900Z-f06/sol-b-r3-readable-audit.json": "e2e99670bcce16580cf53f60476cdfbadc5f015ac7da803c3662a4dc96972496",
+    "docs/telemetry/features/20261003T023900Z-f06/sol-b-r3-readable-frozen-source.json": "97b2a84f5dd4511dbb221f6a98483cdb93a020b5d0d5a67218393e5150abc405",
+    "docs/telemetry/features/20261003T023900Z-f06/sol-b-r3-report-layout-4/checks.json": "b3042813c3d17a728f368b53cc6196a76f55699659336ffb0eb63670a3584976",
+    "docs/telemetry/features/20261003T023900Z-f06/sol-b-r3-report-layout-4/preflight.json": "8ccaaad1fd252414ca3e0e2f957d02d9e2ad94ce8612656f2a147f697909ff84",
+    "docs/telemetry/features/20261003T023900Z-f06/sol-b-r3-report-layout-4/exit.json": "e341c0be29834ece1d9c039af58118ca979e4e7eeb1af6b360c039e4daa3f2dc",
+    "docs/telemetry/features/20261003T023900Z-f06/sol-b-r3-report-layout-4/f06-report-layout.mjs": "4d9d71457e6181971dec0726c03d02c66ef210cebdab403106c4af09eeb34507"
+  },
+  "finished_at": "2026-10-03T05:58:25.479746+00:00",
+  "elapsed_seconds": 235.831879,
+  "status": "completed"
+}
