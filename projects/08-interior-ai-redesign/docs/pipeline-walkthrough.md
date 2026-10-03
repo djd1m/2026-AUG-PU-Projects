@@ -110,3 +110,7 @@ Durable hosted recovery now retains the original attempt, ticket and deadline; c
 ### 2026-10-03 — Replicate I5a evidence/completion accepted
 
 Append-only migration008 and strict hosted evidence preserve old local rows and unknown vendor metrics. Atomic completion remains private/unverified and binds durable succeeded identity, original ticket/input/deadline and current fence. Freshreview found deadline terminal regression; Sol restored shared expiry, meaningfuloldcodeRED andcorrectedPG16/18/21 passed, Astra F1closureACCEPT. Initialreviewtimeout andsame-threaddelivery retained; noactualprovidermeasurements claimed. NextI5b real-corpus/publicpredicateintegration, thenworker/maintenance, mutation/fullregression/browser. Externalspend0.
+
+### 2026-10-03 — Replicate I5b quality/public predicates accepted
+
+Hosted canonical evidence, actual private artifacts and bound nonsynthetic corpus declarations now use the existing operator and publication authority. Fresh Astra/high accepted exact source8d6098c5 with zero findings after Sol6.1/high implementation:28 unit, exact guard mutation0/1/0, hostedPG7 + oldqualityPG7 + oldsharingPG6. The original sharing pre-case migration-count failure remains preserved; only its obsolete6→8 literal changed. Operator declarations do not establish actual measurements or license provenance by themselves. [Review](features/f07-replicate/i5b-review.md), host runtime333.311s, cost unknown. NextI4b worker execution, I4c existing maintenance remote cleanup, thenI6–I8. Externalspend0.
