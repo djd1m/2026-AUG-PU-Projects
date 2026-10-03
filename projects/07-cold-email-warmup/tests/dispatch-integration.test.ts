@@ -72,7 +72,7 @@ test('F03a realPG campaign/pool/shared quota/lease seams without transport',asyn
    for(let i=0;i<28;i++) {
     if(i===0) await seedTestEntitlement(pool,actors[0]!.tenant_id);
     let owner=actors[0]!;
-    if(i>=9) {owner={tenant_id:randomUUID(),account_id:randomUUID()};await pool.query('INSERT INTO tenant(id) VALUES($1)',[owner.tenant_id]);await pool.query("INSERT INTO account(id,tenant_id,email,password_hash) VALUES($1,$2,$3,'fixture')",[owner.account_id,owner.tenant_id,`aggregate-${i}@example.test`]);}
+    if(i>=3) {owner={tenant_id:randomUUID(),account_id:randomUUID()};await pool.query('INSERT INTO tenant(id) VALUES($1)',[owner.tenant_id]);await pool.query("INSERT INTO account(id,tenant_id,email,password_hash) VALUES($1,$2,$3,'fixture')",[owner.account_id,owner.tenant_id,`aggregate-${i}@example.test`]);}
     const mailbox=(await app.mailboxes.save(owner.tenant_id,{...raw,label:'Aggregate fixture '+i})).id;added.push(mailbox);owners.set(mailbox,owner);
     await pool.query("UPDATE mailbox SET state='verified_test' WHERE id=$1",[mailbox]);await poll(mailbox);
     await app.consents.act(owner,mailbox,{scope:'pool',action:'grant',affirmative:true,scopeVersion:1});
