@@ -1,0 +1,45 @@
+TAP version 13
+# Subtest: R1 actual authScript passive valid identity redirects silently
+ok 1 - R1 actual authScript passive valid identity redirects silently
+  ---
+  duration_ms: 10.106473
+  ...
+# Subtest: R1 actual successful register notifies exactly once
+ok 2 - R1 actual successful register notifies exactly once
+  ---
+  duration_ms: 5.296232
+  ...
+# Subtest: R1 actual successful login notifies exactly once
+ok 3 - R1 actual successful login notifies exactly once
+  ---
+  duration_ms: 3.690441
+  ...
+# Subtest: R1 failed action/no identity emits zero false/true
+ok 4 - R1 failed action/no identity emits zero false/true
+  ---
+  duration_ms: 3.032841
+  ...
+# Subtest: R1 failed action/no identity emits zero true/false
+ok 5 - R1 failed action/no identity emits zero true/false
+  ---
+  duration_ms: 4.020742
+  ...
+# Subtest: R1 actual app channel login invalidates, aborts and passive followup never echoes
+ok 6 - R1 actual app channel login invalidates, aborts and passive followup never echoes
+  ---
+  duration_ms: 264.442704
+  ...
+# Subtest: R1 actual app channel logout invalidates, aborts and passive followup never echoes
+ok 7 - R1 actual app channel logout invalidates, aborts and passive followup never echoes
+  ---
+  duration_ms: 93.160543
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2069.282279
