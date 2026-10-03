@@ -1,0 +1,22 @@
+{
+  "donor_product": "5f2f4a81",
+  "integration": "389ab701",
+  "source_inputs_equal": 80,
+  "original_delivery": "failed_nonterminal_timeout124",
+  "recovery_process_exit": 0,
+  "recovery_original_format_gate": "failed_status_not_last",
+  "coordinator_format_normalization": "existing author status moved last; semantic change false; original in b45df073",
+  "final_delivery_gate": "pass",
+  "independent_review": "pending",
+  "full_initial_pg": {
+    "pass": 105,
+    "fail": 2,
+    "reason": "one expiry fixture violates fixed30day DB invariant plusparent failure"
+  },
+  "affected_restored_pg": {
+    "pass": 9,
+    "fail": 0
+  },
+  "unit_pass": 25,
+  "unchanged_green_suites_reused": true
+}

@@ -161,3 +161,5 @@ Aef86f20: отдельные физические и семантические 
 F05a author candidate integrated8dd916ba: local TEST billing/limits/attribution; unit20,PG98,canonical-fence mutantRED/restored7,canary/sourceimagePASS. Author process1107.306s, actualSol6.1/high hostproof in F05 sol-a-runtime.json. FreshAstra review pending; B/F06 pending, no live charge.
 
 F05a accepted6/6 after fresh Astra high source review (276.183s), exact73input match and no findings. F05b proceeds within the approved plan; live provider stays disabled.
+
+F05b candidate: unit25/type/lint/build0; full initialPG105pass2fail from one fixture/parent, fixed fixture5f2f4a81, affected9pass/mutantRED/restored/canary/sourceimagePASS. Original author1500s timeout124 and incomplete receipt preserved. Separate Sol delivery178.303s exit0; coordinator moved existing completed status to last line for structural gate, original claim preserved in git. Fresh Astra B acceptance pending, F06 UI pending.
