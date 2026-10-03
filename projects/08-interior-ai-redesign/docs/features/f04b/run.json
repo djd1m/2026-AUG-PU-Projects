@@ -1,0 +1,56 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f04b",
+  "attempt_id": "n8-f04b-1",
+  "source_revision": "7f99c245a59407eb84b106414ccc0e789f689300",
+  "launch_sha256": "1108c3d6f1b7c7de9086f3bbbcd97a1d58be8e25e90743d4633e254a189c4ab3",
+  "started_at": "2026-10-03T00:44:52.822390+00:00",
+  "stage": "writer_completed",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gap": "Provider-resolved model and counters unavailable inside executor; coordinator evidence separate.",
+  "route": {
+    "mechanical": "L",
+    "exit_code": 1,
+    "substantive": "XL",
+    "approval": "Accepted F04 /feature AUTO owner autonomy in brief; no new checkpoint."
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Authoring only; browser/listener/Docker forbidden in this attempt."
+  },
+  "events": [
+    {
+      "stage": "prepare",
+      "result": "brief, canonical plan and project rules read"
+    },
+    {
+      "stage": "implement",
+      "result": "one bounded writer, no delegation"
+    },
+    {
+      "stage": "verify",
+      "at": "2026-10-03T00:55:18.215806+00:00",
+      "result": "UI + protected POST + fixture/harness authored; focused run found a null-vs-undefined assertion defect; specific correction applied"
+    },
+    {
+      "stage": "handoff",
+      "at": "2026-10-03T01:00:41.271697+00:00",
+      "result": "local build/checks green; authored browser fixture/harness not executed; coordinator independent review/runtime pending"
+    }
+  ],
+  "host_started_at": "2026-10-03T00:43:39+00:00",
+  "finished_at": "2026-10-03T01:02:30.371103+00:00",
+  "duration_seconds": 1131.371103,
+  "source_snapshot_sha256": "7de7c86955d13d18e2652798b9d44faa1ac5fa40262143bb00cd33269e9479d4",
+  "build_revision": "7de7c86955d13d18e2652798b9d44faa1ac5fa40262143bb00cd33269e9479d4",
+  "measurement_gaps": [
+    "Provider-resolved actual model, token usage and cost unavailable inside executor",
+    "Preparation record created after initial brief/rule reads; total duration includes them via host launch timestamp",
+    "Individual early execution-start snapshots not captured; frozen build exactly bound to final81-file snapshot",
+    "Browser/PG/Docker/GPU execution prohibited in this writer attempt"
+  ]
+}

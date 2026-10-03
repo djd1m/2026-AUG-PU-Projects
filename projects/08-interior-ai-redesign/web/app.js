@@ -13,7 +13,8 @@ import { createSharing } from './sharing.js';
 import { publicPage, publicList } from './public-pages.js';
 
 const STATIC = new Map([['/', ['index.html','text/html; charset=utf-8']],
-  ['/app.js',['app.js','text/javascript; charset=utf-8']], ['/style.css',['style.css','text/css; charset=utf-8']]]);
+  ['/app.js',['app.js','text/javascript; charset=utf-8']],
+  ['/ui-state.js',['ui-state.js','text/javascript; charset=utf-8']], ['/ui-actions.js',['ui-actions.js','text/javascript; charset=utf-8']], ['/style.css',['style.css','text/css; charset=utf-8']]]);
 export function createApp(pool, config, {paymentProvider}={}) {
   const attribution=createAttribution(pool,config);
   const payments=createPayments(pool,config,{provider:paymentProvider});
@@ -40,7 +41,9 @@ export function createApp(pool, config, {paymentProvider}={}) {
     try {
       const url = new URL(req.url,'http://internal'); const path = url.pathname;
       const paginated=['/api/jobs','/api/publications','/examples'];
-      if ((url.search && !(req.method==='GET' && paginated.includes(path))) || /%|\\/.test(path)) throw new HttpError(400,'invalid_path');
+      const partnerLanding=req.method==='GET' && path==='/' && [...url.searchParams.keys()].every(k=>k==='partner_code') &&
+        url.searchParams.getAll('partner_code').length===1 && /^[A-Za-z0-9_-]{8,128}$/.test(url.searchParams.get('partner_code'));
+      if ((url.search && !partnerLanding && !(req.method==='GET' && paginated.includes(path))) || /%|\\/.test(path)) throw new HttpError(400,'invalid_path');
       if (req.method === 'GET' && STATIC.has(path)) {
         const [file,type] = STATIC.get(path);
         res.writeHead(200,{'Content-Type':type}); res.end(await readFile(join(PUBLIC_ROOT,file))); return;
@@ -80,6 +83,13 @@ export function createApp(pool, config, {paymentProvider}={}) {
       }
       const account = await auth.authenticate(req);
       if (req.method === 'GET' && path === '/api/me') { send(200,{account:{...account,...await payments.account(account.id)}}); return; }
+      if(req.method==='POST' && path==='/api/attribution/state') {
+        const body=await readJson(req);
+        if(!body || typeof body!=='object' || Array.isArray(body) || Object.keys(body).length)throw new HttpError(400,'invalid_attribution');
+        const result=await attribution.state(account.id,req.headers.cookie);
+        if(result.setCookie)res.setHeader('Set-Cookie',result.setCookie);
+        send(200,result.state);return;
+      }
       if(path==='/api/attribution'&&['GET','POST'].includes(req.method)) {
         requireOrigin(req,config.origin);
         const result=req.method==='GET'?await attribution.state(account.id,req.headers.cookie):

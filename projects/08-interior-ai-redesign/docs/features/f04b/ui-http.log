@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: actual static handler allowlists modules and denies private/source traversal
+ok 1 - actual static handler allowlists modules and denies private/source traversal
+  ---
+  duration_ms: 13.956005
+  type: 'test'
+  ...
+# Subtest: fixture driver refuses shared/user DB and storage before any connection
+ok 2 - fixture driver refuses shared/user DB and storage before any connection
+  ---
+  duration_ms: 1.131501
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 25.461059

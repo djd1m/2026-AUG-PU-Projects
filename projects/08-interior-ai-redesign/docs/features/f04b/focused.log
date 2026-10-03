@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: tests/attribution-http.test.js
+ok 1 - tests/attribution-http.test.js
+  ---
+  duration_ms: 506.15946
+  type: 'test'
+  ...
+# Subtest: tests/attribution.test.js
+ok 2 - tests/attribution.test.js
+  ---
+  duration_ms: 508.651861
+  type: 'test'
+  ...
+# Subtest: tests/jobs.test.js
+ok 3 - tests/jobs.test.js
+  ---
+  duration_ms: 477.554081
+  type: 'test'
+  ...
+# Subtest: tests/payments.test.js
+ok 4 - tests/payments.test.js
+  ---
+  duration_ms: 10533.49791
+  type: 'test'
+  ...
+# Subtest: tests/sharing.http.test.js
+ok 5 - tests/sharing.http.test.js
+  ---
+  duration_ms: 1439.078884
+  type: 'test'
+  ...
+# Subtest: tests/sharing.test.js
+ok 6 - tests/sharing.test.js
+  ---
+  duration_ms: 3860.783098
+  type: 'test'
+  ...
+# Subtest: tests/ui-state.test.js
+not ok 7 - tests/ui-state.test.js
+  ---
+  duration_ms: 216.556217
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f04b/projects/08-interior-ai-redesign/tests/ui-state.test.js:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 6
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10573.673594

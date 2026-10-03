@@ -22,8 +22,15 @@ test('ATTR/PARTNER API authentication Origin body bounds and absence of registry
     await handler(req,res);return {status:res.status,headers,body:res.body};
   }
   assert.equal((await request('GET','/api/attribution',undefined,config.origin,'')).status,401);
+  assert.equal((await request('POST','/api/attribution/state',{},config.origin,'')).status,401);
+  for(const body of [null,[],{action:'accept'},'invalid','x'.repeat(16385)]) {
+    assert.equal((await request('POST','/api/attribution/state',body)).status, typeof body==='string'&&body.length>16384?413:400);
+  }
+  const initial=await request('POST','/api/attribution/state',{});
+  assert.equal(initial.status,200);assert.equal(initial.body.tracking_opt_in,false);assert.equal(initial.headers['set-cookie'],undefined);
   for(const origin of [null,'null','https://foreign.example.test']) {
     assert.equal((await request('GET','/api/attribution',undefined,origin)).status,403);
+    assert.equal((await request('POST','/api/attribution/state',{},origin)).status,403);
     assert.equal((await request('POST','/api/attribution',{action:'accept'},origin)).status,403);
   }
   let r=await request('GET','/api/attribution');assert.equal(r.status,200);assert.equal(r.body.tracking_opt_in,false);assert.equal(r.headers['set-cookie'],undefined);
@@ -38,6 +45,11 @@ test('ATTR/PARTNER API authentication Origin body bounds and absence of registry
   assert.match(r.headers['set-cookie'],/HttpOnly; SameSite=Lax; Max-Age=2592000; Secure$/);
   assert.deepEqual(Object.keys(r.body).sort(),['expires_at','partner_code','source','tracking_opt_in']);
   const tracking=r.headers['set-cookie'].split(';')[0];
+  r=await request('POST','/api/attribution/state',{},config.origin,essential+'; '+tracking);
+  assert.equal(r.status,200);assert.equal(r.body.source,'cookie');assert.equal(r.headers['set-cookie'],undefined);
+  f.preferences.get(id).expires_at=new Date('2000-01-01');
+  r=await request('POST','/api/attribution/state',{},config.origin,essential+'; '+tracking);
+  assert.equal(r.body.source,null);assert.match(r.headers['set-cookie'],/Max-Age=0/);assert.doesNotMatch(r.headers['set-cookie'],/roomkind_session/);
   r=await request('POST','/api/attribution',{action:'deny'},config.origin,essential+'; '+tracking);
   assert.equal(r.status,200);assert.equal(r.body.tracking_opt_in,false);assert.match(r.headers['set-cookie'],/Max-Age=0/);assert.doesNotMatch(r.headers['set-cookie'],/roomkind_session/);
   r=await request('GET','/api/attribution');assert.equal(r.status,200);assert.equal(r.body.source,null);

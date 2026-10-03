@@ -1,0 +1,13 @@
+# F04b browser contract
+
+CJM A now runs the actual owner APIs; four styles remain warm/minimal/afrohemian/playful. No backend job, credit, provider, quality or sharing semantics changed.
+
+`POST /api/attribution/state` accepts exactly JSON `{}` (16 KiB existing limit), exact configured Origin and authenticated session. It calls existing `attribution.state`, returns the existing state shape and forwards expiry cleanup Set-Cookie. It never touches the essential session cookie. GET state and all existing writes retain their checks. Browser fetch supplies Origin naturally; the UI never sets it. Strict test covers missing/null/foreign Origin, missing auth, bad body, expired cookie and normal state.
+
+Static allowlist explicitly includes `/ui-state.js` and `/ui-actions.js`; no filesystem wildcard. The landing route additionally permits one validated `partner_code` query (8–128 ASCII URL-safe characters). It is only displayed as a candidate; storage requires the explicit consent button. Other static queries still fail400. Manual code uses the separate manual action without cookie consent.
+
+Job and ROOM20 request body/key/ID are persisted in sessionStorage under account ID. Photo bytes, credentials and tokens are never persisted by the UI. Unknown network/parse/15s timeout keeps the same key/body for retry; selection changes clear the old intent; a deliberate new generation after terminal status creates a new key. GET recovery never reserves. Polling is serial, selection/version bound and cancelled on logout/deletion. Generation-scoped abort plus post-response checks reject prior-owner work, even when transport ignores cancellation.
+
+Share preparation is action1: native attempt plus actual composite fetched into File. Action2 invokes native share immediately before awaiting network. `canShare` gates it; resolved/abort/error/unavailable are distinct server outcomes. Unavailable preparation records unavailable then prepares a fresh download mode/key, so download remains action2. Download from an available native preparation obtains its own download attempt/key and never claims share completion. Object URLs are created only for download and revoked. No invitation or messages are sent.
+
+Publication is a separate unchecked job-scoped opt-in; context1–160 and description40–2000, own job style. Fixture/unverified/held UI states explain ineligibility; server remains authoritative. State/revoke/public example links use accepted F04a routes. Payment config/202 intent/poll/confirmation are actual F03 APIs; disabled mode is unavailable, fixture says local demo, return URLs do not grant credits. Only provided HTTPS or same-origin fixture root confirmation URLs are linked, never executable or credential-bearing URLs.
