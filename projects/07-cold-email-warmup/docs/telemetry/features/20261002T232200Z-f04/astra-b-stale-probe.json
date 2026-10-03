@@ -1,0 +1,34 @@
+{
+  "scope": "actual worker.poll control flow with deferred adapter and recording store/SQL doubles; not a PG test",
+  "command": "node docs/telemetry/features/20261002T232200Z-f04/astra-b-stale-probe.cjs",
+  "exit_code": 0,
+  "worker_sha256": "50dd58feea07ef3605de3b965bfa6c17200037ecdc45e8b7414d5a20049195a7",
+  "late_failure": {
+    "result": {
+      "mode": "local_test",
+      "state": "paused"
+    },
+    "latest_after": {
+      "runId": "new-run",
+      "uidvalidity": "2",
+      "state": "complete",
+      "scanComplete": false
+    },
+    "queries": [
+      {
+        "sql": "UPDATE mailbox_poll SET scan_complete=false WHERE mailbox_id=$1 AND EXISTS(SELECT 1 FROM mailbox WHERE tenant_id=$2 AND id=$1)",
+        "args": [
+          "mailbox",
+          "tenant"
+        ],
+        "currentEpoch": "2",
+        "currentState": "complete"
+      }
+    ]
+  },
+  "late_snapshot": {
+    "suppliedValidity": "1",
+    "newerDurableValidity": "2"
+  },
+  "store_source_confirmation": "ReplyStore.capture lines 47-53 accepts differing validity and unconditionally upserts a new run; inspected, not executed by this probe"
+}
