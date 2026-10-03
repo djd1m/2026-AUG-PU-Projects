@@ -1,0 +1,29 @@
+{
+  "started_at": "2026-10-03T07:31:45.321287+00:00",
+  "finished_at": "2026-10-03T07:31:45.506967+00:00",
+  "elapsed_seconds": 0.18567698705010116,
+  "source_revision": "2b88ff16b499026e0d35a6f7083c63530aabadbd",
+  "image": "n8-ui-e2e-6:8030270f cached + exact readonlysourceoverlays",
+  "cpu_total": 2,
+  "published_ports": [],
+  "results": [
+    {
+      "name": "port-preflight",
+      "exit_code": 2,
+      "elapsed_seconds": 0.004340871935710311,
+      "log": "replicate-i1-runtime-port-preflight.log"
+    },
+    {
+      "name": "wrapper",
+      "exit_code": 1,
+      "safe_error": "preflight_failed"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "elapsed_seconds": 0.17620394297409803,
+      "log": "replicate-i1-runtime-cleanup.log"
+    }
+  ],
+  "overall_exit": 1
+}

@@ -1,0 +1,354 @@
+
+> roomkind-f01@0.1.0 lint
+> node scripts/check.js
+
+ESM/static build syntax verified (no bundler required)
+
+> roomkind-f01@0.1.0 build
+> node scripts/check.js
+
+ESM/static build syntax verified (no bundler required)
+TAP version 13
+# Subtest: prepared binding accepts only hashes and closed numeric image transform
+ok 1 - prepared binding accepts only hashes and closed numeric image transform
+  ---
+  duration_ms: 9.052953
+  type: 'test'
+  ...
+# Subtest: authority rejects absent/invalid limits and non-test trusted clock before SQL
+ok 2 - authority rejects absent/invalid limits and non-test trusted clock before SQL
+  ---
+  duration_ms: 0.58448
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 24.933558
+TAP version 13
+# Subtest: JOB-01 style/key/UUID boundaries and canonical body hash
+ok 1 - JOB-01 style/key/UUID boundaries and canonical body hash
+  ---
+  duration_ms: 3.270251
+  type: 'test'
+  ...
+# Subtest: PERF-01/SEC-01 required positive integer lower-only budget config
+ok 2 - PERF-01/SEC-01 required positive integer lower-only budget config
+  ---
+  duration_ms: 5.983222
+  type: 'test'
+  ...
+# Subtest: Output contract requires complete evidence and refuses production fixture
+ok 3 - Output contract requires complete evidence and refuses production fixture
+  ---
+  duration_ms: 3.248861
+  type: 'test'
+  ...
+# Subtest: Trusted clock injection is restricted to explicit test runtime
+ok 4 - Trusted clock injection is restricted to explicit test runtime
+  ---
+  duration_ms: 1.162021
+  type: 'test'
+  ...
+# Subtest: Provenance rejects unsupported shapes and serializes a detached canonical revision object
+ok 5 - Provenance rejects unsupported shapes and serializes a detached canonical revision object
+  ---
+  duration_ms: 2.550061
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 38.264773
+TAP version 13
+# Subtest: F02b real subprocess bounds, cancellation, lease and cleanup
+    # Subtest: one persistent subprocess survives two requests; fixture has actual independent hashes
+    not ok 1 - one persistent subprocess survives two requests; fixture has actual independent hashes
+      ---
+      duration_ms: 22.402588
+      type: 'test'
+      location: '/app/tests/generation.test.js:26:13'
+      failureType: 'testCodeFailure'
+      error: 'engine_protocol_or_exit'
+      code: 'ERR_TEST_FAILURE'
+      stack: |-
+        Engine.terminate (file:///app/web/generation.js:84:57)
+        ChildProcess.fail (file:///app/web/generation.js:52:55)
+        ChildProcess.emit (node:events:519:28)
+        ChildProcess._handle.onexit (node:internal/child_process:291:12)
+        onErrorNT (node:internal/child_process:483:16)
+        process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+      ...
+    # Subtest: actual bytes/hash mismatch refuses completion and removes all orphan artifacts
+    not ok 2 - actual bytes/hash mismatch refuses completion and removes all orphan artifacts
+      ---
+      duration_ms: 22.872438
+      type: 'test'
+      location: '/app/tests/generation.test.js:32:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        The input did not match the regular expression /artifact_hash_mismatch/. Input:
+        
+        'Error: engine_protocol_or_exit'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+      error: 'engine_protocol_or_exit'
+      stack: |-
+        Engine.terminate (file:///app/web/generation.js:84:57)
+        ChildProcess.fail (file:///app/web/generation.js:52:55)
+        ChildProcess.emit (node:events:519:28)
+        ChildProcess._handle.onexit (node:internal/child_process:291:12)
+        onErrorNT (node:internal/child_process:483:16)
+        process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+      operator: 'rejects'
+      stack: |-
+        async TestContext.<anonymous> (file:///app/tests/generation.test.js:33:47)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///app/tests/generation.test.js:32:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: deadline kills actual subprocess; partial artifacts removed
+    not ok 3 - deadline kills actual subprocess; partial artifacts removed
+      ---
+      duration_ms: 19.801717
+      type: 'test'
+      location: '/app/tests/generation.test.js:36:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        The input did not match the regular expression /engine_cancelled/. Input:
+        
+        'Error: engine_protocol_or_exit'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+      error: 'engine_protocol_or_exit'
+      stack: |-
+        Engine.terminate (file:///app/web/generation.js:84:57)
+        ChildProcess.fail (file:///app/web/generation.js:52:55)
+        ChildProcess.emit (node:events:519:28)
+        ChildProcess._handle.onexit (node:internal/child_process:291:12)
+        onErrorNT (node:internal/child_process:483:16)
+        process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+      operator: 'rejects'
+      stack: |-
+        async TestContext.<anonymous> (file:///app/tests/generation.test.js:38:7)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///app/tests/generation.test.js:36:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: lost heartbeat cancels child and fences attach
+    not ok 4 - lost heartbeat cancels child and fences attach
+      ---
+      duration_ms: 15.380856
+      type: 'test'
+      location: '/app/tests/generation.test.js:41:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        The input did not match the regular expression /engine_cancelled/. Input:
+        
+        'Error: engine_protocol_or_exit'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+      error: 'engine_protocol_or_exit'
+      stack: |-
+        Engine.terminate (file:///app/web/generation.js:84:57)
+        ChildProcess.fail (file:///app/web/generation.js:52:55)
+        ChildProcess.emit (node:events:519:28)
+        ChildProcess._handle.onexit (node:internal/child_process:291:12)
+        onErrorNT (node:internal/child_process:483:16)
+        process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+      operator: 'rejects'
+      stack: |-
+        async TestContext.<anonymous> (file:///app/tests/generation.test.js:43:7)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///app/tests/generation.test.js:41:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: external cancellation kills subprocess
+    not ok 5 - external cancellation kills subprocess
+      ---
+      duration_ms: 9.183393
+      type: 'test'
+      location: '/app/tests/generation.test.js:45:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        The input did not match the regular expression /engine_cancelled/. Input:
+        
+        'Error: engine_protocol_or_exit'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+      error: 'engine_protocol_or_exit'
+      stack: |-
+        Engine.terminate (file:///app/web/generation.js:84:57)
+        ChildProcess.fail (file:///app/web/generation.js:52:55)
+        ChildProcess.emit (node:events:519:28)
+        ChildProcess._handle.onexit (node:internal/child_process:291:12)
+        onErrorNT (node:internal/child_process:483:16)
+        process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+      operator: 'rejects'
+      stack: |-
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async TestContext.<anonymous> (file:///app/tests/generation.test.js:47:7)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///app/tests/generation.test.js:45:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: invalid and oversized stdout or stderr fail bounded protocol
+    ok 6 - invalid and oversized stdout or stderr fail bounded protocol
+      ---
+      duration_ms: 18.890697
+      type: 'test'
+      ...
+    # Subtest: malformed response then awaited stop terminates failed child before healthy restart
+    not ok 7 - malformed response then awaited stop terminates failed child before healthy restart
+      ---
+      duration_ms: 20.410877
+      type: 'test'
+      location: '/app/tests/generation.test.js:52:13'
+      failureType: 'testCodeFailure'
+      error: 'engine_protocol_or_exit'
+      code: 'ERR_TEST_FAILURE'
+      stack: |-
+        Engine.terminate (file:///app/web/generation.js:84:57)
+        ChildProcess.fail (file:///app/web/generation.js:52:55)
+        ChildProcess.emit (node:events:519:28)
+        ChildProcess._handle.onexit (node:internal/child_process:291:12)
+        onErrorNT (node:internal/child_process:483:16)
+        process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+      ...
+    # Subtest: obsolete child exit cannot reject an immediate replacement request
+    not ok 8 - obsolete child exit cannot reject an immediate replacement request
+      ---
+      duration_ms: 15.752245
+      type: 'test'
+      location: '/app/tests/generation.test.js:60:13'
+      failureType: 'testCodeFailure'
+      error: 'engine_protocol_or_exit'
+      code: 'ERR_TEST_FAILURE'
+      stack: |-
+        Engine.terminate (file:///app/web/generation.js:84:57)
+        ChildProcess.fail (file:///app/web/generation.js:52:55)
+        ChildProcess.emit (node:events:519:28)
+        ChildProcess._handle.onexit (node:internal/child_process:291:12)
+        onErrorNT (node:internal/child_process:483:16)
+        process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+      ...
+    # Subtest: concurrent requests still refuse engine_busy without disturbing active request
+    not ok 9 - concurrent requests still refuse engine_busy without disturbing active request
+      ---
+      duration_ms: 8.400543
+      type: 'test'
+      location: '/app/tests/generation.test.js:65:13'
+      failureType: 'testCodeFailure'
+      error: 'engine_protocol_or_exit'
+      code: 'ERR_TEST_FAILURE'
+      stack: |-
+        Engine.terminate (file:///app/web/generation.js:84:57)
+        ChildProcess.fail (file:///app/web/generation.js:52:55)
+        ChildProcess.emit (node:events:519:28)
+        ChildProcess._handle.onexit (node:internal/child_process:291:12)
+        onErrorNT (node:internal/child_process:483:16)
+        process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+      ...
+    # Subtest: stale fence cleans otherwise valid result
+    not ok 10 - stale fence cleans otherwise valid result
+      ---
+      duration_ms: 23.130118
+      type: 'test'
+      location: '/app/tests/generation.test.js:70:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        The input did not match the regular expression /stale_fence/. Input:
+        
+        'Error: engine_protocol_or_exit'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+      error: 'engine_protocol_or_exit'
+      stack: |-
+        Engine.terminate (file:///app/web/generation.js:84:57)
+        ChildProcess.fail (file:///app/web/generation.js:52:55)
+        ChildProcess.emit (node:events:519:28)
+        ChildProcess._handle.onexit (node:internal/child_process:291:12)
+        onErrorNT (node:internal/child_process:483:16)
+        process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+      operator: 'rejects'
+      stack: |-
+        async TestContext.<anonymous> (file:///app/tests/generation.test.js:71:7)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///app/tests/generation.test.js:70:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: symlinks and unbounded artifact bytes denied
+    ok 11 - symlinks and unbounded artifact bytes denied
+      ---
+      duration_ms: 4.843482
+      type: 'test'
+      ...
+    # Subtest: private reads enforce owner/rejection twice and exact immutable bytes
+    not ok 12 - private reads enforce owner/rejection twice and exact immutable bytes
+      ---
+      duration_ms: 2.865161
+      type: 'test'
+      location: '/app/tests/generation.test.js:78:13'
+      failureType: 'testCodeFailure'
+      error: 'not_found'
+      code: 'not_found'
+      stack: |-
+        Object.read (file:///app/web/generation.js:145:17)
+        async TestContext.<anonymous> (file:///app/tests/generation.test.js:82:61)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///app/tests/generation.test.js:78:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    1..12
+not ok 1 - F02b real subprocess bounds, cancellation, lease and cleanup
+  ---
+  duration_ms: 240.793026
+  type: 'test'
+  location: '/app/tests/generation.test.js:13:1'
+  failureType: 'subtestsFailed'
+  error: '10 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 13
+# suites 0
+# pass 2
+# fail 11
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 252.02212
+ Container n8f07i1-tests-run-dbd80a136b1e Creating 
+ Container n8f07i1-tests-run-dbd80a136b1e Created 
+

@@ -1,0 +1,48 @@
+{
+  "started_at": "2026-10-03T07:32:20.230299+00:00",
+  "finished_at": "2026-10-03T07:33:06.652847+00:00",
+  "elapsed_seconds": 46.422546641901135,
+  "source_revision": "2b88ff16b499026e0d35a6f7083c63530aabadbd",
+  "image": "n8-ui-e2e-6:8030270f cached + exact readonlysourceoverlays",
+  "cpu_total": 2,
+  "published_ports": [],
+  "results": [
+    {
+      "name": "port-preflight",
+      "exit_code": 0,
+      "elapsed_seconds": 1.474152315990068,
+      "log": "replicate-i1-runtime-port-preflight.log"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "elapsed_seconds": 8.589715256006457,
+      "log": "replicate-i1-runtime-db-start.log"
+    },
+    {
+      "name": "binding",
+      "exit_code": 0,
+      "elapsed_seconds": 1.3863263949751854,
+      "log": "replicate-i1-runtime-binding.log"
+    },
+    {
+      "name": "node22-focused",
+      "exit_code": 1,
+      "elapsed_seconds": 12.36979943595361,
+      "log": "replicate-i1-runtime-node22-focused.log"
+    },
+    {
+      "name": "pg16",
+      "exit_code": 0,
+      "elapsed_seconds": 20.57916149601806,
+      "log": "replicate-i1-runtime-pg16.log"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "elapsed_seconds": 2.015343609964475,
+      "log": "replicate-i1-runtime-cleanup.log"
+    }
+  ],
+  "overall_exit": 1
+}

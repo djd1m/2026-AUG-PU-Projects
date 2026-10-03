@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-03T07:35:22.510121+00:00",
+  "source": "2b88ff16",
+  "verdict": "I1 scoped runtime PASS; fresh review pending",
+  "checks": {
+    "source5match": true,
+    "node": "22.20.0",
+    "pg": "16.10",
+    "new_pg_tests": 15,
+    "new_unit_tests": 2,
+    "existing_jobs_unit_tests": 5,
+    "existing_generation_unit_tests": 13,
+    "lint": 0,
+    "build": 0
+  },
+  "preserved_failures": [
+    "attempt1 portchecker supplied directory instead of exact compose file",
+    "attempt2 unchanged generation subprocess tests failed because production web image has no Python; rerun same source with exact image Node22 binary and host Python13/13pass"
+  ],
+  "unchanged_green_pg_repeated": false,
+  "external_spend": 0,
+  "whole_feature_accepted": false
+}
