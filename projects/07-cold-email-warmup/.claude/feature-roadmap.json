@@ -126,12 +126,14 @@
       "number": 6,
       "name": "Persistent cabinet, full browser and delivery gates",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "blocked",
       "complexity": "complex",
       "depends_on": [
         "f05-evidence-billing-growth"
       ],
-      "blockers": [],
+      "blockers": [
+        "GitHub create_pull_request403 Resource not accessible by integration"
+      ],
       "expected_files": [
         "src/web/app.ts",
         "scripts/ui/f06-browser.mjs"
@@ -140,8 +142,9 @@
         "NFR-n7-002"
       ],
       "sprint": "local-mvp",
-      "current_slice": "A1\u2013A6/B1\u2013B4 accepted; B5 docs/toolkit and B6 PR delivery",
-      "product_accepted_revision": "21e42881"
+      "current_slice": "Local software A1–A6/B1–B5 accepted; B6 PR external403",
+      "product_accepted_revision": "21e42881",
+      "local_accepted_revision": "224508e81ddfbc734241ebdb8c7cdaf4e99931c7"
     }
   ],
   "last_completed": "f05-evidence-billing-growth"

@@ -1,8 +1,9 @@
-# Completion — локальное ПО принято, публикация PR в работе
+# Completion — локальное ПО принято; PR заблокирован доступом GitHub
 
-2026-10-03: F01–F05 и F06 A1–A6/B1–B4 приняты. B5 документы/toolkit завершаются;
-B6 создание PR ещё не подтверждено. Поэтому AC-N7-012 пока PARTIAL и весь delivery
-не объявляется завершённым. [12 критериев](acceptance-traceability.md).
+2026-10-03: F01–F05 и F06 A1–A6/B1–B4 приняты. B5 документы/toolkit завершены.
+B6: фактическая попытка GitHub create_pull_request получила403
+`Resource not accessible by integration`; PR не создан. AC-N7-012 остаётся PARTIAL,
+внешняя поставка не объявляется завершённой. [12 критериев](acceptance-traceability.md).
 
 ## Что работает
 
@@ -42,3 +43,10 @@ Main не создаётся. Текущий локальный URL `http://127.
 Astra/high — независимое review. Native coordinator actualmodel/usage и cost неизвестны.
 [Run](telemetry/features/20261003T023900Z-f06/run.json) содержит время, попытки и
 ссылки на raw usage; cumulative resumed counters не складываются повторно.
+
+## Внешний blocker и готовая передача
+
+Документы и ветка отправлены: `224508e81ddfbc734241ebdb8c7cdaf4e99931c7`. [Создать PR из сравнения](https://github.com/djd1m/2026-AUG-PU-Projects/compare/claude/install-npm-packages-n7l3m5...feature/07-cold-email-warmup?expand=1).
+Точный [черновик](pr-draft.md) и [ответ API](telemetry/features/20261003T023900Z-f06/pr-attempt.json) сохранены.
+Нужна GitHub-интеграция с правом создания PR; доступ автоматически не расширялся.
+Всё независимое локально разрешённое выполнено, новых продуктовых задач не осталось.

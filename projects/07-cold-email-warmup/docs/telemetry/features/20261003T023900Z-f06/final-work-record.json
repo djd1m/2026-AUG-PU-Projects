@@ -1,0 +1,234 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "implement",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261003T023900Z-f06",
+    "work_unit_id": "n7-f06-final-handoff",
+    "current_attempt_id": "b6-pr-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/features/20261003T023900Z-f06/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/features/20261003T023900Z-f06/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "52ae6bcfa3bc111c682c32b9d72bac3e703a880b",
+    "current_revision": "224508e81ddfbc734241ebdb8c7cdaf4e99931c7",
+    "build_revision": "2b5c0c6b974feff5774b064f1fe038a3ff4345e9eb520c089945987ed107774c",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "224508e81ddfbc734241ebdb8c7cdaf4e99931c7",
+      "observed_revision": "224508e81ddfbc734241ebdb8c7cdaf4e99931c7",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "mvp-xl-plan-v1@970d4504",
+    "scope": [
+      "Approved local N7 MVP through F06; all local product and documentation AC accepted, PR external access blocked"
+    ],
+    "exclusions": [
+      "Real sends, live charge, production deploy, AI replies, CRM"
+    ],
+    "action_limits": [
+      "Only N7 subtree mutations; owner-approved isolated agent worktrees; no root toolkit edits"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-N7-001",
+        "required": true
+      },
+      {
+        "id": "AC-N7-002",
+        "required": true
+      },
+      {
+        "id": "AC-N7-003",
+        "required": true
+      },
+      {
+        "id": "AC-N7-004",
+        "required": true
+      },
+      {
+        "id": "AC-N7-005",
+        "required": true
+      },
+      {
+        "id": "AC-N7-006",
+        "required": true
+      },
+      {
+        "id": "AC-N7-007",
+        "required": true
+      },
+      {
+        "id": "AC-N7-008",
+        "required": true
+      },
+      {
+        "id": "AC-N7-009",
+        "required": true
+      },
+      {
+        "id": "AC-N7-010",
+        "required": true
+      },
+      {
+        "id": "AC-N7-011",
+        "required": true
+      },
+      {
+        "id": "AC-N7-012",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "docs/reuse-inventory.md"
+          }
+        },
+        "provenance": "c92da227abe48410864c0c1a7d520b7ef89113b8d9abc686ccd586d3bfddbdf5",
+        "useful_fragment": "Internal reuse source/license/security inventory; implementation compatibility decisions preserved in feature reviews",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Reuse owner-authorized internal auth/session/payment primitives; reject unsafe KDF donors as documented"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No comparable accepted N7 run; task budget is a limit, not forecast",
+      "scope_revision": "mvp-xl-plan-v1@970d4504",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [
+        "Unknown billing and provider activation duration"
+      ],
+      "external_expectations": [
+        "First discovery/CJM/SPARC package bounded to 30 minutes"
+      ],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "mvp-xl-plan-v1@970d4504",
+      "tier": "XL",
+      "rationale": "Consequential consent/legal boundary and payment entitlement; mechanical lower bound S overridden upward",
+      "script": {
+        "input": "Explicit planned paths src/auth.ts db/001-init.sql src/unsubscribe.ts under N7",
+        "exit_code": 0
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "mvp-xl-plan-v1@970d4504",
+      "tier": "XL",
+      "rationale": "Original consent/payment/stop-safety XL gates preserved; current bounded stage only docs and PR, mechanical T does not downgrade feature acceptance",
+      "script": {
+        "input": "bash scripts/complexity-router.sh projects/07-cold-email-warmup/docs/Completion.md projects/07-cold-email-warmup/README.md projects/07-cold-email-warmup/docs/pr-draft.md",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "required",
+    "reason": "complexity-router XL checkpoint; explicitly satisfied OWN-N7-002",
+    "evidence": {
+      "id": "OWN-N7-002",
+      "plan_revision": "mvp-xl-plan-v1@970d4504",
+      "covers": [
+        "plan",
+        "team",
+        "roles",
+        "models",
+        "skills"
+      ],
+      "path": {
+        "root": "project",
+        "path": "docs/decisions-owner.md"
+      },
+      "sha256": "3800e3324efbfafb84f14e78b2f20d8604f9fe9782e8fb08b0a51c62f4562ff0"
+    }
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Current handoff documentation only; actual earlier E2E preflights/results are immutable source-bound feature receipts linked by acceptance-traceability.md",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "b5-docs-1",
+      "status": "completed"
+    },
+    {
+      "id": "b6-pr-1",
+      "status": "failed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "n7-f06-final-handoff",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/Completion.md"
+        },
+        {
+          "root": "project",
+          "path": "docs/acceptance-traceability.md"
+        },
+        {
+          "root": "project",
+          "path": "docs/pr-draft.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [
+    {
+      "ac_id": "AC-N7-012",
+      "outcome": "unknown",
+      "command": "GitHub connector create_pull_request",
+      "exit_code": null,
+      "source_revision": "224508e81ddfbc734241ebdb8c7cdaf4e99931c7",
+      "receipt_id": null
+    }
+  ],
+  "receipts": [],
+  "delivery": null,
+  "evidence_index": {
+    "local_acceptance": "docs/acceptance-traceability.md",
+    "external_blocker": "docs/telemetry/features/20261003T023900Z-f06/pr-attempt.json",
+    "reason_not_delivered": "Mandatory external PR pending403; no pause requested and no local implementation remains"
+  }
+}

@@ -23,3 +23,9 @@ SPARC, ADR, CJM3варианта, pipeline walkthrough и deployment plan вну
 
 См. `projects/07-cold-email-warmup/docs/Completion.md`,
 `docs/acceptance-traceability.md`, `docs/pipeline-walkthrough.md` в этой ветке.
+
+## Фактический результат создания
+
+2026-10-03: GitHub connector вернул403 `Resource not accessible by integration`.
+PR не создан. Полный API blocker: `telemetry/features/20261003T023900Z-f06/pr-attempt.json`.
+[Готовое сравнение для создания PR](https://github.com/djd1m/2026-AUG-PU-Projects/compare/claude/install-npm-packages-n7l3m5...feature/07-cold-email-warmup?expand=1).

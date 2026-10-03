@@ -18,7 +18,7 @@ feature SPARC. PASS означает локальную программную �
 | AC-N7-009 | PASS | Unknown/no-evidence blocked, source/date/counts, comparable public whitelist | [F05 closure](features/f05-evidence-billing-growth/review-b-r1.md), [final layout](features/f06-cabinet-e2e-delivery/review-b-r3.md) | f0fb8556/21e42881 |
 | AC-N7-010 | PASS | Growth happy/edge/security; canonical TEST success, one grant, self/replay blocked | [F05 A](features/f05-evidence-billing-growth/review-a.md), [F05 B](features/f05-evidence-billing-growth/review-b-r1.md), [browser](features/f06-cabinet-e2e-delivery/review-b.md) | f0fb8556 + final |
 | AC-N7-011 | PASS | Type/lint/build, unit39, previously full PG115, meaningful mutations, canary audit | [A receipt](features/f06-cabinet-e2e-delivery/correction-a-r1.md), [R3 receipt](features/f06-cabinet-e2e-delivery/implementation-b-r3.md) | final source map; unchanged PG reused |
-| AC-N7-012 | PARTIAL | Actual shared Docker browser/source/image/screenshots accepted; PR creation pending | [full browser](features/f06-cabinet-e2e-delivery/review-b.md), [layout closure](features/f06-cabinet-e2e-delivery/review-b-r3.md), [PR draft](pr-draft.md) | final + pending external PR |
+| AC-N7-012 | PARTIAL | Actual shared Docker browser/source/image/screenshots accepted; PR blocked: GitHub403 | [full browser](features/f06-cabinet-e2e-delivery/review-b.md), [layout closure](features/f06-cabinet-e2e-delivery/review-b-r3.md), [PR draft](pr-draft.md) | final + external403 |
 
 ## Финальная привязка
 

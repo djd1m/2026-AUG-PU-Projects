@@ -7,12 +7,12 @@
   "tier": "XL",
   "profile": "compact-quality-first-v2",
   "baseline_revision": "52ae6bcfa3bc111c682c32b9d72bac3e703a880b",
-  "final_revision": null,
+  "final_revision": "224508e81ddfbc734241ebdb8c7cdaf4e99931c7",
   "spec_sha256": "72b44888ddab0405d955084d572130649fbdddc70b33d53a364db7dd80f05de5",
   "started_at": "2026-10-03T02:41:50.928106+00:00",
-  "ended_at": null,
-  "status": "in_progress",
-  "current_stage": "A1\u2013A6 and B1\u2013B4 accepted; coordinatorB5docs/toolkit/B6PR inprogress",
+  "ended_at": "2026-10-03T06:22:39.069156+00:00",
+  "status": "blocked_external",
+  "current_stage": "Local software and B5 accepted; B6 actual PR API403, draft/compare ready",
   "actual_model": null,
   "usage": null,
   "cost": null,
@@ -21,8 +21,10 @@
   ],
   "quality": {
     "required_gates_passed": false,
-    "ac_met": 10,
-    "ac_total": 12
+    "ac_met": 11,
+    "ac_total": 12,
+    "local_product_gates_passed": true,
+    "external_pr_gate": "blocked403"
   },
   "author_a_runtime": "sol-a-runtime.json",
   "review_a_runtime": "astra-a-runtime.json",
@@ -38,5 +40,8 @@
   "author_b3_runtime": "sol-b3-runtime.json",
   "review_b_runtime": "astra-b-runtime.json",
   "author_b_r3_runtime": "sol-b-r3-runtime.json",
-  "review_b_r3_runtime": "astra-b-r3-runtime.json"
+  "review_b_r3_runtime": "astra-b-r3-runtime.json",
+  "elapsed_ms": 13248141,
+  "pr_attempt": "pr-attempt.json",
+  "final_revision_scope": "Accepted product plus B5 docs; later closure metadata commit does not change product files"
 }
