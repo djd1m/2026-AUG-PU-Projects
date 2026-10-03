@@ -5,7 +5,7 @@
   "batch_id": "n6b-n7-n8-20261002",
   "project": "projects/08-interior-ai-redesign",
   "feature": "replicate-mvp",
-  "pipeline": "replicate \u2192 next \u2192 go",
+  "pipeline": "replicate → next → go",
   "tier": "XL",
   "risk_flags": [
     "payments",
@@ -40,26 +40,32 @@
     "docs/telemetry/n8-20261002-1740/root-label-closure.md",
     "docs/telemetry/n8-20261002-1740/n8-f01-receipt.md",
     "docs/telemetry/n8-20261002-1740/n8-f01-review-receipt.md",
-    "docs/telemetry/n8-20261002-1740/n8-f01-docker-checks.json"
+    "docs/telemetry/n8-20261002-1740/n8-f01-docker-checks.json",
+    "docs/features/f02b/acceptance.md",
+    "docs/features/f03a/acceptance.md",
+    "docs/features/f03b/acceptance.md",
+    "docs/features/f04a/acceptance.md",
+    "docs/features/f04b/acceptance.md",
+    "docs/features/f06a/acceptance.md",
+    "docs/telemetry/n8-20261002-1740/n8-ui-e2e-6-receipt.md",
+    "docs/telemetry/n8-20261002-1740/n8-f06-restore-1-receipt.md",
+    "docs/telemetry/n8-20261002-1740/n8-f06-p2-closure-receipt.md"
   ],
   "quality": {
     "required_gates_passed": false,
     "ac_met": null,
-    "ac_total": null,
-    "confirmed_findings_by_severity": {
-      "high": 3,
-      "medium": 2,
-      "low": 1
-    },
+    "ac_total": 41,
+    "confirmed_findings_by_severity": null,
     "false_positive_findings": null,
     "known_defects_missed": null,
     "regressions": null,
-    "followup_status": "F01 all scoped checks and fresh reviews accepted; F02 jobs/payment/UI/GPU/globaldelivery remain pending",
+    "followup_status": "F01–F04 local software and F06a docs accepted; actual42+2UI and synthetic21table/10file restore passed. FullF05/F06/MVP blocked by realGPU acceptance; realprovider and deploymentsecurity remain release gates.",
     "open_code_findings_by_severity": {
       "high": 0,
       "medium": 0,
       "low": 0
-    }
+    },
+    "findings_measurement_note": "Historical early aggregate counts were limited to prior stage; no exhaustive cross-run recount performed. Individual immutable review receipts are authoritative; finaloneP2docfindingclosed."
   },
   "metrics": {
     "elapsed_wall_ms": 10335811,
@@ -75,8 +81,8 @@
     "No baseline cost comparison",
     "Host version not exposed"
   ],
-  "current_stage": "F01 accepted; F02a Sol implementation running",
-  "last_observed_at": "2026-10-02T20:35:44.200873+00:00",
+  "current_stage": "draft_delivery_handoff",
+  "last_observed_at": "2026-10-03T03:47:06.236448+00:00",
   "actual_models_observed": {
     "native_coordinator": null,
     "f01_coder": "gpt-6.1-sol",
@@ -84,8 +90,8 @@
     "f01_corrector": "gpt-6.1-sol",
     "f02a_coder": "gpt-6.1-sol"
   },
-  "current_work_unit": "n8-ui-upload-fix",
-  "latest_reconciled_at": "2026-10-03T02:23:36.972059+00:00",
-  "current_source_revision": "76d31d73c75eb67f0bdb7f05a0561cb8196c31a4",
-  "stage_evidence_note": "UI payment fixture correction independently accepted; browser attempts2/3 failed and preserved; bounded upload observer correction active; GPU gate pending."
+  "current_work_unit": "n8-delivery-handoff-1",
+  "latest_reconciled_at": "2026-10-03T03:47:06.236448+00:00",
+  "current_source_revision": "fe2572a7636537c9610ab3e044a91b2e24832499",
+  "stage_evidence_note": "Run passport summary refreshed from source-bound individual receipts. Historical stage receipts/checkcounts retained; no global all-gates pass or modelcost inferred."
 }

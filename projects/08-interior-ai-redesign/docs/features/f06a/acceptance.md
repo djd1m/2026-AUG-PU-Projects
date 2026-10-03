@@ -1,0 +1,9 @@
+# F06a documentation/evidence preparation — accepted with external gates
+
+Reviewed document source: `fe2572a7636537c9610ab3e044a91b2e24832499`; product runtime source `8030270f023d83c9cdd597c4578517a1b58b4b35`.
+
+Sol6.1high prepared seven documents and18 scoped checks,41AC/174links. Coordinator reconciled later actual UI/restore results and checked41AC/213links. Fresh independent Astrahigh [final review](../../telemetry/n8-20261002-1740/n8-f06-final-review-receipt.md) verified all41 mappings, seven document hashes,92source/83runtime hashes,42+2browser results,21tables/451rows/10file restore evidence and safe documented ownership boundaries. It found one P2 status wording error; the exact correction and hash refresh received [fresh independent closure](../../telemetry/n8-20261002-1740/n8-f06-p2-closure-receipt.md). Original findings, author checks, failed/interrupted attempts and timing gaps remain unchanged.
+
+Accepted scope: bilingual setup/readme, individual evidence map, inert operator commands, source-bound actual browser and synthetic recovery evidence, Completion/FinalSummary/pipeline walkthrough. No product code changed after8030270f. This accepts a reviewable draft software/documentation package, not fullF06/MVP, realGPU or provider acceptance.
+
+Still accepted-scope pending: F05 CUDA execution/safe pinned weights and GPU dependency compatibility/security, licensed12rooms×3styles geometry,≥30warm inference samples p95≤25s. Real provider acceptance and final deployment security/configuration remain release gates. No GPU rental, model download, external spend, livecharge, mail, deployment, merge or public posting was performed. The existing zero-spend autonomy does not authorize those effects. Full delivery stage remains blocked; draft PR may be published under Completion authority to `claude/install-npm-packages-n7l3m5`.
