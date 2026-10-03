@@ -237,10 +237,10 @@ export function createJobs(pool, config, {trustedClock} = {}) {
       const evidenceSha=sha(canonicalEvidence); // Serialization/hash before SQL locks.
       return ownedTransaction(id,async(c,j,now,s)=>{
         if (j.fence!==fence) return false;
-        // Completion denials never reconcile hosted credit/spend or cleanup state.
+        if (await expire(c,j,now,s) || !live(j,now,fence)) return false;
         if (hosted || s) {
-          if (!hosted || !live(j,now,fence) || !s) return false;
-        } else if (await expire(c,j,now,s) || !live(j,now,fence)) return false;
+          if (!hosted || !s) return false;
+        }
         if (!hosted && j.mode!==null && j.mode!==mode) return false;
         const input=(await c.query('SELECT * FROM upload WHERE id=$1 AND account_id=$2',[j.upload_id,j.account_id])).rows[0];
         if(hosted) {

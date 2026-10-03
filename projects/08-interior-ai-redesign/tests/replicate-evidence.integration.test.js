@@ -79,6 +79,36 @@ test('F07 I5a atomic hosted evidence on dedicated PostgreSQL16',async t=>{
     const before=await allState();assert.equal(await jobs(config).complete(c.job_id,c.fence,output),false);
     assert.deepEqual(await allState(),before,'denial must have zero DB effects');
   }
+  async function terminalState(c,before,reason) {
+    const after=await allState(),j=after.jobs.find(j=>j.id===c.job_id);
+    // First oracle is the missing lifecycle effect, before reason or conservation.
+    assert.equal(j.status,'failed','current-fence completion must terminalize');
+    const original=before.jobs.find(j=>j.id===c.job_id);
+    assert.equal(j.fence,original.fence+1);assert.equal(j.lease_until,null);
+    assert.equal(j.failure_reason,reason);assert.equal(j.reserved,false);
+    const releases=after.credit.filter(e=>e.kind==='release'&&e.reference===c.job_id);
+    assert.equal(releases.length,1,'exactly one unique customer credit release');
+    const release=releases[0];assert.match(release.id,/^[0-9a-f-]{36}$/);
+    assert.deepEqual(release,{id:release.id,account_id:c.account_id,delta:1,kind:'release',
+      reference:c.job_id,created_at:now});
+    const expected=structuredClone(before),ej=expected.jobs.find(j=>j.id===c.job_id),
+      es=expected.submissions.find(s=>s.job_id===c.job_id);
+    Object.assign(ej,{status:'failed',failure_reason:reason,fence:ej.fence+1,lease_until:null,
+      finished_at:now,reserved:false});
+    if(es.cleanup_state==='none')es.cleanup_state='needed';
+    expected.credit.push(release);expected.credit.sort((a,b)=>a.id.localeCompare(b.id));
+    // Literal original ticket/attempt/counter/spend, output/evidence and cleanup identity.
+    assert.deepEqual(after,expected,'only terminal fields, cleanup marker and customer release may change');
+    assert.equal(await jobs().complete(c.job_id,c.fence,c.output),false);
+    assert.equal(await jobs().complete(c.job_id,j.fence,c.output),false);
+    assert.equal(await jobs().heartbeat(c.job_id,c.fence),false);
+    assert.equal(await jobs().fail(c.job_id,j.fence),false);
+    assert.deepEqual(await allState(),after,'repeated operations cannot release twice');
+  }
+  async function terminalDeny(c,output,reason) {
+    const before=await allState();assert.equal(await jobs().complete(c.job_id,c.fence,output),false);
+    await terminalState({...c,output},before,reason);
+  }
   async function barrier(sql,args,actions,beforeRelease=()=>{}) {
     const blocker=await pool.connect();let pending;
     try {
@@ -154,7 +184,7 @@ test('F07 I5a atomic hosted evidence on dedicated PostgreSQL16',async t=>{
       assert.ok([output.output_key,other.output_key].includes((await row(c.job_id)).output_key));
       assert.deepEqual(await conservation(),before);
     });
-    await t.test('clock after account/job/submission lock waits enforces original lease/attempt/hard deadline without release',async()=>{
+    await t.test('clock after account/job/submission lock waits preserves lease-only denial and terminalizes original attempt/hard deadline',async()=>{
       for(const lock of ['account','job','submission'])for(const deadline of ['lease','attempt','hard']) {
         await reset();const {c,output}=await submitted();
         if(deadline==='hard')await pool.query('UPDATE job SET hard_deadline=$2 WHERE id=$1',[c.job_id,new Date(+now+1000)]);
@@ -163,7 +193,8 @@ test('F07 I5a atomic hosted evidence on dedicated PostgreSQL16',async t=>{
         const results=await barrier(`SELECT id FROM ${table} WHERE id=$1 FOR UPDATE`,[id],
           [()=>jobs().complete(c.job_id,c.fence,output)],()=>advance(deadline==='attempt'?179000:deadline==='lease'?29000:1000));
         assert.equal(results[0].status,'fulfilled');assert.equal(results[0].value,false);
-        assert.deepEqual(await allState(),before);
+        if(deadline==='lease')assert.deepEqual(await allState(),before);
+        else await terminalState({...c,output},before,deadline+'_deadline');
       }
     });
     await t.test('reclaim current fence succeeds privately with original ticket/deadlines; stale old fence has no effect',async()=>{
@@ -175,7 +206,26 @@ test('F07 I5a atomic hosted evidence on dedicated PostgreSQL16',async t=>{
       assert.equal(j.hard_deadline.getTime(),c.hard_deadline.getTime());assert.equal(j.attempts,1);
       assert.deepEqual(await conservation(),before);
     });
-    await t.test('deleted input/job, changed hashes/owner/dimensions, wrong mode/ticket/deadline deny with no partial state',async()=>{
+    await t.test('stale fence after new owner cannot terminalize at original attempt/hard deadline',async()=>{
+      for(const deadline of ['attempt','hard']) {
+        await reset();const {c}=await submitted();advance(29000);
+        const fresh=await jobs().claim();assert.equal(fresh.fence,c.fence+1);
+        const output=await outputFor(fresh);
+        if(deadline==='hard')await pool.query('UPDATE job SET hard_deadline=$2 WHERE id=$1',[c.job_id,now]);
+        else now=new Date(c.attempt_deadline);
+        await deny(c,output);
+        await terminalDeny(fresh,output,deadline+'_deadline');
+      }
+    });
+    await t.test('valid local output on expired submitted job restores lifecycle before mode denial',async()=>{
+      for(const mode of ['fixture','controlnet'])for(const deadline of ['attempt','hard']) {
+        await reset();const {c}=await submitted(),output=fixtureOutput();output.mode=mode;
+        if(deadline==='hard')await pool.query('UPDATE job SET hard_deadline=$2 WHERE id=$1',[c.job_id,now]);
+        else now=new Date(c.attempt_deadline);
+        await terminalDeny(c,output,deadline+'_deadline');
+      }
+    });
+    await t.test('deleted input/job and binding changes retain terminal causes; healthy geometry mismatch denies purely',async()=>{
       for(const kind of ['delete','input_deleted','hash','width','owner','mode','ticket','consumed','first_ticket','attempt','deadline','job_deleted']) {
         await reset();const {c,output}=await submitted();
         if(kind==='delete')await jobs().deleteUpload(c.account_id,c.upload_id);
@@ -190,18 +240,24 @@ test('F07 I5a atomic hosted evidence on dedicated PostgreSQL16',async t=>{
         if(kind==='attempt')await pool.query('UPDATE job SET attempts=2 WHERE id=$1',[c.job_id]);
         if(kind==='deadline')await pool.query("UPDATE job SET attempt_deadline=attempt_deadline+interval '1 second' WHERE id=$1",[c.job_id]);
         if(kind==='job_deleted')await pool.query('UPDATE job SET deleted_at=$2 WHERE id=$1',[c.job_id,now]);
-        await deny(c,output);
+        if(['input_deleted','hash','owner'].includes(kind))await terminalDeny(c,output,'submission_input_revoked');
+        else if(['mode','ticket','consumed','first_ticket','attempt','deadline'].includes(kind))
+          await terminalDeny(c,output,'submission_binding_mismatch');
+        else await deny(c,output);
       }
     });
     await t.test('every cleanup designation, quarantine and nonsucceeded/unknown provider status excludes completion',async()=>{
       for(const cleanup of ['needed','claimed','done','unresolved']) {
         await reset();const {c,output}=await submitted();
-        await pool.query('UPDATE provider_submission SET cleanup_state=$2 WHERE job_id=$1',[c.job_id,cleanup]);await deny(c,output);
+        await pool.query('UPDATE provider_submission SET cleanup_state=$2 WHERE job_id=$1',[c.job_id,cleanup]);
+        await terminalDeny(c,output,'submission_binding_mismatch');
       }
       await reset();const conflict=await submitted();await conflict.a.bindPrediction(conflict.c.job_id,{...identity(),prediction_id:'conflicting'});
-      await deny(conflict.c,conflict.output);
+      await terminalDeny(conflict.c,conflict.output,'prediction_identity_conflict');
       for(const status of ['starting','processing','failed','canceled','aborted',null]) {
-        await reset();const {c,output}=await submitted({status});await deny(c,output);
+        await reset();const {c,output}=await submitted({status});
+        if(['failed','canceled','aborted'].includes(status))await terminalDeny(c,output,'provider_failed');
+        else await deny(c,output);
       }
       await reset();const missing=await submitted({known:false});await deny(missing.c,missing.output);
     });
@@ -240,7 +296,7 @@ test('F07 I5a atomic hosted evidence on dedicated PostgreSQL16',async t=>{
     });
     await t.test('deletion or cleanup committed while completion waits cannot attach a late result',async()=>{
       for(const cause of ['delete','cleanup']) {
-        await reset();const {c,output}=await submitted();let deniedState;
+        await reset();const {c,output}=await submitted();let deniedState;const before=await allState();
         const results=await barrier('SELECT id FROM account WHERE id=$1 FOR UPDATE',[c.account_id],
           [()=>jobs().complete(c.job_id,c.fence,output)],async blocker=>{
             if(cause==='delete')await blocker.query('UPDATE job SET deleted_at=$2,fence=fence+1 WHERE id=$1',[c.job_id,now]);
@@ -249,9 +305,14 @@ test('F07 I5a atomic hosted evidence on dedicated PostgreSQL16',async t=>{
               submission:(await blocker.query('SELECT * FROM provider_submission WHERE job_id=$1',[c.job_id])).rows[0]};
           });
         assert.equal(results[0].status,'fulfilled');assert.equal(results[0].value,false);
-        assert.deepEqual(await row(c.job_id),deniedState.job);assert.deepEqual(await sub(c.job_id),deniedState.submission);
-        assert.equal(await count('SELECT count(*)::int AS n FROM generation_evidence'),0);
-        assert.equal(await count("SELECT count(*)::int AS n FROM credit_ledger WHERE kind='release'"),0);
+        if(cause==='cleanup') {
+          before.jobs=[deniedState.job];before.submissions=[deniedState.submission];
+          await terminalState({...c,output},before,'submission_binding_mismatch');
+        } else {
+          assert.deepEqual(await row(c.job_id),deniedState.job);assert.deepEqual(await sub(c.job_id),deniedState.submission);
+          assert.equal(await count('SELECT count(*)::int AS n FROM generation_evidence'),0);
+          assert.equal(await count("SELECT count(*)::int AS n FROM credit_ledger WHERE kind='release'"),0);
+        }
       }
     });
     await t.test('atomic rollback if final job update fails leaves no evidence, output or financial effects',async()=>{
