@@ -81,8 +81,8 @@
     "No baseline cost comparison",
     "Host version not exposed"
   ],
-  "current_stage": "replicate_I4c_prepare",
-  "last_observed_at": "2026-10-03T13:20:50.773405+00:00",
+  "current_stage": "replicate_I4c_IMPLEMENT",
+  "last_observed_at": "2026-10-03T13:24:16.067439+00:00",
   "actual_models_observed": {
     "native_coordinator": null,
     "f01_coder": "gpt-6.1-sol",
@@ -107,7 +107,7 @@
   },
   "current_work_unit": "n8-replicate-i4c",
   "latest_reconciled_at": "2026-10-03T03:55:52.556690+00:00",
-  "current_source_revision": "52c556af0cd2f9f3af18b21f3154fc1d0b0a839f",
+  "current_source_revision": "9a65eedd11ab166d186412201a0cfc2c884c094d",
   "stage_evidence_note": "Run passport summary refreshed from source-bound individual receipts. Historical stage receipts/checkcounts retained; no global all-gates pass or modelcost inferred.",
   "external_blockers": [
     "F05: no CUDA devices/runtime, safe offlineweights/GPUdependency verification and licensed12x3corpus notprovisioned; geometry/performance unmeasured",
