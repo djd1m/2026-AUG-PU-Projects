@@ -1,0 +1,21 @@
+[
+  {
+    "id": "c56726b0bdae1cd11124f3053334b001bbfa08b916092018fdc9c75e9700a94e",
+    "service": "web",
+    "image": "sha256:1b1f2779ae7bf58a1162f80f1103fc043144616358a074367de8a060816d305d",
+    "ports": {
+      "3000/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": "18708"
+        }
+      ]
+    }
+  },
+  {
+    "id": "056a47ab78dcaca37a3efe314a8784773ad9f11baf7318202afcecc1be535362",
+    "service": "db",
+    "image": "sha256:38471f330eb885e04de130b768d6db4e10469e2311879c7e5c699f6d2d8a1c74",
+    "ports": {}
+  }
+]

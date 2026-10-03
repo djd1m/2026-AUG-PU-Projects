@@ -1,0 +1,35 @@
+{
+  "at": "2026-10-03T02:25:51.332080+00:00",
+  "status": "ready",
+  "source_revision": "c5f3e3d8306b3b0b7e5dabfeee8ec3515db42cda",
+  "build_revision": "c5f3e3d8306b3b0b7e5dabfeee8ec3515db42cda",
+  "source_sha256": "00a1e013a6e4fe1a241da9b23adb3654a3e9bbf6a3d0456736c22ecfed517f3e",
+  "image_id": "sha256:41a3d420d3265cf2d35e176564172459cdd47beae379e1f5f3735394648873f7",
+  "environment": "n7f05b loopback18708 privatePG",
+  "inputs": [
+    {
+      "name": "local_test provider",
+      "available": true
+    },
+    {
+      "name": "own existing random runtime secrets",
+      "available": true
+    },
+    {
+      "name": "migration011",
+      "available": true
+    }
+  ],
+  "test_command": "docker compose -p n7f05b exec -T web npx tsx --test --test-concurrency=1 tests/evidence-integration.test.ts",
+  "environment_available": true,
+  "evidence_root": {
+    "root": "project",
+    "path": "docs/telemetry/features/20261003T010600Z-f05"
+  },
+  "expected_effects": [
+    "three temporary F1/F2 source mutants in own container, test tenant reset, byte restore; final affected green"
+  ],
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "build_sha256": "e12d1ad7e80b56be58c851c8a3ce5d964472621b5cc359a77fcb364e3892f14d"
+}

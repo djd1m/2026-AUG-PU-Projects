@@ -1,0 +1,102 @@
+TAP version 13
+# Subtest: F05 B1–B6 real PostgreSQL HTTP evidence and public report gates
+    # Subtest: B1 owner input manual provenance unknown and no external source IO
+    ok 1 - B1 owner input manual provenance unknown and no external source IO
+      ---
+      duration_ms: 123.706224
+      type: 'test'
+      ...
+    # Subtest: F1 primitive direction rejects arrays objects null with zero observation/event writes
+    not ok 2 - F1 primitive direction rejects arrays objects null with zero observation/event writes
+      ---
+      duration_ms: 46.067137
+      type: 'test'
+      location: '/app/tests/evidence-integration.test.ts:1:4036'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        201 !== 400
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 400
+      actual: 201
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (/app/tests/evidence-integration.test.ts:43:100)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (/app/tests/evidence-integration.test.ts:39:3)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: B2 owner pair, stale/incomparable/noimprovement and foreign404
+    ok 3 - B2 owner pair, stale/incomparable/noimprovement and foreign404
+      ---
+      duration_ms: 83.27124
+      type: 'test'
+      ...
+    # Subtest: B3 concurrent explicit share yields ONE report/event and payload409
+    ok 4 - B3 concurrent explicit share yields ONE report/event and payload409
+      ---
+      duration_ms: 162.328048
+      type: 'test'
+      ...
+    # Subtest: B2/B3 HTTP denominators29/30 raw counts versus ratios and window guard
+    ok 5 - B2/B3 HTTP denominators29/30 raw counts versus ratios and window guard
+      ---
+      duration_ms: 102.252196
+      type: 'test'
+      ...
+    # Subtest: B3 authoritative clock after waiting lock blocks expired create
+    ok 6 - B3 authoritative clock after waiting lock blocks expired create
+      ---
+      duration_ms: 280.422771
+      type: 'test'
+      ...
+    # Subtest: B4 EVERY view current TEST entitlement, expiry and committed revocation
+    ok 7 - B4 EVERY view current TEST entitlement, expiry and committed revocation
+      ---
+      duration_ms: 124.568734
+      type: 'test'
+      ...
+    # Subtest: F1 primitive kind rejects arrays objects null with zero observation/event writes
+    ok 8 - F1 primitive kind rejects arrays objects null with zero observation/event writes
+      ---
+      duration_ms: 23.842239
+      type: 'test'
+      ...
+    # Subtest: B5 own aggregate counts explicit idempotent copy/link and bounded histories
+    ok 9 - B5 own aggregate counts explicit idempotent copy/link and bounded histories
+      ---
+      duration_ms: 229.628422
+      type: 'test'
+      ...
+    # Subtest: B1/B5 server storage caps observations1000 reports200 events600
+    ok 10 - B1/B5 server storage caps observations1000 reports200 events600
+      ---
+      duration_ms: 167.600029
+      type: 'test'
+      ...
+    1..10
+not ok 1 - F05 B1–B6 real PostgreSQL HTTP evidence and public report gates
+  ---
+  duration_ms: 2441.005691
+  type: 'test'
+  location: '/app/tests/evidence-integration.test.ts:1:977'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 11
+# suites 0
+# pass 9
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2957.354136
+
+Mutant exit: 1
