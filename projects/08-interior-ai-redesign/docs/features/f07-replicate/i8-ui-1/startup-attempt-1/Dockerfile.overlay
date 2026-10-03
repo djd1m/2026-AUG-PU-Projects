@@ -1,0 +1,4 @@
+FROM sha256:0579a52816d8a012b68a02628b8ba9a9fc1c1686ba3329ea3fa28d3adfe53d18
+COPY web /app/web
+COPY db /app/db
+COPY scripts /app/scripts

@@ -1,0 +1,18 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.overlay
+#1 transferring dockerfile: 184B 0.0s done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/sha256:0579a52816d8a012b68a02628b8ba9a9fc1c1686ba3329ea3fa28d3adfe53d18
+#2 ERROR: pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed
+------
+ > [internal] load metadata for docker.io/library/sha256:0579a52816d8a012b68a02628b8ba9a9fc1c1686ba3329ea3fa28d3adfe53d18:
+------
+Dockerfile.overlay:1
+--------------------
+   1 | >>> FROM sha256:0579a52816d8a012b68a02628b8ba9a9fc1c1686ba3329ea3fa28d3adfe53d18
+   2 |     COPY web /app/web
+   3 |     COPY db /app/db
+--------------------
+ERROR: failed to build: failed to solve: sha256:0579a52816d8a012b68a02628b8ba9a9fc1c1686ba3329ea3fa28d3adfe53d18: failed to resolve source metadata for docker.io/library/sha256:0579a52816d8a012b68a02628b8ba9a9fc1c1686ba3329ea3fa28d3adfe53d18: pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed

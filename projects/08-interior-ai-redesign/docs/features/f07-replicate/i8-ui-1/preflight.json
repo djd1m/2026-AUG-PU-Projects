@@ -1,0 +1,41 @@
+{
+  "status": "ready",
+  "reason": "Fresh 120 host/118 container/176 client hashes verified; HTTPS200, eight migrations, Astra source CONDITIONAL ACCEPT; actual52+2 pending.",
+  "at": "2026-10-03T16:55:27.971824+00:00",
+  "source_revision": "05d154a4f5b0a5b186b93ab11feaa289a451d7f3",
+  "build_revision": "f4d840c1ff3350e4bb4a4bbcdf8d12e246df887563ea2d5b4fa343940916d8de",
+  "environment": "Owned n8-ui-e2e private PG16.10/eight migrations/test fixture; Node22; image sha256:39ff8ab3ffe852bcaae36952d6418239f1edd4727c0e1baf503fcef5ce44fb44; internalHTTPS https://n8-ui.test; total2CPU; shared Playwright1.63 remote temporarynetwork only. No provider token in app.",
+  "environment_available": true,
+  "test_command": "docker exec n8-ui-e2e-web-1 timeout 1200 node scripts/ui/browser.js",
+  "inputs": [
+    {
+      "name": "Exact current source/image and reviewed F07 contracts",
+      "available": true
+    },
+    {
+      "name": "Owned marked PG16 schema with eight migrations, synthetic upload and mocked bounded hosted transport",
+      "available": true
+    },
+    {
+      "name": "Private runtime env available; fixture mode, worker disabled, cleanup false, no live provider key; secret values excluded",
+      "available": true
+    },
+    {
+      "name": "Existing Playwright1.63 packages hashbound to shared container and copied client 5603cf6748901d089ef1249a92c95dbd7d63d747d22f09f566ea3af5d7e03b82",
+      "available": true
+    }
+  ],
+  "expected_effects": [
+    "Create owned synthetic accounts/media/ledger/payment/jobs/evidence within unchanged limits",
+    "Drive actual I1/I2/I3/I5 paths with injected in-process bounded hosted API/DNS/output transport, no external calls",
+    "Exercise52DOM/API checks1440/390, then actualdisabled-payment server2checks",
+    "Record screenshots/results; preserve own DB/media for representative restore, then remove own resources",
+    "No real charges/provider/GPU/email/deploy/publicposting"
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "docs/features/f07-replicate/i8-ui-1"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null
+}
