@@ -1,0 +1,49 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 381B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22.20.0-bookworm-slim
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 101B done
+#3 DONE 0.0s
+
+#4 [1/8] FROM docker.io/library/node:22.20.0-bookworm-slim@sha256:b21fe589dfbe5cc39365d0544b9be3f1f33f55f3c86c87a76ff65a02f8f5848e
+#4 resolve docker.io/library/node:22.20.0-bookworm-slim@sha256:b21fe589dfbe5cc39365d0544b9be3f1f33f55f3c86c87a76ff65a02f8f5848e 0.1s done
+#4 DONE 0.1s
+
+#5 [internal] load build context
+#5 transferring context: 67.51kB 0.0s done
+#5 DONE 0.0s
+
+#6 [2/8] WORKDIR /app
+#6 CACHED
+
+#7 [3/8] COPY package.json package-lock.json ./
+#7 CACHED
+
+#8 [4/8] RUN npm ci --omit=dev --include=optional && npm cache clean --force
+#8 71.06 npm error Exit handler never called!
+#8 71.06 npm error This is an error with npm itself. Please report this error at:
+#8 71.06 npm error   <https://github.com/npm/cli/issues>
+#8 71.06 npm error A complete log of this run can be found in: /root/.npm/_logs/2026-10-03T01_40_48_805Z-debug-0.log
+#8 ERROR: process "/bin/sh -c npm ci --omit=dev --include=optional && npm cache clean --force" did not complete successfully: exit code: 1
+------
+ > [4/8] RUN npm ci --omit=dev --include=optional && npm cache clean --force:
+71.06 npm error Exit handler never called!
+71.06 npm error This is an error with npm itself. Please report this error at:
+71.06 npm error   <https://github.com/npm/cli/issues>
+71.06 npm error A complete log of this run can be found in: /root/.npm/_logs/2026-10-03T01_40_48_805Z-debug-0.log
+------
+Dockerfile:4
+--------------------
+   2 |     WORKDIR /app
+   3 |     COPY package.json package-lock.json ./
+   4 | >>> RUN npm ci --omit=dev --include=optional && npm cache clean --force
+   5 |     COPY web ./web
+   6 |     COPY db ./db
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c npm ci --omit=dev --include=optional && npm cache clean --force" did not complete successfully: exit code: 1

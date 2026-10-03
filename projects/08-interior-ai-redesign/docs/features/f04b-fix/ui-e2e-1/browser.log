@@ -1,0 +1,13 @@
+file:///app/scripts/payment-fixture.js:14
+  if(!p?.provider_id)throw new Error('Run asynchronous checkout creation first');
+                           ^
+
+Error: Run asynchronous checkout creation first
+    at fixtureSignal (file:///app/scripts/payment-fixture.js:14:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async drive (file:///app/scripts/ui/fixture-driver.js:37:11)
+    at async packagePurchase (file:///app/scripts/ui/browser.js:42:48)
+    at async check (file:///app/scripts/ui/browser.js:22:34)
+    at async file:///app/scripts/ui/browser.js:65:5
+
+Node.js v22.20.0

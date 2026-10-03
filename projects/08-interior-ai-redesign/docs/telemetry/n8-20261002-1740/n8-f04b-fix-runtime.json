@@ -1,7 +1,7 @@
 {
   "work_unit_id": "n8-f04b-fix",
   "attempt_id": "n8-f04b-fix-2",
-  "status": "running",
+  "status": "completed",
   "source_revision": "7dd37e81fbe24be8d1300d6884a82ed303c53373",
   "cli_session_id": 40907,
   "started_at": "2026-10-03T01:15:13Z",
@@ -13,5 +13,7 @@
   "cost": null,
   "evidence": "/tmp/n8-f04b-fix/runtime.log host banner",
   "budget_seconds": 1500,
-  "preparation_failure": "f04b-fix-preparation-failure.json; no prior coding process started"
+  "preparation_failure": "f04b-fix-preparation-failure.json; no prior coding process started",
+  "exit_code": 0,
+  "finished_at": "2026-10-03T01:37:22Z"
 }
