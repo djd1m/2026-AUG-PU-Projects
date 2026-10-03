@@ -20,15 +20,15 @@
   ],
   "comparison_id": null,
   "baseline_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
-  "final_revision": null,
+  "final_revision": "925f1bd1424ce0e55fe48015a02cc0b29011e41b",
   "spec_sha256": "92674e25074fcda42c930138b7ff03f6ec1671751f802b89800604176023f499",
   "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
   "host": "Codex native collaboration",
   "host_version": null,
   "billing_mode": "unknown",
   "started_at": "2026-10-02T17:43:28.390084+00:00",
-  "ended_at": null,
-  "status": "running",
+  "ended_at": "2026-10-03T18:18:25.987299+00:00",
+  "status": "blocked",
   "acceptance_evidence": [
     "docs/telemetry/n8-20261002-1740/cjm-sol-1-receipt.md",
     "docs/telemetry/n8-20261002-1740/phase1-gates.json",
@@ -60,7 +60,7 @@
     "false_positive_findings": null,
     "known_defects_missed": null,
     "regressions": null,
-    "followup_status": "F07 AC1\u201311 local software accepted: full I7 composite, fresh source review, actual52+2 browser,23-table/28-file hosted restore PASS. External paid pilot/real quality/performance/license/privacy/release and PR access remain gated.",
+    "followup_status": "F07 AC1\u201311 local software accepted: full I7 composite, fresh source review, actual52+2 browser,23-table/28-file hosted restore PASS. External paid pilot/real quality/performance/license/privacy/release and PR access remain gated. Fresh final draft PR attempt403; no PR exists. All authorized local AC complete; external blocked, no active worker or owned runtime.",
     "open_code_findings_by_severity": {
       "high": 0,
       "medium": 0,
@@ -72,7 +72,7 @@
     "replicate_local_gates_passed": true
   },
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 88497597,
     "active_wall_ms": null,
     "tokens": null,
     "cost": null
@@ -85,8 +85,8 @@
     "No baseline cost comparison",
     "Host version not exposed"
   ],
-  "current_stage": "I8_LOCAL_ACCEPTED_PR_DELIVERY",
-  "last_observed_at": "2026-10-03T18:14:35.788595+00:00",
+  "current_stage": "LOCAL_ACCEPTED_EXTERNAL_GATES",
+  "last_observed_at": "2026-10-03T18:18:25.987299+00:00",
   "actual_models_observed": {
     "native_coordinator": null,
     "f01_coder": "gpt-6.1-sol",
@@ -124,7 +124,7 @@
   ],
   "delivery_artifact_uri": "https://github.com/djd1m/2026-AUG-PU-Projects/tree/feature/08-interior-ai/projects/08-interior-ai-redesign",
   "draft_pr_uri": null,
-  "final_revision_note": "Replicate transition active; earlier terminal revision retained in historical receipts/resumption.",
+  "final_revision_note": "Source/evidence delivery commit; subsequent terminal telemetry commit does not change tested product.",
   "resumption": {
     "observed_at": "2026-10-03T06:18:56.642607+00:00",
     "previous_terminal_state": "blocked",
@@ -134,5 +134,10 @@
     "next_step": "Astra PLAN, then validated bounded Sol implementation and fresh Astra REVIEW",
     "owner": "root until explicit coordinator handoff",
     "elapsed_wall_note": "Previous measured elapsed preserved; recompute on next terminal from original started_at, do not erase blocked interval."
-  }
+  },
+  "blockers": [
+    "GitHub integration cannot create PR (403); pushed branch and exact draft available",
+    "Real paid pilot authorization, provider/corpus/license/privacy/safety/billing readiness and real quality/performance acceptance remain outside current zero-spend authority"
+  ],
+  "next_authorized_action": "When PR permissions or explicit concrete pilot authorization and required inputs change, resume from docs/features/f07-replicate/local-acceptance.md and docs/features/f07-replicate/05_completion.md; do not replay unchanged local green suites."
 }
