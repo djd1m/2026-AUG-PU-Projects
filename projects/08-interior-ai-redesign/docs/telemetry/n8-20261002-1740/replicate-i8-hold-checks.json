@@ -1,0 +1,74 @@
+{
+  "source_revision": "c0bd24c84e96049f29e64539972eb31cd25f64a2",
+  "changed_sha256": {
+    "scripts/ui/replicate-cases.js": "c183d5b3190aa4a3aec29c1c140d509fbc9b23ad918dc60c609bb398d3b92bee",
+    "tests/ui-replicate-corrections.test.js": "5599f52be39df92baeacfe65de366cc85528b026649cc038fc910732a0c7f095",
+    "tests/ui-replicate-hold.test.js": "b3f660f9221a4e5d58f8cad463bf28951246304da26d03d739f7944c42b63ef1",
+    "docs/features/f07-replicate/i8-hold-correction.md": "6adf2936a9f8bca8aa75c28357b4965bd4e3011fca6b4f562ebe9eb68b367145"
+  },
+  "input_sha256": {
+    "docs/features/f07-replicate/01_specification.md": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+    "docs/features/f07-replicate/03_architecture.md": "c14c88440c537afcb1c09fe4d843c253c3e0ed4e0c904105fc3297e6fe9803b9",
+    "docs/features/f07-replicate/i6b-implementation.md": "d61b652ccc04e4c559a9d1d8ea27828d8d73be65cee94ceb32c577dbc9719be9",
+    "docs/features/f07-replicate/i8-ui-1/browser.log": "fb8cec502a8e69e44a7b24bde615247e6760fe0bef25313af926d6decd786ed4",
+    "scripts/ui/browser.js": "d9607aee32dd8d37cf8743f707dee31fb0073ed506dd72013a4cdcd80af1eb21",
+    "scripts/ui/browser-disabled.js": "6015dc427458f45ca052f98f180713683465bdef244a81a5625447bf9d01dc55",
+    "scripts/ui/replicate-fixture.js": "4f88b1bef6bf32cbdb6170a4ef0fed363a0333e0470ef2b392b35bc1ed45384e",
+    "tests/ui-replicate-registration.test.js": "2234b041c3c454a0e8a22661950b488e656b62ecf652357a694770f0e2d6892d"
+  },
+  "dirty_patch_sha256": "7e5bd1ca1c22fe5738e24f7debb466268f17ad8b3694ab4f38b4ab2fc153f1a6",
+  "launch_sha256": "b0b48a4816665c881b6a9ed1eac6f1da6a0cbd1d7a146eab2447ceb860ad3ea6",
+  "protected_files": 2189,
+  "protected_drift": [],
+  "hosted_names_unchanged": [
+    "${width}: hosted deletion during held remote response fences completion/cleanup",
+    "${width}: hosted hold after committed authorization still completes privately",
+    "${width}: hosted hold before send zero HTTP/one release",
+    "${width}: hosted missing/disabled configuration zero HTTP and no DOM result",
+    "${width}: hosted mock actual worker/private comparison/gallery/unverified refusal"
+  ],
+  "expected_actual_browser_checks": {
+    "main": 52,
+    "disabled": 2
+  },
+  "actual_browser": "pending parent after fresh Astra",
+  "focused_tests": {
+    "exit_code": 0,
+    "pass": 23,
+    "fail": 0,
+    "skip": 0,
+    "log": "replicate-i8-hold-tests-restored-green.log"
+  },
+  "mutation_red": {
+    "exit_code": 1,
+    "log": "replicate-i8-hold-mutation-red.log"
+  },
+  "build": {
+    "exit_code": 0,
+    "kind": "ESM/static build syntax only; no Docker image/runtime build",
+    "log": "replicate-i8-hold-build.log"
+  },
+  "diff_check_exit_code": 0,
+  "no_commit_push": true,
+  "scope_guard": {
+    "tracked_changed": [
+      "projects/08-interior-ai-redesign/scripts/ui/replicate-cases.js",
+      "projects/08-interior-ai-redesign/tests/ui-replicate-corrections.test.js"
+    ],
+    "unexpected_untracked": [],
+    "supplied_dependency_symlink_preserved": true
+  },
+  "evidence_sha256": {
+    "replicate-i8-hold-launch.json": "b0b48a4816665c881b6a9ed1eac6f1da6a0cbd1d7a146eab2447ceb860ad3ea6",
+    "replicate-i8-hold-protected-before.json": "94da04d078251e388ba9b90df278bebca3b8ba197b8578850d10fa91bb7f1b34",
+    "replicate-i8-hold-mutation-red.log": "a7d0c6cc13a69d73b5d0d37c8ed219a6ce3291ae4e12c7256efa927599b03160",
+    "replicate-i8-hold-original-cases.js": "7c9ce79ced16c8b58b904942f8bccf9156c2384f4df336016b92efe775b6765c",
+    "replicate-i8-hold-protected-after.json": "94da04d078251e388ba9b90df278bebca3b8ba197b8578850d10fa91bb7f1b34",
+    "replicate-i8-hold-mutation.json": "a2b4aae5d87a98f8c262f91c0101ab92a34a28fcfb25eb8adce332249818f631",
+    "replicate-i8-hold-tests.log": "5afe179f1cbd08b7969e27cd5d6aa0ba7720ccf114c478c36e309dc7fb774e25",
+    "replicate-i8-hold-candidate-cases.js": "c183d5b3190aa4a3aec29c1c140d509fbc9b23ad918dc60c609bb398d3b92bee",
+    "replicate-i8-hold-build.log": "0aec2d6d64684e49007fa69ee2856c2ced7b6631bda52ca8bda26e011b3a9d81",
+    "replicate-i8-hold-tests-restored-green.log": "5652c4632457732868757777da4860bc1dde5c3310735c05c94998b4404663a5",
+    "replicate-i8-hold-source.patch": "7e5bd1ca1c22fe5738e24f7debb466268f17ad8b3694ab4f38b4ab2fc153f1a6"
+  }
+}

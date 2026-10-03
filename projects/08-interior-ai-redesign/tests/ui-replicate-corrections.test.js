@@ -11,7 +11,7 @@ const tick=()=>new Promise(resolve=>setImmediate(resolve));
 
 // Execute the actual scoped functions with controlled boundaries; no PG/browser/network.
 function completion(code=source) {
-  const start=code.indexOf('async function privateCompletion('),end=code.indexOf('export async function hostedCases');
+  const start=code.indexOf('async function privateCompletion('),end=code.indexOf('export async function heldPair');
   assert.ok(start>=0&&end>start);
   const bytes={outputs:Buffer.from('output'),depths:Buffer.from('depth'),configs:Buffer.from('config')};
   const fn=runInNewContext(code.slice(start,end)+'\nprivateCompletion',{

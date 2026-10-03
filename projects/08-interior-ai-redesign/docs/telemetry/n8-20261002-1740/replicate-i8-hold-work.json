@@ -1,0 +1,59 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i8-hold",
+  "source_revision": "c0bd24c84e96049f29e64539972eb31cd25f64a2",
+  "started_at": "2026-10-03T17:03:30.316581+00:00",
+  "stage": "handoff",
+  "profile": "compact-quality-first-v2; sole narrow author override",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gap": "Host model/usage metadata pending parent; no delegation/fallback",
+  "route_plan": {
+    "mechanical_tier": "S",
+    "exit_code": 0,
+    "substantive_tier": "M",
+    "reason": "Test harness shared-account scheduling; preserve immutable billing guard. Production financial contracts unchanged. Explicit focused checks override broad repeat."
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No actual E2E authorized in author work unit; parent owns browser after fresh Astra"
+  },
+  "scope": "Only hold harness scheduling and focused regression, evidence",
+  "exclusions": "No production/DB/auth/limit/canonical docs/packages/toolkit edits; no runtime/browser/network/provider actions",
+  "forecast": {
+    "status": "insufficient_data",
+    "duration": null,
+    "cost": null
+  },
+  "approval": "Explicit user instruction covers author correction; no extra permission required",
+  "donor": "F07 spec01/architecture03 and existing bounded responseGate/start seam, reuse without changing guards",
+  "next": "Parent review precise candidate hashes; execute mandatory actual browser with read-only companion preflight; preserve failed launch and all evidence; no feature ACCEPT from author units",
+  "route_implement": {
+    "substantive_tier": "M",
+    "mechanical_tier": "S",
+    "exit_code": 0,
+    "rationale": "Same narrow approved scope. Gate actual authorized POST, reserve/claim second while active, permanent hold in beforeRun, release/join finally. Existing response gate bound15s and worker deadline180s preserved."
+  },
+  "status": "completed",
+  "ended_at": "2026-10-03T17:16:08.444289+00:00",
+  "elapsed_wall_ms": 758127,
+  "active_wall_ms": null,
+  "active_gap": "No independently measured wait intervals",
+  "build_revision": null,
+  "build_gap": "Static syntax only; actual image build/runtime parent-owned",
+  "source_snapshot_sha256": "bf4d9933db4d20ec62037a8c4bbb50711380eb531bc318090102276bf8051537",
+  "checks": "replicate-i8-hold-checks.json",
+  "receipt": "replicate-i8-hold-receipt.md",
+  "accepted_scope_complete": true,
+  "pending": [
+    {
+      "item": "Fresh Astra delta review, actual source/build-bound main52 + disabled2 browser run",
+      "scope": "out_of_scope",
+      "owner": "parent coordinator",
+      "reason": "Explicit caller assignment; no author runtime/browser/network authority"
+    }
+  ]
+}

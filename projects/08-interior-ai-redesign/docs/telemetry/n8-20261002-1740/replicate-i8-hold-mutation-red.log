@@ -1,0 +1,26 @@
+TAP version 13
+# Subtest: actual heldPair scheduling at 1440: authorization precedes permanent hold; zero/one create and release once
+not ok 1 - actual heldPair scheduling at 1440: authorization precedes permanent hold; zero/one create and release once
+  ---
+  duration_ms: 11.979514
+  type: 'test'
+  location: '/tmp/n8-replicate-i8-hold/projects/08-interior-ai-redesign/tests/ui-replicate-hold.test.js:59:31'
+  failureType: 'testCodeFailure'
+  error: 'monotonic billing state'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    hold (file:///tmp/n8-replicate-i8-hold/projects/08-interior-ai-redesign/tests/ui-replicate-hold.test.js:24:55)
+    heldPair (evalmachine.<anonymous>:9:48)
+    async TestContext.<anonymous> (file:///tmp/n8-replicate-i8-hold/projects/08-interior-ai-redesign/tests/ui-replicate-hold.test.js:60:21)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 428.350633

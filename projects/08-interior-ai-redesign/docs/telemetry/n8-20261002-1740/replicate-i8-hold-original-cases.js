@@ -30,25 +30,6 @@ async function privateCompletion(pool,config,id) {
   assert.equal(e.quality,'unverified');return {job_id:id,evidence_sha:rows[0].evidence_sha,output_sha:e.output_sha,
     software_fixture:true,provider_metrics:null,quality:'unverified'};
 }
-// Both flights use real claims/authorization; the account hold is permanent.
-export async function heldPair({fixture,afterId,reserveBefore,hold,beforeCheck,afterCheck}) {
-  const gate=responseGate();let after,before;
-  try {
-    const beforeId=await reserveBefore(); // Both reservations precede permanent hold.
-    after=await fixture.start(afterId,{gate});
-    await Promise.race([gate.entered,after.done.then(result=>{throw new Error('worker_ended_before_gate:'+result.error);})]);
-    assert.equal(after.counts().post,1); // Actual POST follows committed final authorization.
-    before=await fixture.start(beforeId,{beforeRun:hold});
-    const beforeResult=await before.done;
-    gate.release(); // Release inside the transport's 5s bound, before any paced DOM work.
-    const afterResult=await after.done;
-    await beforeCheck(beforeId,before,beforeResult);
-    await afterCheck(afterId,after,afterResult);
-  } finally {
-    gate.release();before?.cancel();after?.cancel();
-    await Promise.all([before?.done,after?.done]);
-  }
-}
 export async function hostedCases({browser,pool,config,check,request,packagePurchase,other,width,password,origin,ownerAccount,out}) {
   const context=await browser.newContext({ignoreHTTPSErrors:true,viewport:{width,height:width===390?844:1000},reducedMotion:'reduce'});
   await paceContext(context);const page=await context.newPage(),errors=[],evidence=[];
@@ -104,6 +85,29 @@ export async function hostedCases({browser,pool,config,check,request,packagePurc
       }
       await page.locator('#delete-job').click();await page.locator('#result').waitFor({state:'hidden'});
     });
+    await check(`${width}: hosted hold before send zero HTTP/one release`,async()=>{
+      await upload(page,config);const held=await reserve();
+      try {
+        active=await fixture.start(held,{beforeRun:()=>pool.query('UPDATE account SET billing_hold=true WHERE id=$1',[owner])});
+        const result=await active.done;assert.equal(result.completed,false);assert.ok(result.error);
+        assert.deepEqual(active.counts(),{api:0,post:0,get:0,delivery:0});
+        evidence.push({job_id:held,scenario:'hold-before-send',mock_calls:active.counts(),attached:false});
+        assert.equal((await pool.query("SELECT count(*)::int AS n FROM credit_ledger WHERE reference=$1 AND kind='release'",[held])).rows[0].n,1);
+        await page.locator('#resume').click();await page.waitForFunction(()=>document.querySelector('#job-status').textContent.includes('Исходное фото сохранено'));
+        assert.equal(await page.locator('#comparison').isHidden(),true);
+      } finally {await pool.query('UPDATE account SET billing_hold=false WHERE id=$1',[owner]);}
+    });
+    await check(`${width}: hosted hold after committed authorization still completes privately`,async()=>{
+      await upload(page,config);const held=await reserve();
+      try {
+        active=await fixture.start(held,{afterSend:()=>pool.query('UPDATE account SET billing_hold=true WHERE id=$1',[owner])});
+        assert.deepEqual(await active.done,{completed:true,error:null});assert.equal(active.counts().post,1);
+        evidence.push({...await privateCompletion(pool,config,held),scenario:'hold-after-send',mock_calls:active.counts()});await page.reload();await page.locator('#workspace').waitFor({state:'visible'});await finish(held);
+        assert.equal(await page.locator('#publish-consent').isDisabled(),true);
+        assert.equal((await request(page,`/api/jobs/${held}/publication`,'POST',{publish:true,style:'warm',source_context:'Synthetic held room',
+          description:'Synthetic held software result, no accepted provider geometry.'})).status,404);
+      } finally {await pool.query('UPDATE account SET billing_hold=false WHERE id=$1',[owner]);await page.reload();await page.locator('#workspace').waitFor({state:'visible'});}
+    });
     await check(`${width}: hosted deletion during held remote response fences completion/cleanup`,async()=>{
       await upload(page,config);const deleted=await reserve(),gate=responseGate();
       const folders=['outputs','depths','configs'];
@@ -128,37 +132,6 @@ export async function hostedCases({browser,pool,config,check,request,packagePurc
         assert.equal(active.counts().delivery,0);
         evidence.push({job_id:deleted,scenario:'deleted-during-response',mock_calls:active.counts(),attached:false,release_count:await releases()});
       } finally {gate.release();active?.cancel();await active?.done;}
-    });
-    // Complete every unheld scenario before the final paired hold. No hold reset.
-    await upload(page,config);const authorized=await reserve();
-    await heldPair({fixture,afterId:authorized,
-      reserveBefore:async()=>{await upload(page,config);return await reserve();},
-      hold:()=>pool.query('UPDATE account SET billing_hold=true WHERE id=$1',[owner]),
-      beforeCheck:async(held,flight,result)=>{
-        await check(`${width}: hosted hold before send zero HTTP/one release`,async()=>{
-          assert.equal(result.completed,false);assert.ok(result.error);
-          assert.deepEqual(flight.counts(),{api:0,post:0,get:0,delivery:0});
-          evidence.push({job_id:held,scenario:'hold-before-send',mock_calls:flight.counts(),attached:false});
-          assert.equal((await pool.query("SELECT count(*)::int AS n FROM credit_ledger WHERE reference=$1 AND kind='release'",[held])).rows[0].n,1);
-          await page.locator('#resume').click();await page.waitForFunction(()=>document.querySelector('#job-status').textContent.includes('Исходное фото сохранено'));
-          assert.equal(await page.locator('#comparison').isHidden(),true);
-        });
-      },
-      afterCheck:async(held,flight,result)=>{
-        await check(`${width}: hosted hold after committed authorization still completes privately`,async()=>{
-          assert.deepEqual(result,{completed:true,error:null});
-          assert.deepEqual(flight.counts(),{api:2,post:1,get:1,delivery:2});
-          evidence.push({...await privateCompletion(pool,config,held),scenario:'hold-after-send',mock_calls:flight.counts()});
-          await page.reload();await page.locator('#workspace').waitFor({state:'visible'});
-          const button=page.locator('#jobs li').filter({has:page.locator(`img[src="/api/jobs/${held}/result"]`)}).locator('button');
-          await button.click();await finish(held);
-          assert.match(await page.locator('#quality-label').innerText(),/unverified/);
-          assert.equal(await page.locator('#publish-consent').isDisabled(),true);
-          assert.equal(await page.locator('#publish').isDisabled(),true);
-          assert.equal((await request(page,`/api/jobs/${held}/publication`,'POST',{publish:true,style:'warm',source_context:'Synthetic held room',
-            description:'Synthetic held software result, no accepted provider geometry.'})).status,404);
-        });
-      }
     });
     assert.deepEqual(errors,[]);return evidence;
   } finally {active?.cancel();await active?.done;await context.close();}
