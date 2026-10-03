@@ -25,5 +25,8 @@ test('F04a explicit page/header/reference/range/validity limits reject before an
   (p:PageInput)=>{p.completedAt=new Date(NaN);},
  ]) {const p=page();mutate(p);assert.throws(()=>parsePage(p));}
  const p=page();p.headers=[];assert.equal(parsePage(p).coveredThrough,100);
- p.kind='tail';p.expectedCursor=100;assert.equal(parsePage(p).headers.length,0);
+ const tail:PageInput={...p,kind:'tail',tailHighWater:100,expectedCursor:100};assert.equal(parsePage(tail).headers.length,0);
+ for(const horizon of [undefined,-1,99,4294967296]) assert.throws(()=>parsePage({...tail,tailHighWater:horizon} as PageInput));
+ assert.equal(parsePage({...tail,tailHighWater:101}).coveredThrough,100);
+ assert.throws(()=>parsePage({...tail,coveredThrough:102}));
 });

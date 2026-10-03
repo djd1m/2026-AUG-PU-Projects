@@ -7,7 +7,7 @@ import { openRecipient } from '../campaigns/store.js';
 import type { Envelope, Keyring } from '../mailboxes/crypto.js';
 import { date, parsePage, singleAddress, uid, validity, type PageInput, type ReplyHeader } from './input.js';
 export interface Rescan {
- runId:string; uidvalidity:string; highWater:number; cursor:number;
+ runId:string; uidvalidity:string; highWater:number; tailHighWater:number|null; cursor:number;
  state:'scanning'|'rescan_incomplete'|'complete'; attempt:number; pages:number; attemptStartedAt:Date;
  provenance:'local_fixture'|'imap_headers';
 }
@@ -17,7 +17,7 @@ interface Hooks { clock?:()=>Date; beforeCommit?:()=>Promise<void>; afterCommit?
 const stale=()=>new HttpError(409,'stale_reply_run');
 const evidenceError=()=>new HttpError(400,'invalid_reply_evidence');
 function view(r:Record<string,unknown>):Rescan {
- return {runId:r.run_id as string,uidvalidity:r.uidvalidity as string,highWater:Number(r.high_water),cursor:Number(r.cursor_uid),state:r.state as Rescan['state'],attempt:Number(r.attempt),pages:Number(r.pages),attemptStartedAt:r.attempt_started_at as Date,provenance:r.provenance as Rescan['provenance']};
+ return {runId:r.run_id as string,uidvalidity:r.uidvalidity as string,highWater:Number(r.high_water),tailHighWater:r.tail_high_water==null?null:Number(r.tail_high_water),cursor:Number(r.cursor_uid),state:r.state as Rescan['state'],attempt:Number(r.attempt),pages:Number(r.pages),attemptStartedAt:r.attempt_started_at as Date,provenance:r.provenance as Rescan['provenance']};
 }
 // Internal trusted reader API only. No adapter/network I/O belongs inside these transactions.
 export class ReplyStore {
@@ -48,7 +48,7 @@ export class ReplyStore {
    const cursor=prior && prior.uidvalidity===v?Math.min(Number(prior.cursor_uid),highWater):0;
    const id=randomUUID();
    const row=(await c.query(`INSERT INTO reply_rescan(tenant_id,mailbox_id,run_id,uidvalidity,high_water,state,attempt_started_at,provenance,cursor_uid) VALUES($1,$2,$3,$4,$5,'scanning',$6,$7,$8)
-    ON CONFLICT(mailbox_id) DO UPDATE SET run_id=$3,uidvalidity=$4,high_water=$5,cursor_uid=$8,state='scanning',attempt=1,attempt_started_at=$6,pages=0,provenance=$7 RETURNING *`,[tenant,mailbox,id,v,highWater,now,input.provenance,cursor])).rows[0];
+    ON CONFLICT(mailbox_id) DO UPDATE SET run_id=$3,uidvalidity=$4,high_water=$5,cursor_uid=$8,state='scanning',attempt=1,attempt_started_at=$6,pages=0,provenance=$7,tail_high_water=NULL RETURNING *`,[tenant,mailbox,id,v,highWater,now,input.provenance,cursor])).rows[0];
    await c.query(`INSERT INTO mailbox_poll(mailbox_id,scan_complete,uidvalidity,cursor_uid) VALUES($1,false,$2,$3)
     ON CONFLICT(mailbox_id) DO UPDATE SET scan_complete=false,uidvalidity=$2,cursor_uid=$3`,[mailbox,v,cursor]);return view(row);
   });
@@ -100,10 +100,11 @@ export class ReplyStore {
    if(start>end || end>clock || clock-end>30000 || end-start>30000) {
     await this.incomplete(c,tenant,mailbox);return {state:'rescan_incomplete' as const,effects:0,cursor:run.cursor};
    }
-   if(p.kind==='scan' && p.coveredThrough>run.highWater || p.kind==='tail' && run.cursor<run.highWater) throw evidenceError();
+   if(p.kind==='scan' && (p.coveredThrough>run.highWater || run.tailHighWater!==null) || p.kind==='tail' && (run.cursor<run.highWater || (run.tailHighWater!==null && p.tailHighWater!==run.tailHighWater))) throw evidenceError();
+   const tailHighWater=p.kind==='tail'?p.tailHighWater!:run.tailHighWater;
    const effects=await this.ingest(c,tenant,mailbox,run.uidvalidity,p.headers,now);
-   const state=p.kind==='tail'?'complete':run.pages+1>=20?'rescan_incomplete':'scanning';
-   await c.query('UPDATE reply_rescan SET cursor_uid=$3,pages=pages+1,state=$4 WHERE tenant_id=$1 AND mailbox_id=$2',[tenant,mailbox,p.coveredThrough,state]);
+   const state=p.kind==='tail' && p.coveredThrough===tailHighWater?'complete':run.pages+1>=20?'rescan_incomplete':'scanning';
+   await c.query('UPDATE reply_rescan SET cursor_uid=$3,pages=pages+1,state=$4,tail_high_water=$5 WHERE tenant_id=$1 AND mailbox_id=$2',[tenant,mailbox,p.coveredThrough,state,tailHighWater]);
    await c.query('UPDATE mailbox_poll SET cursor_uid=$2,scan_complete=$3,completed_at=CASE WHEN $3 THEN $4 ELSE completed_at END WHERE mailbox_id=$1',[mailbox,p.coveredThrough,state==='complete',now]);
    await this.hooks.beforeCommit?.();return {state,effects,cursor:p.coveredThrough};
   });

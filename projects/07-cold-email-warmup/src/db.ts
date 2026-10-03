@@ -21,9 +21,11 @@ export async function migrate(pool: pg.Pool) {
     if(!fifth.rowCount) await client.query(await readFile(new URL('../db/005-submission.sql',import.meta.url),'utf8'));
     const sixth=await client.query('SELECT version FROM schema_migration WHERE version=6');
     if(!sixth.rowCount) await client.query(await readFile(new URL('../db/006-replies.sql',import.meta.url),'utf8'));
+    const seventh=await client.query('SELECT version FROM schema_migration WHERE version=7');
+    if(!seventh.rowCount) await client.query(await readFile(new URL('../db/007-reply-tail-horizon.sql',import.meta.url),'utf8'));
     await client.query('COMMIT');
   } catch (error) { await client.query('ROLLBACK'); throw error; } finally { client.release(); }
 }
 export async function ready(pool: pg.Pool): Promise<boolean> {
-  try { return (await pool.query('SELECT version FROM schema_migration WHERE version IN (1,2,3,4,5,6)')).rowCount === 6; } catch { return false; }
+  try { return (await pool.query('SELECT version FROM schema_migration WHERE version IN (1,2,3,4,5,6,7)')).rowCount === 7; } catch { return false; }
 }
