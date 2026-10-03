@@ -1,11 +1,15 @@
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
+import { readFile } from 'node:fs/promises';
+import { cabinetPage,cabinetCss } from './web/cabinet.js';
+import { PLANS } from './billing/plans.js';
+import { POOL_DISCLOSURE } from './consent/store.js';
 import type { Pool } from 'pg';
 import type { Config } from './config.js';
 import { HttpError } from './errors.js';
 import { ready } from './db.js';
 import { isValidPassword } from './auth/password.js';
 import { AuthService } from './auth/service.js';
-import { readToken, sessionCookie } from './auth/session.js';
+import { readToken, sessionCookie, tokenDigest } from './auth/session.js';
 import { PgAuthStore } from './auth/store.js';
 import { MailboxStore } from './mailboxes/store.js';
 import { CampaignStore } from './campaigns/store.js';
@@ -26,6 +30,7 @@ import { referralToken,referralCookie } from './growth/attribution.js';
 import { EvidenceStore } from './evidence/store.js';
 import { ReportStore } from './growth/reports.js';
 import { pageInput } from './evidence/input.js';
+const ASSETS=new Set(['app.js','client.js','dom.js','models.js','mailboxes.js','campaigns.js','evidence.js','billing.js']);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 async function body(req: IncomingMessage): Promise<Record<string, unknown>> {
   if (req.headers['content-type']?.split(';')[0]?.trim() !== 'application/json') throw new HttpError(400, 'invalid_input');
@@ -58,7 +63,7 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
   const evidence=new EvidenceStore(pool),reports=new ReportStore(pool);
   const server = createServer((req, res) => {
     res.setHeader('Cache-Control', 'no-store'); res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
+    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
     void (async () => {
       const path = (req.url ?? '').split('?')[0]!; const unsafe = !['GET','HEAD','OPTIONS'].includes(req.method ?? '');
       const publicStop=path.startsWith('/unsubscribe/') && ['GET','POST'].includes(req.method??'');
@@ -98,9 +103,21 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
       }
       if(req.method==='GET' && path.startsWith('/reports/')) {res.setHeader('Referrer-Policy','no-referrer');const html=await reports.view(path.slice(9));res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(html);return;}
       if(req.method==='GET' && path.startsWith('/r/')) {const code=path.slice(3);await suppression.charge(req.socket.remoteAddress??'unknown');await partners.landing(code);res.setHeader('Set-Cookie',referralCookie(referralToken(code,config.sessionKey),config.secureCookie));res.writeHead(303,{Location:'/'});res.end();return;}
-      if (req.method === 'GET' && (path === '/' || path === '/auth.js')) {
-        res.writeHead(200, {'Content-Type':path === '/' ? 'text/html; charset=utf-8' : 'text/javascript; charset=utf-8'});
-        res.end(path === '/' ? authPage : authScript); return;
+      if(req.method==='GET' && path.startsWith('/assets/')) {
+        const asset=path.slice(8);
+        if(asset==='cabinet.css') {res.writeHead(200,{'Content-Type':'text/css; charset=utf-8'});res.end(cabinetCss);return;}
+        if(!ASSETS.has(asset))throw new HttpError(404,'not_found');
+        const source=await readFile(new URL((import.meta.url.endsWith('.ts')?'../dist/web/':'./web/')+asset,import.meta.url),'utf8');
+        res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8'});res.end(source);return;
+      }
+      if(req.method==='GET' && path==='/app') {
+        const token=readToken(req.headers.cookie);
+        if(!token || !await auth.authenticate(token)) {res.writeHead(303,{Location:'/signin'});res.end();return;}
+        res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(cabinetPage);return;
+      }
+      if (req.method === 'GET' && (path === '/' || path === '/signin' || path === '/auth.js')) {
+        res.writeHead(200, {'Content-Type':path !== '/auth.js' ? 'text/html; charset=utf-8' : 'text/javascript; charset=utf-8'});
+        res.end(path !== '/auth.js' ? authPage : authScript); return;
       }
       if (req.method === 'POST' && ['/api/auth/register','/api/auth/login'].includes(path)) {
         const input = await body(req);
@@ -117,6 +134,16 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
         const token = readToken(req.headers.cookie);
         const identity = token ? await auth.authenticate(token) : null;
         if (!identity) throw new HttpError(401, 'unauthorized');
+        // Session UUID is an opaque lifecycle marker, never an authentication capability.
+        const session=(await pool.query('SELECT id FROM session WHERE token_hash=$1',[tokenDigest(token!,config.sessionKey)])).rows[0];
+        res.setHeader('X-N7-Session',session.id);
+        if(path==='/api/app' && req.method==='GET') {
+          const intents=(await pool.query('SELECT id,state,created_at FROM billing_intent WHERE tenant_id=$1 ORDER BY created_at DESC LIMIT 50',[identity.tenant_id])).rows;
+          return json(res,200,{data:{identity,modes:{dispatch:config.dispatchMode,poll:config.pollMode??'disabled',billing:config.billingMode??'disabled'},
+            poolDisclosure:POOL_DISCLOSURE,plans:PLANS,intents,referralCookiePresent:!!req.headers.cookie?.split(';').some(c=>c.trim().startsWith('n7_referral=')),
+            providers:[...config.providerAllowlist].map(([host,limit])=>({host,limit}))},meta:{}});
+        }
+
         if (path === '/api/auth/me' && req.method === 'GET') return json(res, 200, {data:identity,meta:{}});
         if (path === '/api/auth/logout' && req.method === 'POST') {
           await body(req); await auth.logout(token!);
