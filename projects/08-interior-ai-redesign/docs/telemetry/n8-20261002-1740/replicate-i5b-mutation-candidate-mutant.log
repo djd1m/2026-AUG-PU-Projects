@@ -1,0 +1,88 @@
+TAP version 13
+# Subtest: I5b labelled hosted software branch: strict row/config/corpus and actual bytes
+    # Subtest: valid software shape with 12 inputs x 3 styles, distinct per-pair config/request
+    ok 1 - valid software shape with 12 inputs x 3 styles, distinct per-pair config/request
+      ---
+      duration_ms: 73.537447
+      type: 'test'
+      ...
+    # Subtest: guard oracle: synthetic hosted corpus cannot be accepted
+    not ok 2 - guard oracle: synthetic hosted corpus cannot be accepted
+      ---
+      duration_ms: 53.082529
+      type: 'test'
+      location: '/tmp/n8-i5b-mutation-freeze-44wrqiv3/tests/replicate-quality.test.js:47:13'
+      failureType: 'testCodeFailure'
+      error: 'Missing expected exception.'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      operator: 'throws'
+      stack: |-
+        TestContext.<anonymous> (file:///tmp/n8-i5b-mutation-freeze-44wrqiv3/tests/replicate-quality.test.js:50:14)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///tmp/n8-i5b-mutation-freeze-44wrqiv3/tests/replicate-quality.test.js:47:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: closed canonical row, all shared columns, style and SQL null metrics
+    ok 3 - closed canonical row, all shared columns, style and SQL null metrics
+      ---
+      duration_ms: 45.902247
+      type: 'test'
+      ...
+    # Subtest: corpus refuses source/attestation, mixed pins, aliases, substitution and geometry
+    ok 4 - corpus refuses source/attestation, mixed pins, aliases, substitution and geometry
+      ---
+      duration_ms: 420.10378
+      type: 'test'
+      ...
+    # Subtest: server-only review software acceptance, eligibility and once-only rejection
+    ok 5 - server-only review software acceptance, eligibility and once-only rejection
+      ---
+      duration_ms: 48.003717
+      type: 'test'
+      ...
+    # Subtest: missing/changed input, output, depth and config deny review and eligibility
+    ok 6 - missing/changed input, output, depth and config deny review and eligibility
+      ---
+      duration_ms: 275.268268
+      type: 'test'
+      ...
+    # Subtest: final eligibility rechecks deleted/quality/evidence authority after byte reads
+    ok 7 - final eligibility rechecks deleted/quality/evidence authority after byte reads
+      ---
+      duration_ms: 246.006567
+      type: 'test'
+      ...
+    # Subtest: private hosted unverified composite has existing UNVERIFIED pixels
+    ok 8 - private hosted unverified composite has existing UNVERIFIED pixels
+      ---
+      duration_ms: 412.584787
+      type: 'test'
+      ...
+    1..8
+not ok 1 - I5b labelled hosted software branch: strict row/config/corpus and actual bytes
+  ---
+  duration_ms: 1597.33422
+  type: 'test'
+  location: '/tmp/n8-i5b-mutation-freeze-44wrqiv3/tests/replicate-quality.test.js:36:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: I5b hosted sharing mode alone grants no public authority; private and final cache guards
+ok 2 - I5b hosted sharing mode alone grants no public authority; private and final cache guards
+  ---
+  duration_ms: 1698.475326
+  type: 'test'
+  ...
+1..2
+# tests 10
+# suites 0
+# pass 8
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3595.214033

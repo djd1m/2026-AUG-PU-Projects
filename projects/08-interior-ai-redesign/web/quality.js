@@ -4,6 +4,7 @@ import { transaction } from './db.js';
 import { HttpError, requireUuid } from './boundaries.js';
 import { createJobs, STYLES, validateOutput } from './jobs.js';
 import { artifactRead, boundedRead, canonical, sha } from './generation.js';
+import { validateHostedRow, validateHostedConfig, validateHostedCorpus, supportedRealMode, REAL_MODE_SQL } from './replicate-quality.js';
 
 const SHA=/^[a-f0-9]{64}$/;
 const ID=/^[A-Za-z0-9_.:@-]{1,128}$/;
@@ -34,6 +35,7 @@ export function validateCorpus(report,evidence,expectedSha,reportBytes,targetSty
   if(completeInputs.size<12||!matching)throw new Error('corpus_coverage_or_output');
 }
 export function validateEvidence(row) {
+  if(row.mode==='replicate')return validateHostedRow(row);
   const e=row.canonical_evidence;
   if(!e||sha(canonical(e))!==row.evidence_sha||e.job_id!==row.job_id||e.output_key!==row.output_key||e.mode!==row.mode)throw new Error('evidence_binding');
   for(const k of ['input_sha','output_sha','depth_sha','config_sha','seed','mode','worker_source_revision','hardware','queue_ms','inference_ms','warm','model_revisions']) {
@@ -44,11 +46,11 @@ export function validateEvidence(row) {
 }
 export function requireRealQuality(mode) {
   if(mode==='fixture')throw new Error('fixture_quality_forbidden');
-  if(!['fixture','controlnet'].includes(mode))throw new Error('quality_mode_invalid');
+  if(!supportedRealMode(mode))throw new Error('quality_mode_invalid');
 }
-const SELECT=`SELECT e.*,j.output_key,j.account_id,j.status,j.quality,j.deleted_at,j.style,
+const SELECT=`SELECT e.*,j.output_key,j.account_id,j.status,j.quality,j.deleted_at,j.style,j.mode AS job_mode,
   u.deleted_at AS upload_deleted,u.sha256 AS upload_sha,u.private_key AS input_key FROM job j JOIN generation_evidence e ON e.job_id=j.id
-  JOIN upload u ON u.id=j.upload_id WHERE j.id=$1`;
+  JOIN upload u ON u.id=j.upload_id AND u.account_id=j.account_id WHERE j.id=$1`;
 function available(row) {return row&&row.status==='succeeded'&&!row.deleted_at&&!row.upload_deleted;}
 export function createQuality(pool,config,{operatorIdentity}={}) {
   if(!ID.test(operatorIdentity??''))throw new Error('Server-only QUALITY_OPERATOR_ID required');
@@ -61,16 +63,17 @@ export function createQuality(pool,config,{operatorIdentity}={}) {
     if(decision==='accepted') {
       requireRealQuality(row.mode);
       if(row.quality!=='unverified')throw new Error('quality_transition_forbidden');
-      if(e.artifact_key!==row.output_key||!SHA.test(e.manifest_sha??'')||Object.values(e.model_revisions).some(v=>!/^[a-f0-9]{40}$/.test(v)))throw new Error('real_provenance_required');
+      if(e.artifact_key!==row.output_key||row.mode!=='replicate'&&(!SHA.test(e.manifest_sha??'')||Object.values(e.model_revisions).some(v=>!/^[a-f0-9]{40}$/.test(v))))throw new Error('real_provenance_required');
       const [input,output,depth,configBytes,reportBytes]=await Promise.all([
-        artifactRead(config.storageDir,(await pool.query('SELECT private_key FROM upload WHERE id=(SELECT upload_id FROM job WHERE id=$1)',[jobId])).rows[0].private_key),
+        artifactRead(config.storageDir,row.input_key),
         artifactRead(join(config.storageDir,'outputs'),row.output_key),artifactRead(join(config.storageDir,'depths'),row.output_key),
         artifactRead(join(config.storageDir,'configs'),row.output_key,65536),boundedRead(reportPath,4*1024*1024)]);
       if([sha(input),sha(output),sha(depth),sha(configBytes)].some((h,i)=>h!==[e.input_sha,e.output_sha,e.depth_sha,e.config_sha][i])||row.upload_sha!==e.input_sha)throw new Error('quality_actual_bytes_mismatch');
       const g=JSON.parse(configBytes);
-      if(g.mode!==row.mode||g.manifest_sha!==e.manifest_sha||g.seed!==e.seed||g.style!==row.style||
+      if(row.mode==='replicate')validateHostedConfig(g,e);
+      else if(g.mode!==row.mode||g.manifest_sha!==e.manifest_sha||g.seed!==e.seed||g.style!==row.style||
         g.worker_source_revision!==e.worker_source_revision||canonical(g.model_revisions)!==canonical(e.model_revisions))throw new Error('config_evidence_binding');
-      validateCorpus(JSON.parse(reportBytes),e,reportSha,reportBytes,row.style);corpusSha=reportSha;
+      (row.mode==='replicate'?validateHostedCorpus:validateCorpus)(JSON.parse(reportBytes),e,reportSha,reportBytes,row.style);corpusSha=reportSha;
     }
     // No filesystem/hash/network operations under the ordered SQL locks.
     return transaction(pool,async c=>{
@@ -78,7 +81,8 @@ export function createQuality(pool,config,{operatorIdentity}={}) {
       await c.query('SELECT id FROM job WHERE id=$1 FOR UPDATE',[jobId]);
       const final=(await c.query(SELECT,[jobId])).rows[0];
       if(!available(final)||final.account_id!==row.account_id||final.output_key!==row.output_key||final.evidence_sha!==row.evidence_sha||
-        final.upload_sha!==row.upload_sha||final.quality!==row.quality)throw new Error('quality_state_changed');
+        final.upload_sha!==row.upload_sha||final.input_key!==row.input_key||final.style!==row.style||
+        final.job_mode!==row.job_mode||final.quality!==row.quality)throw new Error('quality_state_changed');
       if(decision==='accepted') {
         requireRealQuality(final.mode);
         if(account.billing_hold||final.quality!=='unverified'||final.mode!==row.mode)throw new Error('quality_transition_forbidden');
@@ -100,21 +104,24 @@ export function createQuality(pool,config,{operatorIdentity}={}) {
 // Private owner export may remain explicitly unverified; it grants no publication.
 export async function qualityEligible(pool,jobId,dir) {
   requireUuid(jobId);
-  const row=(await pool.query(`${SELECT} AND j.mode='controlnet' AND j.quality='accepted'
+  const row=(await pool.query(`${SELECT} AND j.mode IN ${REAL_MODE_SQL} AND j.quality='accepted'
     AND NOT EXISTS(SELECT 1 FROM account a WHERE a.id=j.account_id AND a.billing_hold)
     AND EXISTS(SELECT 1 FROM quality_review q WHERE q.job_id=j.id AND q.decision='accepted'
       AND q.output_sha=e.output_sha AND q.evidence_sha=e.evidence_sha AND q.corpus_sha IS NOT NULL)`,[jobId])).rows[0];
-  if(!available(row))return false;
+  if(!available(row)||row.quality!=='accepted'||!supportedRealMode(row.mode))return false;
   try {
     const e=validateEvidence(row);
     if(!dir||e.artifact_key!==row.output_key||row.upload_sha!==e.input_sha)return false;
     const bytes=await Promise.all([artifactRead(dir,row.input_key),artifactRead(join(dir,'outputs'),row.output_key),
       artifactRead(join(dir,'depths'),row.output_key),artifactRead(join(dir,'configs'),row.output_key,65536)]);
     if(bytes.some((b,i)=>sha(b)!==[e.input_sha,e.output_sha,e.depth_sha,e.config_sha][i]))return false;
-    const final=(await pool.query(`${SELECT} AND j.mode='controlnet' AND j.quality='accepted'
+    if(row.mode==='replicate')validateHostedConfig(JSON.parse(bytes[3]),e);
+    const final=(await pool.query(`${SELECT} AND j.mode IN ${REAL_MODE_SQL} AND j.quality='accepted'
       AND NOT EXISTS(SELECT 1 FROM account a WHERE a.id=j.account_id AND a.billing_hold)
       AND EXISTS(SELECT 1 FROM quality_review q WHERE q.job_id=j.id AND q.decision='accepted'
         AND q.output_sha=e.output_sha AND q.evidence_sha=e.evidence_sha AND q.corpus_sha IS NOT NULL)`,[jobId])).rows[0];
-    return available(final)&&final.evidence_sha===row.evidence_sha&&final.output_key===row.output_key;
+    return available(final)&&final.quality==='accepted'&&final.account_id===row.account_id&&final.upload_sha===row.upload_sha&&
+      final.input_key===row.input_key&&final.style===row.style&&final.mode===row.mode&&final.job_mode===row.job_mode&&
+      final.evidence_sha===row.evidence_sha&&final.output_key===row.output_key;
   }catch{return false;}
 }

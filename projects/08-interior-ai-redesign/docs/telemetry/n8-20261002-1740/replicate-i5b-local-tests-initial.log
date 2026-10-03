@@ -1,0 +1,197 @@
+TAP version 13
+# Subtest: bounded real composite pixels: before/after, permanent AI, effective badge and mandatory DEMO
+ok 1 - bounded real composite pixels: before/after, permanent AI, effective badge and mandatory DEMO
+  ---
+  duration_ms: 2587.685513
+  type: 'test'
+  ...
+# Subtest: F02b operator quality software validation, synthetic real-branch data
+    # Subtest: normalized upload is actual WebP with bound hashes; output and depth stay PNG
+    ok 1 - normalized upload is actual WebP with bound hashes; output and depth stay PNG
+      ---
+      duration_ms: 38.989083
+      type: 'test'
+      ...
+    # Subtest: otherwise valid synthetic real branch accepts, evidence is canonical, final locks are account then job
+    ok 2 - otherwise valid synthetic real branch accepts, evidence is canonical, final locks are account then job
+      ---
+      duration_ms: 37.902563
+      type: 'test'
+      ...
+    # Subtest: GEOM-03 fixture-quality exclusion targeted assertion, otherwise-valid byte/report provenance
+    ok 3 - GEOM-03 fixture-quality exclusion targeted assertion, otherwise-valid byte/report provenance
+      ---
+      duration_ms: 22.355098
+      type: 'test'
+      ...
+    # Subtest: ordinary actor, absent report, mismatched report, changed bytes and modified immutable evidence refuse
+    ok 4 - ordinary actor, absent report, mismatched report, changed bytes and modified immutable evidence refuse
+      ---
+      duration_ms: 24.908159
+      type: 'test'
+      ...
+    # Subtest: measured corpus thresholds, coverage, source, config, report hashes and synthetic flag
+    ok 5 - measured corpus thresholds, coverage, source, config, report hashes and synthetic flag
+      ---
+      duration_ms: 27.101549
+      type: 'test'
+      ...
+    # Subtest: 12 aliases of one complete input plus 11 single-style inputs cannot satisfy distinct 12x3 coverage
+    ok 6 - 12 aliases of one complete input plus 11 single-style inputs cannot satisfy distinct 12x3 coverage
+      ---
+      duration_ms: 18.631737
+      type: 'test'
+      ...
+    1..6
+ok 2 - F02b operator quality software validation, synthetic real-branch data
+  ---
+  duration_ms: 183.795486
+  type: 'test'
+  ...
+# Subtest: I5b labelled hosted software branch: strict row/config/corpus and actual bytes
+    # Subtest: valid software shape with 12 inputs x 3 styles, distinct per-pair config/request
+    ok 1 - valid software shape with 12 inputs x 3 styles, distinct per-pair config/request
+      ---
+      duration_ms: 76.639628
+      type: 'test'
+      ...
+    # Subtest: guard oracle: synthetic hosted corpus cannot be accepted
+    ok 2 - guard oracle: synthetic hosted corpus cannot be accepted
+      ---
+      duration_ms: 33.521382
+      type: 'test'
+      ...
+    # Subtest: closed canonical row, all shared columns, style and SQL null metrics
+    ok 3 - closed canonical row, all shared columns, style and SQL null metrics
+      ---
+      duration_ms: 32.051272
+      type: 'test'
+      ...
+    # Subtest: corpus refuses source/attestation, mixed pins, aliases, substitution and geometry
+    ok 4 - corpus refuses source/attestation, mixed pins, aliases, substitution and geometry
+      ---
+      duration_ms: 233.717663
+      type: 'test'
+      ...
+    # Subtest: server-only review software acceptance, eligibility and once-only rejection
+    ok 5 - server-only review software acceptance, eligibility and once-only rejection
+      ---
+      duration_ms: 93.331824
+      type: 'test'
+      ...
+    # Subtest: missing/changed input, output, depth and config deny review and eligibility
+    ok 6 - missing/changed input, output, depth and config deny review and eligibility
+      ---
+      duration_ms: 349.975115
+      type: 'test'
+      ...
+    # Subtest: final eligibility rechecks deleted/quality/evidence authority after byte reads
+    not ok 7 - final eligibility rechecks deleted/quality/evidence authority after byte reads
+      ---
+      duration_ms: 130.605026
+      type: 'test'
+      location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-quality.test.js:102:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        true !== false
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: false
+      actual: true
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-quality.test.js:105:89)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-quality.test.js:102:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: private hosted unverified composite has existing UNVERIFIED pixels
+    ok 8 - private hosted unverified composite has existing UNVERIFIED pixels
+      ---
+      duration_ms: 401.538493
+      type: 'test'
+      ...
+    1..8
+not ok 3 - I5b labelled hosted software branch: strict row/config/corpus and actual bytes
+  ---
+  duration_ms: 1376.996172
+  type: 'test'
+  location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-quality.test.js:36:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: PUBLIC-01 exact Unicode context/description, consent and style boundaries
+ok 4 - PUBLIC-01 exact Unicode context/description, consent and style boundaries
+  ---
+  duration_ms: 2.65246
+  type: 'test'
+  ...
+# Subtest: owner boundary, strict public gate, byte bindings, explicit publication and revocation
+    # Subtest: SHARE-03 targeted cross-owner guard
+    ok 1 - SHARE-03 targeted cross-owner guard
+      ---
+      duration_ms: 2.522171
+      type: 'test'
+      ...
+    # Subtest: prepare ignores removeBadge and wrong owner cannot read artifact
+    ok 2 - prepare ignores removeBadge and wrong owner cannot read artifact
+      ---
+      duration_ms: 296.472806
+      type: 'test'
+      ...
+    # Subtest: accepted record XSS is escaped and public metadata has no private fields
+    ok 3 - accepted record XSS is escaped and public metadata has no private fields
+      ---
+      duration_ms: 331.816539
+      type: 'test'
+      ...
+    # Subtest: unverified or missing privileged evidence cannot publish; private unverified stays unverified
+    ok 4 - unverified or missing privileged evidence cannot publish; private unverified stays unverified
+      ---
+      duration_ms: 286.313362
+      type: 'test'
+      ...
+    1..4
+ok 5 - owner boundary, strict public gate, byte bindings, explicit publication and revocation
+  ---
+  duration_ms: 951.532619
+  type: 'test'
+  ...
+# Subtest: fixture is privately labelled and always denied publication
+ok 6 - fixture is privately labelled and always denied publication
+  ---
+  duration_ms: 337.158661
+  type: 'test'
+  ...
+# Subtest: PAY-05 targeted final hold guard on cached paid bytes and public reads
+ok 7 - PAY-05 targeted final hold guard on cached paid bytes and public reads
+  ---
+  duration_ms: 727.51165
+  type: 'test'
+  ...
+# Subtest: share attempts/outcomes/download events are distinct, replay safe and native resolve is browser reported
+ok 8 - share attempts/outcomes/download events are distinct, replay safe and native resolve is browser reported
+  ---
+  duration_ms: 331.079048
+  type: 'test'
+  ...
+# Subtest: bounded parallel preparation holds no SQL locks; public list repeats final consent check
+ok 9 - bounded parallel preparation holds no SQL locks; public list repeats final consent check
+  ---
+  duration_ms: 874.442392
+  type: 'test'
+  ...
+1..9
+# tests 27
+# suites 0
+# pass 25
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8408.427752

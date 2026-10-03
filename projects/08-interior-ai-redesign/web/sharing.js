@@ -4,6 +4,7 @@ import { HttpError, requireUuid, Capacity } from './boundaries.js';
 import { transaction } from './db.js';
 import { artifactRead, canonical, sha } from './generation.js';
 import { qualityEligible, validateEvidence } from './quality.js';
+import { supportedRealMode, REAL_MODE_SQL } from './replicate-quality.js';
 import { STYLES } from './jobs.js';
 import { createCompositeCache } from './composite.js';
 
@@ -18,7 +19,7 @@ const SELECT=`SELECT e.*,j.id,j.account_id,j.status,j.quality,j.deleted_at,j.sty
  JOIN account a ON a.id=j.account_id JOIN generation_evidence e ON e.job_id=j.id WHERE j.id=$1`;
 const available=r=>r&&r.status==='succeeded'&&!r.deleted_at&&!r.upload_deleted&&r.quality!=='rejected'&&r.mode===r.job_mode;
 const paid=r=>r.badge_free_entitlement===true&&r.billing_hold===false;
-const publicEligible=r=>available(r)&&r.mode==='controlnet'&&r.quality==='accepted'&&r.reviewed===true&&r.billing_hold===false;
+const publicEligible=r=>available(r)&&supportedRealMode(r.mode)&&r.quality==='accepted'&&r.reviewed===true&&r.billing_hold===false;
 const binding=r=>canonical([r.id,r.account_id,r.output_key,r.input_key,r.upload_sha,r.input_sha,r.output_sha,r.evidence_sha,r.mode,r.quality,r.style]);
 const shareBinding=s=>canonical([s.token,s.job_id,s.published,s.revoked_at,s.version,s.input_sha,s.output_sha,s.evidence_sha,s.source_context,s.description,s.style]);
 export function requireOwner(row,accountId) {
@@ -187,7 +188,7 @@ export function createSharing(pool,config,{afterPrepare}={}) {
       if(before&&!(await pool.query('SELECT token FROM share WHERE token=$1',[before])).rowCount)throw new HttpError(400,'invalid_page');
       // Bounded candidate page; excluded entries are not backfilled with an unbounded scan.
       const rows=(await pool.query(`SELECT s.token FROM share s JOIN job j ON j.id=s.job_id JOIN account a ON a.id=j.account_id
-        WHERE s.published AND j.deleted_at IS NULL AND j.quality='accepted' AND j.mode='controlnet' AND NOT a.billing_hold
+        WHERE s.published AND j.deleted_at IS NULL AND j.quality='accepted' AND j.mode IN ${REAL_MODE_SQL} AND NOT a.billing_hold
         AND ($1::text IS NULL OR (s.created_at,s.token)<(SELECT created_at,token FROM share WHERE token=$1))
         ORDER BY s.created_at DESC,s.token DESC LIMIT $2`,[before??null,limit+1])).rows;
       return capacity.run(async()=>{

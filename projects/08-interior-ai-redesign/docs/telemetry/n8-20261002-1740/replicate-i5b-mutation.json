@@ -1,0 +1,13 @@
+{
+  "guard": "reject synthetic hosted corpus",
+  "oracle": "unchanged guard oracle: synthetic hosted corpus cannot be accepted",
+  "baseline_exit": 0,
+  "mutant_exit": 1,
+  "restored_exit": 0,
+  "baseline_sha256": "2b31b5c745c3e05396cc760c1d8a6e126da4fafc1a6168226817588fc0448ecb",
+  "mutant_sha256": "d22d66a9aa476a455d969e3ef261fa30ba628b7c4347e9482f44dbe1a241ab88",
+  "restored_sha256": "2b31b5c745c3e05396cc760c1d8a6e126da4fafc1a6168226817588fc0448ecb",
+  "production_before_sha256": "2b31b5c745c3e05396cc760c1d8a6e126da4fafc1a6168226817588fc0448ecb",
+  "production_after_sha256": "2b31b5c745c3e05396cc760c1d8a6e126da4fafc1a6168226817588fc0448ecb",
+  "disposable_copy": true
+}

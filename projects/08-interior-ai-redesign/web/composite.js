@@ -1,6 +1,7 @@
 import sharp from 'sharp';
 import { Capacity, HttpError } from './boundaries.js';
 import { MAX_BYTES, MAX_PIXELS } from './media.js';
+import { supportedRealMode } from './replicate-quality.js';
 import { sha } from './generation.js';
 
 // Embedded 5x7 bitmap alphabet: labels are pixels, independent of Docker fonts.
@@ -36,7 +37,7 @@ async function panel(bytes) {
   return image.rotate().resize(1024,768,{fit:'contain',background:'#ffffff'}).flatten({background:'#ffffff'}).png().toBuffer();
 }
 export async function compose(before,after,{badgeFree=false,mode,quality}={}) {
-  if(!['controlnet','fixture'].includes(mode)||!['unverified','accepted'].includes(quality))throw new HttpError(404,'not_found');
+  if(!(supportedRealMode(mode)||mode==='fixture')||!['unverified','accepted'].includes(quality))throw new HttpError(404,'not_found');
   const left=await panel(before),right=await panel(after);
   const labels=[['BEFORE',24,786],['AFTER',1048,786],['AI REDESIGN',24,824]];
   if(!badgeFree)labels.push(['ROOMKIND',1800,824]);
