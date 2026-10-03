@@ -1,0 +1,80 @@
+{
+  "run_id": "20261003T042338Z-handover",
+  "work_unit_id": "handover-correction",
+  "attempt_id": "correction-1",
+  "source_revision": "ac2a4490b0c7a3251f2105252577f546f2f6b605",
+  "stage": "delivery",
+  "started_at": "2026-10-03T05:05:38.792577+00:00",
+  "stage_at": "2026-10-03T05:06:48.857777+00:00",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "model_gap": "Native execution metadata unavailable inside worker; coordinator reconciles actual model/effort and fallback.",
+  "route": {
+    "mechanical_tier": "S",
+    "exit": 0,
+    "substantive_scope": "Pure test-contract correction within XL F14; owner brief overrides new mutation and full-suite repetition."
+  },
+  "e2e_preflight": {
+    "status": "not_applicable",
+    "reason": "Focused local middleware unit test only; no E2E/runtime actions."
+  },
+  "baseline_map_file_sha256": "0c1ea7f83dedd9fd498141157982df546363ecf67b19ca325fad76dd76d1d4fe",
+  "original_22_before_match": true,
+  "legacy_test_before_sha256": "756ed80665dd1926ffcc1007a58eaf132272b9d179a616b9ca05e8d84776c630",
+  "test": {
+    "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH node node_modules/vitest/vitest.mjs run --config vitest.config.ts apps/web/tests/unit/referral-cookie.test.ts",
+    "node_version": "v22.22.3",
+    "started_at": "2026-10-03T05:07:04.987314+00:00",
+    "finished_at": "2026-10-03T05:07:07.324224+00:00",
+    "duration_ms": 2337,
+    "exit": 0,
+    "log": "tests/artifacts/handover/correction-1-focused-test.txt"
+  },
+  "elapsed_wall_ms": 190121,
+  "active_wall_ms": null,
+  "usage": null,
+  "cost": null,
+  "original_22_after_match": true,
+  "original_map_bytes_unchanged": true,
+  "legacy_tests_preserved": true,
+  "final_source_file_count": 23,
+  "legacy_test_after_sha256": "a1ac5cadc460a2151919c3c245a341360fee3dcd0a6a5a0190d72cfb62cf5810",
+  "final_map_file_sha256": "8800e312a8aee2f8e0dc48d3ba7add398c065f4d6ab4071e5c3344d93e4e66af",
+  "final_map_canonical_sha256": "fd34ec81afe159fbadbabd23c6f8571384825d0954c2c817b22eaf4613fb2431",
+  "canonical_method": "UTF-8 JSON object; lexicographically sorted keys; compact separators comma/colon; ensure_ascii=False; no BOM; canonical bytes have no trailing newline. Saved map adds exactly one LF; file digest includes LF. Per-file values hash exact file bytes.",
+  "test_passed": 12,
+  "test_failed": 0,
+  "full_unit_gate": {
+    "disposition": "closed_by_union",
+    "prior_passed": 633,
+    "prior_failed": 1,
+    "prior_seam_passed": 10,
+    "corrected_seam_passed": 12,
+    "union_passed": 635,
+    "reason": "Coordinator original full unit/contract run plus corrected seam; no monolithic final full green claim.",
+    "prior_evidence": "tests/artifacts/handover/final-full-regression.txt"
+  },
+  "out_of_scope": "Coordinator-owned typecheck/build/UI/full feature acceptance; no new mutation required for pure test contract correction.",
+  "verified_at": "2026-10-03T05:07:48.045526+00:00",
+  "status": "completed",
+  "finished_at": "2026-10-03T05:08:48.913279+00:00",
+  "diff_check_exit": 0,
+  "final_map_verified": true,
+  "correction_doc_sha256": "ab1f266334d1e057b7616e06bd4b2c85b1dccf124488d006c2c8e9440767dfd8",
+  "measurement_gaps": [
+    "Native actual model/effort/fallback unavailable inside worker",
+    "Native input/cache/output/reasoning usage and cost unavailable",
+    "Active duration unavailable without authoritative wait intervals"
+  ],
+  "writes": [
+    "apps/web/tests/unit/referral-cookie.test.ts",
+    "docs/features/handover/09_correction.md",
+    "tests/artifacts/handover/correction-1-focused-test.txt",
+    "tests/artifacts/handover/correction-1-focused-test-exit.txt",
+    "tests/artifacts/handover/correction-1-checks.json",
+    "tests/artifacts/handover/final-source-hashes.json"
+  ]
+}

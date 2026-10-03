@@ -1,0 +1,42 @@
+{
+  "command": [
+    "/usr/local/bin/node",
+    "/app/node_modules/vitest/vitest.mjs",
+    "run",
+    "--config",
+    "vitest.int.config.ts",
+    "apps/web/tests/int/handover.int.test.ts",
+    "-t",
+    "HAN-04 claimed-keep-access guard"
+  ],
+  "sourceSha256Before": "bc32b496bee50a0e52bfe76fe034734513db439b50e947e786a29df99721f798",
+  "runs": [
+    {
+      "label": "pg-mutation-baseline",
+      "startedAt": "2026-10-03T05:03:39.020Z",
+      "endedAt": "2026-10-03T05:03:43.011Z",
+      "exit": 0,
+      "signal": null,
+      "error": null
+    },
+    {
+      "label": "pg-mutation-red",
+      "startedAt": "2026-10-03T05:03:43.012Z",
+      "endedAt": "2026-10-03T05:03:47.395Z",
+      "exit": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "label": "pg-mutation-restored-green",
+      "startedAt": "2026-10-03T05:03:47.398Z",
+      "endedAt": "2026-10-03T05:03:51.510Z",
+      "exit": 0,
+      "signal": null,
+      "error": null
+    }
+  ],
+  "status": "completed",
+  "behavioralRed": true,
+  "sourceSha256After": "bc32b496bee50a0e52bfe76fe034734513db439b50e947e786a29df99721f798"
+}

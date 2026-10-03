@@ -1,0 +1,46 @@
+
+ RUN  v3.2.7 /app
+
+ ❯ apps/web/tests/int/handover.int.test.ts (11 tests | 1 failed | 10 skipped) 189ms
+   ↓ HAN-01/02 real PostgreSQL handover > SC-US-014-1 own root studio only, 32-byte hash, repeated tokens and database seven-day TTL
+   ↓ HAN-01/02 real PostgreSQL handover > SC-US-014-2 credentials/session commit and real password login keep=false
+   ↓ HAN-01/02 real PostgreSQL handover > SC-US-014-2 credentials/session commit and real password login keep=true
+   ↓ HAN-01/02 real PostgreSQL handover > HAN-02 forced session failure rolls back real credentials and session writes
+   ↓ HAN-01/02 real PostgreSQL handover > HAN-02 forced final-token failure rolls back real credentials and session writes
+   ↓ HAN-01/02 real PostgreSQL handover > HAN-02 session unique violation is 503 and never email409
+   ↓ HAN-01/02 real PostgreSQL handover > SC-US-014-3 unknown/expired/used tokens do not change state
+   × HAN-01/02 real PostgreSQL handover > HAN-04 claimed-keep-access guard blocks second-token reset and reissue 185ms
+     → expected { Object (accountId) } to be 'gone' // Object.is equality
+   ↓ HAN-01/02 real PostgreSQL handover > SC-US-014-4 duplicate normalized email returns exact409, token survives retry
+   ↓ HAN-03 ownership and RLS preserve all child rows > SC-US-014-2 real handover preserves IDs/data/publication and access keep=false
+   ↓ HAN-03 ownership and RLS preserve all child rows > SC-US-014-2 real handover preserves IDs/data/publication and access keep=true
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 skipped (11)
+   Start at  08:03:43
+   Duration  3.08s (transform 1.10s, setup 0ms, collect 1.72s, tests 189ms, environment 0ms, prepare 222ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/tests/int/handover.int.test.ts > HAN-01/02 real PostgreSQL handover > HAN-04 claimed-keep-access guard blocks second-token reset and reissue
+AssertionError: expected { Object (accountId) } to be 'gone' // Object.is equality
+
+[32m- Expected:[39m 
+"gone"
+
+[31m+ Received:[39m 
+{
+  "accountId": "4cd4d292-5d32-4afd-b633-c67e5cc738ec",
+}
+
+ ❯ apps/web/tests/int/handover.int.test.ts:110:51
+    108|     expect(await acceptHandover(service, f.input)).toEqual({ accountId…
+    109|     const before = await snapshot(owner, f.childId);
+    110|     expect(await acceptHandover(service, second)).toBe('gone');
+       |                                                   ^
+    111|     expect(await issueHandover(service, f.studio.accountId, f.childId,…
+    112|     expect(await snapshot(owner, f.childId)).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

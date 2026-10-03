@@ -1,0 +1,633 @@
+ Network n6b-f14-handover_test Creating 
+ Network n6b-f14-handover_test Creating 
+ Network n6b-f14-handover_test Created 
+ Network n6b-f14-handover_test Created 
+ Container n6b-f14-handover-db-1 Creating 
+ Container n6b-f14-handover-db-1 Created 
+ Container n6b-f14-handover-tests-1 Creating 
+ Container n6b-f14-handover-tests-1 Created 
+Attaching to db-1, tests-1
+ Container n6b-f14-handover-db-1 Starting 
+ Container n6b-f14-handover-db-1 Started 
+ Container n6b-f14-handover-db-1 Waiting 
+db-1  | The files belonging to this database system will be owned by user "postgres".
+db-1  | This user must also own the server process.
+db-1  | 
+db-1  | The database cluster will be initialized with locale "en_US.utf8".
+db-1  | The default database encoding has accordingly been set to "UTF8".
+db-1  | The default text search configuration will be set to "english".
+db-1  | 
+db-1  | Data page checksums are disabled.
+db-1  | 
+db-1  | fixing permissions on existing directory /var/lib/postgresql/data ... ok
+db-1  | creating subdirectories ... ok
+db-1  | selecting dynamic shared memory implementation ... posix
+db-1  | selecting default max_connections ... 100
+db-1  | selecting default shared_buffers ... 128MB
+db-1  | selecting default time zone ... Etc/UTC
+db-1  | creating configuration files ... ok
+db-1  | running bootstrap script ... ok
+db-1  | performing post-bootstrap initialization ... ok
+db-1  | syncing data to disk ... ok
+db-1  | 
+db-1  | 
+db-1  | Success. You can now start the database server using:
+db-1  | 
+db-1  |     pg_ctl -D /var/lib/postgresql/data -l logfile start
+db-1  | 
+db-1  | initdb: warning: enabling "trust" authentication for local connections
+db-1  | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+db-1  | waiting for server to start....2026-10-03 04:57:59.180 UTC [49] LOG:  starting PostgreSQL 16.15 (Debian 16.15-1.pgdg12+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+db-1  | 2026-10-03 04:57:59.189 UTC [49] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1  | 2026-10-03 04:57:59.199 UTC [52] LOG:  database system was shut down at 2026-10-03 04:57:59 UTC
+db-1  | 2026-10-03 04:57:59.211 UTC [49] LOG:  database system is ready to accept connections
+db-1  |  done
+db-1  | server started
+db-1  | CREATE DATABASE
+db-1  | 
+db-1  | 
+db-1  | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+db-1  | 
+db-1  | 2026-10-03 04:57:59.450 UTC [49] LOG:  received fast shutdown request
+db-1  | waiting for server to shut down...2026-10-03 04:57:59.450 UTC [49] LOG:  aborting any active transactions
+db-1  | .2026-10-03 04:57:59.454 UTC [49] LOG:  background worker "logical replication launcher" (PID 55) exited with exit code 1
+db-1  | 2026-10-03 04:57:59.456 UTC [50] LOG:  shutting down
+db-1  | 2026-10-03 04:57:59.457 UTC [50] LOG:  checkpoint starting: shutdown immediate
+db-1  | 2026-10-03 04:57:59.474 UTC [50] LOG:  checkpoint complete: wrote 922 buffers (5.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.015 s, sync=0.001 s, total=0.018 s; sync files=301, longest=0.001 s, average=0.001 s; distance=4255 kB, estimate=4255 kB; lsn=0/1912118, redo lsn=0/1912118
+db-1  | 2026-10-03 04:57:59.494 UTC [49] LOG:  database system is shut down
+db-1  |  done
+db-1  | server stopped
+db-1  | 
+db-1  | PostgreSQL init process complete; ready for start up.
+db-1  | 
+db-1  | 2026-10-03 04:57:59.595 UTC [1] LOG:  starting PostgreSQL 16.15 (Debian 16.15-1.pgdg12+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+db-1  | 2026-10-03 04:57:59.596 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+db-1  | 2026-10-03 04:57:59.596 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+db-1  | 2026-10-03 04:57:59.600 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1  | 2026-10-03 04:57:59.604 UTC [65] LOG:  database system was shut down at 2026-10-03 04:57:59 UTC
+db-1  | 2026-10-03 04:57:59.615 UTC [1] LOG:  database system is ready to accept connections
+ Container n6b-f14-handover-db-1 Healthy 
+ Container n6b-f14-handover-tests-1 Starting 
+ Container n6b-f14-handover-tests-1 Started 
+tests-1  | 
+tests-1  | > n6b-rag-class@0.1.0 typecheck
+tests-1  | > tsc --noEmit -p tsconfig.json && npm run typecheck --workspace @n6b/web
+tests-1  | 
+tests-1  | 
+tests-1  | > @n6b/web@0.1.0 typecheck
+tests-1  | > tsc --noEmit -p tsconfig.json
+tests-1  | 
+tests-1  | 
+tests-1  | > n6b-rag-class@0.1.0 pretest
+tests-1  | > npm run build --workspace @n6b/db && npm run build --workspace @n6b/rag
+tests-1  | 
+tests-1  | 
+tests-1  | > @n6b/db@0.1.0 build
+tests-1  | > tsc -p tsconfig.build.json
+tests-1  | 
+tests-1  | 
+tests-1  | > @n6b/rag@0.1.0 build
+tests-1  | > tsc -p tsconfig.build.json
+tests-1  | 
+tests-1  | 
+tests-1  | > n6b-rag-class@0.1.0 test
+tests-1  | > vitest run --config vitest.config.ts
+tests-1  | 
+tests-1  | 
+tests-1  |  RUN  v3.2.7 /app
+tests-1  | 
+tests-1  |  ✓ packages/rag/tests/unit/guards.test.ts (16 tests) 36ms
+tests-1  |  ✓ packages/rag/tests/unit/keys-and-refusal.test.ts (39 tests) 150ms
+tests-1  |  ✓ apps/web/tests/unit/config.test.ts (78 tests) 48ms
+tests-1  | stderr | apps/web/tests/unit/auth-handler.test.ts > регистрация и вход — порядок проверок (Pseudocode «Register and login») > нет X-Forwarded-For → 503 и ни одной попытки bcrypt
+tests-1  | auth: адрес клиента недоступен — запрос не через прокси; вход отклонён
+tests-1  | 
+tests-1  | stderr | apps/web/tests/unit/auth-handler.test.ts > GET /api/health (NFR-n6b-5) > 200 только при ответившей БД; иначе 503 без текста ошибки
+tests-1  | health: проверка не прошла: Error
+tests-1  | 
+tests-1  |  ✓ apps/web/tests/unit/auth-handler.test.ts (18 tests) 436ms
+tests-1  |    ✓ регистрация и вход — порядок проверок (Pseudocode «Register and login») > фиктивный хэш — настоящий bcrypt той же стоимости 12, что и регистрация  312ms
+tests-1  |  ✓ apps/web/tests/unit/widget-handler.test.ts (34 tests) 87ms
+tests-1  |  ✓ packages/rag/tests/unit/chunk.test.ts (12 tests) 14146ms
+tests-1  |    ✓ countTokens (js-tiktoken cl100k_base) > считает токены, а не символы: пустая строка — 0, русский текст дороже английского той же длины  669ms
+tests-1  |    ✓ splitIntoChunks > русский: каждая часть ≤ 500 токенов, tokens и sha256 точные, весь текст покрыт  762ms
+tests-1  |    ✓ splitIntoChunks > перекрытие: следующая часть начинается с хвоста предыдущей, хвост 1…80 токенов  420ms
+tests-1  |    ✓ splitIntoChunks > абзац без переносов режется по предложениям; сплошная строка 20 000 символов — окнами, быстро  2214ms
+tests-1  |    ✓ splitIntoChunks > F-1: один большой документ уступает таймеру внутри абзаца; async = sync, Unicode и cap  9598ms
+tests-1  |  ✓ apps/web/tests/unit/handover-handler.test.ts (9 tests) 155ms
+tests-1  |  ✓ apps/web/tests/unit/jobs-handler.test.ts (11 tests) 41ms
+tests-1  |  ✓ packages/rag/tests/unit/provider.test.ts (16 tests) 60ms
+tests-1  |  ✓ services/worker/tests/unit/job-guards.test.ts (9 tests) 36ms
+tests-1  |  ✓ apps/web/tests/unit/metrics-verifier.test.ts (28 tests) 82ms
+tests-1  |  ✓ packages/rag/tests/unit/answer-flow.test.ts (12 tests) 57ms
+tests-1  |  ✓ apps/web/tests/unit/referral-handler.test.ts (7 tests) 150ms
+tests-1  |  ✓ services/worker/tests/unit/crawl-site-correction.test.ts (19 tests) 95ms
+tests-1  |  ✓ apps/web/tests/unit/studio-handler.test.ts (8 tests) 104ms
+tests-1  |  ✓ packages/rag/tests/unit/live-factory.test.ts (6 tests) 880ms
+tests-1  |    ✓ F-2: живая дверь читает окружение процесса сама и один раз > нет предела или предел пустой/выше int4/персональный > общего → ConfigError с именем переменной  330ms
+tests-1  |  ✓ packages/rag/tests/unit/guards-index.test.ts (5 tests) 52ms
+tests-1  |  ✓ apps/web/tests/unit/demo-view.test.ts (6 tests) 62ms
+tests-1  |  ✓ apps/web/tests/unit/demo-handler.test.ts (34 tests) 70ms
+tests-1  |  ✓ apps/web/tests/unit/publish-handler.test.ts (24 tests) 56ms
+tests-1  |  ✓ packages/rag/tests/unit/site-safety.test.ts (42 tests) 125ms
+tests-1  |  ✓ apps/web/tests/unit/config-wiring.test.ts (19 tests) 135ms
+tests-1  |  ✓ apps/web/tests/unit/ask-handler.test.ts (17 tests) 60ms
+tests-1  | stdout | services/worker/tests/unit/crawl-rules.test.ts > RFC9309 robots > R1: adversarial wildcard finishes under external deadline and leaves heartbeat/ceiling responsive
+tests-1  | R1 bounded CPU/heartbeat: {
+tests-1  |   heartbeats: [33m10[39m,
+tests-1  |   matches: [33m575[39m,
+tests-1  |   elapsedMs: [33m30.411350999999968[39m,
+tests-1  |   ceiling: [33mtrue[39m
+tests-1  | }
+tests-1  | 
+tests-1  |  ✓ services/worker/tests/unit/crawl-rules.test.ts (7 tests) 527ms
+tests-1  |    ✓ RFC9309 robots > R1: adversarial wildcard finishes under external deadline and leaves heartbeat/ceiling responsive  475ms
+tests-1  |  ✓ apps/web/tests/unit/metrics-handler.test.ts (9 tests) 50ms
+tests-1  |  ✓ packages/rag/tests/unit/answer-citations.test.ts (12 tests) 21ms
+tests-1  |  ✓ services/worker/tests/unit/boot.test.ts (7 tests) 29054ms
+tests-1  |    ✓ worker: отказ старта без конфигурации > SC-US-016-2: пустое окружение → exit 1 и имя переменной  2758ms
+tests-1  |    ✓ worker: отказ старта без конфигурации > SC-US-016-2: пустая строка предела → exit 1 с именем, значение не печатается  2646ms
+tests-1  |    ✓ worker: отказ старта без конфигурации > персональный предел больше общего → exit 1  2703ms
+tests-1  |    ✓ worker: отказ старта без конфигурации > F-3 (08_review.md): предел больше int4 → exit 1 с именем при старте  2890ms
+tests-1  |    ✓ worker: отказ старта без конфигурации > F-3: воркер со строкой подключения кабинета (n6b_app_tenant) → exit 1, пароль не печатается  2731ms
+tests-1  |    ✓ worker: отказ старта без конфигурации > chunk-embed: без любого из пределов двери (не эмбеддингов) воркер не стартует — exit 1 с именем  12781ms
+tests-1  |    ✓ worker: отказ старта без конфигурации > chunk-embed: пределы двери с персональным больше общего → exit 1 при старте, а не на первой задаче  2537ms
+tests-1  |  ✓ apps/web/tests/unit/pdf-handler.test.ts (6 tests) 200ms
+tests-1  |  ✓ apps/web/tests/unit/publication-validation.test.ts (59 tests) 53ms
+tests-1  |  ✓ services/worker/tests/unit/pdf-extract.test.ts (6 tests) 609ms
+tests-1  |    ✓ real pdfjs local bytes > 301 pages fail before writes, 300 pages are allowed and empty pages skipped  355ms
+tests-1  |  ✓ apps/web/tests/unit/auth-client.test.ts (8 tests) 37ms
+tests-1  |  ✓ apps/web/tests/unit/publish-bot-ui.test.ts (3 tests) 49ms
+tests-1  |  ❯ apps/web/tests/unit/referral-cookie.test.ts (11 tests | 1 failed) 56ms
+tests-1  |    × REF-02 SC-US-011-1: first touch on the actual landing response > valid first touch sets 30-day HttpOnly Secure Lax cookie and prevents public caching 27ms
+tests-1  |      → expected [ Array(3) ] to deeply equal [ '/', '/b/:path*' ]
+tests-1  |    ✓ REF-02 SC-US-011-1: first touch on the actual landing response > demo page with a valid ref never sets a referral cookie and prevents public caching 2ms
+tests-1  |    ✓ REF-02 SC-US-011-1: first touch on the actual landing response > fixed first-touch guard: repeated landing never overwrites or renews a cookie 2ms
+tests-1  |    ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref null never sets a cookie 1ms
+tests-1  |    ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref  never sets a cookie 1ms
+tests-1  |    ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref short never sets a cookie 1ms
+tests-1  |    ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref Abcdef_12345x never sets a cookie 0ms
+tests-1  |    ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref ../evil.test never sets a cookie 1ms
+tests-1  |    ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref https://evil never sets a cookie 2ms
+tests-1  |    ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref Abcdef_1234! never sets a cookie 1ms
+tests-1  |    ✓ REF-02 SC-US-011-1: first touch on the actual landing response > development omits Secure; cookie reader ignores body/query and rejects encoded garbage 16ms
+tests-1  |  ✓ apps/web/tests/unit/handover-ui.test.ts (3 tests) 30ms
+tests-1  |  ✓ apps/web/tests/unit/create-bot-ui.test.ts (4 tests) 20ms
+tests-1  |  ✓ apps/web/tests/unit/ip.test.ts (10 tests) 34ms
+tests-1  |  ✓ packages/db/tests/unit/enums-vs-migrations.test.ts (14 tests) 14ms
+tests-1  |  ✓ apps/web/tests/unit/bots-handler.test.ts (3 tests) 31ms
+tests-1  |  ✓ apps/web/tests/unit/studio-clients-ui.test.ts (2 tests) 17ms
+tests-1  |  ✓ apps/web/tests/unit/publication-guard.test.ts (1 test) 14ms
+tests-1  | 
+tests-1  | ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+tests-1  | 
+tests-1  |  FAIL  apps/web/tests/unit/referral-cookie.test.ts > REF-02 SC-US-011-1: first touch on the actual landing response > valid first touch sets 30-day HttpOnly Secure Lax cookie and prevents public caching
+tests-1  | AssertionError: expected [ Array(3) ] to deeply equal [ '/', '/b/:path*' ]
+tests-1  | 
+tests-1  | [32m- Expected[39m
+tests-1  | [31m+ Received[39m
+tests-1  | 
+tests-1  | [2m  [[22m
+tests-1  | [2m    "/",[22m
+tests-1  | [2m    "/b/:path*",[22m
+tests-1  | [31m+   "/handover/:path*",[39m
+tests-1  | [2m  ][22m
+tests-1  | 
+tests-1  |  ❯ apps/web/tests/unit/referral-cookie.test.ts:18:28
+tests-1  | 
+tests-1  |      16|     expect(response.headers.get('set-cookie')).toContain('HttpOnly');
+tests-1  |      17|     expect(response.headers.get('cache-control')).toBe('private, no-st…
+tests-1  |      18|     expect(config.matcher).toEqual(['/', '/b/:path*']);
+tests-1  |        |                            ^
+tests-1  |      19|   });
+tests-1  |      20|   it('demo page with a valid ref never sets a referral cookie and prev…
+tests-1  | 
+tests-1  | ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+tests-1  | 
+tests-1  |  Test Files  1 failed | 39 passed (40)
+tests-1  |       Tests  1 failed | 633 passed (634)
+tests-1  |    Start at  07:58:35
+tests-1  |    Duration  81.80s (transform 3.14s, setup 0ms, collect 13.33s, tests 47.94s, environment 15ms, prepare 7.31s)
+tests-1  | 
+tests-1  | 
+tests-1  | > n6b-rag-class@0.1.0 test:int
+tests-1  | > vitest run --config vitest.int.config.ts
+tests-1  | 
+tests-1  | 
+tests-1  |  RUN  v3.2.7 /app
+tests-1  | 
+tests-1  |  ✓ services/worker/tests/int/chunk-embed.int.test.ts (15 tests) 5309ms
+tests-1  |    ✓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > первый прогон: части ≤ 500 токенов записаны с vector(1536), резерв = точная оценка, батчи по размеру  2334ms
+tests-1  |    ✓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > резерв = точная оценка js-tiktoken, а не ⌈длина/4⌉: русский текст не проходит под заниженным n  757ms
+tests-1  |    ✓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-1: worker уступает таймеру и проверяет аренду внутри одного большого документа  1106ms
+tests-1  |  ✓ packages/rag/tests/int/paid-call.test.ts (19 tests) 7377ms
+tests-1  |    ✓ счёт по попыткам (SC-US-016-3, SC-US-005-4, T-8) > T-9: крах процесса между COMMIT резерва и исходом → строка started и списанный резерв  1125ms
+tests-1  |    ✓ конкурентность на настоящем Postgres (ADR-010, shared-resource-verification) > T-5d: 50 прогонов × 30 параллельных попыток на пересекающихся ключах — ни одного deadlock  3800ms
+tests-1  |    ✓ конкурентность на настоящем Postgres (ADR-010, shared-resource-verification) > T-6: 200 параллельных при пуле 10 — соединений ≤ 10, вызовы провайдера идут БЕЗ удержания соединения  875ms
+tests-1  |  ✓ apps/web/tests/int/metrics.int.test.ts (15 tests) 771ms
+db-1     | 2026-10-03 05:00:17.711 UTC [639] WARNING:  there is no transaction in progress
+db-1     | 2026-10-03 05:00:17.799 UTC [639] WARNING:  there is no transaction in progress
+db-1     | 2026-10-03 05:00:17.882 UTC [641] ERROR:  duplicate key value violates unique constraint "account_email_key"
+db-1     | 2026-10-03 05:00:17.882 UTC [641] DETAIL:  Key (lower(email))=(claim-6b57e33e@example.test) already exists.
+db-1     | 2026-10-03 05:00:17.882 UTC [641] STATEMENT:  UPDATE account SET email = $2, password_hash = $3, studio_access = $4,
+db-1     | 	        parent_account_id = CASE WHEN $4 THEN parent_account_id ELSE NULL END WHERE id = $1
+db-1     | 2026-10-03 05:00:17.938 UTC [640] ERROR:  duplicate key value violates unique constraint "account_email_key"
+db-1     | 2026-10-03 05:00:17.938 UTC [640] DETAIL:  Key (lower(email))=(claim-1d8dc890@example.test) already exists.
+db-1     | 2026-10-03 05:00:17.938 UTC [640] STATEMENT:  UPDATE account SET email = $2, password_hash = $3, studio_access = $4,
+db-1     | 	        parent_account_id = CASE WHEN $4 THEN parent_account_id ELSE NULL END WHERE id = $1
+db-1     | 2026-10-03 05:00:17.982 UTC [639] WARNING:  there is no transaction in progress
+db-1     | 2026-10-03 05:00:18.021 UTC [639] WARNING:  there is no transaction in progress
+db-1     | 2026-10-03 05:00:19.043 UTC [639] WARNING:  there is no transaction in progress
+db-1     | 2026-10-03 05:00:20.061 UTC [639] WARNING:  there is no transaction in progress
+db-1     | 2026-10-03 05:00:21.085 UTC [639] WARNING:  there is no transaction in progress
+db-1     | 2026-10-03 05:00:22.116 UTC [639] WARNING:  there is no transaction in progress
+db-1     | 2026-10-03 05:00:22.148 UTC [639] WARNING:  there is no transaction in progress
+db-1     | 2026-10-03 05:00:22.185 UTC [639] WARNING:  there is no transaction in progress
+db-1     | 2026-10-03 05:00:22.223 UTC [639] WARNING:  there is no transaction in progress
+tests-1  |  ✓ apps/web/tests/int/handover-race.int.test.ts (21 tests) 5260ms
+tests-1  |    ✓ HAN-06 real PG handover races and blocking clocks > HAN-06 expiry during account wait rolls back all writes  1022ms
+tests-1  |    ✓ HAN-06 real PG handover races and blocking clocks > HAN-06 expiry during token wait rolls back all writes  1018ms
+tests-1  |    ✓ HAN-06 real PG handover races and blocking clocks > HAN-06 expiry during email wait rolls back all writes  1024ms
+tests-1  |    ✓ HAN-06 real PG handover races and blocking clocks > HAN-06 expiry during session wait rolls back all writes  1030ms
+tests-1  |  ✓ services/worker/tests/int/lease.int.test.ts (17 tests) 956ms
+tests-1  |    ✓ захват: SKIP LOCKED и не более трёх захватов > SC-US-004-1 конкурентно: два воркера × 30 попыток на 10 задач — каждая захвачена ровно один раз  308ms
+db-1     | 2026-10-03 05:00:28.949 UTC [692] ERROR:  duplicate key value violates unique constraint "session_token_hash_key"
+db-1     | 2026-10-03 05:00:28.949 UTC [692] DETAIL:  Key (token_hash)=(9c6cccc2fc2d03637598741aac4a99a4c14fcb227decc1abcef498a2002a06d1) already exists.
+db-1     | 2026-10-03 05:00:28.949 UTC [692] STATEMENT:  INSERT INTO session (account_id, token_hash, expires_at) VALUES ($1, $2, $3)
+db-1     | 2026-10-03 05:00:29.314 UTC [692] ERROR:  duplicate key value violates unique constraint "account_email_key"
+db-1     | 2026-10-03 05:00:29.314 UTC [692] DETAIL:  Key (lower(email))=(stu-e136406a@example.test) already exists.
+db-1     | 2026-10-03 05:00:29.314 UTC [692] STATEMENT:  UPDATE account SET email = $2, password_hash = $3, studio_access = $4,
+db-1     | 	        parent_account_id = CASE WHEN $4 THEN parent_account_id ELSE NULL END WHERE id = $1
+tests-1  |  ✓ apps/web/tests/int/handover.int.test.ts (11 tests) 4050ms
+tests-1  |    ✓ HAN-01/02 real PostgreSQL handover > SC-US-014-2 credentials/session commit and real password login keep=false  1305ms
+tests-1  |    ✓ HAN-01/02 real PostgreSQL handover > SC-US-014-2 credentials/session commit and real password login keep=true  1238ms
+tests-1  |    ✓ HAN-01/02 real PostgreSQL handover > HAN-02 forced session failure rolls back real credentials and session writes  339ms
+tests-1  |    ✓ HAN-01/02 real PostgreSQL handover > HAN-02 forced final-token failure rolls back real credentials and session writes  330ms
+tests-1  |    ✓ HAN-01/02 real PostgreSQL handover > SC-US-014-4 duplicate normalized email returns exact409, token survives retry  317ms
+db-1     | 2026-10-03 05:00:31.886 UTC [731] ERROR:  intentional event insertion failure
+db-1     | 2026-10-03 05:00:31.886 UTC [731] CONTEXT:  PL/pgSQL function f07_fail_cabce8dd80() line 2 at RAISE
+db-1     | 2026-10-03 05:00:31.886 UTC [731] STATEMENT:  INSERT INTO growth_event (account_id, kind) VALUES ($1, 'first_cited_answer')
+tests-1  |  ✓ apps/web/tests/int/ask.int.test.ts (21 tests) 1335ms
+tests-1  |    ✓ ANS-05 atomic first cited answer > SC-US-005-3: 10 concurrent answers → 10 logs, one marker/event/showCTA; provider awaits release connections  303ms
+tests-1  |  ✓ services/worker/tests/int/crawl.int.test.ts (13 tests) 2108ms
+tests-1  |    ✓ SC-US-002 обход сайта и существующая нарезка/эмбеддинги > SC-US-002-1: sitemap первым, root затем ссылки, циклы/фрагменты не повторяются; неизменённые страницы ставят ссылки  988ms
+tests-1  |    ✓ SC-US-002 обход сайта и существующая нарезка/эмбеддинги > Free считает 100 URL включая redirect/nonHTML, seen до HTTP, точная заметка  539ms
+db-1     | 2026-10-03 05:00:36.500 UTC [753] ERROR:  duplicate key value violates unique constraint "session_token_hash_key"
+db-1     | 2026-10-03 05:00:36.500 UTC [753] DETAIL:  Key (token_hash)=(d6650ba5bb57aba0ad3d866ae6f508b820829aeb5c409747ae332be8ea12855d) already exists.
+db-1     | 2026-10-03 05:00:36.500 UTC [753] STATEMENT:  WITH registered AS (
+db-1     | 	          INSERT INTO account (email, password_hash, kind, plan, referred_by_bot_id)
+db-1     | 	          VALUES (lower($1), $2, $3, 'free', $6)
+db-1     | 	          ON CONFLICT ((lower(email))) WHERE email IS NOT NULL DO NOTHING RETURNING id)
+db-1     | 	        INSERT INTO session (account_id, token_hash, expires_at)
+db-1     | 	        SELECT id, $4, $5 FROM registered RETURNING account_id
+db-1     | 2026-10-03 05:00:36.743 UTC [752] ERROR:  canceling statement due to lock timeout
+db-1     | 2026-10-03 05:00:36.743 UTC [752] CONTEXT:  while deleting tuple (2,2) in relation "bot"
+db-1     | 2026-10-03 05:00:36.743 UTC [752] STATEMENT:  DELETE FROM bot WHERE id = $1
+db-1     | 2026-10-03 05:00:36.773 UTC [754] WARNING:  there is no transaction in progress
+db-1     | 2026-10-03 05:00:36.774 UTC [752] WARNING:  there is no transaction in progress
+tests-1  |  ✓ apps/web/tests/int/referral.int.test.ts (9 tests) 863ms
+tests-1  |  ✓ apps/web/tests/int/studio-workflow.int.test.ts (3 tests) 918ms
+tests-1  |    ✓ STU-03/04 child workflow under the studio session actor and real tenant RLS > SC-US-013-1: selected child owns bot/site/PDF/jobs/documents/chunks/logs/model usage and sandbox quota  452ms
+tests-1  |    ✓ STU-03/04 child workflow under the studio session actor and real tenant RLS > STU-05: foreign/revoked/detached targets and direct UUID operations close on every request  405ms
+db-1     | 2026-10-03 05:00:41.184 UTC [783] WARNING:  there is no transaction in progress
+tests-1  |  ✓ apps/web/tests/int/demo.int.test.ts (7 tests) 1300ms
+tests-1  |    ✓ DEM-01/03/04 SC-US-012 real PG demo gate and answer path > SC-US-012-3: 50 shared widget+demo asks contend atomically at configured visitor cap=3  332ms
+tests-1  |    ✓ DEM-01/03/04 SC-US-012 real PG demo gate and answer path > SC-US-012-3: 50 shared widget+demo asks contend atomically at configured bot cap=3  314ms
+tests-1  | stdout | apps/web/tests/int/jobs.int.test.ts > три состояния по job_id — квитанция для docs/long-job-contract.md > выполняется → готово; выполняется → ошибка + «Повторить» → выполняется
+tests-1  | КВИТАНЦИЯ выполняется: GET /api/jobs/bca98e97-49ef-439d-860f-aa776cc5ff2c → {"job_id":"bca98e97-49ef-439d-860f-aa776cc5ff2c","source_id":"e7582b00-973e-4b96-a32d-ef65cd815b45","state":"running","progress_done":0,"progress_total":null,"fragments":0,"error":null,"note":null}, job_id=bca98e97-49ef-439d-860f-aa776cc5ff2c, 2026-10-03T05:00:42.957Z
+tests-1  | 
+tests-1  | stdout | apps/web/tests/int/jobs.int.test.ts > три состояния по job_id — квитанция для docs/long-job-contract.md > выполняется → готово; выполняется → ошибка + «Повторить» → выполняется
+tests-1  | КВИТАНЦИЯ выполняется (прогресс): GET /api/jobs/bca98e97-49ef-439d-860f-aa776cc5ff2c → {"job_id":"bca98e97-49ef-439d-860f-aa776cc5ff2c","source_id":"e7582b00-973e-4b96-a32d-ef65cd815b45","state":"running","progress_done":1,"progress_total":2,"fragments":0,"error":null,"note":null}, job_id=bca98e97-49ef-439d-860f-aa776cc5ff2c, 2026-10-03T05:00:42.990Z
+tests-1  | 
+tests-1  | stdout | apps/web/tests/int/jobs.int.test.ts > три состояния по job_id — квитанция для docs/long-job-contract.md > выполняется → готово; выполняется → ошибка + «Повторить» → выполняется
+tests-1  | КВИТАНЦИЯ успех: GET /api/jobs/bca98e97-49ef-439d-860f-aa776cc5ff2c → {"job_id":"bca98e97-49ef-439d-860f-aa776cc5ff2c","source_id":"e7582b00-973e-4b96-a32d-ef65cd815b45","state":"succeeded","progress_done":2,"progress_total":2,"fragments":0,"error":null,"note":"обойдено 2 из 2"}, job_id=bca98e97-49ef-439d-860f-aa776cc5ff2c, 2026-10-03T05:00:43.012Z
+tests-1  | 
+tests-1  | stdout | apps/web/tests/int/jobs.int.test.ts > три состояния по job_id — квитанция для docs/long-job-contract.md > выполняется → готово; выполняется → ошибка + «Повторить» → выполняется
+tests-1  | КВИТАНЦИЯ отказ: GET /api/jobs/3c4b3ffc-2713-4ee1-8cbf-a9b4abf1025c → {"job_id":"3c4b3ffc-2713-4ee1-8cbf-a9b4abf1025c","source_id":"a4d66a5c-504c-4cd9-b5b0-6e496d584e61","state":"failed","progress_done":0,"progress_total":null,"fragments":0,"error":"Индексация источников ещё не подключена: задача не выполнялась. Нажмите «Повторить», когда обработка станет доступна.","note":null}, job_id=3c4b3ffc-2713-4ee1-8cbf-a9b4abf1025c, 2026-10-03T05:00:43.034Z
+tests-1  | 
+tests-1  | stdout | apps/web/tests/int/jobs.int.test.ts > три состояния по job_id — квитанция для docs/long-job-contract.md > выполняется → готово; выполняется → ошибка + «Повторить» → выполняется
+tests-1  | КВИТАНЦИЯ отказ → Повторить → выполняется: GET /api/jobs/3c4b3ffc-2713-4ee1-8cbf-a9b4abf1025c → {"job_id":"3c4b3ffc-2713-4ee1-8cbf-a9b4abf1025c","source_id":"a4d66a5c-504c-4cd9-b5b0-6e496d584e61","state":"running","progress_done":0,"progress_total":null,"fragments":0,"error":null,"note":null}, job_id=3c4b3ffc-2713-4ee1-8cbf-a9b4abf1025c, 2026-10-03T05:00:43.045Z
+tests-1  | 
+tests-1  |  ✓ apps/web/tests/int/jobs.int.test.ts (8 tests) 1046ms
+tests-1  |    ✓ POST источника → 202 {job_id} до работы (SC-US-002-1, SC-US-004-4) > конкурентно: 20 одновременных POST одного источника (с разными #фрагментами) → один источник, одна задача, один job_id  609ms
+db-1     | 2026-10-03 05:00:43.824 UTC [831] ERROR:  new row violates row-level security policy for table "bot"
+db-1     | 2026-10-03 05:00:43.824 UTC [831] STATEMENT:  INSERT INTO bot ("id", "account_id", "public_id", "name", "contact", "published", "demo_enabled", "demo_slug", "allowed_origins", "first_cited_answer_at", "created_at") SELECT "id", "account_id", "public_id", "name", "contact", "published", "demo_enabled", "demo_slug", "allowed_origins", "first_cited_answer_at", "created_at" FROM json_populate_record(NULL::bot, $1)
+db-1     | 2026-10-03 05:00:43.832 UTC [831] ERROR:  new row violates row-level security policy for table "chunk"
+db-1     | 2026-10-03 05:00:43.832 UTC [831] STATEMENT:  INSERT INTO chunk ("id", "document_id", "bot_id", "account_id", "ord", "text", "text_sha256", "tokens", "embedding", "created_at") SELECT "id", "document_id", "bot_id", "account_id", "ord", "text", "text_sha256", "tokens", "embedding", "created_at" FROM json_populate_record(NULL::chunk, $1)
+db-1     | 2026-10-03 05:00:43.837 UTC [831] ERROR:  new row violates row-level security policy for table "document"
+db-1     | 2026-10-03 05:00:43.837 UTC [831] STATEMENT:  INSERT INTO document ("id", "source_id", "account_id", "locator_url", "locator_page", "title", "text", "content_sha256", "created_at") SELECT "id", "source_id", "account_id", "locator_url", "locator_page", "title", "text", "content_sha256", "created_at" FROM json_populate_record(NULL::document, $1)
+db-1     | 2026-10-03 05:00:43.848 UTC [831] ERROR:  new row violates row-level security policy for table "growth_event"
+db-1     | 2026-10-03 05:00:43.848 UTC [831] STATEMENT:  INSERT INTO growth_event ("id", "account_id", "kind", "created_at") SELECT "id", "account_id", "kind", "created_at" FROM json_populate_record(NULL::growth_event, $1)
+db-1     | 2026-10-03 05:00:43.854 UTC [831] ERROR:  new row violates row-level security policy for table "handover_token"
+db-1     | 2026-10-03 05:00:43.854 UTC [831] STATEMENT:  INSERT INTO handover_token ("id", "account_id", "token_hash", "expires_at", "used_at", "created_at") SELECT "id", "account_id", "token_hash", "expires_at", "used_at", "created_at" FROM json_populate_record(NULL::handover_token, $1)
+db-1     | 2026-10-03 05:00:43.863 UTC [831] ERROR:  insert or update on table "index_job" violates foreign key constraint "index_job_source_fk"
+db-1     | 2026-10-03 05:00:43.863 UTC [831] CONTEXT:  PL/pgSQL function n6b_index_job_source_check() line 4 at RAISE
+db-1     | 2026-10-03 05:00:43.863 UTC [831] STATEMENT:  INSERT INTO index_job ("source_id", "account_id") SELECT "source_id", "account_id" FROM json_populate_record(NULL::index_job, $1)
+db-1     | 2026-10-03 05:00:43.872 UTC [831] ERROR:  new row violates row-level security policy for table "question_log"
+db-1     | 2026-10-03 05:00:43.872 UTC [831] STATEMENT:  INSERT INTO question_log ("id", "bot_id", "account_id", "channel", "visitor_key", "origin_host", "question", "outcome", "cited_chunk_ids", "created_at") SELECT "id", "bot_id", "account_id", "channel", "visitor_key", "origin_host", "question", "outcome", "cited_chunk_ids", "created_at" FROM json_populate_record(NULL::question_log, $1)
+db-1     | 2026-10-03 05:00:43.881 UTC [831] ERROR:  new row violates row-level security policy for table "source"
+db-1     | 2026-10-03 05:00:43.881 UTC [831] STATEMENT:  INSERT INTO source ("id", "bot_id", "account_id", "kind", "url", "file_name", "created_at") SELECT "id", "bot_id", "account_id", "kind", "url", "file_name", "created_at" FROM json_populate_record(NULL::source, $1)
+db-1     | 2026-10-03 05:00:43.887 UTC [831] ERROR:  new row violates row-level security policy for table "source_file"
+db-1     | 2026-10-03 05:00:43.887 UTC [831] STATEMENT:  INSERT INTO source_file ("id", "source_id", "account_id", "bytes", "sha256", "pages", "created_at") SELECT "id", "source_id", "account_id", "bytes", "sha256", "pages", "created_at" FROM json_populate_record(NULL::source_file, $1)
+db-1     | 2026-10-03 05:00:43.917 UTC [831] ERROR:  new row violates row-level security policy for table "bot"
+db-1     | 2026-10-03 05:00:43.917 UTC [831] STATEMENT:  UPDATE bot SET account_id = $2 WHERE account_id = $1
+db-1     | 2026-10-03 05:00:43.929 UTC [831] ERROR:  new row violates row-level security policy for table "chunk"
+db-1     | 2026-10-03 05:00:43.929 UTC [831] STATEMENT:  UPDATE chunk SET account_id = $2 WHERE account_id = $1
+db-1     | 2026-10-03 05:00:43.935 UTC [831] ERROR:  new row violates row-level security policy for table "document"
+db-1     | 2026-10-03 05:00:43.935 UTC [831] STATEMENT:  UPDATE document SET account_id = $2 WHERE account_id = $1
+db-1     | 2026-10-03 05:00:43.946 UTC [831] ERROR:  new row violates row-level security policy for table "source"
+db-1     | 2026-10-03 05:00:43.946 UTC [831] STATEMENT:  UPDATE source SET account_id = $2 WHERE account_id = $1
+db-1     | 2026-10-03 05:00:43.953 UTC [831] ERROR:  new row violates row-level security policy for table "source_file"
+db-1     | 2026-10-03 05:00:43.953 UTC [831] STATEMENT:  UPDATE source_file SET account_id = $2 WHERE account_id = $1
+db-1     | 2026-10-03 05:00:43.958 UTC [831] ERROR:  permission denied for table model_call_log
+db-1     | 2026-10-03 05:00:43.958 UTC [831] STATEMENT:  SELECT 1 FROM model_call_log LIMIT 1
+db-1     | 2026-10-03 05:00:43.963 UTC [831] ERROR:  permission denied for table operator
+db-1     | 2026-10-03 05:00:43.963 UTC [831] STATEMENT:  SELECT 1 FROM operator LIMIT 1
+db-1     | 2026-10-03 05:00:43.965 UTC [831] ERROR:  permission denied for table session
+db-1     | 2026-10-03 05:00:43.965 UTC [831] STATEMENT:  SELECT 1 FROM session LIMIT 1
+tests-1  |  ✓ packages/db/tests/int/rls-catalog.test.ts (9 tests) 327ms
+db-1     | 2026-10-03 05:00:45.692 UTC [832] WARNING:  there is no transaction in progress
+tests-1  |  ✓ apps/web/tests/int/widget.int.test.ts (7 tests) 1303ms
+tests-1  |  ✓ services/worker/tests/int/pdf.int.test.ts (12 tests) 1991ms
+tests-1  |    ✓ SC-US-003-1/3 PDF -> real DB -> indexing -> job API > PDF-04 two real pages have locator_page/title/text/hash and existing chunks  1198ms
+db-1     | 2026-10-03 05:00:50.936 UTC [874] WARNING:  there is no transaction in progress
+tests-1  |  ✓ apps/web/tests/int/publish.int.test.ts (5 tests) 618ms
+db-1     | 2026-10-03 05:00:51.748 UTC [889] ERROR:  expected 1536 dimensions, not 3
+db-1     | 2026-10-03 05:00:51.748 UTC [889] STATEMENT:  INSERT INTO chunk (document_id, bot_id, account_id, ord, text, text_sha256, tokens, embedding)
+db-1     | 	      VALUES ($1, $2, $3, 1, 't', 'h2', 1, '[1,2,3]')
+db-1     | 2026-10-03 05:00:51.769 UTC [890] ERROR:  new row for relation "index_job" violates check constraint "index_job_state_check"
+db-1     | 2026-10-03 05:00:51.769 UTC [890] DETAIL:  Failing row contains (beb8a5ac-0b78-457e-965c-f13345dcfdb2, 5dde299b-ccd4-4a07-91d0-d4eb444ce1f7, b583e32f-155f-43a5-b840-168f84a5b6dc, paused, 0, null, null, null, 0, null, 0, null, 2026-10-03 05:00:51.703977+00, null).
+db-1     | 2026-10-03 05:00:51.769 UTC [890] STATEMENT:  UPDATE index_job SET state = 'paused' WHERE id = $1
+db-1     | 2026-10-03 05:00:51.789 UTC [891] ERROR:  duplicate key value violates unique constraint "index_job_live_source_key"
+db-1     | 2026-10-03 05:00:51.789 UTC [891] DETAIL:  Key (source_id)=(5dde299b-ccd4-4a07-91d0-d4eb444ce1f7) already exists.
+db-1     | 2026-10-03 05:00:51.789 UTC [891] STATEMENT:  INSERT INTO index_job (source_id, account_id) VALUES ($1, $2)
+db-1     | 2026-10-03 05:00:51.837 UTC [892] ERROR:  родитель подаккаунта должен быть студией верхнего уровня
+db-1     | 2026-10-03 05:00:51.837 UTC [892] CONTEXT:  PL/pgSQL function account_one_level() line 6 at RAISE
+db-1     | 2026-10-03 05:00:51.837 UTC [892] STATEMENT:  INSERT INTO account (email, password_hash, kind, parent_account_id, studio_access)
+db-1     | 	     VALUES ($1, 'x', $2, $3, $4) RETURNING id
+db-1     | 2026-10-03 05:00:51.877 UTC [900] ERROR:  new row violates row-level security policy for table "bot"
+db-1     | 2026-10-03 05:00:51.877 UTC [900] STATEMENT:  INSERT INTO bot (account_id, public_id, name) VALUES ($1, 'AAAAAAAAAAAA', 'x')
+db-1     | 2026-10-03 05:00:51.953 UTC [900] ERROR:  permission denied for schema public at character 22
+db-1     | 2026-10-03 05:00:51.953 UTC [900] STATEMENT:  SELECT count(*) FROM public.bot
+db-1     | 2026-10-03 05:00:51.968 UTC [903] ERROR:  permission denied for schema public at character 22
+db-1     | 2026-10-03 05:00:51.968 UTC [903] STATEMENT:  SELECT count(*) FROM public.account
+db-1     | 2026-10-03 05:00:51.983 UTC [904] ERROR:  permission denied for schema public at character 22
+db-1     | 2026-10-03 05:00:51.983 UTC [904] STATEMENT:  SELECT count(*) FROM public.bot
+db-1     | 2026-10-03 05:00:51.999 UTC [905] ERROR:  permission denied for schema public at character 22
+db-1     | 2026-10-03 05:00:51.999 UTC [905] STATEMENT:  SELECT count(*) FROM public.account
+db-1     | 2026-10-03 05:00:52.020 UTC [906] ERROR:  permission denied for table session
+db-1     | 2026-10-03 05:00:52.020 UTC [906] STATEMENT:  SELECT 1 FROM session LIMIT 1
+db-1     | 2026-10-03 05:00:52.022 UTC [906] ERROR:  permission denied for table quota_counter
+db-1     | 2026-10-03 05:00:52.022 UTC [906] STATEMENT:  SELECT 1 FROM quota_counter LIMIT 1
+db-1     | 2026-10-03 05:00:52.025 UTC [906] ERROR:  permission denied for table model_call_log
+db-1     | 2026-10-03 05:00:52.025 UTC [906] STATEMENT:  SELECT 1 FROM model_call_log LIMIT 1
+db-1     | 2026-10-03 05:00:52.027 UTC [906] ERROR:  permission denied for table operator
+db-1     | 2026-10-03 05:00:52.027 UTC [906] STATEMENT:  SELECT 1 FROM operator LIMIT 1
+db-1     | 2026-10-03 05:00:52.116 UTC [906] ERROR:  invalid input syntax for type uuid: "not-a-uuid"
+db-1     | 2026-10-03 05:00:52.116 UTC [906] CONTEXT:  SQL function "n6b_account_ids" statement 1
+db-1     | 2026-10-03 05:00:52.116 UTC [906] STATEMENT:  SELECT count(*) FROM bot
+tests-1  |  ✓ packages/db/tests/int/rls.test.ts (17 tests) 531ms
+db-1     | 2026-10-03 05:00:52.951 UTC [910] ERROR:  permission denied for table quota_reset_log
+db-1     | 2026-10-03 05:00:52.951 UTC [910] STATEMENT:  DELETE FROM quota_reset_log
+db-1     | 2026-10-03 05:00:52.959 UTC [910] ERROR:  permission denied for table quota_reset_log
+db-1     | 2026-10-03 05:00:52.959 UTC [910] STATEMENT:  UPDATE quota_reset_log SET operator = 'x'
+tests-1  |  ✓ packages/db/tests/int/spend-ops.test.ts (13 tests) 404ms
+tests-1  |  ✓ apps/web/tests/int/auth.int.test.ts (9 tests) 11370ms
+tests-1  |    ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-1: аккаунт плана free и сессия; в БД — HMAC токена, не токен; срок 7 дней  434ms
+tests-1  |    ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-2: неверный пароль и чужой e-mail — одинаковый ответ; для чужого сверяется фиктивный хэш  888ms
+tests-1  |    ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-3: kind=studio → аккаунт studio; неизвестный kind → owner  623ms
+tests-1  |    ✓ регистрация и вход на Postgres (FR-n6b-1) > повтор e-mail в другом регистре → 409, второй аккаунт и сессия не созданы  603ms
+tests-1  |    ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-4: 11-я попытка с адреса за час → 429, bcrypt не вызван, аккаунт не создан  1822ms
+tests-1  |    ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-4: IPv6 — разные адреса одной /64 делят счётчик, соседняя /64 — нет  3234ms
+tests-1  |    ✓ регистрация и вход на Postgres (FR-n6b-1) > конкурентно: 20 одновременных попыток с одного адреса при пределе 10 → ровно 10 дошли до bcrypt  3086ms
+tests-1  |    ✓ регистрация и вход на Postgres (FR-n6b-1) > IP не хранится: ключ счётчика — HMAC адреса  345ms
+tests-1  |    ✓ регистрация и вход на Postgres (FR-n6b-1) > выход удаляет сессию из БД  322ms
+db-1     | 2026-10-03 05:01:06.269 UTC [971] WARNING:  there is no transaction in progress
+db-1     | 2026-10-03 05:01:06.286 UTC [971] WARNING:  there is no transaction in progress
+tests-1  |  ✓ apps/web/tests/int/studio-clients.int.test.ts (6 tests) 403ms
+db-1     | 2026-10-03 05:01:07.289 UTC [990] ERROR:  insert or update on table "source" violates foreign key constraint "source_bot_fk"
+db-1     | 2026-10-03 05:01:07.289 UTC [990] DETAIL:  Key is not present in table "bot".
+db-1     | 2026-10-03 05:01:07.289 UTC [990] STATEMENT:  INSERT INTO source (bot_id, account_id, kind, url) VALUES ($1, $2, 'site', 'https://evil.test')
+db-1     | 2026-10-03 05:01:07.298 UTC [990] ERROR:  insert or update on table "source_file" violates foreign key constraint "source_file_source_fk"
+db-1     | 2026-10-03 05:01:07.298 UTC [990] DETAIL:  Key is not present in table "source".
+db-1     | 2026-10-03 05:01:07.298 UTC [990] STATEMENT:  INSERT INTO source_file (source_id, account_id, bytes, sha256) VALUES ($1, $2, '\x00', 'h')
+db-1     | 2026-10-03 05:01:07.322 UTC [990] ERROR:  insert or update on table "document" violates foreign key constraint "document_source_fk"
+db-1     | 2026-10-03 05:01:07.322 UTC [990] DETAIL:  Key is not present in table "source".
+db-1     | 2026-10-03 05:01:07.322 UTC [990] STATEMENT:  INSERT INTO document (source_id, account_id, locator_url, title, text, content_sha256)
+db-1     | 	        VALUES ($1, $2, 'https://evil.test/x', 'x', 'подложенный текст', 'h')
+db-1     | 2026-10-03 05:01:07.345 UTC [990] ERROR:  insert or update on table "chunk" violates foreign key constraint "chunk_document_fk"
+db-1     | 2026-10-03 05:01:07.345 UTC [990] DETAIL:  Key is not present in table "document".
+db-1     | 2026-10-03 05:01:07.345 UTC [990] STATEMENT:  INSERT INTO chunk (document_id, bot_id, account_id, ord, text, text_sha256, tokens, embedding)
+db-1     | 	        VALUES ($1, $2, $3, 5, 't', 'h5', 1, $4)
+db-1     | 2026-10-03 05:01:07.358 UTC [990] ERROR:  insert or update on table "chunk" violates foreign key constraint "chunk_bot_fk"
+db-1     | 2026-10-03 05:01:07.358 UTC [990] DETAIL:  Key is not present in table "bot".
+db-1     | 2026-10-03 05:01:07.358 UTC [990] STATEMENT:  INSERT INTO chunk (document_id, bot_id, account_id, ord, text, text_sha256, tokens, embedding)
+db-1     | 	        VALUES ($1, $2, $3, 6, 't', 'h6', 1, $4)
+db-1     | 2026-10-03 05:01:07.365 UTC [990] ERROR:  insert or update on table "index_job" violates foreign key constraint "index_job_source_fk"
+db-1     | 2026-10-03 05:01:07.365 UTC [990] CONTEXT:  PL/pgSQL function n6b_index_job_source_check() line 4 at RAISE
+db-1     | 2026-10-03 05:01:07.365 UTC [990] STATEMENT:  INSERT INTO index_job (source_id, account_id) VALUES ($1, $2)
+db-1     | 	        ON CONFLICT (source_id) WHERE state IN ('queued', 'running') DO NOTHING
+db-1     | 2026-10-03 05:01:07.370 UTC [990] ERROR:  insert or update on table "question_log" violates foreign key constraint "question_log_bot_fk"
+db-1     | 2026-10-03 05:01:07.370 UTC [990] DETAIL:  Key is not present in table "bot".
+db-1     | 2026-10-03 05:01:07.370 UTC [990] STATEMENT:  INSERT INTO question_log (bot_id, account_id, channel, question, outcome)
+db-1     | 	        VALUES ($1, $2, 'widget', 'q', 'answered')
+db-1     | 2026-10-03 05:01:07.484 UTC [991] ERROR:  insert or update on table "model_call_log" violates foreign key constraint "model_call_log_bot_account_fk"
+db-1     | 2026-10-03 05:01:07.484 UTC [991] DETAIL:  Key (bot_id, account_id)=(2680f0ce-7e11-49e7-a38d-1a5845a7275a, e8be57e7-1e88-40f8-be34-f60d7ff3f405) is not present in table "bot".
+db-1     | 2026-10-03 05:01:07.484 UTC [991] STATEMENT:  INSERT INTO model_call_log (kind, account_id, bot_id, state) VALUES ('answer', $1, $2, 'started')
+db-1     | 2026-10-03 05:01:07.488 UTC [991] ERROR:  new row for relation "model_call_log" violates check constraint "model_call_log_bot_needs_account"
+db-1     | 2026-10-03 05:01:07.488 UTC [991] DETAIL:  Failing row contains (d5c58ee9-e905-44c2-bc8c-fef90f5288bc, answer, null, 2680f0ce-7e11-49e7-a38d-1a5845a7275a, started, null, null, 2026-10-03 05:01:07.486506+00).
+db-1     | 2026-10-03 05:01:07.488 UTC [991] STATEMENT:  INSERT INTO model_call_log (kind, account_id, bot_id, state) VALUES ('answer', NULL, $1, 'started')
+db-1     | 2026-10-03 05:01:07.502 UTC [991] ERROR:  insert or update on table "source" violates foreign key constraint "source_bot_fk"
+db-1     | 2026-10-03 05:01:07.502 UTC [991] DETAIL:  Key (bot_id, account_id)=(2680f0ce-7e11-49e7-a38d-1a5845a7275a, e8be57e7-1e88-40f8-be34-f60d7ff3f405) is not present in table "bot".
+db-1     | 2026-10-03 05:01:07.502 UTC [991] STATEMENT:  INSERT INTO source (bot_id, account_id, kind, url) VALUES ($1, $2, 'site', 'https://evil.test')
+tests-1  |  ✓ packages/db/tests/int/tenant-fk.test.ts (17 tests) 416ms
+db-1     | 2026-10-03 05:01:09.046 UTC [993] ERROR:  insert or update on table "index_job" violates foreign key constraint "index_job_source_fk"
+db-1     | 2026-10-03 05:01:09.046 UTC [993] CONTEXT:  PL/pgSQL function n6b_index_job_source_check() line 4 at RAISE
+db-1     | 2026-10-03 05:01:09.046 UTC [993] STATEMENT:  INSERT INTO index_job (source_id, account_id) VALUES (NULL, NULL)
+tests-1  |  ✓ apps/web/tests/int/pdf-sources.int.test.ts (7 tests) 912ms
+tests-1  |    ✓ SC-US-003-1/2 PDF upload on real tenant DB > PDF-01: 4MiB ->202, exactly one atomic source/file/queued job with SHA256  332ms
+db-1     | 2026-10-03 05:02:59.352 UTC [63] LOG:  checkpoint starting: time
+tests-1  |  ✓ packages/rag/tests/int/search.test.ts (5 tests) 142938ms
+db-1     | 2026-10-03 05:03:34.182 UTC [1544] ERROR:  permission denied for table index_job
+db-1     | 2026-10-03 05:03:34.182 UTC [1544] STATEMENT:  UPDATE index_job SET state = 'succeeded' WHERE id = $1
+db-1     | 2026-10-03 05:03:34.187 UTC [1544] ERROR:  permission denied for table index_job
+db-1     | 2026-10-03 05:03:34.187 UTC [1544] STATEMENT:  UPDATE index_job SET lease_fence = lease_fence + 1 WHERE id = $1
+db-1     | 2026-10-03 05:03:34.194 UTC [1544] ERROR:  permission denied for table index_job
+db-1     | 2026-10-03 05:03:34.194 UTC [1544] STATEMENT:  UPDATE index_job SET progress_done = 999 WHERE id = $1
+db-1     | 2026-10-03 05:03:34.198 UTC [1544] ERROR:  permission denied for table index_job
+db-1     | 2026-10-03 05:03:34.198 UTC [1544] STATEMENT:  UPDATE index_job SET attempts = 0 WHERE id = $1
+db-1     | 2026-10-03 05:03:34.216 UTC [1544] ERROR:  permission denied for table index_job
+db-1     | 2026-10-03 05:03:34.216 UTC [1544] STATEMENT:  INSERT INTO index_job (source_id, account_id, state) VALUES ($1, $2, 'succeeded')
+db-1     | 2026-10-03 05:03:34.219 UTC [1544] ERROR:  permission denied for table index_job
+db-1     | 2026-10-03 05:03:34.219 UTC [1544] STATEMENT:  INSERT INTO index_job (source_id, account_id, lease_fence) VALUES ($1, $2, 1)
+db-1     | 2026-10-03 05:03:34.221 UTC [1544] ERROR:  permission denied for table index_job
+db-1     | 2026-10-03 05:03:34.221 UTC [1544] STATEMENT:  INSERT INTO index_job (source_id, account_id, progress_done) VALUES ($1, $2, 1)
+db-1     | 2026-10-03 05:03:34.223 UTC [1544] ERROR:  permission denied for table index_job
+db-1     | 2026-10-03 05:03:34.223 UTC [1544] STATEMENT:  INSERT INTO index_job (source_id, account_id, attempts) VALUES ($1, $2, 1)
+db-1     | 2026-10-03 05:03:34.226 UTC [1544] ERROR:  permission denied for table index_job
+db-1     | 2026-10-03 05:03:34.226 UTC [1544] STATEMENT:  INSERT INTO index_job (source_id, account_id, run_started_at) VALUES ($1, $2, now())
+db-1     | 2026-10-03 05:03:34.254 UTC [1544] ERROR:  insert or update on table "index_job" violates foreign key constraint "index_job_source_fk"
+db-1     | 2026-10-03 05:03:34.254 UTC [1544] CONTEXT:  PL/pgSQL function n6b_index_job_source_check() line 4 at RAISE
+db-1     | 2026-10-03 05:03:34.254 UTC [1544] STATEMENT:  INSERT INTO index_job (source_id, account_id) VALUES ($1, $2)
+db-1     | 2026-10-03 05:03:34.267 UTC [1544] ERROR:  insert or update on table "index_job" violates foreign key constraint "index_job_source_fk"
+db-1     | 2026-10-03 05:03:34.267 UTC [1544] CONTEXT:  PL/pgSQL function n6b_index_job_source_check() line 4 at RAISE
+db-1     | 2026-10-03 05:03:34.267 UTC [1544] STATEMENT:  INSERT INTO index_job (source_id, account_id) VALUES ($1, $2) ON CONFLICT (source_id) WHERE state IN ('queued', 'running') DO NOTHING
+db-1     | 2026-10-03 05:03:34.270 UTC [1544] ERROR:  insert or update on table "index_job" violates foreign key constraint "index_job_source_fk"
+db-1     | 2026-10-03 05:03:34.270 UTC [1544] CONTEXT:  PL/pgSQL function n6b_index_job_source_check() line 4 at RAISE
+db-1     | 2026-10-03 05:03:34.270 UTC [1544] STATEMENT:  INSERT INTO index_job (source_id, account_id) VALUES ($1, $2)
+db-1     | 2026-10-03 05:03:34.273 UTC [1544] ERROR:  insert or update on table "index_job" violates foreign key constraint "index_job_source_fk"
+db-1     | 2026-10-03 05:03:34.273 UTC [1544] CONTEXT:  PL/pgSQL function n6b_index_job_source_check() line 4 at RAISE
+db-1     | 2026-10-03 05:03:34.273 UTC [1544] STATEMENT:  INSERT INTO index_job (source_id, account_id) VALUES ($1, $2) ON CONFLICT (source_id) WHERE state IN ('queued', 'running') DO NOTHING
+db-1     | 2026-10-03 05:03:34.276 UTC [1544] ERROR:  insert or update on table "index_job" violates foreign key constraint "index_job_source_fk"
+db-1     | 2026-10-03 05:03:34.276 UTC [1544] CONTEXT:  PL/pgSQL function n6b_index_job_source_check() line 4 at RAISE
+db-1     | 2026-10-03 05:03:34.276 UTC [1544] STATEMENT:  INSERT INTO index_job (source_id, account_id) VALUES ($1, $2)
+db-1     | 2026-10-03 05:03:34.278 UTC [1544] ERROR:  insert or update on table "index_job" violates foreign key constraint "index_job_source_fk"
+db-1     | 2026-10-03 05:03:34.278 UTC [1544] CONTEXT:  PL/pgSQL function n6b_index_job_source_check() line 4 at RAISE
+db-1     | 2026-10-03 05:03:34.278 UTC [1544] STATEMENT:  INSERT INTO index_job (source_id, account_id) VALUES ($1, $2) ON CONFLICT (source_id) WHERE state IN ('queued', 'running') DO NOTHING
+db-1     | 2026-10-03 05:03:34.281 UTC [1544] ERROR:  insert or update on table "index_job" violates foreign key constraint "index_job_source_fk"
+db-1     | 2026-10-03 05:03:34.281 UTC [1544] CONTEXT:  PL/pgSQL function n6b_index_job_source_check() line 4 at RAISE
+db-1     | 2026-10-03 05:03:34.281 UTC [1544] STATEMENT:  INSERT INTO index_job (source_id, account_id) VALUES ($1, $2)
+db-1     | 2026-10-03 05:03:34.284 UTC [1544] ERROR:  insert or update on table "index_job" violates foreign key constraint "index_job_source_fk"
+db-1     | 2026-10-03 05:03:34.284 UTC [1544] CONTEXT:  PL/pgSQL function n6b_index_job_source_check() line 4 at RAISE
+db-1     | 2026-10-03 05:03:34.284 UTC [1544] STATEMENT:  INSERT INTO index_job (source_id, account_id) VALUES ($1, $2) ON CONFLICT (source_id) WHERE state IN ('queued', 'running') DO NOTHING
+db-1     | 2026-10-03 05:03:34.285 UTC [1544] ERROR:  insert or update on table "index_job" violates foreign key constraint "index_job_source_fk"
+db-1     | 2026-10-03 05:03:34.285 UTC [1544] CONTEXT:  PL/pgSQL function n6b_index_job_source_check() line 4 at RAISE
+db-1     | 2026-10-03 05:03:34.285 UTC [1544] STATEMENT:  INSERT INTO index_job (source_id, account_id) VALUES ($1, $2)
+db-1     | 2026-10-03 05:03:34.287 UTC [1544] ERROR:  insert or update on table "index_job" violates foreign key constraint "index_job_source_fk"
+db-1     | 2026-10-03 05:03:34.287 UTC [1544] CONTEXT:  PL/pgSQL function n6b_index_job_source_check() line 4 at RAISE
+db-1     | 2026-10-03 05:03:34.287 UTC [1544] STATEMENT:  INSERT INTO index_job (source_id, account_id) VALUES ($1, $2) ON CONFLICT (source_id) WHERE state IN ('queued', 'running') DO NOTHING
+db-1     | 2026-10-03 05:03:34.289 UTC [1544] ERROR:  insert or update on table "index_job" violates foreign key constraint "index_job_source_fk"
+db-1     | 2026-10-03 05:03:34.289 UTC [1544] CONTEXT:  PL/pgSQL function n6b_index_job_source_check() line 4 at RAISE
+db-1     | 2026-10-03 05:03:34.289 UTC [1544] STATEMENT:  INSERT INTO index_job (source_id, account_id) VALUES ($1, $2)
+db-1     | 2026-10-03 05:03:34.292 UTC [1544] ERROR:  insert or update on table "index_job" violates foreign key constraint "index_job_source_fk"
+db-1     | 2026-10-03 05:03:34.292 UTC [1544] CONTEXT:  PL/pgSQL function n6b_index_job_source_check() line 4 at RAISE
+db-1     | 2026-10-03 05:03:34.292 UTC [1544] STATEMENT:  INSERT INTO index_job (source_id, account_id) VALUES ($1, $2) ON CONFLICT (source_id) WHERE state IN ('queued', 'running') DO NOTHING
+tests-1  |  ✓ packages/db/tests/int/index-job-grants.test.ts (5 tests) 360ms
+db-1     | 2026-10-03 05:03:35.335 UTC [1545] WARNING:  there is no transaction in progress
+db-1     | 2026-10-03 05:03:35.371 UTC [1545] WARNING:  there is no transaction in progress
+db-1     | 2026-10-03 05:03:35.415 UTC [1545] WARNING:  there is no transaction in progress
+db-1     | 2026-10-03 05:03:35.451 UTC [1545] WARNING:  there is no transaction in progress
+tests-1  |  ✓ apps/web/tests/int/studio-referral-race.int.test.ts (5 tests) 309ms
+db-1     | 2026-10-03 05:03:36.389 UTC [1558] ERROR:  permission denied to set role "n6b_service"
+db-1     | 2026-10-03 05:03:36.389 UTC [1558] STATEMENT:  SET LOCAL ROLE n6b_service
+db-1     | 2026-10-03 05:03:36.398 UTC [1558] ERROR:  permission denied to set role "n6b_app_service"
+db-1     | 2026-10-03 05:03:36.398 UTC [1558] STATEMENT:  SET LOCAL ROLE n6b_app_service
+db-1     | 2026-10-03 05:03:36.413 UTC [1558] ERROR:  permission denied to set role "n6b_service"
+db-1     | 2026-10-03 05:03:36.413 UTC [1558] STATEMENT:  SET LOCAL ROLE n6b_service
+db-1     | 2026-10-03 05:03:36.416 UTC [1558] ERROR:  permission denied to set role "n6b_service"
+db-1     | 2026-10-03 05:03:36.416 UTC [1558] STATEMENT:  SET LOCAL ROLE n6b_service
+db-1     | 2026-10-03 05:03:36.431 UTC [1559] ERROR:  permission denied to set role "n6b_tenant"
+db-1     | 2026-10-03 05:03:36.431 UTC [1559] STATEMENT:  SET LOCAL ROLE n6b_tenant
+db-1     | 2026-10-03 05:03:36.443 UTC [1558] ERROR:  permission denied for table account
+db-1     | 2026-10-03 05:03:36.443 UTC [1558] STATEMENT:  SELECT password_hash FROM account
+db-1     | 2026-10-03 05:03:36.447 UTC [1558] ERROR:  permission denied for table account
+db-1     | 2026-10-03 05:03:36.447 UTC [1558] STATEMENT:  SELECT * FROM account
+tests-1  |  ✓ packages/db/tests/int/roles.test.ts (9 tests) 224ms
+tests-1  |  ✓ apps/web/tests/int/crawl-bots.int.test.ts (3 tests) 196ms
+tests-1  |  ✓ packages/db/tests/int/quota.test.ts (5 tests) 314ms
+tests-1  | 
+tests-1  |  Test Files  28 passed (28)
+tests-1  |       Tests  293 passed (293)
+tests-1  |    Start at  07:59:58
+tests-1  |    Duration  220.08s (transform 2.35s, setup 0ms, collect 11.04s, tests 193.91s, environment 10ms, prepare 5.38s)
+tests-1  | 
+tests-1  | {"command":["/usr/local/bin/node","/app/node_modules/vitest/vitest.mjs","run","--config","vitest.int.config.ts","apps/web/tests/int/handover.int.test.ts","-t","HAN-04 claimed-keep-access guard"],"sourceSha256Before":"bc32b496bee50a0e52bfe76fe034734513db439b50e947e786a29df99721f798","runs":[{"label":"pg-mutation-baseline","startedAt":"2026-10-03T05:03:39.020Z","endedAt":"2026-10-03T05:03:43.011Z","exit":0,"signal":null,"error":null},{"label":"pg-mutation-red","startedAt":"2026-10-03T05:03:43.012Z","endedAt":"2026-10-03T05:03:47.395Z","exit":1,"signal":null,"error":null},{"label":"pg-mutation-restored-green","startedAt":"2026-10-03T05:03:47.398Z","endedAt":"2026-10-03T05:03:51.510Z","exit":0,"signal":null,"error":null}],"status":"completed","behavioralRed":true,"sourceSha256After":"bc32b496bee50a0e52bfe76fe034734513db439b50e947e786a29df99721f798"}
+tests-1  | 
+tests-1  | > n6b-rag-class@0.1.0 build
+tests-1  | > npm run build --workspace @n6b/db && npm run build --workspace @n6b/rag && npm run build --workspace @n6b/worker && npm run build --workspace @n6b/web
+tests-1  | 
+tests-1  | 
+tests-1  | > @n6b/db@0.1.0 build
+tests-1  | > tsc -p tsconfig.build.json
+tests-1  | 
+tests-1  | 
+tests-1  | > @n6b/rag@0.1.0 build
+tests-1  | > tsc -p tsconfig.build.json
+tests-1  | 
+tests-1  | 
+tests-1  | > @n6b/worker@0.1.0 build
+tests-1  | > tsc -p tsconfig.build.json
+tests-1  | 
+tests-1  | 
+tests-1  | > @n6b/web@0.1.0 build
+tests-1  | > next build
+tests-1  | 
+tests-1  | {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+tests-1  | Attention: Next.js now collects completely anonymous telemetry regarding usage.
+tests-1  | This information is used to shape Next.js' roadmap and prioritize features.
+tests-1  | You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+tests-1  | https://nextjs.org/telemetry
+tests-1  | 
+tests-1  |    ▲ Next.js 15.5.27
+tests-1  | 
+tests-1  |    Creating an optimized production build ...
+tests-1  | {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+tests-1  | {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+tests-1  | {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+tests-1  |  ✓ Compiled successfully in 37.9s
+tests-1  |    Linting and checking validity of types ...
+tests-1  |    Collecting page data ...
+tests-1  |    Generating static pages (0/8) ...
+tests-1  |    Generating static pages (2/8) 
+tests-1  |    Generating static pages (4/8) 
+tests-1  |    Generating static pages (6/8) 
+tests-1  |  ✓ Generating static pages (8/8)
+tests-1  |    Finalizing page optimization ...
+tests-1  |    Collecting build traces ...
+tests-1  | 
+tests-1  | Route (app)                                 Size  First Load JS
+tests-1  | ┌ ƒ /                                      161 B         106 kB
+tests-1  | ├ ○ /_not-found                            988 B         104 kB
+tests-1  | ├ ƒ /admin/metrics                         792 B         103 kB
+tests-1  | ├ ƒ /admin/metrics/verify                  168 B         103 kB
+tests-1  | ├ ƒ /api/account/badge-removal-intent      168 B         103 kB
+tests-1  | ├ ƒ /api/auth/login                        168 B         103 kB
+tests-1  | ├ ƒ /api/auth/logout                       168 B         103 kB
+tests-1  | ├ ƒ /api/auth/register                     168 B         103 kB
+tests-1  | ├ ƒ /api/bots                              168 B         103 kB
+tests-1  | ├ ƒ /api/bots/[id]/ask                     168 B         103 kB
+tests-1  | ├ ƒ /api/bots/[id]/publish                 168 B         103 kB
+tests-1  | ├ ƒ /api/bots/[id]/sources                 168 B         103 kB
+tests-1  | ├ ƒ /api/demo/[slug]/ask                   168 B         103 kB
+tests-1  | ├ ƒ /api/handover/[token]                  168 B         103 kB
+tests-1  | ├ ƒ /api/health                            168 B         103 kB
+tests-1  | ├ ƒ /api/jobs/[id]                         168 B         103 kB
+tests-1  | ├ ƒ /api/jobs/[id]/retry                   168 B         103 kB
+tests-1  | ├ ƒ /api/studio/clients                    168 B         103 kB
+tests-1  | ├ ƒ /api/studio/clients/[id]/handover      168 B         103 kB
+tests-1  | ├ ƒ /api/widget/ask                        168 B         103 kB
+tests-1  | ├ ƒ /api/widget/config                     168 B         103 kB
+tests-1  | ├ ƒ /api/widget/event                      168 B         103 kB
+tests-1  | ├ ƒ /b/[slug]                            1.67 kB         104 kB
+tests-1  | ├ ƒ /cabinet                             6.72 kB         113 kB
+tests-1  | ├ ƒ /handover/[token]                    1.25 kB         104 kB
+tests-1  | ├ ○ /login                               1.36 kB         107 kB
+tests-1  | ├ ƒ /r/b/[public_id]                       168 B         103 kB
+tests-1  | └ ○ /register                            1.36 kB         107 kB
+tests-1  | + First Load JS shared by all             103 kB
+tests-1  |   ├ chunks/18-25b11e3a132b87ef.js        46.5 kB
+tests-1  |   ├ chunks/87c73c54-24122e7b92478d00.js  54.2 kB
+tests-1  |   └ other shared chunks (total)          1.92 kB
+tests-1  | 
+tests-1  | 
+tests-1  | ƒ Middleware                             34.4 kB
+tests-1  | 
+tests-1  | ○  (Static)   prerendered as static content
+tests-1  | ƒ  (Dynamic)  server-rendered on demand
+tests-1  | 
+[Ktests-1 exited with code 1
+ Compose Stopping Aborting on container exit...
+ Container n6b-f14-handover-tests-1 Stopping 
+ Container n6b-f14-handover-tests-1 Stopped 
+ Container n6b-f14-handover-db-1 Stopping 
+db-1     | 2026-10-03 05:06:10.320 UTC [1] LOG:  received fast shutdown request
+db-1     | 2026-10-03 05:06:10.325 UTC [1] LOG:  aborting any active transactions
+db-1     | 2026-10-03 05:06:10.331 UTC [1] LOG:  background worker "logical replication launcher" (PID 68) exited with exit code 1
+db-1     | 2026-10-03 05:06:10.346 UTC [63] LOG:  checkpoint complete: wrote 622 buffers (3.8%); 0 WAL file(s) added, 0 removed, 8 recycled; write=190.990 s, sync=0.004 s, total=190.995 s; sync files=256, longest=0.003 s, average=0.001 s; distance=123338 kB, estimate=123338 kB; lsn=0/D124BB8, redo lsn=0/9184A28
+db-1     | 2026-10-03 05:06:10.347 UTC [63] LOG:  shutting down
+db-1     | 2026-10-03 05:06:10.347 UTC [63] LOG:  checkpoint starting: shutdown immediate
+db-1     | 2026-10-03 05:06:10.361 UTC [63] LOG:  checkpoint complete: wrote 941 buffers (5.7%); 0 WAL file(s) added, 0 removed, 4 recycled; write=0.014 s, sync=0.001 s, total=0.014 s; sync files=65, longest=0.001 s, average=0.000 s; distance=65152 kB, estimate=117519 kB; lsn=0/D124C30, redo lsn=0/D124C30
+db-1     | 2026-10-03 05:06:10.435 UTC [1] LOG:  database system is shut down
+ Container n6b-f14-handover-db-1 Stopped 
+[Kdb-1 exited with code 0
+

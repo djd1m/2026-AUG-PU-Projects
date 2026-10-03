@@ -1,0 +1,53 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-handover/projects/06b-rag-class
+
+ ✓ apps/web/tests/unit/studio-clients-ui.test.ts (2 tests) 21ms
+ ✓ apps/web/tests/unit/handover-ui.test.ts (3 tests) 40ms
+ ✓ apps/web/tests/unit/studio-handler.test.ts (8 tests) 59ms
+ ❯ apps/web/tests/unit/handover-handler.test.ts (9 tests | 1 failed) 177ms
+   ✓ HAN-01/02 handover HTTP boundary > SC-US-014-1: real empty stream accepted without media, only hash stored and configured origin used 24ms
+   ✓ HAN-01/02 handover HTTP boundary > SC-US-014-1: malformed ID, authentication and authority failures have no issue effects 7ms
+   × HAN-01/02 handover HTTP boundary > HAN-02 Origin missing/null/foreign precedes auth, quota, hashing and DB 54ms
+     → expected 200 to be 403 // Object.is equality
+   ✓ HAN-01/02 handover HTTP boundary > HAN-02 actual issue bytes and object envelopes bounded 15ms
+   ✓ HAN-01/02 handover HTTP boundary > SC-US-014-2: false/true exact boolean, normalized email, bcrypt12 and prepared atomic session 15ms
+   ✓ HAN-01/02 handover HTTP boundary > HAN-02 invalid media, bytes, malformed objects and credentials rejected before effects 30ms
+   ✓ HAN-01/02 handover HTTP boundary > SC-US-014-3 malformed token does not look up/hash credentials; 404/410 no cookie 16ms
+   ✓ HAN-01/02 handover HTTP boundary > SC-US-014-4 exact duplicate text, safe 503, no success audit/cookie on failure 5ms
+   ✓ HAN-01/02 handover HTTP boundary > HAN-02 limiter429/503 and absent proxy IP stop before bcrypt/claim 7ms
+stderr | apps/web/tests/unit/auth-handler.test.ts > регистрация и вход — порядок проверок (Pseudocode «Register and login») > нет X-Forwarded-For → 503 и ни одной попытки bcrypt
+auth: адрес клиента недоступен — запрос не через прокси; вход отклонён
+
+stderr | apps/web/tests/unit/auth-handler.test.ts > GET /api/health (NFR-n6b-5) > 200 только при ответившей БД; иначе 503 без текста ошибки
+health: проверка не прошла: Error
+
+ ✓ apps/web/tests/unit/auth-handler.test.ts (17 tests) 489ms
+   ✓ регистрация и вход — порядок проверок (Pseudocode «Register and login») > фиктивный хэш — настоящий bcrypt той же стоимости 12, что и регистрация  383ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/tests/unit/handover-handler.test.ts > HAN-01/02 handover HTTP boundary > HAN-02 Origin missing/null/foreign precedes auth, quota, hashing and DB
+AssertionError: expected 200 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 200
+
+ ❯ apps/web/tests/unit/handover-handler.test.ts:54:71
+     52|     for (const origin of ['', 'null', 'https://foreign.test']) {
+     53|       expect((await issue(request({}, { origin }), ID)).status).toBe(4…
+     54|       expect((await accept(request(good, { origin }), token)).status).…
+       |                                                                       ^
+     55|     }
+     56|     const absent = request(good); absent.headers.delete('origin'); exp…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 38 passed (39)
+   Start at  04:47:41
+   Duration  2.43s (transform 1.57s, setup 0ms, collect 4.82s, tests 785ms, environment 2ms, prepare 1.34s)
+

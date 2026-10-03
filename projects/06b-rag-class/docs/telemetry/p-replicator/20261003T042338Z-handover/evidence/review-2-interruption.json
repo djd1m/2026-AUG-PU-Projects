@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-03T05:24:02.971976+00:00",
+  "cli_exit": 124,
+  "budget_seconds": 240,
+  "terminal_receipt": "not_delivered; failed bounded CLIhandoff, notrerun/forged",
+  "source_review_report": "docs/features/handover/10_review_correction.md",
+  "report_sha256": "48e9e49a7de5dc4e76e0812dbbd7865f8311a5c475230115e795b5d5033d3156",
+  "report_verdict": "ACCEPT_WITH_CAVEATS",
+  "report_written_at": "2026-10-03T05:15:27.371663+00:00",
+  "report_elapsed_seconds": 209.869,
+  "interpretation": "Independent source assessment completed inside budget, terminalreceipt delivery did not. Coordinator aggregate delivery binds report/native and explicitly discloses CLI failure; not a claim of valid per-attempt completedreceipt."
+}

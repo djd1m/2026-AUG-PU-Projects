@@ -1,0 +1,32 @@
+{
+  "command": [
+    "/tmp/n6b-f06-node22/bin/node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "--config",
+    "vitest.config.ts",
+    "apps/web/tests/unit/handover-handler.test.ts",
+    "apps/web/tests/unit/handover-ui.test.ts",
+    "apps/web/tests/unit/auth-handler.test.ts",
+    "apps/web/tests/unit/studio-handler.test.ts",
+    "apps/web/tests/unit/studio-clients-ui.test.ts"
+  ],
+  "source_sha256_before": "31f6a0d06a6ec65594fcf9c75265513ac40d10a6617216cde0084fafba9950e2",
+  "runs": [
+    {
+      "label": "unit-mutation-red",
+      "exit": 1,
+      "started_at": "2026-10-03T04:47:41.015672+00:00",
+      "ended_at": "2026-10-03T04:47:44.318548+00:00"
+    },
+    {
+      "label": "unit-mutation-restored-green",
+      "exit": 0,
+      "started_at": "2026-10-03T04:47:44.319325+00:00",
+      "ended_at": "2026-10-03T04:47:47.430991+00:00"
+    }
+  ],
+  "source_sha256_after": "31f6a0d06a6ec65594fcf9c75265513ac40d10a6617216cde0084fafba9950e2",
+  "byte_exact_restore": true,
+  "status": "completed"
+}
