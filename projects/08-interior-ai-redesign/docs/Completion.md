@@ -1,5 +1,7 @@
 # RoomKind — Completion and Operations
 
+Текущий итог 2026-10-03: F07 AC1–11 локального software scope приняты; actual52+2 browser и hosted DB/private-media restore PASS. [Итог и точные доказательства](features/f07-replicate/local-acceptance.md). Ниже сохранены исторические состояния стадий; реальный платный пилот, качество и внешний релиз остаются закрытыми gates.
+
 2026-10-03 I7 documentation reconciliation, source `be450153910208e2c043de24f7efab540b052c82`. Accepted I1–I6 includes R1/R2/R3 closures; I7 full runtime is pending at author time on parent-owned source `8890e0b7`. Fresh whole-feature review and I8 actual52 main+2 disabled browser/hosted-row restore remain pending. Historical proof retains its tested revision; this update does not declare F07/full MVP ready.
 
 ## Deployment Plan

@@ -40,3 +40,7 @@ Coordinator plans and writes documents. Sol `gpt-6.1-sol` high writes product co
 - Project rules describe commands and thresholds but do not claim host hooks, autonomous dispatch or model switching are installed.
 - Shared source gates remain unchanged. Runtime-inapplicable outcomes retain their exit codes and explanations.
 - No existing third-party screenshot is vendored; appearance requirements cite the actual read-only capture and distinguish unmeasured authenticated paths.
+
+## Финальная проверка наследования
+
+2026-10-03: standalone project verify exit1 (нет install manifest) сохранён, затем installed vendor1.13.2 verify в одноразовой read-only composed view root+project overrides exit0. Общие hooks/settings не активировались и не менялись. Standalone checkout требует доступного корневого toolkit; копия всего toolkit не создавалась. См. docs/telemetry/n8-20261002-1740/toolkit-composed-final-provenance.json и toolkit-composed-final-verify.txt.

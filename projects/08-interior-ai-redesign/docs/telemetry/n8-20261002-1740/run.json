@@ -49,7 +49,8 @@
     "docs/features/f06a/acceptance.md",
     "docs/telemetry/n8-20261002-1740/n8-ui-e2e-6-receipt.md",
     "docs/telemetry/n8-20261002-1740/n8-f06-restore-1-receipt.md",
-    "docs/telemetry/n8-20261002-1740/n8-f06-p2-closure-receipt.md"
+    "docs/telemetry/n8-20261002-1740/n8-f06-p2-closure-receipt.md",
+    "docs/features/f07-replicate/local-acceptance.md"
   ],
   "quality": {
     "required_gates_passed": false,
@@ -59,13 +60,16 @@
     "false_positive_findings": null,
     "known_defects_missed": null,
     "regressions": null,
-    "followup_status": "F01\u2013F04 local software and F06a docs accepted; actual42+2UI and synthetic21table/10file restore passed. FullF05/F06/MVP blocked by realGPU acceptance; realprovider and deploymentsecurity remain release gates. Draft PR create rejected403 by GitHub integration; branch/body ready, no PR exists.",
+    "followup_status": "F07 AC1\u201311 local software accepted: full I7 composite, fresh source review, actual52+2 browser,23-table/28-file hosted restore PASS. External paid pilot/real quality/performance/license/privacy/release and PR access remain gated.",
     "open_code_findings_by_severity": {
       "high": 0,
       "medium": 0,
       "low": 0
     },
-    "findings_measurement_note": "Historical early aggregate counts were limited to prior stage; no exhaustive cross-run recount performed. Individual immutable review receipts are authoritative; finaloneP2docfindingclosed."
+    "findings_measurement_note": "Historical early aggregate counts were limited to prior stage; no exhaustive cross-run recount performed. Individual immutable review receipts are authoritative; finaloneP2docfindingclosed.",
+    "replicate_local_ac_met": 11,
+    "replicate_local_ac_total": 11,
+    "replicate_local_gates_passed": true
   },
   "metrics": {
     "elapsed_wall_ms": null,
@@ -81,8 +85,8 @@
     "No baseline cost comparison",
     "Host version not exposed"
   ],
-  "current_stage": "I8_REFRESH_FIXTURE_FRESH_REVIEW",
-  "last_observed_at": "2026-10-03T15:58:08.816593+00:00",
+  "current_stage": "I8_LOCAL_ACCEPTED_PR_DELIVERY",
+  "last_observed_at": "2026-10-03T18:14:35.788595+00:00",
   "actual_models_observed": {
     "native_coordinator": null,
     "f01_coder": "gpt-6.1-sol",

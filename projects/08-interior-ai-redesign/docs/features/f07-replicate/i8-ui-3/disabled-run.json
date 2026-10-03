@@ -1,0 +1,43 @@
+{
+  "started_at": "2026-10-03T18:08:50.611182+00:00",
+  "checks": [
+    {
+      "name": "disabled-restart",
+      "exit_code": 0,
+      "seconds": 1.8724024289986119
+    },
+    {
+      "name": "disabled-client",
+      "exit_code": 0,
+      "seconds": 0.38878227898385376
+    },
+    {
+      "name": "disabled-health",
+      "exit_code": 0,
+      "seconds": 0.4408109369687736
+    },
+    {
+      "name": "disabled-preflight-validation",
+      "exit_code": 0,
+      "seconds": 0.11257341993041337
+    },
+    {
+      "name": "disabled-preflight-copy",
+      "exit_code": 0,
+      "seconds": 0.08813101099804044
+    },
+    {
+      "name": "disabled-browser",
+      "exit_code": 0,
+      "seconds": 3.4933967570541427
+    },
+    {
+      "name": "disabled-results-copy",
+      "exit_code": 0,
+      "seconds": 0.05401735007762909
+    }
+  ],
+  "status": "pass",
+  "finished_at": "2026-10-03T18:08:57.593757+00:00",
+  "elapsed_seconds": 6.9825657330220565
+}

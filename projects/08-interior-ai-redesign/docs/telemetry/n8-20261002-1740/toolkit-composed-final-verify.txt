@@ -1,0 +1,94 @@
+
+╔══════════════════════════════════════════════════════╗
+║   P-REPLICATOR — AI Product Replicator for Claude Code ║
+║   AI-assisted product development (Vibe Coding)        ║
+╚══════════════════════════════════════════════════════╝
+
+P-Replicator — Verify state
+Manifest: v1.13.2, installed 2026-09-02T08:41:30.478Z
+
+Pre-shipped (from p-replicator init):
+
+  ✓ skills: explore — Socratic task clarification
+  ✓ skills: sparc-prd-mini — SPARC documentation generator (11 docs)
+  ✓ skills: goap-research-ed25519 — Verified research with Ed25519 anti-hallucination
+  ✓ skills: problem-solver-enhanced — First principles + TRIZ (9 modules)
+  ✓ skills: requirements-validator — INVEST/SMART validation + BDD scenarios
+  ✓ skills: brutal-honesty-review — Unvarnished technical criticism
+  ✓ skills: cc-toolkit-generator-enhanced — Modular toolkit generator (9 modules, ~165K chars)
+  ✓ skills: reverse-engineering-unicorn — Company reverse engineering + playbook
+  ✓ skills: pipeline-forge — Meta-skill: build AI pipelines from patterns
+  ✓ skills: knowledge-extractor — Extract reusable knowledge from projects
+  ✓ /replicate — Full pipeline: idea → validated docs → toolkit
+  ✓ /harvest — Knowledge extraction from projects
+  ✓ /start — Bootstrap project from SPARC docs (monorepo + Docker)
+  ✓ /plan — Lightweight planning to docs/plans/ (auto-commit)
+  ✓ /feature — Full SPARC-mini lifecycle (PLAN → VALIDATE → IMPLEMENT → REVIEW)
+  ✓ /go — Intelligent pipeline router (delegates to /plan or /feature)
+  ✓ /run — Autonomous build loop: /next → /go → repeat
+  ✓ /next — Pick next feature from .claude/feature-roadmap.json
+  ✓ /docs — Bilingual documentation generator (RU/EN)
+  ✓ /deploy — Deployment workflow (dev / staging / prod)
+  ✓ /myinsights — Capture and recall development insights
+  ✓ agents: replicate-coordinator — Pipeline orchestration (Phases 0-4)
+  ✓ agents: product-discoverer — Market research (Phase 0)
+  ✓ agents: doc-validator — Documentation validation swarm (Phase 2)
+  ✓ agents: harvest-coordinator — Knowledge extraction swarm
+  ✓ rules: cost-of-detection-ladder — Five enforcement layers, signal-fit check selection, and required reactions
+  ✓ rules: replicate-pipeline — Phase sequence, output paths, git discipline, modular skill loading
+  ✓ rules: skill-interface-protocol — view() contract, module interface, maturity tagging, composition rules
+  ✓ rules: git-workflow — Commit/push discipline, branch strategy, semantic messages
+  ✓ rules: insights-capture — When and how to capture development insights to knowledge base
+  ✓ rules: feature-lifecycle — /feature phases (PLAN → VALIDATE → IMPLEMENT → REVIEW), checkpoints, scoring
+  ✓ rules: docker-ports — Правило №0: storage ports are not published outward; loopback bind is the exception
+  ✓ rules: swarm-file-evidence — Parallel work delivers named terminal file receipts; narrative and silence are not results
+  ✓ rules: honest-configuration — Required external values refuse absent, degenerate, unknown, or unreachable meanings
+  ✓ rules: embeddable-widget — A widget runs on someone else's page: cross-origin requests, style isolation, host CSP — and the check belongs on a FOREIGN origin
+  ✓ rules: incoming-webhooks — Событие приходит дважды и от кого угодно: названный ключ повторности с атомарным исключением, подпись до разбора сырого тела, порядок доставки не гарантирован
+  ✓ rules: long-running-job — Work that takes minutes needs a handle issued before it starts, three distinguishable states, and a retry that continues instead of restarting
+  ✓ rules: model-call-cost — External model calls are billed per call and triggered by strangers: a ceiling is a NUMBER, reaching it REFUSES, and an unconfigured ceiling fails the boot
+  ✓ settings: settings.json — SessionStart insight injection + Stop auto-commit (roadmap, insights, plans)
+  ✓ hooks: session-insights — Inject 3 most recent insights into Claude session context
+  ✓ hooks: autocommit-roadmap — Auto-commit .claude/feature-roadmap.json on Stop hook
+  ✓ hooks: autocommit-insights — Auto-commit .claude/insights/ on Stop hook
+  ✓ hooks: autocommit-plans — Auto-commit docs/plans/ on Stop hook
+  ✓ hooks: statusline — Multi-line dashboard (pipeline, roadmap, toolkit) for Claude Code statusLine
+  ✓ hooks: state-update — Argv-driven helper for pipeline commands to publish current command + phase + progress
+  ✓ hooks: write-insight — Validate and append one harvest insight to the project Markdown carrier
+  ✓ hooks: check-ports — Enforce docker-ports Правило №0 against a real compose (invoke deliberately; exits 0/1/2)
+  ✓ hooks: check-growth-trace — Did the M5 growth seed reach docs/Specification.md (invoke deliberately; exits 0/1/2)
+  ✓ hooks: check-look-trace — Did the Phase-0.5 source-look seed reach docs/Specification.md (invoke deliberately; exits 0/1/2)
+  ✓ hooks: check-look-origin — Did a third-party-analysis HYPOTHESIS row reach Specification.md without dated live confirmation (invoke deliberately; exits 0/1/2)
+  ✓ hooks: check-review-contract — Does review-report.md answer every AC id, disclose the reviewer family and name the spec revision it judged (exits 0/1/2)
+  ✓ hooks: capture-source-path — Phase-0.5 «путь» axis: click through the source product in a browser and emit FR-LOOK rows (external Playwright; exits 0/1/2)
+  ✓ hooks: check-docs-complete — Are Phase-1 documents written and placeholder-free, before the Phase-2 swarm (invoke deliberately; exits 0/1/2)
+  ✓ hooks: check-swarm-receipts — Did every parallel work unit deliver its named terminal file, before the coordinator aggregates (invoke deliberately; exits 0/1/2)
+  ✓ hooks: check-embed-contract — Was the embeddable widget checked on a FOREIGN origin — cross-origin, style leakage, host CSP (invoke deliberately; exits 0/1/2)
+  ✓ hooks: check-webhook-contract — Is the incoming webhook signed, deduplicated by a NAMED repeat key with atomic exclusion, and safe against reordering (invoke deliberately; exits 0/1/2)
+  ✓ hooks: check-job-contract — Does long-running work carry a handle issued before the work, three distinguishable states and a retry that continues (invoke deliberately; exits 0/1/2)
+  ✓ hooks: check-model-cost — Does every external model call name a ceiling that can BIND — a number, per user and per day, refusing at the limit (invoke deliberately; exits 0/1/2)
+  ✓ hooks: check-canon — Before a WRITING fan-out: is the shared canon named, pinned by sha256 and free of colliding ordinals and self-contradicting lists (invoke deliberately; exits 0/1/2)
+  ✓ hooks: check-file-ownership — Before a WRITING fan-out: does every written file have exactly one writer — coordinator included — and does a file born by a SPLIT get its owner at creation (invoke deliberately; exits 0/1/2)
+  ✓ hooks: check-source-version — Before a merge: does every edit and every verdict declare the sha256 of the source it was built on, and does it still match (invoke deliberately; exits 0/1/2)
+  ✓ hooks: check-handoff-manifest — Phase 0 to Phase 1: did every enumerated discovery output get an answer — cited by id, or rejected with a reason (invoke deliberately; exits 0/1/2)
+  ✓ hooks: check-external-deps — Does the external-dependency inventory EXIST and carry a verdict per row — an absent section is never «no dependencies» (invoke deliberately; exits 0/1/2)
+  ✓ hooks: check-metric-source — Does every success metric name WHERE its value comes from, from a closed list, and does an external-API metric have its inventory row (invoke deliberately; exits 0/1/2)
+
+Post-/replicate (generated by Phase 3):
+
+  ✓ .claude/agents/planner.md — Feature planning with algorithm templates from Pseudocode.md
+  ✓ .claude/agents/code-reviewer.md — Quality review with edge cases from Refinement.md
+  ✓ .claude/agents/architect.md — System design from Architecture.md + Solution_Strategy.md
+  ✓ .claude/rules/security.md — NFRs from Specification.md
+  ✓ .claude/rules/coding-style.md — Conventions from Architecture.md tech stack
+  ✓ .claude/rules/testing.md — Test strategy from Refinement.md
+  ✓ CLAUDE.md — Project context (root)
+  ✓ .claude/feature-roadmap.json — Feature list (used by /run, /next)
+  ! DEVELOPMENT_GUIDE.md — Step-by-step dev lifecycle (not found)
+  ! docker-compose.yml — Container orchestration scaffold (not found)
+
+  ✓ insights carrier: 15 entries recorded
+
+────────────────────────────────────────────────────────────
+[OK]   Pre-shipped contract OK (2 post-replicate hint(s)).
+

@@ -1,0 +1,19 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i8-3",
+  "started_at": "2026-10-03T17:58:02.282676+00:00",
+  "source_revision": "98d5111277b788be875b9cb6ded7424e05a994a7",
+  "build_revision": "6c1815291d3cac0562f7fcbe1443218b7c32aa9a7fe61877ac7ebd02c8c0c52f",
+  "candidate": "docs/features/f07-replicate/i8-ui-3/candidate.json",
+  "status": "preparing_not_ready",
+  "scope": "actual52main+2disabled browser then representativehostedrestore",
+  "external_spend_authorized_usd": 0,
+  "base_image": "sha256:0579a52816d8a012b68a02628b8ba9a9fc1c1686ba3329ea3fa28d3adfe53d18",
+  "build_method": "exact existing locked dependency image + offline COPY web/db/scripts; package hashes compare before build",
+  "models": {
+    "coordinator_actual": null,
+    "runtime": "mechanical existing scripts"
+  },
+  "startup_attempt": 4,
+  "browser_attempt": 3
+}

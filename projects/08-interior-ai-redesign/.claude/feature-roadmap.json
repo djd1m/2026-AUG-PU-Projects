@@ -121,7 +121,25 @@
       "blockers": [
         "Full acceptance depends on f05 realGPU; independent docs/browser/backup evidence prepared without waiving dependency"
       ]
+    },
+    {
+      "id": "f07-replicate",
+      "name": "Explicit pinned Replicate adapter, disabled local software acceptance",
+      "priority": "mvp",
+      "status": "done",
+      "complexity": "complex",
+      "depends_on": [
+        "f02-generation",
+        "f03-payments",
+        "f04-product-ui"
+      ],
+      "expected_files": [
+        "web/replicate.js",
+        "docs/features/f07-replicate/local-acceptance.md"
+      ],
+      "blockers": [],
+      "acceptance": "docs/features/f07-replicate/local-acceptance.md; AC1\u201311 local scope only; no paid predictions/real quality/release acceptance"
     }
   ],
-  "last_completed": "f04-product-ui"
+  "last_completed": "f07-replicate"
 }

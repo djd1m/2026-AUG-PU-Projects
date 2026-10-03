@@ -1,5 +1,7 @@
 # F07 — Completion, test contract and later pilot
 
+Текущий итог 2026-10-03: F07 AC1–11 локального software scope приняты; actual52+2 browser и hosted DB/private-media restore PASS. [Итог и точные доказательства](local-acceptance.md). Ниже сохранены исторические состояния стадий; реальный платный пилот, качество и внешний релиз остаются закрытыми gates.
+
 Original PLAN source e2dded9898d8b00f2fa5613e5f5d3fb63281715b retained in history. Updated2026-10-03 on source be450153910208e2c043de24f7efab540b052c82 after accepted I1–I6/R1/R2/R3. Original01 specification SHA256 2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad is unchanged. I7 runtime/source8890e0b7, whole-feature fresh Astra review and I8 actual52+2 browser/hosted-row restore are pending at docs-author freeze; parent reconciles later. This author executes document gates only, never claims runtime or full F07/MVP PASS.
 
 ## Criterion coverage

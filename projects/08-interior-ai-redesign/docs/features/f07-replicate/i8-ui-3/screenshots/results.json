@@ -1,0 +1,368 @@
+{
+  "source": "98d5111277b788be875b9cb6ded7424e05a994a7",
+  "build": "6c1815291d3cac0562f7fcbe1443218b7c32aa9a7fe61877ac7ebd02c8c0c52f",
+  "results": [
+    {
+      "name": "1440: real browser POST attribution state",
+      "result": "pass"
+    },
+    {
+      "name": "1440: fixture checkout verified server balance",
+      "result": "pass"
+    },
+    {
+      "name": "1440: fixture label/publication denial/comparison keyboard",
+      "result": "pass"
+    },
+    {
+      "name": "1440: real private gallery reopens selected result",
+      "result": "pass"
+    },
+    {
+      "name": "1440: injected WebShare resolved, actual backend events",
+      "result": "pass"
+    },
+    {
+      "name": "1440: injected WebShare abort, actual backend events",
+      "result": "pass"
+    },
+    {
+      "name": "1440: injected WebShare error, actual backend events",
+      "result": "pass"
+    },
+    {
+      "name": "1440: injected WebShare unavailable, actual backend events",
+      "result": "pass"
+    },
+    {
+      "name": "1440: two-account media isolation",
+      "result": "pass"
+    },
+    {
+      "name": "1440: separate publication consent and revoke",
+      "result": "pass"
+    },
+    {
+      "name": "1440: uncertain real reservation POST, reload and identical key/body recovery",
+      "result": "pass"
+    },
+    {
+      "name": "1440: R1 delayed A after B selection/submission; no overlap or stale A render",
+      "result": "pass"
+    },
+    {
+      "name": "1440: late reservation detail after selection change cannot render A",
+      "result": "pass"
+    },
+    {
+      "name": "1440: expired attribution cookie clears through actual authenticated POST",
+      "result": "pass"
+    },
+    {
+      "name": "1440: historical software gallery >50 with real continuation and timeout screens",
+      "result": "pass"
+    },
+    {
+      "name": "1440: delete during pending real share response never restores private artifact",
+      "result": "pass"
+    },
+    {
+      "name": "1440: R4 delayed real authentication_required across logout/login",
+      "result": "pass"
+    },
+    {
+      "name": "1440: delayed logout response cannot overwrite new account",
+      "result": "pass"
+    },
+    {
+      "name": "1440: insufficient-credit screen from actual reservations",
+      "result": "pass"
+    },
+    {
+      "name": "1440: budget-exhausted screen without weakened limits",
+      "result": "pass"
+    },
+    {
+      "name": "1440: billing-hold screen from verified fixture refund",
+      "result": "pass"
+    },
+    {
+      "name": "1440: hosted mock actual worker/private comparison/gallery/unverified refusal",
+      "result": "pass"
+    },
+    {
+      "name": "1440: hosted missing/disabled configuration zero HTTP and no DOM result",
+      "result": "pass"
+    },
+    {
+      "name": "1440: hosted deletion during held remote response fences completion/cleanup",
+      "result": "pass"
+    },
+    {
+      "name": "1440: hosted hold before send zero HTTP/one release",
+      "result": "pass"
+    },
+    {
+      "name": "1440: hosted hold after committed authorization still completes privately",
+      "result": "pass"
+    },
+    {
+      "name": "390: real browser POST attribution state",
+      "result": "pass"
+    },
+    {
+      "name": "390: fixture checkout verified server balance",
+      "result": "pass"
+    },
+    {
+      "name": "390: fixture label/publication denial/comparison keyboard",
+      "result": "pass"
+    },
+    {
+      "name": "390: real private gallery reopens selected result",
+      "result": "pass"
+    },
+    {
+      "name": "390: injected WebShare resolved, actual backend events",
+      "result": "pass"
+    },
+    {
+      "name": "390: injected WebShare abort, actual backend events",
+      "result": "pass"
+    },
+    {
+      "name": "390: injected WebShare error, actual backend events",
+      "result": "pass"
+    },
+    {
+      "name": "390: injected WebShare unavailable, actual backend events",
+      "result": "pass"
+    },
+    {
+      "name": "390: two-account media isolation",
+      "result": "pass"
+    },
+    {
+      "name": "390: separate publication consent and revoke",
+      "result": "pass"
+    },
+    {
+      "name": "390: uncertain real reservation POST, reload and identical key/body recovery",
+      "result": "pass"
+    },
+    {
+      "name": "390: R1 delayed A after B selection/submission; no overlap or stale A render",
+      "result": "pass"
+    },
+    {
+      "name": "390: late reservation detail after selection change cannot render A",
+      "result": "pass"
+    },
+    {
+      "name": "390: expired attribution cookie clears through actual authenticated POST",
+      "result": "pass"
+    },
+    {
+      "name": "390: historical software gallery >50 with real continuation and timeout screens",
+      "result": "pass"
+    },
+    {
+      "name": "390: delete during pending real share response never restores private artifact",
+      "result": "pass"
+    },
+    {
+      "name": "390: R4 delayed real authentication_required across logout/login",
+      "result": "pass"
+    },
+    {
+      "name": "390: delayed logout response cannot overwrite new account",
+      "result": "pass"
+    },
+    {
+      "name": "390: insufficient-credit screen from actual reservations",
+      "result": "pass"
+    },
+    {
+      "name": "390: budget-exhausted screen without weakened limits",
+      "result": "pass"
+    },
+    {
+      "name": "390: billing-hold screen from verified fixture refund",
+      "result": "pass"
+    },
+    {
+      "name": "390: hosted mock actual worker/private comparison/gallery/unverified refusal",
+      "result": "pass"
+    },
+    {
+      "name": "390: hosted missing/disabled configuration zero HTTP and no DOM result",
+      "result": "pass"
+    },
+    {
+      "name": "390: hosted deletion during held remote response fences completion/cleanup",
+      "result": "pass"
+    },
+    {
+      "name": "390: hosted hold before send zero HTTP/one release",
+      "result": "pass"
+    },
+    {
+      "name": "390: hosted hold after committed authorization still completes privately",
+      "result": "pass"
+    }
+  ],
+  "hosted_evidence": [
+    {
+      "job_id": "8a322206-f773-45aa-9985-77f7eef17c6e",
+      "evidence_sha": "66e55e52f5c0ff8461a51a6d4f7e980add8c018e798d1bfc98fb57c25b3fa314",
+      "output_sha": "93a7b89dcaaeb4d49877d34b9ba3b13fb1e665c6c3503b43d8e2d77ac6352aae",
+      "software_fixture": true,
+      "provider_metrics": null,
+      "quality": "unverified",
+      "mock_calls": {
+        "api": 2,
+        "post": 1,
+        "get": 1,
+        "delivery": 2
+      }
+    },
+    {
+      "job_id": "1a0c9f53-0c86-4f2e-875d-2c8b42ee9824",
+      "scenario": "missing-token",
+      "mock_calls": {
+        "api": 0,
+        "post": 0,
+        "get": 0,
+        "delivery": 0
+      },
+      "attached": false
+    },
+    {
+      "job_id": "1a0c9f53-0c86-4f2e-875d-2c8b42ee9824",
+      "scenario": "disabled",
+      "mock_calls": {
+        "api": 0,
+        "post": 0,
+        "get": 0,
+        "delivery": 0
+      },
+      "attached": false
+    },
+    {
+      "job_id": "863a5675-0f0d-43ec-a1a4-62531e75a741",
+      "scenario": "deleted-during-response",
+      "mock_calls": {
+        "api": 1,
+        "post": 1,
+        "get": 0,
+        "delivery": 0
+      },
+      "attached": false,
+      "release_count": 1
+    },
+    {
+      "job_id": "b92b10cb-8fe0-40ee-814f-0b4426e97fb1",
+      "scenario": "hold-before-send",
+      "mock_calls": {
+        "api": 0,
+        "post": 0,
+        "get": 0,
+        "delivery": 0
+      },
+      "attached": false
+    },
+    {
+      "job_id": "425b546d-8f1f-433b-b2d5-52481fbf2c37",
+      "evidence_sha": "ece0773d43b91392ce295d2758f87d244164919bfd57ee2e12f32b5dae0c67ee",
+      "output_sha": "93a7b89dcaaeb4d49877d34b9ba3b13fb1e665c6c3503b43d8e2d77ac6352aae",
+      "software_fixture": true,
+      "provider_metrics": null,
+      "quality": "unverified",
+      "scenario": "hold-after-send",
+      "mock_calls": {
+        "api": 2,
+        "post": 1,
+        "get": 1,
+        "delivery": 2
+      }
+    },
+    {
+      "job_id": "93028921-4c6c-4987-88aa-ff7eb55b755e",
+      "evidence_sha": "032aff7faaa5419df73aca42d8a72e10fe9f3aa47f63108ca381f9cc6da6bc79",
+      "output_sha": "93a7b89dcaaeb4d49877d34b9ba3b13fb1e665c6c3503b43d8e2d77ac6352aae",
+      "software_fixture": true,
+      "provider_metrics": null,
+      "quality": "unverified",
+      "mock_calls": {
+        "api": 2,
+        "post": 1,
+        "get": 1,
+        "delivery": 2
+      }
+    },
+    {
+      "job_id": "aba0315f-f819-4246-bf64-cb8f3b8b4b73",
+      "scenario": "missing-token",
+      "mock_calls": {
+        "api": 0,
+        "post": 0,
+        "get": 0,
+        "delivery": 0
+      },
+      "attached": false
+    },
+    {
+      "job_id": "aba0315f-f819-4246-bf64-cb8f3b8b4b73",
+      "scenario": "disabled",
+      "mock_calls": {
+        "api": 0,
+        "post": 0,
+        "get": 0,
+        "delivery": 0
+      },
+      "attached": false
+    },
+    {
+      "job_id": "c21a81e3-51d4-4bea-a1e8-a5e89d85dbdb",
+      "scenario": "deleted-during-response",
+      "mock_calls": {
+        "api": 1,
+        "post": 1,
+        "get": 0,
+        "delivery": 0
+      },
+      "attached": false,
+      "release_count": 1
+    },
+    {
+      "job_id": "5a52db44-e01d-4e05-b669-22075d5c8111",
+      "scenario": "hold-before-send",
+      "mock_calls": {
+        "api": 0,
+        "post": 0,
+        "get": 0,
+        "delivery": 0
+      },
+      "attached": false
+    },
+    {
+      "job_id": "54b78112-8e53-4d62-a981-cc147d49ab32",
+      "evidence_sha": "dbaf73521fc0d7ae78e1d508e0297c07877cc67affb907251994624496a69a95",
+      "output_sha": "93a7b89dcaaeb4d49877d34b9ba3b13fb1e665c6c3503b43d8e2d77ac6352aae",
+      "software_fixture": true,
+      "provider_metrics": null,
+      "quality": "unverified",
+      "scenario": "hold-after-send",
+      "mock_calls": {
+        "api": 2,
+        "post": 1,
+        "get": 1,
+        "delivery": 2
+      }
+    }
+  ],
+  "software_fixture": true,
+  "hosted_provider_metrics": null,
+  "native_outcomes": "injected API promises, not OS/social posting",
+  "geometry_pass": null
+}
