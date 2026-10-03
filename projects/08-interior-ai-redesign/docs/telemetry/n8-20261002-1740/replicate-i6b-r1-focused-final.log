@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: private receipt reports canonical stored digest despite JSONB key order; corrupt digest rejects
+ok 1 - private receipt reports canonical stored digest despite JSONB key order; corrupt digest rejects
+  ---
+  duration_ms: 8.238373
+  type: 'test'
+  ...
+# Subtest: digest oracle detects the previous JSON.stringify receipt implementation
+ok 2 - digest oracle detects the previous JSON.stringify receipt implementation
+  ---
+  duration_ms: 2.714021
+  type: 'test'
+  ...
+# Subtest: held response is released only after matching 200, handler completion and owner 404
+ok 3 - held response is released only after matching 200, handler completion and owner 404
+  ---
+  duration_ms: 14.796835
+  type: 'test'
+  ...
+# Subtest: failed DELETE or accessible job fails the case while finally releases/cancels/joins
+ok 4 - failed DELETE or accessible job fails the case while finally releases/cancels/joins
+  ---
+  duration_ms: 4.897132
+  type: 'test'
+  ...
+# Subtest: ordering oracle detects premature release before handler completion
+ok 5 - ordering oracle detects premature release before handler completion
+  ---
+  duration_ms: 4.066191
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 298.069516

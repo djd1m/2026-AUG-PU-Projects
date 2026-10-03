@@ -1,0 +1,88 @@
+TAP version 13
+# Subtest: private receipt reports canonical stored digest despite JSONB key order; corrupt digest rejects
+ok 1 - private receipt reports canonical stored digest despite JSONB key order; corrupt digest rejects
+  ---
+  duration_ms: 12.560214
+  type: 'test'
+  ...
+# Subtest: digest oracle detects the previous JSON.stringify receipt implementation
+ok 2 - digest oracle detects the previous JSON.stringify receipt implementation
+  ---
+  duration_ms: 3.142651
+  type: 'test'
+  ...
+# Subtest: held response is released only after matching 200, handler completion and owner 404
+not ok 3 - held response is released only after matching 200, handler completion and owner 404
+  ---
+  duration_ms: 29.95617
+  type: 'test'
+  location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/ui-replicate-corrections.test.js:81:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + ReferenceError: evidence is not defined
+    +     at scoped (evalmachine.<anonymous>:23:9)
+    +     at async deletion (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/ui-replicate-corrections.test.js:77:34)
+    +     at async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/ui-replicate-corrections.test.js:82:25)
+    +     at async Test.run (node:internal/test_runner/test:1054:7)
+    +     at async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+    - undefined
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  actual:
+  error: 'evidence is not defined'
+  name: 'ReferenceError'
+  stack: |-
+    scoped (evalmachine.<anonymous>:23:9)
+    async deletion (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/ui-replicate-corrections.test.js:77:34)
+    async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/ui-replicate-corrections.test.js:82:25)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/ui-replicate-corrections.test.js:82:49)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: failed DELETE or accessible job fails the case while finally releases/cancels/joins
+not ok 4 - failed DELETE or accessible job fails the case while finally releases/cancels/joins
+  ---
+  duration_ms: 5.698332
+  type: 'test'
+  location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/ui-replicate-corrections.test.js:88:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'handler'
+    - 'cancel'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'cancel'
+  actual: 'handler'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/ui-replicate-corrections.test.js:91:63)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: ordering oracle detects premature release before handler completion
+ok 5 - ordering oracle detects premature release before handler completion
+  ---
+  duration_ms: 4.642131
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 3
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 351.788595

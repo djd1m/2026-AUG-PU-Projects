@@ -2,11 +2,11 @@
 import assert from 'node:assert/strict';
 import {readFile,readdir} from 'node:fs/promises';
 import {join,resolve} from 'node:path';
-import {upload,paceContext} from './browser-cases.js';
+import {upload,paceContext,clickAndWaitForHandler} from './browser-cases.js';
 import {createHostedFixture,responseGate} from './replicate-fixture.js';
 import {createJobs} from '../../web/jobs.js';
 import {cleanupDeleted} from '../maintenance.js';
-import {sha} from '../../web/generation.js';
+import {sha,canonical} from '../../web/generation.js';
 
 // Use the app's consumed fetch + stored intent rather than a possibly evicted CDP body.
 async function reserveHosted(page,owner) {
@@ -21,12 +21,13 @@ async function reserveHosted(page,owner) {
 async function privateCompletion(pool,config,id) {
   const j=(await pool.query('SELECT * FROM job WHERE id=$1',[id])).rows[0];
   assert.equal(j.status,'succeeded');assert.equal(j.mode,'replicate');assert.equal(j.quality,'unverified');
-  const rows=(await pool.query('SELECT canonical_evidence FROM generation_evidence WHERE job_id=$1',[id])).rows;
+  const rows=(await pool.query('SELECT canonical_evidence,evidence_sha FROM generation_evidence WHERE job_id=$1',[id])).rows;
   assert.equal(rows.length,1);const e=rows[0].canonical_evidence;
+  assert.equal(sha(canonical(e)),rows[0].evidence_sha);
   for(const [folder,key] of [['outputs','output_sha'],['depths','depth_sha'],['configs','config_sha']])
     assert.equal(sha(await readFile(join(config.storageDir,folder,j.output_key))),e[key]);
   for(const key of ['hardware','warm','inference_ms','billing_actual_microusd'])assert.equal(e[key],null);
-  assert.equal(e.quality,'unverified');return {job_id:id,evidence_sha:sha(JSON.stringify(e)),output_sha:e.output_sha,
+  assert.equal(e.quality,'unverified');return {job_id:id,evidence_sha:rows[0].evidence_sha,output_sha:e.output_sha,
     software_fixture:true,provider_metrics:null,quality:'unverified'};
 }
 export async function hostedCases({browser,pool,config,check,request,register,packagePurchase,other,width,password,run,out}) {
@@ -109,8 +110,12 @@ export async function hostedCases({browser,pool,config,check,request,register,pa
       try {
         active=await fixture.start(deleted,{gate});
         await Promise.race([gate.entered,active.done.then(result=>{throw new Error('worker_ended_before_gate:'+result.error);})]);
-        assert.equal(active.counts().post,1);await page.locator('#delete-job').click();
-        await page.locator('#result').waitFor({state:'hidden'});gate.release();
+        assert.equal(active.counts().post,1);
+        const deletion=page.waitForResponse(r=>new URL(r.url()).pathname===`/api/jobs/${deleted}`&&r.request().method()==='DELETE');
+        const [deletedResponse]=await Promise.all([deletion,clickAndWaitForHandler(page,'#delete-job')]);
+        assert.equal(deletedResponse.status(),200);
+        await page.locator('#result').waitFor({state:'hidden'});
+        assert.equal((await request(page,`/api/jobs/${deleted}`)).status,404);gate.release();
         assert.equal((await active.done).completed,false);
         assert.equal((await request(page,`/api/jobs/${deleted}`)).status,404);
         assert.equal((await pool.query('SELECT count(*)::int AS n FROM generation_evidence WHERE job_id=$1',[deleted])).rows[0].n,0);
