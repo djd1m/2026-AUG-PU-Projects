@@ -3,7 +3,7 @@
 // колонку password_hash роль кабинета не видит (foundation F-4). Создание бота — следующие фичи дорожной карты.
 import { cookies } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
-import { listCabinetBots, listCabinetSources, planOf, readCabinetContext } from '@n6b/db';
+import { listHandoverCandidates, listCabinetBots, listCabinetSources, planOf, readCabinetContext } from '@n6b/db';
 import { SESSION_COOKIE, sessionTokenOrNull } from '@/server/auth-handler';
 import { getRuntime } from '@/server/runtime';
 import { publicationOrigins } from '@/server/origin';
@@ -24,7 +24,7 @@ export default async function CabinetPage({ searchParams }: {
   searchParams: Promise<{ account?: string | string[] }>;
 }) {
   const token = sessionTokenOrNull((await cookies()).get(SESSION_COOKIE)?.value);
-  const { auth, tenantPool, config } = getRuntime();
+  const { auth, tenantPool, servicePool, config } = getRuntime();
   const accountId = token ? await auth.authenticate(token) : null;
   if (!accountId) redirect('/login');
   const selector = (await searchParams).account;
@@ -34,6 +34,8 @@ export default async function CabinetPage({ searchParams }: {
     typeof selector === 'string' ? selector.toLowerCase() : accountId);
   if (!context) notFound();
   const { actor: account, selected, clients } = context;
+  const handoverCandidateIds = account.kind === 'studio' && account.parent_account_id === null
+    ? await listHandoverCandidates(servicePool, accountId) : [];
   const [publicationBots, sources] = await Promise.all([
     listCabinetBots(tenantPool, accountId, selected.id), listCabinetSources(tenantPool, accountId, selected.id),
   ]);
@@ -48,7 +50,7 @@ export default async function CabinetPage({ searchParams }: {
       </header>
       <p>Вы вошли как <strong>{account.email ?? 'подаккаунт студии'}</strong>.</p>
       {account.kind === 'studio' && account.parent_account_id === null &&
-        <StudioClients clients={clients} selectedId={selected.id} actorId={accountId} />}
+        <StudioClients handoverCandidateIds={handoverCandidateIds} clients={clients} selectedId={selected.id} actorId={accountId} />}
       {selected.id !== accountId && <p>Выбран клиент: {selected.email ?? `Клиент ${clients.findIndex((c) => c.id === selected.id) + 1}`}.</p>}
       {selected.id === accountId && planOf(account.plan) === 'free' && <BadgeRemoval />}
       <CreateBot accountId={selected.id} />

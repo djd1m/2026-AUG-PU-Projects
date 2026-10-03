@@ -51,7 +51,7 @@ export class AuthService {
     return createHmac('sha256', this.sessionSecret).update(token).digest('hex');
   }
 
-  private newSession(): { token: string; record: NewSession } {
+  prepareSession(): { token: string; record: NewSession } {
     const token = randomBytes(32).toString('base64url');
     return { token, record: { tokenHash: this.tokenHash(token),
       expiresAt: new Date(Date.now() + SESSION_TTL_SECONDS * 1000) } };
@@ -59,7 +59,7 @@ export class AuthService {
 
   async register(email: string, password: string, kind: AccountKind, referral: string | null = null): Promise<RegisterResult> {
     const passwordHash = await this.hasher.hash(password, BCRYPT_COST); // до короткой атомарной записи
-    const session = this.newSession();
+    const session = this.prepareSession();
     const created = await this.store.register(email, passwordHash, kind, session.record, referral);
     return created ? { ok: true, token: session.token } : { ok: false, reason: 'email-taken' };
   }
@@ -69,7 +69,7 @@ export class AuthService {
     const account = await this.store.findAccount(email);
     const matches = await this.hasher.compare(password, account?.password_hash ?? DUMMY_HASH);
     if (!account || !account.password_hash || !matches) return null;
-    const session = this.newSession();
+    const session = this.prepareSession();
     await this.store.createSession(account.id, session.record);
     return session.token;
   }

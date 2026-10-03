@@ -20,7 +20,14 @@ const nextConfig = {
         { key: 'Content-Security-Policy', value: "frame-ancestors 'none'" },
         { key: 'X-Frame-Options', value: 'DENY' },
       ],
-    }];
+    }, ...['/handover/:path*', '/api/handover/:path*', '/api/studio/clients/:id/handover'].map((source) => ({
+      source, headers: [
+        { key: 'Referrer-Policy', value: 'no-referrer' },
+        { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+        { key: 'Cache-Control', value: 'no-store' },
+        { key: 'Content-Security-Policy', value: "frame-ancestors 'none'" },
+      ],
+    }))];
   },
 };
 

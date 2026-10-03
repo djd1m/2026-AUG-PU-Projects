@@ -15,7 +15,7 @@ import { readReferralCookie } from '../lib/referral-cookie';
 export const SESSION_COOKIE = 'n6b_session';
 const MAX_BODY_BYTES = 4096;
 
-const credentials = z.object({
+export const credentials = z.object({
   email: z.string().trim().toLowerCase().email().max(254),
   password: z.string().min(10).refine((v) => Buffer.byteLength(v, 'utf8') <= 72, 'пароль длиннее 72 байт'),
   kind: z.unknown().optional(),

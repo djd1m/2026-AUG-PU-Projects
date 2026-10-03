@@ -170,3 +170,21 @@ describe('GET /api/health (NFR-n6b-5)', () => {
     expect(JSON.stringify(await bad.json())).not.toContain('secret');
   });
 });
+
+describe('HAN-02 existing session factory regression', () => {
+  it('prepareSession generates random HMAC material without creating/authenticating a session', async () => {
+    const store = memoryStore(); const { hasher } = spyHasher();
+    const auth = new AuthService(store, hasher, 'test-session-secret');
+    const before = Date.now(); const a = auth.prepareSession(); const b = auth.prepareSession();
+    expect(Buffer.from(a.token, 'base64url')).toHaveLength(32); expect(a.token).not.toBe(b.token);
+    expect(a.record.tokenHash).toBe(auth.tokenHash(a.token)); expect(a.record.tokenHash).not.toBe(a.token);
+    expect(a.record.expiresAt.getTime()).toBeGreaterThanOrEqual(before + 604800000);
+    expect(a.record.expiresAt.getTime()).toBeLessThanOrEqual(Date.now() + 604800000);
+    expect(await auth.authenticate(a.token)).toBeNull(); expect(hasher.hash).not.toHaveBeenCalled();
+    const registration = await auth.register('client@example.test', 'long-password', 'owner');
+    expect(registration.ok).toBe(true);
+    if (registration.ok) expect(await auth.authenticate(registration.token)).toBe('acc-1');
+    const login = await auth.login('client@example.test', 'long-password');
+    expect(login).not.toBeNull(); expect(await auth.authenticate(login!)).toBe('acc-1');
+  });
+});

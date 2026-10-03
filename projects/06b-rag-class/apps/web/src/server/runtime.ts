@@ -8,6 +8,7 @@
 // По POOL_MAX соединений на пул: web держит до 2×10, воркер — 10 (Architecture → Scalability).
 
 import bcrypt from 'bcrypt';
+import { createIssueHandoverHandler, createAcceptHandoverHandler } from './handover-handler';
 import { createPool, type Pool, reserveQuotaNow } from '@n6b/db';
 import { createAskHandler } from './ask-handler';
 import { AuthService, type PasswordHasher } from './auth';
@@ -99,4 +100,17 @@ export async function demoRoute(request: Request, context: { params: Promise<{ s
   const { config, servicePool, paid } = getRuntime();
   return createDemoHandler({ servicePool, gateway: paid.gateway, publicBaseUrl: config.PUBLIC_BASE_URL,
     visitorSecret: config.VISITOR_SECRET, minSimilarity: config.MIN_SIMILARITY })(request, (await context.params).slug);
+}
+
+export function handoverRoute(kind: 'issue' | 'accept') {
+  return async (request: Request, context: { params: Promise<{ id?: string; token?: string }> }): Promise<Response> => {
+    const { config, servicePool, auth } = getRuntime();
+    const params = await context.params;
+    const common = { servicePool, publicBaseUrl: config.PUBLIC_BASE_URL };
+    if (kind === 'issue') return createIssueHandoverHandler({ ...common,
+      authenticate: (token) => auth.authenticate(token) })(request, params.id ?? '');
+    return createAcceptHandoverHandler({ ...common, auth, hasher, visitorSecret: config.VISITOR_SECRET,
+      authLimitPerHour: config.LIMIT_AUTH_ADDR_HOUR, production: config.production,
+      reserve: (keys) => reserveQuotaNow(servicePool, keys) })(request, params.token ?? '');
+  };
 }
