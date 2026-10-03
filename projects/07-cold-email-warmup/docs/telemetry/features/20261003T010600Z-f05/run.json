@@ -12,7 +12,7 @@
   "started_at": "2026-10-03T01:04:14.510032+00:00",
   "ended_at": null,
   "status": "in_progress",
-  "current_stage": "IMPLEMENT A delivered, 20 unit /98 PG /7 restored pass; fresh REVIEW A pending",
+  "current_stage": "A accepted6/6; IMPLEMENT B next",
   "actual_model": null,
   "usage": null,
   "cost": null,
@@ -21,8 +21,9 @@
   ],
   "quality": {
     "required_gates_passed": false,
-    "ac_met": 0,
+    "ac_met": 6,
     "ac_total": 12
   },
-  "author_a_runtime": "sol-a-runtime.json"
+  "author_a_runtime": "sol-a-runtime.json",
+  "review_a_runtime": "astra-a-runtime.json"
 }
