@@ -26,7 +26,7 @@ test('F04 PG16 composite/publication authorization, atomic revoke, events and ho
     assert.match((await admin.query('SHOW server_version')).rows[0].server_version,/^16\./);
     await admin.query(`CREATE SCHEMA ${schema}`);url.searchParams.set('options',`-c search_path=${schema}`);
     pool=createPool(url.href);await migrate(pool);await migrate(pool);
-    assert.equal((await pool.query('SELECT count(*)::int AS n FROM schema_migration')).rows[0].n,6);
+    assert.equal((await pool.query('SELECT count(*)::int AS n FROM schema_migration')).rows[0].n,8);
     dir=await mkdtemp(join(tmpdir(),'n8-f04a-pg-'));
     const config={storageDir:dir,runtime:'test',platformDailyLimit:200,accountDailyLimit:20};
     const jobs=createJobs(pool,config),q=createQuality(pool,config,{operatorIdentity:'SYNTHETIC_SOFTWARE_OPERATOR'}),s=createSharing(pool,config);
