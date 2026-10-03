@@ -1,0 +1,46 @@
+{
+  "checks": [
+    {
+      "name": "baseline",
+      "command": [
+        "/tmp/n8-node22",
+        "--test",
+        "tests/ui-delete-refresh-order.test.js"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "related",
+      "command": [
+        "/tmp/n8-node22",
+        "--test",
+        "--test-concurrency=2",
+        "tests/ui-auth-order.test.js",
+        "tests/ui-app-races.test.js",
+        "tests/ui-replicate-corrections.test.js",
+        "tests/ui-state.test.js"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "build",
+      "command": [
+        "/tmp/n8-node22",
+        "scripts/check.js"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "mutation-red",
+      "exit_code": 1,
+      "mutant_sha256": "08aa06b60b9426f0b7e9d082079a2e80c6e288e807332d2c1e17ad8999d0b04a"
+    },
+    {
+      "name": "restored",
+      "exit_code": 0
+    }
+  ],
+  "candidate_sha256": "f3450c2cc1d2181df6f53b25bad15797ec40f207a72110a4201bc8b8f463b420",
+  "oracle_sha256": "92812de4fe6c3adf593495aa5d3c011af36871d65df2c7712f49db13f9f28c0d",
+  "oracle_unchanged": true
+}

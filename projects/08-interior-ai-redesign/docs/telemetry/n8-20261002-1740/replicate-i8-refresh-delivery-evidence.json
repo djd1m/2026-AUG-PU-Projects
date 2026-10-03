@@ -1,0 +1,34 @@
+{
+  "files": {
+    "scripts/ui/browser-cases.js": "f3450c2cc1d2181df6f53b25bad15797ec40f207a72110a4201bc8b8f463b420",
+    "tests/ui-delete-refresh-order.test.js": "92812de4fe6c3adf593495aa5d3c011af36871d65df2c7712f49db13f9f28c0d",
+    "docs/telemetry/n8-20261002-1740/replicate-i8-refresh-launch.json": "cf685673c2ac730d98d587cee62cb2826c5f3283ca835a811f649358923626db",
+    "docs/telemetry/n8-20261002-1740/replicate-i8-refresh-checks.json": "d2a41122dbae5a4acc937c676ef19f240b9872732700fdf39354f145bd23f17b",
+    "docs/features/f07-replicate/01_specification.md": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+    "docs/features/f07-replicate/i8-ui-2/browser.log": "742049d2e1ad1d62d46f5a40a9ea747f137cbc2cd8eda6932ae37ad2d6fa1afc",
+    "docs/telemetry/n8-20261002-1740/replicate-i8-refresh-baseline.log": "30c36a03109d00891c1064653709ff66c4dd1def7341a45cf6596612dc7f3ae0",
+    "docs/telemetry/n8-20261002-1740/replicate-i8-refresh-related.log": "d7e112d6868d9a471b9920ee015fc29af0378c1d5888369b4bc24080e0ed8053",
+    "docs/telemetry/n8-20261002-1740/replicate-i8-refresh-build.log": "0aec2d6d64684e49007fa69ee2856c2ced7b6631bda52ca8bda26e011b3a9d81",
+    "docs/telemetry/n8-20261002-1740/replicate-i8-refresh-mutation-red.log": "b9060bc830b7ed46378dee706d157f2f93aa92b91fbd2bbad195875f149d68d6",
+    "docs/telemetry/n8-20261002-1740/replicate-i8-refresh-restored.log": "0f3852f54d8e54a4a2799afa4422ecd21fc88f24ad057f4858f899b0e784470a"
+  },
+  "evidence_sha256": "541a46430db6fd6af0bd38692e4f6cc3598279f3a93fe83c0b1729b695240a4e",
+  "source_revision": "1f226f0e74cb147a610e8a32e46cbc38592ae1d9",
+  "original_attempt": {
+    "budget_seconds": 480,
+    "exit_code": 124,
+    "source": "owner SAME THREAD delivery instruction",
+    "freeze_420s_met": false
+  },
+  "delivery": {
+    "started_at": "2026-10-03T17:48:18+00:00",
+    "finished_at": "2026-10-03T17:49:59.441067+00:00",
+    "no_source_or_test_edits": true,
+    "no_test_reruns": true
+  },
+  "protected_snapshot": {
+    "count": 9022,
+    "sha256": "d635332132b9b8f5fb779c550739d31491a3dc41edac05dcf52d3c285198189d",
+    "final_full_map_verification": "not recorded; parent audit pending"
+  }
+}

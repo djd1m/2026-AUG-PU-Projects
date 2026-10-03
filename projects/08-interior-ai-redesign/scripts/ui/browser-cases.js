@@ -169,7 +169,9 @@ export async function extendedCases({page,context,pool,config,check,request,rese
   });
   await check(`${width}: delete during pending real share response never restores private artifact`,async()=>{
     await page.locator('#upload-choice').selectOption(uploadB);await page.locator('[data-style=playful]').click();const deletedJob=await reserve(page);
-    await drive(pool,config,'complete');await page.locator('#resume').click();await page.locator('#comparison').waitFor({state:'visible'});
+    // reserve returns before generate's balance/gallery tail; its finally clears disabled.
+    await page.waitForFunction(()=>!document.querySelector('#generate').disabled);
+    await drive(pool,config,'complete');await clickAndWaitForHandler(page,'#resume');await page.locator('#comparison').waitFor({state:'visible'});
     const held=await delayedResponse(page,'**/share-attempt');
     try {
       await page.locator('#prepare-share').click();await held.reached;
