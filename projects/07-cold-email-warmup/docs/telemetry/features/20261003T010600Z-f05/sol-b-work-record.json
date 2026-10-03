@@ -22,7 +22,7 @@
   },
   "source": {
     "baseline_revision": "9944b189a054afd5e7d08a3238226e1109deeda9",
-    "current_revision": "fc1efde8",
+    "current_revision": "6054bee12246950ff8f1465f1e0b68f3d8cc4148",
     "build_revision": null,
     "requirements": [
       {
@@ -37,8 +37,8 @@
       }
     ],
     "continuity": {
-      "expected_revision": "9944b189a054afd5e7d08a3238226e1109deeda9",
-      "observed_revision": "9944b189a054afd5e7d08a3238226e1109deeda9",
+      "expected_revision": "6054bee12246950ff8f1465f1e0b68f3d8cc4148",
+      "observed_revision": "6054bee12246950ff8f1465f1e0b68f3d8cc4148",
       "reconciliation": null
     }
   },
@@ -125,20 +125,24 @@
   },
   "routes": [
     {
-      "stage": "plan",
+      "phase": "plan",
       "scope_revision": "f46fb91e7717f2a21237e56549ddfb2b8d831b792f130685c08d3a44297142b4",
-      "substantive_rationale": "Retain approved F05 XL public privacy/server entitlement scope; OWN-N7-002",
-      "risk_tier": "XL",
-      "script_input": "src/billing/service.ts db/010-billing.sql",
-      "exit_code": 1
+      "tier": "XL",
+      "rationale": "Retain approved F05 XL public privacy/server entitlement scope; OWN-N7-002",
+      "script": {
+        "input": "src/billing/service.ts db/010-billing.sql",
+        "exit_code": 1
+      }
     },
     {
-      "stage": "implement",
+      "phase": "implementation",
       "scope_revision": "f46fb91e7717f2a21237e56549ddfb2b8d831b792f130685c08d3a44297142b4",
-      "substantive_rationale": "Repeated XL before IMPLEMENT; current entitlement authority/public privacy/durable idempotency, no money truth edits",
-      "risk_tier": "XL",
-      "script_input": "src/evidence/store.ts src/growth/reports.ts db/011-evidence.sql proposed new paths",
-      "exit_code": 0
+      "tier": "XL",
+      "rationale": "Repeated XL before IMPLEMENT; current entitlement authority/public privacy/durable idempotency, no money truth edits",
+      "script": {
+        "input": "src/evidence/store.ts src/growth/reports.ts db/011-evidence.sql proposed new paths",
+        "exit_code": 0
+      }
     }
   ],
   "approval": {
@@ -157,17 +161,20 @@
         "roles",
         "models",
         "skills"
-      ]
+      ],
+      "sha256": "3800e3324efbfafb84f14e78b2f20d8604f9fe9782e8fb08b0a51c62f4562ff0"
     }
   },
   "preflight": {
     "status": "not_applicable",
-    "reason": "implementation, runtime build pending grant"
+    "reason": "implementation, runtime build pending grant",
+    "external_actions_executed": false,
+    "e2e_claim": null
   },
   "attempts": [
     {
       "id": "implement-b1",
-      "status": "running"
+      "status": "active"
     }
   ],
   "work_units": [
@@ -186,7 +193,56 @@
     }
   ],
   "pause": null,
-  "checks": [],
+  "checks": [
+    {
+      "ac_id": "AC-B1",
+      "outcome": "unknown",
+      "command": "bash scripts/check-f05b-heavy.sh",
+      "exit_code": null,
+      "source_revision": "6054bee12246950ff8f1465f1e0b68f3d8cc4148",
+      "receipt_id": "sol-b"
+    },
+    {
+      "ac_id": "AC-B2",
+      "outcome": "unknown",
+      "command": "bash scripts/check-f05b-heavy.sh",
+      "exit_code": null,
+      "source_revision": "6054bee12246950ff8f1465f1e0b68f3d8cc4148",
+      "receipt_id": "sol-b"
+    },
+    {
+      "ac_id": "AC-B3",
+      "outcome": "unknown",
+      "command": "bash scripts/check-f05b-heavy.sh",
+      "exit_code": null,
+      "source_revision": "6054bee12246950ff8f1465f1e0b68f3d8cc4148",
+      "receipt_id": "sol-b"
+    },
+    {
+      "ac_id": "AC-B4",
+      "outcome": "unknown",
+      "command": "bash scripts/check-f05b-heavy.sh",
+      "exit_code": null,
+      "source_revision": "6054bee12246950ff8f1465f1e0b68f3d8cc4148",
+      "receipt_id": "sol-b"
+    },
+    {
+      "ac_id": "AC-B5",
+      "outcome": "unknown",
+      "command": "bash scripts/check-f05b-heavy.sh",
+      "exit_code": null,
+      "source_revision": "6054bee12246950ff8f1465f1e0b68f3d8cc4148",
+      "receipt_id": "sol-b"
+    },
+    {
+      "ac_id": "AC-B6",
+      "outcome": "unknown",
+      "command": "bash scripts/check-f05b-heavy.sh",
+      "exit_code": null,
+      "source_revision": "6054bee12246950ff8f1465f1e0b68f3d8cc4148",
+      "receipt_id": "sol-b"
+    }
+  ],
   "receipts": [],
   "delivery": null
 }
