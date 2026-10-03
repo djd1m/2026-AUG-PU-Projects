@@ -1,0 +1,112 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i1",
+  "attempt_id": "replicate-i1-1",
+  "runtime": "Node20.20.2; limited host checks, not Node22 runtime acceptance",
+  "checks": [
+    {
+      "command": "node --check web/provider-submissions.js",
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "runtime": "Node20.20.2 (limited host check, not runtime acceptance)",
+      "chunk_id": "132414",
+      "wall_time_seconds": 0.0000049,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "command": "node --check scripts/migrate.js",
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "runtime": "Node20.20.2 (limited host check, not runtime acceptance)",
+      "chunk_id": "d53ecd",
+      "wall_time_seconds": 0.00000634,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "command": "node --check tests/provider-submissions.test.js",
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "runtime": "Node20.20.2 (limited host check, not runtime acceptance)",
+      "chunk_id": "ee06fa",
+      "wall_time_seconds": 0.00000479,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "command": "node --check tests/replicate.integration.test.js",
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "runtime": "Node20.20.2 (limited host check, not runtime acceptance)",
+      "chunk_id": "f1d055",
+      "wall_time_seconds": 0.00000547,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "command": "node tests/provider-submissions.test.js",
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "runtime": "Node20.20.2 (limited host check, not runtime acceptance)",
+      "chunk_id": "ba9d42",
+      "wall_time_seconds": 0.121957464,
+      "exit_code": 0,
+      "original_token_count": 132,
+      "output": "TAP version 13\n# Subtest: prepared binding accepts only hashes and closed numeric image transform\nok 1 - prepared binding accepts only hashes and closed numeric image transform\n  ---\n  duration_ms: 10.333013\n  ...\n# Subtest: authority rejects absent/invalid limits and non-test trusted clock before SQL\nok 2 - authority rejects absent/invalid limits and non-test trusted clock before SQL\n  ---\n  duration_ms: 0.95043\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 36.346383\n"
+    }
+  ],
+  "final_syntax_and_whitespace": [
+    {
+      "command": "node --check web/provider-submissions.js",
+      "chunk_id": "a09144",
+      "wall_time_seconds": 0.00000496,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "command": "node --check tests/replicate.integration.test.js",
+      "chunk_id": "97f2d7",
+      "wall_time_seconds": 0.00000488,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "command": "git diff --check",
+      "chunk_id": "21a023",
+      "wall_time_seconds": 0.00000172,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    }
+  ],
+  "unchanged_regression": {
+    "command": "node tests/jobs.test.js\nnode tests/generation.test.js",
+    "shell_exit_code": 0,
+    "jobs_tests_passed": 5,
+    "generation_tests_passed": 13,
+    "evidence": "TAP results observed in worker tool output; no skips or failures"
+  },
+  "corrected_invocation": {
+    "command": "node tests/provider-submissions.test.js",
+    "cwd": "/tmp/n8-replicate-i1",
+    "exit_code": 1,
+    "reason": "MODULE_NOT_FOUND: initial cwd was repository root",
+    "corrected_cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+    "corrected_exit_code": 0
+  },
+  "pending": [
+    {
+      "command": "node tests/provider-submissions.test.js",
+      "runtime": "Node22",
+      "exit_code": null
+    },
+    {
+      "command": "N8_TEST_DB_OWNERSHIP=n8-f07-replicate node tests/replicate.integration.test.js",
+      "runtime": "Node22/PG16; dedicated TEST_DATABASE_URL injected without disclosure",
+      "exit_code": null,
+      "reason": "Host DB/Docker execution forbidden in this unit"
+    }
+  ]
+}

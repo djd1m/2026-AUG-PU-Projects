@@ -1,0 +1,41 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i1",
+  "attempt_id": "replicate-i1-1",
+  "source_revision": "781d41e96dc143ea898d82747622f2b102f1888c",
+  "created_at": "2026-10-03T07:06:17.581346+00:00",
+  "trace_path": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i1-receipt.md",
+  "trace_prelaunch_state": "absent",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "budget_seconds": 1500,
+  "owned_paths": [
+    "db/007-replicate.sql",
+    "web/provider-submissions.js",
+    "scripts/migrate.js",
+    "tests/replicate.integration.test.js",
+    "tests/provider-submissions.test.js if meaningful",
+    "docs/features/f07-replicate/i1-*",
+    "docs/telemetry/n8-20261002-1740/replicate-i1-*"
+  ],
+  "accepted_plan_hashes": {
+    "03_architecture.md": "c14c88440c537afcb1c09fe4d843c253c3e0ed4e0c904105fc3297e6fe9803b9",
+    "05_completion.md": "91541235061c856f42882e64b047882f8f6fb83b44fcc11708edd510598e491b",
+    "01_specification.md": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+    "04_refinement.md": "43fcc7495be1b92be9537f4c9d9e57fe57b574e7e8e9522c5428af21aff9e02e",
+    "validation-report.md": "69bb791ed3ee076331430d7481568e7bb63e0b767a42dd1381a8603304a40ca3",
+    "correction-v01.md": "4b0c769cbc1d54ddbbd2efa14cf0525817ab9e74bfb6d4ae06ae6d699960c87d",
+    "02_pseudocode.md": "19a86156135d7751e7414e9a406070c990686d6ec8c095448549be012a10572d",
+    "validation-v01-closure.md": "35c3b7234b10d161233390e103fe21465394be93c7b843074da1895116c55353",
+    "replicate-research.md": "a3246fd4d5e0184b62b8bada1ab162e9f6785c228e895d244df8989d758e4a2d"
+  },
+  "route": {
+    "mechanical_tier": "S",
+    "exit": 0,
+    "substantive_tier": "XL",
+    "reason": "Remote-effect authority, money admission, immutable identity and DBfences; approvedplan fullgates remain"
+  }
+}

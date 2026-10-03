@@ -1,0 +1,39 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i1",
+  "attempt_id": "replicate-i1-1",
+  "source_revision": "781d41e96dc143ea898d82747622f2b102f1888c",
+  "launch_sha256": "366f2c234ab6229f8f8b70f0bee3a43fd8636de581b60dbeb85b1595fe715a28",
+  "stage": "HANDOFF",
+  "started_at": "2026-10-03T07:06:30Z",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host model proof and usage unavailable in worker"
+  ],
+  "route": {
+    "mechanical": "S",
+    "exit": 0,
+    "substantive": "XL",
+    "reason": "Immutable remote effect/spend authority; owner approved accepted plan"
+  },
+  "e2e_preflight": {
+    "status": "not_applicable",
+    "reason": "I1 implementation only; Node22/PG16 checks assigned coordinator after frozen handoff"
+  },
+  "next_executor": "Parent coordinator: verify snapshot, run Node22/PG16 checks, assign independent review, then integrate if accepted",
+  "finished_at": "2026-10-03T07:26:29.866404+00:00",
+  "elapsed_wall_seconds": 1199.866404,
+  "verdict": "implementation_ready_for_runtime_review",
+  "snapshot_sha256": "b267430826faac366261c09eac31c8a1114b79d6ff76aa0297f811b1d9ac9973",
+  "remaining_gates": [
+    "Coordinator Node22/PG16 execution",
+    "Fresh independent review",
+    "Later I2-I6 runtime integration/mutation and I5 hosted evidence"
+  ]
+}
