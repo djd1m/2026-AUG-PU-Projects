@@ -1,0 +1,31 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i5b",
+  "attempt_id": "replicate-i5b-1",
+  "created_at": "2026-10-03T11:39:09.416664+00:00",
+  "source_revision": "5f6eb7be0f54967275204ffd8469165d6ea10523",
+  "trace_path": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i5b-receipt.md",
+  "requested_model": "gpt-6.1-sol",
+  "effort": "high",
+  "budget_seconds": 1500,
+  "owned_paths": [
+    "web/quality.js",
+    "web/replicate-quality.js",
+    "web/sharing.js modepredicateonly",
+    "web/composite.js modecompatibilityonly",
+    "tests/replicate-quality.test.js",
+    "tests/replicate-quality.integration.test.js",
+    "tests/replicate-quality-fixtures.js",
+    "docs/features/f07-replicate/i5b-*",
+    "docs/telemetry/n8-20261002-1740/replicate-i5b-*"
+  ],
+  "route": {
+    "mechanical_log": "replicate-i5b-route.log",
+    "substantive_tier": "XL",
+    "approved_plan": "F07 READY preserved"
+  },
+  "no_delegation": true,
+  "actual_model": null,
+  "usage": null,
+  "cost": null
+}
