@@ -1,0 +1,48 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i3-completion",
+  "attempt_id": "replicate-i3-completion-2",
+  "source_revision": "b37b43d88356d7ca53b478c129469e9e0b77d259",
+  "source_continuity": "HEAD matches full pinned source; completion launch uses unambiguous short b37b43d8",
+  "launch_sha256": "5ed3f6398b7a84f14e8f5e1e6ee279a2ba7ee97472665f269ee2e16d2ef6c666",
+  "trace_prelaunch_state": "absent verified at resume",
+  "started_at": "2026-10-03T08:57:13.056892+00:00",
+  "recorded_at": "2026-10-03T08:58:44.456277+00:00",
+  "stage": "DELIVERED",
+  "profile": "compact-quality-first-v2",
+  "route": {
+    "mechanical_tier": "S",
+    "mechanical_exit": 0,
+    "substantive_tier": "XL",
+    "reason": "same accepted I3 scope, delivery only; no product edits"
+  },
+  "prior_attempt": {
+    "attempt_id": "replicate-i3-1",
+    "process_exit": 1,
+    "process_elapsed_seconds": 973.375,
+    "reason": "Selected model is at capacity; product and green tests/mutation delivered before interruption; terminal docs absent",
+    "actual_model": "gpt-6.1-sol",
+    "actual_effort": "high",
+    "model_evidence": "owner supplied host confirmation in completion instruction"
+  },
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Current continuation host metadata and cumulative host usage/cost not available locally"
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "offline handoff; no E2E"
+  },
+  "status": "completed",
+  "ended_at": "2026-10-03T09:02:04.113280+00:00",
+  "completion_elapsed_seconds": 291.056388,
+  "total_elapsed_seconds_including_interruption": 1322.316824,
+  "checks": "136/136 retained full suite; DNS mutation green/red/green; missing delivery syntax/whitespace/scope/hash gates passed",
+  "next_owner": "parent coordinator: fresh bounded independent I3 review, then I4 wiring",
+  "terminal_receipt": "replicate-i3-completion-receipt.md"
+}
