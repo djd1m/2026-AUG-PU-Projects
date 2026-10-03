@@ -1,0 +1,17 @@
+{
+  "checked_at": "2026-10-03T06:36:01.777230+00:00",
+  "source_snapshot_sha256": "2aa1bd4b8d2585254ff21b793a40d71fbcdca5d4bdb89a0fe81eb00a3ec2c978",
+  "runner_image": "sha256:ff0c8692df9cfbaeae0d176d4c9de9a28cadb7fd9d5e9dae2725e99ee2fcb65f",
+  "stage_exits": {
+    "typecheck": 0,
+    "unit": 0,
+    "integration": 0,
+    "critical_mutation": 0,
+    "build": 0,
+    "live_retry_mutation": 0
+  },
+  "unit_passed": 646,
+  "pg_passed": 310,
+  "all_required_passed": true,
+  "coverage": "Full corrected646unit/310PG/type/appbuild and two fixed-oracle PG mutations all0. UI separatelypending. Initial fixture and artifact-permission failures preserved."
+}

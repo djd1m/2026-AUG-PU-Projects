@@ -1,0 +1,32 @@
+{
+  "checked_at": "2026-10-03T06:36:01.777230+00:00",
+  "snapshot_sha256": "2aa1bd4b8d2585254ff21b793a40d71fbcdca5d4bdb89a0fe81eb00a3ec2c978",
+  "runner_image": "sha256:ff0c8692df9cfbaeae0d176d4c9de9a28cadb7fd9d5e9dae2725e99ee2fcb65f",
+  "all_match": true,
+  "file_count": 23,
+  "files": {
+    "apps/web/src/app/api/bots/[id]/stats/route.ts": "7a414bff777329782ab336a53f17253148abed5433a887a3375404298aae5c42",
+    "apps/web/src/app/api/sources/[id]/recrawl/route.ts": "e6f78217e58aea39b1223d8f8af85128d510b3a5620fe28732a09a8b851c3ff5",
+    "apps/web/src/app/api/sources/[id]/route.ts": "ed355215628fb4ee9712e2e6f41c7cffbde8149fb062af83db1992af18a214e8",
+    "apps/web/src/app/cabinet/add-source.tsx": "5466787935e0cb64f2df294d55fe6c2a151916b8f7a7b86caee65727ff5d14b2",
+    "apps/web/src/app/cabinet/bot-stats.tsx": "34a52224232f8633c358c0ad04e6ffc87ae59dc1c99073dcb474719dadaa931b",
+    "apps/web/src/app/cabinet/page.tsx": "8110a50a057c8867046ea3c3d24f286cd85a9f7f8852df7a7fdf4eee76bbadcf",
+    "apps/web/src/app/cabinet/source-actions.tsx": "aab51e5b3ee99c1461a9e7f6f28e86cf181e4ec37f40784446108edc0380929d",
+    "apps/web/src/app/globals.css": "bad8f48d6875b7c2f27266d38ab92c10ffcf285bb54d49a815fc4f30a1cb4224",
+    "apps/web/src/server/runtime.ts": "8c7685b559c04b09df1083df8611c6690eb159c54e8d8c6e4e3c45261aeeb1ae",
+    "apps/web/src/server/source-management-handler.ts": "2a37b7b54482f6a8acd205836827fa6f13bea6aea53f1e827c928c748122e79a",
+    "apps/web/tests/unit/source-management-handler.test.ts": "5d0b318547371ab56e4415ed208c931d49ecb80b5ed3f2ab093c4a71103fd645",
+    "apps/web/tests/unit/source-management-ui.test.ts": "d6c8eaa17ea8362a3fe1791e4f1979209e8a26f32f99bcd6a8142a2f726ed91e",
+    "packages/db/src/index.ts": "45681136541d6d4c1528f2fbeef5c5a3f66ee8d782160b8bb4da734c07769b2d",
+    "packages/db/src/jobs.ts": "9dbb89b371845e962ab6992a702bfd9972246f74702eab45021bcf4243ba52bf",
+    "packages/db/src/source-management.ts": "f716c7bd48af173e95812f96e3b653a6005504398f4679e1bae84f6cfeae408d",
+    "packages/db/tests/int/source-management.test.ts": "3cacc90b94c24e65da21afab5406f4473685f0754fe04ab90b4fa8d6392a69b4",
+    "scripts/mutate-source-management-guard.mjs": "60c5a397630a3505b72f52bdcc79d61567e1b4feda72bbea69e26548fc9e78ca",
+    "services/worker/src/loop.ts": "bba1ca73d46b73c7f1c269fe769ffbdec4faad9b67ec2a75767ab2e723764ece",
+    "services/worker/src/retention.ts": "8e36abb2565a05b0c8734a88940bf60df4860c22897de14c8916620f1e7f158f",
+    "services/worker/tests/int/retention.test.ts": "126faac546273df959a268b2dd72a08602740131724f5df7330ebf9e9b923322",
+    "services/worker/tests/int/source-management.test.ts": "e4368d947a054fff70cdb8a8c850749e1e878cb1858f79fe692e0e4403b48127",
+    "services/worker/tests/unit/retention.test.ts": "15bb89083ccdeac23a8eb7854399dd9e09bdd29da818648e104182a152f2cf2c",
+    "services/worker/tests/unit/source-management-loop.test.ts": "55a81b577ca907576fbdc57a03c171aedea7132964389871486538823c8556c5"
+  }
+}
