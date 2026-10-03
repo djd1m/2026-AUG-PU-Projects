@@ -22,16 +22,20 @@
     "No bypass of paid gateway/spend ceiling",
     "Deployment authorization and exactstand identity"
   ],
-  "quality": {},
+  "quality": {
+    "local_readiness": "source reviewed,683unit composite,3newPG/types; external release gates pending"
+  },
   "metrics": {
     "elapsed_wall_ms": null,
     "active_wall_ms": null,
     "input_tokens_total": null,
-    "cost": null
+    "cost": null,
+    "native_total_tokens_last_exposed": 6059406
   },
   "telemetry_status": "partial",
   "missing_data": [
     "Coordinator model/usage/cost unavailable",
-    "Preparation before run not measured"
+    "Preparation before run not measured",
+    "review2 CLI timeout before finalresponse; completed sourceassessment preserved, partial counter possible"
   ]
 }
