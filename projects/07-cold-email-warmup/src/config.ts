@@ -49,7 +49,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   if(env.OPERATOR_TOKEN_FILE) {
     try {
       const token=readFileSync(env.OPERATOR_TOKEN_FILE,'utf8').trim(),bytes=Buffer.from(token,'base64');
-      if(bytes.length<32 || bytes.toString('base64')!==token || bytes.equals(sessionKey) || bytes.equals(recipientHashKey) || [...credentialKeyring.keys.values()].some(k=>k.equals(bytes))) throw new Error();
+      if(token.length>249 || bytes.length<32 || bytes.toString('base64')!==token || bytes.equals(sessionKey) || bytes.equals(recipientHashKey) || [...credentialKeyring.keys.values()].some(k=>k.equals(bytes))) throw new Error();
       operatorTokenDigest=createHash('sha256').update(token).digest();
     } catch {throw new Error('invalid_operator_token');}
   }

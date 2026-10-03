@@ -18,7 +18,7 @@ services:
       interval: 3s
       timeout: 3s
       retries: 20
-  web:
+  web: &application
     build: .
     cpus: 2
     environment:
@@ -46,6 +46,14 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
+  poll-worker:
+    <<: *application
+    profiles: [local-poll]
+    command: ["node", "dist/replies/worker.js", "loop"]
+    ports: []
+    healthcheck: {disable: true}
+    restart: unless-stopped
+
 secrets:
   operator_token:
     file: ${N7_RUNTIME_DIR:-/tmp/n7-f02-runtime}/operator-token

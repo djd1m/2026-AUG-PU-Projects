@@ -58,6 +58,10 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
         res.setHeader('Referrer-Policy','no-referrer');
         await suppression.charge(req.socket.remoteAddress??'unknown');
       }
+      if(operatorStop) {
+        authenticateOperator(req.headers.authorization,config.operatorTokenDigest);
+        if(req.headers.cookie!==undefined) throw new HttpError(401,'unauthorized');
+      }
       const noOriginCapability=req.method==='POST' && publicStop && req.headers.origin===undefined;
       const noOriginOperator=operatorStop && req.headers.origin===undefined && req.headers.cookie===undefined;
       if (unsafe && !noOriginCapability && !noOriginOperator && req.headers.origin !== config.origin) throw new HttpError(403, 'origin_denied');
@@ -69,8 +73,6 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
         await unsubscribeForm(req);return json(res,200,{data:await suppression.unsubscribe(token),meta:{}});
       }
       if(operatorStop) {
-        authenticateOperator(req.headers.authorization,config.operatorTokenDigest);
-        if(req.headers.cookie!==undefined) throw new HttpError(401,'unauthorized');
         return json(res,200,{data:await suppression.complaint(await body(req)),meta:{}});
       }
       if (req.method === 'GET' && (path === '/healthz' || path === '/readyz')) {

@@ -17,7 +17,7 @@ export function parseComplaint(raw:Record<string,unknown>,key:Buffer) {
  if(Object.keys(raw).some(k=>!['eventId','tenantId','mailboxId','recipientDigest','recipientAddress'].includes(k)) || typeof raw.eventId!=='string' || !/^[A-Za-z0-9_-]{1,128}$/.test(raw.eventId) || typeof raw.tenantId!=='string' || !UUID.test(raw.tenantId) || typeof raw.mailboxId!=='string' || !UUID.test(raw.mailboxId)) throw new HttpError(400,'invalid_complaint');
  let digest=raw.recipientDigest;
  if(raw.recipientAddress!==undefined) {
-  if(digest!==undefined || typeof raw.recipientAddress!=='string' || !singleAddress(raw.recipientAddress)) throw new HttpError(400,'invalid_complaint');
+  if(digest!==undefined || typeof raw.recipientAddress!=='string' || raw.recipientAddress.length>254 || /[\r\n\0]/.test(raw.recipientAddress) || !singleAddress(raw.recipientAddress)) throw new HttpError(400,'invalid_complaint');
   digest=recipientDigest(singleAddress(raw.recipientAddress)!,key);
  }
  if(typeof digest!=='string' || !/^[a-f0-9]{64}$/.test(digest)) throw new HttpError(400,'invalid_complaint');

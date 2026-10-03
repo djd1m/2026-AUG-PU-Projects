@@ -12,23 +12,25 @@ export class PollWorker {
  constructor(readonly pool:Pool,ring:Keyring,readonly mode:'disabled'|'local_test'='disabled',readonly adapter:ReplyAdapter=new FixtureAdapter(pool)) {this.store=new ReplyStore(pool,ring);}
  async poll(tenant:string,mailbox:string) {
   if(this.mode!=='local_test') return {mode:this.mode,state:'disabled'};
-  let run:Rescan|null=null;
+  let run:Rescan|null=null;let deadline=Date.now()+120000;
+  const operation=<T>(call:()=>Promise<T>)=>boundedOperation(call,Math.max(1,Math.min(30000,deadline-Date.now())));
   try {
-   const capture=await boundedOperation(()=>this.adapter.snapshot(tenant,mailbox));
-   run=await this.store.capture(tenant,mailbox,capture);
+   const capture=await operation(()=>this.adapter.snapshot(tenant,mailbox));
+   run=await this.store.capture(tenant,mailbox,capture);deadline=run.attemptStartedAt.getTime()+120000;
    if(run.state==='rescan_incomplete') return {mode:this.mode,state:run.state};
    for(let pages=0;pages<20;pages++) {
+    if(Date.now()>=deadline) {await this.store.failTail(tenant,mailbox,identity(run));return {mode:this.mode,state:'rescan_incomplete'};}
     const kind=run.cursor<run.highWater?'scan':'tail';
     let horizon=run.highWater;
     if(kind==='tail') {
-     const tail=await boundedOperation(()=>this.adapter.snapshot(tenant,mailbox));
+     const tail=await operation(()=>this.adapter.snapshot(tenant,mailbox));
      if(tail.uidvalidity!==run.uidvalidity) {
       run=await this.store.capture(tenant,mailbox,tail);return {mode:this.mode,state:run.state};
      }
      horizon=run.tailHighWater??tail.uidNext-1;
     }
     const current=run;
-    const page=await boundedOperation(()=>this.adapter.read(tenant,mailbox,current.uidvalidity,current.cursor,horizon));
+    const page=await operation(()=>this.adapter.read(tenant,mailbox,current.uidvalidity,current.cursor,horizon));
     const base={...identity(current),...page};
     const result=await this.store.page(tenant,mailbox,kind==='tail'?{...base,kind,tailHighWater:horizon}:{...base,kind});
     if(result.state!=='scanning') return {mode:this.mode,state:result.state};
@@ -46,9 +48,10 @@ export class PollWorker {
  }
  async tick() {
   if(this.mode!=='local_test') return {mode:this.mode,processed:0};
-  // Durable due-time claim bounds each tick; no lock remains over adapter I/O.
+  // At most one attempt per tick keeps this process bounded by the A attempt budget.
+  // Due-time claim is durable; no transaction remains over adapter I/O.
   const rows=(await this.pool.query(`UPDATE local_reply_fixture SET next_poll_at=clock_timestamp()+interval '30 seconds'
-   WHERE mailbox_id IN (SELECT mailbox_id FROM local_reply_fixture WHERE next_poll_at<=clock_timestamp() ORDER BY next_poll_at,mailbox_id LIMIT 10 FOR UPDATE SKIP LOCKED)
+   WHERE mailbox_id IN (SELECT mailbox_id FROM local_reply_fixture WHERE next_poll_at<=clock_timestamp() ORDER BY next_poll_at,mailbox_id LIMIT 1 FOR UPDATE SKIP LOCKED)
    RETURNING tenant_id,mailbox_id`)).rows;
   for(const row of rows) await this.poll(row.tenant_id,row.mailbox_id);
   return {mode:this.mode,processed:rows.length};

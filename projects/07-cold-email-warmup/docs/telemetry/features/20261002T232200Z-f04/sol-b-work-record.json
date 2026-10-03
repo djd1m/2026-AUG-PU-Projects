@@ -1,0 +1,73 @@
+{
+  "identity": {
+    "run_id": "20261002T232200Z-f04",
+    "work_unit_id": "n7-f04b-sol",
+    "current_attempt_id": "implement-b1"
+  },
+  "stage": "implement",
+  "project_root": "/tmp/n7-f04b-sol/projects/07-cold-email-warmup",
+  "source": {
+    "baseline_revision": "c6cbbbfe8250ca37833d397ab1c8aced9e604789",
+    "current_revision": "87388f016d38f0a08b815f94655b7541e136136d",
+    "spec_sha256": "6deaa2f48d531ca66b71abb9f1b90794836cc4ab80eab557076863b92de74a38"
+  },
+  "scope": [
+    "AC-B1",
+    "AC-B2",
+    "AC-B3",
+    "AC-B4",
+    "AC-B5",
+    "AC-B6"
+  ],
+  "excluded": [
+    "live mail",
+    "charge",
+    "browser F06",
+    "deployment",
+    "root/other projects",
+    "independent review performed by author"
+  ],
+  "route": {
+    "plan": {
+      "tier": "XL",
+      "mechanical_exit": 0,
+      "reason": "public capability and safety-bearing final-stop invariant"
+    },
+    "implementation": {
+      "tier": "XL",
+      "mechanical_exit": 0,
+      "reason": "same approved bounded B scope; lockFIRST and immutable A horizons"
+    }
+  },
+  "approval": {
+    "id": "OWN-N7-002",
+    "caller": "sole Sol6.1 high, no agents; 1500s hard"
+  },
+  "forecast": {
+    "status": "insufficient_data",
+    "usage": null,
+    "cost": null
+  },
+  "donors": [
+    {
+      "revision": "c6cbbbfe",
+      "decision": "use",
+      "reason": "accepted F04a trusted store and F03 capability/transaction boundaries"
+    }
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "implementation frozen; actual runtime starts only after heavy grant and source/build/input readiness recorded"
+  },
+  "telemetry": {
+    "events": "sol-b-events.jsonl",
+    "receipt": "sol-b-receipt.md"
+  },
+  "checks": {
+    "diff_check": 0,
+    "python_compile": 0,
+    "shell_syntax": 0,
+    "type_lint_build_unit_pg_mutation": "pending"
+  },
+  "prepared_at": "2026-10-03T00:27:38.040642+00:00"
+}
