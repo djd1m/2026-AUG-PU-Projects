@@ -12,7 +12,7 @@
   "started_at": "2026-10-03T02:41:50.928106+00:00",
   "ended_at": null,
   "status": "in_progress",
-  "current_stage": "B native fetch corrected; 39unit/redgreen/type/lint/build PASS; new image/native browser and fresh review pending",
+  "current_stage": "B native fetch correction accepted; real Chromium native smoke passed; full B matrix next",
   "actual_model": null,
   "usage": null,
   "cost": null,
@@ -30,5 +30,6 @@
   "author_a_r1_delivery_runtime": "sol-a-r1-delivery-runtime.json",
   "review_a_r1_attempts": "review-a-r1-attempts.json",
   "author_b_runtime": "sol-b-runtime.json",
-  "author_b_r1_runtime": "sol-b-r1-runtime.json"
+  "author_b_r1_runtime": "sol-b-r1-runtime.json",
+  "review_b_r1_runtime": "astra-b-r1-runtime.json"
 }

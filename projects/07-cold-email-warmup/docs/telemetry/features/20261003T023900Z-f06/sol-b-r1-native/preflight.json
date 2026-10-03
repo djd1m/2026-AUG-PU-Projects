@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-03T04:20:50.605987+00:00",
+  "source_revision": "50e3c26d93327dc16fee89cfbf8252bf5466cffe",
+  "source_sha256": "cbe07f1ca34ec24312cc77ca14625be26dcf7ed07f79a44656b55e6b8cb9d047",
+  "source_record": "sol-b-r1-frozen-source.json",
+  "image_id": "sha256:d537403b927dff7dbdf6a01845545c1430820a9c2da015c49d39fde172a082af",
+  "build_sha256": "45385ec142c3cf23790226575dcbe2b4f7d2d760cd108cab5383e18a81fd8ae8",
+  "exact_source_and_build_files": true,
+  "image_matches_container": true,
+  "db_no_ports": true,
+  "loopback18709": true,
+  "cpu_limit": 2,
+  "dockerfile_build_input_sha256": "f8d6728ac4337c589cf55983654e2cf51ac437ef4711e20086f12d775cc997f5",
+  "status": "ready",
+  "environment_available": true,
+  "environment": "existing shared Playwright1.63.0 Chromium; own loopback18709/privateDB/CPU2",
+  "inputs": [
+    "fresh exact source/build/image receipt",
+    "random TEST account credentials held only in browser memory"
+  ],
+  "script_sha256": "a308f6cabf30ce87be11b48e79a49fb5ac2bee82fcfa9b1bc1ea04818bbcefca",
+  "test_command": "docker exec codex-ui-playwright node /opt/browser/n7-f06b-r1-native-20261003T023900Z/native.mjs",
+  "expected_effects": [
+    "own TEST registration; actual native direct and SessionClient GET /api/app"
+  ],
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "evidence_root": "/tmp/n7-f06b-r1/projects/07-cold-email-warmup/docs/telemetry/features/20261003T023900Z-f06/sol-b-r1-native"
+}

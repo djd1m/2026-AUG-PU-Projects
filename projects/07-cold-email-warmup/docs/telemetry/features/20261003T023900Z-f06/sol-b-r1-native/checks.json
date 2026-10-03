@@ -1,0 +1,124 @@
+{
+  "status": "pass",
+  "source": "cbe07f1ca34ec24312cc77ca14625be26dcf7ed07f79a44656b55e6b8cb9d047",
+  "build": "45385ec142c3cf23790226575dcbe2b4f7d2d760cd108cab5383e18a81fd8ae8",
+  "image": "sha256:d537403b927dff7dbdf6a01845545c1430820a9c2da015c49d39fde172a082af",
+  "started_at": "2026-10-03T04:20:50.934Z",
+  "chromium_version": "153.0.8010.12",
+  "native": {
+    "direct_status": 200,
+    "client_success": true,
+    "cleared": 0,
+    "redirected": 0,
+    "native_unchanged": true
+  },
+  "http": [
+    {
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/register",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    }
+  ],
+  "page_errors": [],
+  "cleanup": {
+    "own_context_closed": true,
+    "bridge_closed": true,
+    "shared_browser_preserved": true
+  },
+  "finished_at": "2026-10-03T04:20:52.563Z"
+}

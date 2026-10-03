@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-03T04:23:45.382385+00:00",
+  "source_review": "ACCEPT",
+  "receipt_gate": "PASS",
+  "review_process_exit": 124,
+  "review_elapsed_seconds": 240.0043788360199,
+  "files_finished_at": "2026-10-03T04:22:30.981740+00:00",
+  "timing_correction": "Reviewer report says completed before220s but measured238.660s; this claim is false. Both terminalfiles existed before240s processkill. Original preserved, no rerun required.",
+  "runtime_command": "timeout450s bash scripts/check-f06b-r1-heavy.sh",
+  "runtime_exit": 0,
+  "heavy_acquired": "2026-10-03T04:19:35Z",
+  "heavy_released": "2026-10-03T04:20:52Z",
+  "native_browser": "PASS direct200/client success/realcabinet bootstrap/cleanup",
+  "image": "sha256:d537403b927dff7dbdf6a01845545c1430820a9c2da015c49d39fde172a082af",
+  "remaining": "Full B1\u20134 matrix/perf, B5docs/B6PR"
+}
