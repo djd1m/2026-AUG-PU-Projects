@@ -1,0 +1,140 @@
+TAP version 13
+# Subtest: F02a real PostgreSQL durable queue, budget, deadlines, fencing and owner APIs
+    # Subtest: JOB-01 same-key concurrent replay and changed body conflict have one effect even at caps/hold
+    ok 1 - JOB-01 same-key concurrent replay and changed body conflict have one effect even at caps/hold
+      ---
+      duration_ms: 875.680842
+      type: 'test'
+      ...
+    # Subtest: JOB-01/02 style and wrong owner upload cannot reserve; last credit concurrent race
+    ok 2 - JOB-01/02 style and wrong owner upload cannot reserve; last credit concurrent race
+      ---
+      duration_ms: 703.208491
+      type: 'test'
+      ...
+    # Subtest: PERF-01 platform last ticket concurrent admission changes both buckets atomically
+    ok 3 - PERF-01 platform last ticket concurrent admission changes both buckets atomically
+      ---
+      duration_ms: 403.638874
+      type: 'test'
+      ...
+    # Subtest: PERF-01 account last ticket concurrent admission rolls back platform and credit
+    ok 4 - PERF-01 account last ticket concurrent admission rolls back platform and credit
+      ---
+      duration_ms: 416.305699
+      type: 'test'
+      ...
+    # Subtest: JOB-03 first same-day claim reuses ticket; concurrent workers cannot double start
+    ok 5 - JOB-03 first same-day claim reuses ticket; concurrent workers cannot double start
+      ---
+      duration_ms: 1083.957427
+      type: 'test'
+      ...
+    # Subtest: JOB-04 retry consumes new capacity and max two starts; duplicate/stale failures release once
+    ok 6 - JOB-04 retry consumes new capacity and max two starts; duplicate/stale failures release once
+      ---
+      duration_ms: 951.85542
+      type: 'test'
+      ...
+    # Subtest: JOB-04 absent reserve cannot credit; actual reserve releases exactly once across repeated operations
+    ok 7 - JOB-04 absent reserve cannot credit; actual reserve releases exactly once across repeated operations
+      ---
+      duration_ms: 1178.786611
+      type: 'test'
+      ...
+    # Subtest: JOB-04 retry budget exhaustion terminal release does not refund tickets
+    ok 8 - JOB-04 retry budget exhaustion terminal release does not refund tickets
+      ---
+      duration_ms: 1211.867132
+      type: 'test'
+      ...
+    # Subtest: PERF-02 UTC rollover replaces unstarted old ticket; exhaustion releases once
+    ok 9 - PERF-02 UTC rollover replaces unstarted old ticket; exhaustion releases once
+      ---
+      duration_ms: 1042.735842
+      type: 'test'
+      ...
+    # Subtest: JOB-03 queue expires at exactly 60s and repeated maintenance releases once
+    ok 10 - JOB-03 queue expires at exactly 60s and repeated maintenance releases once
+      ---
+      duration_ms: 366.977071
+      type: 'test'
+      ...
+    # Subtest: JOB-03 healthy 10s heartbeats cannot extend attempt 180s or absolute job 360s
+    ok 11 - JOB-03 healthy 10s heartbeats cannot extend attempt 180s or absolute job 360s
+      ---
+      duration_ms: 919.265388
+      type: 'test'
+      ...
+    # Subtest: JOB-04 lease boundary fences expired attempt before retry; no late attach or release
+    ok 12 - JOB-04 lease boundary fences expired attempt before retry; no late attach or release
+      ---
+      duration_ms: 849.708684
+      type: 'test'
+      ...
+    # Subtest: Completion persists canonical sd/controlnet/depth revisions without invoking supplied toJSON
+    ok 13 - Completion persists canonical sd/controlnet/depth revisions without invoking supplied toJSON
+      ---
+      duration_ms: 427.091442
+      type: 'test'
+      ...
+    # Subtest: Atomic output attach rejects wrong input and rolls back evidence on output-key conflict
+    ok 14 - Atomic output attach rejects wrong input and rolls back evidence on output-key conflict
+      ---
+      duration_ms: 458.216504
+      type: 'test'
+      ...
+    # Subtest: PAY-05 applicable hold serialization: queued fail, active pre-hold finish, retry denied
+    ok 15 - PAY-05 applicable hold serialization: queued fail, active pre-hold finish, retry denied
+      ---
+      duration_ms: 1030.396768
+      type: 'test'
+      ...
+    # Subtest: PAY-05 hold race is serialized under account lock for admission and start
+    ok 16 - PAY-05 hold race is serialized under account lock for admission and start
+      ---
+      duration_ms: 912.200776
+      type: 'test'
+      ...
+    # Subtest: GALLERY-03 deletion tombstones upload/all jobs and fences completion; cleanup retries
+    ok 17 - GALLERY-03 deletion tombstones upload/all jobs and fences completion; cleanup retries
+      ---
+      duration_ms: 503.99241
+      type: 'test'
+      ...
+    # Subtest: GALLERY-03 deletion racing active complete cannot attach after tombstone or release twice
+    ok 18 - GALLERY-03 deletion racing active complete cannot attach after tombstone or release twice
+      ---
+      duration_ms: 503.356559
+      type: 'test'
+      ...
+    # Subtest: Output UUIDs live in separate registry sweep; bounded cursor protects live result and reaches tail
+    ok 19 - Output UUIDs live in separate registry sweep; bounded cursor protects live result and reaches tail
+      ---
+      duration_ms: 578.697417
+      type: 'test'
+      ...
+    # Subtest: AUTH-04/GALLERY-01 actual owner job routes, Origin, pagination, no-store and no worker endpoint
+    ok 20 - AUTH-04/GALLERY-01 actual owner job routes, Origin, pagination, no-store and no worker endpoint
+      ---
+      duration_ms: 1528.395526
+      type: 'test'
+      ...
+    1..20
+ok 1 - F02a real PostgreSQL durable queue, budget, deadlines, fencing and owner APIs
+  ---
+  duration_ms: 16704.029153
+  type: 'test'
+  ...
+1..1
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 16711.980955
+ Container n8f07i5a-tests-run-96b5e92279ec Creating 
+ Container n8f07i5a-tests-run-96b5e92279ec Created 
+media_cleanup_pending
