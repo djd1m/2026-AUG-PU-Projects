@@ -1,0 +1,585 @@
+{
+  "run_id": "20261003T010600Z-f05",
+  "work_unit_id": "n7-f05b-astra",
+  "attempt_id": "review-b1",
+  "checked_at": "2026-10-03T02:10:18.058392+00:00",
+  "source_revision": "ab5a6eda9498000e631d45897df51aa94cf2885b",
+  "donor_revision": "5f2f4a8150407802b2d800df08a5a5ddaf71288a",
+  "source_sha256": "10d6b1b84f9210941a807036a36ac6a3b3726b28078067bb655c669128f04f5b",
+  "build_sha256": "8973b6ad99aefd33520dd77939ed55348431dc7c323cddc7fde06704bd8cb316",
+  "image_id": "sha256:1b1f2779ae7bf58a1162f80f1103fc043144616358a074367de8a060816d305d",
+  "inputs_compared": 80,
+  "source_inventory_complete": true,
+  "saved_build_map_digest_matches": true,
+  "current_dockerfile_matches": true,
+  "check": "Python hashlib of complete local source inventory and git show 5f2f4a81:<path>; compare saved copied_input_hashes; recompute source/build map digests",
+  "exit_code": 0,
+  "runtime_rerun": false,
+  "limitations": [
+    "Build map/image identity are saved evidence, not runtime reinspection.",
+    "Preflight generic full integration command differs from actual targeted retry.",
+    "Findings derive from source control flow; reproductions were not executed."
+  ],
+  "comparisons": [
+    {
+      "path": "db/001-init.sql",
+      "sha256": "6c6ca7cc74530a6bee78b2c60b5f08bbb1e6cb76b47ab35ffb4aac359a7948e7",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "db/002-mailboxes-consent.sql",
+      "sha256": "6f23a16557abfd8223de32e9c5e01442941ef2ff08bbdb89d9ae31c006680f5c",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "db/003-dispatch.sql",
+      "sha256": "13551a8e261d141c8d8b5bf32066ef136ac6c8cdac359746f22e898df1e54cd2",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "db/004-claim-order.sql",
+      "sha256": "9a97339cd7b036b6d0fa9d5228b508b20981704173f98d341f6163042e2f792e",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "db/005-submission.sql",
+      "sha256": "a8d25ee87438dfe5fda97ae736d2376e59f0825f73d4d1b0f4a6176cda23b8b3",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "db/006-replies.sql",
+      "sha256": "e0da744dacb1a1856b2d95d03ae37b3d5070b137b5a9f1faae6abb9873608171",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "db/007-reply-tail-horizon.sql",
+      "sha256": "002c8eba0a4e978ab4dfec371f0c82e52d12c9ce5be8ef7caad9dd9786522b6a",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "db/008-suppression-fixture.sql",
+      "sha256": "037a9da324ecd5666c398522e3c40effa73259122518c143a22b17fbcc4b23aa",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "db/009-poll-owner.sql",
+      "sha256": "e77a0c252adb49a99597c914e28a7192e2b56f4af55de1f19e790a60ecf85c39",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "db/010-billing.sql",
+      "sha256": "1e97188e9b0fda6a47308d56e33c8570e6477e0f3605762c5855e3b017cc9c04",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "db/011-evidence.sql",
+      "sha256": "c4ba8a7cb793a394a50f29684e217aba9e76cf87ab2eb828d095ec26a2a6016e",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "eslint.config.js",
+      "sha256": "613fe065d6896d4a08985ac678e967ec5c4aa7e95c30f4ca69159814de59e976",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "49b300c360c2c1471596b225ced88d8b509bb57fcc2787a83c0dd5190089eb1a",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "package.json",
+      "sha256": "09f91636a77dd95be8c324fe94cdf4e5eea044729d2c8ec3a161c77c4d408894",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/auth/password.ts",
+      "sha256": "f8b36c41d1022d2e21e6a080150f8c93f7485b2f98aa3f03771683d2a9748251",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/auth/service.ts",
+      "sha256": "eee97c44ef39becf6edce05dc0df1e3d764ee05a445cb9a3b3745005ea129628",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/auth/session.ts",
+      "sha256": "c5c6b26aff298e7f64b79648a72a61951a4399b3eff25a4a29b1893c1eea35a5",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/auth/store.ts",
+      "sha256": "d5be57fc9270cd8e12a95015b32ce115c2cd3687fc592e4e01cc226292f7d70d",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/billing/plans.ts",
+      "sha256": "e98031c2a717b1585f827c716c667efd3655bf356cc38ea1d3c4646a73ed5ff1",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/billing/provider.ts",
+      "sha256": "e24a9f5bf6ac8d1f35b8efe1edd87b846799aa5fc0f88cc631d98dd93297664e",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/billing/service.ts",
+      "sha256": "7692e0850b12843053a7838df9f1d3d913431ae2cdfca0c0c1289c1dc507fcde",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/billing/transaction.ts",
+      "sha256": "182c375531d2dbafbb3ca29591a628b3637ec86e60cf8d9ceb029a1a00e1d313",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/campaigns/input.ts",
+      "sha256": "13499a78e34b58472c336b4538dba7291374759c42f7d7661357135da261b3ef",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/campaigns/store.ts",
+      "sha256": "c9df14658c9bc7f0bd028c68a87135c942cad92286ed1cbc1b53b6e069b0f60d",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/config.ts",
+      "sha256": "f8a1e9bad73e8b0af6a251917b647d88b3e969cd4779adc8cfe106dd9262d8ce",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/consent/store.ts",
+      "sha256": "b6104faac42e56826247d3179d66dd7a136c11a62882d2181bc4417537f0dd82",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/consent/transaction.ts",
+      "sha256": "24e85675413e5391e75d1c3dfbc77717222439ff5870b53764f4f5aad25896b4",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/db.ts",
+      "sha256": "7f57bc247d10e7ddf02ec83576cae27575253f5ef310ebc281e547f7aeec67f9",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/dispatch/adapter.ts",
+      "sha256": "89dda916b4e0fdeaa90557f6a08276f30299cebc143b2b70312da03e39c39929",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/dispatch/eligibility.ts",
+      "sha256": "c13b263839a44233709efda639e9a3ac2792993db8c1c3a2f5bcfaa03cc3b10d",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/dispatch/message.ts",
+      "sha256": "08c4ff1d564a89efa3f6b4abb4ddd836dbcfa8790c42daa67581983eca8f1efe",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/dispatch/seams.ts",
+      "sha256": "c3038b12db1c223de870c7e707fb56d11836275227543068874c88aec7aa211e",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/dispatch/store.ts",
+      "sha256": "fa96d7944347401b4e1e0a3da603cf77f9bd62b746c4e27a60e7ebcd00298741",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/dispatch/submission.ts",
+      "sha256": "eb96188574f0660f254e3895e193097e6083618e12c765db227a85adde6449c7",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/dispatch/worker.ts",
+      "sha256": "27f6aa1963f7f599b323003737959e4ec1a6735b028a5522fdd0b91940d30a02",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/errors.ts",
+      "sha256": "b2c4f5fbc7536791c64e69430426550d97ed2138a55033cfef5e1cd311fc5cd0",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/evidence/compare.ts",
+      "sha256": "a2185780606417405d34a7b70901f1bef336a2f97622707a3485ee551f076bf5",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/evidence/input.ts",
+      "sha256": "e70d5e3cd6e9742a3bddcd3eef18790055647fb6c740f6bb7bf4f46e5368edc6",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/evidence/store.ts",
+      "sha256": "89f1164dd74b13546d2bf680e17f70ded0b39b58f25f93ed9b1ffecc7b5e08c9",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/growth/attribution.ts",
+      "sha256": "2c81a8f678266d7f63041186c64abfc063364d89a6f75e0c926c52a7f7e23c65",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/growth/partner.ts",
+      "sha256": "41317996b1938ecf0be1ca8a4f6e518e6c2eaaf031e8f9f8349e241fdfaa3a27",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/growth/reports.ts",
+      "sha256": "35305773d789a7a98dbe5d95594a10607bdb059b092a2f307655a5430e39ca84",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/mailboxes/crypto.ts",
+      "sha256": "cfcd13a73ccd7126825ef40ae7624ad7f945659a02a74a1d7cfcebcfa097f020",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/mailboxes/input.ts",
+      "sha256": "127f2e4787a0afe49e2c485ae752bed05077a48b18c4912cfc9a1c4a23de91b3",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/mailboxes/network.ts",
+      "sha256": "7d3346a620d53b6ca245b02b455604afc8dddd74ce0944a8e43d2d717e95abfb",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/mailboxes/provider.ts",
+      "sha256": "064c9aad2964ade6913e442e67cf1d7bbb607d20297fc63d0c0a2188b7de65ac",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/mailboxes/store.ts",
+      "sha256": "48f94bdf987d411c1504c457051d875bacf38b906ef2e16b9d4e6140c6ba65b7",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/main.ts",
+      "sha256": "ecfba84e123b44de26946d5bd21daff3f3636eb2a11030163132d6b11da1467a",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/migrate.ts",
+      "sha256": "35c855b6c506aa4bf67cdf2b14413dc7d33f35ca398f4f70e172d22b018f3abb",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/pool/store.ts",
+      "sha256": "a4f7b5bf5faec4df898e834f3e65225c28d106c0c1a8d617104edc7acef50f19",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/replies/adapter.ts",
+      "sha256": "344f22020555d53b0a9c4ce018392cb6cdba3faac96abb8853793e4a7e664c06",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/replies/fixture.ts",
+      "sha256": "738683ca7eec34d3d2a959593367035406d6c68d8909f751c90939911dabf0d7",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/replies/input.ts",
+      "sha256": "45f451e88364c37dcfcce9e2bda12c3d4aef04c10676377688a958593fb95476",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/replies/operator.ts",
+      "sha256": "60fbbdef1edeba5c275b863bce73ce780a13e839d3965e435b6a1f31b44a01e6",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/replies/store.ts",
+      "sha256": "76259ef3aa335eb82f2359925121dd22c6f48e59c4a34bf35cdd5d6e429cd0bd",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/replies/worker.ts",
+      "sha256": "5c04832d4f362daecc1a0cf79b660a494ede34031172d4bca9b7e901d9af6a14",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/server.ts",
+      "sha256": "a083d98316928fe5e3c8fb68d5e95dfd6c63ce67af198d62e71bd6299919cab8",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/suppression/http.ts",
+      "sha256": "d447d901179a6d7cfb7d1dffa27ac85a42cf4b489e00c350dfa09e1dd33e301e",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/suppression/store.ts",
+      "sha256": "2e2274522cf5b150fcf1bd1561c8ba164a34da08aee1fb9b0fd1f1afb4bc1847",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "src/web/page.ts",
+      "sha256": "926bd9b4ea7cf0c5e14c8141f9e47d152064472a3efa044455cf1c57a8d9120e",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/auth-integration.test.ts",
+      "sha256": "cba20b7dfb4bdfc5c2a0dc37b6973db623d3b33ed32d5f53299a0638d2eb9efa",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/auth-unit.test.ts",
+      "sha256": "8fbb186cc10cea7f9ca5e978f159715bef084b018a9b984d8378982bef299df8",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/billing-fixture.ts",
+      "sha256": "57793f79d6c5b2f51d1daac35175663e98c0c25dc95d4e22bb5187cb7422f28d",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/billing-integration.test.ts",
+      "sha256": "57e6dd89825e54c30fcf9ef7aeecbecf08458e94620fb241440071d9705bdc46",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/billing-unit.test.ts",
+      "sha256": "523dab25739c3f73a2ea51882f22fb96bef51734cbdd4cd4bc023a64aec8f716",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/dispatch-integration.test.ts",
+      "sha256": "f9937cdf7b520f890b656adad59d17c8a7fd1407006781ce0882b3d94d4b9c82",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/dispatch-unit.test.ts",
+      "sha256": "ae4ead459e54086153e3d289c55660eb3700a22fe4906122ffdff24c1f0e98c8",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/evidence-integration.test.ts",
+      "sha256": "e0e0dc8953250513e0ca42e1aff3561d405fb012e652baad8cbea2db2d44f58d",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/evidence-unit.test.ts",
+      "sha256": "cb437702cf0ed11c2155dd5f43421c528929a98a6d2f14e7c107e5a166b0b3dd",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/mailboxes-integration.test.ts",
+      "sha256": "c072c3a693cfc63d9e5e5a768de3cdead03564b6b197822d052e0a7567068e3a",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/mailboxes-unit.test.ts",
+      "sha256": "22d74a6341a2125d78b10f8a3627584df1625a63d422f1a702a5536df634386b",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/replies-integration.test.ts",
+      "sha256": "aa0765005aca4bee224af865c959c838352d52a8c2b280cbf42fb13bd836af1c",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/replies-unit.test.ts",
+      "sha256": "3c73f4d5030b7c505aba19abe334c155823ea22603f306e9269e94188235b420",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/submission-integration.test.ts",
+      "sha256": "7c3c684cf25dbed936e809b5e7a8a8231f24e1db08dc1558ed41dd70ef5c95be",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/submission-unit.test.ts",
+      "sha256": "a61eaae79d360933e4c462cd8e397ceb69465a7b0cd3c1ac15aedbefd6d18ba8",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/suppression-integration.test.ts",
+      "sha256": "abf19088db6ecc814b0ff4e0957e83e63b880746c43d14937a844e89552aa3e1",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/suppression-owner-integration.test.ts",
+      "sha256": "eb1fe102d46d46ab359342d41cc1b6230f5c3f0b8d0be1b332df3a02a95544d1",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tests/suppression-unit.test.ts",
+      "sha256": "ac0765ebd53fc254562d99d25445f68d4258ddf8723d11b5d6d8579a2d5723b2",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tsconfig.build.json",
+      "sha256": "8604911ac658f73989bc22831fb4fe040b7285ea85575b3edefcc384674a6330",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "0fe3705422763f10ffc11ebc6cb3712acc7159b70c51b76ee487ba5cc625de78",
+      "current_matches": true,
+      "donor_matches": true,
+      "saved_copied_input_matches": true
+    }
+  ]
+}

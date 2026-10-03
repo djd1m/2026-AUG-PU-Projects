@@ -163,3 +163,5 @@ F05a author candidate integrated8dd916ba: local TEST billing/limits/attribution;
 F05a accepted6/6 after fresh Astra high source review (276.183s), exact73input match and no findings. F05b proceeds within the approved plan; live provider stays disabled.
 
 F05b candidate: unit25/type/lint/build0; full initialPG105pass2fail from one fixture/parent, fixed fixture5f2f4a81, affected9pass/mutantRED/restored/canary/sourceimagePASS. Original author1500s timeout124 and incomplete receipt preserved. Separate Sol delivery178.303s exit0; coordinator moved existing completed status to last line for structural gate, original claim preserved in git. Fresh Astra B acceptance pending, F06 UI pending.
+
+F05b fresh Astra REQUEST_CHANGES (373.944s): F1 primitive enum types and F2 UUID canonical idempotent replay. Exact correction-b-r1.md, prior source/evidence preserved. F06 waits acceptance.

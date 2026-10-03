@@ -12,7 +12,7 @@
   "started_at": "2026-10-03T01:04:14.510032+00:00",
   "ended_at": null,
   "status": "in_progress",
-  "current_stage": "B candidate delivered after timeout/recovery/format normalization; fresh REVIEW B pending",
+  "current_stage": "B fresh review REQUEST_CHANGES: F1 strict enum types, F2 UUID canonical replay; correction next",
   "actual_model": null,
   "usage": null,
   "cost": null,
@@ -27,5 +27,6 @@
   "author_a_runtime": "sol-a-runtime.json",
   "review_a_runtime": "astra-a-runtime.json",
   "author_b_runtime": "sol-b-runtime.json",
-  "delivery_b_runtime": "sol-b-delivery-runtime.json"
+  "delivery_b_runtime": "sol-b-delivery-runtime.json",
+  "review_b_runtime": "astra-b-runtime.json"
 }
