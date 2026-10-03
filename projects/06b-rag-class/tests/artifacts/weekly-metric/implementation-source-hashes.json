@@ -1,0 +1,24 @@
+{
+  "run_id": "20261003T011351Z-weekly-metric",
+  "work_unit_id": "weekly-metric-implementation",
+  "attempt_id": "implementation-1",
+  "source_revision": "d25e6141b3b43569281c85f95a6a6313f71f8c07",
+  "build_revision": null,
+  "launch_sha256": "974a808214bb7858671c4bd44acc5f20d582793de57d6c029b0fd79559445d42",
+  "captured_at": "2026-10-03T01:34:49.051582+00:00",
+  "snapshot_sha256": "64b0dfee0301396933be83924350d54ca9287f4a5e682f42c1a226198b066800",
+  "canonical_map_sha256": "64b0dfee0301396933be83924350d54ca9287f4a5e682f42c1a226198b066800",
+  "snapshot_method": "SHA256 of UTF-8 JSON files map with sort_keys=True and separators=(comma,colon); project-relative paths; exact file bytes; all changed tracked/untracked production/test files.",
+  "files": {
+    "apps/web/src/app/admin/metrics/metric-controls.tsx": "3c8e32d9359c6478a1b0f766702db994e584496aca1c14819253f26b68838bda",
+    "apps/web/src/app/admin/metrics/page.tsx": "cd7e8c1d67e941e35cdfcefd9423d520c7bbec2b6ca4859fa0ca874c9adac2d3",
+    "apps/web/src/app/admin/metrics/verify/route.ts": "79154f9f04afb85b30f14dc5e7dc3fbc29bf20bcff7f0fe945f16e9e1c992e30",
+    "apps/web/src/server/metrics-handler.ts": "54ec6480a4187cd67a4b8181453284265f050b888bbc0975751917e8d3fff718",
+    "apps/web/src/server/metrics-verifier.ts": "aab7a0d066c940a7e561c0976fc673fd00460d0460a4f4438c4c13cf04b043e0",
+    "apps/web/tests/int/metrics.int.test.ts": "5d3845d478c59e0828dd9c1a602ca0f6151e5ad6f091cdc71afa0d4d94f1d83f",
+    "apps/web/tests/unit/metrics-handler.test.ts": "a994ae278c46a6ba7f27891f7ff0c3e574dec862c8fe4cd6568a2d250b3ea013",
+    "apps/web/tests/unit/metrics-verifier.test.ts": "08917ec6f8fbd2b1eb8a1ca439f419f3dcc437c7e12cacc51fe6c24b5fc2b3ed",
+    "packages/db/src/index.ts": "3b4d4a02c9a8f930b5262c3378e41b7aa409d89648ad36833d3145e49b4dc859",
+    "packages/db/src/metrics.ts": "6a787956e4636f71b9293e61656f9c2dce20290a38b35a7459c22ab5543fb531"
+  }
+}
