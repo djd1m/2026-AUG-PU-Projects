@@ -75,6 +75,31 @@ test('actual app: delayed logout blocks login until cookie-clearing response set
   for(let i=0;i<10;i++)await tick();assert.match(h.element('account-info').textContent,/B@example.test/);h.close();await tick();
 });
 
+test('actual app: earlier login completion keeps auth controls disabled until pending logout settles',async()=>{
+  const h=await harness();let finishLoad,finishLogout;
+  const buttons=[new Element(),new Element()],form=h.element('auth-form');
+  form.children=buttons;form.querySelectorAll=()=>buttons;
+  const event={preventDefault(){},submitter:{value:'login'},currentTarget:form};
+  try {
+    h.setDelay(path=>path==='/api/uploads'?new Promise(r=>{finishLoad=r;}):path==='/api/logout'?new Promise(r=>{finishLogout=r;}):null);
+    form.onsubmit(event);await tick();
+    assert.equal(typeof finishLoad,'function');assert.equal(h.element('workspace').hidden,false);
+    h.close();await tick();assert.equal(typeof finishLogout,'function');
+    assert.ok(buttons.every(b=>b.disabled));
+    finishLoad(response({uploads:[]}));await tick();
+    assert.ok(buttons.every(b=>b.disabled),'earlier login finally must not enable login/register while logout is pending');
+    assert.equal(h.element('workspace').hidden,true);
+    form.onsubmit(event);await tick();
+    assert.equal(h.calls.filter(c=>c.path==='/api/login').length,1,'pending logout must block another login request');
+    finishLogout(response({ok:true}));await tick();
+    assert.ok(buttons.every(b=>!b.disabled));
+    h.setDelay(null);h.setOwner('B');form.onsubmit(event);
+    for(let i=0;i<10;i++)await tick();
+    assert.equal(h.calls.filter(c=>c.path==='/api/login').length,2);
+    assert.match(h.element('account-info').textContent,/B@example.test/);
+  }finally{finishLoad?.(response({uploads:[]}));finishLogout?.(response({ok:true}));h.setDelay(null);h.close();await tick();}
+});
+
 test('actual app: selection changes while reservation detail loads cannot render former selection',async()=>{
   const h=await harness();let finish;
   try {

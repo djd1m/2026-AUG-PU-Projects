@@ -102,7 +102,7 @@ $('auth-form').onsubmit=event=>{
   event.preventDefault();if(logoutPending)return;const action=event.submitter?.value??'login';const form=event.currentTarget;
   guard(async()=>{form.querySelectorAll('button').forEach(b=>b.disabled=true);
     try {await post(`/api/${action}`,{email:$('email').value,password:$('password').value});showAccount((await api('/api/me')).account);await load();if(!jobIntent.get()||jobIntent.get().id)status('Ваше личное пространство готово.');}
-    finally {form.querySelectorAll('button').forEach(b=>b.disabled=false);}
+    finally {form.querySelectorAll('button').forEach(b=>b.disabled=!!logoutPending);}
   });
 };
 $('logout').onclick=()=>{

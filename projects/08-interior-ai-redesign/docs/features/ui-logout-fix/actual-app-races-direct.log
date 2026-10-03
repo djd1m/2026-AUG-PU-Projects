@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: actual app: delayed A, B selection/submission, no overlap/stale render or mismatched intent
+ok 1 - actual app: delayed A, B selection/submission, no overlap/stale render or mismatched intent
+  ---
+  duration_ms: 26.064369
+  type: 'test'
+  ...
+# Subtest: actual app: old authentication_required after logout/new login keeps new account visible
+ok 2 - actual app: old authentication_required after logout/new login keeps new account visible
+  ---
+  duration_ms: 10.161833
+  type: 'test'
+  ...
+# Subtest: actual app: delayed logout blocks login until cookie-clearing response settles
+ok 3 - actual app: delayed logout blocks login until cookie-clearing response settles
+  ---
+  duration_ms: 16.222876
+  type: 'test'
+  ...
+# Subtest: actual app: earlier login completion keeps auth controls disabled until pending logout settles
+ok 4 - actual app: earlier login completion keeps auth controls disabled until pending logout settles
+  ---
+  duration_ms: 9.461494
+  type: 'test'
+  ...
+# Subtest: actual app: selection changes while reservation detail loads cannot render former selection
+ok 5 - actual app: selection changes while reservation detail loads cannot render former selection
+  ---
+  duration_ms: 6.400482
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 76.665007

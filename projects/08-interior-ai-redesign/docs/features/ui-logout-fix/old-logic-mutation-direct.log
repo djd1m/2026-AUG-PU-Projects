@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: actual app: delayed A, B selection/submission, no overlap/stale render or mismatched intent
+ok 1 - actual app: delayed A, B selection/submission, no overlap/stale render or mismatched intent
+  ---
+  duration_ms: 32.665432
+  type: 'test'
+  ...
+# Subtest: actual app: old authentication_required after logout/new login keeps new account visible
+ok 2 - actual app: old authentication_required after logout/new login keeps new account visible
+  ---
+  duration_ms: 9.210064
+  type: 'test'
+  ...
+# Subtest: actual app: delayed logout blocks login until cookie-clearing response settles
+ok 3 - actual app: delayed logout blocks login until cookie-clearing response settles
+  ---
+  duration_ms: 11.417204
+  type: 'test'
+  ...
+# Subtest: actual app: earlier login completion keeps auth controls disabled until pending logout settles
+not ok 4 - actual app: earlier login completion keeps auth controls disabled until pending logout settles
+  ---
+  duration_ms: 7.942183
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-logout-fix/projects/08-interior-ai-redesign/tests/ui-app-races.test.js:78:1'
+  failureType: 'testCodeFailure'
+  error: 'earlier login finally must not enable login/register while logout is pending'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-logout-fix/projects/08-interior-ai-redesign/tests/ui-app-races.test.js:90:12)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: actual app: selection changes while reservation detail loads cannot render former selection
+ok 5 - actual app: selection changes while reservation detail loads cannot render former selection
+  ---
+  duration_ms: 8.113973
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 4
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 81.298109

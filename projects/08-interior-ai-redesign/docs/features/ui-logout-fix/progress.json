@@ -1,0 +1,119 @@
+{
+  "RUN_ID": "n8-20261002-1740",
+  "WORK_UNIT_ID": "n8-ui-logout-fix",
+  "ATTEMPT_ID": "n8-ui-logout-fix-1",
+  "Source-Revision": "6792c6a999ee32e8d1eb6f7037f8553159b806c2",
+  "Launch-SHA256": "949bed53ab999391fc0a4fcd0fa9a9827e8e1ff9c42a1b7e40d076c7040981d6",
+  "started_at": "2026-10-03T03:00:00Z",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "actual_model": "gpt-6.1-sol",
+  "actual_effort": "high",
+  "model_evidence": "CLI banner /tmp/n8-ui-logout-fix/runtime.log lines 2-10",
+  "fallback": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gaps": [
+    "Host token/billing counters unavailable; CLI banner proves configured execution model, not provider-resolved model.",
+    "Active time and parent time to acceptance unavailable."
+  ],
+  "scope": [
+    "web/public/app.js",
+    "tests/ui-app-races.test.js",
+    "docs/features/ui-logout-fix",
+    "docs/telemetry/n8-20261002-1740/n8-ui-logout-fix-receipt.md"
+  ],
+  "excluded": [
+    "browser harness",
+    "backend",
+    "payments",
+    "schema",
+    "worker",
+    "manifests",
+    "prior failed E2E evidence"
+  ],
+  "source_continuity": "expected HEAD equals observed HEAD; clean initial worktree",
+  "approval": "Accepted F04 design and decisions-owner.md full autonomy, confirmed by brief; no repeated checkpoint",
+  "route_plan": {
+    "mechanical_tier": "M",
+    "exit_code": 0,
+    "substantive_tier": "XL",
+    "reason": "Existing private session boundary; narrow confirmed correction within accepted F04 design."
+  },
+  "route_implement": {
+    "mechanical_tier": "M",
+    "exit_code": 0,
+    "substantive_tier": "XL",
+    "reason": "Existing private session boundary; narrow confirmed correction within accepted F04 design."
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Local unit harness only; actual browser UI6 belongs to parent after fresh Astra review."
+  },
+  "forecast": {
+    "status": "insufficient_data",
+    "duration": null,
+    "cost": null
+  },
+  "AC": [
+    "Earlier login completion during held logout keeps login/register disabled.",
+    "Submit guard prevents a second login request until logout settles; login resumes after settlement.",
+    "Existing stale account generation and logout cookie guard unchanged."
+  ],
+  "stage": "completed",
+  "events": [
+    {
+      "stage": "prepare",
+      "at": "2026-10-03T03:01:28.106413+00:00",
+      "reason": "Instructions read; narrow accepted correction scope recorded before implementation."
+    },
+    {
+      "stage": "implement",
+      "at": "2026-10-03T03:02:02.506109+00:00",
+      "reason": "Repeated explicit-file mechanical ROUTE M exit 0; substantive XL retained. Accepted narrow plan validated against auth handlers, scope generation and F04 R4."
+    },
+    {
+      "stage": "verify",
+      "at": "2026-10-03T03:02:40.061558+00:00",
+      "reason": "One-line correction and deterministic actual-app regression authored; mutation then affected suites/build."
+    },
+    {
+      "stage": "verification_retry",
+      "at": "2026-10-03T03:03:27.720595+00:00",
+      "reason": "Initial --test invocation had file-level diagnostics only; direct Node execution per project convention obtained required assertion evidence. No product or test edits between attempts."
+    },
+    {
+      "stage": "completed",
+      "at": "2026-10-03T03:05:20.351162+00:00",
+      "reason": "48 affected local tests, build, exact mutation/restoration, scope and diff checks pass; parent independent review/browser gates remain."
+    }
+  ],
+  "baseline_hashes": {
+    "web/public/app.js": "b85fc42e9d0772f914c53d881d824ad329eefa58cef547299fb71d75fbf6cccc",
+    "tests/ui-app-races.test.js": "53fb233757550b8a08255807f6647a3d92464b4deb16388be3da12e4c70d1c64"
+  },
+  "finished_at": "2026-10-03T03:05:20.351162+00:00",
+  "elapsed_wall_seconds": 320.351,
+  "active_wall_ms": null,
+  "provider_resolved_model": null,
+  "retry_count": 1,
+  "implementation_passes": 1,
+  "escalation_count": 0,
+  "checks": {
+    "actual-app-races-direct": 5,
+    "ui-state": 6,
+    "ui-upload": 10,
+    "ui-auth-order": 1,
+    "ui-payment-fixture": 10,
+    "boundaries": 7,
+    "media": 5,
+    "ui-http": 4
+  },
+  "build_exit_code": 0,
+  "mutation": "Original product logic: exact control-state assertion fails (4 pass/1 fail); fixed logic: 5 pass/0 fail; fixed bytes restored exactly.",
+  "pending_parent_gates": [
+    "Fresh independent Astra review",
+    "Actual browser UI6 full matrix with source-bound preflight"
+  ],
+  "savings": "not established: no comparable baseline"
+}
