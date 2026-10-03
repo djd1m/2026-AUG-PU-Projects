@@ -29,9 +29,11 @@ export async function migrate(pool: pg.Pool) {
     if(!ninth.rowCount) await client.query(await readFile(new URL('../db/009-poll-owner.sql',import.meta.url),'utf8'));
     const tenth=await client.query('SELECT version FROM schema_migration WHERE version=10');
     if(!tenth.rowCount) await client.query(await readFile(new URL('../db/010-billing.sql',import.meta.url),'utf8'));
+    const eleventh=await client.query('SELECT version FROM schema_migration WHERE version=11');
+    if(!eleventh.rowCount) await client.query(await readFile(new URL('../db/011-evidence.sql',import.meta.url),'utf8'));
     await client.query('COMMIT');
   } catch (error) { await client.query('ROLLBACK'); throw error; } finally { client.release(); }
 }
 export async function ready(pool: pg.Pool): Promise<boolean> {
-  try { return (await pool.query('SELECT version FROM schema_migration WHERE version IN (1,2,3,4,5,6,7,8,9,10)')).rowCount === 10; } catch { return false; }
+  try { return (await pool.query('SELECT version FROM schema_migration WHERE version IN (1,2,3,4,5,6,7,8,9,10,11)')).rowCount === 11; } catch { return false; }
 }

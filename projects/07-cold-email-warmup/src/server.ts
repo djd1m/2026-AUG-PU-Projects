@@ -23,6 +23,9 @@ import { BillingService } from './billing/service.js';
 import { LocalProvider } from './billing/provider.js';
 import { PartnerStore } from './growth/partner.js';
 import { referralToken,referralCookie } from './growth/attribution.js';
+import { EvidenceStore } from './evidence/store.js';
+import { ReportStore } from './growth/reports.js';
+import { pageInput } from './evidence/input.js';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 async function body(req: IncomingMessage): Promise<Record<string, unknown>> {
   if (req.headers['content-type']?.split(';')[0]?.trim() !== 'application/json') throw new HttpError(400, 'invalid_input');
@@ -52,6 +55,7 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
   const cohort=new PoolStore(pool);const dispatch=new DispatchStore(pool);const submissions=new SubmissionStore(pool,config);
   const suppression=new SuppressionStore(pool,config.recipientHashKey);const replies=new ReplyStore(pool,config.credentialKeyring);
   const billing=new BillingService(pool,config.sessionKey,config.billingMode??'disabled');const billingProvider=new LocalProvider(pool,config.billingMode??'disabled');const partners=new PartnerStore(pool);
+  const evidence=new EvidenceStore(pool),reports=new ReportStore(pool);
   const server = createServer((req, res) => {
     res.setHeader('Cache-Control', 'no-store'); res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
@@ -92,6 +96,7 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
       if (req.method === 'GET' && (path === '/healthz' || path === '/readyz')) {
         const isReady = await ready(pool); return json(res, isReady ? 200 : 503, {data:{ready:isReady},meta:{}});
       }
+      if(req.method==='GET' && path.startsWith('/reports/')) {res.setHeader('Referrer-Policy','no-referrer');const html=await reports.view(path.slice(9));res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(html);return;}
       if(req.method==='GET' && path.startsWith('/r/')) {const code=path.slice(3);await suppression.charge(req.socket.remoteAddress??'unknown');await partners.landing(code);res.setHeader('Set-Cookie',referralCookie(referralToken(code,config.sessionKey),config.secureCookie));res.writeHead(303,{Location:'/'});res.end();return;}
       if (req.method === 'GET' && (path === '/' || path === '/auth.js')) {
         res.writeHead(200, {'Content-Type':path === '/' ? 'text/html; charset=utf-8' : 'text/javascript; charset=utf-8'});
@@ -118,17 +123,25 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
           res.setHeader('Set-Cookie', sessionCookie('', config.secureCookie, true));
           return json(res, 200, {data:{loggedOut:true},meta:{}});
         }
+        if(path==='/api/evidence' && req.method==='POST') return json(res,201,{data:await evidence.create(identity.tenant_id,await body(req)),meta:{}});
+        if(path==='/api/evidence' && req.method==='GET') {const p=pageInput(req.url!);return json(res,200,{data:await evidence.list(identity.tenant_id,p.limit,p.offset),meta:{}});}
+        if(path==='/api/evidence/compare' && req.method==='POST') {const input=await body(req);if(Object.keys(input).length!==2 || typeof input.baselineId!=='string' || typeof input.latestId!=='string') throw new HttpError(400,'invalid_input');return json(res,200,{data:await evidence.pair(identity.tenant_id,input.baselineId,input.latestId),meta:{}});}
+        if(path==='/api/reports' && req.method==='POST') return json(res,201,{data:await reports.share(identity.tenant_id,await body(req)),meta:{}});
+        if(path==='/api/reports' && req.method==='GET') {const p=pageInput(req.url!);return json(res,200,{data:await reports.list(identity.tenant_id,p.limit,p.offset),meta:{}});}
+        if(path==='/api/growth/events' && req.method==='GET') {const p=pageInput(req.url!);return json(res,200,{data:await reports.events(identity.tenant_id,p.limit,p.offset),meta:{}});}
+        const reportMatch=/^\/api\/reports\/([^/]+)\/(revoke|events)$/.exec(path);
+        if(reportMatch && req.method==='POST') {const input=await body(req);if(reportMatch[2]==='revoke') {if(Object.keys(input).length) throw new HttpError(400,'invalid_input');return json(res,200,{data:await reports.revoke(identity.tenant_id,reportMatch[1]!),meta:{}});}return json(res,200,{data:await reports.event(identity.tenant_id,reportMatch[1]!,input),meta:{}});}
         if(path==='/api/billing/status' && req.method==='GET') return json(res,200,{data:await billing.ownerStatus(identity.tenant_id),meta:{}});
         if(path==='/api/billing/checkout' && req.method==='POST') {await suppression.charge(req.socket.remoteAddress??'unknown');return json(res,201,{data:await billing.checkout(identity.tenant_id,await body(req),req.headers.cookie),meta:{label:'TEST'}});}
         const intentMatch=/^\/api\/billing\/intents\/([^/]+)$/.exec(path);
         if(intentMatch && req.method==='GET') {if(!UUID.test(intentMatch[1]!)) throw new HttpError(404,'not_found');return json(res,200,{data:await billing.status(identity.tenant_id,intentMatch[1]!),meta:{}});}
         if(path==='/api/partner') {
           if(req.method==='POST') {if(Object.keys(await body(req)).length) throw new HttpError(400,'invalid_input');return json(res,201,{data:await partners.create(identity.tenant_id),meta:{}});}
-          if(req.method==='GET') return json(res,200,{data:await partners.status(identity.tenant_id),meta:{}});
+          if(req.method==='GET') return json(res,200,{data:{...await partners.status(identity.tenant_id),events:await reports.aggregate(identity.tenant_id)},meta:{}});
           if(req.method==='PATCH') return json(res,200,{data:await partners.setActive(identity.tenant_id,await body(req)),meta:{}});
         }
         const partnerMatch=/^\/api\/partner\/([A-Za-z0-9_-]+)$/.exec(path);
-        if(partnerMatch && req.method==='GET') return json(res,200,{data:await partners.status(identity.tenant_id,partnerMatch[1]!),meta:{}});
+        if(partnerMatch && req.method==='GET') return json(res,200,{data:{...await partners.status(identity.tenant_id,partnerMatch[1]!),events:await reports.aggregate(identity.tenant_id)},meta:{}});
         if(path==='/api/mailboxes') {
           if(req.method==='GET') return json(res,200,{data:await mailboxes.list(identity.tenant_id),meta:{}});
           if(req.method==='POST') return json(res,201,{data:await mailboxes.save(identity.tenant_id,await body(req)),meta:{}});
@@ -189,5 +202,5 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
     });
   });
   server.requestTimeout = 10000; server.headersTimeout = 10000; server.timeout = 10000; server.maxHeadersCount = 64;
-  return { server, auth, store, mailboxes, consents, campaigns, cohort, dispatch, submissions, suppression, replies, billing, billingProvider, partners };
+  return { server, auth, store, mailboxes, consents, campaigns, cohort, dispatch, submissions, suppression, replies, billing, billingProvider, partners, evidence, reports };
 }
