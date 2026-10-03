@@ -20,11 +20,26 @@ export function createStudioClientHandler(deps: StudioDeps) {
       const token = readSessionCookie(request);
       const actorId = token ? await deps.authenticate(token) : null;
       if (!actorId) return fail(401, 'unauthorized', 'Войдите в кабинет');
-      // The API needs no fields. If a body is supplied, bound it before borrowing a connection.
-      if (request.body) {
-        const body = await readJson(request, { objectOnly: true });
-        if (body === 'too-large') return fail(413, 'body_too_large', 'Тело запроса слишком велико');
-        if (body === 'invalid') return fail(422, 'invalid_body', 'Ожидается JSON-объект');
+      // Next exposes even a bodyless POST as a stream; only nonempty bytes need a JSON envelope.
+      const reader = request.body?.getReader();
+      if (reader) {
+        const chunks: Uint8Array[] = [];
+        let size = 0;
+        for (;;) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          size += value.byteLength;
+          if (size > 4096) {
+            await reader.cancel();
+            return fail(413, 'body_too_large', 'Тело запроса слишком велико');
+          }
+          if (value.byteLength) chunks.push(value);
+        }
+        if (size) {
+          const body = await readJson(new Request(request, { body: Buffer.concat(chunks) }), { objectOnly: true });
+          if (body === 'too-large') return fail(413, 'body_too_large', 'Тело запроса слишком велико');
+          if (body === 'invalid') return fail(422, 'invalid_body', 'Ожидается JSON-объект');
+        }
       }
       const result = await createStudioClient(deps.servicePool, actorId, readReferralCookie(request));
       if (result === 'forbidden') return fail(403, 'studio_required', 'Создавать клиентов может только студия');

@@ -1,0 +1,105 @@
+{
+  "run_id": "20261003T031332Z-studio-subaccounts",
+  "work_unit_id": "studio-subaccounts-correction",
+  "attempt_id": "correction-1",
+  "source_revision": "902d31343bcfb05819dcca0d8009873679d0f292",
+  "launch_sha256": "ab553415a37710f175e81d09e60c79f20c489061f2e2e8c78e3d2474f7360615",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "build_revision": null,
+  "source_snapshot_sha256": "dd55491ba57d829f51f15a1b2a6c6ffb2b055151d852986d54afb53327085b02",
+  "started_at": "2026-10-03T04:00:31.154994+00:00",
+  "finished_at": "2026-10-03T04:05:19.413754+00:00",
+  "elapsed_wall_ms": 288259,
+  "active_wall_ms": null,
+  "usage": {
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null,
+    "source": null
+  },
+  "checks": [
+    {
+      "gate": "ROUTE before PLAN and before IMPLEMENT",
+      "command": "bash ../../scripts/complexity-router.sh apps/web/src/server/studio-handler.ts apps/web/tests/unit/studio-handler.test.ts",
+      "executions": 2,
+      "exit_code": 0,
+      "mechanical_tier": "S",
+      "substantive_tier": "M inherited approved authentication boundary",
+      "log": "tests/artifacts/studio-subaccounts/correction-1-route.log"
+    },
+    {
+      "gate": "baseline reproduction",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH node node_modules/vitest/vitest.mjs run --config vitest.config.ts apps/web/tests/unit/studio-handler.test.ts",
+      "exit_code": 1,
+      "expected_failure": true,
+      "result": "2 failed, 6 passed; exact 422 instead201 reproduced",
+      "log": "tests/artifacts/studio-subaccounts/correction-1-baseline.log"
+    },
+    {
+      "gate": "focused corrected suites",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH node node_modules/vitest/vitest.mjs run --config vitest.config.ts apps/web/tests/unit/studio-handler.test.ts apps/web/tests/unit/studio-clients-ui.test.ts",
+      "exit_code": 0,
+      "result": "10 passed across 2 files",
+      "log": "tests/artifacts/studio-subaccounts/correction-1-focused.log"
+    },
+    {
+      "gate": "typecheck",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH npm run typecheck",
+      "exit_code": 0,
+      "log": "tests/artifacts/studio-subaccounts/correction-1-typecheck.log"
+    },
+    {
+      "gate": "meaningful mutation",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH /tmp/n6b-f06-node22/bin/node node_modules/vitest/vitest.mjs run --config vitest.config.ts apps/web/tests/unit/studio-handler.test.ts apps/web/tests/unit/studio-clients-ui.test.ts",
+      "exit_code": 1,
+      "expected_failure": true,
+      "result": "2 failed, 8 passed after exact HEAD handler restored",
+      "log": "tests/artifacts/studio-subaccounts/correction-1-mutation.log"
+    },
+    {
+      "gate": "exact-byte recovery same suites",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH /tmp/n6b-f06-node22/bin/node node_modules/vitest/vitest.mjs run --config vitest.config.ts apps/web/tests/unit/studio-handler.test.ts apps/web/tests/unit/studio-clients-ui.test.ts",
+      "exit_code": 0,
+      "result": "10 passed; fixed bytes restored with identical SHA256",
+      "log": "tests/artifacts/studio-subaccounts/correction-1-recovery.log"
+    },
+    {
+      "gate": "diff whitespace",
+      "command": "git diff --check",
+      "exit_code": 0
+    },
+    {
+      "gate": "source scope and retained hash guard",
+      "command": "Python hashlib exact-byte check of original22files; only handler+unit test hashes differ",
+      "exit_code": 0,
+      "result": "22 files bound, 20 unchanged hashes retained; production handler54lines"
+    }
+  ],
+  "mutation": {
+    "mutation": "Restore the exact HEAD handler (nonnull body always requires readJson) with the new fixed regressions unchanged",
+    "fixed_sha256": "48676070704e23610ee46c675bfd9fbe710e2f4de4979c58857185e2261a2f60",
+    "mutated_sha256": "9212cdaae85c59041934f6a397c0b413d8c8f4a6c780b7db7e4f3b92b0130fe9",
+    "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH /tmp/n6b-f06-node22/bin/node node_modules/vitest/vitest.mjs run --config vitest.config.ts apps/web/tests/unit/studio-handler.test.ts apps/web/tests/unit/studio-clients-ui.test.ts",
+    "started_at": "2026-10-03T04:03:23.068055+00:00",
+    "mutation_exit": 1,
+    "restored_sha256": "48676070704e23610ee46c675bfd9fbe710e2f4de4979c58857185e2261a2f60",
+    "recovery_exit": 0,
+    "finished_at": "2026-10-03T04:03:28.073412+00:00"
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No E2E/build/network/containers permitted in correction. Full regression, real PostgreSQL, build and actual UI remain coordinator gates after freeze."
+  },
+  "missing_data": [
+    "Actual native model and effort not exposed; requested model is not evidence of actual execution.",
+    "Token usage and billing unavailable.",
+    "Active time intervals not instrumented; elapsed includes reading, tests and artifact preparation."
+  ],
+  "status": "completed_local_correction",
+  "delivery_pending": "Coordinator full regression/build/real UI and final acceptance; no claim of UI pass from unit tests",
+  "artifact_integrity_verified": true
+}

@@ -5,141 +5,144 @@
 #1 DONE 0.0s
 
 #2 [internal] load metadata for docker.io/library/node:22.22-alpine
-#2 DONE 0.0s
+#2 DONE 0.1s
 
 #3 [internal] load .dockerignore
 #3 transferring context: 361B done
 #3 DONE 0.0s
 
-#4 [deps 1/9] FROM docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd
-#4 resolve docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd 0.0s done
+#4 [internal] load build context
 #4 DONE 0.0s
 
-#5 [internal] load build context
-#5 transferring context: 15.81kB 0.1s done
+#5 [deps 1/9] FROM docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd
+#5 resolve docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd 0.1s done
 #5 DONE 0.1s
+
+#4 [internal] load build context
+#4 transferring context: 15.81kB 0.1s done
+#4 DONE 0.1s
 
 #6 [deps 6/9] COPY services/worker/package.json ./services/worker/
 #6 CACHED
 
-#7 [deps 7/9] COPY packages/db/package.json ./packages/db/
+#7 [deps 2/9] WORKDIR /app
 #7 CACHED
 
-#8 [deps 2/9] WORKDIR /app
+#8 [deps 3/9] COPY package.json package-lock.json ./
 #8 CACHED
 
-#9 [deps 3/9] COPY package.json package-lock.json ./
+#9 [deps 4/9] COPY apps/web/package.json ./apps/web/
 #9 CACHED
 
 #10 [deps 8/9] COPY packages/rag/package.json ./packages/rag/
 #10 CACHED
 
-#11 [deps 4/9] COPY apps/web/package.json ./apps/web/
+#11 [deps 5/9] COPY apps/widget/package.json ./apps/widget/
 #11 CACHED
 
-#12 [deps 5/9] COPY apps/widget/package.json ./apps/widget/
+#12 [deps 7/9] COPY packages/db/package.json ./packages/db/
 #12 CACHED
 
 #13 [deps 9/9] RUN npm ci
 #13 CACHED
 
 #14 [build 1/2] COPY . .
-#14 DONE 0.3s
+#14 DONE 0.2s
 
 #15 [build 2/2] RUN npm run build
-#15 1.121 
-#15 1.121 > n6b-rag-class@0.1.0 build
-#15 1.121 > npm run build --workspace @n6b/db && npm run build --workspace @n6b/rag && npm run build --workspace @n6b/worker && npm run build --workspace @n6b/web
-#15 1.121 
-#15 1.542 
-#15 1.542 > @n6b/db@0.1.0 build
-#15 1.542 > tsc -p tsconfig.build.json
-#15 1.542 
-#15 6.224 
-#15 6.224 > @n6b/rag@0.1.0 build
-#15 6.224 > tsc -p tsconfig.build.json
-#15 6.224 
-#15 11.13 
-#15 11.13 > @n6b/worker@0.1.0 build
-#15 11.13 > tsc -p tsconfig.build.json
-#15 11.13 
-#15 17.30 
-#15 17.30 > @n6b/web@0.1.0 build
-#15 17.30 > next build
-#15 17.30 
-#15 22.32 {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
-#15 22.38 Attention: Next.js now collects completely anonymous telemetry regarding usage.
-#15 22.38 This information is used to shape Next.js' roadmap and prioritize features.
-#15 22.38 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
-#15 22.38 https://nextjs.org/telemetry
-#15 22.38 
-#15 22.58    ▲ Next.js 15.5.27
-#15 22.58 
-#15 22.77    Creating an optimized production build ...
-#15 27.14 {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
-#15 48.75 {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
-#15 56.09 {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
-#15 64.98  ✓ Compiled successfully in 27.7s
-#15 64.99    Linting and checking validity of types ...
-#15 78.35    Collecting page data ...
-#15 86.11    Generating static pages (0/8) ...
-#15 87.91    Generating static pages (2/8) 
-#15 88.26    Generating static pages (4/8) 
-#15 88.26    Generating static pages (6/8) 
-#15 88.26  ✓ Generating static pages (8/8)
-#15 90.19    Finalizing page optimization ...
-#15 90.19    Collecting build traces ...
-#15 102.3 
-#15 102.3 Route (app)                                 Size  First Load JS
-#15 102.3 ┌ ƒ /                                      161 B         106 kB
-#15 102.3 ├ ○ /_not-found                            988 B         104 kB
-#15 102.3 ├ ƒ /admin/metrics                         792 B         103 kB
-#15 102.3 ├ ƒ /admin/metrics/verify                  163 B         103 kB
-#15 102.3 ├ ƒ /api/account/badge-removal-intent      163 B         103 kB
-#15 102.3 ├ ƒ /api/auth/login                        163 B         103 kB
-#15 102.3 ├ ƒ /api/auth/logout                       163 B         103 kB
-#15 102.3 ├ ƒ /api/auth/register                     163 B         103 kB
-#15 102.3 ├ ƒ /api/bots                              163 B         103 kB
-#15 102.3 ├ ƒ /api/bots/[id]/ask                     163 B         103 kB
-#15 102.3 ├ ƒ /api/bots/[id]/publish                 163 B         103 kB
-#15 102.3 ├ ƒ /api/bots/[id]/sources                 163 B         103 kB
-#15 102.3 ├ ƒ /api/demo/[slug]/ask                   163 B         103 kB
-#15 102.3 ├ ƒ /api/health                            163 B         103 kB
-#15 102.3 ├ ƒ /api/jobs/[id]                         163 B         103 kB
-#15 102.3 ├ ƒ /api/jobs/[id]/retry                   163 B         103 kB
-#15 102.3 ├ ƒ /api/studio/clients                    163 B         103 kB
-#15 102.3 ├ ƒ /api/widget/ask                        163 B         103 kB
-#15 102.3 ├ ƒ /api/widget/config                     163 B         103 kB
-#15 102.3 ├ ƒ /api/widget/event                      163 B         103 kB
-#15 102.3 ├ ƒ /b/[slug]                            1.67 kB         104 kB
-#15 102.3 ├ ƒ /cabinet                             6.29 kB         112 kB
-#15 102.3 ├ ○ /login                               1.36 kB         107 kB
-#15 102.3 ├ ƒ /r/b/[public_id]                       163 B         103 kB
-#15 102.3 └ ○ /register                            1.36 kB         107 kB
-#15 102.3 + First Load JS shared by all             103 kB
-#15 102.3   ├ chunks/18-25b11e3a132b87ef.js        46.5 kB
-#15 102.3   ├ chunks/87c73c54-24122e7b92478d00.js  54.2 kB
-#15 102.3   └ other shared chunks (total)          1.92 kB
-#15 102.3 
-#15 102.3 
-#15 102.3 ƒ Middleware                             34.7 kB
-#15 102.3 
-#15 102.3 ○  (Static)   prerendered as static content
-#15 102.3 ƒ  (Dynamic)  server-rendered on demand
-#15 102.3 
-#15 DONE 102.6s
+#15 1.346 
+#15 1.346 > n6b-rag-class@0.1.0 build
+#15 1.346 > npm run build --workspace @n6b/db && npm run build --workspace @n6b/rag && npm run build --workspace @n6b/worker && npm run build --workspace @n6b/web
+#15 1.346 
+#15 1.866 
+#15 1.866 > @n6b/db@0.1.0 build
+#15 1.866 > tsc -p tsconfig.build.json
+#15 1.866 
+#15 6.878 
+#15 6.878 > @n6b/rag@0.1.0 build
+#15 6.878 > tsc -p tsconfig.build.json
+#15 6.878 
+#15 12.51 
+#15 12.51 > @n6b/worker@0.1.0 build
+#15 12.51 > tsc -p tsconfig.build.json
+#15 12.51 
+#15 18.57 
+#15 18.57 > @n6b/web@0.1.0 build
+#15 18.57 > next build
+#15 18.57 
+#15 23.73 {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+#15 23.78 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+#15 23.78 This information is used to shape Next.js' roadmap and prioritize features.
+#15 23.78 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#15 23.78 https://nextjs.org/telemetry
+#15 23.78 
+#15 23.98    ▲ Next.js 15.5.27
+#15 23.98 
+#15 24.15    Creating an optimized production build ...
+#15 28.47 {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+#15 51.17 {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+#15 59.14 {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+#15 68.35  ✓ Compiled successfully in 29.0s
+#15 68.37    Linting and checking validity of types ...
+#15 82.90    Collecting page data ...
+#15 91.05    Generating static pages (0/8) ...
+#15 93.00    Generating static pages (2/8) 
+#15 93.42    Generating static pages (4/8) 
+#15 93.42    Generating static pages (6/8) 
+#15 93.42  ✓ Generating static pages (8/8)
+#15 94.99    Finalizing page optimization ...
+#15 94.99    Collecting build traces ...
+#15 107.4 
+#15 107.4 Route (app)                                 Size  First Load JS
+#15 107.4 ┌ ƒ /                                      161 B         106 kB
+#15 107.4 ├ ○ /_not-found                            988 B         104 kB
+#15 107.4 ├ ƒ /admin/metrics                         792 B         103 kB
+#15 107.4 ├ ƒ /admin/metrics/verify                  163 B         103 kB
+#15 107.4 ├ ƒ /api/account/badge-removal-intent      163 B         103 kB
+#15 107.4 ├ ƒ /api/auth/login                        163 B         103 kB
+#15 107.4 ├ ƒ /api/auth/logout                       163 B         103 kB
+#15 107.4 ├ ƒ /api/auth/register                     163 B         103 kB
+#15 107.4 ├ ƒ /api/bots                              163 B         103 kB
+#15 107.4 ├ ƒ /api/bots/[id]/ask                     163 B         103 kB
+#15 107.4 ├ ƒ /api/bots/[id]/publish                 163 B         103 kB
+#15 107.4 ├ ƒ /api/bots/[id]/sources                 163 B         103 kB
+#15 107.4 ├ ƒ /api/demo/[slug]/ask                   163 B         103 kB
+#15 107.4 ├ ƒ /api/health                            163 B         103 kB
+#15 107.4 ├ ƒ /api/jobs/[id]                         163 B         103 kB
+#15 107.4 ├ ƒ /api/jobs/[id]/retry                   163 B         103 kB
+#15 107.4 ├ ƒ /api/studio/clients                    163 B         103 kB
+#15 107.4 ├ ƒ /api/widget/ask                        163 B         103 kB
+#15 107.4 ├ ƒ /api/widget/config                     163 B         103 kB
+#15 107.4 ├ ƒ /api/widget/event                      163 B         103 kB
+#15 107.4 ├ ƒ /b/[slug]                            1.67 kB         104 kB
+#15 107.4 ├ ƒ /cabinet                             6.29 kB         112 kB
+#15 107.4 ├ ○ /login                               1.36 kB         107 kB
+#15 107.4 ├ ƒ /r/b/[public_id]                       163 B         103 kB
+#15 107.4 └ ○ /register                            1.36 kB         107 kB
+#15 107.4 + First Load JS shared by all             103 kB
+#15 107.4   ├ chunks/18-25b11e3a132b87ef.js        46.5 kB
+#15 107.4   ├ chunks/87c73c54-24122e7b92478d00.js  54.2 kB
+#15 107.4   └ other shared chunks (total)          1.92 kB
+#15 107.4 
+#15 107.4 
+#15 107.4 ƒ Middleware                             34.7 kB
+#15 107.4 
+#15 107.4 ○  (Static)   prerendered as static content
+#15 107.4 ƒ  (Dynamic)  server-rendered on demand
+#15 107.4 
+#15 DONE 107.6s
 
-#16 [prod-deps 1/1] RUN npm prune --omit=dev
+#16 [web 3/8] COPY --from=prod-deps /app/node_modules ./node_modules
 #16 CACHED
 
-#17 [web 3/8] COPY --from=prod-deps /app/node_modules ./node_modules
+#17 [prod-deps 1/1] RUN npm prune --omit=dev
 #17 CACHED
 
 #18 [web 4/8] COPY --from=build /app/package.json ./package.json
 #18 CACHED
 
 #19 [web 5/8] COPY --from=build /app/apps/web/.next ./apps/web/.next
-#19 DONE 0.7s
+#19 DONE 0.6s
 
 #20 [web 6/8] COPY --from=build /app/apps/web/public ./apps/web/public
 #20 DONE 0.1s
@@ -152,13 +155,13 @@
 
 #23 exporting to image
 #23 exporting layers
-#23 exporting layers 5.6s done
-#23 exporting manifest sha256:79ce1ed99e702edc49735ae612e266acb9b648f309a8586cef795a3cf21e177a 0.0s done
-#23 exporting config sha256:d54867c7c341bde3b93e78b4c0becbeb242cb678a0a29b95625506f2c6d1418d 0.0s done
-#23 exporting attestation manifest sha256:d6b8fd849ba6efeb4b63c62658a6e3372314f8f8e96036c17abb71878160aecd 0.0s done
-#23 exporting manifest list sha256:878dd06f4a402a977df08b59e129f98466a0e23bb2f18ae82b31f549df4f815e 0.0s done
+#23 exporting layers 5.4s done
+#23 exporting manifest sha256:28c8760538135d8ca940205adb5b01bc720d0f931c765e6a457887f3fc93418b 0.0s done
+#23 exporting config sha256:9159cf8a2b14096bfdd6ea551ae2144f45f897ccdcd6501f100a43c0a5c30dc4 0.0s done
+#23 exporting attestation manifest sha256:88ebe5c1c775536e9439ebc37a7567e2d90460216a36e038d4e470e6a1aa33cf 0.0s done
+#23 exporting manifest list sha256:efd01fdcbdc1e7105804b7c6b559ea39d36817353b40310094b0be3e5ee46cc2 0.0s done
 #23 naming to docker.io/library/n6b-f13-studio-web:20261003
 #23 naming to docker.io/library/n6b-f13-studio-web:20261003 done
 #23 unpacking to docker.io/library/n6b-f13-studio-web:20261003
-#23 unpacking to docker.io/library/n6b-f13-studio-web:20261003 1.1s done
-#23 DONE 7.0s
+#23 unpacking to docker.io/library/n6b-f13-studio-web:20261003 1.0s done
+#23 DONE 6.6s

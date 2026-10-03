@@ -5,60 +5,60 @@
 #1 DONE 0.0s
 
 #2 [internal] load metadata for docker.io/library/node:22.22-bookworm-slim
-#2 DONE 1.0s
+#2 DONE 0.7s
 
 #3 [internal] load build context
-#3 transferring context: 27B
+#3 transferring context: 681.86kB 0.1s
 #3 ...
 
 #4 [ 1/11] FROM docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752
-#4 resolve docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752 0.1s done
-#4 DONE 0.1s
+#4 resolve docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752 0.2s done
+#4 DONE 0.2s
 
 #3 [internal] load build context
-#3 transferring context: 8.92MB 0.4s done
-#3 DONE 0.4s
+#3 transferring context: 8.07MB 0.5s done
+#3 DONE 0.5s
 
-#5 [ 3/11] RUN chown node:node /app
+#5 [ 4/11] COPY --chown=node:node package.json package-lock.json ./
 #5 CACHED
 
-#6 [ 7/11] COPY --chown=node:node services/worker/package.json ./services/worker/
+#6 [ 2/11] WORKDIR /app
 #6 CACHED
 
-#7 [ 9/11] COPY --chown=node:node packages/rag/package.json ./packages/rag/
+#7 [ 3/11] RUN chown node:node /app
 #7 CACHED
 
-#8 [ 4/11] COPY --chown=node:node package.json package-lock.json ./
+#8 [ 6/11] COPY --chown=node:node apps/widget/package.json ./apps/widget/
 #8 CACHED
 
-#9 [ 5/11] COPY --chown=node:node apps/web/package.json ./apps/web/
+#9 [ 8/11] COPY --chown=node:node packages/db/package.json ./packages/db/
 #9 CACHED
 
-#10 [ 6/11] COPY --chown=node:node apps/widget/package.json ./apps/widget/
+#10 [ 9/11] COPY --chown=node:node packages/rag/package.json ./packages/rag/
 #10 CACHED
 
-#11 [ 8/11] COPY --chown=node:node packages/db/package.json ./packages/db/
+#11 [ 5/11] COPY --chown=node:node apps/web/package.json ./apps/web/
 #11 CACHED
 
-#12 [ 2/11] WORKDIR /app
+#12 [ 7/11] COPY --chown=node:node services/worker/package.json ./services/worker/
 #12 CACHED
 
 #13 [10/11] RUN npm ci
 #13 CACHED
 
 #14 [11/11] COPY --chown=node:node . .
-#14 DONE 0.5s
+#14 DONE 0.4s
 
 #15 exporting to image
 #15 exporting layers
-#15 exporting layers 1.0s done
-#15 exporting manifest sha256:851f9af89ef6d85cf3dbf20017b05a9f71500a096536877763bfaccb3df9eeba
-#15 exporting manifest sha256:851f9af89ef6d85cf3dbf20017b05a9f71500a096536877763bfaccb3df9eeba 0.0s done
-#15 exporting config sha256:69f62c3802fec71d2e9ff9110461ccbe9be90738e23c19b3e003806106428953 0.1s done
-#15 exporting attestation manifest sha256:8f11416d872f96a4dcadf0d233fbb733b56be5eb85e34b2760fde52d95e869b8 0.1s done
-#15 exporting manifest list sha256:d917b57856be03a07d069c1fbbc60985cc4a7407f16f6a037f3ce73acd54dab5
-#15 exporting manifest list sha256:d917b57856be03a07d069c1fbbc60985cc4a7407f16f6a037f3ce73acd54dab5 0.0s done
+#15 exporting layers 0.9s done
+#15 exporting manifest sha256:4f4b08785e9fd67828d2f3b315b948c876020612ae3f16144f2e6c9bf97bdbe0
+#15 exporting manifest sha256:4f4b08785e9fd67828d2f3b315b948c876020612ae3f16144f2e6c9bf97bdbe0 0.0s done
+#15 exporting config sha256:87d6f8cf8a32c59c8d062d8a99063df578ccfa9c94ff673764e2ff878864cfd4 0.0s done
+#15 exporting attestation manifest sha256:10b3530c5e1fbca5ee83ebf98ab0cc6f630b29d434224145c7e7455c2e82221c 0.0s done
+#15 exporting manifest list sha256:665bb381d51e16536f48fdb49a8fd5a1744da1d73b0d4104245fe24a1832568c 0.0s done
+#15 naming to docker.io/library/n6b-f13-studio-runner:final
 #15 naming to docker.io/library/n6b-f13-studio-runner:final done
 #15 unpacking to docker.io/library/n6b-f13-studio-runner:final
-#15 unpacking to docker.io/library/n6b-f13-studio-runner:final 0.5s done
-#15 DONE 2.1s
+#15 unpacking to docker.io/library/n6b-f13-studio-runner:final 0.4s done
+#15 DONE 1.8s

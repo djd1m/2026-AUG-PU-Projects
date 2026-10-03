@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-03T04:11:31.964711+00:00",
+  "source_review_verdict": "ACCEPT_WITH_CAVEATS",
+  "source_report": "docs/features/studio-subaccounts/10_review_correction.md",
+  "source_report_sha256": "de1ca10af7b9e58e9c3e9ba7b65660383c7ab01fdb9d0468da854174f8f3aa4a",
+  "cli_exit": 0,
+  "terminal_trace_format": "failed: final CLI response overwrote substantive receipt with short summary lacking source identity and terminal Status",
+  "original_trace_preserved": true,
+  "review_claim": "Independent source review completed with source/snapshot/launch identity in report, final summary agrees; coordinator aggregate delivery will bind report/native and disclose trace-format failure, not claim valid per-attempt terminal receipt"
+}

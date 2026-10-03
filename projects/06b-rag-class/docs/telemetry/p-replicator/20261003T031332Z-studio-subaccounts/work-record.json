@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "implement",
+  "stage": "review",
   "roots": {
     "project": "."
   },
   "identity": {
     "run_id": "20261003T031332Z-studio-subaccounts",
     "work_unit_id": "studio-subaccounts-feature",
-    "current_attempt_id": "correction-1"
+    "current_attempt_id": "review-2"
   },
   "telemetry": {
     "run": {
@@ -194,6 +194,14 @@
     },
     {
       "id": "correction-1",
+      "status": "completed"
+    },
+    {
+      "id": "review-2",
+      "status": "active"
+    },
+    {
+      "id": "full-regression-2",
       "status": "active"
     }
   ],
