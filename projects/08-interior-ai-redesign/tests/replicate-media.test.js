@@ -7,6 +7,7 @@ import { randomUUID, createHash } from 'node:crypto';
 import { mkdtemp, mkdir, writeFile, readFile, rm, symlink, chmod, stat, readdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { deflateSync } from 'node:zlib';
 import sharp from 'sharp';
 import { prepareReplicateInput, getPrivateReplicateInput, prepareReplicateMediaRequest,
   createReplicateMedia, validateDeliveryUrl, isGlobalAddress } from '../web/replicate-media.js';
@@ -93,6 +94,72 @@ function withCodecHook(hook,run) {
   sharp.prototype.toBuffer=async function(...args){const result=await original.apply(this,args);return hook(this,result);};
   return Promise.resolve().then(run).finally(()=>{sharp.prototype.toBuffer=original;});
 }
+
+function pngChunk(type,data=Buffer.alloc(0)) {
+  const body=Buffer.concat([Buffer.from(type),data]);let crc=0xffffffff;
+  for(const byte of body) {crc^=byte;for(let bit=0;bit<8;bit++)crc=(crc>>>1)^((crc&1)?0xedb88320:0);}
+  const chunk=Buffer.alloc(data.length+12);chunk.writeUInt32BE(data.length);body.copy(chunk,4);
+  chunk.writeUInt32BE((crc^0xffffffff)>>>0,chunk.length-4);return chunk;
+}
+function pngFixture(animated=true,plays=2,stored=false) {
+  const header=Buffer.alloc(13);header.writeUInt32BE(512);header.writeUInt32BE(512,4);header[8]=8;header[9]=2;
+  const rows=color=>{const b=Buffer.alloc(512*(1+512*3));
+    for(let y=0;y<512;y++)for(let x=0;x<512;x++)b[y*1537+1+x*3+color]=255;
+    if(stored)Buffer.from('acTLfcTLfdAT').copy(b,1);
+    return deflateSync(b,stored?{level:0}:{});};
+  const control=seq=>{const b=Buffer.alloc(26);b.writeUInt32BE(seq);b.writeUInt32BE(512,4);b.writeUInt32BE(512,8);
+    b.writeUInt16BE(1,20);b.writeUInt16BE(10,22);return pngChunk('fcTL',b);};
+  const chunks=[pngChunk('IHDR',header)];
+  if(animated) {const b=Buffer.alloc(8);b.writeUInt32BE(plays);chunks.push(pngChunk('acTL',b),control(0));}
+  chunks.push(pngChunk('IDAT',rows(0)));
+  if(animated&&plays===2) {const seq=Buffer.alloc(4);seq.writeUInt32BE(2);chunks.push(control(1),pngChunk('fdAT',Buffer.concat([seq,rows(2)])));}
+  return Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),...chunks,pngChunk('IEND')]);
+}
+test('CRC-correct APNG is denied by shared input preparation',async t=>{
+  const f=await fixture(t),bytes=pngFixture();
+  assert.equal(bytes.length,4061);assert.equal(hash(bytes),'031839f815d9d497abec27a167b236c92816a8ceb6aac41303b387e364d154f5');
+  // Real Sharp sees only a static PNG here: this is the reviewed metadata gap.
+  const m=await sharp(bytes).metadata();assert.equal(m.width,512);assert.equal(m.height,512);assert.equal(m.pages,undefined);
+  await writeFile(join(f.dir,f.upload.private_key),bytes);
+  await rejects(prepareReplicateInput({...f.args,upload:{...f.upload,sha256:hash(bytes),width:512,height:512}}));
+  await noArtifacts(f.dir);
+});
+test('CRC-correct APNG depth is denied before second download and leaves zero artifacts',async t=>{
+  const e=await ready(t),n=network([{bytes:pngFixture()},{bytes:e.output}]);
+  const m=createReplicateMedia({storageDir:e.dir},{request:n.request,resolveAddresses:async()=>[{address:'8.8.8.8',family:4}]});
+  await rejects(m.importArtifacts(e.args).then(async result=>{await result.cleanup(async()=>true);return result;}));
+  assert.equal(n.calls.length,1);await noArtifacts(e.dir);
+});
+test('PNG chunk bounds and stray animation chunks fail closed in input and depth',async t=>{
+  const e=await ready(t),staticPng=pngFixture(false),prefix=staticPng.subarray(0,-12);
+  const oversized=Buffer.from(staticPng);oversized.writeUInt32BE(0xffffffff,33);
+  const cases=[['one-frame APNG',pngFixture(true,1)],['stray fcTL',pngChunk('fcTL',Buffer.alloc(26))],
+    ['stray fdAT',pngChunk('fdAT',Buffer.alloc(4))],['short acTL',pngChunk('acTL',Buffer.alloc(1))],
+    ['late acTL',pngChunk('acTL',Buffer.alloc(8))],['truncated header',Buffer.from([0,0,0])],
+    ['missing CRC',pngChunk('tEXt',Buffer.from('x')).subarray(0,-1)],['oversized length',oversized],
+    ['missing IEND',prefix],['nonempty IEND',pngChunk('IEND',Buffer.from('x'))]];
+  for(const [label,value] of cases)await t.test(label,async()=>{
+    const complete=['one-frame APNG','oversized length','missing IEND'].includes(label);
+    const bytes=complete?value:Buffer.concat([prefix,value,pngChunk('IEND')]);
+    await writeFile(join(e.dir,e.upload.private_key),bytes);
+    await rejects(prepareReplicateInput({storageDir:e.dir,accountId:e.upload.account_id,
+      upload:{...e.upload,sha256:hash(bytes),width:512,height:512}}));
+    const n=network([{bytes},{bytes:e.output}]);
+    const m=createReplicateMedia({storageDir:e.dir},{request:n.request,resolveAddresses:async()=>[{address:'8.8.8.8',family:4}]});
+    await rejects(m.importArtifacts(e.args));assert.equal(n.calls.length,1);await noArtifacts(e.dir);
+  });
+});
+test('static PNG accepts animation names inside compressed pixels without substring scanning',async t=>{
+  const e=await ready(t),bytes=pngFixture(false,2,true);
+  for(const name of ['acTL','fcTL','fdAT'])assert.ok(bytes.includes(Buffer.from(name)));
+  await writeFile(join(e.dir,e.upload.private_key),bytes);
+  const input=await prepareReplicateInput({storageDir:e.dir,accountId:e.upload.account_id,
+    upload:{...e.upload,sha256:hash(bytes),width:512,height:512}});assert.equal(input.source_input_sha,hash(bytes));
+  const n=network([{bytes},{bytes:e.output}]);
+  const m=createReplicateMedia({storageDir:e.dir},{request:n.request,resolveAddresses:async()=>[{address:'8.8.8.8',family:4}]});
+  const result=await m.importArtifacts(e.args);assert.equal(n.calls.length,2);assert.equal(result.evidence.raw_provider_depth_sha,hash(bytes));
+  await result.cleanup(async()=>true);await noArtifacts(e.dir);
+});
 
 test('real sanitized JPEG preserves dimensions, deterministic aspect, hashes and removes EXIF',async t=>{
   for(const [w,h,rect] of [[128,64,{x:0,y:128,width:512,height:256}], [64,128,{x:128,y:0,width:256,height:512}],

@@ -25,9 +25,24 @@ function rectangle(width, height) {
   const w = Math.max(1, Math.round(width * scale)), h = Math.max(1, Math.round(height * scale));
   return {x:Math.floor((512-w)/2), y:Math.floor((512-h)/2), width:w, height:h};
 }
+function singleFramePng(bytes) {
+  // Sharp can report APNG as a PNG without pages. Reject all animation chunks.
+  // Walk only chunk headers, never compressed pixel data; MAX_BYTES bounds work.
+  for (let offset = 8; offset < bytes.length;) {
+    if (bytes.length - offset < 12) deny();
+    const length = bytes.readUInt32BE(offset);
+    if (length > bytes.length - offset - 12) deny();
+    const type = bytes.toString('ascii', offset + 4, offset + 8);
+    if (type === 'acTL' || type === 'fcTL' || type === 'fdAT') deny();
+    if (type === 'IEND') { if (length !== 0) deny(); return; }
+    offset += length + 12;
+  }
+  deny(); // Missing IEND or truncated final chunk.
+}
 async function metadata(bytes, mime, check = () => {}) {
   check();
   if (!Buffer.isBuffer(bytes) || !bytes.length || bytes.length > MAX_BYTES || !FORMATS[mime] || imageType(bytes) !== mime) deny();
+  if (mime === 'image/png') singleFramePng(bytes);
   const m = await sharp(bytes, {limitInputPixels:MAX_PIXELS, failOn:'warning'}).metadata();
   check();
   if (m.format !== FORMATS[mime] || !m.width || !m.height || m.width*m.height > MAX_PIXELS || (m.pages ?? 1) !== 1) deny();

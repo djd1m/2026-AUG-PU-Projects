@@ -1,0 +1,15 @@
+# I3-R01 bounded correction
+
+Confirmed finding: [i3-review.md](i3-review.md), lines17–37. Baseline revision: `e7c8bf5a10212189f128a7126eb11b97fd42eb0e`. Run `n8-20261002-1740`, work unit `n8-replicate-i3-r01`, attempt `replicate-i3-r01-1`.
+
+The shared metadata boundary now walks PNG chunk headers before Sharp metadata. Each step requires a complete12-byte chunk envelope and an in-bounds declared payload; the cursor advances by length+12. Any acTL/fcTL/fdAT chunk is denied, including one-frame APNG or stray/malformed animation chunks. Missing/truncated chunks and missing/nonempty IEND fail closed. Work is bounded by the existing10MiB input limit. The walk stops at IEND to preserve the accepted literal-size trailing-byte contract. Compressed bytes are never searched. Existing JPEG/WebP and all earlier production code remain byte-identical.
+
+The fixture is the review's CRC-correct512×512 RGB two-frame APNG: IHDR, acTL(2,0), fcTL(0,delay1/10), IDAT red rows, fcTL(1), fdAT(2,blue rows), IEND;4061 bytes, SHA256031839f815d9d497abec27a167b236c92816a8ceb6aac41303b387e364d154f5. Real Sharp0.35.4 reports no pages. Both unchanged focused assertions failed against the original guard with Missing expected rejection (exit1,0/2), then passed with the correction (exit0,2/2). This is an actual behavioral guard control, not a syntax failure.
+
+The full affected Node22 file passes150/150 (exit0). It checks safe provider_output_denied without leaked cause/message, input rejection, one download for animated depth, zero artifacts, one-frame APNG, stray fcTL/fdAT, short/late acTL, truncation, missing CRC, oversized length, missing/nonempty IEND, and static PNG acceptance with animation names inside compressed pixels. Existing WebP/JPEG, DNS all-answer zero-connect oracle, byte/deadline/pixel/cleanup tests remain green. Production/test syntax and git diff --check pass.134 protected files, including accepted I1/I2 code/tests/contracts and previous reports/snapshots/logs, are unchanged.
+
+Exact commands, exits, counts, first expected failures, CPU affinity[0,1], source hashes and measurement gaps are in [checks](../../telemetry/n8-20261002-1740/replicate-i3-r01-checks.json); the two-source/protected hash [snapshot](../../telemetry/n8-20261002-1740/replicate-i3-r01-snapshot.json) binds the evidence to these source bytes. The first read-only hash-capture attempt used the wrong root for historical log basenames; it was corrected before source edits and is disclosed in checks.
+
+Profile compact-quality-first-v2; requested gpt-6.1-sol/high. Host-confirmed actual model/effort, usage and cost are null pending host metadata. Elapsed through evidence finalization: 434.759s, including setup; active time is unavailable. Only local Sharp, injected HTTP/DNS and disposable synthetic files were used, with CPU<=2 and no dependency writes.
+
+Ready for affected independent review. No fresh review, real provider, live TLS, PostgreSQL/build/full-project or full-feature AC result is claimed. I4–I8 integration/hosted/release gates remain outside this correction. No delegation, commit, push, global configuration, Docker, real network or run-events changes.
