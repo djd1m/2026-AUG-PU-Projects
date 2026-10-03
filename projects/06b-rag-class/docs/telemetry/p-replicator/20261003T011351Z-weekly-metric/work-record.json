@@ -51,7 +51,7 @@
     }
   },
   "prepare": {
-    "scope_revision": "7c79190c2063755ad8cb5a83e5c6f44e2f50ef48cb8afd3d4b62a29e6d16388e",
+    "scope_revision": "7111ecbca3c663701e9c24206d4603828272558e10504263d54309c9ecb7e05e",
     "scope": [
       "MET01..06 operator metrics and bounded page verification"
     ],
@@ -108,7 +108,7 @@
     "forecast": {
       "status": "insufficient_data",
       "method": "No calibrated comparable operator-verification feature; no numerical forecast",
-      "scope_revision": "7c79190c2063755ad8cb5a83e5c6f44e2f50ef48cb8afd3d4b62a29e6d16388e",
+      "scope_revision": "7111ecbca3c663701e9c24206d4603828272558e10504263d54309c9ecb7e05e",
       "calibration": "not_applicable",
       "comparable_run_ids": [],
       "exclusions": [],
@@ -120,7 +120,7 @@
   },
   "routes": [
     {
-      "scope_revision": "7c79190c2063755ad8cb5a83e5c6f44e2f50ef48cb8afd3d4b62a29e6d16388e",
+      "scope_revision": "7111ecbca3c663701e9c24206d4603828272558e10504263d54309c9ecb7e05e",
       "tier": "M",
       "rationale": "New outbound GET L, fresh full SPARC2026-09-30 exception M with mandatorychecks retained",
       "phase": "plan",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "scope_revision": "7c79190c2063755ad8cb5a83e5c6f44e2f50ef48cb8afd3d4b62a29e6d16388e",
+      "scope_revision": "7111ecbca3c663701e9c24206d4603828272558e10504263d54309c9ecb7e05e",
       "tier": "M",
       "rationale": "New outbound GET L, fresh full SPARC2026-09-30 exception M with mandatorychecks retained",
       "phase": "implementation",
