@@ -1,0 +1,81 @@
+{
+  "run_id": "20261002T232200Z-f04",
+  "work_unit_id": "n7-f04a-sol-r1",
+  "attempt_id": "correct-a1",
+  "profile": "compact-quality-first-v2",
+  "started_at": "2026-10-02T23:57:17.975772+00:00",
+  "source_revision": "40623e0ec4444c11efacbf9def6beea7726af1f3",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "status": "completed",
+  "resume": {
+    "prior_attempt": "sol-a interrupted receipt not accepted",
+    "approval": "OWN-N7-002 + explicit correction autonomy; sole worker NOagents",
+    "checkpoint": "not_applicable: caller source/receipt handoff",
+    "source_continuity": "HEAD matches caller baseline",
+    "next": "P1 correction only"
+  },
+  "route": {
+    "stage": "before_IMPLEMENT",
+    "tier": "XL",
+    "rationale": "Completion authority is safety invariant; preserve approved plan and required full PG/unit/type/lint/build and targeted mutation; no B/dispatch algorithm changes",
+    "scope": [
+      "src/replies/input.ts",
+      "src/replies/store.ts",
+      "src/db.ts",
+      "db/007-reply-tail-horizon.sql",
+      "tests/replies*",
+      "scripts/check-f04a-r1*",
+      "implementation-a.md",
+      "correction-a-r1.md",
+      "own telemetry"
+    ],
+    "ac": [
+      "AC-A4 exact spec line15",
+      "AC-A5 exact spec line17",
+      "101-tail S0 then S1; incomplete empty/sparse; immutable tail horizon; stale/reset cannot complete"
+    ],
+    "donor": "Requested F04 donor symlink absent; reuse existing F03b actual node_modules read-only via own symlink. package lock hash checked below.",
+    "forecast": "insufficient_data; hard900s reserved180s delivery",
+    "mechanical_exit": 1
+  },
+  "missing_data": [
+    "actual model/effort/usage/cost pending host"
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "implementation stage; no browser E2E authorized"
+  },
+  "ended_at": "2026-10-03T00:05:45.035049+00:00",
+  "product_revision": "d869e64f29a673614f3032f53118a717418bb8af",
+  "source_sha256": "bf2e05e510128c9a0ae4d015b6686ba93471d7a956ce7946a891fb8185255e80",
+  "build_sha256": "1d8ce1b43ac566444fc5eeff15ecd6d284863a423879a30e834e21c9a2cbf109",
+  "image_id": "sha256:83149eaf54020cf8dedcec267848d114ea02ef0f77d779fd21c21bcb9619c94a",
+  "checks": {
+    "typecheck": 0,
+    "lint": 0,
+    "host_build": 0,
+    "image_build": 0,
+    "full_unit_16_of_16": 0,
+    "full_pg_66_of_66": 0,
+    "mutation_harness": 0,
+    "unconditional_tail_mutant_expected_failure": 1,
+    "restored_affected_pg_15_of_15": 0,
+    "runtime_secret_header_body_canary": 0,
+    "npm_audit": 0,
+    "source_build_image_snapshot": 0
+  },
+  "elapsed_wall_ms": 507059,
+  "active_wall_ms": null,
+  "heavy": {
+    "ready": "2026-10-03T00:01:55Z",
+    "acquired": "2026-10-03T00:01:55Z",
+    "released": "2026-10-03T00:03:57Z"
+  },
+  "receipt_path": "/tmp/n7-f04a-r1/projects/07-cold-email-warmup/docs/telemetry/features/20261002T232200Z-f04/sol-a-r1-receipt.md",
+  "independent_review": "pending parent fresh source-bound review",
+  "fallback": "No model switch or agents; actual model pending host proof; dependency donor path fallback only"
+}
