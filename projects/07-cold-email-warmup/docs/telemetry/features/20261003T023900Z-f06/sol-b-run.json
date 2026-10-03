@@ -1,5 +1,5 @@
 {
-  "status": "running",
+  "status": "failed",
   "run_id": "20261003T023900Z-f06",
   "work_unit_id": "n7-f06b-sol",
   "attempt_id": "b1",
@@ -29,5 +29,36 @@
   "cpu_limit": 2.0,
   "db_no_host_ports": true,
   "web_loopback_only": true,
-  "ui_network_already_attached": false
+  "ui_network_already_attached": false,
+  "finished_at": "2026-10-03T04:04:38.364308+00:00",
+  "elapsed_wall_ms": 825996,
+  "active_wall_ms": null,
+  "retry_count": 3,
+  "escalation_count": 0,
+  "cost_basis": "unavailable",
+  "tokens": null,
+  "external_spend": null,
+  "external_paid_actions_executed": false,
+  "defect": {
+    "id": "F06B-BLOCK-001",
+    "file": "src/web/client.ts",
+    "line": 27,
+    "reason": "Native Window.fetch called with SessionClient receiver throws Illegal invocation; central client maps it to network_error before HTTP.",
+    "source_changed": false
+  },
+  "checks": {
+    "syntax": "pass: four JS modules plus two Python AST parses",
+    "source_image": "93 host source files, 92 in-image source files (Dockerfile build input only), exact build hash matches",
+    "secret_scan": "pass runtime values suppressed; credential API canary not exercised",
+    "browser_matrix": "failed at first Chromium1440 cabinet bootstrap",
+    "performance": "not run; mandatory gate pending",
+    "unit38_fullPG115_type_lint_build_mutation": "inherited accepted A/R1, unchanged source; not rerun",
+    "independent_astra_review": "pending coordinator"
+  },
+  "pending_ac": [
+    "B1 Chromium mobile/fulljourney, Firefox/WebKit smoke, keyboard/focus/reduced motion/layout",
+    "B2 all business journeys, actual operator poll/scheduler/reply/complaint/unsubscribe/payment and rendered messages",
+    "B3 tenant boundaries, negative zero-effects, session races/two-tab/expiry and states",
+    "B4 authenticated 10 concurrent >=100 sample performance and fresh independent review"
+  ]
 }

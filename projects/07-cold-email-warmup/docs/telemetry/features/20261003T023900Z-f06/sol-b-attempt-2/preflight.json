@@ -1,0 +1,51 @@
+{
+  "status": "ready",
+  "at": "2026-10-03T03:59:06.187374+00:00",
+  "source_revision": "a76175a812bfe3c137029b425d413a69639a25d7",
+  "source_sha256": "932e7e0b5f8d3189ab8256f1858bd0b74389c91504775f4e2a8be704da67d1de",
+  "source_files_matched": 93,
+  "image_id": "sha256:a65867e3f1af46b3f4d8a4894a002397ce4a84f890b22b6d0d10d44d1eaa2f7f",
+  "build_sha256": "110c84753e81699007417bba0cd92e20288bbee938921657c58e33c183299ac6",
+  "spec_sha256": "72b44888ddab0405d955084d572130649fbdddc70b33d53a364db7dd80f05de5",
+  "scripts": {
+    "f06-fixture.mjs": "c5884c0917a8b5899fc7822d5b897d8fd934085c1594373506e774fa67ba58b0",
+    "f06-run.py": "f8fddaf3a402cde005f5e62a0034fd8a1102cd1af25b6cc9b4d14b1a8ff7c7eb",
+    "f06-journey.mjs": "a019c89527b42d2b64ee398083a5fabbe00207de1e7c8943cc9cfa55ee45b9ae",
+    "f06-security.mjs": "b8e011c18270ca204e78f2f892404aa628fcf7faed97aba3dbf56c498e7fc773",
+    "f06-browser.mjs": "f84fdbb83a1a2239eeec6798baa7418d288f0dc6fdaf911fb033a7ec7c3b0e02"
+  },
+  "environment": {
+    "cpu": 2,
+    "origin": "http://127.0.0.1:18709",
+    "web": "n7f06a-web-1",
+    "db_no_host_ports": true,
+    "browser_container": "codex-ui-playwright",
+    "playwright": "1.63.0",
+    "ws": "ws://127.0.0.1:9320/"
+  },
+  "input_names": [
+    "N7_UI_EVIDENCE",
+    "SESSION_HMAC_KEY_FILE",
+    "CREDENTIAL_KEYRING_FILE",
+    "RECIPIENT_HASH_KEY_FILE",
+    "DATABASE_PASSWORD_FILE"
+  ],
+  "command_as_data": [
+    "docker",
+    "exec",
+    "-i",
+    "-e",
+    "N7_UI_EVIDENCE=/opt/browser/n7-f06b-20261003T023900Z-attempt-2",
+    "codex-ui-playwright",
+    "node",
+    "/opt/browser/n7-f06b-20261003T023900Z-attempt-2/f06-browser.mjs"
+  ],
+  "effects": [
+    "own TEST tenant UI mutations",
+    "trusted accepted local fixture poll/sink/provider",
+    "own network attach only if absent; detach in finally",
+    "own contexts/bridge/sockets close; shared browser server stays running"
+  ],
+  "evidence_destination": "/tmp/n7-f06b-sol/projects/07-cold-email-warmup/docs/telemetry/features/20261003T023900Z-f06/sol-b-attempt-2",
+  "secrets": "operator and runtime values remain in web process; never browser/logs"
+}

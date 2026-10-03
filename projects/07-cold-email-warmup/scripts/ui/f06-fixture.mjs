@@ -1,15 +1,15 @@
 // Trusted operator-only fixture: imports accepted image modules and touches own TEST DB.
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { loadConfig } from '/app/dist/src/config.js';
-import { createPool } from '/app/dist/src/db.js';
-import { seedFixture } from '/app/dist/src/replies/fixture.js';
-import { PollWorker } from '/app/dist/src/replies/worker.js';
-import { DispatchStore } from '/app/dist/src/dispatch/store.js';
-import { SubmissionStore } from '/app/dist/src/dispatch/submission.js';
-import { SuppressionStore } from '/app/dist/src/suppression/store.js';
-import { BillingService } from '/app/dist/src/billing/service.js';
-import { LocalProvider } from '/app/dist/src/billing/provider.js';
+import { loadConfig } from '/app/dist/config.js';
+import { createPool } from '/app/dist/db.js';
+import { seedFixture } from '/app/dist/replies/fixture.js';
+import { PollWorker } from '/app/dist/replies/worker.js';
+import { DispatchStore } from '/app/dist/dispatch/store.js';
+import { SubmissionStore } from '/app/dist/dispatch/submission.js';
+import { SuppressionStore } from '/app/dist/suppression/store.js';
+import { BillingService } from '/app/dist/billing/service.js';
+import { LocalProvider } from '/app/dist/billing/provider.js';
 const input=JSON.parse(readFileSync(0,'utf8')), config=loadConfig(), pool=createPool(config.databaseUrl);
 assert.equal(config.origin,'http://127.0.0.1:18709');
 assert.equal(config.dispatchMode,'local_test');
@@ -31,8 +31,8 @@ try {
   const m=(await pool.query('SELECT * FROM local_test_message WHERE tenant_id=$1 AND recipient=$2',[tenant,input.recipient])).rows[0];assert(m);
   await seedFixture(pool,tenant,mailbox,{uidvalidity:'1',uidNext:2,headers:[{uid:1,from:m.recipient,inReplyTo:m.message_id,messageId:'<f06b-reply@example.test>'}]});
   const polled=await poll.poll(tenant,mailbox);assert.equal(polled.state,'complete');
-  result={poll:polled,enrollments:(await pool.query('SELECT e.state,e.stop_reason FROM enrollment e WHERE e.tenant_id=$1 AND e.campaign_id=$2',[tenant,campaign])).rows};
-  assert(result.enrollments.some(e=>e.state==='stopped'));
+  result={poll:polled,enrollments:(await pool.query('SELECT e.state FROM enrollment e WHERE e.tenant_id=$1 AND e.campaign_id=$2',[tenant,campaign])).rows};
+  assert(result.enrollments.some(e=>e.state==='replied'));
  } else if(input.action==='complaint') {
   result=await new SuppressionStore(pool,config.recipientHashKey).complaint({eventId:`f06b-${mailbox}`,tenantId:tenant,mailboxId:mailbox,recipientAddress:input.recipient});
   result.mailbox=(await pool.query('SELECT state FROM mailbox WHERE tenant_id=$1 AND id=$2',[tenant,mailbox])).rows[0];assert.equal(result.mailbox.state,'quarantined');

@@ -1,0 +1,234 @@
+{
+  "status": "failed",
+  "started_at": "2026-10-03T04:00:42.179Z",
+  "source": "932e7e0b5f8d3189ab8256f1858bd0b74389c91504775f4e2a8be704da67d1de",
+  "build": "110c84753e81699007417bba0cd92e20288bbee938921657c58e33c183299ac6",
+  "engines": [
+    {
+      "name": "chromium",
+      "width": 1440,
+      "height": 900,
+      "version": "153.0.8010.12"
+    }
+  ],
+  "checks": [],
+  "http": [
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/register",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    }
+  ],
+  "console": [
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "url": "http://127.0.0.1:18709/api/auth/me",
+      "http_status": "401",
+      "kind": "error"
+    }
+  ],
+  "page_errors": [],
+  "screenshots": [],
+  "failures": [
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "kind": "TimeoutError",
+      "assertion": null
+    }
+  ],
+  "cleanup": {
+    "own_contexts_closed": true,
+    "bridge_closed": true,
+    "sockets_destroyed": true,
+    "shared_browser_server_preserved": true
+  },
+  "bridge_requests": [
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/register",
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    }
+  ],
+  "transport_diagnostic": {
+    "direct": {
+      "status": 200,
+      "fields": [
+        "identity",
+        "modes",
+        "poolDisclosure",
+        "plans",
+        "intents",
+        "referralCookiePresent",
+        "providers"
+      ]
+    },
+    "method": {
+      "name": "TypeError",
+      "message": "Failed to execute 'fetch' on 'Window': Illegal invocation"
+    },
+    "accepted_client": {
+      "name": "Error",
+      "code": "network_error",
+      "message": "network_error"
+    }
+  },
+  "failure_dom": "К содержимому\nN7 Почтовый прогрев\nВыйти\n\nВАШЕ ПРОСТРАНСТВО\n\nОбзор\nЯщики\nКампании\nНаблюдения\nТариф\nПартнёр\n\nПодключение → отдельное согласие → пул и цепочки → наблюдаемый результат.\n\nПолучаем режимы сервера…\n\nCOHORT DESK\n\nОбзор\n\nСоединение прервано или запрос занял более 10 секунд. Обновите состояние перед повтором.\n\nЛокальный MVP. TEST не подтверждает реальную доставляемость. Отправки и тариф определяет сервер.",
+  "finished_at": "2026-10-03T04:00:53.205Z"
+}
