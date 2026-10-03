@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: private receipt reports canonical stored digest despite JSONB key order; corrupt digest rejects
+ok 1 - private receipt reports canonical stored digest despite JSONB key order; corrupt digest rejects
+  ---
+  duration_ms: 9.985823
+  type: 'test'
+  ...
+# Subtest: digest oracle detects the previous JSON.stringify receipt implementation
+ok 2 - digest oracle detects the previous JSON.stringify receipt implementation
+  ---
+  duration_ms: 2.49818
+  type: 'test'
+  ...
+# Subtest: held response is released only after matching 200, handler completion and owner 404
+ok 3 - held response is released only after matching 200, handler completion and owner 404
+  ---
+  duration_ms: 18.881147
+  type: 'test'
+  ...
+# Subtest: failed DELETE or accessible job fails the case while finally releases/cancels/joins
+ok 4 - failed DELETE or accessible job fails the case while finally releases/cancels/joins
+  ---
+  duration_ms: 6.430133
+  type: 'test'
+  ...
+# Subtest: ordering oracle detects premature release before handler completion
+ok 5 - ordering oracle detects premature release before handler completion
+  ---
+  duration_ms: 3.524261
+  type: 'test'
+  ...
+# Subtest: fresh hosted context logs in as existing viewport owner before fixture purchase
+ok 6 - fresh hosted context logs in as existing viewport owner before fixture purchase
+  ---
+  duration_ms: 8.080973
+  type: 'test'
+  ...
+# Subtest: wrong owner ID or email rejects before purchase and closes fresh context
+ok 7 - wrong owner ID or email rejects before purchase and closes fresh context
+  ---
+  duration_ms: 7.094163
+  type: 'test'
+  ...
+# Subtest: source budget is five registrations and eight unique legacy plus five hosted reservations per owner
+ok 8 - source budget is five registrations and eight unique legacy plus five hosted reservations per owner
+  ---
+  duration_ms: 0.80112
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 323.706065
