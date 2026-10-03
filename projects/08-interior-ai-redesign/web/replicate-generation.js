@@ -30,9 +30,9 @@ function matches(context,binding,claim) {
 async function references(pool,claim,key) {
   try {
     const row=(await pool.query(`SELECT j.status,j.output_key,
-      EXISTS(SELECT 1 FROM job WHERE output_key=$3) OR
-      EXISTS(SELECT 1 FROM generation_evidence WHERE canonical_evidence->>'output_key'=$3
-        OR canonical_evidence->>'artifact_key'=$3) AS referenced,
+      EXISTS(SELECT 1 FROM job WHERE output_key=$3::uuid) OR
+      EXISTS(SELECT 1 FROM generation_evidence WHERE canonical_evidence->>'output_key'=(($3::uuid)::text)
+        OR canonical_evidence->>'artifact_key'=(($3::uuid)::text)) AS referenced,
       EXISTS(SELECT 1 FROM generation_evidence WHERE job_id=j.id) AS has_evidence
       FROM job j WHERE j.id=$1 AND j.account_id=$2`,[claim.job_id,claim.account_id,key])).rows[0];
     if(!row||typeof row.referenced!=='boolean'||typeof row.has_evidence!=='boolean')return null;
