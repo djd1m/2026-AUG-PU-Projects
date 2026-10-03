@@ -12,10 +12,10 @@
   "feature": "badge-referral",
   "tier": "M (fresh SPARC exception to L)",
   "started_at": "2026-10-03T00:05:34.978724+00:00",
-  "ended_at": null,
-  "status": "active",
+  "ended_at": "2026-10-03T01:10:51.325919+00:00",
+  "status": "completed",
   "baseline_revision": "1952979467428f49f8f740aa636c476b5c3598fb",
-  "final_revision": null,
+  "final_revision": "c3d8cfcc3b3f1c61cc0998b378ecf2a677a7daff",
   "spec_sha256": "918e5d0e070d61f599d4cb5b7fc883adaee55a6c4c8c76c4c1cae21837018c82",
   "risk_flags": [
     "Public redirect and click dedup",
@@ -23,19 +23,47 @@
     "Registration attribution and self-family exclusion"
   ],
   "quality": {
-    "required_gates_passed": false
+    "required_gates_passed": true,
+    "ac_met": 7,
+    "ac_total": 7,
+    "source_review_defects": 0,
+    "build_defects": 1,
+    "build_defects_closed": 1,
+    "first_pass_acceptance": false,
+    "publicrelease_clearance": false,
+    "ui_attempts_failed": 2,
+    "ui_attempts_passed": 1
   },
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 3916347,
     "active_wall_ms": null,
     "input_tokens_total": null,
-    "cost": null
+    "cost": null,
+    "measured_cli_usage_only": {
+      "input_tokens": 2927572,
+      "cached_input_tokens": 2664704,
+      "output_tokens": 35464,
+      "reasoning_output_tokens": 5448,
+      "total_tokens": 2963036
+    },
+    "measured_cli_usage_only_note": "4 final native cumulative snapshots; cached/reasoning subsets; coordinator/cost unknown"
   },
   "telemetry_status": "partial",
   "missing_data": [
     "Coordinator actual model/usage/cost unavailable",
     "Pre-record worktree preparation unmeasured"
   ],
-  "acceptance_evidence": [],
-  "native_stage_usage_files": []
+  "acceptance_evidence": [
+    "docs/telemetry/p-replicator/20261003T000534Z-badge-referral/evidence/delivery-1-receipt.md",
+    "tests/artifacts/badge-referral/final-checks-summary.json",
+    "tests/artifacts/badge-referral/tested-source-final.json",
+    "tests/artifacts/badge-referral/ui-output/report.json",
+    "tests/artifacts/badge-referral/ui-db-verification.json"
+  ],
+  "native_stage_usage_files": [
+    "docs/telemetry/p-replicator/20261003T000534Z-badge-referral/evidence/build-correction-1-native.json",
+    "docs/telemetry/p-replicator/20261003T000534Z-badge-referral/evidence/build-review-1-native.json",
+    "docs/telemetry/p-replicator/20261003T000534Z-badge-referral/evidence/implementation-1-native.json",
+    "docs/telemetry/p-replicator/20261003T000534Z-badge-referral/evidence/review-1-native.json"
+  ]
 }

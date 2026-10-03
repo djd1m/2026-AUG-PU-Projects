@@ -1,0 +1,41 @@
+web-1  |    ▲ Next.js 15.5.27
+web-1  |    - Local:        http://localhost:3000
+web-1  |    - Network:      http://192.168.144.3:3000
+web-1  | 
+web-1  |  ✓ Starting...
+web-1  |  ✓ Ready in 1065ms
+web-1  | (node:1) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+web-1  | (Use `node --trace-warnings ...` to show where the warning was created)
+proxy-1  | {"level":"info","ts":1790989414.4868062,"msg":"maxprocs: Updating GOMAXPROCS=1: using minimum allowed GOMAXPROCS"}
+proxy-1  | {"level":"info","ts":1790989414.4878173,"msg":"GOMEMLIMIT is updated","package":"github.com/KimMachineGun/automemlimit/memlimit","GOMEMLIMIT":11286868377,"previous":9223372036854775807}
+proxy-1  | {"level":"info","ts":1790989414.4883378,"msg":"using config from file","file":"/etc/caddy/Caddyfile"}
+proxy-1  | {"level":"info","ts":1790989414.4910665,"msg":"adapted config to JSON","adapter":"caddyfile"}
+proxy-1  | {"level":"warn","ts":1790989414.4910882,"msg":"Caddyfile input is not formatted; run 'caddy fmt --overwrite' to fix inconsistencies","adapter":"caddyfile","file":"/etc/caddy/Caddyfile","line":2}
+proxy-1  | {"level":"info","ts":1790989414.4932158,"logger":"admin","msg":"admin endpoint started","address":"localhost:2019","enforce_origin":false,"origins":["//localhost:2019","//[::1]:2019","//127.0.0.1:2019"]}
+proxy-1  | {"level":"info","ts":1790989414.5006742,"logger":"tls.cache.maintenance","msg":"started background certificate maintenance","cache":"0xc00013bd80"}
+proxy-1  | {"level":"info","ts":1790989414.5170593,"logger":"http.auto_https","msg":"server is listening only on the HTTPS port but has no TLS connection policies; adding one to enable TLS","server_name":"srv0","https_port":443}
+proxy-1  | {"level":"info","ts":1790989414.517104,"logger":"http.auto_https","msg":"automatic HTTP->HTTPS redirects are disabled","server_name":"srv0"}
+proxy-1  | {"level":"info","ts":1790989414.520325,"logger":"http","msg":"enabling HTTP/3 listener","addr":":443"}
+proxy-1  | {"level":"info","ts":1790989414.5204844,"msg":"failed to sufficiently increase receive buffer size (was: 208 kiB, wanted: 7168 kiB, got: 416 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details."}
+proxy-1  | {"level":"info","ts":1790989414.521143,"logger":"http.log","msg":"server running","name":"srv0","protocols":["h1","h2","h3"]}
+proxy-1  | {"level":"info","ts":1790989414.5211627,"logger":"http","msg":"enabling automatic TLS certificate management","domains":["referral-host.test","n6b-ui.test"]}
+proxy-1  | {"level":"warn","ts":1790989414.5222387,"logger":"pki.ca.local","msg":"installing root certificate (you might be prompted for password)","path":"storage:pki/authorities/local/root.crt"}
+proxy-1  | {"level":"info","ts":1790989414.5278623,"msg":"warning: \"certutil\" is not available, install \"certutil\" with \"apt install libnss3-tools\" or \"yum install nss-tools\" and try again"}
+proxy-1  | {"level":"info","ts":1790989414.5278964,"msg":"define JAVA_HOME environment variable to use the Java trust"}
+proxy-1  | {"level":"info","ts":1790989414.5307157,"logger":"tls","msg":"cleaning storage unit","storage":"FileStorage:/data/caddy"}
+proxy-1  | {"level":"info","ts":1790989414.532974,"logger":"tls.obtain","msg":"acquiring lock","identifier":"referral-host.test"}
+proxy-1  | {"level":"info","ts":1790989414.5361738,"logger":"tls.obtain","msg":"acquiring lock","identifier":"n6b-ui.test"}
+proxy-1  | {"level":"info","ts":1790989414.5369637,"logger":"tls","msg":"finished cleaning storage units"}
+proxy-1  | {"level":"info","ts":1790989414.5370166,"logger":"tls.obtain","msg":"lock acquired","identifier":"referral-host.test"}
+proxy-1  | {"level":"info","ts":1790989414.5370789,"logger":"tls.obtain","msg":"obtaining certificate","identifier":"referral-host.test"}
+proxy-1  | {"level":"info","ts":1790989414.5483143,"logger":"tls.obtain","msg":"lock acquired","identifier":"n6b-ui.test"}
+proxy-1  | {"level":"info","ts":1790989414.5485926,"logger":"tls.obtain","msg":"obtaining certificate","identifier":"n6b-ui.test"}
+proxy-1  | {"level":"info","ts":1790989414.5599952,"logger":"tls.obtain","msg":"certificate obtained successfully","identifier":"referral-host.test","issuer":"local"}
+proxy-1  | {"level":"info","ts":1790989414.560192,"logger":"tls.obtain","msg":"releasing lock","identifier":"referral-host.test"}
+proxy-1  | {"level":"warn","ts":1790989414.5615282,"logger":"tls","msg":"stapling OCSP","identifiers":["referral-host.test"]}
+proxy-1  | {"level":"info","ts":1790989414.5649147,"logger":"tls.obtain","msg":"certificate obtained successfully","identifier":"n6b-ui.test","issuer":"local"}
+proxy-1  | {"level":"info","ts":1790989414.565264,"logger":"tls.obtain","msg":"releasing lock","identifier":"n6b-ui.test"}
+proxy-1  | {"level":"warn","ts":1790989414.5664017,"logger":"tls","msg":"stapling OCSP","identifiers":["n6b-ui.test"]}
+proxy-1  | {"level":"info","ts":1790989414.6684206,"msg":"certificate installed properly in linux trusts"}
+proxy-1  | {"level":"info","ts":1790989414.6694264,"msg":"autosaved config (load with --resume flag)","file":"/config/caddy/autosave.json"}
+proxy-1  | {"level":"info","ts":1790989414.6695096,"msg":"serving initial configuration"}

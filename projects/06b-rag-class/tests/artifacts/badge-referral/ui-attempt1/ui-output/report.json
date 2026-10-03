@@ -1,0 +1,16 @@
+{
+  "started_at": "2026-10-03T01:03:37.801Z",
+  "source_revision": "c3d8cfcc3b3f1c61cc0998b378ecf2a677a7daff",
+  "source_snapshot_sha256": "1a5bd1939c4851e85402f5a1669d35a61835c14a2f00e6d72ffb8be54f9a26a5",
+  "image": "sha256:9bf6944d0ab3506b27e6237083e7ebf03d6bc28fb39fa64a00d257951747a3df",
+  "binding": "Actual production web/widget/Caddy/PostgreSQL; no network mocks, no paid calls. Persisted DB checks follow browser run before cleanup.",
+  "checks": [],
+  "screenshots": [
+    "landing-1440.png",
+    "intent-1440.png"
+  ],
+  "status": "failed",
+  "stage": "intent-1440",
+  "error": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('n6b-widget').getByRole('link', { name: 'Работает на N6b' }) to be visible\n\n    at /opt/browser/n6b-f10-ui.mjs:30:112",
+  "finished_at": "2026-10-03T01:04:10.393Z"
+}

@@ -68,3 +68,11 @@ source freeze after 605.205323 seconds, including reading and local checks. Fina
 the native terminal receipt. Active duration and time to accepted feature remain unknown; savings are not established.
 Coordinator telemetry: `docs/telemetry/p-replicator/20261003T000534Z-badge-referral/`.
 CLI `-o` owns the terminal `evidence/implementation-1-receipt.md`; this executor does not manually write TRACE.
+
+## Приёмка координатора — 2026-10-03T01:09:18.880369+00:00
+
+REF-01..07 приняты на `c3d8cfcc3b3f1c61cc0998b378ecf2a677a7daff`,18файлов snapshot `1a5bd1939c4851e85402f5a1669d35a61835c14a2f00e6d72ffb8be54f9a26a5`, image `sha256:9bf6944d0ab3506b27e6237083e7ebf03d6bc28fb39fa64a00d257951747a3df`. Все532unit/225PG/typecheck/build0 после узкого исправления instrumentation; первоначальная build-ошибка и532/225green сохранены в full-regression-attempt1. Обе Astra-проверки ACCEPT_WITH_CAVEATS: runtime оговорки закрыты, будущая F13/F14 family/handover интеграция явно остаётся отдельной.
+
+ActualDockerUI1440/390 PASS,6снимков и persistedDBPASS. Настоящий widgetbadge302→landing cookie→registration refFK; firsttouch/expiry неизменны после второго касания; intent200/повторfalse/чужойOrigin403/anonymous401; собственный опубликованный бот нового аккаунта сохраняет Freebadge и неизменные plan/removal. Внешний testhost отдаёт HTML собственного бота при обычной HTTP-навигации; page.setContent отсутствует, сервисные ответы не подменены. UI1/2 неуспешны и сохранены. Реальных платных вызовов нет. Cleanup ownstack/privateenv завершён, sharedbrowser сохранён.
+
+Профиль compact-quality-first-v2;4actualnative Sol6.1high/Astra medium, CLI subtotal2963036tokens; elapsed3823902ms отrunstart, coordinator/active/costunknown,pre-recordprepнеизмерен. F13 обязан подключить resolver к созданиюподаккаунта и сF14 определить ordering против handover; SC0112reachableUI сейчас не заявлен. Следующий этап weekly-metric.

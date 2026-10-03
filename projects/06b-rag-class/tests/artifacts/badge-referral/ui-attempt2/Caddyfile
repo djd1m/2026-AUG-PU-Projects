@@ -7,5 +7,6 @@ https://n6b-ui.test {
 }
 https://referral-host.test {
  tls internal
- reverse_proxy host:3001
+ root * /srv/host
+ file_server
 }
