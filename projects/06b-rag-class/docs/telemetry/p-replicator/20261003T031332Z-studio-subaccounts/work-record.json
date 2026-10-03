@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "prepare",
+  "stage": "review",
   "roots": {
     "project": "."
   },
   "identity": {
     "run_id": "20261003T031332Z-studio-subaccounts",
     "work_unit_id": "studio-subaccounts-feature",
-    "current_attempt_id": "plan-1"
+    "current_attempt_id": "review-1"
   },
   "telemetry": {
     "run": {
@@ -22,7 +22,7 @@
   },
   "source": {
     "baseline_revision": "84cd6edad498ef040794a8a95443659592927269",
-    "current_revision": "84cd6edad498ef040794a8a95443659592927269",
+    "current_revision": "362e8f4f3d341023751b085e3b32c82b59acb053",
     "build_revision": null,
     "requirements": [
       {
@@ -45,8 +45,8 @@
       }
     ],
     "continuity": {
-      "expected_revision": "84cd6edad498ef040794a8a95443659592927269",
-      "observed_revision": "84cd6edad498ef040794a8a95443659592927269",
+      "expected_revision": "362e8f4f3d341023751b085e3b32c82b59acb053",
+      "observed_revision": "362e8f4f3d341023751b085e3b32c82b59acb053",
       "reconciliation": null
     }
   },
@@ -171,6 +171,18 @@
     {
       "id": "plan-1",
       "status": "completed"
+    },
+    {
+      "id": "implementation-1",
+      "status": "completed"
+    },
+    {
+      "id": "review-1",
+      "status": "active"
+    },
+    {
+      "id": "full-regression-1",
+      "status": "active"
     }
   ],
   "work_units": [

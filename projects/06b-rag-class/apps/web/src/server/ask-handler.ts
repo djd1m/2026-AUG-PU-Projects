@@ -35,7 +35,8 @@ export function createAskHandler(deps: AskDeps) {
       }
       const bot = await readAnswerBot(deps.tenantPool, accountId, botId);
       if (!bot) return fail(404, 'not_found', 'Не найдено');
-      const result = await answerQuestion(deps, { bot, question, channel: { kind: 'sandbox', accountId }, logChannel: 'sandbox' });
+      const result = await answerQuestion(deps, { bot, question,
+        channel: { kind: 'sandbox', accountId: bot.accountId }, logChannel: 'sandbox' });
       const headers: Record<string, string> = { 'Cache-Control': 'no-store' };
       if (result.status === 200) return Response.json({ data: result.data }, { headers });
       if (result.error.retryAfterSeconds !== undefined) headers['Retry-After'] = String(result.error.retryAfterSeconds);

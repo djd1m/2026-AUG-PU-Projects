@@ -143,7 +143,7 @@ export interface CabinetSource {
 }
 
 /** Экран кабинета: боты аккаунта, их источники и ПОСЛЕДНЯЯ задача каждого источника. */
-export function listCabinetSources(pool: Pool, accountId: string): Promise<CabinetSource[]> {
+export function listCabinetSources(pool: Pool, accountId: string, selectedId?: string): Promise<CabinetSource[]> {
   return withTenant(pool, accountId, async (c) => {
     const rows = await c.query<{ bot_id: string; bot_name: string; source_id: string | null; kind: string | null;
       locator: string | null; job_id: string | null } & Partial<JobRow>>(`
@@ -153,7 +153,8 @@ export function listCabinetSources(pool: Pool, accountId: string): Promise<Cabin
       FROM bot b
       LEFT JOIN source s ON s.bot_id = b.id
       LEFT JOIN LATERAL (SELECT * FROM index_job x WHERE x.source_id = s.id ORDER BY x.created_at DESC LIMIT 1) j ON true
-      ORDER BY b.created_at, b.id, s.created_at, s.id`);
+      WHERE ($1::uuid IS NULL OR b.account_id = $1)
+      ORDER BY b.created_at, b.id, s.created_at, s.id`, [selectedId ?? null]);
     return rows.rows.map((r) => ({ bot_id: r.bot_id, bot_name: r.bot_name, source_id: r.source_id, kind: r.kind,
       locator: r.locator, job: r.job_id ? toView({ ...(r as JobRow), id: r.job_id, source_id: r.source_id! }) : null }));
   });

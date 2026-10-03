@@ -1,0 +1,21 @@
+{
+  "run_id": "20261003T031332Z-studio-subaccounts",
+  "snapshot_sha256": "38cca51076dc9b4bbfbd1b35209e47005233e228aa0766f5d6b14fa3f87eed8a",
+  "guard": "STU-02 real cap five under eight concurrent creates",
+  "command": [
+    "/usr/local/bin/node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "--config",
+    "vitest.int.config.ts",
+    "apps/web/tests/int/studio-clients.int.test.ts",
+    "-t",
+    "eight concurrent creates produce exactly five clients"
+  ],
+  "original_sha256": "334fc43e26ff8ea8d0c5cdf4a9c748b96188de0d841eb8daa4c752036225d50d",
+  "mutated_sha256": "f1efebb8a844a23d9213e026479d24b5341ac5ce201188f52207641b6df9c7a4",
+  "restored_sha256": "334fc43e26ff8ea8d0c5cdf4a9c748b96188de0d841eb8daa4c752036225d50d",
+  "red_exit": 1,
+  "restored_green_exit": 0,
+  "captured_at": "2026-10-03T03:48:29.825Z"
+}

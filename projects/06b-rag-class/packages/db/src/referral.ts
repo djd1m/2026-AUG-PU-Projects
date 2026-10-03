@@ -3,17 +3,26 @@ import type { Pool, PoolClient } from './pool.js';
 import { moscowDay } from './quota.js';
 import { withService } from './tenant.js';
 
-/** Use inside the account-creation transaction. actingStudioId must come from trusted studio authentication,
- * never a registration body. F13 must reuse this resolver when creating a studio child. */
+/** Use inside account creation. actingStudioId comes only from the authenticated studio session.
+ * F14 must lock affected account rows in the same UUID order before changing family membership. */
 export async function resolveReferralBot(client: PoolClient, publicId: string | null,
   actingStudioId: string | null = null): Promise<string | null> {
-  if (!publicId) return null;
   // Keep the source bot alive until account+session commit; a prior deletion simply produces no attribution.
-  const source = (await client.query<{ id: string; account_id: string; parent_account_id: string | null }>(`
-    SELECT b.id, b.account_id, a.parent_account_id FROM bot b JOIN account a ON a.id = b.account_id
-    WHERE b.public_id = $1 FOR KEY SHARE OF b`, [publicId])).rows[0];
-  if (!source || (actingStudioId && (source.account_id === actingStudioId
-    || source.parent_account_id === actingStudioId))) return null;
+  const source = publicId ? (await client.query<{ id: string; account_id: string }>(`
+    SELECT b.id, b.account_id FROM bot b
+    WHERE b.public_id = $1 FOR KEY SHARE OF b`, [publicId])).rows[0] : undefined;
+  if (actingStudioId) {
+    // Lock both accounts before the studio cap/eligibility check. Locking the studio first would
+    // deadlock reciprocal referrals. NO KEY UPDATE remains compatible with child insertion FKs.
+    await client.query(`SELECT id FROM account WHERE id = ANY($1::uuid[])
+      ORDER BY id FOR NO KEY UPDATE`, [[actingStudioId, ...(source ? [source.account_id] : [])]]);
+    if (!source || source.account_id === actingStudioId) return null;
+    // A detach/attach may have committed while waiting: decide from a fresh, locked membership.
+    const account = (await client.query<{ parent_account_id: string | null }>(
+      'SELECT parent_account_id FROM account WHERE id = $1', [source.account_id])).rows[0];
+    if (!account || account.parent_account_id === actingStudioId) return null;
+  }
+  if (!source) return null;
   return source.id;
 }
 

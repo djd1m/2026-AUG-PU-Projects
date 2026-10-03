@@ -1,0 +1,11 @@
+{
+ auto_https disable_redirects
+}
+https://n6b-ui.test {
+ tls internal
+ reverse_proxy web:3000
+}
+https://studio-fixture.test {
+ tls internal
+ reverse_proxy fixture:3001
+}

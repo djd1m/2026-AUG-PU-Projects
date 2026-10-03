@@ -66,4 +66,11 @@ describe('ANS-01: gates before answer gateway', () => {
     mocks.read.mockRejectedValue(new Error('secret DB connection string'));
     expect(await (await handler(post('{"question":"test"}'), BOT)).text()).not.toContain('secret');
   });
+  it('STU-04: studio remains lookup actor, sandbox quota uses the RLS-resolved child owner', async () => {
+    const childId = '33333333-3333-3333-3333-333333333333';
+    mocks.read.mockResolvedValue({ id: BOT, accountId: childId, contact: null });
+    expect((await handler(post('{"question":"test"}'), BOT)).status).toBe(200);
+    expect(mocks.read).toHaveBeenCalledWith(expect.anything(), ACCOUNT, BOT);
+    expect(mocks.answer.mock.calls[0]![1].channel).toEqual({ kind: 'sandbox', accountId: childId });
+  });
 });

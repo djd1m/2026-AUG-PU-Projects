@@ -12,7 +12,7 @@ export interface AnswerBot {
 export function readAnswerBot(pool: Pool, accountId: string, botId: string): Promise<AnswerBot | null> {
   return withTenant(pool, accountId, async (c) => {
     const row = (await c.query<{ id: string; account_id: string; contact: string | null }>(
-      'SELECT id, account_id, contact FROM bot WHERE id = $1 AND account_id = $2', [botId, accountId])).rows[0];
+      'SELECT id, account_id, contact FROM bot WHERE id = $1', [botId])).rows[0];
     return row ? { id: row.id, accountId: row.account_id, contact: row.contact } : null;
   });
 }
