@@ -1,0 +1,350 @@
+{
+  "run_id": "20261003T023900Z-f06",
+  "work_unit_id": "n7-f06b-astra",
+  "attempt_id": "review-b",
+  "source_revision": "acd5564e76643ee9f059cd45990622be153e06be",
+  "spec_sha256": "72b44888ddab0405d955084d572130649fbdddc70b33d53a364db7dd80f05de5",
+  "launch_sha256": "45aaa179df9b291b24ae64ab4eaca0c2d321151bbb33ea7eed33c2673f9277af",
+  "at": "2026-10-03T05:32:30.518941+00:00",
+  "method": "Read-only saved-artifact reconciliation; no tests, runtime, DB, browser or network execution",
+  "source_files": 93,
+  "source_exact_match": true,
+  "source_sha256": "e9e78e47c349a0c23b3542dc68945d1f976f76c6edbb8bee61c817a3aebd084b",
+  "build_sha256_saved": "455e80941dc8bc0c0dd7cca1a2f9b1388e1275b7f8b85fdf716993fdcb1ca27f",
+  "checks": [
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "status": "failed",
+      "checks": 146,
+      "failed_assertions": [
+        {
+          "engine": "chromium-390",
+          "phase": "manual-evidence",
+          "name": "public-report no overflow",
+          "pass": false
+        }
+      ],
+      "page_errors": [],
+      "unmatched_console": [],
+      "ready_before_start": true,
+      "copied_script_hash_mismatches": [],
+      "cleanup": {
+        "own_contexts_closed": true,
+        "bridge_closed": true,
+        "sockets_destroyed": true,
+        "shared_browser_server_preserved": true
+      }
+    },
+    {
+      "attempt": "sol-b-b3-crossbrowser-1",
+      "status": "failed",
+      "checks": 61,
+      "failed_assertions": [
+        {
+          "engine": "firefox-390",
+          "phase": "manual-evidence",
+          "name": "public-report no overflow",
+          "pass": false
+        },
+        {
+          "engine": "webkit-390",
+          "phase": "manual-evidence",
+          "name": "public-report no overflow",
+          "pass": false
+        }
+      ],
+      "page_errors": [],
+      "unmatched_console": [],
+      "ready_before_start": true,
+      "copied_script_hash_mismatches": [],
+      "cleanup": {
+        "own_contexts_closed": true,
+        "bridge_closed": true,
+        "sockets_destroyed": true,
+        "shared_browser_server_preserved": true
+      }
+    },
+    {
+      "attempt": "sol-b-b3-extra-1",
+      "status": "failed",
+      "checks": 9,
+      "failed_assertions": [],
+      "page_errors": [],
+      "unmatched_console": [],
+      "ready_before_start": true,
+      "copied_script_hash_mismatches": [],
+      "cleanup": {
+        "own_contexts_closed": true,
+        "bridge_closed": true,
+        "sockets_destroyed": true,
+        "shared_browser_server_preserved": true
+      }
+    },
+    {
+      "attempt": "sol-b-b3-extra-2",
+      "status": "pass",
+      "checks": 51,
+      "failed_assertions": [],
+      "page_errors": [],
+      "unmatched_console": [],
+      "ready_before_start": true,
+      "copied_script_hash_mismatches": [],
+      "cleanup": {
+        "own_contexts_closed": true,
+        "bridge_closed": true,
+        "sockets_destroyed": true,
+        "shared_browser_server_preserved": true
+      }
+    },
+    {
+      "attempt": "sol-b-b3-focused-1",
+      "status": "failed",
+      "checks": 78,
+      "failed_assertions": [
+        {
+          "engine": "chromium-390",
+          "phase": "classification",
+          "name": "no unexpected console errors",
+          "pass": false
+        }
+      ],
+      "page_errors": [],
+      "unmatched_console": [],
+      "ready_before_start": true,
+      "copied_script_hash_mismatches": [],
+      "cleanup": {
+        "own_contexts_closed": true,
+        "bridge_closed": true,
+        "sockets_destroyed": true,
+        "shared_browser_server_preserved": true
+      }
+    },
+    {
+      "attempt": "sol-b-b3-focused-2",
+      "status": "failed",
+      "checks": 15,
+      "failed_assertions": [],
+      "page_errors": [],
+      "unmatched_console": [],
+      "ready_before_start": true,
+      "copied_script_hash_mismatches": [],
+      "cleanup": {
+        "own_contexts_closed": true,
+        "bridge_closed": true,
+        "sockets_destroyed": true,
+        "shared_browser_server_preserved": true
+      }
+    },
+    {
+      "attempt": "sol-b-b3-focused-3",
+      "status": "failed",
+      "checks": 31,
+      "failed_assertions": [
+        {
+          "engine": "chromium-1440",
+          "phase": "campaign-invalid-escaped-edit",
+          "name": "campaign error actionable",
+          "pass": false
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "campaign-invalid-escaped-edit",
+          "name": "campaign error actionable",
+          "pass": false
+        }
+      ],
+      "page_errors": [],
+      "unmatched_console": [],
+      "ready_before_start": true,
+      "copied_script_hash_mismatches": [],
+      "cleanup": {
+        "own_contexts_closed": true,
+        "bridge_closed": true,
+        "sockets_destroyed": true,
+        "shared_browser_server_preserved": true
+      }
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "status": "failed",
+      "checks": 169,
+      "failed_assertions": [
+        {
+          "engine": "chromium-390",
+          "phase": "explicit-copy-link-idempotent-refresh",
+          "name": "focused-public no overflow",
+          "pass": false
+        }
+      ],
+      "page_errors": [],
+      "unmatched_console": [],
+      "ready_before_start": true,
+      "copied_script_hash_mismatches": [],
+      "cleanup": {
+        "own_contexts_closed": true,
+        "bridge_closed": true,
+        "sockets_destroyed": true,
+        "shared_browser_server_preserved": true
+      }
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "status": "failed",
+      "checks": 96,
+      "failed_assertions": [
+        {
+          "engine": "chromium-390",
+          "phase": "manual-evidence",
+          "name": "public-report no overflow",
+          "pass": false
+        }
+      ],
+      "page_errors": [],
+      "unmatched_console": [],
+      "ready_before_start": true,
+      "copied_script_hash_mismatches": [],
+      "cleanup": {
+        "own_contexts_closed": true,
+        "bridge_closed": true,
+        "sockets_destroyed": true,
+        "shared_browser_server_preserved": true
+      }
+    },
+    {
+      "attempt": "sol-b-b3-true-login-1",
+      "status": "failed",
+      "checks": 11,
+      "failed_assertions": [],
+      "page_errors": [],
+      "unmatched_console": [],
+      "ready_before_start": true,
+      "copied_script_hash_mismatches": [],
+      "cleanup": {
+        "own_contexts_closed": true,
+        "bridge_closed": true,
+        "sockets_destroyed": true,
+        "shared_browser_server_preserved": true
+      }
+    },
+    {
+      "attempt": "sol-b-b3-true-login-2",
+      "status": "pass",
+      "checks": 19,
+      "failed_assertions": [],
+      "page_errors": [],
+      "unmatched_console": [],
+      "ready_before_start": true,
+      "copied_script_hash_mismatches": [],
+      "cleanup": {
+        "own_contexts_closed": true,
+        "bridge_closed": true,
+        "sockets_destroyed": true,
+        "shared_browser_server_preserved": true
+      }
+    }
+  ],
+  "performance": [
+    {
+      "path": "sol-b-b3-attempt-2/performance-1.json",
+      "samples": 100,
+      "workers": {
+        "0": 10,
+        "1": 10,
+        "4": 10,
+        "3": 10,
+        "2": 10,
+        "5": 10,
+        "7": 10,
+        "6": 10,
+        "8": 10,
+        "9": 10
+      },
+      "statuses": {
+        "200": 100
+      },
+      "p95_recomputed": 109.10000002384186,
+      "started_at": "2026-10-03T05:01:43.918Z",
+      "finished_at": "2026-10-03T05:01:44.558Z"
+    },
+    {
+      "path": "sol-b-b3-attempt-2/performance-2.json",
+      "samples": 100,
+      "workers": {
+        "0": 10,
+        "1": 10,
+        "2": 10,
+        "3": 10,
+        "4": 10,
+        "5": 10,
+        "6": 10,
+        "7": 10,
+        "8": 10,
+        "9": 10
+      },
+      "statuses": {
+        "200": 100
+      },
+      "p95_recomputed": 85.19999992847443,
+      "started_at": "2026-10-03T05:02:04.174Z",
+      "finished_at": "2026-10-03T05:02:04.700Z"
+    },
+    {
+      "path": "sol-b-b3-remaining-1/performance-1.json",
+      "samples": 100,
+      "workers": {
+        "0": 10,
+        "2": 10,
+        "1": 10,
+        "5": 10,
+        "4": 10,
+        "6": 10,
+        "7": 10,
+        "8": 10,
+        "3": 10,
+        "9": 10
+      },
+      "statuses": {
+        "200": 100
+      },
+      "p95_recomputed": 78.5,
+      "started_at": "2026-10-03T05:03:42.291Z",
+      "finished_at": "2026-10-03T05:03:42.773Z"
+    }
+  ],
+  "early_hash_recovery": {
+    "f06-fixture.mjs": {
+      "commit": "f127abf2",
+      "matches_early_ready": true
+    },
+    "f06-audit.py": {
+      "commit": "f127abf2",
+      "matches_early_ready": true
+    },
+    "f06-run.py": {
+      "commit": "f127abf2",
+      "matches_early_ready": false
+    },
+    "f06-unsubscribe-probe.py": {
+      "commit": "f127abf2",
+      "matches_early_ready": true
+    },
+    "f06-unsubscribe-probe.mjs": {
+      "commit": "f127abf2",
+      "matches_early_ready": true
+    }
+  },
+  "zero_effects": [
+    {
+      "path": "complete-zero-effects-2.json",
+      "equal": true
+    },
+    {
+      "path": "complete-zero-effects-1.json",
+      "equal": true
+    }
+  ],
+  "verdict": "REQUEST_CHANGES",
+  "blocking_findings": [
+    "F06B-003"
+  ]
+}
