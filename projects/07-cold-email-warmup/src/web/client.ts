@@ -6,7 +6,7 @@ export class SessionClient {
     private epoch = 0;
     private session: string | null = null;
     private controllers = new Set<AbortController>();
-    constructor(private clear: () => void, private signin: () => void, private transport: typeof fetch = fetch) { }
+    constructor(private clear: () => void, private signin: () => void, private transport: typeof fetch = fetch.bind(globalThis)) { }
     current() { return this.epoch; }
     alive(epoch: number) { return epoch === this.epoch; }
     invalidate(redirect = true) {

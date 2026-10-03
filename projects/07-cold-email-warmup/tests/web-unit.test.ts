@@ -6,6 +6,22 @@ import { Ui } from '../src/web/dom.js';
 import { cabinetPage,cabinetCss } from '../src/web/cabinet.js';
 function deferred<T>() {let resolve!:(value:T)=>void;let reject!:(reason:Error)=>void;const promise=new Promise<T>((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};}
 const response=(status=200,session='A',data:unknown={private:'A'})=>new Response(JSON.stringify({data}),{status,headers:{'X-N7-Session':session}});
+test('native default transport preserves its global receiver and injected transport still works',async(t)=>{
+ let nativeCalls=0,injectedCalls=0;
+ t.mock.method(globalThis,'fetch',async function(this:unknown,url:RequestInfo|URL,init?:RequestInit){
+  if(this!==globalThis)throw new TypeError('Illegal invocation');
+  nativeCalls++;assert.equal(url,'/api/app');assert.equal(init?.credentials,'same-origin');assert.equal(init?.cache,'no-store');
+  assert.equal(init?.signal?.aborted,false);return response(200,'A',{native:true});
+ });
+ const native=new SessionClient(()=>assert.fail('unexpected clear'),()=>assert.fail('unexpected redirect'));
+ assert.deepEqual(await native.request('/api/app'),{native:true});assert.equal(nativeCalls,1);
+ const injected:SessionClient=new SessionClient(()=>assert.fail('unexpected clear'),()=>assert.fail('unexpected redirect'),async function(this:unknown,url,init){
+  assert.equal(this,injected);injectedCalls++;assert.equal(url,'/injected');assert.equal(init?.method,'POST');
+  assert.equal(init?.body,JSON.stringify({value:7}));return response(200,'B',{injected:true});
+ });
+ assert.deepEqual(await injected.request('/injected','POST',{value:7}),{injected:true});
+ assert.equal(injectedCalls,1);assert.equal(nativeCalls,1);
+});
 test('A6 central401 clears private state, aborts pending, redirects; late success/error stay obsolete',async()=>{
  const pending=deferred<Response>();let calls=0,clears=0,redirects=0;let signal:AbortSignal|null|undefined;
  const client=new SessionClient(()=>clears++,()=>redirects++,(async(_url,init)=>{signal=init?.signal;return ++calls===1?pending.promise:response(401);}) as typeof fetch);
