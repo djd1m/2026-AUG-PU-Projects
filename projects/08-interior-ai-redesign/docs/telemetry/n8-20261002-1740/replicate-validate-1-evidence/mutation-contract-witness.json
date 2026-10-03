@@ -1,0 +1,38 @@
+{
+  "kind": "abstract plan transition witness; not implementation test",
+  "clauses": [
+    "02_pseudocode.md Durable one-shot submission steps 1-2",
+    "05_completion.md Required checks after implementation mutation paragraph"
+  ],
+  "result": "Removing only the recovery branch cannot force a second create through the retained preflight CAS. New attempt identity also conflicts with immutable job submission binding.",
+  "transitions": [
+    {
+      "reclaimer": 1,
+      "recovery_no_replay_branch_removed": true,
+      "state": "submitting",
+      "preflight_cas_succeeded": false,
+      "total_posts": 1
+    },
+    {
+      "reclaimer": 2,
+      "recovery_no_replay_branch_removed": true,
+      "state": "submitting",
+      "preflight_cas_succeeded": false,
+      "total_posts": 1
+    },
+    {
+      "reclaimer": 1,
+      "recovery_no_replay_branch_removed": true,
+      "state": "ambiguous",
+      "preflight_cas_succeeded": false,
+      "total_posts": 1
+    },
+    {
+      "reclaimer": 2,
+      "recovery_no_replay_branch_removed": true,
+      "state": "ambiguous",
+      "preflight_cas_succeeded": false,
+      "total_posts": 1
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-validate-1",
+  "attempt_id": "replicate-validate-1",
+  "stage": "VALIDATE",
+  "started_at": "2026-10-03T06:48:05Z",
+  "launch_created_at": "2026-10-03T06:47:56.736898+00:00",
+  "recorded_at": "2026-10-03T06:51:16.291575+00:00",
+  "source": "21561a6b6cdcbd04fb03b3e93ecbc4e2ef79863b",
+  "launch_sha256": "33ca288f26c085e1139202bf2170878253589f976d3d0976c04389381d33a369",
+  "profile": "compact-quality-first-v2; owner-requested Astra high independent validation",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host-resolved model/effort and measured usage not provided; active time unknown"
+  ],
+  "inputs": {
+    "docs/features/f07-replicate/03_architecture.md": "c14c88440c537afcb1c09fe4d843c253c3e0ed4e0c904105fc3297e6fe9803b9",
+    "docs/features/f07-replicate/05_completion.md": "90a91240404d9edf7c8bbf042cb5a867dc9e0302691bd15aebcbf931c52a79e4",
+    "docs/features/f07-replicate/01_specification.md": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+    "docs/features/f07-replicate/04_refinement.md": "43fcc7495be1b92be9537f4c9d9e57fe57b574e7e8e9522c5428af21aff9e02e",
+    "docs/features/f07-replicate/02_pseudocode.md": "19a86156135d7751e7414e9a406070c990686d6ec8c095448549be012a10572d",
+    "docs/features/f07-replicate/replicate-research.md": "a3246fd4d5e0184b62b8bada1ab162e9f6785c228e895d244df8989d758e4a2d"
+  },
+  "route": {
+    "tier": "XL",
+    "inherited_plan_exit": 1,
+    "evidence": "docs/telemetry/n8-20261002-1740/replicate-plan-1-evidence/route.log"
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "PLAN validation only; no implementation, Docker or E2E"
+  },
+  "external_calls": 0,
+  "paid_calls": 0,
+  "delegation": false
+}
