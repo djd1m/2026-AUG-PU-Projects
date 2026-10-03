@@ -4,10 +4,17 @@ import { randomBytes,randomUUID } from 'node:crypto';
 import pg from 'pg';
 import { createPool,transaction } from '../web/db.js';
 import { createJobs } from '../web/jobs.js';
-import { createProviderSubmissions } from '../web/provider-submissions.js';
+import { createProviderSubmissions,isCleanupOnly } from '../web/provider-submissions.js';
 import { REPLICATE_MODEL,REPLICATE_VERSION,REPLICATE_CONTRACT_SHA } from '../web/replicate.js';
 import { migrate } from '../scripts/migrate.js';
 import { fixtureOutput } from './job-fixtures.js';
+
+test('cleanup-only includes every non-none durable marker',()=>{
+  assert.equal(isCleanupOnly(null),false);
+  assert.equal(isCleanupOnly({cleanup_state:'none'}),false);
+  for(const cleanup_state of ['needed','claimed','done','unresolved'])
+    assert.equal(isCleanupOnly({cleanup_state}),true);
+});
 
 // Coordinator-only runtime gate: real PG16 locks/rows, no provider/network/listener.
 test('F07 I4a durable hosted lifecycle on dedicated PostgreSQL16',async t=>{
@@ -141,6 +148,55 @@ test('F07 I4a durable hosted lifecycle on dedicated PostgreSQL16',async t=>{
         assert.equal(await count('SELECT count(*)::int AS n FROM generation_evidence'),0);
         assert.equal((await row(c.job_id)).status,'running');
       }
+    });
+    await t.test('late identity after lease loss stays cleanup-only before claim, with or without maintenance',async()=>{
+      for(const maintenance of [false,true]) {
+        await reset();const {c,id,a}=await submitted({known:false}),before=await immutableSnapshot(c);
+        advance(30000);assert.equal(c.attempt_deadline.getTime()-now.getTime(),150000);
+        const expired=await row(c.job_id),late=await a.bindPrediction(c.job_id,identity());
+        assert.equal(late.recorded,true);assert.equal(late.cleanup_required,true);
+        assert.equal(late.completion_authorized,false);
+        const s=await sub(c.job_id);
+        assert.equal(s.state,'known');assert.equal(s.cleanup_state,'needed');assert.equal(s.prediction_id,'prediction_1');
+        assert.deepEqual(await row(c.job_id),expired);assert.equal(expired.status,'running');
+        assert.equal(await releases(c.job_id),0);await literalConservation(c,id,before);
+        // Specific cleanup denial precedes lease/terminal checks; context is read-only.
+        await assert.rejects(a.workerContext(c),e=>e.code==='submission_binding_mismatch');
+        assert.equal(await a.finalAuthorize(c,finalCheck(s)),false);
+        assert.deepEqual(await row(c.job_id),expired);assert.deepEqual(await sub(c.job_id),s);
+        if(maintenance)await jobs().maintenance();
+        const actions=[()=>jobs().claim(),()=>jobs().claim()];
+        const results=maintenance?await Promise.allSettled(actions.map(action=>action())):
+          await barrier('SELECT id FROM account WHERE id=$1 FOR UPDATE',[c.account_id],actions);
+        assert.equal(results.filter(r=>r.status==='fulfilled'&&r.value===null).length,2);
+        const failed=await row(c.job_id);
+        assert.equal(failed.status,'failed');assert.equal(failed.failure_reason,'submission_binding_mismatch');
+        assert.equal(failed.fence,c.fence+1);assert.equal(failed.lease_until,null);assert.equal(failed.reserved,false);
+        assert.deepEqual(await sub(c.job_id),s);assert.equal(await releases(c.job_id),1);
+        await assert.rejects(a.workerContext(c),e=>e.code==='submission_fence_expired');
+        await jobs().maintenance();await jobs().get(c.account_id,c.job_id);
+        assert.equal(await jobs().claim(),null);assert.equal(await jobs().fail(c.job_id,c.fence,{retryable:true}),false);
+        assert.deepEqual(await row(c.job_id),failed);assert.deepEqual(await sub(c.job_id),s);
+        assert.equal(await releases(c.job_id),1);await literalConservation(c,id,before);
+      }
+      await reset();const {c,id,a}=await submitted(),before=await immutableSnapshot(c);
+      assert.equal((await sub(c.job_id)).cleanup_state,'none');advance(30000);
+      const fresh=await jobs().claim();assert.equal(fresh.provider_recovery,true);assert.equal(fresh.fence,c.fence+1);
+      const context=await a.workerContext(fresh);
+      assert.equal(context.remaining_ms,150000);assert.equal(context.submission.cleanup_state,'none');
+      assert.equal(context.submission.submission_fence,c.fence);
+      assert.equal(await releases(c.job_id),0);await literalConservation(c,id,before);
+      // Rebinding against the immutable original fence can designate cleanup while
+      // the recovered job lease is live. Context must deny without a terminal job.
+      assert.equal((await a.bindPrediction(c.job_id,identity())).cleanup_required,true);
+      const active=await row(c.job_id),cleanup=await sub(c.job_id);
+      assert.equal(active.status,'running');assert.ok(now<active.lease_until);assert.equal(cleanup.cleanup_state,'needed');
+      await assert.rejects(a.workerContext(fresh),e=>e.code==='submission_binding_mismatch');
+      assert.deepEqual(await row(c.job_id),active);assert.deepEqual(await sub(c.job_id),cleanup);
+      assert.equal(await jobs().claim(),null);
+      assert.equal((await row(c.job_id)).fence,fresh.fence+1);assert.equal((await row(c.job_id)).status,'failed');
+      assert.deepEqual(await sub(c.job_id),cleanup);assert.equal(await releases(c.job_id),1);
+      await literalConservation(c,id,before);
     });
     await t.test('attempt deadline after expired lease terminalizes on maintenance/get/fail/claim and releases exactly once',async()=>{
       for(const path of ['maintenance','get','fail','claim']) {

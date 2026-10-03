@@ -1,0 +1,76 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i4a-f1",
+  "attempt_id": "replicate-i4a-f1-1",
+  "source_revision": "38d870e6bb4089d92f1fa6c84e7893a326bf2cab",
+  "launch_sha256": "3a3c58f3abd9927f930c5781b07c49aabadb3b0d50f3b1a804a3b21d44d67c79",
+  "frozen_at": "2026-10-03T10:10:29.872803+00:00",
+  "product_test_files": [
+    {
+      "path": "web/jobs.js",
+      "sha256": "bf36f26f293d5b48c934996b1f905a8578388bd45193d2a7adfd93474d160062"
+    },
+    {
+      "path": "web/provider-submissions.js",
+      "sha256": "bf882b4301b257e373f86d1dad91d3819e61def891a2a6faf7404d01827719f9"
+    },
+    {
+      "path": "tests/replicate-lifecycle.integration.test.js",
+      "sha256": "d247fced736d2f6ee822621cc36871b00d7454d963970471672c72df49f8e084"
+    }
+  ],
+  "protected_i1_i2_i3": [
+    {
+      "path": "db/007-replicate.sql",
+      "sha256": "3bce94bab8d6fd8ef9b45e810e1e26ccda8648a213665f64403501ab80b5a05f",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "tests/replicate.integration.test.js",
+      "sha256": "a8aa1d829c53fd0bb4b00d9909bf4c62468e15fd42fda7afe9df93c13df9c796",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "tests/provider-submissions.test.js",
+      "sha256": "a2f44276eb51ef08dbf06a1b48ae933d701ff45d0465b2993377d8faf2e5d954",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "web/replicate.js",
+      "sha256": "be4bd7f92fb6dc354b11326ea6d8d519bbc35285756a6531defb4f91d59b649c",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "tests/replicate.test.js",
+      "sha256": "f0efc8f4114cc59dd10c14576356c5db96a996f2c65d7aa76fef05e87cbd46cd",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "web/replicate-media.js",
+      "sha256": "55baa1f5a8686fc2256106888a4e9e82724745497f38aa741045812e2d781e94",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "tests/replicate-media.test.js",
+      "sha256": "a071ea896aa1bffb75c22c0b12d921b1e4b255366eb109494bfe521321d356dd",
+      "unchanged_from_source": true
+    }
+  ],
+  "protected_i1_authority": {
+    "sha256": "97891ac65a5ff2b967ddef26c92129f4773fdccb1a68b19f7a8f01ca792fb548",
+    "unchanged_from_source": true,
+    "method": "Remove exactly new isCleanupOnly definition and workerLocked guard, compare every remaining byte"
+  },
+  "protected_existing_lifecycle_oracles": {
+    "sha256": "5b8e3a06e0c7f18d573200b28c6bcbed1949d91d122b2be72c14145d5559b2c5",
+    "unchanged_from_source": true,
+    "method": "Remove new marker unit and F1 child; restore import; compare every remaining byte"
+  },
+  "tracked_diff_sha256": "b7066d363ed34fd816aeee5a5601231aac2de73b6cef1e906ab9c18580ba99b0",
+  "scope_guard_exit_code": 0,
+  "preexisting_untracked": [
+    "docs/telemetry/n8-20261002-1740/replicate-i4a-f1-launch.json",
+    "node_modules"
+  ],
+  "postgresql_executed": false
+}

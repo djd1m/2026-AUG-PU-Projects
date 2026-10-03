@@ -2,7 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { transaction } from './db.js';
 import { HttpError, requireUuid } from './boundaries.js';
 import { canonical, sha } from './generation.js';
-import { lockSubmission, markAmbiguousLocked } from './provider-submissions.js';
+import { isCleanupOnly, lockSubmission, markAmbiguousLocked } from './provider-submissions.js';
 
 export const STYLES = ['warm','minimal','afrohemian','playful'];
 export function jobInput(input) {
@@ -78,7 +78,7 @@ export function createJobs(pool, config, {trustedClock} = {}) {
     await c.query('UPDATE job SET reserved=false WHERE id=$1',[j.id]);
   }
   async function cleanup(c,s) {
-    if (!s || s.state==='preflight') return;
+    if (!s || s.state==='preflight' || isCleanupOnly(s)) return;
     if (!s.prediction_id) {
       await markAmbiguousLocked(c,s,s.request_sha);
       await c.query("UPDATE provider_submission SET cleanup_state='unresolved' WHERE id=$1",[s.id]);
@@ -121,6 +121,7 @@ export function createJobs(pool, config, {trustedClock} = {}) {
     let reason;
     if (s.identity_conflict_at) reason='prediction_identity_conflict';
     else if (['failed','canceled','aborted'].includes(s.provider_status)) reason='provider_failed';
+    else if (isCleanupOnly(s)) reason='submission_binding_mismatch';
     else if (s.state==='preflight' || s.provider!=='replicate' || j.mode!==null ||
       j.fence<s.submission_fence || j.attempts!==s.attempt_number || j.attempt_deadline?.getTime()!==s.attempt_deadline.getTime() ||
       !ticket || ticket.job_id!==j.id || ticket.attempt_number!==s.attempt_number ||
@@ -179,7 +180,7 @@ export function createJobs(pool, config, {trustedClock} = {}) {
       const candidates=(await pool.query(`SELECT id,account_id FROM job WHERE deleted_at IS NULL AND
         (status='queued' OR (status='running' AND (lease_until<=$1 OR attempt_deadline<=$1 OR hard_deadline<=$1
           OR EXISTS(SELECT 1 FROM provider_submission s WHERE s.job_id=job.id AND
-            (s.state='ambiguous' OR s.identity_conflict_at IS NOT NULL OR s.provider_status IN ('failed','canceled','aborted'))))))
+            (s.cleanup_state<>'none' OR s.state='ambiguous' OR s.identity_conflict_at IS NOT NULL OR s.provider_status IN ('failed','canceled','aborted'))))))
         ORDER BY created_at,id LIMIT 50`,[now])).rows;
       for (const candidate of candidates) {
         // Hosted recovery never touches daily buckets or allocates a ticket.
@@ -276,7 +277,7 @@ export function createJobs(pool, config, {trustedClock} = {}) {
         AND ((j.status='queued' AND (j.queue_deadline<=$1 OR j.hard_deadline<=$1 OR a.billing_hold))
           OR (j.status='running' AND (j.lease_until<=$1 OR j.attempt_deadline<=$1 OR j.hard_deadline<=$1
             OR EXISTS(SELECT 1 FROM provider_submission s WHERE s.job_id=j.id AND
-              (s.state='ambiguous' OR s.identity_conflict_at IS NOT NULL OR s.provider_status IN ('failed','canceled','aborted'))))))
+              (s.cleanup_state<>'none' OR s.state='ambiguous' OR s.identity_conflict_at IS NOT NULL OR s.provider_status IN ('failed','canceled','aborted'))))))
         ORDER BY j.created_at,j.id LIMIT $2`,[at,limit])).rows;
       for (const {id} of rows) await ownedTransaction(id,async(c,j,now,s)=>{
         if (await expire(c,j,now,s) || s) return;

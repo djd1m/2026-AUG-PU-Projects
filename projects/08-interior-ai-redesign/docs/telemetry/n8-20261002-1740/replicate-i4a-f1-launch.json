@@ -1,0 +1,19 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i4a-f1",
+  "attempt_id": "replicate-i4a-f1-1",
+  "created_at": "2026-10-03T10:05:38.967479+00:00",
+  "source_revision": "38d870e6bb4089d92f1fa6c84e7893a326bf2cab",
+  "trace_path": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i4a-f1-receipt.md",
+  "requested_model": "gpt-6.1-sol",
+  "effort": "high",
+  "budget_seconds": 600,
+  "finding": "F1 HIGH cleanup-only lateidentity activeauthority",
+  "owned_paths": [
+    "web/jobs.js",
+    "web/provider-submissions.js",
+    "tests/replicate-lifecycle.integration.test.js",
+    "docs/features/f07-replicate/i4a-f1-*",
+    "docs/telemetry/n8-20261002-1740/replicate-i4a-f1-*"
+  ]
+}

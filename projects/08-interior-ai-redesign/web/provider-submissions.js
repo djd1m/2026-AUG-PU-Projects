@@ -54,6 +54,8 @@ export async function lockSubmission(client,jobId) {
   uuid(jobId);
   return (await client.query('SELECT * FROM provider_submission WHERE job_id=$1 FOR UPDATE',[jobId])).rows[0]??null;
 }
+// Every durable cleanup designation permanently excludes active-work authority.
+export const isCleanupOnly=s=>!!s && s.cleanup_state!=='none';
 export async function bindPredictionLocked(client,job,submission,{request_sha,prediction_id,version},now) {
   identity(submission,request_sha);
   if(typeof prediction_id!=='string'||! /^[a-zA-Z0-9_-]{1,128}$/.test(prediction_id)||version!==submission.version)deny('invalid_prediction');
@@ -130,6 +132,7 @@ export function createProviderSubmissions(pool,config,{trustedClock}={}) {
   }
   async function workerLocked(c,j,s,claim) {
     checkClaim(claim,j);
+    if (isCleanupOnly(s)) deny('submission_binding_mismatch');
     // Account -> job -> submission -> envelope; no buckets for existing work.
     const budget=s?(await c.query('SELECT * FROM provider_spend_budget WHERE id=$1 FOR UPDATE',[s.spend_budget_id])).rows[0]:null;
     const now=await clock(c); // In particular AFTER a contended envelope lock.
