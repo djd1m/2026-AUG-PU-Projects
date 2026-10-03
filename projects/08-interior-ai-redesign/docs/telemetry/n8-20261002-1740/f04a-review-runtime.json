@@ -1,6 +1,6 @@
 {
   "work_unit_id": "n8-f04a-review",
-  "status": "running",
+  "status": "completed",
   "source_revision": "2bec973b8b8a877da4ef3ccfead8ff10e2c5c120",
   "cli_session_id": 35764,
   "started_at": "2026-10-03T00:31:21Z",
@@ -11,5 +11,11 @@
   "evidence": "/tmp/n8-f04a-review/runtime.log host banner",
   "usage": null,
   "cost": null,
-  "budget_seconds": 720
+  "budget_seconds": 720,
+  "finished_at": "2026-10-03T00:40:26Z",
+  "exit_code": 0,
+  "wrapper_duration_ms": 545000,
+  "reviewer_observed_elapsed_ms": 471680,
+  "clock_note": "Independent observation and wrapper lifetime retained separately.",
+  "verdict": "ACCEPT F04a backend scope"
 }

@@ -1,0 +1,115 @@
+TAP version 13
+# Subtest: F03a real PostgreSQL verified payments, refunds, replay and billing serialization
+    # Subtest: PAY-01 immutable server-priced intents, ten creates reuse and conflicting body409
+    ok 1 - PAY-01 immutable server-priced intents, ten creates reuse and conflicting body409
+      ---
+      duration_ms: 594.958172
+      type: 'test'
+      ...
+    # Subtest: PAY-01 bounded durable runner retries identical body/key and stops unknown outcomes before24h
+    ok 2 - PAY-01 bounded durable runner retries identical body/key and stops unknown outcomes before24h
+      ---
+      duration_ms: 343.492212
+      type: 'test'
+      ...
+    # Subtest: PAY-02 mismatches/transients grant0 and claim no event; valid retry grants20
+    ok 3 - PAY-02 mismatches/transients grant0 and claim no event; valid retry grants20
+      ---
+      duration_ms: 325.125616
+      type: 'test'
+      ...
+    # Subtest: PAY-01 ten create runners share one lease and do network work outside account locks
+    ok 4 - PAY-01 ten create runners share one lease and do network work outside account locks
+      ---
+      duration_ms: 370.708452
+      type: 'test'
+      ...
+    # Subtest: PAY-02 unknown provider ID cannot attach itself through notification metadata
+    ok 5 - PAY-02 unknown provider ID cannot attach itself through notification metadata
+      ---
+      duration_ms: 316.046793
+      type: 'test'
+      ...
+    # Subtest: PAY-03 ten concurrent success replays grant20 once; legitimate repeat grants again
+    ok 6 - PAY-03 ten concurrent success replays grant20 once; legitimate repeat grants again
+      ---
+      duration_ms: 403.986334
+      type: 'test'
+      ...
+    # Subtest: PAY-03 canceled→success allowed; duplicate cancel harmless; review monotonic
+    ok 7 - PAY-03 canceled→success allowed; duplicate cancel harmless; review monotonic
+      ---
+      duration_ms: 388.501608
+      type: 'test'
+      ...
+    # Subtest: PAY-03 fresh success→first cancellation handled without downgrading or duplicate purchase
+    ok 8 - PAY-03 fresh success→first cancellation handled without downgrading or duplicate purchase
+      ---
+      duration_ms: 285.045971
+      type: 'test'
+      ...
+    # Subtest: PAY-04 refund binding matrix effects0; verified partial/full permanent hold without reversal
+    ok 9 - PAY-04 refund binding matrix effects0; verified partial/full permanent hold without reversal
+      ---
+      duration_ms: 388.469809
+      type: 'test'
+      ...
+    # Subtest: PAY-05 refund before success prevents ledger but first success claims marker; unrelated held purchase unspendable
+    ok 10 - PAY-05 refund before success prevents ledger but first success claims marker; unrelated held purchase unspendable
+      ---
+      duration_ms: 331.012599
+      type: 'test'
+      ...
+    # Subtest: PAY-05 hold releases queued jobs once, denies start/retry; active attempt may finish private
+    ok 11 - PAY-05 hold releases queued jobs once, denies start/retry; active attempt may finish private
+      ---
+      duration_ms: 923.706059
+      type: 'test'
+      ...
+    # Subtest: PAY-05 account serialization races refund with admission and success, with no post-hold effects
+    ok 12 - PAY-05 account serialization races refund with admission and success, with no post-hold effects
+      ---
+      duration_ms: 259.420723
+      type: 'test'
+      ...
+    # Subtest: ATTR-03 no-partner first winner excludes backfill and refund promotion forever
+    ok 13 - ATTR-03 no-partner first winner excludes backfill and refund promotion forever
+      ---
+      duration_ms: 342.205642
+      type: 'test'
+      ...
+    # Subtest: ATTR-03 two attributed successes have one committed winner/event; refund invalidates without promoting
+    ok 14 - ATTR-03 two attributed successes have one committed winner/event; refund invalidates without promoting
+      ---
+      duration_ms: 346.438624
+      type: 'test'
+      ...
+    # Subtest: ATTR-03 only validated active nonself manual code or server attribution snapshots
+    ok 15 - ATTR-03 only validated active nonself manual code or server attribution snapshots
+      ---
+      duration_ms: 302.706378
+      type: 'test'
+      ...
+    # Subtest: PAY-01 HTTP authenticated owner/Origin/body/return boundaries and payload ignored
+    ok 16 - PAY-01 HTTP authenticated owner/Origin/body/return boundaries and payload ignored
+      ---
+      duration_ms: 608.007767
+      type: 'test'
+      ...
+    1..16
+ok 1 - F03a real PostgreSQL verified payments, refunds, replay and billing serialization
+  ---
+  duration_ms: 7133.525306
+  type: 'test'
+  ...
+1..1
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7148.064361
+ Container n8-f04a-candidate-web-run-d8276cf06b40 Creating 
+ Container n8-f04a-candidate-web-run-d8276cf06b40 Created 

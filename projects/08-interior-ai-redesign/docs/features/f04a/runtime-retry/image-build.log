@@ -1,0 +1,85 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.38kB done
+#1 DONE 0.0s
+
+#2 [maintenance internal] load build definition from Dockerfile
+#2 DONE 0.0s
+
+#2 [web internal] load build definition from Dockerfile
+#2 transferring dockerfile: 381B done
+#2 DONE 0.0s
+
+#3 [web internal] load metadata for docker.io/library/node:22.20.0-bookworm-slim
+#3 DONE 0.0s
+
+#4 [web internal] load .dockerignore
+#4 transferring context: 101B done
+#4 DONE 0.0s
+
+#5 [web internal] load build context
+#5 DONE 0.0s
+
+#6 [maintenance 1/8] FROM docker.io/library/node:22.20.0-bookworm-slim@sha256:b21fe589dfbe5cc39365d0544b9be3f1f33f55f3c86c87a76ff65a02f8f5848e
+#6 resolve docker.io/library/node:22.20.0-bookworm-slim@sha256:b21fe589dfbe5cc39365d0544b9be3f1f33f55f3c86c87a76ff65a02f8f5848e 0.0s done
+#6 resolve docker.io/library/node:22.20.0-bookworm-slim@sha256:b21fe589dfbe5cc39365d0544b9be3f1f33f55f3c86c87a76ff65a02f8f5848e 0.0s done
+#6 DONE 0.1s
+
+#5 [web internal] load build context
+#5 transferring context: 1.59kB done
+#5 DONE 0.0s
+
+#7 [maintenance 5/8] COPY web ./web
+#7 CACHED
+
+#8 [maintenance 2/8] WORKDIR /app
+#8 CACHED
+
+#9 [maintenance 3/8] COPY package.json package-lock.json ./
+#9 CACHED
+
+#10 [maintenance 4/8] RUN npm ci --omit=dev --include=optional && npm cache clean --force
+#10 CACHED
+
+#11 [maintenance 6/8] COPY db ./db
+#11 CACHED
+
+#12 [maintenance 7/8] COPY scripts ./scripts
+#12 CACHED
+
+#13 [maintenance 8/8] RUN mkdir -p /private && chown node:node /private
+#13 CACHED
+
+#14 [web] exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:df2481b00484690915d3f5bcde357793e8783d8bd8a0baad4f4a2fd75cfb663b done
+#14 exporting config sha256:cee00ead19e489e3aef9125a021e662bb81b3bcd8a4002a387fd8c707ef716a8 done
+#14 exporting attestation manifest sha256:00425c7ae3f0913aca152090b44d532bf4d074042de838c25977ac5c56acb099
+#14 exporting attestation manifest sha256:00425c7ae3f0913aca152090b44d532bf4d074042de838c25977ac5c56acb099 0.1s done
+#14 exporting manifest list sha256:e47a3368b97c527794219bae4ee3cae32f7344318547d6877130b6612b2cbd2a
+#14 ...
+
+#15 [maintenance] exporting to image
+#15 exporting layers 0.0s done
+#15 exporting manifest sha256:03e38fb4d14468a50b5f84ab4eb0c4885f80a9d62b4970b75df683b1ddd49cc7 done
+#15 exporting config sha256:d1df0664208e002a458d4214c711c48664c57be007a4e5be7179d523e70dd615 0.0s done
+#15 exporting attestation manifest sha256:04db0c3df31f0f635e6e7181ea2c1f05153fe06d785e532c628822dae7b52668 0.1s done
+#15 exporting manifest list sha256:96dd66ce16909be771bf05ce83f49a2977f5a2f85db0de2e7427cfddea52f0a2 0.0s done
+#15 naming to docker.io/library/n8-f04a-candidate-maintenance:latest done
+#15 unpacking to docker.io/library/n8-f04a-candidate-maintenance:latest 0.0s done
+#15 DONE 0.3s
+
+#14 [web] exporting to image
+#14 exporting manifest list sha256:e47a3368b97c527794219bae4ee3cae32f7344318547d6877130b6612b2cbd2a 0.0s done
+#14 naming to docker.io/library/n8-f04a-candidate-web:latest done
+#14 unpacking to docker.io/library/n8-f04a-candidate-web:latest 0.0s done
+#14 DONE 0.3s
+
+#16 [maintenance] resolving provenance for metadata file
+#16 DONE 0.0s
+
+#17 [web] resolving provenance for metadata file
+#17 DONE 0.0s
+ Image n8-f04a-candidate-maintenance Building 
+ Image n8-f04a-candidate-web Building 
+ Image n8-f04a-candidate-maintenance Built 
+ Image n8-f04a-candidate-web Built 

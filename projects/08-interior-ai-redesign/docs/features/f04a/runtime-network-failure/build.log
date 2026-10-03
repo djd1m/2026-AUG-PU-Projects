@@ -1,0 +1,8 @@
+ Volume n8-f04a-candidate_media Creating 
+ Volume n8-f04a-candidate_media Creating 
+ Network n8-f04a-candidate_frontend Creating 
+ Network n8-f04a-candidate_frontend Creating 
+ Network n8-f04a-candidate_frontend Error Error response from daemon: all predefined address pools have been fully subnetted
+ network:frontend failed to create network n8-f04a-candidate_frontend: Error response from daemon: all predefined address pools have been fully subnetted 
+ Volume n8-f04a-candidate_media Error error during connect: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.55/volumes/create": failed to create network n8-f04a-candidate_frontend: Error response from daemon: all predefined address pools have been fully subnetted
+failed to create network n8-f04a-candidate_frontend: Error response from daemon: all predefined address pools have been fully subnetted
