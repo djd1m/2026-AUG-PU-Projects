@@ -99,7 +99,7 @@
       "number": 5,
       "name": "Evidence, local billing, attribution and reports",
       "priority": "mvp",
-      "status": "pending",
+      "status": "in_progress",
       "complexity": "complex",
       "depends_on": [
         "f04-reply-suppression"
@@ -117,7 +117,8 @@
         "FR-GROWTH-003",
         "FR-GROWTH-004"
       ],
-      "sprint": "local-mvp"
+      "sprint": "local-mvp",
+      "current_slice": "F05a local payment and attribution"
     },
     {
       "id": "f06-cabinet-e2e-delivery",

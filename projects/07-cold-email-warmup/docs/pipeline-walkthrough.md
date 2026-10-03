@@ -152,3 +152,7 @@ Aef86f20: отдельные физические и семантические 
 ## F04 завершён
 
 12/12 AC, finalsource06ed2f9d, unit18/fullPG91/restoredowner11. Publicunsubscribe иoperatorcomplaints атомарны; durablelocalpoll сохраняет курсор, H/tailH и fence владельца/поколения. Fresh Astra закрывает оба подтверждённых дефекта. Реальная почта отключена; следующий F05 — localbilling, evidence и growth, затем F06 настоящий browserкабинет и PR.
+
+## F05: платежи и доказательный рост
+
+План docs/features/f05-evidence-billing-growth/: A локальный independentprovider/intent/entitlement/attribution, B manualobservations/anonymousreport/serverbadge. Серверныеfree/teamлимиты3/3 и10/10, TEST100minorRUB30days; лимит почты30нерастёт. N3/N6узкиеpatternsпроверены; сетьпровайдеранеактивируется. ПубличныйreportполучаеттолькоwhitelistбезPII, latest7days/baseline28days/n30guardобязательны.
