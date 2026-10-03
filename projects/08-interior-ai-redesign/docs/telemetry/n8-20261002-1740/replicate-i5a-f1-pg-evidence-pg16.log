@@ -1,0 +1,109 @@
+TAP version 13
+# Subtest: F07 I5a atomic hosted evidence on dedicated PostgreSQL16
+    # Subtest: migration retains all historical fixture/controlnet values and hashes, idempotence and immutability
+    ok 1 - migration retains all historical fixture/controlnet values and hashes, idempotence and immutability
+      ---
+      duration_ms: 320.639015
+      type: 'test'
+      ...
+    # Subtest: hosted atomic winner binds null metrics; duplicate immutable evidence and hold-after-CAS preserve credit/spend
+    ok 2 - hosted atomic winner binds null metrics; duplicate immutable evidence and hold-after-CAS preserve credit/spend
+      ---
+      duration_ms: 668.639709
+      type: 'test'
+      ...
+    # Subtest: two genuine completion contenders commit exactly one result and no ticket/credit/spend changes
+    ok 3 - two genuine completion contenders commit exactly one result and no ticket/credit/spend changes
+      ---
+      duration_ms: 547.330125
+      type: 'test'
+      ...
+    # Subtest: clock after account/job/submission lock waits preserves lease-only denial and terminalizes original attempt/hard deadline
+    ok 4 - clock after account/job/submission lock waits preserves lease-only denial and terminalizes original attempt/hard deadline
+      ---
+      duration_ms: 5488.228489
+      type: 'test'
+      ...
+    # Subtest: reclaim current fence succeeds privately with original ticket/deadlines; stale old fence has no effect
+    ok 5 - reclaim current fence succeeds privately with original ticket/deadlines; stale old fence has no effect
+      ---
+      duration_ms: 458.529064
+      type: 'test'
+      ...
+    # Subtest: stale fence after new owner cannot terminalize at original attempt/hard deadline
+    ok 6 - stale fence after new owner cannot terminalize at original attempt/hard deadline
+      ---
+      duration_ms: 1068.088651
+      type: 'test'
+      ...
+    # Subtest: valid local output on expired submitted job restores lifecycle before mode denial
+    ok 7 - valid local output on expired submitted job restores lifecycle before mode denial
+      ---
+      duration_ms: 1978.799706
+      type: 'test'
+      ...
+    # Subtest: deleted input/job and binding changes retain terminal causes; healthy geometry mismatch denies purely
+    ok 8 - deleted input/job and binding changes retain terminal causes; healthy geometry mismatch denies purely
+      ---
+      duration_ms: 5612.385104
+      type: 'test'
+      ...
+    # Subtest: every cleanup designation, quarantine and nonsucceeded/unknown provider status excludes completion
+    ok 9 - every cleanup designation, quarantine and nonsucceeded/unknown provider status excludes completion
+      ---
+      duration_ms: 5335.183634
+      type: 'test'
+      ...
+    # Subtest: identity/input/request/transform and separately verified worker settings fail closed
+    ok 10 - identity/input/request/transform and separately verified worker settings fail closed
+      ---
+      duration_ms: 4577.518504
+      type: 'test'
+      ...
+    # Subtest: hosted without submission/local with submission and SQL mixed/null-local evidence are denied
+    ok 11 - hosted without submission/local with submission and SQL mixed/null-local evidence are denied
+      ---
+      duration_ms: 2164.718402
+      type: 'test'
+      ...
+    # Subtest: SQL hosted constraints reject unknown/sensitive keys, invented metrics and mixed local provenance
+    ok 12 - SQL hosted constraints reject unknown/sensitive keys, invented metrics and mixed local provenance
+      ---
+      duration_ms: 3925.486881
+      type: 'test'
+      ...
+    # Subtest: deletion or cleanup committed while completion waits cannot attach a late result
+    ok 13 - deletion or cleanup committed while completion waits cannot attach a late result
+      ---
+      duration_ms: 891.461168
+      type: 'test'
+      ...
+    # Subtest: atomic rollback if final job update fails leaves no evidence, output or financial effects
+    ok 14 - atomic rollback if final job update fails leaves no evidence, output or financial effects
+      ---
+      duration_ms: 307.65508
+      type: 'test'
+      ...
+    # Subtest: local fixture/controlnet retry and completion preserve their original evidence contract
+    ok 15 - local fixture/controlnet retry and completion preserve their original evidence contract
+      ---
+      duration_ms: 481.497842
+      type: 'test'
+      ...
+    1..15
+ok 1 - F07 I5a atomic hosted evidence on dedicated PostgreSQL16
+  ---
+  duration_ms: 34806.869765
+  type: 'test'
+  ...
+1..1
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 35078.500673
+ Container n8f07i5af1-tests-run-80a069813e92 Creating 
+ Container n8f07i5af1-tests-run-80a069813e92 Created 

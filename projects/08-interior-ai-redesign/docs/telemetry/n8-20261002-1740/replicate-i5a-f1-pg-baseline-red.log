@@ -1,0 +1,250 @@
+TAP version 13
+# Subtest: F07 I5a atomic hosted evidence on dedicated PostgreSQL16
+    # Subtest: migration retains all historical fixture/controlnet values and hashes, idempotence and immutability
+    ok 1 - migration retains all historical fixture/controlnet values and hashes, idempotence and immutability
+      ---
+      duration_ms: 291.102194
+      type: 'test'
+      ...
+    # Subtest: hosted atomic winner binds null metrics; duplicate immutable evidence and hold-after-CAS preserve credit/spend
+    ok 2 - hosted atomic winner binds null metrics; duplicate immutable evidence and hold-after-CAS preserve credit/spend
+      ---
+      duration_ms: 448.450301
+      type: 'test'
+      ...
+    # Subtest: two genuine completion contenders commit exactly one result and no ticket/credit/spend changes
+    ok 3 - two genuine completion contenders commit exactly one result and no ticket/credit/spend changes
+      ---
+      duration_ms: 658.350965
+      type: 'test'
+      ...
+    # Subtest: clock after account/job/submission lock waits preserves lease-only denial and terminalizes original attempt/hard deadline
+    not ok 4 - clock after account/job/submission lock waits preserves lease-only denial and terminalizes original attempt/hard deadline
+      ---
+      duration_ms: 876.821053
+      type: 'test'
+      location: '/app/tests/replicate-evidence.integration.test.js:187:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        current-fence completion must terminalize
+        + actual - expected
+        
+        + 'running'
+        - 'failed'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'failed'
+      actual: 'running'
+      operator: 'strictEqual'
+      stack: |-
+        terminalState (file:///app/tests/replicate-evidence.integration.test.js:85:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async TestContext.<anonymous> (file:///app/tests/replicate-evidence.integration.test.js:197:14)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///app/tests/replicate-evidence.integration.test.js:187:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: reclaim current fence succeeds privately with original ticket/deadlines; stale old fence has no effect
+    ok 5 - reclaim current fence succeeds privately with original ticket/deadlines; stale old fence has no effect
+      ---
+      duration_ms: 582.303088
+      type: 'test'
+      ...
+    # Subtest: stale fence after new owner cannot terminalize at original attempt/hard deadline
+    not ok 6 - stale fence after new owner cannot terminalize at original attempt/hard deadline
+      ---
+      duration_ms: 793.880243
+      type: 'test'
+      location: '/app/tests/replicate-evidence.integration.test.js:209:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        current-fence completion must terminalize
+        + actual - expected
+        
+        + 'running'
+        - 'failed'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'failed'
+      actual: 'running'
+      operator: 'strictEqual'
+      stack: |-
+        terminalState (file:///app/tests/replicate-evidence.integration.test.js:85:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async terminalDeny (file:///app/tests/replicate-evidence.integration.test.js:110:5)
+        async TestContext.<anonymous> (file:///app/tests/replicate-evidence.integration.test.js:217:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///app/tests/replicate-evidence.integration.test.js:209:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: valid local output on expired submitted job restores lifecycle before mode denial
+    not ok 7 - valid local output on expired submitted job restores lifecycle before mode denial
+      ---
+      duration_ms: 451.445931
+      type: 'test'
+      location: '/app/tests/replicate-evidence.integration.test.js:220:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        current-fence completion must terminalize
+        + actual - expected
+        
+        + 'running'
+        - 'failed'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'failed'
+      actual: 'running'
+      operator: 'strictEqual'
+      stack: |-
+        terminalState (file:///app/tests/replicate-evidence.integration.test.js:85:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async terminalDeny (file:///app/tests/replicate-evidence.integration.test.js:110:5)
+        async TestContext.<anonymous> (file:///app/tests/replicate-evidence.integration.test.js:225:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///app/tests/replicate-evidence.integration.test.js:220:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: deleted input/job and binding changes retain terminal causes; healthy geometry mismatch denies purely
+    not ok 8 - deleted input/job and binding changes retain terminal causes; healthy geometry mismatch denies purely
+      ---
+      duration_ms: 804.412927
+      type: 'test'
+      location: '/app/tests/replicate-evidence.integration.test.js:228:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        current-fence completion must terminalize
+        + actual - expected
+        
+        + 'running'
+        - 'failed'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'failed'
+      actual: 'running'
+      operator: 'strictEqual'
+      stack: |-
+        terminalState (file:///app/tests/replicate-evidence.integration.test.js:85:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async terminalDeny (file:///app/tests/replicate-evidence.integration.test.js:110:5)
+        async TestContext.<anonymous> (file:///app/tests/replicate-evidence.integration.test.js:243:60)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///app/tests/replicate-evidence.integration.test.js:228:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: every cleanup designation, quarantine and nonsucceeded/unknown provider status excludes completion
+    not ok 9 - every cleanup designation, quarantine and nonsucceeded/unknown provider status excludes completion
+      ---
+      duration_ms: 375.354294
+      type: 'test'
+      location: '/app/tests/replicate-evidence.integration.test.js:249:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        current-fence completion must terminalize
+        + actual - expected
+        
+        + 'running'
+        - 'failed'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'failed'
+      actual: 'running'
+      operator: 'strictEqual'
+      stack: |-
+        terminalState (file:///app/tests/replicate-evidence.integration.test.js:85:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async terminalDeny (file:///app/tests/replicate-evidence.integration.test.js:110:5)
+        async TestContext.<anonymous> (file:///app/tests/replicate-evidence.integration.test.js:253:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///app/tests/replicate-evidence.integration.test.js:249:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: identity/input/request/transform and separately verified worker settings fail closed
+    ok 10 - identity/input/request/transform and separately verified worker settings fail closed
+      ---
+      duration_ms: 4267.813524
+      type: 'test'
+      ...
+    # Subtest: hosted without submission/local with submission and SQL mixed/null-local evidence are denied
+    ok 11 - hosted without submission/local with submission and SQL mixed/null-local evidence are denied
+      ---
+      duration_ms: 2518.093279
+      type: 'test'
+      ...
+    # Subtest: SQL hosted constraints reject unknown/sensitive keys, invented metrics and mixed local provenance
+    ok 12 - SQL hosted constraints reject unknown/sensitive keys, invented metrics and mixed local provenance
+      ---
+      duration_ms: 5031.566706
+      type: 'test'
+      ...
+    # Subtest: deletion or cleanup committed while completion waits cannot attach a late result
+    not ok 13 - deletion or cleanup committed while completion waits cannot attach a late result
+      ---
+      duration_ms: 1239.077183
+      type: 'test'
+      location: '/app/tests/replicate-evidence.integration.test.js:297:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        current-fence completion must terminalize
+        + actual - expected
+        
+        + 'running'
+        - 'failed'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'failed'
+      actual: 'running'
+      operator: 'strictEqual'
+      stack: |-
+        terminalState (file:///app/tests/replicate-evidence.integration.test.js:85:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async TestContext.<anonymous> (file:///app/tests/replicate-evidence.integration.test.js:310:11)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///app/tests/replicate-evidence.integration.test.js:297:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: atomic rollback if final job update fails leaves no evidence, output or financial effects
+    ok 14 - atomic rollback if final job update fails leaves no evidence, output or financial effects
+      ---
+      duration_ms: 380.128055
+      type: 'test'
+      ...
+    # Subtest: local fixture/controlnet retry and completion preserve their original evidence contract
+    ok 15 - local fixture/controlnet retry and completion preserve their original evidence contract
+      ---
+      duration_ms: 863.363759
+      type: 'test'
+      ...
+    1..15
+not ok 1 - F07 I5a atomic hosted evidence on dedicated PostgreSQL16
+  ---
+  duration_ms: 20296.955196
+  type: 'test'
+  location: '/app/tests/replicate-evidence.integration.test.js:16:1'
+  failureType: 'subtestsFailed'
+  error: '6 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 16
+# suites 0
+# pass 9
+# fail 7
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 20611.787188
+ Container n8f07i5af1-tests-run-b44e13f14679 Creating 
+ Container n8f07i5af1-tests-run-b44e13f14679 Created 
+

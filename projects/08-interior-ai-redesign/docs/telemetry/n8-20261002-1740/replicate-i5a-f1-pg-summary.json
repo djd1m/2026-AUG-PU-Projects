@@ -1,0 +1,62 @@
+{
+  "started_at": "2026-10-03T11:23:41.454967+00:00",
+  "finished_at": "2026-10-03T11:25:32.233212+00:00",
+  "elapsed_seconds": 110.77824494498782,
+  "source_revision": "3315ed70bece8216fa8eacdd7d3bd8ece85c4b3a",
+  "image": "n8-ui-e2e-6:8030270f cached + exact readonlysourceoverlays",
+  "cpu_total": 2,
+  "published_ports": [],
+  "results": [
+    {
+      "name": "port-preflight",
+      "exit_code": 0,
+      "elapsed_seconds": 1.16660568700172,
+      "log": "replicate-i5a-f1-pg-port-preflight.log"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "elapsed_seconds": 5.881089198985137,
+      "log": "replicate-i5a-f1-pg-db-start.log"
+    },
+    {
+      "name": "binding",
+      "exit_code": 0,
+      "elapsed_seconds": 1.1711179279955104,
+      "log": "replicate-i5a-f1-pg-binding.log"
+    },
+    {
+      "name": "baseline-red",
+      "exit_code": 1,
+      "elapsed_seconds": 22.02483036206104,
+      "log": "replicate-i5a-f1-pg-baseline-red.log",
+      "expected_exit_code": 1,
+      "expected_semantic_failure": true
+    },
+    {
+      "name": "evidence-pg16",
+      "exit_code": 0,
+      "elapsed_seconds": 36.46878196904436,
+      "log": "replicate-i5a-f1-pg-evidence-pg16.log"
+    },
+    {
+      "name": "lifecycle-pg16",
+      "exit_code": 0,
+      "elapsed_seconds": 23.13044640701264,
+      "log": "replicate-i5a-f1-pg-lifecycle-pg16.log"
+    },
+    {
+      "name": "jobs-pg16",
+      "exit_code": 0,
+      "elapsed_seconds": 14.62561879097484,
+      "log": "replicate-i5a-f1-pg-jobs-pg16.log"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "elapsed_seconds": 6.293453227030113,
+      "log": "replicate-i5a-f1-pg-cleanup.log"
+    }
+  ],
+  "overall_exit": 0
+}
