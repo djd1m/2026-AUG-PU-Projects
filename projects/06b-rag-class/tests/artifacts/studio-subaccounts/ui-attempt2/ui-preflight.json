@@ -1,0 +1,33 @@
+{
+  "status": "ready",
+  "source_revision": "167721347d4380c67cde360e374e3d2e13e8eb17",
+  "build_revision": "sha256:878dd06f4a402a977df08b59e129f98466a0e23bb2f18ae82b31f549df4f815e",
+  "environment": "Isolated n6b-f13-ui Docker network; production web/PG/Caddy; isolated fixture provisioning/DB observation only; shared browser own contexts, no published ports",
+  "test_command": "docker exec -w /opt/browser codex-ui-playwright node /opt/browser/n6b-f13-ui.mjs /opt/browser/n6b-f13-fixture.json /opt/browser/n6b-f13-output-2",
+  "inputs": [
+    {
+      "name": "Exact22host and immutable runner hashes; full618unit/261PG plus type/build and capmutation0",
+      "available": true
+    },
+    {
+      "name": "Fresh Astra ACCEPT_WITH_CAVEATS, runtime gates close here; no production response mocks",
+      "available": true
+    },
+    {
+      "name": "Disposable real registered owners promoted to existing studio kind by isolated owner fixture; all product operations use actual Next routes",
+      "available": true
+    }
+  ],
+  "environment_available": true,
+  "expected_effects": [
+    "Browser1440/390 real registration/createclient/select/createbot202/publication/back/reload/sixth409/ordinary403/foreign404/revoked404; actual DB ownership and session observations, no mocks or paid calls",
+    "Screenshots and own context/stack/privateenv cleanup; sharedbrowser retained"
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "tests/artifacts/studio-subaccounts/ui-output/report.json"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "checked_at": "2026-10-03T03:58:40.767482+00:00"
+}
