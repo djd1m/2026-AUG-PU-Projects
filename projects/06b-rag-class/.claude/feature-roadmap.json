@@ -12,7 +12,7 @@
     "docs/discovery/reuse-inventory.md"
   ],
   "notes": {
-    "state": "Выполнены14/16 фич до handover включительно. Следующий source-management.",
+    "state": "Выполнены15/16 фич до source-management включительно. Следующий release-gate: реальная калибровка и разрешённый стенд.",
     "sc_coverage": "Все 59 SC-US-nnn-k из Specification распределены по фичам ровно по одному разу (проверено при генерации). SC-US-006-4 и SC-US-008-2 не покрыты REALISES в Pseudocode намеренно (ворота выпуска и браузерная проверка) — они в release-gate и widget.",
     "tier": "Поле tier — по таблице .claude/rules/complexity-router.md корня (T/S/M/L/XL); complexity — закрытый набор схемы /next. Оговорка правила: SPARC моложе недели с FR и алгоритмом опускает L до M; XL не опускается никогда (spend-ceilings — деньги, handover — граница владения). Фактический тир решает bash ../../scripts/complexity-router.sh по реальному диффу.",
     "reuse": "Поле reuse — строки docs/discovery/reuse-inventory.md (N<проект>#<строка> и путь). Код projects/06-rag-sales-chatbase НЕ используется (правило владельца №4).",
@@ -612,7 +612,7 @@
       "name": "Управление источниками и сроки хранения",
       "description": "Удаление источника каскадом (при живой задаче 409), уборщик question_log 30 дней и quota_counter, счётчик «не знаю» за 7 дней на экране бота — только числа.",
       "priority": "high",
-      "status": "next",
+      "status": "done",
       "complexity": "medium",
       "tier": "M",
       "depends_on": [
@@ -640,7 +640,9 @@
       "expected_files": [
         "apps/web/src/app/api/sources/[id]/route.ts",
         "services/worker/src/retention.ts"
-      ]
+      ],
+      "acceptance_revision": "b3df79f3c748c426d7eac16717008ccd121eb10e",
+      "acceptance_evidence": "docs/features/source-management/05_completion.md"
     },
     {
       "id": "release-gate",
@@ -648,7 +650,7 @@
       "name": "Ворота выпуска: калибровка «не знаю», сквозной CJM и виджет на чужом origin на стенде",
       "description": "Калибровка 30 вопросов на живой gpt-4.1-mini (10/10 «не знаю», ≥17/20 со ссылкой) → docs/calibration-report.md; scripts/check-cjm.sh по выданному адресу https://n6b.194.85.249.105.sslip.io; квитанции контрактов embed / long-job / model-cost; аккаунты проверок is_test. Подъём стенда — остановка у владельца.",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "next",
       "complexity": "medium",
       "tier": "M",
       "depends_on": [
@@ -682,5 +684,5 @@
       ]
     }
   ],
-  "last_completed": "handover"
+  "last_completed": "source-management"
 }

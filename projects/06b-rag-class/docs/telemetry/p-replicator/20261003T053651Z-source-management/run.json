@@ -12,26 +12,51 @@
   "feature": "source-management",
   "tier": "M existing tenant lifecycle; full mandatory checks",
   "started_at": "2026-10-03T05:36:51.206371+00:00",
-  "ended_at": null,
-  "status": "active",
+  "ended_at": "2026-10-03T06:40:21.421420+00:00",
+  "status": "completed",
   "baseline_revision": "c7e5c65fcf7d880c8eae686d4221053085ca692f",
-  "final_revision": null,
+  "final_revision": "b3df79f3c748c426d7eac16717008ccd121eb10e",
   "spec_sha256": "918e5d0e070d61f599d4cb5b7fc883adaee55a6c4c8c76c4c1cae21837018c82",
   "risk_flags": [
     "Delete versus retry/recrawl/worker races",
     "Retention cutoff and quotas Moscow day",
     "Tenant and transferred-account visibility"
   ],
-  "quality": {},
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 7,
+    "ac_total": 7,
+    "review_defects_closed": 1,
+    "fixture_defects_closed": 1,
+    "publicrelease_clearance": false
+  },
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 3810215,
     "active_wall_ms": null,
     "input_tokens_total": null,
-    "cost": null
+    "cost": null,
+    "measured_cli_usage_only": {
+      "input_tokens": 5415956,
+      "cached_input_tokens": 5054336,
+      "output_tokens": 65546,
+      "reasoning_output_tokens": 18927,
+      "total_tokens": 5481502
+    },
+    "measured_cli_usage_only_note": "4 final cumulative native counters; subsets not added; coordinator/costunknown"
   },
   "telemetry_status": "partial",
   "missing_data": [
     "Coordinator actual model/usage/cost unavailable",
     "Sparse tree preparation before record not measured"
+  ],
+  "acceptance_evidence": [
+    "docs/telemetry/p-replicator/20261003T053651Z-source-management/evidence/delivery-1-receipt.md",
+    "tests/artifacts/source-management/ui-output/report.json"
+  ],
+  "native_stage_usage_files": [
+    "docs/telemetry/p-replicator/20261003T053651Z-source-management/evidence/correction-1-native.json",
+    "docs/telemetry/p-replicator/20261003T053651Z-source-management/evidence/implementation-1-native.json",
+    "docs/telemetry/p-replicator/20261003T053651Z-source-management/evidence/review-1-native.json",
+    "docs/telemetry/p-replicator/20261003T053651Z-source-management/evidence/review-2-native.json"
   ]
 }

@@ -1,0 +1,33 @@
+{
+  "status": "ready",
+  "source_revision": "b3df79f3c748c426d7eac16717008ccd121eb10e",
+  "build_revision": "sha256:d518d2e9eacfae4b0646aa161253b9edc5a78375b9935b267cdb6d467d220b1e",
+  "environment": "Isolated n6b-f15-ui Docker network; actual production Next/PG/Caddy, test-only explicit job completion and fixed document/chunk/statistics fixture; own contexts insharedbrowser, nopublishedports",
+  "test_command": "docker exec -w /opt/browser codex-ui-playwright node /opt/browser/n6b-f15-ui.mjs /opt/browser/n6b-f15-fixture.json /opt/browser/n6b-f15-output-1",
+  "inputs": [
+    {
+      "name": "Exact23host/image hashes, full646unit/all310PG/type/build0, two meaningful PG guard mutations",
+      "available": true
+    },
+    {
+      "name": "Independent Astra correction source ACCEPT_WITH_CAVEATS; dynamic guards now completed in coordinator artifacts",
+      "available": true
+    },
+    {
+      "name": "Complete private env, owner registration, explicit fixture job completion/chunks/stats",
+      "available": true
+    }
+  ],
+  "environment_available": true,
+  "expected_effects": [
+    "Real1440/390 add-source/stats/recrawl202/new-and-same-live-job/busy409/cancel/delete204/cascade/other-source-preserved; no provider or response mocks",
+    "Owncontexts/stack/privateenv cleanup, sharedbrowser retained"
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "tests/artifacts/source-management/ui-output/report.json"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "checked_at": "2026-10-03T06:37:54.327418+00:00"
+}
