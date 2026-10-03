@@ -6,7 +6,7 @@ import {join,resolve} from 'node:path';
 import sharp from 'sharp';
 import {createJobs} from '../../web/jobs.js';
 import {createPayments} from '../../web/payments.js';
-import {fixtureSignal} from '../payment-fixture.js';
+import {driveFixturePayment} from './payment-ready.js';
 import {prepareArtifacts,canonical,sha,artifactRead} from '../../web/generation.js';
 import {migrate} from '../migrate.js';
 const marker='N8_F04B_OWNED_LOCAL_SOFTWARE_FIXTURE';
@@ -33,8 +33,9 @@ export function fixtureConfig(env=process.env) {
 }
 export async function drive(pool,config,action,id) {
   if(action==='payment') {
+    if(id)return driveFixturePayment(pool,config,id);
     await createPayments(pool,config).runOne();
-    if(id)await fixtureSignal(pool,config,id,'success');return {software_fixture:true};
+    return {software_fixture:true};
   }
   const jobs=createJobs(pool,config),claim=await jobs.claim();
   if(!claim)throw new Error('no_claimable_job');
