@@ -80,10 +80,10 @@ test('F05 B1–B6 real PostgreSQL HTTP evidence and public report gates',async t
   await t.test('B4 EVERY view current TEST entitlement, expiry and committed revocation',async()=>{
    await seedTestEntitlement(pool,tenant);
    assert.equal((await request(reportUrl+'?paid=false')).text.includes('data-n7-source-badge'),false);
-   const entitlement=(await pool.query('SELECT intent_id,expires_at FROM billing_entitlement WHERE tenant_id=$1',[tenant])).rows[0];
-   await pool.query('UPDATE billing_entitlement SET expires_at=clock_timestamp() WHERE intent_id=$1',[entitlement.intent_id]);
+   const entitlement=(await pool.query('SELECT intent_id,paid_at,expires_at FROM billing_entitlement WHERE tenant_id=$1',[tenant])).rows[0];
+   await pool.query("UPDATE billing_entitlement SET paid_at=c.now-interval '30 days',expires_at=c.now FROM (SELECT clock_timestamp() AS now) c WHERE intent_id=$1",[entitlement.intent_id]);
    assert.equal((await request(reportUrl+'?paid=true')).text.includes('data-n7-source-badge'),true);
-   await pool.query('UPDATE billing_entitlement SET expires_at=$2 WHERE intent_id=$1',[entitlement.intent_id,entitlement.expires_at]);
+   await pool.query('UPDATE billing_entitlement SET paid_at=$2,expires_at=$3 WHERE intent_id=$1',[entitlement.intent_id,entitlement.paid_at,entitlement.expires_at]);
    const db=await pool.connect();await db.query('BEGIN');await db.query('UPDATE billing_entitlement SET revoked_at=clock_timestamp() WHERE intent_id=$1',[entitlement.intent_id]);
    assert.equal((await request(reportUrl)).text.includes('data-n7-source-badge'),false);await db.query('COMMIT');db.release();
    assert.equal((await request(reportUrl+'?paid=true')).text.includes('data-n7-source-badge'),true);
