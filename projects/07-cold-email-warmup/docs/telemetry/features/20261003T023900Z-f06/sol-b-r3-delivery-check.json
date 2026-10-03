@@ -1,0 +1,128 @@
+{
+  "at": "2026-10-03T05:50:39.532159+00:00",
+  "changed_frozen_inputs": [
+    "src/growth/reports.ts"
+  ],
+  "backend_inputs_unchanged": true,
+  "checks": 218,
+  "all_pass": true,
+  "layout": [
+    {
+      "engine": "chromium-1440",
+      "name": "ratios-public-report",
+      "width": 1440,
+      "body": 1408,
+      "root": 1440
+    },
+    {
+      "engine": "chromium-1440",
+      "name": "raw_counts-public-report",
+      "width": 1440,
+      "body": 1408,
+      "root": 1440
+    },
+    {
+      "engine": "chromium-390",
+      "name": "ratios-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "chromium-390",
+      "name": "ratios-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "chromium-390",
+      "name": "raw_counts-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "chromium-390",
+      "name": "raw_counts-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "firefox-390",
+      "name": "ratios-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "firefox-390",
+      "name": "ratios-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "firefox-390",
+      "name": "raw_counts-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "firefox-390",
+      "name": "raw_counts-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "webkit-390",
+      "name": "ratios-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "webkit-390",
+      "name": "ratios-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "webkit-390",
+      "name": "raw_counts-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "webkit-390",
+      "name": "raw_counts-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    }
+  ],
+  "immutable_copied_script_hashes_match": {
+    "f06-b3-focused.mjs": true,
+    "f06-report-layout.mjs": true,
+    "f06-audit.py": true,
+    "f06-fixture.mjs": true,
+    "f06-b3-login.mjs": true,
+    "f06-b3-extra.mjs": true,
+    "f06-run.py": true,
+    "f06-journey.mjs": true,
+    "f06-security.mjs": true,
+    "f06-unsubscribe-probe.py": true,
+    "f06-unsubscribe-probe.mjs": true,
+    "f06-browser.mjs": true
+  },
+  "visual_inspection": [
+    "attempt3 Firefox390 start/end and Chromium1440 ratios: identified word/ratio fragmentation",
+    "attempt4 Firefox390 ratio end and Chromium1440 raw counts: full readable numeric columns"
+  ],
+  "inherited_RED": "B3 root570/748/604 saved unchanged; no whole-matrix/PG/benchmark rerun"
+}

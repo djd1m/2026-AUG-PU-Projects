@@ -1,0 +1,229 @@
+
+> n7-cold-email-warmup@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*-unit.test.ts
+
+TAP version 13
+# Subtest: R1 actual authScript passive valid identity redirects silently
+ok 1 - R1 actual authScript passive valid identity redirects silently
+  ---
+  duration_ms: 8.325053
+  ...
+# Subtest: R1 actual successful register notifies exactly once
+ok 2 - R1 actual successful register notifies exactly once
+  ---
+  duration_ms: 3.365322
+  ...
+# Subtest: R1 actual successful login notifies exactly once
+ok 3 - R1 actual successful login notifies exactly once
+  ---
+  duration_ms: 2.21839
+  ...
+# Subtest: R1 failed action/no identity emits zero false/true
+ok 4 - R1 failed action/no identity emits zero false/true
+  ---
+  duration_ms: 2.380661
+  ...
+# Subtest: R1 failed action/no identity emits zero true/false
+ok 5 - R1 failed action/no identity emits zero true/false
+  ---
+  duration_ms: 2.289541
+  ...
+# Subtest: R1 actual app channel login invalidates, aborts and passive followup never echoes
+ok 6 - R1 actual app channel login invalidates, aborts and passive followup never echoes
+  ---
+  duration_ms: 270.676547
+  ...
+# Subtest: R1 actual app channel logout invalidates, aborts and passive followup never echoes
+ok 7 - R1 actual app channel logout invalidates, aborts and passive followup never echoes
+  ---
+  duration_ms: 100.278126
+  ...
+# Subtest: AC-F01-4 Unicode/password byte boundaries reject before invoking KDF
+ok 8 - AC-F01-4 Unicode/password byte boundaries reject before invoking KDF
+  ---
+  duration_ms: 2.449331
+  ...
+# Subtest: AC-F01-4 exact PHC params/salt/output reject adversarial stored costs
+ok 9 - AC-F01-4 exact PHC params/salt/output reject adversarial stored costs
+  ---
+  duration_ms: 0.89369
+  ...
+# Subtest: AC-F01-4 two active KDFs: no queue, unrelated free slot, release on rejection
+ok 10 - AC-F01-4 two active KDFs: no queue, unrelated free slot, release on rejection
+  ---
+  duration_ms: 0.84734
+  ...
+# Subtest: AC-F01-2 opaque canonical cookie and absolute7day HMAC session
+ok 11 - AC-F01-2 opaque canonical cookie and absolute7day HMAC session
+  ---
+  duration_ms: 2.256321
+  ...
+# Subtest: AC-F01-1 safety config fails closed without external runtime key/policy
+ok 12 - AC-F01-1 safety config fails closed without external runtime key/policy
+  ---
+  duration_ms: 18.813876
+  ...
+# Subtest: F05 immutable server plans and closed checkout input
+ok 13 - F05 immutable server plans and closed checkout input
+  ---
+  duration_ms: 2.558541
+  ...
+# Subtest: F05 bounded purpose HMAC cookie exact30day expiration and tamper
+ok 14 - F05 bounded purpose HMAC cookie exact30day expiration and tamper
+  ---
+  duration_ms: 2.235641
+  ...
+# Subtest: A1 canonical bounds, missing fields, source/header injection and escaped preview
+ok 15 - A1 canonical bounds, missing fields, source/header injection and escaped preview
+  ---
+  duration_ms: 4.599311
+  ...
+# Subtest: A2 versioned enrollment AEAD purpose, tenant/id substitution and separately keyed digest
+ok 16 - A2 versioned enrollment AEAD purpose, tenant/id substitution and separately keyed digest
+  ---
+  duration_ms: 3.890091
+  ...
+# Subtest: B1 bounded manual observation input and explicit verification
+ok 17 - B1 bounded manual observation input and explicit verification
+  ---
+  duration_ms: 6.660133
+  ...
+# Subtest: B2 exact 7days/+1ms, 28days/+1ms, equal UTC windows, future and reasons
+ok 18 - B2 exact 7days/+1ms, 28days/+1ms, equal UTC windows, future and reasons
+  ---
+  duration_ms: 2.227021
+  ...
+# Subtest: B2 denominators 29/30 gate ratios and strict raw count improvement
+not ok 19 - B2 denominators 29/30 gate ratios and strict raw count improvement
+  ---
+  duration_ms: 99.749456
+  location: '/tmp/n7-f06b-r3/projects/07-cold-email-warmup/tests/evidence-unit.test.ts:1:2756'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      publicProjection(b,l,'raw_counts')
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (/tmp/n7-f06b-r3/projects/07-cold-email-warmup/tests/evidence-unit.test.ts:35:78)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:796:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+    Test.postRun (node:internal/test_runner/test:889:19)
+    Test.run (node:internal/test_runner/test:835:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+# Subtest: B3/B4 explicit public whitelist, escaping, historical copy and exactly one badge
+ok 20 - B3/B4 explicit public whitelist, escaping, historical copy and exactly one badge
+  ---
+  duration_ms: 4.447391
+  ...
+# Subtest: B5 bounded history pagination
+ok 21 - B5 bounded history pagination
+  ---
+  duration_ms: 1.34624
+  ...
+# Subtest: F1 primitive enums reject array/object/null before any write
+ok 22 - F1 primitive enums reject array/object/null before any write
+  ---
+  duration_ms: 1.825971
+  ...
+# Subtest: F2 validated UUID uses canonical lowercase identity
+ok 23 - F2 validated UUID uses canonical lowercase identity
+  ---
+  duration_ms: 0.64162
+  ...
+# Subtest: AEAD fresh nonce, ciphertext/tag/AAD substitution and retained versions fail closed before transport
+ok 24 - AEAD fresh nonce, ciphertext/tag/AAD substitution and retained versions fail closed before transport
+  ---
+  duration_ms: 5.496032
+  ...
+# Subtest: operator host normalization and conservative public address oracle
+ok 25 - operator host normalization and conservative public address oracle
+  ---
+  duration_ms: 12.202074
+  ...
+# Subtest: IANA reserved and unallocated IPv6 reject before any adapter call, alone or mixed
+ok 26 - IANA reserved and unallocated IPv6 reject before any adapter call, alone or mixed
+  ---
+  duration_ms: 74.204337
+  ...
+# Subtest: save input enforces TLS ports and limits
+ok 27 - save input enforces TLS ports and limits
+  ---
+  duration_ms: 0.86017
+  ...
+# Subtest: connector revalidation, IP pin/TLS identity, canary scrub and abort deadlines
+ok 28 - connector revalidation, IP pin/TLS identity, canary scrub and abort deadlines
+  ---
+  duration_ms: 23.349548
+  ...
+# Subtest: F04a bounded header-only input normalization and optional incoming ID
+ok 29 - F04a bounded header-only input normalization and optional incoming ID
+  ---
+  duration_ms: 4.570532
+  ...
+# Subtest: F04a explicit page/header/reference/range/validity limits reject before any writes
+ok 30 - F04a explicit page/header/reference/range/validity limits reject before any writes
+  ---
+  duration_ms: 2.288321
+  ...
+# Subtest: B3 plain local test message, random bound token, one-click and reference headers
+ok 31 - B3 plain local test message, random bound token, one-click and reference headers
+  ---
+  duration_ms: 4.069362
+  ...
+# Subtest: B4 retry delays/max3 and exact120s ceiling
+ok 32 - B4 retry delays/max3 and exact120s ceiling
+  ---
+  duration_ms: 0.52399
+  ...
+# Subtest: operator distinct hash auth, malformed secrets and complaint payload bounds
+ok 33 - operator distinct hash auth, malformed secrets and complaint payload bounds
+  ---
+  duration_ms: 7.256802
+  ...
+# Subtest: fixture header-only bounds and ordered source coverage; operation timeout
+ok 34 - fixture header-only bounds and ordered source coverage; operation timeout
+  ---
+  duration_ms: 22.381928
+  ...
+# Subtest: native default transport preserves its global receiver and injected transport still works
+ok 35 - native default transport preserves its global receiver and injected transport still works
+  ---
+  duration_ms: 44.150566
+  ...
+# Subtest: A6 central401 clears private state, aborts pending, redirects; late success/error stay obsolete
+ok 36 - A6 central401 clears private state, aborts pending, redirects; late success/error stay obsolete
+  ---
+  duration_ms: 2.603011
+  ...
+# Subtest: A1 session change fences old identity and body-resolution race
+ok 37 - A1 session change fences old identity and body-resolution race
+  ---
+  duration_ms: 1.41417
+  ...
+# Subtest: A1 late action catch/finally cannot change fresh UI or release its pending bound
+ok 38 - A1 late action catch/finally cannot change fresh UI or release its pending bound
+  ---
+  duration_ms: 2.394841
+  ...
+# Subtest: A6 product source security: explicit assets, same-origin shell, no private storage/untrusted HTML/operator access
+ok 39 - A6 product source security: explicit assets, same-origin shell, no private storage/untrusted HTML/operator access
+  ---
+  duration_ms: 2.207121
+  ...
+1..39
+# tests 39
+# suites 0
+# pass 38
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6671.158591

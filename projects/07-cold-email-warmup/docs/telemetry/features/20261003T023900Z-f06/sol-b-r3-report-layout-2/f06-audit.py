@@ -6,7 +6,7 @@ TRACE=ROOT/'docs/telemetry/features/20261003T023900Z-f06'
 binding=None
 if len(sys.argv)>1:
  receipt_path=pathlib.Path(sys.argv[1]).resolve()
- assert receipt_path in [TRACE/'sol-b-r1-image-receipt.json',TRACE/'sol-b-r2-image-receipt.json',TRACE/'sol-b-r3-image-receipt.json',TRACE/'sol-b-r3-readable-image-receipt.json']
+ assert receipt_path in [TRACE/'sol-b-r1-image-receipt.json',TRACE/'sol-b-r2-image-receipt.json',TRACE/'sol-b-r3-image-receipt.json']
  prefix=receipt_path.name.removesuffix('-image-receipt.json')
  binding=json.loads(receipt_path.read_text())
  assert binding['exact_source_and_build_files'] and binding['image_matches_container']
@@ -51,7 +51,7 @@ for p in sorted(TRACE.glob('sol-b-b3-*/checks.json' if len(sys.argv)>2 and sys.a
   console.append({**row,'classification':'expected anonymous initial session lookup' if expected else 'unexpected console error'})
  classifications.append({'attempt':p.parent.name,'http_errors':http,'console_errors':console,'page_errors':r['page_errors'],'requests_failed':[f for f in r['failures'] if f['kind']=='requestfailed'],'failure_summary':r['failures']})
 result={'at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'source_revision':source['revision'],'source_sha256':source['source_sha256'],'source_mismatches':source_bad,'image_id':web['Image'],'build_sha256':build_sha,'build_files':build,'secret_values_suppressed':True,'runtime_secrets_count':len(secrets),'project_files_scanned':len(files),'secret_file_leaks':leaks,'own_web_logs_secret_leak':logs_leak,'credential_canary_web_logs_absent':b'N7_F06B_CREDENTIAL_CANARY' not in logs,'credential_canary_browser_api':'see B3 focused actual mailbox API-body canary assertion; historical B2 assertion was not instrumented','db_no_host_ports':not any(db['NetworkSettings']['Ports'].values()),'web_loopback_only':web['NetworkSettings']['Ports']['3000/tcp']==[{'HostIp':'127.0.0.1','HostPort':'18709'}],'cpu_limit':web['HostConfig']['NanoCpus']/1e9,'own_network_detached':'n7f06a_network' not in ui['NetworkSettings']['Networks'],'ui_container_running':ui['State']['Running'],'http_console_classification':classifications}
-audit_name=prefix+'-audit.json' if binding and prefix.startswith('sol-b-r3') else 'sol-b3-audit.json' if len(sys.argv)>2 and sys.argv[2]=='b3' else 'sol-b-r2-audit.json' if binding and prefix=='sol-b-r2' else 'sol-b2-audit.json' if len(sys.argv)>2 and sys.argv[2]=='b2' else ('sol-b-r1-audit.json' if binding else 'sol-b-audit.json')
+audit_name='sol-b-r3-audit.json' if binding and prefix=='sol-b-r3' else 'sol-b3-audit.json' if len(sys.argv)>2 and sys.argv[2]=='b3' else 'sol-b-r2-audit.json' if binding and prefix=='sol-b-r2' else 'sol-b2-audit.json' if len(sys.argv)>2 and sys.argv[2]=='b2' else ('sol-b-r1-audit.json' if binding else 'sol-b-audit.json')
 assert len(sys.argv)<=2 or sys.argv[2] in ['b2','b-r2','b3','b-r3']
 assert not (TRACE/audit_name).exists(), 'allocate fresh audit path; preserve existing audit'
 (TRACE/audit_name).write_text(json.dumps(result,indent=2)+'\n')

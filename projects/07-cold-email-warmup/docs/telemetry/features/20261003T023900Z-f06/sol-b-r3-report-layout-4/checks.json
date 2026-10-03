@@ -1,0 +1,5055 @@
+{
+  "status": "pass",
+  "started_at": "2026-10-03T05:49:25.249Z",
+  "source": "1144c60cfff6a30ae94be77971274102d5239adbfc8b19f3ee7f7f47f7d98e6a",
+  "build": "2b5c0c6b974feff5774b064f1fe038a3ff4345e9eb520c089945987ed107774c",
+  "engines": [
+    {
+      "name": "chromium",
+      "width": 1440,
+      "height": 900,
+      "version": "153.0.8010.12"
+    },
+    {
+      "name": "chromium",
+      "width": 390,
+      "height": 844,
+      "version": "153.0.8010.12"
+    },
+    {
+      "name": "firefox",
+      "width": 390,
+      "height": 844,
+      "version": "155.0"
+    },
+    {
+      "name": "webkit",
+      "width": 390,
+      "height": 844,
+      "version": "26.6"
+    }
+  ],
+  "checks": [
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "ratios actual observations persisted",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "Сравнить выбранную пару HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "ratios share enabled",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "Создать публичный отчёт HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "ratios snapshot mode",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "ratios public200",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "CSP permits actual inline style",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "privacy whitelist and provenance",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "source badge preserved",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "caption and header associations",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "full timestamps and counts",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "numeric values remain on one readable line",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "ratio/raw columns exact",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "real computed CSS applied",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "timestamps readable without clipping",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "scroll region reachable with Tab",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "focus and instructions visible",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "ratios-public-report credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "ratios-public-report no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "Отозвать ссылку HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "name": "ratios revoke404",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "raw_counts actual observations persisted",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "Сравнить выбранную пару HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "raw_counts share enabled",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "Создать публичный отчёт HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "raw_counts snapshot mode",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "raw_counts public200",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "CSP permits actual inline style",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "privacy whitelist and provenance",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "source badge preserved",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "caption and header associations",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "full timestamps and counts",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "numeric values remain on one readable line",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "ratio/raw columns exact",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "real computed CSS applied",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "timestamps readable without clipping",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "scroll region reachable with Tab",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "focus and instructions visible",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "raw_counts-public-report credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "raw_counts-public-report no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "Отозвать ссылку HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "name": "raw_counts revoke404",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "ratios actual observations persisted",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "Сравнить выбранную пару HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "ratios share enabled",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "Создать публичный отчёт HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "ratios snapshot mode",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "ratios public200",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "CSP permits actual inline style",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "privacy whitelist and provenance",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "source badge preserved",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "caption and header associations",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "full timestamps and counts",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "numeric values remain on one readable line",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "ratio/raw columns exact",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "real computed CSS applied",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "timestamps readable without clipping",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "scroll region reachable with Tab",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "focus and instructions visible",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "contained horizontal table",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "keyboard ArrowRight scrolls",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "keyboard ArrowLeft scrolls",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "ratios-public-report credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "ratios-public-report no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "ratios-public-report-end credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "ratios-public-report-end no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "Отозвать ссылку HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "name": "ratios revoke404",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "raw_counts actual observations persisted",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "Сравнить выбранную пару HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "raw_counts share enabled",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "Создать публичный отчёт HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "raw_counts snapshot mode",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "raw_counts public200",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "CSP permits actual inline style",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "privacy whitelist and provenance",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "source badge preserved",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "caption and header associations",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "full timestamps and counts",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "numeric values remain on one readable line",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "ratio/raw columns exact",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "real computed CSS applied",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "timestamps readable without clipping",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "scroll region reachable with Tab",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "focus and instructions visible",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "contained horizontal table",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "keyboard ArrowRight scrolls",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "keyboard ArrowLeft scrolls",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "raw_counts-public-report credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "raw_counts-public-report no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "raw_counts-public-report-end credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "raw_counts-public-report-end no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "Отозвать ссылку HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "name": "raw_counts revoke404",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "ratios actual observations persisted",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "Сравнить выбранную пару HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "ratios share enabled",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "Создать публичный отчёт HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "ratios snapshot mode",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "ratios public200",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "CSP permits actual inline style",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "privacy whitelist and provenance",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "source badge preserved",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "caption and header associations",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "full timestamps and counts",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "numeric values remain on one readable line",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "ratio/raw columns exact",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "real computed CSS applied",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "timestamps readable without clipping",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "scroll region reachable with Tab",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "focus and instructions visible",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "contained horizontal table",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "keyboard ArrowRight scrolls",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "keyboard ArrowLeft scrolls",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "ratios-public-report credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "ratios-public-report no overflow",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "ratios-public-report-end credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "ratios-public-report-end no overflow",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "Отозвать ссылку HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "name": "ratios revoke404",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "raw_counts actual observations persisted",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "Сравнить выбранную пару HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "raw_counts share enabled",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "Создать публичный отчёт HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "raw_counts snapshot mode",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "raw_counts public200",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "CSP permits actual inline style",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "privacy whitelist and provenance",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "source badge preserved",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "caption and header associations",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "full timestamps and counts",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "numeric values remain on one readable line",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "ratio/raw columns exact",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "real computed CSS applied",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "timestamps readable without clipping",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "scroll region reachable with Tab",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "focus and instructions visible",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "contained horizontal table",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "keyboard ArrowRight scrolls",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "keyboard ArrowLeft scrolls",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "raw_counts-public-report credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "raw_counts-public-report no overflow",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "raw_counts-public-report-end credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "raw_counts-public-report-end no overflow",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "Отозвать ссылку HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "name": "raw_counts revoke404",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "ratios actual observations persisted",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "Сравнить выбранную пару HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "ratios share enabled",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "Создать публичный отчёт HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "ratios snapshot mode",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "ratios public200",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "CSP permits actual inline style",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "privacy whitelist and provenance",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "source badge preserved",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "caption and header associations",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "full timestamps and counts",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "numeric values remain on one readable line",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "ratio/raw columns exact",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "real computed CSS applied",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "timestamps readable without clipping",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "scroll region reachable with Tab",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "focus and instructions visible",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "contained horizontal table",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "keyboard ArrowRight scrolls",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "keyboard ArrowLeft scrolls",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "ratios-public-report credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "ratios-public-report no overflow",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "ratios-public-report-end credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "ratios-public-report-end no overflow",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "Отозвать ссылку HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "name": "ratios revoke404",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "raw_counts actual observations persisted",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "Сравнить выбранную пару HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "raw_counts share enabled",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "Создать публичный отчёт HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "raw_counts snapshot mode",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "raw_counts public200",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "CSP permits actual inline style",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "privacy whitelist and provenance",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "source badge preserved",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "caption and header associations",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "full timestamps and counts",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "numeric values remain on one readable line",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "ratio/raw columns exact",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "real computed CSS applied",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "timestamps readable without clipping",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "scroll region reachable with Tab",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "focus and instructions visible",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "contained horizontal table",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "keyboard ArrowRight scrolls",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "keyboard ArrowLeft scrolls",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "raw_counts-public-report credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "raw_counts-public-report no overflow",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "raw_counts-public-report-end credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "raw_counts-public-report-end no overflow",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "Отозвать ссылку HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "raw_counts revoke404",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "no unexpected HTTP errors",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "no unexpected console errors",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "no page errors",
+      "pass": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "name": "no failed requests",
+      "pass": true
+    }
+  ],
+  "http": [
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/api/auth/login",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/evidence/compare",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/reports/WtbQ8I_Z-SOeBvnmoCQn4uRyJOBgZJFB0sjki-ZvZJo",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/reports/9a48bf6f-7783-41cb-9b60-9aca8a1e781d/revoke",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "path": "/reports/WtbQ8I_Z-SOeBvnmoCQn4uRyJOBgZJFB0sjki-ZvZJo",
+      "status": 404,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/evidence/compare",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/reports/dMNzHpMuixki6uCu_42kY2uRgwTGNZxtBbP8euXXBv8",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/reports/f1d6fdbd-4112-419a-b5e5-8063d3be1386/revoke",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "path": "/reports/dMNzHpMuixki6uCu_42kY2uRgwTGNZxtBbP8euXXBv8",
+      "status": 404,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/api/auth/login",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/evidence/compare",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/reports/rm1CUaCXtERInosxABMrTJmxTbAJ-vK0zbsyycponRM",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/reports/10a8b750-fcee-4430-a37c-997a5d3cf195/revoke",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "path": "/reports/rm1CUaCXtERInosxABMrTJmxTbAJ-vK0zbsyycponRM",
+      "status": 404,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence/compare",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/reports/3_6r3shpAU6-GfXtXprTNWwD70oj3Cwlb24X8EyTipk",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/reports/410497e8-3693-431f-8f5e-277b9bb366f3/revoke",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "path": "/reports/3_6r3shpAU6-GfXtXprTNWwD70oj3Cwlb24X8EyTipk",
+      "status": 404,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/api/auth/login",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "connect",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/evidence/compare",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/reports/Xaadr5vzH3L6B7jhMhLbJYy9vaj4zM9vJuSn68nEEz8",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/reports/66db9141-941c-4b6c-9245-05ae975698f8/revoke",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "ratios",
+      "path": "/reports/Xaadr5vzH3L6B7jhMhLbJYy9vaj4zM9vJuSn68nEEz8",
+      "status": 404,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence/compare",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/reports/OntXKgZmbWAKHNDMulaUOlDqxy1mNQ8ZCu6NlabuApg",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/reports/710b583c-9818-41a1-aa50-8ae424f67d46/revoke",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "firefox-390",
+      "phase": "raw_counts",
+      "path": "/reports/OntXKgZmbWAKHNDMulaUOlDqxy1mNQ8ZCu6NlabuApg",
+      "status": 404,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/api/auth/login",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/evidence/compare",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/reports/x8A9xdDz-LksVo7wGjjJQT2Hh7uPy_GI6W2FBxzZJr4",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/reports/75cfde02-e2b0-4bfb-89c2-726a52e642ce/revoke",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "path": "/reports/x8A9xdDz-LksVo7wGjjJQT2Hh7uPy_GI6W2FBxzZJr4",
+      "status": 404,
+      "method": "GET",
+      "expected": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence/compare",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/reports/qLPNX9FyavBZPyBOZRWGBvHkPyftZNhJeIh6-TqUTAE",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/reports/abce7880-df5f-47c4-b9fe-b6abb500859f/revoke",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "path": "/reports/qLPNX9FyavBZPyBOZRWGBvHkPyftZNhJeIh6-TqUTAE",
+      "status": 404,
+      "method": "GET",
+      "expected": true
+    }
+  ],
+  "console": [
+    {
+      "engine": "chromium-1440",
+      "phase": "connect",
+      "url": "http://127.0.0.1:18709/api/auth/me",
+      "http_status": "401",
+      "kind": "error",
+      "expected": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "ratios",
+      "url": "http://127.0.0.1:18709/reports/WtbQ8I_Z-SOeBvnmoCQn4uRyJOBgZJFB0sjki-ZvZJo",
+      "http_status": "404",
+      "kind": "error",
+      "expected": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "raw_counts",
+      "url": "http://127.0.0.1:18709/reports/dMNzHpMuixki6uCu_42kY2uRgwTGNZxtBbP8euXXBv8",
+      "http_status": "404",
+      "kind": "error",
+      "expected": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "connect",
+      "url": "http://127.0.0.1:18709/api/auth/me",
+      "http_status": "401",
+      "kind": "error",
+      "expected": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "ratios",
+      "url": "http://127.0.0.1:18709/reports/rm1CUaCXtERInosxABMrTJmxTbAJ-vK0zbsyycponRM",
+      "http_status": "404",
+      "kind": "error",
+      "expected": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "raw_counts",
+      "url": "http://127.0.0.1:18709/reports/3_6r3shpAU6-GfXtXprTNWwD70oj3Cwlb24X8EyTipk",
+      "http_status": "404",
+      "kind": "error",
+      "expected": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "connect",
+      "url": "http://127.0.0.1:18709/api/auth/me",
+      "http_status": "401",
+      "kind": "error",
+      "expected": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "ratios",
+      "url": "http://127.0.0.1:18709/reports/x8A9xdDz-LksVo7wGjjJQT2Hh7uPy_GI6W2FBxzZJr4",
+      "http_status": "404",
+      "kind": "error",
+      "expected": true
+    },
+    {
+      "engine": "webkit-390",
+      "phase": "raw_counts",
+      "url": "http://127.0.0.1:18709/reports/qLPNX9FyavBZPyBOZRWGBvHkPyftZNhJeIh6-TqUTAE",
+      "http_status": "404",
+      "kind": "error",
+      "expected": true
+    }
+  ],
+  "page_errors": [],
+  "screenshots": [
+    "chromium-1440-ratios-public-report.png",
+    "chromium-1440-raw_counts-public-report.png",
+    "chromium-390-ratios-public-report.png",
+    "chromium-390-ratios-public-report-end.png",
+    "chromium-390-raw_counts-public-report.png",
+    "chromium-390-raw_counts-public-report-end.png",
+    "firefox-390-ratios-public-report.png",
+    "firefox-390-ratios-public-report-end.png",
+    "firefox-390-raw_counts-public-report.png",
+    "firefox-390-raw_counts-public-report-end.png",
+    "webkit-390-ratios-public-report.png",
+    "webkit-390-ratios-public-report-end.png",
+    "webkit-390-raw_counts-public-report.png",
+    "webkit-390-raw_counts-public-report-end.png"
+  ],
+  "failures": [],
+  "cleanup": {
+    "own_contexts_closed": true,
+    "bridge_closed": true,
+    "sockets_destroyed": true,
+    "shared_browser_server_preserved": true
+  },
+  "bridge_requests": [
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence/compare",
+      "method": "POST"
+    },
+    {
+      "path": "/api/reports",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/WtbQ8I_Z-SOeBvnmoCQn4uRyJOBgZJFB0sjki-ZvZJo",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports/9a48bf6f-7783-41cb-9b60-9aca8a1e781d/revoke",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/WtbQ8I_Z-SOeBvnmoCQn4uRyJOBgZJFB0sjki-ZvZJo",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence/compare",
+      "method": "POST"
+    },
+    {
+      "path": "/api/reports",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/dMNzHpMuixki6uCu_42kY2uRgwTGNZxtBbP8euXXBv8",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports/f1d6fdbd-4112-419a-b5e5-8063d3be1386/revoke",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/dMNzHpMuixki6uCu_42kY2uRgwTGNZxtBbP8euXXBv8",
+      "method": "GET"
+    },
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence/compare",
+      "method": "POST"
+    },
+    {
+      "path": "/api/reports",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/rm1CUaCXtERInosxABMrTJmxTbAJ-vK0zbsyycponRM",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports/10a8b750-fcee-4430-a37c-997a5d3cf195/revoke",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/rm1CUaCXtERInosxABMrTJmxTbAJ-vK0zbsyycponRM",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence/compare",
+      "method": "POST"
+    },
+    {
+      "path": "/api/reports",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/3_6r3shpAU6-GfXtXprTNWwD70oj3Cwlb24X8EyTipk",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports/410497e8-3693-431f-8f5e-277b9bb366f3/revoke",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/3_6r3shpAU6-GfXtXprTNWwD70oj3Cwlb24X8EyTipk",
+      "method": "GET"
+    },
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/favicon.ico",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence/compare",
+      "method": "POST"
+    },
+    {
+      "path": "/api/reports",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/Xaadr5vzH3L6B7jhMhLbJYy9vaj4zM9vJuSn68nEEz8",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports/66db9141-941c-4b6c-9245-05ae975698f8/revoke",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/Xaadr5vzH3L6B7jhMhLbJYy9vaj4zM9vJuSn68nEEz8",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence/compare",
+      "method": "POST"
+    },
+    {
+      "path": "/api/reports",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/OntXKgZmbWAKHNDMulaUOlDqxy1mNQ8ZCu6NlabuApg",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports/710b583c-9818-41a1-aa50-8ae424f67d46/revoke",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/OntXKgZmbWAKHNDMulaUOlDqxy1mNQ8ZCu6NlabuApg",
+      "method": "GET"
+    },
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence/compare",
+      "method": "POST"
+    },
+    {
+      "path": "/api/reports",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/x8A9xdDz-LksVo7wGjjJQT2Hh7uPy_GI6W2FBxzZJr4",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports/75cfde02-e2b0-4bfb-89c2-726a52e642ce/revoke",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/x8A9xdDz-LksVo7wGjjJQT2Hh7uPy_GI6W2FBxzZJr4",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence/compare",
+      "method": "POST"
+    },
+    {
+      "path": "/api/reports",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/qLPNX9FyavBZPyBOZRWGBvHkPyftZNhJeIh6-TqUTAE",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports/abce7880-df5f-47c4-b9fe-b6abb500859f/revoke",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/qLPNX9FyavBZPyBOZRWGBvHkPyftZNhJeIh6-TqUTAE",
+      "method": "GET"
+    }
+  ],
+  "geometry": [
+    {
+      "engine": "chromium-1440",
+      "display": "ratios",
+      "overflowX": "auto",
+      "client": 1022,
+      "scroll": 1022,
+      "times": [
+        {
+          "text": "2026-10-02T04:49:27.597Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-01T04:49:27.597Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-02T04:49:27.597Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-03T04:49:27.597Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-02T04:49:27.597Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-03T04:49:27.597Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        }
+      ]
+    },
+    {
+      "engine": "chromium-1440",
+      "display": "raw_counts",
+      "overflowX": "auto",
+      "client": 1022,
+      "scroll": 1022,
+      "times": [
+        {
+          "text": "2026-10-02T04:49:29.872Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-01T04:49:29.872Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-02T04:49:29.872Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-03T04:49:29.872Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-02T04:49:29.872Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-03T04:49:29.872Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        }
+      ]
+    },
+    {
+      "engine": "chromium-390",
+      "display": "ratios",
+      "overflowX": "auto",
+      "client": 356,
+      "scroll": 901,
+      "times": [
+        {
+          "text": "2026-10-02T04:49:34.015Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-01T04:49:34.015Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-02T04:49:34.015Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-03T04:49:34.015Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-02T04:49:34.015Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-03T04:49:34.015Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        }
+      ]
+    },
+    {
+      "engine": "chromium-390",
+      "display": "raw_counts",
+      "overflowX": "auto",
+      "client": 356,
+      "scroll": 832,
+      "times": [
+        {
+          "text": "2026-10-02T04:49:36.596Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-01T04:49:36.596Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-02T04:49:36.596Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-03T04:49:36.596Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-02T04:49:36.596Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-03T04:49:36.596Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        }
+      ]
+    },
+    {
+      "engine": "firefox-390",
+      "display": "ratios",
+      "overflowX": "auto",
+      "client": 356,
+      "scroll": 911,
+      "times": [
+        {
+          "text": "2026-10-02T04:49:43.609Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-01T04:49:43.609Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-02T04:49:43.609Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-03T04:49:43.609Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-02T04:49:43.609Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-03T04:49:43.609Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        }
+      ]
+    },
+    {
+      "engine": "firefox-390",
+      "display": "raw_counts",
+      "overflowX": "auto",
+      "client": 356,
+      "scroll": 833,
+      "times": [
+        {
+          "text": "2026-10-02T04:49:46.565Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-01T04:49:46.565Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-02T04:49:46.565Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-03T04:49:46.565Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-02T04:49:46.565Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-03T04:49:46.565Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        }
+      ]
+    },
+    {
+      "engine": "webkit-390",
+      "display": "ratios",
+      "overflowX": "auto",
+      "client": 356,
+      "scroll": 901,
+      "times": [
+        {
+          "text": "2026-10-02T04:49:52.146Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-01T04:49:52.146Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-02T04:49:52.146Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-03T04:49:52.146Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-02T04:49:52.146Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-03T04:49:52.146Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        }
+      ]
+    },
+    {
+      "engine": "webkit-390",
+      "display": "raw_counts",
+      "overflowX": "auto",
+      "client": 356,
+      "scroll": 832,
+      "times": [
+        {
+          "text": "2026-10-02T04:49:54.814Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-01T04:49:54.814Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-02T04:49:54.814Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-03T04:49:54.814Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-02T04:49:54.814Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        },
+        {
+          "text": "2026-10-03T04:49:54.814Z",
+          "client": 230,
+          "scroll": 230,
+          "height": 24,
+          "whiteSpace": "nowrap",
+          "font": "16px"
+        }
+      ]
+    }
+  ],
+  "layout": [
+    {
+      "engine": "chromium-1440",
+      "name": "ratios-public-report",
+      "width": 1440,
+      "body": 1408,
+      "root": 1440
+    },
+    {
+      "engine": "chromium-1440",
+      "name": "raw_counts-public-report",
+      "width": 1440,
+      "body": 1408,
+      "root": 1440
+    },
+    {
+      "engine": "chromium-390",
+      "name": "ratios-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "chromium-390",
+      "name": "ratios-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "chromium-390",
+      "name": "raw_counts-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "chromium-390",
+      "name": "raw_counts-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "firefox-390",
+      "name": "ratios-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "firefox-390",
+      "name": "ratios-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "firefox-390",
+      "name": "raw_counts-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "firefox-390",
+      "name": "raw_counts-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "webkit-390",
+      "name": "ratios-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "webkit-390",
+      "name": "ratios-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "webkit-390",
+      "name": "raw_counts-public-report",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    },
+    {
+      "engine": "webkit-390",
+      "name": "raw_counts-public-report-end",
+      "width": 390,
+      "body": 358,
+      "root": 390
+    }
+  ],
+  "finished_at": "2026-10-03T05:49:57.369Z"
+}

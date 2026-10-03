@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-03T05:42:39.851779+00:00",
+  "status": "ready",
+  "source_revision": "a7fb40c9ab36eef9e7e5d16173083fc646199baf",
+  "source_sha256": "9c6de2eb5ef20a354e49eac4e844697c1035e39733974cfd531d01769007f9fb",
+  "build_sha256": "f6f160c042bc61da98a47ee6ab87bf5883b88ca0ac41bc1d355643af46988771",
+  "image_id": "sha256:d6d21dc33fe2d51e2fbdf48e991a42a0984a4d2d0a0d5b3df2f9c297e3167f05",
+  "environment": "own n7f06a loopback18709 privatePG CPU2; existing runtime files present",
+  "environment_available": true,
+  "inputs": [
+    "frozen source and compiled JS",
+    "existing external random runtime files",
+    "new image tag"
+  ],
+  "test_command": "python3 scripts/check-f06b-r1-native.py",
+  "expected_effects": [
+    "own stack web replacement",
+    "own TEST account registration and native fetch only"
+  ],
+  "evidence_root": "/tmp/n7-f06b-r3/projects/07-cold-email-warmup/docs/telemetry/features/20261003T023900Z-f06",
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "exact_image_contents": "pending live-container comparison before browser"
+}

@@ -1,0 +1,2440 @@
+{
+  "at": "2026-10-03T05:47:23.715197+00:00",
+  "source_revision": "a7fb40c9ab36eef9e7e5d16173083fc646199baf",
+  "source_sha256": "9c6de2eb5ef20a354e49eac4e844697c1035e39733974cfd531d01769007f9fb",
+  "source_mismatches": [],
+  "image_id": "sha256:f92e8f8ba5619190a438ecf532fe46b8909b0409330068a3da1b65176b183592",
+  "build_sha256": "0f8714d1d893e11956f5d0a83a81df3f5b07d53f2fa2be450005054f35de4471",
+  "build_files": {
+    "dist/auth/password.js": "3decbfaf152c313910d9375d1e8f559df4aa2b40389b1c63561261d5147b594e",
+    "dist/auth/service.js": "5537019db7c50c93d8a61fd00194330558eb01898726ed5017c4d3bf47b1dd2e",
+    "dist/auth/session.js": "a84490dbbd8589da6ae79cecbf7bf9a04c76a9676d3ca948cc8fb811d1a5ffce",
+    "dist/auth/store.js": "0f6a4de099ec4570e9a2a73f03c2364c92fc01af42e228950844a01f0d6f8605",
+    "dist/billing/plans.js": "e60f18d23a9137dc3855135394417f1d50049ef200ee383e384c882e2b996014",
+    "dist/billing/provider.js": "c0010017201707d13c2810741ef90b991dffa91d3792c570ea0fa5954880f6d1",
+    "dist/billing/service.js": "53ecc4f98112c38ffdc947ba4eba782844a16a5074bb2f73cba4d1895b7228f5",
+    "dist/billing/transaction.js": "32cadf1259627dba17799639216cfdb4d115d6393193462983f01e779186148a",
+    "dist/campaigns/input.js": "158771b68468eb317e469a2d10c301235f8258a8a75d6236dfe5bf96c8c8314b",
+    "dist/campaigns/store.js": "ea08589081cda4ae0a6109fa969da951bba6cf35e45fbf5199a4ed3819ee9a8d",
+    "dist/config.js": "048f66e58416f97f375b137e4a849b83a47a3dd16b7cb96d6e4a3cb6b715f3f2",
+    "dist/consent/store.js": "16978d51391388740ba91e20e8074eae2d0563078cfea7250b3300c9ed38d36e",
+    "dist/consent/transaction.js": "3a268f4003f30b94ef64a0cb365c93ac7fdc701eff3a8ab6fe733158c372d46d",
+    "dist/db.js": "8f4f48e3fdcadb34c9c793428736f210dcfbb6103d30fbfa3057ad65c92beb56",
+    "dist/dispatch/adapter.js": "256b32a9deca1bb16f6cab4a4b9678be6f6af7ceb5788a15489668a432272594",
+    "dist/dispatch/eligibility.js": "4784fc9232b20192e8bd36bf0c711f3cbb1a606eac92dab969c228a6716eb713",
+    "dist/dispatch/message.js": "4e0e800ffc4db523cc0a42a491001084fc7e9e74e68aac72adfdd34b4a73f75e",
+    "dist/dispatch/seams.js": "589665ddba8d9d953e0cd4ed6f92c2af5b6496be441d39f3f312f8e81694e8c1",
+    "dist/dispatch/store.js": "bf6a9722d5bd5c4335c3751482433dcb947579f23e6cac1bb2ed2bbc5d9c8150",
+    "dist/dispatch/submission.js": "6978855ae8a31593c99155210484f7becede4ac669a9dce0dabd053f5eadc357",
+    "dist/dispatch/worker.js": "f31cf7ff40b820d14512925b92b27d630b0ce4ce831469cdd4ca1eb278d40006",
+    "dist/errors.js": "960a11b1d06cc22ca03989ba183dfd16d1322b19cf9b8744874a9cd624fe9c4b",
+    "dist/evidence/compare.js": "4c6bf10142d92183948ef28f8b091a452439c131598a1f434c9170fa521a1401",
+    "dist/evidence/input.js": "20c881038c36d1cfac6054cd5b54e6110856c9da6c69de49cb8e0a792904a171",
+    "dist/evidence/store.js": "0ecf18bfc6d034fe97a64a13f0b2661480345d564376aeb97d0e06b166652f6a",
+    "dist/growth/attribution.js": "77a5436123d647a265f2ee8cd8e9fb7be915ff1d73f1fca3188517a26e170496",
+    "dist/growth/partner.js": "6de3407bcafcd93c82abc7bf33558fad6237e3e5eec131dbec468c32029e1d71",
+    "dist/growth/reports.js": "45de0ae76980bfde81a16cb3797541090cb8560204bdf49111869ad9a47526d7",
+    "dist/mailboxes/crypto.js": "57da121f012021b88d6433abf7a90a6b823275586cd9739834011edb9b794a00",
+    "dist/mailboxes/input.js": "c98480d2c225225cff7f3ff95e0a47cfc254e9812ea70a9e7bbc372a81e69349",
+    "dist/mailboxes/network.js": "a488dfb27971125116877f3a474286443cbe53dff45513296e7830c221ccaba4",
+    "dist/mailboxes/provider.js": "39dc8b289b8adbd05a5787430ac5f81906f65a1ce0e0328ff504bd7646ce4120",
+    "dist/mailboxes/store.js": "d71528d4bf13d90c1fc198d6d8931410e85e7e1e7bbc78176638993d2ba45934",
+    "dist/main.js": "f87eff8a29e75435ed40957521d348c520b3d0b0feae2fd66ca48460665ce39e",
+    "dist/migrate.js": "4e1d6e130120b08b91404a01325e3a6877f2730ec27f6b49c14e4855e84b4c04",
+    "dist/pool/store.js": "226a25d986e54024534bf2ccd19de76db0d76403ef01db14ed89122c52d6c447",
+    "dist/replies/adapter.js": "5ab2639e9ea3959d7796acc48654a898c688ae7115f4db714459691879fc24b4",
+    "dist/replies/fixture.js": "0ad1425e24bfb1086817483b13b48c0c1cc81fdec89e324f5ef203f55e7a243a",
+    "dist/replies/input.js": "f3555237ed6a4a5d6f9afe9e76457bdef8d131012105a8e603873f97a2dcf666",
+    "dist/replies/operator.js": "2efe8f825d753be0b6c411fb1453fbec57cb60e32b79a837499d5ef82aa190b5",
+    "dist/replies/store.js": "fbd693f3d401dc4b14a8c0e1aff21f8c90339d1d9ec03e3ab66e0404bd612e95",
+    "dist/replies/worker.js": "45ef523ee64d2f9bf901aab58ed60e743679119f5e838340d00d39dbad0c4915",
+    "dist/server.js": "530a5be57824bb1eda30dce658feb5e0ddcca9accd6159a75a4a511f85d0f0a2",
+    "dist/suppression/http.js": "6456d9d41cb1b974a69027cd484ba8853dcfcd905e7e92c90f8800b615bb85fd",
+    "dist/suppression/store.js": "7f4b52491cfc211edbd9b5237269854198a2c87e19c8e2721a74a64b487186f7",
+    "dist/web/app.js": "c32f0c87c81e02c2c3d4ed61c1262ccf116a9b7a707df020b81c8004a916a931",
+    "dist/web/billing.js": "101f5fc9c0bf8ddc397f334da1a0991150581b6a34df1cc2f9e4d1b0b221296b",
+    "dist/web/cabinet.js": "b34d4cad4b67c6a9cc3724bf9d426490a876db75b2a5f4f9d5a98442afc7633e",
+    "dist/web/campaigns.js": "74b45d57c61c144cb2d8e4010535987cb463fefe8be6df8f3edd1bcdf7212920",
+    "dist/web/client.js": "7f1a6b43ef93cf307ef6ca474bac1f2dca6936275a92b12710aebb2308d7337f",
+    "dist/web/dom.js": "56bcb0f26340e34e7f665ada006812025249fdce3f8b8fa6e423bb1cfd31d4d2",
+    "dist/web/evidence.js": "631c2016d1b0a5b457968a59e62a2f9985cb4f685915656422fae205c85a0227",
+    "dist/web/mailboxes.js": "21d5c67257016924e1ad6b6449e628ebf34f8445733a06fe236d538552b9d032",
+    "dist/web/models.js": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
+    "dist/web/page.js": "bef7627af341fd831552d010612bedf6120542cd0cda5e13c25621b3034963c5"
+  },
+  "secret_values_suppressed": true,
+  "runtime_secrets_count": 5,
+  "project_files_scanned": 1365,
+  "secret_file_leaks": [],
+  "own_web_logs_secret_leak": false,
+  "credential_canary_web_logs_absent": true,
+  "credential_canary_browser_api": "see B3 focused actual mailbox API-body canary assertion; historical B2 assertion was not instrumented",
+  "db_no_host_ports": true,
+  "web_loopback_only": true,
+  "cpu_limit": 2.0,
+  "own_network_detached": true,
+  "ui_container_running": true,
+  "http_console_classification": [
+    {
+      "attempt": "sol-b-attempt-1",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "kind": "TimeoutError",
+          "assertion": null
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-attempt-2",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "kind": "TimeoutError",
+          "assertion": null
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-attempt-3",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "kind": "TimeoutError",
+          "assertion": null
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-b2-attempt-1",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "unsubscribe",
+          "path": "/unsubscribe/q74Aus_JTnWg4DnBAqk4v8bqefgRqYe-nsGkLuOtWDI",
+          "status": 403,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "unsubscribe",
+          "url": "http://127.0.0.1:18709/unsubscribe/q74Aus_JTnWg4DnBAqk4v8bqefgRqYe-nsGkLuOtWDI",
+          "http_status": "403",
+          "kind": "error",
+          "classification": "unexpected console error"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": [
+        {
+          "engine": "chromium-1440",
+          "phase": "unsubscribe",
+          "kind": "TimeoutError",
+          "assertion": null
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-b3-attempt-2",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "manual-evidence",
+          "path": "/reports/NTLmFVQdXgrCZRDZcCwe-mWE1I-WWS_G0qyDXl3H2po",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "partner-checkout",
+          "path": "/api/partner",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-boundaries",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-boundaries",
+          "path": "/api/partner",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-boundaries",
+          "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-boundaries",
+          "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-boundaries",
+          "path": "/api/evidence/compare",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-boundaries",
+          "path": "/api/reports/e41c4846-71f9-4a29-8bc8-1e9a6424ca03/revoke",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-boundaries",
+          "path": "/api/billing/intents/1a633897-0f64-447e-a4b3-fa1bbff4c525",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-boundaries",
+          "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "late-real-response-logout",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "late-real-response-logout",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "late-real-response-logout",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "late-real-response-logout",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "expired401",
+          "path": "/api/app",
+          "status": 401,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "expired401",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "manual-evidence",
+          "url": "http://127.0.0.1:18709/reports/NTLmFVQdXgrCZRDZcCwe-mWE1I-WWS_G0qyDXl3H2po",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "partner-checkout",
+          "url": "http://127.0.0.1:18709/api/partner",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-boundaries",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-boundaries",
+          "url": "http://127.0.0.1:18709/api/partner",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-boundaries",
+          "url": "http://127.0.0.1:18709/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-boundaries",
+          "url": "http://127.0.0.1:18709/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-boundaries",
+          "url": "http://127.0.0.1:18709/api/evidence/compare",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-boundaries",
+          "url": "http://127.0.0.1:18709/api/reports/e41c4846-71f9-4a29-8bc8-1e9a6424ca03/revoke",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-boundaries",
+          "url": "http://127.0.0.1:18709/api/billing/intents/1a633897-0f64-447e-a4b3-fa1bbff4c525",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-boundaries",
+          "url": "http://127.0.0.1:18709/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "late-real-response-logout",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "late-real-response-logout",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "late-real-response-logout",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "late-real-response-logout",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "expired401",
+          "url": "http://127.0.0.1:18709/api/app",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "expired401",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [
+        {
+          "engine": "chromium-1440",
+          "phase": "late-real-response-logout",
+          "kind": "requestfailed",
+          "path": "/api/evidence",
+          "reason": "net::ERR_ABORTED"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "expired401",
+          "kind": "requestfailed",
+          "path": "/api/app",
+          "reason": "net::ERR_ABORTED"
+        }
+      ],
+      "failure_summary": [
+        {
+          "engine": "chromium-1440",
+          "phase": "late-real-response-logout",
+          "kind": "requestfailed",
+          "path": "/api/evidence",
+          "reason": "net::ERR_ABORTED"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "expired401",
+          "kind": "requestfailed",
+          "path": "/api/app",
+          "reason": "net::ERR_ABORTED"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "manual-evidence",
+          "kind": "AssertionError",
+          "assertion": "public-report no overflow"
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-b3-crossbrowser-1",
+      "http_errors": [
+        {
+          "engine": "firefox-390",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "firefox-390",
+          "phase": "manual-evidence",
+          "path": "/reports/p8nDZDu9h9qd_EsMhl8ZCGBJytWT98rk7NaG-cwI8zA",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "firefox-390",
+          "phase": "manual-evidence",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "firefox-390",
+          "phase": "manual-evidence",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "webkit-390",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "webkit-390",
+          "phase": "manual-evidence",
+          "path": "/reports/GvS6XagKidbBcnuHvi7pqZFBSokSudYAHY-dxXWs5e4",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "webkit-390",
+          "phase": "manual-evidence",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "webkit-390",
+          "phase": "manual-evidence",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "webkit-390",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "webkit-390",
+          "phase": "manual-evidence",
+          "url": "http://127.0.0.1:18709/reports/GvS6XagKidbBcnuHvi7pqZFBSokSudYAHY-dxXWs5e4",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "webkit-390",
+          "phase": "manual-evidence",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "webkit-390",
+          "phase": "manual-evidence",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": [
+        {
+          "engine": "firefox-390",
+          "phase": "manual-evidence",
+          "kind": "AssertionError",
+          "assertion": "public-report no overflow"
+        },
+        {
+          "engine": "webkit-390",
+          "phase": "manual-evidence",
+          "kind": "AssertionError",
+          "assertion": "public-report no overflow"
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-b3-extra-1",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": [
+        {
+          "engine": "chromium-1440",
+          "phase": "complete-tenant-zero-effects",
+          "group": "final-bounded-gaps",
+          "kind": "AssertionError",
+          "assertion": "operator fixture effects"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "complete-tenant-zero-effects",
+          "group": "final-bounded-gaps",
+          "kind": "AssertionError",
+          "assertion": "operator fixture effects"
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-b3-extra-2",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "complete-tenant-zero-effects",
+          "path": "/api/mailboxes/ae94b62a-1da9-4b2c-b058-c7b1024ccbf5",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "complete-tenant-zero-effects",
+          "path": "/api/campaigns/fd834b05-35f6-41e3-a973-747fabca28b7",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "complete-tenant-zero-effects",
+          "path": "/api/evidence/compare",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "complete-tenant-zero-effects",
+          "path": "/api/reports/41dd2b0b-50b4-477d-9c06-32c70c56bf66/revoke",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "complete-tenant-zero-effects",
+          "path": "/api/mailboxes/ae94b62a-1da9-4b2c-b058-c7b1024ccbf5/consents",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "complete-tenant-zero-effects",
+          "path": "/api/mailboxes/1727a297-9734-4634-97c2-df34dce96fe4",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "complete-tenant-zero-effects",
+          "path": "/api/campaigns/f5370844-cf94-49a2-a378-9ccce513379d",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "complete-tenant-zero-effects",
+          "path": "/api/evidence/compare",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "complete-tenant-zero-effects",
+          "path": "/api/reports/7d7a7d33-4379-4dbf-9376-b962a7a70cb1/revoke",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "complete-tenant-zero-effects",
+          "path": "/api/mailboxes/1727a297-9734-4634-97c2-df34dce96fe4/consents",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "complete-tenant-zero-effects",
+          "url": "http://127.0.0.1:18709/api/mailboxes/ae94b62a-1da9-4b2c-b058-c7b1024ccbf5",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "complete-tenant-zero-effects",
+          "url": "http://127.0.0.1:18709/api/campaigns/fd834b05-35f6-41e3-a973-747fabca28b7",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "complete-tenant-zero-effects",
+          "url": "http://127.0.0.1:18709/api/evidence/compare",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "complete-tenant-zero-effects",
+          "url": "http://127.0.0.1:18709/api/reports/41dd2b0b-50b4-477d-9c06-32c70c56bf66/revoke",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "complete-tenant-zero-effects",
+          "url": "http://127.0.0.1:18709/api/mailboxes/ae94b62a-1da9-4b2c-b058-c7b1024ccbf5/consents",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "complete-tenant-zero-effects",
+          "url": "http://127.0.0.1:18709/api/mailboxes/1727a297-9734-4634-97c2-df34dce96fe4",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "complete-tenant-zero-effects",
+          "url": "http://127.0.0.1:18709/api/campaigns/f5370844-cf94-49a2-a378-9ccce513379d",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "complete-tenant-zero-effects",
+          "url": "http://127.0.0.1:18709/api/evidence/compare",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "complete-tenant-zero-effects",
+          "url": "http://127.0.0.1:18709/api/reports/7d7a7d33-4379-4dbf-9376-b962a7a70cb1/revoke",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "complete-tenant-zero-effects",
+          "url": "http://127.0.0.1:18709/api/mailboxes/1727a297-9734-4634-97c2-df34dce96fe4/consents",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": []
+    },
+    {
+      "attempt": "sol-b-b3-focused-1",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "keyboard-labels-empty",
+          "path": "/api/partner",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "keyboard-labels-empty",
+          "path": "/api/partner",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "keyboard-labels-empty",
+          "url": "http://127.0.0.1:18709/api/partner",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "unavailable-network",
+          "url": "http://127.0.0.1:18709/api/app",
+          "http_status": null,
+          "kind": "error",
+          "expected": false,
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "keyboard-labels-empty",
+          "url": "http://127.0.0.1:18709/api/partner",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "unavailable-network",
+          "url": "http://127.0.0.1:18709/api/app",
+          "http_status": null,
+          "kind": "error",
+          "expected": false,
+          "classification": "unexpected console error"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [
+        {
+          "engine": "chromium-1440",
+          "phase": "unavailable-network",
+          "kind": "requestfailed",
+          "path": "/api/app",
+          "reason": "net::ERR_INTERNET_DISCONNECTED"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "unavailable-network",
+          "kind": "requestfailed",
+          "path": "/api/app",
+          "reason": "net::ERR_INTERNET_DISCONNECTED"
+        }
+      ],
+      "failure_summary": [
+        {
+          "engine": "chromium-1440",
+          "phase": "unavailable-network",
+          "kind": "requestfailed",
+          "path": "/api/app",
+          "reason": "net::ERR_INTERNET_DISCONNECTED"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "mailbox-limits-invalid",
+          "group": "focused-gaps",
+          "kind": "TimeoutError",
+          "assertion": null
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "unavailable-network",
+          "kind": "requestfailed",
+          "path": "/api/app",
+          "reason": "net::ERR_INTERNET_DISCONNECTED"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "mailbox-limits-invalid",
+          "group": "focused-gaps",
+          "kind": "TimeoutError",
+          "assertion": null
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "classification",
+          "kind": "AssertionError",
+          "assertion": "no unexpected console errors"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "classification",
+          "kind": "AssertionError",
+          "assertion": "no unexpected console errors"
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-b3-focused-2",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": [
+        {
+          "engine": "chromium-1440",
+          "phase": "mailbox-limits-invalid",
+          "group": "focused-gaps",
+          "kind": "TimeoutError",
+          "assertion": null
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "mailbox-limits-invalid",
+          "group": "focused-gaps",
+          "kind": "TimeoutError",
+          "assertion": null
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-b3-focused-3",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "campaign-invalid-escaped-edit",
+          "path": "/api/campaigns",
+          "status": 400,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "campaign-invalid-escaped-edit",
+          "path": "/api/campaigns",
+          "status": 400,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "campaign-invalid-escaped-edit",
+          "url": "http://127.0.0.1:18709/api/campaigns",
+          "http_status": "400",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "campaign-invalid-escaped-edit",
+          "url": "http://127.0.0.1:18709/api/campaigns",
+          "http_status": "400",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": [
+        {
+          "engine": "chromium-1440",
+          "phase": "campaign-invalid-escaped-edit",
+          "kind": "AssertionError",
+          "assertion": "campaign error actionable"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "campaign-invalid-escaped-edit",
+          "group": "focused-gaps",
+          "kind": "AssertionError",
+          "assertion": "campaign error actionable"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "campaign-invalid-escaped-edit",
+          "kind": "AssertionError",
+          "assertion": "campaign error actionable"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "campaign-invalid-escaped-edit",
+          "group": "focused-gaps",
+          "kind": "AssertionError",
+          "assertion": "campaign error actionable"
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-b3-focused-4",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "campaign-invalid-escaped-edit",
+          "path": "/api/campaigns",
+          "status": 400,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-full-effects",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-full-effects",
+          "path": "/api/mailboxes/ae94b62a-1da9-4b2c-b058-c7b1024ccbf5",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-full-effects",
+          "path": "/api/campaigns/fd834b05-35f6-41e3-a973-747fabca28b7",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-full-effects",
+          "path": "/api/evidence/compare",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-full-effects",
+          "path": "/api/reports/41dd2b0b-50b4-477d-9c06-32c70c56bf66/revoke",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-full-effects",
+          "path": "/api/mailboxes/ae94b62a-1da9-4b2c-b058-c7b1024ccbf5/consents",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-full-effects",
+          "path": "/reports/qEzsz--i0PNXYm2fo_IkvUC7PnvlS9C21wH-3uwNmzs",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "partner-idempotency-self-referral",
+          "path": "/api/partner",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "partner-idempotency-self-referral",
+          "path": "/api/billing/checkout",
+          "status": 400,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "campaign-invalid-escaped-edit",
+          "path": "/api/campaigns",
+          "status": 400,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-full-effects",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-full-effects",
+          "path": "/api/mailboxes/1727a297-9734-4634-97c2-df34dce96fe4",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-full-effects",
+          "path": "/api/campaigns/f5370844-cf94-49a2-a378-9ccce513379d",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-full-effects",
+          "path": "/api/evidence/compare",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-full-effects",
+          "path": "/api/reports/7d7a7d33-4379-4dbf-9376-b962a7a70cb1/revoke",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-full-effects",
+          "path": "/api/mailboxes/1727a297-9734-4634-97c2-df34dce96fe4/consents",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-full-effects",
+          "path": "/reports/oOLaOaArkQ72ShyVT0uOzzsyvOd5MdEWh2qve3qaMHc",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "partner-idempotency-self-referral",
+          "path": "/api/partner",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "partner-idempotency-self-referral",
+          "path": "/api/billing/checkout",
+          "status": 400,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "campaign-invalid-escaped-edit",
+          "url": "http://127.0.0.1:18709/api/campaigns",
+          "http_status": "400",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-full-effects",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-full-effects",
+          "url": "http://127.0.0.1:18709/api/mailboxes/ae94b62a-1da9-4b2c-b058-c7b1024ccbf5",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-full-effects",
+          "url": "http://127.0.0.1:18709/api/campaigns/fd834b05-35f6-41e3-a973-747fabca28b7",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-full-effects",
+          "url": "http://127.0.0.1:18709/api/evidence/compare",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-full-effects",
+          "url": "http://127.0.0.1:18709/api/reports/41dd2b0b-50b4-477d-9c06-32c70c56bf66/revoke",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-full-effects",
+          "url": "http://127.0.0.1:18709/api/mailboxes/ae94b62a-1da9-4b2c-b058-c7b1024ccbf5/consents",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "tenant-full-effects",
+          "url": "http://127.0.0.1:18709/reports/qEzsz--i0PNXYm2fo_IkvUC7PnvlS9C21wH-3uwNmzs",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "partner-idempotency-self-referral",
+          "url": "http://127.0.0.1:18709/api/partner",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "partner-idempotency-self-referral",
+          "url": "http://127.0.0.1:18709/api/billing/checkout",
+          "http_status": "400",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "campaign-invalid-escaped-edit",
+          "url": "http://127.0.0.1:18709/api/campaigns",
+          "http_status": "400",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-full-effects",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-full-effects",
+          "url": "http://127.0.0.1:18709/api/mailboxes/1727a297-9734-4634-97c2-df34dce96fe4",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-full-effects",
+          "url": "http://127.0.0.1:18709/api/campaigns/f5370844-cf94-49a2-a378-9ccce513379d",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-full-effects",
+          "url": "http://127.0.0.1:18709/api/evidence/compare",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-full-effects",
+          "url": "http://127.0.0.1:18709/api/reports/7d7a7d33-4379-4dbf-9376-b962a7a70cb1/revoke",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-full-effects",
+          "url": "http://127.0.0.1:18709/api/mailboxes/1727a297-9734-4634-97c2-df34dce96fe4/consents",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-full-effects",
+          "url": "http://127.0.0.1:18709/reports/oOLaOaArkQ72ShyVT0uOzzsyvOd5MdEWh2qve3qaMHc",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "partner-idempotency-self-referral",
+          "url": "http://127.0.0.1:18709/api/partner",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "partner-idempotency-self-referral",
+          "url": "http://127.0.0.1:18709/api/billing/checkout",
+          "http_status": "400",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": [
+        {
+          "engine": "chromium-390",
+          "phase": "explicit-copy-link-idempotent-refresh",
+          "kind": "AssertionError",
+          "assertion": "focused-public no overflow"
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-b3-remaining-1",
+      "http_errors": [
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "manual-evidence",
+          "path": "/reports/jw0DC8E6pubIqE8vNPzF9lWPAa1359Mj9qDzbmWJNE8",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "partner-checkout",
+          "path": "/api/partner",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-boundaries",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-boundaries",
+          "path": "/api/partner",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-boundaries",
+          "path": "/api/mailboxes/5b070c85-d0a3-45b1-bffa-4d1c05064d5e",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-boundaries",
+          "path": "/api/campaigns/6f4bccd6-4bd5-4cff-801a-9d407b0397e0",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-boundaries",
+          "path": "/api/evidence/compare",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-boundaries",
+          "path": "/api/reports/33548724-b108-4366-89b1-cdd7a36c0c1a/revoke",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-boundaries",
+          "path": "/api/billing/intents/763b4f1a-c428-494c-93a2-badd7ae962c9",
+          "status": 404,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-boundaries",
+          "path": "/api/mailboxes/5b070c85-d0a3-45b1-bffa-4d1c05064d5e/consents",
+          "status": 404,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "late-real-response-logout",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "late-real-response-logout",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "late-real-response-logout",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "late-real-response-logout",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "expired401",
+          "path": "/api/app",
+          "status": 401,
+          "method": "GET",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "expired401",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "firefox-390",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "firefox-390",
+          "phase": "auth",
+          "path": "/api/auth/register",
+          "status": 429,
+          "method": "POST",
+          "classification": "unclassified preserved attempt negative; see sol-b3-negative-classification.json"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "manual-evidence",
+          "url": "http://127.0.0.1:18709/reports/jw0DC8E6pubIqE8vNPzF9lWPAa1359Mj9qDzbmWJNE8",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "partner-checkout",
+          "url": "http://127.0.0.1:18709/api/partner",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-boundaries",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-boundaries",
+          "url": "http://127.0.0.1:18709/api/partner",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-boundaries",
+          "url": "http://127.0.0.1:18709/api/mailboxes/5b070c85-d0a3-45b1-bffa-4d1c05064d5e",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-boundaries",
+          "url": "http://127.0.0.1:18709/api/campaigns/6f4bccd6-4bd5-4cff-801a-9d407b0397e0",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-boundaries",
+          "url": "http://127.0.0.1:18709/api/evidence/compare",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-boundaries",
+          "url": "http://127.0.0.1:18709/api/reports/33548724-b108-4366-89b1-cdd7a36c0c1a/revoke",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-boundaries",
+          "url": "http://127.0.0.1:18709/api/billing/intents/763b4f1a-c428-494c-93a2-badd7ae962c9",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "tenant-boundaries",
+          "url": "http://127.0.0.1:18709/api/mailboxes/5b070c85-d0a3-45b1-bffa-4d1c05064d5e/consents",
+          "http_status": "404",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "late-real-response-logout",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "late-real-response-logout",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "late-real-response-logout",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "late-real-response-logout",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "expired401",
+          "url": "http://127.0.0.1:18709/api/app",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "unexpected console error"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "expired401",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [
+        {
+          "engine": "chromium-390",
+          "phase": "late-real-response-logout",
+          "kind": "requestfailed",
+          "path": "/api/evidence",
+          "reason": "net::ERR_ABORTED"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "expired401",
+          "kind": "requestfailed",
+          "path": "/api/app",
+          "reason": "net::ERR_ABORTED"
+        }
+      ],
+      "failure_summary": [
+        {
+          "engine": "chromium-390",
+          "phase": "manual-evidence",
+          "kind": "AssertionError",
+          "assertion": "public-report no overflow"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "late-real-response-logout",
+          "kind": "requestfailed",
+          "path": "/api/evidence",
+          "reason": "net::ERR_ABORTED"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "expired401",
+          "kind": "requestfailed",
+          "path": "/api/app",
+          "reason": "net::ERR_ABORTED"
+        },
+        {
+          "engine": "firefox-390",
+          "phase": "auth",
+          "kind": "TimeoutError",
+          "assertion": null
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-b3-true-login-1",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "true-ui-explicit-login",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "true-ui-explicit-login",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "true-ui-explicit-login",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "true-ui-explicit-login",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": [
+        {
+          "engine": "chromium-1440",
+          "phase": "true-ui-explicit-login",
+          "group": "actual-ui-login",
+          "kind": "TimeoutError",
+          "assertion": null
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "true-ui-explicit-login",
+          "group": "actual-ui-login",
+          "kind": "TimeoutError",
+          "assertion": null
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-b3-true-login-2",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "true-ui-explicit-login",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "true-ui-explicit-login",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "true-ui-explicit-login",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "true-ui-explicit-login",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": []
+    },
+    {
+      "attempt": "sol-b-diagnostic-4",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": [
+        {
+          "engine": "chromium-1440",
+          "phase": "auth",
+          "kind": "TimeoutError",
+          "assertion": null
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-r3-report-layout-1",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "connect",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "classification": "expected anonymous session lookup"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "connect",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": [
+        {
+          "engine": "chromium-1440",
+          "phase": "ratios",
+          "kind": "TypeError",
+          "assertion": null
+        }
+      ]
+    },
+    {
+      "attempt": "sol-b-r3-report-layout-3",
+      "http_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "connect",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "expected": true,
+          "classification": "expected asserted negative"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "ratios",
+          "path": "/reports/CdJdfAIAA4dcuziHLtWsXUIUesacLfj8utfvIugx37M",
+          "status": 404,
+          "method": "GET",
+          "expected": true,
+          "classification": "expected asserted negative"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "raw_counts",
+          "path": "/reports/mVnU92POh8zzv3k3tZRHQaR_aUJeqaj9NLS0DjkUvBU",
+          "status": 404,
+          "method": "GET",
+          "expected": true,
+          "classification": "expected asserted negative"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "connect",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "expected": true,
+          "classification": "expected asserted negative"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "ratios",
+          "path": "/reports/c7cZoUovX4tMEamYxDTk5tgqYYTCtHEZgHJF6X64cLY",
+          "status": 404,
+          "method": "GET",
+          "expected": true,
+          "classification": "expected asserted negative"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "raw_counts",
+          "path": "/reports/l76gudQeg6Erg5irV1v7E2brdU9zSHv_x_fpChwXtQc",
+          "status": 404,
+          "method": "GET",
+          "expected": true,
+          "classification": "expected asserted negative"
+        },
+        {
+          "engine": "firefox-390",
+          "phase": "connect",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "expected": true,
+          "classification": "expected asserted negative"
+        },
+        {
+          "engine": "firefox-390",
+          "phase": "ratios",
+          "path": "/reports/ylYaVPEMEPe2Utpo8ujHZlw1RCGhLhmLI_OJ4pBxAvg",
+          "status": 404,
+          "method": "GET",
+          "expected": true,
+          "classification": "expected asserted negative"
+        },
+        {
+          "engine": "firefox-390",
+          "phase": "raw_counts",
+          "path": "/reports/z8eCeaLf3LHZXi0YJevOFfRXDXHKsICWg8J9mgpJoNY",
+          "status": 404,
+          "method": "GET",
+          "expected": true,
+          "classification": "expected asserted negative"
+        },
+        {
+          "engine": "webkit-390",
+          "phase": "connect",
+          "path": "/api/auth/me",
+          "status": 401,
+          "method": "GET",
+          "expected": true,
+          "classification": "expected asserted negative"
+        },
+        {
+          "engine": "webkit-390",
+          "phase": "ratios",
+          "path": "/reports/EATbA_L5uciYKkmDDvDNpY2hY2UO3Xs7ccOtjRfEdT8",
+          "status": 404,
+          "method": "GET",
+          "expected": true,
+          "classification": "expected asserted negative"
+        },
+        {
+          "engine": "webkit-390",
+          "phase": "raw_counts",
+          "path": "/reports/lwP85OLkvwewq80neU5mxcbOKkGCmYJBLBcL-kvie0g",
+          "status": 404,
+          "method": "GET",
+          "expected": true,
+          "classification": "expected asserted negative"
+        }
+      ],
+      "console_errors": [
+        {
+          "engine": "chromium-1440",
+          "phase": "connect",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "ratios",
+          "url": "http://127.0.0.1:18709/reports/CdJdfAIAA4dcuziHLtWsXUIUesacLfj8utfvIugx37M",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-1440",
+          "phase": "raw_counts",
+          "url": "http://127.0.0.1:18709/reports/mVnU92POh8zzv3k3tZRHQaR_aUJeqaj9NLS0DjkUvBU",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "connect",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "ratios",
+          "url": "http://127.0.0.1:18709/reports/c7cZoUovX4tMEamYxDTk5tgqYYTCtHEZgHJF6X64cLY",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "chromium-390",
+          "phase": "raw_counts",
+          "url": "http://127.0.0.1:18709/reports/l76gudQeg6Erg5irV1v7E2brdU9zSHv_x_fpChwXtQc",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "webkit-390",
+          "phase": "connect",
+          "url": "http://127.0.0.1:18709/api/auth/me",
+          "http_status": "401",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "webkit-390",
+          "phase": "ratios",
+          "url": "http://127.0.0.1:18709/reports/EATbA_L5uciYKkmDDvDNpY2hY2UO3Xs7ccOtjRfEdT8",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        },
+        {
+          "engine": "webkit-390",
+          "phase": "raw_counts",
+          "url": "http://127.0.0.1:18709/reports/lwP85OLkvwewq80neU5mxcbOKkGCmYJBLBcL-kvie0g",
+          "http_status": "404",
+          "kind": "error",
+          "expected": true,
+          "classification": "expected anonymous initial session lookup"
+        }
+      ],
+      "page_errors": [],
+      "requests_failed": [],
+      "failure_summary": []
+    }
+  ]
+}

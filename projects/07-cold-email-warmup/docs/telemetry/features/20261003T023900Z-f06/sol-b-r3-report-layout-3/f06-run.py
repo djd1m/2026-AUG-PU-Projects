@@ -8,7 +8,7 @@ RUN=sys.argv[1] if len(sys.argv)>1 else 'attempt-1'
 binding=None
 if len(sys.argv)>2:
  receipt_path=pathlib.Path(sys.argv[2]).resolve()
- assert receipt_path in [TRACE/'sol-b-r1-image-receipt.json',TRACE/'sol-b-r2-image-receipt.json',TRACE/'sol-b-r3-image-receipt.json',TRACE/'sol-b-r3-readable-image-receipt.json']
+ assert receipt_path in [TRACE/'sol-b-r1-image-receipt.json',TRACE/'sol-b-r2-image-receipt.json',TRACE/'sol-b-r3-image-receipt.json']
  prefix=receipt_path.name.removesuffix('-image-receipt.json')
  binding=json.loads(receipt_path.read_text())
  assert binding['exact_source_and_build_files'] and binding['image_matches_container']
@@ -18,12 +18,12 @@ EXPECTED_BUILD=binding['build_sha256'] if binding else '110c84753e81699007417bba
 DEST=TRACE/('sol-b-'+RUN); DEST.mkdir(exist_ok=False)
 REMOTE='/opt/browser/n7-f06b-20261003T023900Z-'+RUN
 B3=RUN.startswith('b3-')
-PROGRESS=pathlib.Path('/tmp/n7-f06b-r3-run/progress.md') if binding and prefix.startswith('sol-b-r3') else pathlib.Path('/tmp/n7-f06b-final-run/progress.md') if B3 else pathlib.Path('/tmp/n7-f06b-r2-run/progress.md' if binding and prefix=='sol-b-r2' else '/tmp/n7-f06b-resume-run/progress.md')
+PROGRESS=pathlib.Path('/tmp/n7-f06b-r3-run/progress.md') if binding and prefix=='sol-b-r3' else pathlib.Path('/tmp/n7-f06b-final-run/progress.md') if B3 else pathlib.Path('/tmp/n7-f06b-r2-run/progress.md' if binding and prefix=='sol-b-r2' else '/tmp/n7-f06b-resume-run/progress.md')
 PROGRESS.parent.mkdir(exist_ok=True)
 def now(): return datetime.datetime.now(datetime.timezone.utc).isoformat()
 def call(args, **kw): return subprocess.run(args,check=True,capture_output=True,**kw)
 def event(kind,**kw):
- with (TRACE/('sol-b-r3-browser-events.jsonl' if binding and prefix.startswith('sol-b-r3') else 'sol-b3-browser-events.jsonl' if B3 else 'sol-b-r2-browser-events.jsonl' if binding and prefix=='sol-b-r2' else ('sol-b2-browser-events.jsonl' if binding else 'sol-b-events.jsonl'))).open('a') as f: f.write(json.dumps({'at':now(),'event':kind,**kw})+'\n')
+ with (TRACE/('sol-b-r3-browser-events.jsonl' if binding and prefix=='sol-b-r3' else 'sol-b3-browser-events.jsonl' if B3 else 'sol-b-r2-browser-events.jsonl' if binding and prefix=='sol-b-r2' else ('sol-b2-browser-events.jsonl' if binding else 'sol-b-events.jsonl'))).open('a') as f: f.write(json.dumps({'at':now(),'event':kind,**kw})+'\n')
 lock=open('/tmp/codex-ui-e2e.lock','a'); event('ui-lock-wait'); fcntl.flock(lock,fcntl.LOCK_EX)
 with PROGRESS.open('a') as f:f.write('UI acquired: '+now()+'\n')
 event('ui-lock-acquired')
@@ -66,7 +66,7 @@ try:
  assert all(hashlib.sha256((ROOT/'scripts/ui'/n).read_bytes()).hexdigest()==v for n,v in scripts.items())
  preflight={'focused_resume':RUN.startswith('b3-focused') and RUN!='b3-focused-1','target_tenants':json.loads((TRACE/'sol-b3-extra-input.json').read_text())['target_tenants'] if RUN.startswith('b3-extra') else [],'seed_auth':RUN.startswith('b3-true-login') or RUN.startswith('b3-extra') or RUN.startswith('b3-focused') or RUN.startswith('b3-crossbrowser'),'group':'true-login' if RUN.startswith('b3-true-login') else 'extra' if RUN.startswith('b3-extra') else 'focused' if RUN.startswith('b3-focused') else 'crossbrowser' if RUN.startswith('b3-crossbrowser') else 'remaining' if RUN=='b3-remaining-1' else 'full','status':'ready','at':now(),'source_revision':source['revision'],'source_sha256':source['source_sha256'],'source_files_matched':len(source['files']),'image_id':web['Image'],'build_sha256':EXPECTED_BUILD,'spec_sha256':json.loads((TRACE/'sol-b-run.json').read_text())['spec_sha256'],'scripts':scripts,'environment':{'cpu':2,'origin':'http://127.0.0.1:18709','web':'n7f06a-web-1','db_no_host_ports':True,'browser_container':'codex-ui-playwright','playwright':'1.63.0','ws':'ws://127.0.0.1:9320/'},'input_names':['N7_UI_EVIDENCE','SESSION_HMAC_KEY_FILE','CREDENTIAL_KEYRING_FILE','RECIPIENT_HASH_KEY_FILE','DATABASE_PASSWORD_FILE'],'command_as_data':['docker','exec','-i','-e','N7_UI_EVIDENCE='+REMOTE,'codex-ui-playwright','node',REMOTE+'/f06-browser.mjs'],'effects':['own TEST tenant UI mutations','trusted accepted local fixture poll/sink/provider','own network attach only if absent; detach in finally','own contexts/bridge/sockets close; shared browser server stays running'],'evidence_destination':str(DEST),'external_actions_executed':False,'environment_available':True,'e2e_claim':None,'secrets':'operator and runtime values remain in web process; never browser/logs'}
  if RUN.startswith('r3-report-layout'):
-  assert binding and prefix.startswith('sol-b-r3')
+  assert binding and prefix=='sol-b-r3'
   preflight['command_as_data'][-1]=REMOTE+'/f06-report-layout.mjs'
   preflight['seed_auth']=True
  if correction:

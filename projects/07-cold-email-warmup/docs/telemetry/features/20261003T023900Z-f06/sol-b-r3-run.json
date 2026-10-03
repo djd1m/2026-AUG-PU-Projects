@@ -1,0 +1,64 @@
+{
+  "run_id": "20261003T023900Z-f06",
+  "work_unit_id": "n7-f06b-r3-sol",
+  "attempt_id": "b-r3",
+  "profile": "compact-quality-first-v2",
+  "tier": "XL",
+  "mechanical_route": {
+    "exit": 1,
+    "tier": "L",
+    "input": "src/growth/reports.ts",
+    "reason": "whole-file database role predicate; report-local CSS only"
+  },
+  "plan_route": "parent substantive XL preserved; approved narrow F06B-003 correction",
+  "implementation_route": "XL preserved; one template; no backend/server/CSP mutation",
+  "source_revision": "a7fb40c9ab36eef9e7e5d16173083fc646199baf",
+  "spec_sha256": "72b44888ddab0405d955084d572130649fbdddc70b33d53a364db7dd80f05de5",
+  "launch_sha256": "efea775068b0ae74fed460446ec49ed212d60d2048938f0469203c88d8dd7098",
+  "started_at": "2026-10-03T05:38:08.306061+00:00",
+  "status": "completed",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host model/effort/usage/cost attribution pending"
+  ],
+  "scope": [
+    "reportHtml local CSS/markup",
+    "narrow report layout harness and binding adapters",
+    "own telemetry and implementation-b-r3.md"
+  ],
+  "excluded": [
+    "backend queries/consent/billing/session/schema/dependencies/global cabinet",
+    "unchanged B2/B3/B4 whole matrix, PG115, benchmark",
+    "fresh Astra closure, coordinator B5/B6/PR"
+  ],
+  "forecast": {
+    "status": "insufficient_data",
+    "expected_seconds": null,
+    "hard_budget_seconds": 900
+  },
+  "preflight": "sol-b-r3-preflight-runtime.json plus browser attempt preflight.json immediately before READY",
+  "inherited_evidence": "review-b.md fresh full acceptance review; immutable B3 RED widths570/748/604; unchanged B2/B3/B4 evidence supported",
+  "ended_at": "2026-10-03T05:51:33.310781+00:00",
+  "elapsed_wall_seconds": 805.00472,
+  "active_wall_seconds": null,
+  "source_sha256": "1144c60cfff6a30ae94be77971274102d5239adbfc8b19f3ee7f7f47f7d98e6a",
+  "build_sha256": "2b5c0c6b974feff5774b064f1fe038a3ff4345e9eb520c089945987ed107774c",
+  "image_id": "sha256:e04c5647ca2e18e97a104b8ee348a1fc5880c9310d3a102371504571e066aeeb",
+  "validation": {
+    "unit": 39,
+    "browser": 218,
+    "affected_checks_pass": true,
+    "secret_scan": "pass"
+  },
+  "pending": [
+    {
+      "scope": "out_of_scope",
+      "item": "fresh targeted Astra closure; coordinator B5/B6/PR"
+    }
+  ]
+}
