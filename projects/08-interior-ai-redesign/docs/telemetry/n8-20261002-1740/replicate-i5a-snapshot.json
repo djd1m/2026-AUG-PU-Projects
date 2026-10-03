@@ -1,0 +1,238 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i5a",
+  "attempt_id": "replicate-i5a-1",
+  "source_revision": "2ad12e0e1cf98e0aacff28472f29b9a3bcdbf374",
+  "spec_sha256": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+  "launch_sha256": "5bf6aeb199bff6c17fbc82bfb03e33a060a4925d9330adcaef8473fa0d164cb6",
+  "frozen_at": "2026-10-03T10:59:55.722069+00:00",
+  "product_snapshot_sha256": "0d48ab6cb4243bb51389d55e62d5cd3e01a6e7ee421d19b6d937b9b23411ad04",
+  "product_snapshot_definition": "SHA256 of JSON array product_test_files with sort_keys=true and separators comma/colon",
+  "product_test_files": [
+    {
+      "path": "db/008-replicate-evidence.sql",
+      "sha256": "aa4251b74c230f4a28c20f3cde109b4cccc0e81864392448a8c125582e75f33d"
+    },
+    {
+      "path": "scripts/migrate.js",
+      "sha256": "fe51902ef782ae2ab1f0c17be997af70920556b4ef6e5672d734e21da0b3a432"
+    },
+    {
+      "path": "web/replicate-evidence.js",
+      "sha256": "a75b154af512ba629e0a1fe827603e11d6ceabc16efb499e1538055634feef73"
+    },
+    {
+      "path": "web/jobs.js",
+      "sha256": "1d849d356b7c31ed4d5c9c16b634da6ccfd7c0751d04d4e6ae50ae6b6705183f"
+    },
+    {
+      "path": "tests/replicate-evidence.test.js",
+      "sha256": "142b34971c86302e64872aa5c25bad7f6ee92bb6c3a6228686d96da38d360483"
+    },
+    {
+      "path": "tests/replicate-evidence.integration.test.js",
+      "sha256": "1d59de22e9c55d5c4aa48ff9cd54ac3a50cf5b78f5107970de985fd6d85cf85a"
+    },
+    {
+      "path": "tests/replicate-evidence-fixtures.js",
+      "sha256": "52acde6c010bad38901c5e45801ad9d19086457357074000257c96da7e3b5f20"
+    },
+    {
+      "path": "tests/replicate.integration.test.js",
+      "sha256": "9f9d2c5cd3a742d96fbae3c866739bb76c5d5fc17ac922d161a91e1ea98d1542"
+    }
+  ],
+  "protected_previous_files": {
+    "db/001-foundation.sql": "0976a3aa1742d2cd5724b6f761e6b85747d1cf097100713290dfb8c16abf59cc",
+    "db/002-generation.sql": "a724d4deb31241212abead386c0b4287cf09b7179dfbcf030236a24f9f6bba6a",
+    "db/003-quality.sql": "daabc30f1c17b875050c5e89d6573dee32197b5439e4876ae68b1c936e403d87",
+    "db/004-payments.sql": "4d0c3f1299d75d8ae099cd09e5d7a696f29448f5e1560b96f79dc60e3befb6ae",
+    "db/005-attribution.sql": "422a19029cd5580d3e3b663eb57e0173fe4a6a2a235aa67cc978f6605065aee4",
+    "db/006-sharing.sql": "7224a4c71a281810ced5a4da8f010f981783908afffe875d5895a5401df7b6cb",
+    "db/007-replicate.sql": "3bce94bab8d6fd8ef9b45e810e1e26ccda8648a213665f64403501ab80b5a05f",
+    "scripts/check.js": "df39e9efb54e2f5b58731c6eb7646ea840eaeada9a21b8c2f01801a2c11de58f",
+    "scripts/maintenance.js": "84fd25bf2b151cdeb0a51424f06d335a06b9498f40fd40f389d6ac79db72279e",
+    "scripts/mutation.js": "b7a3fc7651d6cc97bd149b0de88c0e03680a4ce26a833e828e18abcc6ba3f1bf",
+    "scripts/partner.js": "3e40deae9d5b6a544f8e61f184dd03d81a1174da81b921d3a789a67f9e979305",
+    "scripts/payment-fixture.js": "4029f269c008fc9b7835cb22e8e458f5b430afa4e49455277bf305e7e112dd21",
+    "scripts/payment-worker.js": "745e215dc6a30a930f0ce7165d032214dfdccfd10bc49215e556733931f5732c",
+    "scripts/quality.js": "ee807ffd94c261e5d6c8fd985f8e7c5c91800f18c6f026d2b2712e96abe3e792",
+    "scripts/queue-status.js": "8a63c418a1180863679570bf6b8107d02b81f5cb62f6995bac0864154374d85f",
+    "scripts/sweep.js": "caf4d8fd85ef8ffcb171642ee9efd7cb21ee31e7ba06fb0a5b206ae74fb90d7e",
+    "scripts/ui/Caddyfile": "2b9a2cf027581dc67a82f0c71c4b620edb2bd96c94b6a35138ff6d2af6233084",
+    "scripts/ui/browser-cases.js": "6c5604aeb6fe4d44c979aff0786d353f061ba49d31f4f43960c44bee4b5b5209",
+    "scripts/ui/browser-disabled.js": "6015dc427458f45ca052f98f180713683465bdef244a81a5625447bf9d01dc55",
+    "scripts/ui/browser.js": "278a11a7151b3c5a60758e88cdda2a6e21dc98a8c23fd8229c529a0be48a9e2c",
+    "scripts/ui/compose.e2e.yml": "f2b5564b43b43b67d015ab9d67ffc936b1df5d59020b66cc4a6f7df2973f1ea5",
+    "scripts/ui/fixture-driver.js": "bee155b9a1ca31c205aa642437a3b0afe2efa55e47130f403feaa80921920923",
+    "scripts/ui/init-owned-db.sh": "55af6aa80352aebd3cf102578ec4150e37d47b7ddc392cbca0658b7a803aba78",
+    "scripts/ui/mutation-local.py": "1fee9714356668adf7febebbcfcc963140b01a995f02310ad642db4f94f71ffe",
+    "scripts/ui/payment-ready.js": "cfc3191f83a5ef340c6ce41716f014d88635e89bb319605b9a3ee58775deba84",
+    "scripts/worker.js": "ab05f88b8ddf1a8b254e75b958d93264c93b7f68e23d75aa229dda7b9c7ecd56",
+    "tests/attribution-fixtures.js": "2b70422c515a572bad035ce090598a7f16774ec279add479b82cb1d71f0f75b1",
+    "tests/attribution-http.test.js": "02a632e3e15d01f544fb8894409dd9c4103f7b07d90ec3a8ce610cdb86ce9514",
+    "tests/attribution.integration.test.js": "0e2c2895420d0f307d99320f5d34f2dcdf161b9bcb46a567e4c5fad3cf4da2f2",
+    "tests/attribution.test.js": "48dada9afc678fc0b73886f24924baa6a7e6ce41af6d1cf879b23928f8af67ef",
+    "tests/boundaries.test.js": "01b2f63f2c9434d9654b442804c75fc8105f87e88740280553062798894db35c",
+    "tests/composite.test.js": "5056def41f526a8f986711fb7852ff2d1c738702aee0c9dd743f3bf100fdc567",
+    "tests/engine-double.py": "fd8ba7485ae4ac7f400bccf0fb30a73addf9413070f50236c027a633f526ef03",
+    "tests/generation.test.js": "a07f333127eccf0202102543458e1381d61f88931d9e354167e28f4cc556c58e",
+    "tests/integration.test.js": "d327a522b8f6d0a3d8f024747f681d6b4329901d2301aaf96e0fb863ee5480e8",
+    "tests/job-fixtures.js": "52546307e908f5656bafe6469bd8b7ee516dd46a617f1343cd12477ef5bbba55",
+    "tests/jobs.integration.test.js": "aa4dcdd6ee4e13f92a4d0e85df2bb2a2809173e7f332c500d50be1fe9bd07558",
+    "tests/jobs.test.js": "15d261c448922da1e9cbb0b72bc63f0903c75abd564631118c363b997fe61bc3",
+    "tests/media.test.js": "23dda1a6e38c01b8e5bfd71e85625d4ed028908c646e74ed799fc5a623e7d73c",
+    "tests/mutation.test.js": "395a45e5fbe8bf917a09d57e305ca632e56c9193aaf2041e01efb66ecaf207ee",
+    "tests/partners.test.js": "091fe4db5de98f63a198d83b48fd22c4550dee609ec5826295b20bf802ad5828",
+    "tests/payments.http.test.js": "3f793ce0cc01d2bdee980694f6dc8130f67f4b459a47e98a1999d631258ba002",
+    "tests/payments.integration.test.js": "83db6b390c80ed813921fb6e728fd0aae3c860747df5f14d444be23f3017dfa4",
+    "tests/payments.test.js": "b4869d90d0dff89b21ef1a155efd7a9a292aef21fdbcafc18993228eda789408",
+    "tests/provider-submissions.test.js": "a2f44276eb51ef08dbf06a1b48ae933d701ff45d0465b2993377d8faf2e5d954",
+    "tests/quality-fixtures.js": "6fbd7328600eecf58c2245e61e0bc5a7ce76d762ffe05837e3050f8c8d2cd135",
+    "tests/quality.integration.test.js": "3418eb07567b1534ded60462992138ee9f20a99752ffa0b2d5a64002340dd5aa",
+    "tests/quality.test.js": "baa3049a249b8185515ef5ef0b3204b17141a67de745ba237aaba4e3997b9278",
+    "tests/replicate-lifecycle.integration.test.js": "d247fced736d2f6ee822621cc36871b00d7454d963970471672c72df49f8e084",
+    "tests/replicate-media.test.js": "a071ea896aa1bffb75c22c0b12d921b1e4b255366eb109494bfe521321d356dd",
+    "tests/replicate.test.js": "f0efc8f4114cc59dd10c14576356c5db96a996f2c65d7aa76fef05e87cbd46cd",
+    "tests/sharing-fixtures.js": "3ba8ae094c43dc55cf808ce9a942064b7b3b161e79043decb1d2737ea1565234",
+    "tests/sharing.http.test.js": "3272d50c18972a65fe462f401001748a5c6bdd104679cada8220150b40b839b6",
+    "tests/sharing.integration.test.js": "13183543b3921b2a5b686168c0833443b479eca14f5b5466f731f7fe3244b811",
+    "tests/sharing.test.js": "54a3a3d312c58c1e43b375872a4ef6397c26d171c69aa2fec184dd07d845bbac",
+    "tests/sweep-pass.js": "cccb79f13e5a29d1f13dc57662624f6c1cb17e551bc2913b31e48035b9e63a0e",
+    "tests/ui-app-races.test.js": "9c10ba5cdbb4ad63f09cc1521c7dfe52497cf7a43b1b4e1a3723f47eecb2ef0a",
+    "tests/ui-auth-order.test.js": "d655d3d4177775b1dffaef824ba86c427b1f253bb94c124260a2a274e1c40b34",
+    "tests/ui-http.test.js": "e4a9b15c5f22d4bf1b098117119d9e04910d7719c2a0a6f17b799d90770837a8",
+    "tests/ui-payment-fixture.test.js": "d4f3bd9fe7848f5d9042591aea22a497065b4e89584a9e44b7a0eb7c3bc38b83",
+    "tests/ui-state.test.js": "58e688d6126a2efd52e7444d182ca0addfde285811aaaee929a06a25e58bb60a",
+    "tests/ui-upload.test.js": "651493c9c1794a79f1963b0e22a676844dbc12e0e1aa15c972b73fb8b28c6f10",
+    "web/app.js": "eff2dce109eaef87b821e2da3322356bc95e665b916f947c72524abda0fa0f1f",
+    "web/attribution.js": "eca7eb8182e9cb602c410f9203c965d2dec71bbaecba022ab2c49021f7900e85",
+    "web/auth.js": "85070f69d53add6a074ab9b81fd90d43d5707289a383332c531548a299b6b0d3",
+    "web/boundaries.js": "10f37fba266cde1ce2aae17d9bd57a0a21c61b952cf409781517f00501cc7c55",
+    "web/composite.js": "acd9a74603c040978c43bf471bdd10a21ec0d4808c4eb9586ce6fc6cb7de7f75",
+    "web/config.js": "451599f6fa194ea4345e9f23f537549f4e8aeff3d4ecc2482f3f1982c73fafad",
+    "web/db.js": "b7313dbd768e51b426db8457ece9b6c2055a48145edbc826ba3fc54f47b1b842",
+    "web/generation.js": "3927d146c0ae84b8f6def135101caaa38e989c88f2f5794ebaf1c5c4b075f7ba",
+    "web/media.js": "cb56df4fca0a3fe8144a413cd10ccd94186d53d2231fca8ce347eab016f60ad5",
+    "web/partners.js": "33d2f8fc635f181f87219be8b2ea06e60cef8f7fa6fcbf8eca6133bcd6c5575e",
+    "web/payment-fixture.js": "e37749c67b55ace79b18f78078dd1c753ab8350fb5d9565ee9987bb6a10e7077",
+    "web/payments.js": "1cd6412a7e4448720fd92e752fd761b6b974b4e835fe9d2fdca33ca844b487aa",
+    "web/provider-submissions.js": "bf882b4301b257e373f86d1dad91d3819e61def891a2a6faf7404d01827719f9",
+    "web/provider.js": "539eb4f311adb559b445f6f1f9fb5b2c962815efd1e529157a87f432f09bea09",
+    "web/public-pages.js": "49407383e405170748c293bd69efb32159379ec2d2c2dd3cef0db207ddbf0b8e",
+    "web/public/app.js": "15a8dd97b39e0a2fb9d307ce26ddcf5ac857d01e15e2de1cbca09102b86ebbe3",
+    "web/public/index.html": "aeab890fbe6037620d36ac381d12db5e0f58065adf402606d00b976c64800fd4",
+    "web/public/style.css": "570b16b3e69cc7162b76f72ea4bb2079e6af69d1d0f04ef6065a0999ef28b5d4",
+    "web/public/ui-actions.js": "3259db87e2053307179afa7cbcbab3930de38d44fbba4d3ded2e794fc59c9f50",
+    "web/public/ui-state.js": "55973cce2ae5375a1ddb2a1bb04ecc91ab66b33f7806e8871bb486d50e71989b",
+    "web/quality.js": "1c3829ff2bafc140cd33eb0a2196ef2640081fb651fe71f1271e202dd70baa30",
+    "web/replicate-media.js": "55baa1f5a8686fc2256106888a4e9e82724745497f38aa741045812e2d781e94",
+    "web/replicate.js": "be4bd7f92fb6dc354b11326ea6d8d519bbc35285756a6531defb4f91d59b649c",
+    "web/server.js": "c54dbe72719ff9dc7e3f5d685dcb68257fc20a1518b6632c67ec3a443061fceb",
+    "web/sharing.js": "c0f3f81af981db7242a9f486fbce6b164c725f918a762753584ae145036699af",
+    "worker/engine.py": "37f9594b0ee3258520507f0cea21ee82fb28adf901e34e254da31ed4540edbb7",
+    "worker/manifest.py": "5711ec06f04ef522b4ed1ae746e7c2e7689ea87336359e1ce78c43b8103754e3",
+    "worker/requirements.txt": "e4e73e3c9a7f0b7144da39a28b0a36c13f7e7be17a1fb8d5818f680c71557308",
+    "worker/test_engine.py": "5ade8a34789d4d5fedafbe1c7f032719a0e25c0603776f6171c39d5606d014ff"
+  },
+  "accepted_plan_files": [
+    {
+      "path": "docs/features/f07-replicate/01_specification.md",
+      "sha256": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad"
+    },
+    {
+      "path": "docs/features/f07-replicate/02_pseudocode.md",
+      "sha256": "19a86156135d7751e7414e9a406070c990686d6ec8c095448549be012a10572d"
+    },
+    {
+      "path": "docs/features/f07-replicate/03_architecture.md",
+      "sha256": "c14c88440c537afcb1c09fe4d843c253c3e0ed4e0c904105fc3297e6fe9803b9"
+    },
+    {
+      "path": "docs/features/f07-replicate/04_refinement.md",
+      "sha256": "43fcc7495be1b92be9537f4c9d9e57fe57b574e7e8e9522c5428af21aff9e02e"
+    },
+    {
+      "path": "docs/features/f07-replicate/05_completion.md",
+      "sha256": "91541235061c856f42882e64b047882f8f6fb83b44fcc11708edd510598e491b"
+    }
+  ],
+  "pin": {
+    "model": "jagilley/controlnet-depth2img",
+    "version": "922c7bb67b87ec32cbc2fd11b1d5f94f0ba4f5519c4dbd02856376444127cc60",
+    "contract_sha": "3d94bb6e59e6a90e24a0504abb4c06c055f7619372e2c36313f42de5d86e99bc",
+    "protected_transport_sha256": "be4bd7f92fb6dc354b11326ea6d8d519bbc35285756a6531defb4f91d59b649c",
+    "protected_media_sha256": "55baa1f5a8686fc2256106888a4e9e82724745497f38aa741045812e2d781e94"
+  },
+  "artifacts": [
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i5a-attempt.json",
+      "sha256": "0d8a37542720e170a73597b0eeb15acf2bded627b3f0ea080a363a8b6d66aeef"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i5a-checks.json",
+      "sha256": "c391761a342a13c6f598762c44397f10af4c66a07f13771f46a6c4f0ae4f03b0"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i5a-command-failure.log",
+      "sha256": "ea803d9daa5333ea74e8000fc8b15ff11c9a50ca49e3e93837ba5fa111b58bbd"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i5a-final-syntax-scope.log",
+      "sha256": "4e9d2ddcde4053e360a3f2b035d52dc12a3000a02b70a6b7901940235fd47011"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i5a-launch.json",
+      "sha256": "5bf6aeb199bff6c17fbc82bfb03e33a060a4925d9330adcaef8473fa0d164cb6"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i5a-local-tests.log",
+      "sha256": "a6f6a43986e9a9e7c74e5d480d3fbceb3954e420c2905626541466f2307057bf"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i5a-mutation-baseline.log",
+      "sha256": "d0b05d56ef97ea707337b3c3e6acfeeef6cca90f720b3f5964b1f6a898c2cf33"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i5a-mutation-mutant.log",
+      "sha256": "256144f143d52abe0ab47f42c2a310f387c6d8c33ea2d028a1919ed6bf9826b8"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i5a-mutation-restored.log",
+      "sha256": "a3fd552cf66cc9c8678723432ef24959d531f5e52a11b7f77d2c2573da5482e7"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i5a-mutation.json",
+      "sha256": "0bac5b85ccd54d796b2b6102e88501750cedaac4576c6a46ba233494765feeab"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i5a-pg-author-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i5a-route.log",
+      "sha256": "aa85818086f10fe26fdfe78669ef92b4a69d0325cb6021beda8bac4daadb7aa2"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i5a-scope.log",
+      "sha256": "73e873ffe43efa1a119a616bffbebd8d215d21e8034e5383aecca4c662d20d7f"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i5a-syntax.log",
+      "sha256": "0aec2d6d64684e49007fa69ee2856c2ced7b6631bda52ca8bda26e011b3a9d81"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i5a-whitespace.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/features/f07-replicate/i5a-implementation.md",
+      "sha256": "458f66898823d23472d630a25537ad9393458198b21eeb3813be9d222fdff4a5"
+    }
+  ],
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "PG_executed": false,
+  "receipt_path": "docs/telemetry/n8-20261002-1740/replicate-i5a-receipt.md"
+}

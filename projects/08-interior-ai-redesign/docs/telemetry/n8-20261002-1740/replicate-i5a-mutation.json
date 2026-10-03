@@ -1,0 +1,30 @@
+{
+  "guard": "reject any non-null hosted vendor hardware/warm/inference/billing scalar",
+  "oracle": "unchanged provider scalar claims test",
+  "command": [
+    "/tmp/n8-node22",
+    "--test",
+    "--test-concurrency=1",
+    "--test-name-pattern=provider scalar claims",
+    "tests/replicate-evidence.test.js"
+  ],
+  "results": [
+    {
+      "variant": "baseline",
+      "exit_code": 0,
+      "source_sha256": "a75b154af512ba629e0a1fe827603e11d6ceabc16efb499e1538055634feef73"
+    },
+    {
+      "variant": "mutant",
+      "exit_code": 1,
+      "source_sha256": "dd4299b4999d9d0e5f3f261352bc1c2916d10d28092a1b85331a0f98d0d4bc94"
+    },
+    {
+      "variant": "restored",
+      "exit_code": 0,
+      "source_sha256": "a75b154af512ba629e0a1fe827603e11d6ceabc16efb499e1538055634feef73"
+    }
+  ],
+  "disposable_copy": true,
+  "production_unchanged": true
+}

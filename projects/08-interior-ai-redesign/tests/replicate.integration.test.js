@@ -77,7 +77,7 @@ test('F07 I1 real PostgreSQL immutable one-shot submission and spend authority',
     const legacy=(await pool.query('SELECT * FROM generation_evidence ORDER BY job_id')).rows;
     await migrate(pool);await migrate(pool);
     assert.deepEqual((await pool.query('SELECT * FROM generation_evidence ORDER BY job_id')).rows,legacy);
-    assert.equal(await count('SELECT count(*)::int AS n FROM schema_migration'),7);
+    assert.equal(await count('SELECT count(*)::int AS n FROM schema_migration'),8);
     assert.equal(await count('SELECT count(*)::int AS n FROM provider_spend_budget'),0);
     for(const row of legacy)await assert.rejects(pool.query('UPDATE generation_evidence SET seed=2 WHERE job_id=$1',[row.job_id]),/immutable/);
     async function reset() {

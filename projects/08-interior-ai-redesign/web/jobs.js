@@ -2,6 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { transaction } from './db.js';
 import { HttpError, requireUuid } from './boundaries.js';
 import { canonical, sha } from './generation.js';
+import { validateHostedOutput, hostedWorkerBinding, hostedCompletionMatches } from './replicate-evidence.js';
 import { isCleanupOnly, lockSubmission, markAmbiguousLocked } from './provider-submissions.js';
 
 export const STYLES = ['warm','minimal','afrohemian','playful'];
@@ -228,27 +229,32 @@ export function createJobs(pool, config, {trustedClock} = {}) {
       });
     },
     async complete(id,fence,output) {
-      const modelRevisions=validateOutput(output,config.runtime);
-      const outputKey=output.output_key,mode=output.mode;
-      const e={...output.evidence,model_revisions:modelRevisions};
+      const validated=validateOutput(output,config.runtime),hosted=output.mode==='replicate';
+      const outputKey=hosted?validated.output_key:output.output_key,mode=output.mode;
+      const e=hosted?validated.evidence:{...output.evidence,model_revisions:validated};
+      if(hosted && !hostedWorkerBinding(e,config)) return false;
       const canonicalEvidence=canonical({...e,job_id:id,output_key:outputKey,mode});
-      const evidenceSha=sha(canonicalEvidence); // Hash before acquiring SQL locks.
+      const evidenceSha=sha(canonicalEvidence); // Serialization/hash before SQL locks.
       return ownedTransaction(id,async(c,j,now,s)=>{
         if (j.fence!==fence) return false;
-        if (await expire(c,j,now,s)) return false;
-        if (!live(j,now,fence)) return false;
-        // I5 must supply an accepted discriminated hosted evidence branch.
-        if (s || (j.mode!==null && j.mode!==mode)) return false;
-        const input=(await c.query('SELECT sha256,deleted_at FROM upload WHERE id=$1',[j.upload_id])).rows[0];
-        if (input.deleted_at || input.sha256!==e.input_sha) throw new Error('Output input binding mismatch');
+        // Completion denials never reconcile hosted credit/spend or cleanup state.
+        if (hosted || s) {
+          if (!hosted || !live(j,now,fence) || !s) return false;
+        } else if (await expire(c,j,now,s) || !live(j,now,fence)) return false;
+        if (!hosted && j.mode!==null && j.mode!==mode) return false;
+        const input=(await c.query('SELECT * FROM upload WHERE id=$1 AND account_id=$2',[j.upload_id,j.account_id])).rows[0];
+        if(hosted) {
+          const ticket=(await c.query('SELECT * FROM attempt_ticket WHERE id=$1',[s.attempt_ticket_id])).rows[0];
+          if(!hostedCompletionMatches(j,s,ticket,input,e,now)) return false;
+        } else if (!input || input.deleted_at || input.sha256!==e.input_sha) throw new Error('Output input binding mismatch');
         await c.query(`INSERT INTO generation_evidence(job_id,input_sha,output_sha,depth_sha,config_sha,model_revisions,
           seed,mode,worker_source_revision,hardware,queue_ms,inference_ms,warm,created_at,canonical_evidence,evidence_sha)
           VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)`,[id,e.input_sha,e.output_sha,e.depth_sha,e.config_sha,
-          JSON.stringify(modelRevisions),e.seed,mode,e.worker_source_revision,e.hardware,e.queue_ms,e.inference_ms,e.warm,now,
+          hosted?null:JSON.stringify(validated),e.seed,mode,e.worker_source_revision,e.hardware,e.queue_ms,e.inference_ms,e.warm,now,
           canonicalEvidence,evidenceSha]);
         await c.query(`UPDATE job SET status='succeeded',output_key=$2,mode=$3,quality='unverified',
           finished_at=$4,lease_until=NULL WHERE id=$1`,[id,outputKey,mode,now]);
-        return true; // Active pre-hold work may finish private; no quality/public acceptance here.
+        return true; // Active pre-hold work may finish privately; no public acceptance.
       });
     },
     async fail(id,fence,{retryable=false}={}) {
@@ -338,6 +344,7 @@ export function createJobs(pool, config, {trustedClock} = {}) {
   };
 }
 export function validateOutput(output,runtime) {
+  if(output?.mode==='replicate') return validateHostedOutput(output);
   const e=output?.evidence;
   if (!output || !['fixture','controlnet'].includes(output.mode) || (runtime==='production' && output.mode==='fixture')) throw new Error('Invalid output mode');
   requireUuid(output.output_key);
