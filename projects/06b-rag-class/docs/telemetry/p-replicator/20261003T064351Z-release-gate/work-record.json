@@ -8,7 +8,7 @@
   "identity": {
     "run_id": "20261003T064351Z-release-gate",
     "work_unit_id": "release-gate-feature",
-    "current_attempt_id": "review-1"
+    "current_attempt_id": "pg-validation-1"
   },
   "telemetry": {
     "run": {
@@ -171,6 +171,10 @@
     },
     {
       "id": "review-1",
+      "status": "completed"
+    },
+    {
+      "id": "pg-validation-1",
       "status": "completed"
     }
   ],

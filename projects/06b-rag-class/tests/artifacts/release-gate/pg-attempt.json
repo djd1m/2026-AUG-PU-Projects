@@ -1,0 +1,47 @@
+{
+  "run_id": "20261003T064351Z-release-gate",
+  "work_unit_id": "release-gate-pg-validation",
+  "attempt_id": "pg-validation-1",
+  "started_at": "2026-10-03T07:23:25.459441+00:00",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host actual model/effort and usage not exposed"
+  ],
+  "scope": "realPG validation only; no product edits; no children",
+  "tier": "S validation-only; calling narrow checks override fullsuite",
+  "route_evidence": "pg-route.txt",
+  "status": "completed",
+  "retries": [
+    {
+      "invocation": 1,
+      "exit_code": 2,
+      "reason": "Cached F15 image missing F16 calibrate/check-cjm source overlays; root tsc failed before SQL",
+      "evidence": "pg-pass1-validation.txt",
+      "next_step": "Explicitly overlay two existing F16 scripts; retry narrow validation"
+    },
+    {
+      "invocation": 2,
+      "exit_code": 1,
+      "reason": "Test sibling public_id UUID violated bot_public_id_format; product helper paths passed first two tests",
+      "evidence": "pg-pass2-validation.txt",
+      "next_step": "Use existing randomBytes(9).base64url format in test-only sibling fixture"
+    }
+  ],
+  "verdict": "pass",
+  "source_revision": "e5672838a107c2cafc616600a4cb00de7d5895b8",
+  "finished_at": "2026-10-03T07:31:48.275558+00:00",
+  "elapsed_wall_seconds": 502.816,
+  "active_wall_seconds": null,
+  "invocations": 3,
+  "checks": "pg-verification.json",
+  "receipt": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-release-gate/projects/06b-rag-class/docs/telemetry/p-replicator/20261003T064351Z-release-gate/evidence/pg-validation-1-receipt.md",
+  "remaining_accepted_scope_work": [],
+  "parent_work_record": "docs/telemetry/p-replicator/20261003T064351Z-release-gate/work-record.json",
+  "parent_record_integration_owner": "coordinator; not edited by validation worker"
+}
