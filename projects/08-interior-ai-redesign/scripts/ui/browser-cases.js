@@ -24,11 +24,33 @@ export async function delayedResponse(page,pattern,predicate=()=>true) {
   return {reached,release,finished,close:async()=>{release();await page.unroute(pattern,handler);}};
 }
 export async function upload(page,config) {
+  const ownerUploads=()=>page.evaluate(async()=>{
+    const response=await fetch('/api/uploads',{credentials:'same-origin',cache:'no-store'});
+    if(response.status!==200)throw new Error('owner_uploads_http_'+response.status);
+    const body=await response.json();
+    if(!Array.isArray(body.uploads))throw new Error('owner_uploads_missing');
+    return body.uploads;
+  });
+  const before=await ownerUploads();
+  const previous=[...before.map(u=>u.id),...await page.locator('#upload-choice option').evaluateAll(options=>options.map(o=>o.value))];
   await page.locator('#file').setInputFiles(resolve(config.storageDir,'upload.png'));
   const done=page.waitForResponse(r=>r.url().endsWith('/api/uploads')&&r.request().method()==='POST');
   await page.locator('#upload-form button').click();const response=await done;assert.equal(response.status(),201);
-  const id=(await response.json()).upload.id;
-  await page.waitForFunction(id=>document.querySelector('#upload-choice').value===id,id);return id;
+  // The app reads its fetch body and selects the saved UUID. CDP may already
+  // have evicted that body; bind the fresh DOM selection to real owner metadata.
+  await page.waitForFunction(previous=>{
+    const id=document.querySelector('#upload-choice').value;
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)&&!previous.includes(id);
+  },previous);
+  const id=await page.locator('#upload-choice').inputValue();
+  assert.ok(!previous.includes(id),'upload selection must be fresh');
+  const fresh=(await ownerUploads()).filter(u=>!before.some(old=>old.id===u.id));
+  assert.equal(fresh.length,1,'owner must have exactly one new upload');
+  assert.equal(fresh[0].id,id,'new owner upload must match DOM selection');
+  assert.ok(Number.isInteger(fresh[0].width)&&fresh[0].width>0&&Number.isInteger(fresh[0].height)&&fresh[0].height>0,'upload dimensions required');
+  assert.equal(fresh[0].mime,'image/webp');
+  assert.ok(typeof fresh[0].created_at==='string'&&Number.isFinite(Date.parse(fresh[0].created_at)),'upload creation time required');
+  return id;
 }
 async function login(page,email,password) {
   await page.locator('#email').fill(email);await page.locator('#password').fill(password);
