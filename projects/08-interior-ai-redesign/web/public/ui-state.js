@@ -11,7 +11,7 @@ export function createIntent(storage, name, uuid = () => crypto.randomUUID()) {
       }
       return {...current.body,idempotency_key:current.key};
     },
-    resolved(id) { if(current) {current.id=id;save();} },
+    resolved(id,key) { if(!current || current.key!==key)return false;current.id=id;save();return true; },
     clear() {current=null;try {storage.removeItem(name);} catch { /* unavailable storage */ } }
   };
 }
@@ -24,6 +24,7 @@ export function createScope() {
     async run(work) {
       const token=generation, controller=new AbortController();controllers.add(controller);
       try {const value=await work(controller.signal);if(token!==generation)throw new Error('stale_account');return value;}
+      catch(error) {if(token!==generation)throw new Error('stale_account');throw error;}
       finally {controllers.delete(controller);}
     }
   };

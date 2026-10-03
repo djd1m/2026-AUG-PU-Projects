@@ -1,20 +1,22 @@
 // LOCAL SOFTWARE FIXTURE ONLY. Never GPU/geometry/latency acceptance evidence.
 import pg from 'pg';
 import {randomUUID} from 'node:crypto';
-import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {writeFile,mkdir} from 'node:fs/promises';
 import {join,resolve} from 'node:path';
 import sharp from 'sharp';
 import {createJobs} from '../../web/jobs.js';
 import {createPayments} from '../../web/payments.js';
 import {fixtureSignal} from '../payment-fixture.js';
 import {prepareArtifacts,canonical,sha,artifactRead} from '../../web/generation.js';
+import {migrate} from '../migrate.js';
 const marker='N8_F04B_OWNED_LOCAL_SOFTWARE_FIXTURE';
 const source='7f99c245a59407eb84b106414ccc0e789f689300';
 export async function ownedPool(env=process.env) {
   const url=new URL(env.DATABASE_URL),schema=env.UI_SCHEMA;
-  if(env.UI_FIXTURE_OWNER!==marker||env.NODE_ENV!=='test'||env.PROVIDER_MODE!=='fixture'||
+  if(!['postgres:','postgresql:'].includes(url.protocol)||env.UI_FIXTURE_OWNER!==marker||env.NODE_ENV!=='test'||env.PROVIDER_MODE!=='fixture'||
     !['localhost','127.0.0.1','[::1]','n8-ui-pg'].includes(url.hostname)||!/^\/n8_ui_[a-f0-9]{12}$/.test(url.pathname)||
-    !/^n8_ui_[a-f0-9]{24}$/.test(schema??'')||url.password.length<24)throw new Error('dedicated_owned_fixture_required');
+    !/^n8_ui_[a-f0-9]{24}$/.test(schema??'')||url.password.length<24||
+    url.searchParams.get('options')!==`-c search_path=${schema},public`)throw new Error('dedicated_owned_fixture_required');
   const pool=new pg.Pool({connectionString:url.href,max:2,options:`-c search_path=${schema},public`});
   try {
     const {rows:[v]}=await pool.query("SELECT current_setting('server_version_num')::int AS version,shobj_description(oid,'pg_database') AS marker FROM pg_database WHERE datname=current_database()");
@@ -26,8 +28,8 @@ export function fixtureConfig(env=process.env) {
   const dir=resolve(env.STORAGE_DIR??'');
   if(!/^\/tmp\/n8-ui-[a-f0-9]{24}$/.test(dir))throw new Error('owned_private_storage_required');
   const origin=new URL(env.APP_ORIGIN);
-  if(!['localhost','127.0.0.1','[::1]','n8-ui-web'].includes(origin.hostname)||origin.protocol!=='http:')throw new Error('local_origin_required');
-  return {runtime:'test',providerMode:'fixture',origin:origin.origin,storageDir:dir,platformDailyLimit:200,accountDailyLimit:20,secureCookie:false};
+  if(env.APP_ORIGIN!=='https://n8-ui.test'||origin.origin!==env.APP_ORIGIN)throw new Error('owned_https_origin_required');
+  return {runtime:'test',providerMode:'fixture',origin:origin.origin,storageDir:dir,platformDailyLimit:200,accountDailyLimit:20,secureCookie:true};
 }
 export async function drive(pool,config,action,id) {
   if(action==='payment') {
@@ -66,7 +68,7 @@ async function main() {
   try {
     if(process.argv[2]==='init') {
       await pool.query(`CREATE SCHEMA ${process.env.UI_SCHEMA}`);
-      for(const file of ['001-foundation.sql','002-generation.sql','003-quality.sql','004-payments.sql','005-attribution.sql','006-sharing.sql'])await pool.query(await readFile(new URL('../../db/'+file,import.meta.url),'utf8'));
+      await migrate(pool);
       await mkdir(config.storageDir,{mode:0o700});
       await writeFile(join(config.storageDir,'upload.png'),await sharp({create:{width:640,height:480,channels:3,background:'#bda98b'}}).png().toBuffer());
       console.log(JSON.stringify({schema:process.env.UI_SCHEMA,upload:join(config.storageDir,'upload.png'),software_fixture:true}));

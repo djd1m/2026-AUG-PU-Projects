@@ -9,7 +9,7 @@ test('uncertain response survives reload with same body/key; selection and accou
   assert.notEqual(reloaded.select({...body,style:'minimal'}).idempotency_key,first.idempotency_key);
   assert.notEqual(reloaded.select(body).idempotency_key,first.idempotency_key);
   assert.equal(createIntent(store,'accountB',uuid).get(),null);
-  reloaded.resolved('job1');assert.equal(createIntent(store,'accountA').get().id,'job1');reloaded.clear();assert.equal(reloaded.get(),null);
+  reloaded.resolved('job1',reloaded.get().key);assert.equal(createIntent(store,'accountA').get().id,'job1');reloaded.clear();assert.equal(reloaded.get(),null);
 });
 test('account switch aborts and rejects late former-owner image even if transport ignores abort',async()=>{
   const scope=createScope();let complete,signal;
@@ -30,4 +30,22 @@ test('checkout rejects executable/insecure/credential URLs; fixture stays local'
   assert.equal(safeConfirmation('http://localhost/','fixture','http://localhost'),'http://localhost/');
   assert.equal(safeConfirmation('http://foreign.test/','fixture','http://localhost'),null);
   assert.equal(safeConfirmation('https://yoomoney.ru/checkout','live','http://localhost'),'https://yoomoney.ru/checkout');
+});
+
+test('late A resolution cannot bind A job to the submitted B body/key',()=>{
+  const store=storage(),intent=createIntent(store,'owner',()=>crypto.randomUUID());
+  const a=intent.select({upload_id:'A',style:'warm'});intent.clear();
+  const b=intent.select({upload_id:'B',style:'minimal'});
+  assert.equal(intent.resolved('jobA',a.idempotency_key),false);
+  assert.deepEqual(intent.get(),{body:{upload_id:'B',style:'minimal'},key:b.idempotency_key,id:null});
+  assert.equal(intent.resolved('jobB',b.idempotency_key),true);
+  assert.equal(createIntent(store,'owner').get().id,'jobB');
+});
+test('late authentication rejection across logout/login cannot escape to new account',async()=>{
+  const scope=createScope();let reject;
+  const old=scope.run(()=>new Promise((_,r)=>{reject=r;}));
+  scope.reset();scope.reset();assert.equal(await scope.run(async()=> 'new-account'),'new-account');
+  reject(Object.assign(new Error('login required'),{code:'authentication_required'}));
+  await assert.rejects(old,e=>e.message==='stale_account'&&e.code===undefined);
+  await assert.rejects(scope.run(async()=>{throw new Error('current failure');}),/current failure/);
 });

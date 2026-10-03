@@ -1,0 +1,24 @@
+{
+  "donors": [
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/06b-rag-class/scripts/ui/compose.e2e.yml",
+      "sha256": "9289ea69453a00f9ba6cc7e0e0be9b4029fa7a328092abcd2a764c4850ec6b41",
+      "decision": "adapt read-only",
+      "use": "owned internal HTTPS transport"
+    },
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/06b-rag-class/scripts/ui/Caddyfile",
+      "sha256": "2787d6b2a46601699dea45e685152a1588b8bc96a370d11ceaa53b31671c8ca6",
+      "decision": "adapt read-only",
+      "use": "owned internal HTTPS transport"
+    }
+  ],
+  "differences": [
+    "N8 origin/upstream8080; exact existing Caddy image digest",
+    "PG16 ordinary postgres instead of pgvector; strict random DB ownership init",
+    "existing migrate(pool), same-schema URL options, normal node server",
+    "node UID private /tmp volume, read-only own tests; no project mount/DB env in shared browser",
+    "CPU total2 for concurrent services, no host ports",
+    "separate disabled-provider normal web restart; existing remote Playwright clients"
+  ]
+}

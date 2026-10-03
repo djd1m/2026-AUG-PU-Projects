@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: uncertain response survives reload with same body/key; selection and account isolate
+ok 1 - uncertain response survives reload with same body/key; selection and account isolate
+  ---
+  duration_ms: 2.197871
+  type: 'test'
+  ...
+# Subtest: account switch aborts and rejects late former-owner image even if transport ignores abort
+ok 2 - account switch aborts and rejects late former-owner image even if transport ignores abort
+  ---
+  duration_ms: 1.02717
+  type: 'test'
+  ...
+# Subtest: native outcomes depend on promise; invocation starts immediately in user gesture
+ok 3 - native outcomes depend on promise; invocation starts immediately in user gesture
+  ---
+  duration_ms: 0.74637
+  type: 'test'
+  ...
+# Subtest: checkout rejects executable/insecure/credential URLs; fixture stays local
+ok 4 - checkout rejects executable/insecure/credential URLs; fixture stays local
+  ---
+  duration_ms: 0.32065
+  type: 'test'
+  ...
+# Subtest: late A resolution cannot bind A job to the submitted B body/key
+ok 5 - late A resolution cannot bind A job to the submitted B body/key
+  ---
+  duration_ms: 3.346191
+  type: 'test'
+  ...
+# Subtest: late authentication rejection across logout/login cannot escape to new account
+ok 6 - late authentication rejection across logout/login cannot escape to new account
+  ---
+  duration_ms: 0.51707
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 28.18437

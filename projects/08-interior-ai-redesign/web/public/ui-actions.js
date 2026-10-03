@@ -40,7 +40,7 @@ export function installActions({$,api,post,scope,status,balance,guard,getAccount
   }
   $('buy').onclick=()=>guard(async()=>{
     $('buy').disabled=true;
-    try {const intent=getPaymentIntent();if(terminalPayment)intent.clear();const body=intent.select({package:'ROOM20'});const result=await post('/api/payments',body);intent.resolved(result.payment.payment_id);await payment(result.payment.payment_id);}
+    try {const intent=getPaymentIntent();if(terminalPayment)intent.clear();const body=intent.select({package:'ROOM20'});const result=await post('/api/payments',body);intent.resolved(result.payment.payment_id,body.idempotency_key);await payment(result.payment.payment_id);}
     finally {if(getAccount())$('buy').disabled=config?.provider_mode==='disabled';}
   });
   $('payment-resume').onclick=()=>guard(()=>payment(getPaymentIntent().get().id));

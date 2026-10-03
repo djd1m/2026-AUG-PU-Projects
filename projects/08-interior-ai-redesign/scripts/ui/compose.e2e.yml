@@ -1,0 +1,74 @@
+name: n8-ui-e2e
+x-app: &app
+  image: ${UI_WEB_IMAGE:?Frozen owned N8 image required}
+  user: node
+  env_file: ["${UI_ENV_FILE:?Private owned test environment required}"]
+  volumes:
+    - private:/tmp
+    - "${UI_PROJECT_ROOT:?Exact N8 project root required}/tests:/app/tests:ro"
+  networks: [ui]
+  security_opt: ["no-new-privileges:true"]
+  cap_drop: [ALL]
+services:
+  db:
+    image: postgres:16.10-bookworm
+    environment:
+      POSTGRES_DB: ${UI_DB_NAME:?Owned n8_ui_12hex database required}
+      POSTGRES_USER: n8_ui_owner
+      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD:?Random test password required}
+    volumes: ["./init-owned-db.sh:/docker-entrypoint-initdb.d/10-owned.sh:ro"]
+    tmpfs: [/var/lib/postgresql/data]
+    cpus: 0.75
+    networks:
+      ui:
+        aliases: [n8-ui-pg]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n8_ui_owner -d \"$$POSTGRES_DB\""]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    restart: "no"
+  init:
+    <<: *app
+    environment: {PROVIDER_MODE: fixture}
+    command: ["node", "scripts/ui/fixture-driver.js", "init"]
+    depends_on:
+      db: {condition: service_healthy}
+    cpus: 0.75
+    restart: "no"
+  web:
+    <<: *app
+    environment: {PROVIDER_MODE: "${UI_PROVIDER_MODE:-fixture}"}
+    command: ["node", "web/server.js"]
+    depends_on:
+      init: {condition: service_completed_successfully}
+    cpus: 0.75
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8080/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    restart: "no"
+  maintenance:
+    <<: *app
+    command: ["node", "scripts/maintenance.js"]
+    depends_on:
+      web: {condition: service_healthy}
+    cpus: 0.25
+    restart: "no"
+  proxy:
+    image: caddy:2.10-alpine@sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d
+    volumes: ["./Caddyfile:/etc/caddy/Caddyfile:ro"]
+    depends_on:
+      web: {condition: service_healthy}
+    cpus: 0.25
+    networks:
+      ui:
+        aliases: [n8-ui.test]
+    restart: "no"
+volumes:
+  private:
+networks:
+  ui:
+    name: n8-ui-e2e
+    internal: true

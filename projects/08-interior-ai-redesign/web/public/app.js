@@ -3,7 +3,7 @@ import {installActions} from './ui-actions.js';
 const $=id=>document.getElementById(id), scope=createScope();
 const status=text=>{$('status').textContent=text;};
 const messages={authentication_required:'Войдите, чтобы открыть свои комнаты.',invalid_credentials:'Проверьте почту и пароль.',registration_unavailable:'Адрес уже используется. Попробуйте войти.',invalid_image:'Нужен корректный JPEG, PNG или WebP.',body_too_large:'Файл или запрос слишком большой.',image_too_large:'Фото превышает 10 МиБ или 20 мегапикселей.',insufficient_credit:'Недостаточно кредитов. Фото сохранено; можно приобрести пакет.',budget_exhausted:'Дневной бюджет попыток исчерпан. Попробуйте позже.',billing_hold:'Аккаунт ограничен после проверки оплаты. Новая генерация недоступна.',queue_expired:'Истекло время ожидания очереди.',hard_deadline:'Истекло время выполнения.',payments_unavailable:'Оплата сейчас недоступна.',origin_denied:'Адрес страницы не совпадает с адресом сервиса.',not_found:'Работа удалена или недоступна.',idempotency_conflict:'Запрос не совпадает с сохранённой попыткой.',tracking_consent_required:'Сначала явно разрешите tracking.',invalid_partner:'Партнёрский код недоступен.',rate_limited:'Слишком много запросов. Попробуйте позже.',service_unavailable:'Сервис временно недоступен.'};
-let account=null,uploads=[],style='warm',job=null,jobIntent=null,paymentIntent=null,timer=null,pollVersion=0,next=null;
+let account=null,uploads=[],style='warm',job=null,jobIntent=null,paymentIntent=null,timer=null,pollVersion=0,next=null,selectionGeneration=0,reservationPending=null,logoutPending=null;
 async function api(path,options={}) {
   return scope.run(async signal=>{
     let response;
@@ -21,7 +21,7 @@ function clearResult() {
   for(const id of ['before','after'])$(id).removeAttribute('src');actions.clear();
 }
 function showAccount(value) {
-  scope.reset();clearResult();account=value;uploads=[];
+  scope.reset();selectionGeneration++;reservationPending=null;clearResult();account=value;uploads=[];
   $('jobs').replaceChildren();$('upload-choice').replaceChildren();$('source-preview').removeAttribute('src');$('source-preview').hidden=true;$('file').value='';
   $('auth').hidden=!!value;$('workspace').hidden=!value;$('logout').hidden=!value;
   $('password').value='';$('account-info').textContent='';
@@ -31,7 +31,7 @@ function showAccount(value) {
 }
 function paintAccount() {
   $('account-info').textContent=account?`${account.email} · Кредитов: ${account.credits} · ${account.billing_hold?'Ограничение оплаты':'Аккаунт активен'}`:'';
-  $('generate').disabled=!account||!$('upload-choice').value||account.billing_hold;
+  $('generate').disabled=!!reservationPending||!account||!$('upload-choice').value||account.billing_hold;
 }
 async function balance() {
   const token=scope.current();const value=(await api('/api/me')).account;
@@ -69,10 +69,10 @@ async function renderJob(current) {
     await actions.publication(current);
   }
 }
-async function openJob(id) {
+async function openJob(id,expectedSelection) {
   clearResult();const version=pollVersion;
   const current=(await api(`/api/jobs/${id}`)).job;
-  if(version!==pollVersion)return;
+  if(version!==pollVersion||(expectedSelection!==undefined&&expectedSelection!==selectionGeneration))return;
   await renderJob(current);
   if(version!==pollVersion)return;
   if(['queued','running'].includes(job.status))schedule(id,version);
@@ -99,28 +99,42 @@ function styleButtons(){for(const b of $('styles').children)b.setAttribute('aria
 async function guard(work) {try {await work();}catch(e){if(e.message==='stale_account')return;if(e.code==='authentication_required')showAccount(null);status(e.message);}}
 const actions=installActions({$,api,post,scope,status,balance,guard,getAccount:()=>account,getJob:()=>job,getPaymentIntent:()=>paymentIntent});
 $('auth-form').onsubmit=event=>{
-  event.preventDefault();const action=event.submitter?.value??'login';const form=event.currentTarget;
+  event.preventDefault();if(logoutPending)return;const action=event.submitter?.value??'login';const form=event.currentTarget;
   guard(async()=>{form.querySelectorAll('button').forEach(b=>b.disabled=true);
-    try {await post(`/api/${action}`,{email:$('email').value,password:$('password').value});showAccount((await api('/api/me')).account);await load();status('Ваше личное пространство готово.');}
+    try {await post(`/api/${action}`,{email:$('email').value,password:$('password').value});showAccount((await api('/api/me')).account);await load();if(!jobIntent.get()||jobIntent.get().id)status('Ваше личное пространство готово.');}
     finally {form.querySelectorAll('button').forEach(b=>b.disabled=false);}
   });
 };
-$('logout').onclick=()=>{const old=account;showAccount(null);guard(async()=>{await post('/api/logout',{});status('Вы вышли.');});if(old){jobIntent=null;paymentIntent=null;}};
+$('logout').onclick=()=>{
+  if(logoutPending)return;const pending={};logoutPending=pending;showAccount(null);
+  const buttons=$('auth-form').querySelectorAll('button');buttons.forEach(b=>b.disabled=true);
+  guard(async()=>{try{await post('/api/logout',{});status('Вы вышли.');}
+    finally{if(logoutPending===pending){logoutPending=null;buttons.forEach(b=>b.disabled=false);}}});
+};
 $('upload-form').onsubmit=event=>{event.preventDefault();guard(async()=>{
   const file=$('file').files[0];if(!file)return;if(file.size>10485760)throw new Error(messages.image_too_large);
   const u=(await api('/api/uploads',{method:'POST',headers:{'Content-Type':file.type},body:file})).upload;
-  jobIntent.clear();$('file').value='';await loadUploads(u.id);status('Фото сохранено приватно. Выберите настроение.');
+  selectionGeneration++;jobIntent.clear();$('file').value='';await loadUploads(u.id);status('Фото сохранено приватно. Выберите настроение.');
 });};
-$('upload-choice').onchange=()=>{jobIntent.clear();source();};
-for(const b of $('styles').children)b.onclick=()=>{if(style!==b.dataset.style){style=b.dataset.style;jobIntent.clear();}styleButtons();};
+$('upload-choice').onchange=()=>{selectionGeneration++;jobIntent.clear();source();};
+for(const b of $('styles').children)b.onclick=()=>{if(style!==b.dataset.style){style=b.dataset.style;selectionGeneration++;jobIntent.clear();}styleButtons();};
 $('generate').onclick=()=>guard(async()=>{
-  $('generate').disabled=true;
-  try {const intent=jobIntent;if(intent.get()?.id && job && ['failed','succeeded'].includes(job.status))intent.clear();const body=intent.select({upload_id:$('upload-choice').value,style});const value=await post('/api/jobs',body);intent.resolved(value.job_id);await openJob(value.job_id);await balance();await gallery();}
-  finally {paintAccount();}
+  if(reservationPending||!account||!jobIntent)return;
+  const pending={},generation=selectionGeneration,token=scope.current(),intent=jobIntent;
+  reservationPending=pending;paintAccount();
+  try {
+    if(intent.get()?.id && job && ['failed','succeeded'].includes(job.status))intent.clear();
+    const body=intent.select({upload_id:$('upload-choice').value,style});
+    const value=await post('/api/jobs',body);
+    if(!scope.valid(token)||generation!==selectionGeneration||intent!==jobIntent)return;
+    if(!intent.resolved(value.job_id,body.idempotency_key))return;
+    await openJob(value.job_id,generation);await balance();await gallery();
+  } catch(error) {if(!scope.valid(token)||generation!==selectionGeneration)throw new Error('stale_account');throw error;}
+  finally {if(reservationPending===pending)reservationPending=null;paintAccount();}
 });
 $('resume').onclick=()=>guard(()=>openJob(job.job_id));
 $('refresh').onclick=()=>guard(async()=>{await balance();await gallery();});$('next').onclick=()=>guard(()=>gallery(next));
-$('delete-job').onclick=()=>guard(async()=>{const id=job.job_id;scope.reset();clearResult();$('jobs').replaceChildren();await api(`/api/jobs/${id}`,{method:'DELETE'});jobIntent.clear();await loadUploads();await balance();await gallery();});
-$('delete-upload').onclick=()=>guard(async()=>{const id=$('upload-choice').value;scope.reset();clearResult();$('jobs').replaceChildren();$('source-preview').removeAttribute('src');await api(`/api/uploads/${id}`,{method:'DELETE'});jobIntent.clear();await loadUploads();await balance();await gallery();});
+$('delete-job').onclick=()=>guard(async()=>{const id=job.job_id;scope.reset();selectionGeneration++;clearResult();$('jobs').replaceChildren();await api(`/api/jobs/${id}`,{method:'DELETE'});jobIntent.clear();await loadUploads();await balance();await gallery();});
+$('delete-upload').onclick=()=>guard(async()=>{const id=$('upload-choice').value;scope.reset();selectionGeneration++;clearResult();$('jobs').replaceChildren();$('source-preview').removeAttribute('src');await api(`/api/uploads/${id}`,{method:'DELETE'});jobIntent.clear();await loadUploads();await balance();await gallery();});
 $('split').oninput=()=>{const v=$('split').value;$('compare').style.setProperty('--split',v+'%');$('split-state').textContent=v+'% исходного фото';$('split').setAttribute('aria-valuetext',v+'% исходного фото');};
-guard(async()=>{try {showAccount((await api('/api/me')).account);await load();status('Фото приватны. Согласие на публикацию и tracking — ваш отдельный выбор.');}catch(e){if(e.code==='authentication_required'){showAccount(null);status(messages.authentication_required);}else throw e;}});
+guard(async()=>{try {showAccount((await api('/api/me')).account);await load();if(!jobIntent.get()||jobIntent.get().id)status('Фото приватны. Согласие на публикацию и tracking — ваш отдельный выбор.');}catch(e){if(e.code==='authentication_required'){showAccount(null);status(messages.authentication_required);}else throw e;}});

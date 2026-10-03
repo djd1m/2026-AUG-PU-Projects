@@ -6,16 +6,18 @@ import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import assert from 'node:assert/strict';
 import {ownedPool,fixtureConfig,drive} from './fixture-driver.js';
+import {extendedCases,failureScreens,paceContext} from './browser-cases.js';
 import {createPartners} from '../../web/partners.js';
 const require=createRequire(import.meta.url);
-const {chromium}=require('/opt/browser/node_modules/playwright');
+if(!/^1\.63\./.test(require('/opt/n8-browser-client/node_modules/playwright/package.json').version)||!/^1\.63\./.test(require('/opt/n8-browser-client/node_modules/playwright-core/package.json').version))throw new Error('existing_playwright_1_63_clients_required');
+const {chromium}=require('/opt/n8-browser-client/node_modules/playwright');
 const origin=process.env.APP_ORIGIN,config=fixtureConfig();
 if(process.env.UI_SHARED_BROWSER_CONTAINER!=='codex-ui-playwright')throw new Error('existing_shared_browser_container_required');
 const preflight=JSON.parse(await readFile(process.env.UI_PREFLIGHT,'utf8'));
 if(preflight.status!=='ready'||!preflight.source_revision||!preflight.build_revision)throw new Error('fresh_source_bound_companion_preflight_required');
 const out=resolve(process.env.UI_OUTPUT??`/tmp/n8-ui-browser-${randomBytes(12).toString('hex')}`);
 await mkdir(out,{recursive:false});
-const pool=await ownedPool(),browser=await chromium.connect('ws://127.0.0.1:9320/');
+const pool=await ownedPool(),browser=await chromium.connect('ws://codex-ui-playwright:9320/');
 const results=[],contexts=[];
 async function check(name,work) {await work();results.push({name,result:'pass'});}
 async function request(page,path,method='GET',body) {
@@ -42,13 +44,13 @@ async function packagePurchase(page) {
 }
 try {
   const run=randomBytes(6).toString('hex'),password=randomBytes(24).toString('hex');
-  const second=await browser.newContext({viewport:{width:390,height:844}});contexts.push(second);
-  const other=await second.newPage();await register(other,`other-${run}@example.test`,password);
+  const second=await browser.newContext({ignoreHTTPSErrors:true,viewport:{width:390,height:844}});contexts.push(second);
+  await paceContext(second);const other=await second.newPage();await register(other,`other-${run}@example.test`,password);
   const otherAccount=(await request(other,'/api/me')).body.account;
   const partner=await createPartners(pool).create(otherAccount.id);
   for(const width of [1440,390]) {
-    const context=await browser.newContext({viewport:{width,height:width===390?844:1000},reducedMotion:'reduce'});contexts.push(context);
-    const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+    const context=await browser.newContext({ignoreHTTPSErrors:true,viewport:{width,height:width===390?844:1000},reducedMotion:'reduce'});contexts.push(context);
+    await paceContext(context);const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
     await register(page,`owner-${run}-${width}@example.test`,password);
     await check(`${width}: real browser POST attribution state`,async()=>{
       const state=await request(page,'/api/attribution/state','POST',{});assert.equal(state.status,200);assert.equal(state.body.tracking_opt_in,false);
@@ -114,6 +116,8 @@ try {
     assert.equal((await request(page,`/api/jobs/${failed}`)).body.job.status,'failed');
     await page.locator('#delete-job').click();await page.locator('#result').waitFor({state:'hidden'});
     assert.equal((await request(page,`/api/jobs/${publicId}`)).status,404); // deletion tombstones upload and all its jobs
+    await extendedCases({page,context,pool,config,check,request,reserve,width,otherEmail:`other-${run}@example.test`,password,partnerCode:partner.code});
+    await failureScreens({browser,pool,config,check,request,register,packagePurchase,width,password,run});
     await page.locator('#logout').click();await page.locator('#auth').waitFor({state:'visible'});
     assert.equal(await page.locator('#jobs img').count(),0);assert.equal(await page.locator('#before').getAttribute('src'),null);
     assert.deepEqual(errors,[]);

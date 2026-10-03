@@ -1,0 +1,57 @@
+[
+  {
+    "name": "reservation-pending",
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "tests/ui-app-races.test.js"
+    ],
+    "exit_code": 1,
+    "detected": true,
+    "log": "mutation-reservation-pending.log",
+    "log_sha256": "48c172771ed24540fc791fe1cc431c93c52a47bbb051c99712b136dec7a5bfa0"
+  },
+  {
+    "name": "reservation-selection",
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "tests/ui-app-races.test.js"
+    ],
+    "exit_code": 0,
+    "detected": false,
+    "log": "mutation-reservation-selection.log",
+    "log_sha256": "d6ca8a1309df044ddcb457c3deb381b5a2fe7ad32dd9545a276273ec27d9d2c9"
+  },
+  {
+    "name": "submitted-key",
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "tests/ui-state.test.js"
+    ],
+    "exit_code": 1,
+    "detected": true,
+    "log": "mutation-submitted-key.log",
+    "log_sha256": "08027bd9d62fba302cd85b47ee2f51c7b6a4cd19a972fe2cf0283d7497b3df31"
+  },
+  {
+    "name": "stale-rejection",
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "tests/ui-app-races.test.js"
+    ],
+    "exit_code": 1,
+    "detected": true,
+    "log": "mutation-stale-rejection.log",
+    "log_sha256": "456b29274c5a30630110bcedddd092619eba7d755980ac19ea1a768da87fbb67"
+  },
+  {
+    "name": "stable-key",
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "tests/ui-state.test.js"
+    ],
+    "exit_code": 1,
+    "detected": true,
+    "log": "mutation-stable-key.log",
+    "log_sha256": "1791361d16647f77f2ad07d2055b7568fb0bdd6201c02e9bcbdd744b1eebe727"
+  }
+]
