@@ -78,8 +78,25 @@
   "owner_initial_reason": "coordinator supplied n8-f02a while actual owner integration requires n8-f01; no source change; original preserved",
   "legacy_mutations_pass": 8,
   "legacy_mutations_total": 9,
-  "fixture_mutation": "inconclusive; actual CLI log retained; next bounded diagnosis/fix required after docs writer",
+  "fixture_mutation": {
+    "verdict": "detected",
+    "baseline": 0,
+    "mutant": 1,
+    "restored": 0,
+    "evidence": "replicate-i7-mutation-evidence/quality-proof.json",
+    "source": "d3e55472",
+    "production_oracle_unchanged": true
+  },
   "cas_new_proof": "I6a baseline0 exact2POST mutant1 restored0 unchangedhash; ordinaryCAS suite rerunPASS",
   "full_gate_pass": false,
-  "i8": "pending actual52main+2disabled plus representativehostedrestore"
+  "i8": "pending actual52main+2disabled plus representativehostedrestore",
+  "required_legacy_mutation_gates_passed": 9,
+  "full_regression_software_gates_passed": true,
+  "whole_feature_acceptance": false,
+  "pending": [
+    "fresh whole-feature Astra review",
+    "I8 actual52+2 browser",
+    "representative hosted-row restore",
+    "PR attempt"
+  ]
 }
