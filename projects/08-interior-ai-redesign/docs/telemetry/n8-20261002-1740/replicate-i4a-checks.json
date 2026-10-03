@@ -1,0 +1,74 @@
+{
+  "runtime": "Node22.20.0 /tmp/n8-node22",
+  "checks": [
+    {
+      "command": "/tmp/n8-node22 tests/jobs.test.js",
+      "cwd": "PROJECT_ROOT",
+      "exit_code": 0,
+      "tests": 5,
+      "pass": 5,
+      "fail": 0
+    },
+    {
+      "command": "/tmp/n8-node22 tests/provider-submissions.test.js",
+      "cwd": "PROJECT_ROOT",
+      "exit_code": 0,
+      "tests": 2,
+      "pass": 2,
+      "fail": 0
+    },
+    {
+      "command": "/tmp/n8-node22 tests/generation.test.js",
+      "cwd": "PROJECT_ROOT",
+      "exit_code": 0,
+      "tests": 13,
+      "pass": 13,
+      "fail": 0
+    },
+    {
+      "command": "git diff --check",
+      "cwd": "REPO_ROOT",
+      "exit_code": 0
+    },
+    {
+      "command": "/tmp/n8-node22 scripts/check.js",
+      "cwd": "PROJECT_ROOT",
+      "exit_code": 0,
+      "result": "All web/scripts/tests ESM syntax checked; initial and final invocation passed"
+    },
+    {
+      "command": "/tmp/n8-node22 tests/jobs.test.js",
+      "cwd": "PROJECT_ROOT",
+      "exit_code": 0,
+      "tests": 5,
+      "pass": 5,
+      "fail": 0,
+      "reason": "Affected rerun after final lifecycle guard changes",
+      "log": "replicate-i4a-jobs-unit.log"
+    },
+    {
+      "command": "/tmp/n8-node22 tests/provider-submissions.test.js",
+      "cwd": "PROJECT_ROOT",
+      "exit_code": 0,
+      "tests": 2,
+      "pass": 2,
+      "fail": 0,
+      "reason": "Affected rerun after final context guard changes",
+      "log": "replicate-i4a-provider-unit.log"
+    },
+    {
+      "command": "Changed/new JS --check; exact owned-path, protected source and I1 compatibility guard",
+      "exit_code": 0,
+      "files": 4
+    }
+  ],
+  "failed_history": [],
+  "pending": [
+    "Real PG16 lifecycle tests",
+    "Real PG16 I1 regression",
+    "Real PG16 existing jobs integration",
+    "Fresh independent Astra/high review"
+  ],
+  "recorded_at": "2026-10-03T09:50:41.426352+00:00",
+  "snapshot_sha256": "370b1cf3f98d66ae49e0e23ee462b803eb4146f198dd336ad9238aad01c73afe"
+}

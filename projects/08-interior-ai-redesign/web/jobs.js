@@ -2,6 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { transaction } from './db.js';
 import { HttpError, requireUuid } from './boundaries.js';
 import { canonical, sha } from './generation.js';
+import { lockSubmission, markAmbiguousLocked } from './provider-submissions.js';
 
 export const STYLES = ['warm','minimal','afrohemian','playful'];
 export function jobInput(input) {
@@ -76,7 +77,17 @@ export function createJobs(pool, config, {trustedClock} = {}) {
       ON CONFLICT(kind,reference) DO NOTHING`,[randomUUID(),j.account_id,j.id,now]);
     await c.query('UPDATE job SET reserved=false WHERE id=$1',[j.id]);
   }
-  async function terminal(c,j,now,reason) {
+  async function cleanup(c,s) {
+    if (!s || s.state==='preflight') return;
+    if (!s.prediction_id) {
+      await markAmbiguousLocked(c,s,s.request_sha);
+      await c.query("UPDATE provider_submission SET cleanup_state='unresolved' WHERE id=$1",[s.id]);
+    } else await c.query(`UPDATE provider_submission SET cleanup_state=CASE
+      WHEN identity_conflict_at IS NOT NULL THEN 'unresolved'
+      WHEN cleanup_state='none' THEN 'needed' ELSE cleanup_state END WHERE id=$1`,[s.id]);
+  }
+  async function terminal(c,j,now,reason,s) {
+    await cleanup(c,s);
     if (['succeeded','failed'].includes(j.status)) return;
     await c.query(`UPDATE job SET status='failed',failure_reason=$2,fence=fence+1,lease_until=NULL,
       finished_at=$3 WHERE id=$1`,[j.id,reason,now]);
@@ -89,25 +100,57 @@ export function createJobs(pool, config, {trustedClock} = {}) {
     if (!candidate) return false;
     return transaction(pool,async c=>{
       await c.query('SELECT id FROM account WHERE id=$1 FOR UPDATE',[candidate.account_id]);
-      const j=await lockJob(c,id); return action(c,j,await clock(c));
+      const j=await lockJob(c,id),s=await lockSubmission(c,id); return action(c,j,await clock(c),s);
     });
   }
   function reuse(j,input) {
     if (j.request_hash!==input.hash) throw new HttpError(409,'idempotency_conflict');
     return {job_id:j.id};
   }
-  async function expire(c,j,now) {
+  async function expire(c,j,now,s) {
     if (j.deleted_at || !['queued','running'].includes(j.status)) return false;
-    if (now>=j.hard_deadline) { await terminal(c,j,now,'hard_deadline'); return true; }
+    if (now>=j.hard_deadline) { await terminal(c,j,now,'hard_deadline',s); return true; }
+    if (s && now>=s.attempt_deadline) { await terminal(c,j,now,'attempt_deadline',s); return true; }
+    if (s) return hostedInvalid(c,j,s,now);
     if (j.status==='queued' && now>=j.queue_deadline) { await terminal(c,j,now,'queue_expired'); return true; }
     return false;
+  }
+  async function hostedInvalid(c,j,s,now) {
+    const ticket=(await c.query('SELECT * FROM attempt_ticket WHERE id=$1',[s.attempt_ticket_id])).rows[0];
+    const input=(await c.query('SELECT * FROM upload WHERE id=$1 AND account_id=$2',[j.upload_id,j.account_id])).rows[0];
+    let reason;
+    if (s.identity_conflict_at) reason='prediction_identity_conflict';
+    else if (['failed','canceled','aborted'].includes(s.provider_status)) reason='provider_failed';
+    else if (s.state==='preflight' || s.provider!=='replicate' || j.mode!==null ||
+      j.fence<s.submission_fence || j.attempts!==s.attempt_number || j.attempt_deadline?.getTime()!==s.attempt_deadline.getTime() ||
+      !ticket || ticket.job_id!==j.id || ticket.attempt_number!==s.attempt_number ||
+      !ticket.consumed_at || ticket.superseded || (s.attempt_number===1 && j.first_ticket_id!==ticket.id)) reason='submission_binding_mismatch';
+    else if (!input || input.deleted_at || input.sha256!==s.source_input_sha) reason='submission_input_revoked';
+    else if (!s.prediction_id && (s.state==='ambiguous' || s.state==='terminal' || now>=j.lease_until || j.status==='queued')) reason='provider_create_ambiguous';
+    if (!reason) return false;
+    await terminal(c,j,now,reason,s); return true;
+  }
+  const claimView=j=>({job_id:j.id,account_id:j.account_id,upload_id:j.upload_id,style:j.style,
+    fence:j.fence,attempt:j.attempts,attempt_deadline:j.attempt_deadline,hard_deadline:j.hard_deadline,lease_until:j.lease_until});
+  async function reclaim(c,j,now,s) {
+    if (j.deleted_at || !['queued','running'].includes(j.status) || await expire(c,j,now,s)) return null;
+    if (!s.prediction_id || (j.status==='running' && now<j.lease_until)) return null;
+    const deadline=new Date(Math.min(s.attempt_deadline.getTime(),j.hard_deadline.getTime()));
+    const started=(await c.query(`UPDATE job SET status='running',fence=fence+1,heartbeat_at=$2,
+      lease_until=$3 WHERE id=$1 RETURNING *`,[j.id,now,bounded(now,30000,deadline)])).rows[0];
+    return {...claimView(started),provider_recovery:true};
   }
   return {
     // Trusted settlement already owns the account lock. Never open a nested transaction.
     async holdQueued(c,accountId) {
       const rows=(await c.query("SELECT * FROM job WHERE account_id=$1 AND status='queued' ORDER BY id FOR UPDATE",[accountId])).rows;
+      const submissions=[];
+      for(const j of rows)submissions.push(await lockSubmission(c,j.id));
       const now=await clock(c);
-      for(const j of rows)await terminal(c,j,now,'billing_hold');
+      for(let i=0;i<rows.length;i++) {
+        if(submissions[i]) await expire(c,rows[i],now,submissions[i]);
+        else await terminal(c,rows[i],now,'billing_hold');
+      }
     },
     async reserve(accountId,body) {
       requireUuid(accountId); const input=jobInput(body);
@@ -134,13 +177,21 @@ export function createJobs(pool, config, {trustedClock} = {}) {
       // Nonlocking candidate read. No job lock is taken ahead of budget/account locks.
       const now=await clock(pool);
       const candidates=(await pool.query(`SELECT id,account_id FROM job WHERE deleted_at IS NULL AND
-        (status='queued' OR (status='running' AND (lease_until<=$1 OR attempt_deadline<=$1 OR hard_deadline<=$1)))
+        (status='queued' OR (status='running' AND (lease_until<=$1 OR attempt_deadline<=$1 OR hard_deadline<=$1
+          OR EXISTS(SELECT 1 FROM provider_submission s WHERE s.job_id=job.id AND
+            (s.state='ambiguous' OR s.identity_conflict_at IS NOT NULL OR s.provider_status IN ('failed','canceled','aborted'))))))
         ORDER BY created_at,id LIMIT 50`,[now])).rows;
       for (const candidate of candidates) {
-        const result=await budgetTransaction(candidate.account_id,async(c,account,at,utcDay,counts)=>{
-          const j=await lockJob(c,candidate.id);
+        // Hosted recovery never touches daily buckets or allocates a ticket.
+        const recovery=await ownedTransaction(candidate.id,async(c,j,at,s)=>s ? reclaim(c,j,at,s) : 'local');
+        if (recovery!=='local') { if(recovery)return recovery; continue; }
+        const result=await budgetTransaction(candidate.account_id,async(c,account,_at,utcDay,counts)=>{
+          const j=await lockJob(c,candidate.id),s=await lockSubmission(c,candidate.id);
+          const at=await clock(c);
+          if (day(at)!==utcDay) throw new Error('utc_rollover_retry');
           if (!j || j.deleted_at || !['queued','running'].includes(j.status)) return null;
-          if (await expire(c,j,at)) return null;
+          if (s) return reclaim(c,j,at,s);
+          if (await expire(c,j,at,s)) return null;
           if (j.status==='running' && at<j.lease_until && at<j.attempt_deadline) return null;
           if (account.billing_hold) { await terminal(c,j,at,'billing_hold'); return null; }
           if (j.attempts>=2) { await terminal(c,j,at,'retry_limit'); return null; }
@@ -160,17 +211,18 @@ export function createJobs(pool, config, {trustedClock} = {}) {
           const deadline=bounded(at,180000,j.hard_deadline);
           const started=(await c.query(`UPDATE job SET status='running',attempts=attempts+1,fence=fence+1,
             heartbeat_at=$2,attempt_deadline=$3,lease_until=$4 WHERE id=$1 RETURNING *`,[j.id,at,deadline,bounded(at,30000,deadline)])).rows[0];
-          return {job_id:j.id,account_id:j.account_id,upload_id:j.upload_id,style:j.style,fence:started.fence,
-            attempt:started.attempts,attempt_deadline:deadline,hard_deadline:j.hard_deadline,lease_until:started.lease_until};
+          return claimView(started);
         });
         if (result) return result;
       }
       return null;
     },
     async heartbeat(id,fence) {
-      return ownedTransaction(id,async(c,j,now)=>{
+      return ownedTransaction(id,async(c,j,now,s)=>{
+        if (j.fence!==fence) return false;
+        if (await expire(c,j,now,s)) return false;
         if (!live(j,now,fence)) return false;
-        await c.query('UPDATE job SET heartbeat_at=$2,lease_until=$3 WHERE id=$1',[id,now,bounded(now,30000,j.attempt_deadline)]);
+        await c.query('UPDATE job SET heartbeat_at=$2,lease_until=$3 WHERE id=$1',[id,now,bounded(now,30000,new Date(Math.min(j.attempt_deadline.getTime(),j.hard_deadline.getTime())))]);
         return true;
       });
     },
@@ -180,8 +232,12 @@ export function createJobs(pool, config, {trustedClock} = {}) {
       const e={...output.evidence,model_revisions:modelRevisions};
       const canonicalEvidence=canonical({...e,job_id:id,output_key:outputKey,mode});
       const evidenceSha=sha(canonicalEvidence); // Hash before acquiring SQL locks.
-      return ownedTransaction(id,async(c,j,now)=>{
+      return ownedTransaction(id,async(c,j,now,s)=>{
+        if (j.fence!==fence) return false;
+        if (await expire(c,j,now,s)) return false;
         if (!live(j,now,fence)) return false;
+        // I5 must supply an accepted discriminated hosted evidence branch.
+        if (s || (j.mode!==null && j.mode!==mode)) return false;
         const input=(await c.query('SELECT sha256,deleted_at FROM upload WHERE id=$1',[j.upload_id])).rows[0];
         if (input.deleted_at || input.sha256!==e.input_sha) throw new Error('Output input binding mismatch');
         await c.query(`INSERT INTO generation_evidence(job_id,input_sha,output_sha,depth_sha,config_sha,model_revisions,
@@ -195,7 +251,10 @@ export function createJobs(pool, config, {trustedClock} = {}) {
       });
     },
     async fail(id,fence,{retryable=false}={}) {
-      return ownedTransaction(id,async(c,j,now)=>{
+      return ownedTransaction(id,async(c,j,now,s)=>{
+        if (j.fence!==fence || j.deleted_at || !['queued','running'].includes(j.status)) return false;
+        if (await expire(c,j,now,s)) return true;
+        if (s) { await terminal(c,j,now,'worker_failed',s); return true; }
         if (!live(j,now,fence)) return false;
         const held=(await c.query('SELECT billing_hold FROM account WHERE id=$1',[j.account_id])).rows[0].billing_hold;
         if (held || !retryable || j.attempts>=2) await terminal(c,j,now,held?'billing_hold':'worker_failed');
@@ -215,10 +274,12 @@ export function createJobs(pool, config, {trustedClock} = {}) {
       const at=await clock(pool);
       const rows=(await pool.query(`SELECT j.id FROM job j JOIN account a ON a.id=j.account_id WHERE j.deleted_at IS NULL
         AND ((j.status='queued' AND (j.queue_deadline<=$1 OR j.hard_deadline<=$1 OR a.billing_hold))
-          OR (j.status='running' AND (j.lease_until<=$1 OR j.attempt_deadline<=$1 OR j.hard_deadline<=$1)))
+          OR (j.status='running' AND (j.lease_until<=$1 OR j.attempt_deadline<=$1 OR j.hard_deadline<=$1
+            OR EXISTS(SELECT 1 FROM provider_submission s WHERE s.job_id=j.id AND
+              (s.state='ambiguous' OR s.identity_conflict_at IS NOT NULL OR s.provider_status IN ('failed','canceled','aborted'))))))
         ORDER BY j.created_at,j.id LIMIT $2`,[at,limit])).rows;
-      for (const {id} of rows) await ownedTransaction(id,async(c,j,now)=>{
-        if (await expire(c,j,now)) return;
+      for (const {id} of rows) await ownedTransaction(id,async(c,j,now,s)=>{
+        if (await expire(c,j,now,s) || s) return;
         const held=(await c.query('SELECT billing_hold FROM account WHERE id=$1',[j.account_id])).rows[0].billing_hold;
         if (j.status==='queued' && held) await terminal(c,j,now,'billing_hold');
         else if (j.status==='running' && (now>=j.lease_until || now>=j.attempt_deadline)) {
@@ -232,9 +293,9 @@ export function createJobs(pool, config, {trustedClock} = {}) {
       requireUuid(id);
       const j=(await pool.query('SELECT * FROM job WHERE id=$1 AND account_id=$2 AND deleted_at IS NULL',[id,accountId])).rows[0];
       if (!j) throw new HttpError(404,'not_found');
-      await ownedTransaction(id,async(c,current,now)=>{
-        await expire(c,current,now);
-        if (current.status==='queued' && !current.deleted_at &&
+      await ownedTransaction(id,async(c,current,now,s)=>{
+        await expire(c,current,now,s);
+        if (!s && current.status==='queued' && !current.deleted_at &&
             (await c.query('SELECT billing_hold FROM account WHERE id=$1',[accountId])).rows[0].billing_hold) await terminal(c,current,now,'billing_hold');
       });
       const current=(await pool.query('SELECT * FROM job WHERE id=$1 AND account_id=$2 AND deleted_at IS NULL',[id,accountId])).rows[0];
@@ -259,12 +320,15 @@ export function createJobs(pool, config, {trustedClock} = {}) {
       requireUuid(id);
       return transaction(pool,async c=>{
         await c.query('SELECT id FROM account WHERE id=$1 FOR UPDATE',[accountId]);
+        const rows=(await c.query('SELECT * FROM job WHERE upload_id=$1 AND account_id=$2 ORDER BY id FOR UPDATE',[id,accountId])).rows;
+        const submissions=[];
+        for(const j of rows)submissions.push(await lockSubmission(c,j.id));
         const now=await clock(c);
         const updated=await c.query('UPDATE upload SET deleted_at=$3 WHERE id=$1 AND account_id=$2 AND deleted_at IS NULL',[id,accountId,now]);
         if (!updated.rowCount) throw new HttpError(404,'not_found');
-        const rows=(await c.query('SELECT * FROM job WHERE upload_id=$1 AND account_id=$2 ORDER BY id FOR UPDATE',[id,accountId])).rows;
-        for (const j of rows) {
-          await terminal(c,j,now,'deleted');
+        for (let i=0;i<rows.length;i++) {
+          const j=rows[i];
+          await terminal(c,j,now,'deleted',submissions[i]);
           await release(c,j,now);
           await c.query('UPDATE job SET deleted_at=$2,fence=fence+1 WHERE id=$1',[j.id,now]);
         }

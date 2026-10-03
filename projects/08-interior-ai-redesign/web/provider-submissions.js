@@ -122,7 +122,55 @@ export function createProviderSubmissions(pool,config,{trustedClock}={}) {
       const s=await lockSubmission(c,jobId);return action(c,j,s,await clock(c));
     });
   }
+  function checkClaim(claim,j) {
+    uuid(claim?.job_id); uuid(claim?.account_id);
+    if (!j || j.account_id!==claim.account_id || !Number.isInteger(claim.fence) ||
+      j.fence!==claim.fence || j.attempts!==claim.attempt ||
+      j.attempt_deadline?.getTime()!==new Date(claim.attempt_deadline).getTime()) deny('submission_fence_expired');
+  }
+  async function workerLocked(c,j,s,claim) {
+    checkClaim(claim,j);
+    // Account -> job -> submission -> envelope; no buckets for existing work.
+    const budget=s?(await c.query('SELECT * FROM provider_spend_budget WHERE id=$1 FOR UPDATE',[s.spend_budget_id])).rows[0]:null;
+    const now=await clock(c); // In particular AFTER a contended envelope lock.
+    if (!live(j,now,claim.fence)) deny('submission_fence_expired');
+    const input=(await c.query('SELECT id,private_key,sha256,width,height,mime,deleted_at FROM upload WHERE id=$1 AND account_id=$2',
+      [j.upload_id,j.account_id])).rows[0];
+    if (!input || input.deleted_at || (s && input.sha256!==s.source_input_sha)) deny('submission_input_revoked');
+    if (s) {
+      const ticket=(await c.query('SELECT * FROM attempt_ticket WHERE id=$1',[s.attempt_ticket_id])).rows[0];
+      if (s.state==='preflight' || s.identity_conflict_at || s.provider!=='replicate' || j.mode!==null ||
+        ['failed','canceled','aborted'].includes(s.provider_status) || s.submission_fence>j.fence || s.attempt_number!==j.attempts ||
+        s.attempt_deadline.getTime()!==j.attempt_deadline.getTime() ||
+        !ticket || ticket.job_id!==j.id || ticket.attempt_number!==j.attempts || !ticket.consumed_at || ticket.superseded ||
+        (j.attempts===1 && j.first_ticket_id!==ticket.id)) deny('submission_binding_mismatch');
+      if (!budget || budget.revoked_at || now<budget.window_start || now>=budget.window_end ||
+        budget.ceiling_microusd==='0' || BigInt(budget.reserved_microusd)<BigInt(s.spend_reserved_microusd) ||
+        ['model','version','contract_sha',...ACCEPTANCES].some(k=>budget[k]!==s[k]) ||
+        budget.per_create_ceiling_microusd!==s.spend_reserved_microusd) deny('provider_spend_unauthorized');
+      if (!s.prediction_id && s.state!=='submitting') deny('submission_no_replay');
+    } else {
+      const account=(await c.query('SELECT billing_hold FROM account WHERE id=$1',[j.account_id])).rows[0];
+      if (account.billing_hold) deny('submission_billing_hold');
+    }
+    const remaining_ms=Math.min(j.attempt_deadline.getTime(),j.hard_deadline.getTime())-now.getTime();
+    return {claim:{job_id:j.id,account_id:j.account_id,fence:j.fence,attempt:j.attempts,
+      attempt_deadline:j.attempt_deadline,hard_deadline:j.hard_deadline,lease_until:j.lease_until},
+      input,submission:s,db_now:now,remaining_ms};
+  }
   return {
+    // Read-only worker context; never a browser response or a new send permit.
+    workerContext(claim) {return owned(claim?.job_id,(c,j,s)=>workerLocked(c,j,s,claim));},
+    // I2 collaborator bound to the original CAS winner's claim. Recovery uses GET.
+    async finalAuthorize(claim,check) {
+      try {return await owned(claim?.job_id,async(c,j,s)=>{
+        const context=await workerLocked(c,j,s,claim);
+        return !!(s && s.state==='submitting' && !s.prediction_id &&
+          s.submission_fence===claim.fence && check?.submission_id===s.id &&
+          check.job_id===j.id && check.request_sha===s.request_sha && check.version===s.version &&
+          new Date(check.attempt_deadline).getTime()===s.attempt_deadline.getTime() && context.remaining_ms>0);
+      });} catch { return false; } // Exception/uncertain commit is never a send permit.
+    },
     // A true result is the ONLY send authorization, valid only after this wrapper's commit.
     // Never call HTTP inside a client transaction. Any commit uncertainty means no send/replay.
     async authorize(claim,prepared) {

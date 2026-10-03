@@ -1,0 +1,48 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i4a",
+  "attempt_id": "replicate-i4a-1",
+  "source_revision": "64d640622444fe944ac61468ba9820a31f3907ac",
+  "launch_sha256": "6f414f363eefdc2f3030316a12ad1ed3223f59eecac57a95b0b883a2ce3cf244",
+  "started_at": "2026-10-03T09:33:07.654144Z",
+  "updated_at": "2026-10-03T09:52:07.712045+00:00",
+  "stage": "HANDOFF",
+  "status": "completed",
+  "profile": "compact-quality-first-v2",
+  "tier": "XL",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host-resolved actual model/effort, usage and cost unavailable",
+    "Active intervals not separately measured",
+    "Time to accepted result remains unknown until coordinator runtime/review gates"
+  ],
+  "scope": "DB hosted lifecycle and real PG test authorship; worker HTTP/schema/hosted completion excluded",
+  "route": "Accepted XL retained; launch mechanical S lower bound",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No E2E, database or listener execution authorized in writer"
+  },
+  "next_step": "Parent coordinator verifies four-file snapshot, executes dedicated PG16 suites, assigns independent review and concrete corrections if needed",
+  "finished_at": "2026-10-03T09:52:07.712045+00:00",
+  "elapsed_wall_seconds": 1140.057901,
+  "active_wall_seconds": null,
+  "accepted_result_elapsed_seconds": null,
+  "verdict": "implementation_ready_for_runtime_review",
+  "snapshot_sha256": "370b1cf3f98d66ae49e0e23ee462b803eb4146f198dd336ad9238aad01c73afe",
+  "remaining_gates": [
+    "Coordinator real PG16 focused lifecycle suite",
+    "Coordinator real PG16 unchanged I1 cases/legacy migration evidence",
+    "Coordinator existing jobs integration regression",
+    "Fresh independent Astra/high review"
+  ],
+  "next_executor": "Parent coordinator after writer handoff; no background runtime/reviewer launched by writer",
+  "budget_seconds": 1500,
+  "soft_freeze_receipt_target_seconds": 1350,
+  "soft_target_late": false,
+  "fallback_reason": null
+}

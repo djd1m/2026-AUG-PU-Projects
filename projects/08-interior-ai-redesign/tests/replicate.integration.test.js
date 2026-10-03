@@ -4,7 +4,8 @@ import { randomBytes,randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import pg from 'pg';
 import { createPool,transaction } from '../web/db.js';
-import { createJobs } from '../web/jobs.js';
+import { createJobs,jobInput } from '../web/jobs.js';
+import { canonical,sha } from '../web/generation.js';
 import { migrate } from '../scripts/migrate.js';
 import { createProviderSubmissions } from '../web/provider-submissions.js';
 import { fixtureOutput } from './job-fixtures.js';
@@ -49,9 +50,29 @@ test('F07 I1 real PostgreSQL immutable one-shot submission and spend authority',
       const claim=await q.claim();assert.equal(claim.job_id,r.job_id);return claim;
     }
     for(const mode of ['fixture','controlnet']) {
-      const c=await start(),out=fixtureOutput();out.mode=mode;
+      // Explicit OLD-schema seed: current lifecycle requires 007 authority tables.
+      // Keep real pre-007 rows and the exact before/after evidence assertions below.
+      const o=await owner(),id=randomUUID(),ticketId=randomUUID(),out=fixtureOutput();out.mode=mode;
       if(mode==='controlnet')out.evidence.model_revisions={sd:'1'.repeat(40),controlnet:'2'.repeat(40),depth:'3'.repeat(40)};
-      assert.equal(await jobs().complete(c.job_id,c.fence,out),true);
+      const body={upload_id:o.upload,style:'warm',idempotency_key:randomUUID()},e=out.evidence;
+      const ce=canonical({...e,job_id:id,output_key:out.output_key,mode});
+      await transaction(pool,async c=>{
+        await c.query(`INSERT INTO job(id,account_id,upload_id,style,idempotency_key,request_hash,status,fence,attempts,
+          created_at,queue_deadline,hard_deadline,attempt_deadline,output_key,mode,finished_at)
+          VALUES($1,$2,$3,'warm',$4,$5,'succeeded',1,1,$6,$7,$8,$9,$10,$11,$6)`,
+          [id,o.id,o.upload,body.idempotency_key,jobInput(body).hash,now,new Date(+now+60000),new Date(+now+360000),new Date(+now+180000),out.output_key,mode]);
+        await c.query('INSERT INTO attempt_ticket(id,job_id,attempt_number,day,consumed_at) VALUES($1,$2,1,$3,$4)',[ticketId,id,now.toISOString().slice(0,10),now]);
+        await c.query('UPDATE job SET first_ticket_id=$2 WHERE id=$1',[id,ticketId]);
+        for(const [bucket,ownerId] of [['platform','platform'],['account',o.id]])
+          await c.query(`INSERT INTO attempt_budget(bucket,owner,day,count) VALUES($1,$2,$3,1)
+            ON CONFLICT(bucket,owner,day) DO UPDATE SET count=attempt_budget.count+1`,[bucket,ownerId,now.toISOString().slice(0,10)]);
+        await c.query("INSERT INTO credit_ledger(id,account_id,delta,kind,reference,created_at) VALUES($1,$2,-1,'reserve',$3,$4)",[randomUUID(),o.id,id,now]);
+        await c.query(`INSERT INTO generation_evidence(job_id,input_sha,output_sha,depth_sha,config_sha,model_revisions,
+          seed,mode,worker_source_revision,hardware,queue_ms,inference_ms,warm,created_at,canonical_evidence,evidence_sha)
+          VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)`,
+          [id,e.input_sha,e.output_sha,e.depth_sha,e.config_sha,JSON.stringify(e.model_revisions),e.seed,mode,
+            e.worker_source_revision,e.hardware,e.queue_ms,e.inference_ms,e.warm,now,ce,sha(ce)]);
+      });
     }
     const legacy=(await pool.query('SELECT * FROM generation_evidence ORDER BY job_id')).rows;
     await migrate(pool);await migrate(pool);
