@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-03T03:49:11.032777+00:00",
+  "nvidia_device_paths": [],
+  "drm_devices": [
+    {
+      "device": "/sys/class/drm/card0/device",
+      "vendor": "0x1013",
+      "device_id": "0x00b8"
+    }
+  ],
+  "docker_runtime_names": [
+    "io.containerd.runc.v2",
+    "runc"
+  ],
+  "docker_info_exit_code": 0,
+  "cuda_execution": "not_run",
+  "weights_provisioning": "not_performed",
+  "licensed_corpus": "not_provisioned",
+  "spend": 0,
+  "scope": "Read-only device/runtime metadata; absence of nvidia-smi alone is not used as proof"
+}
