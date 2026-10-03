@@ -62,13 +62,13 @@ test('F04B real PostgreSQL public stop and durable local operator polling',async
  try {
   await t.test('B1/B4 generic accessible GET zero business writes; negative GET/POST and strict Origin',async()=>{
    await setup();const token=await capability(),before=await business();const get=await fetch(origin+'/unsubscribe/'+token);
-   assert.equal(get.status,200);assert.equal(get.headers.get('referrer-policy'),'no-referrer');assert.equal(get.headers.get('cache-control'),'no-store');const html=await get.text();assert.match(html,/<button/);assert.ok(!html.includes('@'));assert.equal(await business(),before);
+   assert.equal(get.status,200);assert.equal(get.headers.get('referrer-policy'),'same-origin');assert.equal(get.headers.get('cache-control'),'no-store');const html=await get.text();assert.match(html,/<button/);assert.ok(!html.includes('@'));assert.equal(await business(),before);
    const invalid=[randomBytes(32).toString('base64url'),cookie.split('=')[1]!,await capability(0,new Date(Date.now()-1)),'bad'];
    for(const bad of invalid) {assert.equal((await fetch(origin+'/unsubscribe/'+bad)).status,400);assert.equal((await post(bad)).status,400);assert.equal(await business(),before);}
    assert.equal((await post(token,'confirm=unsubscribe&tenantId='+tenant)).status,400);
-   assert.equal((await post(token,'confirm=unsubscribe',{origin:'https://forged.example'})).status,403);assert.equal(await business(),before);
+   for(const denied of ['null','https://forged.example']) {const response=await post(token,'confirm=unsubscribe',{origin:denied});assert.equal(response.status,403);assert.equal((await response.json()).error.code,'origin_denied');assert.equal(response.headers.get('referrer-policy'),'no-referrer');assert.equal(await business(),before);}
    assert.equal((await fetch(origin+'/api/auth/logout',{method:'POST',headers:{cookie,'content-type':'application/json'},body:'{}'})).status,403);
-   assert.equal((await post(token,'confirm=unsubscribe')).status,200);assert.equal((await post(token)).status,200);
+   assert.equal((await post(token,'confirm=unsubscribe',{origin:config.origin})).status,200);const stopped=await business();assert.equal((await post(token,'confirm=unsubscribe',{origin:config.origin})).status,200);assert.equal(await business(),stopped);assert.equal((await post(token)).status,200);
    assert.equal((await pool.query('SELECT count(*) FROM suppression')).rows[0].count,'1');
    assert.equal((await pool.query('SELECT state FROM send_job WHERE enrollment_id=$1 AND step=1',[sent[0]!.enrollment_id])).rows[0].state,'cancelled');
   });

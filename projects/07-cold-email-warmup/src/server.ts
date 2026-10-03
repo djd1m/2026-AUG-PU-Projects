@@ -83,7 +83,7 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
       if(publicStop) {
         const token=path.slice('/unsubscribe/'.length);
         if(req.method==='GET') {
-          await suppression.confirm(token);res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(confirmationPage);return;
+          await suppression.confirm(token);res.setHeader('Referrer-Policy','same-origin');res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(confirmationPage);return;
         }
         await unsubscribeForm(req);return json(res,200,{data:await suppression.unsubscribe(token),meta:{}});
       }

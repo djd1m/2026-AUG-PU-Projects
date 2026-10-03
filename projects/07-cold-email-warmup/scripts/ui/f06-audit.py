@@ -6,11 +6,12 @@ TRACE=ROOT/'docs/telemetry/features/20261003T023900Z-f06'
 binding=None
 if len(sys.argv)>1:
  receipt_path=pathlib.Path(sys.argv[1]).resolve()
- assert receipt_path==TRACE/'sol-b-r1-image-receipt.json'
+ assert receipt_path in [TRACE/'sol-b-r1-image-receipt.json',TRACE/'sol-b-r2-image-receipt.json']
+ prefix='sol-b-r2' if receipt_path.name=='sol-b-r2-image-receipt.json' else 'sol-b-r1'
  binding=json.loads(receipt_path.read_text())
  assert binding['exact_source_and_build_files'] and binding['image_matches_container']
- assert binding['source_record']=='sol-b-r1-frozen-source.json'
- subprocess.run(['python3',str(ROOT/'scripts/check-f06b-r1-snapshot.py'),'verify'],check=True,capture_output=True)
+ assert binding['source_record']==prefix+'-frozen-source.json'
+ subprocess.run(['env','N7_F06_BINDING_PREFIX='+prefix,'python3',str(ROOT/'scripts/check-f06b-r1-snapshot.py'),'verify'],check=True,capture_output=True)
 source=json.loads((TRACE/(binding['source_record'] if binding else 'sol-b-source.json')).read_text())
 if binding:
  source['revision']=source['source_revision']
@@ -38,7 +39,7 @@ logs=subprocess.check_output(['docker','logs','n7f06a-web-1'],stderr=subprocess.
 logs_leak=any(s in logs for s in secrets)
 classifications=[]
 for p in sorted(TRACE.glob('sol-b-*/checks.json')):
- if p.parent.name=='sol-b-r1-native':continue  # separate narrow native smoke, not full-matrix history
+ if p.parent.name=='sol-b-r1-native' or p.parent.name.startswith('sol-b-r2-unsubscribe-probe-'):continue  # separate narrow native smoke, not full-matrix history
  r=json.loads(p.read_text());http=[]
  for row in r['http']:
   if row['status']>=400:
@@ -50,8 +51,8 @@ for p in sorted(TRACE.glob('sol-b-*/checks.json')):
   console.append({**row,'classification':'expected anonymous initial session lookup' if expected else 'unexpected console error'})
  classifications.append({'attempt':p.parent.name,'http_errors':http,'console_errors':console,'page_errors':r['page_errors'],'requests_failed':[f for f in r['failures'] if f['kind']=='requestfailed'],'failure_summary':r['failures']})
 result={'at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'source_revision':source['revision'],'source_sha256':source['source_sha256'],'source_mismatches':source_bad,'image_id':web['Image'],'build_sha256':build_sha,'build_files':build,'secret_values_suppressed':True,'runtime_secrets_count':len(secrets),'project_files_scanned':len(files),'secret_file_leaks':leaks,'own_web_logs_secret_leak':logs_leak,'credential_canary_web_logs_absent':b'N7_F06B_CREDENTIAL_CANARY' not in logs,'credential_canary_browser_api':'actual credential submission exercised in b2; response-body absence assertion not instrumented before STOP','db_no_host_ports':not any(db['NetworkSettings']['Ports'].values()),'web_loopback_only':web['NetworkSettings']['Ports']['3000/tcp']==[{'HostIp':'127.0.0.1','HostPort':'18709'}],'cpu_limit':web['HostConfig']['NanoCpus']/1e9,'own_network_detached':'n7f06a_network' not in ui['NetworkSettings']['Networks'],'ui_container_running':ui['State']['Running'],'http_console_classification':classifications}
-audit_name='sol-b2-audit.json' if len(sys.argv)>2 and sys.argv[2]=='b2' else ('sol-b-r1-audit.json' if binding else 'sol-b-audit.json')
-assert len(sys.argv)<=2 or sys.argv[2]=='b2'
+audit_name='sol-b-r2-audit.json' if binding and prefix=='sol-b-r2' else 'sol-b2-audit.json' if len(sys.argv)>2 and sys.argv[2]=='b2' else ('sol-b-r1-audit.json' if binding else 'sol-b-audit.json')
+assert len(sys.argv)<=2 or sys.argv[2] in ['b2','b-r2']
 assert not (TRACE/audit_name).exists(), 'allocate fresh audit path; preserve existing audit'
 (TRACE/audit_name).write_text(json.dumps(result,indent=2)+'\n')
 assert not source_bad and not leaks and not logs_leak and result['credential_canary_web_logs_absent']

@@ -1,0 +1,95 @@
+TAP version 13
+# Subtest: F04B real PostgreSQL public stop and durable local operator polling
+    # Subtest: B1/B4 generic accessible GET zero business writes; negative GET/POST and strict Origin
+    ok 1 - B1/B4 generic accessible GET zero business writes; negative GET/POST and strict Origin
+      ---
+      duration_ms: 831.652767
+      type: 'test'
+      ...
+    # Subtest: B1 exact30day expiry boundary and corrupted job binding zero business writes
+    ok 2 - B1 exact30day expiry boundary and corrupted job binding zero business writes
+      ---
+      duration_ms: 426.236942
+      type: 'test'
+      ...
+    # Subtest: B2 concurrent stable tenant-wide suppression and post-lock expiry
+    ok 3 - B2 concurrent stable tenant-wide suppression and post-lock expiry
+      ---
+      duration_ms: 1527.275196
+      type: 'test'
+      ...
+    # Subtest: B3 complaints operator auth, closed absent config, durable dedup bound payload and 0 writes
+    ok 4 - B3 complaints operator auth, closed absent config, durable dedup bound payload and 0 writes
+      ---
+      duration_ms: 571.074563
+      type: 'test'
+      ...
+    # Subtest: B4 concurrent 31st request 429 counts failures and ignores forwarded IP
+    ok 5 - B4 concurrent 31st request 429 counts failures and ignores forwarded IP
+      ---
+      duration_ms: 722.174797
+      type: 'test'
+      ...
+    # Subtest: B2 pool optout globally withdraws intended recipient, preserves sender and in-flight
+    ok 6 - B2 pool optout globally withdraws intended recipient, preserves sender and in-flight
+      ---
+      duration_ms: 506.19145
+      type: 'test'
+      ...
+    # Subtest: B2/B3 actual unsubscribe shared-lock race before final: before0 after1 later0
+    ok 7 - B2/B3 actual unsubscribe shared-lock race before final: before0 after1 later0
+      ---
+      duration_ms: 518.105045
+      type: 'test'
+      ...
+    # Subtest: B2/B3 actual unsubscribe shared-lock race after final: before0 after1 later0
+    ok 8 - B2/B3 actual unsubscribe shared-lock race after final: before0 after1 later0
+      ---
+      duration_ms: 469.848757
+      type: 'test'
+      ...
+    # Subtest: B2/B3 actual complaint shared-lock race before final: before0 after1 later0
+    ok 9 - B2/B3 actual complaint shared-lock race before final: before0 after1 later0
+      ---
+      duration_ms: 409.674756
+      type: 'test'
+      ...
+    # Subtest: B2/B3 actual complaint shared-lock race after final: before0 after1 later0
+    ok 10 - B2/B3 actual complaint shared-lock race after final: before0 after1 later0
+      ---
+      duration_ms: 389.010959
+      type: 'test'
+      ...
+    # Subtest: B5/B6 actual operator CLI durable seed→poll→ReplyStore stops pending; tenant status safe
+    ok 11 - B5/B6 actual operator CLI durable seed→poll→ReplyStore stops pending; tenant status safe
+      ---
+      duration_ms: 2051.892933
+      type: 'test'
+      ...
+    # Subtest: B5 default/missing/failure pause, empty explicit complete, reset and incomplete explicit retry
+    ok 12 - B5 default/missing/failure pause, empty explicit complete, reset and incomplete explicit retry
+      ---
+      duration_ms: 2896.335634
+      type: 'test'
+      ...
+    # Subtest: B5 adapter source 101-tail honest prefix boundary and restart immutable H/tailH
+    ok 13 - B5 adapter source 101-tail honest prefix boundary and restart immutable H/tailH
+      ---
+      duration_ms: 476.22878
+      type: 'test'
+      ...
+    1..13
+ok 1 - F04B real PostgreSQL public stop and durable local operator polling
+  ---
+  duration_ms: 12150.302407
+  type: 'test'
+  ...
+1..1
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12828.19751

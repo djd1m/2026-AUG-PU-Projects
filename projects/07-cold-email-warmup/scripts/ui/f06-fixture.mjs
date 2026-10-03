@@ -1,5 +1,7 @@
 // Trusted operator-only fixture: imports accepted image modules and touches own TEST DB.
 import assert from 'node:assert/strict';
+import { randomBytes } from 'node:crypto';
+import { application } from '/app/dist/server.js';
 import { readFileSync } from 'node:fs';
 import { loadConfig } from '/app/dist/config.js';
 import { createPool } from '/app/dist/db.js';
@@ -19,7 +21,18 @@ try {
  const {tenant,mailbox,campaign}=input;
  if(tenant) assert((await pool.query('SELECT 1 FROM account WHERE tenant_id=$1 AND email LIKE $2',[tenant,'n7-f06b-%@example.test'])).rowCount===1,'owned fixture tenant');
  if(mailbox) assert((await pool.query('SELECT 1 FROM mailbox WHERE tenant_id=$1 AND id=$2',[tenant,mailbox])).rowCount===1);
- if(input.action==='poll') {
+ if(input.action==='unsubscribe-setup') {
+  const app=await application(config,pool,{resolver:async()=>[{address:'8.8.8.8',family:4}]});
+  const email='n7-f06b-'+randomBytes(8).toString('hex')+'@example.test';await app.auth.register(email,randomBytes(24).toString('base64url'));
+  const actor=(await pool.query('SELECT tenant_id,id AS account_id FROM account WHERE email=$1',[email])).rows[0];
+  const box=await app.mailboxes.save(actor.tenant_id,{label:'F06B correction TEST',senderAddress:'sender-f06b@example.test',smtpHost:'smtp.gmail.com',smtpPort:587,imapHost:'imap.gmail.com',imapPort:993,requiredTLS:true,smtpUsername:'N7_F06B_CREDENTIAL_CANARY',smtpPassword:'N7_F06B_CREDENTIAL_CANARY',imapUsername:'N7_F06B_CREDENTIAL_CANARY',imapPassword:'N7_F06B_CREDENTIAL_CANARY'});
+  await app.mailboxes.verify(actor.tenant_id,box.id);
+  const camp=await app.consents.campaign(actor,{steps:[{subject:'F06B form',body:'Local TEST',delayHours:24},{subject:'Next',body:'TEST followup',delayHours:24}],recipients:['desktop','mobile','third'].map(x=>({address:x+'-f06b@example.test',fields:{}}))});
+  await app.consents.act(actor,box.id,{scope:'campaign',action:'grant',affirmative:true,scopeVersion:camp.content_version,campaignId:camp.id,recipientFingerprint:camp.recipient_fingerprint});
+  await seedFixture(pool,actor.tenant_id,box.id,{uidvalidity:'1',uidNext:1,headers:[]});assert.equal((await poll.poll(actor.tenant_id,box.id)).state,'complete');
+  await app.campaigns.start(actor,camp.id,{mailboxIds:[box.id]});
+  result={tenant:actor.tenant_id,mailbox:box.id,campaign:camp.id};
+ } else if(input.action==='poll') {
   await seedFixture(pool,tenant,mailbox,{uidvalidity:'1',uidNext:1,headers:[]});
   result=await poll.poll(tenant,mailbox);assert.equal(result.state,'complete');
  } else if(input.action==='send') {
@@ -44,7 +57,7 @@ try {
  } else if(input.action==='expire') {
   result={expired:(await pool.query("UPDATE session SET expires_at=clock_timestamp()-interval '1 second' WHERE account_id IN(SELECT id FROM account WHERE tenant_id=$1)",[tenant])).rowCount};
  } else if(input.action==='effects') {
-  result={jobs:(await pool.query('SELECT state,count(*)::int FROM send_job WHERE tenant_id=$1 GROUP BY state',[tenant])).rows,consents:(await pool.query('SELECT scope,revoked_at FROM consent WHERE tenant_id=$1',[tenant])).rows,grants:(await pool.query('SELECT count(*)::int AS count FROM billing_entitlement WHERE tenant_id=$1',[tenant])).rows[0].count};
+  result={suppression:(await pool.query('SELECT recipient_hash FROM suppression WHERE tenant_id=$1 ORDER BY recipient_hash',[tenant])).rows,enrollments:(await pool.query('SELECT id,state FROM enrollment WHERE tenant_id=$1 ORDER BY id',[tenant])).rows,jobs:(await pool.query('SELECT state,count(*)::int FROM send_job WHERE tenant_id=$1 GROUP BY state ORDER BY state',[tenant])).rows,consents:(await pool.query('SELECT scope,revoked_at FROM consent WHERE tenant_id=$1',[tenant])).rows,grants:(await pool.query('SELECT count(*)::int AS count FROM billing_entitlement WHERE tenant_id=$1',[tenant])).rows[0].count};
  } else throw new Error('unknown_action');
  console.log(JSON.stringify({ok:true,result}));
 } catch(error) {console.log(JSON.stringify({ok:false,kind:error.name,code:error.code??null}));process.exitCode=1;}

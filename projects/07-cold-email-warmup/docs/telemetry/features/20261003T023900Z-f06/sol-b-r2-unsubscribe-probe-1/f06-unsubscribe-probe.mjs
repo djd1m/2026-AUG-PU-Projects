@@ -46,7 +46,7 @@ try{
   const navigation=page.waitForNavigation();await page.getByRole('button',{name:'Unsubscribe',exact:true}).click();response=await navigation;
   const body=JSON.parse(await page.locator('body').innerText());await page.screenshot({path:dir+(correction?'/'+width+'-form-result.png':'/form-result.png')});
   if(correction){
-   check(width+' native POST200',response.status()===200&&body.data.accepted===true);
+   check(width+' native POST200',response.status()===200&&body.data.state==='suppressed');
    check(width+' native configured Origin',requests.at(-1).method==='POST'&&requests.at(-1).origin_class==='configured');
    const after=await effects();check(width+' suppression added',after.suppression.length===before.suppression.length+1);
    check(width+' queued future job cancelled',after.jobs.find(j=>j.state==='cancelled')?.count===(before.jobs.find(j=>j.state==='cancelled')?.count??0)+1);
