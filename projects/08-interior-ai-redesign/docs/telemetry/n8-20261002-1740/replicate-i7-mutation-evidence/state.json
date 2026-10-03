@@ -1,0 +1,222 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i7-mutation",
+  "source_revision": "d562842454a5e4bfa7d7af0c1d7c27cf1fa31d7e",
+  "launch_path": "/tmp/n8-replicate-i7-mutation/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-mutation-launch.json",
+  "launch_sha256": "331ec20dbb7f118b102393930a156e102f649d57d6f01d9c7431203eac5b02c8",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Provider-resolved model, effort and usage unavailable; pending host metadata"
+  ],
+  "started_at": "2026-10-03T16:24:09.849395+00:00",
+  "stage": "HANDOFF",
+  "status": "completed",
+  "route": {
+    "mechanical_exit": 0,
+    "mechanical_tier": "S",
+    "substantive": "Bounded S correction within inherited approved XL. Runner fixture branch only; production/oracle immutable. No new shared-resource behavior."
+  },
+  "approval": "Inherited approved XL; explicit sole-author correction task",
+  "scope": [
+    "scripts/mutation.js fixture branch",
+    "tests/mutation.test.js focused guards",
+    "docs/features/f07-replicate/i7-mutation-fix.md",
+    "unique replicate-i7-mutation evidence"
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Local runner/quality verification only; no E2E, DB, HTTP, Docker or provider"
+  },
+  "forecast": {
+    "status": "insufficient_data",
+    "seconds": null
+  },
+  "donor": {
+    "path": "docs/telemetry/n8-20261002-1740/replicate-i7-fixture-diagnostic",
+    "compatibility": "partial",
+    "decision": "use historical failure and existing helpers; adapt fixture mutation only"
+  },
+  "acceptance": [
+    "Actual baseline0/mutant1/restored0 with exact existing GEOM-03 strictEqual expected true actual false",
+    "Exact guard count mismatch failclosed, unchanged recognizer rejects infrastructure failures",
+    "Protected tracked bytes identical outside allowed runner/test paths"
+  ],
+  "history": [
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i7-fixture-diagnostic/baseline.log",
+      "sha256": "5739a6df33efb680f7ff71316a6108e63a10d7043b9addcbc764a2eb2d7b8e71"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i7-fixture-diagnostic/mutation.log",
+      "sha256": "1a3cd5ac6b2569b3a2f001b161a8dee24398431701123cc8ee798616d02e670d"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i7-fixture-diagnostic/diagnostic.json",
+      "sha256": "44e2eedbe61fc69e692420fc7dfe2cfd7941755fb194be1bd2c46fb9e15110c2"
+    }
+  ],
+  "history_reason": "Old mutant exit1 was quality_mode_invalid before GEOM-03; inconclusive, not detected",
+  "finished_at": "2026-10-03T16:31:27.453277+00:00",
+  "elapsed_wall_ms": 437604,
+  "active_wall_ms": null,
+  "candidate_diff_sha256": "6efe2b3ff6a3b3a208852c746267edcfdfd1792a8b418a39764f994d1d468fe6",
+  "checks": {
+    "mutation-units": {
+      "command": [
+        "/tmp/n8-node22",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/mutation.test.js"
+      ],
+      "exit_code": 0,
+      "finished_at": "2026-10-03T16:27:42.091110+00:00",
+      "log_sha256": "226a6d7a013404caf0093b22784cf90d51ae82e5144daae36cf5292ff23595ea"
+    },
+    "build": {
+      "command": [
+        "/tmp/n8-node22",
+        "scripts/check.js"
+      ],
+      "exit_code": 0,
+      "finished_at": "2026-10-03T16:28:41.402963+00:00",
+      "log_sha256": "0aec2d6d64684e49007fa69ee2856c2ced7b6631bda52ca8bda26e011b3a9d81"
+    },
+    "diff-check": {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "finished_at": "2026-10-03T16:28:41.421444+00:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "quality-proof": {
+      "kind": "fixture",
+      "source_revision": "d562842454a5e4bfa7d7af0c1d7c27cf1fa31d7e",
+      "started_at": "2026-10-03T16:27:39.255Z",
+      "disposable_directory": "/tmp/n8-i7-fixture-proof-179Gt8",
+      "node_version": "v22.20.0",
+      "source_sha256": "53df3db86de19df36f5ae573b797f9a1f2a94f21e3e36dec46fee1710e69f24c",
+      "oracle_sha256": "baa3049a249b8185515ef5ef0b3204b17141a67de745ba237aaba4e3997b9278",
+      "runner_sha256": "879b05d58e62429492ae850a7ea6a3ae48a555a9276f6451798027fef08e0dcb",
+      "runs": {
+        "baseline": {
+          "command": [
+            "/tmp/n8-node22",
+            "--test-reporter=tap",
+            "tests/quality.test.js"
+          ],
+          "status": 0,
+          "log_sha256": "cf1b3c6db37c2444320b9162b8cce09ab8f03c1a1bb62617c84e9fd57c8609cc"
+        },
+        "mutation": {
+          "command": [
+            "/tmp/n8-node22",
+            "--test-reporter=tap",
+            "tests/quality.test.js"
+          ],
+          "status": 1,
+          "log_sha256": "2f9285105faec2adf926fe8c2cfdc94066f678e51c1543623eb1e079b67a4415"
+        },
+        "restored": {
+          "command": [
+            "/tmp/n8-node22",
+            "--test-reporter=tap",
+            "tests/quality.test.js"
+          ],
+          "status": 0,
+          "log_sha256": "94380cf32ebbbb68478e7b978f24e741f42d9ebffb6d7a1e2065f861205950b2"
+        }
+      },
+      "verdict": "detected",
+      "detected_status": 1,
+      "mutant_sha256": "08bb1d112122f133d08b70a8c9073df56bae9342f8eabd0a933ff99efcabfd04",
+      "targeted_red": true,
+      "restored_green": true,
+      "restored_source_sha256": "53df3db86de19df36f5ae573b797f9a1f2a94f21e3e36dec46fee1710e69f24c",
+      "restored_oracle_sha256": "baa3049a249b8185515ef5ef0b3204b17141a67de745ba237aaba4e3997b9278",
+      "original_source_sha256_after": "53df3db86de19df36f5ae573b797f9a1f2a94f21e3e36dec46fee1710e69f24c",
+      "original_oracle_sha256_after": "baa3049a249b8185515ef5ef0b3204b17141a67de745ba237aaba4e3997b9278",
+      "identical": true,
+      "disposable_removed": true,
+      "finished_at": "2026-10-03T16:27:40.843Z"
+    },
+    "scope-check": {
+      "source_revision": "d562842454a5e4bfa7d7af0c1d7c27cf1fa31d7e",
+      "tracked_files_checked": 2138,
+      "protected_files_checked": 2136,
+      "changed_tracked_paths": [
+        "projects/08-interior-ai-redesign/scripts/mutation.js",
+        "projects/08-interior-ai-redesign/tests/mutation.test.js"
+      ],
+      "untracked_paths": [
+        "projects/08-interior-ai-redesign/docs/features/f07-replicate/i7-mutation-fix.md",
+        "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-mutation-evidence/baseline.log",
+        "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-mutation-evidence/build.json",
+        "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-mutation-evidence/build.log",
+        "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-mutation-evidence/diff-check.json",
+        "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-mutation-evidence/diff-check.log",
+        "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-mutation-evidence/initial-hashes.json",
+        "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-mutation-evidence/mutation-units.json",
+        "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-mutation-evidence/mutation-units.log",
+        "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-mutation-evidence/mutation.log",
+        "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-mutation-evidence/quality-proof.json",
+        "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-mutation-evidence/restored.log",
+        "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-mutation-evidence/state.json",
+        "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i7-mutation-launch.json",
+        "projects/08-interior-ai-redesign/node_modules"
+      ],
+      "violations": [],
+      "initial_snapshot_sha256": "cae36f55c43e27455e1bfc69b2ccf38a24365985588b64eadd5c76c67d2f3415",
+      "status": "pass"
+    }
+  },
+  "bindings": {
+    "scripts/mutation.js": "879b05d58e62429492ae850a7ea6a3ae48a555a9276f6451798027fef08e0dcb",
+    "tests/mutation.test.js": "b9c385fe95da33903557851acbd46bf42829f0728f066f7de11ef7ce3d0b1c6f",
+    "web/quality.js": "53df3db86de19df36f5ae573b797f9a1f2a94f21e3e36dec46fee1710e69f24c",
+    "tests/quality.test.js": "baa3049a249b8185515ef5ef0b3204b17141a67de745ba237aaba4e3997b9278",
+    "tests/quality-fixtures.js": "6fbd7328600eecf58c2245e61e0bc5a7ce76d762ffe05837e3050f8c8d2cd135",
+    "docs/features/f07-replicate/01_specification.md": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+    "docs/features/f07-replicate/03_architecture.md": "c14c88440c537afcb1c09fe4d843c253c3e0ed4e0c904105fc3297e6fe9803b9",
+    "docs/features/f07-replicate/i7-mutation-fix.md": "02957ea0c6a93d8c273a74e8885ff80c124792fb45c074b909ac4335ea6dc406"
+  },
+  "stage_boundaries": [
+    {
+      "stage": "ROUTE/PREPARE",
+      "source": "supplied launch plus local ROUTE before implementation"
+    },
+    {
+      "stage": "IMPLEMENT",
+      "result": "Two exact equivalent fixture-mode rejections bypassed only in disposable mutant"
+    },
+    {
+      "stage": "VERIFY",
+      "result": "Local units and measured quality 0/1/0; protected hashes identical"
+    },
+    {
+      "stage": "HANDOFF",
+      "result": "Frozen scoped artifacts; independent review/integration parent-owned"
+    }
+  ],
+  "pending": [
+    {
+      "item": "Provider actual model/effort/usage/cost",
+      "scope": "host metadata",
+      "reason": "Unavailable to author"
+    },
+    {
+      "item": "Independent review and integration",
+      "scope": "out_of_scope",
+      "reason": "Parent-owned; sole-author/no-delegation contract"
+    }
+  ]
+}

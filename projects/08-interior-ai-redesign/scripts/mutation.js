@@ -18,6 +18,18 @@ const SEND_CAS_GUARDS = [
   ["WHERE id=$1 AND state='preflight' RETURNING *","WHERE id=$1 RETURNING *"],
 ];
 export function mutateSource(source, kind) {
+  if(kind==='fixture') {
+    // Both rejections in requireRealQuality must be bypassed for the unchanged
+    // GEOM-03 assertion to observe acceptance. Keep other invalid modes denied.
+    const guards=[
+      ["if(mode==='fixture')throw new Error('fixture_quality_forbidden');","/* fixture rejection removed */"],
+      ["if(!supportedRealMode(mode))throw new Error('quality_mode_invalid');",
+        "if(mode!=='fixture'&&!supportedRealMode(mode))throw new Error('quality_mode_invalid');"],
+    ];
+    for(const [guard] of guards)
+      if(source.split(guard).length-1!==1)throw new Error('mutation_guard_mismatch');
+    return guards.reduce((text,[guard,replacement])=>text.replace(guard,replacement),source);
+  }
   if(kind==='replicate-send-cas') {
     for(const [guard] of SEND_CAS_GUARDS)
       if(source.split(guard).length-1!==1)throw new Error('mutation_guard_mismatch');

@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: GEOM-03 fixture mutation requires each equivalent mode rejection exactly once
+ok 1 - GEOM-03 fixture mutation requires each equivalent mode rejection exactly once
+  ---
+  duration_ms: 13.511845
+  type: 'test'
+  ...
+# Subtest: GEOM-03 fixture recognizer keeps exact assertion and infrastructure failures inconclusive
+ok 2 - GEOM-03 fixture recognizer keeps exact assertion and infrastructure failures inconclusive
+  ---
+  duration_ms: 280.37482
+  type: 'test'
+  ...
+# Subtest: F04 mutation oracles refuse unrelated assertion, spawn failure and timeout
+ok 3 - F04 mutation oracles refuse unrelated assertion, spawn failure and timeout
+  ---
+  duration_ms: 205.471044
+  type: 'test'
+  ...
+# Subtest: SEC-03 mutation oracle accepts only exact tagged owner assertion and rejects unrelated failures
+ok 4 - SEC-03 mutation oracle accepts only exact tagged owner assertion and rejects unrelated failures
+  ---
+  duration_ms: 493.222766
+  type: 'test'
+  ...
+# Subtest: SEC-03 baseline must pass before source changes; no-op and unexpected guards fail closed
+ok 5 - SEC-03 baseline must pass before source changes; no-op and unexpected guards fail closed
+  ---
+  duration_ms: 168.82796
+  type: 'test'
+  ...
+# Subtest: SEC-03 budget oracle requires exact assertion: expected one admission, actual two
+ok 6 - SEC-03 budget oracle requires exact assertion: expected one admission, actual two
+  ---
+  duration_ms: 283.530241
+  type: 'test'
+  ...
+# Subtest: PAY-02 payment mutation oracle targets only the exact merchant-binding assertion
+ok 7 - PAY-02 payment mutation oracle targets only the exact merchant-binding assertion
+  ---
+  duration_ms: 79.674699
+  type: 'test'
+  ...
+# Subtest: F07 send CAS mutation changes only two exact guards and refuses source drift
+ok 8 - F07 send CAS mutation changes only two exact guards and refuses source drift
+  ---
+  duration_ms: 2.940931
+  type: 'test'
+  ...
+# Subtest: F07 send CAS recognizer accepts only named 1 versus 2 assertion, including nested TAP
+ok 9 - F07 send CAS recognizer accepts only named 1 versus 2 assertion, including nested TAP
+  ---
+  duration_ms: 615.80527
+  type: 'test'
+  ...
+# Subtest: F07 send CAS inconclusive runner restores bytes and preserves three raw logs and hashes
+ok 10 - F07 send CAS inconclusive runner restores bytes and preserves three raw logs and hashes
+  ---
+  duration_ms: 515.030204
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2779.958842

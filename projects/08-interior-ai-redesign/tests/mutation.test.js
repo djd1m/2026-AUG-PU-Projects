@@ -6,6 +6,49 @@ import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { mutateSource, mutationDetected, runTest, verifyMutation } from '../scripts/mutation.js';
 
+test('GEOM-03 fixture mutation requires each equivalent mode rejection exactly once',async()=>{
+  const source=await readFile(new URL('../web/quality.js',import.meta.url),'utf8');
+  const guards=["if(mode==='fixture')throw new Error('fixture_quality_forbidden');",
+    "if(!supportedRealMode(mode))throw new Error('quality_mode_invalid');"];
+  const mutated=mutateSource(source,'fixture');
+  assert.notEqual(mutated,source);
+  assert.throws(()=>mutateSource(mutated,'fixture'),/mutation_guard_mismatch/);
+  for(const guard of guards) {
+    assert.throws(()=>mutateSource(source.replace(guard,''),'fixture'),/mutation_guard_mismatch/);
+    assert.throws(()=>mutateSource(source+'\n'+guard,'fixture'),/mutation_guard_mismatch/);
+  }
+  // Exercise the disposable predicate without importing or changing production.
+  const body=mutated.match(/export function requireRealQuality\(mode\) \{([\s\S]*?)\n\}/)[1];
+  const requireMutantQuality=new Function('mode','supportedRealMode',body);
+  const real=mode=>['controlnet','replicate'].includes(mode);
+  for(const mode of ['fixture','controlnet','replicate'])assert.doesNotThrow(()=>requireMutantQuality(mode,real));
+  for(const mode of ['invalid',undefined,null])assert.throws(()=>requireMutantQuality(mode,real),/quality_mode_invalid/);
+});
+
+test('GEOM-03 fixture recognizer keeps exact assertion and infrastructure failures inconclusive',async()=>{
+  const dir=await mkdtemp(join(tmpdir(),'n8-fixture-oracle-'));
+  const tag='GEOM-03 fixture quality must be rejected with otherwise valid provenance';
+  try {
+    const probe=join(dir,'probe.cjs');
+    await writeFile(probe,`const test=require('node:test');const assert=require('node:assert/strict');
+      test('target',()=>assert.equal(false,true,${JSON.stringify(tag)}));`);
+    const target=runTest(dir,probe,'target.log');
+    assert.equal(target.status,1);assert.equal(mutationDetected('fixture',target),true);
+    for(const bad of [{...target,status:0},{...target,signal:'SIGTERM'},
+      {...target,error:new Error('spawn failed')},{...target,error:new Error('timeout')},
+      {...target,output:target.output.replace(tag,'unrelated assertion')},
+      {...target,output:target.output.replace('expected: true','expected: false')},
+      {...target,output:target.output.replace('actual: false','actual: true')},
+      {...target,output:target.output.replace("operator: 'strictEqual'","operator: 'deepStrictEqual'")},
+      {...target,output:target.output.replace("code: 'ERR_ASSERTION'","code: 'ERR_TEST_FAILURE'")}])
+      assert.equal(mutationDetected('fixture',bad),false);
+    for(const error of ['quality_mode_invalid','database_unavailable']) {
+      await writeFile(probe,`const test=require('node:test');test('infrastructure',()=>{throw new Error(${JSON.stringify(error)});});`);
+      assert.equal(mutationDetected('fixture',runTest(dir,probe,'infrastructure.log')),false);
+    }
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
+
 test('F04 mutation oracles refuse unrelated assertion, spawn failure and timeout',async()=>{
   const source=await readFile(new URL('../web/sharing.js',import.meta.url),'utf8');
   const dir=await mkdtemp(join(tmpdir(),'n8-f04-oracle-'));

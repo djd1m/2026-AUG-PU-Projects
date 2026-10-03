@@ -1,0 +1,51 @@
+{
+  "kind": "fixture",
+  "source_revision": "d562842454a5e4bfa7d7af0c1d7c27cf1fa31d7e",
+  "started_at": "2026-10-03T16:27:39.255Z",
+  "disposable_directory": "/tmp/n8-i7-fixture-proof-179Gt8",
+  "node_version": "v22.20.0",
+  "source_sha256": "53df3db86de19df36f5ae573b797f9a1f2a94f21e3e36dec46fee1710e69f24c",
+  "oracle_sha256": "baa3049a249b8185515ef5ef0b3204b17141a67de745ba237aaba4e3997b9278",
+  "runner_sha256": "879b05d58e62429492ae850a7ea6a3ae48a555a9276f6451798027fef08e0dcb",
+  "runs": {
+    "baseline": {
+      "command": [
+        "/tmp/n8-node22",
+        "--test-reporter=tap",
+        "tests/quality.test.js"
+      ],
+      "status": 0,
+      "log_sha256": "cf1b3c6db37c2444320b9162b8cce09ab8f03c1a1bb62617c84e9fd57c8609cc"
+    },
+    "mutation": {
+      "command": [
+        "/tmp/n8-node22",
+        "--test-reporter=tap",
+        "tests/quality.test.js"
+      ],
+      "status": 1,
+      "log_sha256": "2f9285105faec2adf926fe8c2cfdc94066f678e51c1543623eb1e079b67a4415"
+    },
+    "restored": {
+      "command": [
+        "/tmp/n8-node22",
+        "--test-reporter=tap",
+        "tests/quality.test.js"
+      ],
+      "status": 0,
+      "log_sha256": "94380cf32ebbbb68478e7b978f24e741f42d9ebffb6d7a1e2065f861205950b2"
+    }
+  },
+  "verdict": "detected",
+  "detected_status": 1,
+  "mutant_sha256": "08bb1d112122f133d08b70a8c9073df56bae9342f8eabd0a933ff99efcabfd04",
+  "targeted_red": true,
+  "restored_green": true,
+  "restored_source_sha256": "53df3db86de19df36f5ae573b797f9a1f2a94f21e3e36dec46fee1710e69f24c",
+  "restored_oracle_sha256": "baa3049a249b8185515ef5ef0b3204b17141a67de745ba237aaba4e3997b9278",
+  "original_source_sha256_after": "53df3db86de19df36f5ae573b797f9a1f2a94f21e3e36dec46fee1710e69f24c",
+  "original_oracle_sha256_after": "baa3049a249b8185515ef5ef0b3204b17141a67de745ba237aaba4e3997b9278",
+  "identical": true,
+  "disposable_removed": true,
+  "finished_at": "2026-10-03T16:27:40.843Z"
+}
