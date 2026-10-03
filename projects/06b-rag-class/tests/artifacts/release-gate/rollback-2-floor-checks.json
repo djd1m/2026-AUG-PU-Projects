@@ -1,0 +1,300 @@
+{
+  "run_id": "20261003T064351Z-release-gate",
+  "attempt": "rollback-2-runtime-floor-fix",
+  "base_revision": "689edf2f79232f324dc0f5dda4d3719653154694",
+  "input_runner_sha256": "0c0c9bbd97b66c11401094c17e11b2b1b81836acb4befb1326c2e342a39bcefd",
+  "final_runner_sha256": "199d494dd09eba225f56797edeff2ca3341fd491c41a97f2c9c477589138d770",
+  "profile": "narrow P1 correction; one executor; focused mocks plus mutation",
+  "checks": [
+    {
+      "name": "after_startup_command",
+      "result": "pass",
+      "runner_exit_code": 75,
+      "runtime_verdict": "not_executed",
+      "status": "failed",
+      "blocker": "disk blocker: available=1610612735 bytes; required=1610612736 bytes; shared cleanup forbidden",
+      "disk_samples": 21,
+      "final_free_bytes": 1610612735,
+      "runtime_stages_completed": 0,
+      "owned_cleanup_commands": [
+        "down",
+        "ps",
+        "network",
+        "volume"
+      ],
+      "cleanup": {
+        "owned_stack_started": true,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "terminated_processes": 1,
+      "max_sleep_seconds": 0
+    },
+    {
+      "name": "migration_command",
+      "result": "pass",
+      "runner_exit_code": 75,
+      "runtime_verdict": "not_executed",
+      "status": "failed",
+      "blocker": "disk blocker: available=1610612735 bytes; required=1610612736 bytes; shared cleanup forbidden",
+      "disk_samples": 25,
+      "final_free_bytes": 1610612735,
+      "runtime_stages_completed": 0,
+      "owned_cleanup_commands": [
+        "down",
+        "ps",
+        "network",
+        "volume"
+      ],
+      "cleanup": {
+        "owned_stack_started": true,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "terminated_processes": 1,
+      "max_sleep_seconds": 0
+    },
+    {
+      "name": "worker_wait",
+      "result": "pass",
+      "runner_exit_code": 75,
+      "runtime_verdict": "not_executed",
+      "status": "failed",
+      "blocker": "disk blocker: available=1610612735 bytes; required=1610612736 bytes; shared cleanup forbidden",
+      "disk_samples": 50,
+      "final_free_bytes": 1610612735,
+      "runtime_stages_completed": 0,
+      "owned_cleanup_commands": [
+        "down",
+        "ps",
+        "network",
+        "volume"
+      ],
+      "cleanup": {
+        "owned_stack_started": true,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "terminated_processes": 0,
+      "max_sleep_seconds": 1
+    },
+    {
+      "name": "db_retry_wait",
+      "result": "pass",
+      "runner_exit_code": 75,
+      "runtime_verdict": "not_executed",
+      "status": "failed",
+      "blocker": "disk blocker: available=1610612735 bytes; required=1610612736 bytes; shared cleanup forbidden",
+      "disk_samples": 23,
+      "final_free_bytes": 1610612735,
+      "runtime_stages_completed": 0,
+      "owned_cleanup_commands": [
+        "down",
+        "ps",
+        "network",
+        "volume"
+      ],
+      "cleanup": {
+        "owned_stack_started": true,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "terminated_processes": 0,
+      "max_sleep_seconds": 1
+    },
+    {
+      "name": "web_retry_wait",
+      "result": "pass",
+      "runner_exit_code": 75,
+      "runtime_verdict": "not_executed",
+      "status": "failed",
+      "blocker": "disk blocker: available=1610612735 bytes; required=1610612736 bytes; shared cleanup forbidden",
+      "disk_samples": 74,
+      "final_free_bytes": 1610612735,
+      "runtime_stages_completed": 0,
+      "owned_cleanup_commands": [
+        "down",
+        "ps",
+        "network",
+        "volume"
+      ],
+      "cleanup": {
+        "owned_stack_started": true,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "terminated_processes": 0,
+      "max_sleep_seconds": 1
+    },
+    {
+      "name": "final_stage_command",
+      "result": "pass",
+      "runner_exit_code": 75,
+      "runtime_verdict": "not_executed",
+      "status": "failed",
+      "blocker": "disk blocker: available=1610612735 bytes; required=1610612736 bytes; shared cleanup forbidden",
+      "disk_samples": 172,
+      "final_free_bytes": 1610612735,
+      "runtime_stages_completed": 2,
+      "owned_cleanup_commands": [
+        "down",
+        "ps",
+        "network",
+        "volume"
+      ],
+      "cleanup": {
+        "owned_stack_started": true,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "terminated_processes": 1,
+      "max_sleep_seconds": 1
+    },
+    {
+      "name": "final_guard",
+      "result": "pass",
+      "runner_exit_code": 75,
+      "runtime_verdict": "not_executed",
+      "status": "failed",
+      "blocker": "disk blocker: available=1610612735 bytes; required=1610612736 bytes; shared cleanup forbidden",
+      "disk_samples": 188,
+      "final_free_bytes": 1610612735,
+      "runtime_stages_completed": 3,
+      "owned_cleanup_commands": [
+        "down",
+        "ps",
+        "network",
+        "volume"
+      ],
+      "cleanup": {
+        "owned_stack_started": true,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "terminated_processes": 0,
+      "max_sleep_seconds": 1
+    },
+    {
+      "name": "exact_floor",
+      "result": "pass",
+      "runner_exit_code": 0,
+      "runtime_verdict": "pass",
+      "status": "completed",
+      "blocker": null,
+      "disk_samples": 188,
+      "final_free_bytes": 1610612736,
+      "runtime_stages_completed": 3,
+      "owned_cleanup_commands": [
+        "down",
+        "ps",
+        "network",
+        "volume"
+      ],
+      "cleanup": {
+        "owned_stack_started": true,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "terminated_processes": 0,
+      "max_sleep_seconds": 1
+    },
+    {
+      "name": "stdin_retry",
+      "result": "pass",
+      "runner_exit_code": 0,
+      "runtime_verdict": "pass",
+      "status": "completed",
+      "blocker": null,
+      "disk_samples": 205,
+      "final_free_bytes": 1610612736,
+      "runtime_stages_completed": 3,
+      "owned_cleanup_commands": [
+        "down",
+        "ps",
+        "network",
+        "volume"
+      ],
+      "cleanup": {
+        "owned_stack_started": true,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "terminated_processes": 0,
+      "max_sleep_seconds": 1
+    }
+  ],
+  "mutations": [
+    {
+      "name": "disable_command_monitor",
+      "result": "detected"
+    },
+    {
+      "name": "disable_final_guard",
+      "result": "detected"
+    },
+    {
+      "name": "disable_wait_guard",
+      "result": "detected"
+    }
+  ],
+  "compile": "pass; builtin compile; no bytecode written",
+  "result": "pass",
+  "check_count": 9,
+  "mutation_count": 3,
+  "disk_floor_bytes": 1610612736,
+  "unchanged_thresholds": {
+    "before_build_disk_bytes": 6442450944,
+    "preflight_ram_bytes": 4294967296
+  },
+  "runtime_executed": false,
+  "docker_executed": false,
+  "e2e_preflight": {
+    "status": "not_applicable",
+    "reason": "mock-only correction; actual runtime forbidden"
+  },
+  "model": {
+    "requested": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "actual": null,
+    "reason": "actual model not independently exposed by execution metadata"
+  },
+  "cost": null,
+  "usage": null,
+  "measurement_gaps": [
+    "actual model/effort and usage/cost unavailable",
+    "Docker runtime and actual owned cleanup unexecuted"
+  ],
+  "prior_checks": {
+    "path": "tests/artifacts/release-gate/rollback-2-guard-checks.json",
+    "count": 26,
+    "rerun": false,
+    "reason": "unaffected checks outside narrow correction"
+  },
+  "finished_at": "2026-10-03T17:48:22.403226+00:00",
+  "invariant_checks": {
+    "configuration_ast_vs_base": "identical; CPU=2/internal network/no ports/synthetic config",
+    "manifest_ast_vs_base": "identical; fixed Git build inputs",
+    "reviewed_source_and_runner_hash_handling": "unchanged by this correction",
+    "F14_F15_revisions_and_image_ids": "unchanged by this correction",
+    "git_diff_check": "pass",
+    "file_write_scope": [
+      "tests/artifacts/release-gate/rollback-runner.py",
+      "tests/artifacts/release-gate/rollback-2-floor-checks.json"
+    ]
+  },
+  "started_at": "2026-10-03T17:42:43.363855+00:00",
+  "elapsed_seconds_since_launcher_start": 339.039,
+  "test_method": "Real main/run/runtime_sleep/guard control flow; only subprocesses, disk samples, clock, filesystem side effects, manifest and RAM measurement mocked. No Docker/network.",
+  "fixture_correction": "Initial harness used compose argument offset 7; corrected to 6, then all focused checks and mutations passed. No runner change.",
+  "remaining_runtime": "Actual Docker rollback, container cleanup and runtime acceptance remain unexecuted; outside this correction authorization.",
+  "replay_harness_python": "import contextlib, hashlib, io, json, sys, tarfile, time\nfrom pathlib import Path\nfrom types import SimpleNamespace\nfrom unittest.mock import patch\n\npath = Path('tests/artifacts/release-gate/rollback-runner.py').resolve()\nsource = path.read_text()\nns = {'__file__': str(path), '__name__': 'rollback_floor_test'}\nexec(compile(source, str(path), 'exec'), ns)\nbase = '689edf2f79232f324dc0f5dda4d3719653154694'\nbuffer = io.BytesIO()\nwith tarfile.open(fileobj=buffer, mode='w'):\n    pass\narchive = buffer.getvalue()\nrows = []\n\ndef case(mode, candidate=ns):\n    state = {'now': 0., 'free': candidate['MIN_FREE'], 'builds': 0, 'config': None,\n             'web_starts': 0, 'worker_starts': 0, 'inspect_count': 0, 'sql_count': 0,\n             'commands': [], 'cleanup': [], 'terminated': [], 'sleeps': [], 'result': None,\n             'after_final_inspect': 0, 'disk_samples': 0, 'input_sizes': []}\n    def disk(_):\n        state['disk_samples'] += 1\n        if mode == 'final_guard' and state['inspect_count'] == 3:\n            state['after_final_inspect'] += 1\n            if state['after_final_inspect'] >= 2:\n                state['free'] = candidate['STOP_RESERVE'] - 1\n        return SimpleNamespace(free=state['free'])\n    def sleep(seconds):\n        state['sleeps'].append(seconds)\n        state['now'] += seconds\n        if mode == 'worker_wait' and state['worker_starts']:\n            state['free'] = candidate['STOP_RESERVE'] - 1\n        if mode == 'db_retry_wait' and state['sql_count']:\n            state['free'] = candidate['STOP_RESERVE'] - 1\n        if mode == 'web_retry_wait' and state['web_starts']:\n            state['free'] = candidate['STOP_RESERVE'] - 1\n    def write_text(p, content, *a, **kw):\n        if p.name == 'compose.json':\n            state['config'] = json.loads(content)\n        elif p.name.endswith('-result.json'):\n            state['result'] = json.loads(content)\n        else:\n            raise AssertionError('unexpected file write: '+str(p))\n        return len(content)\n    def dispatch(args, data=None):\n        state['commands'].append(args)\n        if args[:2] == ['git', 'rev-parse']:\n            return base.encode(), 0\n        if args[0] == 'git' and 'archive' in args:\n            return archive, 0\n        if args[:3] == ['docker', 'image', 'inspect']:\n            tag = args[3]\n            for label, (_, web_tag, image) in candidate['VERSIONS'].items():\n                if tag == web_tag:\n                    return image.encode(), 0\n            return ('sha256:mock-'+tag).encode(), 0\n        if args[:2] == ['docker', 'build']:\n            state['builds'] += 1\n            if state['builds'] == 2:\n                state['free'] = candidate['STOP_RESERVE']\n            return b'build', 0\n        if args[0] in ['true', 'bash']:\n            return b'', 0\n        if args[:2] == ['docker', 'compose']:\n            cmd = args[6:]\n            if cmd[:1] == ['config']:\n                return json.dumps(state['config']).encode(), 0\n            if cmd[:1] == ['down']:\n                state['cleanup'].append('down')\n                return b'', 0\n            if cmd[:1] == ['up']:\n                if cmd[-1] == 'web':\n                    state['web_starts'] += 1\n                elif cmd[-1] == 'worker':\n                    state['worker_starts'] += 1\n                return b'', 0\n            if cmd[:1] == ['logs']:\n                return '\u0430\u0440\u0435\u043d\u0434\u0430 \u0437\u0430\u0434\u0430\u0447'.encode(), 0\n            if cmd[:2] == ['ps', '-aq']:\n                return b'web-id\\nworker-id\\n', 0\n            if cmd[:3] == ['exec', '-T', 'db']:\n                state['sql_count'] += 1\n                sql = (data or b'').decode()\n                state['input_sizes'].append(len(data or b''))\n                if sql == 'SELECT 1;' and mode == 'db_retry_wait':\n                    return b'', 1\n                if 'RETURNING id' in sql:\n                    return b'account-id\\n', 0\n                if 'xact_commit' in sql:\n                    return str(state['sql_count'] * 10).encode(), 0\n                if 'count(*)' in sql:\n                    return b'0', 0\n                if 'row_to_json' in sql:\n                    return b'snapshot', 0\n                return b'1', 0\n            if cmd[:3] == ['exec', '-T', 'web'] and mode == 'web_retry_wait':\n                return b'', 1\n            return b'', 0\n        if args[:2] == ['docker', 'inspect']:\n            state['inspect_count'] += 1\n            config = state['config']\n            bindings = []\n            for service in ['web', 'worker']:\n                tag = config['services'][service]['image']\n                image = next(v[2] for v in candidate['VERSIONS'].values() if v[1] == tag) if service == 'web' else 'sha256:mock-'+tag\n                bindings.append({'Name': '/'+config['name']+'-'+service+'-1', 'Id': service+'-id',\n                    'Image': image, 'State': {'Running': True},\n                    'HostConfig': {'NanoCpus': 750000000, 'PortBindings': {}},\n                    'NetworkSettings': {'Networks': {'internal': {}}}})\n            return json.dumps(bindings).encode(), 0\n        if args[0] == 'docker' and '--filter' in args:\n            state['cleanup'].append(args[1])\n            return b'', 0\n        raise AssertionError('unexpected mocked command: '+repr(args[:3]))\n    class Process:\n        def __init__(self, args, **kwargs):\n            self.args = args\n            self.returncode = None\n            self.input = None\n            self.started = False\n        def communicate(self, input=None, timeout=None):\n            if input is not None:\n                self.input = input\n            cmd = self.args[6:] if self.args[:2] == ['docker', 'compose'] else []\n            breach = ((mode == 'after_startup_command' and cmd[:3] == ['exec', '-T', 'db'])\n                      or (mode == 'migration_command' and cmd[:1] == ['run'])\n                      or (mode == 'final_stage_command' and state['web_starts'] == 3 and cmd[:3] == ['exec', '-T', 'web']))\n            if breach and not self.started:\n                self.started = True\n                state['now'] += timeout\n                state['free'] = candidate['STOP_RESERVE'] - 1\n                raise candidate['subprocess'].TimeoutExpired(self.args, timeout)\n            if mode == 'stdin_retry' and cmd[:3] == ['exec', '-T', 'db'] and not self.started:\n                self.started = True\n                state['now'] += timeout\n                raise candidate['subprocess'].TimeoutExpired(self.args, timeout)\n            out, code = dispatch(self.args, self.input)\n            self.returncode = code\n            return out, b''\n        def poll(self):\n            return self.returncode\n        def terminate(self):\n            state['terminated'].append(self.args[:2])\n            self.returncode = -15\n        def kill(self):\n            self.returncode = -9\n    def subprocess_run(args, input=None, **kw):\n        out, code = dispatch(args, input)\n        return SimpleNamespace(returncode=code, stdout=out, stderr=b'')\n    with contextlib.ExitStack() as stack:\n        def mock(target, **kw):\n            return stack.enter_context(patch(target, **kw))\n        mock('sys.argv', new=['runner', '--expected-source', base, '--execute', '--prefix', 'rollback-mock'])\n        mock('shutil.disk_usage', side_effect=disk)\n        mock('shutil.rmtree')\n        mock('tempfile.mkdtemp', return_value='/mock/private')\n        mock('fcntl.flock')\n        mock('builtins.open', return_value=io.StringIO())\n        mock('pathlib.Path.exists', return_value=False)\n        mock('pathlib.Path.mkdir')\n        mock('pathlib.Path.chmod')\n        mock('pathlib.Path.write_bytes', return_value=0)\n        mock('pathlib.Path.write_text', autospec=True, side_effect=write_text)\n        mock('time.monotonic', side_effect=lambda: state['now'])\n        mock('time.sleep', side_effect=sleep)\n        mock('subprocess.Popen', side_effect=Process)\n        mock('subprocess.run', side_effect=subprocess_run)\n        stack.enter_context(patch.dict(candidate, available_ram=lambda: candidate['MIN_RAM'],\n            manifest=lambda revision: {'revision': revision}))\n        with contextlib.redirect_stdout(io.StringIO()):\n            code = candidate['main']()\n    result = state['result']\n    assert result is not None, 'missing result'\n    assert state['cleanup'] == ['down', 'ps', 'network', 'volume'], state['cleanup']\n    assert result['cleanup']['resources_removed'] and result['cleanup']['private_directory_removed'], result['cleanup']\n    if mode in ['exact_floor', 'stdin_retry']:\n        assert code == 0 and result['runtime_verdict'] == 'pass', result\n        assert state['inspect_count'] == 3\n        assert result['status'] == 'completed'\n    else:\n        assert code == 75 and result['status'] == 'failed', result\n        assert result['runtime_verdict'] != 'pass', result\n        assert 'disk blocker' in result['blocker'], result\n        assert state['free'] == candidate['STOP_RESERVE'] - 1\n    if mode == 'final_guard':\n        assert state['inspect_count'] == 3, 'did not reach final guard'\n    if mode == 'final_stage_command':\n        assert state['web_starts'] == 3 and state['terminated'], 'did not monitor final active command'\n    if mode in ['after_startup_command', 'migration_command']:\n        assert state['terminated'], 'active process not terminated'\n    if mode in ['worker_wait', 'db_retry_wait', 'web_retry_wait']:\n        assert state['sleeps'] and max(state['sleeps']) <= 1, 'wait not periodically sampled'\n    return {'name': mode, 'result': 'pass', 'runner_exit_code': code,\n        'runtime_verdict': result['runtime_verdict'], 'status': result['status'],\n        'blocker': result.get('blocker'), 'disk_samples': state['disk_samples'],\n        'final_free_bytes': state['free'], 'runtime_stages_completed': state['inspect_count'],\n        'owned_cleanup_commands': state['cleanup'], 'cleanup': result['cleanup'],\n        'terminated_processes': len(state['terminated']), 'max_sleep_seconds': max(state['sleeps'], default=0)}\n\nfor mode in ['after_startup_command', 'migration_command', 'worker_wait', 'db_retry_wait',\n             'web_retry_wait', 'final_stage_command', 'final_guard', 'exact_floor', 'stdin_retry']:\n    rows.append(case(mode))\nmutations = []\nfor name, old, new, mode in [\n    ('disable_command_monitor', \"monitor_disk=touched and name != 'cleanup-owned-stack'\", \"monitor_disk=False\", 'after_startup_command'),\n    ('disable_final_guard', \"        guard(shutil.disk_usage(ROOT).free, STOP_RESERVE)\\n        result.update\", \"        result.update\", 'final_guard'),\n    ('disable_wait_guard', '            runtime_sleep(7)', '            time.sleep(7)', 'worker_wait')]:\n    assert old in source\n    mutated = {'__file__': str(path), '__name__': 'rollback_floor_mutation'}\n    exec(compile(source.replace(old, new, 1), str(path), 'exec'), mutated)\n    try:\n        case(mode, mutated)\n    except AssertionError:\n        mutations.append({'name': name, 'result': 'detected'})\n    else:\n        raise AssertionError('mutation survived: '+name)\nreport = {\n    'run_id': '20261003T064351Z-release-gate',\n    'attempt': 'rollback-2-runtime-floor-fix',\n    'base_revision': base,\n    'input_runner_sha256': '0c0c9bbd97b66c11401094c17e11b2b1b81836acb4befb1326c2e342a39bcefd',\n    'final_runner_sha256': hashlib.sha256(path.read_bytes()).hexdigest(),\n    'profile': 'narrow P1 correction; one executor; focused mocks plus mutation',\n    'checks': rows, 'mutations': mutations,\n    'compile': 'pass; builtin compile; no bytecode written',\n    'result': 'pass', 'check_count': len(rows), 'mutation_count': len(mutations),\n    'disk_floor_bytes': ns['STOP_RESERVE'],\n    'unchanged_thresholds': {'before_build_disk_bytes': ns['MIN_FREE'], 'preflight_ram_bytes': ns['MIN_RAM']},\n    'runtime_executed': False, 'docker_executed': False,\n    'e2e_preflight': {'status': 'not_applicable', 'reason': 'mock-only correction; actual runtime forbidden'},\n    'model': {'requested': 'gpt-6.1-sol', 'requested_effort': 'high', 'actual': None,\n              'reason': 'actual model not independently exposed by execution metadata'},\n    'cost': None, 'usage': None,\n    'measurement_gaps': ['actual model/effort and usage/cost unavailable', 'Docker runtime and actual owned cleanup unexecuted'],\n    'prior_checks': {'path': 'tests/artifacts/release-gate/rollback-2-guard-checks.json', 'count': 26, 'rerun': False, 'reason': 'unaffected checks outside narrow correction'},\n    'finished_at': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())\n}\nPath('tests/artifacts/release-gate/rollback-2-floor-checks.json').write_text(json.dumps(report, indent=2)+'\\n')\nprint(json.dumps({k: report[k] for k in ['result', 'check_count', 'mutation_count', 'final_runner_sha256']}))\n"
+}

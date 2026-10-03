@@ -44,12 +44,11 @@
     "Preparation before run not measured",
     "review2 CLI timeout before finalresponse; completed sourceassessment preserved, partial counter possible"
   ],
-  "checkpoint_at": "2026-10-03T07:57:51.712690+00:00",
-  "blockers": {
-    "disk_available_bytes": 1126559744,
-    "rollback_safe_headroom_bytes": 6442450944,
-    "headroom_basis": "conservative estimated guard, not measured build consumption",
-    "credentials": "No approved private key provisioning received; scoped N6/secrets prohibition honored",
-    "publicstand": "Explicit owner gate in Completion; no authorization/base provisioning received"
-  }
+  "checkpoint_at": "2026-10-03T18:02:39.934061+00:00",
+  "blockers": [
+    "Rollback firstworkerbuild300s timeout; retry disk below6GiB guard",
+    "NFR200k unexecuted; resource-safe fixture/measurement preparation pending",
+    "Approved private liveprovider key/spend configuration unavailable",
+    "Publicstand deployment authorization absent"
+  ]
 }

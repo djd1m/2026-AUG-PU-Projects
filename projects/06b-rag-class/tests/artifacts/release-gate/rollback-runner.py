@@ -20,7 +20,6 @@ import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[3]
-SOURCE = "86d4b0ceedc348f85f3e65de2ebfb272528b1801"
 VERSIONS = {
     "current": ("b3df79f3c748c426d7eac16717008ccd121eb10e", "n6b-f15-source-management-web:corrected",
                 "sha256:d518d2e9eacfae4b0646aa161253b9edc5a78375b9935b267cdb6d467d220b1e"),
@@ -29,7 +28,9 @@ VERSIONS = {
 }
 MIGRATE = "n6b-f15-source-management-migrate:corrected"
 DB = "pgvector/pgvector:0.8.6-pg16"
-MIN_FREE = 6 * 1024**3  # two builds/deps/prune/export plus DB and 512 MiB stop reserve
+MIN_FREE = 6 * 1024**3  # conservative two-build/deps/export plus DB headroom
+STOP_RESERVE = 1536 * 1024**2  # overall host disk reserve throughout build/runtime
+MIN_RAM = 4 * 1024**3  # conservative available RAM for bounded CPU=2 Node builds/runtime
 BUILD_INPUTS = ["Dockerfile", ".dockerignore", "package.json", "package-lock.json", "apps", "services", "packages",
                 "tsconfig.json", "tsconfig.base.json", "scripts"]
 
@@ -42,23 +43,29 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def run(args, *, data=None, env=None, timeout=30):
-    if env and env.get('DOCKER_BUILDKIT') == '0' and args[:2] == ['docker', 'build']:
-        process = subprocess.Popen(args, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
+def run(args, *, data=None, env=None, timeout=30, monitor_disk=False):
+    build = env and env.get('DOCKER_BUILDKIT') == '0' and args[:2] == ['docker', 'build']
+    if build:
+        guard(shutil.disk_usage(ROOT).free)
+        ram_guard(available_ram())
+    if build or monitor_disk:
+        guard(shutil.disk_usage(ROOT).free, STOP_RESERVE)
+        process = subprocess.Popen(args, cwd=ROOT, stdin=subprocess.PIPE if data is not None else None,
+                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
         until = time.monotonic() + timeout
         try:
             while True:
-                if shutil.disk_usage(ROOT).free < 512*1024**2:
-                    raise RuntimeError('build disk stop reserve reached')
+                guard(shutil.disk_usage(ROOT).free, STOP_RESERVE)
                 if time.monotonic() >= until:
-                    raise RuntimeError('bounded build timeout')
+                    raise RuntimeError('bounded build timeout' if build else 'bounded runtime timeout')
                 try:
-                    stdout, stderr = process.communicate(timeout=min(1, until-time.monotonic()))
+                    stdout, stderr = process.communicate(input=data, timeout=min(1, until-time.monotonic()))
+                    guard(shutil.disk_usage(ROOT).free, STOP_RESERVE)
                     if process.returncode:
-                        raise RuntimeError(f'canonical worker build failed: exit {process.returncode}')
-                    return stdout + stderr
+                        raise RuntimeError(f'{args[0]} operation failed: exit {process.returncode}')
+                    return stdout + stderr if build else stdout
                 except subprocess.TimeoutExpired:
-                    pass
+                    data = None  # communicate retains pending input across retries
         finally:
             if process.poll() is None:
                 process.terminate()
@@ -81,9 +88,58 @@ def image_id(tag):
         return None
 
 
-def guard(free):
-    if free < MIN_FREE:
-        raise RuntimeError(f"disk blocker: available={free} bytes; required={MIN_FREE} bytes; shared cleanup forbidden")
+class DiskReserveError(RuntimeError):
+    """A disk breach must escape ordinary service-readiness retries."""
+
+
+def guard(free, required=MIN_FREE):
+    if free < required:
+        raise DiskReserveError(f"disk blocker: available={free} bytes; required={required} bytes; shared cleanup forbidden")
+
+
+def runtime_sleep(seconds):
+    until = time.monotonic() + seconds
+    while True:
+        guard(shutil.disk_usage(ROOT).free, STOP_RESERVE)
+        remaining = until - time.monotonic()
+        if remaining <= 0:
+            return
+        time.sleep(min(1, remaining))
+
+
+def available_ram():
+    # MemAvailable includes reclaimable memory; MemFree and swap are not substitutes.
+    for line in Path('/proc/meminfo').read_text().splitlines():
+        fields = line.split()
+        if fields and fields[0] == 'MemAvailable:':
+            if len(fields) == 3 and fields[2] == 'kB' and fields[1].isdigit():
+                return int(fields[1]) * 1024
+            break
+    raise RuntimeError('RAM blocker: MemAvailable measurement unavailable')
+
+
+def ram_guard(available):
+    if available < MIN_RAM:
+        raise RuntimeError(f"RAM blocker: available={available} bytes; required={MIN_RAM} bytes")
+
+
+def resources(result, stage, required=MIN_FREE):
+    sample = {'stage': stage, 'measured_at': utc(),
+              'disk_available_bytes': shutil.disk_usage(ROOT).free, 'disk_required_bytes': required,
+              'ram_available_bytes': available_ram(), 'ram_required_bytes': MIN_RAM}
+    result.setdefault('resource_checks', []).append(sample)
+    guard(sample['disk_available_bytes'], required)
+    ram_guard(sample['ram_available_bytes'])
+    return sample
+
+
+def source_guard(expected, runner_sha):
+    actual = run(['git', 'rev-parse', 'HEAD']).decode().strip()
+    if actual != expected:
+        raise RuntimeError(f'source drift: expected={expected}; actual={actual}')
+    if digest(Path(__file__).read_bytes()) != runner_sha:
+        raise RuntimeError('runner SHA drift')
+    return actual
 
 
 def manifest(revision):
@@ -134,8 +190,11 @@ def configuration(stack, private, password):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--execute", action="store_true")
+    parser.add_argument("--expected-source", required=True, help="explicit reviewed full Git HEAD SHA")
     parser.add_argument("--prefix", default="rollback-1")
     args = parser.parse_args()
+    if len(args.expected_source) != 40 or any(c not in '0123456789abcdef' for c in args.expected_source):
+        parser.error('expected source must be a full lowercase Git SHA')
     if not args.prefix.startswith("rollback-") or any(c not in "abcdefghijklmnopqrstuvwxyz0123456789-" for c in args.prefix):
         parser.error("prefix must be a simple rollback-* name")
     output = ROOT / "tests/artifacts/release-gate" / (args.prefix + "-result.json")
@@ -144,10 +203,10 @@ def main():
     started = time.monotonic()
     deadline = started + 840  # final 60s of caller's 900s reserved for handoff
     result = {"run_id": "20261003T064351Z-release-gate", "work_unit_id": "release-gate-local-rollback",
-              "source_revision": SOURCE, "started_at": utc(), "operations": [], "checks": {},
+              "source_revision": args.expected_source, "runner_sha256": digest(Path(__file__).read_bytes()),
+              "started_at": utc(), "operations": [], "checks": {},
               "execute_requested": args.execute, "runtime_verdict": "not_executed", "build_revision": None}
-    private = Path(tempfile.mkdtemp(prefix="n6b-f16-rollback-"))
-    private.chmod(0o700)
+    private = None
     stack = "n6b-f16-rollback-" + secrets.token_hex(4)
     compose = None
     touched = False
@@ -156,7 +215,11 @@ def main():
         entry = {"name": name, "started_at": utc()}
         result["operations"].append(entry)
         try:
-            value = run(command, timeout=min(kwargs.pop("timeout", 30), max(1, deadline-time.monotonic())), **kwargs)
+            if command[:2] == ['docker', 'build'] or (command[:2] == ['docker', 'compose'] and
+                    name.startswith(('start-', 'migrate'))):
+                resources(result, 'before-' + name, MIN_FREE if command[1] == 'build' else STOP_RESERVE)
+            value = run(command, timeout=min(kwargs.pop("timeout", 30), max(1, deadline-time.monotonic())),
+                        monitor_disk=touched and name != 'cleanup-owned-stack', **kwargs)
             entry["exit_code"] = 0
             return value
         except Exception:
@@ -165,7 +228,14 @@ def main():
         finally:
             entry["finished_at"] = utc()
     try:
-        assert run(["git", "rev-parse", "HEAD"]).decode().strip() == SOURCE, "source drift"
+        result['actual_source_revision'] = source_guard(args.expected_source, result['runner_sha256'])
+        sample = resources(result, 'initial-preflight')
+        result['disk'] = {'available_bytes': sample['disk_available_bytes'], 'required_bytes': MIN_FREE,
+                          'stop_reserve_bytes': STOP_RESERVE}
+        result['ram'] = {'available_bytes': sample['ram_available_bytes'], 'required_bytes': MIN_RAM,
+                         'measurement': '/proc/meminfo MemAvailable', 'threshold_basis': 'conservative safety estimate'}
+        private = Path(tempfile.mkdtemp(prefix="n6b-f16-rollback-"))
+        private.chmod(0o700)
         password = {role: secrets.token_hex(24) for role in ["owner", "tenant", "service"]}
         config, path = configuration(stack, private, password)
         compose = ["docker", "compose", "-p", stack, "-f", str(path)]
@@ -175,8 +245,6 @@ def main():
         assert sum(float(normalized['services'][s]['cpus']) for s in ['db', 'web', 'worker']) == 2
         result['checks']['isolation_and_cpu_config'] = "pass; DB=.5 web=.75 worker=.75; migrate+DB=2; no ports"
         operation("port-conflicts", ["bash", str(ROOT.parents[1] / "scripts/check-port-conflicts.sh"), str(path)])
-        result["disk"] = {"available_bytes": shutil.disk_usage(ROOT).free, "required_bytes": MIN_FREE,
-                          "stop_reserve_bytes": 512*1024**2}
         result["images"] = {"migrate": image_id(MIGRATE), "db": image_id(DB)}
         result["sources"] = {}
         for label, (revision, web_tag, expected) in VERSIONS.items():
@@ -186,13 +254,13 @@ def main():
                 "worker_tag": "n6b-f16-rollback-worker:" + label,
                 "worker_id": image_id("n6b-f16-rollback-worker:" + label)}
             result["sources"][label] = manifest(revision)
-        result["preflight"] = {"status": "blocked", "source_revision": SOURCE,
+        result["preflight"] = {"status": "blocked", "source_revision": args.expected_source,
+            "runner_sha256": result['runner_sha256'],
             "build_revision": None, "environment": stack + "; isolated/no ports/private synthetic config",
             "inputs": "exact tested own N6b F14/F15 Git sources; canonical Dockerfile target worker",
-            "command": "python3 tests/artifacts/release-gate/rollback-runner.py --execute --prefix rollback-NEW",
+            "command": "python3 tests/artifacts/release-gate/rollback-runner.py --expected-source " + args.expected_source + " --execute --prefix rollback-NEW",
             "expected_effects": "owned images and ephemeral DB/web/worker; no jobs/provider calls",
             "evidence_root": str(output.parent), "external_actions_executed": False, "e2e_claim": None}
-        guard(result["disk"]["available_bytes"])
         if not args.execute:
             result["preflight"]["reason"] = "resource guard passed; --execute needed for local runtime actions"
             result["status"] = "prepared"
@@ -209,8 +277,10 @@ def main():
                     raise RuntimeError("heavy-operation mutex unavailable within 15s")
                 time.sleep(.2)
         result["lock_acquired_at"] = utc()
+        source_guard(args.expected_source, result['runner_sha256'])
+        resources(result, 'after-mutex-acquire')
         for label, (revision, _, _) in VERSIONS.items():
-            guard(shutil.disk_usage(ROOT).free)
+            resources(result, 'before-context-' + label)
             context = private / label
             context.mkdir()
             archive = run(["git", "-C", str(ROOT.parents[1]), "archive", revision,
@@ -242,8 +312,10 @@ def main():
             try:
                 sql("SELECT 1;")
                 break
+            except DiskReserveError:
+                raise
             except RuntimeError:
-                time.sleep(1)
+                runtime_sleep(1)
         else:
             raise RuntimeError("DB readiness timeout")
         operation("migrate", compose+["run", "--rm", "--no-deps", "migrate"], timeout=60)
@@ -256,15 +328,14 @@ def main():
         snapshot_query = "SELECT row_to_json(a)::text FROM account a ORDER BY id; SELECT row_to_json(b)::text FROM bot b ORDER BY id; SELECT row_to_json(s)::text FROM session s ORDER BY id; SELECT filename FROM schema_migrations ORDER BY filename;"
         snapshot = digest(sql(snapshot_query).encode())
         for label in ['current', 'previous', 'current']:
-            if shutil.disk_usage(ROOT).free < 512*1024**2:
-                raise RuntimeError("disk stop reserve reached")
+            resources(result, 'runtime-stage-' + label, STOP_RESERVE)
             operation("stop-web-worker", compose+["stop", "web", "worker"])
             config['services']['web']['image'] = result['images'][label]['web_tag']
             config['services']['worker']['image'] = result['images'][label]['worker_tag']
             path.write_text(json.dumps(config))
             before = int(sql("SELECT xact_commit FROM pg_stat_database WHERE datname='n6b';"))
             operation("start-worker-"+label, compose+["up", "-d", "--no-deps", "--no-build", "--pull", "never", "worker"])
-            time.sleep(7)
+            runtime_sleep(7)
             logs = operation("worker-logs", compose+["logs", "--no-color", "worker"]).decode()
             assert "аренда задач" in logs and "не прошёл" not in logs and "упала" not in logs
             assert int(sql("SELECT xact_commit FROM pg_stat_database WHERE datname='n6b';"))-before >= 5, "worker query loop not proven"
@@ -275,8 +346,10 @@ def main():
                 try:
                     operation("web-health-session-bootstrap", compose+["exec", "-T", "web", "node", "--input-type=module", "-e", js, token])
                     break
+                except DiskReserveError:
+                    raise
                 except RuntimeError:
-                    time.sleep(1)
+                    runtime_sleep(1)
             else:
                 raise RuntimeError("web readiness/session timeout")
             service_logs = operation('service-log-safety', compose+['logs', '--no-color', 'web', 'worker']).decode()
@@ -288,7 +361,7 @@ def main():
             assert digest(sql(snapshot_query).encode()) == snapshot, "seed/schema/session preservation failure"
             assert sql("SELECT (SELECT count(*) FROM index_job)+(SELECT count(*) FROM model_call_log);") == '0'
             ids = operation("container-ids", compose+["ps", "-aq"]).decode().splitlines()
-            bindings = json.loads(run(["docker", "inspect", *ids]))
+            bindings = json.loads(run(["docker", "inspect", *ids], monitor_disk=True))
             safe = [{"name": c['Name'], "id": c['Id'], "image": c['Image'], "running": c['State']['Running'],
                 "cpu": c['HostConfig']['NanoCpus'], "ports": c['HostConfig']['PortBindings'],
                 "networks": list(c['NetworkSettings']['Networks'])} for c in bindings]
@@ -297,6 +370,7 @@ def main():
                 assert c['running'] and c['image'] == result['images'][label][s+'_id'] and not c['ports']
             result['operations'].append({"name": "runtime-stage-"+label, "finished_at": utc(), "exit_code": 0,
                 "bindings": safe, "seed_schema_session_sha256": snapshot, "jobs": 0, "provider_ledger": 0})
+        guard(shutil.disk_usage(ROOT).free, STOP_RESERVE)
         result.update(status="completed", runtime_verdict="pass")
         return 0
     except Exception as exc:
@@ -314,13 +388,14 @@ def main():
                     assert not run(cmd+['--filter', 'label=com.docker.compose.project='+stack]).strip(), kind+" remains"
             except Exception:
                 cleanup_ok = False
-        shutil.rmtree(private)
+        if private is not None:
+            shutil.rmtree(private)
         if lock:
             fcntl.flock(lock, fcntl.LOCK_UN)
             lock.close()
             result['lock_released_at'] = utc()
         result['cleanup'] = {"owned_stack_started": touched, "resources_removed": cleanup_ok,
-                             "private_directory_removed": not private.exists(), "shared_cleanup": False}
+                             "private_directory_removed": private is None or not private.exists(), "shared_cleanup": False}
         if not cleanup_ok:
             result.update(status="failed", runtime_verdict="failed_cleanup")
         result['finished_at'] = utc()

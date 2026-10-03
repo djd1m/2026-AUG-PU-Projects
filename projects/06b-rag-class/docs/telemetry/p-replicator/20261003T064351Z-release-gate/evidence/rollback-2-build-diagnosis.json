@@ -1,0 +1,15 @@
+{
+  "observed_at": "2026-10-03T18:00:09.280578+00:00",
+  "result": "first canonical worker build exceeded300s; not a test failure",
+  "owned_intermediate_image": "fd4bdbad6e25",
+  "history_last3": [
+    "2026-10-03T17:57:53Z\t/bin/sh -c npm run build\t137MB",
+    "2026-10-03T17:55:23Z\t/bin/sh -c #(nop) COPY dir:358e5951ed46c370a031f8a16e5e46ce3f65226a619268f24e28d79cfb6f3dfb in . \t1.95MB",
+    "2026-10-03T17:54:45Z\t/bin/sh -c npm ci\t965MB"
+  ],
+  "interpretation": "npm ci completed17:54:45; npm run build completed17:57:53; timeout occurred during later image assembly, based on image history; no complete worker tag",
+  "disk_available_bytes": 5903097856,
+  "retry_start_min_bytes": 6442450944,
+  "retry": "blocked until resource guard passes; no threshold lowered",
+  "cleanup": "no own running build container; privatecontextremoved; no sharedprune"
+}

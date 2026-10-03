@@ -1,0 +1,517 @@
+{
+  "run_id": "20261003T064351Z-release-gate",
+  "attempt": "rollback-2-guard-correction",
+  "source_sha": "689edf2f79232f324dc0f5dda4d3719653154694",
+  "runner_sha256": "0c0c9bbd97b66c11401094c17e11b2b1b81836acb4befb1326c2e342a39bcefd",
+  "baseline_runner_sha256": "69c5c96c582b56caa5502f7827cd1e2d2351c6f0813f07f005f0ffd700ee1d13",
+  "checked_at": "2026-10-03T17:36:39.356737+00:00",
+  "check_count": 26,
+  "checks": [
+    {
+      "name": "6 GiB exact floor",
+      "status": "pass"
+    },
+    {
+      "name": "disk below floor",
+      "status": "pass"
+    },
+    {
+      "name": "1.5 GiB exact reserve",
+      "status": "pass"
+    },
+    {
+      "name": "disk below reserve",
+      "status": "pass"
+    },
+    {
+      "name": "4 GiB exact RAM",
+      "status": "pass"
+    },
+    {
+      "name": "RAM below floor",
+      "status": "pass"
+    },
+    {
+      "name": "MemAvailable parser measured kB to bytes",
+      "status": "pass"
+    },
+    {
+      "name": "missing RAM measurement fails closed",
+      "status": "pass"
+    },
+    {
+      "name": "accepted F14/F15 source/tag/image IDs and migrate/DB unchanged",
+      "status": "pass"
+    },
+    {
+      "name": "mock main wrong-source",
+      "status": "pass"
+    },
+    {
+      "name": "mock main low-disk",
+      "status": "pass"
+    },
+    {
+      "name": "mock main low-ram",
+      "status": "pass"
+    },
+    {
+      "name": "mock main lock-disk",
+      "status": "pass"
+    },
+    {
+      "name": "mock main lock-ram",
+      "status": "pass"
+    },
+    {
+      "name": "mock main lock-source",
+      "status": "pass"
+    },
+    {
+      "name": "mock main between-lock-build",
+      "status": "pass"
+    },
+    {
+      "name": "mock main exact-preflight",
+      "status": "pass"
+    },
+    {
+      "name": "mock main runtime-low-reserve",
+      "status": "pass"
+    },
+    {
+      "name": "mock main runtime-exact-reserve",
+      "status": "pass"
+    },
+    {
+      "name": "explicit source works after docs commit without bypass",
+      "status": "pass"
+    },
+    {
+      "name": "build reserve below threshold terminates owned process",
+      "status": "pass"
+    },
+    {
+      "name": "build exact reserve accepted",
+      "status": "pass"
+    },
+    {
+      "name": "RAM rejects before build process creation",
+      "status": "pass"
+    },
+    {
+      "name": "mutation disabled guard",
+      "status": "pass",
+      "mutant_result": "negative control fails on unsafe acceptance"
+    },
+    {
+      "name": "mutation disabled ram_guard",
+      "status": "pass",
+      "mutant_result": "negative control fails on unsafe acceptance"
+    },
+    {
+      "name": "runner SHA drift rejected",
+      "status": "pass"
+    }
+  ],
+  "mock_main_cases": [
+    {
+      "case": "wrong-source",
+      "exit_code": 75,
+      "blocker": "source drift: expected=0000000000000000000000000000000000000000; actual=689edf2f79232f324dc0f5dda4d3719653154694",
+      "resource_checks": [],
+      "cleanup": {
+        "owned_stack_started": false,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "mock_builds": 0,
+      "mock_starts": 0
+    },
+    {
+      "case": "low-disk",
+      "exit_code": 75,
+      "blocker": "disk blocker: available=6442450943 bytes; required=6442450944 bytes; shared cleanup forbidden",
+      "resource_checks": [
+        {
+          "stage": "initial-preflight",
+          "measured_at": "2026-10-03T17:36:39.312724+00:00",
+          "disk_available_bytes": 6442450943,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        }
+      ],
+      "cleanup": {
+        "owned_stack_started": false,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "mock_builds": 0,
+      "mock_starts": 0
+    },
+    {
+      "case": "low-ram",
+      "exit_code": 75,
+      "blocker": "RAM blocker: available=4294967295 bytes; required=4294967296 bytes",
+      "resource_checks": [
+        {
+          "stage": "initial-preflight",
+          "measured_at": "2026-10-03T17:36:39.316574+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967295,
+          "ram_required_bytes": 4294967296
+        }
+      ],
+      "cleanup": {
+        "owned_stack_started": false,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "mock_builds": 0,
+      "mock_starts": 0
+    },
+    {
+      "case": "lock-disk",
+      "exit_code": 75,
+      "blocker": "disk blocker: available=6442450943 bytes; required=6442450944 bytes; shared cleanup forbidden",
+      "resource_checks": [
+        {
+          "stage": "initial-preflight",
+          "measured_at": "2026-10-03T17:36:39.319191+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        },
+        {
+          "stage": "after-mutex-acquire",
+          "measured_at": "2026-10-03T17:36:39.319737+00:00",
+          "disk_available_bytes": 6442450943,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        }
+      ],
+      "cleanup": {
+        "owned_stack_started": false,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "mock_builds": 0,
+      "mock_starts": 0
+    },
+    {
+      "case": "lock-ram",
+      "exit_code": 75,
+      "blocker": "RAM blocker: available=4294967295 bytes; required=4294967296 bytes",
+      "resource_checks": [
+        {
+          "stage": "initial-preflight",
+          "measured_at": "2026-10-03T17:36:39.325226+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        },
+        {
+          "stage": "after-mutex-acquire",
+          "measured_at": "2026-10-03T17:36:39.326037+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967295,
+          "ram_required_bytes": 4294967296
+        }
+      ],
+      "cleanup": {
+        "owned_stack_started": false,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "mock_builds": 0,
+      "mock_starts": 0
+    },
+    {
+      "case": "lock-source",
+      "exit_code": 75,
+      "blocker": "source drift: expected=689edf2f79232f324dc0f5dda4d3719653154694; actual=ffffffffffffffffffffffffffffffffffffffff",
+      "resource_checks": [
+        {
+          "stage": "initial-preflight",
+          "measured_at": "2026-10-03T17:36:39.331105+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        }
+      ],
+      "cleanup": {
+        "owned_stack_started": false,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "mock_builds": 0,
+      "mock_starts": 0
+    },
+    {
+      "case": "between-lock-build",
+      "exit_code": 75,
+      "blocker": "disk blocker: available=6442450943 bytes; required=6442450944 bytes; shared cleanup forbidden",
+      "resource_checks": [
+        {
+          "stage": "initial-preflight",
+          "measured_at": "2026-10-03T17:36:39.334786+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        },
+        {
+          "stage": "after-mutex-acquire",
+          "measured_at": "2026-10-03T17:36:39.335329+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        },
+        {
+          "stage": "before-context-current",
+          "measured_at": "2026-10-03T17:36:39.335341+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        },
+        {
+          "stage": "before-build-worker-current",
+          "measured_at": "2026-10-03T17:36:39.335985+00:00",
+          "disk_available_bytes": 6442450943,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        }
+      ],
+      "cleanup": {
+        "owned_stack_started": false,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "mock_builds": 0,
+      "mock_starts": 0
+    },
+    {
+      "case": "exact-preflight",
+      "exit_code": 0,
+      "blocker": null,
+      "resource_checks": [
+        {
+          "stage": "initial-preflight",
+          "measured_at": "2026-10-03T17:36:39.339098+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        }
+      ],
+      "cleanup": {
+        "owned_stack_started": false,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "mock_builds": 0,
+      "mock_starts": 0
+    },
+    {
+      "case": "runtime-low-reserve",
+      "exit_code": 75,
+      "blocker": "disk blocker: available=1610612735 bytes; required=1610612736 bytes; shared cleanup forbidden",
+      "resource_checks": [
+        {
+          "stage": "initial-preflight",
+          "measured_at": "2026-10-03T17:36:39.342094+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        },
+        {
+          "stage": "after-mutex-acquire",
+          "measured_at": "2026-10-03T17:36:39.342684+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        },
+        {
+          "stage": "before-context-current",
+          "measured_at": "2026-10-03T17:36:39.342697+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        },
+        {
+          "stage": "before-build-worker-current",
+          "measured_at": "2026-10-03T17:36:39.343286+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        },
+        {
+          "stage": "before-context-previous",
+          "measured_at": "2026-10-03T17:36:39.343328+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        },
+        {
+          "stage": "before-build-worker-previous",
+          "measured_at": "2026-10-03T17:36:39.343542+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        },
+        {
+          "stage": "before-start-db",
+          "measured_at": "2026-10-03T17:36:39.343604+00:00",
+          "disk_available_bytes": 1610612735,
+          "disk_required_bytes": 1610612736,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        }
+      ],
+      "cleanup": {
+        "owned_stack_started": true,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "mock_builds": 2,
+      "mock_starts": 0
+    },
+    {
+      "case": "runtime-exact-reserve",
+      "exit_code": 75,
+      "blocker": "injected ordinary startup failure",
+      "resource_checks": [
+        {
+          "stage": "initial-preflight",
+          "measured_at": "2026-10-03T17:36:39.347700+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        },
+        {
+          "stage": "after-mutex-acquire",
+          "measured_at": "2026-10-03T17:36:39.348513+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        },
+        {
+          "stage": "before-context-current",
+          "measured_at": "2026-10-03T17:36:39.348525+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        },
+        {
+          "stage": "before-build-worker-current",
+          "measured_at": "2026-10-03T17:36:39.349106+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        },
+        {
+          "stage": "before-context-previous",
+          "measured_at": "2026-10-03T17:36:39.349253+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        },
+        {
+          "stage": "before-build-worker-previous",
+          "measured_at": "2026-10-03T17:36:39.349544+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        },
+        {
+          "stage": "before-start-db",
+          "measured_at": "2026-10-03T17:36:39.349597+00:00",
+          "disk_available_bytes": 1610612736,
+          "disk_required_bytes": 1610612736,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        }
+      ],
+      "cleanup": {
+        "owned_stack_started": true,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "mock_builds": 2,
+      "mock_starts": 1
+    },
+    {
+      "case": "docs-preflight",
+      "exit_code": 0,
+      "blocker": null,
+      "resource_checks": [
+        {
+          "stage": "initial-preflight",
+          "measured_at": "2026-10-03T17:36:39.352884+00:00",
+          "disk_available_bytes": 6442450944,
+          "disk_required_bytes": 6442450944,
+          "ram_available_bytes": 4294967296,
+          "ram_required_bytes": 4294967296
+        }
+      ],
+      "cleanup": {
+        "owned_stack_started": false,
+        "resources_removed": true,
+        "private_directory_removed": true,
+        "shared_cleanup": false
+      },
+      "mock_builds": 0,
+      "mock_starts": 0
+    }
+  ],
+  "host_ram_measurement": {
+    "available_bytes": 3204648960,
+    "required_bytes": 4294967296,
+    "source": "/proc/meminfo MemAvailable",
+    "threshold_basis": "conservative safety estimate; not measured peak consumption"
+  },
+  "thresholds": {
+    "disk_build_bytes": 6442450944,
+    "disk_overall_reserve_bytes": 1610612736,
+    "ram_preflight_bytes": 4294967296
+  },
+  "docker_operations_executed": false,
+  "runtime_executed": false,
+  "compile": "builtin compile() passed; no bytecode written",
+  "test_method": "stdlib mocks replace runner.run, subprocess.Popen, filesystem mutations and flock; real main/guard control flow",
+  "test_command": "python3 - <<'PY' (focused stdlib mock harness executed inline; cases and measured inputs/results below)",
+  "fixture_correction": "First harness lowered disk after first build rather than after second; corrected fixture, no runner change",
+  "result": "pass"
+}
