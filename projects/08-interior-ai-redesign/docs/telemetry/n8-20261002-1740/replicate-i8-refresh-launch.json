@@ -1,0 +1,19 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i8-refresh",
+  "source_revision": "1f226f0e74cb147a610e8a32e46cbc38592ae1d9",
+  "started_at": "2026-10-03T17:38:58.373103+00:00",
+  "budget_seconds": 480,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "trace_path": "/tmp/n8-replicate-i8-refresh/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-refresh-receipt.md",
+  "scope": "Concrete legacy UI observer race: await predecessor resume handler; preserve exact delete refresh oracle",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "local test-only author; parentactualbrowser"
+  },
+  "external_spend_authorized_usd": 0
+}
