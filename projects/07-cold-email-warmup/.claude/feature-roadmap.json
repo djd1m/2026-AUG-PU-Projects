@@ -99,7 +99,7 @@
       "number": 5,
       "name": "Evidence, local billing, attribution and reports",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "f04-reply-suppression"
@@ -118,14 +118,15 @@
         "FR-GROWTH-004"
       ],
       "sprint": "local-mvp",
-      "current_slice": "F05a local payment and attribution"
+      "current_slice": "F05a/F05b accepted",
+      "accepted_revision": "f0fb8556536381c968973e992d5e06ac0416cd83"
     },
     {
       "id": "f06-cabinet-e2e-delivery",
       "number": 6,
       "name": "Persistent cabinet, full browser and delivery gates",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "planned",
       "complexity": "complex",
       "depends_on": [
         "f05-evidence-billing-growth"
@@ -141,5 +142,5 @@
       "sprint": "local-mvp"
     }
   ],
-  "last_completed": "f04-reply-suppression"
+  "last_completed": "f05-evidence-billing-growth"
 }

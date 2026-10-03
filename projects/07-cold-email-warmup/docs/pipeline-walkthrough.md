@@ -167,3 +167,5 @@ F05b candidate: unit25/type/lint/build0; full initialPG105pass2fail from one fix
 F05b fresh Astra REQUEST_CHANGES (373.944s): F1 primitive enum types and F2 UUID canonical idempotent replay. Exact correction-b-r1.md, prior source/evidence preserved. F06 waits acceptance.
 
 F05b F1/F2 corrected in24b93fe6, author677.513s. FullPG109/unit27/restored11,three exact mutantsRED,canary/sourceimagePASS. Fresh targeted Astra closure next; F06 pending.
+
+F05 accepted12/12 onf0fb8556: fresh Astra293.623s closesF1/F2. Final109PG/unit27/restored11 and80sourceinputs PASS. /next now selects F06cabinet/fullDockerbrowser/docs/PR.

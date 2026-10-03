@@ -1,6 +1,6 @@
 # F05 completion
 
-A1–A6 accepted at9944b189a054afd5e7d08a3238226e1109deeda9 (`review-a.md`); B implementation source provided, runtime and fresh independent acceptance pending until source-bound receipts. Entire F05 accepts only both bounded implementations, fresh reviews and all12AC proof. F06 cabinet/full browser/docs/PR remains mandatory later. No deployment/live billing approval implied.
+A1–A6 accepted at9944b189 (`review-a.md`); B1–B6 accepted after F1/F2 correction atf0fb8556 (`review-b-r1.md`). Entire F05 accepted12/12. Final fullPG109/unit27/restored11, three concrete mutantsRED,canary/sourceimage80inputs PASS. F06 cabinet/full browser/docs/PR remains mandatory. No live SMTP, real charge or deployment approval implied.
 
 ## Criterion coverage
 
@@ -19,4 +19,4 @@ A1–A6 accepted at9944b189a054afd5e7d08a3238226e1109deeda9 (`review-a.md`); B i
 | AC-B5 | tests/evidence-integration.test.ts | B5 own aggregate counts explicit idempotent copy/link and bounded histories |
 | AC-B6 | tests/evidence-integration.test.ts | F05 B1–B6 real PostgreSQL HTTP evidence and public report gates |
 
-Additional HTTP29/30 raw-count/ratio check, current clock after waiting share lock, immutable evidence/whitelist privacy, aggregate cap1000/200/600 and accessible historical HTML are in evidence-integration/unit. Billing conversion2/replay/self/inactive tenant scenarios remain in accepted full regression. Actual commands/exits and immutable source/build/image map belong to `docs/telemetry/features/20261003T010600Z-f05/sol-b-receipt.md`; pending never means pass. No whole-cabinet UX claim.
+Additional HTTP29/30 raw-count/ratio check, current clock after waiting share lock, immutable evidence/whitelist privacy, aggregate cap1000/200/600 and accessible historical HTML are in evidence-integration/unit. Billing conversion2/replay/self/inactive tenant scenarios remain in accepted full regression. Actual commands/exits and immutable source/build/image map belong to `docs/telemetry/features/20261003T010600Z-f05/sol-b-r1-receipt.md` and fresh `astra-b-r1-receipt.md`; pending never means pass. No whole-cabinet UX claim.
