@@ -1,8 +1,8 @@
 # F07 independent PLAN validation
 Spec revision: sha256:2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad
-Verdict: ACCEPT/CLOSED
+Verdict: NEEDS_WORK
 Score: 95/100 (story average after security bonus, no zero floors)
-Source: 8ce5b84d53618a807b8177179a9820b05445e812
+Source: 21561a6b6cdcbd04fb03b3e93ecbc4e2ef79863b
 Run-ID: n8-20261002-1740
 Work-Unit-ID: n8-replicate-validate-1
 Attempt-ID: replicate-validate-1
@@ -10,8 +10,6 @@ Scope: independent /feature Phase 2; five F07 role documents plus replicate-rese
 Requested model/effort: gpt-6-astra/high. Actual model/effort and usage: null, pending host proof.
 
 ## Decision
-
-Closure 2026-10-03 — F07-V01 ACCEPT/CLOSED at source 8ce5b84d53618a807b8177179a9820b05445e812: the corrected direct send-CAS mutation explicitly authorizes a second POST for the same durable submission and must fail the unchanged exactly1-POST oracle; the expired-lease/two-reclaimer recovery race remains a separate regression. See `validation-v01-closure.md` and `../../telemetry/n8-20261002-1740/replicate-v01-review-1-evidence/report-gate.json` for this narrow revalidation and current packaged gates. Initial report preserved byte-for-byte in `validation-report-initial.md`. Score95/100, specification revision, AC/scenario table and BDD remain unchanged. All following original decision/finding/check/source statements are retained as historical validation, not current blockers or new execution claims. No implementation or real-pilot pass is claimed.
 
 The software design is feasible and has no confirmed core algorithm blocker. One required correction to the mandatory mutation recipe prevents unconditional Phase 3 acceptance of this exact plan: F07-V01 below. NEEDS_WORK is narrowly for that contradictory test contract, not absent implementation, live predictions, or conservative availability. Return only that clause for correction; do not redesign the adapter or reopen accepted auth/billing/UI. No paid test is needed to close the finding.
 

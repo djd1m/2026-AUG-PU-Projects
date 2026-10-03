@@ -81,8 +81,8 @@
     "No baseline cost comparison",
     "Host version not exposed"
   ],
-  "current_stage": "replicate_V01_corrected_fresh_closure_next",
-  "last_observed_at": "2026-10-03T06:46:09.212152+00:00",
+  "current_stage": "replicate_PLAN_VALIDATED_I1_preparation",
+  "last_observed_at": "2026-10-03T07:02:39.145386+00:00",
   "actual_models_observed": {
     "native_coordinator": null,
     "f01_coder": "gpt-6.1-sol",
@@ -90,9 +90,10 @@
     "f01_corrector": "gpt-6.1-sol",
     "f02a_coder": "gpt-6.1-sol",
     "replicate_planner": "gpt-6-astra",
-    "replicate_validator": "gpt-6-astra"
+    "replicate_validator": "gpt-6-astra",
+    "replicate_v01_reviewer": "gpt-6-astra"
   },
-  "current_work_unit": "n8-replicate-validate-1",
+  "current_work_unit": "n8-replicate-v01-review",
   "latest_reconciled_at": "2026-10-03T03:55:52.556690+00:00",
   "current_source_revision": "21561a6b6cdcbd04fb03b3e93ecbc4e2ef79863b",
   "stage_evidence_note": "Run passport summary refreshed from source-bound individual receipts. Historical stage receipts/checkcounts retained; no global all-gates pass or modelcost inferred.",
