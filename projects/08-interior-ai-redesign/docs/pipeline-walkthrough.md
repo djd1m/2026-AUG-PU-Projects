@@ -97,3 +97,8 @@ Next is I2 fixed-origin, bounded asynchronous transport, followed by private med
 ## Replicate transition — I2 accepted (2026-10-03)
 
 The one-shot HTTPS adapter passed149 TAP tests (25 top-level,124 nested) and the unchanged2 I1 authority units under Node22. Fresh Astra/high accepted the exact2-file candidate7395d7a5 with zero findings; [i2-review.md](features/f07-replicate/i2-review.md) records the boundaries. Output references remain private internal handles, and no live provider call was made. Sol completed within the1500-second hard bound, but missed the1400-second receipt target by24.7seconds; that failed intermediate receipt remains intact alongside a separate completed immutable-delivery receipt. Next is I3 bounded private media preparation/import.
+
+
+## Replicate transition — I3 accepted (2026-10-03)
+
+Private image preparation/import passed150 affected Node22 TAP tests after independent review found and closed a two-frame APNG bypass in Sharp metadata. The bounded PNG chunk guard now rejects animation before decode; the real CRC-correct fixture fails against old code and passes against the fix. Prior DNS protection mutation also recorded green/red/restored-green. [I3 review](features/f07-replicate/i3-review.md) and [narrow closure](features/f07-replicate/i3-r01-closure.md) retain both the defect and its resolution. Input hashes,512-letterbox transform, same I2 time budget, DNS-pinned delivery and guarded private artifacts are implemented. No real provider request or image quality claim is made. The first author attempt encountered a model-capacity error; its saved code/checks were preserved and a bounded continuation delivered the unchanged artifacts. Next: I4 queue/worker lifecycle and cleanup wiring.
