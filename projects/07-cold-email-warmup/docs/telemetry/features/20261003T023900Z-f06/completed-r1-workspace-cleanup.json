@@ -1,0 +1,53 @@
+{
+  "at": "2026-10-03T04:36:31.791821+00:00",
+  "rows": [
+    {
+      "path": "/tmp/n7-f06b-r1",
+      "revision": "c66061da5b963f91ace4b99749c824bceed5f8c0",
+      "process": {
+        "exit_code": 0,
+        "pid": 2057932,
+        "started_at": "2026-10-03T04:07:30.623988+00:00",
+        "finished_at": "2026-10-03T04:16:49.982754+00:00",
+        "elapsed_seconds": 559.3587456468958
+      },
+      "preserved": "same absolute N7 subtree excluding reproducible dist/deps; accepted integratedsource retained"
+    },
+    {
+      "path": "/tmp/n7-f06b-r1-review",
+      "revision": "bfda7cc2f42b9d23d31b837bf619d30873a7f6e7",
+      "process": {
+        "exit_code": 124,
+        "pid": 2261742,
+        "started_at": "2026-10-03T04:18:32.389855+00:00",
+        "finished_at": "2026-10-03T04:22:32.394157+00:00",
+        "elapsed_seconds": 240.0043788360199
+      },
+      "preserved": "same absolute N7 subtree excluding reproducible dist/deps; accepted integratedsource retained"
+    },
+    {
+      "path": "/tmp/n7-f06a-sol",
+      "revision": "f7dcbd8d5e2286a7056a894638ca032436e08a42",
+      "process": {
+        "exit_code": 0,
+        "pid": 511905,
+        "started_at": "2026-10-03T02:44:18.508304+00:00",
+        "finished_at": "2026-10-03T03:08:18.276990+00:00",
+        "elapsed_seconds": 1439.7686928230105
+      },
+      "preserved": "same absolute N7 subtree excluding reproducible dist/deps; integratedsource retained"
+    },
+    {
+      "path": "/tmp/n7-f06b-resume",
+      "revision": "57cf9319ff5cbe0fd8aa2d99bbe0844db80b63b5",
+      "process": {
+        "exit_code": 0,
+        "pid": 2390821,
+        "started_at": "2026-10-03T04:25:16.471128+00:00",
+        "finished_at": "2026-10-03T04:35:07.229610+00:00",
+        "elapsed_seconds": 590.7585295670433
+      },
+      "preserved": "same absolute N7 subtree excluding reproducible dist/deps; integratedsource retained"
+    }
+  ]
+}
