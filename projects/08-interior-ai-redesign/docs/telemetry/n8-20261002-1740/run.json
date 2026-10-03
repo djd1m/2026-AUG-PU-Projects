@@ -20,7 +20,7 @@
   ],
   "comparison_id": null,
   "baseline_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
-  "final_revision": "02f850f4d67ed2a09ea84efc6ac982f5030b4042",
+  "final_revision": null,
   "spec_sha256": "92674e25074fcda42c930138b7ff03f6ec1671751f802b89800604176023f499",
   "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
   "host": "Codex native collaboration",
@@ -68,7 +68,7 @@
     "findings_measurement_note": "Historical early aggregate counts were limited to prior stage; no exhaustive cross-run recount performed. Individual immutable review receipts are authoritative; finaloneP2docfindingclosed."
   },
   "metrics": {
-    "elapsed_wall_ms": 36744167,
+    "elapsed_wall_ms": null,
     "active_wall_ms": null,
     "tokens": null,
     "cost": null
@@ -81,18 +81,19 @@
     "No baseline cost comparison",
     "Host version not exposed"
   ],
-  "current_stage": "replicate_transition_prepare",
-  "last_observed_at": "2026-10-03T06:18:56.642607+00:00",
+  "current_stage": "replicate_PLAN_delivered_fresh_validation_next",
+  "last_observed_at": "2026-10-03T06:46:09.212152+00:00",
   "actual_models_observed": {
     "native_coordinator": null,
     "f01_coder": "gpt-6.1-sol",
     "f01_reviewer": "gpt-6-astra",
     "f01_corrector": "gpt-6.1-sol",
-    "f02a_coder": "gpt-6.1-sol"
+    "f02a_coder": "gpt-6.1-sol",
+    "replicate_planner": "gpt-6-astra"
   },
-  "current_work_unit": "n8-replicate-transition",
+  "current_work_unit": "n8-replicate-plan-delivery-1",
   "latest_reconciled_at": "2026-10-03T03:55:52.556690+00:00",
-  "current_source_revision": "dfb5d80984a4fdb3ad2abf77933ddcc49a2382cf",
+  "current_source_revision": "e2dded9898d8b00f2fa5613e5f5d3fb63281715b",
   "stage_evidence_note": "Run passport summary refreshed from source-bound individual receipts. Historical stage receipts/checkcounts retained; no global all-gates pass or modelcost inferred.",
   "external_blockers": [
     "F05: no CUDA devices/runtime, safe offlineweights/GPUdependency verification and licensed12x3corpus notprovisioned; geometry/performance unmeasured",
@@ -101,7 +102,7 @@
   ],
   "delivery_artifact_uri": "https://github.com/djd1m/2026-AUG-PU-Projects/tree/feature/08-interior-ai/projects/08-interior-ai-redesign",
   "draft_pr_uri": null,
-  "final_revision_note": "Last pushed source before this terminal metadata commit; product runtime source remains8030270f, reviewed7docs correctionfe2572a7. Final metadata commit will be reported by coordinator separately.",
+  "final_revision_note": "Replicate transition active; earlier terminal revision retained in historical receipts/resumption.",
   "resumption": {
     "observed_at": "2026-10-03T06:18:56.642607+00:00",
     "previous_terminal_state": "blocked",

@@ -1,0 +1,21 @@
+{
+  "url": "https://raw.githubusercontent.com/replicate/controlnet/main/gradio_depth2image.py",
+  "status": 200,
+  "sha256": "6cf453de3343b8085d558df8ce6cb692dd9f3dd1f03678a58badacfd229761b2",
+  "relevant_lines": [
+    "11: from annotator.util import resize_image, HWC3",
+    "13: from cldm.model import create_model, load_state_dict",
+    "14: from ldm.models.diffusion.ddim import DDIMSampler",
+    "16: def process_depth(input_image, prompt, a_prompt, n_prompt, num_samples, image_resolution, detect_resolution, ddim_steps, scale, seed, eta, model, ddim_sampler):",
+    "19:         detected_map, _ = apply_midas(resize_image(input_image, detect_resolution))",
+    "20:         detected_map = HWC3(detected_map)",
+    "21:         img = resize_image(input_image, image_resolution)",
+    "24:         detected_map = cv2.resize(detected_map, (W, H), interpolation=cv2.INTER_LINEAR)",
+    "26:         control = torch.from_numpy(detected_map.copy()).float().cuda() / 255.0",
+    "32:         cond = {\"c_concat\": [control], \"c_crossattn\": [model.get_learned_conditioning([prompt + ', ' + a_prompt] * num_samples)]}",
+    "33:         un_cond = {\"c_concat\": [control], \"c_crossattn\": [model.get_learned_conditioning([n_prompt] * num_samples)]}",
+    "40:         x_samples = model.decode_first_stage(samples)",
+    "43:         results = [x_samples[i] for i in range(num_samples)]",
+    "44:     return [detected_map] + results"
+  ]
+}

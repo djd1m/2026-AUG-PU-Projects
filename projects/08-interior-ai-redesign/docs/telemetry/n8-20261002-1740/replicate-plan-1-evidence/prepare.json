@@ -1,0 +1,47 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-plan-1",
+  "attempt_id": "replicate-plan-1",
+  "stage": "PLAN",
+  "started_at": "2026-10-03T06:26:12Z",
+  "recorded_at": "2026-10-03T06:28:55.665755+00:00",
+  "source": "e2dded9898d8b00f2fa5613e5f5d3fb63281715b",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "missing_data": "No provider-resolved host metadata or usage supplied",
+  "profile": "compact-balanced-v1; owner-requested Astra plan / Sol6.1 implementation / fresh Astra review",
+  "route": {
+    "tier": "XL",
+    "exit_code": 1,
+    "reason": "Paid external API and private media boundary; durable side-effect ambiguity"
+  },
+  "scope": "Five feature SPARC roles, official research, own evidence and receipt only",
+  "exclusions": [
+    "product code",
+    "canonical docs",
+    "paid calls",
+    "delegation",
+    "build/browser",
+    "run.json/events.jsonl"
+  ],
+  "approval": "docs/decisions-owner.md 2026-10-03; plan continuation authorized, spend ceiling 0",
+  "donors": "Accepted local queue/credits/fence/media/UI retained; CUDA model manifest cannot serve as hosted provenance",
+  "forecast": {
+    "status": "insufficient_data",
+    "elapsed_estimate": null,
+    "hard_attempt_seconds": 900,
+    "write_by_seconds": 850
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Planning only; no hosted adapter build exists"
+  },
+  "route_inputs": [
+    "web/replicate.js",
+    "web/jobs.js",
+    "db/007-replicate.sql",
+    "docs/Architecture.md"
+  ]
+}

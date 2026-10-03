@@ -1,0 +1,32 @@
+{
+  "url": "https://raw.githubusercontent.com/replicate/controlnet/main/predict.py",
+  "status": 200,
+  "sha256": "57c9402c27a8c828a8f483c558e838735666f14762ab349294cb573c7bec57ad",
+  "relevant_lines": [
+    "7: from cldm.model import create_model, load_state_dict",
+    "8: from ldm.models.diffusion.ddim import DDIMSampler",
+    "12: from utils import get_state_dict_path, download_model, model_dl_urls, annotator_dl_urls",
+    "35:         \"\"\"Load the model into memory to make running multiple predictions efficient\"\"\"",
+    "36:         self.model = create_model('./models/cldm_v15.yaml').cuda()",
+    "37:         self.model.load_state_dict(load_state_dict(get_state_dict_path(MODEL_TYPE), location='cuda'))",
+    "38:         self.ddim_sampler = DDIMSampler(self.model)",
+    "43:         prompt: str = Input(description=\"Prompt for the model\"),",
+    "54:         low_threshold: int = Input(description=\"Canny line detection low threshold\", default=100, ge=1, le=255), # only applicable when model type is 'canny'",
+    "55:         high_threshold: int = Input(description=\"Canny line detection high threshold\", default=200, ge=1, le=255), # only applicable when model type is 'canny'",
+    "62:         detect_resolution: int = Input(description=\"Resolution at which detection method will be applied)\", default=512, ge=128, le=1024), # only applicable when model type is 'HED', 'seg', or 'MLSD'",
+    "63:         # bg_threshold: float = Input(description=\"Background Threshold (only applicable when model type is 'normal')\", default=0.0, ge=0.0, le=1.0), # only applicable when model type is 'normal'",
+    "64:         # value_threshold: float = Input(description=\"Value Threshold (only applicable when model type is 'MLSD')\", default=0.1, ge=0.01, le=2.0), # only applicable when model type is 'MLSD'",
+    "65:         # distance_threshold: float = Input(description=\"Distance Threshold (only applicable when model type is 'MLSD')\", default=0.1, ge=0.01, le=20.0), # only applicable when model type is 'MLSD'",
+    "67:         \"\"\"Run a single prediction on the model\"\"\"",
+    "94:                 self.model,",
+    "110:                 self.model,",
+    "126:                 self.model,",
+    "142:                 self.model,",
+    "160:                 self.model,",
+    "175:                 self.model,",
+    "191:                 self.model,",
+    "207:                 self.model,",
+    "215:         # return paths to output files",
+    "216:         return [Path(f\"tmp/output_{i}.png\") for i in range(len(outputs))]"
+  ]
+}

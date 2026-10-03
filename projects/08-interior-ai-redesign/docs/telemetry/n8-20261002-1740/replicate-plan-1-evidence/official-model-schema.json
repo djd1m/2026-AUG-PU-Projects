@@ -1,0 +1,114 @@
+{
+  "url": "https://replicate.com/jagilley/controlnet-depth2img",
+  "verified_at": "2026-10-03T06:29:51.446467+00:00",
+  "page_sha256": "624188b7d849b48fd8417a90d4e52f838d0437168d60d7a8cb83fe1f1686eb51",
+  "version": "922c7bb67b87ec32cbc2fd11b1d5f94f0ba4f5519c4dbd02856376444127cc60",
+  "input": {
+    "type": "object",
+    "title": "Input",
+    "required": [
+      "image",
+      "prompt"
+    ],
+    "properties": {
+      "eta": {
+        "type": "number",
+        "title": "Eta",
+        "default": 0,
+        "x-order": 7,
+        "description": "eta (DDIM)"
+      },
+      "seed": {
+        "type": "integer",
+        "title": "Seed",
+        "x-order": 6,
+        "description": "Seed"
+      },
+      "image": {
+        "type": "string",
+        "title": "Image",
+        "format": "uri",
+        "x-order": 0,
+        "description": "Input image"
+      },
+      "scale": {
+        "type": "number",
+        "title": "Scale",
+        "default": 9,
+        "maximum": 30,
+        "minimum": 0.1,
+        "x-order": 5,
+        "description": "Guidance Scale"
+      },
+      "prompt": {
+        "type": "string",
+        "title": "Prompt",
+        "x-order": 1,
+        "description": "Prompt for the model"
+      },
+      "a_prompt": {
+        "type": "string",
+        "title": "A Prompt",
+        "default": "best quality, extremely detailed",
+        "x-order": 8,
+        "description": "Added Prompt"
+      },
+      "n_prompt": {
+        "type": "string",
+        "title": "N Prompt",
+        "default": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality",
+        "x-order": 9,
+        "description": "Negative Prompt"
+      },
+      "ddim_steps": {
+        "type": "integer",
+        "title": "Ddim Steps",
+        "default": 20,
+        "x-order": 4,
+        "description": "Steps"
+      },
+      "num_samples": {
+        "enum": [
+          "1",
+          "4"
+        ],
+        "type": "string",
+        "title": "num_samples",
+        "description": "Number of samples (higher values may OOM)",
+        "default": "1",
+        "x-order": 2
+      },
+      "image_resolution": {
+        "enum": [
+          "256",
+          "512",
+          "768"
+        ],
+        "type": "string",
+        "title": "image_resolution",
+        "description": "Image resolution to be generated",
+        "default": "512",
+        "x-order": 3
+      },
+      "detect_resolution": {
+        "type": "integer",
+        "title": "Detect Resolution",
+        "default": 512,
+        "maximum": 1024,
+        "minimum": 128,
+        "x-order": 10,
+        "description": "Resolution for detection)"
+      }
+    }
+  },
+  "output": {
+    "type": "array",
+    "items": {
+      "type": "string",
+      "format": "uri"
+    },
+    "title": "Output"
+  },
+  "price_advertised": "$0.0014 per second",
+  "license_url": "https://github.com/replicate/controlnet/blob/main/LICENSE"
+}

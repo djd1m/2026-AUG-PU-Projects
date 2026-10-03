@@ -1,0 +1,17 @@
+{
+  "original": {
+    "exit_code": 124,
+    "elapsed_seconds": 900.001707879,
+    "receipt": "absent",
+    "runtime": "replicate-plan-1-runtime.json"
+  },
+  "delivery": {
+    "exit_code": 0,
+    "elapsed_seconds": 103.661154475,
+    "receipt": "replicate-plan-delivery-1-receipt.md",
+    "runtime": "replicate-plan-delivery-1-runtime.json",
+    "gate": "PASS"
+  },
+  "accounting": "Same resumed thread: delivery total raw usage cumulative; count last total once, do not sum original and resumed. Cost null.",
+  "verdict": "Plan delivered, independent validation pending"
+}
