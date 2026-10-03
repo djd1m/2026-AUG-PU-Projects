@@ -64,3 +64,11 @@ The CLI must capture the substantive final answer to the fresh absolute receipt 
 ## Coordinator full regression
 
 Final frozen 10-file snapshot verified against immutable runner: typecheck, 569 unit, 240 real PostgreSQL tests and production build passed. Production web and migration images built successfully. Browser acceptance remains pending. See final-checks-summary.json and tested-source-final.json.
+
+## Приёмка координатора — 2026-10-03T02:08:52.350219+00:00
+
+MET-01..06 приняты на dbd68a6862e17bb1a01e7659d0d3686b8cd4cf05; snapshot 64b0dfee0301396933be83924350d54ca9287f4a5e682f42c1a226198b066800. Полный Node22 typecheck/569unit/240PG/build0,10 host/image hashes совпали. Независимое Astra ACCEPT_WITH_CAVEATS; row locks после успешного UPDATE сохраняются до commit bounded batch, исходная неточная формулировка автора исправлена отдельным приложением.
+
+Actual production Docker browser 1440/390, six screenshots: real viewer/operator login, anonymous and ordinary account 404, operator dashboard 200/no-store, seeded expected counts, foreign Origin 403, real verify POST 202 and metrics refresh, no overflow or JavaScript errors. UI1/2 stopped after hanging waiter; UI3 identified Playwright response.json timeout despite separate real HTTPS complete JSON. Failed artifacts preserved. Accepted UI4 asserts real HTTP202, visible status and persisted DB outcome without reading response body through Playwright; production code/images unchanged. Exact browser internals not claimed. Positive verified counts are seeded disposable DB fixtures, not live external-page acceptance. Pending source-verify.test remains unverified after actual callback; lease released. No response mocks, paid calls or transport bypass. Own stack/network/contexts/private environment removed, shared browser retained.
+
+Две actual native модели Sol6.1high/Astra medium; CLI subtotal 2503209 tokens, elapsed 3301299 ms; coordinator/cost unknown. Следующая фича demo-page.

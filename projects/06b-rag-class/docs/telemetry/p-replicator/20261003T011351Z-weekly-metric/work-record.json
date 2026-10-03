@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "implement",
+  "stage": "delivered",
   "roots": {
     "project": "."
   },
   "identity": {
     "run_id": "20261003T011351Z-weekly-metric",
     "work_unit_id": "weekly-metric-feature",
-    "current_attempt_id": "full-regression-1"
+    "current_attempt_id": "delivery-1"
   },
   "telemetry": {
     "run": {
@@ -22,8 +22,8 @@
   },
   "source": {
     "baseline_revision": "b6e1a4dca1fe96eebe5dd24ff0534888594747c6",
-    "current_revision": "d25e6141b3b43569281c85f95a6a6313f71f8c07",
-    "build_revision": null,
+    "current_revision": "dbd68a6862e17bb1a01e7659d0d3686b8cd4cf05",
+    "build_revision": "sha256:7779a9cbce2394b93ddf162714277ec3311fb3e55fd85ae1ab9129232e03c015",
     "requirements": [
       {
         "root": "project",
@@ -45,8 +45,8 @@
       }
     ],
     "continuity": {
-      "expected_revision": "d25e6141b3b43569281c85f95a6a6313f71f8c07",
-      "observed_revision": "d25e6141b3b43569281c85f95a6a6313f71f8c07",
+      "expected_revision": "dbd68a6862e17bb1a01e7659d0d3686b8cd4cf05",
+      "observed_revision": "dbd68a6862e17bb1a01e7659d0d3686b8cd4cf05",
       "reconciliation": null
     }
   },
@@ -154,10 +154,37 @@
     "evidence": null
   },
   "preflight": {
-    "status": "not_applicable",
-    "reason": "Implementation not yet E2E; immutable build pending",
+    "status": "ready",
+    "source_revision": "dbd68a6862e17bb1a01e7659d0d3686b8cd4cf05",
+    "build_revision": "sha256:7779a9cbce2394b93ddf162714277ec3311fb3e55fd85ae1ab9129232e03c015",
+    "environment": "Isolated n6b-f11-ui Docker network; production web/PG/Caddy; operator dashboard and bounded verification; shared browser own contexts, no published ports",
+    "test_command": "docker exec -w /opt/browser codex-ui-playwright node /opt/browser/n6b-f11-ui.mjs /opt/browser/n6b-f11-fixture.json /opt/browser/n6b-f11-output-4",
+    "inputs": [
+      {
+        "name": "Exact10host and immutable runner hashes; full type/unit/PG/build0",
+        "available": true
+      },
+      {
+        "name": "Fresh Astra ACCEPT_WITH_CAVEATS, runtime gates close here; no production response mocks",
+        "available": true
+      },
+      {
+        "name": "Disposable seeded counts, operator/viewer credentials and private destination fixture",
+        "available": true
+      }
+    ],
+    "environment_available": true,
+    "expected_effects": [
+      "Browser 1440/390 actual operator login/dashboard/202; seeded positive metric counts; private destination remains unverified; no response mocks or provider calls",
+      "Screenshots and own context/stack/privateenv cleanup; sharedbrowser retained"
+    ],
+    "evidence_root": {
+      "root": "project",
+      "path": "tests/artifacts/weekly-metric/ui-output/report.json"
+    },
     "external_actions_executed": false,
-    "e2e_claim": null
+    "e2e_claim": null,
+    "checked_at": "2026-10-03T02:07:39.140236+00:00"
   },
   "attempts": [
     {
@@ -175,6 +202,26 @@
     {
       "id": "full-regression-1",
       "status": "completed"
+    },
+    {
+      "id": "ui-1",
+      "status": "failed"
+    },
+    {
+      "id": "ui-2",
+      "status": "failed"
+    },
+    {
+      "id": "ui-3",
+      "status": "failed"
+    },
+    {
+      "id": "ui-4",
+      "status": "completed"
+    },
+    {
+      "id": "delivery-1",
+      "status": "completed"
     }
   ],
   "work_units": [
@@ -189,8 +236,99 @@
     }
   ],
   "pause": null,
-  "checks": [],
-  "receipts": [],
-  "delivery": null,
+  "checks": [
+    {
+      "ac_id": "MET-01",
+      "outcome": "pass",
+      "command": "Frozen full type/unit/PG/build, guard mutation, independent review, actual Docker UI and persisted DB checks",
+      "exit_code": 0,
+      "source_revision": "dbd68a6862e17bb1a01e7659d0d3686b8cd4cf05",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "MET-02",
+      "outcome": "pass",
+      "command": "Frozen full type/unit/PG/build, guard mutation, independent review, actual Docker UI and persisted DB checks",
+      "exit_code": 0,
+      "source_revision": "dbd68a6862e17bb1a01e7659d0d3686b8cd4cf05",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "MET-03",
+      "outcome": "pass",
+      "command": "Frozen full type/unit/PG/build, guard mutation, independent review, actual Docker UI and persisted DB checks",
+      "exit_code": 0,
+      "source_revision": "dbd68a6862e17bb1a01e7659d0d3686b8cd4cf05",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "MET-04",
+      "outcome": "pass",
+      "command": "Frozen full type/unit/PG/build, guard mutation, independent review, actual Docker UI and persisted DB checks",
+      "exit_code": 0,
+      "source_revision": "dbd68a6862e17bb1a01e7659d0d3686b8cd4cf05",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "MET-05",
+      "outcome": "pass",
+      "command": "Frozen full type/unit/PG/build, guard mutation, independent review, actual Docker UI and persisted DB checks",
+      "exit_code": 0,
+      "source_revision": "dbd68a6862e17bb1a01e7659d0d3686b8cd4cf05",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "MET-06",
+      "outcome": "pass",
+      "command": "Frozen full type/unit/PG/build, guard mutation, independent review, actual Docker UI and persisted DB checks",
+      "exit_code": 0,
+      "source_revision": "dbd68a6862e17bb1a01e7659d0d3686b8cd4cf05",
+      "receipt_id": "delivery-1"
+    }
+  ],
+  "receipts": [
+    {
+      "id": "delivery-1",
+      "work_id": "weekly-metric-feature",
+      "path": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261003T011351Z-weekly-metric/evidence/delivery-1-receipt.md"
+      },
+      "launch_path": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261003T011351Z-weekly-metric/evidence/delivery-1-launch.json"
+      },
+      "sha256": "4ba9fffceac36d85188dd4de9f6733e4570021bb14dee51d2ca23a3c537967b7",
+      "launch_sha256": "1b93f962d8b652195be00c2b38837967fdb743e5ffcc83dfacc79710dc3b2f6f"
+    }
+  ],
+  "delivery": {
+    "uri": "urn:project-work-companion:20261003T011351Z-weekly-metric:weekly-metric-feature",
+    "scope": {
+      "included": [
+        "MET01..06 operator metrics and bounded verification"
+      ],
+      "excluded": [
+        "Public deployment",
+        "Live public-page verification acceptance",
+        "Remaining roadmap"
+      ]
+    },
+    "build": {
+      "source_revision": "dbd68a6862e17bb1a01e7659d0d3686b8cd4cf05",
+      "build_revision": "sha256:7779a9cbce2394b93ddf162714277ec3311fb3e55fd85ae1ab9129232e03c015"
+    },
+    "evidence": [
+      "delivery-1"
+    ],
+    "pending": [
+      {
+        "item": "Remaining MVP/public release/calibration",
+        "scope": "out_of_scope",
+        "reason": "Separate roadmap features and release gates"
+      }
+    ],
+    "e2e_claim": "pass"
+  },
   "ownership": []
 }

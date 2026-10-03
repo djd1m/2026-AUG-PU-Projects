@@ -12,7 +12,7 @@
     "docs/discovery/reuse-inventory.md"
   ],
   "notes": {
-    "state": "Выполнены10/16 фич до badge-referral включительно. Следующий этап weekly-metric; F13/F14 должны подключить и проверить семейную атрибуцию при handover.",
+    "state": "Выполнены 11/16 фич до weekly-metric включительно. Следующий этап demo-page.",
     "sc_coverage": "Все 59 SC-US-nnn-k из Specification распределены по фичам ровно по одному разу (проверено при генерации). SC-US-006-4 и SC-US-008-2 не покрыты REALISES в Pseudocode намеренно (ворота выпуска и браузерная проверка) — они в release-gate и widget.",
     "tier": "Поле tier — по таблице .claude/rules/complexity-router.md корня (T/S/M/L/XL); complexity — закрытый набор схемы /next. Оговорка правила: SPARC моложе недели с FR и алгоритмом опускает L до M; XL не опускается никогда (spend-ceilings — деньги, handover — граница владения). Фактический тир решает bash ../../scripts/complexity-router.sh по реальному диффу.",
     "reuse": "Поле reuse — строки docs/discovery/reuse-inventory.md (N<проект>#<строка> и путь). Код projects/06-rag-sales-chatbase НЕ используется (правило владельца №4).",
@@ -456,7 +456,7 @@
       "name": "Метрика недели: внешние виджеты (бот × хост) и панель оператора",
       "description": "widget_install: config_seen_at при загрузке конфига, first_question_at только после вопроса с того же origin; metric_host() одна для origin и страницы (снимает www.); excluded() — наш хост, localhost, IP, частные, превью-домены (закрытый список, OWN-06B-005); /admin/metrics только для таблицы operator; перепроверка страницы оператором через SSRF-фильтр.",
       "priority": "mvp",
-      "status": "next",
+      "status": "done",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -486,7 +486,9 @@
         "apps/web/src/server/metric-host.ts",
         "apps/web/src/app/admin/metrics/page.tsx",
         "apps/web/src/server/widget-install.ts"
-      ]
+      ],
+      "acceptance_revision": "dbd68a6862e17bb1a01e7659d0d3686b8cd4cf05",
+      "acceptance_evidence": "docs/features/weekly-metric/05_completion.md"
     },
     {
       "id": "demo-page",
@@ -494,7 +496,7 @@
       "name": "Публичная демо-страница сохранённого бота /b/{slug}",
       "description": "GET /b/{slug} только при published AND demo_enabled (иначе 404), X-Robots-Tag noindex, no-store, frame-ancestors 'none' + X-Frame-Options DENY; POST /api/demo/{slug}/ask только application/json и Origin = наш origin, иначе 403 до квоты; те же пределы посетителя, widget_install не пишется.",
       "priority": "high",
-      "status": "blocked",
+      "status": "next",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -674,5 +676,5 @@
       ]
     }
   ],
-  "last_completed": "badge-referral"
+  "last_completed": "weekly-metric"
 }

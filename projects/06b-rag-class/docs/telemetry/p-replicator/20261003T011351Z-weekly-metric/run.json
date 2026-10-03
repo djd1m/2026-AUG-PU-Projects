@@ -12,10 +12,10 @@
   "feature": "weekly-metric",
   "tier": "M (fresh SPARC exception to L)",
   "started_at": "2026-10-03T01:13:51.051428+00:00",
-  "ended_at": null,
-  "status": "active",
+  "ended_at": "2026-10-03T02:08:52.350219+00:00",
+  "status": "completed",
   "baseline_revision": "b6e1a4dca1fe96eebe5dd24ff0534888594747c6",
-  "final_revision": null,
+  "final_revision": "dbd68a6862e17bb1a01e7659d0d3686b8cd4cf05",
   "spec_sha256": "918e5d0e070d61f599d4cb5b7fc883adaee55a6c4c8c76c4c1cae21837018c82",
   "risk_flags": [
     "Operator-only metrics",
@@ -23,19 +23,39 @@
     "Verified eligible installs and honest attribution"
   ],
   "quality": {
-    "required_gates_passed": false
+    "required_gates_passed": true,
+    "ac_met": 6,
+    "ac_total": 6,
+    "source_review_defects": 0,
+    "publicrelease_clearance": false
   },
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 3301299,
     "active_wall_ms": null,
     "input_tokens_total": null,
-    "cost": null
+    "cost": null,
+    "measured_cli_usage_only": {
+      "input_tokens": 2467186,
+      "cached_input_tokens": 2294272,
+      "output_tokens": 36023,
+      "reasoning_output_tokens": 9842,
+      "total_tokens": 2503209
+    },
+    "measured_cli_usage_only_note": "2 final cumulative native snapshots; cached/reasoning subsets; coordinator/cost unknown"
   },
   "telemetry_status": "partial",
   "missing_data": [
     "Coordinator actual model/usage/cost unavailable",
     "Pre-record worktree preparation and roadmap context read unmeasured"
   ],
-  "acceptance_evidence": [],
-  "native_stage_usage_files": []
+  "acceptance_evidence": [
+    "docs/telemetry/p-replicator/20261003T011351Z-weekly-metric/evidence/delivery-1-receipt.md",
+    "tests/artifacts/weekly-metric/final-checks-summary.json",
+    "tests/artifacts/weekly-metric/ui-output/report.json",
+    "tests/artifacts/weekly-metric/ui-db-verification.json"
+  ],
+  "native_stage_usage_files": [
+    "docs/telemetry/p-replicator/20261003T011351Z-weekly-metric/evidence/implementation-1-native.json",
+    "docs/telemetry/p-replicator/20261003T011351Z-weekly-metric/evidence/review-1-native.json"
+  ]
 }
