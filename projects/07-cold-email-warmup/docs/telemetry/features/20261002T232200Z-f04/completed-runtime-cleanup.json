@@ -1,0 +1,17 @@
+{
+  "time": "2026-10-03T00:34:05.637134+00:00",
+  "reason": "N8 Docker default subnet pool exhausted; release only completed owned F01/F02 runtimes",
+  "stopped_removed_containers": [
+    "n7f01-web-1",
+    "n7f01-db-1",
+    "n7f02-web-1",
+    "n7f02-db-1"
+  ],
+  "removed_networks": [
+    "n7f01_network",
+    "n7f02_network"
+  ],
+  "volumes": "retained; no data deletion",
+  "active_f03_f04_runtimes": "untouched",
+  "evidence": "historical source/browser/PG receipts retained"
+}
