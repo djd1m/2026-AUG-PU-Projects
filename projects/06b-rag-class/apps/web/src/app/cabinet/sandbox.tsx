@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from 'react';
 import type { AnswerData } from '@n6b/rag';
 
-export function Sandbox({ botId }: { botId: string }) {
+export function Sandbox({ botId, demoPath = null }: { botId: string; demoPath?: string | null }) {
   const [question, setQuestion] = useState('');
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -49,10 +49,9 @@ export function Sandbox({ botId }: { botId: string }) {
             </li>)}
           </ul>}
           {answer.show_cta && <div className="sandbox-cta">
-            <p>Первый ответ с источником готов. Перед публикацией укажите контакт и подтвердите домены.
-              Демо-страница ещё не подключена.</p>
+            <p>Первый ответ с источником готов. Перед публикацией укажите контакт и подтвердите домены.</p>
             <a href={`#publish-${botId}`}>Вставить на сайт</a>
-            <button type="button" disabled>Поделиться демо-страницей</button>
+            <a href={demoPath ?? `#publish-${botId}`}>{demoPath ? 'Поделиться демо-страницей' : 'Включить демо-страницу'}</a>
           </div>}
         </>}
       </div>

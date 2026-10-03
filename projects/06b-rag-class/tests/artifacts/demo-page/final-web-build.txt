@@ -1,0 +1,166 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.90kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22.22-alpine
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 361B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 DONE 0.0s
+
+#5 [deps 1/9] FROM docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd
+#5 resolve docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd 0.0s done
+#5 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 15.09kB 0.1s done
+#4 DONE 0.1s
+
+#6 [deps 8/9] COPY packages/rag/package.json ./packages/rag/
+#6 CACHED
+
+#7 [deps 2/9] WORKDIR /app
+#7 CACHED
+
+#8 [deps 5/9] COPY apps/widget/package.json ./apps/widget/
+#8 CACHED
+
+#9 [deps 3/9] COPY package.json package-lock.json ./
+#9 CACHED
+
+#10 [deps 4/9] COPY apps/web/package.json ./apps/web/
+#10 CACHED
+
+#11 [deps 7/9] COPY packages/db/package.json ./packages/db/
+#11 CACHED
+
+#12 [deps 6/9] COPY services/worker/package.json ./services/worker/
+#12 CACHED
+
+#13 [deps 9/9] RUN npm ci
+#13 CACHED
+
+#14 [build 1/2] COPY . .
+#14 DONE 0.1s
+
+#15 [build 2/2] RUN npm run build
+#15 0.920 
+#15 0.920 > n6b-rag-class@0.1.0 build
+#15 0.920 > npm run build --workspace @n6b/db && npm run build --workspace @n6b/rag && npm run build --workspace @n6b/worker && npm run build --workspace @n6b/web
+#15 0.920 
+#15 1.404 
+#15 1.404 > @n6b/db@0.1.0 build
+#15 1.404 > tsc -p tsconfig.build.json
+#15 1.404 
+#15 6.183 
+#15 6.183 > @n6b/rag@0.1.0 build
+#15 6.183 > tsc -p tsconfig.build.json
+#15 6.183 
+#15 11.28 
+#15 11.28 > @n6b/worker@0.1.0 build
+#15 11.28 > tsc -p tsconfig.build.json
+#15 11.28 
+#15 18.81 
+#15 18.81 > @n6b/web@0.1.0 build
+#15 18.81 > next build
+#15 18.81 
+#15 24.66 {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+#15 24.72 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+#15 24.72 This information is used to shape Next.js' roadmap and prioritize features.
+#15 24.72 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#15 24.72 https://nextjs.org/telemetry
+#15 24.72 
+#15 24.92    ▲ Next.js 15.5.27
+#15 24.93 
+#15 25.11    Creating an optimized production build ...
+#15 29.69 {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+#15 50.58 {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+#15 57.93 {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+#15 65.97  ✓ Compiled successfully in 26.3s
+#15 65.99    Linting and checking validity of types ...
+#15 80.58    Collecting page data ...
+#15 88.68    Generating static pages (0/7) ...
+#15 90.41    Generating static pages (1/7) 
+#15 90.77    Generating static pages (3/7) 
+#15 90.77    Generating static pages (5/7) 
+#15 90.77  ✓ Generating static pages (7/7)
+#15 92.48    Finalizing page optimization ...
+#15 92.48    Collecting build traces ...
+#15 105.1 
+#15 105.1 Route (app)                                 Size  First Load JS
+#15 105.1 ┌ ƒ /                                      161 B         106 kB
+#15 105.1 ├ ○ /_not-found                            988 B         104 kB
+#15 105.1 ├ ƒ /admin/metrics                         792 B         103 kB
+#15 105.1 ├ ƒ /admin/metrics/verify                  162 B         103 kB
+#15 105.1 ├ ƒ /api/account/badge-removal-intent      162 B         103 kB
+#15 105.1 ├ ƒ /api/auth/login                        162 B         103 kB
+#15 105.1 ├ ƒ /api/auth/logout                       162 B         103 kB
+#15 105.1 ├ ƒ /api/auth/register                     162 B         103 kB
+#15 105.1 ├ ƒ /api/bots                              162 B         103 kB
+#15 105.1 ├ ƒ /api/bots/[id]/ask                     162 B         103 kB
+#15 105.1 ├ ƒ /api/bots/[id]/publish                 162 B         103 kB
+#15 105.1 ├ ƒ /api/bots/[id]/sources                 162 B         103 kB
+#15 105.1 ├ ƒ /api/demo/[slug]/ask                   162 B         103 kB
+#15 105.1 ├ ƒ /api/health                            162 B         103 kB
+#15 105.1 ├ ƒ /api/jobs/[id]                         162 B         103 kB
+#15 105.1 ├ ƒ /api/jobs/[id]/retry                   162 B         103 kB
+#15 105.1 ├ ƒ /api/widget/ask                        162 B         103 kB
+#15 105.1 ├ ƒ /api/widget/config                     162 B         103 kB
+#15 105.1 ├ ƒ /api/widget/event                      162 B         103 kB
+#15 105.1 ├ ƒ /b/[slug]                            1.67 kB         104 kB
+#15 105.1 ├ ƒ /cabinet                             5.77 kB         108 kB
+#15 105.1 ├ ○ /login                               1.36 kB         107 kB
+#15 105.1 ├ ƒ /r/b/[public_id]                       162 B         103 kB
+#15 105.1 └ ○ /register                            1.36 kB         107 kB
+#15 105.1 + First Load JS shared by all             103 kB
+#15 105.1   ├ chunks/18-25b11e3a132b87ef.js        46.5 kB
+#15 105.1   ├ chunks/87c73c54-24122e7b92478d00.js  54.2 kB
+#15 105.1   └ other shared chunks (total)          1.92 kB
+#15 105.1 
+#15 105.1 
+#15 105.1 ƒ Middleware                             34.7 kB
+#15 105.1 
+#15 105.1 ○  (Static)   prerendered as static content
+#15 105.1 ƒ  (Dynamic)  server-rendered on demand
+#15 105.1 
+#15 DONE 105.4s
+
+#16 [prod-deps 1/1] RUN npm prune --omit=dev
+#16 CACHED
+
+#17 [web 3/8] COPY --from=prod-deps /app/node_modules ./node_modules
+#17 CACHED
+
+#18 [web 4/8] COPY --from=build /app/package.json ./package.json
+#18 CACHED
+
+#19 [web 5/8] COPY --from=build /app/apps/web/.next ./apps/web/.next
+#19 DONE 0.8s
+
+#20 [web 6/8] COPY --from=build /app/apps/web/public ./apps/web/public
+#20 DONE 0.1s
+
+#21 [web 7/8] COPY --from=build /app/apps/web/package.json ./apps/web/package.json
+#21 DONE 0.1s
+
+#22 [web 8/8] COPY --from=build /app/packages ./packages
+#22 DONE 0.1s
+
+#23 exporting to image
+#23 exporting layers
+#23 exporting layers 5.4s done
+#23 exporting manifest sha256:a97b520690ff3e3d5c5a883ed4eb0869e0f69c993846d32cfa0de5694ab8bc88 0.0s done
+#23 exporting config sha256:dafbda527e38996df3323d3727c2f5d297878abb78a7dd06b3731f3a1a41e26e 0.0s done
+#23 exporting attestation manifest sha256:cfe93540fcd011a262bcb214d076656360006f663d962d13fee6f564e6f24669 0.0s done
+#23 exporting manifest list sha256:d61e3832e80ccc062eeefe4e1bb65dfc4a90d3f5ddc70d8241bf59f09c69d824 0.0s done
+#23 naming to docker.io/library/n6b-f12-demo-web:20261003
+#23 naming to docker.io/library/n6b-f12-demo-web:20261003 done
+#23 unpacking to docker.io/library/n6b-f12-demo-web:20261003
+#23 unpacking to docker.io/library/n6b-f12-demo-web:20261003 1.1s done
+#23 DONE 6.7s

@@ -1,0 +1,79 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-demo-page/projects/06b-rag-class
+
+ ❯ apps/web/tests/unit/demo-handler.test.ts (34 tests | 7 failed) 137ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > rejects serialized Origin null before lookup/admission; no CORS 10ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > rejects serialized Origin  before lookup/admission; no CORS 2ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > rejects serialized Origin null before lookup/admission; no CORS 4ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > rejects serialized Origin https://foreign.example before lookup/admission; no CORS 3ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > rejects serialized Origin https://demo.example/path before lookup/admission; no CORS 3ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > rejects serialized Origin https://demo.example/ before lookup/admission; no CORS 1ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > rejects serialized Origin https://demo.example?x=1 before lookup/admission; no CORS 7ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > rejects serialized Origin https://demo.example#x before lookup/admission; no CORS 3ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > rejects serialized Origin https://user@demo.example before lookup/admission; no CORS 5ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > rejects serialized Origin https://demo.example:444 before lookup/admission; no CORS 1ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > rejects serialized Origin https://demo.example\evil before lookup/admission; no CORS 2ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > rejects serialized Origin https://demo.example https://other.test before lookup/admission; no CORS 1ms
+   × DEM-01/03 SC-US-012-5 demo request gate > rejects media null before lookup/admission 31ms
+     → expected 422 to be 403 // Object.is equality
+   × DEM-01/03 SC-US-012-5 demo request gate > rejects media  before lookup/admission 2ms
+     → expected 422 to be 403 // Object.is equality
+   × DEM-01/03 SC-US-012-5 demo request gate > rejects media text/plain before lookup/admission 2ms
+     → expected 422 to be 403 // Object.is equality
+   × DEM-01/03 SC-US-012-5 demo request gate > rejects media application/x-www-form-urlencoded before lookup/admission 2ms
+     → expected 422 to be 403 // Object.is equality
+   × DEM-01/03 SC-US-012-5 demo request gate > rejects media multipart/form-data; boundary=x before lookup/admission 4ms
+     → expected 422 to be 403 // Object.is equality
+   × DEM-01/03 SC-US-012-5 demo request gate > rejects media application/json-evil before lookup/admission 2ms
+     → expected 422 to be 403 // Object.is equality
+   × DEM-01/03 SC-US-012-5 demo request gate > rejects media text/json before lookup/admission 1ms
+     → expected 422 to be 403 // Object.is equality
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > accepts normalized origin/default port and JSON charset, ignoring all client authority 9ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > unknown/disabled/unpublished reader results and bounded invalid slugs give identical 404 10ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > invalid JSON/question null never admits 2ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > invalid JSON/question %j never admits 1ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > invalid JSON/question {} never admits 1ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > invalid JSON/question "{bad" never admits 1ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > invalid JSON/question "\"too-large\"" never admits 1ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > invalid JSON/question {"question":""} never admits 2ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > invalid JSON/question {"question":"  "} never admits 1ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > invalid JSON/question {"question":2} never admits 4ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > invalid JSON/question {"question":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"} never admits 3ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > actual byte bound, missing trusted IP and OPTIONS are closed before admission 4ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > preserves 429/contact/Retry-After and permits a later retry 4ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > preserves 503/contact/Retry-After and permits a later retry 3ms
+   ✓ DEM-01/03 SC-US-012-5 demo request gate > database errors expose no secrets 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/tests/unit/demo-handler.test.ts > DEM-01/03 SC-US-012-5 demo request gate > rejects media null before lookup/admission
+ FAIL  apps/web/tests/unit/demo-handler.test.ts > DEM-01/03 SC-US-012-5 demo request gate > rejects media  before lookup/admission
+ FAIL  apps/web/tests/unit/demo-handler.test.ts > DEM-01/03 SC-US-012-5 demo request gate > rejects media text/plain before lookup/admission
+ FAIL  apps/web/tests/unit/demo-handler.test.ts > DEM-01/03 SC-US-012-5 demo request gate > rejects media application/x-www-form-urlencoded before lookup/admission
+ FAIL  apps/web/tests/unit/demo-handler.test.ts > DEM-01/03 SC-US-012-5 demo request gate > rejects media multipart/form-data; boundary=x before lookup/admission
+ FAIL  apps/web/tests/unit/demo-handler.test.ts > DEM-01/03 SC-US-012-5 demo request gate > rejects media application/json-evil before lookup/admission
+ FAIL  apps/web/tests/unit/demo-handler.test.ts > DEM-01/03 SC-US-012-5 demo request gate > rejects media text/json before lookup/admission
+AssertionError: expected 422 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 422
+
+ ❯ apps/web/tests/unit/demo-handler.test.ts:41:24
+     39|     'application/json-evil', 'text/json'])('rejects media %s before lo…
+     40|     const res = await handler(request(undefined, BASE, type), SLUG);
+     41|     expect(res.status).toBe(403); expect(m.read).not.toHaveBeenCalled(…
+       |                        ^
+     42|   });
+     43|   it('accepts normalized origin/default port and JSON charset, ignorin…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 27 passed (34)
+   Start at  02:25:59
+   Duration  1.72s (transform 579ms, setup 0ms, collect 1.04s, tests 137ms, environment 0ms, prepare 136ms)
+

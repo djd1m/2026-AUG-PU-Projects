@@ -18,6 +18,7 @@ import { createJobHandler, createRetryHandler, createSourceHandler } from './job
 import { createPaidRuntime, type PaidRuntime } from './paid';
 import { createPublishHandler } from './publish-handler';
 import { createWidgetHandler } from './widget-handler';
+import { createDemoHandler } from './demo-handler';
 
 const hasher: PasswordHasher = {
   hash: (password, cost) => bcrypt.hash(password, cost),
@@ -92,4 +93,10 @@ export function widgetRoute(kind: 'config' | 'ask' | 'event') {
     return createWidgetHandler(kind, { servicePool, gateway: paid.gateway, publicBaseUrl: config.PUBLIC_BASE_URL,
       visitorSecret: config.VISITOR_SECRET, minSimilarity: config.MIN_SIMILARITY })(request);
   };
+}
+
+export async function demoRoute(request: Request, context: { params: Promise<{ slug: string }> }): Promise<Response> {
+  const { config, servicePool, paid } = getRuntime();
+  return createDemoHandler({ servicePool, gateway: paid.gateway, publicBaseUrl: config.PUBLIC_BASE_URL,
+    visitorSecret: config.VISITOR_SECRET, minSimilarity: config.MIN_SIMILARITY })(request, (await context.params).slug);
 }

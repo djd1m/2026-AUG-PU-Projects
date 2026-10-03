@@ -1,0 +1,58 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.44kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22.22-bookworm-slim
+#2 DONE 0.6s
+
+#3 [ 1/11] FROM docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752
+#3 resolve docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752 0.1s done
+#3 DONE 0.1s
+
+#4 [internal] load build context
+#4 transferring context: 322.42kB 0.1s done
+#4 DONE 0.1s
+
+#5 [ 9/11] COPY --chown=node:node packages/rag/package.json ./packages/rag/
+#5 CACHED
+
+#6 [ 5/11] COPY --chown=node:node apps/web/package.json ./apps/web/
+#6 CACHED
+
+#7 [ 7/11] COPY --chown=node:node services/worker/package.json ./services/worker/
+#7 CACHED
+
+#8 [ 8/11] COPY --chown=node:node packages/db/package.json ./packages/db/
+#8 CACHED
+
+#9 [ 3/11] RUN chown node:node /app
+#9 CACHED
+
+#10 [ 4/11] COPY --chown=node:node package.json package-lock.json ./
+#10 CACHED
+
+#11 [ 2/11] WORKDIR /app
+#11 CACHED
+
+#12 [ 6/11] COPY --chown=node:node apps/widget/package.json ./apps/widget/
+#12 CACHED
+
+#13 [10/11] RUN npm ci
+#13 CACHED
+
+#14 [11/11] COPY --chown=node:node . .
+#14 DONE 0.3s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 0.8s done
+#15 exporting manifest sha256:55a37844811b2d7bd3ac726fdc12de743515a460334e7886e1d5949b3ed3b51c 0.0s done
+#15 exporting config sha256:e8b976c0a803d502b355af8c3346015a8e945dcd0cdec882dfc636734cc94a2b 0.0s done
+#15 exporting attestation manifest sha256:b069462325897ab2d82a6e6d1014ce4ad70276b16d18741ddb408b342808dbae 0.0s done
+#15 exporting manifest list sha256:a26924470017255751b0bfcd3d5830fb261fcf5fdf4f3045f556cd9ec1948802 0.0s done
+#15 naming to docker.io/library/n6b-f12-demo-runner:final done
+#15 unpacking to docker.io/library/n6b-f12-demo-runner:final
+#15 unpacking to docker.io/library/n6b-f12-demo-runner:final 0.8s done
+#15 DONE 1.8s

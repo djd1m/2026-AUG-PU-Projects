@@ -8,7 +8,7 @@ const BOT = '11111111-1111-1111-1111-111111111111';
 const ACCOUNT = '22222222-2222-2222-2222-222222222222';
 const BASE = 'https://cabinet.test';
 const stored: PublicationBot = { id: BOT, public_id: 'immutable_12', contact: 'owner@example.test',
-  allowed_origins: [], published: true, demo_enabled: false };
+  allowed_origins: [], published: true, demo_enabled: false, demo_slug: null };
 const payload = { contact: 'owner@example.test', allowed_origins: [] };
 const handler = createPublishHandler({ publicBaseUrl: BASE, authenticate: mocks.authenticate,
   tenantPool: {} as Pool, log: () => undefined });
@@ -61,7 +61,7 @@ describe('PUB-01 publication gates', () => {
   it('server selects account/public_id and normalizes the complete payload with optional boolean', async () => {
     const response = await handler(patch(JSON.stringify({ contact: ' owner@example.test ',
       allowed_origins: ['https://EXAMPLE.test:443/a', 'https://example.test', 'http://example.test:8080'],
-      demo_enabled: true, account_id: 'foreign', public_id: 'replacement' })), BOT);
+      demo_enabled: true, demo_slug: 'client_selected_slug', account_id: 'foreign', public_id: 'replacement' })), BOT);
     expect(response.status).toBe(200); expect(response.headers.get('Cache-Control')).toBe('no-store');
     expect(mocks.publish).toHaveBeenCalledWith(expect.anything(), ACCOUNT, BOT, { contact: payload.contact,
       allowed_origins: ['https://example.test', 'http://example.test:8080'], demo_enabled: true });

@@ -13,8 +13,7 @@ import { AddSource } from './add-source';
 import { AddPdf } from './add-pdf';
 import { JobStatus } from './job-status';
 import { LogoutButton } from './logout-button';
-import { Sandbox } from './sandbox';
-import { PublishBot } from './publish-bot';
+import { BotInteractions } from './bot-interactions';
 import { BadgeRemoval } from './badge-removal';
 
 export const dynamic = 'force-dynamic';
@@ -57,8 +56,7 @@ export default async function CabinetPage() {
           <AddSource botId={bot.id} busy={bot.sources.some((s) => s.job?.state === 'running')} />
           <AddPdf botId={bot.id} busy={bot.sources.some((s) => s.job?.state === 'running')}
             observedJobIds={bot.sources.flatMap((s) => s.job ? [s.job.job_id] : [])} />
-          <Sandbox botId={bot.id} />
-          <PublishBot initial={{ ...bot, embed_code: publicationEmbedCode(bot, config.PUBLIC_BASE_URL) }}
+          <BotInteractions initial={{ ...bot, embed_code: publicationEmbedCode(bot, config.PUBLIC_BASE_URL) }}
             proposedOrigins={publicationOrigins(bot)} />
         </section>
       ))}

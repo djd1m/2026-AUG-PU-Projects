@@ -74,3 +74,6 @@ button:disabled { opacity: 0.6; cursor: progress; }
 .publication textarea { resize: vertical; }
 .publication p, .publication label, .publication button { overflow-wrap: anywhere; }
 .publication button:disabled { cursor: not-allowed; }
+.publication input[type="checkbox"] { width: auto; }
+.demo-page { max-width: 720px; }
+.demo-page h1 { overflow-wrap: anywhere; }

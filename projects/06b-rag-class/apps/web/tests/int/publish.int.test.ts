@@ -91,12 +91,16 @@ describe('PUB-01/02/05 real PostgreSQL publication', () => {
     expect(before.allowed_origins).toEqual([]); expect(publicationOrigins(before)).toEqual(['https://site.test']);
     expect(publicationEmbedCode(before, BASE)).toBeNull();
     const response = await handler(patch(a.token, { contact: ' +79991234567 ', allowed_origins: ['https://EXAMPLE.test:443/a',
-      'https://example.test', 'http://example.test:8080'], demo_enabled: true, public_id: 'replaced', account_id: randomUUID() }), a.botId);
+      'https://example.test', 'http://example.test:8080'], demo_enabled: true, demo_slug: 'client_selected_demo_slug',
+      public_id: 'replaced', account_id: randomUUID() }), a.botId);
     expect(response.status).toBe(200);
     const saved = await data(response);
     expect(saved).toMatchObject({ public_id: a.publicId, contact: '+79991234567', published: true, demo_enabled: true,
       allowed_origins: ['https://example.test', 'http://example.test:8080'] });
     const reloaded = (await listCabinetBots(cabinet, a.accountId))[0]!;
+    expect(saved.demo_slug).toMatch(/^[A-Za-z0-9_-]{24}$/);
+    expect(saved.demo_slug).not.toBe('client_selected_demo_slug');
+    expect(reloaded.demo_slug).toBe(saved.demo_slug);
     expect(reloaded).toMatchObject(await row(a.botId));
     expect(publicationEmbedCode(reloaded, BASE)).toBe(saved.embed_code);
     expect((await handler(patch(a.token, { ...valid, allowed_origins: [] }), a.botId)).status).toBe(200);

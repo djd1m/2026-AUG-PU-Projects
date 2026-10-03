@@ -1,0 +1,45 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-demo-page/projects/06b-rag-class
+
+ ❯ apps/web/tests/unit/referral-cookie.test.ts (10 tests | 1 failed) 38ms
+   × REF-02 SC-US-011-1: first touch on the actual landing response > valid first touch sets 30-day HttpOnly Secure Lax cookie and prevents public caching 22ms
+     → expected [ '/', '/b/:path*' ] to deeply equal [ '/' ]
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > fixed first-touch guard: repeated landing never overwrites or renews a cookie 3ms
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref null never sets a cookie 1ms
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref  never sets a cookie 1ms
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref short never sets a cookie 1ms
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref Abcdef_12345x never sets a cookie 1ms
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref ../evil.test never sets a cookie 0ms
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref https://evil never sets a cookie 1ms
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref Abcdef_1234! never sets a cookie 2ms
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > development omits Secure; cookie reader ignores body/query and rejects encoded garbage 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/tests/unit/referral-cookie.test.ts > REF-02 SC-US-011-1: first touch on the actual landing response > valid first touch sets 30-day HttpOnly Secure Lax cookie and prevents public caching
+AssertionError: expected [ '/', '/b/:path*' ] to deeply equal [ '/' ]
+
+- Expected
++ Received
+
+  [
+    "/",
++   "/b/:path*",
+  ]
+
+ ❯ apps/web/tests/unit/referral-cookie.test.ts:18:28
+     16|     expect(response.headers.get('set-cookie')).toContain('HttpOnly');
+     17|     expect(response.headers.get('cache-control')).toBe('private, no-st…
+     18|     expect(config.matcher).toEqual(['/']);
+       |                            ^
+     19|   });
+     20|   it('fixed first-touch guard: repeated landing never overwrites or re…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  02:38:47
+   Duration  739ms (transform 124ms, setup 0ms, collect 226ms, tests 38ms, environment 0ms, prepare 121ms)
+

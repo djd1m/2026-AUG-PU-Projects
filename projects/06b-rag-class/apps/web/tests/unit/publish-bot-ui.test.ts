@@ -35,6 +35,7 @@ describe('PUB-06/07 cabinet publication client (actual browser gate pending)', (
     expect(ui).toContain('setEmbedCode(null)'); expect(ui).toContain('Добавьте домен');
     const sandbox = readFileSync('apps/web/src/app/cabinet/sandbox.tsx', 'utf8');
     expect(sandbox).toContain('href={`#publish-${botId}`}');
-    expect(sandbox).toContain('<button type="button" disabled>Поделиться демо-страницей</button>');
+    expect(sandbox).toContain('demoPath ?? `#publish-${botId}`');
+    expect(sandbox).toContain('Включить демо-страницу');
   });
 });

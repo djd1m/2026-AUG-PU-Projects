@@ -2,41 +2,48 @@
 
 import { useState, type FormEvent } from 'react';
 import type { PublicationData } from '@/server/publish-handler';
+import { publicationDemoPath } from '@/lib/demo-presentation';
 
 type SubmitResult = { ok: true; data: PublicationData } | { ok: false; message: string };
 
 export async function submitPublication(botId: string, contact: string, origins: string,
-  request: typeof fetch = fetch): Promise<SubmitResult> {
+  request: typeof fetch = fetch, demoEnabled?: boolean): Promise<SubmitResult> {
   try {
     const response = await request(`/api/bots/${botId}/publish`, { method: 'PATCH', credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contact,
-        allowed_origins: origins.split(/\r?\n/).map((line) => line.trim()).filter(Boolean) }) });
+        allowed_origins: origins.split(/\r?\n/).map((line) => line.trim()).filter(Boolean),
+        ...(demoEnabled === undefined ? {} : { demo_enabled: demoEnabled }) }) });
     const body = await response.json() as { data?: PublicationData; error?: { message?: string } };
     if (!response.ok || !body.data?.published || !body.data.contact || !body.data.embed_code
-      || !Array.isArray(body.data.allowed_origins)) {
+      || !Array.isArray(body.data.allowed_origins) || (demoEnabled === true && !publicationDemoPath(body.data))) {
       return { ok: false, message: body.error?.message ?? 'Публикация не сохранена. Повторите позже' };
     }
     return { ok: true, data: body.data };
   } catch { return { ok: false, message: 'Нет связи с сервисом. Проверьте соединение и сохраните снова' }; }
 }
 
-export function PublishBot({ initial, proposedOrigins }: { initial: PublicationData; proposedOrigins: string[] }) {
+export function PublishBot({ initial, proposedOrigins, onDemoSaved }: { initial: PublicationData; proposedOrigins: string[];
+  onDemoSaved?: (path: string | null) => void }) {
   const [contact, setContact] = useState(initial.contact ?? '');
   const [origins, setOrigins] = useState(proposedOrigins.join('\n'));
   const [embedCode, setEmbedCode] = useState(initial.embed_code);
+  const [demoEnabled, setDemoEnabled] = useState(initial.demo_enabled);
+  const [demoPath, setDemoPath] = useState(publicationDemoPath(initial));
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
-  const edit = () => { setEmbedCode(null); setSaved(false); setError(null); };
+  const edit = () => { setEmbedCode(null); setDemoPath(null); setSaved(false); setError(null); };
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (pending) return;
-    setPending(true); setError(null); setSaved(false); setEmbedCode(null);
-    const result = await submitPublication(initial.id, contact, origins);
+    setPending(true); setError(null); setSaved(false); setEmbedCode(null); setDemoPath(null);
+    const result = await submitPublication(initial.id, contact, origins, fetch, demoEnabled);
     if (result.ok) {
       setContact(result.data.contact ?? ''); setOrigins(result.data.allowed_origins.join('\n'));
       setEmbedCode(result.data.embed_code); setSaved(true);
+      setDemoEnabled(result.data.demo_enabled); setDemoPath(publicationDemoPath(result.data));
+      onDemoSaved?.(publicationDemoPath(result.data));
     } else setError(result.message);
     setPending(false);
   }
@@ -60,6 +67,9 @@ export function PublishBot({ initial, proposedOrigins }: { initial: PublicationD
           onChange={(event) => { edit(); setOrigins(event.target.value); }} />
         <p className="job-detail" id={`origins-hint-${initial.id}`}>До 20 адресов http(s)://, до 2048 символов каждый.
           Схема и нестандартный порт различаются; полный URL будет приведён к домену.</p>
+        <label htmlFor={`demo-${initial.id}`}><input id={`demo-${initial.id}`} type="checkbox" checked={demoEnabled}
+          disabled={pending} onChange={(event) => { edit(); setDemoEnabled(event.target.checked); }} />
+          Включить публичную демо-страницу</label>
         <button type="submit" disabled={pending}>{pending ? 'Сохраняем…' : 'Подтвердить и сохранить публикацию'}</button>
       </form>
       <div aria-live="polite" aria-busy={pending}>
@@ -73,8 +83,8 @@ export function PublishBot({ initial, proposedOrigins }: { initial: PublicationD
           <p className="job-detail">Скопируйте код в HTML сайта на одном из разрешённых доменов.</p>
         </>}
       </div>
-      <p className="job-detail">Демо-страница ещё не подключена.</p>
-      <button type="button" disabled>Поделиться демо-страницей</button>
+      {demoPath ? <p><a href={demoPath}>Поделиться демо-страницей</a></p>
+        : <p className="job-detail">Чтобы получить ссылку на демо, включите его и сохраните публикацию.</p>}
     </section>
   );
 }

@@ -15,7 +15,13 @@ describe('REF-02 SC-US-011-1: first touch on the actual landing response', () =>
     expect(REFERRAL_TTL_SECONDS).toBe(2592000);
     expect(response.headers.get('set-cookie')).toContain('HttpOnly');
     expect(response.headers.get('cache-control')).toBe('private, no-store');
-    expect(config.matcher).toEqual(['/']);
+    expect(config.matcher).toEqual(['/', '/b/:path*']);
+  });
+  it('demo page with a valid ref never sets a referral cookie and prevents public caching', () => {
+    const response = middleware(new NextRequest(`https://site.test/b/slug?ref=${REF}`));
+    expect(response.cookies.get('n6b_ref')).toBeUndefined();
+    expect(response.headers.get('set-cookie')).toBeNull();
+    expect(response.headers.get('cache-control')).toBe('private, no-store');
   });
   it('fixed first-touch guard: repeated landing never overwrites or renews a cookie', () => {
     const response = middleware(new NextRequest(`https://site.test/?ref=${REF}`, {

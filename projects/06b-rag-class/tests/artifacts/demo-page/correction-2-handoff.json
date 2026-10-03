@@ -1,0 +1,30 @@
+{
+  "run_id": "20261003T021046Z-demo-page",
+  "work_unit_id": "demo-page-pg-correction",
+  "attempt_id": "correction-2",
+  "source_revision": "24d7e6fb85c425347ae31205f43888575e84594c",
+  "launch_sha256": "44b7ea0532847045e408170054805224a9a866d9bcb31634cbce4ac4cd7684c5",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": "Native runtime model, effort, usage and billing metadata not exposed; requested model is not proof of execution.",
+  "build_revision": null,
+  "finished_at": "2026-10-03T02:54:44.323559+00:00",
+  "elapsed_wall_seconds_since_launch": 188.472839,
+  "active_wall_seconds": null,
+  "active_wall_reason": "No native active-time counters exposed",
+  "verdict": "bounded handoff",
+  "snapshot_sha256": "a7ce1d5c28fa33d7d2de07a17a47cca86f68c9ff48de3f12fa8bd59c1de4de83",
+  "source_map": "tests/artifacts/demo-page/final-source-hashes.json",
+  "report": "docs/features/demo-page/11_pg_correction.md",
+  "checks": "tests/artifacts/demo-page/correction-2-scope-check.json",
+  "pending": [
+    "Coordinator actual real-PG demo suite: 7 tests",
+    "Coordinator pending build"
+  ],
+  "status": "completed"
+}
