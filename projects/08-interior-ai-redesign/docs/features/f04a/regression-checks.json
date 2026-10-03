@@ -1,0 +1,112 @@
+[
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--test-reporter=tap",
+      "tests/boundaries.test.js"
+    ],
+    "exit_code": 0,
+    "log": "docs/features/f04a/check-boundaries.test.log",
+    "at": "2026-10-03T00:20:37.174357+00:00"
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--test-reporter=tap",
+      "tests/media.test.js"
+    ],
+    "exit_code": 0,
+    "log": "docs/features/f04a/check-media.test.log",
+    "at": "2026-10-03T00:20:46.286300+00:00"
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--test-reporter=tap",
+      "tests/jobs.test.js"
+    ],
+    "exit_code": 0,
+    "log": "docs/features/f04a/check-jobs.test.log",
+    "at": "2026-10-03T00:20:46.525490+00:00"
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--test-reporter=tap",
+      "tests/quality.test.js"
+    ],
+    "exit_code": 0,
+    "log": "docs/features/f04a/check-quality.test.log",
+    "at": "2026-10-03T00:20:46.907309+00:00"
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--test-reporter=tap",
+      "tests/payments.test.js"
+    ],
+    "exit_code": 0,
+    "log": "docs/features/f04a/check-payments.test.log",
+    "at": "2026-10-03T00:20:57.199463+00:00"
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--test-reporter=tap",
+      "tests/payments.http.test.js"
+    ],
+    "exit_code": 1,
+    "log": "docs/features/f04a/check-payments.http.test.log",
+    "at": "2026-10-03T00:20:57.352752+00:00"
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--test-reporter=tap",
+      "tests/attribution.test.js"
+    ],
+    "exit_code": 0,
+    "log": "docs/features/f04a/check-attribution.test.log",
+    "at": "2026-10-03T00:20:57.643475+00:00"
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--test-reporter=tap",
+      "tests/attribution-http.test.js"
+    ],
+    "exit_code": 0,
+    "log": "docs/features/f04a/check-attribution-http.test.log",
+    "at": "2026-10-03T00:20:57.945769+00:00"
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--test-reporter=tap",
+      "tests/partners.test.js"
+    ],
+    "exit_code": 0,
+    "log": "docs/features/f04a/check-partners.test.log",
+    "at": "2026-10-03T00:20:58.100935+00:00"
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--test-reporter=tap",
+      "tests/mutation.test.js"
+    ],
+    "exit_code": 0,
+    "log": "docs/features/f04a/check-mutation.test.log",
+    "at": "2026-10-03T00:20:59.396468+00:00"
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--test-reporter=tap",
+      "tests/sharing.http.test.js"
+    ],
+    "exit_code": 0,
+    "log": "docs/features/f04a/check-sharing.http.test.log",
+    "at": "2026-10-03T00:21:00.377133+00:00"
+  }
+]

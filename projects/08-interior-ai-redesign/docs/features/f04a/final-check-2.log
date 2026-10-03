@@ -1,0 +1,71 @@
+TAP version 13
+# Subtest: PUBLIC-01 exact Unicode context/description, consent and style boundaries
+ok 1 - PUBLIC-01 exact Unicode context/description, consent and style boundaries
+  ---
+  duration_ms: 1.89662
+  type: 'test'
+  ...
+# Subtest: owner boundary, strict public gate, byte bindings, explicit publication and revocation
+    # Subtest: SHARE-03 targeted cross-owner guard
+    ok 1 - SHARE-03 targeted cross-owner guard
+      ---
+      duration_ms: 1.40752
+      type: 'test'
+      ...
+    # Subtest: prepare ignores removeBadge and wrong owner cannot read artifact
+    ok 2 - prepare ignores removeBadge and wrong owner cannot read artifact
+      ---
+      duration_ms: 298.925016
+      type: 'test'
+      ...
+    # Subtest: accepted record XSS is escaped and public metadata has no private fields
+    ok 3 - accepted record XSS is escaped and public metadata has no private fields
+      ---
+      duration_ms: 320.713005
+      type: 'test'
+      ...
+    # Subtest: unverified or missing privileged evidence cannot publish; private unverified stays unverified
+    ok 4 - unverified or missing privileged evidence cannot publish; private unverified stays unverified
+      ---
+      duration_ms: 312.957702
+      type: 'test'
+      ...
+    1..4
+ok 2 - owner boundary, strict public gate, byte bindings, explicit publication and revocation
+  ---
+  duration_ms: 974.956878
+  type: 'test'
+  ...
+# Subtest: fixture is privately labelled and always denied publication
+ok 3 - fixture is privately labelled and always denied publication
+  ---
+  duration_ms: 336.92763
+  type: 'test'
+  ...
+# Subtest: PAY-05 targeted final hold guard on cached paid bytes and public reads
+ok 4 - PAY-05 targeted final hold guard on cached paid bytes and public reads
+  ---
+  duration_ms: 632.645016
+  type: 'test'
+  ...
+# Subtest: share attempts/outcomes/download events are distinct, replay safe and native resolve is browser reported
+ok 5 - share attempts/outcomes/download events are distinct, replay safe and native resolve is browser reported
+  ---
+  duration_ms: 309.88175
+  type: 'test'
+  ...
+# Subtest: bounded parallel preparation holds no SQL locks; public list repeats final consent check
+ok 6 - bounded parallel preparation holds no SQL locks; public list repeats final consent check
+  ---
+  duration_ms: 906.272613
+  type: 'test'
+  ...
+1..6
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3171.322342

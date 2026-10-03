@@ -1,0 +1,61 @@
+[
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "scripts/check.js"
+    ],
+    "exit_code": 0,
+    "log": "docs/features/f04a/final-check-0.log",
+    "at": "2026-10-03T00:23:31.277095+00:00"
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--test-reporter=tap",
+      "tests/composite.test.js"
+    ],
+    "exit_code": 0,
+    "log": "docs/features/f04a/final-check-1.log",
+    "at": "2026-10-03T00:23:33.843652+00:00"
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--test-reporter=tap",
+      "tests/sharing.test.js"
+    ],
+    "exit_code": 0,
+    "log": "docs/features/f04a/final-check-2.log",
+    "at": "2026-10-03T00:23:37.243068+00:00"
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--test-reporter=tap",
+      "tests/sharing.http.test.js"
+    ],
+    "exit_code": 0,
+    "log": "docs/features/f04a/final-check-3.log",
+    "at": "2026-10-03T00:23:38.209826+00:00"
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "scripts/mutation.js",
+      "share-hold"
+    ],
+    "exit_code": 0,
+    "log": "docs/features/f04a/final-check-4.log",
+    "at": "2026-10-03T00:23:44.827411+00:00"
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "scripts/mutation.js",
+      "share-owner"
+    ],
+    "exit_code": 0,
+    "log": "docs/features/f04a/final-check-5.log",
+    "at": "2026-10-03T00:23:53.035440+00:00"
+  }
+]

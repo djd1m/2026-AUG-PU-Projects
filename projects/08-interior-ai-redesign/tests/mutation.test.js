@@ -5,6 +5,22 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { mutateSource, mutationDetected, runTest, verifyMutation } from '../scripts/mutation.js';
 
+test('F04 mutation oracles refuse unrelated assertion, spawn failure and timeout',async()=>{
+  const source=await readFile(new URL('../web/sharing.js',import.meta.url),'utf8');
+  const dir=await mkdtemp(join(tmpdir(),'n8-f04-oracle-'));
+  try {
+    const probe=join(dir,'probe.cjs');
+    for(const [kind,actual,expected,tag] of [['share-owner',200,404,'SHARE-03 cross-owner composite must return 404'],
+      ['share-hold',false,true,'PAY-05 final hold must reject cached paid composite']]) {
+      assert.notEqual(mutateSource(source,kind),source);
+      assert.throws(()=>mutateSource(mutateSource(source,kind),kind),/mutation_guard_mismatch/);
+      await writeFile(probe,`const test=require('node:test');const assert=require('node:assert/strict');test('target',()=>assert.equal(${actual},${expected},${JSON.stringify(tag)}));`);
+      const r=runTest(dir,probe,'probe.log');assert.equal(mutationDetected(kind,r),true);
+      for(const bad of [{...r,status:0},{...r,signal:'SIGTERM'},{...r,error:new Error('spawn failed')},{...r,output:r.output.replace(tag,'unrelated error')}])assert.equal(mutationDetected(kind,bad),false);
+    }
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
+
 // Harness-only synthetic assertion probes. They are not PostgreSQL evidence.
 test('SEC-03 mutation oracle accepts only exact tagged owner assertion and rejects unrelated failures',async () => {
   const dir=await mkdtemp(join(tmpdir(),'n8-f01-oracle-'));

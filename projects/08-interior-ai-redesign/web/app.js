@@ -9,6 +9,8 @@ import { MAX_BYTES, createMedia } from './media.js';
 import { createAttribution } from './attribution.js';
 import { createPayments } from './payments.js';
 import { createResults } from './generation.js';
+import { createSharing } from './sharing.js';
+import { publicPage, publicList } from './public-pages.js';
 
 const STATIC = new Map([['/', ['index.html','text/html; charset=utf-8']],
   ['/app.js',['app.js','text/javascript; charset=utf-8']], ['/style.css',['style.css','text/css; charset=utf-8']]]);
@@ -18,6 +20,7 @@ export function createApp(pool, config, {paymentProvider}={}) {
   const auth = createAuth(pool,config.secret); const jobs = createJobs(pool,config);
   const media = createMedia(pool,config.storageDir,{deleteUpload:jobs.deleteUpload});
   const results = createResults(pool,config.storageDir);
+  const sharing = createSharing(pool,config);
   const notificationCapacity=new Capacity(4);
   const rates = new RateLimiter(); const authCapacity = new Capacity(4); const uploadCapacity = new Capacity(2);
   const server = createServer(async (req,res) => {
@@ -29,16 +32,38 @@ export function createApp(pool, config, {paymentProvider}={}) {
     const send = (status, body) => {
       res.writeHead(status, { 'Content-Type':'application/json; charset=utf-8' }); res.end(JSON.stringify(body));
     };
+    const sendComposite=image=>{
+      const timer=setTimeout(()=>res.destroy(),15000);
+      res.once('finish',()=>clearTimeout(timer));res.once('close',()=>clearTimeout(timer));
+      res.writeHead(200,{'Content-Type':image.mime,'Content-Length':image.data.length});res.end(image.data);
+    };
     try {
       const url = new URL(req.url,'http://internal'); const path = url.pathname;
-      if ((url.search && !(req.method==='GET' && path==='/api/jobs')) || /%|\\/.test(path)) throw new HttpError(400,'invalid_path');
+      const paginated=['/api/jobs','/api/publications','/examples'];
+      if ((url.search && !(req.method==='GET' && paginated.includes(path))) || /%|\\/.test(path)) throw new HttpError(400,'invalid_path');
       if (req.method === 'GET' && STATIC.has(path)) {
         const [file,type] = STATIC.get(path);
         res.writeHead(200,{'Content-Type':type}); res.end(await readFile(join(PUBLIC_ROOT,file))); return;
       }
-      if (!path.startsWith('/api/')) throw new HttpError(404,'not_found');
       const ip = req.socket.remoteAddress ?? 'unknown'; // Never trust caller X-Forwarded-For.
       rates.take(`public:${ip}`,120,60000);
+      const publicMatch=/^\/s\/([^/]+)(\/composite)?$/.exec(path);
+      if(req.method==='GET'&&(publicMatch||['/api/publications','/examples'].includes(path))) {
+        await readBody(req,16384);
+        res.setHeader('Cache-Control','no-store');
+        if(publicMatch) {
+          const item=await sharing.publicRead(publicMatch[1]);
+          if(publicMatch[2])sendComposite(item.image);
+          else {res.removeHeader('X-Robots-Tag');res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(publicPage(item));}
+        } else {
+          if([...url.searchParams.keys()].some(k=>!['before','limit'].includes(k)||url.searchParams.getAll(k).length!==1))throw new HttpError(400,'invalid_page');
+          const result=await sharing.list({before:url.searchParams.get('before')??undefined,
+            limit:url.searchParams.has('limit')?Number(url.searchParams.get('limit')):10});
+          if(path==='/api/publications')send(200,result);
+          else {res.removeHeader('X-Robots-Tag');res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(publicList(result));}
+        }return;
+      }
+      if (!path.startsWith('/api/')) throw new HttpError(404,'not_found');
       if(req.method==='POST' && path==='/api/payments/webhook') { const signal=await readJson(req); send(200,await notificationCapacity.run(()=>payments.notify(signal))); return; }
       if (!['GET','HEAD'].includes(req.method)) requireOrigin(req,config.origin);
       if (req.method === 'POST' && ['/api/register','/api/login'].includes(path)) {
@@ -83,6 +108,24 @@ export function createApp(pool, config, {paymentProvider}={}) {
             [...url.searchParams.keys()].some(k=>url.searchParams.getAll(k).length!==1)) throw new HttpError(400,'invalid_page');
         send(200,await jobs.list(account.id,{before:url.searchParams.get('before')??undefined,
           limit:url.searchParams.has('limit')?Number(url.searchParams.get('limit')):50})); return;
+      }
+      const sharingMatch=/^\/api\/jobs\/([^/]+)\/(share-attempt|share-outcome|publication)$/.exec(path);
+      if(sharingMatch) {
+        const [,id,kind]=sharingMatch;
+        if(req.method==='POST'&&kind==='share-attempt'){send(200,await sharing.attempt(account.id,id,await readJson(req)));return;}
+        if(req.method==='POST'&&kind==='share-outcome'){send(200,await sharing.outcome(account.id,id,await readJson(req)));return;}
+        if(req.method==='POST'&&kind==='publication'){send(201,await sharing.publish(account.id,id,await readJson(req)));return;}
+        if(req.method==='GET'&&kind==='publication'){send(200,await sharing.state(account.id,id));return;}
+        if(req.method==='DELETE'&&kind==='publication'){await readBody(req,16384);send(200,await sharing.revoke(account.id,id));return;}
+      }
+      const compositeMatch=/^\/api\/jobs\/([^/]+)\/composite\/(native|download)\/([^/]+)$/.exec(path);
+      if(compositeMatch&&req.method==='GET') {
+        const image=await sharing.ownerComposite(account.id,compositeMatch[1],compositeMatch[2],compositeMatch[3]);
+        if(image.download) {
+          res.setHeader('Content-Disposition','attachment; filename="roomkind.webp"');
+          res.once('finish',()=>{image.delivered().catch(()=>console.error('share_event_failed'));});
+        }
+        sendComposite(image);return;
       }
       const resultMatch = /^\/api\/jobs\/([^/]+)\/result$/.exec(path);
       if(resultMatch && req.method==='GET') {

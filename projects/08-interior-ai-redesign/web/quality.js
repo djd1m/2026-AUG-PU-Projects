@@ -95,8 +95,9 @@ export function createQuality(pool,config,{operatorIdentity}={}) {
     });
   }};
 }
-// F04 must call this guard at final publication/export authorization. No public
-// sharing route exists yet. Reads remain independently guarded by byte hashes.
+// Public publication/export requires this strict byte/provenance guard outside
+// locks, then F04 repeats the bound SQL checks under account -> job -> share locks.
+// Private owner export may remain explicitly unverified; it grants no publication.
 export async function qualityEligible(pool,jobId,dir) {
   requireUuid(jobId);
   const row=(await pool.query(`${SELECT} AND j.mode='controlnet' AND j.quality='accepted'
