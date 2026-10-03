@@ -1,0 +1,42 @@
+{
+  "started_at": "2026-10-03T14:05:16.794902+00:00",
+  "finished_at": "2026-10-03T14:05:56.766600+00:00",
+  "elapsed_seconds": 39.971758489031345,
+  "source_revision": "5f90419d242f46b59c4f6e892d0eabbd5da1d06d",
+  "image": "n8-ui-e2e-6:8030270f cached + exact readonlysourceoverlays",
+  "cpu_total": 2,
+  "published_ports": [],
+  "results": [
+    {
+      "name": "port-preflight",
+      "exit_code": 0,
+      "elapsed_seconds": 1.2951363819884136,
+      "log": "replicate-i4c-r1-pg-port-preflight.log"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "elapsed_seconds": 6.200573684065603,
+      "log": "replicate-i4c-r1-pg-db-start.log"
+    },
+    {
+      "name": "binding",
+      "exit_code": 0,
+      "elapsed_seconds": 1.358523075003177,
+      "log": "replicate-i4c-r1-pg-binding.log"
+    },
+    {
+      "name": "cleanup-pg16",
+      "exit_code": 0,
+      "elapsed_seconds": 29.47384395089466,
+      "log": "replicate-i4c-r1-pg-cleanup-pg16.log"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "elapsed_seconds": 1.6354346240404993,
+      "log": "replicate-i4c-r1-pg-cleanup.log"
+    }
+  ],
+  "overall_exit": 0
+}
