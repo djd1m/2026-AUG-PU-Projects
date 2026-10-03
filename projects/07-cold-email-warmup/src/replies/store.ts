@@ -13,6 +13,7 @@ export interface Rescan {
 }
 export interface Capture { uidvalidity:string; uidNext:number; observedAt:Date; provenance:Rescan['provenance'] }
 export interface RunIdentity { runId:string; attempt:number; uidvalidity:string; expectedCursor:number }
+export type TransactionGuard=(client:PoolClient)=>Promise<void>;
 interface Hooks { clock?:()=>Date; beforeCommit?:()=>Promise<void>; afterCommit?:()=>Promise<void> }
 const stale=()=>new HttpError(409,'stale_reply_run');
 const evidenceError=()=>new HttpError(400,'invalid_reply_evidence');
@@ -37,10 +38,11 @@ export class ReplyStore {
   const row=(await this.pool.query('SELECT * FROM reply_rescan WHERE tenant_id=$1 AND mailbox_id=$2',[tenant,mailbox])).rows[0];return row?view(row):null;
  }
  // Same validity resumes unfinished work. A completed poll starts bounded incremental coverage.
- async capture(tenant:string,mailbox:string,input:Capture):Promise<Rescan> {
+ async capture(tenant:string,mailbox:string,input:Capture,guard?:TransactionGuard):Promise<Rescan> {
   const v=validity(input.uidvalidity),highWater=uid(input.uidNext)-1,observed=date(input.observedAt);
   if(!['local_fixture','imap_headers'].includes(input.provenance)) throw evidenceError();
   return eligibilityTransaction(this.pool,async c=>{
+   await guard?.(c);
    await this.owned(c,tenant,mailbox);const now=this.now();
    if(observed.getTime()>now.getTime() || now.getTime()-observed.getTime()>30000) throw evidenceError();
    const prior=(await c.query('SELECT * FROM reply_rescan WHERE tenant_id=$1 AND mailbox_id=$2 FOR UPDATE',[tenant,mailbox])).rows[0];
@@ -65,8 +67,9 @@ export class ReplyStore {
   await c.query('UPDATE mailbox_poll SET scan_complete=false WHERE mailbox_id=$1',[mailbox]);
  }
  // Failed tail evidence has no header writes and cannot manufacture completion.
- async failTail(tenant:string,mailbox:string,identity:RunIdentity) {
+ async failTail(tenant:string,mailbox:string,identity:RunIdentity,guard?:TransactionGuard) {
   return eligibilityTransaction(this.pool,async c=>{
+   await guard?.(c);
    const run=await this.current(c,tenant,mailbox,identity);if(run.state==='complete') throw stale();
    await this.incomplete(c,tenant,mailbox);return {state:'rescan_incomplete' as const,effects:0};
   });
@@ -88,9 +91,10 @@ export class ReplyStore {
   }
   return effects;
  }
- async page(tenant:string,mailbox:string,input:PageInput) {
+ async page(tenant:string,mailbox:string,input:PageInput,guard?:TransactionGuard) {
   const p=parsePage(input);
   const result=await eligibilityTransaction(this.pool,async c=>{
+   await guard?.(c);
    const run=await this.current(c,tenant,mailbox,{runId:p.runId,attempt:p.attempt,uidvalidity:p.uidvalidity,expectedCursor:p.expectedCursor});
    if(run.state!=='scanning') throw stale();const now=this.now(),elapsed=now.getTime()-run.attemptStartedAt.getTime();
    if(elapsed<0 || elapsed>=120000 || run.pages>=20) {

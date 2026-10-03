@@ -5,43 +5,50 @@ import { eligibilityTransaction } from '../consent/transaction.js';
 import { loadConfig } from '../config.js';
 import { createPool,ready } from '../db.js';
 import { FixtureAdapter,boundedOperation,type ReplyAdapter } from './adapter.js';
-import { ReplyStore,type Rescan } from './store.js';
+import { ReplyStore,type Rescan,type TransactionGuard } from './store.js';
+import { claimPoll,observePoll } from './fixture.js';
+import { HttpError } from '../errors.js';
 export const identity=(r:Rescan)=>({runId:r.runId,attempt:r.attempt,uidvalidity:r.uidvalidity,expectedCursor:r.cursor});
 export class PollWorker {
  readonly store:ReplyStore;
  constructor(readonly pool:Pool,ring:Keyring,readonly mode:'disabled'|'local_test'='disabled',readonly adapter:ReplyAdapter=new FixtureAdapter(pool)) {this.store=new ReplyStore(pool,ring);}
  async poll(tenant:string,mailbox:string) {
   if(this.mode!=='local_test') return {mode:this.mode,state:'disabled'};
-  let run:Rescan|null=null;let deadline=Date.now()+120000;
+  let run:Rescan|null=null;let guard:TransactionGuard|undefined;let deadline=Date.now()+120000;
   const operation=<T>(call:()=>Promise<T>)=>boundedOperation(call,Math.max(1,Math.min(30000,deadline-Date.now())));
   try {
+   const owner=await claimPoll(this.pool,tenant,mailbox);
+   guard=await observePoll(this.pool,tenant,mailbox,owner);
    const capture=await operation(()=>this.adapter.snapshot(tenant,mailbox));
-   run=await this.store.capture(tenant,mailbox,capture);deadline=run.attemptStartedAt.getTime()+120000;
+   run=await this.store.capture(tenant,mailbox,capture,guard);deadline=run.attemptStartedAt.getTime()+120000;
    if(run.state==='rescan_incomplete') return {mode:this.mode,state:run.state};
    for(let pages=0;pages<20;pages++) {
-    if(Date.now()>=deadline) {await this.store.failTail(tenant,mailbox,identity(run));return {mode:this.mode,state:'rescan_incomplete'};}
+    if(Date.now()>=deadline) {await this.store.failTail(tenant,mailbox,identity(run),guard);return {mode:this.mode,state:'rescan_incomplete'};}
+    guard=await observePoll(this.pool,tenant,mailbox,owner);
     const kind=run.cursor<run.highWater?'scan':'tail';
     let horizon=run.highWater;
     if(kind==='tail') {
      const tail=await operation(()=>this.adapter.snapshot(tenant,mailbox));
      if(tail.uidvalidity!==run.uidvalidity) {
-      run=await this.store.capture(tenant,mailbox,tail);return {mode:this.mode,state:run.state};
+      run=await this.store.capture(tenant,mailbox,tail,guard);return {mode:this.mode,state:run.state};
      }
      horizon=run.tailHighWater??tail.uidNext-1;
     }
     const current=run;
     const page=await operation(()=>this.adapter.read(tenant,mailbox,current.uidvalidity,current.cursor,horizon));
     const base={...identity(current),...page};
-    const result=await this.store.page(tenant,mailbox,kind==='tail'?{...base,kind,tailHighWater:horizon}:{...base,kind});
+    const result=await this.store.page(tenant,mailbox,kind==='tail'?{...base,kind,tailHighWater:horizon}:{...base,kind},guard);
     if(result.state!=='scanning') return {mode:this.mode,state:result.state};
     run=(await this.store.status(tenant,mailbox))!;
    }
    return {mode:this.mode,state:'rescan_incomplete'};
-  } catch {
+  } catch(error) {
+   if(error instanceof HttpError && error.code==='stale_poll_owner') return {mode:this.mode,state:'superseded'};
    // Failure never clears a pause or manufactures evidence, including missing fixture.
    try {
-    if(run && run.state!=='complete') await this.store.failTail(tenant,mailbox,identity(run));
-    else await eligibilityTransaction(this.pool,async c=>{await c.query('UPDATE mailbox_poll SET scan_complete=false WHERE mailbox_id=$1 AND EXISTS(SELECT 1 FROM mailbox WHERE tenant_id=$2 AND id=$1)',[mailbox,tenant]);});
+    if(!guard) return {mode:this.mode,state:'paused'};
+    if(run && run.state!=='complete') await this.store.failTail(tenant,mailbox,identity(run),guard);
+    else await eligibilityTransaction(this.pool,async c=>{await guard!(c);await c.query('UPDATE mailbox_poll SET scan_complete=false WHERE mailbox_id=$1 AND EXISTS(SELECT 1 FROM mailbox WHERE tenant_id=$2 AND id=$1)',[mailbox,tenant]);});
    } catch { /* A superseding run owns its pause. */ }
    return {mode:this.mode,state:'paused'};
   }
