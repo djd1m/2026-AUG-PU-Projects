@@ -3,7 +3,7 @@
 ## Overview
 Локальный MVP SMTP/IMAP warmup и персонализированных цепочек для небольшой B2B команды.
 Canonical product/architecture docs: docs/. Validated design: docs/validation-report.md.
-Backend ещё строится; готовность определяют тесты и review, а не наличие документа.
+Локальный backend и кабинет приняты; source-bound status/PR: docs/Completion.md.
 
 ## Problem & Solution
 Команде нужны общий лимит, отдельное согласие и надёжная остановка после ответа.
@@ -17,9 +17,9 @@ src/auth, src/mailboxes, src/dispatch, src/replies, src/billing, src/growth и w
 Схема и алгоритмы: docs/Architecture.md, docs/Pseudocode.md.
 
 ## Tech Stack
-Node22, TypeScript, native HTTP, pg, Argon2id, Nodemailer, ImapFlow. UI — доступная
+Node22, TypeScript, native HTTP, pg, Argon2id; SMTP/IMAP только local adapters. UI — доступная
 серверная оболочка и TypeScript по CJM A. Browser только общий Docker Playwright1.63.0.
-Версии/лицензии зависимостей фиксируются Sol и интегратором в первом lockfile.
+Версии закреплены в package-lock.json; внутреннее reuse описано в docs/reuse-inventory.md.
 
 ## Key Algorithms
 - register/login/logout: bounded Argon2id, durable session revocation, tenant predicates.

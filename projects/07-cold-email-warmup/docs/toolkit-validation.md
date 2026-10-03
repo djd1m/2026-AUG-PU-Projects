@@ -32,3 +32,14 @@ The disposable view now includes actual N7 Compose and insights carrier. Vendor
 1.13.2 verify rerun because these two previously missing artifacts changed: exit0,
 All artifacts verified. Output toolkit-vendor-verify-final.txt under replicate
 evidence. Settings/hooks remain root-only; no global or local hook registration.
+
+## Final F06 documentation handoff — 2026-10-03
+
+Same installed vendor1.13.2 and disposable composed view were verified after the
+completed implementation/docs refresh. Vendor output: **All artifacts verified**.
+[Full output](telemetry/features/20261003T023900Z-f06/toolkit-final-verify.txt).
+The shell wrapper exited0; the vendor exit was not separately captured before
+tail (raw vendor summary is the direct success evidence). No root settings/hooks
+were registered or changed. This still verifies the composed monorepo view, not
+a portable single-project installation. Earlier paragraphs are historical stage
+records; the current local implementation is accepted in Completion.md.

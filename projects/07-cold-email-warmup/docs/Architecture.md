@@ -2,17 +2,17 @@
 
 ## Architecture Overview
 
-Distributed Monolith in project monorepo. Docker Compose deployment on existing
-VPS, separate N7 network and volumes. No changes to shared proxy without approval.
+Distributed Monolith in project monorepo. Local Docker Compose on the development host, separate N7 network and volumes.
+Production deployment remains gated. No changes to shared proxy without approval.
 
 ```mermaid
 flowchart LR
   Browser --> Web[Web and API]
   Web --> PG[(PostgreSQL)]
-  Worker[Bounded scheduler and IMAP worker] --> PG
-  Worker --> SMTP[Allowed SMTP provider or local test sink]
-  Worker --> IMAP[Allowed IMAP provider or local test inbox]
-  Web --> Pay[Sandbox payment adapter]
+  Worker[Bounded local scheduler and reply worker] --> PG
+  Worker --> SMTP[Durable local test sink]
+  Worker --> IMAP[Local inbox fixture]
+  Web --> Pay[Canonical local TEST payment adapter]
 ```
 
 ## Component Breakdown / Technology Stack
@@ -24,7 +24,7 @@ flowchart LR
 | Database | PostgreSQL 16 container | Durable jobs, atomic quota, tenant data, unique idempotency keys |
 | Cache | None initially | Avoid second authority for consent/quota |
 | Queue | PostgreSQL jobs and SKIP LOCKED | Shared transaction for claim, consent and limits |
-| Worker | Separate Node process/container using same domain package | Scheduled warmup and bounded IMAP ingestion |
+| Worker | Separate Node process/container using same domain package | Scheduled local warmup and bounded inbox ingestion |
 | Infrastructure | Docker Compose, loopback-only web port variable | Isolated ownership; DB expose only, no host mapping |
 | Test browser | Existing codex-ui-playwright 1.63.0 | Owner-required shared browser; isolated contexts/artifacts |
 
@@ -109,3 +109,11 @@ ADR-005 donor provenance. CPU limit 2 for tests, no parallel heavy builds with r
 ADR-001 → FR-n7-002; ADR-002 → FR-n7-003/005; ADR-003 → FR-n7-004/008;
 ADR-004 → FR-n7-009/FR-GROWTH-002; ADR-005 → FR-n7-001/NFR-n7-001.
 These links establish named coverage, not implemented behavior.
+
+## Implemented boundary — 2026-10-03
+
+F01–F06 product contracts are accepted locally; see [Completion](Completion.md).
+No Nodemailer/ImapFlow or live payment SDK is installed. Provider-host validation
+and encrypted configuration do not imply a real connection. Historical scenario
+links below/above are design traceability; actual execution receipts are linked
+in [acceptance traceability](acceptance-traceability.md).

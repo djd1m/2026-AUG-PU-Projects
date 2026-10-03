@@ -1,7 +1,8 @@
 # PRD — Когорта
 
 Версия 1, 2026-10-02, CHOSEN_CJM: A. Source: секция 07 исходного prompt.
-Состояние: XL-план v1 утверждён, продукт ещё не реализован.
+Состояние 2026-10-03: локальное ПО реализовано и прошло независимую приёмку;
+почтовые/платёжные адаптеры TEST. Статус PR и deployment — в [Completion](Completion.md).
 
 ## Problem / target users
 
@@ -15,8 +16,8 @@
 preview цепочки → отдельный campaign consent → dispatcher → stop-on-reply.
 Системные границы: unsubscribe в каждом сообщении, suppression, complaints,
 tenant isolation, encrypted credentials, real evidence для reputation.
-Free/team entitlement и partner attribution проектируются сразу; sandbox
-payment integration не даёт live charge. FR/SC/AC — в Specification.md.
+Free/team entitlement и partner attribution реализованы; локальный TEST
+payment adapter не выполняет live charge. FR/SC/AC — в Specification.md.
 
 Вне scope: AI-ответы, CRM, domain/mailbox purchase, email existence validation,
 искусственные открытия/изъятие из spam, автоматическая публикация от имени

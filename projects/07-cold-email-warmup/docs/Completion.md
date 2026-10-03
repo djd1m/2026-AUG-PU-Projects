@@ -1,48 +1,44 @@
-# Completion / release contract
+# Completion — локальное ПО принято, публикация PR в работе
 
-Status: approved planning, correction N7-V01..06; independent revalidation pending. Three CJM prototypes have separate browser evidence. Product
-implementation, production launch, real provider integration and payment acceptance
-are not implied by documentation or successful prototype tests.
+2026-10-03: F01–F05 и F06 A1–A6/B1–B4 приняты. B5 документы/toolkit завершаются;
+B6 создание PR ещё не подтверждено. Поэтому AC-N7-012 пока PARTIAL и весь delivery
+не объявляется завершённым. [12 критериев](acceptance-traceability.md).
 
-## Development gates
+## Что работает
 
-Phase 1 docs → deterministic trace/completeness checks → independent Phase 2
-semantic validation → generated project-only toolkit → per-feature /next → /go.
-XL plan checkpoint blocks dependent implementation until explicit owner approval.
-Each feature carries RUN_ID, source revision, plan, checks and terminal receipt.
+Регистрация/tenant sessions, шифрованные настройки, отдельные согласия, pooled seed
+cohort, цепочки и общая квота, атомарная граница stop/submitting, bounded reply
+scanning/dedup, unsubscribe/complaints, ручные наблюдения, приватные share reports,
+TEST billing/entitlements/partner attribution и настоящий persistent кабинет.
 
-Mandatory acceptance: AC-N7-001..012 and all Specification FR/NFR. Required commands
-must be established in project package scripts and executed against exact source.
-Unavailable mandatory checks block delivery, not recorded as skip/pass.
+Почта — local sink/inbox fixture, оплата — canonical local TEST provider.
+AI replies, реальные SMTP/IMAP, списания и production deployment отсутствуют.
+Репутация без ручных наблюдений unknown. Seed goal30/7days ещё не измеряется.
 
-## Deployment checkpoint
+## Проверки и привязка
 
-Before any container start: `bash scripts/check-port-conflicts.sh projects/07-cold-email-warmup`.
-Compose uses only variable-defined loopback host port; PostgreSQL has expose and
-no published port. Isolated project name/volumes/network; no edits to another
-project or shared proxy. Fresh random runtime secrets and DB password, ignored env.
+Последний продуктовый commit `21e42881`; final acceptance metadata `9413b431`.
+[Source/build/image и отзывы](acceptance-traceability.md): unit39, ранее полный
+PG115, type/lint/build, guard mutations, privacy/tenant/secret canaries. Actual
+shared Docker Playwright Chromium1440/390, Firefox/WebKit390; narrow final mobile
+report218checks, eight revocations, keyboard scrolling и читаемые counts/ISO.
+Local p95<500ms измерен на CPU2/concurrency10 (109.1/85.2ms); не production SLA.
 
-Plan deployment with source SHA, build image digest, rollback previous image,
-backup/restore verification, migration direction and downtime expectation.
-Ask owner approval only with reviewable concrete release. Live SMTP/IMAP credentials
-and sends require separate approved provider and opt-in pilot; never enable by
-presence of an env variable alone. Charges likewise separate.
+Браузер проверил реальный API/DB и обнаружил четыре исправленных дефекта.
+Все неудачные попытки/таймауты сохранены. Fresh Astra final report ACCEPT;
+процесс timeout124 после записи terminal receipt раскрыт в telemetry отдельно.
 
-## Handoff
+## Документы, воспроизведение и поставка
 
-PR targets current default `claude/install-npm-packages-n7l3m5`; do not create main.
-Russian conventional commits after logical milestones, push feature branch,
-no Co-Authored-By. Include verified UI links, source/build, checks, remaining
-limitations, elapsed and available usage/cost. Unknown counters remain null.
+[Русское руководство](../README/ru/README.md) · [English](../README/eng/README.md)
+· [Walkthrough](pipeline-walkthrough.md) · [Toolkit](toolkit-validation.md)
+· [PR draft](pr-draft.md) · [Deployment checkpoint](deployment-checkpoint.md).
 
-Seven-day target is monitored only after accepted pilot start; no background
-automation or retention claim implied. Completion means all accepted scope AC
-pass, not merely all documents exist.
+Ветка `feature/07-cold-email-warmup`, target `claude/install-npm-packages-n7l3m5`.
+Main не создаётся. Текущий локальный URL `http://127.0.0.1:18709` существует только
+на host запущенного dev-стека; это не публичный deployment.
 
-Local billing acceptance REQUIRES configured fake provider success: immutable
-price/attribution, canonical state fetch, duplicate/reordered event tests, one
-entitlement grant. Unavailable is a negative test only. Real provider activation
-and real money stay deferred; no paid conversion metric is inferred from fixtures.
-Privacy acceptance tests both disclosed peer headers/test body and forbidden
-private data/API access. Stop safety acceptance covers BOTH lock orderings at
-final submitting commit for every stop writer.
+Профиль compact-quality-first-v2/XL. Подтверждённые модели: Sol6.1/high — код/тесты,
+Astra/high — независимое review. Native coordinator actualmodel/usage и cost неизвестны.
+[Run](telemetry/features/20261003T023900Z-f06/run.json) содержит время, попытки и
+ссылки на raw usage; cumulative resumed counters не складываются повторно.

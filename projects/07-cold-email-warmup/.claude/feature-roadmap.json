@@ -13,7 +13,7 @@
       "depends_on": [],
       "blockers": [],
       "expected_files": [
-        "src/auth.ts",
+        "src/auth/service.ts",
         "src/server.ts",
         "db/001-init.sql"
       ],
@@ -36,8 +36,8 @@
       ],
       "blockers": [],
       "expected_files": [
-        "src/mailboxes.ts",
-        "src/consent.ts"
+        "src/mailboxes/store.ts",
+        "src/consent/store.ts"
       ],
       "requirements": [
         "FR-n7-002",
@@ -58,8 +58,8 @@
       ],
       "blockers": [],
       "expected_files": [
-        "src/dispatch.ts",
-        "src/campaigns.ts"
+        "src/dispatch/store.ts",
+        "src/campaigns/store.ts"
       ],
       "requirements": [
         "FR-n7-004",
@@ -82,8 +82,8 @@
       ],
       "blockers": [],
       "expected_files": [
-        "src/replies.ts",
-        "src/suppression.ts"
+        "src/replies/store.ts",
+        "src/suppression/store.ts"
       ],
       "requirements": [
         "FR-n7-006",
@@ -106,8 +106,8 @@
       ],
       "blockers": [],
       "expected_files": [
-        "src/billing.ts",
-        "src/growth.ts"
+        "src/billing/service.ts",
+        "src/growth/reports.ts"
       ],
       "requirements": [
         "FR-n7-008",
@@ -133,14 +133,15 @@
       ],
       "blockers": [],
       "expected_files": [
-        "src/web.ts",
-        "scripts/ui/check-app.mjs"
+        "src/web/app.ts",
+        "scripts/ui/f06-browser.mjs"
       ],
       "requirements": [
         "NFR-n7-002"
       ],
       "sprint": "local-mvp",
-      "current_slice": "F06a persistent cabinet"
+      "current_slice": "A1\u2013A6/B1\u2013B4 accepted; B5 docs/toolkit and B6 PR delivery",
+      "product_accepted_revision": "21e42881"
     }
   ],
   "last_completed": "f05-evidence-billing-growth"
