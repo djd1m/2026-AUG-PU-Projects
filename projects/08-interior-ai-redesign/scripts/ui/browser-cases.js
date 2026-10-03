@@ -23,6 +23,31 @@ export async function delayedResponse(page,pattern,predicate=()=>true) {
   await page.route(pattern,handler);
   return {reached,release,finished,close:async()=>{release();await page.unroute(pattern,handler);}};
 }
+export async function clickAndWaitForHandler(page,selector) {
+  const button=page.locator(selector);
+  const observation=await button.evaluateHandle(element=>{
+    const original=element.onclick;
+    if(typeof original!=='function')throw new Error('missing click handler');
+    let finish;const done=new Promise(resolve=>{finish=resolve;});
+    const wrapper=function(event) {
+      try {
+        const pending=original.call(this,event);
+        if(typeof pending?.then!=='function')throw new Error('click handler must return its operation promise');
+        pending.then(()=>finish({}),error=>finish({error:String(error)}));
+        return pending;
+      }catch(error){finish({error:String(error)});throw error;}
+    };
+    element.onclick=wrapper;
+    return {element,original,wrapper,done};
+  });
+  try {
+    await button.click();
+    await observation.evaluate(async({done})=>{const outcome=await done;if(outcome.error)throw new Error(outcome.error);});
+  }finally {
+    await observation.evaluate(({element,original,wrapper})=>{if(element.onclick===wrapper)element.onclick=original;});
+    await observation.dispose();
+  }
+}
 export async function upload(page,config) {
   const ownerUploads=()=>page.evaluate(async()=>{
     const response=await fetch('/api/uploads',{credentials:'same-origin',cache:'no-store'});
@@ -143,17 +168,31 @@ export async function extendedCases({page,context,pool,config,check,request,rese
     }
   });
   await check(`${width}: delete during pending real share response never restores private artifact`,async()=>{
-    await page.locator('#upload-choice').selectOption(uploadB);await page.locator('[data-style=playful]').click();await reserve(page);
+    await page.locator('#upload-choice').selectOption(uploadB);await page.locator('[data-style=playful]').click();const deletedJob=await reserve(page);
     await drive(pool,config,'complete');await page.locator('#resume').click();await page.locator('#comparison').waitFor({state:'visible'});
     const held=await delayedResponse(page,'**/share-attempt');
     try {
       await page.locator('#prepare-share').click();await held.reached;
-      await page.locator('#delete-job').click();await page.locator('#result').waitFor({state:'hidden'});held.release();await held.finished;await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
+      const deleted=page.waitForResponse(r=>r.url().endsWith('/api/jobs/'+deletedJob)&&r.request().method()==='DELETE');
+      // Hiding the result precedes DELETE and all three authenticated refreshes.
+      const refreshes=[],observe=response=>{
+        const url=new URL(response.url()),path=url.pathname+url.search;
+        if(response.request().method()==='GET'&&['/api/uploads','/api/me','/api/jobs?limit=50'].includes(path))refreshes.push([path,response.status()]);
+      };
+      page.on('response',observe);
+      try {await clickAndWaitForHandler(page,'#delete-job');}finally{page.off('response',observe);}
+      assert.equal((await deleted).status(),200);
+      assert.deepEqual(refreshes,[['/api/uploads',200],['/api/me',200],['/api/jobs?limit=50',200]],'all delete refreshes must succeed');
+      assert.equal((await request(page,'/api/jobs/'+deletedJob)).status,404);
+      await page.locator('#result').waitFor({state:'hidden'});held.release();await held.finished;await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
       assert.equal(await page.locator('#download').isVisible(),false);assert.equal(await page.locator('#native-share').isVisible(),false);
       assert.equal(await page.locator('#after').getAttribute('src'),null);
     }finally{await held.close();}
   });
   await check(`${width}: R4 delayed real authentication_required across logout/login`,async()=>{
+    assert.equal(await page.locator('#logout').isVisible(),true);
+    assert.equal(await page.locator('#workspace').isVisible(),true);
+    assert.match(await page.locator('#account-info').innerText(),new RegExp(account.email));
     assert.equal((await request(page,'/api/logout','POST',{})).status,200);
     const held=await delayedResponse(page,'**/api/me');
     try {
