@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-03T02:14:47.514065+00:00",
+  "reason": "disk1.8GB before correction; only completed own read-only worktrees",
+  "rows": [
+    {
+      "path": "/tmp/n7-f04b-review",
+      "revision": "99c6bca75a46b6e84db91630299874eb89fd6eb7",
+      "process_exit": 0,
+      "finished_at": "2026-10-03T00:43:35.826697+00:00",
+      "archive": "same absolute N7 subtree; monorepo copy removed; now not a git worktree",
+      "reproducible_exclusions": [
+        "node_modules",
+        "dist"
+      ]
+    },
+    {
+      "path": "/tmp/n7-f04b-r1-review",
+      "revision": "06ed2f9d271b416e2f75ccb95f309bb7d1acde1c",
+      "process_exit": 0,
+      "finished_at": "2026-10-03T01:01:03.399040+00:00",
+      "archive": "same absolute N7 subtree; monorepo copy removed; now not a git worktree",
+      "reproducible_exclusions": [
+        "node_modules",
+        "dist"
+      ]
+    },
+    {
+      "path": "/tmp/n7-f05a-review",
+      "revision": "e3b6462748efbceda3ba3fd8a603d9453ec6a299",
+      "process_exit": 0,
+      "finished_at": "2026-10-03T01:29:42.954057+00:00",
+      "archive": "same absolute N7 subtree; monorepo copy removed; now not a git worktree",
+      "reproducible_exclusions": [
+        "node_modules",
+        "dist"
+      ]
+    },
+    {
+      "path": "/tmp/n7-f05b-review",
+      "revision": "ab5a6eda9498000e631d45897df51aa94cf2885b",
+      "process_exit": 0,
+      "finished_at": "2026-10-03T02:12:37.605056+00:00",
+      "archive": "same absolute N7 subtree; monorepo copy removed; now not a git worktree",
+      "reproducible_exclusions": [
+        "node_modules",
+        "dist"
+      ]
+    }
+  ],
+  "absolute_n7_trace_paths_preserved": true
+}

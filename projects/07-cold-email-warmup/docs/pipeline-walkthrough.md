@@ -165,3 +165,5 @@ F05a accepted6/6 after fresh Astra high source review (276.183s), exact73input m
 F05b candidate: unit25/type/lint/build0; full initialPG105pass2fail from one fixture/parent, fixed fixture5f2f4a81, affected9pass/mutantRED/restored/canary/sourceimagePASS. Original author1500s timeout124 and incomplete receipt preserved. Separate Sol delivery178.303s exit0; coordinator moved existing completed status to last line for structural gate, original claim preserved in git. Fresh Astra B acceptance pending, F06 UI pending.
 
 F05b fresh Astra REQUEST_CHANGES (373.944s): F1 primitive enum types and F2 UUID canonical idempotent replay. Exact correction-b-r1.md, prior source/evidence preserved. F06 waits acceptance.
+
+F05b F1/F2 corrected in24b93fe6, author677.513s. FullPG109/unit27/restored11,three exact mutantsRED,canary/sourceimagePASS. Fresh targeted Astra closure next; F06 pending.
