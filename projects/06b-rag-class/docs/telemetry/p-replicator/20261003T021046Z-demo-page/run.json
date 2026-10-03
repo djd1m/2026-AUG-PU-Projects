@@ -12,26 +12,55 @@
   "feature": "demo-page",
   "tier": "M (fresh SPARC exception to L)",
   "started_at": "2026-10-03T02:10:46.364147+00:00",
-  "ended_at": null,
-  "status": "active",
+  "ended_at": "2026-10-03T03:09:56.665832+00:00",
+  "status": "completed",
   "baseline_revision": "023cc72302235061681902faec86a7363a8664e3",
-  "final_revision": null,
+  "final_revision": "05d05ca9fe3edd911f4d953ad8848f34505b36d8",
   "spec_sha256": "918e5d0e070d61f599d4cb5b7fc883adaee55a6c4c8c76c4c1cae21837018c82",
   "risk_flags": [
     "New public demo route",
     "Same-origin quota gate and frame denial",
     "Existing paid gateway reused without real paid calls"
   ],
-  "quality": {},
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 8,
+    "ac_total": 8,
+    "source_review_defects": 1,
+    "runtime_fixture_defects": 1,
+    "test_defects_closed": 2,
+    "publicrelease_clearance": false
+  },
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 3550302,
     "active_wall_ms": null,
     "input_tokens_total": null,
-    "cost": null
+    "cost": null,
+    "measured_cli_usage_only": {
+      "input_tokens": 4620329,
+      "cached_input_tokens": 4194688,
+      "output_tokens": 51427,
+      "reasoning_output_tokens": 7718,
+      "total_tokens": 4671756
+    },
+    "measured_cli_usage_only_note": "6 final cumulative native snapshots; cached/reasoning subsets; coordinator/cost unknown"
   },
   "telemetry_status": "partial",
   "missing_data": [
     "Coordinator actual model/usage/cost unavailable",
     "Pre-record worktree preparation and roadmap context read unmeasured"
+  ],
+  "acceptance_evidence": [
+    "docs/telemetry/p-replicator/20261003T021046Z-demo-page/evidence/delivery-1-receipt.md",
+    "tests/artifacts/demo-page/final-checks-summary.json",
+    "tests/artifacts/demo-page/ui-output/report.json"
+  ],
+  "native_stage_usage_files": [
+    "docs/telemetry/p-replicator/20261003T021046Z-demo-page/evidence/correction-1-native.json",
+    "docs/telemetry/p-replicator/20261003T021046Z-demo-page/evidence/correction-2-native.json",
+    "docs/telemetry/p-replicator/20261003T021046Z-demo-page/evidence/implementation-1-native.json",
+    "docs/telemetry/p-replicator/20261003T021046Z-demo-page/evidence/review-1-native.json",
+    "docs/telemetry/p-replicator/20261003T021046Z-demo-page/evidence/review-2-native.json",
+    "docs/telemetry/p-replicator/20261003T021046Z-demo-page/evidence/review-3-native.json"
   ]
 }

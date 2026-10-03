@@ -1,0 +1,54 @@
+{
+  "status": "pass",
+  "source_revision": "05d05ca9fe3edd911f4d953ad8848f34505b36d8",
+  "image": "sha256:d61e3832e80ccc062eeefe4e1bb65dfc4a90d3f5ddc70d8241bf59f09c69d824",
+  "basis": "Actual owner SQL queries in test-only bridge /stats during accepted UI before cleanup; extracted from original sourcebound report, not a second DB execution",
+  "per_bot": [
+    {
+      "bot_id": "7e63e8af-e3b6-448b-af8c-efa1b30a78c0",
+      "slug": "i6H9CRoFmhGJA9e2DoXud3-q",
+      "installs": 0,
+      "logs": [
+        {
+          "channel": "demo",
+          "outcome": "answered",
+          "n": 2
+        },
+        {
+          "channel": "demo",
+          "outcome": "error",
+          "n": 1
+        },
+        {
+          "channel": "demo",
+          "outcome": "limited",
+          "n": 1
+        }
+      ],
+      "provider_calls": 5
+    },
+    {
+      "bot_id": "9d892205-3a2a-41f9-b397-7e90e3c418bf",
+      "slug": "p-_mzfFPygrCwiq5d1M6bogZ",
+      "installs": 0,
+      "logs": [
+        {
+          "channel": "demo",
+          "outcome": "answered",
+          "n": 2
+        },
+        {
+          "channel": "demo",
+          "outcome": "error",
+          "n": 1
+        },
+        {
+          "channel": "demo",
+          "outcome": "limited",
+          "n": 1
+        }
+      ],
+      "provider_calls": 5
+    }
+  ]
+}

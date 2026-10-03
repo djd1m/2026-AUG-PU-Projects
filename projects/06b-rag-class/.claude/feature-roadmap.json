@@ -12,7 +12,7 @@
     "docs/discovery/reuse-inventory.md"
   ],
   "notes": {
-    "state": "Выполнены 11/16 фич до weekly-metric включительно. Следующий этап demo-page.",
+    "state": "Выполнены12/16 фич до demo-page включительно. Следующий этап studio-subaccounts; семейная атрибуция и handover ordering остаются обязательствами F13/F14.",
     "sc_coverage": "Все 59 SC-US-nnn-k из Specification распределены по фичам ровно по одному разу (проверено при генерации). SC-US-006-4 и SC-US-008-2 не покрыты REALISES в Pseudocode намеренно (ворота выпуска и браузерная проверка) — они в release-gate и widget.",
     "tier": "Поле tier — по таблице .claude/rules/complexity-router.md корня (T/S/M/L/XL); complexity — закрытый набор схемы /next. Оговорка правила: SPARC моложе недели с FR и алгоритмом опускает L до M; XL не опускается никогда (spend-ceilings — деньги, handover — граница владения). Фактический тир решает bash ../../scripts/complexity-router.sh по реальному диффу.",
     "reuse": "Поле reuse — строки docs/discovery/reuse-inventory.md (N<проект>#<строка> и путь). Код projects/06-rag-sales-chatbase НЕ используется (правило владельца №4).",
@@ -496,7 +496,7 @@
       "name": "Публичная демо-страница сохранённого бота /b/{slug}",
       "description": "GET /b/{slug} только при published AND demo_enabled (иначе 404), X-Robots-Tag noindex, no-store, frame-ancestors 'none' + X-Frame-Options DENY; POST /api/demo/{slug}/ask только application/json и Origin = наш origin, иначе 403 до квоты; те же пределы посетителя, widget_install не пишется.",
       "priority": "high",
-      "status": "next",
+      "status": "done",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -525,7 +525,9 @@
       "expected_files": [
         "apps/web/src/app/b/[slug]/page.tsx",
         "apps/web/src/app/api/demo/[slug]/ask/route.ts"
-      ]
+      ],
+      "acceptance_revision": "05d05ca9fe3edd911f4d953ad8848f34505b36d8",
+      "acceptance_evidence": "docs/features/demo-page/05_completion.md"
     },
     {
       "id": "studio-subaccounts",
@@ -676,5 +678,5 @@
       ]
     }
   ],
-  "last_completed": "weekly-metric"
+  "last_completed": "demo-page"
 }

@@ -1,0 +1,33 @@
+Traceback (most recent call last):
+  File "/tmp/n6b-f12-ui-preflight.py", line 5, in <module>
+    pf={'status':'ready','source_revision':source,'build_revision':image,'environment':'Isolated n6b-f12-ui Docker network; production web/PG/Caddy; test-only identical demo handler/gateway/FakeProvider bridge; shared browser own contexts, no published ports','test_command':'docker exec -w /opt/browser codex-ui-playwright node /opt/browser/n6b-f12-ui.mjs /opt/browser/n6b-f12-fixture.json /opt/browser/n6b-f12-output-1','inputs':[{'name':'Exact25host and immutable runner hashes; full type/unit/PG/build0','available':True},{'name':'Fresh Astra ACCEPT_WITH_CAVEATS, runtime gates close here; no production response mocks','available':True},{'name':'Disposable registered owners/API-created bots plus seeded source chunk and isolated FakeProvider','available':f.exists()}],'environment_available':True,'expected_effects':['Browser1440/390 real registration/publication/demoHTML/iframe denial/strictPOST/answerretrylimit/disable/re-enable; test-only FakeProvider with real gatewayPG, no response mocks or paid calls','Screenshots and own context/stack/privateenv cleanup; sharedbrowser retained'],'evidence_root':{'root':'project','path':'tests/artifacts/demo-page/ui-output/report.json'},'external_actions_executed':False,'e2e_claim':None,'checked_at':datetime.datetime.now(datetime.timezone.utc).isoformat()};(a/'ui-preflight.json').write_text(json.dumps(pf,indent=2)+'\n');wr=json.loads((r/'work-record.json').read_text());wr['stage']='preflight';wr['preflight']=pf;wr['source'].update(current_revision=source,build_revision=image,continuity={'expected_revision':source,'observed_revision':source,'reconciliation':None});wr['attempts'].append({'id':'ui-1','status':'active'});wr['identity']['current_attempt_id']='ui-1'
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1029, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-demo-page/projects/06b-rag-class/docs/telemetry/p-replicator/20261003T011351Z-demo-page/work-record.json'
+ Container n6b-f12-ui-bridge-1 Stopping 
+ Container n6b-f12-ui-proxy-1 Stopping 
+ Container n6b-f12-ui-proxy-1 Stopped 
+ Container n6b-f12-ui-proxy-1 Removing 
+ Container n6b-f12-ui-proxy-1 Removed 
+ Container n6b-f12-ui-web-1 Stopping 
+ Container n6b-f12-ui-web-1 Stopped 
+ Container n6b-f12-ui-web-1 Removing 
+ Container n6b-f12-ui-web-1 Removed 
+ Container n6b-f12-ui-bridge-1 Stopped 
+ Container n6b-f12-ui-bridge-1 Removing 
+ Container n6b-f12-ui-bridge-1 Removed 
+ Container n6b-f12-ui-migrate-1 Stopping 
+ Container n6b-f12-ui-migrate-1 Stopped 
+ Container n6b-f12-ui-migrate-1 Removing 
+ Container n6b-f12-ui-migrate-1 Removed 
+ Container n6b-f12-ui-db-1 Stopping 
+ Container n6b-f12-ui-db-1 Stopped 
+ Container n6b-f12-ui-db-1 Removing 
+ Container n6b-f12-ui-db-1 Removed 
+ Network n6b-f12-ui Removing 
+ Network n6b-f12-ui Removed 
