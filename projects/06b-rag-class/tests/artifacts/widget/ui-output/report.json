@@ -1,0 +1,261 @@
+{
+  "started_at": "2026-10-02T23:54:56.777Z",
+  "binding": "Production w.js/config/events (config transport delayed250ms in test server); no Playwright routing; actual network proxy ask -> test-only real handler/PaidGateway/PG with deterministic FakeProvider; no request fulfillment, no paid calls",
+  "source": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+  "image": "sha256:82460803f628576175aac1dc260f8df39d8938d4f6defff683034100d3ccecc2",
+  "checks": [
+    {
+      "width": 1440,
+      "pass": true,
+      "stats": {
+        "events": [
+          {
+            "kind": "impression",
+            "n": 1
+          },
+          {
+            "kind": "tamper",
+            "n": 3
+          }
+        ],
+        "installs": [
+          {
+            "origin_host": "widget-host.test",
+            "first_question_at": "2026-10-02T23:54:58.833Z"
+          }
+        ],
+        "providerCalls": 2,
+        "requests": [
+          {
+            "method": "OPTIONS",
+            "status": 204,
+            "origin": "https://widget-host.test",
+            "cookiePresent": false,
+            "acao": "https://widget-host.test",
+            "credentials": null
+          },
+          {
+            "method": "POST",
+            "status": 200,
+            "origin": "https://widget-host.test",
+            "cookiePresent": false,
+            "acao": "https://widget-host.test",
+            "credentials": null
+          }
+        ]
+      },
+      "responses": [
+        {
+          "status": 200,
+          "method": "POST",
+          "headers": {
+            "cache-control": "no-store",
+            "via": "1.1 Caddy",
+            "access-control-allow-origin": "https://widget-host.test",
+            "alt-svc": "h3=\":443\"; ma=2592000",
+            "content-length": "309",
+            "date": "Fri, 02 Oct 2026 23:54:58 GMT",
+            "content-type": "application/json",
+            "vary": "Origin"
+          }
+        },
+        {
+          "status": 200,
+          "method": "POST",
+          "headers": {
+            "cache-control": "no-store",
+            "via": "1.1 Caddy",
+            "access-control-allow-origin": "https://widget-host.test",
+            "alt-svc": "h3=\":443\"; ma=2592000",
+            "content-length": "179",
+            "date": "Fri, 02 Oct 2026 23:55:00 GMT",
+            "content-type": "application/json",
+            "vary": "Origin"
+          }
+        },
+        {
+          "status": 503,
+          "method": "POST",
+          "headers": {
+            "cache-control": "no-store",
+            "via": "1.1 Caddy",
+            "access-control-allow-origin": "https://widget-host.test",
+            "alt-svc": "h3=\":443\"; ma=2592000",
+            "content-length": "148",
+            "date": "Fri, 02 Oct 2026 23:55:01 GMT",
+            "content-type": "application/json",
+            "vary": "Origin"
+          }
+        },
+        {
+          "status": 200,
+          "method": "POST",
+          "headers": {
+            "cache-control": "no-store",
+            "via": "1.1 Caddy",
+            "access-control-allow-origin": "https://widget-host.test",
+            "alt-svc": "h3=\":443\"; ma=2592000",
+            "content-length": "309",
+            "date": "Fri, 02 Oct 2026 23:55:02 GMT",
+            "content-type": "application/json",
+            "vary": "Origin"
+          }
+        }
+      ],
+      "expected_network_errors": [
+        "Failed to load resource: the server responded with a status of 503 ()"
+      ]
+    },
+    {
+      "width": 390,
+      "pass": true,
+      "stats": {
+        "events": [
+          {
+            "kind": "impression",
+            "n": 1
+          },
+          {
+            "kind": "tamper",
+            "n": 3
+          }
+        ],
+        "installs": [
+          {
+            "origin_host": "widget-host.test",
+            "first_question_at": "2026-10-02T23:55:03.923Z"
+          }
+        ],
+        "providerCalls": 2,
+        "requests": [
+          {
+            "method": "OPTIONS",
+            "status": 204,
+            "origin": "https://widget-host.test",
+            "cookiePresent": false,
+            "acao": "https://widget-host.test",
+            "credentials": null
+          },
+          {
+            "method": "POST",
+            "status": 200,
+            "origin": "https://widget-host.test",
+            "cookiePresent": false,
+            "acao": "https://widget-host.test",
+            "credentials": null
+          }
+        ]
+      },
+      "responses": [
+        {
+          "status": 200,
+          "method": "POST",
+          "headers": {
+            "cache-control": "no-store",
+            "via": "1.1 Caddy",
+            "access-control-allow-origin": "https://widget-host.test",
+            "alt-svc": "h3=\":443\"; ma=2592000",
+            "content-length": "309",
+            "date": "Fri, 02 Oct 2026 23:55:03 GMT",
+            "content-type": "application/json",
+            "vary": "Origin"
+          }
+        },
+        {
+          "status": 200,
+          "method": "POST",
+          "headers": {
+            "cache-control": "no-store",
+            "via": "1.1 Caddy",
+            "access-control-allow-origin": "https://widget-host.test",
+            "alt-svc": "h3=\":443\"; ma=2592000",
+            "content-length": "179",
+            "date": "Fri, 02 Oct 2026 23:55:05 GMT",
+            "content-type": "application/json",
+            "vary": "Origin"
+          }
+        },
+        {
+          "status": 503,
+          "method": "POST",
+          "headers": {
+            "cache-control": "no-store",
+            "via": "1.1 Caddy",
+            "access-control-allow-origin": "https://widget-host.test",
+            "alt-svc": "h3=\":443\"; ma=2592000",
+            "content-length": "148",
+            "date": "Fri, 02 Oct 2026 23:55:07 GMT",
+            "content-type": "application/json",
+            "vary": "Origin"
+          }
+        },
+        {
+          "status": 200,
+          "method": "POST",
+          "headers": {
+            "cache-control": "no-store",
+            "via": "1.1 Caddy",
+            "access-control-allow-origin": "https://widget-host.test",
+            "alt-svc": "h3=\":443\"; ma=2592000",
+            "content-length": "309",
+            "date": "Fri, 02 Oct 2026 23:55:07 GMT",
+            "content-type": "application/json",
+            "vary": "Origin"
+          }
+        }
+      ],
+      "expected_network_errors": [
+        "Failed to load resource: the server responded with a status of 503 ()"
+      ]
+    }
+  ],
+  "screenshots": [
+    "collapsed-1440.png",
+    "answered-1440.png",
+    "paid-1440.png",
+    "unknown-1440.png",
+    "collapsed-390.png",
+    "answered-390.png",
+    "paid-390.png",
+    "unknown-390.png"
+  ],
+  "lastObservedStats": {
+    "events": [
+      {
+        "kind": "impression",
+        "n": 1
+      },
+      {
+        "kind": "tamper",
+        "n": 3
+      }
+    ],
+    "installs": [
+      {
+        "origin_host": "widget-host.test",
+        "first_question_at": "2026-10-02T23:55:03.923Z"
+      }
+    ],
+    "providerCalls": 2,
+    "requests": [
+      {
+        "method": "OPTIONS",
+        "status": 204,
+        "origin": "https://widget-host.test",
+        "cookiePresent": false,
+        "acao": "https://widget-host.test",
+        "credentials": null
+      },
+      {
+        "method": "POST",
+        "status": 200,
+        "origin": "https://widget-host.test",
+        "cookiePresent": false,
+        "acao": "https://widget-host.test",
+        "credentials": null
+      }
+    ]
+  },
+  "status": "pass",
+  "finished_at": "2026-10-02T23:55:07.911Z"
+}

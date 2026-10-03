@@ -1,0 +1,48 @@
+web-1    |    ▲ Next.js 15.5.27
+bridge-1  | widget fixture ready
+web-1     |    - Local:        http://localhost:3000
+web-1     |    - Network:      http://192.168.224.4:3000
+web-1     | 
+web-1     |  ✓ Starting...
+web-1     |  ✓ Ready in 1904ms
+web-1     | (node:1) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+web-1     | (Use `node --trace-warnings ...` to show where the warning was created)
+proxy-1  | {"level":"info","ts":1790985291.7629528,"msg":"maxprocs: Updating GOMAXPROCS=1: using minimum allowed GOMAXPROCS"}
+proxy-1   | {"level":"info","ts":1790985291.7663906,"msg":"GOMEMLIMIT is updated","package":"github.com/KimMachineGun/automemlimit/memlimit","GOMEMLIMIT":11286868377,"previous":9223372036854775807}
+proxy-1   | {"level":"info","ts":1790985291.7664714,"msg":"using config from file","file":"/etc/caddy/Caddyfile"}
+proxy-1   | {"level":"info","ts":1790985291.7691603,"msg":"adapted config to JSON","adapter":"caddyfile"}
+proxy-1   | {"level":"warn","ts":1790985291.7691975,"msg":"Caddyfile input is not formatted; run 'caddy fmt --overwrite' to fix inconsistencies","adapter":"caddyfile","file":"/etc/caddy/Caddyfile","line":2}
+proxy-1   | {"level":"info","ts":1790985291.771575,"logger":"admin","msg":"admin endpoint started","address":"localhost:2019","enforce_origin":false,"origins":["//localhost:2019","//[::1]:2019","//127.0.0.1:2019"]}
+proxy-1   | {"level":"info","ts":1790985291.7785542,"logger":"tls.cache.maintenance","msg":"started background certificate maintenance","cache":"0xc0005c4a80"}
+proxy-1   | {"level":"info","ts":1790985291.7894583,"logger":"http.auto_https","msg":"server is listening only on the HTTPS port but has no TLS connection policies; adding one to enable TLS","server_name":"srv0","https_port":443}
+proxy-1   | {"level":"info","ts":1790985291.7895014,"logger":"http.auto_https","msg":"automatic HTTP->HTTPS redirects are disabled","server_name":"srv0"}
+proxy-1   | {"level":"warn","ts":1790985291.7901683,"logger":"pki.ca.local","msg":"installing root certificate (you might be prompted for password)","path":"storage:pki/authorities/local/root.crt"}
+proxy-1   | {"level":"info","ts":1790985291.7907686,"msg":"warning: \"certutil\" is not available, install \"certutil\" with \"apt install libnss3-tools\" or \"yum install nss-tools\" and try again"}
+proxy-1   | {"level":"info","ts":1790985291.790783,"msg":"define JAVA_HOME environment variable to use the Java trust"}
+proxy-1   | {"level":"info","ts":1790985292.0633626,"msg":"certificate installed properly in linux trusts"}
+proxy-1   | {"level":"info","ts":1790985292.0643687,"logger":"http","msg":"enabling HTTP/3 listener","addr":":443"}
+proxy-1   | {"level":"info","ts":1790985292.0646749,"msg":"failed to sufficiently increase receive buffer size (was: 208 kiB, wanted: 7168 kiB, got: 416 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details."}
+proxy-1   | {"level":"info","ts":1790985292.0648274,"logger":"http.log","msg":"server running","name":"srv0","protocols":["h1","h2","h3"]}
+proxy-1   | {"level":"info","ts":1790985292.0648603,"logger":"http","msg":"enabling automatic TLS certificate management","domains":["n6b-ui.test","widget-host.test","denied-host.test"]}
+proxy-1   | {"level":"info","ts":1790985292.067722,"msg":"autosaved config (load with --resume flag)","file":"/config/caddy/autosave.json"}
+proxy-1   | {"level":"info","ts":1790985292.0677583,"msg":"serving initial configuration"}
+proxy-1   | {"level":"info","ts":1790985292.071969,"logger":"tls.obtain","msg":"acquiring lock","identifier":"widget-host.test"}
+proxy-1   | {"level":"info","ts":1790985292.0746095,"logger":"tls.obtain","msg":"acquiring lock","identifier":"denied-host.test"}
+proxy-1   | {"level":"info","ts":1790985292.0752835,"logger":"tls.obtain","msg":"acquiring lock","identifier":"n6b-ui.test"}
+proxy-1   | {"level":"info","ts":1790985292.0757325,"logger":"tls","msg":"cleaning storage unit","storage":"FileStorage:/data/caddy"}
+proxy-1   | {"level":"info","ts":1790985292.079647,"logger":"tls.obtain","msg":"lock acquired","identifier":"widget-host.test"}
+proxy-1   | {"level":"info","ts":1790985292.0798109,"logger":"tls.obtain","msg":"obtaining certificate","identifier":"widget-host.test"}
+proxy-1   | {"level":"info","ts":1790985292.081782,"logger":"tls.obtain","msg":"lock acquired","identifier":"denied-host.test"}
+proxy-1   | {"level":"info","ts":1790985292.082048,"logger":"tls.obtain","msg":"obtaining certificate","identifier":"denied-host.test"}
+proxy-1   | {"level":"info","ts":1790985292.0851963,"logger":"tls.obtain","msg":"lock acquired","identifier":"n6b-ui.test"}
+proxy-1   | {"level":"info","ts":1790985292.0882473,"logger":"tls.obtain","msg":"obtaining certificate","identifier":"n6b-ui.test"}
+proxy-1   | {"level":"info","ts":1790985292.1594055,"logger":"tls","msg":"finished cleaning storage units"}
+proxy-1   | {"level":"info","ts":1790985292.1692402,"logger":"tls.obtain","msg":"certificate obtained successfully","identifier":"denied-host.test","issuer":"local"}
+proxy-1   | {"level":"info","ts":1790985292.1694627,"logger":"tls.obtain","msg":"releasing lock","identifier":"denied-host.test"}
+proxy-1   | {"level":"warn","ts":1790985292.170277,"logger":"tls","msg":"stapling OCSP","identifiers":["denied-host.test"]}
+proxy-1   | {"level":"info","ts":1790985292.1718605,"logger":"tls.obtain","msg":"certificate obtained successfully","identifier":"n6b-ui.test","issuer":"local"}
+proxy-1   | {"level":"info","ts":1790985292.1721714,"logger":"tls.obtain","msg":"releasing lock","identifier":"n6b-ui.test"}
+proxy-1   | {"level":"warn","ts":1790985292.1739202,"logger":"tls","msg":"stapling OCSP","identifiers":["n6b-ui.test"]}
+proxy-1   | {"level":"info","ts":1790985292.1757534,"logger":"tls.obtain","msg":"certificate obtained successfully","identifier":"widget-host.test","issuer":"local"}
+proxy-1   | {"level":"info","ts":1790985292.1763144,"logger":"tls.obtain","msg":"releasing lock","identifier":"widget-host.test"}
+proxy-1   | {"level":"warn","ts":1790985292.1771355,"logger":"tls","msg":"stapling OCSP","identifiers":["widget-host.test"]}

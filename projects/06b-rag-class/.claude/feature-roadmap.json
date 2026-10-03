@@ -12,7 +12,7 @@
     "docs/discovery/reuse-inventory.md"
   ],
   "notes": {
-    "state": "Выполнены8/16 фич: foundation, spend-ceilings, index-jobs, chunk-embed, crawl-site, pdf-source, rag-answer-sandbox, publish-bot. Продолжение: widget; release gates сохраняются.",
+    "state": "Выполнены9/16 фич до widget включительно. Следующий этап badge-referral; публичный release и оставшиеся roadmap gates сохраняются.",
     "sc_coverage": "Все 59 SC-US-nnn-k из Specification распределены по фичам ровно по одному разу (проверено при генерации). SC-US-006-4 и SC-US-008-2 не покрыты REALISES в Pseudocode намеренно (ворота выпуска и браузерная проверка) — они в release-gate и widget.",
     "tier": "Поле tier — по таблице .claude/rules/complexity-router.md корня (T/S/M/L/XL); complexity — закрытый набор схемы /next. Оговорка правила: SPARC моложе недели с FR и алгоритмом опускает L до M; XL не опускается никогда (spend-ceilings — деньги, handover — граница владения). Фактический тир решает bash ../../scripts/complexity-router.sh по реальному диффу.",
     "reuse": "Поле reuse — строки docs/discovery/reuse-inventory.md (N<проект>#<строка> и путь). Код projects/06-rag-sales-chatbase НЕ используется (правило владельца №4).",
@@ -360,7 +360,7 @@
       "name": "Виджет w.js на чужом сайте: CORS по списку, Shadow DOM, уведомление 152-ФЗ, бейдж",
       "description": "Бандл ≤30 KB gzip без инлайновых script/style (adoptedStyleSheets); Widget ask gate (Origin из списка, иначе 403 без CORS; OPTIONS 204; ключ посетителя); Widget config (privacy_notice до первого вопроса, badge_required решает сервер, plan_of fail-closed), самовосстановление бейджа; docs/embed-contract.md — проверка на ЧУЖОМ origin под ограничительным CSP и враждебным CSS.",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "done",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -405,7 +405,9 @@
         "apps/web/src/app/api/widget/config/route.ts",
         "apps/web/src/server/plan.ts",
         "docs/embed-contract.md"
-      ]
+      ],
+      "acceptance_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+      "acceptance_evidence": "docs/features/widget/05_completion.md"
     },
     {
       "id": "badge-referral",
@@ -413,7 +415,7 @@
       "name": "Намерение снять бейдж, клик бейджа, лендинг и атрибуция регистрации",
       "description": "Кнопка «убрать бейдж» пишет growth_event(badge_removal_intent) раз в сутки, бейдж не меняется; GET /r/b/{public_id} → badge_event(click) уникально за сутки → 302 /?ref&utm_source=badge; cookie n6b_ref 30 дней первым касанием; referred_by_bot_id при регистрации, самореферал внутри семьи студии не засчитывается.",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "next",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -668,5 +670,5 @@
       ]
     }
   ],
-  "last_completed": "chunk-embed"
+  "last_completed": "widget"
 }

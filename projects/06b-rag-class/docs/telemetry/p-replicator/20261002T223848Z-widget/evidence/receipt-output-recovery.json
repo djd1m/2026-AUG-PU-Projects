@@ -1,0 +1,24 @@
+{
+  "recorded_at": "2026-10-03T00:02:41.425152+00:00",
+  "recoveries": [
+    {
+      "attempt": "fixture-correction-1",
+      "native_session": "01a0fef2-227f-7b21-a0ac-2bef53491269",
+      "native_source": "/root/.codex/sessions/2026/10/02/rollout-2026-10-02T23-27-56-01a0fef2-227f-7b21-a0ac-2bef53491269.jsonl",
+      "recovered_path": "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/fixture-correction-1-recovered-final.md",
+      "sha256": "856536cef547932da24142444bbaf0b3acff231f6c2659e5501e3c1122d6dc08",
+      "original_trace_written": false,
+      "reason": "Relative CLI -o from project cwd failed; CLI exit0 still reported Failed to write last message file. Verbatim native final_answer recovered, not fresh worker receipt."
+    },
+    {
+      "attempt": "fixture-review-1",
+      "native_session": "01a0fef9-4c06-76c1-8d70-4435da70b712",
+      "native_source": "/root/.codex/sessions/2026/10/02/rollout-2026-10-02T23-35-45-01a0fef9-4c06-76c1-8d70-4435da70b712.jsonl",
+      "recovered_path": "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/fixture-review-1-recovered-final.md",
+      "sha256": "be8370aa0b65c447f8583caaa9a6d1b2ea6f53d938607325148ea565f3e9125d",
+      "original_trace_written": false,
+      "reason": "Relative CLI -o from project cwd failed; CLI exit0 still reported Failed to write last message file. Verbatim native final_answer recovered, not fresh worker receipt."
+    }
+  ],
+  "strict_receipt_index": "Only aggregate delivery-1; absent original child paths not represented as compliant delivery"
+}

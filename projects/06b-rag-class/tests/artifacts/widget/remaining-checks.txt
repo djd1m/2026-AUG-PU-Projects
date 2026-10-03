@@ -1,0 +1,177 @@
+ Network n6b-f09-widget_test Creating 
+ Network n6b-f09-widget_test Creating 
+ Network n6b-f09-widget_test Created 
+ Network n6b-f09-widget_test Created 
+ Container n6b-f09-widget-db-1 Creating 
+ Container n6b-f09-widget-db-1 Created 
+ Container n6b-f09-widget-tests-1 Creating 
+ Container n6b-f09-widget-tests-1 Created 
+Attaching to db-1, tests-1
+ Container n6b-f09-widget-db-1 Starting 
+ Container n6b-f09-widget-db-1 Started 
+ Container n6b-f09-widget-db-1 Waiting 
+db-1  | The files belonging to this database system will be owned by user "postgres".
+db-1  | This user must also own the server process.
+db-1  | 
+db-1  | The database cluster will be initialized with locale "en_US.utf8".
+db-1  | The default database encoding has accordingly been set to "UTF8".
+db-1  | The default text search configuration will be set to "english".
+db-1  | 
+db-1  | Data page checksums are disabled.
+db-1  | 
+db-1  | fixing permissions on existing directory /var/lib/postgresql/data ... ok
+db-1  | creating subdirectories ... ok
+db-1  | selecting dynamic shared memory implementation ... posix
+db-1  | selecting default max_connections ... 100
+db-1  | selecting default shared_buffers ... 128MB
+db-1  | selecting default time zone ... Etc/UTC
+db-1  | creating configuration files ... ok
+db-1  | running bootstrap script ... ok
+db-1  | performing post-bootstrap initialization ... ok
+db-1  | syncing data to disk ... ok
+db-1  | 
+db-1  | 
+db-1  | Success. You can now start the database server using:
+db-1  | 
+db-1  |     pg_ctl -D /var/lib/postgresql/data -l logfile start
+db-1  | 
+db-1  | initdb: warning: enabling "trust" authentication for local connections
+db-1  | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+db-1  | waiting for server to start....2026-10-02 23:45:33.960 UTC [49] LOG:  starting PostgreSQL 16.15 (Debian 16.15-1.pgdg12+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+db-1  | 2026-10-02 23:45:33.968 UTC [49] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1  | 2026-10-02 23:45:33.973 UTC [52] LOG:  database system was shut down at 2026-10-02 23:45:33 UTC
+db-1  | 2026-10-02 23:45:33.982 UTC [49] LOG:  database system is ready to accept connections
+db-1  |  done
+db-1  | server started
+db-1  | CREATE DATABASE
+db-1  | 
+db-1  | 
+db-1  | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+db-1  | 
+db-1  | waiting for server to shut down....2026-10-02 23:45:34.218 UTC [49] LOG:  received fast shutdown request
+db-1  | 2026-10-02 23:45:34.218 UTC [49] LOG:  aborting any active transactions
+db-1  | 2026-10-02 23:45:34.226 UTC [49] LOG:  background worker "logical replication launcher" (PID 55) exited with exit code 1
+db-1  | 2026-10-02 23:45:34.227 UTC [50] LOG:  shutting down
+db-1  | 2026-10-02 23:45:34.227 UTC [50] LOG:  checkpoint starting: shutdown immediate
+db-1  | 2026-10-02 23:45:34.240 UTC [50] LOG:  checkpoint complete: wrote 922 buffers (5.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.012 s, sync=0.001 s, total=0.013 s; sync files=301, longest=0.001 s, average=0.001 s; distance=4255 kB, estimate=4255 kB; lsn=0/1912118, redo lsn=0/1912118
+db-1  | 2026-10-02 23:45:34.256 UTC [49] LOG:  database system is shut down
+db-1  |  done
+db-1  | server stopped
+db-1  | 
+db-1  | PostgreSQL init process complete; ready for start up.
+db-1  | 
+db-1  | 2026-10-02 23:45:34.355 UTC [1] LOG:  starting PostgreSQL 16.15 (Debian 16.15-1.pgdg12+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+db-1  | 2026-10-02 23:45:34.356 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+db-1  | 2026-10-02 23:45:34.356 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+db-1  | 2026-10-02 23:45:34.358 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1  | 2026-10-02 23:45:34.362 UTC [65] LOG:  database system was shut down at 2026-10-02 23:45:34 UTC
+db-1  | 2026-10-02 23:45:34.370 UTC [1] LOG:  database system is ready to accept connections
+ Container n6b-f09-widget-db-1 Healthy 
+ Container n6b-f09-widget-tests-1 Starting 
+ Container n6b-f09-widget-tests-1 Started 
+tests-1  | 
+tests-1  | > @n6b/db@0.1.0 build
+tests-1  | > tsc -p tsconfig.build.json
+tests-1  | 
+tests-1  | 
+tests-1  | > @n6b/rag@0.1.0 build
+tests-1  | > tsc -p tsconfig.build.json
+tests-1  | 
+tests-1  | 
+tests-1  |  RUN  v3.2.7 /app
+tests-1  | 
+tests-1  |  ✓ packages/rag/tests/int/paid-call.test.ts (19 tests) 5825ms
+tests-1  |    ✓ счёт по попыткам (SC-US-016-3, SC-US-005-4, T-8) > T-9: крах процесса между COMMIT резерва и исходом → строка started и списанный резерв  797ms
+tests-1  |    ✓ конкурентность на настоящем Postgres (ADR-010, shared-resource-verification) > T-5d: 50 прогонов × 30 параллельных попыток на пересекающихся ключах — ни одного deadlock  2986ms
+tests-1  |    ✓ конкурентность на настоящем Postgres (ADR-010, shared-resource-verification) > T-6: 200 параллельных при пуле 10 — соединений ≤ 10, вызовы провайдера идут БЕЗ удержания соединения  916ms
+tests-1  | 
+tests-1  |  Test Files  1 passed (1)
+tests-1  |       Tests  19 passed (19)
+tests-1  |    Start at  02:45:48
+tests-1  |    Duration  7.72s (transform 759ms, setup 0ms, collect 709ms, tests 5.82s, environment 0ms, prepare 196ms)
+tests-1  | 
+tests-1  | 
+tests-1  | > n6b-rag-class@0.1.0 build
+tests-1  | > npm run build --workspace @n6b/db && npm run build --workspace @n6b/rag && npm run build --workspace @n6b/worker && npm run build --workspace @n6b/web
+tests-1  | 
+tests-1  | 
+tests-1  | > @n6b/db@0.1.0 build
+tests-1  | > tsc -p tsconfig.build.json
+tests-1  | 
+tests-1  | 
+tests-1  | > @n6b/rag@0.1.0 build
+tests-1  | > tsc -p tsconfig.build.json
+tests-1  | 
+tests-1  | 
+tests-1  | > @n6b/worker@0.1.0 build
+tests-1  | > tsc -p tsconfig.build.json
+tests-1  | 
+tests-1  | 
+tests-1  | > @n6b/web@0.1.0 build
+tests-1  | > next build
+tests-1  | 
+tests-1  | {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+tests-1  | Attention: Next.js now collects completely anonymous telemetry regarding usage.
+tests-1  | This information is used to shape Next.js' roadmap and prioritize features.
+tests-1  | You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+tests-1  | https://nextjs.org/telemetry
+tests-1  | 
+tests-1  |    ▲ Next.js 15.5.27
+tests-1  | 
+tests-1  |    Creating an optimized production build ...
+tests-1  | {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+tests-1  | {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+tests-1  | {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+tests-1  |  ✓ Compiled successfully in 27.0s
+tests-1  |    Linting and checking validity of types ...
+tests-1  |    Collecting page data ...
+tests-1  |    Generating static pages (0/7) ...
+tests-1  |    Generating static pages (1/7) 
+tests-1  |    Generating static pages (3/7) 
+tests-1  |    Generating static pages (5/7) 
+tests-1  |  ✓ Generating static pages (7/7)
+tests-1  |    Finalizing page optimization ...
+tests-1  |    Collecting build traces ...
+tests-1  | 
+tests-1  | Route (app)                                 Size  First Load JS
+tests-1  | ┌ ○ /                                      161 B         106 kB
+tests-1  | ├ ○ /_not-found                            988 B         104 kB
+tests-1  | ├ ƒ /api/auth/login                        153 B         103 kB
+tests-1  | ├ ƒ /api/auth/logout                       153 B         103 kB
+tests-1  | ├ ƒ /api/auth/register                     153 B         103 kB
+tests-1  | ├ ƒ /api/bots                              153 B         103 kB
+tests-1  | ├ ƒ /api/bots/[id]/ask                     153 B         103 kB
+tests-1  | ├ ƒ /api/bots/[id]/publish                 153 B         103 kB
+tests-1  | ├ ƒ /api/bots/[id]/sources                 153 B         103 kB
+tests-1  | ├ ƒ /api/health                            153 B         103 kB
+tests-1  | ├ ƒ /api/jobs/[id]                         153 B         103 kB
+tests-1  | ├ ƒ /api/jobs/[id]/retry                   153 B         103 kB
+tests-1  | ├ ƒ /api/widget/ask                        153 B         103 kB
+tests-1  | ├ ƒ /api/widget/config                     153 B         103 kB
+tests-1  | ├ ƒ /api/widget/event                      153 B         103 kB
+tests-1  | ├ ƒ /cabinet                             5.14 kB         108 kB
+tests-1  | ├ ○ /login                               1.36 kB         107 kB
+tests-1  | └ ○ /register                            1.36 kB         107 kB
+tests-1  | + First Load JS shared by all             103 kB
+tests-1  |   ├ chunks/18-25b11e3a132b87ef.js        46.5 kB
+tests-1  |   ├ chunks/87c73c54-24122e7b92478d00.js  54.2 kB
+tests-1  |   └ other shared chunks (total)          1.92 kB
+tests-1  | 
+tests-1  | 
+tests-1  | ○  (Static)   prerendered as static content
+tests-1  | ƒ  (Dynamic)  server-rendered on demand
+tests-1  | 
+[Ktests-1 exited with code 0
+ Compose Stopping Aborting on container exit...
+ Container n6b-f09-widget-tests-1 Stopping 
+ Container n6b-f09-widget-tests-1 Stopped 
+ Container n6b-f09-widget-db-1 Stopping 
+db-1     | 2026-10-02 23:47:55.844 UTC [1] LOG:  received fast shutdown request
+db-1     | 2026-10-02 23:47:55.844 UTC [1] LOG:  aborting any active transactions
+db-1     | 2026-10-02 23:47:55.849 UTC [1] LOG:  background worker "logical replication launcher" (PID 68) exited with exit code 1
+db-1     | 2026-10-02 23:47:55.854 UTC [63] LOG:  shutting down
+db-1     | 2026-10-02 23:47:55.854 UTC [63] LOG:  checkpoint starting: shutdown immediate
+db-1     | 2026-10-02 23:47:55.863 UTC [63] LOG:  checkpoint complete: wrote 602 buffers (3.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.008 s, sync=0.001 s, total=0.009 s; sync files=235, longest=0.001 s, average=0.001 s; distance=4074 kB, estimate=4074 kB; lsn=0/1D0CBD8, redo lsn=0/1D0CBD8
+db-1     | 2026-10-02 23:47:55.882 UTC [1] LOG:  database system is shut down
+ Container n6b-f09-widget-db-1 Stopped 
+[Kdb-1 exited with code 0

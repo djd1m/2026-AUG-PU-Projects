@@ -1,0 +1,36 @@
+{
+  "run_id": "20261002T223848Z-widget",
+  "work_unit_id": "widget-fixture-correction",
+  "attempt_id": "fixture-correction-1",
+  "source_revision": "39464ac3c4ac77afd43bf1c15859398b7dd42b12",
+  "build_revision": null,
+  "launch_sha256": "94afe3c5ba9661faeac7e287179f815443a044a70fb640bacfd63433105e01cd",
+  "captured_at": "2026-10-02T23:29:22.983858+00:00",
+  "baseline_snapshot_sha256": "00f9a5a25dc0506e7df3f2bad58457c407474f0206e777f90b8912456c2f3954",
+  "snapshot_sha256": "1f8de8e69a48755557fc8279848fafaa90d2e0eca45ef21c8aeac491097fd199",
+  "snapshot_method": "SHA256 of UTF-8 JSON files map with sort_keys=True and separators=(comma,colon); project-relative paths, exact byte SHA256. Includes all changed production/test source plus changed build/config inputs. Excludes coordinator-owned telemetry and prose/log artifacts.",
+  "changed_source_entries": [
+    "apps/web/tests/int/widget-fixture.ts"
+  ],
+  "files": {
+    ".gitignore": "5049e167ab6d54447e9f59f21079136f0c12e59a87e5c5c0ad4d7b1c7301b45a",
+    "apps/web/next.config.mjs": "370edb94186b0a05e28f3ac7c9b40d734f62fede3e4f28dc96de413ac581578c",
+    "apps/web/src/app/api/widget/ask/route.ts": "518a6c769148c1e76d806d6545264dd34ab1c5dbbe20a5114f53ad1175af642e",
+    "apps/web/src/app/api/widget/config/route.ts": "cc7cd0e99332107049f2e3f42d5654dea07067c4aa4f891336e5db631899cb6f",
+    "apps/web/src/app/api/widget/event/route.ts": "10e1ae5c3f37278aae698536161922ce0b01638c422d90e6da702b92776d31e6",
+    "apps/web/src/app/cabinet/publish-bot.tsx": "ac5315e058f786227f1c9f957aa330b3f6301888d261f68974da245947c13bd0",
+    "apps/web/src/server/metric-host.ts": "10ff5f303b4365f91bcf81f4a701b56e4b21e28c234e8e70f79b6502442c3f21",
+    "apps/web/src/server/runtime.ts": "3aca04a2397db6554ef1e85906bb9f18ca337fc26b75a4e0ab2746025b42a753",
+    "apps/web/src/server/widget-handler.ts": "bd45ad818b385c6e4b7967c48496bfed61b51c52172c1fa98f15be09e88144ec",
+    "apps/web/src/server/widget-policy.ts": "a993b4e0aee5430c988b261769ef9246e2ffcb91a6723e6d0dd801755d82a8cc",
+    "apps/web/tests/int/widget-fixture.ts": "af981cd55036c13a3277105ef0ad68719eadc4aaa46cfb5bcaa1e4816dfff06c",
+    "apps/web/tests/int/widget.int.test.ts": "42e08f6bd4bd12ed0c9610abfb356f6cf46d4d393ed3b97f7a2bfb9bf34e7ebd",
+    "apps/web/tests/unit/widget-handler.test.ts": "5eb8f93702c4e1067f9d4782b4416448cd90d88ba97196bd1ba8e3898bc0dcd4",
+    "apps/widget/src/index.ts": "c6a052d4becb9f8b4ab40d58c272b08437a8f1eceeed2ccd7c6083910f1601bd",
+    "packages/db/src/index.ts": "70147bbace67ddc62dd4aff284146222db0031244efcef9a9c2dbe521df0fa15",
+    "packages/db/src/widget.ts": "3932f1206a6870d0703e6aabc680920f70592ce580ee4647d3657fbc86ccfb1a",
+    "scripts/build-widget.mjs": "5f7969e7965023ae5102aa938f6baf911427ab5d718d2d4384d3f34c6988981c",
+    "tests/artifacts/widget/deny-typescript-loader.mjs": "0e151b87c46bba85839136b3cd5a1144b4fe2e173d0a38928e500dd810bce50f",
+    "tsconfig.json": "a500a6f8ec3070aedf06d40ca1ffade6a068091dd3355d07e0c05714ff984d95"
+  }
+}

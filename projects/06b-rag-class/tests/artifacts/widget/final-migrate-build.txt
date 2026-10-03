@@ -1,0 +1,77 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.90kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22.22-alpine
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 361B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 DONE 0.0s
+
+#5 [deps 1/9] FROM docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd
+#5 resolve docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd 0.1s done
+#5 DONE 0.1s
+
+#4 [internal] load build context
+#4 transferring context: 12.74kB 0.0s done
+#4 DONE 0.1s
+
+#6 [deps 3/9] COPY package.json package-lock.json ./
+#6 CACHED
+
+#7 [deps 2/9] WORKDIR /app
+#7 CACHED
+
+#8 [deps 7/9] COPY packages/db/package.json ./packages/db/
+#8 CACHED
+
+#9 [deps 9/9] RUN npm ci
+#9 CACHED
+
+#10 [deps 6/9] COPY services/worker/package.json ./services/worker/
+#10 CACHED
+
+#11 [build 1/2] COPY . .
+#11 CACHED
+
+#12 [deps 8/9] COPY packages/rag/package.json ./packages/rag/
+#12 CACHED
+
+#13 [deps 4/9] COPY apps/web/package.json ./apps/web/
+#13 CACHED
+
+#14 [deps 5/9] COPY apps/widget/package.json ./apps/widget/
+#14 CACHED
+
+#15 [build 2/2] RUN npm run build
+#15 CACHED
+
+#16 [prod-deps 1/1] RUN npm prune --omit=dev
+#16 CACHED
+
+#17 [migrate 3/5] COPY --from=prod-deps /app/node_modules ./node_modules
+#17 CACHED
+
+#18 [migrate 4/5] COPY --from=build /app/package.json ./package.json
+#18 CACHED
+
+#19 [migrate 5/5] COPY --from=build /app/packages/db ./packages/db
+#19 DONE 0.4s
+
+#20 exporting to image
+#20 exporting layers
+#20 exporting layers 0.2s done
+#20 exporting manifest sha256:ddd6a62eb0805260068ecc5f0958ceef880daeb8a18aed3bb06039fe47bcd782 0.0s done
+#20 exporting config sha256:c684d99a89b271a2381961128522baf8e404ae5ea8b60461a79d61f159387fd8 0.0s done
+#20 exporting attestation manifest sha256:f0ebb86dd1505831a5dc454fbbf4da1e87fbce094a101a4f63da7c4b5919e73c 0.0s done
+#20 exporting manifest list sha256:148c5d786df038477ea10012601969b3a39634bfdb32a6812c7523d5dc1733f8
+#20 exporting manifest list sha256:148c5d786df038477ea10012601969b3a39634bfdb32a6812c7523d5dc1733f8 0.0s done
+#20 naming to docker.io/library/n6b-f09-widget-migrate:20261002 done
+#20 unpacking to docker.io/library/n6b-f09-widget-migrate:20261002 0.1s done
+#20 DONE 0.5s

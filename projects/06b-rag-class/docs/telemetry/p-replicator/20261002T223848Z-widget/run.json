@@ -12,10 +12,10 @@
   "feature": "widget",
   "tier": "M (fresh SPARC exception to L)",
   "started_at": "2026-10-02T22:38:48.743951+00:00",
-  "ended_at": null,
-  "status": "active",
+  "ended_at": "2026-10-03T00:02:41.425152+00:00",
+  "status": "completed",
   "baseline_revision": "fad30bfd7b280685d7afdaac3d2e8f2208bc966f",
-  "final_revision": null,
+  "final_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
   "spec_sha256": "918e5d0e070d61f599d4cb5b7fc883adaee55a6c4c8c76c4c1cae21837018c82",
   "risk_flags": [
     "New public widget paths",
@@ -25,18 +25,50 @@
     "Server badge decision"
   ],
   "quality": {
-    "required_gates_passed": false
+    "required_gates_passed": true,
+    "ac_met": 8,
+    "ac_total": 8,
+    "confirmed_findings_by_severity": {
+      "P2": 1
+    },
+    "confirmed_findings_closed": 1,
+    "test_fixture_corrections": 1,
+    "harness_prerequisite_corrections": 1,
+    "ui_attempts_failed": 1,
+    "ui_attempts_passed": 1,
+    "publicrelease_clearance": false
   },
   "metrics": {
-    "elapsed_wall_ms": null,
+    "elapsed_wall_ms": 5032681,
     "active_wall_ms": null,
     "input_tokens_total": null,
-    "cost": null
+    "cost": null,
+    "measured_cli_usage_only": {
+      "input_tokens": 5634064,
+      "cached_input_tokens": 5241216,
+      "output_tokens": 62342,
+      "reasoning_output_tokens": 11386,
+      "total_tokens": 5696406
+    },
+    "measured_cli_usage_only_note": "Six final native cumulative snapshots once each; cached/reasoning subsets; coordinator usage and cost unavailable"
   },
   "telemetry_status": "partial",
   "missing_data": [
-    "Coordinator actual model and usage unavailable; pre-record preparation unmeasured"
+    "Coordinator actual model and usage unavailable; pre-record preparation unmeasured",
+    "Two relative CLI -o writes failed despite exit0; exact native finals recovered separately, not strict original receipts"
   ],
-  "acceptance_evidence": [],
-  "native_stage_usage_files": []
+  "acceptance_evidence": [
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/delivery-1-receipt.md",
+    "tests/artifacts/widget/tested-source-final.json",
+    "tests/artifacts/widget/final-checks-summary.json",
+    "tests/artifacts/widget/ui-output/report.json"
+  ],
+  "native_stage_usage_files": [
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/correction-review-1-native-usage.json",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/fixture-correction-1-native-usage.json",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/correction-1-native-usage.json",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/review-1-native-usage.json",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/fixture-review-1-native-usage.json",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/implementation-1-native-usage.json"
+  ]
 }

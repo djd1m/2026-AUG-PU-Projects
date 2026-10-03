@@ -1,0 +1,19 @@
+{
+ auto_https disable_redirects
+}
+https://n6b-ui.test {
+ tls internal
+ handle /api/widget/config {
+  reverse_proxy bridge:3001
+ }
+ handle /api/widget/ask {
+  reverse_proxy bridge:3001
+ }
+ handle {
+  reverse_proxy web:3000
+ }
+}
+https://widget-host.test, https://denied-host.test {
+ tls internal
+ reverse_proxy bridge:3001
+}
