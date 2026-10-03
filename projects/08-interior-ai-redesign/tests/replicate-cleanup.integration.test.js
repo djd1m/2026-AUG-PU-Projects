@@ -223,7 +223,7 @@ test('F07 I4c cleanup on owned internal PostgreSQL16',async t=>{
     await t.test('default disabled and invalid opt-in deny without outbound calls or row changes',async()=>{
       await reset();await submitted();const before=await snapshot(),s=(await pool.query('SELECT * FROM provider_submission')).rows;
       const http=mockBoundary(()=>({json:prediction()}));assert.equal((await run(http,{},common)).actions,0);
-      for(const key of Object.keys(cleanupEnv()))assert.throws(()=>readReplicateCleanupConfig(common,{...cleanupEnv(),[key]:'invalid'}));
+      for(const key of Object.keys(cleanupEnv()))assert.throws(()=>readReplicateCleanupConfig(common,{...cleanupEnv(),[key]:key==='REPLICATE_API_TOKEN'?'':'invalid'}));
       assert.equal(http.calls.length,0);assert.deepEqual((await pool.query('SELECT * FROM provider_submission')).rows,s);assert.deepEqual(await snapshot(),before);
     });
     await t.test('scan at most100 once; sequential per-row actions and absolute pass exhaustion',async()=>{
