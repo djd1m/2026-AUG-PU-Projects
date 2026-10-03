@@ -1,6 +1,5 @@
 # F05 B separate delivery recovery
 
-Status: completed
 Verdict: saved author evidence delivered; product acceptance pending
 RUN_ID: 20261003T010600Z-f05
 WORK_UNIT_ID: n7-f05b-delivery-sol
@@ -32,3 +31,5 @@ Preflight ready at01:57:34; its generic full-suite command differs from actual t
 Scope: F05 B backend/API/public HTML author evidence only; implementation-b.md contains API handoff. Remaining gates: parent receipt validation/aggregation and fresh independent Astra F05 acceptance; F06 whole-cabinet Playwright out of this delivery scope. No product/test edits, reruns, network, deployment, live actions or push. Full local trace: /tmp/n7-f05b-sol/projects/07-cold-email-warmup/docs/telemetry/features/20261003T010600Z-f05/sol-b-delivery-receipt.md.
 
 Timing exception: provisional receipt was immediate; terminal receipt at158.696s missed required120s gate. Evidence delivery completed; deadline compliance failed.
+
+Status: completed
