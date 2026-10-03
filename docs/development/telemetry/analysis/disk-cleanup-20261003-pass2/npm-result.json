@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-03T17:25:45.592235+00:00",
+  "status": "PASS",
+  "checks": {
+    "protected_root_identities_preserved": true,
+    "immutable_course_files_preserved": true,
+    "exit_zero": true,
+    "npm_installed_logs_and_config_preserved": true,
+    "cache_removed": true
+  },
+  "exit_code": 0,
+  "elapsed_seconds": 2.556,
+  "available_bytes_before": 2948710400,
+  "available_bytes_after": 5411954688,
+  "available_bytes_delta": 2463244288,
+  "protected_immutable_file_count": 972,
+  "protected_npm_file_count": 6012,
+  "retry_performed": true,
+  "retry_reason": "Known initial npm double-loading config error corrected after three new model reviews; initial failure before deletion preserved."
+}

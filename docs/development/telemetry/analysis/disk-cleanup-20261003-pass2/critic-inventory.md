@@ -1,0 +1,6 @@
+Verdict: REQUEST_CHANGES
+
+- **High — Protected snapshot is incomplete.** The protected scope includes the entire course base and Git/worktrees, sources, and other data, but the procedure does not define a baseline and postcheck for those paths. Add a bounded comparison that verifies the protected paths relevant to this cleanup remain intact; otherwise their preservation is an assertion, not checked evidence.
+- **Medium — The fresh BuildKit preflight does not check age.** Its stated `du` selector checks IDs, immutable/private status, and type, but omits the 12-hour cutoff. Require a fresh age-eligibility check for all 83 IDs before pruning; the prune’s backend age guard can skip records, but does not establish that all sealed candidates were eligible.
+
+Counts reconcile: `candidates.json` contains 83 unique IDs, matching the inventory’s selected count. The listed sizes are rounded logical sizes, correctly treated as an estimate rather than disk-space reclaimed. The sealed npm index evidence records 1,792 entries—1,777 registry requests and 15 security-advisory entries—and the plan appropriately requires a fresh index and live-consumer check before cleanup. The pinned source semantics support the stated cache path and BuildKit guards. Those checks are procedural requirements, not evidence that the live preflight has already passed.

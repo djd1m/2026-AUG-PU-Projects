@@ -1,0 +1,23 @@
+{
+  "npm_version": "10.8.2",
+  "npm_cache_path": "/root/.npm/_cacache",
+  "index_record_count": 1792,
+  "origins": {
+    "registry.npmjs.org": 1777
+  },
+  "nonrequest_categories": {
+    "security-advisory": 15
+  },
+  "npm_clean_source": "/usr/lib/node_modules/npm/lib/commands/cache.js",
+  "npm_clean_source_sha256": "c7aced5e5ab97d492529195f59db75e035a79f161a7939ed330a0eeff506184e",
+  "npm_clean_source_excerpt": "async clean: cachePath=join(this.npm.cache, _cacache); force required; return fs.rm(cachePath,{recursive:true,force:true}); no _npx removal",
+  "selected_buildcache_count": 77,
+  "buildcache_logical_rounded_bytes": 4381964915.0,
+  "protected_course_base": "/home/dz-projects-2026/aicoding-site-promo/course-promos-render-20261003/**",
+  "node_modules_deletion_selected": false,
+  "startup_source_hashes": {
+    "/usr/lib/node_modules/npm/lib/utils/log-file.js": "31f369934a85b7cc9a782c3374a227b7036e5eab536a57cfc86af3b2ecbfb2f2",
+    "/usr/lib/node_modules/npm/lib/cli/update-notifier.js": "777c2519fcacf76c2e97260d1a6a8c4c9c3b2f5d33ae970e0caeb00123cabdae"
+  },
+  "v3_excluded_refreshed_count": 6
+}

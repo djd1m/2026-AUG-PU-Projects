@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-03T17:15:43.744505+00:00",
+  "status": "FINDINGS",
+  "checks": {
+    "protected_root_identities_preserved": true,
+    "immutable_course_files_preserved": true,
+    "exit_zero": false,
+    "npm_installed_logs_and_config_preserved": true,
+    "cache_removed": false
+  },
+  "exit_code": 1,
+  "elapsed_seconds": 1.363,
+  "available_bytes_before": 2986131456,
+  "available_bytes_after": 2984787968,
+  "available_bytes_delta": -1343488,
+  "protected_immutable_file_count": 972,
+  "protected_npm_file_count": 6012,
+  "retry_performed": false
+}
