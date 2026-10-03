@@ -1,0 +1,49 @@
+TAP version 13
+# Subtest: F04 PG16 composite/publication authorization, atomic revoke, events and hold serialization
+    # Subtest: two owners; accepted-only per-job consent; boundaries and byte/evidence mismatch
+    ok 1 - two owners; accepted-only per-job consent; boundaries and byte/evidence mismatch
+      ---
+      duration_ms: 3840.743721
+      type: 'test'
+      ...
+    # Subtest: revoke/republication/delete/reject atomically close old tokens without ledger regression
+    ok 2 - revoke/republication/delete/reject atomically close old tokens without ledger regression
+      ---
+      duration_ms: 1916.189374
+      type: 'test'
+      ...
+    # Subtest: cache hit waits for concurrent hold account lock then rejects stale unbadged image
+    ok 3 - cache hit waits for concurrent hold account lock then rejects stale unbadged image
+      ---
+      duration_ms: 1499.735115
+      type: 'test'
+      ...
+    # Subtest: concurrent event replay admits one attempt/completion/export and abort/error/unavailable zero completion
+    ok 4 - concurrent event replay admits one attempt/completion/export and abort/error/unavailable zero completion
+      ---
+      duration_ms: 872.172581
+      type: 'test'
+      ...
+    # Subtest: public list keyset pagination is bounded and consent remains job scoped
+    ok 5 - public list keyset pagination is bounded and consent remains job scoped
+      ---
+      duration_ms: 4433.093682
+      type: 'test'
+      ...
+    1..5
+ok 1 - F04 PG16 composite/publication authorization, atomic revoke, events and hold serialization
+  ---
+  duration_ms: 13221.198549
+  type: 'test'
+  ...
+1..1
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13701.009951
+ Container n8f07i7-tests-run-9d466ea96b2c Creating 
+ Container n8f07i7-tests-run-9d466ea96b2c Created 

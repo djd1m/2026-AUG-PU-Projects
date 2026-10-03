@@ -1,0 +1,42 @@
+{
+  "started_at": "2026-10-03T16:03:29.900884+00:00",
+  "finished_at": "2026-10-03T16:04:04.896753+00:00",
+  "elapsed_seconds": 34.995875791995786,
+  "source_revision": "8890e0b784abcf27f0db085e3d92134909a39219",
+  "image": "n8-ui-e2e-6:8030270f cached + exact readonlysourceoverlays",
+  "cpu_total": 2,
+  "published_ports": [],
+  "results": [
+    {
+      "name": "port-preflight",
+      "exit_code": 0,
+      "elapsed_seconds": 1.3579484949586913,
+      "log": "replicate-i7-owner-pg-port-preflight.log"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "elapsed_seconds": 8.058151565957814,
+      "log": "replicate-i7-owner-pg-db-start.log"
+    },
+    {
+      "name": "binding",
+      "exit_code": 0,
+      "elapsed_seconds": 1.538579700049013,
+      "log": "replicate-i7-owner-pg-binding.log"
+    },
+    {
+      "name": "mutation-owner",
+      "exit_code": 0,
+      "elapsed_seconds": 22.874521075049415,
+      "log": "replicate-i7-owner-pg-mutation-owner.log"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "elapsed_seconds": 1.0113369510509074,
+      "log": "replicate-i7-owner-pg-cleanup.log"
+    }
+  ],
+  "overall_exit": 0
+}

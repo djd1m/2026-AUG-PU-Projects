@@ -1,0 +1,192 @@
+{
+  "started_at": "2026-10-03T15:54:57.889528+00:00",
+  "finished_at": "2026-10-03T16:01:53.501225+00:00",
+  "elapsed_seconds": 415.61168976302724,
+  "source_revision": "8890e0b784abcf27f0db085e3d92134909a39219",
+  "image": "n8-ui-e2e-6:8030270f cached + exact readonlysourceoverlays",
+  "cpu_total": 2,
+  "published_ports": [],
+  "results": [
+    {
+      "name": "all-local32",
+      "exit_code": 0,
+      "elapsed_seconds": 61.918635734007694,
+      "log": "replicate-i7-pg-all-local32.log"
+    },
+    {
+      "name": "python5",
+      "exit_code": 0,
+      "elapsed_seconds": 0.30621571897063404,
+      "log": "replicate-i7-pg-python5.log"
+    },
+    {
+      "name": "lint",
+      "exit_code": 0,
+      "elapsed_seconds": 5.3022300930460915,
+      "log": "replicate-i7-pg-lint.log"
+    },
+    {
+      "name": "build",
+      "exit_code": 0,
+      "elapsed_seconds": 5.598897909047082,
+      "log": "replicate-i7-pg-build.log"
+    },
+    {
+      "name": "port-preflight",
+      "exit_code": 0,
+      "elapsed_seconds": 1.4774009669199586,
+      "log": "replicate-i7-pg-port-preflight.log"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "elapsed_seconds": 6.248317230958492,
+      "log": "replicate-i7-pg-db-start.log"
+    },
+    {
+      "name": "binding",
+      "exit_code": 0,
+      "elapsed_seconds": 1.6003529410809278,
+      "log": "replicate-i7-pg-binding.log"
+    },
+    {
+      "name": "attribution.integration.test",
+      "exit_code": 0,
+      "elapsed_seconds": 5.485632219002582,
+      "log": "replicate-i7-pg-attribution.integration.test.log"
+    },
+    {
+      "name": "integration.test",
+      "exit_code": 0,
+      "elapsed_seconds": 12.748454781016335,
+      "log": "replicate-i7-pg-integration.test.log"
+    },
+    {
+      "name": "jobs.integration.test",
+      "exit_code": 0,
+      "elapsed_seconds": 13.183408245909959,
+      "log": "replicate-i7-pg-jobs.integration.test.log"
+    },
+    {
+      "name": "payments.integration.test",
+      "exit_code": 0,
+      "elapsed_seconds": 11.193625796004198,
+      "log": "replicate-i7-pg-payments.integration.test.log"
+    },
+    {
+      "name": "quality.integration.test",
+      "exit_code": 0,
+      "elapsed_seconds": 3.704721973044798,
+      "log": "replicate-i7-pg-quality.integration.test.log"
+    },
+    {
+      "name": "replicate-cleanup.integration.test",
+      "exit_code": 0,
+      "elapsed_seconds": 34.89803409704473,
+      "log": "replicate-i7-pg-replicate-cleanup.integration.test.log"
+    },
+    {
+      "name": "replicate-evidence.integration.test",
+      "exit_code": 0,
+      "elapsed_seconds": 45.915636810008436,
+      "log": "replicate-i7-pg-replicate-evidence.integration.test.log"
+    },
+    {
+      "name": "replicate-generation.integration.test",
+      "exit_code": 0,
+      "elapsed_seconds": 19.21890972100664,
+      "log": "replicate-i7-pg-replicate-generation.integration.test.log"
+    },
+    {
+      "name": "replicate-lifecycle.integration.test",
+      "exit_code": 0,
+      "elapsed_seconds": 27.508955350029282,
+      "log": "replicate-i7-pg-replicate-lifecycle.integration.test.log"
+    },
+    {
+      "name": "replicate-quality.integration.test",
+      "exit_code": 0,
+      "elapsed_seconds": 21.160457464051433,
+      "log": "replicate-i7-pg-replicate-quality.integration.test.log"
+    },
+    {
+      "name": "replicate-send-cas.integration.test",
+      "exit_code": 0,
+      "elapsed_seconds": 4.466413413989358,
+      "log": "replicate-i7-pg-replicate-send-cas.integration.test.log"
+    },
+    {
+      "name": "replicate.integration.test",
+      "exit_code": 0,
+      "elapsed_seconds": 23.726632958976552,
+      "log": "replicate-i7-pg-replicate.integration.test.log"
+    },
+    {
+      "name": "sharing.integration.test",
+      "exit_code": 0,
+      "elapsed_seconds": 15.247483882936649,
+      "log": "replicate-i7-pg-sharing.integration.test.log"
+    },
+    {
+      "name": "mutation-origin",
+      "exit_code": 0,
+      "elapsed_seconds": 2.40419627900701,
+      "log": "replicate-i7-pg-mutation-origin.log"
+    },
+    {
+      "name": "mutation-owner",
+      "exit_code": 1,
+      "elapsed_seconds": 2.1966591839445755,
+      "log": "replicate-i7-pg-mutation-owner.log"
+    },
+    {
+      "name": "mutation-budget",
+      "exit_code": 0,
+      "elapsed_seconds": 32.87365346495062,
+      "log": "replicate-i7-pg-mutation-budget.log"
+    },
+    {
+      "name": "mutation-fixture",
+      "exit_code": 1,
+      "elapsed_seconds": 2.7259692930383608,
+      "log": "replicate-i7-pg-mutation-fixture.log"
+    },
+    {
+      "name": "mutation-payment",
+      "exit_code": 0,
+      "elapsed_seconds": 22.345659407088533,
+      "log": "replicate-i7-pg-mutation-payment.log"
+    },
+    {
+      "name": "mutation-consent",
+      "exit_code": 0,
+      "elapsed_seconds": 2.093246917007491,
+      "log": "replicate-i7-pg-mutation-consent.log"
+    },
+    {
+      "name": "mutation-partner",
+      "exit_code": 0,
+      "elapsed_seconds": 2.1905714019667357,
+      "log": "replicate-i7-pg-mutation-partner.log"
+    },
+    {
+      "name": "mutation-share-owner",
+      "exit_code": 0,
+      "elapsed_seconds": 10.201246871962212,
+      "log": "replicate-i7-pg-mutation-share-owner.log"
+    },
+    {
+      "name": "mutation-share-hold",
+      "exit_code": 0,
+      "elapsed_seconds": 9.17923751694616,
+      "log": "replicate-i7-pg-mutation-share-hold.log"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "elapsed_seconds": 8.310351895983331,
+      "log": "replicate-i7-pg-cleanup.log"
+    }
+  ],
+  "overall_exit": 1
+}

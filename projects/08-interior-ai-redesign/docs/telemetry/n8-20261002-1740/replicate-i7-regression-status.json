@@ -1,0 +1,85 @@
+{
+  "at": "2026-10-03T16:05:25.338925+00:00",
+  "source_revision": "8890e0b784abcf27f0db085e3d92134909a39219",
+  "local_tap_pass": 480,
+  "pg_tap_pass": 163,
+  "pg_files": [
+    {
+      "file": "tests/attribution.integration.test.js",
+      "tap_pass": 7,
+      "tap_fail": 0
+    },
+    {
+      "file": "tests/integration.test.js",
+      "tap_pass": 9,
+      "tap_fail": 0
+    },
+    {
+      "file": "tests/jobs.integration.test.js",
+      "tap_pass": 21,
+      "tap_fail": 0
+    },
+    {
+      "file": "tests/payments.integration.test.js",
+      "tap_pass": 17,
+      "tap_fail": 0
+    },
+    {
+      "file": "tests/quality.integration.test.js",
+      "tap_pass": 7,
+      "tap_fail": 0
+    },
+    {
+      "file": "tests/replicate-cleanup.integration.test.js",
+      "tap_pass": 14,
+      "tap_fail": 0
+    },
+    {
+      "file": "tests/replicate-evidence.integration.test.js",
+      "tap_pass": 16,
+      "tap_fail": 0
+    },
+    {
+      "file": "tests/replicate-generation.integration.test.js",
+      "tap_pass": 22,
+      "tap_fail": 0
+    },
+    {
+      "file": "tests/replicate-lifecycle.integration.test.js",
+      "tap_pass": 18,
+      "tap_fail": 0
+    },
+    {
+      "file": "tests/replicate-quality.integration.test.js",
+      "tap_pass": 7,
+      "tap_fail": 0
+    },
+    {
+      "file": "tests/replicate-send-cas.integration.test.js",
+      "tap_pass": 3,
+      "tap_fail": 0
+    },
+    {
+      "file": "tests/replicate.integration.test.js",
+      "tap_pass": 16,
+      "tap_fail": 0
+    },
+    {
+      "file": "tests/sharing.integration.test.js",
+      "tap_pass": 6,
+      "tap_fail": 0
+    }
+  ],
+  "python_pass": 5,
+  "lint_exit": 0,
+  "build_exit": 0,
+  "initial_overall_exit": 1,
+  "owner_retry_exit": 0,
+  "owner_initial_reason": "coordinator supplied n8-f02a while actual owner integration requires n8-f01; no source change; original preserved",
+  "legacy_mutations_pass": 8,
+  "legacy_mutations_total": 9,
+  "fixture_mutation": "inconclusive; actual CLI log retained; next bounded diagnosis/fix required after docs writer",
+  "cas_new_proof": "I6a baseline0 exact2POST mutant1 restored0 unchangedhash; ordinaryCAS suite rerunPASS",
+  "full_gate_pass": false,
+  "i8": "pending actual52main+2disabled plus representativehostedrestore"
+}
