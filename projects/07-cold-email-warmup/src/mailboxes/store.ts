@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { Pool } from 'pg';
+import { checkCapacity } from '../billing/plans.js';
 import { HttpError } from '../errors.js';
 import { eligibilityTransaction } from '../consent/transaction.js';
 import { encryptCredentials, decryptCredentials, type Envelope, type Keyring } from './crypto.js';
@@ -32,7 +33,7 @@ export class MailboxStore {
         if(!(await client.query('SELECT id FROM mailbox WHERE tenant_id=$1 AND id=$2 FOR UPDATE',[tenant,id])).rowCount) throw new HttpError(404,'not_found');
         await cancelMailbox(client,id);
         await client.query("UPDATE mailbox SET label=$3,state='configured',credential_envelope=$4,metadata=$5,daily_limit=$6,provider_limit=$7 WHERE tenant_id=$1 AND id=$2",[tenant,id,input.label,encrypted,metadata,input.dailyLimit,cap]);
-      } else await client.query("INSERT INTO mailbox(id,tenant_id,label,state,credential_envelope,metadata,daily_limit,provider_limit) VALUES($1,$2,$3,'configured',$4,$5,$6,$7)",[mailbox,tenant,input.label,encrypted,metadata,input.dailyLimit,cap]);
+      } else { await checkCapacity(client,tenant,'mailboxes'); await client.query("INSERT INTO mailbox(id,tenant_id,label,state,credential_envelope,metadata,daily_limit,provider_limit) VALUES($1,$2,$3,'configured',$4,$5,$6,$7)",[mailbox,tenant,input.label,encrypted,metadata,input.dailyLimit,cap]); }
     });
     return this.read(tenant,mailbox);
   }

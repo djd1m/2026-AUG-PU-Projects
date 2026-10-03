@@ -52,6 +52,7 @@ test('AC-F01-1 safety config fails closed without external runtime key/policy', 
   const hashfile=dir+'/recipient';writeFileSync(hashfile,randomBytes(32).toString('base64'),{mode:0o600});
   const env = {RECIPIENT_HASH_KEY_FILE:hashfile,CREDENTIAL_KEYRING_FILE:keyfile,MAIL_PROVIDER_ALLOWLIST:'{"smtp.example.com":30}',SAFETY_POLICY_VERSION:'n7-safety-v1',SESSION_HMAC_KEY:randomBytes(32).toString('base64'),DATABASE_URL:'postgresql://fixture',APP_ORIGIN:'http://127.0.0.1:18701'};
   assert.equal(loadConfig(env).secureCookie,false);
+  assert.equal(loadConfig(env).billingMode,'disabled');assert.equal(loadConfig({...env,BILLING_MODE:'local_test'}).billingMode,'local_test');assert.throws(()=>loadConfig({...env,BILLING_MODE:'live'}),/invalid_billing_mode/);
   assert.equal(loadConfig(env).dispatchMode,'disabled');assert.equal(loadConfig({...env,DISPATCH_MODE:'local_test'}).dispatchMode,'local_test');
   for(const mode of ['', 'live', 'smtp', 'LOCAL_TEST']) assert.throws(()=>loadConfig({...env,DISPATCH_MODE:mode}),/invalid_dispatch_mode/);
   for(const change of [{RECIPIENT_HASH_KEY_FILE:''},{RECIPIENT_HASH_KEY_FILE:dir+'/absent'},{SAFETY_POLICY_VERSION:''},{SESSION_HMAC_KEY:''},{SESSION_HMAC_KEY:Buffer.alloc(16).toString('base64')},{APP_ORIGIN:'http://public.example'},{PORT:'0'},{CREDENTIAL_KEYRING_FILE:''},{CREDENTIAL_KEYRING_FILE:dir+'/absent'},{MAIL_PROVIDER_ALLOWLIST:''},{MAIL_PROVIDER_ALLOWLIST:'{"smtp.example.com":31}'}]) assert.throws(()=>loadConfig({...env,...change}));

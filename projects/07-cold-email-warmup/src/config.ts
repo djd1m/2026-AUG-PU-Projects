@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { parseKeyring, type Keyring } from './mailboxes/crypto.js';
 import { normalizeHost } from './mailboxes/network.js';
-export interface Config { pollMode?:'disabled'|'local_test'; operatorTokenDigest?:Buffer|null; dispatchMode:'disabled'|'local_test'; databaseUrl: string; recipientHashKey: Buffer; sessionKey: Buffer; origin: string; port: number; secureCookie: boolean; credentialKeyring:Keyring; providerAllowlist:ReadonlyMap<string,number> }
+export interface Config { billingMode?:'disabled'|'local_test'; pollMode?:'disabled'|'local_test'; operatorTokenDigest?:Buffer|null; dispatchMode:'disabled'|'local_test'; databaseUrl: string; recipientHashKey: Buffer; sessionKey: Buffer; origin: string; port: number; secureCookie: boolean; credentialKeyring:Keyring; providerAllowlist:ReadonlyMap<string,number> }
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   if (env.SAFETY_POLICY_VERSION !== 'n7-safety-v1') throw new Error('invalid_safety_policy');
   const encoded = env.SESSION_HMAC_KEY_FILE ? readFileSync(env.SESSION_HMAC_KEY_FILE, 'utf8').trim() : env.SESSION_HMAC_KEY;
@@ -53,5 +53,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
       operatorTokenDigest=createHash('sha256').update(token).digest();
     } catch {throw new Error('invalid_operator_token');}
   }
-  return { pollMode,operatorTokenDigest,dispatchMode, databaseUrl, recipientHashKey, sessionKey, credentialKeyring, providerAllowlist, origin, port, secureCookie: url.protocol === 'https:' };
+  const billingMode=env.BILLING_MODE ?? 'disabled';
+  if(billingMode!=='disabled' && billingMode!=='local_test') throw new Error('invalid_billing_mode');
+  return { billingMode,pollMode,operatorTokenDigest,dispatchMode, databaseUrl, recipientHashKey, sessionKey, credentialKeyring, providerAllowlist, origin, port, secureCookie: url.protocol === 'https:' };
 }

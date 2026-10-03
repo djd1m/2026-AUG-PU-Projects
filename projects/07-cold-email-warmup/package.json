@@ -18,7 +18,8 @@
     "replies:operator": "node dist/replies/operator.js",
     "test:f04b": "tsx --test --test-concurrency=1 tests/suppression-integration.test.ts",
     "dispatch:tick": "node dist/dispatch/worker.js",
-    "migrate": "node dist/migrate.js"
+    "migrate": "node dist/migrate.js",
+    "test:f05a": "tsx --test --test-concurrency=1 tests/billing-integration.test.ts"
   },
   "dependencies": {
     "@node-rs/argon2": "2.0.2",

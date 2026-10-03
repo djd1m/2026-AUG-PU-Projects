@@ -1,0 +1,41 @@
+{
+  "run_id": "20261003T010600Z-f05",
+  "work_unit_id": "n7-f05a-sol",
+  "attempt_id": "implement-a1",
+  "profile": "compact-quality-first-v2",
+  "source_revision": "33a165cfcc31cd33f3f3288624cc58c59cb4c3d2",
+  "started_at": "2026-10-03T01:04:50.471832+00:00",
+  "deadline": "2026-10-03T01:29:50.471832+00:00",
+  "stage": "implement",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "fallback": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gaps": [
+    "actual model/usage/cost pending host evidence"
+  ],
+  "approval": "OWN-N7-002",
+  "scope": "A1-A6",
+  "excluded": [
+    "B",
+    "F06",
+    "live charges/network/SMTP/IMAP/deploy"
+  ],
+  "route": {
+    "substantive": "XL money and server entitlements; preserve full SPARC",
+    "mechanical_exit": 1
+  },
+  "checks": {
+    "typecheck": 0,
+    "lint": 0,
+    "build": 0,
+    "unit": 0,
+    "realPG": null,
+    "mutation": null,
+    "image": null,
+    "secrets": null
+  },
+  "independent_review": "pending parent fresh Astra"
+}

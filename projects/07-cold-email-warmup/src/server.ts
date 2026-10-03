@@ -19,6 +19,10 @@ import { authPage, authScript } from './web/page.js';
 import { SuppressionStore,authenticateOperator } from './suppression/store.js';
 import { confirmationPage,unsubscribeForm } from './suppression/http.js';
 import { ReplyStore } from './replies/store.js';
+import { BillingService } from './billing/service.js';
+import { LocalProvider } from './billing/provider.js';
+import { PartnerStore } from './growth/partner.js';
+import { referralToken,referralCookie } from './growth/attribution.js';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 async function body(req: IncomingMessage): Promise<Record<string, unknown>> {
   if (req.headers['content-type']?.split(';')[0]?.trim() !== 'application/json') throw new HttpError(400, 'invalid_input');
@@ -47,13 +51,15 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
   const campaigns=new CampaignStore(pool,config.credentialKeyring,config.recipientHashKey);
   const cohort=new PoolStore(pool);const dispatch=new DispatchStore(pool);const submissions=new SubmissionStore(pool,config);
   const suppression=new SuppressionStore(pool,config.recipientHashKey);const replies=new ReplyStore(pool,config.credentialKeyring);
+  const billing=new BillingService(pool,config.sessionKey,config.billingMode??'disabled');const billingProvider=new LocalProvider(pool,config.billingMode??'disabled');const partners=new PartnerStore(pool);
   const server = createServer((req, res) => {
     res.setHeader('Cache-Control', 'no-store'); res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
     void (async () => {
       const path = (req.url ?? '').split('?')[0]!; const unsafe = !['GET','HEAD','OPTIONS'].includes(req.method ?? '');
       const publicStop=path.startsWith('/unsubscribe/') && ['GET','POST'].includes(req.method??'');
-      const operatorStop=path==='/api/complaints' && req.method==='POST';
+      const operatorBilling=['/api/operator/billing/simulate','/api/operator/billing/reconcile'].includes(path) && req.method==='POST';
+      const operatorStop=(path==='/api/complaints' && req.method==='POST') || operatorBilling;
       if(publicStop || operatorStop) {
         res.setHeader('Referrer-Policy','no-referrer');
         await suppression.charge(req.socket.remoteAddress??'unknown');
@@ -72,12 +78,21 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
         }
         await unsubscribeForm(req);return json(res,200,{data:await suppression.unsubscribe(token),meta:{}});
       }
+      if(operatorBilling) {
+        const input=await body(req);
+        const id=path.endsWith('/simulate')?input.paymentId:input.intentId;
+        if(typeof id!=='string' || !UUID.test(id)) throw new HttpError(400,'invalid_input');
+        if(path.endsWith('/reconcile')) {if(Object.keys(input).length!==1) throw new HttpError(400,'invalid_input');return json(res,200,{data:await billing.reconcile(id),meta:{label:'TEST'}});}
+        const {paymentId:ignored,...mutation}=input;void ignored;
+        const payment=await billingProvider.simulate(id,mutation);return json(res,200,{data:{id:payment.id,status:payment.status,version:payment.version,label:'TEST'},meta:{}});
+      }
       if(operatorStop) {
         return json(res,200,{data:await suppression.complaint(await body(req)),meta:{}});
       }
       if (req.method === 'GET' && (path === '/healthz' || path === '/readyz')) {
         const isReady = await ready(pool); return json(res, isReady ? 200 : 503, {data:{ready:isReady},meta:{}});
       }
+      if(req.method==='GET' && path.startsWith('/r/')) {const code=path.slice(3);await suppression.charge(req.socket.remoteAddress??'unknown');await partners.landing(code);res.setHeader('Set-Cookie',referralCookie(referralToken(code,config.sessionKey),config.secureCookie));res.writeHead(303,{Location:'/'});res.end();return;}
       if (req.method === 'GET' && (path === '/' || path === '/auth.js')) {
         res.writeHead(200, {'Content-Type':path === '/' ? 'text/html; charset=utf-8' : 'text/javascript; charset=utf-8'});
         res.end(path === '/' ? authPage : authScript); return;
@@ -103,6 +118,17 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
           res.setHeader('Set-Cookie', sessionCookie('', config.secureCookie, true));
           return json(res, 200, {data:{loggedOut:true},meta:{}});
         }
+        if(path==='/api/billing/status' && req.method==='GET') return json(res,200,{data:await billing.ownerStatus(identity.tenant_id),meta:{}});
+        if(path==='/api/billing/checkout' && req.method==='POST') {await suppression.charge(req.socket.remoteAddress??'unknown');return json(res,201,{data:await billing.checkout(identity.tenant_id,await body(req),req.headers.cookie),meta:{label:'TEST'}});}
+        const intentMatch=/^\/api\/billing\/intents\/([^/]+)$/.exec(path);
+        if(intentMatch && req.method==='GET') {if(!UUID.test(intentMatch[1]!)) throw new HttpError(404,'not_found');return json(res,200,{data:await billing.status(identity.tenant_id,intentMatch[1]!),meta:{}});}
+        if(path==='/api/partner') {
+          if(req.method==='POST') {if(Object.keys(await body(req)).length) throw new HttpError(400,'invalid_input');return json(res,201,{data:await partners.create(identity.tenant_id),meta:{}});}
+          if(req.method==='GET') return json(res,200,{data:await partners.status(identity.tenant_id),meta:{}});
+          if(req.method==='PATCH') return json(res,200,{data:await partners.setActive(identity.tenant_id,await body(req)),meta:{}});
+        }
+        const partnerMatch=/^\/api\/partner\/([A-Za-z0-9_-]+)$/.exec(path);
+        if(partnerMatch && req.method==='GET') return json(res,200,{data:await partners.status(identity.tenant_id,partnerMatch[1]!),meta:{}});
         if(path==='/api/mailboxes') {
           if(req.method==='GET') return json(res,200,{data:await mailboxes.list(identity.tenant_id),meta:{}});
           if(req.method==='POST') return json(res,201,{data:await mailboxes.save(identity.tenant_id,await body(req)),meta:{}});
@@ -163,5 +189,5 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
     });
   });
   server.requestTimeout = 10000; server.headersTimeout = 10000; server.timeout = 10000; server.maxHeadersCount = 64;
-  return { server, auth, store, mailboxes, consents, campaigns, cohort, dispatch, submissions, suppression, replies };
+  return { server, auth, store, mailboxes, consents, campaigns, cohort, dispatch, submissions, suppression, replies, billing, billingProvider, partners };
 }

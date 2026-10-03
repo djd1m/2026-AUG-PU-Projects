@@ -1,3 +1,4 @@
+import { seedTestEntitlement } from './billing-fixture.js';
 import assert from 'node:assert/strict';
 import { randomBytes,randomUUID } from 'node:crypto';
 import { test } from 'node:test';
@@ -67,17 +68,20 @@ test('F03a realPG campaign/pool/shared quota/lease seams without transport',asyn
    assert.equal((await request('/api/mailboxes/'+boxes[1],'GET',cookies[0])).status,404);assert.equal(calls,0);
   });
   await t.test('A3 aggregate counts30 eligible mailboxes and excludes quarantine/disconnected/withdrawn',async()=>{
-   await grant(1);const added:string[]=[];
+   await grant(1);const added:string[]=[];const owners=new Map<string,Identity>();
    for(let i=0;i<28;i++) {
-    const mailbox=(await app.mailboxes.save(actors[0]!.tenant_id,{...raw,label:'Aggregate fixture '+i})).id;added.push(mailbox);
+    if(i===0) await seedTestEntitlement(pool,actors[0]!.tenant_id);
+    let owner=actors[0]!;
+    if(i>=9) {owner={tenant_id:randomUUID(),account_id:randomUUID()};await pool.query('INSERT INTO tenant(id) VALUES($1)',[owner.tenant_id]);await pool.query("INSERT INTO account(id,tenant_id,email,password_hash) VALUES($1,$2,$3,'fixture')",[owner.account_id,owner.tenant_id,`aggregate-${i}@example.test`]);}
+    const mailbox=(await app.mailboxes.save(owner.tenant_id,{...raw,label:'Aggregate fixture '+i})).id;added.push(mailbox);owners.set(mailbox,owner);
     await pool.query("UPDATE mailbox SET state='verified_test' WHERE id=$1",[mailbox]);await poll(mailbox);
-    await app.consents.act(actors[0]!,mailbox,{scope:'pool',action:'grant',affirmative:true,scopeVersion:1});
+    await app.consents.act(owner,mailbox,{scope:'pool',action:'grant',affirmative:true,scopeVersion:1});
    }
    assert.equal((await app.cohort.aggregate(now)).count,30);
    await app.mailboxes.change(actors[0]!.tenant_id,added[0]!,{state:'quarantined'});assert.equal((await app.cohort.aggregate(now)).count,29);
    await pool.query("UPDATE mailbox SET state='configured' WHERE id=$1",[added[1]]);assert.equal((await app.cohort.aggregate(now)).count,28);
    await app.consents.act(actors[0]!,added[2]!,{scope:'pool',action:'revoke'});assert.equal((await app.cohort.aggregate(now)).count,27);
-   for(const id of added) await app.mailboxes.change(actors[0]!.tenant_id,id,{state:'paused'});
+   for(const id of added) await app.mailboxes.change(owners.get(id)!.tenant_id,id,{state:'paused'});
   });
   await t.test('A4 shared pool/campaign quota 20 contenders remaining3, 45s lease and conservative irreversible states',async()=>{
    await grant(0,'campaign');await grant(1);await poll(boxes[0]!);await poll(boxes[1]!);

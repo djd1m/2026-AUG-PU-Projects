@@ -1,6 +1,7 @@
 import { createHmac,randomUUID } from 'node:crypto';
 import type { Pool } from 'pg';
 import type { Identity } from '../auth/store.js';
+import { checkCapacity } from '../billing/plans.js';
 import { HttpError } from '../errors.js';
 import { eligibilityTransaction } from '../consent/transaction.js';
 import { encryptCredentials,decryptCredentials,type Envelope,type Keyring } from '../mailboxes/crypto.js';
@@ -33,6 +34,7 @@ export class CampaignStore {
     const consent=await client.query(`SELECT id FROM consent WHERE tenant_id=$1 AND mailbox_id=$2 AND campaign_id=$3 AND scope='campaign' AND revoked_at IS NULL AND scope_version=$4 AND recipient_fingerprint=$5`,[identity.tenant_id,mailbox,id,row.content_version,row.recipient_fingerprint]);
     if(!consent.rowCount) throw new HttpError(409,'consent_required');
    }
+   if(row.state!=='active') await checkCapacity(client,identity.tenant_id,'activeCampaigns');
    let created=0;let recipientIndex=0;
    for(const address of value.recipients) {
     const digest=recipientDigest(address,this.hashKey);const enrollment=randomUUID();
