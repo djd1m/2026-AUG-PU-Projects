@@ -1,6 +1,6 @@
 {
   "work_unit_id": "n8-f04a",
-  "status": "running",
+  "status": "completed",
   "source_revision": "a983354127af10f228b329a4ec3fa48d33bd279f",
   "cli_session_id": 34208,
   "started_at": "2026-10-03T00:06:13Z",
@@ -11,5 +11,14 @@
   "usage": null,
   "cost": null,
   "evidence": "/tmp/n8-f04a/runtime.log host banner",
-  "budget_seconds": 1500
+  "budget_seconds": 1500,
+  "finished_at": "2026-10-03T00:27:59Z",
+  "exit_code": 0,
+  "wrapper_duration_ms": 1306000,
+  "author_observed_elapsed_ms": 1263660,
+  "clock_note": "Wrapper start/end and author observation are distinct; neither normalized.",
+  "integrated_source": "2bec973b8b8a877da4ef3ccfead8ff10e2c5c120",
+  "snapshot_sha256": "784cfc4dc94f222e7bda88474e32f69b7c8c941014030b60870f2cd85883d775",
+  "snapshot_files_verified": 75,
+  "acceptance": "pending real PG/runtime and fresh review"
 }
