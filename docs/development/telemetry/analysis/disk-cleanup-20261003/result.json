@@ -1,0 +1,70 @@
+{
+  "at": "2026-10-03T11:18:03.104050+00:00",
+  "status": "PASS",
+  "elapsed_execution_seconds": 13.19,
+  "checks": {
+    "exit_zero": true,
+    "removed_subset_sealed": true,
+    "reported_matches_removed": true,
+    "images_preserved": true,
+    "volumes_preserved": true,
+    "networks_preserved": true,
+    "containers_state_preserved": true
+  },
+  "removed_ids": [
+    "1kromx5ae4c9ms0paupai0vfg",
+    "1zo1tfpshobn4lvv633uxynt3",
+    "6j2hmj9tnhvki3k3mbrx5nwko",
+    "ae6me64nrqjqwpz7d7sir3zkh",
+    "cu8mbud1c4syq1erwc14sikkn",
+    "e3dqtm3obepr5un3drxd2c8f7",
+    "exivpkyzpd0zb6zml4x4ik0wv",
+    "id28x1ryxdidw37qdu0r21avu",
+    "ipr9ac8xe9klmjvxonyxlhm86",
+    "kva0mdsextv39kt2ixgfenb6p",
+    "ndat5mk62s491qkpzheo1d2gh",
+    "tmulo5irvsa1s3asibn0ah1kv",
+    "yr5zu7qen6zftz2nq44zx3vxc",
+    "zcgt4q2xrwz9eu0ieji7si69u"
+  ],
+  "reported_removed_ids": [
+    "1kromx5ae4c9ms0paupai0vfg",
+    "1zo1tfpshobn4lvv633uxynt3",
+    "6j2hmj9tnhvki3k3mbrx5nwko",
+    "ae6me64nrqjqwpz7d7sir3zkh",
+    "cu8mbud1c4syq1erwc14sikkn",
+    "e3dqtm3obepr5un3drxd2c8f7",
+    "exivpkyzpd0zb6zml4x4ik0wv",
+    "id28x1ryxdidw37qdu0r21avu",
+    "ipr9ac8xe9klmjvxonyxlhm86",
+    "kva0mdsextv39kt2ixgfenb6p",
+    "ndat5mk62s491qkpzheo1d2gh",
+    "tmulo5irvsa1s3asibn0ah1kv",
+    "yr5zu7qen6zftz2nq44zx3vxc",
+    "zcgt4q2xrwz9eu0ieji7si69u"
+  ],
+  "retained_candidates": [
+    "0u11nu661fmfhzhko2fhr4u79",
+    "1kuu5mrs79s2i0mp8cv311nyi",
+    "382ilqq6w4qn8h5wh2mre2rzi",
+    "79fh8lofoe1a5g9077d65lp5e",
+    "8g9vm6opbtmogh76b21gjqatx",
+    "ctkxp7f1x3e6oppc2xrnbgyv8",
+    "ht87xhl7ywm2b4tdt6sahavyd",
+    "mvaxcuphit5syuhbs1zqh3ccj",
+    "q59fnt5hokot2oqnky2k83z4n",
+    "ucnwhs60xhmewd4two8jeae7w",
+    "uxiy8dtyyeswfmx5f4jqrq5bv",
+    "z2x72vhamb4j7zcl9qgesxa0y"
+  ],
+  "available_bytes_before": 1079144448,
+  "available_bytes_after": 3975897088,
+  "available_bytes_delta": 2896752640,
+  "protected_counts_before": {
+    "images": 140,
+    "containers": 57,
+    "volumes": 70,
+    "networks": 29
+  },
+  "caveat": "df delta includes concurrent unrelated filesystem writes; logical reclaimed bytes may overlap image layers."
+}

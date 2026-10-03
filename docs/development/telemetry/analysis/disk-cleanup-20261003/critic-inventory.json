@@ -1,0 +1,23 @@
+{
+  "role": "inventory",
+  "started_at": "2026-10-03T11:02:41.709856+00:00",
+  "finished_at": "2026-10-03T11:03:13.412716+00:00",
+  "requested_model": "gpt-6-luna",
+  "requested_effort": "medium",
+  "actual_model": "gpt-6-luna",
+  "actual_effort": "medium",
+  "model_evidence": "/root/.codex/sessions/2026/10/03/rollout-2026-10-03T11-02-42-01a1016e-3449-77d0-b187-9b05378330d6.jsonl",
+  "exit_code": 0,
+  "verdict": "FAIL",
+  "usage": {
+    "input_tokens": 58697,
+    "cached_input_tokens": 47360,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 833,
+    "reasoning_output_tokens": 209
+  },
+  "cost": null,
+  "raw_log": "/tmp/codex-disk-critics-_kccad4d/inventory.jsonl",
+  "plan_sha256": "ae5a22cefef85990a5f81da5a7f6a0d0e79532715307c0c9fb0c49de78e44a6a",
+  "candidates_sha256": "c5f639b271cd581319726c0cb914393e2f8e53ca68f2e8216719e3a59a17ec62"
+}

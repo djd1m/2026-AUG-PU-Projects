@@ -1,0 +1,47 @@
+{
+  "started_at": "2026-10-03T10:59:44.220519+00:00",
+  "status": "complete",
+  "scope": "26 exact BuildKit cache records only",
+  "profile": "bounded M ops, three independent model critics",
+  "model_requested": [
+    "gpt-6-astra/high",
+    "gpt-6.1-sol/high",
+    "gpt-6-luna/medium"
+  ],
+  "actual_models": {
+    "execution": "gpt-6.1-sol",
+    "inventory": "gpt-6-luna",
+    "risk": "gpt-6-astra"
+  },
+  "usage": {
+    "critic_cli_only_sum": {
+      "input_tokens": 410936,
+      "cached_input_tokens": 333952,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 7147,
+      "reasoning_output_tokens": 1658
+    },
+    "note": "Cached input is a subset of input; reasoning output is a subset of output. Coordinator usage and monetary cost unknown."
+  },
+  "cost": null,
+  "plan_sha256": "20d6c9313ae92b96d48cd917f0d4148a986c0dd74ebf447a2a9406da6ff69cd5",
+  "candidate_sha256": "c5f639b271cd581319726c0cb914393e2f8e53ca68f2e8216719e3a59a17ec62",
+  "missing_data": [
+    "Coordinatorusage/costunknown",
+    "Initialinstructionreadingstartunknown"
+  ],
+  "cleanup_executed": true,
+  "finished_at": "2026-10-03T11:19:12.225385+00:00",
+  "checks": {
+    "exit_zero": true,
+    "removed_subset_sealed": true,
+    "reported_matches_removed": true,
+    "images_preserved": true,
+    "volumes_preserved": true,
+    "networks_preserved": true,
+    "containers_state_preserved": true
+  },
+  "removed_count": 14,
+  "retained_count": 12,
+  "duration_seconds": 1168.004866
+}

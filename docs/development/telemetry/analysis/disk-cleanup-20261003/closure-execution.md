@@ -1,0 +1,10 @@
+All four findings in `critic-execution.md` are closed by the final plan. No remaining blocker for the exact 26-cache cleanup scope.
+
+- **Whole abort:** Step 3 explicitly aborts the entire prune on any candidate mismatch before mutation. Backend eligibility skips are separately recorded and reconciled; they do not authorize altered candidates or blind retries.
+- **Admission and atomic eligibility:** The final plan records explicit admission closure for known launchers and continuous lock ownership through postchecks. The mutation includes conjunctive `immutable,private` and `type=regular` predicates alongside the anchored IDs. The supplied BuildKit 0.33.0 excerpts check references, shared status, type, age, and filters while holding the manager and record locks, retaining selected record locks. The shared adapter and positive/negative controls substantiate mutation-time predicates. Unknown external operators are explicitly outside the admission guarantee.
+- **External timeout:** The plan specifies a 120-second subprocess deadline, SIGTERM with 5-second grace, then SIGKILL with 5-second grace. Admission and lock remain held until backend activity and actual state are reconciled; client termination is not treated as proof that daemon work stopped.
+- **Relative age:** The final plan distinguishes reported “≥2 days” labels from an exact 48-hour threshold. Buildx 0.37.1 translates `until=24h` into `KeepDuration`; the supplied backend excerpt enforces that separate runtime cooldown.
+
+The candidate SHA-256 matches the seal. All 26 IDs are unique, satisfy the recorded constraints, and exactly match the mutation selector and verification result. No broader deletion or additional approval requirement is introduced. This closes the plan findings; it does not certify execution results.
+
+Verdict: PASS
