@@ -64,3 +64,24 @@ Backend композиций и публикации принят на `2bec973b
 Попытка5 дошла до следующей проверки и выявила уже продуктовую гонку: finally предыдущего входа включает кнопки во время нового logoutPending. Сам запрос входа остаётся заблокирован защитой обработчика, но состояние UI неверно. На source6792c6a9 запущена отдельная узкая коррекция app.js с actual-app regression. Ни один из пяти неполных прогонов не объявлен полной браузерной приёмкой. Сохранённые одноцветные комнаты — синтетические software fixtures, не результаты реального редизайна или доказательство геометрии.
 
 Параллельная независимая подготовка F06a была начата и явно прервана для приоритетного product fix и лимита четырёх исполнителей. Это не отменяет дальнейшие README/41AC/restore документы. Их план — plans/f06-delivery.md. F05 real corpus12×3, безопасные pinned GPU weights и30 warm samples остаются невыполненными внешними gates; полного MVP/deployment пока нет.
+
+
+### F04: измеренные попытки и source-bound продолжение F06a
+
+| Фактический browser stage | Измеренное время / результат | Следующая конкретная коррекция |
+|---|---|---|
+| [UI1](telemetry/n8-20261002-1740/n8-ui-e2e-1-receipt.md) |17245мс, exit1 |Target-intent payment readiness, не один проход общей очереди |
+| [UI2](telemetry/n8-20261002-1740/n8-ui-e2e-2-receipt.md) |28022мс, exit143 |Отдельная проверка companion exit0 перед browser, исходный sequencing отказ сохранён |
+| [UI3](telemetry/n8-20261002-1740/n8-ui-e2e-3-receipt.md) |72618мс, exit1 |HTTP201/new DOM UUID/owner metadata вместо evicted CDP response body |
+| [UI4](telemetry/n8-20261002-1740/n8-ui-e2e-4-receipt.md) |149422мс, exit1 |Await реального delete handler Promise и refresh chain перед session invalidation |
+| [UI5](telemetry/n8-20261002-1740/n8-ui-e2e-5-receipt.md) |125517мс, exit1 |Продуктовый finally раннего login должен учитывать текущий logoutPending |
+
+На `8030270f023d83c9cdd597c4578517a1b58b4b35` [logout correction](features/ui-logout-fix/verification.md) выполнена одной строкой app plus actual-app regression.48local checks прошли; возврат старого finally обнаружен точной мутацией. Свежий parent Astra ACCEPT подтвердил11independent checks,70source/20evidence hashes; отчёт `/tmp/n8-ui-logout-review/answer.md` привязан к этому source и отдельному launch. Это приёмка конкретной коррекции, не итоговый browser PASS. UI6 запущен координатором с snapshot `19ea9d39d31aab8b2a7ce005b79e091fadce203d1272c0c44bf1396aa228c00a`; terminal source-bound PASS в эту docs-попытку не передан. Неудачи1–5 и их synthetic screenshots остаются неизменными.
+
+F06a возобновлён как `n8-f06-delivery-resume-1`; ранний interruption связан с приоритетной UI5 коррекцией, не с docs failure. [README ru](README/ru.md)/[en](README/en.md), [41 отдельных AC](features/f06a/acceptance-map.md) и [operations](features/f06a/operations.md) сверены с существующими исходниками. Restore использует стандартные PG16 tools только в собственном quiescent fixture после browser, без raw dump в Git; здесь он лишь описан, фактический receipt pending. Новые product/PG/build/browser проверки документационный исполнитель не запускал, прошлые counts сохранены как исторические наблюдения. Полный F06/MVP остаётся blocked реальным F05; deployment/spend/live provider не разрешены.
+
+## F04 closure and independent F06a delivery reconciliation
+
+Product8030270f received fresh Astra logout-control ACCEPT. Actual UI6 then passed42 main checks1440/390 in321280ms, plus actual disabled-provider restart2/2 in2832ms; [receipt](telemetry/n8-20261002-1740/n8-ui-e2e-6-receipt.md). Sharedbrowser released03:23:24Z; no fakegeometry/publicposting/livepayment claim. OwnPG backup/restore passed21tables/451rows in16145ms with constraints/source unchanged;10synthetic privatefiles recovered, rawartifacts and ownstand removed. [Restore](telemetry/n8-20261002-1740/n8-f06-restore-1-receipt.md). `/next f04-product-ui` marks only local software done; F05/fullF06 remain dependent on realGPU.
+
+F06a Sol resumed the interrupted writer in a new trace, actualSol6.1high; source8030270f, author907.026s, wrapper03:32:07Zexit0,18docs checks/41AC/174links passed. Author receipt preserves its earlier pendingUI/restore view. Coordinator reconciled the subsequently delivered actual evidence into the seven current documents; historical checks/hashes were not rewritten. Fresh independent Astra review is required on this integrated source. Usage/cost/provider-resolved model remain null.

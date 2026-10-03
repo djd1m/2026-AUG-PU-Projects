@@ -1,0 +1,304 @@
+{
+  "status": "failed",
+  "source_revision": "8030270f023d83c9cdd597c4578517a1b58b4b35",
+  "checked_at": "2026-10-03T03:29:16.660485+00:00",
+  "checks": [
+    {
+      "check": "exact_41_ac_coverage",
+      "exit_code": 0,
+      "detail": {
+        "required": 41,
+        "rows": 41,
+        "missing": [],
+        "extra": []
+      }
+    },
+    {
+      "check": "under_500_lines:docs/README/ru.md",
+      "exit_code": 0,
+      "detail": 78
+    },
+    {
+      "check": "under_500_lines:docs/README/en.md",
+      "exit_code": 0,
+      "detail": 78
+    },
+    {
+      "check": "under_500_lines:docs/features/f06a/acceptance-map.md",
+      "exit_code": 0,
+      "detail": 74
+    },
+    {
+      "check": "under_500_lines:docs/features/f06a/operations.md",
+      "exit_code": 0,
+      "detail": 174
+    },
+    {
+      "check": "under_500_lines:docs/Completion.md",
+      "exit_code": 0,
+      "detail": 36
+    },
+    {
+      "check": "under_500_lines:docs/Final_Summary.md",
+      "exit_code": 0,
+      "detail": 29
+    },
+    {
+      "check": "under_500_lines:docs/pipeline-walkthrough.md",
+      "exit_code": 0,
+      "detail": 81
+    },
+    {
+      "check": "local_markdown_links",
+      "exit_code": 0,
+      "detail": {
+        "checked": 174,
+        "missing": []
+      }
+    },
+    {
+      "check": "npm_commands_exist",
+      "exit_code": 0,
+      "detail": {
+        "build": "node scripts/check.js",
+        "lint": "node scripts/check.js",
+        "migrate": "node scripts/migrate.js",
+        "start": "node web/server.js",
+        "sweep": "node scripts/sweep.js",
+        "test": "node tests/boundaries.test.js && node tests/media.test.js",
+        "test:boundaries": "node tests/boundaries.test.js",
+        "test:integration": "node tests/integration.test.js",
+        "test:mutation": "node scripts/mutation.js"
+      }
+    },
+    {
+      "check": "documented_command_paths",
+      "exit_code": 0,
+      "detail": [
+        "scripts/migrate.js",
+        "web/server.js",
+        "scripts/maintenance.js",
+        "scripts/queue-status.js",
+        "scripts/worker.js",
+        "scripts/partner.js",
+        "scripts/payment-fixture.js",
+        "scripts/quality.js",
+        "scripts/ui/compose.e2e.yml",
+        "compose.yaml"
+      ]
+    },
+    {
+      "check": "port_checker_argument_matches_source",
+      "exit_code": 0,
+      "detail": "Explicit existing compose.yaml file path; checker itself not executed."
+    },
+    {
+      "check": "environment_names_match_sample_and_source",
+      "exit_code": 0,
+      "detail": {
+        "documented": [
+          "ACCOUNT_DAILY_LIMIT",
+          "APP_ORIGIN",
+          "COMPOSE_PROJECT_NAME",
+          "DATABASE_URL",
+          "DB_PASSWORD",
+          "HOST",
+          "MODEL_ROOT",
+          "NODE_ENV",
+          "PLATFORM_DAILY_LIMIT",
+          "PORT",
+          "PROVIDER_MODE",
+          "QUALITY_CORPUS_REPORT",
+          "QUALITY_CORPUS_SHA256",
+          "QUALITY_OPERATOR_ID",
+          "SESSION_SECRET",
+          "STORAGE_DIR",
+          "WEB_PORT",
+          "WORKER_MODE",
+          "WORKER_PYTHON",
+          "WORKER_SEED",
+          "WORKER_SOURCE_REVISION",
+          "YOOKASSA_SECRET_KEY",
+          "YOOKASSA_SHOP_ID"
+        ],
+        "sample_missing": [],
+        "source_missing": [],
+        "secret_files_read": false
+      }
+    },
+    {
+      "check": "inert_restore_shell_syntax",
+      "exit_code": 0,
+      "detail": {
+        "exit": 0,
+        "stderr": "",
+        "blocks": 4,
+        "executed": false
+      }
+    },
+    {
+      "check": "owned_documentation_diff_check",
+      "exit_code": 1,
+      "detail": [
+        {
+          "path": "docs/README/ru.md",
+          "exit": 1,
+          "output": ""
+        },
+        {
+          "path": "docs/README/en.md",
+          "exit": 1,
+          "output": ""
+        },
+        {
+          "path": "docs/features/f06a/acceptance-map.md",
+          "exit": 1,
+          "output": ""
+        },
+        {
+          "path": "docs/features/f06a/operations.md",
+          "exit": 1,
+          "output": ""
+        },
+        {
+          "path": "docs/Completion.md",
+          "exit": 0,
+          "output": ""
+        },
+        {
+          "path": "docs/Final_Summary.md",
+          "exit": 0,
+          "output": ""
+        },
+        {
+          "path": "docs/pipeline-walkthrough.md",
+          "exit": 0,
+          "output": ""
+        }
+      ]
+    },
+    {
+      "check": "scope_allowlist",
+      "exit_code": 0,
+      "detail": {
+        "changed_and_untracked": [
+          "projects/08-interior-ai-redesign/docs/Completion.md",
+          "projects/08-interior-ai-redesign/docs/Final_Summary.md",
+          "projects/08-interior-ai-redesign/docs/pipeline-walkthrough.md",
+          "projects/08-interior-ai-redesign/docs/README/en.md",
+          "projects/08-interior-ai-redesign/docs/README/ru.md",
+          "projects/08-interior-ai-redesign/docs/features/f06a/acceptance-map.md",
+          "projects/08-interior-ai-redesign/docs/features/f06a/checks/resume-run.json",
+          "projects/08-interior-ai-redesign/docs/features/f06a/checks/run.json",
+          "projects/08-interior-ai-redesign/docs/features/f06a/checks/validation.json",
+          "projects/08-interior-ai-redesign/docs/features/f06a/operations.md"
+        ],
+        "unexpected": [],
+        "product_code_modified": false
+      }
+    },
+    {
+      "check": "accepted_logout_candidate_hash_continuity",
+      "exit_code": 0,
+      "detail": {
+        "paths": 70,
+        "mismatches": [],
+        "not_a_test_rerun": true
+      }
+    },
+    {
+      "check": "current_source_matches_resume",
+      "exit_code": 0,
+      "detail": "HEAD8030270f, doc-only dirty delta."
+    }
+  ],
+  "source_snapshot_sha256": "1164460f848271901e0a70cea2ebfb0e02429c0df485dbc627b2a24cedc972b9",
+  "documents": {
+    "docs/README/ru.md": "c179f9f7d9b3047c15a1e251845586d61d74dc2b96a423f5dfb5c64baba47325",
+    "docs/README/en.md": "ccaafaa78c38ca006e88fe5ad36bdde910d4ba6315571bcb6d0c8493cc45e7a1",
+    "docs/features/f06a/acceptance-map.md": "481ac9374982a27f84f29619ed39946b6b96c9cfa8163946401faff004d31a07",
+    "docs/features/f06a/operations.md": "76cf599e25a2038397486e2502eadcb6ca60409b1a7000c6197a83fcd5cf00ce",
+    "docs/Completion.md": "c8e1d8b9ed8d7a584866cb7a2421bbcdcf1d9cb488617b9db28c3ff1c47725f7",
+    "docs/Final_Summary.md": "44f450a697630b23b1ebbffaf52c0226d8aab85d0238f59773bcd4856b4f0d76",
+    "docs/pipeline-walkthrough.md": "dfecdba1fa4f0854b43f7e2fd641da7d8850254205a0e42ad213f0f6f1cb39b4"
+  },
+  "evidence_files": {
+    "worker/requirements.txt": "e4e73e3c9a7f0b7144da39a28b0a36c13f7e7be17a1fb8d5818f680c71557308",
+    ".env.example": "c23cfc3cb51740306384d1bd083ebfa3fe4f7b14bc744979bf78dd0a667473f3",
+    "package.json": "c8fbc375bad4d45d73ccc3e83054ae01c7ee5955071aaace55c841bc115bb186",
+    "docs/test-scenarios.md": "0e681b437ced125ae2ecf8bd55ecb3b5f649df6205a1552ac2e1d0437aa2a54f",
+    "compose.yaml": "365bad14f841859136a5ad75b86fa48940edeb5ac9a556f8ea81f7859611246f",
+    "scripts/ui/compose.e2e.yml": "f2b5564b43b43b67d015ab9d67ffc936b1df5d59020b66cc4a6f7df2973f1ea5",
+    "docs/features/f04b-fix/browser-runbook.md": "9f54071d37d8f407111f7978ef20103f01e7485518e0fca212208d10fee6c4b0",
+    "web/app.js": "eff2dce109eaef87b821e2da3322356bc95e665b916f947c72524abda0fa0f1f",
+    "docs/Specification.md": "92674e25074fcda42c930138b7ff03f6ec1671751f802b89800604176023f499",
+    "docs/features/f01/acceptance.md": "04419ce7101d62fdc1cc8241de693ca0d6f962f1fb659f43ea28d418f6fe0930",
+    "docs/features/f02a/acceptance.md": "d6ca4f8f39f17914c591d482d04feba2cfa6508ebca81d5eebe09b30b1c71087",
+    "docs/features/f02b/acceptance.md": "d4ef740dd3d33c819a4b5ab12e92d9598cd60bf3ad9c0b36746af33b75883dcd",
+    "docs/features/f03a/acceptance.md": "08897b882821c235856dbb312e46f8f5a8075def29f386edd40627ca2db17407",
+    "docs/features/f03b/acceptance.md": "e249dec9939d84b8c2cfa4d4ee476db838788d7c767795b68893a5bd7819fd0f",
+    "docs/features/f04a/acceptance.md": "85cf831851c2562cf0d59d5969e9d98a9e90616c8063f69314016e0554c24daa",
+    "docs/features/f04b/verification.md": "beaba6fa3307e91bff012932a7d097ad5e46350cb1a5bca735a4c9cecc21022f",
+    "docs/features/f04b-fix/receipt.md": "b109d6b5f09ea6f88022674bf018d80ab52d34770f770428a4b8384dfe6025d2",
+    "docs/features/ui-logout-fix/verification.md": "587cc70d06f7305e5d8e5e346e2b9bc149318ca431192d44b68249b1f52a708c",
+    "docs/telemetry/n8-20261002-1740/n8-ui-e2e-1-receipt.md": "711d1609399028f1056fb52255304e5f8b73dbeadc003138b594c7529376ca7d",
+    "docs/telemetry/n8-20261002-1740/n8-ui-e2e-2-receipt.md": "191755f53204ae41e51e1bc78b43bc016a054be7a4a7e6a2fb9f7d0b4be7bb0a",
+    "docs/telemetry/n8-20261002-1740/n8-ui-e2e-3-receipt.md": "79c19cb50395711d8fea64762a693d6118fb07fa8f25746201386b0e56c1a08f",
+    "docs/telemetry/n8-20261002-1740/n8-ui-e2e-4-receipt.md": "b5d63fc8f6a53a2d8cd27bc4a28bb498041527e684206d1e15a8c2a8bf7d2e15",
+    "docs/telemetry/n8-20261002-1740/n8-ui-e2e-5-receipt.md": "0febb08c044210a32e62232a2ff594e2909d2928c5b0c34fed02fb37b981825e",
+    "web/auth.js": "85070f69d53add6a074ab9b81fd90d43d5707289a383332c531548a299b6b0d3",
+    "web/boundaries.js": "10f37fba266cde1ce2aae17d9bd57a0a21c61b952cf409781517f00501cc7c55",
+    "web/media.js": "cb56df4fca0a3fe8144a413cd10ccd94186d53d2231fca8ce347eab016f60ad5",
+    "scripts/sweep.js": "caf4d8fd85ef8ffcb171642ee9efd7cb21ee31e7ba06fb0a5b206ae74fb90d7e",
+    "web/jobs.js": "738513f4493a07ece07be1a95d22f6114f4366297e1ae3df5ad046019e5b498a",
+    "web/public/ui-state.js": "55973cce2ae5375a1ddb2a1bb04ecc91ab66b33f7806e8871bb486d50e71989b",
+    "worker/engine.py": "37f9594b0ee3258520507f0cea21ee82fb28adf901e34e254da31ed4540edbb7",
+    "web/quality.js": "1c3829ff2bafc140cd33eb0a2196ef2640081fb651fe71f1271e202dd70baa30",
+    "web/public/index.html": "aeab890fbe6037620d36ac381d12db5e0f58065adf402606d00b976c64800fd4",
+    "scripts/maintenance.js": "84fd25bf2b151cdeb0a51424f06d335a06b9498f40fd40f389d6ac79db72279e",
+    "web/payments.js": "1cd6412a7e4448720fd92e752fd761b6b974b4e835fe9d2fdca33ca844b487aa",
+    "web/provider.js": "539eb4f311adb559b445f6f1f9fb5b2c962815efd1e529157a87f432f09bea09",
+    "web/public/app.js": "15a8dd97b39e0a2fb9d307ce26ddcf5ac857d01e15e2de1cbca09102b86ebbe3",
+    "web/sharing.js": "c0f3f81af981db7242a9f486fbce6b164c725f918a762753584ae145036699af",
+    "web/attribution.js": "eca7eb8182e9cb602c410f9203c965d2dec71bbaecba022ab2c49021f7900e85",
+    "web/partners.js": "33d2f8fc635f181f87219be8b2ea06e60cef8f7fa6fcbf8eca6133bcd6c5575e",
+    "web/composite.js": "acd9a74603c040978c43bf471bdd10a21ec0d4808c4eb9586ce6fc6cb7de7f75",
+    "web/public-pages.js": "49407383e405170748c293bd69efb32159379ec2d2c2dd3cef0db207ddbf0b8e",
+    "scripts/partner.js": "3e40deae9d5b6a544f8e61f184dd03d81a1174da81b921d3a789a67f9e979305",
+    "web/config.js": "451599f6fa194ea4345e9f23f537549f4e8aeff3d4ecc2482f3f1982c73fafad",
+    "scripts/mutation.js": "b7a3fc7651d6cc97bd149b0de88c0e03680a4ce26a833e828e18abcc6ba3f1bf",
+    "scripts/migrate.js": "5bf50e4f7503bc1bf0dd78226bd3eec13458f0d162af46c2076e27a6a62b747b",
+    "worker/manifest.py": "5711ec06f04ef522b4ed1ae746e7c2e7689ea87336359e1ce78c43b8103754e3"
+  },
+  "parent_review": {
+    "path": "/tmp/n8-ui-logout-review/answer.md",
+    "sha256": "2a9cb990e3c3811530bd9600f3d380d45867d34eb59b8e966bf7565aba401b24",
+    "status": "ACCEPT correction only; parent owns immutable integration"
+  },
+  "historical_f04a_source_continuity": {
+    "unchanged": 70,
+    "total": 75,
+    "changed_paths": [
+      "tests/attribution-http.test.js",
+      "web/app.js",
+      "web/public/app.js",
+      "web/public/index.html",
+      "web/public/style.css"
+    ],
+    "limitation": "Historical F04a source is not current full-stack runtime acceptance."
+  },
+  "not_executed": [
+    "product tests",
+    "build",
+    "PG",
+    "browser",
+    "restore",
+    "Docker",
+    "network",
+    "provider",
+    "GPU"
+  ],
+  "required_product_gates": "pending",
+  "source_hash_metadata": "docs/features/f06a/checks/source-hashes.json",
+  "note": "Initial verifier wrongly required exit0 from git diff --no-index --check; exit1 with empty output is normal content difference. No whitespace defect was emitted."
+}

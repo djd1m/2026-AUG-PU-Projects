@@ -1,0 +1,87 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f06-delivery-resume-1",
+  "attempt_id": "n8-f06-delivery-resume-1",
+  "profile": "compact-quality-first-v2",
+  "source_revision": "8030270f023d83c9cdd597c4578517a1b58b4b35",
+  "launch_sha256": "fbc21b59abacbd7f4b7040ad3de617dee373c28f0d1cbdd3f08c5cee93b0aaa6",
+  "trace_prelaunch_state": "absent",
+  "started_at": "2026-10-03T03:16:37.855842+00:00",
+  "requested_model": "gpt-6.1-sol",
+  "actual_model": "gpt-6.1-sol",
+  "actual_model_evidence": "/tmp/n8-f06-delivery-resume-1/runtime.log: CLI model: gpt-6.1-sol, provider openai, v0.160.0",
+  "requested_effort": "high",
+  "actual_effort": "high",
+  "actual_effort_evidence": "CLI banner reasoning effort: high",
+  "provider_resolved_model": null,
+  "usage": null,
+  "cost": null,
+  "active_wall_ms": null,
+  "missing_data": [
+    "Provider-resolved model and billing counters unavailable; CLI banner confirms host model selection only.",
+    "No measured waiting intervals; active time unknown.",
+    "Parent owns aggregate telemetry and independent integration/review."
+  ],
+  "scope": "Documentation-only bounded F06a preparation, inert restore procedure; no product/runtime changes",
+  "exclusions": [
+    "actual browser",
+    "GPU",
+    "live provider",
+    "restore execution",
+    "deployment",
+    "roadmap",
+    "delegation"
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Documentation only; no actual E2E or runtime commands authorized."
+  },
+  "stages": [
+    {
+      "stage": "ROUTE/RESUME/IMPLEMENT",
+      "at": "2026-10-03T03:17:32.572410+00:00",
+      "mechanical_exit": 0,
+      "substantive_tier": "T documentation delta; inherited product XL gates unchanged",
+      "result": "Reused prior preparation and accepted F06 plan; no new plan pause, no native checkpoint; E2E not_applicable."
+    },
+    {
+      "stage": "VALIDATE",
+      "at": "2026-10-03T03:29:16.081818+00:00",
+      "result": "Read-only documentation/source verification; no build/unit/PG/browser/network/container execution."
+    },
+    {
+      "stage": "VALIDATE_FINISHED",
+      "at": "2026-10-03T03:30:07.731074+00:00",
+      "result": "18 documentation checks passed; initial no-index exit interpretation corrected, original result retained; no source or document correction required by that check.",
+      "evidence": "docs/features/f06a/checks/validation.json",
+      "source_snapshot_sha256": "1164460f848271901e0a70cea2ebfb0e02429c0df485dbc627b2a24cedc972b9"
+    },
+    {
+      "stage": "HANDOFF",
+      "at": "2026-10-03T03:31:44.881955+00:00",
+      "result": "Seven Markdown docs complete;18docs checks passed; parent atomically installs new terminal TRACE, then independently reviews/integrates. UI/restore/GPU/provider aggregate gates pending; no source/product/roadmap changes."
+    }
+  ],
+  "status": "completed",
+  "prior_attempt": {
+    "work_unit_id": "n8-f06-delivery",
+    "attempt_id": "n8-f06-delivery-1",
+    "state": "interrupted by coordinator, terminal receipt failed",
+    "reason": "Coordinator resolved real UI5 logout-control race; documentation did not fail.",
+    "source_revision": "6d04b91e545822b723bedd49f794f6aa228d4a69",
+    "metadata": "docs/features/f06a/checks/run.json"
+  },
+  "source_continuity": {
+    "expected": "8030270f023d83c9cdd597c4578517a1b58b4b35",
+    "observed": "8030270f023d83c9cdd597c4578517a1b58b4b35",
+    "reconciliation": "Fast-forward authorized by resume brief; one product finally-line correction plus regression/evidence and parent walkthrough append. Update UI status/source bindings; unchanged foundation evidence reused, no runtime rerun in doc-only scope."
+  },
+  "ended_at": "2026-10-03T03:31:44.881955+00:00",
+  "elapsed_wall_ms": 907026,
+  "verdict": "PASS bounded documentation preparation; parent integration/review and runtime gates pending",
+  "fallback_reason": null,
+  "delegation_count": 0,
+  "source_snapshot_sha256": "1164460f848271901e0a70cea2ebfb0e02429c0df485dbc627b2a24cedc972b9",
+  "validation_path": "docs/features/f06a/checks/validation.json",
+  "required_product_gates_passed": false
+}
