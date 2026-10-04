@@ -1,0 +1,14 @@
+[
+  "docker",
+  "buildx",
+  "prune",
+  "--builder",
+  "default",
+  "--force",
+  "--filter",
+  "id~=\"^(79fh8lofoe1a5g9077d65lp5e|unim6nbqg4oyylhz09ty5ciw9|v7aiu6bbmvfdk42f6zhcfs80m|sl7j08zgs590l9c8q8p1ld6gk|yk0bpzcoauwdpkmm78elwc1am|cqkdz3y2ud2yhsb46krm1r155|382ilqq6w4qn8h5wh2mre2rzi|itpz7sm5c9kanbc1yzwmn98yw|llt6tqs0xx7pt9ubtyvtlj78j|19wl70745bu11e4jhcgq2vapd|2nb5sis0pznes953rwfrqqzux|wj0gtoleg0fgrfhambdadolbz|0sgn8a4jyot26h05xhferpfyf|9cfnlrb3nzkulld066gsr81kl|tvlos7yad6uw1vc4qqbtu7hfw|nd60rzatfbe030qlt3px36hfd|hvwdx4z5hfp0xgfv0sydsnd20|wpm9yimyvhb158vijcitpa5ky|pg5zhf47uj73j1tdsd8i8qgpp|jbyvzfj8jnlkuke0vwf1u14bx|aecqg8os4wskha50k0jh9xnsf|q59fnt5hokot2oqnky2k83z4n|vgda6tzzasft96yjs5tuevtmb|q8svvuthnrttkb0v2o2l4hvzp|s2zpnbhwdxgkshr6b07rqeqn4|u5dcm8mw5fmcokvrd5wmmiepc|frp9f57ys61m54uvh5078083w|wevpdqqgdrrl4i1pmhr23ej9i|ub3zrz9rzod1jiiad002cxuzr|tx9kbcfea33irvg2o2tnvwlh2|050tfyvudyxlovx0bfj3ue5t4|pvf22vukccl4gl6oba6tiy2wu|kay4alwkj35j69wbfx2mgufjc|kto8t7y7yxka6nei843vl8oo6|0fz79e03afmsiyn443mrxwmyh|02xcsdcpfjzqq5y8bv3boec47|lrmxjsesybds6zcrrd9palka6|tjl2wmzlkew76bcb4i1vlzxja|u8xcoc3rmgj3e7p5l8j66l7ce|la80azgm23wkexahpsmi1hkyy|1kuu5mrs79s2i0mp8cv311nyi|45xl5l5fgj8lsti0nctf31md8|yf8eku18yxu440m7qcsdd6jkm|6vqfjkjmcsxse2wybij68yt5v|ozt1dtow0gfhlyhk9h04lp09u|xa274i7lj8x85ss1vbmqg7mdd|z2x72vhamb4j7zcl9qgesxa0y|p2appntt0uu5usaozv4yvmdvn|iwpkopb79i3335sdsyv32fv6p|u2ikp0kc37l372ly17zn5t0ew|0u11nu661fmfhzhko2fhr4u79|k05piryrxru8bcmk1psov1c7y|nzcsalmdc8etohj66d20ix7ku)$\",immutable,private",
+  "--filter",
+  "type=regular",
+  "--filter",
+  "until=12h"
+]
