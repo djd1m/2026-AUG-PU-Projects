@@ -1,0 +1,51 @@
+{
+  "status": "completed",
+  "verdict": "READY_fixpack_not_product_acceptance",
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "stage": "A30",
+  "launch_utc": "2026-10-06T21:49:34.851646+00:00",
+  "finished_utc": "2026-10-06T21:56:51.247490+00:00",
+  "elapsed_wall_ms": 436395,
+  "bound_seconds": 480,
+  "freeze_seconds": 360,
+  "initial_freeze_utc": "2026-10-06T21:55:53.246211+00:00",
+  "freeze_lateness_seconds": 18.394565,
+  "post_freeze_change": "Root-requested normative correction of an unsupported authored assertion; scratch plan only",
+  "source_revision": "0f0653f010e40122532f6dd446fc1e16937656e8",
+  "source_unchanged": true,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "profile": "model-routing-econom",
+  "owned_processes_joined": true,
+  "pure_node_replay_exit": 0,
+  "native_pg_physical_tests_started": 0,
+  "normative_hash_checks": "14/14 match",
+  "mechanical_route_exit": 0,
+  "mechanical_route_tier": "M",
+  "substantive_risk": "L",
+  "disk_available_bytes": 2973704192,
+  "disk_total_bytes": 105590231040,
+  "artifact_sha256": {
+    "report.md": "ca524cdc4de1dc2fc20980a8b53871f1cfa00afbd244b0589e3e213901ef2cd6",
+    "context_manifest.json": "cb9beee7ad71e4c7c799f0dc8df252a42f4173d45685d6e7566c39663360a290",
+    "counterproof.py": "84275fbdb6e5fe8aef6476641a81d4c777184ff11f5a4e1674faf6b4ae08c8d0",
+    "counterproof-output.json": "2bcf1cdbb5a760871ee7c08f80bd6eea5be243283d1cddf14dde1fba6acaf7b8"
+  },
+  "remaining_AC": [
+    "Separate19/20 native assertion cause unresolved, no waiver",
+    "Implement atomic fair claim/physical admission and exact one-use/unbound cleanup",
+    "Affected focused/native/full PG/330s parent/mutation/canary gates on new frozen source",
+    "Fresh independent HIGH final source review"
+  ],
+  "next_executor": "Root launches one fresh Sol6.1 MEDIUM author <=20min incl3min seal; not a parked queue",
+  "measurement_gaps": [
+    "Host actual model/effort and usage counters unavailable",
+    "instantaneous failed admission transaction unobserved",
+    "server closes do not directly prove per-child exit",
+    "19 versus20 assertion cause unknown"
+  ]
+}

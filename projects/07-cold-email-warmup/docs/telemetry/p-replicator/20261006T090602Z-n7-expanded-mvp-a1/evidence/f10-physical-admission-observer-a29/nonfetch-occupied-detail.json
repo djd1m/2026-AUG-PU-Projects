@@ -1,0 +1,144 @@
+[
+  {
+    "busy_at": "2026-10-06T21:43:31.706Z",
+    "slot": 3,
+    "operation": "f9e6173f-c6b3-48a5-aec0-f312509e4d94",
+    "mailbox": "3a4fed3f-54dc-4156-b758-dee10866771a",
+    "last_wire_before_yield": null,
+    "acquired_at": "2026-10-06T21:43:31.682Z",
+    "released_at": "2026-10-06T21:43:36.797Z"
+  },
+  {
+    "busy_at": "2026-10-06T21:43:35.864Z",
+    "slot": 4,
+    "operation": "7fb2e25b-75f5-4d77-8343-f5315703950d",
+    "mailbox": "2088e411-acd2-4818-b8a0-f7325054cfff",
+    "last_wire_before_yield": {
+      "connection": 85,
+      "label": null,
+      "mailbox": null,
+      "phase": "response_written",
+      "verb": "GREETING",
+      "utc": "2026-10-06T21:43:35.864Z",
+      "monotonicMs": 35182.41115
+    },
+    "acquired_at": "2026-10-06T21:43:35.761Z",
+    "released_at": "2026-10-06T21:43:40.883Z"
+  },
+  {
+    "busy_at": "2026-10-06T21:43:36.888Z",
+    "slot": 3,
+    "operation": "e1eab37a-6fb8-41cb-8be3-74b39e038430",
+    "mailbox": "3a4fed3f-54dc-4156-b758-dee10866771a",
+    "last_wire_before_yield": null,
+    "acquired_at": "2026-10-06T21:43:36.819Z",
+    "released_at": "2026-10-06T21:43:41.923Z"
+  },
+  {
+    "busy_at": "2026-10-06T21:43:41.007Z",
+    "slot": 4,
+    "operation": "adb35082-af70-4536-ac7b-b8b39bfb604b",
+    "mailbox": "2088e411-acd2-4818-b8a0-f7325054cfff",
+    "last_wire_before_yield": {
+      "connection": 89,
+      "label": null,
+      "mailbox": null,
+      "phase": "response_written",
+      "verb": "CAPABILITY",
+      "utc": "2026-10-06T21:43:41.007Z",
+      "monotonicMs": 40324.952095
+    },
+    "acquired_at": "2026-10-06T21:43:40.908Z",
+    "released_at": "2026-10-06T21:43:46.026Z"
+  },
+  {
+    "busy_at": "2026-10-06T21:43:42.032Z",
+    "slot": 3,
+    "operation": "b95dacaf-baf5-4f40-8096-4556fddd7dfb",
+    "mailbox": "3a4fed3f-54dc-4156-b758-dee10866771a",
+    "last_wire_before_yield": null,
+    "acquired_at": "2026-10-06T21:43:41.966Z",
+    "released_at": "2026-10-06T21:43:47.086Z"
+  },
+  {
+    "busy_at": "2026-10-06T21:43:51.316Z",
+    "slot": 4,
+    "operation": "07336021-febf-41f0-9975-b99642e20d52",
+    "mailbox": "2088e411-acd2-4818-b8a0-f7325054cfff",
+    "last_wire_before_yield": null,
+    "acquired_at": "2026-10-06T21:43:51.212Z",
+    "released_at": "2026-10-06T21:43:56.354Z"
+  },
+  {
+    "busy_at": "2026-10-06T21:43:52.343Z",
+    "slot": 3,
+    "operation": "3dc30731-d172-4eb3-a22c-4834692ab534",
+    "mailbox": "3a4fed3f-54dc-4156-b758-dee10866771a",
+    "last_wire_before_yield": null,
+    "acquired_at": "2026-10-06T21:43:52.246Z",
+    "released_at": "2026-10-06T21:43:57.373Z"
+  },
+  {
+    "busy_at": "2026-10-06T21:43:56.490Z",
+    "slot": 4,
+    "operation": "da714fb2-7496-47a5-8055-29dbb7ed6a1b",
+    "mailbox": "2088e411-acd2-4818-b8a0-f7325054cfff",
+    "last_wire_before_yield": null,
+    "acquired_at": "2026-10-06T21:43:56.387Z",
+    "released_at": "2026-10-06T21:44:01.521Z"
+  },
+  {
+    "busy_at": "2026-10-06T21:44:01.613Z",
+    "slot": 4,
+    "operation": "47099be1-1356-4118-b330-4eca40dc87a9",
+    "mailbox": "2088e411-acd2-4818-b8a0-f7325054cfff",
+    "last_wire_before_yield": null,
+    "acquired_at": "2026-10-06T21:44:01.564Z",
+    "released_at": "2026-10-06T21:44:06.702Z"
+  },
+  {
+    "busy_at": "2026-10-06T21:44:02.646Z",
+    "slot": 3,
+    "operation": "fc8740c7-a615-44fd-8eb5-e3484f7c4aed",
+    "mailbox": "3a4fed3f-54dc-4156-b758-dee10866771a",
+    "last_wire_before_yield": null,
+    "acquired_at": "2026-10-06T21:44:02.567Z",
+    "released_at": "2026-10-06T21:44:07.702Z"
+  },
+  {
+    "busy_at": "2026-10-06T21:44:04.699Z",
+    "slot": 1,
+    "operation": "23f9eaf0-50c9-48f2-9489-40687469db46",
+    "mailbox": "bfb64f84-f8ed-4b28-a860-d4a1b654af79",
+    "last_wire_before_yield": null,
+    "acquired_at": "2026-10-06T21:44:04.613Z",
+    "released_at": "2026-10-06T21:44:09.759Z"
+  },
+  {
+    "busy_at": "2026-10-06T21:44:06.781Z",
+    "slot": 4,
+    "operation": "afdbc777-eea6-4a7d-b549-8d17e2f52adf",
+    "mailbox": "2088e411-acd2-4818-b8a0-f7325054cfff",
+    "last_wire_before_yield": null,
+    "acquired_at": "2026-10-06T21:44:06.768Z",
+    "released_at": "2026-10-06T21:44:11.901Z"
+  },
+  {
+    "busy_at": "2026-10-06T21:44:07.812Z",
+    "slot": 3,
+    "operation": "4c6ffa8f-f2c3-4e62-8c91-32b0e921604c",
+    "mailbox": "3a4fed3f-54dc-4156-b758-dee10866771a",
+    "last_wire_before_yield": null,
+    "acquired_at": "2026-10-06T21:44:07.764Z",
+    "released_at": "2026-10-06T21:44:12.937Z"
+  },
+  {
+    "busy_at": "2026-10-06T21:44:09.865Z",
+    "slot": 1,
+    "operation": "2f176c8f-874e-4d62-95ac-32a8a62136f3",
+    "mailbox": "bfb64f84-f8ed-4b28-a860-d4a1b654af79",
+    "last_wire_before_yield": null,
+    "acquired_at": "2026-10-06T21:44:09.782Z",
+    "released_at": "2026-10-06T21:44:14.900Z"
+  }
+]

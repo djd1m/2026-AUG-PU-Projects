@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 A28 corrected PLAN READY; fresh MEDIUM A29 observer allocated, waiting actual startup ACK; F10 not accepted",
+  "current_stage": "F10 A30 independent minimal atomic-admission plan READY; fresh MEDIUM A31 four-runtime-file implementation actual ACK",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -138,14 +138,17 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f10_physical_admission_observer_a29",
-    "native_spawn_success": true,
-    "actual_ACK_received": false,
+    "executor": "/root/n7_sol_coordinator/f10_atomic_admission_author_a31",
+    "actual_ACK_received": true,
+    "actual_ACK_at": "2026-10-06T21:59:38.353756Z",
+    "launch_sha256": "57fa21baa6ca00d9df1efdfefd4ed100367eaeec0f77ecf05efee670d9c9806f",
     "requested_model": "gpt-6.1-sol",
     "requested_effort": "medium",
     "actual_model": null,
-    "source_revision": "d2a03eb0ee91409b59b65dc66808159db7975d7e",
-    "next": "Two-test physical operation lifecycle / E busy slot snapshots, short instrumentation proof before newly instrumented original native witness; no runtime/threshold change"
+    "source_revision": "0f0653f010e40122532f6dd446fc1e16937656e8",
+    "freeze_at": "2026-10-06T22:16:38Z",
+    "deadline": "2026-10-06T22:19:38Z",
+    "next": "Atomic native poll fairclaim+physical reservation in same FIRST TX; exact unused disposal; four runtime +three existing F10 tests; frozen focusedchecks then fresh HIGH affected verification/source review"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -448,13 +451,11 @@
     "whole_runtime_accepted": false
   },
   "branch_push": {
-    "remote_revision": "956ef0714339889ec6684df94efe04d59e20723d",
-    "reported_by": "root",
-    "confirmed_at": null,
-    "confirmation_recorded_at": "2026-10-06T20:05:00.413350+00:00",
-    "exit_code": 0,
-    "prior_review_rejections_preserved": true,
-    "source_acceptance": false
+    "revision": "6f6fa66ed0c2ec40d0be5cc126e885ec2083b54d",
+    "actual_published_at": "2026-10-06T21:41Z minute precision root receipt",
+    "parent_remote": "a59a8dcc04c0112f7bf9dc2fa5c38e70a77a3402",
+    "trusted_executor": "root",
+    "scope": "docs telemetry only; no F10 acceptance"
   },
   "model_policy_boundary": {
     "owner_decision": "OWN-N7-006",
@@ -501,5 +502,44 @@
     "original_draft_valid_only_with_corrected_clauses": true,
     "actual_model": null,
     "usage": null
+  },
+  "f10_physical_observer_a29": {
+    "revision": "0f0653f010e40122532f6dd446fc1e16937656e8",
+    "finished_at": "2026-10-06T21:47:18.951367Z",
+    "only_test_files": 2,
+    "native_exit": 1,
+    "native_timeout": false,
+    "literal_required_pages": 20,
+    "observed_pages": 19,
+    "page_failure_cause": "unknown; kept separate from E completion cadence",
+    "E_first_completion_gap_ms": 40783,
+    "E_busy_yields": 39,
+    "physical_acquisitions": 276,
+    "physical_releases": 276,
+    "all3_workers_joined_drained": true,
+    "source_DB_mutex_released": true,
+    "exact_rolledback_acquire_instant_uncaptured": true,
+    "canary_available": 5,
+    "canary_hits": 0,
+    "actual_model": null,
+    "usage": null,
+    "accepted": false
+  },
+  "f10_atomic_admission_plan_a30": {
+    "status": "READY",
+    "finished_at": "2026-10-06T21:56:51.247490Z",
+    "elapsed_ms": 436395,
+    "freeze_overrun_ms": 18394.565,
+    "source_revision": "0f0653f010e40122532f6dd446fc1e16937656e8",
+    "report_sha256": "ca524cdc4de1dc2fc20980a8b53871f1cfa00afbd244b0589e3e213901ef2cd6",
+    "no_first_unserved_barrier": true,
+    "normative_reconciliation": "approved04 line44/46 supports E before any oldsecond; no allfirstcompletion-before-E requirement",
+    "author_test_correction": "Remove only unsupported completed<=eFirst comparison; real successful >=5000ms quanta/all5/20pages/30s/60s/windows unchanged",
+    "initial_context_sha256": "2cd9e250c738f2f6536f9847bf31cbce33e18a96edda08749639e598252fdac0",
+    "final_context_sha256": "cb9beee7ad71e4c7c799f0dc8df252a42f4173d45685d6e7566c39663360a290",
+    "context_metadata_updated_during_seal_original_preserved_separately": true,
+    "actual_model": null,
+    "usage": null,
+    "product_acceptance": false
   }
 }

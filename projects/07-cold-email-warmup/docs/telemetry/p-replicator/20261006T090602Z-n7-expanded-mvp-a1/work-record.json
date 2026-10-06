@@ -478,7 +478,15 @@
     },
     {
       "id": "f10-physical-admission-observer-a29",
-      "status": "allocated; startup ACK pending"
+      "status": "completed diagnostic; native RED preserved"
+    },
+    {
+      "id": "f10-physical-admission-plan-a30",
+      "status": "completed; freeze overrun disclosed"
+    },
+    {
+      "id": "f10-atomic-admission-a31",
+      "status": "active"
     }
   ],
   "work_units": [
@@ -521,10 +529,10 @@
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true,
     "latest_checkpoint": {
-      "at": "2026-10-06T21:37:17.803948+00:00",
-      "disk_available_bytes": 3026432000,
-      "remaining_AC": "F10 physical admission E completion<=30s + fresh independent review; F11–14 pending",
-      "executor": "/root/n7_sol_coordinator/f10_egap_diagnostician_a27"
+      "at": "2026-10-06T22:01:47.312195+00:00",
+      "disk_available_bytes": 2969190400,
+      "remaining_AC": "F10 atomic admission implementation+all affected fullchecks+fresh independent review; F11 validated plan waits accepted F10; F12–14 pending",
+      "executor": "/root/n7_sol_coordinator/f10_atomic_admission_author_a31"
     }
   }
 }
