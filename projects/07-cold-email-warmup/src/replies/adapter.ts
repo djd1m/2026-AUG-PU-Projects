@@ -5,6 +5,7 @@ import type { MailboxInput } from '../mailboxes/input.js';
 import { authorizeTransport } from '../mailboxes/transport-authority.js';
 import { acquireTransportSlot } from '../mailboxes/transport-slots.js';
 import { runTransportChild,type ChildRequest } from '../mailboxes/transport-lifetime.js';
+import type { TransactionGuard } from './store.js';
 import type { Pool } from 'pg';
 import { HttpError } from '../errors.js';
 import type { HeaderInput } from './input.js';
@@ -12,6 +13,7 @@ export interface Snapshot {uidvalidity:string;uidNext:number;observedAt:Date;pro
 export interface HeaderPage {uidvalidity:string;coveredThrough:number;headers:HeaderInput[];startedAt:Date;completedAt:Date}
 export interface ReplyAdapter {
  readonly mode:'local_test'|'live_provider'|'protocol_fixture';
+ fence?(tenant:string,mailbox:string):Promise<TransactionGuard>;
  snapshot(tenant:string,mailbox:string):Promise<Snapshot>;
  read(tenant:string,mailbox:string,validity:string,cursor:number,horizon:number):Promise<HeaderPage>;
 }
@@ -47,6 +49,7 @@ export async function boundedOperation<T>(operation:()=>Promise<T>,timeoutMs=300
 export class LiveReplyAdapter implements ReplyAdapter {
  readonly mode:'live_provider'|'protocol_fixture';
  constructor(readonly pool:Pool,readonly config:Config,readonly fixture?:ChildRequest['fixture']){this.mode=fixture?'protocol_fixture':'live_provider';}
+ async fence(tenant:string,mailbox:string):Promise<TransactionGuard>{const snapshot=await eligibilityTransaction(this.pool,c=>authorizeTransport(c,this.config,tenant,mailbox,'imap_headers'));return async c=>{const current=await authorizeTransport(c,this.config,tenant,mailbox,'imap_headers');if(current.revision!==snapshot.revision||current.mailboxRevision!==snapshot.mailboxRevision)throw new HttpError(409,'stale_poll_owner');};}
  private async operation<T>(tenant:string,mailbox:string,extra:{kind:'snapshot'|'read';validity?:string;cursor?:number;horizon?:number}):Promise<T>{
   if(this.config.pollMode!=='live_provider')throw new HttpError(503,'transport_denied');
   const snapshot=await eligibilityTransaction(this.pool,c=>authorizeTransport(c,this.config,tenant,mailbox,'imap_headers'));

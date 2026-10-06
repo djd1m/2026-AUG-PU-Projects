@@ -94,7 +94,7 @@ export class SubmissionStore {
   return eligibilityTransaction(this.pool,async client=>{
    const current=(await client.query("SELECT * FROM send_job WHERE id=$1 AND state='submitting' AND attempt_count=$2 FOR UPDATE",[id,prepared.row.attempt_count])).rows[0];
    if(!current) return {state:'unknown_delivery',calls:1};
-   const finished=this.now();let state:string='unknown',reason='unknown_delivery';
+   const finished=slot&&outcome.kind==='accepted'&&outcome.acceptedAt instanceof Date?outcome.acceptedAt:this.now();let state:string='unknown',reason='unknown_delivery';
    if(outcome?.kind==='accepted') {
     if(!slot)await client.query(`INSERT INTO local_test_message(job_id,tenant_id,recipient_tenant_id,scope,message_id,sender,recipient,subject,body,headers,test_label,accepted_at)
      VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,[id,current.tenant_id,prepared.recipientTenant,current.scope,prepared.message.messageId,prepared.message.sender,prepared.message.recipient,prepared.message.subject,prepared.message.body,prepared.message.headers,(prepared.message as TestMessage).testLabel,finished]);

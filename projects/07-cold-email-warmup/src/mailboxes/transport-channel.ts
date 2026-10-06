@@ -5,18 +5,20 @@ import { publicResolver,isPublicIp,normalizeHost,type Resolver } from './network
 export class TransportFailure extends Error {constructor(readonly code:'timeout'|'cancelled'|'connection_failed'|'tls_failed'|'protocol_invalid'|'response_size'|'dns_unavailable'|'unsafe_address'|'host_denied'){super(code);}}
 export interface TransportFixture {ca:Buffer|string;resolver:Resolver;dial:(address:string,port:number)=>{address:string;port:number}}
 export class TransportBudget {
- readonly deadline:number;
+ readonly deadline:number;private active=0;
+ resources(){return {timers:this.active,abortListeners:this.active};}
  constructor(readonly signal:AbortSignal,milliseconds:number){this.deadline=performance.now()+milliseconds;}
  async phase<T>(operation:()=>Promise<T>,limit=10000):Promise<T>{
   if(this.signal.aborted)throw new TransportFailure('cancelled');const left=Math.min(limit,this.deadline-performance.now());if(left<=0)throw new TransportFailure('timeout');
   let timer:NodeJS.Timeout|undefined;let abort:()=>void=()=>{};
-  try{return await Promise.race([operation(),new Promise<never>((_,reject)=>{abort=()=>reject(new TransportFailure('cancelled'));this.signal.addEventListener('abort',abort,{once:true});timer=setTimeout(()=>reject(new TransportFailure('timeout')),left);})]);}
-  finally{if(timer)clearTimeout(timer);this.signal.removeEventListener('abort',abort);}
+  try{return await Promise.race([operation(),new Promise<never>((_,reject)=>{abort=()=>reject(new TransportFailure('cancelled'));this.active++;this.signal.addEventListener('abort',abort,{once:true});timer=setTimeout(()=>reject(new TransportFailure('timeout')),left);})]);}
+  finally{if(timer){clearTimeout(timer);this.active--;}this.signal.removeEventListener('abort',abort);}
  }
 }
 export class TransportChannel {
  private raw:Socket|undefined;private tls:TLSSocket|undefined;private current:Socket|undefined;
  private buffer=Buffer.alloc(0);private received=0;private sealed=false;private failure:TransportFailure|undefined;
+ private drainWaits=0;
  private wake:(()=>void)|undefined;private sockets=new Set<Socket>();
  private abort=()=>this.fail(new TransportFailure('cancelled'));
  private data=(chunk:Buffer)=>{if(this.received+chunk.length>this.maximum||this.buffer.length+chunk.length>131072){this.fail(new TransportFailure('response_size'));return;}this.received+=chunk.length;this.buffer=Buffer.concat([this.buffer,chunk]);if(this.buffer.length>65536)this.current?.pause();this.wake?.();};
@@ -50,7 +52,8 @@ export class TransportChannel {
  private consume(count:number){const value=this.buffer.subarray(0,count);this.buffer=this.buffer.subarray(count);if(this.buffer.length<32768)this.current?.resume();return value;}
  async line(limit=10000):Promise<string>{return this.budget.phase(async()=>{for(;;){this.check();const end=this.buffer.indexOf('\r\n');if(end>=0){if(end+2>8192)throw new TransportFailure('response_size');const b=this.consume(end+2).subarray(0,end);if(b.includes(0)||b.includes(10)||b.includes(13))throw new TransportFailure('protocol_invalid');return b.toString('utf8');}if(this.buffer.length>8192)throw new TransportFailure('response_size');await this.available();}},limit);}
  async literal(length:number):Promise<Buffer>{if(!Number.isInteger(length)||length<0||length>8192)throw new TransportFailure('response_size');return this.budget.phase(async()=>{while(this.buffer.length<length)await this.available();return Buffer.from(this.consume(length));});}
- async write(bytes:string|Buffer){this.check();await this.budget.phase(()=>new Promise<void>((resolve,reject)=>{const socket=this.current;if(!socket){reject(new TransportFailure('connection_failed'));return;}if(socket.write(bytes)){resolve();return;}const done=()=>{cleanup();resolve();},failed=()=>{cleanup();reject(new TransportFailure('connection_failed'));};const cleanup=()=>{socket.removeListener('drain',done);socket.removeListener('error',failed);socket.removeListener('close',failed);};socket.once('drain',done);socket.once('error',failed);socket.once('close',failed);}));}
+ async write(bytes:string|Buffer){this.check();await this.budget.phase(()=>new Promise<void>((resolve,reject)=>{const socket=this.current;if(!socket){reject(new TransportFailure('connection_failed'));return;}if(socket.write(bytes)){resolve();return;}this.drainWaits++;const done=()=>{cleanup();resolve();},failed=()=>{cleanup();reject(new TransportFailure('connection_failed'));};const cleanup=()=>{socket.removeListener('drain',done);socket.removeListener('error',failed);socket.removeListener('close',failed);};socket.once('drain',done);socket.once('error',failed);socket.once('close',failed);}));}
+ resources(){return {sockets:[...this.sockets].filter(s=>!s.closed).length,queuedBytes:this.buffer.length,pending:this.wake?1:0,drainWaits:this.drainWaits,listeners:[...this.sockets].reduce((n,s)=>n+s.listenerCount('data')+s.listenerCount('drain'),0),...this.budget.resources()};}
  async command(line:string){if(/[\r\n\0]/.test(line))throw new TransportFailure('protocol_invalid');await this.write(line+'\r\n');}
  async close(){if(this.sealed)return;this.sealed=true;this.budget.signal.removeEventListener('abort',this.abort);this.wake?.();
   const sockets=[...this.sockets];await Promise.all(sockets.map(socket=>new Promise<void>(resolve=>{this.detach(socket);if(socket.closed){resolve();return;}socket.once('close',()=>resolve());socket.on('error',()=>{});socket.destroy();})));this.buffer=Buffer.alloc(0);this.sockets.clear();

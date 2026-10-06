@@ -14,17 +14,19 @@ export class PollWorker {
  constructor(readonly pool:Pool,ring:Keyring,readonly mode:'disabled'|'local_test'|'live_provider'='disabled',readonly adapter:ReplyAdapter=new FixtureAdapter(pool)) {this.store=new ReplyStore(pool,ring);}
  async poll(tenant:string,mailbox:string) {
   if(this.mode==='disabled') return {mode:this.mode,state:'disabled'};
+  if(this.mode==='live_provider'&&this.adapter.mode==='local_test')return {mode:this.mode,state:'paused'};
   let run:Rescan|null=null;let guard:TransactionGuard|undefined;let deadline=Date.now()+120000;
+  const observe=async(owner:string)=>{const source=await observePoll(this.pool,tenant,mailbox,owner),transport=await this.adapter.fence?.(tenant,mailbox);return async(client:import('pg').PoolClient)=>{await source(client);await transport?.(client);};};
   const operation=<T>(call:()=>Promise<T>)=>boundedOperation(call,Math.max(1,Math.min(30000,deadline-Date.now())));
   try {
    const owner=await claimPoll(this.pool,tenant,mailbox);
-   guard=await observePoll(this.pool,tenant,mailbox,owner);
+   guard=await observe(owner);
    const capture=await operation(()=>this.adapter.snapshot(tenant,mailbox));
    run=await this.store.capture(tenant,mailbox,capture,guard);deadline=run.attemptStartedAt.getTime()+120000;
    if(run.state==='rescan_incomplete') return {mode:this.mode,state:run.state};
    for(let pages=0;pages<20;pages++) {
     if(Date.now()>=deadline) {await this.store.failTail(tenant,mailbox,identity(run),guard);return {mode:this.mode,state:'rescan_incomplete'};}
-    guard=await observePoll(this.pool,tenant,mailbox,owner);
+    guard=await observe(owner);
     const kind=run.cursor<run.highWater?'scan':'tail';
     let horizon=run.highWater;
     if(kind==='tail') {
