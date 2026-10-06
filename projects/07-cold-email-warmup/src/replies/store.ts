@@ -1,3 +1,4 @@
+import { enqueueCaptureClient } from './context-store.js';
 import { randomUUID } from 'node:crypto';
 import type { Pool, PoolClient } from 'pg';
 import { HttpError } from '../errors.js';
@@ -90,20 +91,31 @@ export class ReplyStore {
    await this.incomplete(c,tenant,mailbox);return {state:'rescan_incomplete' as const,effects:0};
   });
  }
- private async ingest(c:PoolClient,tenant:string,mailbox:string,v:string,headers:ReplyHeader[],now:Date) {
+ private async ingest(c:PoolClient,tenant:string,mailbox:string,v:string,headers:ReplyHeader[],now:Date,run:Rescan) {
   let effects=0;
   for(const h of headers) {
    await c.query('INSERT INTO reply_observation(tenant_id,mailbox_id,uidvalidity,uid,message_id) VALUES($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING',[tenant,mailbox,v,h.uid,h.messageId]);
    if(h.messageId) await c.query('INSERT INTO reply_message(tenant_id,mailbox_id,message_id) VALUES($1,$2,$3) ON CONFLICT DO NOTHING',[tenant,mailbox,h.messageId]);
    // Neither observation nor incoming ID is authoritative dedup. Reused IDs must still match S.
    if(!h.sender || !h.references.length) continue;
-   const candidates=(await c.query(`SELECT DISTINCT e.id,e.recipient_envelope FROM send_job j JOIN enrollment e ON e.tenant_id=j.tenant_id AND e.id=j.enrollment_id
+   const candidates=(await c.query(`SELECT DISTINCT e.id,e.recipient_envelope,j.id AS job_id FROM send_job j JOIN enrollment e ON e.tenant_id=j.tenant_id AND e.id=j.enrollment_id
     WHERE j.tenant_id=$1 AND j.mailbox_id=$2 AND j.message_id=ANY($3::text[]) AND j.state IN ('submitting','submitted','unknown')`,[tenant,mailbox,h.references])).rows;
+   const matched:{enrollment:string;job:string}[]=[];
    for(const e of candidates) {
     if(singleAddress(openRecipient(e.recipient_envelope as Envelope,tenant,e.id,this.ring))!==h.sender) continue;
+    matched.push({enrollment:e.id,job:e.job_id});
     const inserted=await c.query(`INSERT INTO reply_effect(tenant_id,mailbox_id,enrollment_id,kind,created_at) VALUES($1,$2,$3,'reply',$4) ON CONFLICT DO NOTHING RETURNING enrollment_id`,[tenant,mailbox,e.id,now]);
     if(inserted.rowCount) {await stopEnrollmentClient(c,tenant,e.id,'replied');effects++;}
    }
+   if(!matched.length)continue;
+   // Follow only own tenant/mailbox/enrollment parents, bounded against cycles.
+   const roots=new Set<string>();let invalid=false;
+   for(const m of matched){let id=m.job;const visited=new Set<string>();let root:string|null=null;
+    for(let depth=0;depth<32;depth++){if(visited.has(id))break;visited.add(id);const j=(await c.query('SELECT id,parent_id FROM send_job WHERE tenant_id=$1 AND mailbox_id=$2 AND enrollment_id=$3 AND id=$4',[tenant,mailbox,m.enrollment,id])).rows[0];if(!j)break;if(j.parent_id===null){root=j.id;break;}id=j.parent_id;}
+    if(root)roots.add(root);else invalid=true;
+   }
+   const enrollments=new Set(matched.map(m=>m.enrollment)),owned=!invalid&&roots.size===1&&enrollments.size===1;
+   await enqueueCaptureClient(c,{tenant,mailbox,uidvalidity:v,uid:h.uid,runId:run.runId,attempt:run.attempt,source:run.provenance,observedAt:now,enrollment:owned?matched[0]!.enrollment:null,root:owned?[...roots][0]!:null});
   }
   return effects;
  }
@@ -122,7 +134,7 @@ export class ReplyStore {
    }
    if(p.kind==='scan' && (p.coveredThrough>run.highWater || run.tailHighWater!==null) || p.kind==='tail' && (run.cursor<run.highWater || (run.tailHighWater!==null && p.tailHighWater!==run.tailHighWater))) throw evidenceError();
    const tailHighWater=p.kind==='tail'?p.tailHighWater!:run.tailHighWater;
-   const effects=await this.ingest(c,tenant,mailbox,run.uidvalidity,p.headers,now);
+   const effects=await this.ingest(c,tenant,mailbox,run.uidvalidity,p.headers,now,run);
    const state=p.kind==='tail' && p.coveredThrough===tailHighWater?'complete':run.pages+1>=20?'rescan_incomplete':'scanning';
    await c.query('UPDATE reply_rescan SET cursor_uid=$3,pages=pages+1,state=$4,tail_high_water=$5 WHERE tenant_id=$1 AND mailbox_id=$2',[tenant,mailbox,p.coveredThrough,state,tailHighWater]);
    await c.query('UPDATE mailbox_poll SET cursor_uid=$2,scan_complete=$3,completed_at=CASE WHEN $3 THEN $4 ELSE completed_at END WHERE mailbox_id=$1',[mailbox,p.coveredThrough,state==='complete',now]);
