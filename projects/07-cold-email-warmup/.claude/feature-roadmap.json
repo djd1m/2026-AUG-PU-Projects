@@ -1,7 +1,7 @@
 {
   "version": "1.1",
   "project": "07-cold-email-warmup",
-  "current_sprint": "expanded-mvp-planning",
+  "current_sprint": "expanded-mvp",
   "features": [
     {
       "id": "f01-foundation-auth",
@@ -151,15 +151,13 @@
       "number": 7,
       "name": "Unlimited connected mailboxes and bounded active capacity",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "planned",
       "complexity": "complex",
       "depends_on": [
         "f02-mailboxes-consent",
         "f05-evidence-billing-growth"
       ],
-      "blockers": [
-        "Concrete expanded XL plan checkpoint; preparatory contract reconciliation"
-      ],
+      "blockers": [],
       "expected_files": [
         "src/billing/plans.ts",
         "src/mailboxes/store.ts"
@@ -168,7 +166,8 @@
         "AC-expanded-mvp-001"
       ],
       "sprint": "expanded-mvp",
-      "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a"
+      "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+      "preimplementation_gate": "Legacy contract reconciliation before IMPLEMENT"
     },
     {
       "id": "f08-live-diagnostics",
@@ -346,7 +345,7 @@
   "last_completed": "f05-evidence-billing-growth",
   "scope_decision": "OWN-N7-004",
   "scope_plan": "docs/plans/expanded-mvp-plan.md",
-  "scope_checkpoint": "pending concrete XL plan approval",
+  "scope_checkpoint": "approved OWN-N7-005",
   "preimplementation_gates": [
     "Reconcile legacy six feature contours with current role-map/traceability contracts without invalidating historical acceptance",
     "Confirm primary SMTP/IMAP/OpenAI capability contracts before dependent implementation"

@@ -28,7 +28,7 @@
   "billing_mode": "unknown",
   "started_at": "2026-10-06T09:06:02.878171Z",
   "ended_at": null,
-  "status": "blocked",
+  "status": "running",
   "acceptance_evidence": [
     "evidence/cli-update.md",
     "evidence/architect-receipt.md",
@@ -69,7 +69,7 @@
     "No prelaunch serialized launch digest for native PLAN receipt; terminal receipt and output SHA verified, not companion delivery attestation",
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred."
   ],
-  "current_stage": "Concrete XL plan checkpoint; implementation not started",
+  "current_stage": "PREPARE legacy contract reconciliation",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -120,12 +120,10 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "root",
-    "next": "After owner concrete plan approval: reconcile legacy contracts; then Sol6.1 high bounded F07 implementation with fresh Astra review",
-    "executor": "root; coder not yet dispatched before XL checkpoint",
-    "status": "awaiting required owner decision; no background implementation claimed"
+    "next": "Bounded model-routed legacy document reconciliation, then F07 through /go → /feature",
+    "status": "approval recorded; dispatch preparing"
   },
   "blockers": [
-    "Owner concrete expanded XL plan checkpoint (assumptions A1–A3, policy, team)",
     "Legacy full-project role-map/traceability reconciliation before IMPLEMENT",
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization"
   ],
@@ -135,5 +133,13 @@
     "criterion_scenarios_exit": 0,
     "scope": "expanded-mvp only; legacy whole-project gate not established",
     "ac_scenarios": 9
+  },
+  "owner_approval": {
+    "id": "OWN-N7-005",
+    "observed_at": "2026-10-06T09:42:48.596729Z",
+    "spec_sha256": "dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+    "plan_published_revision": "298960ce",
+    "scope": "plan, A1-A3, team, roles, models, skills",
+    "source": "docs/decisions-owner.md"
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "plan",
+  "stage": "approved",
   "roots": {
     "project": "."
   },
@@ -153,7 +153,22 @@
   "approval": {
     "requirement": "required",
     "reason": "Root .claude/rules/complexity-router.md XL: остановка на плане у владельца; OWN-N7-004 authorizes expanded goals, concrete A1–A3 plan checkpoint is pending",
-    "evidence": null
+    "evidence": {
+      "id": "OWN-N7-005",
+      "plan_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+      "covers": [
+        "plan",
+        "team",
+        "roles",
+        "models",
+        "skills"
+      ],
+      "path": {
+        "root": "project",
+        "path": "docs/decisions-owner.md"
+      },
+      "sha256": "390c07b9ad371e0f1975ed22b657f7f33b3d6d95ce6c8781ba8904667a1db0e6"
+    }
   },
   "preflight": {
     "status": "not_applicable",
