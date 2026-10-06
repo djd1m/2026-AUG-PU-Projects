@@ -1,0 +1,39 @@
+{
+  "record_created_at": "2026-10-06T08:38:26.722387+00:00",
+  "scope": "read-only donor maturity and N7 reuse analysis",
+  "profile": "bounded parallel analysis; no product changes",
+  "sources": {
+    "donor00": "02689350083fa6961df07d47aca8ea9079b1f527",
+    "donor01": "fdf565827880813c97535c9aa68ea7fa08ee4339",
+    "n7": "243f0425"
+  },
+  "roles": [
+    "donor00 reviewer",
+    "donor01 reviewer",
+    "N7 compatibility reviewer",
+    "root integration reviewer"
+  ],
+  "actual_models": null,
+  "actual_models_gap": "Native model metadata not exposed; no explicit model switch performed",
+  "token_usage": null,
+  "cost": null,
+  "test_policy": "No dependency installs, build, containers, provider calls or runtime tests; source inspection only",
+  "status": "completed",
+  "finished_at": "2026-10-06T08:44:09.509256+00:00",
+  "root_elapsed_seconds": null,
+  "root_elapsed_gap": "Original task start was not clock-recorded; record creation time is not the full task start",
+  "known_contributor_seconds": {
+    "n7_compatibility": 292
+  },
+  "independent_root_checks": [
+    "GCM vs CBC contracts",
+    "unscoped campaign_step lookup",
+    "unsigned reply webhook",
+    "full git-tree test/license/lockfile/workflow inventory"
+  ],
+  "files": {
+    "donor00-review.md": "90277d2648fef210365f336db6d7424f0e22556b064cfdb281825f4ffed2bc53",
+    "donor01-review.md": "d9013bad29dfc7a51b8a4fc94ce9659f5faf93f1fa699e7db805f741779bd1d4",
+    "n7-compatibility.md": "2d02b1dbdfe65c42173d4fa362543c2a9424d216e15deba3b3e31accfff9a707"
+  }
+}
