@@ -39,7 +39,10 @@
     "evidence/r2-traceability.log",
     "evidence/validation-r2/validation-report.md",
     "evidence/r2-validation-gate.log",
-    "evidence/work-record-check.log"
+    "evidence/work-record-check.log",
+    "evidence/legacy-review-r2/receipt.md",
+    "evidence/f07-validate-r2/receipt.md",
+    "evidence/integrated-preimplementation/phase12.txt"
   ],
   "quality": {
     "required_gates_passed": false,
@@ -51,15 +54,16 @@
     "false_positive_findings": null,
     "known_defects_missed": null,
     "regressions": null,
-    "followup_status": "N7-VAL-001 closed for PLAN; independent validation CAVEATS, no new plan blockers; all product AC pending"
+    "followup_status": "Expanded plan CAVEATS approved OWN-N7-005; legacy independent ACCEPT and integrated Phase I/II=0; F07 VALIDATE READY. F07 implementation/runtime acceptance pending; expanded product AC not yet accepted."
   },
   "metrics": {
-    "elapsed_wall_ms": 1401834,
+    "elapsed_wall_ms": 5697479,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
-    "cost_basis": "unavailable"
+    "cost_basis": "unavailable",
+    "elapsed_as_of": "2026-10-06T10:41:00.358157+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -117,7 +121,7 @@
     "legacy_requirements": 60,
     "features_checked": 8,
     "source_revision": "b2433e8f467df182600f1525318422887a917dde",
-    "scope": "full project before adding F07 contour",
+    "scope": "Historical legacy-only result plus integrated full Phase I/II across eight feature contours including F07",
     "semantic_review": "ACCEPT after R1 correction",
     "integrated_phase12_exit": 0
   },
@@ -125,25 +129,27 @@
     "exit_code": 0,
     "scope": "canonical plus exact-byte expanded-mvp only",
     "requirement_algorithm_pairs": 18,
-    "full_project_result": "not established: legacy6"
+    "full_project_result": "Original selected snapshot did not establish full pass; later integrated full Phase I/II=0, see integrated-preimplementation/phase12.txt",
+    "historical": true
   },
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "root",
-    "executor": "f07_author_a1 (dispatch allocated); n7_expanded_coordinator",
+    "executor": "f07_author_a1 (actually started 2026-10-06T10:30:05.656613+00:00); n7_expanded_coordinator",
     "next": "F07 implementation20min then independent review8min",
     "source_revision": "1841a68bc9d496c5c7908d01d5f89508eb4c8379"
   },
   "blockers": [
-    "Legacy full-project role-map/traceability reconciliation before IMPLEMENT",
-    "Later applicable live pilot/provider/OpenAI spending/deployment authorization"
+    "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
+    "F06 PR access403; retry only on access/state change; independent local implementation continues"
   ],
   "selected_validation": {
     "verdict": "CAVEATS",
     "report_revision_exit": 0,
     "criterion_scenarios_exit": 0,
     "scope": "expanded-mvp only; legacy whole-project gate not established",
-    "ac_scenarios": 9
+    "ac_scenarios": 9,
+    "historical": true
   },
   "owner_approval": {
     "id": "OWN-N7-005",
@@ -155,7 +161,7 @@
   },
   "legacy_completion": {
     "exit_code": 2,
-    "cause": "installed1.13.4 doubles canonical completion absolute path; legacy6 tables missing/malformed; expanded9futuretests absent",
+    "cause": "Historical installed bug/legacy deficiencies retained; current patched integrated result below is authoritative",
     "package_bug_notified_root": true,
     "patched_exit_code": 2,
     "inconclusive_count": 1,
@@ -174,7 +180,7 @@
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-06T10:24:56.503533+00:00",
+    "last_reported_at": "2026-10-06T10:39:00Z",
     "responsible": "n7_expanded_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true
   }

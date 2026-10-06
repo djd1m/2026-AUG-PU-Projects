@@ -150,7 +150,7 @@
       }
     },
     {
-      "phase": "implement",
+      "phase": "implementation",
       "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
       "tier": "XL",
       "rationale": "F07 commercial entitlement, global active admission and final sending fence; approved OWN-N7-005, full PLAN/VALIDATE0, independent preparation ACCEPT, F07 READY",
@@ -209,15 +209,43 @@
     },
     {
       "id": "contract-author-a2",
-      "status": "running"
+      "status": "completed"
     },
     {
       "id": "f07-plan-a1",
-      "status": "running"
+      "status": "completed"
     },
     {
       "id": "f07-implement-a1",
-      "status": "running"
+      "status": "active"
+    },
+    {
+      "id": "contract-fix-a3",
+      "status": "completed"
+    },
+    {
+      "id": "f07-plan-r2",
+      "status": "completed"
+    },
+    {
+      "id": "f07-validate-a1",
+      "status": "completed"
+    },
+    {
+      "id": "f07-validate-r2",
+      "status": "completed"
+    },
+    {
+      "id": "legacy-review-a1",
+      "status": "completed"
+    },
+    {
+      "id": "legacy-r1-fix",
+      "status": "completed"
+    },
+    {
+      "id": "legacy-review-r2",
+      "status": "completed"
     }
   ],
   "work_units": [
@@ -256,7 +284,7 @@
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-06T10:24:56.503533+00:00",
+    "last_reported_at": "2026-10-06T10:39:00Z",
     "responsible": "n7_expanded_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true
   }
