@@ -1,0 +1,17 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-cadence-validate-a1",
+  "source_revision": "e5fad0bd750f0ec40cbd4c1b898f159c1bb20da8",
+  "spec_sha256": "410d329fcc9d433f51e554310318457096a8dfdd82aad9754e47d7122744eeb8",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_model_reason": "host_not_exposed",
+  "worktree": "/tmp/n7-f10-validate-20261006",
+  "created_at": "2026-10-06T16:45:34.081217+00:00",
+  "freeze_by": "2026-10-06T16:49:04.081217+00:00",
+  "deadline": "2026-10-06T16:50:34.081217+00:00",
+  "budget_minutes": 5,
+  "trace_path": "/tmp/n7-f10-cadence-validate-a1-receipt.md",
+  "scope": "Fresh semantic requirements validation of only changed02/03/04 cadence clauses and exact hashes; unchanged strict01AC, hold/backoff/fairness/resources. Resolve idle/no-data ambiguity explicitly; fullPhaseI-II; no runtime/source edits or acceptance."
+}

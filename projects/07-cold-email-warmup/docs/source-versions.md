@@ -19,5 +19,5 @@ This declaration binds the current planning conclusions to actual source bytes. 
 | F09 native transport capabilities | вывод | docs/features/f09-live-transport/capability-contracts.md | e0ff418c52f33b4ad566a0a546add3b911dce78331f08566af3e79893f766dfb |
 | F09 ACCEPT source e043bb27; R1 closed | вывод | docs/features/f09-live-transport/review-report.md | ce41730fd3368f0cfe404a65fc717cf676afc8e245bb6701ce7ed7f9f06e15e0 |
 | F10 frozen scope after V1 fairness correction | вывод | docs/features/f10-durable-runtime/01_specification.md | 410d329fcc9d433f51e554310318457096a8dfdd82aad9754e47d7122744eeb8 |
-| F10 independent READY at952e356d | вывод | docs/features/f10-durable-runtime/validation-report.md | 7d2863788c8a601e5d90a9dbccc91fadaf52f1d9f93d5fe6520e982a25f2038d |
-| F10 physical runtime mapping | вывод | docs/features/f10-durable-runtime/03_architecture.md | c76c1fc569c4116ce7e70eafb624b83dd5de3a7288ac937fc03ece15ef43064b |
+| F10 independent cadence READY at e5fad0bd | вывод | docs/features/f10-durable-runtime/validation-report.md | 22eabfaba1f78ec1f9c74d5b0eb8763c2d28babcd00be98b5d86e88b57e1400d |
+| F10 physical runtime and fair cadence mapping | вывод | docs/features/f10-durable-runtime/03_architecture.md | 7ba1644e010feb420901d5b24e5a41fd2ec959a237f5f72b85d4fb31f6b12df1 |

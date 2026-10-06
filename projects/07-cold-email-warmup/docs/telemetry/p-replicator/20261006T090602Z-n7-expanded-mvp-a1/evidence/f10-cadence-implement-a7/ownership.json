@@ -1,0 +1,15 @@
+{
+  "project_root": "projects/07-cold-email-warmup",
+  "paths": [
+    "src/runtime/store.ts",
+    "src/runtime/loop.ts",
+    "tests/f10-runtime-integration.test.ts",
+    "tests/f10-runtime-unit.test.ts",
+    "tests/expanded-mvp-04.test.ts",
+    "tests/f10-runtime-process-fixture.ts",
+    "tests/f10-runtime-fixture.ts",
+    "tests/f10-runtime-protocol.test.ts",
+    "tests/f09-transport-fixture.ts"
+  ],
+  "constraints": "Production only store/loop accepted cadence/yield; f09fixture only test-local IMAP varying-delay if required; no schemas/dependencies/docs/worker/main/sourceoutside"
+}

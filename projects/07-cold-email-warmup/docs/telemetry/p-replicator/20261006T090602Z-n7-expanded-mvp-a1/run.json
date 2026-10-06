@@ -74,7 +74,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "IMPLEMENT F10 bounded cadence correction A6",
+  "current_stage": "IMPLEMENT F10 validated cadence correction A7",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -136,9 +136,9 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_expanded_coordinator",
-    "executor": "retained Sol f08_author_a1; actual tool ACK16:26:11Z",
-    "source_revision": "6b1e464558283c1e0cfafd35344bb8b9e503f18d",
-    "next": "Short real no-loader discriminator, exact cadence/fault correction, then full verification from frozen source"
+    "executor": "retained Sol f08_author_a1; actual tool ACK16:52:14Z",
+    "source_revision": "2f24e06cc8460450c88d2103c38221fa85f32b48",
+    "next": "Exact correction/short proof and freeze, separate long full verification from immutable source, fresh independent review"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -323,5 +323,16 @@
     "guard_mutations_caught": 3,
     "status": "unaccepted; claimed recovery/newjob backoff edge pending",
     "receipt_status": "failed incomplete scope and timing16.691448s; author postseal timing note disclosed"
+  },
+  "f10_cadence_contract": {
+    "plan": "e5fad0bd750f0ec40cbd4c1b898f159c1bb20da8",
+    "validation": "2f24e06cc8460450c88d2103c38221fa85f32b48",
+    "integrated_plan": "7d85d90c",
+    "integrated_report": "a4e1bb4d",
+    "status": "READY requirements only",
+    "phase12_exit": 0,
+    "source_version_rows": 12,
+    "source_version_exit": 0,
+    "runtime_accepted": false
   }
 }
