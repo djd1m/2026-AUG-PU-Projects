@@ -1,0 +1,157 @@
+{
+  "source": "87bb94944f33bf99f9f9fd6d6390d097ca415dc2",
+  "begun": 1791307082516,
+  "ended": 1791307167100,
+  "cpus": [
+    0,
+    1
+  ],
+  "wallSeconds": 84.584,
+  "failure": null,
+  "participants": 30,
+  "completionsMin": 2,
+  "gaps": {
+    "n": 30,
+    "median": 35936.0,
+    "p95": 37329,
+    "max": 37527,
+    "sum": 1067864
+  },
+  "mailboxesOver30": 30,
+  "processCount": 181,
+  "startupToFirstTCPMs": {
+    "n": 137,
+    "median": 276,
+    "p95": 372,
+    "max": 399,
+    "sum": 37333
+  },
+  "childLifetimeMs": {
+    "n": 181,
+    "median": 382,
+    "p95": 479,
+    "max": 535,
+    "sum": 68954
+  },
+  "peerTLSMs": {
+    "n": 181,
+    "median": 89.97140200000285,
+    "p95": 155.87068599999475,
+    "max": 181.96072499999718,
+    "sum": 16933.126814000057
+  },
+  "cpuTicksFinalWithReapedChildren": 4442,
+  "cpuPercentOneCore": 52.51584223966708,
+  "rssKbPeak": 316628,
+  "fdPeak": 124,
+  "processPeak": 5,
+  "physicalConnectionsPeak": 4,
+  "runtimeAndDBTimingsMs": {
+    "pool.connect": {
+      "n": 2011,
+      "median": 0.043600000004516914,
+      "p95": 0.2857999999978347,
+      "max": 537.4766719999999,
+      "sum": 12849.34596599991
+    },
+    "global_lock": {
+      "n": 2011,
+      "median": 29.04145000000426,
+      "p95": 530.6723989999991,
+      "max": 951.097379999992,
+      "sum": 319520.8327459999
+    },
+    "physical_slot_query": {
+      "n": 5614,
+      "median": 5.193281499996374,
+      "p95": 9.835463999999774,
+      "max": 26.433979000000363,
+      "sum": 30238.051656000047
+    },
+    "runtime.maintenance": {
+      "n": 55,
+      "median": 562.7262110000011,
+      "p95": 765.9729439999992,
+      "max": 819.3947930000031,
+      "sum": 30749.46989799996
+    },
+    "runtime.claim.poll": {
+      "n": 183,
+      "median": 34.77519200000097,
+      "p95": 567.571182,
+      "max": 668.7828890000019,
+      "sum": 20249.935383000015
+    },
+    "pool.connect.callback": {
+      "n": 181,
+      "median": 0.0328799999988405,
+      "p95": 0.14712999999755993,
+      "max": 13.431765000000041,
+      "sum": 38.74815599996714
+    },
+    "runtime.claim.dispatch": {
+      "n": 108,
+      "median": 554.0081775000035,
+      "p95": 888.6057270000001,
+      "max": 1256.131318,
+      "sum": 61219.97529
+    },
+    "runtime.claim.pool": {
+      "n": 96,
+      "median": 313.81258150000144,
+      "p95": 759.2668410000006,
+      "max": 1264.839111,
+      "sum": 28443.223337999996
+    },
+    "runtime.finish.pool": {
+      "n": 60,
+      "median": 43.5667555,
+      "p95": 608.6971570000023,
+      "max": 650.5676119999989,
+      "sum": 9947.147237000028
+    },
+    "runtime.finish.poll": {
+      "n": 181,
+      "median": 317.6602930000008,
+      "p95": 488.28612400000566,
+      "max": 652.4593729999979,
+      "sum": 46161.411202999996
+    }
+  },
+  "PGWaitStateWeightedSamples": {
+    "active:None:None": 180,
+    "active:Lock:advisory": 1379,
+    "idle in transaction:Client:ClientRead": 113,
+    "idle:Client:ClientRead": 394,
+    "idle in transaction:None:None": 36,
+    "active:IO:WALSync": 14,
+    "active:Client:ClientRead": 4,
+    "idle:None:None": 1
+  },
+  "operationCounts": {
+    "CAPABILITY": 181,
+    "AUTHENTICATE": 181,
+    "AUTH_RESPONSE": 181,
+    "EXAMINE": 181
+  },
+  "guard": {
+    "denied": 0,
+    "allowed": 6,
+    "dnsDenied": 0,
+    "installed": true
+  },
+  "drain": {
+    "outcome": {
+      "code": 0,
+      "signal": null
+    },
+    "drained": true,
+    "elapsedMs": 109
+  },
+  "samplingLimitations": {
+    "processTargetMs": 30,
+    "dbTargetMs": 200,
+    "exitBracket": "lastObservedAt..exitObservedAt; /proc starttime10ms resolution; short-lived missed processes possible"
+  },
+  "telemetryTruncated": false
+}

@@ -1,0 +1,17 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-contention-fix-a10",
+  "source_revision": "87bb94944f33bf99f9f9fd6d6390d097ca415dc2",
+  "spec_sha256": "410d329fcc9d433f51e554310318457096a8dfdd82aad9754e47d7122744eeb8",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_model_reason": "host_not_exposed",
+  "worktree": "/tmp/n7-f10-implement-20261006",
+  "created_at": "2026-10-06T17:23:01.377896+00:00",
+  "freeze_by": "2026-10-06T17:31:31.377896+00:00",
+  "deadline": "2026-10-06T17:33:01.377896+00:00",
+  "budget_minutes": 10,
+  "trace_path": "/tmp/n7-f10-contention-fix-a10-receipt.md",
+  "scope": "Measured lock contention correction only. Own src/runtime/loop.ts, src/runtime/store.ts, tests/f10-runtime-integration.test.ts, tests/f10-runtime-unit.test.ts; optional tests/expanded-mvp-04.test.ts ESRCH sampler correction only. Maintenance5s within approved<=30, replace cohort-wide dispatch projection per claim with current selected-sender O(1) projection while preserving bounded periodic reconciliation, recovery, fair sequence, original due/backoff, newjob/reset, quota/currentday/stop/final fence. Add meaningful bound/oldbehavior witness, affectedtests/type/lint/build; freeze source then reuse guarded2CPU short probe. No docs/schema/deps changes."
+}

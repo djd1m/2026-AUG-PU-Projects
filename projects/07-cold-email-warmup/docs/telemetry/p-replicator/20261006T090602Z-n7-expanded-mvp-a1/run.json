@@ -57,13 +57,13 @@
     "followup_status": "F07/F08/F09 locally accepted, expanded AC001\u2013003 met; AC004\u2013009 pending. Whole required_gates_passed remains false."
   },
   "metrics": {
-    "elapsed_wall_ms": 22010349,
+    "elapsed_wall_ms": 29955371,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-06T15:12:53.226947+00:00"
+    "elapsed_as_of": "2026-10-06T17:25:18.250079+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -74,7 +74,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F10 A9 temporary fixture guard, audit and conditional safe profiling",
+  "current_stage": "F10 A10 measured global lock contention correction",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -136,9 +136,9 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_expanded_coordinator",
-    "executor": "retained Sol f08_author_a1 actual first tool ACK17:16:00Z; temporary safe profiler only",
+    "executor": "retained Sol f08_author_a1 actual ACK17:23:25Z; A10 measured lock contention fix",
     "source_revision": "87bb94944f33bf99f9f9fd6d6390d097ca415dc2",
-    "next": "Only /tmp/n7-f10-safe-profile-a9 diagnostic files. Audit own A8 shutdown and synthetic credential/endpoint provenance without secrets. Before network run assert fifth local fixture argument plus inherited socket/DNS allowlist allowing only actual local fixture endpoints and exact owned PostgreSQL; negative guard witness before worker. Await telemetry IPC flush. Frozen product87bb unchanged. If guard ready, bounded <=150s native100/30/3 two-CPU profiling, otherwise seal precise blocker; no product optimization."
+    "next": "Measured lock contention correction only. Own src/runtime/loop.ts, src/runtime/store.ts, tests/f10-runtime-integration.test.ts, tests/f10-runtime-unit.test.ts; optional tests/expanded-mvp-04.test.ts ESRCH sampler correction only. Maintenance5s within approved<=30, replace cohort-wide dispatch projection per claim with current selected-sender O(1) projection while preserving bounded periodic reconciliation, recovery, fair sequence, original due/backoff, newjob/reset, quota/currentday/stop/final fence. Add meaningful bound/oldbehavior witness, affectedtests/type/lint/build; freeze source then reuse guarded2CPU short probe. No docs/schema/deps changes."
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -334,5 +334,17 @@
     "source_version_rows": 12,
     "source_version_exit": 0,
     "runtime_accepted": false
+  },
+  "f10_contention_profile": {
+    "source": "87bb94944f33bf99f9f9fd6d6390d097ca415dc2",
+    "participants": 30,
+    "all_miss_30s": true,
+    "gap_max_ms": 37527,
+    "guard_negative_exit": 0,
+    "actual_cpu_affinity": [
+      0,
+      1
+    ],
+    "whole_runtime_accepted": false
   }
 }

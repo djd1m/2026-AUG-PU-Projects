@@ -1,0 +1,11 @@
+{
+  "at": 1791307047.8524137,
+  "fixtureSource": "tests/diagnostics-fixture.ts",
+  "syntheticSecretLiteralPresent": false,
+  "endpoints": {
+    "smtpHost": "smtp.gmail.com",
+    "imapHost": "imap.gmail.com"
+  },
+  "credentialValueNotExported": true,
+  "runtimeSecretFilesAreLocalInfrastructureKeysNotProviderCredentials": true
+}
