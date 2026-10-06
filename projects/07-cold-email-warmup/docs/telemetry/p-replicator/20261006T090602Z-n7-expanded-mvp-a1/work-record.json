@@ -463,6 +463,22 @@
     {
       "id": "f11-context-plan-a1c-cli",
       "status": "active"
+    },
+    {
+      "id": "f10-fixture-cleanup-a26",
+      "status": "completed"
+    },
+    {
+      "id": "f10-egap-diagnosis-a27",
+      "status": "completed"
+    },
+    {
+      "id": "f11-context-plan-validation-a28-native",
+      "status": "completed"
+    },
+    {
+      "id": "f10-physical-admission-observer-a29",
+      "status": "allocated; startup ACK pending"
     }
   ],
   "work_units": [
@@ -505,10 +521,10 @@
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true,
     "latest_checkpoint": {
-      "at": "2026-10-06T21:19:56.761002+00:00",
-      "disk_available_bytes": 3046973440,
-      "remaining_AC": "shortforcedstaleproof/currentnativeGREEN→independentadmission; F11–14pending",
-      "executor": "/root/n7_sol_coordinator/f10_fixture_cleanup_author_a26"
+      "at": "2026-10-06T21:37:17.803948+00:00",
+      "disk_available_bytes": 3026432000,
+      "remaining_AC": "F10 physical admission E completion<=30s + fresh independent review; F11–14 pending",
+      "executor": "/root/n7_sol_coordinator/f10_egap_diagnostician_a27"
     }
   }
 }

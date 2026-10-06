@@ -1,0 +1,1885 @@
+{
+  "source_revision": "d2a03eb0ee91409b59b65dc66808159db7975d7e",
+  "raw_evidence": {
+    "path": "/tmp/n7-f10-fixture-cleanup-a26/fairness-1791321623950.json",
+    "sha256": "d62f646c9b26e6e2c3ed6524967ccb2711108f92eafae09094f6b5fd4d99b678"
+  },
+  "native_exit_sha256": "0fcf8cb5582a2341985890672a16d7be3e31a18f7936821164628d7134e23bbe",
+  "no_cause_inferred": true,
+  "e_unique_completion_timestamps": [
+    "2026-10-06T21:20:31.049+00:00",
+    "2026-10-06T21:20:31.591+00:00",
+    "2026-10-06T21:20:32.316+00:00",
+    "2026-10-06T21:20:32.91+00:00",
+    "2026-10-06T21:20:33.524+00:00",
+    "2026-10-06T21:21:43.339+00:00",
+    "2026-10-06T21:21:43.801+00:00",
+    "2026-10-06T21:21:44.363+00:00",
+    "2026-10-06T21:21:44.852+00:00",
+    "2026-10-06T21:21:45.272+00:00",
+    "2026-10-06T21:21:45.709+00:00",
+    "2026-10-06T21:21:46.143+00:00",
+    "2026-10-06T21:21:46.609+00:00",
+    "2026-10-06T21:21:47.027+00:00",
+    "2026-10-06T21:21:47.429+00:00",
+    "2026-10-06T21:21:47.931+00:00",
+    "2026-10-06T21:21:48.459+00:00",
+    "2026-10-06T21:21:48.958+00:00",
+    "2026-10-06T21:22:03.866+00:00",
+    "2026-10-06T21:22:04.297+00:00",
+    "2026-10-06T21:22:04.791+00:00",
+    "2026-10-06T21:22:05.232+00:00",
+    "2026-10-06T21:22:05.694+00:00",
+    "2026-10-06T21:22:06.14+00:00",
+    "2026-10-06T21:22:06.836+00:00",
+    "2026-10-06T21:22:07.391+00:00",
+    "2026-10-06T21:22:07.975+00:00",
+    "2026-10-06T21:22:08.547+00:00",
+    "2026-10-06T21:22:09.679+00:00",
+    "2026-10-06T21:22:10.202+00:00",
+    "2026-10-06T21:22:10.748+00:00"
+  ],
+  "max_gap_pair": {
+    "before": "2026-10-06T21:20:33.524+00:00",
+    "after": "2026-10-06T21:21:43.339+00:00",
+    "gap_ms": 69815
+  },
+  "first_selection_at": "2026-10-06T21:20:30.168Z",
+  "begun_ms": 1791321623950,
+  "first_completion_ms": 1791321631049,
+  "first_completion_deadline_ms": 1791321653950,
+  "e_tail_events": [
+    {
+      "event_id": "1332",
+      "at": "2026-10-06T21:22:10.388Z",
+      "kind": "selection",
+      "mailbox": "16399c34-30fb-497e-8e82-74835dcb68e7",
+      "body": {
+        "kind": "poll",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:22:10.204+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": "d6deb317-0da9-450c-b3d7-629247ca5132",
+        "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+        "generation": 173,
+        "mailbox_id": "16399c34-30fb-497e-8e82-74835dcb68e7",
+        "lease_until": "2026-10-06T21:24:10.383+00:00",
+        "service_seq": 40534,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:22:10.381903+00:00",
+        "last_served_at": "2026-10-06T21:22:10.383+00:00"
+      }
+    },
+    {
+      "event_id": "1335",
+      "at": "2026-10-06T21:22:10.564Z",
+      "kind": "yield",
+      "mailbox": "16399c34-30fb-497e-8e82-74835dcb68e7",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:22:10.204+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+        "generation": 173,
+        "mailbox_id": "16399c34-30fb-497e-8e82-74835dcb68e7",
+        "lease_until": null,
+        "service_seq": 40534,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:22:10.564557+00:00",
+        "last_served_at": "2026-10-06T21:22:10.383+00:00"
+      }
+    },
+    {
+      "event_id": "1337",
+      "at": "2026-10-06T21:22:10.570Z",
+      "kind": "selection",
+      "mailbox": "16399c34-30fb-497e-8e82-74835dcb68e7",
+      "body": {
+        "kind": "poll",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:22:10.204+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": "9b1c4a47-1e61-43de-80e2-b89a83ef329e",
+        "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+        "generation": 174,
+        "mailbox_id": "16399c34-30fb-497e-8e82-74835dcb68e7",
+        "lease_until": "2026-10-06T21:24:10.567+00:00",
+        "service_seq": 40540,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:22:10.564557+00:00",
+        "last_served_at": "2026-10-06T21:22:10.567+00:00"
+      }
+    },
+    {
+      "event_id": "1341",
+      "at": "2026-10-06T21:22:10.757Z",
+      "kind": "yield",
+      "mailbox": "16399c34-30fb-497e-8e82-74835dcb68e7",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:22:10.753+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+        "generation": 174,
+        "mailbox_id": "16399c34-30fb-497e-8e82-74835dcb68e7",
+        "lease_until": null,
+        "service_seq": 40540,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:22:10.753+00:00",
+        "last_served_at": "2026-10-06T21:22:10.567+00:00"
+      }
+    },
+    {
+      "event_id": "1343",
+      "at": "2026-10-06T21:22:10.765Z",
+      "kind": "selection",
+      "mailbox": "16399c34-30fb-497e-8e82-74835dcb68e7",
+      "body": {
+        "kind": "poll",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:22:10.753+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": "ab5afd8f-ad61-4c58-a486-a92b56b94b7a",
+        "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+        "generation": 175,
+        "mailbox_id": "16399c34-30fb-497e-8e82-74835dcb68e7",
+        "lease_until": "2026-10-06T21:24:10.762+00:00",
+        "service_seq": 40542,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:22:10.753+00:00",
+        "last_served_at": "2026-10-06T21:22:10.762+00:00"
+      }
+    },
+    {
+      "event_id": "1347",
+      "at": "2026-10-06T21:22:10.915Z",
+      "kind": "yield",
+      "mailbox": "16399c34-30fb-497e-8e82-74835dcb68e7",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:22:10.753+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+        "generation": 175,
+        "mailbox_id": "16399c34-30fb-497e-8e82-74835dcb68e7",
+        "lease_until": null,
+        "service_seq": 40542,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:22:10.914859+00:00",
+        "last_served_at": "2026-10-06T21:22:10.762+00:00"
+      }
+    },
+    {
+      "event_id": "1349",
+      "at": "2026-10-06T21:22:10.920Z",
+      "kind": "selection",
+      "mailbox": "16399c34-30fb-497e-8e82-74835dcb68e7",
+      "body": {
+        "kind": "poll",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:22:10.753+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": "93b8506b-335d-4093-9464-0be46af1d35f",
+        "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+        "generation": 176,
+        "mailbox_id": "16399c34-30fb-497e-8e82-74835dcb68e7",
+        "lease_until": "2026-10-06T21:24:10.917+00:00",
+        "service_seq": 40544,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:22:10.914859+00:00",
+        "last_served_at": "2026-10-06T21:22:10.917+00:00"
+      }
+    },
+    {
+      "event_id": "1352",
+      "at": "2026-10-06T21:22:11.054Z",
+      "kind": "yield",
+      "mailbox": "16399c34-30fb-497e-8e82-74835dcb68e7",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:22:10.753+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+        "generation": 176,
+        "mailbox_id": "16399c34-30fb-497e-8e82-74835dcb68e7",
+        "lease_until": null,
+        "service_seq": 40544,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:22:11.054679+00:00",
+        "last_served_at": "2026-10-06T21:22:10.917+00:00"
+      }
+    },
+    {
+      "event_id": "1354",
+      "at": "2026-10-06T21:22:11.060Z",
+      "kind": "selection",
+      "mailbox": "16399c34-30fb-497e-8e82-74835dcb68e7",
+      "body": {
+        "kind": "poll",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:22:10.753+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": "31c9104a-1870-446b-ad1d-ddfb9dafe5af",
+        "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+        "generation": 177,
+        "mailbox_id": "16399c34-30fb-497e-8e82-74835dcb68e7",
+        "lease_until": "2026-10-06T21:24:11.057+00:00",
+        "service_seq": 40546,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:22:11.054679+00:00",
+        "last_served_at": "2026-10-06T21:22:11.057+00:00"
+      }
+    },
+    {
+      "event_id": "1356",
+      "at": "2026-10-06T21:22:11.191Z",
+      "kind": "yield",
+      "mailbox": "16399c34-30fb-497e-8e82-74835dcb68e7",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:22:10.753+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+        "generation": 177,
+        "mailbox_id": "16399c34-30fb-497e-8e82-74835dcb68e7",
+        "lease_until": null,
+        "service_seq": 40546,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:22:11.054679+00:00",
+        "last_served_at": "2026-10-06T21:22:11.057+00:00"
+      }
+    }
+  ],
+  "phases": [
+    {
+      "phase": "first_start",
+      "pid": 2893235,
+      "at": 1791321624165
+    },
+    {
+      "phase": "actual_first_join",
+      "at": 1791321629755,
+      "outcome": {
+        "pid": 2893235,
+        "code": 0,
+        "signal": null,
+        "stderr": "",
+        "drained": true,
+        "at": 1791321629754
+      }
+    },
+    {
+      "phase": "persisted_before_restart",
+      "at": 1791321629759,
+      "rows": [
+        {
+          "mailbox_id": "16399c34-30fb-497e-8e82-74835dcb68e7",
+          "due_at": "2026-10-06T21:19:23.948Z",
+          "service_seq": "0"
+        },
+        {
+          "mailbox_id": "2cbed110-74b6-43bc-9890-350cd39568f0",
+          "due_at": "2026-10-06T21:18:23.948Z",
+          "service_seq": "39448"
+        },
+        {
+          "mailbox_id": "442901a3-5b82-42a2-9138-def883bf1dba",
+          "due_at": "2026-10-06T21:18:23.948Z",
+          "service_seq": "39452"
+        },
+        {
+          "mailbox_id": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+          "due_at": "2026-10-06T21:18:23.948Z",
+          "service_seq": "39454"
+        },
+        {
+          "mailbox_id": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+          "due_at": "2026-10-06T21:18:23.948Z",
+          "service_seq": "39456"
+        }
+      ]
+    },
+    {
+      "phase": "competing_restart",
+      "at": 1791321630192
+    },
+    {
+      "phase": "all_long_scans_held",
+      "at": 1791321729978
+    },
+    {
+      "phase": "competing_join",
+      "at": 1791321731178,
+      "outcome": {
+        "pid": 2894341,
+        "code": 0,
+        "signal": null,
+        "stderr": "",
+        "drained": true,
+        "at": 1791321731220
+      }
+    },
+    {
+      "phase": "competing_join",
+      "at": 1791321731220,
+      "outcome": {
+        "pid": 2894431,
+        "code": 0,
+        "signal": null,
+        "stderr": "",
+        "drained": true,
+        "at": 1791321731207
+      }
+    }
+  ],
+  "native_operations_during_gap": [
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321633909,
+      "beforeIO": {
+        "service_seq": "39530",
+        "owner_id": "90aab3a3-2bda-4e98-9a45-a881e7363c69",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321635824,
+      "beforeIO": {
+        "service_seq": "39544",
+        "owner_id": "fba69dc0-e273-4f49-be49-d078c968aa11",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321635905,
+      "beforeIO": {
+        "service_seq": "39546",
+        "owner_id": "23bc9365-6aa0-4eda-a7f7-dd9bfbfd526d",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321635933,
+      "beforeIO": {
+        "service_seq": "39548",
+        "owner_id": "64bc0ab7-9737-48f2-801a-b7c14baf496d",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321633909,
+      "completed": 1791321638910,
+      "elapsedMs": 5001.238455000002,
+      "command": "a4 UID FETCH 201:300 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321639081,
+      "beforeIO": {
+        "service_seq": "39576",
+        "owner_id": "d39ea6bc-1050-4361-b2e7-24d832582606",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321635824,
+      "completed": 1791321640825,
+      "elapsedMs": 5000.5582950000025,
+      "command": "a4 UID FETCH 301:400 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321635905,
+      "completed": 1791321640906,
+      "elapsedMs": 5000.236194999998,
+      "command": "a4 UID FETCH 301:400 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321635933,
+      "completed": 1791321640934,
+      "elapsedMs": 5000.207235000002,
+      "command": "a4 UID FETCH 301:400 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321640987,
+      "beforeIO": {
+        "service_seq": "39590",
+        "owner_id": "5ddbe7b0-d6b0-4fd7-80c8-9efdb562769b",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321641106,
+      "beforeIO": {
+        "service_seq": "39592",
+        "owner_id": "69648ed9-64fe-49fc-966a-8e141b0bdd95",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321641134,
+      "beforeIO": {
+        "service_seq": "39594",
+        "owner_id": "645ee06e-9ccb-446b-94e9-68e76111b440",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321639081,
+      "completed": 1791321644081,
+      "elapsedMs": 5000.577985,
+      "command": "a4 UID FETCH 301:400 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321644261,
+      "beforeIO": {
+        "service_seq": "39622",
+        "owner_id": "25ca0c97-58cd-43cc-b848-6e77a8490cac",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321640987,
+      "completed": 1791321645988,
+      "elapsedMs": 5000.940414999997,
+      "command": "a4 UID FETCH 401:500 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321641106,
+      "completed": 1791321646109,
+      "elapsedMs": 5003.505856,
+      "command": "a4 UID FETCH 401:500 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321641134,
+      "completed": 1791321646135,
+      "elapsedMs": 5000.916696,
+      "command": "a4 UID FETCH 401:500 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321646155,
+      "beforeIO": {
+        "service_seq": "39636",
+        "owner_id": "7fbce6b0-f6cb-49e3-8ffa-460f2dcc32fd",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321646274,
+      "beforeIO": {
+        "service_seq": "39638",
+        "owner_id": "14dc4f0f-0e6b-481b-98c7-9ca0b1109061",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321646310,
+      "beforeIO": {
+        "service_seq": "39640",
+        "owner_id": "edbeedc7-97ac-4c4f-b6c4-68b94d45288c",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321644261,
+      "completed": 1791321649263,
+      "elapsedMs": 5001.283615,
+      "command": "a4 UID FETCH 401:500 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321649402,
+      "beforeIO": {
+        "service_seq": "39668",
+        "owner_id": "a819ae9b-839c-497a-99a4-e657e5ae2d55",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321646155,
+      "completed": 1791321651156,
+      "elapsedMs": 5000.7316850000025,
+      "command": "a4 UID FETCH 501:600 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321646274,
+      "completed": 1791321651274,
+      "elapsedMs": 5000.076655000001,
+      "command": "a4 UID FETCH 501:600 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321646310,
+      "completed": 1791321651311,
+      "elapsedMs": 5001.423605,
+      "command": "a4 UID FETCH 501:600 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321651318,
+      "beforeIO": {
+        "service_seq": "39682",
+        "owner_id": "1827c3db-2b01-48e9-b251-00fc547f523f",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321651430,
+      "beforeIO": {
+        "service_seq": "39684",
+        "owner_id": "b5e7b274-606f-44e5-b54a-ed6e31792d79",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321651483,
+      "beforeIO": {
+        "service_seq": "39686",
+        "owner_id": "389b6901-63be-4774-8838-8dcb94ba983e",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321649402,
+      "completed": 1791321654403,
+      "elapsedMs": 5000.572605000001,
+      "command": "a4 UID FETCH 501:600 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321654572,
+      "beforeIO": {
+        "service_seq": "39714",
+        "owner_id": "4dba5a7c-99b1-4f87-bef3-fc3d9458582a",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321651318,
+      "completed": 1791321656318,
+      "elapsedMs": 5000.182834000007,
+      "command": "a4 UID FETCH 601:700 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321651430,
+      "completed": 1791321656432,
+      "elapsedMs": 5000.996704999998,
+      "command": "a4 UID FETCH 601:700 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321656474,
+      "beforeIO": {
+        "service_seq": "39728",
+        "owner_id": "db6fed05-b8c2-4e89-b394-ac972c280011",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321651483,
+      "completed": 1791321656483,
+      "elapsedMs": 5000.442315,
+      "command": "a4 UID FETCH 601:700 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321656581,
+      "beforeIO": {
+        "service_seq": "39730",
+        "owner_id": "22cbc80f-7f13-44dd-8136-790bc8e43875",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321656645,
+      "beforeIO": {
+        "service_seq": "39732",
+        "owner_id": "bdb114ec-eb43-4b9f-9f76-aba883cccea2",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321654572,
+      "completed": 1791321659573,
+      "elapsedMs": 5000.7961249999935,
+      "command": "a4 UID FETCH 601:700 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321659720,
+      "beforeIO": {
+        "service_seq": "39760",
+        "owner_id": "030dae81-878a-48d2-9b9a-14045f0b8fa8",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321656474,
+      "completed": 1791321661474,
+      "elapsedMs": 5000.110775000001,
+      "command": "a4 UID FETCH 701:800 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321656581,
+      "completed": 1791321661582,
+      "elapsedMs": 5000.714005999995,
+      "command": "a4 UID FETCH 701:800 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321661613,
+      "beforeIO": {
+        "service_seq": "39774",
+        "owner_id": "a5abe1fd-bf9f-45f5-9be5-dcafea4c5f42",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321656645,
+      "completed": 1791321661646,
+      "elapsedMs": 5000.343305000002,
+      "command": "a4 UID FETCH 701:800 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321661745,
+      "beforeIO": {
+        "service_seq": "39776",
+        "owner_id": "1dcc7f19-2608-4bb3-b405-c95056a60b30",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321661829,
+      "beforeIO": {
+        "service_seq": "39778",
+        "owner_id": "22a76acf-98d4-4366-b80b-d46edaba0419",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321659720,
+      "completed": 1791321664721,
+      "elapsedMs": 5000.798515000002,
+      "command": "a4 UID FETCH 701:800 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321664887,
+      "beforeIO": {
+        "service_seq": "39810",
+        "owner_id": "11ffd69d-46e7-46af-93e8-37b33d72d0e5",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321661613,
+      "completed": 1791321666613,
+      "elapsedMs": 5000.192274999994,
+      "command": "a4 UID FETCH 801:900 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321661745,
+      "completed": 1791321666747,
+      "elapsedMs": 5001.130664999997,
+      "command": "a4 UID FETCH 801:900 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321666795,
+      "beforeIO": {
+        "service_seq": "39820",
+        "owner_id": "4fcc06c0-2bba-40b9-b9f2-1774f7a4bb53",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321661829,
+      "completed": 1791321666829,
+      "elapsedMs": 5000.305245000003,
+      "command": "a4 UID FETCH 801:900 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321666924,
+      "beforeIO": {
+        "service_seq": "39822",
+        "owner_id": "fa52201e-04f7-48d7-8f1d-078f020b12be",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321666988,
+      "beforeIO": {
+        "service_seq": "39824",
+        "owner_id": "dad5ee5e-9592-41d8-b7a9-e55aa3c9491a",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321664887,
+      "completed": 1791321669889,
+      "elapsedMs": 5000.514665000002,
+      "command": "a4 UID FETCH 801:900 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321670077,
+      "beforeIO": {
+        "service_seq": "39856",
+        "owner_id": "a414211c-d980-4b20-85d6-37247c480ef9",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321666795,
+      "completed": 1791321671796,
+      "elapsedMs": 5000.851465000007,
+      "command": "a4 UID FETCH 901:1000 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321666924,
+      "completed": 1791321671925,
+      "elapsedMs": 5001.153725000004,
+      "command": "a4 UID FETCH 901:1000 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321671964,
+      "beforeIO": {
+        "service_seq": "39866",
+        "owner_id": "c6b5c67d-22a9-439c-ba9b-4cfd439a9877",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321666988,
+      "completed": 1791321671990,
+      "elapsedMs": 5001.243994999997,
+      "command": "a4 UID FETCH 901:1000 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321672098,
+      "beforeIO": {
+        "service_seq": "39868",
+        "owner_id": "1f62beed-f32f-44b1-af86-f7fbf9e000bf",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321672168,
+      "beforeIO": {
+        "service_seq": "39870",
+        "owner_id": "3828b37c-98fd-4092-880a-018fb8161696",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321670077,
+      "completed": 1791321675078,
+      "elapsedMs": 5001.140704999998,
+      "command": "a4 UID FETCH 901:1000 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321675234,
+      "beforeIO": {
+        "service_seq": "39902",
+        "owner_id": "e2252e7e-2808-49b1-805d-5e85eb4cf336",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321671964,
+      "completed": 1791321676965,
+      "elapsedMs": 5000.935774999998,
+      "command": "a4 UID FETCH 1001:1100 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321672098,
+      "completed": 1791321677099,
+      "elapsedMs": 5001.053185000004,
+      "command": "a4 UID FETCH 1001:1100 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321677126,
+      "beforeIO": {
+        "service_seq": "39912",
+        "owner_id": "fb153596-01f2-48b5-99c8-0f1819c6e2b4",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321672168,
+      "completed": 1791321677169,
+      "elapsedMs": 5000.539405000003,
+      "command": "a4 UID FETCH 1001:1100 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321677279,
+      "beforeIO": {
+        "service_seq": "39914",
+        "owner_id": "f8cab8c7-9ba1-48ee-9805-145c4eeae7aa",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321677329,
+      "beforeIO": {
+        "service_seq": "39918",
+        "owner_id": "f7845992-e8c8-4e8c-ae53-75eb8d201a24",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321675234,
+      "completed": 1791321680236,
+      "elapsedMs": 5002.563316,
+      "command": "a4 UID FETCH 1001:1100 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321680391,
+      "beforeIO": {
+        "service_seq": "39950",
+        "owner_id": "11c3c1ee-267f-4811-9b04-92809db9673e",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321677126,
+      "completed": 1791321682127,
+      "elapsedMs": 5000.863734999999,
+      "command": "a4 UID FETCH 1101:1200 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321682276,
+      "beforeIO": {
+        "service_seq": "39958",
+        "owner_id": "e0ae624e-a17f-4ec1-9432-6659cecc49c2",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321677279,
+      "completed": 1791321682280,
+      "elapsedMs": 5000.174505000003,
+      "command": "a4 UID FETCH 1101:1200 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321677329,
+      "completed": 1791321682331,
+      "elapsedMs": 5001.169325000003,
+      "command": "a4 UID FETCH 1101:1200 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321682471,
+      "beforeIO": {
+        "service_seq": "39962",
+        "owner_id": "de455c02-c85f-47df-939e-3f555d8b8a4f",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321682498,
+      "beforeIO": {
+        "service_seq": "39966",
+        "owner_id": "3c38f13a-bd11-47d1-8362-b15be697601a",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321680391,
+      "completed": 1791321685391,
+      "elapsedMs": 5000.311354999991,
+      "command": "a4 UID FETCH 1101:1200 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321685540,
+      "beforeIO": {
+        "service_seq": "40000",
+        "owner_id": "4d94018a-6e75-4ca2-b04a-e624dee5f8e8",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321682276,
+      "completed": 1791321687276,
+      "elapsedMs": 5000.229614999989,
+      "command": "a4 UID FETCH 1201:1300 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321687414,
+      "beforeIO": {
+        "service_seq": "40006",
+        "owner_id": "74b43062-493e-4e51-bd3d-3b269e7c5bd1",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321682471,
+      "completed": 1791321687472,
+      "elapsedMs": 5000.562214999998,
+      "command": "a4 UID FETCH 1201:1300 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321682498,
+      "completed": 1791321687498,
+      "elapsedMs": 5000.168125000011,
+      "command": "a4 UID FETCH 1201:1300 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321687649,
+      "beforeIO": {
+        "service_seq": "40012",
+        "owner_id": "d7878531-46b2-44c5-a68f-10ad7194a826",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321687697,
+      "beforeIO": {
+        "service_seq": "40014",
+        "owner_id": "f08b3079-cbfd-4765-99c0-248ed97336bb",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321685540,
+      "completed": 1791321690541,
+      "elapsedMs": 5000.634494999991,
+      "command": "a4 UID FETCH 1201:1300 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321690704,
+      "beforeIO": {
+        "service_seq": "40048",
+        "owner_id": "bca06ef1-3aa9-4c02-8ba5-04849df6dec1",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321687414,
+      "completed": 1791321692417,
+      "elapsedMs": 5002.562936000002,
+      "command": "a4 UID FETCH 1301:1400 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321692606,
+      "beforeIO": {
+        "service_seq": "40062",
+        "owner_id": "7478d898-aa66-47ab-9d9e-f0a256cb7d04",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321687649,
+      "completed": 1791321692649,
+      "elapsedMs": 5000.619814999998,
+      "command": "a4 UID FETCH 1301:1400 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321687697,
+      "completed": 1791321692698,
+      "elapsedMs": 5000.754124999992,
+      "command": "a4 UID FETCH 1301:1400 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321692781,
+      "beforeIO": {
+        "service_seq": "40066",
+        "owner_id": "6b9438c2-7332-4b8a-9fa8-9d58acd82fd2",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321692861,
+      "beforeIO": {
+        "service_seq": "40068",
+        "owner_id": "f304e0e4-2cd4-450e-82d3-1795be812ac9",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321690704,
+      "completed": 1791321695704,
+      "elapsedMs": 5000.6044450000045,
+      "command": "a4 UID FETCH 1301:1400 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321695875,
+      "beforeIO": {
+        "service_seq": "40100",
+        "owner_id": "62752793-2320-46c1-a0f7-61b917a9e5f9",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321692606,
+      "completed": 1791321697607,
+      "elapsedMs": 5000.926446000012,
+      "command": "a4 UID FETCH 1401:1500 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321697742,
+      "beforeIO": {
+        "service_seq": "40110",
+        "owner_id": "8b25a157-c31d-492c-ad58-e1f5512720c5",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321692781,
+      "completed": 1791321697782,
+      "elapsedMs": 5001.227245000002,
+      "command": "a4 UID FETCH 1401:1500 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321692861,
+      "completed": 1791321697862,
+      "elapsedMs": 5000.97168599999,
+      "command": "a4 UID FETCH 1401:1500 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321697974,
+      "beforeIO": {
+        "service_seq": "40112",
+        "owner_id": "84313e3b-b802-460f-b7f7-1ad3ea915f4e",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321698049,
+      "beforeIO": {
+        "service_seq": "40114",
+        "owner_id": "9f538e47-fddd-4758-9b00-4f203eb7d029",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321695875,
+      "completed": 1791321700875,
+      "elapsedMs": 5000.542264999996,
+      "command": "a4 UID FETCH 1401:1500 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321701006,
+      "beforeIO": {
+        "service_seq": "40146",
+        "owner_id": "5c8869a1-01bb-42c0-b19a-61c330f4298b",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321697742,
+      "completed": 1791321702742,
+      "elapsedMs": 5000.28747499999,
+      "command": "a4 UID FETCH 1501:1600 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321702885,
+      "beforeIO": {
+        "service_seq": "40156",
+        "owner_id": "4496feed-9d1b-4338-82ba-86b75d1530c7",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321697974,
+      "completed": 1791321702974,
+      "elapsedMs": 5000.010614999992,
+      "command": "a4 UID FETCH 1501:1600 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "D",
+      "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "started": 1791321698049,
+      "completed": 1791321703049,
+      "elapsedMs": 5000.384955000001,
+      "command": "a4 UID FETCH 1501:1600 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321703124,
+      "beforeIO": {
+        "service_seq": "40158",
+        "owner_id": "5b328469-edb0-425b-85b1-802a55b053e5",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:18:23.948Z"
+      }
+    },
+    {
+      "label": "B",
+      "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "started": 1791321701006,
+      "completed": 1791321706006,
+      "elapsedMs": 5000.295344999991,
+      "command": "a4 UID FETCH 1501:1600 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "A",
+      "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "started": 1791321702885,
+      "completed": 1791321707886,
+      "elapsedMs": 5000.707954999991,
+      "command": "a4 UID FETCH 1601:1700 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "started": 1791321703124,
+      "completed": 1791321708125,
+      "elapsedMs": 5000.933955,
+      "command": "a4 UID FETCH 1601:1700 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    }
+  ],
+  "captured_final_state": [
+    {
+      "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+      "mailbox_id": "16399c34-30fb-497e-8e82-74835dcb68e7",
+      "kind": "poll",
+      "due_at": "2026-10-06T21:22:10.753Z",
+      "next_check_at": "2026-10-06T21:22:11.054Z",
+      "last_served_at": "2026-10-06T21:22:11.057Z",
+      "job_id": null,
+      "service_seq": "40546",
+      "state": "ready",
+      "owner_id": null,
+      "lease_until": null,
+      "generation": "177",
+      "failure_count": 0,
+      "reason": "ready",
+      "pages": 0,
+      "scan_state": "scanning",
+      "scan_complete": false,
+      "completed_at": "2026-10-06T21:22:10.748Z"
+    },
+    {
+      "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+      "mailbox_id": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "kind": "poll",
+      "due_at": "2026-10-06T21:18:23.948Z",
+      "next_check_at": "2026-10-06T21:22:03.436Z",
+      "last_served_at": "2026-10-06T21:21:58.256Z",
+      "job_id": null,
+      "service_seq": "40372",
+      "state": "blocked",
+      "owner_id": null,
+      "lease_until": null,
+      "generation": "19",
+      "failure_count": 0,
+      "reason": "rescan_incomplete",
+      "pages": 20,
+      "scan_state": "rescan_incomplete",
+      "scan_complete": false,
+      "completed_at": null
+    },
+    {
+      "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+      "mailbox_id": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "kind": "poll",
+      "due_at": "2026-10-06T21:18:23.948Z",
+      "next_check_at": "2026-10-06T21:22:03.632Z",
+      "last_served_at": "2026-10-06T21:21:58.445Z",
+      "job_id": null,
+      "service_seq": "40378",
+      "state": "blocked",
+      "owner_id": null,
+      "lease_until": null,
+      "generation": "19",
+      "failure_count": 0,
+      "reason": "rescan_incomplete",
+      "pages": 20,
+      "scan_state": "rescan_incomplete",
+      "scan_complete": false,
+      "completed_at": null
+    },
+    {
+      "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+      "mailbox_id": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "kind": "poll",
+      "due_at": "2026-10-06T21:18:23.948Z",
+      "next_check_at": "2026-10-06T21:22:09.905Z",
+      "last_served_at": "2026-10-06T21:22:04.765Z",
+      "job_id": null,
+      "service_seq": "40444",
+      "state": "blocked",
+      "owner_id": null,
+      "lease_until": null,
+      "generation": "25",
+      "failure_count": 0,
+      "reason": "rescan_incomplete",
+      "pages": 20,
+      "scan_state": "rescan_incomplete",
+      "scan_complete": false,
+      "completed_at": null
+    },
+    {
+      "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+      "mailbox_id": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "kind": "poll",
+      "due_at": "2026-10-06T21:18:23.948Z",
+      "next_check_at": "2026-10-06T21:22:06.845Z",
+      "last_served_at": "2026-10-06T21:22:01.552Z",
+      "job_id": null,
+      "service_seq": "40408",
+      "state": "blocked",
+      "owner_id": null,
+      "lease_until": null,
+      "generation": "22",
+      "failure_count": 0,
+      "reason": "rescan_incomplete",
+      "pages": 20,
+      "scan_state": "rescan_incomplete",
+      "scan_complete": false,
+      "completed_at": null
+    }
+  ],
+  "participants": [
+    {
+      "label": "A",
+      "id": "2cbed110-74b6-43bc-9890-350cd39568f0",
+      "selection_count": 19,
+      "page_event_count": 19,
+      "full_completion_event_count": 0,
+      "last_selection": {
+        "event_id": "1074",
+        "at": "2026-10-06T21:21:58.262Z",
+        "kind": "selection",
+        "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+        "body": {
+          "kind": "poll",
+          "state": "claimed",
+          "due_at": "2026-10-06T21:18:23.948917+00:00",
+          "job_id": null,
+          "reason": "ready",
+          "owner_id": "f364f6f6-45ff-4831-93a9-00e07d877dc1",
+          "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+          "generation": 19,
+          "mailbox_id": "2cbed110-74b6-43bc-9890-350cd39568f0",
+          "lease_until": "2026-10-06T21:23:58.256+00:00",
+          "service_seq": 40372,
+          "failure_count": 0,
+          "next_check_at": "2026-10-06T21:21:58.253377+00:00",
+          "last_served_at": "2026-10-06T21:21:58.256+00:00"
+        }
+      },
+      "last_page_UID_state": {
+        "event_id": "1114",
+        "at": "2026-10-06T21:22:03.421Z",
+        "kind": "page",
+        "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+        "body": {
+          "pages": 20,
+          "state": "rescan_incomplete",
+          "run_id": "d9c5c2e9-3999-497c-bb67-d469565359dc",
+          "attempt": 1,
+          "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+          "cursor_uid": 2000,
+          "high_water": 3000,
+          "mailbox_id": "2cbed110-74b6-43bc-9890-350cd39568f0",
+          "provenance": "imap_headers",
+          "uidvalidity": "1",
+          "tail_high_water": null,
+          "attempt_started_at": "2026-10-06T21:20:18.277+00:00"
+        }
+      },
+      "last_completion": null,
+      "last_ownership": {
+        "event_id": "1116",
+        "at": "2026-10-06T21:22:03.436Z",
+        "kind": "yield",
+        "mailbox": "2cbed110-74b6-43bc-9890-350cd39568f0",
+        "body": {
+          "kind": "poll",
+          "state": "blocked",
+          "due_at": "2026-10-06T21:18:23.948917+00:00",
+          "job_id": null,
+          "reason": "rescan_incomplete",
+          "owner_id": null,
+          "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+          "generation": 19,
+          "mailbox_id": "2cbed110-74b6-43bc-9890-350cd39568f0",
+          "lease_until": null,
+          "service_seq": 40372,
+          "failure_count": 0,
+          "next_check_at": "2026-10-06T21:22:03.436085+00:00",
+          "last_served_at": "2026-10-06T21:21:58.256+00:00"
+        }
+      }
+    },
+    {
+      "label": "B",
+      "id": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+      "selection_count": 22,
+      "page_event_count": 19,
+      "full_completion_event_count": 0,
+      "last_selection": {
+        "event_id": "1104",
+        "at": "2026-10-06T21:22:01.554Z",
+        "kind": "selection",
+        "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+        "body": {
+          "kind": "poll",
+          "state": "claimed",
+          "due_at": "2026-10-06T21:18:23.948948+00:00",
+          "job_id": null,
+          "reason": "ready",
+          "owner_id": "adeff09a-212d-45b6-a6ef-a3c73355dfbd",
+          "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+          "generation": 22,
+          "mailbox_id": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+          "lease_until": "2026-10-06T21:24:01.552+00:00",
+          "service_seq": 40408,
+          "failure_count": 0,
+          "next_check_at": "2026-10-06T21:22:01.55054+00:00",
+          "last_served_at": "2026-10-06T21:22:01.552+00:00"
+        }
+      },
+      "last_page_UID_state": {
+        "event_id": "1231",
+        "at": "2026-10-06T21:22:06.820Z",
+        "kind": "page",
+        "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+        "body": {
+          "pages": 20,
+          "state": "rescan_incomplete",
+          "run_id": "dad0d0fc-0f09-4267-a457-424432179048",
+          "attempt": 1,
+          "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+          "cursor_uid": 2000,
+          "high_water": 3000,
+          "mailbox_id": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+          "provenance": "imap_headers",
+          "uidvalidity": "1",
+          "tail_high_water": null,
+          "attempt_started_at": "2026-10-06T21:20:18.316+00:00"
+        }
+      },
+      "last_completion": null,
+      "last_ownership": {
+        "event_id": "1235",
+        "at": "2026-10-06T21:22:06.845Z",
+        "kind": "yield",
+        "mailbox": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+        "body": {
+          "kind": "poll",
+          "state": "blocked",
+          "due_at": "2026-10-06T21:18:23.948948+00:00",
+          "job_id": null,
+          "reason": "rescan_incomplete",
+          "owner_id": null,
+          "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+          "generation": 22,
+          "mailbox_id": "ae2e058e-b0d0-4ac8-b02e-7729dd5f0d01",
+          "lease_until": null,
+          "service_seq": 40408,
+          "failure_count": 0,
+          "next_check_at": "2026-10-06T21:22:06.845372+00:00",
+          "last_served_at": "2026-10-06T21:22:01.552+00:00"
+        }
+      }
+    },
+    {
+      "label": "C",
+      "id": "442901a3-5b82-42a2-9138-def883bf1dba",
+      "selection_count": 19,
+      "page_event_count": 19,
+      "full_completion_event_count": 0,
+      "last_selection": {
+        "event_id": "1080",
+        "at": "2026-10-06T21:21:58.447Z",
+        "kind": "selection",
+        "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+        "body": {
+          "kind": "poll",
+          "state": "claimed",
+          "due_at": "2026-10-06T21:18:23.94893+00:00",
+          "job_id": null,
+          "reason": "ready",
+          "owner_id": "97a56b5a-e913-4d8b-96e8-d0302557573c",
+          "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+          "generation": 19,
+          "mailbox_id": "442901a3-5b82-42a2-9138-def883bf1dba",
+          "lease_until": "2026-10-06T21:23:58.445+00:00",
+          "service_seq": 40378,
+          "failure_count": 0,
+          "next_check_at": "2026-10-06T21:21:58.443494+00:00",
+          "last_served_at": "2026-10-06T21:21:58.445+00:00"
+        }
+      },
+      "last_page_UID_state": {
+        "event_id": "1117",
+        "at": "2026-10-06T21:22:03.629Z",
+        "kind": "page",
+        "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+        "body": {
+          "pages": 20,
+          "state": "rescan_incomplete",
+          "run_id": "4fb5c352-387e-48df-a34e-972fd25dc44c",
+          "attempt": 1,
+          "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+          "cursor_uid": 2000,
+          "high_water": 3000,
+          "mailbox_id": "442901a3-5b82-42a2-9138-def883bf1dba",
+          "provenance": "imap_headers",
+          "uidvalidity": "1",
+          "tail_high_water": null,
+          "attempt_started_at": "2026-10-06T21:20:18.418+00:00"
+        }
+      },
+      "last_completion": null,
+      "last_ownership": {
+        "event_id": "1119",
+        "at": "2026-10-06T21:22:03.632Z",
+        "kind": "yield",
+        "mailbox": "442901a3-5b82-42a2-9138-def883bf1dba",
+        "body": {
+          "kind": "poll",
+          "state": "blocked",
+          "due_at": "2026-10-06T21:18:23.94893+00:00",
+          "job_id": null,
+          "reason": "rescan_incomplete",
+          "owner_id": null,
+          "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+          "generation": 19,
+          "mailbox_id": "442901a3-5b82-42a2-9138-def883bf1dba",
+          "lease_until": null,
+          "service_seq": 40378,
+          "failure_count": 0,
+          "next_check_at": "2026-10-06T21:22:03.632661+00:00",
+          "last_served_at": "2026-10-06T21:21:58.445+00:00"
+        }
+      }
+    },
+    {
+      "label": "D",
+      "id": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+      "selection_count": 25,
+      "page_event_count": 19,
+      "full_completion_event_count": 0,
+      "last_selection": {
+        "event_id": "1161",
+        "at": "2026-10-06T21:22:04.767Z",
+        "kind": "selection",
+        "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+        "body": {
+          "kind": "poll",
+          "state": "claimed",
+          "due_at": "2026-10-06T21:18:23.948939+00:00",
+          "job_id": null,
+          "reason": "ready",
+          "owner_id": "f03d9346-702d-4081-a941-c187a62150ec",
+          "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+          "generation": 25,
+          "mailbox_id": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+          "lease_until": "2026-10-06T21:24:04.765+00:00",
+          "service_seq": 40444,
+          "failure_count": 0,
+          "next_check_at": "2026-10-06T21:22:04.763757+00:00",
+          "last_served_at": "2026-10-06T21:22:04.765+00:00"
+        }
+      },
+      "last_page_UID_state": {
+        "event_id": "1314",
+        "at": "2026-10-06T21:22:09.902Z",
+        "kind": "page",
+        "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+        "body": {
+          "pages": 20,
+          "state": "rescan_incomplete",
+          "run_id": "41108b3c-674f-4b58-b424-5ac392b1a7c2",
+          "attempt": 1,
+          "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+          "cursor_uid": 2000,
+          "high_water": 3000,
+          "mailbox_id": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+          "provenance": "imap_headers",
+          "uidvalidity": "1",
+          "tail_high_water": null,
+          "attempt_started_at": "2026-10-06T21:20:18.37+00:00"
+        }
+      },
+      "last_completion": null,
+      "last_ownership": {
+        "event_id": "1316",
+        "at": "2026-10-06T21:22:09.905Z",
+        "kind": "yield",
+        "mailbox": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+        "body": {
+          "kind": "poll",
+          "state": "blocked",
+          "due_at": "2026-10-06T21:18:23.948939+00:00",
+          "job_id": null,
+          "reason": "rescan_incomplete",
+          "owner_id": null,
+          "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+          "generation": 25,
+          "mailbox_id": "9e8967af-9bcd-4d65-abff-afc7801301ae",
+          "lease_until": null,
+          "service_seq": 40444,
+          "failure_count": 0,
+          "next_check_at": "2026-10-06T21:22:09.905374+00:00",
+          "last_served_at": "2026-10-06T21:22:04.765+00:00"
+        }
+      }
+    },
+    {
+      "label": "E",
+      "id": "16399c34-30fb-497e-8e82-74835dcb68e7",
+      "selection_count": 177,
+      "page_event_count": 94,
+      "full_completion_event_count": 62,
+      "last_selection": {
+        "event_id": "1354",
+        "at": "2026-10-06T21:22:11.060Z",
+        "kind": "selection",
+        "mailbox": "16399c34-30fb-497e-8e82-74835dcb68e7",
+        "body": {
+          "kind": "poll",
+          "state": "claimed",
+          "due_at": "2026-10-06T21:22:10.753+00:00",
+          "job_id": null,
+          "reason": "ready",
+          "owner_id": "31c9104a-1870-446b-ad1d-ddfb9dafe5af",
+          "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+          "generation": 177,
+          "mailbox_id": "16399c34-30fb-497e-8e82-74835dcb68e7",
+          "lease_until": "2026-10-06T21:24:11.057+00:00",
+          "service_seq": 40546,
+          "failure_count": 0,
+          "next_check_at": "2026-10-06T21:22:11.054679+00:00",
+          "last_served_at": "2026-10-06T21:22:11.057+00:00"
+        }
+      },
+      "last_page_UID_state": {
+        "event_id": "1351",
+        "at": "2026-10-06T21:22:11.052Z",
+        "kind": "page",
+        "mailbox": "16399c34-30fb-497e-8e82-74835dcb68e7",
+        "body": {
+          "pages": 0,
+          "state": "scanning",
+          "run_id": "c21c483c-b54c-4640-ba22-f41dccc9abdd",
+          "attempt": 1,
+          "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+          "cursor_uid": 0,
+          "high_water": 0,
+          "mailbox_id": "16399c34-30fb-497e-8e82-74835dcb68e7",
+          "provenance": "imap_headers",
+          "uidvalidity": "1",
+          "tail_high_water": 0,
+          "attempt_started_at": "2026-10-06T21:22:10.908+00:00"
+        }
+      },
+      "last_completion": {
+        "event_id": "1344",
+        "at": "2026-10-06T21:22:10.770Z",
+        "kind": "poll",
+        "mailbox": "16399c34-30fb-497e-8e82-74835dcb68e7",
+        "body": {
+          "cursor_uid": 0,
+          "mailbox_id": "16399c34-30fb-497e-8e82-74835dcb68e7",
+          "poll_owner": "0fc8cc60-f598-461c-8c6c-6084d923cbdb",
+          "uidvalidity": "1",
+          "completed_at": "2026-10-06T21:22:10.748+00:00",
+          "scan_complete": true
+        }
+      },
+      "last_ownership": {
+        "event_id": "1356",
+        "at": "2026-10-06T21:22:11.191Z",
+        "kind": "yield",
+        "mailbox": "16399c34-30fb-497e-8e82-74835dcb68e7",
+        "body": {
+          "kind": "poll",
+          "state": "ready",
+          "due_at": "2026-10-06T21:22:10.753+00:00",
+          "job_id": null,
+          "reason": "ready",
+          "owner_id": null,
+          "tenant_id": "e5337a53-47af-428a-a7df-63bf24c53ee1",
+          "generation": 177,
+          "mailbox_id": "16399c34-30fb-497e-8e82-74835dcb68e7",
+          "lease_until": null,
+          "service_seq": 40546,
+          "failure_count": 0,
+          "next_check_at": "2026-10-06T21:22:11.054679+00:00",
+          "last_served_at": "2026-10-06T21:22:11.057+00:00"
+        }
+      }
+    }
+  ],
+  "uncaptured": [
+    "scheduler observer loop phase timestamps within gap",
+    "resource/backoff/grant current catalogs beyond final runtime_due and recorded reply_rescan/mailbox_poll events",
+    "external state after owned DB release"
+  ],
+  "guards": "socket/resource boundaries in guard-counts.json; maxSockets4 observed"
+}

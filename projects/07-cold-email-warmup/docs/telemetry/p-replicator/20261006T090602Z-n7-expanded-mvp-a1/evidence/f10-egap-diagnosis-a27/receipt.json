@@ -1,0 +1,33 @@
+{
+  "attempt": "A27",
+  "started_at": "2026-10-06T21:25:53.662993+00:00",
+  "finished_at": "2026-10-06T21:30:42.451500+00:00",
+  "status": "completed",
+  "verdict": "diagnosis complete; physical admission starvation demonstrated; F10 not accepted",
+  "source_revision": "d2a03eb0ee91409b59b65dc66808159db7975d7e",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "elapsed_seconds": 288.788507,
+  "source_immutable": true,
+  "db_used": false,
+  "db_lease": "released to coordinator",
+  "heavy_mutex": "not acquired, no heavy workload",
+  "owned_processes": "pure Node subprocess joined exit0; none outstanding",
+  "report_sha256": "f756cf7aceeebe4f761c0bad6114f5cbc775fb36ef293a1da15a817040dda0f7",
+  "context_provenance_sha256": "c0a3aa69dfe5a40b8072519dcc1044f9fbf1d682e072ff5a5b8be86bd5bb156e",
+  "remaining_AC": [
+    "F10 healthy E completion cadence <=30s failed (69815ms)",
+    "fresh independent final review after fix"
+  ],
+  "next_owner": "coordinator assigns fresh MEDIUM observer scope",
+  "next_scope": [
+    "tests/f10-runtime-protocol.test.ts",
+    "tests/f10-runtime-fixture.ts"
+  ],
+  "publication": false
+}

@@ -1,0 +1,186 @@
+{
+  "attempt": "A27",
+  "role": "fresh independent HIGH narrow diagnosis",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "fork_turns": "none",
+  "started_at": "2026-10-06T21:25:53.662993+00:00",
+  "freeze_at": "2026-10-06T21:31:53.662993+00:00",
+  "deadline": "2026-10-06T21:33:53.662993+00:00",
+  "source_revision": "d2a03eb0ee91409b59b65dc66808159db7975d7e",
+  "baseline_revision": "92687e48fa3d74491d3208c55143b380785a473a",
+  "candidate_project": "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup",
+  "immutable_source": true,
+  "changed_product_files": [
+    {
+      "path": "projects/07-cold-email-warmup/db/015-durable-runtime.sql",
+      "sha256": "70bd0248636e06577f56d867e3b983f44e82dbe38877067749122ee34b297581"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/package.json",
+      "sha256": "c987d43200253960ac825b7b4656e32fa4d10853d51493829a2708d4ee6bc867"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/db.ts",
+      "sha256": "71d5c71d5742f4e348bb1e9c08fdc10562402e6308af15cbdc01349eec900cc2"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/dispatch/store.ts",
+      "sha256": "366115624196439b5f759c6a04c7699a90136063d770ddafb3b022d0a0af6b07"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/dispatch/submission.ts",
+      "sha256": "c1ff349f29beb7267982ee5e4e02b2339a60524c6df3b8ec4fcfd7e0bcf5085f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/pool/store.ts",
+      "sha256": "5c79c8cabbdf6f47bf49b1e2e54b0f85f1631dc9992ed69c7849afa097fa9ba1"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/adapter.ts",
+      "sha256": "8595571bda349274294a47fe08342383fd7d02b44650f00124d93aaab49ba112"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/imap.ts",
+      "sha256": "e84dfccb60b3236ab3004815b19ecb4eee6c2233e601e0e8cbbd14d117df0200"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/store.ts",
+      "sha256": "041516f0fb492bd0e7d92567cf0b94bec23f770991f449fcc8343961d3e6363c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/worker.ts",
+      "sha256": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/runtime/loop.ts",
+      "sha256": "96041a5d3f55a02ba6e55faeda69142a9f6826ea50ce988beceaa00a1b85edc6"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/runtime/store.ts",
+      "sha256": "33ac7a7b48c5dee3d4b1a7444957733ff0b02a4ead55750e022ff67f33a6ba3c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/runtime/worker.ts",
+      "sha256": "cb56a41c61e77350d24416443b31c2d55eecb352a2309753a6771b23deaf22e3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/capacity-integration.test.ts",
+      "sha256": "c6148b977a1fa39a035e19a2c70c15f891326a737abd10990e3a2aeec585e184"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/diagnostics-integration.test.ts",
+      "sha256": "27ba7b2d3652779f6888ce362d90053019a01e3950e13bb115c699433a2c84ba"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/expanded-mvp-04.test.ts",
+      "sha256": "4b910abd04ea6686eda746079432eed7a83528a68163452ad080fbe17c1f7faa"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f09-live-protocol.test.ts",
+      "sha256": "9922a78ba4e713b4af4a529b373dff418a8314b6479c970f73c9b18729f21e3f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f09-live-transport.test.ts",
+      "sha256": "64d166c0bcb983f647a9885ae29d21bc191e7980aa4bb800461af2c33bcd67b3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f09-transport-fixture.ts",
+      "sha256": "984e6242be0a61880750c114dde53e5993588d9d3c82990c608e7e4db0eb5328"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f10-runtime-fixture.ts",
+      "sha256": "45256043409c443f6eaf395eb0369b12c6c3631997baf15b47f964fd92c27ddb"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f10-runtime-integration.test.ts",
+      "sha256": "97fb303f49f165f1242b37172644bcab5300ecd06358d3263ba0935bb03d1501"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts",
+      "sha256": "e3d889eba4dda70d1236c508e6819111eb38cd8b3e6de0e8047f8bacac76cadd"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+      "sha256": "638923999311a60653e72ced2bf5de2ec28d63d3ce47af18f66d352f112a594d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f10-runtime-unit.test.ts",
+      "sha256": "6253fbac97001a2b9aa246fac8f7c09babb3c65051cb85bc9e76954ce0aa802a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/replies-integration.test.ts",
+      "sha256": "cd79f7ec1a6345f9e63a1782afd7010acec1e2d808f7e22bc76726b0f426c051"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/submission-integration.test.ts",
+      "sha256": "350b22220e81b829490ae47fbb4bdc30c1757217551da2c0410aafc3f11a2d1a"
+    }
+  ],
+  "planner_packet": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/sol-coordinator-handoff-20261006/planner-only-review-packet.json",
+  "planner_packet_sha256": "c56fa1bef6b60a4f413320469fe4ee7314439e4aa5d1c48e5ea9328c5f4682e5",
+  "normative_F10_UID_planner": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f10-uidreset-contract-plan-a14b-cli/receipt.md",
+  "normative_F10_UID_planner_sha256": "998aeeb0b4c89294d7f196650b759954f3a965f62dacfaf8313d1e5eaf749662",
+  "allowed_objective_evidence": [
+    "/tmp/n7-f10-frozen-verify-a20/canonical-measurements.json",
+    "/tmp/n7-f10-frozen-verify-a20/full330-native-exit.json",
+    "/tmp/n7-f10-frozen-verify-a20/full330.tap",
+    "/tmp/n7-f10-frozen-verify-a20/fullpg-native-exit.json",
+    "/tmp/n7-f10-remaining-verify-a21/mutation-results.json",
+    "/tmp/n7-f10-remaining-verify-a21/pair-correction-results.json",
+    "/tmp/n7-f10-remaining-verify-a21/canary-result.json",
+    "/tmp/n7-f10-pair-fixture-fix-a22/final-manifest.json",
+    "/tmp/n7-f10-frozen-verify-a20/fullpg.tap",
+    "/tmp/n7-f10-pair-fixture-fix-a22/positive-native-exit.json",
+    "/tmp/n7-f10-pair-fixture-fix-a22/negative-native-exit.json",
+    "/tmp/n7-f10-pair-fixture-fix-a22/restored-native-exit.json",
+    "/tmp/n7-f10-pair-fixture-fix-a22/negative.tap"
+  ],
+  "excluded_context": [
+    "authorchat/reasoning/narrativereceipts",
+    "coordinatorhistory",
+    "verifierreasoning",
+    "operationalhandoff.md"
+  ],
+  "source_DB_owner": "coordinator released sole isolatedDBreadonlyverification lease to this reviewer; productsourceimmutable",
+  "objective_evidence_SHA": {
+    "/tmp/n7-f10-frozen-verify-a20/canonical-measurements.json": "92e7534b5ada92d3d708d9cea22928503a87f26f0e2e739eeff97165cf88e532",
+    "/tmp/n7-f10-frozen-verify-a20/full330-native-exit.json": "8c5e988fba5b6346fa881214321291bfe924624cac7a3fed61329f133a2bd89e",
+    "/tmp/n7-f10-frozen-verify-a20/full330.tap": "9d6c9187e2a14778bbe98a715249a8f7fd6b61e895c69ec7aa4b007f5a3b0dd8",
+    "/tmp/n7-f10-frozen-verify-a20/fullpg-native-exit.json": "f42ec23b00195b0b9aba228ddbca582ba67f281f1e5fef6dbe624bc04ae6081e",
+    "/tmp/n7-f10-remaining-verify-a21/mutation-results.json": "20e000b1715754066289d80541d02f9d471b0f712309983a02a3fe84f51500b3",
+    "/tmp/n7-f10-remaining-verify-a21/pair-correction-results.json": "2998aecd75b277f1871d2c946a30cd617497cf0cc5e84c80bd59d2f422940df5",
+    "/tmp/n7-f10-remaining-verify-a21/canary-result.json": "e61082fbb003b0d9a0d7d2b20c80981e17bef14ddf81d9566205bafff7332fa6",
+    "/tmp/n7-f10-pair-fixture-fix-a22/final-manifest.json": "00d8a463aad276021583f4f94a07cf05024cfee05cfa61346937cfcc00775fbe",
+    "/tmp/n7-f10-frozen-verify-a20/fullpg.tap": "5d06e3fd559d77ece631149b834120387527f2f68534944c2f4d0e12ee190d60",
+    "/tmp/n7-f10-pair-fixture-fix-a22/positive-native-exit.json": "c7013cc00360e087e8c76c0707f96845e7162e43b2dcf1e111c76da887b6d177",
+    "/tmp/n7-f10-pair-fixture-fix-a22/negative-native-exit.json": "73ff4cf6196016efd8a487c2efb5aef1e2298fd830fa00f7b0092ffa84663c96",
+    "/tmp/n7-f10-pair-fixture-fix-a22/restored-native-exit.json": "7fbf1412e6df7032f5217f2660d2845889bc6ddf2e2a4c5dcfa61d2576b9f663",
+    "/tmp/n7-f10-pair-fixture-fix-a22/negative.tap": "e7ced62369035e1b782626caea52cd02e458ec57fc1a615ee10c376dd5133478"
+  },
+  "objective_current_source_manifest": "/tmp/n7-f10-adversarial-fairness-a24/final-manifest.json",
+  "objective_current_source_manifest_sha256": "8fc213bdc10547d433cbcff8aa5f7e8d6693fd6c3b6b90d8e992a6c3a4631247",
+  "exact_operational_handoff": "/tmp/n7-f10-adversarial-fairness-a24/verification-handoff.json",
+  "exact_operational_handoff_sha256": "ee11cf5a3066c2c2f8db7faffd5912847424ba711418205294224e8a78e47366",
+  "prior_independent_finding": "/tmp/n7-f10-independent-review-a23/review.md",
+  "prior_independent_finding_sha256": "833109353de9e01b1238dcb9d328982cae9cdd18ce8d0982ed5fda5a65a1ba05",
+  "scope": "exact69815ms healthyE gap chronology/cause hypothesis andminimalcounterproof; no newacceptance/broadnative repeat/productsourcewrite",
+  "read_only": true,
+  "objective_packet": "/tmp/n7-f10-fixture-cleanup-a26/diagnosis-objective-packet.json",
+  "objective_packet_sha256": "d3131182de06d27750273da51fa8cc5556364caac5b86a98fa47345f709e0ba2",
+  "bad_E_gap": {
+    "from": "2026-10-06T21:20:33.524Z",
+    "to": "2026-10-06T21:21:43.339Z",
+    "milliseconds": 69815
+  },
+  "first_E_selection_ms": 6218,
+  "first_E_complete_ms": 7099,
+  "current_original_native": {
+    "native_exit": 1,
+    "timeout": false,
+    "finished_at": "2026-10-06T21:22:11.387947Z",
+    "elapsed_ms": 114995
+  },
+  "no_rejected_variant_retry": true
+}

@@ -1,0 +1,32 @@
+{
+  "attempt": "A28",
+  "status": "completed",
+  "verdict": "READY corrected local plan; F11 code blocked pending accepted F10",
+  "started_at": "2026-10-06T21:32:51+00:00",
+  "finished_at": "2026-10-06T21:36:48.665391+00:00",
+  "elapsed_seconds": 237.665391,
+  "source_revision": "d2a03eb0ee91409b59b65dc66808159db7975d7e",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "source_unchanged": true,
+  "DB_used": false,
+  "owned_processes": "all read-only commands joined exit0; no remaining subprocess",
+  "heavy_mutex": "not acquired",
+  "external_calls": false,
+  "corrected_clauses": [
+    "C1 global atomic body/poll physical admission and finite lanes",
+    "C2 semantic event/root ownership and canonical entity mapping",
+    "C3 concrete frozen RU/EN finite rule pack",
+    "C4 correct copies/no invented backup-erasure blocker"
+  ],
+  "next_owner": "coordinator first launches bounded F10 observer MEDIUM; F11 MEDIUM pack waits accepted F10",
+  "report_sha256": "745545a9fb09eda73264c957fd6f1eb225702e42492c2da9a98f4581bc1da201",
+  "context_provenance_sha256": "45d82ffd358969c9a2439365855fbca6971426bf5eaedd17ea6aaca68d9e8f3e",
+  "tests_run": [],
+  "acceptance_claim": false
+}

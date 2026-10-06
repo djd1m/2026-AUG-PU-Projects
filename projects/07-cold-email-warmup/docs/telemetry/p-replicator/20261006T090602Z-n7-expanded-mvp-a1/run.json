@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F10 A25 BLOCKED fixtureDDLrepeatability; freshMEDIUMA26 ONEfile setupcleanup correction actualACK",
+  "current_stage": "F11 A28 corrected PLAN READY; fresh MEDIUM A29 observer allocated, waiting actual startup ACK; F10 not accepted",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -138,14 +138,14 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f10_fixture_cleanup_author_a26",
-    "source_revision": "9ad64857e9b82303165934011f8ab4bf8a783409",
-    "actual_ACK_received": true,
-    "launch_sha256": "5948e71831457de383784fe6293c0a6b16070914483682d6159fb370a54ce2d4",
-    "freeze_at": "2026-10-06T21:26:35.991025+00:00",
-    "deadline": "2026-10-06T21:29:35.991025+00:00",
-    "next": "shortforcedstalecatalogproof native0 BEFOREfullcurrentnative20pageGREEN; ONEsourcefile only; then freshindependentHIGHfindingreview/F11planvalidation",
-    "no_external_calls_or_new_framework": true
+    "executor": "/root/n7_sol_coordinator/f10_physical_admission_observer_a29",
+    "native_spawn_success": true,
+    "actual_ACK_received": false,
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "medium",
+    "actual_model": null,
+    "source_revision": "d2a03eb0ee91409b59b65dc66808159db7975d7e",
+    "next": "Two-test physical operation lifecycle / E busy slot snapshots, short instrumentation proof before newly instrumented original native witness; no runtime/threshold change"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -477,5 +477,29 @@
       "External authorization/access wait"
     ],
     "mandatory_checks_unchanged": true
+  },
+  "f10_candidate_runtime_a26": {
+    "revision": "d2a03eb0ee91409b59b65dc66808159db7975d7e",
+    "fixture_setup_short_native_exit": 0,
+    "original_native_exit": 1,
+    "E_completion_gap_ms": 69815,
+    "accepted": false,
+    "A27_E_selections": 70,
+    "A27_transport_busy": 67,
+    "four_FETCH_interval_proof": 52,
+    "exact_slot_state_unknown_intervals": 15,
+    "source_DB_released": true,
+    "actual_model": null,
+    "usage": null
+  },
+  "f11_plan_validation": {
+    "status": "READY corrected local pack",
+    "source_revision": "d2a03eb0ee91409b59b65dc66808159db7975d7e",
+    "report_sha256": "745545a9fb09eda73264c957fd6f1eb225702e42492c2da9a98f4581bc1da201",
+    "finished_at": "2026-10-06T21:36:48.665391+00:00",
+    "coding_prerequisite": "F10 accepted and admission interfaces reconciled",
+    "original_draft_valid_only_with_corrected_clauses": true,
+    "actual_model": null,
+    "usage": null
   }
 }
