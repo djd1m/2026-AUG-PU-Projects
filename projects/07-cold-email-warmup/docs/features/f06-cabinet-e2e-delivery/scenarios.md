@@ -13,7 +13,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-001`, legacy 
 Scenario Outline: SC-f06-cabinet-e2e-delivery-001
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant real cabinet forms and session lifecycle, source verification, actual browser/operations validation, documentation and PR delivery workflow operation runs for <case> against authoritative persistent state
+  When the user enters or reloads the protected cabinet, logs out/switches identity, or an asynchronous request resolves against the current epoch for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: public auth register/login transitions into protected/app
   And the unchanged contract assertion holds: direct unauthenticated/app redirects signin.
@@ -39,7 +39,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-002`, legacy 
 Scenario Outline: SC-f06-cabinet-e2e-delivery-002
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant real cabinet forms and session lifecycle, source verification, actual browser/operations validation, documentation and PR delivery workflow operation runs for <case> against authoritative persistent state
+  When the user saves/edits mailbox settings or explicitly grants/revokes consent/quarantine and reloads the authoritative state for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: real mailbox save/edit/limit1..30/quarantine controls, SMTP465or587/IMAP993 mandatoryTLS, secret inputs never populated fromAPI and cleared on success
   And the unchanged contract assertion holds: defaultlimit10.
@@ -67,7 +67,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-003`, legacy 
 Scenario Outline: SC-f06-cabinet-e2e-delivery-003
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant real cabinet forms and session lifecycle, source verification, actual browser/operations validation, documentation and PR delivery workflow operation runs for <case> against authoritative persistent state
+  When the user edits/imports the labelled campaign form, previews it and explicitly starts/pauses or reconsents after its version changes for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: actual campaign create/edit with1..5steps subject/body/delay>=24h and recipients<=100 with allowlisted personalization
   And the unchanged contract assertion holds: usable labelled form/importlines rather than rawJSON editor.
@@ -93,7 +93,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-004`, legacy 
 Scenario Outline: SC-f06-cabinet-e2e-delivery-004
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant real cabinet forms and session lifecycle, source verification, actual browser/operations validation, documentation and PR delivery workflow operation runs for <case> against authoritative persistent state
+  When the user saves manual observations, compares their own pair and explicitly shares/copies/opens/revokes its public report for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: owner manual observation form source/ref/UTC windows/metric/direction/numerator/denominator/manualcheckbox, real saved history
   And the unchanged contract assertion holds: compareownselectedpair throughAPI.
@@ -120,7 +120,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-005`, legacy 
 Scenario Outline: SC-f06-cabinet-e2e-delivery-005
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant real cabinet forms and session lifecycle, source verification, actual browser/operations validation, documentation and PR delivery workflow operation runs for <case> against authoritative persistent state
+  When the user retries/refreshes TEST checkout or activates/deactivates/copies their partner code while an operator changes canonical fixture state outside the browser for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: billing currentfree/teamlimits+expiry+TEST100minorRUB30days, disabled typedunavailable.
   And the unchanged contract assertion holds: Explicitpartnercode beforecheckout (cookie fallback statusvisible), retryusesstableidempotencykey untilpayloadchange
@@ -145,7 +145,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-006`, legacy 
 Scenario Outline: SC-f06-cabinet-e2e-delivery-006
   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
   And the concrete case is <case>
-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
+  When the authorized cabinet-source verification runs type/lint/build/full unit/PG/HTTP/static checks and a session-authority mutation with source/image/canary review for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: implementationtype/lint/build/unit/fullPG and focused HTTP route/auth/staticsecurity tests
   And the unchanged contract assertion holds: meaningful central401/sessionguard or relevant UIauthority mutation RED/restoredGREEN
@@ -173,7 +173,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-007`, legacy 
 Scenario Outline: SC-f06-cabinet-e2e-delivery-007
   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
   And the concrete case is <case>
-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
+  When the authorized harness passes exact READY preflight, acquires shared UI flock and drives the stated viewport/engine/keyboard/screenshot matrix in existing Docker Playwright for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: actual existingDocker codex-ui-playwright@1.63.0 only
   And the unchanged contract assertion holds: nohostbrowser install/newcontainer.
@@ -197,7 +197,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-008`, legacy 
 Scenario Outline: SC-f06-cabinet-e2e-delivery-008
   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
   And the concrete case is <case>
-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
+  When the harness drives real cabinet clicks and reloads while trusted operator fixture code supplies reply/complaint/unsubscribe/payment prerequisites outside the browser for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: real browser actions register/login/addeditmailbox/separateuncheckedconsents/poolwaiting/campaignpreviewstartpause/observationscompareexplicitshare/publicreport/revoke/checkoutpartner
   And the unchanged contract assertion holds: page reload provesserverpersistence.
@@ -222,7 +222,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-009`, legacy 
 Scenario Outline: SC-f06-cabinet-e2e-delivery-009
   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
   And the concrete case is <case>
-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
+  When two real tenant browser contexts perform foreign requests, logout/expiry and delayed-response/negative-state journeys for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: two independenttenantcontexts
   And the unchanged contract assertion holds: privatebox/campaign/evidence/reportIDsforeign404, no cross-tenantDOMdata
@@ -248,7 +248,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-010`, legacy 
 Scenario Outline: SC-f06-cabinet-e2e-delivery-010
   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
   And the concrete case is <case>
-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
+  When the authorized harness measures at least100 authenticated API samples with10workers on CPU2 and verifies source-bound health/secret/regression evidence for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: actual source-bound10concurrent authenticated localAPIrequests (>=100samples,excludingKDF/providerIO) measurep95<500ms target, disclose exactcommands/source/CPU2/environment/errors
   And the unchanged contract assertion holds: noestimatedbenchmark.
@@ -272,7 +272,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-011`, legacy 
 Scenario Outline: SC-f06-cabinet-e2e-delivery-011
   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
   And the concrete case is <case>
-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
+  When the authorized documentation workflow reconciles actual canonical decisions, bilingual setup/operator TEST guides, twelve accepted criteria/telemetry and unchanged inherited toolkit evidence for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: canonicaldocs Markdown updated PRD/Specification/Architecture/ADR onlyifactualdecisions, Completioncurrentstatus, README Russian and README.en.md withlocalsetup/secretfiles/modes/operatorTESTflow/tests/limitations, pipeline-walkthrough.md completechronologyandcurrentartifacts.
   And the unchanged contract assertion holds: Source-reuseinventory/provenanceknown, no unrelateddocs copy.
@@ -296,7 +296,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-012`, legacy 
 Scenario Outline: SC-f06-cabinet-e2e-delivery-012
   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
   And the concrete case is <case>
-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
+  When the authorized delivery workflow checks clean scoped commit/push and attempts the required branch-target PR creation while retaining the deployment checkpoint and excluded live actions for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: commit/push Russian messages noCoAuthoredBy, clean N7scope diff/secretcheck, create PR feature/07-cold-email-warmup→defaultclaude/install-npm-packages-n7l3m5
   And the unchanged contract assertion holds: do notcreate main/changdefault.

@@ -13,7 +13,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-001`, legacy `AC
 Scenario Outline: SC-f04-reply-suppression-001
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
+  When the reply reader normalizes the bounded header page and matches its sender/References to our tenant/mailbox sent message for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: validate bounded header-only pages <=100, UIDs/UIDVALIDITY and normalized single sender/References/In-Reply-To.
   And the unchanged contract assertion holds: Match only OUR sent message within tenant+mailbox AND decrypted enrollment recipient exact normalized sender
@@ -40,7 +40,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-002`, legacy `AC
 Scenario Outline: SC-f04-reply-suppression-002
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
+  When the reply page transaction takes lock(7,1) FIRST, writes observations/semantic effects/cancellation/cursor and commits or crashes for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: all page writes use shared advisory lock(7,1) FIRST.
   And the unchanged contract assertion holds: Observation unique(mailbox,validity,UID), additional valid normalized Message-ID ledger
@@ -68,7 +68,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-003`, legacy `AC
 Scenario Outline: SC-f04-reply-suppression-003
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
+  When the poll reader begins or resets the immutable rescan run, then applies the supplied trusted UID coverage for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: initial poll or UIDVALIDITY change creates durable run_id with captured UIDNEXT-1 high-water H, cursor0, state scanning and mailbox_poll scan_complete=false.
   And the unchanged contract assertion holds: Keep mailbox operational state (quarantine/revocation) intact
@@ -95,7 +95,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-004`, legacy `AC
 Scenario Outline: SC-f04-reply-suppression-004
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
+  When the rescan applies its attempt budget, handles explicit retry/restart and attempts same-validity tail completion for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: per-attempt max20 pages×100 headers and120s elapsed
   And the unchanged contract assertion holds: future clock failsclosed.
@@ -121,7 +121,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-005`, legacy `AC
 Scenario Outline: SC-f04-reply-suppression-005
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
+  When the realPG crash/concurrency/stop-barrier verification drives production page ingestion and final dispatch for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: realPG crash BEFORE page COMMIT rollback observation/effect/cursor, AFTER COMMIT retained
   And the unchanged contract assertion holds: old replyR effect1 and unseenS0→1 after replay with sameH.
@@ -144,7 +144,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-006`, legacy `AC
 Scenario Outline: SC-f04-reply-suppression-006
   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
   And the concrete case is <case>
-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
+  When the authorized reply-source verification procedure checks additive migration, full unit/PG/build gates, dedup/page mutation and source/image/canary receipts for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: additive migration only (006), type/lint/build, fullunit/realPGregression, meaningful dedup or page-atomicity mutation red/restoredgreen, secret/header/body canary checks and source/image hashes.
   And the unchanged contract assertion holds: Fresh independent Astra review and unique terminal receipt.
@@ -170,7 +170,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-007`, legacy `AC
 Scenario Outline: SC-f04-reply-suppression-007
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
+  When the public unsubscribe handler validates the bound capability and processes GET confirmation or HTML/RFC one-click POST for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: existing opaque32byte hashed unsubscribe capability, purpose implicit dedicated table, bound expiry30days/job/mailbox/enrollment/digest.
   And the unchanged contract assertion holds: GET validates and shows accessible confirmation with zero business mutations
@@ -194,7 +194,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-008`, legacy `AC
 Scenario Outline: SC-f04-reply-suppression-008
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
+  When the unsubscribe POST transaction takes lock(7,1) FIRST, revalidates post-lock expiry and applies suppression/cancellation/pool withdrawal for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: POST takes same lock FIRST, validates capability at current post-lock time and atomically UPSERTs tenant suppression/cancels recipient pending enrollments
   And the unchanged contract assertion holds: repeated/concurrent requests idempotent.
@@ -219,7 +219,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-009`, legacy `AC
 Scenario Outline: SC-f04-reply-suppression-009
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
+  When the complaint intake authenticates the operator, validates/deduplicates the event and commits suppression/quarantine/cancellation for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: operator-only authenticated complaint intake, no generic unsigned provider webhook.
   And the unchanged contract assertion holds: Durable event dedup bound to operator,event,tenant,mailbox and recipient
@@ -244,7 +244,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-010`, legacy `AC
 Scenario Outline: SC-f04-reply-suppression-010
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
+  When the public token/complaint handler applies trusted-IP admission and GET/POST token/security policies during concurrent requests and stop barriers for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: public token/complaint requests atomic30/min per socket/trusted configured IP (no arbitrary forwarded headers), invalid requests count
   And the unchanged contract assertion holds: duplicate POST still stable
@@ -266,7 +266,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-011`, legacy `AC
 Scenario Outline: SC-f04-reply-suppression-011
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
+  When the gated poll worker reads the independently durable local fixture with bounded I/O and applies its coverage/tail/status state for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: bounded poll worker every30s with disabled default or explicit local_test fixture protocol adapter
   And the unchanged contract assertion holds: reads only headers, <=100/page, operation<=30s, same durable A run/coverage/tail contracts, no DBlock over adapter IO.
@@ -292,7 +292,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-012`, legacy `AC
 Scenario Outline: SC-f04-reply-suppression-012
   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
   And the concrete case is <case>
-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
+  When the authorized local end-to-end procedure seeds/polls an actual reply, drives unsubscribe/complaint HTTP and evaluates full regression/mutation/source/fresh-review gates for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: end-to-end local operator seed/poll→actual persisted reply→pending stop and local unsubscribe/complaint HTTP flows with realPG
   And the unchanged contract assertion holds: fullregression, relevant negative guards/mutation, sourcebuild/receipts/freshAstra.

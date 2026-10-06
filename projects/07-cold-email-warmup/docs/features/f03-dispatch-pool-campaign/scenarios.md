@@ -18,7 +18,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-001`, legac
 Scenario Outline: SC-f03-dispatch-pool-campaign-001
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
+  When the owner lists, reads, previews, edits, starts or pauses the bounded campaign through the authoritative API for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: owned campaigns expose list/read/preview/edit/start/pause with tenant404, session401 and Origin403. <=5 steps, <=100 recipients/import, delay>=24h, known personalization fields
   And the unchanged contract assertion holds: reject missing field, subject/address CRLF and unsafe source markup before jobs.
@@ -46,7 +46,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-002`, legac
 Scenario Outline: SC-f03-dispatch-pool-campaign-002
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
+  When the owner explicitly starts or pauses the consent-bound campaign and durable enrollment/step jobs are inserted or canceled for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: explicit start requires current campaign-version/recipient consent for selected owned mailboxes and inserts durable unique(campaign,enrollment,step) jobs once.
   And the unchanged contract assertion holds: Store encrypted recipient address and keyed recipient hash, no plaintext contacts/credential dumps in logs.
@@ -73,7 +73,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-003`, legac
 Scenario Outline: SC-f03-dispatch-pool-campaign-003
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
+  When the pool scheduler computes the eligible aggregate and creates or replays the pair/day initial or single-parent reply job for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: pool aggregate counts only current opted-in, eligible, freshly polled, non-quarantined mailboxes
   And the unchanged contract assertion holds: reports waiting with fewer than two distinct tenants.
@@ -103,7 +103,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-004`, legac
 Scenario Outline: SC-f03-dispatch-pool-campaign-004
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
+  When concurrent dispatcher workers claim or recover a lease and reserve the shared warmup/campaign quota for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: atomic claim under shared lock first + SKIP LOCKED reserves common warmup/campaign quota, min(user,provider,30), default10.
   And the unchanged contract assertion holds: Twenty contenders with remaining3 obtain<=3 reservations.
@@ -133,7 +133,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-005`, legac
 Scenario Outline: SC-f03-dispatch-pool-campaign-005
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
+  When the planning/final-guard path reads the durable poll, scan, suppression and enrollment evidence for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: add durable poll/suppression/enrollment seams needed by final guards
   And the unchanged contract assertion holds: absent poll or incomplete scan stays blocked.
@@ -161,7 +161,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-006`, legac
 Scenario Outline: SC-f03-dispatch-pool-campaign-006
   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
   And the concrete case is <case>
-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
+  When the authorized planning verification procedure executes validation/idempotence/privacy/quota/lease tests, guard mutation and full affected regression for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: unit + realPG prove validation, idempotence, isolation, shared pool privacy, quota concurrency and leases
   And the unchanged contract assertion holds: meaningful guard mutation, full affected F01/F02 regression, typecheck/lint/build/securityscan.
@@ -190,7 +190,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-007`, legac
 Scenario Outline: SC-f03-dispatch-pool-campaign-007
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
+  When the final submit transaction acquires lock(7,1) FIRST, rechecks all current predicates and transfers the UTC-day reservation for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: fresh transaction takes same lock(7,1) FIRST and conditionally updates claimed→submitting after job/lease owner, current sender consent/version, enrollment/suppression, campaign state/version, mailbox/quarantine, pool recipient eligibility, complete poll age0<=age<60s and operator test/live gate checks.
   And the unchanged contract assertion holds: Move prior UTC-day reservation atomically to current day or defer when full.
@@ -217,7 +217,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-008`, legac
 Scenario Outline: SC-f03-dispatch-pool-campaign-008
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
+  When each real stop writer commits before or after the final submitting barrier, then the dispatcher attempts submission and later work for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: commit is irreversible boundary
   And the unchanged contract assertion holds: no lock held across adapter I/O.
@@ -245,7 +245,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-009`, legac
 Scenario Outline: SC-f03-dispatch-pool-campaign-009
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
+  When the local durable sink renders and stores the TEST message and an owner/intended pool peer reads its disclosed projection for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: local isolated durable sink records actual rendered test messages with sender/headers/test body and body unsubscribe plus List-Unsubscribe one-click headers.
   And the unchanged contract assertion holds: Message-ID stored for later reference matching.
@@ -274,7 +274,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-010`, legac
 Scenario Outline: SC-f03-dispatch-pool-campaign-010
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
+  When the submission result classifier handles proved pre-DATA failure or an ambiguous outcome and the retry scheduler evaluates <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: typed proved pre-DATA transient failure only: max3 total attempts within 120s, delays5/30, all current guards and quota rechecked.
   And the unchanged contract assertion holds: Ambiguous timeout/crash after submitting=>unknown_delivery, quota retained, zero automatic resend.
@@ -298,7 +298,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-011`, legac
 Scenario Outline: SC-f03-dispatch-pool-campaign-011
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
+  When the final guard/retry/inspection path samples the controlled post-lock clock at the stated boundary and checks operator authority for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: deterministic clock boundaries include midnight with provider lower limit, 59.999/60/future poll time, lease expiry,120s retry ceiling.
   And the unchanged contract assertion holds: State inspection and operator test tick are scoped to local test mode
@@ -325,7 +325,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-012`, legac
 Scenario Outline: SC-f03-dispatch-pool-campaign-012
   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
   And the concrete case is <case>
-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
+  When the authorized final-dispatch verification procedure executes realPG races/outcomes, final-guard mutation, regression/build/security and independent review for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: full realPG races/outcome tests, mutation for final guard, regressions, typecheck/lint/build/security and fresh independent review
   And the unchanged contract assertion holds: F04 unsubscribe and IMAP runtime, F06 full cabinet UI remain tracked, never claimed complete here.

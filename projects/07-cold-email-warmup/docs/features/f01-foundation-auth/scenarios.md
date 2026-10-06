@@ -14,7 +14,7 @@ Source: `01_specification.md` heading `AC-f01-foundation-auth-001`, legacy `AC-F
 Scenario Outline: SC-f01-foundation-auth-001
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant startup, registration/session lookup, request authorization, KDF/password validation, atomic auth admission, identity verification gates operation runs for <case> against authoritative persistent state
+  When the isolated Node22/API/worker/PG16 stack starts, migrations run and health/readiness probes execute for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: runnable Node22/TypeScript web/API+PostgreSQL16 isolated Compose
   And the unchanged contract assertion holds: DB has no host port
@@ -37,7 +37,7 @@ Source: `01_specification.md` heading `AC-f01-foundation-auth-002`, legacy `AC-F
 Scenario Outline: SC-f01-foundation-auth-002
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant startup, registration/session lookup, request authorization, KDF/password validation, atomic auth admission, identity verification gates operation runs for <case> against authoritative persistent state
+  When the client registers, logs in and logs out, then the server resolves the resulting session for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: register creates tenant/account and usable7day opaque session
   And the unchanged contract assertion holds: login/logout
@@ -60,7 +60,7 @@ Source: `01_specification.md` heading `AC-f01-foundation-auth-003`, legacy `AC-F
 Scenario Outline: SC-f01-foundation-auth-003
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant startup, registration/session lookup, request authorization, KDF/password validation, atomic auth admission, identity verification gates operation runs for <case> against authoritative persistent state
+  When the server authorizes the mailbox request and validates its UUID, tenant, session and Origin for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: no/forged/revoked cookie401, badOrigin403 with0writes
   And the unchanged contract assertion holds: secondtenant mailbox fixture returns404
@@ -87,7 +87,7 @@ Source: `01_specification.md` heading `AC-f01-foundation-auth-004`, legacy `AC-F
 Scenario Outline: SC-f01-foundation-auth-004
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant startup, registration/session lookup, request authorization, KDF/password validation, atomic auth admission, identity verification gates operation runs for <case> against authoritative persistent state
+  When the server validates password/hash parameters and attempts KDF admission/hash/verify for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: exact Argon2id v19 m65536/t3/p1/salt16/out32 only
   And the unchanged contract assertion holds: password8–200Unicode chars<=800bytes, reject before KDF
@@ -112,7 +112,7 @@ Source: `01_specification.md` heading `AC-f01-foundation-auth-005`, legacy `AC-F
 Scenario Outline: SC-f01-foundation-auth-005
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant startup, registration/session lookup, request authorization, KDF/password validation, atomic auth admission, identity verification gates operation runs for <case> against authoritative persistent state
+  When the server atomically admits a login or registration attempt against its fixed UTC email/trusted-IP bucket for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: atomicDB fixedUTC windows login email5/15min+trustedIP10/min, registerIP5/hour
   And the unchanged contract assertion holds: attempts count
@@ -139,7 +139,7 @@ Source: `01_specification.md` heading `AC-f01-foundation-auth-006`, legacy `AC-F
 Scenario Outline: SC-f01-foundation-auth-006
   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
   And the concrete case is <case>
-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
+  When the authorized source-bound identity verification procedure executes build/typecheck/lint/auth unit/realPG checks, canary scan and license/donor audit for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: build/typecheck/lint/authunit+realPGintegration pass
   And the unchanged contract assertion holds: secretcanary scan

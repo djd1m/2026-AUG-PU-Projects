@@ -16,7 +16,7 @@ Source: `01_specification.md` heading `AC-f02-mailboxes-consent-001`, legacy `AC
 Scenario Outline: SC-f02-mailboxes-consent-001
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant mailbox save/read/update, AEAD decrypt, bounded connector verification, explicit consent change, shared stop mutation, mailbox verification gates operation runs for <case> against authoritative persistent state
+  When the authenticated tenant saves, updates, lists or reads the mailbox settings for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: authenticated tenant can save/list/read/update own SMTP465/587 requiredTLS and IMAP993 TLS settings
   And the unchanged contract assertion holds: API returns masked metadata only.
@@ -46,7 +46,7 @@ Source: `01_specification.md` heading `AC-f02-mailboxes-consent-002`, legacy `AC
 Scenario Outline: SC-f02-mailboxes-consent-002
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant mailbox save/read/update, AEAD decrypt, bounded connector verification, explicit consent change, shared stop mutation, mailbox verification gates operation runs for <case> against authoritative persistent state
+  When the credential store encrypts a save or decrypts a transport credential and scrubs the adapter error for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: AES256GCM freshnonce with external versioned credential key and AAD (tenant,mailbox,keyversion)
   And the unchanged contract assertion holds: DB/API/logs contain0 plaintext credentials.
@@ -76,7 +76,7 @@ Source: `01_specification.md` heading `AC-f02-mailboxes-consent-003`, legacy `AC
 Scenario Outline: SC-f02-mailboxes-consent-003
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant mailbox save/read/update, AEAD decrypt, bounded connector verification, explicit consent change, shared stop mutation, mailbox verification gates operation runs for <case> against authoritative persistent state
+  When the connector resolves the allowlisted endpoint again, validates every address, pins the selected IP and performs bounded TLS I/O for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: operator-allowlisted normalized hostname only
   And the unchanged contract assertion holds: public-IP resolution, reject loopback/private/linklocal/metadata/reserved/IPv4mapped forms and mixed unsafeDNS
@@ -108,7 +108,7 @@ Source: `01_specification.md` heading `AC-f02-mailboxes-consent-004`, legacy `AC
 Scenario Outline: SC-f02-mailboxes-consent-004
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant mailbox save/read/update, AEAD decrypt, bounded connector verification, explicit consent change, shared stop mutation, mailbox verification gates operation runs for <case> against authoritative persistent state
+  When the owner explicitly grants or revokes one versioned pool/campaign consent or edits its recipient/content snapshot for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: separate affirmative versioned pool and campaign consent persisted with actor/time/scope/version/revokedat.
   And the unchanged contract assertion holds: Registration/save grantneither.
@@ -141,7 +141,7 @@ Source: `01_specification.md` heading `AC-f02-mailboxes-consent-005`, legacy `AC
 Scenario Outline: SC-f02-mailboxes-consent-005
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant mailbox save/read/update, AEAD decrypt, bounded connector verification, explicit consent change, shared stop mutation, mailbox verification gates operation runs for <case> against authoritative persistent state
+  When the consent/mailbox/limit/campaign writer acquires lock(7,1) FIRST and commits the corresponding stop mutation for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: grants/revokes/mailboxstate/limits/campaignversion changes acquire SAME transaction advisory lock(7,1) FIRST before eligibility reads/mutations.
   And the unchanged contract assertion holds: Revoke cancels queued/claimed jobs and pool membership atomically
@@ -172,7 +172,7 @@ Source: `01_specification.md` heading `AC-f02-mailboxes-consent-006`, legacy `AC
 Scenario Outline: SC-f02-mailboxes-consent-006
   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
   And the concrete case is <case>
-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
+  When the authorized mailbox verification procedure executes focused unit/realPG, affected auth regression, typecheck/lint/build and security gates for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: focused unit and realPG integration prove above, including ciphertext substitution,0transport/canary, two tenants, distinct scopes/version invalidation and revocation queue state.
   And the unchanged contract assertion holds: F01 auth regression only where server/config/schema changes affect it

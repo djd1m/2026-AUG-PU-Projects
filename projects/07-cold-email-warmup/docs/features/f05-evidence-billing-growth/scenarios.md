@@ -13,7 +13,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-001`, lega
 Scenario Outline: SC-f05-evidence-billing-growth-001
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
+  When the server evaluates current entitlement while creating a mailbox or starting a new campaign under serialized resource admission for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: server-owned free/team config
   And the unchanged contract assertion holds: TESTteam100minorRUB30days immutable
@@ -42,7 +42,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-002`, lega
 Scenario Outline: SC-f05-evidence-billing-growth-002
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
+  When the referral landing/checkout attribution selector verifies explicit code or purpose-bound cookie and freezes the partner snapshot for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: unique nonPII partnercode pertenant, owner-only status/aggregate endpoints
   And the unchanged contract assertion holds: signed boundedpurpose-specific30daycookie landing /r/:code, invalid/inactivecodeexplicitrejection.
@@ -68,7 +68,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-003`, lega
 Scenario Outline: SC-f05-evidence-billing-growth-003
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
+  When the owner POSTs checkout and the service creates/reuses the immutable intent/provider binding outside the database transaction for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: session/Origin POSTcheckout acceptsclosedbody plan='team', clientidempotencykey8–128, optionalexplicitcode only.
   And the unchanged contract assertion holds: Unique(tenant,key) immutable plan/amount/currency/attribution/providerkey
@@ -95,7 +95,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-004`, lega
 Scenario Outline: SC-f05-evidence-billing-growth-004
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
+  When the authenticated adapter/operator wakes reconciliation, fetches independent canonical provider truth and checks fields/version before commit for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: independentdurable localproviderfixture separatefromintent/entitlement, operator-only simulate pending→success/cancel and revocation/expiryteststate withmonotonicversion.
   And the unchanged contract assertion holds: Publicredirect/status/query/bodycannotwriteprovidertruth.
@@ -120,7 +120,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-005`, lega
 Scenario Outline: SC-f05-evidence-billing-growth-005
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
+  When canonical reconciliation applies or rejects the unique grant/first-buyer conversion and current entitlement reads its fixed expiry/terminal state for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: atmostoneentitlementgrant perintent, fixedexpires_at=verifiedpaidAt+30days, no replayextension
   And the unchanged contract assertion holds: currenttimeexpiryservertruth, canceled/revoked/expired cannotresurrectfromstaleevent.
@@ -145,7 +145,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-006`, lega
 Scenario Outline: SC-f05-evidence-billing-growth-006
   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
   And the concrete case is <case>
-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
+  When the authorized billing acceptance procedure drives HTTP checkout/operator canonical state/grant negatives and full mutation/regression/source/donor review gates for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: actuallocalHTTPcheckout→operatorfixture success→canonicalfetch→oneTESTgrant+attributedconversion, cancel/expiry/redirect/mismatchnegativebranches allSC009/011/013.
   And the unchanged contract assertion holds: Type/lint/build/fullunit/realPG, meaningfultamperedcanonicalguardmutation+restoredgreen, rate/body/secretcanary/sourceimagebinding andfreshAstra.
@@ -171,7 +171,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-007`, lega
 Scenario Outline: SC-f05-evidence-billing-growth-007
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
+  When the owner submits the bounded manually verified observation and the server validates/persists its private metadata for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: owner-only boundedmanualobservations require sourceURL/reference, observeddates, metric/unit/windows, rawvalue/denominator andexplicitmanualverification.
   And the unchanged contract assertion holds: NoexternalURLfetch
@@ -195,7 +195,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-008`, lega
 Scenario Outline: SC-f05-evidence-billing-growth-008
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
+  When the server compares the selected own observation pair using UTC windows, direction, freshness and denominator guards for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: comparability same source/metric/unit/direction/equalUTCwindowduration nonoverlap, latestage<=7days exactboundary, baseline<=28days beforelatest, nofuturedata.
   And the unchanged contract assertion holds: Strictdeclaredhigher/lower improvement
@@ -219,7 +219,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-009`, lega
 Scenario Outline: SC-f05-evidence-billing-growth-009
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
+  When the owner explicitly POSTs share and the transaction rechecks the pair, idempotency payload and anonymous public projection for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: explicitauthenticatedPOSTshare selectsowncomparablepair, idempotencykey boundpayload.
   And the unchanged contract assertion holds: Createone randomopaqueanonymousreport/token andone shareevent
@@ -245,7 +245,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-010`, lega
 Scenario Outline: SC-f05-evidence-billing-growth-010
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
+  When the public report handler renders the snapshot using current server entitlement, freshness and token state for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: public report dynamicallyconsultscurrentserverentitlement onEVERYview
   And the unchanged contract assertion holds: free/expired/revokedreturnsonevisibleN7sourcebadge, paidTESTteammayhide, paid=true/clientflagsignored.
@@ -269,7 +269,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-011`, lega
 Scenario Outline: SC-f05-evidence-billing-growth-011
   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
   And the concrete case is <case>
-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
+  When the owner queries partner/report history or explicitly records a copy/link event against bounded aggregate storage for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: partnerpanelownaggregate events(counts onlyunder30), twoeligibleconversionscount2, duplicates0, foreigntenant404/noidentities.
   And the unchanged contract assertion holds: Shareeventcopy/link UIseam explicit andidempotent, metricprovenanceandTESTconversionlabelspreserved.
@@ -291,7 +291,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-012`, lega
 Scenario Outline: SC-f05-evidence-billing-growth-012
   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
   And the concrete case is <case>
-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
+  When the authorized evidence acceptance procedure drives realPG share/badge races, relevant mutations and full regression/source/fresh-review gates for <case>
   Then the required outcome is <expected>
   And the unchanged contract assertion holds: realPG/API(publicreportHTTP) source-boundallSC008/010/012/013, concurrencyshare/dedup andentitlementexpiry/revocation races, meaningfulshareguardorbadgepredicate mutantRED/restoredGREEN, fullregression/type/lint/build/securitysourceimageproof+freshAstra.
   And the unchanged contract assertion holds: FullcabinetPlaywrightF06stillmandatorylater
