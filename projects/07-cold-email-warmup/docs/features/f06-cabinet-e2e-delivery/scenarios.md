@@ -131,7 +131,7 @@ Scenario Outline: SC-f06-cabinet-e2e-delivery-005
   And the unchanged contract assertion holds: Usercan copycode/link with clipboardfallback.
   Examples:
     | case | expected |
-    | TESTcheckoutstablepayloadrepeat /changedpayload /disabled /operatorcanonicalsuccessoutsidebrowser /partnercopyfallback | actualfree-teamlimitsTEST100RUB30daysstatusintent; stablekeyretrynotclientpaidflag; explicitcodecookievisible; operatorsecretabsent; refreshrealgrant; codeactivate/deactivatecountsTESTboundedhistorynofakereward; clipboardfallback |
+    | TESTcheckoutstablepayloadrepeat /changedpayload /disabled /operatorcanonicalsuccessoutsidebrowser /partnercopyfallback | actualfree-teamlimitsTEST100minorRUB30daysstatusintent; stablekeyretrynotclientpaidflag; explicitcodecookievisible; operatorsecretabsent; refreshrealgrant; codeactivate/deactivatecountsTESTboundedhistorynofakereward; clipboardfallback |
 ```
 
 ## SC-f06-cabinet-e2e-delivery-006
