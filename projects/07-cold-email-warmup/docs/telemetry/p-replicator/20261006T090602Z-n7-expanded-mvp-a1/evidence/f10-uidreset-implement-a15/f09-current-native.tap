@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: transport grants are separate scoped expiring authority
+ok 1 - transport grants are separate scoped expiring authority
+  ---
+  duration_ms: 1502.714197
+  type: 'test'
+  ...
+# Subtest: final live submission preserves all eligibility fences
+ok 2 - final live submission preserves all eligibility fences
+  ---
+  duration_ms: 36270.784628
+  type: 'test'
+  ...
+# Subtest: UID reset crash and replay preserve atomic stop effects
+ok 3 - UID reset crash and replay preserve atomic stop effects
+  ---
+  duration_ms: 9321.057137
+  type: 'test'
+  ...
+# Subtest: independent capacity and consent predicates deny live transport
+ok 4 - independent capacity and consent predicates deny live transport
+  ---
+  duration_ms: 4446.981897
+  type: 'test'
+  ...
+# Subtest: expired slot age alone cannot replace its allocated identity
+ok 5 - expired slot age alone cannot replace its allocated identity
+  ---
+  duration_ms: 872.519152
+  type: 'test'
+  ...
+# Subtest: native pool fixture uses canonical current UTC pair day and malformed initial keys stay denied
+ok 6 - native pool fixture uses canonical current UTC pair day and malformed initial keys stay denied
+  ---
+  duration_ms: 779.264558
+  type: 'test'
+  ...
+# Subtest: full poll captures a reset between snapshot and read and incomplete entry performs no IO
+ok 7 - full poll captures a reset between snapshot and read and incomplete entry performs no IO
+  ---
+  duration_ms: 4143.83312
+  type: 'test'
+  ...
+# Subtest: settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences
+ok 8 - settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences
+  ---
+  duration_ms: 14166.020907
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 72211.154637

@@ -59,13 +59,13 @@
     "followup_status": "F07/F08/F09 locally accepted, expanded AC001–003 met; AC004–009 pending. Whole required_gates_passed remains false."
   },
   "metrics": {
-    "elapsed_wall_ms": 33341499,
+    "elapsed_wall_ms": 34924342,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-06T18:21:44.377766+00:00"
+    "elapsed_as_of": "2026-10-06T18:48:07.220600+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F10 A14b independent UID-result plan ready; A15 MEDIUM implementation allocated",
+  "current_stage": "F10 A15 scoped UID fix completed/frozen eae17; A16 fresh HIGH fork-none verification actual ACK18:59:05",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -138,9 +138,9 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f10_restart_author_a12 fixed MEDIUM new bounded attempt",
-    "source_revision": "6255b8f19a456103f062b0d1d5fd2313b914af94",
-    "next": "A15 exact planned private UID-result implementation; final frozen330/fullPG/physical/currentmutations+canary and fresh planner-only HIGH review"
+    "executor": "/root/n7_sol_coordinator/f10_frozen_verifier_a16 fresh Sol6.1 HIGH fork-none actual ACK18:59:05 UTC",
+    "source_revision": "eae17bbea36312ee5290adb8390e066b1f0d6c2a",
+    "next": "A16 full330/fullPG/physical frozenchecks; remainingcurrentmaterialmutants/fullcanary then separatefreshcleanHIGH8minreview"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -366,5 +366,16 @@
     "actual_model": null,
     "reason": "host_not_exposed",
     "global_config_changed": false
+  },
+  "owner_schedule_target": {
+    "target_at": "2026-10-07T06:34:00Z",
+    "confidence": "low",
+    "basis": "Owner12-hour local implementation+mandatory checks+PR-preparation orientation; no calibrated comparable accepted run",
+    "hard_acceptance_deadline": false,
+    "excluded": [
+      "Actual authorized seven-day live pilot",
+      "External authorization/access wait"
+    ],
+    "mandatory_checks_unchanged": true
   }
 }

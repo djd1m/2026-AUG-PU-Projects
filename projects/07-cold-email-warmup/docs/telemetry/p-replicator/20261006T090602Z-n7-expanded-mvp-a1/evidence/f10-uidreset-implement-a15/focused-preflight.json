@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T18:45:59.920026+00:00",
+  "status": "ready",
+  "source": "6255b8f1 + exact dirty authorized SHA inventory",
+  "source_sha": {
+    "src/replies/adapter.ts": "8595571bda349274294a47fe08342383fd7d02b44650f00124d93aaab49ba112",
+    "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+    "src/replies/store.ts": "041516f0fb492bd0e7d92567cf0b94bec23f770991f449fcc8343961d3e6363c",
+    "src/replies/input.ts": "45f451e88364c37dcfcce9e2bda12c3d4aef04c10676377688a958593fb95476",
+    "src/replies/headers.ts": "0987bc97311908e5042b1ec1df86576fbd2574908da171bafbca0519b18f4475",
+    "src/replies/operator.ts": "60fbbdef1edeba5c275b863bce73ce780a13e839d3965e435b6a1f31b44a01e6",
+    "src/replies/fixture.ts": "738683ca7eec34d3d2a959593367035406d6c68d8909f751c90939911dabf0d7",
+    "src/replies/imap.ts": "e84dfccb60b3236ab3004815b19ecb4eee6c2233e601e0e8cbbd14d117df0200"
+  },
+  "guard_sha": "9c2b899e9d7e173beb631415044e8b5106b257b006bb06cd2283500b528bd33f",
+  "environment": "Node22; CPU2/heavylock; readonly installeddeps; NODE_OPTIONS inherited ownguard; privateenv; fixtures assert current_database n7f10_a2 before reset",
+  "command": "node --import tsx --test --test-concurrency=1 --test-name-pattern=explicit retry captures|full poll captures|settled native UID|reset capture fences tests/f10-runtime-protocol.test.ts tests/f09-live-transport.test.ts tests/f10-runtime-integration.test.ts",
+  "inputs": "real native oldUID/tail explicit retry after30s; fullpoll snapshot/read race; seven stale-fence cases; realPG expectedrun/provenance/foreign/rollback/hold",
+  "effects": "ownedDB reset; exactPG/numericloopback TLS only; canonical nativeadapter fifthargfixture unchanged; no externalactions",
+  "e2e_claim": null,
+  "external_actions_executed": false
+}
