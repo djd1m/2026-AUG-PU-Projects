@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F10 A22 fresh MEDIUM durable pair-fixture correction active; F11 draft complete, independent native slot unavailable and CLI approval rejection",
+  "current_stage": "F10 A23 BLOCKED missing mandatory native A–D/E witness; actual fresh MEDIUM A24 corrective test stage active",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -138,13 +138,17 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f10_pair_fixture_author_a22",
-    "actual_ack": "2026-10-06T20:36:30 attempt active ACK received",
-    "source_revision": "afb58dc9b26f814433b117a63e45994c71e7cbde",
-    "next": "ONEtestfixture positive/negative/restored proof then fresh clean HIGH final F10 source review",
-    "freeze_at": "2026-10-06T20:53:30.378491Z",
-    "deadline": "2026-10-06T20:56:30.378491Z",
-    "parallel_F11": "draft complete; independent plan validation blocked by native thread-limit and auto-review CLI sensitive-payload authorization rejection; root notified"
+    "executor": "/root/n7_sol_coordinator/f10_adversarial_fairness_author_a24",
+    "source_revision": "74766159b38c0e346832992c3be7b62851aad577",
+    "next": "exactadversarialnativewitness+orderingmutants; independentHIGHreconciliation and F11planvalidation using allowednativeworkflow afteractorrelease",
+    "freeze_at": "2026-10-06T21:06:05.366124+00:00",
+    "deadline": "2026-10-06T21:09:05.366124+00:00",
+    "launch_sha256": "6be7d410c71449a7ed0b7a004b987ceb87cf80067a6fc8165ac18d0759227f7f",
+    "remaining_F10_AC": [
+      "F10-A23-001 requirednativeAD/Efairnesswitness",
+      "independentreviewadmission"
+    ],
+    "F11_current_blocker": "native followup threadlimit beforeexecution; noCLI bypass"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -320,6 +324,38 @@
       "negative_TAP_and_native_exit_retained": true,
       "source_DB_released": true,
       "overall_F10_accepted": false
+    },
+    "a22": {
+      "status": "completed_scoped_fixture_fix",
+      "revision": "74766159b38c0e346832992c3be7b62851aad577",
+      "only_source_delta": [
+        "tests/f10-runtime-integration.test.ts"
+      ],
+      "native_exits": [
+        0,
+        1,
+        0
+      ],
+      "named_negative_assertion": true,
+      "source_unchanged": 119,
+      "build_unchanged": 73,
+      "SQL_unchanged": 15,
+      "elapsed_ms": 275677.964,
+      "actual_model": null,
+      "usage": null,
+      "overall_F10_acceptance": false,
+      "source_DB_released": true
+    },
+    "a23": {
+      "status": "BLOCKED",
+      "finding": "F10-A23-001 HIGH mandatoryapprovedwitnessgap, no runtime defect inferred",
+      "review_sha256": "833109353de9e01b1238dcb9d328982cae9cdd18ce8d0982ed5fda5a65a1ba05",
+      "finished_at": "2026-10-06T20:48:09.889Z",
+      "elapsed_ms": 341914,
+      "all26producthashes_unchanged": true,
+      "actual_model": null,
+      "usage": null,
+      "independent_context": "freshHIGHforknone planner-only/frozenlegitimatecode/rawproof; no author/verifier/coordinatorhistory"
     }
   },
   "f10_candidate_runtime": {

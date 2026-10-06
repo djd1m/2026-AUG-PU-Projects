@@ -1,0 +1,32 @@
+{
+  "attempt": "A22",
+  "stage": "F10 durable pair-conflict fixture correction",
+  "role": "author",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "actual_usage": null,
+  "started_at": "2026-10-06T20:36:30.378491+00:00",
+  "budget_seconds": 1200,
+  "seal_reserve_seconds": 180,
+  "source_revision": "afb58dc9b26f814433b117a63e45994c71e7cbde",
+  "candidate": "/tmp/n7-f10-restart-fix-20261006-a12",
+  "allowed_source_files": [
+    "projects/07-cold-email-warmup/tests/f10-runtime-integration.test.ts"
+  ],
+  "handoff_sha256": "05cfea4ad74965b976db2dc941ba1fba824bd305bff2ea47a73fe35a3c687fa3",
+  "patch_sha256": "4ed562ae7d83b2d312f3d6a1033ed4a4cb60d9ea14a29cf853ea14aa3d58f8e7",
+  "checks": [
+    "exact focused positive title native0",
+    "break-first-conflict mutation named assertion native1 in compact shadow",
+    "exact restored positive native0",
+    "source/build/SQL fingerprints, owned child joins, isolated PG quiescence, heavy mutex free"
+  ],
+  "prohibited": [
+    "runtime changes",
+    "330/fullPG/physical repeats",
+    "dependency/config/keys changes",
+    "external calls"
+  ],
+  "next": "fresh HIGH clean planner-context final review"
+}

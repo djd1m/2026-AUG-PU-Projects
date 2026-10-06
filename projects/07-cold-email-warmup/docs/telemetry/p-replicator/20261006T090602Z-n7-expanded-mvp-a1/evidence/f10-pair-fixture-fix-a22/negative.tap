@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: automatic pool allocation skips pair conflicts and remains idempotent
+not ok 1 - automatic pool allocation skips pair conflicts and remains idempotent
+  ---
+  duration_ms: 479.355951
+  type: 'test'
+  location: '/tmp/n7-f10-pair-fixture-fix-a22/compact-shadow/tests/f10-runtime-integration.test.ts:1:5324'
+  failureType: 'testCodeFailure'
+  error: |-
+    pair conflict must skip to another eligible tenant
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/n7-f10-pair-fixture-fix-a22/compact-shadow/tests/f10-runtime-integration.test.ts:69:10)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1189.421595
