@@ -54,7 +54,7 @@
     "followup_status": "N7-VAL-001 closed for PLAN; independent validation CAVEATS, no new plan blockers; all product AC pending"
   },
   "metrics": {
-    "elapsed_wall_ms": 1296155,
+    "elapsed_wall_ms": 1401834,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
@@ -66,7 +66,8 @@
     "Preparation CLI update preceded run creation; exact start unavailable, not retroactively measured",
     "Coordinator actual model and host usage unavailable",
     "Native agent requested Astra/high; actual model and usage not exposed by host",
-    "No prelaunch serialized launch digest for native PLAN receipt; terminal receipt and output SHA verified, not companion delivery attestation"
+    "No prelaunch serialized launch digest for native PLAN receipt; terminal receipt and output SHA verified, not companion delivery attestation",
+    "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred."
   ],
   "current_stage": "Concrete XL plan checkpoint; implementation not started",
   "cli_update": {
@@ -116,7 +117,7 @@
     "requirement_algorithm_pairs": 18,
     "full_project_result": "not established: legacy6"
   },
-  "intermediate_revision": "61ea349f",
+  "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "root",
     "next": "After owner concrete plan approval: reconcile legacy contracts; then Sol6.1 high bounded F07 implementation with fresh Astra review",
