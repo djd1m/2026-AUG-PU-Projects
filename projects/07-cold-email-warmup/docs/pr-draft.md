@@ -1,7 +1,18 @@
-# PR: feat(n7): локальный почтовый пул, цепочки и кабинет с проверенной остановкой
+# PR: feat(n7): почтовый пул и кабинет с ограниченным SMTP/IMAP транспортом
 
 Base: `claude/install-npm-packages-n7l3m5`  
 Head: `feature/07-cold-email-warmup`
+
+
+## Текущее состояние ветки — 2026-10-06
+
+После исходного локального MVP приняты F07 connected capacity, F08 отдельная диагностика TLS/AUTH и F09 native SMTP/UID IMAP transport. Отправка требует отдельной scoped authority и текущего final fence; unknown delivery сохраняет квоту и не повторяется автоматически. Физические socket slots не освобождаются по одному истечению lease. Billing остаётся TEST.
+
+F09 source `e043bb27` принят независимым ревью по9AC: итоговые affected12/12 и type/lint/build проходят; realPG147/147, unit57/57 и physical socket test сохранены с явными unchanged-component bindings. Две мутации прежнего SMTP phase deadline отвергнуты, отдельный TLS probe подтвердил остановку до AUTH/DATA. [Точная приёмка](Completion.md) и [отчёт F09](features/f09-live-transport/review-report.md) содержат ограничения доказательств.
+
+F10 сейчас реализуется по независимо принятому плану; F10–F14 и отдельные live/model gates F15 ещё не приняты. Этот draft обновляется по принятому source и пока не представляет завершение расширенного MVP. Внешние SMTP/IMAP/LLM, расходы и deployment требуют конкретных разрешений из [пакета пилота](operations/authorized-live-pilot-package.md). Повторного запроса создания PR при неизменённом403 не выполнялось.
+
+## Историческое описание исходного локального MVP
 
 До изменения N7 содержал описание идеи. Теперь локальный MVP даёт изолированный
 кабинет, зашифрованные настройки ящиков, отдельные согласия на пул и кампанию,
