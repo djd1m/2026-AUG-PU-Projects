@@ -394,6 +394,10 @@
     },
     {
       "id": "f10-native-profile-a8",
+      "status": "failed"
+    },
+    {
+      "id": "f10-safe-profile-a9",
       "status": "active"
     }
   ],
@@ -433,7 +437,7 @@
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-06T16:54:50Z",
+    "last_reported_at": "2026-10-06T17:17:33.306351+00:00",
     "responsible": "n7_expanded_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true
   }

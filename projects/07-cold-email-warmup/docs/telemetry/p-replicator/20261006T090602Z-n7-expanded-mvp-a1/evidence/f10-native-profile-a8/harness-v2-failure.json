@@ -1,0 +1,18 @@
+{
+  "at": 1791306553.0190256,
+  "failure": "temporary profiling pool.connect override did not preserve callback overload used by pool.query; no production finding",
+  "terminated_owned_processes": [
+    {
+      "pid": 3322873,
+      "fixture": "/tmp/n7-f10-native-profile-a8/worker-profile-v2.mjs"
+    },
+    {
+      "pid": 3322128,
+      "fixture": "/tmp/n7-f10-native-profile-a8/profile-v2.mts"
+    },
+    {
+      "pid": 3322153,
+      "fixture": "/tmp/n7-f10-native-profile-a8/profile-v2.mts"
+    }
+  ]
+}

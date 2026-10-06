@@ -1,0 +1,18 @@
+{
+  "frozen_at": "2026-10-06T17:13:48.163467+00:00",
+  "source": "87bb94944f33bf99f9f9fd6d6390d097ca415dc2",
+  "v1_partial": {
+    "failure": "ESRCH: no such process, read",
+    "children": 24,
+    "startupMatched": 18,
+    "startupMedianMs": 319.5,
+    "startupMaxMs": 431,
+    "lifetimeMatched": 22,
+    "lifetimeMedianMs": 442.0,
+    "lifetimeMaxMs": 572,
+    "peerMedianMs": 103.89565699999912,
+    "peerMaxMs": 182.4778159999987
+  },
+  "critical": "v3 omitted fixture argument; not local-only evidence; actual provider DNS/socket attempts cannot be ruled out",
+  "next": "fresh fail-closed fixture DI profiling entrypoint with awaited IPC flush, callback-safe wrappers and explicit no-external-network guard"
+}
