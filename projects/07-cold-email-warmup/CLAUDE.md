@@ -52,9 +52,10 @@ One implementation → fresh independent review → confirmed corrections only.
 ## Swarm Agents
 | Scenario | Model roles | Bound |
 |---|---|---|
-| Planning/architecture | Astra high | exact feature scope |
-| Product code/tests/UI | Sol6.1 high | 20minutes per attempt |
-| Independent review | fresh Astra high | 8minutes per bounded slice |
+| Planning/architecture | Sol6.1 high | exact feature scope |
+| Product code/tests/UI | Sol6.1 medium | 20minutes per attempt |
+| Independent review | fresh Sol6.1 high, fork_turns=none | 8minutes per bounded slice |
+OWN-N7-006 overrides the former Astra/high and Sol/high split for new stages. Reviewer receives the approved planner packet and frozen source/tests, without author history or reasoning. Existing A11 HIGH and historical records remain unchanged.
 Actual models require host evidence. Never change global configuration. Parent can lend its
 lane to one CLI worker while monitoring only; max4 actual working units across projects.
 
@@ -88,7 +89,7 @@ in initial discovery; do not invent imported memories. Root hook registration is
 
 ## Feature Development Lifecycle
 PLAN uses validated project clauses and delta feature spec under docs/features/;
-VALIDATE retains exact scenario references; IMPLEMENT is Sol-authored; REVIEW is fresh Astra.
+VALIDATE retains exact scenario references; IMPLEMENT is Sol6.1/medium; REVIEW is fresh Sol6.1/high with planner-only context.
 XL owner approval OWN-N7-002 covers this plan/team/roles/skills and autonomous continuation.
 It does not authorize live email, charge or deployment. Runtime tests remain mandatory.
 

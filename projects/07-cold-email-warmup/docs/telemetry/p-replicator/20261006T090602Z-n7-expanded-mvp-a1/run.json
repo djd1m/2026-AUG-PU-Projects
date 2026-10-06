@@ -12,17 +12,18 @@
     "live SMTP IMAP architecture",
     "AI automated replies and paid provider boundary"
   ],
-  "profile": "compact-quality-first-v2",
+  "profile": "sol-effort-split-v1",
   "profile_overrides": [
     "OpenAI only",
     "gpt-6.1-sol high coding",
-    "gpt-6-astra high planning and independent review"
+    "gpt-6-astra high planning and independent review",
+    "OWN-N7-006 applies from 2026-10-06T17:48Z: Sol6.1 HIGH coordinator/planning/validation/review, MEDIUM new coding, fresh reviewer planner-only context. Prior requested roles and A11 HIGH preserved."
   ],
   "comparison_id": null,
   "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
   "final_revision": null,
   "spec_sha256": "dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
-  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "policy_sha256": "5eb7edc0a97b27de92f605a8b284ce9c5f77d2ee1097db00e5afcb402eed88e1",
   "host": "Codex API multi-agent",
   "host_version": null,
   "billing_mode": "unknown",
@@ -54,16 +55,16 @@
     "false_positive_findings": null,
     "known_defects_missed": null,
     "regressions": null,
-    "followup_status": "F07/F08/F09 locally accepted, expanded AC001\u2013003 met; AC004\u2013009 pending. Whole required_gates_passed remains false."
+    "followup_status": "F07/F08/F09 locally accepted, expanded AC001–003 met; AC004–009 pending. Whole required_gates_passed remains false."
   },
   "metrics": {
-    "elapsed_wall_ms": 29955371,
+    "elapsed_wall_ms": 31387493,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-06T17:25:18.250079+00:00"
+    "elapsed_as_of": "2026-10-06T17:49:10.370961+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -74,7 +75,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F10 immutable-source full runtime verification A11",
+  "current_stage": "F10 immutable A11 verification; confirmed graceful-restart claim defect awaiting terminal witness",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -135,10 +136,10 @@
   },
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
-    "responsible": "n7_expanded_coordinator",
+    "responsible": "n7_sol_coordinator",
     "executor": "retained Sol f08_author_a1 actual ACK17:33:43Z; A11 immutable source full runtime verification",
     "source_revision": "52cad40204deed91d93c969fe95ed89f3d95a8c7",
-    "next": "Frozen source verification only; all product tracked files read-only. Own /tmp/n7-f10-frozen-verify-a11 guarded launchers/observer/raw receipts. Full330 native100/30/3/2CPU with REALfault+restart and ALL per-mailbox healthy gaps including postrestart/censored deadlines; no hiding logical-lease stalls. Existing full unit,realPG,nativephysical/fault/affected F09, relevant mutations/restoration, canary scan/source-build completeinventory. Heavylock serialized, ownPGn7f10_a2 only; exact launcher socket/DNSdenyguard+mandatoryfixture before native runs. No source fix during verification; any concrete red freezes exactremaining for separate repair."
+    "next": "Preserve A11 read-only until terminal; bounded fresh Sol6.1/MEDIUM graceful-restart claim repair against approved shutdown/recovery contract; preserve rescan_incomplete hold and physical slot safety. Fresh Sol6.1/HIGH review fork_turns=none planner-only packet after source-bound required checks."
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -182,7 +183,7 @@
       "blocker"
     ],
     "last_reported_at": "2026-10-06T17:35:16.886558+00:00",
-    "responsible": "n7_expanded_coordinator sends root; root reports owner",
+    "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true
   },
   "f07_runtime_candidate": {
