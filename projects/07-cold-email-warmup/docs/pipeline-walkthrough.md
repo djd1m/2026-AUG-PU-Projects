@@ -132,12 +132,24 @@ bounded inbox context → OpenAI draft → HITL/отдельный autopilot con
 существующую необратимую submitting границу; F14 измеряет всю цепочку, F15 —
 живой разрешённый пилот. Оплата остаётся TEST.
 
-Предлагаемый пилот: 100 connected/30 active, 3 tenants, 300 eligible arrivals
+Согласованные в OWN-N7-005 параметры пилота: 100 connected/30 active, 3 tenants, 300 eligible arrivals
 за 7 суток. Цель p95 arrival→SMTP accepted <300s, минимум95% eligible on-time;
 ошибки, просрочки и unknown включены. Draft/API latency не заменяет эту метрику.
-Пилотные параметры — предложение для checkpoint, а не достигнутая ёмкость.
+Параметры согласованы; достигнутая ёмкость и live-пилот ещё не подтверждены.
 
-Новый контур прошёл package-owned traceability на exact-byte staging; legacy
-контуры F01–F06 несовместимы с текущим role map и требуют согласования до
-IMPLEMENT. Независимая requirements validation и конкретный XL checkpoint
-предшествуют коду. Local fixture acceptance и live acceptance учитываются отдельно.
+2026-10-06 legacy F01–F06 согласованы с текущим role map с сохранением исходных
+требований и исторических отчётов. Полные PLAN/VALIDATE проверки восьми feature
+контуров проходят; независимое ревью приняло подготовку. F07 получил READY и
+реализуется отдельным Sol-исполнителем с 10:30 UTC. Полный completion ещё не пройден:
+будущие expanded/F07 тесты и внешняя поставка F06 остаются явными обязательствами.
+Local fixture acceptance и live acceptance учитываются отдельно.
+
+
+## Панель знаний N7
+
+Root проверил 2026-10-06 10:28–10:30 UTC: dz CLI0.8.44 и harness-core0.8.52
+актуальны по npm, переустановка не требовалась. Отдельная tmux-сессия
+`dz-knowledge`, окно `n7`, показывает read-only `dz statusline --watch --interval 10`
+для этого проекта. Подключение: `tmux attach -t dz-knowledge`. На момент проверки
+3 active patterns и 0 quarantined; неизвестные host recall/phase не считаются нулём.
+Панель не меняет hooks/config/models и не доказывает исполнение продуктовой задачи.

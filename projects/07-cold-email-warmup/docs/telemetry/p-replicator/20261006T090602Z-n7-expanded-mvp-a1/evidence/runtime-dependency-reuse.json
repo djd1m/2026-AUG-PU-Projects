@@ -5,5 +5,7 @@
   "lock_sha256": "49b300c360c2c1471596b225ced88d8b509bb57fcc2787a83c0dd5190089eb1a",
   "target": "/tmp/n7-expanded-runtime-20261006/node_modules",
   "method": "docker cp existing exact-lock dependencies; no install/download",
-  "runtime_tests": "not run; use Node22 Docker for required suite"
+  "runtime_tests": "not yet run; Node22 reused for native checks; actual owned PG/Docker and browser acceptance source-bound separately",
+  "native_node_path": "/tmp/n7-expanded-runtime-20261006/bin/node",
+  "native_node_sha256": "b1cbec894e45a5814b6ab756e1e14f8a76516273197e67e0412b57c1e10d0d9f"
 }

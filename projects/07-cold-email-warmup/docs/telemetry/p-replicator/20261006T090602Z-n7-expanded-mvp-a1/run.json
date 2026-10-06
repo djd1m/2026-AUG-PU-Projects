@@ -69,7 +69,7 @@
     "No prelaunch serialized launch digest for native PLAN receipt; terminal receipt and output SHA verified, not companion delivery attestation",
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred."
   ],
-  "current_stage": "IMPLEMENT F07 prelaunch",
+  "current_stage": "IMPLEMENT F07",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -130,9 +130,9 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "root",
-    "executor": "n7_expanded_coordinator; f07_author_a1 dispatch preparing",
+    "executor": "f07_author_a1 (dispatch allocated); n7_expanded_coordinator",
     "next": "F07 implementation20min then independent review8min",
-    "source_revision": "48b4f3ff4853f48690e4a0a0e56fd6d9aa44c79e"
+    "source_revision": "1841a68bc9d496c5c7908d01d5f89508eb4c8379"
   },
   "blockers": [
     "Legacy full-project role-map/traceability reconciliation before IMPLEMENT",
