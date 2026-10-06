@@ -1,0 +1,8 @@
+{
+  "authorized_at": "2026-10-06T16:06:11.608583+00:00",
+  "source_revision": "8dc405d237afa78950e57a3da54e02c9af76e39c",
+  "additional_path": "tests/f09-transport-fixture.ts",
+  "scope": "Only two exact current_database assertions in transportContext/recoveryScenario change from n7f09_a1 to n7f10_a2; no fixture/provider/runtime behavior change",
+  "reason": "Owned native regressions call shared fixture guard; safe disposable A5 execution must not touch historical F09 DB",
+  "launch_digest_unchanged": true
+}

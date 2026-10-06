@@ -8,7 +8,7 @@
   "identity": {
     "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
     "work_unit_id": "expanded-mvp",
-    "current_attempt_id": "f10-projection-fix-a4"
+    "current_attempt_id": "f10-native-verify-a5"
   },
   "telemetry": {
     "run": {
@@ -22,7 +22,7 @@
   },
   "source": {
     "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
-    "current_revision": "e0c93e196aac89610ba1b5d69ccb64ce571d86bc",
+    "current_revision": "8dc405d237afa78950e57a3da54e02c9af76e39c",
     "build_revision": null,
     "requirements": [
       {
@@ -45,8 +45,8 @@
       }
     ],
     "continuity": {
-      "expected_revision": "e0c93e196aac89610ba1b5d69ccb64ce571d86bc",
-      "observed_revision": "e0c93e196aac89610ba1b5d69ccb64ce571d86bc",
+      "expected_revision": "8dc405d237afa78950e57a3da54e02c9af76e39c",
+      "observed_revision": "8dc405d237afa78950e57a3da54e02c9af76e39c",
       "reconciliation": null
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
@@ -366,6 +366,10 @@
     },
     {
       "id": "f10-projection-fix-a4",
+      "status": "completed"
+    },
+    {
+      "id": "f10-native-verify-a5",
       "status": "active"
     }
   ],

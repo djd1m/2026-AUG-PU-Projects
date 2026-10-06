@@ -1,0 +1,13 @@
+{
+  "source_revision": "8dc405d237afa78950e57a3da54e02c9af76e39c",
+  "project_root": "projects/07-cold-email-warmup",
+  "paths": [
+    "tests/f10-runtime-protocol.test.ts",
+    "tests/f10-runtime-fixture.ts",
+    "tests/f10-runtime-process-fixture.ts",
+    "tests/expanded-mvp-04.test.ts",
+    "tests/f09-live-transport.test.ts",
+    "src/runtime/worker.ts"
+  ],
+  "constraints": "worker.ts tiny trusted internal construction/helper seam only; no environment/HTTP fixture selector; f09 test only ownedDB and pacing60 witness; no other production modifications"
+}
