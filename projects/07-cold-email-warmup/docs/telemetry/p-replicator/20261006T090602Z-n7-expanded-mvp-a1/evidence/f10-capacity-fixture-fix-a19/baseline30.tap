@@ -1,0 +1,102 @@
+TAP version 13
+# Subtest: F07 real PostgreSQL capacity boundaries and atomic safety
+    # Subtest: creates101st connected mailbox for free and expired TEST team without send
+    ok 1 - creates101st connected mailbox for free and expired TEST team without send
+      ---
+      duration_ms: 1644.430697
+      type: 'test'
+      ...
+    # Subtest: tenant pages remain bounded and foreign capacity actions cause no side effects
+    ok 2 - tenant pages remain bounded and foreign capacity actions cause no side effects
+      ---
+      duration_ms: 41.589995
+      type: 'test'
+      ...
+    # Subtest: global30 admission serializes competing tenants and duplicate requests
+    ok 3 - global30 admission serializes competing tenants and duplicate requests
+      ---
+      duration_ms: 1517.021872
+      type: 'test'
+      ...
+    # Subtest: lease120 expiry release and stale renewal never resurrect stopped mailbox
+    ok 4 - lease120 expiry release and stale renewal never resurrect stopped mailbox
+      ---
+      duration_ms: 88.837672
+      type: 'test'
+      ...
+    # Subtest: complaint quarantine immediately releases capacity for another tenant
+    not ok 5 - complaint quarantine immediately releases capacity for another tenant
+      ---
+      duration_ms: 278.941299
+      type: 'test'
+      location: '/tmp/n7-f10-capacity-fixture-fix-a19/baseline30/tests/capacity-integration.test.js:105:17'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'active'
+        - 'waiting_capacity'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'waiting_capacity'
+      actual: 'active'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///tmp/n7-f10-capacity-fixture-fix-a19/baseline30/tests/capacity-integration.test.js:109:20)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///tmp/n7-f10-capacity-fixture-fix-a19/baseline30/tests/capacity-integration.test.js:105:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: sender and pool recipient need active lease at scheduling claim and final fence
+    ok 6 - sender and pool recipient need active lease at scheduling claim and final fence
+      ---
+      duration_ms: 415.490649
+      type: 'test'
+      ...
+    # Subtest: capacity writers sample database time after shared lock and rollback admission
+    ok 7 - capacity writers sample database time after shared lock and rollback admission
+      ---
+      duration_ms: 168.97569
+      type: 'test'
+      ...
+    # Subtest: strict own capacity API rejects auth origin malformed cursor and rate abuse
+    ok 8 - strict own capacity API rejects auth origin malformed cursor and rate abuse
+      ---
+      duration_ms: 817.219892
+      type: 'test'
+      ...
+    # Subtest: real schema11 to12 upgrade preserves envelope states and has no automatic leases
+    ok 9 - real schema11 to12 upgrade preserves envelope states and has no automatic leases
+      ---
+      duration_ms: 1243.931024
+      type: 'test'
+      ...
+    # Subtest: additive migration idempotency keeps records without implicit lease
+    ok 10 - additive migration idempotency keeps records without implicit lease
+      ---
+      duration_ms: 35.301593
+      type: 'test'
+      ...
+    1..10
+not ok 1 - F07 real PostgreSQL capacity boundaries and atomic safety
+  ---
+  duration_ms: 8016.033411
+  type: 'test'
+  location: '/tmp/n7-f10-capacity-fixture-fix-a19/baseline30/tests/capacity-integration.test.js:19:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 11
+# suites 0
+# pass 9
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8591.642607

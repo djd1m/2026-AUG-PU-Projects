@@ -442,6 +442,10 @@
     },
     {
       "id": "f10-capacity-fixture-fix-a19",
+      "status": "completed"
+    },
+    {
+      "id": "f10-frozen-verify-a20",
       "status": "active"
     }
   ],
@@ -481,7 +485,7 @@
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-06T19:56:38.439384+00:00",
+    "last_reported_at": "2026-10-06T20:03:34.334846+00:00",
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true
   }

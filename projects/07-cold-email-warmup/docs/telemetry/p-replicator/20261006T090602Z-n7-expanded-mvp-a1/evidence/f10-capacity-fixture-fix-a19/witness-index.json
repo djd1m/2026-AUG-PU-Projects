@@ -1,0 +1,29 @@
+[
+  {
+    "stage": "baseline30",
+    "forced_winner": 30,
+    "patched": false,
+    "test_sha256": "336f577ea339c50e4b115a767d1492be0224286a51d7a20dd00b60300014e791",
+    "race_change": "sequential activations in witness-only compiled copy; existing sorted-state/count assertions retained",
+    "production_src_symlink": "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/dist",
+    "db_symlink": "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/db"
+  },
+  {
+    "stage": "patched30",
+    "forced_winner": 30,
+    "patched": true,
+    "test_sha256": "7309a1b34e6d15527ebc9404c432aed082e8c73b6e67148bcee043abb799249b",
+    "race_change": "sequential activations in witness-only compiled copy; existing sorted-state/count assertions retained",
+    "production_src_symlink": "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/dist",
+    "db_symlink": "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/db"
+  },
+  {
+    "stage": "patched29",
+    "forced_winner": 29,
+    "patched": true,
+    "test_sha256": "16a7347669f5251b530def9fefefc7777102a9c0f9ea494227f57afcef8efb8a",
+    "race_change": "sequential activations in witness-only compiled copy; existing sorted-state/count assertions retained",
+    "production_src_symlink": "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/dist",
+    "db_symlink": "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/db"
+  }
+]

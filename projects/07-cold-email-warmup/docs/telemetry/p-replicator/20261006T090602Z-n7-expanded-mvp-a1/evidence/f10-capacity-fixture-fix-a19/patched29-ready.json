@@ -1,0 +1,59 @@
+{
+  "witness_inputs": {
+    "patched29/package.json": "1239d4d885dcad42201a27ed9324f8f0f760b78700d8db9ced39a511cffe7eae",
+    "patched29/tests/capacity-integration.test.js": "16a7347669f5251b530def9fefefc7777102a9c0f9ea494227f57afcef8efb8a",
+    "patched29/tests/billing-fixture.js": "e7ac92d113621bd9eee5fb62d2e30af0d91d1e907cc78c6f6d977f64eeeda641"
+  },
+  "at": "2026-10-06T19:56:06.039380+00:00",
+  "status": "ready",
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-capacity-fixture-fix-a19",
+  "source_revision": "eae17bbea36312ee5290adb8390e066b1f0d6c2a",
+  "manifest_sha256": "e24bff5b7c6a2a5dacfef2b616a9517001293f442708c2f06af7b1af16685a8d",
+  "source_count": 120,
+  "build_count": 73,
+  "runner_path": "/tmp/n7-f10-capacity-fixture-fix-a19/run-file-v1.py",
+  "runner_sha256": "4106db86e317d1c4b0811eaa457bd51dfef291c11a688138cac73e8b40f63f25",
+  "preloads": {
+    "guard-v1.mjs": "c531ebe96a7fe7962ec3c62cf9e15c218d852b40b73ac6e1402410ccc51bd751",
+    "pg-snapshot-v1.mjs": "9f829e4efe2dce6f3e8125996cd9fe9e83e4cdc12e6c25d7550ee0fbb1c40bf1"
+  },
+  "fixtures": {
+    "tests/diagnostics-fixture.ts": "889f428735c251a33c18a026d3afbdd761bc3e4b9d7e965ab6848ac788740017",
+    "tests/f09-transport-fixture.ts": "984e6242be0a61880750c114dde53e5993588d9d3c82990c608e7e4db0eb5328",
+    "tests/f10-runtime-fixture.ts": "654fb5e45e5dcc0f520bdae5906c5340baf68eb8fb0dd9a8e9d29b6d6a91aa2f",
+    "tests/f10-runtime-process-fixture.ts": "af3523f51274e34d420ca1e8cd01927e7c3e262cfeb229cbe0dc1535b66a6340"
+  },
+  "environment": {
+    "DATABASE_NAME": "n7f10_a2",
+    "TMPDIR": "/tmp/n7-f10-capacity-fixture-fix-a19",
+    "NODE_OPTIONS": "--import=/tmp/n7-f10-capacity-fixture-fix-a19/guard-v1.mjs",
+    "credentials": "available; values omitted"
+  },
+  "DB_assertion": {
+    "at": "2026-10-06T19:56:06.017Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "command": [
+    "/tmp/n7-expanded-runtime-20261006/bin/node",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-concurrency=1",
+    "/tmp/n7-f10-capacity-fixture-fix-a19/patched29/tests/capacity-integration.test.js"
+  ],
+  "budget_s": 90,
+  "disk": {
+    "available_bytes": 3205304320,
+    "free_inodes": 4778637
+  },
+  "sideeffects": [
+    "own scratch",
+    "n7f10_a2",
+    "numeric local TLS"
+  ],
+  "source_build_readonly": true
+}

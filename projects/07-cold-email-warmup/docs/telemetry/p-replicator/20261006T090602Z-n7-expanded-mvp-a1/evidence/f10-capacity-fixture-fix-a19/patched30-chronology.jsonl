@@ -1,0 +1,77 @@
+{"at": "2026-10-06T19:55:47.345983+00:00", "stream": "tap", "line": "TAP version 13"}
+{"at": "2026-10-06T19:55:49.919582+00:00", "stream": "tap", "line": "# Subtest: F07 real PostgreSQL capacity boundaries and atomic safety"}
+{"at": "2026-10-06T19:55:49.919750+00:00", "stream": "tap", "line": "    # Subtest: creates101st connected mailbox for free and expired TEST team without send"}
+{"at": "2026-10-06T19:55:49.920522+00:00", "stream": "tap", "line": "    ok 1 - creates101st connected mailbox for free and expired TEST team without send"}
+{"at": "2026-10-06T19:55:49.920752+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:55:49.920794+00:00", "stream": "tap", "line": "      duration_ms: 1514.377041"}
+{"at": "2026-10-06T19:55:49.920820+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:55:49.920835+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:55:49.952603+00:00", "stream": "tap", "line": "    # Subtest: tenant pages remain bounded and foreign capacity actions cause no side effects"}
+{"at": "2026-10-06T19:55:49.953001+00:00", "stream": "tap", "line": "    ok 2 - tenant pages remain bounded and foreign capacity actions cause no side effects"}
+{"at": "2026-10-06T19:55:49.953036+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:55:49.953053+00:00", "stream": "tap", "line": "      duration_ms: 35.343492"}
+{"at": "2026-10-06T19:55:49.953065+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:55:49.953075+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:55:51.188932+00:00", "stream": "tap", "line": "    # Subtest: global30 admission serializes competing tenants and duplicate requests"}
+{"at": "2026-10-06T19:55:51.189109+00:00", "stream": "tap", "line": "    ok 3 - global30 admission serializes competing tenants and duplicate requests"}
+{"at": "2026-10-06T19:55:51.189141+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:55:51.189155+00:00", "stream": "tap", "line": "      duration_ms: 1236.517641"}
+{"at": "2026-10-06T19:55:51.189168+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:55:51.189182+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:55:51.239285+00:00", "stream": "tap", "line": "    # Subtest: lease120 expiry release and stale renewal never resurrect stopped mailbox"}
+{"at": "2026-10-06T19:55:51.239795+00:00", "stream": "tap", "line": "    ok 4 - lease120 expiry release and stale renewal never resurrect stopped mailbox"}
+{"at": "2026-10-06T19:55:51.239821+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:55:51.239837+00:00", "stream": "tap", "line": "      duration_ms: 50.221908"}
+{"at": "2026-10-06T19:55:51.239861+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:55:51.239893+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:55:51.571300+00:00", "stream": "tap", "line": "    # Subtest: complaint quarantine immediately releases capacity for another tenant"}
+{"at": "2026-10-06T19:55:51.571776+00:00", "stream": "tap", "line": "    ok 5 - complaint quarantine immediately releases capacity for another tenant"}
+{"at": "2026-10-06T19:55:51.571879+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:55:51.571907+00:00", "stream": "tap", "line": "      duration_ms: 330.957638"}
+{"at": "2026-10-06T19:55:51.571930+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:55:51.571948+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:55:51.870969+00:00", "stream": "tap", "line": "    # Subtest: sender and pool recipient need active lease at scheduling claim and final fence"}
+{"at": "2026-10-06T19:55:51.871054+00:00", "stream": "tap", "line": "    ok 6 - sender and pool recipient need active lease at scheduling claim and final fence"}
+{"at": "2026-10-06T19:55:51.871073+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:55:51.871084+00:00", "stream": "tap", "line": "      duration_ms: 298.077777"}
+{"at": "2026-10-06T19:55:51.871097+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:55:51.871132+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:55:52.020773+00:00", "stream": "tap", "line": "    # Subtest: capacity writers sample database time after shared lock and rollback admission"}
+{"at": "2026-10-06T19:55:52.020854+00:00", "stream": "tap", "line": "    ok 7 - capacity writers sample database time after shared lock and rollback admission"}
+{"at": "2026-10-06T19:55:52.020875+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:55:52.020892+00:00", "stream": "tap", "line": "      duration_ms: 149.712283"}
+{"at": "2026-10-06T19:55:52.020909+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:55:52.020925+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:55:52.683777+00:00", "stream": "tap", "line": "    # Subtest: strict own capacity API rejects auth origin malformed cursor and rate abuse"}
+{"at": "2026-10-06T19:55:52.683888+00:00", "stream": "tap", "line": "    ok 8 - strict own capacity API rejects auth origin malformed cursor and rate abuse"}
+{"at": "2026-10-06T19:55:52.683945+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:55:52.683963+00:00", "stream": "tap", "line": "      duration_ms: 664.564098"}
+{"at": "2026-10-06T19:55:52.683979+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:55:52.683994+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:55:53.429360+00:00", "stream": "tap", "line": "    # Subtest: real schema11 to12 upgrade preserves envelope states and has no automatic leases"}
+{"at": "2026-10-06T19:55:53.429496+00:00", "stream": "tap", "line": "    ok 9 - real schema11 to12 upgrade preserves envelope states and has no automatic leases"}
+{"at": "2026-10-06T19:55:53.429518+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:55:53.429535+00:00", "stream": "tap", "line": "      duration_ms: 744.173685"}
+{"at": "2026-10-06T19:55:53.429551+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:55:53.429567+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:55:53.456768+00:00", "stream": "tap", "line": "    # Subtest: additive migration idempotency keeps records without implicit lease"}
+{"at": "2026-10-06T19:55:53.456863+00:00", "stream": "tap", "line": "    ok 10 - additive migration idempotency keeps records without implicit lease"}
+{"at": "2026-10-06T19:55:53.456881+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:55:53.456904+00:00", "stream": "tap", "line": "      duration_ms: 25.819209"}
+{"at": "2026-10-06T19:55:53.456915+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:55:53.456925+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:55:53.881508+00:00", "stream": "tap", "line": "    1..10"}
+{"at": "2026-10-06T19:55:53.881591+00:00", "stream": "tap", "line": "ok 1 - F07 real PostgreSQL capacity boundaries and atomic safety"}
+{"at": "2026-10-06T19:55:53.882178+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:55:53.882218+00:00", "stream": "tap", "line": "  duration_ms: 5986.617867"}
+{"at": "2026-10-06T19:55:53.882234+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:55:53.882247+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:55:53.937151+00:00", "stream": "tap", "line": "1..1"}
+{"at": "2026-10-06T19:55:53.937245+00:00", "stream": "tap", "line": "# tests 11"}
+{"at": "2026-10-06T19:55:53.937267+00:00", "stream": "tap", "line": "# suites 0"}
+{"at": "2026-10-06T19:55:53.937283+00:00", "stream": "tap", "line": "# pass 11"}
+{"at": "2026-10-06T19:55:53.937298+00:00", "stream": "tap", "line": "# fail 0"}
+{"at": "2026-10-06T19:55:53.937313+00:00", "stream": "tap", "line": "# cancelled 0"}
+{"at": "2026-10-06T19:55:53.937328+00:00", "stream": "tap", "line": "# skipped 0"}
+{"at": "2026-10-06T19:55:53.937349+00:00", "stream": "tap", "line": "# todo 0"}
+{"at": "2026-10-06T19:55:53.937365+00:00", "stream": "tap", "line": "# duration_ms 6624.301634"}

@@ -1,0 +1,104 @@
+{
+  "at": "2026-10-06T19:57:34.733231+00:00",
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-capacity-fixture-fix-a19",
+  "revision": "afb58dc9b26f814433b117a63e45994c71e7cbde",
+  "source_count": 120,
+  "build_count": 73,
+  "expected_test_changes": [
+    {
+      "path": "tests/capacity-integration.test.ts",
+      "before": "667deb7986f057de112b259d011caf2d23af83fa687da0eda0d07ecbd8824f95",
+      "after": "c6148b977a1fa39a035e19a2c70c15f891326a737abd10990e3a2aeec585e184"
+    }
+  ],
+  "production_source_drift": [],
+  "production_build_drift": [],
+  "immutable_runner_preload_witness_fixture_drift": [],
+  "own_or_prior_nodes": [],
+  "PG": {
+    "at": "2026-10-06T19:57:34.702Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "mutex": "free verified via nonblocking acquire and release",
+  "disk_available_bytes": 3202416640,
+  "free_inodes": 4778344,
+  "private_probe_key_removed": true,
+  "native_results": {
+    "baseline30": {
+      "at": "2026-10-06T19:55:37.939223+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 8702.493496937677,
+      "pid": 1605201,
+      "startticks": "123953923",
+      "counts": {
+        "tests": 11,
+        "pass": 9,
+        "fail": 2,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "TAP_sha256": "30e7d34a22899ac37668ebe45ae3219c93b95c16dfaf8cf5d31a387b9f0a63b8"
+    },
+    "patched30": {
+      "at": "2026-10-06T19:55:53.970541+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 6720.100179081783,
+      "pid": 1609557,
+      "startticks": "123955725",
+      "counts": {
+        "tests": 11,
+        "pass": 11,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "TAP_sha256": "ba8f6a979b8e7dfb8233caf7f0747a9470f2faa00acd59f2fc5f3665de094a88"
+    },
+    "patched29": {
+      "at": "2026-10-06T19:56:12.961103+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 6919.90919993259,
+      "pid": 1612877,
+      "startticks": "123957604",
+      "counts": {
+        "tests": 11,
+        "pass": 11,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "TAP_sha256": "f621731ea4ff6e0d6d6368bb4b419b2b5e416aff27ddd3869741e4e04678c110"
+    },
+    "capacity": {
+      "at": "2026-10-06T19:56:28.721252+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 8458.962939912453,
+      "pid": 1615683,
+      "startticks": "123959026",
+      "counts": {
+        "tests": 11,
+        "pass": 11,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "TAP_sha256": "cd099685e89c755e65c98995af49f1a939b952bbdcde45c628db9d9b61aef30e"
+    }
+  },
+  "source_acceptance": false,
+  "overall_F10": "UNACCEPTED; independent review/integration owned by coordinator",
+  "next_responsible": "/root/n7_sol_coordinator",
+  "no_new_native_tests_after_seal": true
+}
