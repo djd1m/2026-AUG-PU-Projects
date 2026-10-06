@@ -57,13 +57,13 @@
     "followup_status": "F07 locally accepted. F08 coherent implementation candidate; specific phase/race/CLI/UI/canary witnesses pending; not accepted."
   },
   "metrics": {
-    "elapsed_wall_ms": 8559360,
+    "elapsed_wall_ms": 10227884,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-06T11:28:42.238348+00:00"
+    "elapsed_as_of": "2026-10-06T11:56:30.762591+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -137,7 +137,8 @@
     "responsible": "n7_expanded_coordinator",
     "executor": "f08_author_a1 native running; first action 11:48:50UTC confirmed",
     "source_revision": "967acf90519b0a81d4adee3ffac52244d89219ba",
-    "next": "15min exact acceptance remainder, then fresh independent Astra review"
+    "next": "15min exact acceptance remainder, then fresh independent Astra review",
+    "parallel_bounded_fix": "f08_dependency_fix_a1 actual started, isolated two manifests only, bound12:01:32UTC; no shared dependencies mutated"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",

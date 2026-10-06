@@ -1,0 +1,56 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f08-dependency-fix-a1",
+  "source_revision": "967acf90519b0a81d4adee3ffac52244d89219ba",
+  "result_revision": "6adcd529554a5c861fdf61d913e4bf3b18758443",
+  "launch_sha256": "edff4e2aad8f0cb2530bf254cb324e98774e4c66202dd1be2fed94d650c1c4a1",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host exposes no actual model/effort evidence or per-agent usage/cost counters."
+  ],
+  "started_at": "2026-10-06T11:53:32.407873+00:00",
+  "ended_at": "2026-10-06T11:58:44.523778+00:00",
+  "elapsed_wall_seconds": 312.115905,
+  "checks": {
+    "install": {
+      "exit_code": 0,
+      "evidence": "/tmp/n7-f08-dependency-fix-a1/install.log"
+    },
+    "ci": {
+      "exit_code": 0,
+      "evidence": "/tmp/n7-f08-dependency-fix-a1/ci.log"
+    },
+    "lock-consistency": {
+      "exit_code": 0,
+      "evidence": "/tmp/n7-f08-dependency-fix-a1/lock-consistency.log"
+    },
+    "audit-full": {
+      "exit_code": 0,
+      "evidence": "/tmp/n7-f08-dependency-fix-a1/audit-full.json"
+    },
+    "audit-production": {
+      "exit_code": 0,
+      "evidence": "/tmp/n7-f08-dependency-fix-a1/audit-production.json"
+    },
+    "lint": {
+      "exit_code": 0,
+      "evidence": "/tmp/n7-f08-dependency-fix-a1/lint.log"
+    },
+    "typecheck": {
+      "exit_code": 0,
+      "evidence": "/tmp/n7-f08-dependency-fix-a1/typecheck.log"
+    },
+    "build": {
+      "exit_code": 0,
+      "evidence": "/tmp/n7-f08-dependency-fix-a1/build.log"
+    }
+  },
+  "runtime_tree_sha256": "be9c34bca3c4b6d5e8dd8695128326fc9afde42f5bebbf06edfd4d64b0d71f22",
+  "status": "completed",
+  "feature_acceptance": "pending independent combined-candidate review"
+}
