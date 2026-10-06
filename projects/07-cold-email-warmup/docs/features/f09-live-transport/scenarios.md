@@ -1,8 +1,8 @@
 # F09 derived acceptance scenarios
 Spec revision: sha256:6e10f17fd5373c92a8725d6298827265f6b5082d8c37bba45777c3d7a7a756e9
-Source revision: fbc4232548cefc441cf7cf5e9a5b321eef80b825
+Source revision: bf613a4a71d39c3e87056bc8b181edfd3d60902d
 
-All cases are prospective BDD obligations, not executed runtime tests. Each outline supplies happy/error/edge/abuse witnesses. F09-V1 is a requirements design finding, not a claimed runtime failure.
+All cases are prospective BDD obligations, not executed runtime tests. Each outline supplies happy/error/edge/abuse witnesses. F09-V1 was a requirements design finding, resolved in PLAN revision bf613a4a; its expanded AC007 cases remain mandatory runtime obligations.
 
 ## Criterion scenarios
 | Criterion | Scenario | Source SHA256 |
@@ -133,7 +133,13 @@ Scenario Outline: F09 hostile framing and resource ownership stay bounded
     | error | slow trickle stalled drain DNS completion after abort or duplicate terminal callback | remaining total deadline bounds active work; no late connect write or publish |
     | edge | global2SMTP/4IMAP occupied or same protocol/mailbox active | deny extra admission with zero sockets and no waiting queue |
     | abuse | NUL duplicate scalar ambiguous From more than50 references or nested framing injection | reject rather than truncate potentially stopping evidence |
-    | edge | owner is OS-suspended with established socket past120s lease while another process claims same slot | slot must remain unavailable until old socket closure or owner termination is proven; current PLAN lacks this proof (F09-V1) |
+    | edge | owner is OS-suspended with established socket past120s lease while another process claims same slot | expired occupancy continues blocking same-mailbox and global replacement; real peer socket counts remain<=2SMTP/4IMAP and<=1 per protocol/mailbox |
+    | happy | suspended owner resumes and irreversibly seals operation then confirms close of every raw and TLS underlying handle | identity-fenced CAS releases only its slot; replacement connects after closure; late callbacks cannot create I/O |
+    | error | abort destroy end kill request or killed flag exists without physical close or exact-child exit proof | occupancy remains;5s graceful plus5s exit wait ends cleanup_blocked if proof absent |
+    | happy | privileged parent observes exact ChildProcess exit for bound owner UUID with exclusively owned sockets | release only that process incarnation by CAS; replacement may connect after confirmed closure |
+    | edge | database release fails or commit result is unknown then recovers | preserve occupied slot and bounded sealed close acknowledgement; idempotent matching CAS releases once; stale acknowledgement cannot clear replacement |
+    | error | parent restarts or host is unreachable and original child identity or authenticated termination proof is absent | retain occupied exclusion; only confirmed exact old process or recorded old container incarnation termination permits scoped cleanup |
+    | abuse | committed SMTP owner dies during cleanup or expiry-reclaim mutation is restored | delivery stays unknown with retained quota and zero retries; the real suspended-owner fixture rejects expiry-reclaim mutation |
 ```
 
 ## AC-f09-live-transport-008
