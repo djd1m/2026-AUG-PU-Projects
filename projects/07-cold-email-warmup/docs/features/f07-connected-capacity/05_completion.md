@@ -1,80 +1,66 @@
-# F07 — Planned acceptance and delivery
+# F07 — Implementation and executed checks
 
-PLAN ONLY; all runtime acceptance is pending. Source revision: c80504ac.
-RUN_ID: 20261006T090602Z-n7-expanded-mvp-a1 · WORK_UNIT_ID: f07-plan-a1.
-This document is not an independent validation verdict or a runtime receipt.
+IMPLEMENT attempt f07-implement-a1; independent acceptance remains pending.
+RUN_ID: 20261006T090602Z-n7-expanded-mvp-a1.
+Spec SHA256: 8c55e447d6a5e9f8b98f5bbb0415102089ed300b31142dab42f73d44ac9d7712.
+Source/build/actual image bindings and final results are in the terminal receipt
+/tmp/n7-f07-implement-a1-receipt.md and evidence /tmp/n7-f07-implement-a1.
+Coordinator integrates permanent evidence paths; these files do not claim delivery.
 
-## Planned criterion coverage (pending implementation)
+## Criterion coverage
 
-Exact future names below are assignments, not existing tests or a passing
-`## Criterion coverage` gate. Replace with actual table and executed evidence
-only after implementation; reviewer independently binds Spec revision hash.
+| Criterion | Test file | Test title |
+|---|---|---|
+| AC-f07-connected-capacity-001 | tests/capacity-integration.test.ts | creates101st connected mailbox for free and expired TEST team without send |
+| AC-f07-connected-capacity-002 | tests/capacity-integration.test.ts | global30 admission serializes competing tenants and duplicate requests |
+| AC-f07-connected-capacity-003 | tests/capacity-integration.test.ts | complaint quarantine immediately releases capacity for another tenant |
+| AC-f07-connected-capacity-004 | tests/capacity-integration.test.ts | sender and pool recipient need active lease at scheduling claim and final fence |
+| AC-f07-connected-capacity-005 | tests/submission-integration.test.ts | R1 post-lock clock midnight concurrent waiters enforce new-day provider limit1 and reservations |
+| AC-f07-connected-capacity-006 | tests/capacity-integration.test.ts | tenant pages remain bounded and foreign capacity actions cause no side effects |
+| AC-f07-connected-capacity-007 | scripts/ui/f07-capacity.mjs | saturation visible keyboard activation |
+| AC-f07-connected-capacity-008 | tests/capacity-integration.test.ts | real schema11 to12 upgrade preserves envelope states and has no automatic leases |
 
-| Criterion | Planned file | Planned test title | Status |
-|---|---|---|---|
-| AC-f07-connected-capacity-001 | tests/capacity-integration.test.ts | creates101st connected mailbox for free and expired TEST team without send | pending |
-| AC-f07-connected-capacity-002 | tests/capacity-integration.test.ts | global30 admission serializes competing tenants and duplicate requests | pending |
-| AC-f07-connected-capacity-003 | tests/capacity-integration.test.ts | lease120 expiry release and stale renewal never resurrect stopped mailbox | pending |
-| AC-f07-connected-capacity-004 | tests/capacity-integration.test.ts | sender and pool recipient need active lease at scheduling claim and final fence | pending |
-| AC-f07-connected-capacity-005 | tests/submission-integration.test.ts | capacity stop wins before final commit and midnight preserves current quota | pending |
-| AC-f07-connected-capacity-006 | tests/capacity-integration.test.ts | tenant pages remain bounded and foreign capacity actions cause no side effects | pending |
-| AC-f07-connected-capacity-007 | tests/web-integration.test.ts | capacity controls pagination and unlimited labels expose honest local TEST state | pending + Docker browser |
-| AC-f07-connected-capacity-008 | tests/billing-integration.test.ts | unlimited connected preserves TEST billing and campaign3and10 boundaries | pending + migration fixture |
+## Actual implementation and test scope
 
-Unit cases: strict page/action parsing, explicit null unlimited rendering, expiry
-projection. Real PG mandatory: migration11→12 idempotency/data preservation,
-30/31 literals, concurrency across≥3 tenants, rollback, lock-first order, expiry
-while blocked, sender and recipient stop races. Positive local TEST send proves
-capacity isn't a permanent fail-closed stub. Re-run existing auth/mailboxes/
-consent/dispatch/submission/replies/suppression/billing/web integration regressions.
-Update only obsolete mailbox3/10 assertions; preserve campaign3/10 and TEST100RUB
-minor/30days and provider30 daily independent literal assertions.
+Schema12 adds singleton global30 and tenant-bound lease120s without backfill.
+Explicit activate/renew/deactivate use first global advisory lock, singleton and
+own mailbox row locks, then database clock. Shared cancelMailbox releases capacity
+atomically, including complaint quarantine; independent consent revoke stays scoped.
+Sender and pool recipient require unexpired capacity at scheduling/claim/final fence.
+Unknown delivery, quota UTC, credentials/AAD and Argon2 rules are unchanged.
 
-Browser evidence: shared Docker Playwright1.63.0, own authenticated context;
-create/choose mailbox on later page, activation when global full→waiting, release
-and retry→active, errors and keyboard controls, unchecked consent, session switch,
-no credential canary in API/DOM. Read-only companion preflight immediately before
-E2E; no host browser. Current docs-only preflight not_applicable.
+Connected records are commercially unlimited, both plan mailbox limits explicitly
+null. Campaign limits3/10 remain. TEST price is100 minor RUB (1 RUB), duration30days;
+existing canonical billing/payment/single-grant/expiry tests remain authoritative.
+API pages25/max100 use exact PostgreSQL timestamp/id anchors and own cursor checks.
+Cabinet uses page totals, explicit capacity actions and paged campaign chooser;
+SessionClient epoch protects page responses. There is no automatic renewal or send.
 
-## Mandatory gates and bounded continuation
+Executed baseline checks: full unit40/40; full PostgreSQL126/126; typecheck/lint/build0.
+Final focused PostgreSQL11/11 includes actual blocked lease-expiry, rollback, global
+race and distinct-tenant complaint release. Final unit40/40 and typecheck/lint0.
+Two independent isolated mutations removing missing-lease or expiry predicates fail
+actual capacity tests; canary/runtime-secret scan passes with values suppressed.
+Schema11→12 is tested in a separate temporary own PostgreSQL database, then dropped.
+Docker Playwright browser actual PASS:10 checks, no page errors; pagination101,
+waiting→release→retry active, deactivate, keyboard action, unchecked consent,
+paged campaign chooser, unlimited label, DOM canary and session logout clearing.
+Fresh read-only preflight binds actual source/container/build/image. Build SHA256
+e2f695ace69688f62ed74f861c27c84e0adb9aa23aa1273f22e943561ace7828;
+image sha256:f4836fdf94a42b6c4e2736713ea4efec87f5d3d6283849726c99c2b87da76b2d.
+Browser r1/r2 failed before product checks because Docker fixture ownership denied
+read; r3 uses observed UID1001. All failed receipts remain preserved.
 
-1. Resolve installed @dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh;
-   PLAN --traceability on full project must exit0 before next phase. Selected
-   exact-byte staging pass is only F07 linkage, not full-project pass. At baseline
-   historical role-map repair is independently assigned; no weakened gate.
-2. Fresh coordinator-assigned requirements-validator: validation-report.md with
-   actual spec SHA and criterion scenarios; --report-revision --criterion-scenarios0.
-3. Substantive XL ROUTE repeated before implementation. Sol6.1 high requested,
-   ≤20min attempt, isolated worktree, source digest/ownership/receipt; no nested
-   writers. Implement schema/admission/fence then API/UI/meaningful tests in one
-   bounded pass; if attempt expires coordinator inspects artifacts and launches
-   concrete continuation, never marks feature done on timeout.
-4. npm test, npm run lint, npm run build and npm run test:integration in Node22
-   N7 runtime with real PG; no new dependencies. Run browser after build/preflight.
-5. Actual criterion table plus --completion0; fresh Astra high reviewer≤8min,
-   AC-by-AC source-bound review; fix confirmed blocker/high and rerun affected tests.
-   --review-contract and canon/source/ownership/receipt gates mandatory.
-6. Coordinator integrates accepted commit; authorized push/PR separately owned.
-   This PLAN worker commits only these five docs, no push or deployment.
+Previous failed migration/keyset/fixture and browser file-permission attempts are
+preserved in evidence. Installed selected completion gate is a source-linkage gate,
+not runtime acceptance. Full project's future expanded/F06 pending coverage and
+superseded F05 mailbox-test title remain separate coordinator-owned gaps.
 
-## Delivery and measurement boundaries
+## Acceptance and measurement boundaries
 
-Telemetry remains coordinator-owned under the same RUN_ID. Requested planning
-role Astra high; actual model/effort/usage/cost null: host metadata unavailable.
-Record measured attempt wall timestamps in terminal receipt, no token estimates.
-Profile inherited compact-balanced-v1 with project role overrides; savings not
-established. Completion of this planning work unit does not complete F07 or
-expanded MVP. Remaining owner: N7 coordinator → fresh validator → bounded Sol
-implementation → fresh reviewer. F08–F15/live authorization stay outside F07.
-
-Historical F05 A1 connected3/10 assertions are superseded by OWN-N7-005. Preserve
-old receipts/specs as history; coordinator explicitly reconciles legacy completion
-references when test titles change, never rewrites old evidence as current PASS.
-
-## Planning checks actually executed
-
-Installed package checker selected exact-byte F07 staging: exit0, 8 requirements,
-8 claims, missing0/orphan0. Diagnostic: `VERDICT traceability=PASS features=1 gaps=0 inconclusive=0`.
-Log: /tmp/n7-f07-plan-selected.log; this is selected-contour evidence only.
-Full-project traceability not run here; legacy repair remains an integration gate.
-Runtime tests/build not_applicable to this docs-only unit; no product PASS claim.
+Fresh independent source-bound review, confirmed corrections and coordinator
+integration are mandatory before accepting F07. No push, deployment, live email,
+paid LLM or real payment was performed. Profile compact-quality-first-v2; requested
+Sol6.1 high; actual model/effort/usage/cost null because host metadata unavailable.
+Elapsed includes reading, implementation, checks and failed attempts; terminal
+receipt records wall-clock boundary and remaining authorized steps. Savings unknown.

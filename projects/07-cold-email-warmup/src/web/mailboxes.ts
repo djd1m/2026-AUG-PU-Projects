@@ -1,22 +1,24 @@
 import { button, card, check, checked, details, field, node, note, options, rows, select, submit, Ui, value } from './dom.js';
 import { ApiError } from './client.js';
-import type { Campaign, Consent, Mailbox, Metadata, Poll } from './models.js';
+import type { Campaign, Consent, Mailbox, MailboxPage, Metadata, Poll } from './models.js';
 const stop = 'Отзыв, пауза и карантин отменяют будущие задания. После уже зафиксированного перехода submitting возможна максимум одна отправка в полёте; её нельзя отозвать.';
-export async function mailboxPage(ui: Ui, meta: Metadata) {
+export async function mailboxPage(ui: Ui, meta: Metadata, after?:string) {
     const epoch = ui.api.current();
-    const [boxes, campaigns, pool] = await Promise.all([ui.api.request<Mailbox[]>('/api/mailboxes'), ui.api.request<Campaign[]>('/api/campaigns'), ui.api.request<{
+    const [page, campaigns, pool] = await Promise.all([ui.api.request<MailboxPage>('/api/mailboxes'+(after?'?after='+after:'')), ui.api.request<Campaign[]>('/api/campaigns'), ui.api.request<{
             count: number;
             status: string;
         }>('/api/pool')]);
     if (!ui.api.alive(epoch))
         return;
+    const boxes=page.items;
     const content = ui.content;
     content.replaceChildren();
     content.append(note(`Пул: ${pool.count} пригодных ящиков · ${pool.status === 'waiting' ? 'ожидание двух разных участников' : 'готовность по API'}. Приглашения не равны пригодным участникам. Репутация неизвестна.`));
+    content.append(note(`Всего подключено: ${page.total}. Connected без ограничения; активная ёмкость всей установки: 30.`), button('Первая страница ящиков', () => void ui.run(() => mailboxPage(ui,meta))), ...(page.nextCursor?[button('Следующая страница ящиков', () => void ui.run(() => mailboxPage(ui,meta,page.nextCursor!)))]:[]));
     const chooser = node('form');
     chooser.append(select('Ваш ящик', 'mailbox', options(boxes)));
     const area = node('div');
-    content.append(card('Ящики', chooser, rows(boxes.map(b => `${b.label} · ${b.metadata?.senderAddress ?? 'не настроен'} · ${b.state} · общий лимит ${b.effective_limit}/сутки`), 'Добавьте первый почтовый ящик.')), area);
+    content.append(card('Ящики', chooser, rows(boxes.map(b => `${b.label} · ${b.metadata?.senderAddress ?? 'не настроен'} · ${b.state} · ${b.capacity.state} · общий лимит ${b.effective_limit}/сутки`), 'Добавьте первый почтовый ящик.')), area);
     const edit = (box?: Mailbox) => {
         area.replaceChildren();
         const form = node('form');
@@ -46,6 +48,7 @@ export async function mailboxPage(ui: Ui, meta: Metadata) {
         area.replaceChildren();
         const fresh = poll.scanComplete && poll.lastComplete !== null && Date.now() - Date.parse(poll.lastComplete) >= 0 && Date.now() - Date.parse(poll.lastComplete) < 60000;
         area.append(card(box.label, note(`Подключение: ${box.state}. Проверка local TEST не означает реальное SMTP/IMAP соединение.`), note(`Проверка ответов: ${poll.mode} · ${poll.scan?.state ?? 'нет сканирования'} · источник ${poll.scan?.provenance ?? 'нет данных'} · последний полный опрос ${poll.lastComplete ?? 'отсутствует'} · ${fresh ? 'свежий на момент чтения' : 'устарел / не завершён — отправка блокируется'}. Реальная проверка: ${poll.realVerification}. Свежесть <60 секунд; сервер перепроверяет её перед отправкой.`), button('Проверить локально · TEST', () => void ui.run(async () => { await ui.api.request(`/api/mailboxes/${id}/verify-test`, 'POST', {}); await inspect(id); }), true), button('Изменить подключение', () => edit(box)), button('Обновить опрос и согласия', () => void ui.run(() => inspect(id))), note(stop)));
+        area.append(card('Активная ёмкость · local TEST', note(`Состояние: ${box.capacity.state}. Срок lease: ${box.capacity.expiresAt??'отсутствует'}. Ёмкость не даёт согласия или гарантии отправки.`), ...(['activate','renew','deactivate'] as const).map(action=>button(action==='activate'?'Активировать / повторить запрос':action==='renew'?'Продлить действующий lease':'Освободить ёмкость',()=>void ui.run(async()=>{await ui.api.request(`/api/mailboxes/${id}/capacity`,'POST',{action});if(ui.api.alive(epoch)) await inspect(id);})))));
         const limits = node('form');
         limits.append(field('Общий лимит 1–30', 'dailyLimit', String(box.daily_limit), 'number'));
         const limit = limits.elements.namedItem('dailyLimit') as HTMLInputElement;

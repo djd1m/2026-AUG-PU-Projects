@@ -1,4 +1,6 @@
+export interface MailboxPage {items: Mailbox[]; total:number; limit:number; nextCursor:string|null;}
 export interface Mailbox {
+    capacity:{state:'inactive'|'active'|'waiting_capacity';expiresAt:string|null};
     id: string;
     label: string;
     state: string;
@@ -77,7 +79,7 @@ export interface Event {
 export interface Billing {
     plan: string;
     limits: {
-        mailboxes: number;
+        mailboxes: number | null;
         activeCampaigns: number;
     };
     expiresAt: string | null;
@@ -128,11 +130,11 @@ export interface Metadata {
     };
     plans: {
         free: {
-            mailboxes: number;
+            mailboxes: number | null;
             activeCampaigns: number;
         };
         team: {
-            mailboxes: number;
+            mailboxes: number | null;
             activeCampaigns: number;
         };
     };

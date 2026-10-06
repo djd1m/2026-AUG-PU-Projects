@@ -86,20 +86,19 @@ test('F05 A1–A6 real PostgreSQL HTTP and canonical race gates',async t=>{
    const expired=(await checkout(other.cookie)).data.data;await simulate(expired.payment_id,'succeeded',{paidAt:new Date(Date.now()-31*86400000).toISOString()});await reconcile(expired.id);assert.equal(Number((await pool.query('SELECT count(*) FROM billing_entitlement WHERE intent_id=$1',[expired.id])).rows[0].count),0);
    await clearRate();
   });
-  await t.test('A1 concurrent free/team mailbox limits and post-lock expiry, existing edit retained',async()=>{
+  await t.test('A1 unlimited connected preserves TEST billing and post-lock expiry, existing edit retained',async()=>{
    const tenant=other.identity.tenant_id;
-   const results=await Promise.allSettled(Array.from({length:8},()=>app.mailboxes.save(tenant,raw)));assert.equal(results.filter(r=>r.status==='fulfilled').length,3);
-   assert.ok(results.filter(r=>r.status==='rejected').every(r=>r.status==='rejected' && r.reason.code==='plan_limit_reached'));
-   await seedTestEntitlement(pool,tenant);const team=await Promise.allSettled(Array.from({length:10},()=>app.mailboxes.save(tenant,raw)));assert.equal(team.filter(r=>r.status==='fulfilled').length,7);assert.equal((await app.mailboxes.list(tenant)).length,10);
+   const results=await Promise.allSettled(Array.from({length:8},()=>app.mailboxes.save(tenant,raw)));assert.equal(results.filter(r=>r.status==='fulfilled').length,8);
+   await seedTestEntitlement(pool,tenant);const team=await Promise.allSettled(Array.from({length:10},()=>app.mailboxes.save(tenant,raw)));assert.equal(team.filter(r=>r.status==='fulfilled').length,10);assert.equal((await app.mailboxes.list(tenant)).total,18);
    const expiryTenant=randomUUID();await pool.query('INSERT INTO tenant(id) VALUES($1)',[expiryTenant]);for(let i=0;i<3;i++) await app.mailboxes.save(expiryTenant,raw);await seedTestEntitlement(pool,expiryTenant);
    const blocker=await pool.connect();await blocker.query('BEGIN');await blocker.query('SELECT pg_advisory_xact_lock(7,1)');
    const pending=app.mailboxes.save(expiryTenant,raw);await new Promise(r=>setTimeout(r,30));const paidAt=new Date(Date.now()-31*86400000);await blocker.query('UPDATE billing_entitlement SET paid_at=$2,expires_at=$3 WHERE tenant_id=$1',[expiryTenant,paidAt,new Date(paidAt.getTime()+30*86400000)]);
-   await blocker.query('COMMIT');blocker.release();await assert.rejects(pending,(e:unknown)=>!!e && typeof e==='object' && 'code' in e && e.code==='plan_limit_reached');
+   await blocker.query('COMMIT');blocker.release();assert.ok((await pending).id);
    await pool.query("UPDATE billing_entitlement SET revoked_at=clock_timestamp() WHERE tenant_id=$1",[tenant]);
-   const boxes=await app.mailboxes.list(tenant);assert.equal(boxes.length,10);assert.equal((await currentEntitlement(pool,tenant)).plan,'free');assert.equal((await app.mailboxes.save(tenant,raw,boxes[0].id)).id,boxes[0].id);assert.equal((await app.mailboxes.change(tenant,boxes[0].id,{state:'paused'})).state,'paused');
+   const boxes=(await app.mailboxes.list(tenant)).items;assert.equal(boxes.length,18);assert.equal((await currentEntitlement(pool,tenant)).plan,'free');assert.equal((await app.mailboxes.save(tenant,raw,boxes[0].id)).id,boxes[0].id);assert.equal((await app.mailboxes.change(tenant,boxes[0].id,{state:'paused'})).state,'paused');
   });
   await t.test('A1 campaign concurrency and active duplicate after expiry',async()=>{
-   const tenant=other.identity.tenant_id,box=(await app.mailboxes.list(tenant))[0]!.id;
+   const tenant=other.identity.tenant_id,box=(await app.mailboxes.list(tenant)).items[0]!.id;
    const campaigns:Awaited<ReturnType<typeof app.consents.campaign>>[]=[];for(let i=0;i<5;i++){const c=await app.consents.campaign(other.identity,{content:'Hello',recipients:[`r${i}@example.test`]});await app.consents.act(other.identity,box,{scope:'campaign',action:'grant',affirmative:true,campaignId:c.id,scopeVersion:c.content_version,recipientFingerprint:c.recipient_fingerprint});campaigns.push(c);}
    const starts=await Promise.allSettled(campaigns.map(c=>app.campaigns.start(other.identity,c.id,{mailboxIds:[box]})));assert.equal(starts.filter(x=>x.status==='fulfilled').length,3);
    const active=(await app.campaigns.list(tenant)).find(x=>x.state==='active')!;assert.equal((await app.campaigns.start(other.identity,active.id,{mailboxIds:[box]})).created,0);

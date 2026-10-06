@@ -1,5 +1,7 @@
 // Shared claim/scheduler predicate; final transport guard belongs to F03b.
 export const freshMailbox=`m.state='verified_test' AND m.credential_envelope IS NOT NULL
+ AND EXISTS(SELECT 1 FROM installation_capacity i WHERE i.id=1 AND i.active_limit=30)
+ AND EXISTS(SELECT 1 FROM capacity_lease l WHERE l.tenant_id=m.tenant_id AND l.mailbox_id=m.id AND l.state='active' AND l.expires_at>$1)
  AND EXISTS(SELECT 1 FROM mailbox_poll p WHERE p.mailbox_id=m.id AND p.scan_complete
  AND p.completed_at<=$1 AND p.completed_at>$1::timestamptz-interval '60 seconds')`;
 export const poolEligible=`${freshMailbox} AND EXISTS(SELECT 1 FROM pool_member pm JOIN consent c ON c.id=pm.consent_id

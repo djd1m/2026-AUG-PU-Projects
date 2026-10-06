@@ -4,8 +4,9 @@ import { eligibilityTransaction } from '../consent/transaction.js';
 import { freshMailbox,poolEligible } from './eligibility.js';
 export class DispatchStore {
  constructor(readonly pool:Pool) {}
- async claim(owner=randomUUID(),now=new Date()) {
+ async claim(owner=randomUUID(),clock?:Date|(()=>Date)) {
   return eligibilityTransaction(this.pool,async client=>{
+   const now=typeof clock==='function'?clock():clock??(await client.query('SELECT clock_timestamp() AS now')).rows[0].now as Date;
    await client.query(`UPDATE send_job SET state='queued',reserved_day=NULL,lease_owner=NULL,lease_until=NULL WHERE state='claimed' AND lease_until<=$1`,[now]);
    await client.query("UPDATE send_job SET state='cancelled',outcome='retry_exhausted' WHERE state IN ('queued','claimed') AND first_attempt_at IS NOT NULL AND ($1::timestamptz>=first_attempt_at+interval '120 seconds' OR attempt_count>=3)",[now]);
    const day=now.toISOString().slice(0,10);

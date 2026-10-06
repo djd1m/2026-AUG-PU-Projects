@@ -1,3 +1,4 @@
+import { seedCapacity } from './capacity-fixture.js';
 import { seedTestEntitlement } from './billing-fixture.js';
 import assert from 'node:assert/strict';
 import { randomBytes,randomUUID } from 'node:crypto';
@@ -30,6 +31,7 @@ test('F03a realPG campaign/pool/shared quota/lease seams without transport',asyn
    boxes.push((await app.mailboxes.save(actors[i]!.tenant_id,raw)).id);
    // Explicit local DB fixtures only: no fabricated polling API or real reputation claim.
    await eligibilityTransaction(pool,async c=>{await c.query("UPDATE mailbox SET state='verified_test' WHERE id=$1",[boxes[i]]);});
+   await seedCapacity(pool,now);
   }
   await t.test('A1/A2 owned API, validation no jobs, explicit consent, unique starts, AEAD and version atomicity',async()=>{
    campaign=(await request('/api/campaigns','POST',cookies[0],campaignInput)).data;
@@ -75,6 +77,7 @@ test('F03a realPG campaign/pool/shared quota/lease seams without transport',asyn
     if(i>=3) {owner={tenant_id:randomUUID(),account_id:randomUUID()};await pool.query('INSERT INTO tenant(id) VALUES($1)',[owner.tenant_id]);await pool.query("INSERT INTO account(id,tenant_id,email,password_hash) VALUES($1,$2,$3,'fixture')",[owner.account_id,owner.tenant_id,`aggregate-${i}@example.test`]);}
     const mailbox=(await app.mailboxes.save(owner.tenant_id,{...raw,label:'Aggregate fixture '+i})).id;added.push(mailbox);owners.set(mailbox,owner);
     await pool.query("UPDATE mailbox SET state='verified_test' WHERE id=$1",[mailbox]);await poll(mailbox);
+   await seedCapacity(pool,now);
     await app.consents.act(owner,mailbox,{scope:'pool',action:'grant',affirmative:true,scopeVersion:1});
    }
    assert.equal((await app.cohort.aggregate(now)).count,30);
@@ -106,10 +109,12 @@ test('F03a realPG campaign/pool/shared quota/lease seams without transport',asyn
   await t.test('A4/A5 common lock first, suppression seam and sender rotation',async()=>{
    const tickNow=new Date(now.getTime()+60000);
    await pool.query("UPDATE mailbox SET state='verified_test',provider_limit=30 WHERE id=ANY($1::uuid[])",[boxes]);
+   await seedCapacity(pool,now);
    await grant(0,'campaign');await poll(boxes[0]!,tickNow);await poll(boxes[1]!,tickNow);
    await app.campaigns.pause(actors[0]!.tenant_id,campaign.id);
    const third=(await app.mailboxes.save(actors[0]!.tenant_id,raw)).id;
    await pool.query("UPDATE mailbox SET state='verified_test' WHERE id=$1",[third]);await poll(third,tickNow);
+   await seedCapacity(pool,now);
    const other=await app.consents.campaign(actors[0]!,{content:'Rotate',recipients:['a@example.test','b@example.test','c@example.test','d@example.test','e@example.test','f@example.test','g@example.test']});
    for(const id of [boxes[0]!,third]) await app.consents.act(actors[0]!,id,{scope:'campaign',action:'grant',affirmative:true,scopeVersion:1,campaignId:other.id,recipientFingerprint:other.recipient_fingerprint});
    await eligibilityTransaction(pool,async c=>{await c.query('INSERT INTO suppression(tenant_id,recipient_hash,reason) VALUES($1,$2,$3)',[actors[0]!.tenant_id,recipientDigest('b@example.test',config.recipientHashKey),'local fixture']);});

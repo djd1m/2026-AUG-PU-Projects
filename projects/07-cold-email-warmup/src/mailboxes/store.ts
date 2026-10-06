@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { Pool } from 'pg';
-import { checkCapacity } from '../billing/plans.js';
+import { capacityProjection, releaseCapacity } from './capacity.js';
 import { HttpError } from '../errors.js';
 import { eligibilityTransaction } from '../consent/transaction.js';
 import { encryptCredentials, decryptCredentials, type Envelope, type Keyring } from './crypto.js';
@@ -8,6 +8,7 @@ import { maskEmail, parseMailbox, dailyLimit, type MailboxInput } from './input.
 import { resolveEndpoint, type Resolver } from './network.js';
 import { localTestAdapter, verifyTest, type TestAdapter } from './provider.js';
 export async function cancelMailbox(client:import('pg').PoolClient,id:string) {
+  await releaseCapacity(client,id);
   await client.query("UPDATE consent SET revoked_at=now() WHERE mailbox_id=$1 AND revoked_at IS NULL",[id]);
   await client.query('DELETE FROM pool_member WHERE mailbox_id=$1',[id]);
   await client.query("UPDATE send_job SET state='cancelled' WHERE (mailbox_id=$1 OR recipient_mailbox_id=$1) AND state IN ('queued','claimed')",[id]);
@@ -15,10 +16,20 @@ export async function cancelMailbox(client:import('pg').PoolClient,id:string) {
 export class MailboxStore {
   constructor(readonly pool:Pool, readonly ring:Keyring, readonly allowlist:ReadonlyMap<string,number>, readonly resolver?:Resolver, readonly adapter:TestAdapter=localTestAdapter) {}
   async read(tenant:string,id:string) {
-    const row=(await this.pool.query('SELECT id,label,state,metadata,daily_limit,provider_limit,LEAST(daily_limit,provider_limit,30) AS effective_limit FROM mailbox WHERE tenant_id=$1 AND id=$2',[tenant,id])).rows[0];
+    const row=(await this.pool.query(`SELECT m.id,m.label,m.state,m.metadata,m.daily_limit,m.provider_limit,LEAST(m.daily_limit,m.provider_limit,30) AS effective_limit,${capacityProjection} FROM mailbox m LEFT JOIN capacity_lease l ON l.mailbox_id=m.id AND l.tenant_id=m.tenant_id WHERE m.tenant_id=$1 AND m.id=$2`,[tenant,id])).rows[0];
     if(!row) throw new HttpError(404,'not_found'); return row;
   }
-  async list(tenant:string) { return (await this.pool.query('SELECT id,label,state,metadata,daily_limit,provider_limit,LEAST(daily_limit,provider_limit,30) AS effective_limit FROM mailbox WHERE tenant_id=$1 ORDER BY created_at,id',[tenant])).rows; }
+  async list(tenant:string,limit=25,after?:string) {
+    if(!Number.isInteger(limit) || limit<1 || limit>100) throw new HttpError(400,'invalid_input');
+    const anchor=after?(await this.pool.query('SELECT created_at,id FROM mailbox WHERE tenant_id=$1 AND id=$2',[tenant,after])).rows[0]:null;
+    if(after && !anchor) throw new HttpError(404,'not_found');
+    const items=(await this.pool.query(`SELECT m.id,m.label,m.state,m.metadata,m.daily_limit,m.provider_limit,LEAST(m.daily_limit,m.provider_limit,30) AS effective_limit,${capacityProjection}
+      FROM mailbox m LEFT JOIN capacity_lease l ON l.mailbox_id=m.id AND l.tenant_id=m.tenant_id
+      WHERE m.tenant_id=$1 AND ($3::uuid IS NULL OR (m.created_at,m.id)>(SELECT created_at,id FROM mailbox WHERE tenant_id=$1 AND id=$3)) ORDER BY m.created_at,m.id LIMIT $2`,[tenant,limit+1,after??null])).rows;
+    const total=Number((await this.pool.query('SELECT count(*) FROM mailbox WHERE tenant_id=$1',[tenant])).rows[0].count);
+    const more=items.length>limit; if(more) items.pop();
+    return {items,total,limit,nextCursor:more?items.at(-1)!.id:null};
+  }
   async save(tenant:string,raw:Record<string,unknown>,id?:string) {
     // Foreign resource identity must precede user validation/DNS; repeated under lock below.
     if(id) await eligibilityTransaction(this.pool,async client=>{ if(!(await client.query('SELECT id FROM mailbox WHERE tenant_id=$1 AND id=$2',[tenant,id])).rowCount) throw new HttpError(404,'not_found'); });
@@ -33,7 +44,7 @@ export class MailboxStore {
         if(!(await client.query('SELECT id FROM mailbox WHERE tenant_id=$1 AND id=$2 FOR UPDATE',[tenant,id])).rowCount) throw new HttpError(404,'not_found');
         await cancelMailbox(client,id);
         await client.query("UPDATE mailbox SET label=$3,state='configured',credential_envelope=$4,metadata=$5,daily_limit=$6,provider_limit=$7 WHERE tenant_id=$1 AND id=$2",[tenant,id,input.label,encrypted,metadata,input.dailyLimit,cap]);
-      } else { await checkCapacity(client,tenant,'mailboxes'); await client.query("INSERT INTO mailbox(id,tenant_id,label,state,credential_envelope,metadata,daily_limit,provider_limit) VALUES($1,$2,$3,'configured',$4,$5,$6,$7)",[mailbox,tenant,input.label,encrypted,metadata,input.dailyLimit,cap]); }
+      } else { await client.query("INSERT INTO mailbox(id,tenant_id,label,state,credential_envelope,metadata,daily_limit,provider_limit) VALUES($1,$2,$3,'configured',$4,$5,$6,$7)",[mailbox,tenant,input.label,encrypted,metadata,input.dailyLimit,cap]); }
     });
     return this.read(tenant,mailbox);
   }

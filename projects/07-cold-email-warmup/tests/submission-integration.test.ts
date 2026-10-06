@@ -1,3 +1,4 @@
+import { seedCapacity } from './capacity-fixture.js';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { test } from 'node:test';
@@ -42,6 +43,7 @@ test('F03b real PG durable final authority, all stop races, sink privacy and out
    actors.push({tenant_id:tenant,account_id:account});
    boxes.push((await app.mailboxes.save(tenant,{...raw,senderAddress:`sender-${i}@example.test`})).id);
    await eligibilityTransaction(pool,async c=>{await c.query("UPDATE mailbox SET state='verified_test' WHERE id=$1",[boxes[i]]);});
+   await seedCapacity(pool,now);
    await seams.recordPoll(tenant,boxes[i]!,{completedAt:now,scanComplete:true,uidvalidity:'fixture',cursorUid:1});
   }
   campaign=await app.consents.campaign(actors[0]!,{...input,recipients:Array.from({length:recipients},(_,i)=>({address:`private-b-${i}@example.test`,fields:{firstName:'Ada'}}))});
@@ -179,7 +181,7 @@ test('F03b real PG durable final authority, all stop races, sink privacy and out
   });
   await t.test('R1 post-lock clock midnight concurrent waiters enforce new-day provider limit1 and reservations',async()=>{
    const first=await setup('campaign',2);const second=await app.dispatch.claim(randomUUID(),now);assert.ok(second);
-   now=new Date('2026-10-02T23:59:59.999Z');
+   now=new Date('2026-10-02T23:59:59.999Z');await seedCapacity(pool,now);
    await eligibilityTransaction(pool,async c=>{
     await c.query("UPDATE send_job SET lease_until=$1::timestamptz+interval '45 seconds' WHERE id=ANY($2::uuid[])",[now,[first.id,second.id]]);
     await c.query('UPDATE mailbox SET provider_limit=1 WHERE id=$1',[boxes[0]]);
@@ -204,7 +206,7 @@ test('F03b real PG durable final authority, all stop races, sink privacy and out
   });
   await t.test('B5 midnight reservations move under concurrent final guard; provider lowered, no off-by-one',async()=>{
    const first=await setup('campaign',2);const second=await app.dispatch.claim(randomUUID(),now);assert.ok(second);
-   now=new Date('2026-10-02T23:59:59.999Z');
+   now=new Date('2026-10-02T23:59:59.999Z');await seedCapacity(pool,now);
    await eligibilityTransaction(pool,async c=>{
     await c.query('UPDATE send_job SET lease_until=$1::timestamptz+interval \'45 seconds\' WHERE id=ANY($2::uuid[])',[now,[first.id,second.id]]);
     await c.query('UPDATE mailbox SET provider_limit=1 WHERE id=$1',[boxes[0]]);

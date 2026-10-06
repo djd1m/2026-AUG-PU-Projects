@@ -11,6 +11,7 @@ import { isValidPassword } from './auth/password.js';
 import { AuthService } from './auth/service.js';
 import { readToken, sessionCookie, tokenDigest } from './auth/session.js';
 import { PgAuthStore } from './auth/store.js';
+import { CapacityStore, capacityAction, mailboxPageInput } from './mailboxes/capacity.js';
 import { MailboxStore } from './mailboxes/store.js';
 import { CampaignStore } from './campaigns/store.js';
 import { PoolStore } from './pool/store.js';
@@ -55,6 +56,7 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
   const store = new PgAuthStore(pool); const auth = new AuthService(store, config.sessionKey);
   await auth.initialize();
   const mailboxes=new MailboxStore(pool,config.credentialKeyring,config.providerAllowlist,fixtures?.resolver,fixtures?.adapter);
+  const capacity=new CapacityStore(pool);
   const consents=new ConsentStore(pool,config.credentialKeyring);
   const campaigns=new CampaignStore(pool,config.credentialKeyring,config.recipientHashKey);
   const cohort=new PoolStore(pool);const dispatch=new DispatchStore(pool);const submissions=new SubmissionStore(pool,config);
@@ -170,8 +172,8 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
         const partnerMatch=/^\/api\/partner\/([A-Za-z0-9_-]+)$/.exec(path);
         if(partnerMatch && req.method==='GET') return json(res,200,{data:{...await partners.status(identity.tenant_id,partnerMatch[1]!),events:await reports.aggregate(identity.tenant_id)},meta:{}});
         if(path==='/api/mailboxes') {
-          if(req.method==='GET') return json(res,200,{data:await mailboxes.list(identity.tenant_id),meta:{}});
-          if(req.method==='POST') return json(res,201,{data:await mailboxes.save(identity.tenant_id,await body(req)),meta:{}});
+          if(req.method==='GET') {const p=mailboxPageInput(req.url!);return json(res,200,{data:await mailboxes.list(identity.tenant_id,p.limit,p.after),meta:{}});}
+          if(req.method==='POST') {await suppression.charge(req.socket.remoteAddress??'unknown');return json(res,201,{data:await mailboxes.save(identity.tenant_id,await body(req)),meta:{}});}
         }
         const pollMatch=/^\/api\/mailboxes\/([^/]+)\/reply-status$/.exec(path);
         if(pollMatch && req.method==='GET') {
@@ -180,10 +182,13 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
           const poll=(await pool.query('SELECT scan_complete,completed_at FROM mailbox_poll WHERE mailbox_id=$1',[pollMatch[1]])).rows[0];
           return json(res,200,{data:{mode:config.pollMode??'disabled',scan:await replies.status(identity.tenant_id,pollMatch[1]!),lastComplete:poll?.completed_at??null,scanComplete:poll?.scan_complete??false,realVerification:'unknown'},meta:{}});
         }
-        const mailboxMatch=/^\/api\/mailboxes\/([^/]+)(?:\/(consents|verify-test))?$/.exec(path);
+        const mailboxMatch=/^\/api\/mailboxes\/([^/]+)(?:\/(consents|verify-test|capacity))?$/.exec(path);
         if(mailboxMatch) {
           const id=mailboxMatch[1]!; if(!UUID.test(id)) throw new HttpError(400,'invalid_input');
-          if(mailboxMatch[2]==='consents') {
+          if(mailboxMatch[2]==='capacity' && req.method==='POST') {
+            await suppression.charge(req.socket.remoteAddress??'unknown');
+            return json(res,200,{data:await capacity.act(identity.tenant_id,id,capacityAction(await body(req))),meta:{}});
+          } else if(mailboxMatch[2]==='consents') {
             if(req.method==='GET') return json(res,200,{data:await consents.list(identity,id),meta:{}});
             if(req.method==='POST') return json(res,200,{data:await consents.act(identity,id,await body(req)),meta:{}});
           } else if(mailboxMatch[2]==='verify-test' && req.method==='POST') {

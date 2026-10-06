@@ -9,8 +9,9 @@ export class PoolStore {
   const rows=(await this.pool.query(`SELECT count(*)::integer AS count,count(DISTINCT m.tenant_id)::integer AS tenants FROM mailbox m WHERE ${poolEligible}`,[now])).rows[0];
   return {count:rows.count,status:rows.tenants<2?'waiting':'ready'};
  }
- async tick(now=new Date()) {
+ async tick(clock?:Date|(()=>Date)) {
   return eligibilityTransaction(this.pool,async client=>{
+   const now=typeof clock==='function'?clock():clock??(await client.query('SELECT clock_timestamp() AS now')).rows[0].now as Date;
    const eligible=(await client.query(`SELECT m.id,m.tenant_id FROM mailbox m WHERE ${poolEligible} ORDER BY m.id LIMIT 1000`,[now])).rows;
    if(new Set(eligible.map(m=>m.tenant_id)).size<2) return {status:'waiting',created:0};
    let created=0;const day=now.toISOString().slice(0,10);

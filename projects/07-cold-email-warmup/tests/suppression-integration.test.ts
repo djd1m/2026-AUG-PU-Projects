@@ -1,3 +1,4 @@
+import { seedCapacity } from './capacity-fixture.js';
 import assert from 'node:assert/strict';
 import { randomBytes,randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
@@ -43,6 +44,7 @@ test('F04B real PostgreSQL public stop and durable local operator polling',async
   await pool.query('INSERT INTO session(id,account_id,token_hash,expires_at) VALUES($1,$2,$3,$4)',[randomUUID(),account,session.digest,session.expiresAt]);
   mailbox=(await app.mailboxes.save(tenant,raw)).id;foreignMailbox=(await app.mailboxes.save(foreignTenant,{...raw,senderAddress:'foreign@example.test'})).id;
   await pool.query("UPDATE mailbox SET state='verified_test'");
+   await seedCapacity(pool,now);
   const actor={tenant_id:tenant,account_id:account};
   const campaign=await app.consents.campaign(actor,{steps:[{subject:'First',body:'Fixture',delayHours:24},{subject:'Next',body:'Fixture',delayHours:24}],recipients:['r','s','t'].map(x=>({address:`${x}@example.test`,fields:{}}))});
   await app.consents.act(actor,mailbox,{scope:'campaign',action:'grant',affirmative:true,scopeVersion:campaign.content_version,campaignId:campaign.id,recipientFingerprint:campaign.recipient_fingerprint});

@@ -5,7 +5,7 @@ import { cookieCode,referralToken } from '../src/growth/attribution.js';
 import { parseCheckout } from '../src/billing/service.js';
 import { PLANS,TEST_TEAM } from '../src/billing/plans.js';
 test('F05 immutable server plans and closed checkout input',()=>{
- assert.deepEqual(PLANS,{free:{mailboxes:3,activeCampaigns:3},team:{mailboxes:10,activeCampaigns:10}});
+ assert.deepEqual(PLANS,{free:{mailboxes:null,activeCampaigns:3},team:{mailboxes:null,activeCampaigns:10}});
  assert.deepEqual(TEST_TEAM,{plan:'team',amountMinor:100,currency:'RUB',durationDays:30,label:'TEST'});
  assert.equal(parseCheckout({plan:'team',idempotencyKey:'abcdefgh'}).key,'abcdefgh');
  for(const raw of [{plan:'free',idempotencyKey:'abcdefgh'},{plan:'team',idempotencyKey:'short'},...['amount','currency','duration','paid','status'].map(k=>({plan:'team',idempotencyKey:'abcdefgh',[k]:100}))]) assert.throws(()=>parseCheckout(raw));

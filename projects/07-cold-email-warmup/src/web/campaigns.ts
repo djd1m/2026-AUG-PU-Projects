@@ -1,9 +1,9 @@
 import { button, card, check, checked, details, field, node, note, options, rows, select, submit, Ui, value } from './dom.js';
 import { ApiError } from './client.js';
-import type { Campaign, Consent, Mailbox, Poll, Step } from './models.js';
+import type { Campaign, Consent, Mailbox, MailboxPage, Poll, Step } from './models.js';
 export async function campaignPage(ui: Ui) {
     const epoch = ui.api.current();
-    const [campaigns, boxes] = await Promise.all([ui.api.request<Campaign[]>('/api/campaigns'), ui.api.request<Mailbox[]>('/api/mailboxes')]);
+    const [campaigns, boxPage] = await Promise.all([ui.api.request<Campaign[]>('/api/campaigns'), ui.api.request<MailboxPage>('/api/mailboxes')]);
     if (!ui.api.alive(epoch))
         return;
     ui.content.replaceChildren();
@@ -33,8 +33,13 @@ export async function campaignPage(ui: Ui) {
             return;
         area.replaceChildren();
         const preview = node('div'), control = node('form');
-        const boxSelect = select('Ящик для запуска', 'mailbox', options(boxes));
-        control.append(boxSelect, note(`Текущая версия ${campaign.content_version}; ${campaign.recipients.length} получателей. Выберите ящик и обновите проверку готовности.`));
+        const boxSelect = select('Ящик для запуска', 'mailbox', options(boxPage.items));
+        let currentBoxes=boxPage;
+        const pageState=node('div');
+        const renderPage=()=>{pageState.replaceChildren(note(`Ящики: ${currentBoxes.total} всего; показано ${currentBoxes.items.length}`), button('Первая страница выбора',()=>void ui.run(()=>loadPage())), ...(currentBoxes.nextCursor?[button('Следующая страница выбора',()=>void ui.run(()=>loadPage(currentBoxes.nextCursor!)))]:[]));};
+        const loadPage=async(after?:string)=>{const data=await ui.api.request<MailboxPage>('/api/mailboxes'+(after?'?after='+after:''));if(!ui.api.alive(epoch))return;const chosen=value(control,'mailbox'), old=[...boxSelect.querySelectorAll('option')].find(o=>o.value===chosen);currentBoxes=data;const fresh=select('Ящик для запуска','mailbox',options(data.items));const target=boxSelect.querySelector('select')!;target.replaceChildren(...fresh.querySelector('select')!.children);if(chosen && old){if(![...target.options].some(o=>o.value===chosen))target.append(old);target.value=chosen;}renderPage();};
+        renderPage();
+        control.append(boxSelect, pageState, note(`Текущая версия ${campaign.content_version}; ${campaign.recipients.length} получателей. Выберите ящик и обновите проверку готовности.`));
         const readiness = node('div'), consentBox = check('Разрешаю выбранную кампанию и текущий список получателей для выбранного ящика', 'affirmative');
         control.append(readiness, consentBox);
         let consent: Consent[] = [];
@@ -55,11 +60,11 @@ export async function campaignPage(ui: Ui) {
                 readiness.replaceChildren(note('Выберите ящик.'));
                 return;
             }
-            const data = await Promise.all([ui.api.request<Consent[]>(`/api/mailboxes/${mailbox}/consents`), ui.api.request<Poll>(`/api/mailboxes/${mailbox}/reply-status`)]);
+            const data = await Promise.all([ui.api.request<Consent[]>(`/api/mailboxes/${mailbox}/consents`), ui.api.request<Poll>(`/api/mailboxes/${mailbox}/reply-status`), ui.api.request<Mailbox>(`/api/mailboxes/${mailbox}`)]);
             if (!ui.api.alive(epoch))
                 return;
             [consent, poll] = data;
-            const box = boxes.find(b => b.id === mailbox), current = consent.some(c => c.scope === 'campaign' && c.campaign_id === id && !c.revoked_at && c.scope_version === campaign.content_version && c.recipient_fingerprint === campaign.recipient_fingerprint);
+            const box = data[2], current = consent.some(c => c.scope === 'campaign' && c.campaign_id === id && !c.revoked_at && c.scope_version === campaign.content_version && c.recipient_fingerprint === campaign.recipient_fingerprint);
             const fresh = poll.scanComplete && poll.lastComplete !== null && Date.now() - Date.parse(poll.lastComplete) >= 0 && Date.now() - Date.parse(poll.lastComplete) < 60000;
             const blockers = [!current ? 'нужно отдельное согласие на эту версию' : '', box?.state !== 'verified_test' ? 'нужна локальная TEST-проверка ящика' : '', !fresh ? 'нет полного опроса младше 60 секунд: оператор должен выполнить TEST-опрос' : ''].filter(Boolean);
             readiness.replaceChildren(note(blockers.length ? 'Запуск заблокирован: ' + blockers.join('; ') : 'Условия по последнему чтению выполнены. Сервер проверяет согласие, квоту и стоп-лист снова.'));

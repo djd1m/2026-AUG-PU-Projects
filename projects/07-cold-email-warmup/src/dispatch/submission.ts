@@ -21,7 +21,7 @@ export class SubmissionStore {
    // Operator authority is configured at process startup, never chosen by HTTP input.
    if(this.config.dispatchMode!=='local_test' || (this.fixtures.adapter && this.fixtures.adapter.mode!=='local_test')) return null;
    // The shared lock may have waited across a deadline or UTC midnight.
-   const now=this.now();
+   const now=this.fixtures.clock?.()??(await client.query('SELECT clock_timestamp() AS now')).rows[0].now as Date;
    const day=now.toISOString().slice(0,10);
    const row=(await client.query(`UPDATE send_job j SET state='submitting',reserved_day=$4,
      attempt_count=attempt_count+1,first_attempt_at=COALESCE(first_attempt_at,$1),submitting_at=$1,outcome=NULL

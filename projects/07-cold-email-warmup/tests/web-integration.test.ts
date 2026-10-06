@@ -27,9 +27,9 @@ test('F06 A real PostgreSQL protected cabinet, exact built assets and persistent
   });
   await t.test('A2 mailbox save has no consent, persists masked, limit and independent grant/revoke',async()=>{
    const box=await data('/api/mailboxes','POST',{label:'F06 mailbox',senderAddress:'owner@example.test',smtpHost:'smtp.gmail.com',smtpPort:465,imapHost:'imap.gmail.com',imapPort:993,requiredTLS:true,smtpUsername:canary,smtpPassword:canary,imapUsername:canary,imapPassword:canary});
-   assert.equal(box.daily_limit,10);assert.equal((await data(`/api/mailboxes/${box.id}/consents`)).length,0);assert.equal((await data('/api/mailboxes')).length,1);assert.doesNotMatch(JSON.stringify(await data('/api/mailboxes')),new RegExp(canary));
+   assert.equal(box.daily_limit,10);assert.equal((await data(`/api/mailboxes/${box.id}/consents`)).length,0);assert.equal((await data('/api/mailboxes')).total,1);assert.doesNotMatch(JSON.stringify(await data('/api/mailboxes')),new RegExp(canary));
    assert.equal((await data(`/api/mailboxes/${box.id}/verify-test`,'POST')).state,'verified_test');
-   await data(`/api/mailboxes/${box.id}`,'PATCH',{dailyLimit:7});assert.equal((await data('/api/mailboxes'))[0].daily_limit,7);
+   await data(`/api/mailboxes/${box.id}`,'PATCH',{dailyLimit:7});assert.equal((await data('/api/mailboxes')).items[0].daily_limit,7);
    await data(`/api/mailboxes/${box.id}/consents`,'POST',{scope:'pool',action:'grant',affirmative:true,scopeVersion:1});assert.equal((await data(`/api/mailboxes/${box.id}/consents`)).length,1);
    await data(`/api/mailboxes/${box.id}/consents`,'POST',{scope:'pool',action:'revoke'});assert.ok((await data(`/api/mailboxes/${box.id}/consents`))[0].revoked_at);
    assert.equal((await data('/api/pool')).status,'waiting');assert.equal((await data(`/api/mailboxes/${box.id}/reply-status`)).scanComplete,false);
@@ -37,7 +37,7 @@ test('F06 A real PostgreSQL protected cabinet, exact built assets and persistent
   await t.test('A3 actual campaign form contract and preview/edit invalidation, no consent start denied',async()=>{
    const input={steps:[{subject:'Hello {{firstName}}',body:'Team {{company}}',delayHours:24}],recipients:[{address:'recipient@example.test',fields:{firstName:'Alex',company:'Example'}}]};
    const campaign=await data('/api/campaigns','POST',input);assert.equal((await data(`/api/campaigns/${campaign.id}/preview`))[0].steps[0].subject,'Hello Alex');
-   const box=(await data('/api/mailboxes'))[0];assert.equal((await request(`/api/campaigns/${campaign.id}/start`,'POST',{mailboxIds:[box.id]})).status,409);
+   const box=(await data('/api/mailboxes')).items[0];assert.equal((await request(`/api/campaigns/${campaign.id}/start`,'POST',{mailboxIds:[box.id]})).status,409);
    const changed=await data(`/api/campaigns/${campaign.id}`,'PUT',{...input,steps:[{subject:'New',body:'New body',delayHours:24}]});assert.equal(changed.content_version,campaign.content_version+1);
    await data(`/api/campaigns/${campaign.id}/pause`,'POST');assert.equal((await data('/api/campaigns'))[0].state,'paused');
   });
@@ -56,7 +56,7 @@ test('F06 A real PostgreSQL protected cabinet, exact built assets and persistent
   });
   await t.test('A1 logout/relogin durability and session marker changes',async()=>{
    const marker=(await request('/api/app')).headers.get('x-n7-session');const old=cookie;await data('/api/auth/logout','POST');assert.equal((await request('/api/app','GET',{},old)).status,401);assert.equal((await request('/app','GET',{},old)).status,303);
-   const login=await request('/api/auth/login','POST',{email,password},'');cookie=login.headers.get('set-cookie')!.split(';')[0]!;assert.notEqual((await request('/api/app')).headers.get('x-n7-session'),marker);assert.equal((await data('/api/mailboxes')).length,1);assert.equal((await data('/api/campaigns')).length,1);assert.equal((await data('/api/evidence')).observations.length,2);
+   const login=await request('/api/auth/login','POST',{email,password},'');cookie=login.headers.get('set-cookie')!.split(';')[0]!;assert.notEqual((await request('/api/app')).headers.get('x-n7-session'),marker);assert.equal((await data('/api/mailboxes')).total,1);assert.equal((await data('/api/campaigns')).length,1);assert.equal((await data('/api/evidence')).observations.length,2);
   });
  }finally{await new Promise<void>(resolve=>app.server.close(()=>resolve()));await pool.end();}
 });

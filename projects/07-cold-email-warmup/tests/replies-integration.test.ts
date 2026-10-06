@@ -1,3 +1,4 @@
+import { seedCapacity } from './capacity-fixture.js';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { test } from 'node:test';
@@ -33,6 +34,7 @@ test('F04a real PG reply matching, durable rescan, crash atomicity and stop seri
   mailbox=(await app.mailboxes.save(tenant,raw)).id;otherMailbox=(await app.mailboxes.save(tenant,{...raw,senderAddress:'other@example.test'})).id;
   foreignMailbox=(await app.mailboxes.save(foreignTenant,{...raw,senderAddress:'foreign@example.test'})).id;
   await pool.query("UPDATE mailbox SET state='verified_test'");
+   await seedCapacity(pool,now);
   const actor={tenant_id:tenant,account_id:account};
   const campaign=await app.consents.campaign(actor,{steps:[{subject:'First',body:'Fixture',delayHours:24},{subject:'Next',body:'Fixture',delayHours:24}],recipients:['r','s','t'].map(x=>({address:`${x}@example.test`,fields:{}}))});
   await app.consents.act(actor,mailbox,{scope:'campaign',action:'grant',affirmative:true,scopeVersion:campaign.content_version,campaignId:campaign.id,recipientFingerprint:campaign.recipient_fingerprint});
