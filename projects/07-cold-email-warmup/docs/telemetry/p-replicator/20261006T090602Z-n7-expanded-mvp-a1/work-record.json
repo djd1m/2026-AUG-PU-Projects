@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "implement",
+  "stage": "plan",
   "roots": {
     "project": "."
   },
   "identity": {
     "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
     "work_unit_id": "expanded-mvp",
-    "current_attempt_id": "f08-review-r2"
+    "current_attempt_id": "f09-plan-a1"
   },
   "telemetry": {
     "run": {
@@ -22,8 +22,8 @@
   },
   "source": {
     "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
-    "current_revision": "521ae2b3208c7ffa2f33a6701c84a816f07c3d5a",
-    "build_revision": "sha256:7c75627c0bef87b06cb4795647ade213674dc8d571181a3587811cf5ee5612b9",
+    "current_revision": "801b1102972f76e67f17ce7f7dada7cc79de5ec7",
+    "build_revision": null,
     "requirements": [
       {
         "root": "project",
@@ -45,12 +45,12 @@
       }
     ],
     "continuity": {
-      "expected_revision": "521ae2b3208c7ffa2f33a6701c84a816f07c3d5a",
-      "observed_revision": "521ae2b3208c7ffa2f33a6701c84a816f07c3d5a",
+      "expected_revision": "801b1102972f76e67f17ce7f7dada7cc79de5ec7",
+      "observed_revision": "801b1102972f76e67f17ce7f7dada7cc79de5ec7",
       "reconciliation": null
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
-    "integration_note": "F08 isolated coherent candidate; not integrated or accepted. First author terminal failed means exact acceptance witnesses pending, continuation assigned."
+    "integration_note": "F08 accepted521ae2b integrated801b1102; F09 docs-only PLAN on clean isolated exactsource. Historical F08 runtime manifests unchanged."
   },
   "prepare": {
     "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
@@ -144,10 +144,10 @@
       "phase": "plan",
       "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
       "tier": "XL",
-      "rationale": "Changing commercial connection entitlements and adding sending authority/external providers requires full feature cycle and owner plan checkpoint",
+      "rationale": "F09 SMTP irreversible uncertainty and UID IMAP recovery; /go mechanical M0 lowerbound, inheritedXL fullcycle; scope005",
       "script": {
-        "input": "src/billing/plans.ts; src/dispatch/worker.ts; src/replies/worker.ts; src/mailboxes/provider.ts",
-        "exit_code": 1
+        "input": "dispatch adapter/submission, replies adapter/store, config",
+        "exit_code": 0
       }
     },
     {
@@ -183,7 +183,7 @@
   },
   "preflight": {
     "status": "not_applicable",
-    "reason": "Narrow R1/R2 backend correction: actual affected PG/HTTP/CLI plus fullPG146 and newdeps static/build. Unchanged UI browser20 evidence remains exact00f source, retained separately; no final-source E2E claim. Reviewer assesses composition.",
+    "reason": "F09 docs-only PLAN, no actual E2E or external actions; prior F08 runtime evidence remains independently source-bound.",
     "external_actions_executed": false,
     "e2e_claim": null
   },
@@ -291,6 +291,10 @@
     {
       "id": "f08-review-r2",
       "status": "completed"
+    },
+    {
+      "id": "f09-plan-a1",
+      "status": "active"
     }
   ],
   "work_units": [
