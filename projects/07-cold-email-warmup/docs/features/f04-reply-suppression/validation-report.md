@@ -1,63 +1,57 @@
-# f04-reply-suppression contract-format validation index
-
+# f04-reply-suppression requirements testability — A2
 Spec revision: sha256:73a4dc62c00e08718bde936bd6fede36bd1bae07c48cf9c963d3c56a552237a6
 Date: 2026-10-06
-Inspected source revision: c80504ac43876345084f57eb47287d5f9712f184
-Verdict: format/inheritance index; substantive VALIDATE gaps remain.
+Inspected source revision: 40ff7c776a1bdca720db42043e1a2be823b85de0
+Verdict: CAVEATS — documentation testable; fresh independent semantic review pending; runtime/delivery claims unchanged.
 
-This is documentation traceability, not rerun runtime acceptance or independent product review. The complete legacy requirement paragraphs and stage gates remain unchanged. Each scenario below was read; composite conditions absent from existing BDD are identified explicitly. Historical accepted runtime/source receipts retain their original revisions. A populated checker cell does not close a semantic gap. New IMPLEMENT awaits the existing planning/VALIDATE process and fresh independent review.
+## Analysis and score
+
+INVEST34/50: Independent0 (inherited dependency graph), Negotiable0 (fixed accepted safety clauses), Valuable10 (concrete tenant/user benefit), Estimable8 and Small8 (bounded contours), Testable8 (quoted original AC in scenarios.md). SMART30/30: Specific6 (explicit conditions), Measurable8 (numeric/boolean/status/state assertions), Achievable6 (local fixtures/procedures), Relevant5 (same accepted scope), Time-bound5 (explicit quota/session/poll/retry/performance/execution boundaries). Quality20/20: Traceability10 (table below), Completeness10 (all original clauses quoted and scenario assertions, success/error/boundary Examples). Base84/100; security bonus5 for explicit auth/input/tenant/encryption/operator boundaries =89/100. This is a reasoned documentation score, not measured runtime quality or cost. Growth bonus not rescored: unchanged inherited canonical growth scope, no promoted seed obligation.
+
+Inherited security scenarios retain auth bypass, SQL/XSS/input, cross-tenant and applicable rate-limit cases. Derived Examples add exact missing composite conditions; no generic template thresholds replace the project values.
+
+Blocking floor: Testable8/Completeness10 are anchored to all exact acceptance paragraph quotations and assertions in `scenarios.md` under the named headings below. Traceability10 is anchored to `validation-report.md` Criterion scenarios. No criterion without an AC or named scenario receives a nonzero score. The fixed values/dependencies are disclosed caveats, not new owner decisions.
 
 ## Criterion scenarios
 | Criterion | Scenario |
 | --- | --- |
-| AC-f04-reply-suppression-001 | Legacy `AC-A1`; `docs/tests/security-scenarios.md` SC-US-006-4 Examples; existing procedure/evidence `acceptance.md # F04 accepted` (historical; no rerun); **VALIDATE GAP G01** below |
-| AC-f04-reply-suppression-002 | Legacy `AC-A2`; `docs/test-scenarios.md` SC-US-006-1 Scenario; `docs/test-scenarios.md` SC-US-006-2 Scenario; `docs/tests/security-scenarios.md` SC-US-006-3 Examples; `docs/tests/security-scenarios.md` SC-US-006-4 Examples; existing procedure/evidence `acceptance.md # F04 accepted` (historical; no rerun); **VALIDATE GAP G02** below |
-| AC-f04-reply-suppression-003 | Legacy `AC-A3`; `docs/test-scenarios.md` SC-US-006-2 Scenario; `docs/tests/security-scenarios.md` SC-US-006-3 Examples; `docs/tests/security-scenarios.md` SC-US-006-5 Examples; existing procedure/evidence `acceptance.md # F04 accepted` (historical; no rerun); **VALIDATE GAP G03** below |
-| AC-f04-reply-suppression-004 | Legacy `AC-A4`; `docs/tests/security-scenarios.md` SC-US-006-3 Examples; `docs/tests/security-scenarios.md` SC-US-006-5 Examples; existing procedure/evidence `acceptance.md # F04 accepted` (historical; no rerun); **VALIDATE GAP G04** below |
-| AC-f04-reply-suppression-005 | Legacy `AC-A5`; `docs/tests/security-scenarios.md` SC-US-006-3 Examples; `docs/tests/security-scenarios.md` SC-US-003-4 Examples; `docs/tests/security-scenarios.md` SC-US-003-5 Examples; `docs/tests/security-scenarios.md` SC-US-006-5 Examples; existing procedure/evidence `acceptance.md # F04 accepted` (historical; no rerun); **VALIDATE GAP G05** below |
-| AC-f04-reply-suppression-006 | Legacy `AC-A6`; `docs/tests/security-scenarios.md` SC-US-006-3 Examples; `docs/tests/security-scenarios.md` SC-US-006-4 Examples; `docs/tests/security-scenarios.md` SC-US-006-5 Examples; existing procedure/evidence `acceptance.md # F04 accepted` (historical; no rerun); **VALIDATE GAP G06** below |
-| AC-f04-reply-suppression-007 | Legacy `AC-B1`; `docs/tests/security-scenarios.md` SC-US-007-4 Examples; existing procedure/evidence `acceptance.md # F04 accepted` (historical; no rerun); **VALIDATE GAP G07** below |
-| AC-f04-reply-suppression-008 | Legacy `AC-B2`; `docs/test-scenarios.md` SC-US-007-2 Scenario; `docs/tests/security-scenarios.md` SC-US-003-4 Examples; `docs/tests/security-scenarios.md` SC-US-003-5 Examples; existing procedure/evidence `acceptance.md # F04 accepted` (historical; no rerun); **VALIDATE GAP G08** below |
-| AC-f04-reply-suppression-009 | Legacy `AC-B3`; `docs/test-scenarios.md` SC-US-007-3 Scenario; `docs/tests/security-scenarios.md` SC-US-007-4 Examples; existing procedure/evidence `acceptance.md # F04 accepted` (historical; no rerun); **VALIDATE GAP G09** below |
-| AC-f04-reply-suppression-010 | Legacy `AC-B4`; `docs/tests/security-scenarios.md` SC-US-007-4 Examples; `docs/tests/security-scenarios.md` SC-US-003-4 Examples; `docs/tests/security-scenarios.md` SC-US-003-5 Examples; existing procedure/evidence `acceptance.md # F04 accepted` (historical; no rerun); **VALIDATE GAP G10** below |
-| AC-f04-reply-suppression-011 | Legacy `AC-B5`; `docs/test-scenarios.md` SC-US-006-2 Scenario; `docs/tests/security-scenarios.md` SC-US-006-5 Examples; existing procedure/evidence `acceptance.md # F04 accepted` (historical; no rerun); **VALIDATE GAP G11** below |
-| AC-f04-reply-suppression-012 | Legacy `AC-B6`; `docs/test-scenarios.md` SC-US-006-1 Scenario; `docs/test-scenarios.md` SC-US-007-2 Scenario; `docs/test-scenarios.md` SC-US-007-3 Scenario; `docs/tests/security-scenarios.md` SC-US-007-5 Examples; existing procedure/evidence `acceptance.md # F04 accepted` (historical; no rerun); **VALIDATE GAP G12** below |
+| AC-f04-reply-suppression-001 | `scenarios.md` SC-f04-reply-suppression-001 Scenario Outline / Examples; legacy `AC-A1`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
+| AC-f04-reply-suppression-002 | `scenarios.md` SC-f04-reply-suppression-002 Scenario Outline / Examples; legacy `AC-A2`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
+| AC-f04-reply-suppression-003 | `scenarios.md` SC-f04-reply-suppression-003 Scenario Outline / Examples; legacy `AC-A3`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
+| AC-f04-reply-suppression-004 | `scenarios.md` SC-f04-reply-suppression-004 Scenario Outline / Examples; legacy `AC-A4`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
+| AC-f04-reply-suppression-005 | `scenarios.md` SC-f04-reply-suppression-005 Scenario Outline / Examples; legacy `AC-A5`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
+| AC-f04-reply-suppression-006 | `scenarios.md` SC-f04-reply-suppression-006 Scenario Outline / Examples; legacy `AC-A6`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
+| AC-f04-reply-suppression-007 | `scenarios.md` SC-f04-reply-suppression-007 Scenario Outline / Examples; legacy `AC-B1`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
+| AC-f04-reply-suppression-008 | `scenarios.md` SC-f04-reply-suppression-008 Scenario Outline / Examples; legacy `AC-B2`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
+| AC-f04-reply-suppression-009 | `scenarios.md` SC-f04-reply-suppression-009 Scenario Outline / Examples; legacy `AC-B3`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
+| AC-f04-reply-suppression-010 | `scenarios.md` SC-f04-reply-suppression-010 Scenario Outline / Examples; legacy `AC-B4`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
+| AC-f04-reply-suppression-011 | `scenarios.md` SC-f04-reply-suppression-011 Scenario Outline / Examples; legacy `AC-B5`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
+| AC-f04-reply-suppression-012 | `scenarios.md` SC-f04-reply-suppression-012 Scenario Outline / Examples; legacy `AC-B6`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
 
-## Concrete remaining VALIDATE gaps
+## A1 gap resolution
 
-- G01 / `AC-f04-reply-suppression-001` (legacy `AC-A1`): SC-US-006-4 omits bounded header/page-size rejection cases.
-- G02 / `AC-f04-reply-suppression-002` (legacy `AC-A2`): SC-US-006-3/4 omit concurrent page reorder and atomic counter ledger as separate BDD.
-- G03 / `AC-f04-reply-suppression-003` (legacy `AC-A3`): SC-US-006-2/3/5 omit sparse/expunged coverage and second-reset stale-worker case.
-- G04 / `AC-f04-reply-suppression-004` (legacy `AC-A4`): SC-US-006-3/5 omit explicit retry budget-reset preserving run/H/cursor.
-- G05 / `AC-f04-reply-suppression-005` (legacy `AC-A5`): SC-US-006-3/003-4/5 omit duplicate concurrent page and reset-during-tail cases.
-- G06 / `AC-f04-reply-suppression-006` (legacy `AC-A6`): Named migration/build/mutation/canary/store-interface gates BDD absent; acceptance-a.md retains historical procedure.
-- G07 / `AC-f04-reply-suppression-007` (legacy `AC-B1`): SC-US-007-4 omits expired capability and exact30day/job binding cases.
-- G08 / `AC-f04-reply-suppression-008` (legacy `AC-B2`): SC-US-007-2 omits pool-recipient global withdrawal and tenant-wide campaign suppression cases.
-- G09 / `AC-f04-reply-suppression-009` (legacy `AC-B3`): SC-US-007-3/4 omit operator-event dedup and malformed/foreign complaint cases.
-- G10 / `AC-f04-reply-suppression-010` (legacy `AC-B4`): SC-US-007-4 omits31st/concurrent rate limit and no-store/referrer/token-log conditions.
-- G11 / `AC-f04-reply-suppression-011` (legacy `AC-B5`): SC-US-006-2/5 omit30s cadence/operation timeout and disabled/local-source authority cases.
-- G12 / `AC-f04-reply-suppression-012` (legacy `AC-B6`): Named local source→poll→reply plus full regression/mutation/source receipt gates BDD absent; acceptance.md and review-b-r1.md retain procedure evidence.
+The58previous composite BDD gaps across six contours are addressed by new derived scenarios, not relabelled as preexisting coverage. Per-contour closures:
 
-These are documentary coverage gaps, distinct from the external F06 GitHub403 delivery blocker. Do not infer PASS from historical procedure evidence or invent a scenario. Coordinator resolves them through existing planning before new code.
+| Prior gap | Criterion | Missing condition identified in A1 | New artifact |
+| --- | --- | --- | --- |
+| G01 | AC-f04-reply-suppression-001 | SC-US-006-4 omits bounded header/page-size rejection cases. | `scenarios.md` SC-f04-reply-suppression-001; complete original assertions and concrete Examples authored |
+| G02 | AC-f04-reply-suppression-002 | SC-US-006-3/4 omit concurrent page reorder and atomic counter ledger as separate BDD. | `scenarios.md` SC-f04-reply-suppression-002; complete original assertions and concrete Examples authored |
+| G03 | AC-f04-reply-suppression-003 | SC-US-006-2/3/5 omit sparse/expunged coverage and second-reset stale-worker case. | `scenarios.md` SC-f04-reply-suppression-003; complete original assertions and concrete Examples authored |
+| G04 | AC-f04-reply-suppression-004 | SC-US-006-3/5 omit explicit retry budget-reset preserving run/H/cursor. | `scenarios.md` SC-f04-reply-suppression-004; complete original assertions and concrete Examples authored |
+| G05 | AC-f04-reply-suppression-005 | SC-US-006-3/003-4/5 omit duplicate concurrent page and reset-during-tail cases. | `scenarios.md` SC-f04-reply-suppression-005; complete original assertions and concrete Examples authored |
+| G06 | AC-f04-reply-suppression-006 | Named migration/build/mutation/canary/store-interface gates BDD absent; acceptance-a.md retains historical procedure. | `scenarios.md` SC-f04-reply-suppression-006; complete original assertions and concrete Examples authored |
+| G07 | AC-f04-reply-suppression-007 | SC-US-007-4 omits expired capability and exact30day/job binding cases. | `scenarios.md` SC-f04-reply-suppression-007; complete original assertions and concrete Examples authored |
+| G08 | AC-f04-reply-suppression-008 | SC-US-007-2 omits pool-recipient global withdrawal and tenant-wide campaign suppression cases. | `scenarios.md` SC-f04-reply-suppression-008; complete original assertions and concrete Examples authored |
+| G09 | AC-f04-reply-suppression-009 | SC-US-007-3/4 omit operator-event dedup and malformed/foreign complaint cases. | `scenarios.md` SC-f04-reply-suppression-009; complete original assertions and concrete Examples authored |
+| G10 | AC-f04-reply-suppression-010 | SC-US-007-4 omits31st/concurrent rate limit and no-store/referrer/token-log conditions. | `scenarios.md` SC-f04-reply-suppression-010; complete original assertions and concrete Examples authored |
+| G11 | AC-f04-reply-suppression-011 | SC-US-006-2/5 omit30s cadence/operation timeout and disabled/local-source authority cases. | `scenarios.md` SC-f04-reply-suppression-011; complete original assertions and concrete Examples authored |
+| G12 | AC-f04-reply-suppression-012 | Named local source→poll→reply plus full regression/mutation/source receipt gates BDD absent; acceptance.md and review-b-r1.md retain procedure evidence. | `scenarios.md` SC-f04-reply-suppression-012; complete original assertions and concrete Examples authored |
 
-## Role-path migration and preserved history
+## Preservation and evidence limits
 
-Archive: `history/validation-report.pre-contract-format.md`, sha256:cb87c85fed3776fb47bfb64e7d9e96d6b7b7bf941cebfdd5b1078aa82d239cf7. Historical report bytes are unchanged; this archive is not an additional active role contour.
+Previous index: `history/validation-report.pre-a2-bdd.md`, sha256:8dbc8955662db6167bdd6975acf4088546fe62b7e8061286f8dd050b632cf773. Original pre-format report and role-path migration remain preserved there and in history. Specification/pseudocode/architecture/refinement remain byte-identical to inspected source. Completion prior bytes are archived at `history/05_completion.pre-contract-coverage.md`; the active completion index names real executable witnesses plus exact limits. A populated checker cell is not execution evidence. No app runtime/build/browser/test/network occurred in this document repair. Fresh independent Astra must assess the mappings before integration; new expanded code keeps all approved full gates.
 
-| Former role | Unique active role |
-| --- | --- |
-| `01-specification.md` | `01_specification.md` |
-| `02-pseudocode.md` | `02_pseudocode.md` |
-| `03-architecture.md` | `03_architecture.md` |
-| `04-refinement.md` | `04_refinement.md` |
-| `05-completion.md` | `05_completion.md` |
-
-Historical basenames retaining former paths: `docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/contract-route/plan.md`. Resolve their old role basename through the unique active path in this feature above; never rewrite historical evidence.
-
-## Dirty input digests
+## Input digests
 
 - `01_specification.md`: sha256:73a4dc62c00e08718bde936bd6fede36bd1bae07c48cf9c963d3c56a552237a6
-- `02_pseudocode.md`: sha256:fc9eb9de0bfb35d568b573446aea394cf8d49d99c210025cdd5772a3db5e273d
-- `03_architecture.md`: sha256:c377e4a0fcca7a28b60c9e3b2fb2a73de502152f02c77142a9c8a586619009c9
-- `04_refinement.md`: sha256:416286c8f6b689d84be90dd33d13e1198a1028c3e58cfe47466e8d6cf27492b2
-- `05_completion.md`: sha256:8d1e07eaff504470fb92c20acb0db9b52e6b8a1e0011e078696088c24d9dfddf
+- `scenarios.md`: sha256:3230a9f662c0ffe2434a2108d3f68c270b98555fb98d85f4f7729da3b2bdef35

@@ -1,51 +1,45 @@
-# f01-foundation-auth contract-format validation index
-
+# f01-foundation-auth requirements testability — A2
 Spec revision: sha256:0a62915da4cad8837bdd4c6e3387fe11453b33386537d124bb543fe3cf4bbfca
 Date: 2026-10-06
-Inspected source revision: c80504ac43876345084f57eb47287d5f9712f184
-Verdict: format/inheritance index; substantive VALIDATE gaps remain.
+Inspected source revision: 40ff7c776a1bdca720db42043e1a2be823b85de0
+Verdict: CAVEATS — documentation testable; fresh independent semantic review pending; runtime/delivery claims unchanged.
 
-This is documentation traceability, not rerun runtime acceptance or independent product review. The complete legacy requirement paragraphs and stage gates remain unchanged. Each scenario below was read; composite conditions absent from existing BDD are identified explicitly. Historical accepted runtime/source receipts retain their original revisions. A populated checker cell does not close a semantic gap. New IMPLEMENT awaits the existing planning/VALIDATE process and fresh independent review.
+## Analysis and score
+
+INVEST34/50: Independent0 (inherited dependency graph), Negotiable0 (fixed accepted safety clauses), Valuable10 (concrete tenant/user benefit), Estimable8 and Small8 (bounded contours), Testable8 (quoted original AC in scenarios.md). SMART30/30: Specific6 (explicit conditions), Measurable8 (numeric/boolean/status/state assertions), Achievable6 (local fixtures/procedures), Relevant5 (same accepted scope), Time-bound5 (explicit quota/session/poll/retry/performance/execution boundaries). Quality20/20: Traceability10 (table below), Completeness10 (all original clauses quoted and scenario assertions, success/error/boundary Examples). Base84/100; security bonus5 for explicit auth/input/tenant/encryption/operator boundaries =89/100. This is a reasoned documentation score, not measured runtime quality or cost. Growth bonus not rescored: unchanged inherited canonical growth scope, no promoted seed obligation.
+
+Inherited security scenarios retain auth bypass, SQL/XSS/input, cross-tenant and applicable rate-limit cases. Derived Examples add exact missing composite conditions; no generic template thresholds replace the project values.
+
+Blocking floor: Testable8/Completeness10 are anchored to all exact acceptance paragraph quotations and assertions in `scenarios.md` under the named headings below. Traceability10 is anchored to `validation-report.md` Criterion scenarios. No criterion without an AC or named scenario receives a nonzero score. The fixed values/dependencies are disclosed caveats, not new owner decisions.
 
 ## Criterion scenarios
 | Criterion | Scenario |
 | --- | --- |
-| AC-f01-foundation-auth-001 | Legacy `AC-F01-1`; existing procedure/evidence `review-report.md # Obligations and verdicts AC-F01-1` (historical; no rerun); **VALIDATE GAP G01** below |
-| AC-f01-foundation-auth-002 | Legacy `AC-F01-2`; `docs/tests/security-scenarios.md` SC-US-001-3 Scenario; existing procedure/evidence `review-report.md # Obligations and verdicts AC-F01-2` (historical; no rerun); **VALIDATE GAP G02** below |
-| AC-f01-foundation-auth-003 | Legacy `AC-F01-3`; `docs/test-scenarios.md` SC-US-001-1 Scenario; `docs/test-scenarios.md` SC-US-001-2 Scenario; `docs/tests/security-scenarios.md` SC-US-001-4 Examples; `docs/tests/security-scenarios.md` SC-US-001-6 Examples; existing procedure/evidence `review-report.md # Obligations and verdicts AC-F01-3` (historical; no rerun); **VALIDATE GAP G03** below |
-| AC-f01-foundation-auth-004 | Legacy `AC-F01-4`; `docs/tests/security-scenarios.md` SC-US-001-5 Examples; `docs/tests/security-scenarios.md` SC-US-001-6 Examples; existing procedure/evidence `review-report.md # Obligations and verdicts AC-F01-4` (historical; no rerun); **VALIDATE GAP G04** below |
-| AC-f01-foundation-auth-005 | Legacy `AC-F01-5`; `docs/tests/security-scenarios.md` SC-US-001-5 Examples; existing procedure/evidence `review-report.md # Obligations and verdicts AC-F01-5` (historical; no rerun); **VALIDATE GAP G05** below |
-| AC-f01-foundation-auth-006 | Legacy `AC-F01-6`; `docs/test-scenarios.md` SC-US-001-1 Scenario; `docs/test-scenarios.md` SC-US-001-2 Scenario; `docs/tests/security-scenarios.md` SC-US-001-3 Scenario; `docs/tests/security-scenarios.md` SC-US-001-4 Examples; `docs/tests/security-scenarios.md` SC-US-001-5 Examples; `docs/tests/security-scenarios.md` SC-US-001-6 Examples; existing procedure/evidence `review-report.md # Obligations and verdicts AC-F01-6` (historical; no rerun); **VALIDATE GAP G06** below |
+| AC-f01-foundation-auth-001 | `scenarios.md` SC-f01-foundation-auth-001 Scenario Outline / Examples; legacy `AC-F01-1`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
+| AC-f01-foundation-auth-002 | `scenarios.md` SC-f01-foundation-auth-002 Scenario Outline / Examples; legacy `AC-F01-2`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
+| AC-f01-foundation-auth-003 | `scenarios.md` SC-f01-foundation-auth-003 Scenario Outline / Examples; legacy `AC-F01-3`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
+| AC-f01-foundation-auth-004 | `scenarios.md` SC-f01-foundation-auth-004 Scenario Outline / Examples; legacy `AC-F01-4`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
+| AC-f01-foundation-auth-005 | `scenarios.md` SC-f01-foundation-auth-005 Scenario Outline / Examples; legacy `AC-F01-5`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
+| AC-f01-foundation-auth-006 | `scenarios.md` SC-f01-foundation-auth-006 Scenario Outline / Examples; legacy `AC-F01-6`; inherited scenario references preserved in `history/validation-report.pre-a2-bdd.md` |
 
-## Concrete remaining VALIDATE gaps
+## A1 gap resolution
 
-- G01 / `AC-f01-foundation-auth-001` (legacy `AC-F01-1`): Runnable Compose/migration and DB-fault readiness are not named BDD; use review-report.md AC-F01-1 evidence.
-- G02 / `AC-f01-foundation-auth-002` (legacy `AC-F01-2`): SC-US-001-3 omits 7day TTL/HMAC-only storage and inactive identity rejection.
-- G03 / `AC-f01-foundation-auth-003` (legacy `AC-F01-3`): SC-US-001-6 has SQL syntax but not all malformed UUID classes.
-- G04 / `AC-f01-foundation-auth-004` (legacy `AC-F01-4`): SC-US-001-5/6 omit exact PHC parameters, Unicode bounds and finally-release on KDF exception.
-- G05 / `AC-f01-foundation-auth-005` (legacy `AC-F01-5`): SC-US-001-5 omits rejected-attempt persistence and spoofed forwarded-IP checks.
-- G06 / `AC-f01-foundation-auth-006` (legacy `AC-F01-6`): Named build/license/donor/canary gate BDD absent; review-report.md AC-F01-6 supplies historical procedure evidence.
+The58previous composite BDD gaps across six contours are addressed by new derived scenarios, not relabelled as preexisting coverage. Per-contour closures:
 
-These are documentary coverage gaps, distinct from the external F06 GitHub403 delivery blocker. Do not infer PASS from historical procedure evidence or invent a scenario. Coordinator resolves them through existing planning before new code.
+| Prior gap | Criterion | Missing condition identified in A1 | New artifact |
+| --- | --- | --- | --- |
+| G01 | AC-f01-foundation-auth-001 | Runnable Compose/migration and DB-fault readiness are not named BDD; use review-report.md AC-F01-1 evidence. | `scenarios.md` SC-f01-foundation-auth-001; complete original assertions and concrete Examples authored |
+| G02 | AC-f01-foundation-auth-002 | SC-US-001-3 omits 7day TTL/HMAC-only storage and inactive identity rejection. | `scenarios.md` SC-f01-foundation-auth-002; complete original assertions and concrete Examples authored |
+| G03 | AC-f01-foundation-auth-003 | SC-US-001-6 has SQL syntax but not all malformed UUID classes. | `scenarios.md` SC-f01-foundation-auth-003; complete original assertions and concrete Examples authored |
+| G04 | AC-f01-foundation-auth-004 | SC-US-001-5/6 omit exact PHC parameters, Unicode bounds and finally-release on KDF exception. | `scenarios.md` SC-f01-foundation-auth-004; complete original assertions and concrete Examples authored |
+| G05 | AC-f01-foundation-auth-005 | SC-US-001-5 omits rejected-attempt persistence and spoofed forwarded-IP checks. | `scenarios.md` SC-f01-foundation-auth-005; complete original assertions and concrete Examples authored |
+| G06 | AC-f01-foundation-auth-006 | Named build/license/donor/canary gate BDD absent; review-report.md AC-F01-6 supplies historical procedure evidence. | `scenarios.md` SC-f01-foundation-auth-006; complete original assertions and concrete Examples authored |
 
-## Role-path migration and preserved history
+## Preservation and evidence limits
 
-Archive: `history/validation-report.pre-contract-format.md`, sha256:1dd2c761ad7ede94842d0798389f1b7e66b7703da4aa97993dbcb3994c628613. Historical report bytes are unchanged; this archive is not an additional active role contour.
+Previous index: `history/validation-report.pre-a2-bdd.md`, sha256:c439845b462d58b3b08a519406aad03e2f283c4b7ec9899f3146ee0be02d406c. Original pre-format report and role-path migration remain preserved there and in history. Specification/pseudocode/architecture/refinement remain byte-identical to inspected source. Completion prior bytes are archived at `history/05_completion.pre-contract-coverage.md`; the active completion index names real executable witnesses plus exact limits. A populated checker cell is not execution evidence. No app runtime/build/browser/test/network occurred in this document repair. Fresh independent Astra must assess the mappings before integration; new expanded code keeps all approved full gates.
 
-| Former role | Unique active role |
-| --- | --- |
-| `01-specification.md` | `01_specification.md` |
-| `02-pseudocode.md` | `02_pseudocode.md` |
-| `03-architecture.md` | `03_architecture.md` |
-| `04-refinement.md` | `04_refinement.md` |
-| `05-completion.md` | `05_completion.md` |
-
-Historical basenames retaining former paths: `docs/telemetry/features/20261002T192500Z-f01/sol-receipt.md`, `docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/contract-route/plan.md`. Resolve their old role basename through the unique active path in this feature above; never rewrite historical evidence.
-
-## Dirty input digests
+## Input digests
 
 - `01_specification.md`: sha256:0a62915da4cad8837bdd4c6e3387fe11453b33386537d124bb543fe3cf4bbfca
-- `02_pseudocode.md`: sha256:31b005eb9b1bc15480a2a912f0bf47d1f63c650c842922a6d12dbec8c21bcdf1
-- `03_architecture.md`: sha256:5fa3337a6ace31083c5b7aee436a82dc184146dfd4555fda2dd45af5615c19c8
-- `04_refinement.md`: sha256:bb1f6cf2f53d8472e1b424c6ac692d793446559fde6ab40227c17366bffc4a73
-- `05_completion.md`: sha256:a626345250e1774b6e62c705c433af4d53a19d6df94dd3044c5dd65ce28de8a9
+- `scenarios.md`: sha256:816573f3577be50ea99ef937e8a7cc5045189af4fe7637848e2f79aa91c7f9eb
