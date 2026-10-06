@@ -1,0 +1,99 @@
+{
+  "attempt": "A25",
+  "status": "completed",
+  "verdict": "BLOCKED",
+  "started_at": "2026-10-06T21:08:42.526883+00:00",
+  "finished_at": "2026-10-06T21:15:55.676090+00:00",
+  "elapsed_seconds": 433.149207,
+  "source_revision": "9ad64857e9b82303165934011f8ab4bf8a783409",
+  "source_manifest_sha256": "8fc213bdc10547d433cbcff8aa5f7e8d6693fd6c3b6b90d8e992a6c3a4631247",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "profile": "model-routing-econom",
+  "measurement_gap": "host metadata unavailable",
+  "findings": [
+    "F10-A25-001 PG42710 test setup",
+    "F10-A23-001 OPEN"
+  ],
+  "native_exit": {
+    "finished_at": "2026-10-06T21:11:01.434775+00:00",
+    "native_returncode": 1,
+    "timed_out": false,
+    "elapsed_ms": 8010.281648952514,
+    "started_at": "2026-10-06T21:10:53.424524+00:00",
+    "pid": 2753353,
+    "startticks": "124406342",
+    "runner_pid": 2753181
+  },
+  "joins_and_quiescence": {
+    "at": "2026-10-06T21:11:01.594729+00:00",
+    "PG": {
+      "at": "2026-10-06T21:11:01.567Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [],
+      "quiescent": true
+    },
+    "remaining_owned_nodes": [],
+    "native_returncode": 1,
+    "timed_out": false,
+    "runner_sha256_unchanged": true,
+    "inputs_unchanged": true,
+    "tap_sha256": "00a854ba8ae23cf4030b08c28cc9666241afbeb5c560a04bf3455b3810cf6177",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "catalog_after": {
+    "at": "2026-10-06T21:14:08.975Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true,
+    "instrumentation": {
+      "triggers": [],
+      "functions": [],
+      "eventTable": [
+        {
+          "name": "n7_fair_events"
+        }
+      ]
+    },
+    "transport": [
+      {
+        "occupied": 0
+      }
+    ]
+  },
+  "source_unchanged": true,
+  "DB_lease": "released to coordinator",
+  "mutex": "released with reacquisition proof",
+  "second_native_run": false,
+  "raw_command": [
+    "/tmp/n7-expanded-runtime-20261006/bin/node",
+    "node_modules/tsx/dist/cli.mjs",
+    "--test",
+    "--test-concurrency=1",
+    "--test-name-pattern=native five-second rescans",
+    "tests/f10-runtime-protocol.test.ts"
+  ],
+  "guard_counts": {
+    "socketDenied": 9,
+    "socketAllowed": 15,
+    "dnsDenied": 0,
+    "ipcValidated": 8,
+    "processes": 14
+  },
+  "artifact_sha256": {
+    "review.md": "5435d99e11978d77b4434efb351088a57fd9e2053228c560f9199d4821066479",
+    "context_provenance.json": "5987d7b885871401b3e8eac7f3a15176f78e6633ddf358b2011e66ef872acd2f",
+    "native-green-a25.tap": "00a854ba8ae23cf4030b08c28cc9666241afbeb5c560a04bf3455b3810cf6177",
+    "native-green-a25-native-exit.json": "088f5117086eb2d337335c851f979a7216f48136d8cc95d57cf31d9e6b0bc0a8",
+    "native-green-a25-terminal.json": "f925470a4332cbabe954016efd581e6993f46c792e5d201ca05f6b7f4ed47c30",
+    "catalog-after-a25.json": "cfc75e433161a9e2edd7ee75882d2906ce6e20e44f9f641c52374d34bcfc4ceb",
+    "guard-summary.json": "99347558d5674e57f9926b233b20f7c60ac27f8ecccda9be45c9590da6b53344",
+    "canary-scoped-result.json": "177b0158bf306f07bf3c050b1d94fd425dc49cdeb25410d1cdc5e3b3cd348f67"
+  }
+}

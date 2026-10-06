@@ -1,0 +1,28 @@
+{
+  "revision": "9ad64857e9b82303165934011f8ab4bf8a783409",
+  "candidate": "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup",
+  "source_manifest": "/tmp/n7-f10-adversarial-fairness-a24/final-manifest.json",
+  "source_manifest_sha256": "8fc213bdc10547d433cbcff8aa5f7e8d6693fd6c3b6b90d8e992a6c3a4631247",
+  "launch_packet": "/tmp/n7-f10-adversarial-fairness-a24/launch.json",
+  "launch_sha256": "6be7d410c71449a7ed0b7a004b987ceb87cf80067a6fc8165ac18d0759227f7f",
+  "finding_packet": "/tmp/n7-f10-independent-review-a23/review.md",
+  "finding_sha256": "833109353de9e01b1238dcb9d328982cae9cdd18ce8d0982ed5fda5a65a1ba05",
+  "normative_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+  "command": [
+    "/tmp/n7-expanded-runtime-20261006/bin/node",
+    "node_modules/tsx/dist/cli.mjs",
+    "--test",
+    "--test-concurrency=1",
+    "--test-name-pattern=native five-second rescans",
+    "tests/f10-runtime-protocol.test.ts"
+  ],
+  "guard": "/tmp/n7-f10-adversarial-fairness-a24/guard.mjs",
+  "guard_sha256": "8d65dae31d9baa35f89e4717bfa035eb8466551843ae2f6ee8a16b764bc7af88",
+  "runner": "/tmp/n7-f10-adversarial-fairness-a24/run.py",
+  "runner_sha256": "5bc3cdfa87cc6fd12cc816dfdd208ef50629a0c62837ab62e7a0987973076e09",
+  "environment_source": "/tmp/n7-f09-verify-a2/env.sh",
+  "DATABASE_NAME": "n7f10_a2",
+  "F10_EVIDENCE_DIR": "new unique coordinator-owned evidence root",
+  "requirements": "new fixture/runner hashes before launch; own heavy mutex; ownDB asserted pre-reset and quiescent; fresh unique raw TAP/exits; current20page nativeGREEN only, reuse unchanged330/wholePG/physical",
+  "new_record_instruction": "read legitimate launch/review/normative and objective raw; do not inherit author reasoning; this operational handoff records authority/command only"
+}

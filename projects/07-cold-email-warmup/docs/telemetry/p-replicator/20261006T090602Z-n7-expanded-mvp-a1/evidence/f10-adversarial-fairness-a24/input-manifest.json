@@ -1,0 +1,20 @@
+{
+  "original_manifest_sha256": "00d8a463aad276021583f4f94a07cf05024cfee05cfa61346937cfcc00775fbe",
+  "allowed_delta": {
+    "tests/f10-runtime-protocol.test.ts": {
+      "old": "adb0fbb7c219b433bca26767c6c79edea6aab62973e4cefdbd17eb22aeb5750a",
+      "new": "e1169054d76873562dd5ca60715ded823d921f09c0b02374491dc84201be264f"
+    },
+    "tests/f10-runtime-fixture.ts": {
+      "old": "654fb5e45e5dcc0f520bdae5906c5340baf68eb8fb0dd9a8e9d29b6d6a91aa2f",
+      "new": "a5d2f34d79bd0e640d33ba8f1b2e3046d7bbf168e989e32f9af9f0e1f18cf657"
+    },
+    "tests/f10-runtime-process-fixture.ts": {
+      "old": "af3523f51274e34d420ca1e8cd01927e7c3e262cfeb229cbe0dc1535b66a6340",
+      "new": "7647eb5f59e154d2ed2b908776939a720d5751f4a4b2cb01454c7d59d0221478"
+    }
+  },
+  "source_count": 120,
+  "build_count": 73,
+  "SQL_count": 15
+}

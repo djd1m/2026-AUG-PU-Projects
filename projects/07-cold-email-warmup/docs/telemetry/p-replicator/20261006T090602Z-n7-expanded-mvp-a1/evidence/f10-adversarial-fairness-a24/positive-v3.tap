@@ -1,0 +1,29 @@
+TAP version 13
+# Subtest: native five-second rescans yield fairly to later healthy E across competing worker restart
+not ok 1 - native five-second rescans yield fairly to later healthy E across competing worker restart
+  ---
+  duration_ms: 37889.298515
+  type: 'test'
+  location: '/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts:1:11100'
+  failureType: 'testCodeFailure'
+  error: 'healthy E actual completion <=30s'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts:86:165)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 38492.826291

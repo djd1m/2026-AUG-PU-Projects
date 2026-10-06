@@ -1,0 +1,30 @@
+{
+  "attempt": "A26",
+  "role": "fresh MEDIUM ONEtestfile fixture correction",
+  "started_at": "2026-10-06T21:17:35.991025+00:00",
+  "freeze_at": "2026-10-06T21:26:35.991025+00:00",
+  "deadline": "2026-10-06T21:29:35.991025+00:00",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "source_revision": "9ad64857e9b82303165934011f8ab4bf8a783409",
+  "allowed_source_file": "projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+  "finding": "F10-A25-001 PG42710 stalefixturetriggers; originalF10-A23-001nativeGREEN remainsopen",
+  "review_path": "/tmp/n7-f10-independent-review-a25/review.md",
+  "review_sha256": "5435d99e11978d77b4434efb351088a57fd9e2053228c560f9199d4821066479",
+  "owned_objects": [
+    "n7_fair_record trigger onruntime_due/reply_rescan/mailbox_poll",
+    "public.n7_fair_record()",
+    "public.n7_fair_events"
+  ],
+  "AC": [
+    "cleanuponlyknownownedinstrumentation BEFOREadversarialFixture nativepriming",
+    "assertactualDBn7f10_a2beforedisposableDDL",
+    "shortforceall3staletriggers/exactfunction\u2192idempotentsetup/cleanup/catalog/native0 BEFOREexpensivewitness",
+    "fullcurrentoriginal20page/native5s/A-D-E/restartcompeting/order/ownership/Ebounds native0",
+    "tsc/lint native0; allother source119/build73/SQL15unchanged",
+    "frozenrunner/guard/fixtureSHAprelaunch; actualUTCnativeexit/ownedjoins/PGquiescent/mutexfree"
+  ],
+  "no_runtime_changes": true,
+  "next": "freshHIGHindependentfindingreconciliation then F11planvalidation"
+}

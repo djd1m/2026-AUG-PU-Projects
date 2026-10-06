@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F10 A23 BLOCKED missing mandatory native A–D/E witness; actual fresh MEDIUM A24 corrective test stage active",
+  "current_stage": "F10 A25 BLOCKED fixtureDDLrepeatability; freshMEDIUMA26 ONEfile setupcleanup correction actualACK",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -138,17 +138,14 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f10_adversarial_fairness_author_a24",
-    "source_revision": "74766159b38c0e346832992c3be7b62851aad577",
-    "next": "exactadversarialnativewitness+orderingmutants; independentHIGHreconciliation and F11planvalidation using allowednativeworkflow afteractorrelease",
-    "freeze_at": "2026-10-06T21:06:05.366124+00:00",
-    "deadline": "2026-10-06T21:09:05.366124+00:00",
-    "launch_sha256": "6be7d410c71449a7ed0b7a004b987ceb87cf80067a6fc8165ac18d0759227f7f",
-    "remaining_F10_AC": [
-      "F10-A23-001 requirednativeAD/Efairnesswitness",
-      "independentreviewadmission"
-    ],
-    "F11_current_blocker": "native followup threadlimit beforeexecution; noCLI bypass"
+    "executor": "/root/n7_sol_coordinator/f10_fixture_cleanup_author_a26",
+    "source_revision": "9ad64857e9b82303165934011f8ab4bf8a783409",
+    "actual_ACK_received": true,
+    "launch_sha256": "5948e71831457de383784fe6293c0a6b16070914483682d6159fb370a54ce2d4",
+    "freeze_at": "2026-10-06T21:26:35.991025+00:00",
+    "deadline": "2026-10-06T21:29:35.991025+00:00",
+    "next": "shortforcedstalecatalogproof native0 BEFOREfullcurrentnative20pageGREEN; ONEsourcefile only; then freshindependentHIGHfindingreview/F11planvalidation",
+    "no_external_calls_or_new_framework": true
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -356,6 +353,48 @@
       "actual_model": null,
       "usage": null,
       "independent_context": "freshHIGHforknone planner-only/frozenlegitimatecode/rawproof; no author/verifier/coordinatorhistory"
+    },
+    "a24": {
+      "status": "PARTIAL",
+      "revision": "9ad64857e9b82303165934011f8ab4bf8a783409",
+      "only_test_files": 3,
+      "typecheck": 0,
+      "lint": 0,
+      "corrected_ordering_mutants": "two namedASSERT native1/exactbytesrestore EACH",
+      "current_restored_GREEN": "TERM joined; mandatoryunknown noPASS",
+      "common_postjoin_at": "2026-10-06T21:05:07.483518Z",
+      "timestamp_gap": "native-exit.at overwrittenbylaunchtime; postjointerminal authoritative",
+      "coordinator_freeze_error": "overstrictjoincutoffledTERMbeforeownerclarification; preservehistory",
+      "source_DB_released": true,
+      "seal_sha256": "92f7606569e4b61178d940d7f3cd984402f0835657819701441efd6cda5cec78",
+      "actual_model": null,
+      "usage": null
+    },
+    "a25": {
+      "status": "BLOCKED",
+      "finding": "F10-A25-001 PG42710 ownedstaleaudittriggers; F10-A23-001 remainsopen",
+      "native_exit": 1,
+      "timeout": false,
+      "elapsed_ms": 8010.282,
+      "native_finished_at": "2026-10-06T21:11:01.434775Z",
+      "finished_at": "2026-10-06T21:15:55.676090Z",
+      "review_sha256": "5435d99e11978d77b4434efb351088a57fd9e2053228c560f9199d4821066479",
+      "source_unchanged": true,
+      "actual_model": null,
+      "usage": null,
+      "source_DB_released": true,
+      "catalog_proof_at": "2026-10-06T21:14:08.975Z",
+      "three_triggers_function_absent": true,
+      "events_table_remains": true,
+      "guard_counts": {
+        "socketDenied": 9,
+        "socketAllowed": 15,
+        "dnsDenied": 0,
+        "ipcValidated": 8,
+        "processes": 14
+      },
+      "denied_endpoints_uncaptured": true,
+      "newoutputs_canary_hits": 0
     }
   },
   "f10_candidate_runtime": {

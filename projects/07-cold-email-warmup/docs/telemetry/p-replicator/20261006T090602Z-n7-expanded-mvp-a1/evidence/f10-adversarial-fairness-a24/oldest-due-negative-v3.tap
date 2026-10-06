@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: native five-second rescans yield fairly to later healthy E across competing worker restart
+not ok 1 - native five-second rescans yield fairly to later healthy E across competing worker restart
+  ---
+  duration_ms: 13237.080166
+  type: 'test'
+  location: '/tmp/n7-f10-adversarial-fairness-a24/compact-shadow/tests/f10-runtime-protocol.test.ts:1:11100'
+  failureType: 'testCodeFailure'
+  error: |-
+    fair E selection precedes ANY A-D second quantum after actual restart
+    + actual - expected
+    
+    + '1747ba3f-87fd-4595-a142-d17e8af07105'
+    - '5f6fe39b-494b-437f-b3cf-4addd1cdc4eb'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '5f6fe39b-494b-437f-b3cf-4addd1cdc4eb'
+  actual: '1747ba3f-87fd-4595-a142-d17e8af07105'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/n7-f10-adversarial-fairness-a24/compact-shadow/tests/f10-runtime-protocol.test.ts:85:208)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13693.157368

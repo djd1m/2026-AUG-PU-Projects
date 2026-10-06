@@ -1,0 +1,140 @@
+{
+  "attempt": "A25",
+  "role": "fresh independent review",
+  "profile": "model-routing-econom",
+  "excluded_context": [
+    "authorchat/reasoning/narrativereceipts",
+    "coordinatorhistory",
+    "verifierreasoning",
+    "operationalhandoff.md"
+  ],
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "null_reason": "host metadata not exposed",
+  "verified_normative_and_context": {
+    "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/01_specification.md": {
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "expected": "410d329fcc9d433f51e554310318457096a8dfdd82aad9754e47d7122744eeb8",
+      "actual": "410d329fcc9d433f51e554310318457096a8dfdd82aad9754e47d7122744eeb8"
+    },
+    "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/02_pseudocode.md": {
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "expected": "c08da0230b35a07f749f186ce0c54d363662c1c70e3e95e617e321974e456fdb",
+      "actual": "c08da0230b35a07f749f186ce0c54d363662c1c70e3e95e617e321974e456fdb"
+    },
+    "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/03_architecture.md": {
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "expected": "7ba1644e010feb420901d5b24e5a41fd2ec959a237f5f72b85d4fb31f6b12df1",
+      "actual": "7ba1644e010feb420901d5b24e5a41fd2ec959a237f5f72b85d4fb31f6b12df1"
+    },
+    "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/04_refinement.md": {
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "expected": "a28d4e29ae8e54ae487caaa285938059b67c215546443baa66e1d7b4c70e1300",
+      "actual": "a28d4e29ae8e54ae487caaa285938059b67c215546443baa66e1d7b4c70e1300"
+    },
+    "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/05_completion.md": {
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "expected": "913b45a0e49dbfc95e98d33db485c382d1e935f77f3559c2fd1e4835e2278b27",
+      "actual": "913b45a0e49dbfc95e98d33db485c382d1e935f77f3559c2fd1e4835e2278b27"
+    },
+    "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/validation-report.md": {
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "expected": "22eabfaba1f78ec1f9c74d5b0eb8763c2d28babcd00be98b5d86e88b57e1400d",
+      "actual": "22eabfaba1f78ec1f9c74d5b0eb8763c2d28babcd00be98b5d86e88b57e1400d"
+    },
+    "projects/07-cold-email-warmup/docs/ADR.md": {
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "expected": "6baf1874848d3c4bceb8eab65ccfc12ccd6bf6920c9a9a19a2e6bcc7a32880a4",
+      "actual": "6baf1874848d3c4bceb8eab65ccfc12ccd6bf6920c9a9a19a2e6bcc7a32880a4"
+    },
+    "projects/07-cold-email-warmup/docs/decisions-owner.md": {
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "expected": "cf47d55af1d5ad4cd5f34c7531f1d2004dfdc98076e7459c76af8b93f3e709d8",
+      "actual": "cf47d55af1d5ad4cd5f34c7531f1d2004dfdc98076e7459c76af8b93f3e709d8"
+    },
+    "projects/07-cold-email-warmup/docs/plans/expanded-mvp-plan.md": {
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "expected": "cb9449fb233471275dd6ee67a496d8d04f38ddedf637bdfe4588dfc9689fb13d",
+      "actual": "cb9449fb233471275dd6ee67a496d8d04f38ddedf637bdfe4588dfc9689fb13d"
+    },
+    "projects/07-cold-email-warmup/docs/features/expanded-mvp/01_specification.md": {
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "expected": "dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+      "actual": "dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a"
+    },
+    "projects/07-cold-email-warmup/docs/features/expanded-mvp/ai-policy-v1.md": {
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "expected": "d3d7c9d4614134f1dca9078ed797e3f8ee94a7bc613856bb54f2f2628b566512",
+      "actual": "d3d7c9d4614134f1dca9078ed797e3f8ee94a7bc613856bb54f2f2628b566512"
+    },
+    ".claude/commands/feature.md": {
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "expected": "6908fa6c8ba770f829378a021d5f7e9a9bc79a15bdd67b278d8c6a765968b291",
+      "actual": "6908fa6c8ba770f829378a021d5f7e9a9bc79a15bdd67b278d8c6a765968b291"
+    },
+    ".claude/skills/sparc-prd-mini/SKILL.md": {
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "expected": "b663793d1e1d1de028f91f2e266a191811bb610f97a12be7f95d62327589d53a",
+      "actual": "b663793d1e1d1de028f91f2e266a191811bb610f97a12be7f95d62327589d53a"
+    },
+    ".claude/skills/requirements-validator/references/feature-report-contracts.md": {
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "expected": "df263cbce17fb5d9dec6514561c66f6283b3f19e2fc85056f0531bac615be0f1",
+      "actual": "df263cbce17fb5d9dec6514561c66f6283b3f19e2fc85056f0531bac615be0f1"
+    },
+    "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/sol-coordinator-handoff-20261006/planner-only-review-packet.json": {
+      "actual": "c56fa1bef6b60a4f413320469fe4ee7314439e4aa5d1c48e5ea9328c5f4682e5"
+    },
+    "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f10-uidreset-contract-plan-a14b-cli/receipt.md": {
+      "actual": "998aeeb0b4c89294d7f196650b759954f3a965f62dacfaf8313d1e5eaf749662"
+    },
+    "/tmp/n7-f10-adversarial-fairness-a24/verification-handoff.json": {
+      "actual": "ee11cf5a3066c2c2f8db7faffd5912847424ba711418205294224e8a78e47366"
+    },
+    "/tmp/n7-f10-adversarial-fairness-a24/final-manifest.json": {
+      "actual": "8fc213bdc10547d433cbcff8aa5f7e8d6693fd6c3b6b90d8e992a6c3a4631247"
+    },
+    "/tmp/n7-f10-independent-review-a23/review.md": {
+      "actual": "833109353de9e01b1238dcb9d328982cae9cdd18ce8d0982ed5fda5a65a1ba05"
+    }
+  },
+  "current_source_groups": {
+    "source": {
+      "count": 120,
+      "mismatches": []
+    },
+    "build": {
+      "count": 73,
+      "mismatches": []
+    },
+    "db": {
+      "count": 15,
+      "mismatches": []
+    }
+  },
+  "source_revision": "9ad64857e9b82303165934011f8ab4bf8a783409",
+  "scoped_changed_files": [
+    "projects/07-cold-email-warmup/tests/f10-runtime-fixture.ts",
+    "projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts",
+    "projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts"
+  ],
+  "verified_objective_evidence": {
+    "/tmp/n7-f10-frozen-verify-a20/canonical-measurements.json": "92e7534b5ada92d3d708d9cea22928503a87f26f0e2e739eeff97165cf88e532",
+    "/tmp/n7-f10-frozen-verify-a20/full330-native-exit.json": "8c5e988fba5b6346fa881214321291bfe924624cac7a3fed61329f133a2bd89e",
+    "/tmp/n7-f10-frozen-verify-a20/full330.tap": "9d6c9187e2a14778bbe98a715249a8f7fd6b61e895c69ec7aa4b007f5a3b0dd8",
+    "/tmp/n7-f10-frozen-verify-a20/fullpg-native-exit.json": "f42ec23b00195b0b9aba228ddbca582ba67f281f1e5fef6dbe624bc04ae6081e",
+    "/tmp/n7-f10-remaining-verify-a21/mutation-results.json": "20e000b1715754066289d80541d02f9d471b0f712309983a02a3fe84f51500b3",
+    "/tmp/n7-f10-remaining-verify-a21/pair-correction-results.json": "2998aecd75b277f1871d2c946a30cd617497cf0cc5e84c80bd59d2f422940df5",
+    "/tmp/n7-f10-remaining-verify-a21/canary-result.json": "e61082fbb003b0d9a0d7d2b20c80981e17bef14ddf81d9566205bafff7332fa6",
+    "/tmp/n7-f10-pair-fixture-fix-a22/final-manifest.json": "00d8a463aad276021583f4f94a07cf05024cfee05cfa61346937cfcc00775fbe",
+    "/tmp/n7-f10-frozen-verify-a20/fullpg.tap": "5d06e3fd559d77ece631149b834120387527f2f68534944c2f4d0e12ee190d60",
+    "/tmp/n7-f10-pair-fixture-fix-a22/positive-native-exit.json": "c7013cc00360e087e8c76c0707f96845e7162e43b2dcf1e111c76da887b6d177",
+    "/tmp/n7-f10-pair-fixture-fix-a22/negative-native-exit.json": "73ff4cf6196016efd8a487c2efb5aef1e2298fd830fa00f7b0092ffa84663c96",
+    "/tmp/n7-f10-pair-fixture-fix-a22/restored-native-exit.json": "7fbf1412e6df7032f5217f2660d2845889bc6ddf2e2a4c5dcfa61d2576b9f663",
+    "/tmp/n7-f10-pair-fixture-fix-a22/negative.tap": "e7ced62369035e1b782626caea52cd02e458ec57fc1a615ee10c376dd5133478"
+  }
+}
