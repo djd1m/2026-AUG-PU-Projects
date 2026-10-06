@@ -1,6 +1,6 @@
 # F15 — пакет разрешений и приёмки внешнего пилота
 
-Подготовлен 2026-10-06 в RUN_ID `20261006T090602Z-n7-expanded-mvp-a1` по [утверждённому XL-плану](../plans/expanded-mvp-plan.md) и OWN-N7-005. Статус: подготовка, внешние действия не запускались. F07/F08 приняты локально; F09 в реализации, F10–F14 ожидают своей реализации и приёмки. Это конкретный перечень будущих входов и результатов, а не запрос повторного разрешения на разработку. Финальная ревизия, команды и отчёты заполняются после локальной приёмки соответствующих slices.
+Подготовлен 2026-10-06 в RUN_ID `20261006T090602Z-n7-expanded-mvp-a1` по [утверждённому XL-плану](../plans/expanded-mvp-plan.md) и OWN-N7-005. Статус: подготовка, внешние действия не запускались. F07/F08/F09 приняты локально; F10 планируется, F10–F14 ожидают своей реализации и приёмки. Это конкретный перечень будущих входов и результатов, а не запрос повторного разрешения на разработку. Финальная ревизия, команды и отчёты заполняются после локальной приёмки соответствующих slices.
 
 ## Область отдельного внешнего решения
 
@@ -10,7 +10,7 @@
 | Передача контента OpenAI | Явное согласие tenant на disclosure; project/account/model; утверждённая retention notice; перечень разрешённых полей/типов контента | Не предоставлено; владелец tenant и OpenAI project |
 | Actual-model synthetic gate | Positive daily token и currency cap, отдельный максимальный расход запуска, разрешённый project/model, approved prompt/policy/snapshot/cases hashes; синтетические C01–C24 | Не предоставлено; владелец бюджета. Ни одного платного вызова в подготовке |
 | AI autopilot live | Применимое отдельное AI consent; immutable approved snippet snapshot, intent/topic/language mappings и exact thread/recipient scope; источник/версия и expiry; успешный actual-model gate | Не предоставлено; владелец tenant. Произвольные модельные формулировки остаются HITL |
-| Deployment и окружение | Точный хост/инсталляция, frozen source/build/config, допустимое окно, назначенный оператор, ресурсы, backup/restore/rollback evidence | Пока не готово; координатор завершает локальные F09–F14, затем оператор утверждает конкретную поставку |
+| Deployment и окружение | Точный хост/инсталляция, frozen source/build/config, допустимое окно, назначенный оператор, ресурсы, backup/restore/rollback evidence | Пока не готово; координатор завершает локальные F10–F14, затем оператор утверждает конкретную поставку |
 | Обращения и остановка | Существующий complaint intake и его ответственный, оператор kill switch, контакты и окно дежурства | Не предоставлено; оператор. Этот пакет не отправляет сообщения и не создаёт внешние интеграции |
 
 Секреты передаются через разрешённую runtime-конфигурацию: в этом файле и отчётах только opaque identifiers, digest и ссылки на разрешённое хранилище, без паролей/API keys/тел писем. Billing остаётся TEST. Изменение shared proxy, новые расходы и внешние уведомления требуют применимого конкретного решения.
@@ -27,8 +27,8 @@ Body≤32KiB, thread≤5messages/64KiB; без загрузки вложений
 
 | Артефакт | Обязательное содержимое | Статус |
 |---|---|---|
-| Frozen candidate | Source commit, build digest, миграции, config fingerprint, policy/prompt/snapshot/cases hashes, readonly source-version map | Ожидает F09–F14 |
-| Local acceptance | Полные unit/real-PG/local-protocol/concurrency/fault/canary/mutation/type/lint/build; применимый Docker UI; independent review и exact AC witnesses | F07/F08 приняты; остаток F09–F14 |
+| Frozen candidate | Source commit, build digest, миграции, config fingerprint, policy/prompt/snapshot/cases hashes, readonly source-version map | Ожидает F10–F14 |
+| Local acceptance | Полные unit/real-PG/local-protocol/concurrency/fault/canary/mutation/type/lint/build; применимый Docker UI; independent review и exact AC witnesses | F07/F08/F09 приняты; остаток F10–F14 |
 | Actual-model result | Все24case и variants, все попытки/ошибки, scrubbed outputs, returned model/version/parameters, usage/cost и caps; независимая проверка | Внешний gate: отдельный budget/account/content grant |
 | Live launch sheet | UTC start/end ровно7суток, список разрешённых opaque mailbox/tenant IDs, scoped grants/expiry, ресурсный baseline, on-call operator | Ожидает локальной готовности и входов выше |
 | Recovery rehearsal | Kill switch revoke под FIRST global lock, drain submitting/unknown без повторов, доказанное socket close/exit, совместимый rollback/backup restore | Ожидает F10/F14 |

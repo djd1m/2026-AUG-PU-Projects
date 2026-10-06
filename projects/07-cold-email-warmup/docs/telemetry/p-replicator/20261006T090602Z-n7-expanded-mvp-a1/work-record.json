@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "implement",
+  "stage": "plan",
   "roots": {
     "project": "."
   },
   "identity": {
     "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
     "work_unit_id": "expanded-mvp",
-    "current_attempt_id": "f09-review-r2"
+    "current_attempt_id": "f10-plan-a1"
   },
   "telemetry": {
     "run": {
@@ -22,7 +22,7 @@
   },
   "source": {
     "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
-    "current_revision": "5bf5653d2f66b69d51756f36a6c92aadffba6444",
+    "current_revision": "2248aa17df74822cb9e82f62046e3c1a26032cba",
     "build_revision": null,
     "requirements": [
       {
@@ -45,8 +45,8 @@
       }
     ],
     "continuity": {
-      "expected_revision": "5bf5653d2f66b69d51756f36a6c92aadffba6444",
-      "observed_revision": "5bf5653d2f66b69d51756f36a6c92aadffba6444",
+      "expected_revision": "2248aa17df74822cb9e82f62046e3c1a26032cba",
+      "observed_revision": "2248aa17df74822cb9e82f62046e3c1a26032cba",
       "reconciliation": null
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
@@ -144,9 +144,9 @@
       "phase": "plan",
       "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
       "tier": "XL",
-      "rationale": "F09 SMTP irreversible uncertainty and UID IMAP recovery; /go mechanical M0 lowerbound, inheritedXL fullcycle; scope005",
+      "rationale": "F10 durable fairness/shared claims/pool auto-enrollment, mechanical M lowerbound; authorized scope005",
       "script": {
-        "input": "dispatch adapter/submission, replies adapter/store, config",
+        "input": "src/dispatch/worker.ts src/replies/worker.ts src/pool/store.ts",
         "exit_code": 0
       }
     },
@@ -183,7 +183,7 @@
   },
   "preflight": {
     "status": "not_applicable",
-    "reason": "F09 native transport changes no UI; real local PG/TLS mandatory, browser not applicable unless UI scope explicitly changes. No E2E claim.",
+    "reason": "F10 PLAN documentation only; mandatory actual E2E preflight before applicable later UI checks",
     "external_actions_executed": false,
     "e2e_claim": null
   },
@@ -331,6 +331,10 @@
     {
       "id": "f09-review-r2",
       "status": "completed"
+    },
+    {
+      "id": "f10-plan-a1",
+      "status": "active"
     }
   ],
   "work_units": [
