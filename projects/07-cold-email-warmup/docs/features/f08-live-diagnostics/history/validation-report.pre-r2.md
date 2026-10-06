@@ -1,13 +1,13 @@
 # F08 Requirements Testability Analysis
 Spec revision: sha256:a3ad1300fde78f396c850627e9fd833391d3a572214801315519b92ad197a0a8
 
-Verdict: READY for implementation — F08-V1 resolved in the plan; runtime acceptance remains pending.
-Source revision: 8c2f4dc57aeb6b71f19b160755b4372d338f1ee1.
-RUN_ID: 20261006T090602Z-n7-expanded-mvp-a1; WORK_UNIT_ID: f08-validate-r2.
+Verdict: NEEDS WORK — one high architecture gap F08-V1; runtime acceptance remains pending.
+Source revision: 9cd46e43e04acc2f1a89f9fbeb7d4df7eebc9235.
+RUN_ID: 20261006T090602Z-n7-expanded-mvp-a1; WORK_UNIT_ID: f08-validate-a1.
 Independent bounded requirements review; profile compact-quality-first-v2, substantive XL under OWN-N7-005. Requested gpt-6-astra/high; actual model/effort/usage/cost null because native host evidence is unavailable. No model switch or savings claim.
 
 ## Summary
-One bounded user story, eight testable AC, no remaining confirmed blocking findings. Original F08-V1 NEEDS WORK report is preserved byte-for-byte at history/validation-report.pre-r2.md. This second pass reviews only its targeted correction; all unchanged first-pass analysis remains applicable. Core score96/100; security bonus+5 and existing growth trace+5 (outside core rubric; capped display100). The score describes testability, not protocol correctness or runtime success; it does not prove runtime correctness. Selected finite native Node22.20 AUTH-only states are implementable within the stated limits; expanding them into a general mail client is unnecessary for F08.
+One bounded user story, eight testable AC, one blocking architecture gap (F08-V1). Core score96/100; security bonus+5 and existing growth trace+5 (outside core rubric; capped display100). The score describes testability, not protocol correctness or runtime success; it does not override the high finding. Selected finite native Node22.20 AUTH-only states are implementable within the stated limits; expanding them into a general mail client is unnecessary for F08.
 
 ## INVEST and SMART
 | Dimension | Points | Basis |
@@ -72,31 +72,24 @@ Given real local TLS SMTP465/587 and IMAP993 servers plus PostgreSQL16, When the
 ## Cross-document and source inspection
 Read all six F08 plan documents and existing src/mailboxes/network.ts, provider.ts, input.ts, store.ts, src/config.ts, src/server.ts, src/consent/transaction.ts and shared quarantine callsites. Existing resolveEndpoint validates all answers but alone is not the new cancellable TLS adapter. Existing verifyTest is sequential local_test and must not be re-labelled authentic evidence. Existing cancelMailbox centralizes replacement/stop/quarantine cancellation; it is the required revision invalidation seam. eligibilityTransaction already takes global lock first. Save/change settings paths need explicit revision coverage, including same-value replacements; implementation tests must prove this rather than infer it from ciphertext equality.
 
-### F08-V1 — resolved at plan revision 8c2f4dc57aeb6b71f19b160755b4372d338f1ee1
+### F08-V1 — high: grant/config revocation has no serialized publication boundary
 
-Original high finding: mutable file fingerprints did not order operator grant/config revocation against final diagnostic publication. Prior report and original evidence remain in `history/validation-report.pre-r2.md`; the specification and scenarios have not changed.
+AC005 requires that revoked/changed operator grant/config cannot leave stale completion publishing current evidence. Architecture selects a mutable operator grant file read/fingerprinted at begin/finish, while the pseudocode compares the snapshot under the database lock. No grant/config authority writer is specified to share that lock. Reproducer: finish reads valid file revision A; revoke replaces/removes the file; finish then acquires the lock (or had already acquired it before reading), checks its A snapshot and commits success. Reading after lock closes the first ordering but still permits file replacement between read and commit. A file fingerprint alone provides detection at an instant, not serialization across processes. Existing core safety forbids network I/O under the lock; it does not prohibit local file reads, so a supposed blanket file-I/O contradiction is NOT the finding.
 
-Independent disposition: RESOLVED in the requirements/architecture contract. `03_architecture.md` → Operator publication and failure boundary — F08-V1 now places authority in one durable diagnostic_authority row with monotonic authority_revision, scope/config fingerprint, expiry and active/revoked state. Privileged publish/revoke and diagnostic begin/finish all use existing eligibilityTransaction with global lock(7,1) FIRST, then authority row and mailbox. Expected revision rejects stale publication; identical-data publication increments revision. Operator file parsing is bounded and outside the transaction, and file existence is explicitly not live authority.
-
-`02_pseudocode.md` → Fence evidence against current database state gives both serial orders: revoke commits first → final snapshot revision fails; finalization commits first → later revoke makes its historical observation noncurrent. Project diagnostic truth to owner joins current durable authority and post-lock expiry semantics without a cached verified flag. `04_refinement.md` → F08-V1 targeted race and failure witnesses explicitly tests a waiter before lock, revoke blocked after final authority read, identical republish ABA, invalid/missing file input, expected-revision conflict and transaction rollback. `05_completion.md` requires committed revoke revision evidence for operations/rollback. Database failure is never reported as a successful revoke; diagnostics fail closed when their authority read/write is unavailable.
-
-The original `Scenario: F08 grant revocation is ordered with final publication` already covers both orders and remains unchanged. Input-file editing/removal alone is now explicitly not a committed revoke; an authorized publish with invalid/missing input commits a revoke at its expected revision and then reports the typed input failure. This makes the publication point observable without a watcher or a new service. No mailbox-wide rewrite, external network call under lock, broader control plane or weakened AC was introduced.
-
-This is design revalidation only. IMPLEMENT must produce the specified real-PG ordering, current-projection and rollback witnesses; no authority implementation or runtime test pass is inferred from the documentation.
+Minimal repair before IMPLEMENT: define a single authoritative grant/config revision whose activation/revocation is serialized through existing eligibilityTransaction FIRST lock, with parsed file data as input outside that transaction. Finalization checks this current authority and post-lock DB expiry; a revoke ordered after completion invalidates its current evidence. A small durable authority field/row is sufficient; no new general control plane is requested. Another mechanism is acceptable only if it proves the same cross-process ordering, file-removal fail-closed behavior and no stale publication. Add both orderings, file-change while final waiter is blocked, and change after final read before publication to the real PG race witnesses. See `Scenario: F08 grant revocation is ordered with final publication` in scenarios.md. Specification AC005 need not weaken or expand; repair its architecture/pseudocode mechanism, then revalidate changed source hashes.
 
 Other mandatory implementation watchpoints are already requirements: counters must be process singletons; per-process admission does not claim distributed exclusivity; cross-process overlap is fenced durably. Do not reuse the current independent deadline helper without propagating the shared remaining budget. Native TLS capability citations establish available APIs only; this validation did not re-fetch or certify dependency security. Real local TLS and adversarial parser tests decide correctness.
 
 ## Gates and acceptance boundary
-Run installed full-project --traceability --report-revision --criterion-scenarios with explicit root role maps; raw evidence /tmp/n7-f08-validate-r2-phase12.txt. Gate results are recorded in the terminal receipt. Required advancing result is exit0. No selected snapshot is presented as the full project.
+Run installed full-project --traceability --report-revision --criterion-scenarios with explicit root role maps; raw evidence /tmp/n7-f08-validate-a1-phase12.txt. Gate results are recorded in the terminal receipt. Required advancing result is exit0. No selected snapshot is presented as the full project.
 
 Runtime suites, build, schema12→13, mutations and Docker browser are not_applicable to this docs-only validation and remain mandatory IMPLEMENT/REVIEW work. Companion E2E preflight is not_applicable because no E2E is run. Planned completion rows are not executable-test evidence; F06 B5/B6 and future expanded acceptance remain Phase3 debt, not Phase1/2 blockers. No live provider, new dependency, paid API, sending or deployment is authorized or performed.
 
 ## Input and scenario hashes
 - `01_specification.md`: `a3ad1300fde78f396c850627e9fd833391d3a572214801315519b92ad197a0a8`
-- `02_pseudocode.md`: `c9720a7e3f0dd7134e1d09386328250332b86981dd0224940351a7227e3f6321`
-- `03_architecture.md`: `6504e68afcc5466e582904d0f86b88b1f46e2807fcceea0c5f5cc14b1781c6d0`
-- `04_refinement.md`: `fb409427b883001cb9636029b2f22ce9d2987d2fd1884ef27e6f70132095d8f7`
-- `05_completion.md`: `d41c7592f15d35cf43ca621cab61765ef4b83a7edf080e2c127806ed62f4dd6e`
+- `02_pseudocode.md`: `93b812cc459524552f42aa5b71577f0df5b2f9bafae3065d72774f0e9ede3429`
+- `03_architecture.md`: `74706e04cd96a2820db6b8dcf0a28c10f7ee98e2a43728f9d59d590784fba0f6`
+- `04_refinement.md`: `92ad39010dc9728f0fe5b89d18325df2edeab7b3cbc6595eb72cb488eef07317`
+- `05_completion.md`: `fd3de1490015aa6465622b77716c7aee392f75d40f7f70eb5562e51be4f95423`
 - `capability-contracts.md`: `6c91d0b611c24a9129dda339d9ed9b12000889bc53691879d8f17f821f4e8fb4`
 - `scenarios.md`: `d5471acb0f5e57bd6462470357064a4db690d8edd649722af6d6d4fe07d8adab`
-- `history/validation-report.pre-r2.md`: `ec02efb1090671519b9feb6871d360716c8671da3eedd3f4e72fcee94e29708a`
