@@ -1,0 +1,12 @@
+{
+  "original_file": "cancel-disposal-omitted-compiled-negative.tap",
+  "original_sha256": "7266906cb291fcb03df6218ad90308ac851757ce9c09f2086fb85693af3aba6f",
+  "original_bytes": 4817,
+  "original_scratch_path": "/tmp/n7-f10-cancel-diagnostic-a34/cancel-disposal-omitted-compiled-negative.tap",
+  "original_scratch_unchanged": true,
+  "export_archive": "cancel-disposal-omitted-compiled-negative.tap.gz",
+  "archive_sha256": "d5ae470c9d64e0b79c30030ba5fa202cc82dcd10d2c9e1ad8734d8b57dcdbafc",
+  "archive_bytes": 953,
+  "roundtrip_verified": true,
+  "reason": "Lossless export of immutable raw TAP whose whitespace-only diagnostic lines fail git diff --check; no source or raw test bytes normalized."
+}

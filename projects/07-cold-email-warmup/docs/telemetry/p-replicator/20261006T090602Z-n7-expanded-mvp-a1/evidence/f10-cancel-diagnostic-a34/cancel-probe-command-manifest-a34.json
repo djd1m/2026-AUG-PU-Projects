@@ -1,0 +1,46 @@
+{
+  "utc": "2026-10-06T22:55:22.727566+00:00",
+  "runner_sha256": "f5ebfd41a6ddb21ffe70d99b363869203f9bb6df510e73bfb5e4cf48407085d1",
+  "guard_sha256": "ed4cb6599e59784b6ed754951f6e138d81bb8dae1a44fe0f9204958e884f662c",
+  "preload_sha256": "cbf39f193dcb063b2076b2fbbb7ce9a2c435dfa8850eefab2e8667180d260c34",
+  "native_runner_sha256": "11a902bd9677b0a7a0372a9a4ac61ffac8aba19fc6fc45eeeee1556969056e75",
+  "test_sha256": {
+    "tests/a34-cancel-seam.test.ts": "8335d27ed8f4c72efc30d2dba76928dfb01b2b503714e6d2904593a77d23ec4e",
+    "tests/a34-cancel-seam-compiled.test.ts": "8d778617d6f84f1582826e33eb084af854d8c5580d7b22c2d21db77255f65346"
+  },
+  "cases": [
+    {
+      "name": "cancel-disposal-omitted",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "old": "async cancel(claim:RuntimeClaim,reason:RuntimeReason='ready'){\n  await this.disposeUnusedAdmission(claim);",
+          "new": "async cancel(claim:RuntimeClaim,reason:RuntimeReason='ready'){\n  // omitted disposal"
+        },
+        {
+          "path": "dist/runtime/store.js",
+          "old": "async cancel(claim, reason = 'ready') {\n        await this.disposeUnusedAdmission(claim);",
+          "new": "async cancel(claim, reason = 'ready') {\n        // omitted disposal"
+        }
+      ]
+    },
+    {
+      "name": "abort-cancel-cloned-identity",
+      "changes": [
+        {
+          "path": "src/runtime/loop.ts",
+          "old": "if(signal.aborted){await store.cancel(claim);return;}",
+          "new": "if(signal.aborted){await store.cancel({...claim});return;}"
+        },
+        {
+          "path": "dist/runtime/loop.js",
+          "old": "await store.cancel(claim);",
+          "new": "await store.cancel({ ...claim });"
+        }
+      ]
+    }
+  ],
+  "budget_seconds": 12,
+  "origin": "existing real PG runtimeFixture and Store/runRuntime abort-after-COMMIT seam; bounded operational numeric await/slot observer, no durable product/test edit",
+  "cleanup": "exact original Store admission proof release in finally; no TTL or unknown-child reclaim"
+}

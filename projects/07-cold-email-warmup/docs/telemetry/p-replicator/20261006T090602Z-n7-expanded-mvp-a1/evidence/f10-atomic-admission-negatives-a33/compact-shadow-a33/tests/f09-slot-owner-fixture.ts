@@ -1,0 +1,2 @@
+import { connect } from 'node:tls';
+process.once('message',(value:unknown)=>{const v=value as {port:number;ca:Buffer;servername?:string};const socket=connect({host:'127.0.0.1',port:v.port,servername:v.servername??'smtp.gmail.com',ca:v.ca,rejectUnauthorized:true,minVersion:'TLSv1.2'});socket.on('error',()=>process.exit(1));socket.once('secureConnect',()=>process.send?.({ready:true}));process.once('SIGTERM',()=>socket.destroy());socket.once('close',()=>process.exit(0));});

@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-06T22:39:46.524958+00:00",
+  "native_exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 3.6929760188795626,
+  "pid": 4116297,
+  "startticks": "124939283",
+  "runner_pid": 4084682,
+  "PG": {
+    "at": "2026-10-06T22:39:46.343Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB_slots_claims_after_join": {
+    "utc": "2026-10-06T22:39:46.507Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": []
+  },
+  "owned_nodes": [],
+  "assertion_failure": true,
+  "failure_titles": [
+    "not ok 2 - A3/A5 fresh complete current opt-in aggregate privacy, pair/day and one submitted-parent reply",
+    "not ok 1 - F03a realPG campaign/pool/shared quota/lease seams without transport"
+  ],
+  "tap_sha256": "b812a3c4aff5f371f86d4b8a814592934b60abc8f02932193f993543e71e0702",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

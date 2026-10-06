@@ -1,0 +1,12 @@
+{
+  "original_file": "pacing-bypass-negative.tap",
+  "original_sha256": "46038d492c5860ca277ba618eeba37ed368fa1528ce18a7f3c2d579f7626c1fe",
+  "original_bytes": 1033,
+  "original_scratch_path": "/tmp/n7-f10-atomic-admission-negatives-a33/pacing-bypass-negative.tap",
+  "original_scratch_unchanged": true,
+  "export_archive": "pacing-bypass-negative.tap.gz",
+  "archive_sha256": "e2eee11b2b59e5c06c25190f93e8f15f813f51dea7cb4887bee120768dee63a1",
+  "archive_bytes": 541,
+  "roundtrip_verified": true,
+  "reason": "Lossless export of immutable raw TAP whose whitespace-only diagnostic lines fail git diff --check; no source or raw test bytes normalized."
+}

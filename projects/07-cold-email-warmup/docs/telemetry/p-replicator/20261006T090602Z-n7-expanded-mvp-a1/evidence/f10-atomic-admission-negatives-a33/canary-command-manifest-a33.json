@@ -1,0 +1,10 @@
+{
+  "utc": "2026-10-06T22:41:26.870129+00:00",
+  "command_as_data": [
+    "python3",
+    "/tmp/n7-f10-atomic-admission-negatives-a33/canary-a33.py"
+  ],
+  "runner_sha256": "566d2da7dff2a12453ec9db307ec17fdb4d00acdb38b1938af855e1e0cc529d1",
+  "requested_scope": "specific5inputs recursiveJSONlongstrings>=12 +plain/base64/urlbase64/hex/url/jsonescaped; ownallregularartifacts; numericcountsONLY",
+  "execution": "afterall25+slot5ownedchildjoins"
+}

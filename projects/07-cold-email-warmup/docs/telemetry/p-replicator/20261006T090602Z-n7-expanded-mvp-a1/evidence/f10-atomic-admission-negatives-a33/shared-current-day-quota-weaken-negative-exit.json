@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-06T22:41:09.485207+00:00",
+  "native_exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 18.83950330503285,
+  "pid": 4133629,
+  "startticks": "124946064",
+  "runner_pid": 4084682,
+  "PG": {
+    "at": "2026-10-06T22:41:09.275Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB_slots_claims_after_join": {
+    "utc": "2026-10-06T22:41:09.464Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": []
+  },
+  "owned_nodes": [],
+  "assertion_failure": true,
+  "failure_titles": [
+    "not ok 19 - B1/B2 SC-US-003-4 limit",
+    "not ok 1 - F03b real PG durable final authority, all stop races, sink privacy and outcomes"
+  ],
+  "tap_sha256": "5331d18314c9010a9578851847ab2724841c48faeec56523ee93c0008f7191b6",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

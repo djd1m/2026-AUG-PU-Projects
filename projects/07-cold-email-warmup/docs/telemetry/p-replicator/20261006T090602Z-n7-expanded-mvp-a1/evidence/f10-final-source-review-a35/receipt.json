@@ -1,0 +1,26 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-final-source-review-a35",
+  "status": "completed",
+  "verdict": "BLOCKED",
+  "source_revision": "db50798a76a97fed75931544f24cd1181ff082d8",
+  "spec_sha256": "410d329fcc9d433f51e554310318457096a8dfdd82aad9754e47d7122744eeb8",
+  "ack_utc": "2026-10-06T22:58:02Z",
+  "sealed_utc": "2026-10-06T23:05:06.783275+00:00",
+  "elapsed_seconds": 424.783275,
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gap": "host_not_exposed",
+  "findings": [
+    "F10-A35-001"
+  ],
+  "report_sha256": "dfaaf15d614ed108a77a2cfe2fac99d107b08b5ba76e9a3570c66d5373a806e0",
+  "context_manifest_sha256": "ae7eacd3c486bcf8bdb2d4fb81128260a80f15686dc5753b225bd969074b9988",
+  "own_tests": 0,
+  "next_executor": "root N7 coordinator assigns bounded UID mutation verification/evidence review"
+}

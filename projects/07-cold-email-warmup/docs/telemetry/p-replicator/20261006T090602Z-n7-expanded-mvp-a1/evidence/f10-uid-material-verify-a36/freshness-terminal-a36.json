@@ -1,0 +1,463 @@
+{
+  "utc": "2026-10-06T23:16:39.976134+00:00",
+  "results": [
+    {
+      "name": "uid-freshness-timestamp-source",
+      "baseline": {
+        "utc": "2026-10-06T23:16:18.299408+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.635264293989167,
+        "pid": 484967,
+        "startticks": "125158366",
+        "runner_pid": 484722,
+        "PG": {
+          "at": "2026-10-06T23:16:18.101Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:16:18.277Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "b18e4ae03bea5a8ed02b2cf52682a07c375f78cdccd53d55796efa10c74efee5",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mutated_sha256": {
+        "src/replies/store.ts": "33a8330bb2f708e4271ec9ca95226e2af101490bb483cd7b58c40c12b5a9712e",
+        "dist/replies/store.js": "0926353fc73b58ae04aeedaef31c9938e54891a76e82675964f5b35027d7f3f1"
+      },
+      "negative": {
+        "utc": "2026-10-06T23:16:21.954442+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 3.234792404808104,
+        "pid": 486593,
+        "startticks": "125158871",
+        "runner_pid": 484722,
+        "PG": {
+          "at": "2026-10-06T23:16:21.774Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:16:21.936Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+        ],
+        "tap_sha256": "995bb99bbf47e2e78a8adc39a52cbbd8a6f0f1ad749edd1a94be89154263a484",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored": {
+        "utc": "2026-10-06T23:16:26.807234+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.52630257490091,
+        "pid": 487805,
+        "startticks": "125159228",
+        "runner_pid": 484722,
+        "PG": {
+          "at": "2026-10-06T23:16:26.601Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:16:26.790Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "065866de07777f4582166dd0a4044e29b59adfc539861d52f8924cd5b422affd",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/store.ts": "041516f0fb492bd0e7d92567cf0b94bec23f770991f449fcc8343961d3e6363c",
+        "dist/replies/store.js": "656f1d9cc163efb49ef80b3ee1846bab6b0841d27d1896d90484bd5cb2852d13"
+      },
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "uid-freshness-timestamp-compiled",
+      "baseline": {
+        "utc": "2026-10-06T23:16:31.728358+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.547366643091664,
+        "pid": 489339,
+        "startticks": "125159718",
+        "runner_pid": 484722,
+        "PG": {
+          "at": "2026-10-06T23:16:31.494Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:16:31.709Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "6b95b5d38c77b07a77f8b6f5fbd94264c992974531b496d511627b01c326ad1f",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mutated_sha256": {
+        "src/replies/store.ts": "33a8330bb2f708e4271ec9ca95226e2af101490bb483cd7b58c40c12b5a9712e",
+        "dist/replies/store.js": "0926353fc73b58ae04aeedaef31c9938e54891a76e82675964f5b35027d7f3f1"
+      },
+      "negative": {
+        "utc": "2026-10-06T23:16:34.889985+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 2.782922304002568,
+        "pid": 491257,
+        "startticks": "125160210",
+        "runner_pid": 484722,
+        "PG": {
+          "at": "2026-10-06T23:16:34.719Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:16:34.872Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+        ],
+        "tap_sha256": "0ada0386e62ed536e6a3c7348b24f49f51c1755862ae75cefb64c2520e39f934",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored": {
+        "utc": "2026-10-06T23:16:39.963076+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.668686386896297,
+        "pid": 492275,
+        "startticks": "125160529",
+        "runner_pid": 484722,
+        "PG": {
+          "at": "2026-10-06T23:16:39.780Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:16:39.943Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "3cd5b9523da46995f1d1f6abe42e48ba6012286185fb78767903f58095aebb2b",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/store.ts": "041516f0fb492bd0e7d92567cf0b94bec23f770991f449fcc8343961d3e6363c",
+        "dist/replies/store.js": "656f1d9cc163efb49ef80b3ee1846bab6b0841d27d1896d90484bd5cb2852d13"
+      },
+      "status": "caught_material_assertion"
+    }
+  ],
+  "candidate_drift": [],
+  "nodes": [],
+  "PG": {
+    "at": "2026-10-06T23:16:40.152Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB": {
+    "utc": "2026-10-06T23:16:40.304Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 2,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 3,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 4,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 2,
+        "occupied": false
+      }
+    ]
+  },
+  "mutex": "released after receipt"
+}

@@ -1,0 +1,12 @@
+{
+  "original_file": "incomplete-reported-complete-negative.tap",
+  "original_sha256": "e3997ef19b1fd07790af4c456e9f576b970f577ba44bf88262686afdd3361b9a",
+  "original_bytes": 1142,
+  "original_scratch_path": "/tmp/n7-f10-atomic-admission-negatives-a33/incomplete-reported-complete-negative.tap",
+  "original_scratch_unchanged": true,
+  "export_archive": "incomplete-reported-complete-negative.tap.gz",
+  "archive_sha256": "b131fa4cea3115d143a9579ba7c6489d0065ff510f7643317af13c1798752ee4",
+  "archive_bytes": 568,
+  "roundtrip_verified": true,
+  "reason": "Lossless export of immutable raw TAP whose whitespace-only diagnostic lines fail git diff --check; no source or raw test bytes normalized."
+}

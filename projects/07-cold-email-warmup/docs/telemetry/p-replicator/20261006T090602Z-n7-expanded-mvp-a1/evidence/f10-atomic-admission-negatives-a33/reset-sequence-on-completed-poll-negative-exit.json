@@ -1,0 +1,65 @@
+{
+  "utc": "2026-10-06T22:38:29.361259+00:00",
+  "native_exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 1.5810856739990413,
+  "pid": 4094975,
+  "startticks": "124931777",
+  "runner_pid": 4084682,
+  "PG": {
+    "at": "2026-10-06T22:38:29.142Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB_slots_claims_after_join": {
+    "utc": "2026-10-06T22:38:29.335Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 2,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 3,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 4,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 2,
+        "occupied": false
+      }
+    ]
+  },
+  "owned_nodes": [],
+  "assertion_failure": true,
+  "failure_titles": [
+    "not ok 1 - complete proof becomes immediately eligible without resetting its selected fair turn"
+  ],
+  "tap_sha256": "3529e25bb42c8b35de689fb4da8d778c2c4afc2a334585ec0ff513aaabc34b3c",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

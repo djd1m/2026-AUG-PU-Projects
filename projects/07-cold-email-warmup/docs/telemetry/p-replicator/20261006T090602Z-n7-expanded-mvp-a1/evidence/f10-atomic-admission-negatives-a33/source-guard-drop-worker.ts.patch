@@ -1,0 +1,11 @@
+--- src/replies/worker.ts
++++ src/replies/worker.ts
+@@ -64,7 +64,7 @@
+   let run=await this.store.status(tenant,mailbox);
+   if(run?.state==='rescan_incomplete')return {state:run.state};
+   const owner=await claimPoll(this.pool,tenant,mailbox),source=await observePoll(this.pool,tenant,mailbox,owner),transport=await this.adapter.fence?.(tenant,mailbox);
+-  const guard:TransactionGuard=async c=>{await runtimeGuard(c);await source(c);await transport?.(c);};
++  const guard:TransactionGuard=async c=>{await runtimeGuard(c);await transport?.(c);};
+   try{
+    if(signal.aborted)throw new Error('aborted');
+    if(!run||run.state==='complete'){

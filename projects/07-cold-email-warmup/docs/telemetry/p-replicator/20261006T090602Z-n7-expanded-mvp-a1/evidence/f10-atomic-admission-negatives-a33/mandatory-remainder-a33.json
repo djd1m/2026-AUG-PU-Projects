@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-06T22:50:05.176671+00:00",
+  "source_head": "db50798a76a97fed75931544f24cd1181ff082d8",
+  "product_acceptance": false,
+  "next_executor": "coordinator to actually launch distinct bounded HIGH diagnostic follow-up; confirmed fixture changes require fresh MEDIUM author",
+  "required": [
+    {
+      "name": "atomic-cancel-unused-leak",
+      "state": "native timeout; not caught",
+      "raw": [
+        "atomic-cancel-unused-leak-negative-timeout.json",
+        "atomic-cancel-unused-leak-negative-exit.json",
+        "atomic-cancel-unused-leak-store.ts.patch",
+        "atomic-cancel-timeout-restored-exit.json"
+      ],
+      "diagnosis": "PG sessions idle ClientRead, no blockers, stderr empty; no causal conclusion; actual owned timeout joins preserved; restored positive0 and test residue cleared only after joined/quiescent/source/mutex proof",
+      "next": "isolate cancel and existing real abort-after-COMMIT with named bounded physical-slot-count assertion before child start; exact source binding, baseline0/material assertion/restored0; no blind 70s replay"
+    },
+    {
+      "name": "native-runtime-result-guard-drop",
+      "state": "unrun fixed budget",
+      "title": "settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences"
+    },
+    {
+      "name": "native-transport-result-guard-drop",
+      "state": "unrun fixed budget",
+      "title": "settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences"
+    },
+    {
+      "name": "abort-specific material seam",
+      "state": "existing real PG positive verified, material mutation not isolated",
+      "next": "use existing abort-after-COMMIT PG witness; no assertion of missing positive coverage"
+    },
+    {
+      "name": "fresh independent source review",
+      "state": "separate new fork-none HIGH actor after mandatory operational gaps"
+    }
+  ],
+  "no_source_fix_authorized_by_timeout": true
+}

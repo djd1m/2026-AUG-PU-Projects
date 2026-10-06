@@ -1,0 +1,48 @@
+# Independent final F10 source review A35 — BLOCKED
+Reviewer family: codex
+Spec revision: 410d329fcc9d433f51e554310318457096a8dfdd82aad9754e47d7122744eeb8
+Source revision: db50798a76a97fed75931544f24cd1181ff082d8
+Baseline revision: d50e05068636c56003d9708b4d374465fc0cd0bb
+Profile: model-routing-econom. Requested gpt-6.1-sol HIGH; actual model/effort/usage/cost NULL (host does not expose authoritative metadata).
+
+Verdict **BLOCKED on one mandatory evidence gap**. No concrete source defect was found in the scoped frozen F10 implementation. This is an independent final source/test assessment and raw reconciliation, not acceptance of the whole expanded MVP or a live pilot.
+
+## Spec conformance
+
+| Criterion | Result | Source and objective binding |
+|---|---|---|
+| AC-f10-durable-runtime-001 | PASS for scoped source and supplied runtime witnesses | runtime/loop.ts:8–25 stops admission, cancels after committed claim and joins all lanes; runtime/store.ts:120–129 releases exact unused admission before logical cancellation; transport-lifetime.ts:7–30 confirms exact child exit. Full-PG lifecycle/abort/failure positives, native physical restart tests, both canonical drains code0/drained (138/59ms), A34 source+compiled cancel counterproof native0/1/0. |
+| AC-f10-durable-runtime-002 | PASS | runtime/store.ts:82–110 commits canonical durable tenant/mailbox turns and physical reservation together; finish:134–141 immediate completed-proof readiness retains selected order. Independently recomputed all30 healthy/postrestart censored bounds and all5 A–D/E selection/restart metrics. |
+| AC-f10-durable-runtime-003 | PASS | transport-slots.ts:13–35 keeps four/two rows, one protocol/mailbox, exact registered one-use reservation and exact never-child-bound/closed-child release, without TTL reclamation. Native SIGSTOP>120s positives, all104 adversarial selections joined to same-TX physical reservation and all104 exact operation/owner releases; slot negatives0/1/0. |
+| AC-f10-durable-runtime-004 | PASS for scoped source and supplied fence/quota witnesses | consent/transaction.ts:6–11 FIRST7,1; dispatch/store.ts:47–56 and submission.ts:37–102 preserve post-lock current UTC, lower shared cap, activity/consent/freshness, final authority and sixty-second pacing before outside-TX I/O. Full-PG/F09 positives; tenant, freshness, consent, shared quota, pacing and source/runtime/transport fence negatives0/1/0. |
+| AC-f10-durable-runtime-005 | PASS | pool/store.ts:12–39 applies current post-lock day, bounded active candidates, persistent peer cursor, legal pair and movable backlog checks; original pair/parent uniqueness retained. Named allocation/pair-conflict positive and negative; all30 full300s allocation windows pass. |
+| AC-f10-durable-runtime-006 | PASS | runtime/store.ts:11–23 enumerated failure classification, 31–68 bounded reconciliation, 131–141 retained unsatisfied age and literal backoff; runtime/loop.ts:12/15/22–25 cancellable <=1s no-data wait, internal abort and sibling joins on DB fault. Full-PG/units and raw all-participant observations retain blocked/failed work. |
+| AC-f10-durable-runtime-007 | BLOCKED — specific UID mutation coverage unverified | Exact canonical title, static gates, full PG/unit, native F10/F09 affected positives, broad25 material guard witnesses and separate five slot witnesses are bound and pass. The sealed UID planner also requires the six distinct fail-capable mutations identified below; no objective execution linkage for those six appears in the supplied inventory. |
+
+## Finding F10-A35-001 — high, mandatory verification gap
+
+Normative input: the sealed UID contract planner receipt SHA998aeeb0b4c89294d7f196650b759954f3a965f62dacfaf8313d1e5eaf749662, section “Independent fail-capable verification assignments”, item6. It requires targeted witnesses to turn red for restoring mismatch-as-error, fetching/relabeling on mismatch, adding a second snapshot operation, clearing fixed tail on retry, inventing completion from reset proof, and bypassing explicit retry. Existing source/runtime/grant/tenant guard, rollback and semantic replay evidence covers other listed concerns but cannot substitute for these six mechanisms.
+
+Concrete implementation/test targets: src/replies/imap.ts:24 (typed EXAMINE generation proof before FETCH), src/replies/worker.ts:19/65/80–84 (hold and single-operation guarded capture), src/replies/store.ts:41–65 plus retry (expected run/provenance/hold/reset identity and preserved fixed tail), tests/f10-runtime-protocol.test.ts:96–113 and tests/f09-live-transport.test.ts exact title `full poll captures a reset between snapshot and read and incomplete entry performs no IO`. This finding asserts missing mandatory fail-capable evidence, not a defect in those current paths.
+
+Next concrete step: coordinator owns a bounded verification-only worker on isolated copied components and the exact candidate/build, supplying original/mutant/restored hashes, named assertions and native0/1/0 joins for the six UID seams, or an already existing legitimate source-bound objective linkage. Preserve original UID retry authority and all frozen source. No need to repeat unchanged healthy330/fullPG/full-unit/physical suites. Then a fresh bounded independent evidence review can close this finding. No source fix is prescribed by this review.
+
+## Independently reconciled evidence
+
+All14 immutable planner blobs and current owner workflow input hashes verified. Candidate inventory120 source/73 compiled JS/15 SQL matches the frozen manifest77cc744dfe793d599abd0300a9ab03d6060a7481d88091686a7a1bb79d88c536; final head and hashes unchanged. Static native typecheck0/lint0/build0 supplied as supplemental raw evidence; old/new complete source/build/SQL manifests are identical. Earlier focused PG1 remains historical and is not counted as current PASS.
+
+Nine A32 exact command/positive-inventory/TAP/native-exit/PID-ticks joins pass, including full-PG and full-unit. Four lexical title prefixes in its inventory were independently expanded from frozen source literal loops into the exact dynamic positive titles, all present in hashed TAP. A33 remaining five exact F09 positives also join native0 and matching launch/PID-ticks.
+
+Canonical raw cadence SHA5201ea3b258b2d3dc01987e04913a006a046d9399e225ad414e6ef9495b42422: observation330195ms; all30 retained. Max healthy completion gap13250ms, healthy selection6026ms, postrestart full-censored completion11906ms and selection4321ms, full-censored allocation62927ms. Both drains native0/drained; resource samples bound <=6 physical/jobs. Fault/retry/restart remain visible; no claim of an unconditional healthy target during the fault window.
+
+Adversarial raw fairness SHA90bfbbf69b42923c7ff9944eb58c8bb77f1bc814e2d2a6740060f6c6f69d6481: all5 retained, A–D first four selections, E fifth before any old second selection; all5 eligible before first claim, E later due. Each first scheduled A–D successful native page independently >=5000ms and durable commit; all A–D literal20 pages, explicit incomplete hold and original due retained. E first completion16979ms, unique repeat max16146ms; maximum all5 selection gap6007ms. Three native code0/drained joins. All104 selections have same-TX reservation and exactly one prior matching durable turn; all104 acquired operation/owner identities released. No unsupported all-first-completions-before-E barrier asserted.
+
+A33/A34 native mutation records: 21 broad material + native-admission-authority + two final fence mechanisms + cancellation same-seam counterproof =25 unique required broader material guards, with source/compiled duplicates where supplied; five separate slot guards.35 successful0/1/0 records when duplicates/diagnostic cloned-claim probes are included. Prior omitted-cancel native timeout remains UNKNOWN and is not counted as a caught assertion; A34 bounded same-seam source/compiled counterproof supplies the cancellation witness. Clone capability mutation is diagnostic only; current code passes the exact original claim and gains no transferable authority requirement.
+
+Canary result summaries report zero runtime secret variants/private PEM in their bounded output scope. Reviewer read no private PEM or secret contents and made no provider/network/test run. Known observation gaps are retained: DB UTC and fixture monotonic clocks are correlated rather than identical, server writes are not child-exit proof, and admission failures that rollback are not reconstructed by later snapshots.
+
+## Scope and terminal ownership
+
+READ-ONLY candidate/main; all reviewer writes confined to /tmp/n7-f10-final-source-review-a35. No code changes, own test/runtime children, database connections/resets, mutex acquisitions, external SMTP/IMAP/API spend, deployment, publication or global configuration edits. Every short shell/helper command joined before sealing. Recorded A32 native PID/starttick identities are no longer live; own persistent child set is empty. Latest supplied A34 terminal DB proof is historical22:56:45 UTC with occupied0/runtimeclaims0/othersessions0 and no nodes; this review does not falsely label that a new reviewer DB observation. Reviewer mutex/DB preflight is not_applicable because no DB/native checks were launched.
+
+F06 documentary/PR-delivery gaps and F11–F15 remain outside this scoped source review, as required by canon. Integration, pipeline report-contract gates, delivery and continuation remain the coordinator’s responsibility. Final report/receipt/context/source/proof SHA manifests accompany this file. Status: completed (bounded review stage); accepted F10 delivery remains blocked only as stated above.

@@ -1,0 +1,12 @@
+--- dist/replies/worker.js
++++ dist/replies/worker.js
+@@ -25,8 +25,7 @@
+         if (this.mode === 'live_provider' && this.adapter.mode === 'local_test')
+             return { mode: this.mode, state: 'paused' };
+         let run = await this.store.status(tenant, mailbox);
+-        if (run?.state === 'rescan_incomplete')
+-            return { mode: this.mode, state: run.state };
++        if (run?.state === 'rescan_incomplete') run = await this.store.retry(tenant, mailbox, identity(run));
+         let guard;
+         let deadline = Date.now() + 120000;
+         const observe = async (owner) => { const source = await observePoll(this.pool, tenant, mailbox, owner), transport = await this.adapter.fence?.(tenant, mailbox); return async (client) => { await source(client); await transport?.(client); }; };

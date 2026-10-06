@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: transport grants are separate scoped expiring authority
+ok 1 - transport grants are separate scoped expiring authority
+  ---
+  duration_ms: 974.861618
+  type: 'test'
+  ...
+# Subtest: final live submission preserves all eligibility fences
+ok 2 - final live submission preserves all eligibility fences
+  ---
+  duration_ms: 23525.753768
+  type: 'test'
+  ...
+# Subtest: UID reset crash and replay preserve atomic stop effects
+ok 3 - UID reset crash and replay preserve atomic stop effects
+  ---
+  duration_ms: 6034.775195
+  type: 'test'
+  ...
+# Subtest: independent capacity and consent predicates deny live transport
+ok 4 - independent capacity and consent predicates deny live transport
+  ---
+  duration_ms: 3698.88802
+  type: 'test'
+  ...
+# Subtest: native pool fixture uses canonical current UTC pair day and malformed initial keys stay denied
+ok 5 - native pool fixture uses canonical current UTC pair day and malformed initial keys stay denied
+  ---
+  duration_ms: 989.124353
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 35631.76262

@@ -1,0 +1,684 @@
+{
+  "inputs": [
+    {
+      "path": "/tmp/n7-f10-atomic-admission-a31/complete-source-build-sql-manifest-v2.json",
+      "sha256": "77cc744dfe793d599abd0300a9ab03d6060a7481d88091686a7a1bb79d88c536",
+      "provenance": "Legitimate frozen product artifact: exact120source/73build/15SQL inventory only; no author narrative."
+    },
+    {
+      "path": "/tmp/n7-f10-atomic-admission-verify-a32/results.json",
+      "provenance": "Fixed runner actual commands/native exits/joins; raw objective only.",
+      "sha256": "ed84800f586fd9ece212ef8b362fdfd35d99bba11cd55da396636c4b57400f55"
+    },
+    {
+      "path": "/tmp/n7-f10-atomic-admission-verify-a32/canonical-independent-reconciliation.json",
+      "provenance": "All30 denominator raw metric checks.",
+      "sha256": "7b8e6d704f5858134858c88896c8cd63e7e30e0b7acbaee004cea3771a1a3e31"
+    },
+    {
+      "path": "/tmp/n7-f10-atomic-admission-verify-a32/terminal-ownership.json",
+      "sha256": "375f7072c8816664bc38353432a565f2d7ab5810e85d4658cacc585f73b9a370",
+      "provenance": "Source/process/DB/legacy-original/mutex ownership proof."
+    },
+    {
+      "path": "/tmp/n7-f10-atomic-admission-verify-a32/native-independent-reconciliation.json",
+      "sha256": "19af8080ad486fbc5e22117b341461762b40c9c02bb3ee547017328085c3e961",
+      "provenance": "Current actual native five-slow-mailbox fairness raw observation checks; denominator/all20pages/5s/order/joins."
+    },
+    {
+      "path": "/tmp/n7-f10-atomic-admission-negatives-a33/input-inventory-a33.json",
+      "sha256": "216d0774b15019a0c137b3a32c6df841562574d1adee536de9badd3e21ecab4f",
+      "bytes": 21834,
+      "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+    },
+    {
+      "path": "/tmp/n7-f10-atomic-admission-negatives-a33/material-command-manifest-a33.json",
+      "sha256": "0df642c43f195017aa8e881577519d90fe4ab10de9872f941b4e0ae99fb5bc99",
+      "bytes": 759,
+      "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+    },
+    {
+      "path": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "sha256": "9ea41e7584de2ee4a0a9215b7c9368350913f7bf112a7ded691a112acb52da09",
+      "bytes": 119680,
+      "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+    },
+    {
+      "path": "/tmp/n7-f10-atomic-admission-negatives-a33/slot-mutation-results.json",
+      "sha256": "2e41d75694c1bb4aeceaf23367ac85c25ed7d27d9243a3533343acd82d5cb9a9",
+      "bytes": 9681,
+      "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+    },
+    {
+      "path": "/tmp/n7-f10-atomic-admission-negatives-a33/short-remainder-results.json",
+      "sha256": "c2b9627e4b63900e42b74ddbfc013a1d6ad6d4219a2ec6a9bc757e3bbd7515aa",
+      "bytes": 5562,
+      "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+    },
+    {
+      "path": "/tmp/n7-f10-atomic-admission-negatives-a33/terminal-ownership-a33.json",
+      "sha256": "0ddbc1782dbe80322f6a7bf82bc9b40b7616b477501ec7f2192ed210da0e9e0d",
+      "bytes": 1707,
+      "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+    },
+    {
+      "path": "/tmp/n7-f10-atomic-admission-negatives-a33/canary-result-a33.json",
+      "sha256": "8a63d4e1c6b63bf5ef61441934e970e5fa900b83bc2f96e6bc1c893905b18464",
+      "bytes": 420375,
+      "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+    },
+    {
+      "path": "/tmp/n7-f10-cancel-diagnostic-a34/fence-command-manifest-a34.json",
+      "sha256": "bb7bb183fe83eac5af650bb708f9ba0f367ec16a596a21ec29e0b2ef7bf065e6",
+      "bytes": 2776,
+      "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+    },
+    {
+      "path": "/tmp/n7-f10-cancel-diagnostic-a34/fence-results-a34.json",
+      "sha256": "e67f8af8d63cf25e9d583e2550ff1201bee6d364f8937db10c74de523ec416fd",
+      "bytes": 24637,
+      "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+    },
+    {
+      "path": "/tmp/n7-f10-cancel-diagnostic-a34/cancel-probe-command-manifest-a34.json",
+      "sha256": "cf8bfe2e2c1c9e8eb6d84780a7202821c95a5786dd7f4d7c26beba28dbc715b2",
+      "bytes": 2063,
+      "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+    },
+    {
+      "path": "/tmp/n7-f10-cancel-diagnostic-a34/cancel-probe-results-a34.json",
+      "sha256": "fc68eef42cf485ef57e8cdc27a0664cc22d1971ed3a0f29c310919ea95fd440f",
+      "bytes": 22472,
+      "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+    },
+    {
+      "path": "/tmp/n7-f10-cancel-diagnostic-a34/diagnostic-reconciliation-a34.json",
+      "sha256": "c16ee26e99a423d248da96b160f42f8a9b1cff06e8d995aaef1cdba43408bdc2",
+      "bytes": 2382,
+      "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+    },
+    {
+      "path": "/tmp/n7-f10-cancel-diagnostic-a34/terminal-ownership-a34.json",
+      "sha256": "a767ebf74e7b60b4c7412b6be8affde39a886159b1d426947fb9aeab6dd13823",
+      "bytes": 1585,
+      "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+    },
+    {
+      "path": "/tmp/n7-f10-cancel-diagnostic-a34/canary-result-a34.json",
+      "sha256": "75bb05ab5a20377f40c3f31e7fc1fe66062fd3e501d3cda4cd91125ecd1d34b2",
+      "bytes": 148335,
+      "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+    }
+  ],
+  "mutation_records": [
+    {
+      "name": "oldest-due-order",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - overload backoff preserves due age and independent tenant progress"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4085661,
+      "negative_startticks": "124929085"
+    },
+    {
+      "name": "reset-sequence-on-yield",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - overload backoff preserves due age and independent tenant progress"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4086854,
+      "negative_startticks": "124929427"
+    },
+    {
+      "name": "drop-generation",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - durable runtime drains and recovers without replaying uncertain sends"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4089070,
+      "negative_startticks": "124930082"
+    },
+    {
+      "name": "sleep30-completion",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - complete proof becomes immediately eligible without resetting its selected fair turn"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4091438,
+      "negative_startticks": "124930757"
+    },
+    {
+      "name": "failure-held-as-success",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - complete proof becomes immediately eligible without resetting its selected fair turn",
+        "not ok 2 - partial and held scans cannot manufacture successful polling readiness"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4093250,
+      "negative_startticks": "124931314"
+    },
+    {
+      "name": "reset-sequence-on-completed-poll",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - complete proof becomes immediately eligible without resetting its selected fair turn"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4094975,
+      "negative_startticks": "124931777"
+    },
+    {
+      "name": "first-pair-conflict",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - automatic pool allocation skips pair conflicts and remains idempotent"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4096799,
+      "negative_startticks": "124932338"
+    },
+    {
+      "name": "pacing-bypass",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - paced dispatch preserves current day quota and every stop fence"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4099025,
+      "negative_startticks": "124932957"
+    },
+    {
+      "name": "occupied-slot-ttl-release",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - expired slot age alone cannot replace its allocated identity"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4101254,
+      "negative_startticks": "124933527"
+    },
+    {
+      "name": "source-guard-drop",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4106214,
+      "negative_startticks": "124935037"
+    },
+    {
+      "name": "incomplete-reported-complete",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - poll quanta persist the fixed tail before yielding and never retry incomplete scans"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4111183,
+      "negative_startticks": "124936856"
+    },
+    {
+      "name": "yield-reported-complete",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - poll quanta persist the fixed tail before yielding and never retry incomplete scans"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4112086,
+      "negative_startticks": "124937232"
+    },
+    {
+      "name": "consent-check-remove",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - independent capacity and consent predicates deny live transport"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4113976,
+      "negative_startticks": "124938097"
+    },
+    {
+      "name": "freshness-check-remove",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 2 - A3/A5 fresh complete current opt-in aggregate privacy, pair/day and one submitted-parent reply",
+        "not ok 1 - F03a realPG campaign/pool/shared quota/lease seams without transport"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4116297,
+      "negative_startticks": "124939283"
+    },
+    {
+      "name": "tenant-predicate-bypass",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 21 - B3 durable rendered sink/token/message refs with own OR intended pool peer read only",
+        "not ok 1 - F03b real PG durable final authority, all stop races, sink privacy and outcomes"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4121271,
+      "negative_startticks": "124941989"
+    },
+    {
+      "name": "shared-current-day-quota-weaken",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 19 - B1/B2 SC-US-003-4 limit",
+        "not ok 1 - F03b real PG durable final authority, all stop races, sink privacy and outcomes"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4133629,
+      "negative_startticks": "124946064"
+    },
+    {
+      "name": "native-delayed-success-gap",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - compiled healthy polling completes twice without a TypeScript loader"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4149575,
+      "negative_startticks": "124951572"
+    },
+    {
+      "name": "atomic-split-claim-no-reservation",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - native poll claim reserves physical admission atomically across competing processes"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4166541,
+      "negative_startticks": "124957882"
+    },
+    {
+      "name": "atomic-skip-mailbox-service-sequence",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - native poll claim reserves physical admission atomically across competing processes"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4167872,
+      "negative_startticks": "124958263"
+    },
+    {
+      "name": "atomic-rollback-commits-reservation",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - native poll claim reserves physical admission atomically across competing processes"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4169420,
+      "negative_startticks": "124958667"
+    },
+    {
+      "name": "atomic-fullcapacity-consumes-turn",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - native poll claim reserves physical admission atomically across competing processes"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 4170915,
+      "negative_startticks": "124959079"
+    },
+    {
+      "name": "one-use-consumed-drop",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/slot-mutation-results.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - preadmitted slots are one-use and unused cleanup refuses a child-bound owner"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": null,
+      "negative_pid": 54143,
+      "negative_startticks": "124988981"
+    },
+    {
+      "name": "unused-reservation-leak",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/slot-mutation-results.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - preadmitted slots are one-use and unused cleanup refuses a child-bound owner",
+        "not ok 2 - unused reservation cleanup retains exact proof after a database release failure"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": null,
+      "negative_pid": 54548,
+      "negative_startticks": "124989101"
+    },
+    {
+      "name": "child-bound-unused-release",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/slot-mutation-results.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - preadmitted slots are one-use and unused cleanup refuses a child-bound owner"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": null,
+      "negative_pid": 54939,
+      "negative_startticks": "124989226"
+    },
+    {
+      "name": "retry-unused-proof-lost",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/slot-mutation-results.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 2 - unused reservation cleanup retains exact proof after a database release failure"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": null,
+      "negative_pid": 55249,
+      "negative_startticks": "124989345"
+    },
+    {
+      "name": "tenant-binding-drop",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/slot-mutation-results.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - preadmitted slots are one-use and unused cleanup refuses a child-bound owner"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": null,
+      "negative_pid": 55501,
+      "negative_startticks": "124989464"
+    },
+    {
+      "name": "atomic-native-authority-check-drop",
+      "file": "/tmp/n7-f10-atomic-admission-negatives-a33/short-remainder-results.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - native poll claim reserves physical admission atomically across competing processes"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 56401,
+      "negative_startticks": "124989835"
+    },
+    {
+      "name": "native-runtime-result-guard-drop-source",
+      "file": "/tmp/n7-f10-cancel-diagnostic-a34/fence-results-a34.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 129666,
+      "negative_startticks": "125020024"
+    },
+    {
+      "name": "native-runtime-result-guard-drop-compiled",
+      "file": "/tmp/n7-f10-cancel-diagnostic-a34/fence-results-a34.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 136564,
+      "negative_startticks": "125022857"
+    },
+    {
+      "name": "native-transport-result-guard-drop-source",
+      "file": "/tmp/n7-f10-cancel-diagnostic-a34/fence-results-a34.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 145055,
+      "negative_startticks": "125025410"
+    },
+    {
+      "name": "native-transport-result-guard-drop-compiled",
+      "file": "/tmp/n7-f10-cancel-diagnostic-a34/fence-results-a34.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 156761,
+      "negative_startticks": "125029139"
+    },
+    {
+      "name": "cancel-disposal-omitted-source",
+      "file": "/tmp/n7-f10-cancel-diagnostic-a34/cancel-probe-results-a34.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - A34 direct cancellation releases its never-started reservation",
+        "not ok 2 - A34 abort after committed native claim releases slots before any operation"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 164918,
+      "negative_startticks": "125033526"
+    },
+    {
+      "name": "cancel-disposal-omitted-compiled",
+      "file": "/tmp/n7-f10-cancel-diagnostic-a34/cancel-probe-results-a34.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 1 - A34 direct cancellation releases its never-started reservation",
+        "not ok 2 - A34 abort after committed native claim releases slots before any operation"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 166638,
+      "negative_startticks": "125034322"
+    },
+    {
+      "name": "abort-cancel-cloned-identity-source",
+      "file": "/tmp/n7-f10-cancel-diagnostic-a34/cancel-probe-results-a34.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 2 - A34 abort after committed native claim releases slots before any operation"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 168061,
+      "negative_startticks": "125034997"
+    },
+    {
+      "name": "abort-cancel-cloned-identity-compiled",
+      "file": "/tmp/n7-f10-cancel-diagnostic-a34/cancel-probe-results-a34.json",
+      "triplet": [
+        0,
+        1,
+        0
+      ],
+      "failure_titles": [
+        "not ok 2 - A34 abort after committed native claim releases slots before any operation"
+      ],
+      "status": "caught_material_assertion",
+      "negative_timeout": false,
+      "negative_pid": 170458,
+      "negative_startticks": "125035701"
+    }
+  ],
+  "mutation_count": 35,
+  "dynamic_inventory_note": "Four lexical prefixes in supplied inventory independently expanded from frozen source literal loops to exact actual positive titles; all present in hashed TAP."
+}

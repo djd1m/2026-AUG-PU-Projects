@@ -1,0 +1,50 @@
+TAP version 13
+# A34_AWAIT {"phase":"claim_begin","pid":171396,"utc":"2026-10-06T22:55:50.548Z"}
+# A34_AWAIT {"phase":"claim_end","pid":171396,"utc":"2026-10-06T22:55:50.560Z","counts":1}
+# A34_AWAIT {"phase":"cancel_begin","pid":171396,"utc":"2026-10-06T22:55:50.560Z"}
+# A34_AWAIT {"phase":"cancel_end","pid":171396,"utc":"2026-10-06T22:55:50.570Z","counts":0}
+# A34_AWAIT {"phase":"exact_unused_cleanup_begin","pid":171396,"utc":"2026-10-06T22:55:50.571Z"}
+# A34_AWAIT {"phase":"exact_unused_cleanup_end","pid":171396,"utc":"2026-10-06T22:55:50.571Z","counts":0}
+# A34_AWAIT {"phase":"pool_end_begin","pid":171396,"utc":"2026-10-06T22:55:50.571Z"}
+# A34_AWAIT {"phase":"pool_end_end","pid":171396,"utc":"2026-10-06T22:55:50.572Z"}
+# Subtest: A34 direct cancellation releases its never-started reservation
+ok 1 - A34 direct cancellation releases its never-started reservation
+  ---
+  duration_ms: 488.286724
+  type: 'test'
+  ...
+# A34_AWAIT {"phase":"runtime_begin","pid":171396,"utc":"2026-10-06T22:55:50.980Z"}
+# A34_AWAIT {"phase":"abort_claim_begin","pid":171396,"utc":"2026-10-06T22:55:51.081Z"}
+# A34_AWAIT {"phase":"abort_claim_begin","pid":171396,"utc":"2026-10-06T22:55:51.081Z"}
+# A34_AWAIT {"phase":"abort_claim_begin","pid":171396,"utc":"2026-10-06T22:55:51.081Z"}
+# A34_AWAIT {"phase":"abort_claim_begin","pid":171396,"utc":"2026-10-06T22:55:51.081Z"}
+# A34_AWAIT {"phase":"abort_claim_begin","pid":171396,"utc":"2026-10-06T22:55:51.081Z"}
+# A34_AWAIT {"phase":"abort_claim_begin","pid":171396,"utc":"2026-10-06T22:55:51.081Z"}
+# A34_AWAIT {"phase":"abort_claim_begin","pid":171396,"utc":"2026-10-06T22:55:51.081Z"}
+# A34_AWAIT {"phase":"abort_claim_end","pid":171396,"utc":"2026-10-06T22:55:51.111Z","counts":{"claimed":true,"reserved":true}}
+# A34_AWAIT {"phase":"abort_claim_end","pid":171396,"utc":"2026-10-06T22:55:51.131Z","counts":{"claimed":true,"reserved":true}}
+# A34_AWAIT {"phase":"abort_claim_end","pid":171396,"utc":"2026-10-06T22:55:51.151Z","counts":{"claimed":true,"reserved":true}}
+# A34_AWAIT {"phase":"abort_claim_end","pid":171396,"utc":"2026-10-06T22:55:51.160Z","counts":{"claimed":false,"reserved":false}}
+# A34_AWAIT {"phase":"abort_claim_end","pid":171396,"utc":"2026-10-06T22:55:51.167Z","counts":{"claimed":false,"reserved":false}}
+# A34_AWAIT {"phase":"abort_claim_end","pid":171396,"utc":"2026-10-06T22:55:51.181Z","counts":{"claimed":true,"reserved":true}}
+# A34_AWAIT {"phase":"abort_claim_end","pid":171396,"utc":"2026-10-06T22:55:51.188Z","counts":{"claimed":true,"reserved":false}}
+# A34_AWAIT {"phase":"runtime_joined","pid":171396,"utc":"2026-10-06T22:55:51.214Z","counts":{"operations":0,"claimed":5,"slots":0}}
+# A34_AWAIT {"phase":"abort_exact_unused_cleanup_begin","pid":171396,"utc":"2026-10-06T22:55:51.215Z"}
+# A34_AWAIT {"phase":"abort_exact_unused_cleanup_end","pid":171396,"utc":"2026-10-06T22:55:51.216Z","counts":0}
+# A34_AWAIT {"phase":"abort_pool_end_begin","pid":171396,"utc":"2026-10-06T22:55:51.216Z"}
+# A34_AWAIT {"phase":"abort_pool_end_end","pid":171396,"utc":"2026-10-06T22:55:51.217Z"}
+# Subtest: A34 abort after committed native claim releases slots before any operation
+ok 2 - A34 abort after committed native claim releases slots before any operation
+  ---
+  duration_ms: 643.37545
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1558.139676

@@ -1,0 +1,11 @@
+--- src/runtime/store.ts
++++ src/runtime/store.ts
+@@ -95,7 +95,7 @@
+    catch(error){if(error instanceof HttpError&&error.code==='transport_denied')admission.reason='authority_denied';else throw error;}
+    if(!admission.reason){
+     if((await c.query("SELECT 1 FROM transport_operation WHERE protocol='imap' AND mailbox_id=$1 AND operation IS NOT NULL",[row.mailbox_id])).rowCount)admission.reason='transport_busy';
+-    else admission.slot=await acquireTransportSlotInTransaction(c,'imap',row.tenant_id,row.mailbox_id);
++    else try{admission.slot=await acquireTransportSlotInTransaction(c,'imap',row.tenant_id,row.mailbox_id);}catch(error){if(error instanceof HttpError&&error.code==='transport_busy')admission.reason='transport_busy';else throw error;}
+    }
+   }
+   await c.query("UPDATE runtime_tenant_turn SET service_seq=nextval('runtime_service_seq') WHERE tenant_id=$1 AND kind=$2",[row.tenant_id,kind]);

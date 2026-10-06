@@ -1,0 +1,917 @@
+{
+  "utc": "2026-10-06T22:55:01.496376+00:00",
+  "results": [
+    {
+      "name": "native-runtime-result-guard-drop-source",
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences",
+        "tests/f09-live-transport.test.ts"
+      ],
+      "baseline": {
+        "utc": "2026-10-06T22:53:09.883338+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 11.894779475871474,
+        "pid": 127287,
+        "startticks": "125018798",
+        "runner_pid": 127134,
+        "PG": {
+          "at": "2026-10-06T22:53:09.694Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T22:53:09.862Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 1,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "a8ff580a8157f822d992e474746c502a6bd4907f2af1cbd80124f2cdc32899e9",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original_sha256": {
+        "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+        "dist/replies/worker.js": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d"
+      },
+      "mutated_sha256": {
+        "src/replies/worker.ts": "7ff97a4a2968050d6856adb245af8678f43dc59c3be66ef3ebedb0f5f29c4757",
+        "dist/replies/worker.js": "c8ed5ecbab25084f90827dc04ab11562f815642a9117c6101c497b73dc050f41"
+      },
+      "negative": {
+        "utc": "2026-10-06T22:53:12.777701+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 2.5340689138974994,
+        "pid": 129666,
+        "startticks": "125020024",
+        "runner_pid": 127134,
+        "PG": {
+          "at": "2026-10-06T22:53:12.546Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T22:53:12.756Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 1,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences"
+        ],
+        "tap_sha256": "46b63212610d4e16f438b98ba83117643955cb74ad51a88d5057c4bfbec4970a",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored": {
+        "utc": "2026-10-06T22:53:25.159696+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 12.00317531498149,
+        "pid": 130217,
+        "startticks": "125020315",
+        "runner_pid": 127134,
+        "PG": {
+          "at": "2026-10-06T22:53:24.945Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T22:53:25.135Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 1,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "eeee41edf0e55409a2b1b8a0d261dcd52dcf3866d286116041ff3a1c072df969",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+        "dist/replies/worker.js": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d"
+      },
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "native-runtime-result-guard-drop-compiled",
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences",
+        "tests/a34-compiled-f09.test.ts"
+      ],
+      "baseline": {
+        "utc": "2026-10-06T22:53:38.237310+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 12.71725462982431,
+        "pid": 132557,
+        "startticks": "125021551",
+        "runner_pid": 127134,
+        "PG": {
+          "at": "2026-10-06T22:53:38.054Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T22:53:38.216Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 1,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "27f1a57391d5408310ce6d51dc5064d0e770965b2e1e3592af41cf479dade615",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original_sha256": {
+        "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+        "dist/replies/worker.js": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d"
+      },
+      "mutated_sha256": {
+        "src/replies/worker.ts": "7ff97a4a2968050d6856adb245af8678f43dc59c3be66ef3ebedb0f5f29c4757",
+        "dist/replies/worker.js": "c8ed5ecbab25084f90827dc04ab11562f815642a9117c6101c497b73dc050f41"
+      },
+      "negative": {
+        "utc": "2026-10-06T22:53:41.296116+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 2.722512361826375,
+        "pid": 136564,
+        "startticks": "125022857",
+        "runner_pid": 127134,
+        "PG": {
+          "at": "2026-10-06T22:53:41.107Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T22:53:41.278Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 1,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences"
+        ],
+        "tap_sha256": "caed03bb8c77dd9b0f50ab87563e3f36b3ce49e40cae7510a085e52f03848f79",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored": {
+        "utc": "2026-10-06T22:53:52.546763+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 10.88786825700663,
+        "pid": 137697,
+        "startticks": "125023165",
+        "runner_pid": 127134,
+        "PG": {
+          "at": "2026-10-06T22:53:52.353Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T22:53:52.524Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 1,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "147c8ee6d8e18134eb73019ab3efb4ebd2dc767dc5fc2f989ae145586475b223",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+        "dist/replies/worker.js": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d"
+      },
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "native-transport-result-guard-drop-source",
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences",
+        "tests/f09-live-transport.test.ts"
+      ],
+      "baseline": {
+        "utc": "2026-10-06T22:54:03.792117+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 10.860502156894654,
+        "pid": 141131,
+        "startticks": "125024293",
+        "runner_pid": 127134,
+        "PG": {
+          "at": "2026-10-06T22:54:03.597Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T22:54:03.772Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 1,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "8ceb013ca1cce3dfba8ba47e0451200c584e8b3ce5b60448288cd01a90dbcd8b",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original_sha256": {
+        "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+        "dist/replies/worker.js": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d"
+      },
+      "mutated_sha256": {
+        "src/replies/worker.ts": "f726d0c6a71e8648424610bc755d7ad6fdbe38fc2002ec0c644f1b2d3cf8850d",
+        "dist/replies/worker.js": "9183104f94aaaec686294884094995e17fa8fae9f3bb1741a9a1462d28ba36ab"
+      },
+      "negative": {
+        "utc": "2026-10-06T22:54:16.301767+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 12.195897053927183,
+        "pid": 145055,
+        "startticks": "125025410",
+        "runner_pid": 127134,
+        "PG": {
+          "at": "2026-10-06T22:54:16.086Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T22:54:16.279Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 1,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences"
+        ],
+        "tap_sha256": "a435a8539ec90baba0ce55300a7b6991b57f745949a064529cc06c28d630a7d8",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored": {
+        "utc": "2026-10-06T22:54:29.028440+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 12.304660842055455,
+        "pid": 149013,
+        "startticks": "125026672",
+        "runner_pid": 127134,
+        "PG": {
+          "at": "2026-10-06T22:54:28.820Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T22:54:29.008Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 1,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "95a3fc1c319ae83f16b7bf035e9d5cd4886970d077614b0f59ef87f6391449d5",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+        "dist/replies/worker.js": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d"
+      },
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "native-transport-result-guard-drop-compiled",
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences",
+        "tests/a34-compiled-f09.test.ts"
+      ],
+      "baseline": {
+        "utc": "2026-10-06T22:54:41.076807+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 11.710748239886016,
+        "pid": 153178,
+        "startticks": "125027936",
+        "runner_pid": 127134,
+        "PG": {
+          "at": "2026-10-06T22:54:40.879Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T22:54:41.054Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 1,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "3e248f1b493630b31ce02ccd226300a63b5d0c78764c2b6b4c6e42bae61371ab",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "original_sha256": {
+        "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+        "dist/replies/worker.js": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d"
+      },
+      "mutated_sha256": {
+        "src/replies/worker.ts": "f726d0c6a71e8648424610bc755d7ad6fdbe38fc2002ec0c644f1b2d3cf8850d",
+        "dist/replies/worker.js": "9183104f94aaaec686294884094995e17fa8fae9f3bb1741a9a1462d28ba36ab"
+      },
+      "negative": {
+        "utc": "2026-10-06T22:54:49.805331+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 8.40644604107365,
+        "pid": 156761,
+        "startticks": "125029139",
+        "runner_pid": 127134,
+        "PG": {
+          "at": "2026-10-06T22:54:49.587Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T22:54:49.781Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 1,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences"
+        ],
+        "tap_sha256": "4d215cbb4b485d0a79e8f90bab5c732b49ba83e966fee0dc30cff5f8ef258c37",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored": {
+        "utc": "2026-10-06T22:55:01.484765+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 11.329171623801813,
+        "pid": 158489,
+        "startticks": "125030015",
+        "runner_pid": 127134,
+        "PG": {
+          "at": "2026-10-06T22:55:01.324Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T22:55:01.467Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 1,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "42c65cbea4fc1af595de23ada391215b11f0deaa3adc9a8eead405af8fa6908f",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+        "dist/replies/worker.js": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d"
+      },
+      "status": "caught_material_assertion"
+    }
+  ],
+  "candidate_drift": [],
+  "nodes": [],
+  "PG": {
+    "at": "2026-10-06T22:55:01.643Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB": {
+    "utc": "2026-10-06T22:55:01.771Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 1,
+      "other_sessions": 0
+    },
+    "slots": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 2,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 3,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 4,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 2,
+        "occupied": false
+      }
+    ]
+  },
+  "mutex": "released after receipt"
+}

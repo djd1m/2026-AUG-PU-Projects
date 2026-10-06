@@ -1,0 +1,65 @@
+{
+  "utc": "2026-10-06T22:38:41.030850+00:00",
+  "native_exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 1.459958410821855,
+  "pid": 4099025,
+  "startticks": "124932957",
+  "runner_pid": 4084682,
+  "PG": {
+    "at": "2026-10-06T22:38:40.835Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB_slots_claims_after_join": {
+    "utc": "2026-10-06T22:38:41.013Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 2,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 3,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 4,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 2,
+        "occupied": false
+      }
+    ]
+  },
+  "owned_nodes": [],
+  "assertion_failure": true,
+  "failure_titles": [
+    "not ok 1 - paced dispatch preserves current day quota and every stop fence"
+  ],
+  "tap_sha256": "46038d492c5860ca277ba618eeba37ed368fa1528ce18a7f3c2d579f7626c1fe",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

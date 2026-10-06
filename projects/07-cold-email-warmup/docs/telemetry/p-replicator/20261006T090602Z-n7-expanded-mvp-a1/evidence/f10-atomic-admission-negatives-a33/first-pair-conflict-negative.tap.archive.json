@@ -1,0 +1,12 @@
+{
+  "original_file": "first-pair-conflict-negative.tap",
+  "original_sha256": "8a255e4903ece219fa0476bba754bdc3e419ed4d3b345686960df47719e84a5b",
+  "original_bytes": 1045,
+  "original_scratch_path": "/tmp/n7-f10-atomic-admission-negatives-a33/first-pair-conflict-negative.tap",
+  "original_scratch_unchanged": true,
+  "export_archive": "first-pair-conflict-negative.tap.gz",
+  "archive_sha256": "eb78288146cc0f928f84b545bf25d1ecd956b02b1d2d3fa58040179f29588df5",
+  "archive_bytes": 542,
+  "roundtrip_verified": true,
+  "reason": "Lossless export of immutable raw TAP whose whitespace-only diagnostic lines fail git diff --check; no source or raw test bytes normalized."
+}

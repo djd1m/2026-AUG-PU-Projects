@@ -1,0 +1,12 @@
+{
+  "original_file": "tenant-predicate-bypass-negative.tap",
+  "original_sha256": "b9bd6580de93e1ff1aab224ff20f04ed79689dbe5f72de33f8df05732861c7a2",
+  "original_bytes": 7234,
+  "original_scratch_path": "/tmp/n7-f10-atomic-admission-negatives-a33/tenant-predicate-bypass-negative.tap",
+  "original_scratch_unchanged": true,
+  "export_archive": "tenant-predicate-bypass-negative.tap.gz",
+  "archive_sha256": "5d097ec1c61d9524fa780bbb989470aa1f85def6623c4beec8d912448e734682",
+  "archive_bytes": 1662,
+  "roundtrip_verified": true,
+  "reason": "Lossless export of immutable raw TAP whose whitespace-only diagnostic lines fail git diff --check; no source or raw test bytes normalized."
+}

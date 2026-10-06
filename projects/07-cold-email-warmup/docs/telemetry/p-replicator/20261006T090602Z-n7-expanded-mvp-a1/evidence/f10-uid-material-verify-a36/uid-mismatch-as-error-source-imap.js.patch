@@ -1,0 +1,12 @@
+--- dist/replies/imap.js
++++ dist/replies/imap.js
+@@ -77,8 +77,7 @@
+     const startedAt = new Date(), c = new TransportChannel(new TransportBudget(signal, 30000), 1048576, fixture);
+     try {
+         const snapshot = await examine(c, input, allowlist);
+-        if (snapshot.uidvalidity !== expectedValidity)
+-            return { kind: 'uidvalidity_changed', snapshot };
++        if (snapshot.uidvalidity !== expectedValidity) throw invalid();
+         if (snapshot.uidNext - 1 < horizon)
+             throw invalid();
+         const hi = Math.min(horizon, cursor + 100), headers = [], seen = new Set();

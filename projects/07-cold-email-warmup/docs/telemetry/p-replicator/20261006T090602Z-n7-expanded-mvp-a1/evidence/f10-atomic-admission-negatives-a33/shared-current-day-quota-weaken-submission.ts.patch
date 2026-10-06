@@ -1,0 +1,11 @@
+--- src/dispatch/submission.ts
++++ src/dispatch/submission.ts
+@@ -64,7 +64,7 @@
+        AND s.scope='campaign' AND s.revoked_at IS NULL AND s.scope_version=c.content_version AND s.recipient_fingerprint=c.recipient_fingerprint
+        AND NOT EXISTS(SELECT 1 FROM suppression x WHERE x.tenant_id=e.tenant_id AND x.recipient_hash=e.recipient_hash))))
+     AND (SELECT count(*) FROM send_job q WHERE q.mailbox_id=m.id AND q.id<>j.id AND q.reserved_day=$4::date
+-       AND q.state IN ('claimed','submitting','submitted','unknown'))<LEAST(m.daily_limit,m.provider_limit,30)
++       AND q.state IN ('claimed','submitting','submitted','unknown'))<100
+     RETURNING j.*`,[now,id,owner,day])).rows[0];
+    if(!row) {
+     // Release a movable claim if the new day's quota (or lowered cap) is full.

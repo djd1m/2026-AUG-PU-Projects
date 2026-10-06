@@ -1,0 +1,275 @@
+{
+  "utc": "2026-10-06T22:42:31.832420+00:00",
+  "scope": "completed currentmaterial cases only; no timeout/import/compiler counted",
+  "cases": [
+    {
+      "name": "oldest-due-order",
+      "failure_titles": [
+        "not ok 1 - overload backoff preserves due age and independent tenant progress"
+      ],
+      "error_fields": [
+        "error: |-",
+        "code: 'ERR_ASSERTION'",
+        "operator: 'strictEqual'"
+      ],
+      "baseline_native_exit": 0,
+      "negative_native_exit": 1,
+      "restored_native_exit": 0,
+      "mutant_changed_all_components": true,
+      "restored_exact_bytes": true
+    },
+    {
+      "name": "reset-sequence-on-yield",
+      "failure_titles": [
+        "not ok 1 - overload backoff preserves due age and independent tenant progress"
+      ],
+      "error_fields": [
+        "error: |-",
+        "code: 'ERR_ASSERTION'",
+        "operator: 'strictEqual'"
+      ],
+      "baseline_native_exit": 0,
+      "negative_native_exit": 1,
+      "restored_native_exit": 0,
+      "mutant_changed_all_components": true,
+      "restored_exact_bytes": true
+    },
+    {
+      "name": "drop-generation",
+      "failure_titles": [
+        "not ok 1 - durable runtime drains and recovers without replaying uncertain sends"
+      ],
+      "error_fields": [
+        "error: |-",
+        "code: 'ERR_ASSERTION'",
+        "operator: 'strictEqual'"
+      ],
+      "baseline_native_exit": 0,
+      "negative_native_exit": 1,
+      "restored_native_exit": 0,
+      "mutant_changed_all_components": true,
+      "restored_exact_bytes": true
+    },
+    {
+      "name": "sleep30-completion",
+      "failure_titles": [
+        "not ok 1 - complete proof becomes immediately eligible without resetting its selected fair turn"
+      ],
+      "error_fields": [
+        "error: |-",
+        "code: 'ERR_ASSERTION'",
+        "operator: 'strictEqual'"
+      ],
+      "baseline_native_exit": 0,
+      "negative_native_exit": 1,
+      "restored_native_exit": 0,
+      "mutant_changed_all_components": true,
+      "restored_exact_bytes": true
+    },
+    {
+      "name": "failure-held-as-success",
+      "failure_titles": [
+        "not ok 1 - complete proof becomes immediately eligible without resetting its selected fair turn",
+        "not ok 2 - partial and held scans cannot manufacture successful polling readiness"
+      ],
+      "error_fields": [
+        "error: |-",
+        "code: 'ERR_ASSERTION'",
+        "operator: 'strictEqual'",
+        "error: |-",
+        "code: 'ERR_ASSERTION'",
+        "operator: 'strictEqual'"
+      ],
+      "baseline_native_exit": 0,
+      "negative_native_exit": 1,
+      "restored_native_exit": 0,
+      "mutant_changed_all_components": true,
+      "restored_exact_bytes": true
+    },
+    {
+      "name": "reset-sequence-on-completed-poll",
+      "failure_titles": [
+        "not ok 1 - complete proof becomes immediately eligible without resetting its selected fair turn"
+      ],
+      "error_fields": [
+        "error: |-",
+        "code: 'ERR_ASSERTION'",
+        "operator: 'strictEqual'"
+      ],
+      "baseline_native_exit": 0,
+      "negative_native_exit": 1,
+      "restored_native_exit": 0,
+      "mutant_changed_all_components": true,
+      "restored_exact_bytes": true
+    },
+    {
+      "name": "first-pair-conflict",
+      "failure_titles": [
+        "not ok 1 - automatic pool allocation skips pair conflicts and remains idempotent"
+      ],
+      "error_fields": [
+        "error: |-",
+        "code: 'ERR_ASSERTION'",
+        "operator: 'strictEqual'"
+      ],
+      "baseline_native_exit": 0,
+      "negative_native_exit": 1,
+      "restored_native_exit": 0,
+      "mutant_changed_all_components": true,
+      "restored_exact_bytes": true
+    },
+    {
+      "name": "pacing-bypass",
+      "failure_titles": [
+        "not ok 1 - paced dispatch preserves current day quota and every stop fence"
+      ],
+      "error_fields": [
+        "error: |-",
+        "code: 'ERR_ASSERTION'",
+        "operator: 'strictEqual'"
+      ],
+      "baseline_native_exit": 0,
+      "negative_native_exit": 1,
+      "restored_native_exit": 0,
+      "mutant_changed_all_components": true,
+      "restored_exact_bytes": true
+    },
+    {
+      "name": "occupied-slot-ttl-release",
+      "failure_titles": [
+        "not ok 1 - expired slot age alone cannot replace its allocated identity"
+      ],
+      "error_fields": [
+        "error: 'Missing expected rejection.'",
+        "code: 'ERR_ASSERTION'",
+        "operator: 'rejects'"
+      ],
+      "baseline_native_exit": 0,
+      "negative_native_exit": 1,
+      "restored_native_exit": 0,
+      "mutant_changed_all_components": true,
+      "restored_exact_bytes": true
+    },
+    {
+      "name": "source-guard-drop",
+      "failure_titles": [
+        "not ok 1 - settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences"
+      ],
+      "error_fields": [
+        "error: 'poll'",
+        "code: 'ERR_ASSERTION'",
+        "operator: '=='"
+      ],
+      "baseline_native_exit": 0,
+      "negative_native_exit": 1,
+      "restored_native_exit": 0,
+      "mutant_changed_all_components": true,
+      "restored_exact_bytes": true
+    },
+    {
+      "name": "incomplete-reported-complete",
+      "failure_titles": [
+        "not ok 1 - poll quanta persist the fixed tail before yielding and never retry incomplete scans"
+      ],
+      "error_fields": [
+        "error: |-",
+        "code: 'ERR_ASSERTION'",
+        "operator: 'strictEqual'"
+      ],
+      "baseline_native_exit": 0,
+      "negative_native_exit": 1,
+      "restored_native_exit": 0,
+      "mutant_changed_all_components": true,
+      "restored_exact_bytes": true
+    },
+    {
+      "name": "yield-reported-complete",
+      "failure_titles": [
+        "not ok 1 - poll quanta persist the fixed tail before yielding and never retry incomplete scans"
+      ],
+      "error_fields": [
+        "error: |-",
+        "code: 'ERR_ASSERTION'",
+        "operator: 'strictEqual'"
+      ],
+      "baseline_native_exit": 0,
+      "negative_native_exit": 1,
+      "restored_native_exit": 0,
+      "mutant_changed_all_components": true,
+      "restored_exact_bytes": true
+    },
+    {
+      "name": "consent-check-remove",
+      "failure_titles": [
+        "not ok 1 - independent capacity and consent predicates deny live transport"
+      ],
+      "error_fields": [
+        "error: |-",
+        "code: 'ERR_ASSERTION'",
+        "operator: 'strictEqual'"
+      ],
+      "baseline_native_exit": 0,
+      "negative_native_exit": 1,
+      "restored_native_exit": 0,
+      "mutant_changed_all_components": true,
+      "restored_exact_bytes": true
+    },
+    {
+      "name": "freshness-check-remove",
+      "failure_titles": [
+        "not ok 2 - A3/A5 fresh complete current opt-in aggregate privacy, pair/day and one submitted-parent reply",
+        "not ok 1 - F03a realPG campaign/pool/shared quota/lease seams without transport"
+      ],
+      "error_fields": [
+        "error: |-",
+        "code: 'ERR_ASSERTION'",
+        "operator: 'strictEqual'",
+        "error: '1 subtest failed'",
+        "code: 'ERR_TEST_FAILURE'"
+      ],
+      "baseline_native_exit": 0,
+      "negative_native_exit": 1,
+      "restored_native_exit": 0,
+      "mutant_changed_all_components": true,
+      "restored_exact_bytes": true
+    },
+    {
+      "name": "tenant-predicate-bypass",
+      "failure_titles": [
+        "not ok 21 - B3 durable rendered sink/token/message refs with own OR intended pool peer read only",
+        "not ok 1 - F03b real PG durable final authority, all stop races, sink privacy and outcomes"
+      ],
+      "error_fields": [
+        "error: |-",
+        "code: 'ERR_ASSERTION'",
+        "operator: 'strictEqual'",
+        "error: '1 subtest failed'",
+        "code: 'ERR_TEST_FAILURE'"
+      ],
+      "baseline_native_exit": 0,
+      "negative_native_exit": 1,
+      "restored_native_exit": 0,
+      "mutant_changed_all_components": true,
+      "restored_exact_bytes": true
+    },
+    {
+      "name": "shared-current-day-quota-weaken",
+      "failure_titles": [
+        "not ok 19 - B1/B2 SC-US-003-4 limit",
+        "not ok 1 - F03b real PG durable final authority, all stop races, sink privacy and outcomes"
+      ],
+      "error_fields": [
+        "error: |-",
+        "code: 'ERR_ASSERTION'",
+        "operator: 'strictEqual'",
+        "error: '1 subtest failed'",
+        "code: 'ERR_TEST_FAILURE'"
+      ],
+      "baseline_native_exit": 0,
+      "negative_native_exit": 1,
+      "restored_native_exit": 0,
+      "mutant_changed_all_components": true,
+      "restored_exact_bytes": true
+    }
+  ]
+}

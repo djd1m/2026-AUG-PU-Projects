@@ -1,0 +1,17 @@
+TAP version 13
+# A36_RETRY_COUNTS {"tail":30,"cursor":20,"horizon":10,"attempt":2,"pages":0,"sameRun":true}
+# Subtest: A36 explicit retry preserves fixed tail cursor horizon and run identity
+ok 1 - A36 explicit retry preserves fixed tail cursor horizon and run identity
+  ---
+  duration_ms: 412.461197
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 844.105532

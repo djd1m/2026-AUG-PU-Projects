@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-06T23:16:13.192929+00:00",
+  "runner_sha256": "57f9ec770fa0087ba73f12790a72f49d01ba8a42f47a91bca4a8aaff44dca4a1",
+  "native_runner_sha256": "b5d17f7a40ca37bed24dfa8cef4f8b2fa8ede9c5787e31d69b2b291759738ea6",
+  "guard_sha256": "ca117cc05f05ff5cbc087b45f4c6c590ac200ddd042c89c580547f8343c38585",
+  "preload_sha256": "2e00e3fb132343831e7afc162a518eadd5e678263f0b327fc2ad250a1dd8dbdb",
+  "mechanism": "same mechanism5 false freshness/reset success, timestamp-only variant independent of scan_complete",
+  "original_sha256": {
+    "src/replies/store.ts": "041516f0fb492bd0e7d92567cf0b94bec23f770991f449fcc8343961d3e6363c",
+    "dist/replies/store.js": "656f1d9cc163efb49ef80b3ee1846bab6b0841d27d1896d90484bd5cb2852d13"
+  },
+  "mutation_old": "ON CONFLICT(mailbox_id) DO UPDATE SET scan_complete=false,uidvalidity=$2,cursor_uid=$3",
+  "mutation_new": "ON CONFLICT(mailbox_id) DO UPDATE SET scan_complete=false,completed_at=clock_timestamp(),uidvalidity=$2,cursor_uid=$3",
+  "positive_tests": [
+    {
+      "file": "tests/a36-freshness-source.test.ts",
+      "title": "full poll captures a reset between snapshot and read and incomplete entry performs no IO",
+      "sha256": "fc279fe19a1fdae32ff39010b680cca9eea4c2d026ce80210d5626748843de00"
+    },
+    {
+      "file": "tests/a36-freshness-compiled.test.ts",
+      "title": "full poll captures a reset between snapshot and read and incomplete entry performs no IO",
+      "sha256": "da2c4ca51d93549b6784d5ed57162119742d878285b9b1296ea6e9b05053b2eb"
+    }
+  ],
+  "budget_seconds_per_child": 30
+}

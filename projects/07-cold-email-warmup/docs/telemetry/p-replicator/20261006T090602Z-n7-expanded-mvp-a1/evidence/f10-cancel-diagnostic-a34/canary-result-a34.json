@@ -1,0 +1,4402 @@
+{
+  "utc": "2026-10-06T22:56:46.161135+00:00",
+  "authorized_secret_files_read_exact": 5,
+  "raw_or_nested_long_string_count": 6,
+  "bounded_variant_count": 25,
+  "JSON_nested_minimum_length": 12,
+  "file_count": 546,
+  "bytes_scanned": 1259860,
+  "runtime_secret_variant_hits": 0,
+  "literal_marker_numeric_counts_outputs": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "literal_marker_numeric_counts_code_or_fixture": [
+    2,
+    1,
+    1,
+    1
+  ],
+  "private_PEM_numeric_counts_outputs": 0,
+  "private_PEM_numeric_counts_code": 0,
+  "runtime_canary_pass": true,
+  "generic_private_scan_pass": true,
+  "scope": "all own regular A33 scratch/shadow/runtime artifacts; exact5 authorizedenvsecretfiles only; source/protecteddeps/foreignfiles/symlinks excluded",
+  "scope_gaps": [
+    "postscan receipt/context/artifactmanifest metadata unscanned",
+    "terminal tool transcripts outside ownregularartifacts are not a genericsecret/private scanner",
+    "runtime canary and generic privatePEM check are separate claims"
+  ],
+  "files": [
+    {
+      "path": "guard-137671-1791327221551.json",
+      "bytes": 148,
+      "sha256": "7735566b37705a21eb7eda53fa0fdd3ec756d9cd240b1a98dc5c47980a5736b8",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-source-negative.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-compiled-negative.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-source-restored-ready.json",
+      "bytes": 1620,
+      "sha256": "33b204c4143163dcc5c9701247b3d6c26ed22ecb12da40ab0001140a20f01b79",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-144983-1791327244006.json",
+      "bytes": 148,
+      "sha256": "c3241e4be394fba380b6c858dcb848de63060ac4ca35ec4236dcb02087516e46",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-140934-1791327232433.json",
+      "bytes": 148,
+      "sha256": "484f622d39d1aa0b813ec966174b133d989254618db7f97bbea2d04416e33e3c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-164391-1791327322942.json",
+      "bytes": 148,
+      "sha256": "17e78c82a30d2f8cc17bf9dcc6a9c1809bb6a42570041f49dfcc15f977578d08",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-probe-terminal-a34.json",
+      "bytes": 25142,
+      "sha256": "543ead39a2ca28c849969cd895b5235036a4df0caf84c23eb06f375ee9fcbca2",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-164704-1791327324733.json",
+      "bytes": 148,
+      "sha256": "1468f7606daed0b85e6255701e48d2379783a874f3c924d5c13ab1306a3595bf",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "fence-command-manifest-a34.json",
+      "bytes": 2776,
+      "sha256": "bb7bb183fe83eac5af650bb708f9ba0f367ec16a596a21ec29e0b2ef7bf065e6",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-140853-1791327231855.json",
+      "bytes": 148,
+      "sha256": "631c9d6a4024776799f81240ac103e58423e6f87ccdb8d710c7ee78bb8012cbb",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-compiled-restored-launch.json",
+      "bytes": 118,
+      "sha256": "7b33844c873091bb6132a5258a6d8a0a8a46dc9f01bf89cd7473669fb728b9ea",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-compiled-restored.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-compiled-negative.tap",
+      "bytes": 4108,
+      "sha256": "4e9c4b74487f471bb8a239349879d3e269b4a9d4293410a47af320f09c230e04",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-source-baseline-exit.json",
+      "bytes": 1375,
+      "sha256": "c20a22c0146e28e59f846b5926d64d0d9465c453e3acf6aef6220a21e630a54d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-157279-1791327284383.json",
+      "bytes": 148,
+      "sha256": "298d911d287f98b107e55388fdd92e39cddbbbe48a4b700cede9be03827e6188",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-133576-1791327209077.json",
+      "bytes": 148,
+      "sha256": "6ae07de5a92fb424b014f67306ebf12e5b3463a4a8f095fc458cd6993f88433b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-160533-1791327301400.json",
+      "bytes": 148,
+      "sha256": "adfa6fc20e79a23daf2879ee723b96afda1627ab87ab029e0cba7ab7bf96786e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-131232-1791327198301.json",
+      "bytes": 148,
+      "sha256": "990e8ce8a81a4bb68cae0caa5ebeb15e322c46e07944fa1ebbc60e667fcf4635",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-132628-1791327205855.json",
+      "bytes": 148,
+      "sha256": "bf8613c2492a533f0d47bdfceb5e74341796f224ff6ad7337a7e4ca17a6b8aec",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-167993-1791327339729.json",
+      "bytes": 148,
+      "sha256": "005a6ee57b61a3b6cf18d539a8310752323b893f008cf34f97f8db090c95b531",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-166508-1791327332770.json",
+      "bytes": 148,
+      "sha256": "b1f40d42c04175f9b35e7d3c92999851da1eb326474c6560d6b7cac61615da92",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "suite-output-a34.mjs",
+      "bytes": 798,
+      "sha256": "cbf39f193dcb063b2076b2fbbb7ce9a2c435dfa8850eefab2e8667180d260c34",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "guard-151724-1791327265183.json",
+      "bytes": 148,
+      "sha256": "c77b92151536acbad6813e0fd9c92dad9c89faa00f20905ed49f9652ed612d5c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-165367-1791327327350.json",
+      "bytes": 148,
+      "sha256": "4ab7615753031b3df713188805570b2fedeef03973b8b911b1495217d8f28773",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-137735-1791327221937.json",
+      "bytes": 148,
+      "sha256": "f7edf8cab32d7de3a8c4da9bfdeb58e256ffb362d787831c43c5f24a286edf13",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-167653-1791327338109.json",
+      "bytes": 148,
+      "sha256": "e3882a417287d378192a286fec68fb1788cf7cb3639cf6e8046337bb91c715ed",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-source-negative-ready.json",
+      "bytes": 1620,
+      "sha256": "889417148b69c31ca4d270d807ea8e57f5ad2ae21e8b3a2b8eaa5c24ecf55b62",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-137579-1791327221389.json",
+      "bytes": 148,
+      "sha256": "78e78fdff42b261adb24339a41b943f4c5a8e41caf57386c24fe2a5067e4376b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-171274-1791327349211.json",
+      "bytes": 148,
+      "sha256": "083e526d565b38546781fc7cf63ff2c4246605d262d7247bd2a322ddcedb7db9",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-source-baseline-launch.json",
+      "bytes": 118,
+      "sha256": "55043f06b32d6aded98ffcbc92dab7cf730009bfc58c3a3cb36ef58f8b227308",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-source-restored-exit.json",
+      "bytes": 1375,
+      "sha256": "c7973ee7117abf062992f3b96ae9163d1e41dffe4afc1cda86ab57a4234ae1b2",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-compiled-negative-launch.json",
+      "bytes": 118,
+      "sha256": "376f17dc9f7987ac818cc68f9299d435fd264e4da55e70fdd0eb0094f7640940",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-132470-1791327205388.json",
+      "bytes": 148,
+      "sha256": "1501ba3a18b1bdf8eb514903db00b454262b05b0242c15a8405b90903cf91910",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-source-negative-exit.json",
+      "bytes": 1487,
+      "sha256": "53ba3faf5338e7eecaaadb80a1fe572d9047ba38201d8ea9ba7676854d21afeb",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "shadow-inputs-a34.json",
+      "bytes": 17257,
+      "sha256": "702a4d6b288cf3a6574dc6702f3daf062d5afe4e12e0eff666edbac06224c7ed",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-144639-1791327243513.json",
+      "bytes": 148,
+      "sha256": "8f741d83b4e6398f4120e359bf88c6d7500d7e3567755ea33aff7049d0198c5f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-source-baseline.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-152943-1791327268917.json",
+      "bytes": 148,
+      "sha256": "c5f0eb7515861af782a74cdad8fdf4f0ed6b25ade0e0c42817324f05c49adb93",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-156492-1791327280402.json",
+      "bytes": 148,
+      "sha256": "341d81591f1afd9c39c24762b317bc6d957e42816f06a3da3fe5e2b612940e31",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-source-baseline-ready.json",
+      "bytes": 1743,
+      "sha256": "b4d46fc0666ecbd63647c8dd98240b832ce512655c1efb19d50f58ba1fa864d8",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-compiled-negative-launch.json",
+      "bytes": 118,
+      "sha256": "6880bedf0c7814109902420242231ec6cc6b2cb0545db9dd5eb5df8328c9d2b9",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-170475-1791327347276.json",
+      "bytes": 148,
+      "sha256": "9fa77584c0aafff0ffb2b38740d048290584d361ce41082f60d90e23bf8634cc",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-188779-1791327405685.json",
+      "bytes": 148,
+      "sha256": "5eadc1473035a6a21e4f25b8a201d325a871e54ba3304ac9374ef5e53a8511e8",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-157617-1791327286729.json",
+      "bytes": 148,
+      "sha256": "2063ae4acc0f3b5a4b8c4101570313ebd9db0784c93fafb8937844dacfbc586a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-137143-1791327220521.json",
+      "bytes": 148,
+      "sha256": "7c4e0844643c46b0bf5e41088f72cb86302678d718a6f35e51bb3ed6cb845d90",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "pg-snapshot-a34.mjs",
+      "bytes": 908,
+      "sha256": "9f829e4efe2dce6f3e8125996cd9fe9e83e4cdc12e6c25d7550ee0fbb1c40bf1",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "guard-171066-1791327348830.json",
+      "bytes": 148,
+      "sha256": "e4d3ff1c3392715da13acf676d71b3cc998872f2926730f476655d7a86c58ba2",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-166764-1791327333564.json",
+      "bytes": 148,
+      "sha256": "ba94804602e8b15b77a52bc9abc864416423355a69ab127418fa1bb114a58317",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-compiled-baseline-exit.json",
+      "bytes": 1374,
+      "sha256": "2dddaf116dc3c53284fbb6c317374e50648219cf6dd37262a0de2c294484aa2e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-run-a34.py",
+      "bytes": 4446,
+      "sha256": "11a902bd9677b0a7a0372a9a4ac61ffac8aba19fc6fc45eeeee1556969056e75",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-compiled-restored-exit.json",
+      "bytes": 1375,
+      "sha256": "99199f782adb422770fe893b8ea1a60a7a7cd4112942f69dc2a1d31212d579c6",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-source-baseline-exit.json",
+      "bytes": 1375,
+      "sha256": "a09527512ac8386703d088b9fdd3ee08a0c3ac0900d9a9e32c980d97267f24ea",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-compiled-baseline.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-136337-1791327217966.json",
+      "bytes": 148,
+      "sha256": "4aa49649448073b40b23c909fae1615b040596ecc2ba5aca17af5a174bc3e4f0",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-158086-1791327289069.json",
+      "bytes": 148,
+      "sha256": "9c590f56a5ea1e9cab837b90a47d6b29e0ff34a364871646b7e7a9571af5a964",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-157026-1791327283290.json",
+      "bytes": 148,
+      "sha256": "b3d1f793e00e9783cc160342899bea2301e3f3f35b4580872b68836a0fc25377",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-compiled-restored.tap",
+      "bytes": 3386,
+      "sha256": "0b6b4e8579de57aa93acf6794667bca7548526e832f54523dd8e516403ff071e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-167943-1791327339564.json",
+      "bytes": 148,
+      "sha256": "b9ccde9407bd9585ca3dfd83e58565e5ba0f9db82df0adffc2f8413d7e6ea836",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-148932-1791327256573.json",
+      "bytes": 148,
+      "sha256": "e126c68ac41653661e27bd26338fa74cb81a92184ad58b28a576f8984292ed48",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-138343-1791327223744.json",
+      "bytes": 148,
+      "sha256": "59c9a5ff9027d381d602d91df7add46040000ad1adef847607a792bd3aab7971",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-170313-1791327346559.json",
+      "bytes": 148,
+      "sha256": "c8ff31e2a085d0dd7a7104bd9110ac9ca9ad0094cf2e07e6841d292be2adca8f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-source-negative-ready.json",
+      "bytes": 1743,
+      "sha256": "2d8caf0f3878ffa4f640b16c5c2955c3b8ee4db73306372c4772d590f19dcb72",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-159574-1791327296188.json",
+      "bytes": 148,
+      "sha256": "1ac6a866bfeb31c64190fb744a842442f5398f06952d9b4383dd4063f0cd8b9f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-167150-1791327335614.json",
+      "bytes": 148,
+      "sha256": "608b47c691deccb05f3210b48760786af75a7a2da356f263ce1b2e20597c1c95",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-153178-1791327269422.json",
+      "bytes": 148,
+      "sha256": "41aa5a81d9f530aa3b4480a30294a8ff4efbd7197ba66f525d1619fc4d1cf1a9",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-134169-1791327210902.json",
+      "bytes": 148,
+      "sha256": "897ab80a215ed202f89656860bda913f7f2724dc988d52cb64d83ead5ae68f1a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-compiled-baseline-ready.json",
+      "bytes": 1629,
+      "sha256": "84a2e49d3bc6b09f6a58d5c4b1e948d2f54e18e3e0a83ccacef68c656733f657",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-153247-1791327269684.json",
+      "bytes": 148,
+      "sha256": "377485c786eed5b08c0452af768c9c6a08dcf97edd32610c58ea960b769f19d6",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-compiled-negative-ready.json",
+      "bytes": 1741,
+      "sha256": "0a43f1241adf8f2f4251e6982027a03b52e5e449ea7f8eda371b146584d67d46",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-136690-1791327218890.json",
+      "bytes": 148,
+      "sha256": "17e7fceb473334ff877560134ca34f0ec5454a427d9098c54e09659ea2497197",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-160275-1791327299679.json",
+      "bytes": 148,
+      "sha256": "6afd55a1091eeece191ccac71bd92c951950fd0801e5f4b2ee0726d159bb800d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-136564-1791327218630.json",
+      "bytes": 148,
+      "sha256": "aff8e0481b3de97505e8496612754f663e61137a3e7326e065e48aed43d660d9",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-132242-1791327204399.json",
+      "bytes": 148,
+      "sha256": "a9d82f1d2f2df60ef26afd3a48ad896eff5b0305e8655ea9b0a87bf35e726cb7",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-168803-1791327342264.json",
+      "bytes": 148,
+      "sha256": "4a4eb0b29e37e3ef62e11aff7c40a46d838c74755e939828d22ca79591a65f7d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-156816-1791327281679.json",
+      "bytes": 148,
+      "sha256": "67239df4087ba0a5cf460f6d58472ed17629b55a18152fca5ee1ca80a6e60371",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-127304-1791327178269.json",
+      "bytes": 148,
+      "sha256": "883cadea80ac10e7041b2e43472502df5189109090957fddb28bfdbafa25b160",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-compiled-restored.tap",
+      "bytes": 379,
+      "sha256": "147c8ee6d8e18134eb73019ab3efb4ebd2dc767dc5fc2f989ae145586475b223",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-compiled-restored.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-160489-1791327300779.json",
+      "bytes": 148,
+      "sha256": "0f5b7d25401bfa0ea4fc9a49041f1c4618462293e8884445aa6537885fd8ecf6",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-compiled-baseline.tap",
+      "bytes": 380,
+      "sha256": "27f1a57391d5408310ce6d51dc5064d0e770965b2e1e3592af41cf479dade615",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-129456-1791327189770.json",
+      "bytes": 148,
+      "sha256": "18ba662610cd828238a82013c44837abf867e42a4fd688bd5b093b34c9dcdf69",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-compiled-baseline-exit.json",
+      "bytes": 1375,
+      "sha256": "014b1468d27d928eb13e342c643c7f1b85a4c097fef4acac23a4c3602ff94474",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-source-baseline.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-166048-1791327330271.json",
+      "bytes": 148,
+      "sha256": "c6b7343e12c36e201081ad6c72efa5e88ecb06673a5bd67b7b9b549125bf6a20",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-source-negative-launch.json",
+      "bytes": 118,
+      "sha256": "ca7511dffb5a7971b30ff13e96869414d028a5d3f6045ef7bc962ed555d156eb",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-132452-1791327205242.json",
+      "bytes": 148,
+      "sha256": "974ae8559133fa44909dd8ccad732f96fd4657b01d4a12fd3ba1fb95812bc5d4",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-compiled-negative.tap",
+      "bytes": 991,
+      "sha256": "4d215cbb4b485d0a79e8f90bab5c732b49ba83e966fee0dc30cff5f8ef258c37",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-160601-1791327301702.json",
+      "bytes": 148,
+      "sha256": "dc79b657dd336f71f53797c248e98496295e0f07535aca9d1e30cc3fd3b7bf1b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-134611-1791327212820.json",
+      "bytes": 148,
+      "sha256": "6abb1a84c3afff6303441706c2fad2aa84ad96e284ef1888ea76ce883478feb8",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-127720-1791327180249.json",
+      "bytes": 148,
+      "sha256": "deb35b52a39f20cca25b871760c01c24be1aad7594c2b1daff556aca8aa10bb1",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-157946-1791327287917.json",
+      "bytes": 148,
+      "sha256": "fd03f7e9ebf0a436c7d28401cd12a11d118e9b4bcbe8a67d585619aaffb3b17d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-152796-1791327268719.json",
+      "bytes": 148,
+      "sha256": "18499d10d39b4a14bf7143c7983352e87d0469fa285cc5fe4b7a0a394ba5469d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-130936-1791327196799.json",
+      "bytes": 148,
+      "sha256": "6b0aaf9b4e735e6fa1099464b345e5f0c157e523f01810123a17667293cfd8b1",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-compiled-baseline.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-171352-1791327349542.json",
+      "bytes": 148,
+      "sha256": "e4e88143b3a664411a4fe4d94d178a15d276185205cc8851fa84124b3ff73377",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-source-restored.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-136235-1791327217511.json",
+      "bytes": 148,
+      "sha256": "4c48dd73ea64d755374d4ad86e658190cddbf0463204741bbb96f61ed77eabfa",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "fence-plan-a34.json",
+      "bytes": 1706,
+      "sha256": "41bae3478a1f389a10bc7e79cc71815560e2e86cb45c91974f2afa9d26588f9e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-probe-a34.log",
+      "bytes": 3037,
+      "sha256": "c5ef3644c46d150690b3da9a0788ae33627c7e3912187b0cb54cf47762c5971e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "fences-a34.log",
+      "bytes": 3257,
+      "sha256": "8949f531c3e3e153525312535795cd768c16287e4a2951c32313e27208acf91b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-168687-1791327341962.json",
+      "bytes": 148,
+      "sha256": "4c525113991bff5333f9f0f1e4e171b1444a3ea7414262cc3a8bca790f07e9c1",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-compiled-restored-ready.json",
+      "bytes": 1629,
+      "sha256": "3e2a880446c7f589f0894d3f0386cab13d24374d4cc51c8a36058b87d796b61f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-172091-1791327351508.json",
+      "bytes": 148,
+      "sha256": "88bfa89da3f33286b8e9035b361e9d86822775b04eac6dab1f9afcb900ec6847",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-148506-1791327255564.json",
+      "bytes": 148,
+      "sha256": "0dd3b6e5d6e27c044392af89b3f889ebd464674504b98c6b38d44d523f76e1c5",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-132373-1791327205035.json",
+      "bytes": 148,
+      "sha256": "0fc4952808de36d8243464407bff3f55597df90aaa1f4b0270f1ed13815f7c40",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-165422-1791327327547.json",
+      "bytes": 148,
+      "sha256": "11a04b370c96c339e7f7525fe26675da8d19da7cf8b1f20858db1b7c2190d48b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-136427-1791327218133.json",
+      "bytes": 148,
+      "sha256": "b8439ecf13b0fabc132dfda0c2d7988807782ae35039ebfda9d1dc387eec3eb8",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-source-restored-launch.json",
+      "bytes": 118,
+      "sha256": "f3c3f132e3edd28e684cd1e83fca20ff65102aa1946ee0e9485b2aea3e698d65",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-140921-1791327232275.json",
+      "bytes": 148,
+      "sha256": "81564740a898806309a394729f89b6dcd7e5f5cdb1b993bca341c22d655caa6b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-141209-1791327233214.json",
+      "bytes": 148,
+      "sha256": "453e1e3a88085ce10d50aac7b34e4ef44ca33bdb0d804de144ff4fd2cdef1f61",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-source-negative-exit.json",
+      "bytes": 1468,
+      "sha256": "95e9908e9a5c1bc785c5d885799f30464bb16b947d5273c6f801d1f1d496c60d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-148606-1791327256007.json",
+      "bytes": 148,
+      "sha256": "5bce45880b5453e8206d4d79935cab05d306c125645490401ecff70228d5c4d8",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-source-restored.tap",
+      "bytes": 3384,
+      "sha256": "d494cb1eb7f4072fc7ae631f1dde160b75468d5052f1fba5d9da04b5467b5e13",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-129555-1791327190118.json",
+      "bytes": 148,
+      "sha256": "780fb1c6479906ac2ffea1ccf7ce129900ee35ee0af17848aab07bd1b785ef68",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-source-restored-launch.json",
+      "bytes": 118,
+      "sha256": "0accb31e80cff685a71372e554b5d289e2b6671c90298195f1285134f97d255f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-compiled-baseline-ready.json",
+      "bytes": 1741,
+      "sha256": "3a3a4f9e99eab03163265da4f51ad5299fa536513817c2fbe4409cea01b718f1",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-129983-1791327192471.json",
+      "bytes": 148,
+      "sha256": "5bc5f0a9841f1d9ad0d5e20e75d82aebaf30e68c1feafffc3086a16cd70aba21",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-129530-1791327189969.json",
+      "bytes": 148,
+      "sha256": "6338865f47a9ea6da4a780fb5fcc0b1c02671c9f5f8a9ed138dace5cfd84c204",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-137514-1791327221200.json",
+      "bytes": 148,
+      "sha256": "e624df0d26c64ac510a6b302f4fccb99095cd1dc634c9aaa276afd3a4ea1843f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-167229-1791327336006.json",
+      "bytes": 148,
+      "sha256": "3ffbb83cecfd0ff6c0674ea085c95068fd56bc62d15dc1b0ee1438077b7d4a07",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-159249-1791327294787.json",
+      "bytes": 148,
+      "sha256": "4c9283f6090bbff5096d8bacd02e78d0cf1e8e55dfd027556f18d3b6b639856e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-168182-1791327340252.json",
+      "bytes": 148,
+      "sha256": "f442b2e0d499d776c9bf7ea2fc3d066589f2374de4e2a42c090ca2280984c594",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-129945-1791327192080.json",
+      "bytes": 148,
+      "sha256": "d1b2a791d76144baa17ddf57596e5daf28214f8b5b4d0db0ead80118436f585a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-source-restored-ready.json",
+      "bytes": 1620,
+      "sha256": "eeb932ce9b2e86b559e2945da6277b3896bf38edc43c65bda5f3ab25eb8fb3dd",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-130041-1791327192645.json",
+      "bytes": 148,
+      "sha256": "69a7523d04e30d4ba480a76079874690479530d1b99bbd7f4c2c3c2a6be55a9b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "diagnostic-reconciliation-a34.json",
+      "bytes": 2382,
+      "sha256": "c16ee26e99a423d248da96b160f42f8a9b1cff06e8d995aaef1cdba43408bdc2",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-compiled-restored-ready.json",
+      "bytes": 1741,
+      "sha256": "4d5efe5b8831d7d334674bfb4d0152bfa66d5c2f1a1535a0d10b277b35c0ab9c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-compiled-baseline-ready.json",
+      "bytes": 1741,
+      "sha256": "37ece17af4d5d1edbc672f79b6d494ccd7b91c5862e286739d0c41e390e6ae95",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-150573-1791327261903.json",
+      "bytes": 148,
+      "sha256": "0f0601f15890219c262c3a2bec35345fc7ff834cbb66c78b9ba663c5217b7ac3",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "canary-a34.py",
+      "bytes": 3221,
+      "sha256": "62c535740d04acfd712fa966736a11efa01d800bd9758159efe0623623ff3007",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "guard-171396-1791327349794.json",
+      "bytes": 148,
+      "sha256": "3abcbac123db01c0f3d1cc33666eeea96a5ef10c8591273ed2f428f65fe8ce3c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-compiled-restored-ready.json",
+      "bytes": 1741,
+      "sha256": "11f9ba2651fae03d805810af02f0aaceb64e3b6767eb05d9ee1ecfda1418f167",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-167892-1791327339403.json",
+      "bytes": 148,
+      "sha256": "bc13658d535109ad15ab037bee33a24dc68cb75a0c1c04fd140d390abfcad680",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-compiled-restored-exit.json",
+      "bytes": 1375,
+      "sha256": "ad92c01f56c352e1b11012959b411ae0d50ab532742dd1a6b8e0db57f4bbe4dd",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-169400-1791327344049.json",
+      "bytes": 148,
+      "sha256": "23c487667f2b989edb5bf928c7d23a9386a2488fb4db3062267e9fcc9f69b58c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-155856-1791327278851.json",
+      "bytes": 148,
+      "sha256": "d3175eb6d411617c9842cea918161abf36cee35a7588dc28ae2a00ddd730dd9d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-source-negative.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-166590-1791327333098.json",
+      "bytes": 148,
+      "sha256": "312957864b9d5572aa9938f806df8ae7754e82469b4061b0102d2da626651ca7",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-compiled-restored-launch.json",
+      "bytes": 118,
+      "sha256": "449d96cf705917354ae316013b8114a009bba009610d4cbddb8c38dba64cd9b2",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-source-negative.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-compiled-negative-ready.json",
+      "bytes": 1629,
+      "sha256": "c0d0799e11f8709f31d4ce6c30f113e94e7f2c1cf00d6dca71526a1f711db87c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-169540-1791327344401.json",
+      "bytes": 148,
+      "sha256": "a64febae7e6fb6afdf1d28671feaf2526a5307be5511573cedca7a8535a7aeca",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-compiled-negative-exit.json",
+      "bytes": 1550,
+      "sha256": "9eeca82836a0ae8a7bc80923eb5d57b83fbb4a89baa4b2e9ab1950f409c25bd0",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-compiled-negative-exit.json",
+      "bytes": 1486,
+      "sha256": "7d5ddc1a9f3dd17a086d6e67e3d0b7715c504d9139079be968928d275f788841",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-172037-1791327351358.json",
+      "bytes": 148,
+      "sha256": "c6fafb2fdcb6aa241b652068d3fa910e52a0fd68dc3feb951940958608f642ec",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-compiled-baseline-exit.json",
+      "bytes": 1375,
+      "sha256": "e01212459c1265f7c55d5fbf479084e627e22f15692fef0f26abcb14a476cf56",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-145548-1791327246022.json",
+      "bytes": 148,
+      "sha256": "07dcab6693188fae152991f233d3e045680750ff03dce655bd49d1616144728b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-128158-1791327183089.json",
+      "bytes": 148,
+      "sha256": "101d635f67f27cff7a5e9e52712a633e110bf7db16476f7e41fc3a469fbcca6c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-164487-1791327323322.json",
+      "bytes": 148,
+      "sha256": "a71987fb4946cb268494a414f9eeda9ec7cb3e70d6913882ca0032f68ff4fe86",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-compiled-baseline.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-156667-1791327281160.json",
+      "bytes": 148,
+      "sha256": "f64d13897c9c0ff4ccb9e0b3b93c8c146f2a29278f09be81e8d6e26ae80b3825",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-source-negative.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-source-negative-ready.json",
+      "bytes": 1620,
+      "sha256": "d963fbded9de5ca4b12e0711a5288cae53e9176ece22567b35c1ce57e467b3e8",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-152569-1791327268256.json",
+      "bytes": 148,
+      "sha256": "eea4824b4d73c058d9fc6668a1bc071310e195736432d3e70e5471814b3d2d5a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-188857-1791327405829.json",
+      "bytes": 148,
+      "sha256": "ce88cf77d7d14d570bcfedd19ea11965c21500797aab9f9e4edb547ce742b332",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-compiled-restored-ready.json",
+      "bytes": 1629,
+      "sha256": "1415087b51d83a87d92ca6eb33068acc9ba7bd3328af2d8c6e7b2f5756c5b125",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-166223-1791327330934.json",
+      "bytes": 148,
+      "sha256": "9b0d88b1f7de09fc5f55cc80fe664cf2be5b6562b9985548692b86dceb6c3094",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-143225-1791327239146.json",
+      "bytes": 148,
+      "sha256": "cf0a162a5075ba89177f9bb996bb5389b8dd2430ca4f2cc8b06fcab33f9ad62c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-127178-1791327177537.json",
+      "bytes": 148,
+      "sha256": "bda1a98345dfed3fb41206db8327529f03575c2fb360bc8f62d65d15c33550a9",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-146136-1791327247725.json",
+      "bytes": 148,
+      "sha256": "441e53260642e8f0947e2605b4ddf1b3613ad195bb4612acdcebb56dbfd1b55e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-151132-1791327263727.json",
+      "bytes": 148,
+      "sha256": "731e9c89908430de2bd7f7b8945649b1470249055af8febc0d02bcf3d4797054",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "fence-results-a34.json",
+      "bytes": 24637,
+      "sha256": "e67f8af8d63cf25e9d583e2550ff1201bee6d364f8937db10c74de523ec416fd",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-source-restored-launch.json",
+      "bytes": 118,
+      "sha256": "42b3d997a8f99efafb8de4bc2dbeae13a215054d8d055d09389de2afe0d1e271",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-compiled-negative-exit.json",
+      "bytes": 1468,
+      "sha256": "04a268fdbaf2fc598823ff2883523c2e5bba5835e241635cfb83d2c4478aca30",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-130203-1791327193031.json",
+      "bytes": 148,
+      "sha256": "a47240f829daddc487e5fae61bcfcfd22ee1b9c433c6954cd9418458f42cb54b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-164440-1791327323089.json",
+      "bytes": 148,
+      "sha256": "9c5386b62f4004e275cecf1aacde29a159af5874abaca706fcdab377e5e5e0f6",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-compiled-baseline-launch.json",
+      "bytes": 118,
+      "sha256": "d778db10362e8efeea0814fa1e7d661bc61c1d1aadf58dbc92ed45c4c4d20038",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-136499-1791327218463.json",
+      "bytes": 148,
+      "sha256": "2930e6758258747dc98b5f771cd4d6454e422d37cda573528ed68fd52fd537a0",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-source-baseline-launch.json",
+      "bytes": 118,
+      "sha256": "d6423610eed726c73e0ef40de0f8f28ab0677e4378432116413b104ee485c0f2",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-153903-1791327272459.json",
+      "bytes": 148,
+      "sha256": "7e4f7a705b9aa182ac2b82c34ef4bc4c0a6a947bb38e14c98ffb3a590a7be71e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-source-restored.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-169475-1791327344224.json",
+      "bytes": 148,
+      "sha256": "dde1eeae53d4cc99faaaa02c26d8af0abad8bb2cc3f5086c501b716c79dd779b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-compiled-restored.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-source-restored-exit.json",
+      "bytes": 1374,
+      "sha256": "408dbd64318b863a28d61ef8b8e8846d6e7ea5f08693f5897d8737ce25c4c793",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "fence-terminal-a34.json",
+      "bytes": 27402,
+      "sha256": "46dd12a4b473b7534fdb38e4b2928910be10b0d5f30e194f35f6488d35cdf7fa",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-129666-1791327190297.json",
+      "bytes": 148,
+      "sha256": "005b9dad5919afe3515789e1d4f90f9d4ed436231fe611795bbfb89ead6ac3ce",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-168061-1791327340020.json",
+      "bytes": 148,
+      "sha256": "de8da03b0fa7f04d545bec42b810942f225dd56ad72c4d3e917c80daf4f48d8c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-165471-1791327327719.json",
+      "bytes": 148,
+      "sha256": "3b06142bc103f3cd977f40df1cbefbaa2b55f27c36e17e6ac549da182fbf9258",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-152093-1791327266672.json",
+      "bytes": 148,
+      "sha256": "c5d2afacc37ad9d63e94e06eab97e99079d8a20b24d335eba5fe4817b5754729",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-compiled-negative.tap",
+      "bytes": 4817,
+      "sha256": "7266906cb291fcb03df6218ad90308ac851757ce9c09f2086fb85693af3aba6f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-compiled-baseline-ready.json",
+      "bytes": 1629,
+      "sha256": "ca5d3f430e17346f0059294d236cbbd7dc5eec7d0288793ec4f2bb90c0db77a0",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "terminal-ownership-a34.json",
+      "bytes": 1585,
+      "sha256": "a767ebf74e7b60b4c7412b6be8affde39a886159b1d426947fb9aeab6dd13823",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-source-negative-exit.json",
+      "bytes": 1487,
+      "sha256": "075ddebe484fcb1275d91ff07f9c62941505219462573722e4021d52dd8ee686",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "fences-a34.py",
+      "bytes": 3070,
+      "sha256": "e079cfc2d599dc1e8a302ae5db2569c9a38d8c657af6861951704b19a03b3b09",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "guard-150199-1791327260552.json",
+      "bytes": 148,
+      "sha256": "277247d95160cc042d94ec8f04b72b33b79f77947eb431ef3878ab6ab56f82d1",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-166100-1791327330441.json",
+      "bytes": 148,
+      "sha256": "216c6f5da173ba121cfababd51728e734ab8aa3d3942ef105b20a0f8a4f52482",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-source-negative-launch.json",
+      "bytes": 118,
+      "sha256": "073a3caf1e414ecb7c9bedcbc253cd42d73e82c08015a975dcebeb9d0a79bc61",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-165847-1791327329841.json",
+      "bytes": 148,
+      "sha256": "fe252864920fd303a76dbf34c0a092ea779845129dfc0a2f3332d0060635fc0b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-127261-1791327177871.json",
+      "bytes": 148,
+      "sha256": "58dd3a2c19fa02777746b4262d2587f2fef578738c22e977015ab8a973507998",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-probe-results-a34.json",
+      "bytes": 22472,
+      "sha256": "fc68eef42cf485ef57e8cdc27a0664cc22d1971ed3a0f29c310919ea95fd440f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-153704-1791327271280.json",
+      "bytes": 148,
+      "sha256": "e30d18b8b0634e40c99039614158b8f3f988c30d093c85417cab28205b89fefd",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-compiled-baseline-launch.json",
+      "bytes": 118,
+      "sha256": "44e9f85b2b441f500bb8e4300ba4f516931d5adb8cf8169fded44acab4ad3ce8",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-170388-1791327346765.json",
+      "bytes": 148,
+      "sha256": "39043fb183e19cc46ceec86f8aafffa0015c0c8d8bdb06e929b202e93053aa46",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-source-restored.tap",
+      "bytes": 3385,
+      "sha256": "69b26f9319d229a3728e1b51c5be5f8f058c9345b900f2a85d5c1f2f9012900f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-128730-1791327185839.json",
+      "bytes": 148,
+      "sha256": "34d116465f7d3dc4211ccd982aaf0b7356994b368bedf70ac6d45f7810f4a1a3",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-166558-1791327332951.json",
+      "bytes": 148,
+      "sha256": "2f806fdba4a6f7c9f448ba177fe6f0e261131ddea8844cdef45554993096d475",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-143687-1791327240621.json",
+      "bytes": 148,
+      "sha256": "e32f1e36b583303e3d2a62e75ce6e3efdcdefa061e486cbee1e9848f139682ae",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-167020-1791327335234.json",
+      "bytes": 148,
+      "sha256": "d37eb64de069da13241bfd8036e9f4b961eff3cde31a712536901782057ded50",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-source-restored.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-166494-1791327332596.json",
+      "bytes": 148,
+      "sha256": "b881a50858978574ff2090f10741f2a12c94f65d0d1f7ea1b76a906c9aee42fc",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-154477-1791327274021.json",
+      "bytes": 148,
+      "sha256": "35d73468f182877cb615434f9f3c480aff6408157498a7c617febc31339b5207",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-149013-1791327256771.json",
+      "bytes": 148,
+      "sha256": "6f5c91506af3f8e4feffdbea90032394c60b35d151d234ceea4ab3bb19a3846b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-167118-1791327335448.json",
+      "bytes": 148,
+      "sha256": "aee2b607b5c9741bfa0e3a9cfbcc59f4ab60016a7d7348d4c936a972ca28fba6",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "launch-actual.json",
+      "bytes": 611,
+      "sha256": "55ae4960270106841b50e83afa20489c9aec07321076020a37bccfe5eda8004d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-compiled-baseline-launch.json",
+      "bytes": 118,
+      "sha256": "02dd33d35565b9bc12e036dbf55a01e9b9563e11488bc59fe1e80196043ea91a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-167506-1791327337403.json",
+      "bytes": 148,
+      "sha256": "23338112a6c1ca697515944f7531909254cdb8b2b1bcaaa62a932b1e564a9a31",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-164918-1791327325311.json",
+      "bytes": 148,
+      "sha256": "64c7dfc0f9fc6f99fa4362fa0f361b024ecba761c811a2e14c6e633b98a5f55f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-source-baseline-ready.json",
+      "bytes": 1620,
+      "sha256": "fdb05307a94e59b47d3bf9102e375c2ce207556e494f184b9209e0c375c8ff40",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-141699-1791327234775.json",
+      "bytes": 148,
+      "sha256": "5e607f0c69123f69ea53dc1e19d182e52b80a2bcf6c3a310e54a37e32e80d803",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-130236-1791327193448.json",
+      "bytes": 148,
+      "sha256": "3d5ddee0c54f535190dbca9f0bc2313fc69dacb6537d6c77ee48aa7327dc10dc",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-165985-1791327330036.json",
+      "bytes": 148,
+      "sha256": "5fd867192dbace3e189796a9de54028472a4470752b1b1169649eafd8a35db3a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "seal-a34.py",
+      "bytes": 7819,
+      "sha256": "73c01535a0994623b3e5bb6b123d912c9223919300024ab1aa9650aa5c1ed4c7",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "guard-172155-1791327351817.json",
+      "bytes": 148,
+      "sha256": "b78638f51eddbb9397c26ad3adec3fd776057da5d4d3dcf1f8e76140a471fa0d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-compiled-negative.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-compiled-negative.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-166638-1791327333279.json",
+      "bytes": 148,
+      "sha256": "4e5e90305a59ff7a7c67e1eaef5f84efee65568ebdd5ca74e2caac0f93c192a8",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-149905-1791327259357.json",
+      "bytes": 148,
+      "sha256": "89a9757a723f19cefb80d6e93450f272d255e2d7a6f599dbffa675112f4efc74",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-164881-1791327325109.json",
+      "bytes": 148,
+      "sha256": "d932a38ef41fb5fb62c6e68b44d372cf116cb23d1cad83c7499f4b7b3bf62e5d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-compiled-baseline.tap",
+      "bytes": 3385,
+      "sha256": "71e28f9c67d906130ee9983058b24bc1e442cd2c2531a99e30d3006b5cd09a75",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-source-baseline.tap",
+      "bytes": 379,
+      "sha256": "a8ff580a8157f822d992e474746c502a6bd4907f2af1cbd80124f2cdc32899e9",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-166954-1791327335052.json",
+      "bytes": 148,
+      "sha256": "fd0e6a3668178a17dbc7cac6091eb6d765ec6d78d7cf9d9f1cf4087a011ed31a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-source-baseline.tap",
+      "bytes": 379,
+      "sha256": "8ceb013ca1cce3dfba8ba47e0451200c584e8b3ce5b60448288cd01a90dbcd8b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-139455-1791327227300.json",
+      "bytes": 148,
+      "sha256": "98da84b3d1fe41347a18cf2b2fbed9c46dac60aab7e1c5d0d7d2a2038352b13f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-compiled-restored-exit.json",
+      "bytes": 1375,
+      "sha256": "c989ff89a67ee0a5381494b6cdabc6015b626b37cbc38c1ad5b3c5232c5aace0",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-source-baseline-launch.json",
+      "bytes": 118,
+      "sha256": "8c14860a2a3aefe51b2aff80f564f0c180ce1a30a22e32719ecdd5615999906a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-127287-1791327178037.json",
+      "bytes": 148,
+      "sha256": "d7906aa71446e2efcf31595878f8d9fe54adb4632747dc1328bcf93b8cf63cd9",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-157467-1791327285444.json",
+      "bytes": 148,
+      "sha256": "feb2e98b2dd58b3458858395a83493d4c0c96bccde5410adea52784eda15ca7e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-compiled-baseline.tap",
+      "bytes": 378,
+      "sha256": "3e248f1b493630b31ce02ccd226300a63b5d0c78764c2b6b4c6e42bae61371ab",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-166133-1791327330624.json",
+      "bytes": 148,
+      "sha256": "728675c6aba07eab4bf8def7fb7ae6fed6824a340411cee2ac8f7c2760b04002",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-141029-1791327232798.json",
+      "bytes": 148,
+      "sha256": "c3fbf612d614c70214c3450d83c791d082c6d652b01da433e76f2be61a4de612",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-129425-1791327189618.json",
+      "bytes": 148,
+      "sha256": "fde628b9291fd12c922af1fb2bdcc252d5c8ac168b8e2becac126f74017c7087",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-127948-1791327181957.json",
+      "bytes": 148,
+      "sha256": "507ecc759a55ccebdd867e280987ea7282b636651000961cb3ae47bf4d6d492c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-145104-1791327244394.json",
+      "bytes": 148,
+      "sha256": "35b20ae95ba38cc6450b832d166ddce2a7df6c12fd21484c0cc4d525a30b08ff",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-compiled-negative.tap",
+      "bytes": 991,
+      "sha256": "caed03bb8c77dd9b0f50ab87563e3f36b3ce49e40cae7510a085e52f03848f79",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-compiled-restored-launch.json",
+      "bytes": 118,
+      "sha256": "096fd119ecdec1ca93d05cba1318fd5c82f7a1044038de5811bdfccb47fa398f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-source-restored.tap",
+      "bytes": 380,
+      "sha256": "95a3fc1c319ae83f16b7bf035e9d5cd4886970d077614b0f59ef87f6391449d5",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "prepare-a34.py",
+      "bytes": 2399,
+      "sha256": "5bc06176e19d3a9e7d27f6ac0f22711d86f895ed5052dfdf06b56dd4553b0998",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "guard-158273-1791327289503.json",
+      "bytes": 148,
+      "sha256": "8e6d4c1acaad82b4386d036d295cc9daebbf24c3c1cc1add35ce5de1d445cf34",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-source-negative-launch.json",
+      "bytes": 118,
+      "sha256": "286e44a149c452de942d4ecd3594eb5548318dd1573a1b0ed97a7a08fe95c1a3",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-source-baseline.tap",
+      "bytes": 3386,
+      "sha256": "697b73d4372114068c0f79b14a03ba7eeaa36dbfcc9e6507e13198638c41d7c3",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-165301-1791327327155.json",
+      "bytes": 148,
+      "sha256": "943b85f3a655afa7e8e4781cc26a03991765a1d3bc4ae31c4d01b6b60949e1cc",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-168866-1791327342428.json",
+      "bytes": 148,
+      "sha256": "74518460e4b0decba7d1cbf55a68f4f9d2a0857aafa48589972ef94b92d2ec41",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-154989-1791327275642.json",
+      "bytes": 148,
+      "sha256": "e001798d7cabf4716c3e4252b6da03355eb23c02ccd8306d5d7d2dac94c671cc",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-139798-1791327228667.json",
+      "bytes": 148,
+      "sha256": "8b25a5ceb85de2479397656c90720bc04cf28fe8b9a80c6b2a9526ac8050554c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-129346-1791327189218.json",
+      "bytes": 148,
+      "sha256": "776d4f3c37d4affcc5d992dec196656447c3656cb26edc61a7136a0ec2940b37",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-compiled-negative-launch.json",
+      "bytes": 118,
+      "sha256": "3f04309ba5a6dda0fc4dd09e42bbfe4789a461cd0809b580ca987f39d10705b1",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-171321-1791327349374.json",
+      "bytes": 148,
+      "sha256": "7f4e923e447e90c2ccaea15c16eac6d97d506f5a8dfd0b7872b8c0b6b79b4b10",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-131662-1791327200913.json",
+      "bytes": 148,
+      "sha256": "0e591a823629feb21b197eb146f98bbd618d8ed5b9a9236c8f3d721a7ea17cbf",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-148677-1791327256176.json",
+      "bytes": 148,
+      "sha256": "a08e851a3db34f167b153c51867bccbb5123ccf9d20e443e8395ceab94eba6d8",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-source-baseline.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "launch-prepared.json",
+      "bytes": 2363,
+      "sha256": "188d8ef9a7ebdfd99f13ed1763f59420d5e0f2336016fd97197cc00045673636",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-144209-1791327241967.json",
+      "bytes": 148,
+      "sha256": "0f3edfc7c0ffb006c484dd85391e6ca2454a8be4871b04a0af323f00a8959029",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-141131-1791327232976.json",
+      "bytes": 148,
+      "sha256": "2d7b79270f708e5d3d1a85f212afbee3cd83a525d367e329dade2fe329efaf5a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-source-restored-launch.json",
+      "bytes": 118,
+      "sha256": "dfe91065f4303bdb48e56a359904ae16bfd1950976682b3c438cc167323b383d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-source-negative-launch.json",
+      "bytes": 118,
+      "sha256": "ad569b24fe4344fce12aace2dbed1e6a7c3705f2601312062335874b32bd927b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-138998-1791327226095.json",
+      "bytes": 148,
+      "sha256": "404ee34d1c19b96cc9087ae6178ff8889e33dd457a181f9053117d9aba576de0",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "pg-owned-status-a34.mjs",
+      "bytes": 1023,
+      "sha256": "da135c300ce5df9c7f75dd551bb77b5b028b3afa9e6cb274b4ed08a257c1f1ea",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "guard-167168-1791327335783.json",
+      "bytes": 148,
+      "sha256": "e085a0827491fca29fd5db4d789d420835e7be25d696301a517c38670c62a029",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-compiled-baseline-exit.json",
+      "bytes": 1375,
+      "sha256": "e452e845210f4500afa8e5b81a1cfd6aab4e7b2f092c72e54dc5d59552b774b5",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-source-negative.tap",
+      "bytes": 995,
+      "sha256": "46b63212610d4e16f438b98ba83117643955cb74ad51a88d5057c4bfbec4970a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-compiled-negative-ready.json",
+      "bytes": 1741,
+      "sha256": "400948ac773284da0f1d36fdbaf0fb0ca2942951bb1573129bcdc917b3e4be72",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-source-restored-ready.json",
+      "bytes": 1743,
+      "sha256": "f04d6de73e81d4120607d656983d2fa5df84a98470ec24f5c6cbd01be2e6a92a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-140976-1791327232640.json",
+      "bytes": 148,
+      "sha256": "360f98c9a81c4b4c4d6aaa966790b85084b8f092d579566d8ae332bcaa619456",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-142285-1791327236357.json",
+      "bytes": 148,
+      "sha256": "69e2bd0219ec0997dc53f31f9f7b530ae6fc1301113ad668f991b743dd63c64a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-127249-1791327177729.json",
+      "bytes": 148,
+      "sha256": "f560787674af8905e9329e3eb0ec61d4526ed6452851377ed7a7a51906897495",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-144878-1791327243867.json",
+      "bytes": 148,
+      "sha256": "55d20e9663f2debb0d7e809e0dcbd3fc3cd5876377b3bb378cc052a5b583cdcc",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-168047-1791327339876.json",
+      "bytes": 148,
+      "sha256": "c92a4d86be99ae0bff925d83448882ab2236164c04e2b9d736ea4efb31ca301c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-compiled-negative-launch.json",
+      "bytes": 118,
+      "sha256": "7e482ef5335ec500c36fe093e920a55fe66a1a3b3eb157cefef30ae53b089a5f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-source-baseline-launch.json",
+      "bytes": 118,
+      "sha256": "09641299e3c21a7b7651507a6b5dc92af7f21a4d5a0fc9acbaf07af84a21e636",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-146698-1791327249711.json",
+      "bytes": 148,
+      "sha256": "8ac23f311add58eb1d065772b48d052bd1112808ed79fc522347c9ff4f1b9d12",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-160564-1791327301564.json",
+      "bytes": 148,
+      "sha256": "cb2b67493f3176645c6e8c5bfc641184069fb8622ed3b848ec7a793bb5563503",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-compiled-baseline.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-158989-1791327293481.json",
+      "bytes": 148,
+      "sha256": "8f9ce1d0d49fb7e39ca886bc2f5fc20bada4a6cf3fb13dcc644999f13a98e544",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-156579-1791327280968.json",
+      "bytes": 148,
+      "sha256": "96f2c069599fd2ed556a9710cef1e332b3910c71c5a34e23d59676691d2f7997",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-169672-1791327344954.json",
+      "bytes": 148,
+      "sha256": "77a16e595f37c26af32f7d8b114921331ce268c9b63cfcad4347613d59339415",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-137697-1791327221709.json",
+      "bytes": 148,
+      "sha256": "77783808fa50b77beb2748dc6fbf9c5cac9b53b9e1db41c461c2b1039ecd08e2",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-source-baseline-ready.json",
+      "bytes": 1743,
+      "sha256": "3c470a1fb916908553f98bda3f8393d32ac1e3129f06d49d9b580a46f9f423c4",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-source-negative-ready.json",
+      "bytes": 1743,
+      "sha256": "8dd5be380588953338d15ba3bf063f41bb3ca9dd4a70839b7ad69cd77168ff3d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-135700-1791327215944.json",
+      "bytes": 148,
+      "sha256": "e1734854c9237484513451a9eca9a0890d3431ab0da82d705d4b4ebb5ce43246",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-144397-1791327243083.json",
+      "bytes": 148,
+      "sha256": "0163dada185b1f121928d6f6f154e4a04e80753d492f02a794951ee3e549b4d9",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-source-negative-exit.json",
+      "bytes": 1549,
+      "sha256": "ce2550ded249524cf8c90024362051e26eadabe1c138cfae015df2f2956aca28",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-158321-1791327289687.json",
+      "bytes": 148,
+      "sha256": "9ad93c429f2483f51987f431c2361a070812c229974e167d7bd3abf8a3e6654c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-compiled-restored.tap",
+      "bytes": 380,
+      "sha256": "42c65cbea4fc1af595de23ada391215b11f0deaa3adc9a8eead405af8fa6908f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-158815-1791327292253.json",
+      "bytes": 148,
+      "sha256": "5e71f18afa68cd0747f0e0ea3fb5d0519e5bd3f368dea58d2af09e6082467aa1",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-159814-1791327297792.json",
+      "bytes": 148,
+      "sha256": "c90fb2f0d22f7f7dc3d58acb4c5460fb5faca8d469c9cf6c2f62156610237841",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-164368-1791327322796.json",
+      "bytes": 148,
+      "sha256": "45722133457a4fd9a9e01857a81081eb70049fe73f8350cafe16b0b681c4fc1c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-171143-1791327349000.json",
+      "bytes": 148,
+      "sha256": "cafd47d353964e643f57f368e44dd74b39fa48d9525fb89c970938d6c5b63eb8",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-128404-1791327184570.json",
+      "bytes": 148,
+      "sha256": "c46369036654548c78c481d482091805ce6406beff1f19ad7dd876179ec9eaef",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-source-restored-exit.json",
+      "bytes": 1375,
+      "sha256": "9297e4275f1c90f15661a5a7069abcd3acbd3bece3bd491154c22df150440149",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-169605-1791327344560.json",
+      "bytes": 148,
+      "sha256": "1f1fbb5c7e5907b3afb968f93827e7131b5ec577be7713ab82c2cead1045b914",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-170427-1791327346901.json",
+      "bytes": 148,
+      "sha256": "de2e32c8a5be7a2055d0260884a58f680c2db157b6194b6585481f4923bb6a7e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-156723-1791327281294.json",
+      "bytes": 148,
+      "sha256": "f8fd11fd4de4910b3ba23825fd63d381a789ff15c5ad67a2639c8def47cd8ba1",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-compiled-negative.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-170255-1791327346396.json",
+      "bytes": 148,
+      "sha256": "8adb0c80076c675575d12a2fbe19cdaf29f17eeb166451b7730c51019469d094",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-158414-1791327289890.json",
+      "bytes": 148,
+      "sha256": "8a0abfea4296c4ab746ae2ac574268d758298603e98f7f5079dcd85dd5843f41",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-164843-1791327324933.json",
+      "bytes": 148,
+      "sha256": "ebec97208920147f50b0174430e7ee7c37c89d2a389f841a58d45f8e27120d3b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-source-negative.tap",
+      "bytes": 996,
+      "sha256": "a435a8539ec90baba0ce55300a7b6991b57f745949a064529cc06c28d630a7d8",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-167469-1791327337253.json",
+      "bytes": 148,
+      "sha256": "140ec974a3c80e5d34c61e7a52df07aea55d39703099133eee7a1548831697e7",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-160501-1791327301247.json",
+      "bytes": 148,
+      "sha256": "6710fbf0f7078001f502e534eaacc6883f4989488969327b0d046c16687a4d1b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-158446-1791327290047.json",
+      "bytes": 148,
+      "sha256": "28aebd90a55cd60c8bf6bc75e5d1ea081404b72df7af9f9ed9071f0e177a6f07",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-155523-1791327277417.json",
+      "bytes": 148,
+      "sha256": "ab5d3affb6cda3ddbb302c305c6c978dcae44ce750992f133b84a61aa359ef27",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-130124-1791327192868.json",
+      "bytes": 148,
+      "sha256": "f3768342889bcad374852cd89545955f96e479a54e4a63456ada38078ebbb8f2",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-compiled-negative-ready.json",
+      "bytes": 1629,
+      "sha256": "d8fa0f26d7ff897afd23e72518c6bef7aff306defb590270256f6d46df0de7d9",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-source-negative.tap",
+      "bytes": 4781,
+      "sha256": "5b673a2d3463dca7ac6459bfb62d26f8fd79bf62daa27e88662bcff3e764c6cb",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-138583-1791327224941.json",
+      "bytes": 148,
+      "sha256": "1638c0253f0e90bb74f582fd9f271a285de4ad6c4ab337b45046861ef92fbd41",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-compiled-baseline.tap",
+      "bytes": 3386,
+      "sha256": "f047137059a000f76a43cca35c0a4412b3aa72f917d9b52594b6ef62bd57994d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-153042-1791327269098.json",
+      "bytes": 148,
+      "sha256": "5acfd2dd8a36498a931a479f77e4bffdb0732cc79dbd6ab4175317f03d5927a4",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-135003-1791327214170.json",
+      "bytes": 148,
+      "sha256": "b84c836af3ed9d3ca4c5ce54f51ba4a37d81ead1deb9066f9c2afab6b14b6d9d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-source-restored.tap",
+      "bytes": 380,
+      "sha256": "eeee41edf0e55409a2b1b8a0d261dcd52dcf3866d286116041ff3a1c072df969",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-compiled-baseline-launch.json",
+      "bytes": 118,
+      "sha256": "3fbcb9cb1063424db49addfb6d8e24c34a49f195a0688c6e7405cde916685923",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-167616-1791327337873.json",
+      "bytes": 148,
+      "sha256": "9dcb1d82654c6bde091a9ad7e1793a2c50fc7551648ec3a944a8963c11cba993",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-compiled-negative-exit.json",
+      "bytes": 1485,
+      "sha256": "d259a638e37547a4d6c5f4282f6d960d80fe47b5bcc732ade6ec8eb65554a61e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-167604-1791327337729.json",
+      "bytes": 148,
+      "sha256": "1b4848dd4765a1aa649e803af5f14f5d86c3f79e4d2f1994c5b7d8fe6a791e67",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-148838-1791327256396.json",
+      "bytes": 148,
+      "sha256": "b3434b52ea80bf1eedbde948885630b9dd1f75e1976fb6fa1f2f74e00666c5e5",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-probe-command-manifest-a34.json",
+      "bytes": 2063,
+      "sha256": "cf8bfe2e2c1c9e8eb6d84780a7202821c95a5786dd7f4d7c26beba28dbc715b2",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-source-baseline-exit.json",
+      "bytes": 1375,
+      "sha256": "20e62ccc9b165d8579e7f2216d6078317d03801a78275db0582a74c3e87c48c3",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-172123-1791327351679.json",
+      "bytes": 148,
+      "sha256": "fe0e76769c9431a63fa2460b43c9aa018c965eb6b4ab954fd8f002a1c50d89f9",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-165518-1791327328198.json",
+      "bytes": 148,
+      "sha256": "97d8fcfebec1460937a6b98958245576df8e86d5ed235ab08b142733f3d58ca8",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-169655-1791327344714.json",
+      "bytes": 148,
+      "sha256": "c7cf18026c47c71294443f9428c004d1a5eb214b487412c631c507bc38d1bc5c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-130217-1791327193200.json",
+      "bytes": 148,
+      "sha256": "e13297411f452b3de7bdfd3505614b7ae15eb4cf6af9353a18fbd1e796a68606",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-132361-1791327204853.json",
+      "bytes": 148,
+      "sha256": "6b7800920a9b66b7a0683bce573925c735feabc52f08533b3cc960c5fe994d9d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-137383-1791327221000.json",
+      "bytes": 148,
+      "sha256": "e73440aa0ae3a06fe27d0cc641d6533fdcb38b29bc9299def017dc3e5e17f9a6",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-129761-1791327190551.json",
+      "bytes": 148,
+      "sha256": "b9543020899bff3435e71a6e38a71ba12646f32197d2dd426e1e8e5f2eb64573",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-144741-1791327243685.json",
+      "bytes": 148,
+      "sha256": "042e29d8e97fdc98b629f7e90c99dc0a667e755ba092bc23bc6165a6dfc18328",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-168614-1791327341796.json",
+      "bytes": 148,
+      "sha256": "2bbc71adda555872b399bdde88ff5843ef55dfa1a4d1ae0d1ac8aa27d68937cb",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-source-restored-exit.json",
+      "bytes": 1375,
+      "sha256": "c6be991be6b85f085291504c1d4583f179344eaeda3b12ed1615fef4e8a4c47b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-source-negative.tap",
+      "bytes": 4090,
+      "sha256": "72fb0f9b5b18729840a7a97c175e005666707520e207846b1e152e584b27dabe",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-source-restored.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-source-baseline-exit.json",
+      "bytes": 1375,
+      "sha256": "2c07f271d82842105b45797baccb04672b034b77b7c224f19d3e131aa14a0b4a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-168756-1791327342127.json",
+      "bytes": 148,
+      "sha256": "fae22925dcf138a10da04709cd271061c4e916fc5241c872019f9dd0abd786fd",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-142944-1791327237916.json",
+      "bytes": 148,
+      "sha256": "3f2040c83acc9207a2c9bd3d246ed7d59de1dbfd6456900ac6f6fc1a80feac71",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-136480-1791327218317.json",
+      "bytes": 148,
+      "sha256": "a9b579c0e159f712071aa0f8df12141cdfe9cbc32b18473c62423760ce80470a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-164655-1791327324560.json",
+      "bytes": 148,
+      "sha256": "347f5bf0a33e63642de62100b31a3b46176a1acf76cf00164c9d80e3b7b67bc8",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-a34.mjs",
+      "bytes": 3816,
+      "sha256": "ed4cb6599e59784b6ed754951f6e138d81bb8dae1a44fe0f9204958e884f662c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "guard-156761-1791327281442.json",
+      "bytes": 148,
+      "sha256": "786ec8a87e29a6b93fdcb3c8711e21a2020606f510209bc563feff71ca9d9e98",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-source-restored-ready.json",
+      "bytes": 1743,
+      "sha256": "67d5b1c9a09703a6bc719491c23ec62937d0bb1b9c945d2a796ee10f535b9c75",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-compiled-restored.tap",
+      "bytes": 3385,
+      "sha256": "95f285ae47cf6b3b3b48cbc9e4f4d99b566616f1d0e280ea5596433df66263b1",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-transport-result-guard-drop-compiled-restored-launch.json",
+      "bytes": 118,
+      "sha256": "204f598fc08be87170b366da0be96431612662ce8d778989112e32741839b766",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-149096-1791327257022.json",
+      "bytes": 148,
+      "sha256": "83e4bff5106252117f978485add6f237fec14ed5e57713bacb18289edf316390",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-169051-1791327342680.json",
+      "bytes": 148,
+      "sha256": "393e5aae42a60a2c0b60275f8ec464af7d00610636c3e33ee769bf1fbe157b2d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-147182-1791327251252.json",
+      "bytes": 148,
+      "sha256": "e9cd0b9059abf3f83fcb720c7568d6a6e1d2e801b7b69bd86bb0ac4b1cea557c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-source-baseline-ready.json",
+      "bytes": 1620,
+      "sha256": "0f9d009b03e66bb4784a6ac5857c0bd474db7b9f19081ad6095e507f33d09397",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "native-runtime-result-guard-drop-compiled-restored-exit.json",
+      "bytes": 1374,
+      "sha256": "fc9fbfc61f85a323496fe84d92b5ea180f2191541feb2a5b49604ec4fee87472",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-probe-a34.py",
+      "bytes": 6221,
+      "sha256": "f5ebfd41a6ddb21ffe70d99b363869203f9bb6df510e73bfb5e4cf48407085d1",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "guard-132557-1791327205574.json",
+      "bytes": 148,
+      "sha256": "25f7624eea1adac7ee00077b4e5f415da04178ef5088c201d8140995e1e80bd1",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-165009-1791327325582.json",
+      "bytes": 148,
+      "sha256": "07c5e5d4706db2406d81ad6c73788bbe3d89abfb8227cc22cb3cac4ba6f623fe",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-158558-1791327290467.json",
+      "bytes": 148,
+      "sha256": "73552ddd8b09de1f87426368d3be0458f544ee09fd2c69456dcc87f411349466",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-compiled-restored.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-170458-1791327347051.json",
+      "bytes": 148,
+      "sha256": "19b9990288f1e2c657ad3e34d3e036ab14f089d66a71536d541fb8e2db091deb",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-165494-1791327327911.json",
+      "bytes": 148,
+      "sha256": "c961d8e1a9ff67e2834115be93825e7e49668960b089dcffd2fab47d1886f354",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-132063-1791327203190.json",
+      "bytes": 148,
+      "sha256": "4ffd52bee5ca8aadf1958c3911ac29f353e959f9beda29337c43562176f4c917",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-147790-1791327253059.json",
+      "bytes": 148,
+      "sha256": "2f0df81f059c41759f297bb5ab7cf6c830602681a7ee7f31fcd5722433687c54",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-131415-1791327199766.json",
+      "bytes": 148,
+      "sha256": "04543495de804bdc2b9bc10772245f230c2d6b182cfcd6ab22c956c01a0c884b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-158489-1791327290213.json",
+      "bytes": 148,
+      "sha256": "4d92c859fd1e3b08a5c2f19db1cb05099ed6c71cf00c62e5595b1fe562395e94",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-140285-1791327230413.json",
+      "bytes": 148,
+      "sha256": "18df7dfb04cb972af21442f3440c9f08cf1b819604c3be5a1499ddc273ca1d85",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "abort-cancel-cloned-identity-source-baseline.tap",
+      "bytes": 3385,
+      "sha256": "daff1d1411af241f07d98ffb97087db3362598b7861b5f4b8e6b8f1037ac7012",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-153112-1791327269256.json",
+      "bytes": 148,
+      "sha256": "e4eb5bad44fd567f07cb7b41db637879056bcb284719fecb9cac086270d28e68",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-130530-1791327195169.json",
+      "bytes": 148,
+      "sha256": "f95f796c40aba9bab0afba03d0d70de94e90dd89d1d89977a88e569eb1556497",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-167572-1791327337581.json",
+      "bytes": 148,
+      "sha256": "d54afb4c97066541a29729311d8c5de826bd60dc42ac9f3fdcaa74f9ac91bb7c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-145055-1791327244152.json",
+      "bytes": 148,
+      "sha256": "51d1ed871d9fce09ee3d643e33b97e5b6ae5bf07d8fe3402acc6356b9288991f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-129084-1791327187719.json",
+      "bytes": 148,
+      "sha256": "35c9e43b938ccfedd92477dd596120f637fe2e757bb763ac85c241354796e6b8",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-156525-1791327280807.json",
+      "bytes": 148,
+      "sha256": "fe0ed75883960402df7659d31a04759b42507a2e5c3894fcaf51eed026c53cab",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "guard-133003-1791327207736.json",
+      "bytes": 148,
+      "sha256": "45bf5304fcad2ae57eccd1140e82434cb40ee2af1b274a505debb3bc1e12076b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "cancel-disposal-omitted-source-baseline.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "__pycache__/native-run-a34.cpython-312.pyc",
+      "bytes": 12445,
+      "sha256": "e360c23fea4a24d8a6991a509f1be25b59bba1ff0e0c1f8eb41d83ea8c56c52d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "compact-shadow-a34/package.json",
+      "bytes": 1382,
+      "sha256": "c987d43200253960ac825b7b4656e32fa4d10853d51493829a2708d4ee6bc867",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "compact-shadow-a34/src/server.ts",
+      "bytes": 20929,
+      "sha256": "71191b8dc16cdd7cf3074ad727cb8c6d4835f19cd7535f4e18b3ce82108c1aba",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/db.ts",
+      "bytes": 4256,
+      "sha256": "71d5c71d5742f4e348bb1e9c08fdc10562402e6308af15cbdc01349eec900cc2",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/config.ts",
+      "bytes": 4748,
+      "sha256": "4d73ade5756b1d2eaa8da10d355f1c3f314f3e5b38a4c52ec4c541deba41181f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/main.ts",
+      "bytes": 648,
+      "sha256": "ecfba84e123b44de26946d5bd21daff3f3636eb2a11030163132d6b11da1467a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/errors.ts",
+      "bytes": 150,
+      "sha256": "b2c4f5fbc7536791c64e69430426550d97ed2138a55033cfef5e1cd311fc5cd0",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/migrate.ts",
+      "bytes": 298,
+      "sha256": "35c855b6c506aa4bf67cdf2b14413dc7d33f35ca398f4f70e172d22b018f3abb",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/capacity-fixture.ts",
+      "bytes": 585,
+      "sha256": "8b6b6e928dd627dc8a0fcdc2f5cb73b3e5e0f2679f42be6e20bea134ff26dc32",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/a34-cancel-seam.test.ts",
+      "bytes": 2450,
+      "sha256": "8335d27ed8f4c72efc30d2dba76928dfb01b2b503714e6d2904593a77d23ec4e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/a34-cancel-seam-compiled.test.ts",
+      "bytes": 2452,
+      "sha256": "8d778617d6f84f1582826e33eb084af854d8c5580d7b22c2d21db77255f65346",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/diagnostics-fixture.ts",
+      "bytes": 5231,
+      "sha256": "889f428735c251a33c18a026d3afbdd761bc3e4b9d7e965ab6848ac788740017",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/dispatch-integration.test.ts",
+      "bytes": 15290,
+      "sha256": "78ad4012111d02e618a813f59247784e4e523ec79171e9b80576cd191e393f3b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/f09-live-transport.test.ts",
+      "bytes": 25686,
+      "sha256": "64d166c0bcb983f647a9885ae29d21bc191e7980aa4bb800461af2c33bcd67b3",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/f10-runtime-fixture.ts",
+      "bytes": 11658,
+      "sha256": "c42e2a6862249baecd05617d4cb8dd8c4f0cb0b5eb023e9c8254c0cd2cdaae95",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/f10-runtime-unit.test.ts",
+      "bytes": 6474,
+      "sha256": "148a2b4a8444c66b83219b84a60d02ff2f9b8f8bbae1ebcb72ad977ef510a6e4",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/diagnostics-overlap-fixture.ts",
+      "bytes": 652,
+      "sha256": "dc691f236c778d310914b3af609cf4cdaa8081dc7df2dd261fc24c9271ac6ca2",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/f09-transport-fixture.ts",
+      "bytes": 16143,
+      "sha256": "984e6242be0a61880750c114dde53e5993588d9d3c82990c608e7e4db0eb5328",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/f10-runtime-protocol.test.ts",
+      "bytes": 27997,
+      "sha256": "4edb0be1f37ae1a1b32e1d530db4a5db5ea3f79bfab993be9197b009cfbdc366",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/billing-fixture.ts",
+      "bytes": 655,
+      "sha256": "57793f79d6c5b2f51d1daac35175663e98c0c25dc95d4e22bb5187cb7422f28d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/a34-compiled-f09.test.ts",
+      "bytes": 25701,
+      "sha256": "f50d5940d7930cc46e0209c55a57f9693844f12a2959adbe7ca4ebec589e8dea",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/f09-slot-owner-fixture.ts",
+      "bytes": 476,
+      "sha256": "c9c11e48e5e7af7e1fdb57f9860d043a8791f65095c35ad0683f7f51c3bd36df",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/f10-runtime-integration.test.ts",
+      "bytes": 37686,
+      "sha256": "e7fabd24ea02d2d52bc5b7571d4338c4d471cde58741812496061afaa5679929",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/f10-runtime-process-fixture.ts",
+      "bytes": 1217,
+      "sha256": "e3d889eba4dda70d1236c508e6819111eb38cd8b3e6de0e8047f8bacac76cadd",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/submission-integration.test.ts",
+      "bytes": 23152,
+      "sha256": "350b22220e81b829490ae47fbb4bdc30c1757217551da2c0410aafc3f11a2d1a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/tests/diagnostics-deadline-fixture.ts",
+      "bytes": 2693,
+      "sha256": "50e208a0e801cbc9fc8937a6d44db125949875b6a91fd32ea1955ceb81f98deb",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/db/008-suppression-fixture.sql",
+      "bytes": 830,
+      "sha256": "037a9da324ecd5666c398522e3c40effa73259122518c143a22b17fbcc4b23aa",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "compact-shadow-a34/db/011-evidence.sql",
+      "bytes": 2505,
+      "sha256": "c4ba8a7cb793a394a50f29684e217aba9e76cf87ab2eb828d095ec26a2a6016e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "compact-shadow-a34/db/012-connected-capacity.sql",
+      "bytes": 815,
+      "sha256": "2325d39a09b12861da5ab231accfd0058c5035f273b94685c38d80f8414b3538",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "compact-shadow-a34/db/005-submission.sql",
+      "bytes": 1249,
+      "sha256": "a8d25ee87438dfe5fda97ae736d2376e59f0825f73d4d1b0f4a6176cda23b8b3",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "compact-shadow-a34/db/004-claim-order.sql",
+      "bytes": 310,
+      "sha256": "9a97339cd7b036b6d0fa9d5228b508b20981704173f98d341f6163042e2f792e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "compact-shadow-a34/db/001-init.sql",
+      "bytes": 1376,
+      "sha256": "6c6ca7cc74530a6bee78b2c60b5f08bbb1e6cb76b47ab35ffb4aac359a7948e7",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "compact-shadow-a34/db/007-reply-tail-horizon.sql",
+      "bytes": 308,
+      "sha256": "002c8eba0a4e978ab4dfec371f0c82e52d12c9ce5be8ef7caad9dd9786522b6a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "compact-shadow-a34/db/015-durable-runtime.sql",
+      "bytes": 2069,
+      "sha256": "70bd0248636e06577f56d867e3b983f44e82dbe38877067749122ee34b297581",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "compact-shadow-a34/db/006-replies.sql",
+      "bytes": 1823,
+      "sha256": "e0da744dacb1a1856b2d95d03ae37b3d5070b137b5a9f1faae6abb9873608171",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "compact-shadow-a34/db/002-mailboxes-consent.sql",
+      "bytes": 2945,
+      "sha256": "6f23a16557abfd8223de32e9c5e01442941ef2ff08bbdb89d9ae31c006680f5c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "compact-shadow-a34/db/013-live-diagnostics.sql",
+      "bytes": 678,
+      "sha256": "61984ae86e21a8ba29993e7abc0cd02d516246fe107de7cfda6e6d92657377d7",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "compact-shadow-a34/db/014-live-transport.sql",
+      "bytes": 2069,
+      "sha256": "dd9e55eb7edc38a57c38df9fb3054b38b800e9e5c45a81cffa10b65c265bfec8",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "compact-shadow-a34/db/009-poll-owner.sql",
+      "bytes": 263,
+      "sha256": "e77a0c252adb49a99597c914e28a7192e2b56f4af55de1f19e790a60ecf85c39",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "compact-shadow-a34/db/010-billing.sql",
+      "bytes": 2770,
+      "sha256": "1e97188e9b0fda6a47308d56e33c8570e6477e0f3605762c5855e3b017cc9c04",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "compact-shadow-a34/db/003-dispatch.sql",
+      "bytes": 3465,
+      "sha256": "13551a8e261d141c8d8b5bf32066ef136ac6c8cdac359746f22e898df1e54cd2",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "runtime_artifact"
+    },
+    {
+      "path": "compact-shadow-a34/dist/main.js",
+      "bytes": 682,
+      "sha256": "f87eff8a29e75435ed40957521d348c520b3d0b0feae2fd66ca48460665ce39e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/errors.js",
+      "bytes": 244,
+      "sha256": "960a11b1d06cc22ca03989ba183dfd16d1322b19cf9b8744874a9cd624fe9c4b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/config.js",
+      "bytes": 4745,
+      "sha256": "80432665f0a0b00f01f105d83fd057c7b24ab8f823de7876aa1e48bed17c5e32",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/server.js",
+      "bytes": 25716,
+      "sha256": "91a358e574b9fe29ff29e72267d5e1080bb8dec55d41befbd8bca96a64304c62",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/db.js",
+      "bytes": 4676,
+      "sha256": "da477f0466b42cb21f9e8332e18ad3d7e71eac7ff7a6d9380e3a57a9f99cc3cb",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/migrate.js",
+      "bytes": 318,
+      "sha256": "4e1d6e130120b08b91404a01325e3a6877f2730ec27f6b49c14e4855e84b4c04",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/growth/partner.ts",
+      "bytes": 1891,
+      "sha256": "41317996b1938ecf0be1ca8a4f6e518e6c2eaaf031e8f9f8349e241fdfaa3a27",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/growth/reports.ts",
+      "bytes": 9128,
+      "sha256": "d8579c27a049a3b9b9efe59428b2888049647d72643ed29b65572c224c90385a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/growth/attribution.ts",
+      "bytes": 2743,
+      "sha256": "2c81a8f678266d7f63041186c64abfc063364d89a6f75e0c926c52a7f7e23c65",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/web/models.ts",
+      "bytes": 3604,
+      "sha256": "6a24bd2faf8600f61bba0294632e27ee63288f69e485a55fc4ab80771be8d6a9",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/web/client.ts",
+      "bytes": 6240,
+      "sha256": "aeb51b15356750ed55eff22a09e2d6019b09ef83553a79967583692917b6dc04",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/web/cabinet.ts",
+      "bytes": 5317,
+      "sha256": "b34d4cad4b67c6a9cc3724bf9d426490a876db75b2a5f4f9d5a98442afc7633e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/web/app.ts",
+      "bytes": 4789,
+      "sha256": "9456b5c512122ebb3240e3ed6578d706a9fd689971bc7c369cb6bba58e024107",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/web/mailboxes.ts",
+      "bytes": 13282,
+      "sha256": "a61952b537844ecc3356f27dbf471a48abac71761563b8b468cb5a9ab9a7aff4",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/web/page.ts",
+      "bytes": 4001,
+      "sha256": "bef7627af341fd831552d010612bedf6120542cd0cda5e13c25621b3034963c5",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/web/dom.ts",
+      "bytes": 6169,
+      "sha256": "11b7d784cd39c1e791caf575bbdb981a8ca6cba1144c50b34cd5c9907a3099d9",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/web/evidence.ts",
+      "bytes": 8137,
+      "sha256": "a4c537cf6f1f908519c7df7080fd95c83719cd87a9324f675783fb184ea2f5fa",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/web/billing.ts",
+      "bytes": 6903,
+      "sha256": "6323739d57b7e40f7ebef8d8853b3ad2a828410015184a055b0c2051683ceba7",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/web/campaigns.ts",
+      "bytes": 10806,
+      "sha256": "fb36a6ade860e0aad29edb2884b025ad3b3ef0607d3364064eb7123c12f50e8a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/evidence/store.ts",
+      "bytes": 2542,
+      "sha256": "89f1164dd74b13546d2bf680e17f70ded0b39b58f25f93ed9b1ffecc7b5e08c9",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/evidence/input.ts",
+      "bytes": 3089,
+      "sha256": "2e0e6290219b06b15c7576024b00aab627612c1c7781eee4556758b3f914cacf",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/evidence/compare.ts",
+      "bytes": 1647,
+      "sha256": "a2185780606417405d34a7b70901f1bef336a2f97622707a3485ee551f076bf5",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/dispatch/submission.ts",
+      "bytes": 13735,
+      "sha256": "c1ff349f29beb7267982ee5e4e02b2339a60524c6df3b8ec4fcfd7e0bcf5085f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/dispatch/adapter.ts",
+      "bytes": 812,
+      "sha256": "169f8fbc8a7a2f529f2f065d3c655caf5d189487d7fce7aa2b7d27831512f0a9",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/dispatch/worker.ts",
+      "bytes": 1086,
+      "sha256": "04a221a61a99ec248b6207303708c81d14864e4399398d695ebc7becb3da1b8c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/dispatch/store.ts",
+      "bytes": 6197,
+      "sha256": "366115624196439b5f759c6a04c7699a90136063d770ddafb3b022d0a0af6b07",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/dispatch/message.ts",
+      "bytes": 3899,
+      "sha256": "6a7f0d55ae5f4cd8eccf20850ce33edce58cd55fc6f785dbccdde770598d07db",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/dispatch/seams.ts",
+      "bytes": 3900,
+      "sha256": "c3038b12db1c223de870c7e707fb56d11836275227543068874c88aec7aa211e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/dispatch/eligibility.ts",
+      "bytes": 852,
+      "sha256": "f892ba9b553ba881c8ffea2dfacc79205e484df7aff9e85e4caf75923256736a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/dispatch/smtp.ts",
+      "bytes": 3599,
+      "sha256": "be65ba01ba2349c52de66806d337b285321a868d0b6c1f80bd1e45ed4e020887",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/replies/adapter.ts",
+      "bytes": 6571,
+      "sha256": "54e40ca7270ca7299c6a9601b3cf268663877413fc131a8e9c76b4e117d1fcf9",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/replies/worker.ts",
+      "bytes": 8935,
+      "sha256": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/replies/store.ts",
+      "bytes": 10709,
+      "sha256": "041516f0fb492bd0e7d92567cf0b94bec23f770991f449fcc8343961d3e6363c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/replies/input.ts",
+      "bytes": 4124,
+      "sha256": "45f451e88364c37dcfcce9e2bda12c3d4aef04c10676377688a958593fb95476",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/replies/headers.ts",
+      "bytes": 1739,
+      "sha256": "0987bc97311908e5042b1ec1df86576fbd2574908da171bafbca0519b18f4475",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/replies/operator.ts",
+      "bytes": 1394,
+      "sha256": "60fbbdef1edeba5c275b863bce73ce780a13e839d3965e435b6a1f31b44a01e6",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/replies/fixture.ts",
+      "bytes": 3468,
+      "sha256": "738683ca7eec34d3d2a959593367035406d6c68d8909f751c90939911dabf0d7",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/replies/imap.ts",
+      "bytes": 4235,
+      "sha256": "e84dfccb60b3236ab3004815b19ecb4eee6c2233e601e0e8cbbd14d117df0200",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/campaigns/store.ts",
+      "bytes": 5990,
+      "sha256": "c9df14658c9bc7f0bd028c68a87135c942cad92286ed1cbc1b53b6e069b0f60d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/campaigns/input.ts",
+      "bytes": 3531,
+      "sha256": "13499a78e34b58472c336b4538dba7291374759c42f7d7661357135da261b3ef",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/suppression/store.ts",
+      "bytes": 4767,
+      "sha256": "2e2274522cf5b150fcf1bd1561c8ba164a34da08aee1fb9b0fd1f1afb4bc1847",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/suppression/http.ts",
+      "bytes": 1104,
+      "sha256": "d447d901179a6d7cfb7d1dffa27ac85a42cf4b489e00c350dfa09e1dd33e301e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/auth/password.ts",
+      "bytes": 2291,
+      "sha256": "f8b36c41d1022d2e21e6a080150f8c93f7485b2f98aa3f03771683d2a9748251",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/auth/store.ts",
+      "bytes": 4450,
+      "sha256": "d5be57fc9270cd8e12a95015b32ce115c2cd3687fc592e4e01cc226292f7d70d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/auth/session.ts",
+      "bytes": 1207,
+      "sha256": "c5c6b26aff298e7f64b79648a72a61951a4399b3eff25a4a29b1893c1eea35a5",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/auth/service.ts",
+      "bytes": 1423,
+      "sha256": "eee97c44ef39becf6edce05dc0df1e3d764ee05a445cb9a3b3745005ea129628",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/billing/transaction.ts",
+      "bytes": 433,
+      "sha256": "182c375531d2dbafbb3ca29591a628b3637ec86e60cf8d9ceb029a1a00e1d313",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/billing/plans.ts",
+      "bytes": 1305,
+      "sha256": "7f88cb875c18c789616873750045b1a88c67ec30a8f5878c79a32283e652a9f4",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/billing/provider.ts",
+      "bytes": 4530,
+      "sha256": "e24a9f5bf6ac8d1f35b8efe1edd87b846799aa5fc0f88cc631d98dd93297664e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/billing/service.ts",
+      "bytes": 6581,
+      "sha256": "7692e0850b12843053a7838df9f1d3d913431ae2cdfca0c0c1289c1dc507fcde",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/pool/store.ts",
+      "bytes": 5049,
+      "sha256": "5c79c8cabbdf6f47bf49b1e2e54b0f85f1631dc9992ed69c7849afa097fa9ba1",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/consent/transaction.ts",
+      "bytes": 774,
+      "sha256": "830899e94ae29d9cbc9a25e150dbe46fbc4fb4494438a709514023b60d9088c9",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/consent/store.ts",
+      "bytes": 7453,
+      "sha256": "b6104faac42e56826247d3179d66dd7a136c11a62882d2181bc4417537f0dd82",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/mailboxes/diagnostics.ts",
+      "bytes": 5445,
+      "sha256": "e746ab18f528bfc24ed9f3b01759176e6b7046bfea5cb0e039e89003f4240336",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/mailboxes/transport-child.ts",
+      "bytes": 1435,
+      "sha256": "3b0be9a1481567cdd6c27423b8f7ef3a88007d3a92311fed21594af8b42eea20",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/mailboxes/crypto.ts",
+      "bytes": 2885,
+      "sha256": "cfcd13a73ccd7126825ef40ae7624ad7f945659a02a74a1d7cfcebcfa097f020",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/mailboxes/store.ts",
+      "bytes": 7423,
+      "sha256": "6d61b806290777c4a543c90381707589c6deded1f3f8d135955c0831f86b5c15",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/mailboxes/input.ts",
+      "bytes": 1689,
+      "sha256": "127f2e4787a0afe49e2c485ae752bed05077a48b18c4912cfc9a1c4a23de91b3",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/mailboxes/transport-operator.ts",
+      "bytes": 1231,
+      "sha256": "406bea107e773e3041780081bc34f4f7c41266645e1679a41f77d37bff93f3ea",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/mailboxes/transport-authority.ts",
+      "bytes": 5805,
+      "sha256": "12ceabeab74af78d271cfe6dbbd6479bf3176713d9158b4dca9c130bcb8e0fab",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/mailboxes/transport-lifetime.ts",
+      "bytes": 2864,
+      "sha256": "287b7c4449da552a2bc2df511d81fe2cb2dfe481edcdaf5a5fe0e8a39c4e83f0",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/mailboxes/diagnostic-operator.ts",
+      "bytes": 1394,
+      "sha256": "1a2d33ddf686c8569aeb340c7119108addffe3eae6a4ed8efbb6ed98a93d19fd",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/mailboxes/network.ts",
+      "bytes": 4234,
+      "sha256": "7d3346a620d53b6ca245b02b455604afc8dddd74ce0944a8e43d2d717e95abfb",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/mailboxes/diagnostic-channel.ts",
+      "bytes": 7828,
+      "sha256": "e30dd22747fd60f0e28651bf338b8084db5d270859416cc3498c4db909eb8d94",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/mailboxes/provider.ts",
+      "bytes": 2035,
+      "sha256": "064c9aad2964ade6913e442e67cf1d7bbb607d20297fc63d0c0a2188b7de65ac",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/mailboxes/diagnostic-store.ts",
+      "bytes": 5056,
+      "sha256": "d9188835ce6f33ce0923d88bf7bd8ae5c0928de1867b99fbec107182aaa515c3",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/mailboxes/transport-slots.ts",
+      "bytes": 3916,
+      "sha256": "93c3509a79bf43296b99f20610045da188e26d057fd6f8b14c2fb1e6bd23bb66",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/mailboxes/transport-channel.ts",
+      "bytes": 7530,
+      "sha256": "aed6062d25aa48fbb927f002887f9a2537f2f4aa483f762a2bf01c91af3dca65",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/mailboxes/capacity.ts",
+      "bytes": 3674,
+      "sha256": "4f9538f0f5e5137f30760c15eac64c4dfe9b6d22021441a956a0a633ac3e17ae",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/mailboxes/diagnostic-authority.ts",
+      "bytes": 4469,
+      "sha256": "93d65b5bc8d2bfe13527a29891bb3e46507596f5b65254f55e69f139203795d3",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/runtime/loop.ts",
+      "bytes": 2185,
+      "sha256": "96041a5d3f55a02ba6e55faeda69142a9f6826ea50ce988beceaa00a1b85edc6",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/runtime/worker.ts",
+      "bytes": 3559,
+      "sha256": "820513ecaa13b25bededc8845306365f635d1dae41232451cd96a2decc31c774",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/src/runtime/store.ts",
+      "bytes": 13726,
+      "sha256": "983a1e5331f17bc7312a4c3f8ea95c7c2728e60b24d5e14708a9084e50fcff28",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/growth/reports.js",
+      "bytes": 9435,
+      "sha256": "0e91de893154c4f9aca978fd83bcf484c52dc7fdd9f314c323abe7a45354a02f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/growth/partner.js",
+      "bytes": 2078,
+      "sha256": "6de3407bcafcd93c82abc7bf33558fad6237e3e5eec131dbec468c32029e1d71",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/growth/attribution.js",
+      "bytes": 2903,
+      "sha256": "77a5436123d647a265f2ee8cd8e9fb7be915ff1d73f1fca3188517a26e170496",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/web/billing.js",
+      "bytes": 6821,
+      "sha256": "c86169ef537a6c1ed55f7002d3e51ea8e331245942b1b16ae236fa7c8a9c7f34",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/web/campaigns.js",
+      "bytes": 10854,
+      "sha256": "fbca081bc8baa63bcd4e0d3b1b4cc751521c2fc677591bd23c18ba0e718f5028",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/web/evidence.js",
+      "bytes": 7958,
+      "sha256": "631c2016d1b0a5b457968a59e62a2f9985cb4f685915656422fae205c85a0227",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/web/page.js",
+      "bytes": 4001,
+      "sha256": "bef7627af341fd831552d010612bedf6120542cd0cda5e13c25621b3034963c5",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/web/mailboxes.js",
+      "bytes": 13189,
+      "sha256": "1961eb62ec469d1b198702435f92da61ea321b6608869783a55e695ff1a35eea",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/web/models.js",
+      "bytes": 11,
+      "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/web/app.js",
+      "bytes": 4564,
+      "sha256": "5e2d7d63adb7bc2bcc5db143366572cf17816de9d2a0b4df6fa224b1e9f670f3",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/web/cabinet.js",
+      "bytes": 5317,
+      "sha256": "b34d4cad4b67c6a9cc3724bf9d426490a876db75b2a5f4f9d5a98442afc7633e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/web/dom.js",
+      "bytes": 5915,
+      "sha256": "56bcb0f26340e34e7f665ada006812025249fdce3f8b8fa6e423bb1cfd31d4d2",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/web/client.js",
+      "bytes": 6101,
+      "sha256": "d2dc27ba3f1e8810e24b0d274d583536f7c137c0edd48f80036f7e4a5ff08f2a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/evidence/compare.js",
+      "bytes": 1647,
+      "sha256": "4c6bf10142d92183948ef28f8b091a452439c131598a1f434c9170fa521a1401",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/evidence/store.js",
+      "bytes": 2620,
+      "sha256": "0ecf18bfc6d034fe97a64a13f0b2661480345d564376aeb97d0e06b166652f6a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/evidence/input.js",
+      "bytes": 3020,
+      "sha256": "20c881038c36d1cfac6054cd5b54e6110856c9da6c69de49cb8e0a792904a171",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/dispatch/smtp.js",
+      "bytes": 3828,
+      "sha256": "d13d7995601b9792c6ad42af1af05efb2f8817784e625136d0e88a79cbf0594a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/dispatch/adapter.js",
+      "bytes": 358,
+      "sha256": "256b32a9deca1bb16f6cab4a4b9678be6f6af7ceb5788a15489668a432272594",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/dispatch/store.js",
+      "bytes": 6305,
+      "sha256": "5c67b41b0ecdeec33d5d37e5f93dd57367b2be9d86ea37b4f2f09114e8bd5d6a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/dispatch/submission.js",
+      "bytes": 14923,
+      "sha256": "08a0f8e5126b1983d5943cb1dee53a974d73e8aca327701231f97688c4d4d03e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/dispatch/message.js",
+      "bytes": 3843,
+      "sha256": "c29e77cd69751dcf5ac05ca03be83acf66ee89501c84f11b2c05ffcd69faf1e4",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/dispatch/worker.js",
+      "bytes": 1186,
+      "sha256": "0745c2b4d3da424a71aa14d6d1d3c7fb7f6428137f265e40196ffd93ccd242bf",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/dispatch/eligibility.js",
+      "bytes": 856,
+      "sha256": "4676adc3f763dc35fa79908901801fa04c0382a01ab51fc867e7af3d0f7a4f60",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/dispatch/seams.js",
+      "bytes": 3920,
+      "sha256": "589665ddba8d9d953e0cd4ed6f92c2af5b6496be441d39f3f312f8e81694e8c1",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/replies/operator.js",
+      "bytes": 1546,
+      "sha256": "2efe8f825d753be0b6c411fb1453fbec57cb60e32b79a837499d5ef82aa190b5",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/replies/adapter.js",
+      "bytes": 5751,
+      "sha256": "716bb9f42f62cda10d7f8ad189b064f783fc63a058bc09722a635fb7aa41a38f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/replies/store.js",
+      "bytes": 11277,
+      "sha256": "656f1d9cc163efb49ef80b3ee1846bab6b0841d27d1896d90484bd5cb2852d13",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/replies/fixture.js",
+      "bytes": 3546,
+      "sha256": "0ad1425e24bfb1086817483b13b48c0c1cc81fdec89e324f5ef203f55e7a243a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/replies/headers.js",
+      "bytes": 2043,
+      "sha256": "5ac87781bb9ea2cfc3c92b730e19407b75aecf6588eb7eef1b8fe23f0a65ac36",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/replies/input.js",
+      "bytes": 3816,
+      "sha256": "f3555237ed6a4a5d6f9afe9e76457bdef8d131012105a8e603873f97a2dcf666",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/replies/worker.js",
+      "bytes": 11204,
+      "sha256": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/replies/imap.js",
+      "bytes": 5119,
+      "sha256": "6fe481db6a4bed95f3108d4ba8a00955ffbdb54a0ed8d97eecd4091efba5bbc1",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/campaigns/store.js",
+      "bytes": 6629,
+      "sha256": "ea08589081cda4ae0a6109fa969da951bba6cf35e45fbf5199a4ed3819ee9a8d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/campaigns/input.js",
+      "bytes": 3621,
+      "sha256": "158771b68468eb317e469a2d10c301235f8258a8a75d6236dfe5bf96c8c8314b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/suppression/store.js",
+      "bytes": 5182,
+      "sha256": "7f4b52491cfc211edbd9b5237269854198a2c87e19c8e2721a74a64b487186f7",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/suppression/http.js",
+      "bytes": 1143,
+      "sha256": "6456d9d41cb1b974a69027cd484ba8853dcfcd905e7e92c90f8800b615bb85fd",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/auth/store.js",
+      "bytes": 4057,
+      "sha256": "0f6a4de099ec4570e9a2a73f03c2364c92fc01af42e228950844a01f0d6f8605",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/auth/session.js",
+      "bytes": 1173,
+      "sha256": "a84490dbbd8589da6ae79cecbf7bf9a04c76a9676d3ca948cc8fb811d1a5ffce",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/auth/password.js",
+      "bytes": 2250,
+      "sha256": "3decbfaf152c313910d9375d1e8f559df4aa2b40389b1c63561261d5147b594e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/auth/service.js",
+      "bytes": 1478,
+      "sha256": "5537019db7c50c93d8a61fd00194330558eb01898726ed5017c4d3bf47b1dd2e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/billing/transaction.js",
+      "bytes": 362,
+      "sha256": "32cadf1259627dba17799639216cfdb4d115d6393193462983f01e779186148a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/billing/provider.js",
+      "bytes": 4573,
+      "sha256": "c0010017201707d13c2810741ef90b991dffa91d3792c570ea0fa5954880f6d1",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/billing/service.js",
+      "bytes": 7018,
+      "sha256": "53ecc4f98112c38ffdc947ba4eba782844a16a5074bb2f73cba4d1895b7228f5",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/billing/plans.js",
+      "bytes": 1308,
+      "sha256": "46b563cd56f6e03b5258eb458f593ea090d3c65945a520a11f761d291da916eb",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/pool/store.js",
+      "bytes": 5650,
+      "sha256": "cc48dad8892b9b3fc2f3100b2973170e2c0c5b555268a3888c2229338953c75a",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/consent/transaction.js",
+      "bytes": 761,
+      "sha256": "73a1c140d4c26fce559ea9c1f401362c743a0374dc5c177aa668df018a5cf6b9",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/consent/store.js",
+      "bytes": 7820,
+      "sha256": "16978d51391388740ba91e20e8074eae2d0563078cfea7250b3300c9ed38d36e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/mailboxes/transport-slots.js",
+      "bytes": 3686,
+      "sha256": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/mailboxes/diagnostic-authority.js",
+      "bytes": 4149,
+      "sha256": "3bda6073ab940b13884fc7d69f3a04043122b9cf969f177e5054b43bbcd1b90f",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/mailboxes/provider.js",
+      "bytes": 1492,
+      "sha256": "39dc8b289b8adbd05a5787430ac5f81906f65a1ce0e0328ff504bd7646ce4120",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/mailboxes/store.js",
+      "bytes": 7994,
+      "sha256": "2e2ebe0278cd4b78b152167c765b0f24a286a11b6edb247d0b4751ea88c99ced",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/mailboxes/transport-channel.js",
+      "bytes": 8275,
+      "sha256": "76871828ee777d4616a89e98d6b1e12e4887322c9c89ce2f1ecf417554b415d6",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/mailboxes/diagnostics.js",
+      "bytes": 5961,
+      "sha256": "7d7bc0fa4469f62bf3e80d5a1a6fa6f33333611f429c23fd0f85c04f6d908d71",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/mailboxes/input.js",
+      "bytes": 1486,
+      "sha256": "c98480d2c225225cff7f3ff95e0a47cfc254e9812ea70a9e7bbc372a81e69349",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/mailboxes/diagnostic-store.js",
+      "bytes": 5481,
+      "sha256": "b2707928e559ace601bd53471d04ff5770a0b8bf922a21611de95c7ea023c666",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/mailboxes/crypto.js",
+      "bytes": 2766,
+      "sha256": "57da121f012021b88d6433abf7a90a6b823275586cd9739834011edb9b794a00",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/mailboxes/diagnostic-channel.js",
+      "bytes": 8794,
+      "sha256": "3223405e2bfcbc75b46caeff6a442d0dab553749e678b212d1dd9efd163a172c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/mailboxes/network.js",
+      "bytes": 4012,
+      "sha256": "a488dfb27971125116877f3a474286443cbe53dff45513296e7830c221ccaba4",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/mailboxes/transport-lifetime.js",
+      "bytes": 3034,
+      "sha256": "fdbbd9602f04637167cf2bacba89d118a4d33f786e8ce829cee8e7df6d461a22",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/mailboxes/transport-child.js",
+      "bytes": 1304,
+      "sha256": "33e62333d39a9052938839b1d1c50f058b82643c773a8d8fea82f99dfa13c3a5",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/mailboxes/diagnostic-operator.js",
+      "bytes": 1821,
+      "sha256": "97c98f166e0932b9f20eb933d204e75e98e210d578bd72c855a4a3728da1726d",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/mailboxes/transport-authority.js",
+      "bytes": 5541,
+      "sha256": "d54c55676ea6b8418a0cbc326ae5a9517a2f08bf8cef63639f509105174d6a3e",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/mailboxes/capacity.js",
+      "bytes": 3956,
+      "sha256": "f22c61a5984208f108f20dfa3352a25e480b589fc0571aff78fcd7848a212782",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/mailboxes/transport-operator.js",
+      "bytes": 1642,
+      "sha256": "b8128e77cfaea849cb1169b74bd87d4dedb3a6439a19e73b8e32ce2e8f32709b",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/runtime/store.js",
+      "bytes": 14864,
+      "sha256": "f579feda5be195e46e021cc73a81012eb940b9ca5360f6ca055ea188a079dd6c",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/runtime/loop.js",
+      "bytes": 2817,
+      "sha256": "5e0bc6a7ea96730b6f15da12c2d814eccc6b23dfd64486ae9a9173f028af2cac",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    },
+    {
+      "path": "compact-shadow-a34/dist/runtime/worker.js",
+      "bytes": 3869,
+      "sha256": "b92e33a226964bea25f8df3923d4ac4c81898ef1f5ceba58d3974c3fb2ec9aee",
+      "secret_variant_hits": 0,
+      "private_PEM_count": 0,
+      "kind": "code_or_fixture"
+    }
+  ]
+}

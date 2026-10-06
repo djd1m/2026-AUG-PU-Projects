@@ -1,0 +1,23 @@
+{
+  "recorded_utc": "2026-10-06T23:12:08.324312+00:00",
+  "launch_sha256": "d36cddf345c24b926dd5297940161d828078dee1b9b9663a4cf02f132b4649fc",
+  "source_head": "db50798a76a97fed75931544f24cd1181ff082d8",
+  "source_inventory_path": "/tmp/n7-f10-atomic-admission-a31/complete-source-build-sql-manifest-v2.json",
+  "source_inventory_sha256": "77cc744dfe793d599abd0300a9ab03d6060a7481d88091686a7a1bb79d88c536",
+  "UID_planner_path": "/tmp/n7-f10-uidreset-plan-a14b-cli/receipt.md",
+  "UID_planner_sha256": "998aeeb0b4c89294d7f196650b759954f3a965f62dacfaf8313d1e5eaf749662",
+  "authorized_reviewer_finding_path": "/tmp/n7-f10-final-source-review-a35/report.md",
+  "authorized_reviewer_finding_sha256": "dfaaf15d614ed108a77a2cfe2fac99d107b08b5ba76e9a3570c66d5373a806e0",
+  "planner_and_finding_read_before_first_native_start": true,
+  "context_file_timing_gap": "this explicit consolidated context metadata file is recorded after childlaunch; launch/command/guard/shadow manifests were frozen before first native child",
+  "guard_policy_identical_A34_after_audit_root_normalization": true,
+  "output_relocation_identical_A34_after_audit_root_normalization": true,
+  "command_manifest_sha256": "b326346baa527000d34569208b1c6eebdaa91bdf30cea350b1ac54501c54c8ca",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "next_required_gate": "same independent A35 finding-only reconciliation after these raw six witnesses, no operational product acceptance"
+}

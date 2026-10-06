@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-06T22:48:01.657432+00:00",
+  "pid": 54548,
+  "startticks": "124989101",
+  "native_exit": 1,
+  "elapsed_seconds": 0.638878287980333,
+  "test_count_exact2": true,
+  "assertion_failure": true,
+  "failure_titles": [
+    "not ok 1 - preadmitted slots are one-use and unused cleanup refuses a child-bound owner",
+    "not ok 2 - unused reservation cleanup retains exact proof after a database release failure"
+  ],
+  "executed_compiled_module_sha256": "bdb71343d38c22417fd80fbf60b6ad9c2ef49fe154ce6296c752f4257d2dafb1",
+  "tap_sha256": "1a4484712a457198db099098a082c7df5217be2610e0f8c5d71fd477b8dd38e4"
+}

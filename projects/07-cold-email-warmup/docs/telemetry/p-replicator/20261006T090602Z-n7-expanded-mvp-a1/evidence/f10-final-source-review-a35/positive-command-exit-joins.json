@@ -1,0 +1,251 @@
+[
+  {
+    "stage": "instrumentation",
+    "native_exit": 0,
+    "pid": 3685146,
+    "startticks": "124776851",
+    "joined_utc": "2026-10-06T22:12:39.580248+00:00",
+    "expected_positive_titles": 1,
+    "observed_positive_titles": 1,
+    "missing_titles": [],
+    "native_exit_record_keys": [
+      "stage",
+      "started",
+      "joined_utc",
+      "native_returncode",
+      "timed_out",
+      "elapsed_seconds",
+      "PG",
+      "remaining_owned_nodes",
+      "tap_sha256",
+      "stderr_sha256"
+    ],
+    "positive_inventory_pass": true,
+    "dynamic_source_literal_expansion": {},
+    "missing_titles_after_source_expansion": []
+  },
+  {
+    "stage": "canonical330",
+    "native_exit": 0,
+    "pid": 3685503,
+    "startticks": "124776958",
+    "joined_utc": "2026-10-06T22:18:12.745162+00:00",
+    "expected_positive_titles": 1,
+    "observed_positive_titles": 1,
+    "missing_titles": [],
+    "native_exit_record_keys": [
+      "stage",
+      "started",
+      "joined_utc",
+      "native_returncode",
+      "timed_out",
+      "elapsed_seconds",
+      "PG",
+      "remaining_owned_nodes",
+      "tap_sha256",
+      "stderr_sha256"
+    ],
+    "positive_inventory_pass": true,
+    "dynamic_source_literal_expansion": {},
+    "missing_titles_after_source_expansion": []
+  },
+  {
+    "stage": "full-pg",
+    "native_exit": 0,
+    "pid": 3783534,
+    "startticks": "124810274",
+    "joined_utc": "2026-10-06T22:19:58.202307+00:00",
+    "expected_positive_titles": 133,
+    "observed_positive_titles": 170,
+    "missing_titles": [
+      "generation alone fences "
+    ],
+    "native_exit_record_keys": [
+      "stage",
+      "started",
+      "joined_utc",
+      "native_returncode",
+      "timed_out",
+      "elapsed_seconds",
+      "PG",
+      "remaining_owned_nodes",
+      "tap_sha256",
+      "stderr_sha256"
+    ],
+    "positive_inventory_pass": true,
+    "dynamic_source_literal_expansion": {
+      "generation alone fences ": [
+        "generation alone fences capture",
+        "generation alone fences failure"
+      ]
+    },
+    "missing_titles_after_source_expansion": []
+  },
+  {
+    "stage": "full-unit",
+    "native_exit": 0,
+    "pid": 3812288,
+    "startticks": "124820820",
+    "joined_utc": "2026-10-06T22:21:18.535784+00:00",
+    "expected_positive_titles": 55,
+    "observed_positive_titles": 64,
+    "missing_titles": [
+      "R1 actual successful ",
+      "R1 failed action/no identity emits zero ",
+      "R1 actual app channel "
+    ],
+    "native_exit_record_keys": [
+      "stage",
+      "started",
+      "joined_utc",
+      "native_returncode",
+      "timed_out",
+      "elapsed_seconds",
+      "PG",
+      "remaining_owned_nodes",
+      "tap_sha256",
+      "stderr_sha256"
+    ],
+    "positive_inventory_pass": true,
+    "dynamic_source_literal_expansion": {
+      "R1 actual successful ": [
+        "R1 actual successful register notifies exactly once",
+        "R1 actual successful login notifies exactly once"
+      ],
+      "R1 failed action/no identity emits zero ": [
+        "R1 failed action/no identity emits zero false/true",
+        "R1 failed action/no identity emits zero true/false"
+      ],
+      "R1 actual app channel ": [
+        "R1 actual app channel login invalidates, aborts and passive followup never echoes",
+        "R1 actual app channel logout invalidates, aborts and passive followup never echoes"
+      ]
+    },
+    "missing_titles_after_source_expansion": []
+  },
+  {
+    "stage": "f10-physical120",
+    "native_exit": 0,
+    "pid": 3834274,
+    "startticks": "124828853",
+    "joined_utc": "2026-10-06T22:23:21.888119+00:00",
+    "expected_positive_titles": 1,
+    "observed_positive_titles": 1,
+    "missing_titles": [],
+    "native_exit_record_keys": [
+      "stage",
+      "started",
+      "joined_utc",
+      "native_returncode",
+      "timed_out",
+      "elapsed_seconds",
+      "PG",
+      "remaining_owned_nodes",
+      "tap_sha256",
+      "stderr_sha256"
+    ],
+    "positive_inventory_pass": true,
+    "dynamic_source_literal_expansion": {},
+    "missing_titles_after_source_expansion": []
+  },
+  {
+    "stage": "f09-physical120",
+    "native_exit": 0,
+    "pid": 3864715,
+    "startticks": "124841188",
+    "joined_utc": "2026-10-06T22:25:26.068653+00:00",
+    "expected_positive_titles": 1,
+    "observed_positive_titles": 1,
+    "missing_titles": [],
+    "native_exit_record_keys": [
+      "stage",
+      "started",
+      "joined_utc",
+      "native_returncode",
+      "timed_out",
+      "elapsed_seconds",
+      "PG",
+      "remaining_owned_nodes",
+      "tap_sha256",
+      "stderr_sha256"
+    ],
+    "positive_inventory_pass": true,
+    "dynamic_source_literal_expansion": {},
+    "missing_titles_after_source_expansion": []
+  },
+  {
+    "stage": "protocol-short",
+    "native_exit": 0,
+    "pid": 3895558,
+    "startticks": "124853606",
+    "joined_utc": "2026-10-06T22:26:21.233914+00:00",
+    "expected_positive_titles": 3,
+    "observed_positive_titles": 3,
+    "missing_titles": [],
+    "native_exit_record_keys": [
+      "stage",
+      "started",
+      "joined_utc",
+      "native_returncode",
+      "timed_out",
+      "elapsed_seconds",
+      "PG",
+      "remaining_owned_nodes",
+      "tap_sha256",
+      "stderr_sha256"
+    ],
+    "positive_inventory_pass": true,
+    "dynamic_source_literal_expansion": {},
+    "missing_titles_after_source_expansion": []
+  },
+  {
+    "stage": "f09-short",
+    "native_exit": 0,
+    "pid": 3911316,
+    "startticks": "124859123",
+    "joined_utc": "2026-10-06T22:26:36.107190+00:00",
+    "expected_positive_titles": 3,
+    "observed_positive_titles": 3,
+    "missing_titles": [],
+    "native_exit_record_keys": [
+      "stage",
+      "started",
+      "joined_utc",
+      "native_returncode",
+      "timed_out",
+      "elapsed_seconds",
+      "PG",
+      "remaining_owned_nodes",
+      "tap_sha256",
+      "stderr_sha256"
+    ],
+    "positive_inventory_pass": true,
+    "dynamic_source_literal_expansion": {},
+    "missing_titles_after_source_expansion": []
+  },
+  {
+    "stage": "native-adversarial",
+    "native_exit": 0,
+    "pid": 3914160,
+    "startticks": "124860610",
+    "joined_utc": "2026-10-06T22:28:26.931420+00:00",
+    "expected_positive_titles": 1,
+    "observed_positive_titles": 1,
+    "missing_titles": [],
+    "native_exit_record_keys": [
+      "stage",
+      "started",
+      "joined_utc",
+      "native_returncode",
+      "timed_out",
+      "elapsed_seconds",
+      "PG",
+      "remaining_owned_nodes",
+      "tap_sha256",
+      "stderr_sha256"
+    ],
+    "positive_inventory_pass": true,
+    "dynamic_source_literal_expansion": {},
+    "missing_titles_after_source_expansion": []
+  }
+]

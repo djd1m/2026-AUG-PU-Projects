@@ -1,0 +1,32 @@
+{
+  "utc": "2026-10-06T22:39:42.513578+00:00",
+  "native_exit": 0,
+  "timed_out": false,
+  "elapsed_seconds": 3.7853222507983446,
+  "pid": 4115390,
+  "startticks": "124938872",
+  "runner_pid": 4084682,
+  "PG": {
+    "at": "2026-10-06T22:39:42.335Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB_slots_claims_after_join": {
+    "utc": "2026-10-06T22:39:42.496Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": []
+  },
+  "owned_nodes": [],
+  "assertion_failure": false,
+  "failure_titles": [],
+  "tap_sha256": "4073f1eabffa6f7046d4165f3f440a58130f02522ad0aa3c32fcc5cdb979d4cd",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

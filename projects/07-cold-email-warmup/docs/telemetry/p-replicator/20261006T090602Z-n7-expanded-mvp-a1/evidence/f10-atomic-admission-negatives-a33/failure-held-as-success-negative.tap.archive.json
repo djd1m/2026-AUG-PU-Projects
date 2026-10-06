@@ -1,0 +1,12 @@
+{
+  "original_file": "failure-held-as-success-negative.tap",
+  "original_sha256": "04889399e1ac613a385338469631a9a38bed61edfcc4905bc7b5464c9ea3a4aa",
+  "original_bytes": 2201,
+  "original_scratch_path": "/tmp/n7-f10-atomic-admission-negatives-a33/failure-held-as-success-negative.tap",
+  "original_scratch_unchanged": true,
+  "export_archive": "failure-held-as-success-negative.tap.gz",
+  "archive_sha256": "6735d830fba635724b5fc076f4709a37859a9ef45ce73a2783d0775d3073a49b",
+  "archive_bytes": 740,
+  "roundtrip_verified": true,
+  "reason": "Lossless export of immutable raw TAP whose whitespace-only diagnostic lines fail git diff --check; no source or raw test bytes normalized."
+}

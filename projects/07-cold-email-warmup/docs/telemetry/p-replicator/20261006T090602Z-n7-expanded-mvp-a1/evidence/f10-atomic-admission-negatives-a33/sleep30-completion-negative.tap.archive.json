@@ -1,0 +1,12 @@
+{
+  "original_file": "sleep30-completion-negative.tap",
+  "original_sha256": "9e7d54495419a6c581489716699234f0a5c67840ce8298a7dfa0dc22f42b3eeb",
+  "original_bytes": 1085,
+  "original_scratch_path": "/tmp/n7-f10-atomic-admission-negatives-a33/sleep30-completion-negative.tap",
+  "original_scratch_unchanged": true,
+  "export_archive": "sleep30-completion-negative.tap.gz",
+  "archive_sha256": "ef5031b73aec559dea1cd72b874770dedc274cb593e4b428e9f465fe5ba5466c",
+  "archive_bytes": 556,
+  "roundtrip_verified": true,
+  "reason": "Lossless export of immutable raw TAP whose whitespace-only diagnostic lines fail git diff --check; no source or raw test bytes normalized."
+}

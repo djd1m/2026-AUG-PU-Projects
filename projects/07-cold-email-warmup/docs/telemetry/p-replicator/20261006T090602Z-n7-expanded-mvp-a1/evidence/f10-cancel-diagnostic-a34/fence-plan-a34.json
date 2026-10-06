@@ -1,0 +1,44 @@
+[
+  {
+    "name": "native-runtime-result-guard-drop",
+    "changes": [
+      {
+        "path": "src/replies/worker.ts",
+        "old": "await runtimeGuard(c);await source(c);await transport?.(c);",
+        "new": "await source(c);await transport?.(c);",
+        "anchor_count": 1
+      }
+    ],
+    "test_file": "tests/f09-live-transport.test.ts",
+    "title": "settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences",
+    "expected_material_assertion": "settled native UIDproof neverbypasses current runtime fence",
+    "budget_s": 20,
+    "status": "pending",
+    "execution_binding": {
+      "test_import": "await import('../src/replies/worker.js')",
+      "tsx_resolves": "src/replies/worker.ts",
+      "dist_binding": "frozen matching compiled component retained; not executed by this source title"
+    }
+  },
+  {
+    "name": "native-transport-result-guard-drop",
+    "changes": [
+      {
+        "path": "src/replies/worker.ts",
+        "old": "await runtimeGuard(c);await source(c);await transport?.(c);",
+        "new": "await runtimeGuard(c);await source(c);",
+        "anchor_count": 1
+      }
+    ],
+    "test_file": "tests/f09-live-transport.test.ts",
+    "title": "settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences",
+    "expected_material_assertion": "settled native UIDproof neverbypasses grant/mailbox fence",
+    "budget_s": 20,
+    "status": "pending",
+    "execution_binding": {
+      "test_import": "await import('../src/replies/worker.js')",
+      "tsx_resolves": "src/replies/worker.ts",
+      "dist_binding": "frozen matching compiled component retained; not executed by this source title"
+    }
+  }
+]

@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "F10 A33 remaining material/atomic/transport negatives actual ACK; A32 all9 baseline exit0; final fresh review pending",
+  "stage": "F10 A35 source review BLOCKED only six mandatory UID witnesses; A36 exact bounded verification actual ACK",
   "roots": {
     "project": "."
   },
   "identity": {
     "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
     "work_unit_id": "expanded-mvp",
-    "current_attempt_id": "f10-atomic-admission-negatives-a33"
+    "current_attempt_id": "f10-uid-material-verify-a36"
   },
   "telemetry": {
     "run": {
@@ -183,7 +183,7 @@
   },
   "preflight": {
     "status": "not_applicable",
-    "reason": "A16 frozen verification current native preflight/probes underway; no330/fullPG/physical PASS claim. PriorA15 ready artifacts+baseline readinessgap preserved.",
+    "reason": "No browser/deployed E2E claim in this frozen operational slice. Actual isolated native preflight is ready: source120/build73/SQL15 bound, DBn7f10_a2 quiescent/slots0/claims0, prior owned nodes joined, heavy mutex and inherited network guard; A33 remaining-f09-five-ready.json provides exact local proof. No live provider or deployment actions.",
     "external_actions_executed": false,
     "e2e_claim": null
   },
@@ -490,7 +490,23 @@
     },
     {
       "id": "f10-atomic-admission-verify-a32",
-      "status": "active"
+      "status": "completed executed scope; product acceptance pending mandatory negatives and fresh review"
+    },
+    {
+      "id": "f10-atomic-admission-negatives-a33",
+      "status": "completed scoped; cancellation timeout and two fence probes remain"
+    },
+    {
+      "id": "f10-cancel-diagnostic-a34",
+      "status": "completed all scoped source/compiled counterproofs; original timeout retained"
+    },
+    {
+      "id": "f10-final-source-review-a35",
+      "status": "BLOCKED solely six UID material witnesses; no source defect"
+    },
+    {
+      "id": "f10-uid-material-verify-a36",
+      "status": "active; actual ACK verified"
     }
   ],
   "work_units": [
@@ -539,21 +555,21 @@
       "executor": "/root/n7_sol_coordinator/f10_atomic_admission_verifier_a32"
     }
   },
-  "current_stage": "F10 A33 remaining material/atomic/transport negatives actual ACK; A32 all9 baseline exit0; final fresh review pending",
+  "current_stage": "F10 independent UID finding reconciliation A37",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f10_atomic_admission_verifier_a32",
-    "attempt": "f10-atomic-admission-negatives-a33",
+    "executor": "/root/n7_sol_coordinator/f10_final_source_reviewer_a35",
+    "attempt": "f10-uid-finding-reconciliation-a37",
+    "same_independent_HIGH_actor": true,
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-06T22:31:51.162456Z",
-    "same_fixed_HIGH_actor": true,
-    "launch_sha256": "1196852fb1726b691435dcc86f2eb778b3d55005ce131312dc784d242da1fd30",
+    "actual_ACK_at": "2026-10-06T23:19:19Z",
     "requested_model": "gpt-6.1-sol",
     "requested_effort": "high",
     "actual_model": null,
     "source_revision": "db50798a76a97fed75931544f24cd1181ff082d8",
-    "freeze_at": "2026-10-06T22:48:51.162456Z",
-    "deadline": "2026-10-06T22:51:51.162456Z",
-    "next": "Exact17material+5slot/newatomic/5F09remaining/canary; fresh new planner-only source review after operational gates. F10 not accepted."
+    "freeze_at": "2026-10-06T23:25:19Z",
+    "deadline": "2026-10-06T23:27:19Z",
+    "context_manifest_sha256": "a27e00e0e1dfea40125da0b33207675d7feeb21da2df3c87774f97202363b888",
+    "next": "Finding-only independent reconciliation of exact six UID obligations. No source integration or F11 coding before acceptance."
   }
 }

@@ -1,0 +1,11 @@
+--- dist/replies/store.js
++++ dist/replies/store.js
+@@ -71,7 +71,7 @@
+             const row = (await c.query(`INSERT INTO reply_rescan(tenant_id,mailbox_id,run_id,uidvalidity,high_water,state,attempt_started_at,provenance,cursor_uid) VALUES($1,$2,$3,$4,$5,'scanning',$6,$7,$8)
+     ON CONFLICT(mailbox_id) DO UPDATE SET run_id=$3,uidvalidity=$4,high_water=$5,cursor_uid=$8,state='scanning',attempt=1,attempt_started_at=$6,pages=0,provenance=$7,tail_high_water=NULL RETURNING *`, [tenant, mailbox, id, v, highWater, now, input.provenance, cursor])).rows[0];
+             await c.query(`INSERT INTO mailbox_poll(mailbox_id,scan_complete,uidvalidity,cursor_uid) VALUES($1,false,$2,$3)
+-    ON CONFLICT(mailbox_id) DO UPDATE SET scan_complete=false,uidvalidity=$2,cursor_uid=$3`, [mailbox, v, cursor]);
++    ON CONFLICT(mailbox_id) DO UPDATE SET scan_complete=true,completed_at=clock_timestamp(),uidvalidity=$2,cursor_uid=$3`, [mailbox, v, cursor]);
+             return view(row);
+         });
+     }

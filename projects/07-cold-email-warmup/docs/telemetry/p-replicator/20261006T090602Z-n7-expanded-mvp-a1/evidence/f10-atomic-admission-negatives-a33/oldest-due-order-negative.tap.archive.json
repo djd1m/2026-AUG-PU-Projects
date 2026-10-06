@@ -1,0 +1,12 @@
+{
+  "original_file": "oldest-due-order-negative.tap",
+  "original_sha256": "8acbac8a0e5d9df519ac76044debc80ed635473317c83c284b9da73a17fb165f",
+  "original_bytes": 1049,
+  "original_scratch_path": "/tmp/n7-f10-atomic-admission-negatives-a33/oldest-due-order-negative.tap",
+  "original_scratch_unchanged": true,
+  "export_archive": "oldest-due-order-negative.tap.gz",
+  "archive_sha256": "16204f8adde0be77852a3ed8cabef176d48acf57f8b568efd145876bc7ee1f22",
+  "archive_bytes": 555,
+  "roundtrip_verified": true,
+  "reason": "Lossless export of immutable raw TAP whose whitespace-only diagnostic lines fail git diff --check; no source or raw test bytes normalized."
+}

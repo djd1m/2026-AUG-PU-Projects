@@ -1,0 +1,10 @@
+--- dist/replies/worker.js
++++ dist/replies/worker.js
+@@ -120,6 +120,7 @@
+             const tail = run.cursor >= run.highWater, horizon = tail ? run.tailHighWater : run.highWater;
+             const read = validateReadResult(await this.adapter.read(tenant, mailbox, run.uidvalidity, run.cursor, horizon, signal), run.uidvalidity, this.adapter.mode === 'local_test' ? 'local_fixture' : 'imap_headers');
+             if (read.kind === 'uidvalidity_changed') {
++                await this.adapter.snapshot(tenant, mailbox, signal);
+                 run = await this.store.capture(tenant, mailbox, read.snapshot, guard, identity(run));
+                 return { state: run.state };
+             }

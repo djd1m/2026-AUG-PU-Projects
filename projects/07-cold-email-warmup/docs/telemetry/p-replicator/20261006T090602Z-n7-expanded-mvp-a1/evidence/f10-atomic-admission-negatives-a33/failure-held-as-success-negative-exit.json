@@ -1,0 +1,66 @@
+{
+  "utc": "2026-10-06T22:38:24.999297+00:00",
+  "native_exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 1.855126891983673,
+  "pid": 4093250,
+  "startticks": "124931314",
+  "runner_pid": 4084682,
+  "PG": {
+    "at": "2026-10-06T22:38:24.802Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB_slots_claims_after_join": {
+    "utc": "2026-10-06T22:38:24.980Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 2,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 3,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 4,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 2,
+        "occupied": false
+      }
+    ]
+  },
+  "owned_nodes": [],
+  "assertion_failure": true,
+  "failure_titles": [
+    "not ok 1 - complete proof becomes immediately eligible without resetting its selected fair turn",
+    "not ok 2 - partial and held scans cannot manufacture successful polling readiness"
+  ],
+  "tap_sha256": "04889399e1ac613a385338469631a9a38bed61edfcc4905bc7b5464c9ea3a4aa",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

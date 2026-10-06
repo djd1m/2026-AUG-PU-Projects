@@ -1,0 +1,65 @@
+{
+  "utc": "2026-10-06T22:55:42.054101+00:00",
+  "native_exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 2.075885240919888,
+  "pid": 168061,
+  "startticks": "125034997",
+  "runner_pid": 164359,
+  "PG": {
+    "at": "2026-10-06T22:55:41.879Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB_slots_claims_after_join": {
+    "utc": "2026-10-06T22:55:42.035Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 2,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 3,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 4,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 2,
+        "occupied": false
+      }
+    ]
+  },
+  "owned_nodes": [],
+  "assertion_failure": true,
+  "failure_titles": [
+    "not ok 2 - A34 abort after committed native claim releases slots before any operation"
+  ],
+  "tap_sha256": "72fb0f9b5b18729840a7a97c175e005666707520e207846b1e152e584b27dabe",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
