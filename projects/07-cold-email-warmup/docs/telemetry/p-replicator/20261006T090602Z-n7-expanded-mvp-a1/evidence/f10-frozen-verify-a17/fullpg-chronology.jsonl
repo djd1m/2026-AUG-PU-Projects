@@ -1,0 +1,1109 @@
+{"at": "2026-10-06T19:30:01.389036+00:00", "stream": "tap", "line": ""}
+{"at": "2026-10-06T19:30:01.389135+00:00", "stream": "tap", "line": "> n7-cold-email-warmup@0.1.0 test:integration"}
+{"at": "2026-10-06T19:30:01.389163+00:00", "stream": "tap", "line": "> tsx --test --test-concurrency=1 tests/*-integration.test.ts"}
+{"at": "2026-10-06T19:30:01.389184+00:00", "stream": "tap", "line": ""}
+{"at": "2026-10-06T19:30:01.658705+00:00", "stream": "tap", "line": "TAP version 13"}
+{"at": "2026-10-06T19:30:02.975739+00:00", "stream": "tap", "line": "# Subtest: F01 real PostgreSQL16 HTTP identity acceptance"}
+{"at": "2026-10-06T19:30:02.976090+00:00", "stream": "tap", "line": "    # Subtest: AC-F01-1 migrated readiness serves without exposing secrets"}
+{"at": "2026-10-06T19:30:02.976780+00:00", "stream": "tap", "line": "    ok 1 - AC-F01-1 migrated readiness serves without exposing secrets"}
+{"at": "2026-10-06T19:30:02.976830+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:02.976846+00:00", "stream": "tap", "line": "      duration_ms: 39.200904"}
+{"at": "2026-10-06T19:30:02.976857+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:02.976868+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:03.474115+00:00", "stream": "tap", "line": "    # Subtest: AC-F01-2 registration atomically creates tenants and only HMAC sessions; no consent"}
+{"at": "2026-10-06T19:30:03.474509+00:00", "stream": "tap", "line": "    ok 2 - AC-F01-2 registration atomically creates tenants and only HMAC sessions; no consent"}
+{"at": "2026-10-06T19:30:03.474779+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:03.474822+00:00", "stream": "tap", "line": "      duration_ms: 501.015889"}
+{"at": "2026-10-06T19:30:03.474840+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:03.474856+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:03.532202+00:00", "stream": "tap", "line": "    # Subtest: AC-F01-3 own200/foreign404; UUID and SQL injection400; auth/origin bypass0writes"}
+{"at": "2026-10-06T19:30:03.532653+00:00", "stream": "tap", "line": "    ok 3 - AC-F01-3 own200/foreign404; UUID and SQL injection400; auth/origin bypass0writes"}
+{"at": "2026-10-06T19:30:03.532791+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:03.532826+00:00", "stream": "tap", "line": "      duration_ms: 56.33377"}
+{"at": "2026-10-06T19:30:03.532847+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:03.532863+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:04.107145+00:00", "stream": "tap", "line": "    # Subtest: AC-F01-2 logout/login/logout durable rejection, expired/inactive accounts and tenants"}
+{"at": "2026-10-06T19:30:04.108951+00:00", "stream": "tap", "line": "    ok 4 - AC-F01-2 logout/login/logout durable rejection, expired/inactive accounts and tenants"}
+{"at": "2026-10-06T19:30:04.109020+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:04.109041+00:00", "stream": "tap", "line": "      duration_ms: 560.15282"}
+{"at": "2026-10-06T19:30:04.109055+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:04.109069+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:04.218000+00:00", "stream": "tap", "line": "    # Subtest: AC-F01-5 atomic concurrent ceilings and fixed UTC resets count rejected attempts"}
+{"at": "2026-10-06T19:30:04.218102+00:00", "stream": "tap", "line": "    ok 5 - AC-F01-5 atomic concurrent ceilings and fixed UTC resets count rejected attempts"}
+{"at": "2026-10-06T19:30:04.218345+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:04.218381+00:00", "stream": "tap", "line": "      duration_ms: 123.947104"}
+{"at": "2026-10-06T19:30:04.218403+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:04.218423+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:07.670484+00:00", "stream": "tap", "line": "    # Subtest: AC-F01-5 HTTP wrong attempts count; spoofed forwarded IP cannot evade10/min"}
+{"at": "2026-10-06T19:30:07.670844+00:00", "stream": "tap", "line": "    ok 6 - AC-F01-5 HTTP wrong attempts count; spoofed forwarded IP cannot evade10/min"}
+{"at": "2026-10-06T19:30:07.673447+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:07.673522+00:00", "stream": "tap", "line": "      duration_ms: 3449.020961"}
+{"at": "2026-10-06T19:30:07.673538+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:07.673552+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:08.774280+00:00", "stream": "tap", "line": "# secret_canary_scan_passed (value suppressed)"}
+{"at": "2026-10-06T19:30:08.783125+00:00", "stream": "tap", "line": "    # Subtest: AC-F01-6 error secret canary redaction, invalid input no KDF/state, duplicate registration rollback"}
+{"at": "2026-10-06T19:30:08.783223+00:00", "stream": "tap", "line": "    ok 7 - AC-F01-6 error secret canary redaction, invalid input no KDF/state, duplicate registration rollback"}
+{"at": "2026-10-06T19:30:08.783262+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:08.783296+00:00", "stream": "tap", "line": "      duration_ms: 1106.211925"}
+{"at": "2026-10-06T19:30:08.783317+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:08.783338+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:08.784711+00:00", "stream": "tap", "line": "    1..7"}
+{"at": "2026-10-06T19:30:08.784771+00:00", "stream": "tap", "line": "ok 1 - F01 real PostgreSQL16 HTTP identity acceptance"}
+{"at": "2026-10-06T19:30:08.784796+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:30:08.784819+00:00", "stream": "tap", "line": "  duration_ms: 6520.984958"}
+{"at": "2026-10-06T19:30:08.784841+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:30:08.784862+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:30:12.324748+00:00", "stream": "tap", "line": "# Subtest: F05 A1\u2013A6 real PostgreSQL HTTP and canonical race gates"}
+{"at": "2026-10-06T19:30:12.324848+00:00", "stream": "tap", "line": "    # Subtest: A2 explicit priority, cookie failure reasons, self/inactive and tenant404"}
+{"at": "2026-10-06T19:30:12.325140+00:00", "stream": "tap", "line": "    ok 1 - A2 explicit priority, cookie failure reasons, self/inactive and tenant404"}
+{"at": "2026-10-06T19:30:12.325174+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:12.325686+00:00", "stream": "tap", "line": "      duration_ms: 316.113623"}
+{"at": "2026-10-06T19:30:12.325714+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:12.325728+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:12.647315+00:00", "stream": "tap", "line": "    # Subtest: A3 parallel HTTP idempotency, immutable payload, crash recovery and disabled zero-state"}
+{"at": "2026-10-06T19:30:12.647397+00:00", "stream": "tap", "line": "    ok 2 - A3 parallel HTTP idempotency, immutable payload, crash recovery and disabled zero-state"}
+{"at": "2026-10-06T19:30:12.647416+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:12.647434+00:00", "stream": "tap", "line": "      duration_ms: 333.000169"}
+{"at": "2026-10-06T19:30:12.647452+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:12.647468+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:13.008809+00:00", "stream": "tap", "line": "    # Subtest: A4/5 HTTP canonical success, frozen attribution, replay fixed expiry, two buyers and cancellation"}
+{"at": "2026-10-06T19:30:13.008890+00:00", "stream": "tap", "line": "    ok 3 - A4/5 HTTP canonical success, frozen attribution, replay fixed expiry, two buyers and cancellation"}
+{"at": "2026-10-06T19:30:13.008917+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:13.008946+00:00", "stream": "tap", "line": "      duration_ms: 361.017869"}
+{"at": "2026-10-06T19:30:13.008964+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:13.009012+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:13.624763+00:00", "stream": "tap", "line": "    # Subtest: A4 canonical mismatch, unavailable503, bounded callback, stale cancel/expiry barriers"}
+{"at": "2026-10-06T19:30:13.624848+00:00", "stream": "tap", "line": "    ok 4 - A4 canonical mismatch, unavailable503, bounded callback, stale cancel/expiry barriers"}
+{"at": "2026-10-06T19:30:13.626556+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:13.626778+00:00", "stream": "tap", "line": "      duration_ms: 606.681577"}
+{"at": "2026-10-06T19:30:13.626926+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:13.626971+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:13.932802+00:00", "stream": "tap", "line": "    # Subtest: A1 unlimited connected preserves TEST billing and post-lock expiry, existing edit retained"}
+{"at": "2026-10-06T19:30:13.932903+00:00", "stream": "tap", "line": "    ok 5 - A1 unlimited connected preserves TEST billing and post-lock expiry, existing edit retained"}
+{"at": "2026-10-06T19:30:13.932930+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:13.932950+00:00", "stream": "tap", "line": "      duration_ms: 317.810034"}
+{"at": "2026-10-06T19:30:13.932970+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:13.932990+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:14.534923+00:00", "stream": "tap", "line": "    # Subtest: A1 campaign concurrency and active duplicate after expiry"}
+{"at": "2026-10-06T19:30:14.535172+00:00", "stream": "tap", "line": "    ok 6 - A1 campaign concurrency and active duplicate after expiry"}
+{"at": "2026-10-06T19:30:14.535243+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:14.535268+00:00", "stream": "tap", "line": "      duration_ms: 598.193503"}
+{"at": "2026-10-06T19:30:14.535344+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:14.535365+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:14.535578+00:00", "stream": "tap", "line": "    1..6"}
+{"at": "2026-10-06T19:30:14.536058+00:00", "stream": "tap", "line": "ok 2 - F05 A1\u2013A6 real PostgreSQL HTTP and canonical race gates"}
+{"at": "2026-10-06T19:30:14.536094+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:30:14.536113+00:00", "stream": "tap", "line": "  duration_ms: 4838.590097"}
+{"at": "2026-10-06T19:30:14.536130+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:30:14.536147+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:30:17.766457+00:00", "stream": "tap", "line": "# Subtest: F07 real PostgreSQL capacity boundaries and atomic safety"}
+{"at": "2026-10-06T19:30:17.766548+00:00", "stream": "tap", "line": "    # Subtest: creates101st connected mailbox for free and expired TEST team without send"}
+{"at": "2026-10-06T19:30:17.766595+00:00", "stream": "tap", "line": "    ok 1 - creates101st connected mailbox for free and expired TEST team without send"}
+{"at": "2026-10-06T19:30:17.766646+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:17.766671+00:00", "stream": "tap", "line": "      duration_ms: 2057.058974"}
+{"at": "2026-10-06T19:30:17.766690+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:17.766708+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:17.810463+00:00", "stream": "tap", "line": "    # Subtest: tenant pages remain bounded and foreign capacity actions cause no side effects"}
+{"at": "2026-10-06T19:30:17.810545+00:00", "stream": "tap", "line": "    ok 2 - tenant pages remain bounded and foreign capacity actions cause no side effects"}
+{"at": "2026-10-06T19:30:17.810567+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:17.810585+00:00", "stream": "tap", "line": "      duration_ms: 44.612895"}
+{"at": "2026-10-06T19:30:17.810603+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:17.810648+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:19.495706+00:00", "stream": "tap", "line": "    # Subtest: global30 admission serializes competing tenants and duplicate requests"}
+{"at": "2026-10-06T19:30:19.495793+00:00", "stream": "tap", "line": "    ok 3 - global30 admission serializes competing tenants and duplicate requests"}
+{"at": "2026-10-06T19:30:19.495816+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:19.495831+00:00", "stream": "tap", "line": "      duration_ms: 1686.017101"}
+{"at": "2026-10-06T19:30:19.495845+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:19.495857+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:19.638396+00:00", "stream": "tap", "line": "    # Subtest: lease120 expiry release and stale renewal never resurrect stopped mailbox"}
+{"at": "2026-10-06T19:30:19.638466+00:00", "stream": "tap", "line": "    ok 4 - lease120 expiry release and stale renewal never resurrect stopped mailbox"}
+{"at": "2026-10-06T19:30:19.638481+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:19.638493+00:00", "stream": "tap", "line": "      duration_ms: 139.97673"}
+{"at": "2026-10-06T19:30:19.638505+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:19.638517+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:20.047124+00:00", "stream": "tap", "line": "    # Subtest: complaint quarantine immediately releases capacity for another tenant"}
+{"at": "2026-10-06T19:30:20.047462+00:00", "stream": "tap", "line": "    not ok 5 - complaint quarantine immediately releases capacity for another tenant"}
+{"at": "2026-10-06T19:30:20.047564+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:20.047584+00:00", "stream": "tap", "line": "      duration_ms: 408.870686"}
+{"at": "2026-10-06T19:30:20.047599+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:20.047614+00:00", "stream": "tap", "line": "      location: '/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/capacity-integration.test.ts:1:5843'"}
+{"at": "2026-10-06T19:30:20.047701+00:00", "stream": "tap", "line": "      failureType: 'testCodeFailure'"}
+{"at": "2026-10-06T19:30:20.047721+00:00", "stream": "tap", "line": "      error: |-"}
+{"at": "2026-10-06T19:30:20.047737+00:00", "stream": "tap", "line": "        Expected values to be strictly equal:"}
+{"at": "2026-10-06T19:30:20.047752+00:00", "stream": "tap", "line": "        + actual - expected"}
+{"at": "2026-10-06T19:30:20.047768+00:00", "stream": "tap", "line": "        "}
+{"at": "2026-10-06T19:30:20.047783+00:00", "stream": "tap", "line": "        + 'active'"}
+{"at": "2026-10-06T19:30:20.047799+00:00", "stream": "tap", "line": "        - 'waiting_capacity'"}
+{"at": "2026-10-06T19:30:20.047815+00:00", "stream": "tap", "line": "        "}
+{"at": "2026-10-06T19:30:20.047831+00:00", "stream": "tap", "line": "      code: 'ERR_ASSERTION'"}
+{"at": "2026-10-06T19:30:20.047847+00:00", "stream": "tap", "line": "      name: 'AssertionError'"}
+{"at": "2026-10-06T19:30:20.047861+00:00", "stream": "tap", "line": "      expected: 'waiting_capacity'"}
+{"at": "2026-10-06T19:30:20.047875+00:00", "stream": "tap", "line": "      actual: 'active'"}
+{"at": "2026-10-06T19:30:20.047889+00:00", "stream": "tap", "line": "      operator: 'strictEqual'"}
+{"at": "2026-10-06T19:30:20.047903+00:00", "stream": "tap", "line": "      stack: |-"}
+{"at": "2026-10-06T19:30:20.047918+00:00", "stream": "tap", "line": "        TestContext.<anonymous> (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/capacity-integration.test.ts:68:63)"}
+{"at": "2026-10-06T19:30:20.047933+00:00", "stream": "tap", "line": "        process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+{"at": "2026-10-06T19:30:20.047948+00:00", "stream": "tap", "line": "        async Test.run (node:internal/test_runner/test:1054:7)"}
+{"at": "2026-10-06T19:30:20.047962+00:00", "stream": "tap", "line": "        async TestContext.<anonymous> (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/capacity-integration.test.ts:66:3)"}
+{"at": "2026-10-06T19:30:20.048001+00:00", "stream": "tap", "line": "        async Test.run (node:internal/test_runner/test:1054:7)"}
+{"at": "2026-10-06T19:30:20.048016+00:00", "stream": "tap", "line": "        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)"}
+{"at": "2026-10-06T19:30:20.048031+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:20.329060+00:00", "stream": "tap", "line": "    # Subtest: sender and pool recipient need active lease at scheduling claim and final fence"}
+{"at": "2026-10-06T19:30:20.329165+00:00", "stream": "tap", "line": "    ok 6 - sender and pool recipient need active lease at scheduling claim and final fence"}
+{"at": "2026-10-06T19:30:20.329195+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:20.329212+00:00", "stream": "tap", "line": "      duration_ms: 283.290821"}
+{"at": "2026-10-06T19:30:20.329228+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:20.329243+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:20.478156+00:00", "stream": "tap", "line": "    # Subtest: capacity writers sample database time after shared lock and rollback admission"}
+{"at": "2026-10-06T19:30:20.479487+00:00", "stream": "tap", "line": "    ok 7 - capacity writers sample database time after shared lock and rollback admission"}
+{"at": "2026-10-06T19:30:20.479556+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:20.479577+00:00", "stream": "tap", "line": "      duration_ms: 146.573892"}
+{"at": "2026-10-06T19:30:20.479592+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:20.479608+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:21.384055+00:00", "stream": "tap", "line": "    # Subtest: strict own capacity API rejects auth origin malformed cursor and rate abuse"}
+{"at": "2026-10-06T19:30:21.391781+00:00", "stream": "tap", "line": "    ok 8 - strict own capacity API rejects auth origin malformed cursor and rate abuse"}
+{"at": "2026-10-06T19:30:21.391897+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:21.391917+00:00", "stream": "tap", "line": "      duration_ms: 907.850884"}
+{"at": "2026-10-06T19:30:21.391933+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:21.391947+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:22.826573+00:00", "stream": "tap", "line": "    # Subtest: real schema11 to12 upgrade preserves envelope states and has no automatic leases"}
+{"at": "2026-10-06T19:30:22.827436+00:00", "stream": "tap", "line": "    ok 9 - real schema11 to12 upgrade preserves envelope states and has no automatic leases"}
+{"at": "2026-10-06T19:30:22.827650+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:22.827677+00:00", "stream": "tap", "line": "      duration_ms: 1441.458154"}
+{"at": "2026-10-06T19:30:22.827692+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:22.827705+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:22.868691+00:00", "stream": "tap", "line": "    # Subtest: additive migration idempotency keeps records without implicit lease"}
+{"at": "2026-10-06T19:30:22.868789+00:00", "stream": "tap", "line": "    ok 10 - additive migration idempotency keeps records without implicit lease"}
+{"at": "2026-10-06T19:30:22.868824+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:22.868853+00:00", "stream": "tap", "line": "      duration_ms: 40.855075"}
+{"at": "2026-10-06T19:30:22.868877+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:22.868897+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:23.419187+00:00", "stream": "tap", "line": "    1..10"}
+{"at": "2026-10-06T19:30:23.419755+00:00", "stream": "tap", "line": "not ok 3 - F07 real PostgreSQL capacity boundaries and atomic safety"}
+{"at": "2026-10-06T19:30:23.419827+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:30:23.419847+00:00", "stream": "tap", "line": "  duration_ms: 8209.01871"}
+{"at": "2026-10-06T19:30:23.419862+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:30:23.419877+00:00", "stream": "tap", "line": "  location: '/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/capacity-integration.test.ts:1:995'"}
+{"at": "2026-10-06T19:30:23.419893+00:00", "stream": "tap", "line": "  failureType: 'subtestsFailed'"}
+{"at": "2026-10-06T19:30:23.419907+00:00", "stream": "tap", "line": "  error: '1 subtest failed'"}
+{"at": "2026-10-06T19:30:23.419921+00:00", "stream": "tap", "line": "  code: 'ERR_TEST_FAILURE'"}
+{"at": "2026-10-06T19:30:23.419935+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:30:31.561757+00:00", "stream": "tap", "line": "# Subtest: HTTP disconnect in every phase clears owned resources and admission without late publication"}
+{"at": "2026-10-06T19:30:31.561842+00:00", "stream": "tap", "line": "ok 4 - HTTP disconnect in every phase clears owned resources and admission without late publication"}
+{"at": "2026-10-06T19:30:31.561863+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:30:31.561880+00:00", "stream": "tap", "line": "  duration_ms: 7487.184263"}
+{"at": "2026-10-06T19:30:31.561896+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:30:31.561912+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:30:32.570669+00:00", "stream": "tap", "line": "# Subtest: final cancellation after FIRST wait and persisted SQL rolls back and releases admission"}
+{"at": "2026-10-06T19:30:32.571407+00:00", "stream": "tap", "line": "    # Subtest: first_lock"}
+{"at": "2026-10-06T19:30:32.571571+00:00", "stream": "tap", "line": "    ok 1 - first_lock"}
+{"at": "2026-10-06T19:30:32.571610+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:32.572683+00:00", "stream": "tap", "line": "      duration_ms: 145.608882"}
+{"at": "2026-10-06T19:30:32.572725+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:32.572748+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:32.683743+00:00", "stream": "tap", "line": "    # Subtest: persistence"}
+{"at": "2026-10-06T19:30:32.683806+00:00", "stream": "tap", "line": "    ok 2 - persistence"}
+{"at": "2026-10-06T19:30:32.683820+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:32.683831+00:00", "stream": "tap", "line": "      duration_ms: 109.324489"}
+{"at": "2026-10-06T19:30:32.683851+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:32.683875+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:33.090170+00:00", "stream": "tap", "line": "    # Subtest: actual HTTP disconnect during final lock wait observes server abort before release"}
+{"at": "2026-10-06T19:30:33.090292+00:00", "stream": "tap", "line": "    ok 3 - actual HTTP disconnect during final lock wait observes server abort before release"}
+{"at": "2026-10-06T19:30:33.090348+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:33.090410+00:00", "stream": "tap", "line": "      duration_ms: 409.822296"}
+{"at": "2026-10-06T19:30:33.090424+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:33.090435+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:33.137239+00:00", "stream": "tap", "line": "    # Subtest: abort after committed success cannot retroactively invalidate the observation"}
+{"at": "2026-10-06T19:30:33.137349+00:00", "stream": "tap", "line": "    ok 4 - abort after committed success cannot retroactively invalidate the observation"}
+{"at": "2026-10-06T19:30:33.137387+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:33.137407+00:00", "stream": "tap", "line": "      duration_ms: 45.891817"}
+{"at": "2026-10-06T19:30:33.137425+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:33.137443+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:33.155859+00:00", "stream": "tap", "line": "    1..4"}
+{"at": "2026-10-06T19:30:33.156051+00:00", "stream": "tap", "line": "ok 5 - final cancellation after FIRST wait and persisted SQL rolls back and releases admission"}
+{"at": "2026-10-06T19:30:33.156079+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:30:33.156097+00:00", "stream": "tap", "line": "  duration_ms: 988.920953"}
+{"at": "2026-10-06T19:30:33.156112+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:30:33.156127+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:30:35.684564+00:00", "stream": "tap", "line": "# Subtest: diagnostic authority and tenant checks open no unauthorized sockets"}
+{"at": "2026-10-06T19:30:35.684692+00:00", "stream": "tap", "line": "    # Subtest: owner origin session and disabled authority precede decrypt DNS sockets"}
+{"at": "2026-10-06T19:30:35.684718+00:00", "stream": "tap", "line": "    ok 1 - owner origin session and disabled authority precede decrypt DNS sockets"}
+{"at": "2026-10-06T19:30:35.684737+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:35.684751+00:00", "stream": "tap", "line": "      duration_ms: 64.478703"}
+{"at": "2026-10-06T19:30:35.684766+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:35.684780+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:35.834069+00:00", "stream": "tap", "line": "    # Subtest: AEAD and protocol error canaries never escape diagnostic sinks"}
+{"at": "2026-10-06T19:30:35.834151+00:00", "stream": "tap", "line": "    ok 2 - AEAD and protocol error canaries never escape diagnostic sinks"}
+{"at": "2026-10-06T19:30:35.834177+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:35.834197+00:00", "stream": "tap", "line": "      duration_ms: 129.285386"}
+{"at": "2026-10-06T19:30:35.834217+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:35.834250+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:37.491279+00:00", "stream": "tap", "line": "    # Subtest: diagnostic revision fences replacement stop quarantine and newer attempt"}
+{"at": "2026-10-06T19:30:37.491775+00:00", "stream": "tap", "line": "    ok 3 - diagnostic revision fences replacement stop quarantine and newer attempt"}
+{"at": "2026-10-06T19:30:37.491830+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:37.491861+00:00", "stream": "tap", "line": "      duration_ms: 1654.344601"}
+{"at": "2026-10-06T19:30:37.491888+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:37.491914+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:37.778547+00:00", "stream": "tap", "line": "    # Subtest: grant revoke orders before final publication and after publication invalidates projection"}
+{"at": "2026-10-06T19:30:37.778700+00:00", "stream": "tap", "line": "    ok 4 - grant revoke orders before final publication and after publication invalidates projection"}
+{"at": "2026-10-06T19:30:37.778729+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:37.778752+00:00", "stream": "tap", "line": "      duration_ms: 291.655574"}
+{"at": "2026-10-06T19:30:37.778772+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:37.778793+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:37.869727+00:00", "stream": "tap", "line": "    # Subtest: authority and final persistence rollback leave no partial current result"}
+{"at": "2026-10-06T19:30:37.870119+00:00", "stream": "tap", "line": "    ok 5 - authority and final persistence rollback leave no partial current result"}
+{"at": "2026-10-06T19:30:37.870207+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:37.870233+00:00", "stream": "tap", "line": "      duration_ms: 90.683832"}
+{"at": "2026-10-06T19:30:37.870253+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:37.870271+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:37.881556+00:00", "stream": "tap", "line": "    1..5"}
+{"at": "2026-10-06T19:30:37.881653+00:00", "stream": "tap", "line": "ok 6 - diagnostic authority and tenant checks open no unauthorized sockets"}
+{"at": "2026-10-06T19:30:37.881672+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:30:37.881686+00:00", "stream": "tap", "line": "  duration_ms: 4055.971888"}
+{"at": "2026-10-06T19:30:37.881699+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:30:37.881713+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:30:37.952580+00:00", "stream": "tap", "line": "# Subtest: real schema12 to13 upgrade preserves encrypted data without verified backfill"}
+{"at": "2026-10-06T19:30:37.952788+00:00", "stream": "tap", "line": "ok 7 - real schema12 to13 upgrade preserves encrypted data without verified backfill"}
+{"at": "2026-10-06T19:30:37.952924+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:30:37.952947+00:00", "stream": "tap", "line": "  duration_ms: 75.668757"}
+{"at": "2026-10-06T19:30:37.952964+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:30:37.952980+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:30:40.994705+00:00", "stream": "tap", "line": "# Subtest: post-lock expiry queued revoke complaint order and actual CLI are fenced"}
+{"at": "2026-10-06T19:30:40.994845+00:00", "stream": "tap", "line": "    # Subtest: DB clock sampled after FIRST lock denies authority expiry while waiting"}
+{"at": "2026-10-06T19:30:40.995029+00:00", "stream": "tap", "line": "    ok 1 - DB clock sampled after FIRST lock denies authority expiry while waiting"}
+{"at": "2026-10-06T19:30:40.995091+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:40.995107+00:00", "stream": "tap", "line": "      duration_ms: 1340.736289"}
+{"at": "2026-10-06T19:30:40.995120+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:40.995132+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:41.109523+00:00", "stream": "tap", "line": "    # Subtest: revoke waits behind final authority read and makes committed observation noncurrent"}
+{"at": "2026-10-06T19:30:41.109605+00:00", "stream": "tap", "line": "    ok 2 - revoke waits behind final authority read and makes committed observation noncurrent"}
+{"at": "2026-10-06T19:30:41.109707+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:41.109729+00:00", "stream": "tap", "line": "      duration_ms: 114.118401"}
+{"at": "2026-10-06T19:30:41.109745+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:41.109760+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:41.322128+00:00", "stream": "tap", "line": "    # Subtest: complaint shared cancel before and after final publication preserves submitting"}
+{"at": "2026-10-06T19:30:41.322205+00:00", "stream": "tap", "line": "    ok 3 - complaint shared cancel before and after final publication preserves submitting"}
+{"at": "2026-10-06T19:30:41.322330+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:41.322348+00:00", "stream": "tap", "line": "      duration_ms: 206.565274"}
+{"at": "2026-10-06T19:30:41.322361+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:41.322374+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:41.636647+00:00", "stream": "tap", "line": "    # Subtest: actual CLI without configured operator capability cannot publish or revoke"}
+{"at": "2026-10-06T19:30:41.636773+00:00", "stream": "tap", "line": "    ok 4 - actual CLI without configured operator capability cannot publish or revoke"}
+{"at": "2026-10-06T19:30:41.636797+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:41.636817+00:00", "stream": "tap", "line": "      duration_ms: 315.641742"}
+{"at": "2026-10-06T19:30:41.636835+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:41.636853+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:42.220091+00:00", "stream": "tap", "line": "    # Subtest: actual privileged CLI commits revoke for invalid missing and expired input"}
+{"at": "2026-10-06T19:30:42.220181+00:00", "stream": "tap", "line": "    ok 5 - actual privileged CLI commits revoke for invalid missing and expired input"}
+{"at": "2026-10-06T19:30:42.220207+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:42.220227+00:00", "stream": "tap", "line": "      duration_ms: 584.972428"}
+{"at": "2026-10-06T19:30:42.220358+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:42.220390+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:42.629828+00:00", "stream": "tap", "line": "    # Subtest: actual stale importer and database failure never claim successful revoke"}
+{"at": "2026-10-06T19:30:42.629907+00:00", "stream": "tap", "line": "    ok 6 - actual stale importer and database failure never claim successful revoke"}
+{"at": "2026-10-06T19:30:42.629945+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:42.629996+00:00", "stream": "tap", "line": "      duration_ms: 408.844056"}
+{"at": "2026-10-06T19:30:42.630021+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:42.630033+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:42.649746+00:00", "stream": "tap", "line": "    1..6"}
+{"at": "2026-10-06T19:30:42.649972+00:00", "stream": "tap", "line": "ok 8 - post-lock expiry queued revoke complaint order and actual CLI are fenced"}
+{"at": "2026-10-06T19:30:42.650007+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:30:42.650028+00:00", "stream": "tap", "line": "  duration_ms: 4148.480291"}
+{"at": "2026-10-06T19:30:42.650045+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:30:42.650062+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:30:45.170969+00:00", "stream": "tap", "line": "# Subtest: F03a realPG campaign/pool/shared quota/lease seams without transport"}
+{"at": "2026-10-06T19:30:45.171048+00:00", "stream": "tap", "line": "    # Subtest: A1/A2 owned API, validation no jobs, explicit consent, unique starts, AEAD and version atomicity"}
+{"at": "2026-10-06T19:30:45.171074+00:00", "stream": "tap", "line": "    ok 1 - A1/A2 owned API, validation no jobs, explicit consent, unique starts, AEAD and version atomicity"}
+{"at": "2026-10-06T19:30:45.171094+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:45.171113+00:00", "stream": "tap", "line": "      duration_ms: 293.193584"}
+{"at": "2026-10-06T19:30:45.171131+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:45.171149+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:45.389212+00:00", "stream": "tap", "line": "    # Subtest: A3/A5 fresh complete current opt-in aggregate privacy, pair/day and one submitted-parent reply"}
+{"at": "2026-10-06T19:30:45.389310+00:00", "stream": "tap", "line": "    ok 2 - A3/A5 fresh complete current opt-in aggregate privacy, pair/day and one submitted-parent reply"}
+{"at": "2026-10-06T19:30:45.389335+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:45.389355+00:00", "stream": "tap", "line": "      duration_ms: 219.024238"}
+{"at": "2026-10-06T19:30:45.389375+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:45.389393+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:46.875699+00:00", "stream": "tap", "line": "    # Subtest: A3 aggregate counts30 eligible mailboxes and excludes quarantine/disconnected/withdrawn"}
+{"at": "2026-10-06T19:30:46.875790+00:00", "stream": "tap", "line": "    ok 3 - A3 aggregate counts30 eligible mailboxes and excludes quarantine/disconnected/withdrawn"}
+{"at": "2026-10-06T19:30:46.875848+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:46.875866+00:00", "stream": "tap", "line": "      duration_ms: 1485.64263"}
+{"at": "2026-10-06T19:30:46.875881+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:46.875919+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:47.473161+00:00", "stream": "tap", "line": "    # Subtest: A4 shared pool/campaign quota 20 contenders remaining3, 45s lease and conservative irreversible states"}
+{"at": "2026-10-06T19:30:47.473824+00:00", "stream": "tap", "line": "    ok 4 - A4 shared pool/campaign quota 20 contenders remaining3, 45s lease and conservative irreversible states"}
+{"at": "2026-10-06T19:30:47.473857+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:47.473872+00:00", "stream": "tap", "line": "      duration_ms: 594.715003"}
+{"at": "2026-10-06T19:30:47.473883+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:47.473894+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:48.116713+00:00", "stream": "tap", "line": "    # Subtest: A4/A5 common lock first, suppression seam and sender rotation"}
+{"at": "2026-10-06T19:30:48.116809+00:00", "stream": "tap", "line": "    ok 5 - A4/A5 common lock first, suppression seam and sender rotation"}
+{"at": "2026-10-06T19:30:48.126710+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:48.126797+00:00", "stream": "tap", "line": "      duration_ms: 642.124939"}
+{"at": "2026-10-06T19:30:48.126822+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:48.126842+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:48.126860+00:00", "stream": "tap", "line": "    1..5"}
+{"at": "2026-10-06T19:30:48.129127+00:00", "stream": "tap", "line": "ok 9 - F03a realPG campaign/pool/shared quota/lease seams without transport"}
+{"at": "2026-10-06T19:30:48.129212+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:30:48.129251+00:00", "stream": "tap", "line": "  duration_ms: 4837.691637"}
+{"at": "2026-10-06T19:30:48.129272+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:30:48.129291+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:30:50.713879+00:00", "stream": "tap", "line": "# Subtest: F05 B1\u2013B6 real PostgreSQL HTTP evidence and public report gates"}
+{"at": "2026-10-06T19:30:50.713962+00:00", "stream": "tap", "line": "    # Subtest: B1 owner input manual provenance unknown and no external source IO"}
+{"at": "2026-10-06T19:30:50.713993+00:00", "stream": "tap", "line": "    ok 1 - B1 owner input manual provenance unknown and no external source IO"}
+{"at": "2026-10-06T19:30:50.714093+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:50.714134+00:00", "stream": "tap", "line": "      duration_ms: 184.284306"}
+{"at": "2026-10-06T19:30:50.714171+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:50.714195+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:50.792750+00:00", "stream": "tap", "line": "    # Subtest: F1 primitive direction rejects arrays objects null with zero observation/event writes"}
+{"at": "2026-10-06T19:30:50.792826+00:00", "stream": "tap", "line": "    ok 2 - F1 primitive direction rejects arrays objects null with zero observation/event writes"}
+{"at": "2026-10-06T19:30:50.792845+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:50.792860+00:00", "stream": "tap", "line": "      duration_ms: 77.081318"}
+{"at": "2026-10-06T19:30:50.792882+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:50.792897+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:50.933907+00:00", "stream": "tap", "line": "    # Subtest: B2 owner pair, stale/incomparable/noimprovement and foreign404"}
+{"at": "2026-10-06T19:30:50.933998+00:00", "stream": "tap", "line": "    ok 3 - B2 owner pair, stale/incomparable/noimprovement and foreign404"}
+{"at": "2026-10-06T19:30:50.934026+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:50.934047+00:00", "stream": "tap", "line": "      duration_ms: 141.34331"}
+{"at": "2026-10-06T19:30:50.934068+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:50.934117+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:51.183341+00:00", "stream": "tap", "line": "    # Subtest: B3 concurrent explicit share yields ONE report/event and payload409"}
+{"at": "2026-10-06T19:30:51.183427+00:00", "stream": "tap", "line": "    ok 4 - B3 concurrent explicit share yields ONE report/event and payload409"}
+{"at": "2026-10-06T19:30:51.183445+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:51.183769+00:00", "stream": "tap", "line": "      duration_ms: 250.2254"}
+{"at": "2026-10-06T19:30:51.183802+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:51.183822+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:51.363383+00:00", "stream": "tap", "line": "    # Subtest: B2/B3 HTTP denominators29/30 raw counts versus ratios and window guard"}
+{"at": "2026-10-06T19:30:51.363497+00:00", "stream": "tap", "line": "    ok 5 - B2/B3 HTTP denominators29/30 raw counts versus ratios and window guard"}
+{"at": "2026-10-06T19:30:51.363923+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:51.363958+00:00", "stream": "tap", "line": "      duration_ms: 180.441954"}
+{"at": "2026-10-06T19:30:51.363978+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:51.363996+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:51.659201+00:00", "stream": "tap", "line": "    # Subtest: B3 authoritative clock after waiting lock blocks expired create"}
+{"at": "2026-10-06T19:30:51.662925+00:00", "stream": "tap", "line": "    ok 6 - B3 authoritative clock after waiting lock blocks expired create"}
+{"at": "2026-10-06T19:30:51.663019+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:51.663049+00:00", "stream": "tap", "line": "      duration_ms: 294.377646"}
+{"at": "2026-10-06T19:30:51.663067+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:51.663085+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:51.829213+00:00", "stream": "tap", "line": "    # Subtest: B4 EVERY view current TEST entitlement, expiry and committed revocation"}
+{"at": "2026-10-06T19:30:51.829323+00:00", "stream": "tap", "line": "    ok 7 - B4 EVERY view current TEST entitlement, expiry and committed revocation"}
+{"at": "2026-10-06T19:30:51.829356+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:51.829380+00:00", "stream": "tap", "line": "      duration_ms: 170.782491"}
+{"at": "2026-10-06T19:30:51.829404+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:51.829428+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:51.855771+00:00", "stream": "tap", "line": "    # Subtest: F1 primitive kind rejects arrays objects null with zero observation/event writes"}
+{"at": "2026-10-06T19:30:51.855921+00:00", "stream": "tap", "line": "    ok 8 - F1 primitive kind rejects arrays objects null with zero observation/event writes"}
+{"at": "2026-10-06T19:30:51.855978+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:51.855997+00:00", "stream": "tap", "line": "      duration_ms: 25.527189"}
+{"at": "2026-10-06T19:30:51.856013+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:51.856029+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:52.162355+00:00", "stream": "tap", "line": "    # Subtest: B5 own aggregate counts explicit idempotent copy/link and bounded histories"}
+{"at": "2026-10-06T19:30:52.162494+00:00", "stream": "tap", "line": "    ok 9 - B5 own aggregate counts explicit idempotent copy/link and bounded histories"}
+{"at": "2026-10-06T19:30:52.162528+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:52.162550+00:00", "stream": "tap", "line": "      duration_ms: 304.159039"}
+{"at": "2026-10-06T19:30:52.162569+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:52.162587+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:52.370810+00:00", "stream": "tap", "line": "    # Subtest: B1/B5 server storage caps observations1000 reports200 events600"}
+{"at": "2026-10-06T19:30:52.370917+00:00", "stream": "tap", "line": "    ok 10 - B1/B5 server storage caps observations1000 reports200 events600"}
+{"at": "2026-10-06T19:30:52.370951+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:30:52.370969+00:00", "stream": "tap", "line": "      duration_ms: 203.117082"}
+{"at": "2026-10-06T19:30:52.370991+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:30:52.371018+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:30:52.371033+00:00", "stream": "tap", "line": "    1..10"}
+{"at": "2026-10-06T19:30:52.371049+00:00", "stream": "tap", "line": "ok 10 - F05 B1\u2013B6 real PostgreSQL HTTP evidence and public report gates"}
+{"at": "2026-10-06T19:30:52.371065+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:30:52.371080+00:00", "stream": "tap", "line": "  duration_ms: 3431.094975"}
+{"at": "2026-10-06T19:30:52.371095+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:30:52.371110+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:30:59.574417+00:00", "stream": "tap", "line": "# Subtest: F09 real PG child transport ambiguity reset and semantic replay"}
+{"at": "2026-10-06T19:30:59.577510+00:00", "stream": "tap", "line": "ok 11 - F09 real PG child transport ambiguity reset and semantic replay"}
+{"at": "2026-10-06T19:30:59.577602+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:30:59.577648+00:00", "stream": "tap", "line": "  duration_ms: 6717.276508"}
+{"at": "2026-10-06T19:30:59.577672+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:30:59.577683+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:01.041326+00:00", "stream": "tap", "line": "# Subtest: overload backoff preserves due age and independent tenant progress"}
+{"at": "2026-10-06T19:31:01.041419+00:00", "stream": "tap", "line": "ok 12 - overload backoff preserves due age and independent tenant progress"}
+{"at": "2026-10-06T19:31:01.041439+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:01.041451+00:00", "stream": "tap", "line": "  duration_ms: 893.633939"}
+{"at": "2026-10-06T19:31:01.041463+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:01.041474+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:02.566904+00:00", "stream": "tap", "line": "# Subtest: durable runtime drains and recovers without replaying uncertain sends"}
+{"at": "2026-10-06T19:31:02.569988+00:00", "stream": "tap", "line": "ok 13 - durable runtime drains and recovers without replaying uncertain sends"}
+{"at": "2026-10-06T19:31:02.570074+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:02.570090+00:00", "stream": "tap", "line": "  duration_ms: 1521.974243"}
+{"at": "2026-10-06T19:31:02.570101+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:02.570111+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:05.142667+00:00", "stream": "tap", "line": "# Subtest: fair polling serves thirty active mailboxes and preserves activity intent"}
+{"at": "2026-10-06T19:31:05.145060+00:00", "stream": "tap", "line": "ok 14 - fair polling serves thirty active mailboxes and preserves activity intent"}
+{"at": "2026-10-06T19:31:05.146397+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:05.146455+00:00", "stream": "tap", "line": "  duration_ms: 2577.23667"}
+{"at": "2026-10-06T19:31:05.146476+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:05.146496+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:06.253501+00:00", "stream": "tap", "line": "# Subtest: poll quanta persist the fixed tail before yielding and never retry incomplete scans"}
+{"at": "2026-10-06T19:31:06.253590+00:00", "stream": "tap", "line": "ok 15 - poll quanta persist the fixed tail before yielding and never retry incomplete scans"}
+{"at": "2026-10-06T19:31:06.253609+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:06.253672+00:00", "stream": "tap", "line": "  duration_ms: 1111.932557"}
+{"at": "2026-10-06T19:31:06.253689+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:06.253703+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:07.532163+00:00", "stream": "tap", "line": "# Subtest: automatic pool allocation skips pair conflicts and remains idempotent"}
+{"at": "2026-10-06T19:31:07.532396+00:00", "stream": "tap", "line": "ok 16 - automatic pool allocation skips pair conflicts and remains idempotent"}
+{"at": "2026-10-06T19:31:07.532447+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:07.532484+00:00", "stream": "tap", "line": "  duration_ms: 1272.907645"}
+{"at": "2026-10-06T19:31:07.532507+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:07.532527+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:09.155193+00:00", "stream": "tap", "line": "# Subtest: paced dispatch preserves current day quota and every stop fence"}
+{"at": "2026-10-06T19:31:09.155276+00:00", "stream": "tap", "line": "ok 17 - paced dispatch preserves current day quota and every stop fence"}
+{"at": "2026-10-06T19:31:09.155298+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:09.155317+00:00", "stream": "tap", "line": "  duration_ms: 1625.49951"}
+{"at": "2026-10-06T19:31:09.155338+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:09.155360+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:12.870401+00:00", "stream": "tap", "line": "# Subtest: persisted keyset reconciliation advances beyond first hundred without recreating activity"}
+{"at": "2026-10-06T19:31:12.870477+00:00", "stream": "tap", "line": "ok 18 - persisted keyset reconciliation advances beyond first hundred without recreating activity"}
+{"at": "2026-10-06T19:31:12.870498+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:12.870512+00:00", "stream": "tap", "line": "  duration_ms: 3718.732778"}
+{"at": "2026-10-06T19:31:12.870524+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:12.870536+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:14.003770+00:00", "stream": "tap", "line": "# Subtest: actual dispatch job age survives restart backoff pacing quota and an empty queue"}
+{"at": "2026-10-06T19:31:14.003848+00:00", "stream": "tap", "line": "ok 19 - actual dispatch job age survives restart backoff pacing quota and an empty queue"}
+{"at": "2026-10-06T19:31:14.003877+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:14.003904+00:00", "stream": "tap", "line": "  duration_ms: 1132.770574"}
+{"at": "2026-10-06T19:31:14.003932+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:14.003958+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:14.763600+00:00", "stream": "tap", "line": "# Subtest: actual database failure during a poll quantum propagates without provider backoff writes"}
+{"at": "2026-10-06T19:31:14.765641+00:00", "stream": "tap", "line": "ok 20 - actual database failure during a poll quantum propagates without provider backoff writes"}
+{"at": "2026-10-06T19:31:14.765723+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:14.765746+00:00", "stream": "tap", "line": "  duration_ms: 756.37894"}
+{"at": "2026-10-06T19:31:14.765763+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:14.765781+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:15.557842+00:00", "stream": "tap", "line": "# Subtest: denied live submission returns typed authority outcome before acquiring a physical slot"}
+{"at": "2026-10-06T19:31:15.558256+00:00", "stream": "tap", "line": "ok 21 - denied live submission returns typed authority outcome before acquiring a physical slot"}
+{"at": "2026-10-06T19:31:15.558287+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:15.558307+00:00", "stream": "tap", "line": "  duration_ms: 797.405955"}
+{"at": "2026-10-06T19:31:15.558342+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:15.558361+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:16.330726+00:00", "stream": "tap", "line": "# Subtest: projection recovers expired logical claims without self quota deadlock and holds fresh owners"}
+{"at": "2026-10-06T19:31:16.330795+00:00", "stream": "tap", "line": "ok 22 - projection recovers expired logical claims without self quota deadlock and holds fresh owners"}
+{"at": "2026-10-06T19:31:16.330813+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:16.330827+00:00", "stream": "tap", "line": "  duration_ms: 771.797745"}
+{"at": "2026-10-06T19:31:16.330840+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:16.330852+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:17.317848+00:00", "stream": "tap", "line": "# Subtest: new and proved completed jobs reset backoff while the same failed job retains original age"}
+{"at": "2026-10-06T19:31:17.317931+00:00", "stream": "tap", "line": "ok 23 - new and proved completed jobs reset backoff while the same failed job retains original age"}
+{"at": "2026-10-06T19:31:17.317953+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:17.317972+00:00", "stream": "tap", "line": "  duration_ms: 987.778223"}
+{"at": "2026-10-06T19:31:17.317990+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:17.318007+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:18.025052+00:00", "stream": "tap", "line": "# Subtest: expired claimed reservation is recovered before quota projection independently of a fresh hold"}
+{"at": "2026-10-06T19:31:18.025136+00:00", "stream": "tap", "line": "ok 24 - expired claimed reservation is recovered before quota projection independently of a fresh hold"}
+{"at": "2026-10-06T19:31:18.025154+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:18.025168+00:00", "stream": "tap", "line": "  duration_ms: 707.707003"}
+{"at": "2026-10-06T19:31:18.025181+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:18.025194+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:19.036101+00:00", "stream": "tap", "line": "# Subtest: a new oldest logical job clears prior backoff independently of terminal history"}
+{"at": "2026-10-06T19:31:19.036189+00:00", "stream": "tap", "line": "ok 25 - a new oldest logical job clears prior backoff independently of terminal history"}
+{"at": "2026-10-06T19:31:19.036208+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:19.036222+00:00", "stream": "tap", "line": "  duration_ms: 1008.79225"}
+{"at": "2026-10-06T19:31:19.036236+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:19.036248+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:19.771287+00:00", "stream": "tap", "line": "# Subtest: a fresh logical owner holds the sender even when another queued job is older"}
+{"at": "2026-10-06T19:31:19.771366+00:00", "stream": "tap", "line": "ok 26 - a fresh logical owner holds the sender even when another queued job is older"}
+{"at": "2026-10-06T19:31:19.771387+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:19.771420+00:00", "stream": "tap", "line": "  duration_ms: 737.093103"}
+{"at": "2026-10-06T19:31:19.771440+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:19.771463+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:20.524348+00:00", "stream": "tap", "line": "# Subtest: complete proof becomes immediately eligible without resetting its selected fair turn"}
+{"at": "2026-10-06T19:31:20.524433+00:00", "stream": "tap", "line": "ok 27 - complete proof becomes immediately eligible without resetting its selected fair turn"}
+{"at": "2026-10-06T19:31:20.524738+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:20.524771+00:00", "stream": "tap", "line": "  duration_ms: 751.875609"}
+{"at": "2026-10-06T19:31:20.524787+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:20.524811+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:21.171997+00:00", "stream": "tap", "line": "# Subtest: partial and held scans cannot manufacture successful polling readiness"}
+{"at": "2026-10-06T19:31:21.172532+00:00", "stream": "tap", "line": "ok 28 - partial and held scans cannot manufacture successful polling readiness"}
+{"at": "2026-10-06T19:31:21.172560+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:21.172573+00:00", "stream": "tap", "line": "  duration_ms: 648.759561"}
+{"at": "2026-10-06T19:31:21.172584+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:21.172608+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:22.350153+00:00", "stream": "tap", "line": "# Subtest: dispatch claims project only one sender and rotate deferred candidates"}
+{"at": "2026-10-06T19:31:22.350246+00:00", "stream": "tap", "line": "ok 29 - dispatch claims project only one sender and rotate deferred candidates"}
+{"at": "2026-10-06T19:31:22.350281+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:22.350311+00:00", "stream": "tap", "line": "  duration_ms: 1177.529421"}
+{"at": "2026-10-06T19:31:22.350330+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:22.350350+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:22.949812+00:00", "stream": "tap", "line": "# Subtest: graceful stop after committed claim releases logical owners before lease expiry"}
+{"at": "2026-10-06T19:31:22.949909+00:00", "stream": "tap", "line": "ok 30 - graceful stop after committed claim releases logical owners before lease expiry"}
+{"at": "2026-10-06T19:31:22.949930+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:22.949946+00:00", "stream": "tap", "line": "  duration_ms: 598.353883"}
+{"at": "2026-10-06T19:31:22.949957+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:22.949970+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:23.932192+00:00", "stream": "tap", "line": "# Subtest: inflight graceful drain joins cleanup and retains explicit holds and fairness"}
+{"at": "2026-10-06T19:31:23.932475+00:00", "stream": "tap", "line": "ok 31 - inflight graceful drain joins cleanup and retains explicit holds and fairness"}
+{"at": "2026-10-06T19:31:23.932586+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:23.932754+00:00", "stream": "tap", "line": "  duration_ms: 983.500231"}
+{"at": "2026-10-06T19:31:23.932800+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:23.932822+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:24.593822+00:00", "stream": "tap", "line": "# Subtest: cancel scopes occupied cleanup to its own protocol without releasing physical ownership"}
+{"at": "2026-10-06T19:31:24.593918+00:00", "stream": "tap", "line": "ok 32 - cancel scopes occupied cleanup to its own protocol without releasing physical ownership"}
+{"at": "2026-10-06T19:31:24.593941+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:24.593958+00:00", "stream": "tap", "line": "  duration_ms: 658.360075"}
+{"at": "2026-10-06T19:31:24.593973+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:24.593994+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:25.223256+00:00", "stream": "tap", "line": "# Subtest: reset capture fences expected identity provenance tenant holds and transaction rollback"}
+{"at": "2026-10-06T19:31:25.223511+00:00", "stream": "tap", "line": "ok 33 - reset capture fences expected identity provenance tenant holds and transaction rollback"}
+{"at": "2026-10-06T19:31:25.223661+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:25.223689+00:00", "stream": "tap", "line": "  duration_ms: 634.407276"}
+{"at": "2026-10-06T19:31:25.223702+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:25.223713+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:27.724177+00:00", "stream": "tap", "line": "# Subtest: F02 real PostgreSQL tenant, AEAD, scopes, locking and atomic stop writers"}
+{"at": "2026-10-06T19:31:27.724898+00:00", "stream": "tap", "line": "    # Subtest: AC1 authenticated masked persistence sends0, no implicit consent, foreign404 and origin0writes"}
+{"at": "2026-10-06T19:31:27.724942+00:00", "stream": "tap", "line": "    ok 1 - AC1 authenticated masked persistence sends0, no implicit consent, foreign404 and origin0writes"}
+{"at": "2026-10-06T19:31:27.724961+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:27.724977+00:00", "stream": "tap", "line": "      duration_ms: 911.650175"}
+{"at": "2026-10-06T19:31:27.724993+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:27.725008+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:27.820985+00:00", "stream": "tap", "line": "    # Subtest: AC2/3 tampered/substituted ciphertext0transport, scrubbed error, verified_test only and DNS revalidation"}
+{"at": "2026-10-06T19:31:27.821063+00:00", "stream": "tap", "line": "    ok 2 - AC2/3 tampered/substituted ciphertext0transport, scrubbed error, verified_test only and DNS revalidation"}
+{"at": "2026-10-06T19:31:27.821084+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:27.821100+00:00", "stream": "tap", "line": "      duration_ms: 95.004383"}
+{"at": "2026-10-06T19:31:27.821115+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:27.821143+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:28.002473+00:00", "stream": "tap", "line": "    # Subtest: AC4 distinct affirmative scopes/version/content/recipient snapshots and tenant ownership"}
+{"at": "2026-10-06T19:31:28.002557+00:00", "stream": "tap", "line": "    ok 3 - AC4 distinct affirmative scopes/version/content/recipient snapshots and tenant ownership"}
+{"at": "2026-10-06T19:31:28.002578+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:28.002595+00:00", "stream": "tap", "line": "      duration_ms: 179.066834"}
+{"at": "2026-10-06T19:31:28.002610+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:28.002679+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:28.159186+00:00", "stream": "tap", "line": "    # Subtest: AC5 revoke queue/member atomicity, submitting preserved and real rollback"}
+{"at": "2026-10-06T19:31:28.159287+00:00", "stream": "tap", "line": "    ok 4 - AC5 revoke queue/member atomicity, submitting preserved and real rollback"}
+{"at": "2026-10-06T19:31:28.159345+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:28.159370+00:00", "stream": "tap", "line": "      duration_ms: 160.075937"}
+{"at": "2026-10-06T19:31:28.159388+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:28.159406+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:28.798997+00:00", "stream": "tap", "line": "    # Subtest: AC5 all real writers wait on shared advisory lock first; default/ceiling/provider cap"}
+{"at": "2026-10-06T19:31:28.799142+00:00", "stream": "tap", "line": "    ok 5 - AC5 all real writers wait on shared advisory lock first; default/ceiling/provider cap"}
+{"at": "2026-10-06T19:31:28.799170+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:28.799189+00:00", "stream": "tap", "line": "      duration_ms: 632.032996"}
+{"at": "2026-10-06T19:31:28.799205+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:28.799221+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:28.799237+00:00", "stream": "tap", "line": "    1..5"}
+{"at": "2026-10-06T19:31:28.799253+00:00", "stream": "tap", "line": "ok 34 - F02 real PostgreSQL tenant, AEAD, scopes, locking and atomic stop writers"}
+{"at": "2026-10-06T19:31:28.799271+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:28.799287+00:00", "stream": "tap", "line": "  duration_ms: 2911.695899"}
+{"at": "2026-10-06T19:31:28.799304+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:28.799339+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:31.737959+00:00", "stream": "tap", "line": "# Subtest: F04a real PG reply matching, durable rescan, crash atomicity and stop serialization"}
+{"at": "2026-10-06T19:31:31.738960+00:00", "stream": "tap", "line": "    # Subtest: A1 exact sender + own tenant/mailbox references; no/malformed/reused IDs"}
+{"at": "2026-10-06T19:31:31.739097+00:00", "stream": "tap", "line": "    ok 1 - A1 exact sender + own tenant/mailbox references; no/malformed/reused IDs"}
+{"at": "2026-10-06T19:31:31.739142+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:31.739165+00:00", "stream": "tap", "line": "      duration_ms: 1720.988754"}
+{"at": "2026-10-06T19:31:31.739193+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:31.739211+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:32.455070+00:00", "stream": "tap", "line": "    # Subtest: A2/A3/A5 SC-US-006-3 R1/S0 \u2192 R1/S1 crash before COMMIT"}
+{"at": "2026-10-06T19:31:32.455315+00:00", "stream": "tap", "line": "    ok 2 - A2/A3/A5 SC-US-006-3 R1/S0 \u2192 R1/S1 crash before COMMIT"}
+{"at": "2026-10-06T19:31:32.455496+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:32.455528+00:00", "stream": "tap", "line": "      duration_ms: 719.651246"}
+{"at": "2026-10-06T19:31:32.455547+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:32.455565+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:33.031871+00:00", "stream": "tap", "line": "    # Subtest: A2/A3/A5 SC-US-006-3 R1/S0 \u2192 R1/S1 crash after COMMIT"}
+{"at": "2026-10-06T19:31:33.031973+00:00", "stream": "tap", "line": "    ok 3 - A2/A3/A5 SC-US-006-3 R1/S0 \u2192 R1/S1 crash after COMMIT"}
+{"at": "2026-10-06T19:31:33.031994+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:33.032011+00:00", "stream": "tap", "line": "      duration_ms: 575.870095"}
+{"at": "2026-10-06T19:31:33.032026+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:33.032041+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:33.567695+00:00", "stream": "tap", "line": "    # Subtest: A2 concurrent duplicate page/effect has no partial writes or budget advance"}
+{"at": "2026-10-06T19:31:33.567785+00:00", "stream": "tap", "line": "    ok 4 - A2 concurrent duplicate page/effect has no partial writes or budget advance"}
+{"at": "2026-10-06T19:31:33.567808+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:33.567826+00:00", "stream": "tap", "line": "      duration_ms: 534.191151"}
+{"at": "2026-10-06T19:31:33.567844+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:33.567906+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:34.326190+00:00", "stream": "tap", "line": "    # Subtest: A3 sparse/expunged and initial empty trusted fixture coverage; no unquarantine"}
+{"at": "2026-10-06T19:31:34.326405+00:00", "stream": "tap", "line": "    ok 5 - A3 sparse/expunged and initial empty trusted fixture coverage; no unquarantine"}
+{"at": "2026-10-06T19:31:34.326436+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:34.326454+00:00", "stream": "tap", "line": "      duration_ms: 760.249551"}
+{"at": "2026-10-06T19:31:34.326470+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:34.326486+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:34.978115+00:00", "stream": "tap", "line": "    # Subtest: A3 stale page/tail and second validity reset cannot complete current run"}
+{"at": "2026-10-06T19:31:34.978191+00:00", "stream": "tap", "line": "    ok 6 - A3 stale page/tail and second validity reset cannot complete current run"}
+{"at": "2026-10-06T19:31:34.978206+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:34.978217+00:00", "stream": "tap", "line": "      duration_ms: 651.235652"}
+{"at": "2026-10-06T19:31:34.978227+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:34.978259+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:35.825086+00:00", "stream": "tap", "line": "    # Subtest: A4 exact twenty pages, explicit retry preserves H/run/cursor; crash restart same attempt"}
+{"at": "2026-10-06T19:31:35.825176+00:00", "stream": "tap", "line": "    ok 7 - A4 exact twenty pages, explicit retry preserves H/run/cursor; crash restart same attempt"}
+{"at": "2026-10-06T19:31:35.825202+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:35.825222+00:00", "stream": "tap", "line": "      duration_ms: 843.780671"}
+{"at": "2026-10-06T19:31:35.825242+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:35.825351+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:37.890469+00:00", "stream": "tap", "line": "    # Subtest: A4 post-lock exact120s, future clock, failed/future/slow tail fail closed"}
+{"at": "2026-10-06T19:31:37.890556+00:00", "stream": "tap", "line": "    ok 8 - A4 post-lock exact120s, future clock, failed/future/slow tail fail closed"}
+{"at": "2026-10-06T19:31:37.890580+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:37.890602+00:00", "stream": "tap", "line": "      duration_ms: 2066.599667"}
+{"at": "2026-10-06T19:31:37.890656+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:37.890691+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:38.456819+00:00", "stream": "tap", "line": "    # Subtest: A4 successful tail completion timestamp samples actual post-lock clock"}
+{"at": "2026-10-06T19:31:38.456904+00:00", "stream": "tap", "line": "    ok 9 - A4 successful tail completion timestamp samples actual post-lock clock"}
+{"at": "2026-10-06T19:31:38.456924+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:38.456939+00:00", "stream": "tap", "line": "      duration_ms: 564.469292"}
+{"at": "2026-10-06T19:31:38.456953+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:38.456967+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:39.298088+00:00", "stream": "tap", "line": "    # Subtest: R1 P1 101 tail headers: first100 stays paused S0 and dispatch/submission calls0; last coverage S1 completes"}
+{"at": "2026-10-06T19:31:39.302798+00:00", "stream": "tap", "line": "    ok 10 - R1 P1 101 tail headers: first100 stays paused S0 and dispatch/submission calls0; last coverage S1 completes"}
+{"at": "2026-10-06T19:31:39.302925+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:39.302962+00:00", "stream": "tap", "line": "      duration_ms: 841.08197"}
+{"at": "2026-10-06T19:31:39.302990+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:39.303013+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:40.568168+00:00", "stream": "tap", "line": "    # Subtest: R1 empty/sparse tail prefix stays paused; immutable snapshot survives failure/retry and rejects changed horizon/epoch"}
+{"at": "2026-10-06T19:31:40.568280+00:00", "stream": "tap", "line": "    ok 11 - R1 empty/sparse tail prefix stays paused; immutable snapshot survives failure/retry and rejects changed horizon/epoch"}
+{"at": "2026-10-06T19:31:40.568326+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:40.568364+00:00", "stream": "tap", "line": "      duration_ms: 1271.645564"}
+{"at": "2026-10-06T19:31:40.568391+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:40.568427+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:41.554238+00:00", "stream": "tap", "line": "    # Subtest: A6 header display/body/credential canaries never enter durable reply data"}
+{"at": "2026-10-06T19:31:41.556333+00:00", "stream": "tap", "line": "    ok 12 - A6 header display/body/credential canaries never enter durable reply data"}
+{"at": "2026-10-06T19:31:41.556403+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:41.556445+00:00", "stream": "tap", "line": "      duration_ms: 986.189952"}
+{"at": "2026-10-06T19:31:41.556506+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:41.556546+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:42.356360+00:00", "stream": "tap", "line": "    # Subtest: A5 production ingestion stop before final submitting: calls 0, later0"}
+{"at": "2026-10-06T19:31:42.356733+00:00", "stream": "tap", "line": "    ok 13 - A5 production ingestion stop before final submitting: calls 0, later0"}
+{"at": "2026-10-06T19:31:42.356765+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:42.356783+00:00", "stream": "tap", "line": "      duration_ms: 802.233356"}
+{"at": "2026-10-06T19:31:42.356802+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:42.356819+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:43.017835+00:00", "stream": "tap", "line": "    # Subtest: A5 production ingestion stop after final submitting: calls 1, later0"}
+{"at": "2026-10-06T19:31:43.017934+00:00", "stream": "tap", "line": "    ok 14 - A5 production ingestion stop after final submitting: calls 1, later0"}
+{"at": "2026-10-06T19:31:43.017965+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:43.017991+00:00", "stream": "tap", "line": "      duration_ms: 659.955746"}
+{"at": "2026-10-06T19:31:43.018015+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:43.018038+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:43.018294+00:00", "stream": "tap", "line": "    1..14"}
+{"at": "2026-10-06T19:31:43.018537+00:00", "stream": "tap", "line": "ok 35 - F04a real PG reply matching, durable rescan, crash atomicity and stop serialization"}
+{"at": "2026-10-06T19:31:43.018584+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:31:43.018611+00:00", "stream": "tap", "line": "  duration_ms: 13354.654437"}
+{"at": "2026-10-06T19:31:43.018670+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:31:43.018695+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:31:44.680960+00:00", "stream": "tap", "line": "# Subtest: F03b real PG durable final authority, all stop races, sink privacy and outcomes"}
+{"at": "2026-10-06T19:31:44.681185+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 revoke"}
+{"at": "2026-10-06T19:31:44.681299+00:00", "stream": "tap", "line": "    ok 1 - B1/B2 SC-US-003-4 revoke"}
+{"at": "2026-10-06T19:31:44.681330+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:44.681350+00:00", "stream": "tap", "line": "      duration_ms: 696.416058"}
+{"at": "2026-10-06T19:31:44.681365+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:44.681377+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:45.337120+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 revoke"}
+{"at": "2026-10-06T19:31:45.337214+00:00", "stream": "tap", "line": "    ok 2 - B1/B2 SC-US-003-5 revoke"}
+{"at": "2026-10-06T19:31:45.337236+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:45.337255+00:00", "stream": "tap", "line": "      duration_ms: 656.869534"}
+{"at": "2026-10-06T19:31:45.337273+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:45.337292+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:45.891288+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 version"}
+{"at": "2026-10-06T19:31:45.891593+00:00", "stream": "tap", "line": "    ok 3 - B1/B2 SC-US-003-4 version"}
+{"at": "2026-10-06T19:31:45.891662+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:45.891687+00:00", "stream": "tap", "line": "      duration_ms: 553.702368"}
+{"at": "2026-10-06T19:31:45.891707+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:45.891738+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:46.475957+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 version"}
+{"at": "2026-10-06T19:31:46.476152+00:00", "stream": "tap", "line": "    ok 4 - B1/B2 SC-US-003-5 version"}
+{"at": "2026-10-06T19:31:46.476194+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:46.476218+00:00", "stream": "tap", "line": "      duration_ms: 583.836568"}
+{"at": "2026-10-06T19:31:46.476240+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:46.476262+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:47.006388+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 pause"}
+{"at": "2026-10-06T19:31:47.006470+00:00", "stream": "tap", "line": "    ok 5 - B1/B2 SC-US-003-4 pause"}
+{"at": "2026-10-06T19:31:47.006493+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:47.006512+00:00", "stream": "tap", "line": "      duration_ms: 530.48456"}
+{"at": "2026-10-06T19:31:47.006530+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:47.006548+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:47.624436+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 pause"}
+{"at": "2026-10-06T19:31:47.625375+00:00", "stream": "tap", "line": "    ok 6 - B1/B2 SC-US-003-5 pause"}
+{"at": "2026-10-06T19:31:47.625472+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:47.625499+00:00", "stream": "tap", "line": "      duration_ms: 612.699799"}
+{"at": "2026-10-06T19:31:47.625521+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:47.625542+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:48.137467+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 sender_withdraw"}
+{"at": "2026-10-06T19:31:48.137837+00:00", "stream": "tap", "line": "    ok 7 - B1/B2 SC-US-003-4 sender_withdraw"}
+{"at": "2026-10-06T19:31:48.137881+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:48.137904+00:00", "stream": "tap", "line": "      duration_ms: 517.319245"}
+{"at": "2026-10-06T19:31:48.137938+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:48.137959+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:48.782093+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 sender_withdraw"}
+{"at": "2026-10-06T19:31:48.782189+00:00", "stream": "tap", "line": "    ok 8 - B1/B2 SC-US-003-5 sender_withdraw"}
+{"at": "2026-10-06T19:31:48.782226+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:48.782249+00:00", "stream": "tap", "line": "      duration_ms: 644.37493"}
+{"at": "2026-10-06T19:31:48.782271+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:48.782294+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:49.271866+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 recipient_withdraw"}
+{"at": "2026-10-06T19:31:49.271944+00:00", "stream": "tap", "line": "    ok 9 - B1/B2 SC-US-003-4 recipient_withdraw"}
+{"at": "2026-10-06T19:31:49.271964+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:49.271980+00:00", "stream": "tap", "line": "      duration_ms: 485.906513"}
+{"at": "2026-10-06T19:31:49.271995+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:49.272011+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:50.053678+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 recipient_withdraw"}
+{"at": "2026-10-06T19:31:50.053777+00:00", "stream": "tap", "line": "    ok 10 - B1/B2 SC-US-003-5 recipient_withdraw"}
+{"at": "2026-10-06T19:31:50.053802+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:50.053824+00:00", "stream": "tap", "line": "      duration_ms: 784.11533"}
+{"at": "2026-10-06T19:31:50.053844+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:50.053864+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:50.602214+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 reply"}
+{"at": "2026-10-06T19:31:50.602306+00:00", "stream": "tap", "line": "    ok 11 - B1/B2 SC-US-003-4 reply"}
+{"at": "2026-10-06T19:31:50.602322+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:50.602333+00:00", "stream": "tap", "line": "      duration_ms: 548.276285"}
+{"at": "2026-10-06T19:31:50.602344+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:50.602355+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:51.346794+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 reply"}
+{"at": "2026-10-06T19:31:51.346899+00:00", "stream": "tap", "line": "    ok 12 - B1/B2 SC-US-003-5 reply"}
+{"at": "2026-10-06T19:31:51.346921+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:51.346936+00:00", "stream": "tap", "line": "      duration_ms: 743.729535"}
+{"at": "2026-10-06T19:31:51.346951+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:51.346966+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:52.132278+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 unsubscribe"}
+{"at": "2026-10-06T19:31:52.132366+00:00", "stream": "tap", "line": "    ok 13 - B1/B2 SC-US-003-4 unsubscribe"}
+{"at": "2026-10-06T19:31:52.132387+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:52.132409+00:00", "stream": "tap", "line": "      duration_ms: 785.03015"}
+{"at": "2026-10-06T19:31:52.132435+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:52.132465+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:52.766183+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 unsubscribe"}
+{"at": "2026-10-06T19:31:52.766248+00:00", "stream": "tap", "line": "    ok 14 - B1/B2 SC-US-003-5 unsubscribe"}
+{"at": "2026-10-06T19:31:52.766262+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:52.766274+00:00", "stream": "tap", "line": "      duration_ms: 634.275047"}
+{"at": "2026-10-06T19:31:52.766284+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:52.766295+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:53.343961+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 complaint"}
+{"at": "2026-10-06T19:31:53.344042+00:00", "stream": "tap", "line": "    ok 15 - B1/B2 SC-US-003-4 complaint"}
+{"at": "2026-10-06T19:31:53.344063+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:53.344080+00:00", "stream": "tap", "line": "      duration_ms: 577.547676"}
+{"at": "2026-10-06T19:31:53.344096+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:53.344112+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:53.874366+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 complaint"}
+{"at": "2026-10-06T19:31:53.874433+00:00", "stream": "tap", "line": "    ok 16 - B1/B2 SC-US-003-5 complaint"}
+{"at": "2026-10-06T19:31:53.874447+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:53.874458+00:00", "stream": "tap", "line": "      duration_ms: 530.71775"}
+{"at": "2026-10-06T19:31:53.874469+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:53.874482+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:54.554114+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 disable"}
+{"at": "2026-10-06T19:31:54.554196+00:00", "stream": "tap", "line": "    ok 17 - B1/B2 SC-US-003-4 disable"}
+{"at": "2026-10-06T19:31:54.554216+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:54.554231+00:00", "stream": "tap", "line": "      duration_ms: 679.033842"}
+{"at": "2026-10-06T19:31:54.554451+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:54.554480+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:55.312908+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 disable"}
+{"at": "2026-10-06T19:31:55.312982+00:00", "stream": "tap", "line": "    ok 18 - B1/B2 SC-US-003-5 disable"}
+{"at": "2026-10-06T19:31:55.313027+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:55.313055+00:00", "stream": "tap", "line": "      duration_ms: 758.286131"}
+{"at": "2026-10-06T19:31:55.313072+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:55.313088+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:55.882495+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 limit"}
+{"at": "2026-10-06T19:31:55.882586+00:00", "stream": "tap", "line": "    ok 19 - B1/B2 SC-US-003-4 limit"}
+{"at": "2026-10-06T19:31:55.882609+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:55.882672+00:00", "stream": "tap", "line": "      duration_ms: 569.363103"}
+{"at": "2026-10-06T19:31:55.882692+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:55.882711+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:56.544610+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 limit"}
+{"at": "2026-10-06T19:31:56.544743+00:00", "stream": "tap", "line": "    ok 20 - B1/B2 SC-US-003-5 limit"}
+{"at": "2026-10-06T19:31:56.544784+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:56.544807+00:00", "stream": "tap", "line": "      duration_ms: 662.049587"}
+{"at": "2026-10-06T19:31:56.544827+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:56.544847+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:58.080760+00:00", "stream": "tap", "line": "    # Subtest: B3 durable rendered sink/token/message refs with own OR intended pool peer read only"}
+{"at": "2026-10-06T19:31:58.080860+00:00", "stream": "tap", "line": "    ok 21 - B3 durable rendered sink/token/message refs with own OR intended pool peer read only"}
+{"at": "2026-10-06T19:31:58.081118+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:58.081148+00:00", "stream": "tap", "line": "      duration_ms: 1535.378638"}
+{"at": "2026-10-06T19:31:58.081164+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:58.081180+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:59.145115+00:00", "stream": "tap", "line": "    # Subtest: R2 B5 authenticated disabled inspection unavailable before either reader"}
+{"at": "2026-10-06T19:31:59.145203+00:00", "stream": "tap", "line": "    ok 22 - R2 B5 authenticated disabled inspection unavailable before either reader"}
+{"at": "2026-10-06T19:31:59.145223+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:59.145239+00:00", "stream": "tap", "line": "      duration_ms: 1059.548318"}
+{"at": "2026-10-06T19:31:59.145266+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:59.145298+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:31:59.765327+00:00", "stream": "tap", "line": "    # Subtest: R1 post-lock clock lease45s rejects expired waiter with zero adapter calls"}
+{"at": "2026-10-06T19:31:59.765407+00:00", "stream": "tap", "line": "    ok 23 - R1 post-lock clock lease45s rejects expired waiter with zero adapter calls"}
+{"at": "2026-10-06T19:31:59.765439+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:31:59.765463+00:00", "stream": "tap", "line": "      duration_ms: 624.033723"}
+{"at": "2026-10-06T19:31:59.765486+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:31:59.765511+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:00.369133+00:00", "stream": "tap", "line": "    # Subtest: R1 post-lock clock poll60s rejects stale waiter with live lease and zero adapter calls"}
+{"at": "2026-10-06T19:32:00.369218+00:00", "stream": "tap", "line": "    ok 24 - R1 post-lock clock poll60s rejects stale waiter with live lease and zero adapter calls"}
+{"at": "2026-10-06T19:32:00.369253+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:00.369276+00:00", "stream": "tap", "line": "      duration_ms: 604.656186"}
+{"at": "2026-10-06T19:32:00.369321+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:00.369342+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:00.974671+00:00", "stream": "tap", "line": "    # Subtest: R1 post-lock clock retry120s rejects ceiling waiter with zero adapter calls"}
+{"at": "2026-10-06T19:32:00.974768+00:00", "stream": "tap", "line": "    ok 25 - R1 post-lock clock retry120s rejects ceiling waiter with zero adapter calls"}
+{"at": "2026-10-06T19:32:00.974813+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:00.974834+00:00", "stream": "tap", "line": "      duration_ms: 604.920996"}
+{"at": "2026-10-06T19:32:00.974851+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:00.974867+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:01.728993+00:00", "stream": "tap", "line": "    # Subtest: R1 post-lock clock midnight concurrent waiters enforce new-day provider limit1 and reservations"}
+{"at": "2026-10-06T19:32:01.729077+00:00", "stream": "tap", "line": "    ok 26 - R1 post-lock clock midnight concurrent waiters enforce new-day provider limit1 and reservations"}
+{"at": "2026-10-06T19:32:01.729104+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:01.729121+00:00", "stream": "tap", "line": "      duration_ms: 754.150799"}
+{"at": "2026-10-06T19:32:01.729139+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:01.729156+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:09.061560+00:00", "stream": "tap", "line": "    # Subtest: B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan"}
+{"at": "2026-10-06T19:32:09.061702+00:00", "stream": "tap", "line": "    not ok 27 - B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan"}
+{"at": "2026-10-06T19:32:09.061728+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:09.061747+00:00", "stream": "tap", "line": "      duration_ms: 7137.233377"}
+{"at": "2026-10-06T19:32:09.061765+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:09.061797+00:00", "stream": "tap", "line": "      location: '/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/submission-integration.test.ts:1:15602'"}
+{"at": "2026-10-06T19:32:09.061822+00:00", "stream": "tap", "line": "      failureType: 'testCodeFailure'"}
+{"at": "2026-10-06T19:32:09.061852+00:00", "stream": "tap", "line": "      error: 'canceling statement due to statement timeout'"}
+{"at": "2026-10-06T19:32:09.061870+00:00", "stream": "tap", "line": "      code: '57014'"}
+{"at": "2026-10-06T19:32:09.061887+00:00", "stream": "tap", "line": "      name: 'error'"}
+{"at": "2026-10-06T19:32:09.061903+00:00", "stream": "tap", "line": "      stack: |-"}
+{"at": "2026-10-06T19:32:09.061920+00:00", "stream": "tap", "line": "        /tmp/n7-f08-dependency-fix-20261006/projects/07-cold-email-warmup/node_modules/pg-pool/index.js:45:11"}
+{"at": "2026-10-06T19:32:09.061939+00:00", "stream": "tap", "line": "        process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+{"at": "2026-10-06T19:32:09.062443+00:00", "stream": "tap", "line": "        async setup (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/submission-integration.test.ts:39:3)"}
+{"at": "2026-10-06T19:32:09.062478+00:00", "stream": "tap", "line": "        async TestContext.<anonymous> (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/submission-integration.test.ts:202:9)"}
+{"at": "2026-10-06T19:32:09.062496+00:00", "stream": "tap", "line": "        async Test.run (node:internal/test_runner/test:1054:7)"}
+{"at": "2026-10-06T19:32:09.062537+00:00", "stream": "tap", "line": "        async TestContext.<anonymous> (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/submission-integration.test.ts:197:3)"}
+{"at": "2026-10-06T19:32:09.062554+00:00", "stream": "tap", "line": "        async Test.run (node:internal/test_runner/test:1054:7)"}
+{"at": "2026-10-06T19:32:09.062582+00:00", "stream": "tap", "line": "        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)"}
+{"at": "2026-10-06T19:32:09.062602+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:11.071345+00:00", "stream": "tap", "line": "    # Subtest: B5 midnight reservations move under concurrent final guard; provider lowered, no off-by-one"}
+{"at": "2026-10-06T19:32:11.072201+00:00", "stream": "tap", "line": "    ok 28 - B5 midnight reservations move under concurrent final guard; provider lowered, no off-by-one"}
+{"at": "2026-10-06T19:32:11.072251+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:11.072280+00:00", "stream": "tap", "line": "      duration_ms: 2203.694837"}
+{"at": "2026-10-06T19:32:11.072305+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:11.072327+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:12.568742+00:00", "stream": "tap", "line": "    # Subtest: B4 proved pre-DATA only, 60s pacing within original120s ceiling, re-enter guards/quota"}
+{"at": "2026-10-06T19:32:12.568824+00:00", "stream": "tap", "line": "    ok 29 - B4 proved pre-DATA only, 60s pacing within original120s ceiling, re-enter guards/quota"}
+{"at": "2026-10-06T19:32:12.568863+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:12.568884+00:00", "stream": "tap", "line": "      duration_ms: 1496.765165"}
+{"at": "2026-10-06T19:32:12.568902+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:12.568920+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:16.563766+00:00", "stream": "tap", "line": "    # Subtest: B4/B5 retry120s exact ceiling, ambiguous timeout/crash retain quota, never recover resend"}
+{"at": "2026-10-06T19:32:16.563839+00:00", "stream": "tap", "line": "    ok 30 - B4/B5 retry120s exact ceiling, ambiguous timeout/crash retain quota, never recover resend"}
+{"at": "2026-10-06T19:32:16.563858+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:16.563886+00:00", "stream": "tap", "line": "      duration_ms: 3991.648955"}
+{"at": "2026-10-06T19:32:16.563900+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:16.563914+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:16.563928+00:00", "stream": "tap", "line": "    1..30"}
+{"at": "2026-10-06T19:32:16.563942+00:00", "stream": "tap", "line": "not ok 36 - F03b real PG durable final authority, all stop races, sink privacy and outcomes"}
+{"at": "2026-10-06T19:32:16.563956+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:32:16.563970+00:00", "stream": "tap", "line": "  duration_ms: 32903.011696"}
+{"at": "2026-10-06T19:32:16.563984+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:32:16.563998+00:00", "stream": "tap", "line": "  location: '/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/submission-integration.test.ts:1:1282'"}
+{"at": "2026-10-06T19:32:16.564013+00:00", "stream": "tap", "line": "  failureType: 'subtestsFailed'"}
+{"at": "2026-10-06T19:32:16.564027+00:00", "stream": "tap", "line": "  error: '1 subtest failed'"}
+{"at": "2026-10-06T19:32:16.564041+00:00", "stream": "tap", "line": "  code: 'ERR_TEST_FAILURE'"}
+{"at": "2026-10-06T19:32:16.564060+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:32:18.140302+00:00", "stream": "tap", "line": "# Subtest: F04B real PostgreSQL public stop and durable local operator polling"}
+{"at": "2026-10-06T19:32:18.140387+00:00", "stream": "tap", "line": "    # Subtest: B1/B4 generic accessible GET zero business writes; negative GET/POST and strict Origin"}
+{"at": "2026-10-06T19:32:18.142139+00:00", "stream": "tap", "line": "    ok 1 - B1/B4 generic accessible GET zero business writes; negative GET/POST and strict Origin"}
+{"at": "2026-10-06T19:32:18.142192+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:18.142216+00:00", "stream": "tap", "line": "      duration_ms: 666.341078"}
+{"at": "2026-10-06T19:32:18.142255+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:18.142275+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:18.593753+00:00", "stream": "tap", "line": "    # Subtest: B1 exact30day expiry boundary and corrupted job binding zero business writes"}
+{"at": "2026-10-06T19:32:18.593838+00:00", "stream": "tap", "line": "    ok 2 - B1 exact30day expiry boundary and corrupted job binding zero business writes"}
+{"at": "2026-10-06T19:32:18.593864+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:18.593897+00:00", "stream": "tap", "line": "      duration_ms: 452.034981"}
+{"at": "2026-10-06T19:32:18.593915+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:18.593932+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:20.389419+00:00", "stream": "tap", "line": "    # Subtest: B2 concurrent stable tenant-wide suppression and post-lock expiry"}
+{"at": "2026-10-06T19:32:20.389512+00:00", "stream": "tap", "line": "    ok 3 - B2 concurrent stable tenant-wide suppression and post-lock expiry"}
+{"at": "2026-10-06T19:32:20.389535+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:20.389552+00:00", "stream": "tap", "line": "      duration_ms: 1796.389432"}
+{"at": "2026-10-06T19:32:20.389569+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:20.389590+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:21.077004+00:00", "stream": "tap", "line": "    # Subtest: B3 complaints operator auth, closed absent config, durable dedup bound payload and 0 writes"}
+{"at": "2026-10-06T19:32:21.077089+00:00", "stream": "tap", "line": "    ok 4 - B3 complaints operator auth, closed absent config, durable dedup bound payload and 0 writes"}
+{"at": "2026-10-06T19:32:21.077111+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:21.077128+00:00", "stream": "tap", "line": "      duration_ms: 686.640215"}
+{"at": "2026-10-06T19:32:21.077145+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:21.077162+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:21.996255+00:00", "stream": "tap", "line": "    # Subtest: B4 concurrent 31st request 429 counts failures and ignores forwarded IP"}
+{"at": "2026-10-06T19:32:21.996654+00:00", "stream": "tap", "line": "    ok 5 - B4 concurrent 31st request 429 counts failures and ignores forwarded IP"}
+{"at": "2026-10-06T19:32:21.996840+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:21.996868+00:00", "stream": "tap", "line": "      duration_ms: 919.058678"}
+{"at": "2026-10-06T19:32:21.996928+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:21.996952+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:22.848142+00:00", "stream": "tap", "line": "    # Subtest: B2 pool optout globally withdraws intended recipient, preserves sender and in-flight"}
+{"at": "2026-10-06T19:32:22.848240+00:00", "stream": "tap", "line": "    ok 6 - B2 pool optout globally withdraws intended recipient, preserves sender and in-flight"}
+{"at": "2026-10-06T19:32:22.848266+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:22.848288+00:00", "stream": "tap", "line": "      duration_ms: 851.529374"}
+{"at": "2026-10-06T19:32:22.848310+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:22.848331+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:23.461460+00:00", "stream": "tap", "line": "    # Subtest: B2/B3 actual unsubscribe shared-lock race before final: before0 after1 later0"}
+{"at": "2026-10-06T19:32:23.461532+00:00", "stream": "tap", "line": "    ok 7 - B2/B3 actual unsubscribe shared-lock race before final: before0 after1 later0"}
+{"at": "2026-10-06T19:32:23.461548+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:23.461567+00:00", "stream": "tap", "line": "      duration_ms: 610.560108"}
+{"at": "2026-10-06T19:32:23.461656+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:23.461707+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:24.028605+00:00", "stream": "tap", "line": "    # Subtest: B2/B3 actual unsubscribe shared-lock race after final: before0 after1 later0"}
+{"at": "2026-10-06T19:32:24.028765+00:00", "stream": "tap", "line": "    ok 8 - B2/B3 actual unsubscribe shared-lock race after final: before0 after1 later0"}
+{"at": "2026-10-06T19:32:24.028800+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:24.028826+00:00", "stream": "tap", "line": "      duration_ms: 567.534373"}
+{"at": "2026-10-06T19:32:24.028846+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:24.028863+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:24.860735+00:00", "stream": "tap", "line": "    # Subtest: B2/B3 actual complaint shared-lock race before final: before0 after1 later0"}
+{"at": "2026-10-06T19:32:24.860881+00:00", "stream": "tap", "line": "    ok 9 - B2/B3 actual complaint shared-lock race before final: before0 after1 later0"}
+{"at": "2026-10-06T19:32:24.860920+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:24.860937+00:00", "stream": "tap", "line": "      duration_ms: 833.272618"}
+{"at": "2026-10-06T19:32:24.860953+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:24.860967+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:25.767611+00:00", "stream": "tap", "line": "    # Subtest: B2/B3 actual complaint shared-lock race after final: before0 after1 later0"}
+{"at": "2026-10-06T19:32:25.767710+00:00", "stream": "tap", "line": "    ok 10 - B2/B3 actual complaint shared-lock race after final: before0 after1 later0"}
+{"at": "2026-10-06T19:32:25.767724+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:25.767736+00:00", "stream": "tap", "line": "      duration_ms: 907.507694"}
+{"at": "2026-10-06T19:32:25.767746+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:25.767759+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:26.736189+00:00", "stream": "tap", "line": "    # Subtest: B5/B6 actual operator CLI durable seed\u2192poll\u2192ReplyStore stops pending; tenant status safe"}
+{"at": "2026-10-06T19:32:26.736279+00:00", "stream": "tap", "line": "    not ok 11 - B5/B6 actual operator CLI durable seed\u2192poll\u2192ReplyStore stops pending; tenant status safe"}
+{"at": "2026-10-06T19:32:26.736305+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:26.736326+00:00", "stream": "tap", "line": "      duration_ms: 966.290695"}
+{"at": "2026-10-06T19:32:26.736345+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:26.736366+00:00", "stream": "tap", "line": "      location: '/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/suppression-integration.test.ts:1:16015'"}
+{"at": "2026-10-06T19:32:26.736389+00:00", "stream": "tap", "line": "      failureType: 'testCodeFailure'"}
+{"at": "2026-10-06T19:32:26.736410+00:00", "stream": "tap", "line": "      error: |-"}
+{"at": "2026-10-06T19:32:26.736431+00:00", "stream": "tap", "line": "        Expected values to be strictly equal:"}
+{"at": "2026-10-06T19:32:26.736451+00:00", "stream": "tap", "line": "        "}
+{"at": "2026-10-06T19:32:26.736471+00:00", "stream": "tap", "line": "        1 !== 0"}
+{"at": "2026-10-06T19:32:26.736492+00:00", "stream": "tap", "line": "        "}
+{"at": "2026-10-06T19:32:26.736512+00:00", "stream": "tap", "line": "      code: 'ERR_ASSERTION'"}
+{"at": "2026-10-06T19:32:26.736532+00:00", "stream": "tap", "line": "      name: 'AssertionError'"}
+{"at": "2026-10-06T19:32:26.736552+00:00", "stream": "tap", "line": "      expected: 0"}
+{"at": "2026-10-06T19:32:26.736572+00:00", "stream": "tap", "line": "      actual: 1"}
+{"at": "2026-10-06T19:32:26.736593+00:00", "stream": "tap", "line": "      operator: 'strictEqual'"}
+{"at": "2026-10-06T19:32:26.736613+00:00", "stream": "tap", "line": "      stack: |-"}
+{"at": "2026-10-06T19:32:26.736683+00:00", "stream": "tap", "line": "        operatorCLI (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/suppression-integration.test.ts:29:77)"}
+{"at": "2026-10-06T19:32:26.736706+00:00", "stream": "tap", "line": "        async TestContext.<anonymous> (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/suppression-integration.test.ts:127:9)"}
+{"at": "2026-10-06T19:32:26.736727+00:00", "stream": "tap", "line": "        async Test.run (node:internal/test_runner/test:1054:7)"}
+{"at": "2026-10-06T19:32:26.736746+00:00", "stream": "tap", "line": "        async TestContext.<anonymous> (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/suppression-integration.test.ts:123:3)"}
+{"at": "2026-10-06T19:32:26.736765+00:00", "stream": "tap", "line": "        async Test.run (node:internal/test_runner/test:1054:7)"}
+{"at": "2026-10-06T19:32:26.736783+00:00", "stream": "tap", "line": "        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)"}
+{"at": "2026-10-06T19:32:26.736876+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:29.048563+00:00", "stream": "tap", "line": "    # Subtest: B5 default/missing/failure pause, empty explicit complete, reset and incomplete explicit retry"}
+{"at": "2026-10-06T19:32:29.050171+00:00", "stream": "tap", "line": "    ok 12 - B5 default/missing/failure pause, empty explicit complete, reset and incomplete explicit retry"}
+{"at": "2026-10-06T19:32:29.050228+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:29.050247+00:00", "stream": "tap", "line": "      duration_ms: 2313.915946"}
+{"at": "2026-10-06T19:32:29.050266+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:29.050284+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:29.834903+00:00", "stream": "tap", "line": "    # Subtest: B5 adapter source 101-tail honest prefix boundary and restart immutable H/tailH"}
+{"at": "2026-10-06T19:32:29.835044+00:00", "stream": "tap", "line": "    ok 13 - B5 adapter source 101-tail honest prefix boundary and restart immutable H/tailH"}
+{"at": "2026-10-06T19:32:29.835065+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:29.835081+00:00", "stream": "tap", "line": "      duration_ms: 784.08167"}
+{"at": "2026-10-06T19:32:29.835265+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:29.835288+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:29.835313+00:00", "stream": "tap", "line": "    1..13"}
+{"at": "2026-10-06T19:32:29.835334+00:00", "stream": "tap", "line": "not ok 37 - F04B real PostgreSQL public stop and durable local operator polling"}
+{"at": "2026-10-06T19:32:29.835351+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:32:29.835367+00:00", "stream": "tap", "line": "  duration_ms: 12657.573659"}
+{"at": "2026-10-06T19:32:29.835382+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:32:29.835398+00:00", "stream": "tap", "line": "  location: '/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/suppression-integration.test.ts:1:1793'"}
+{"at": "2026-10-06T19:32:29.835415+00:00", "stream": "tap", "line": "  failureType: 'subtestsFailed'"}
+{"at": "2026-10-06T19:32:29.835431+00:00", "stream": "tap", "line": "  error: '1 subtest failed'"}
+{"at": "2026-10-06T19:32:29.835445+00:00", "stream": "tap", "line": "  code: 'ERR_TEST_FAILURE'"}
+{"at": "2026-10-06T19:32:29.835460+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:32:31.357718+00:00", "stream": "tap", "line": "# Subtest: B-R1 real fixture callbacks fenced by durable owner and source generation"}
+{"at": "2026-10-06T19:32:31.357811+00:00", "stream": "tap", "line": "    # Subtest: first-success"}
+{"at": "2026-10-06T19:32:31.357840+00:00", "stream": "tap", "line": "    ok 1 - first-success"}
+{"at": "2026-10-06T19:32:31.357862+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:31.357903+00:00", "stream": "tap", "line": "      duration_ms: 848.269282"}
+{"at": "2026-10-06T19:32:31.357928+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:31.357963+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:32.019545+00:00", "stream": "tap", "line": "    # Subtest: first-failure"}
+{"at": "2026-10-06T19:32:32.019662+00:00", "stream": "tap", "line": "    ok 2 - first-failure"}
+{"at": "2026-10-06T19:32:32.019784+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:32.019808+00:00", "stream": "tap", "line": "      duration_ms: 661.582816"}
+{"at": "2026-10-06T19:32:32.019830+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:32.019852+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:32.577137+00:00", "stream": "tap", "line": "    # Subtest: changed-tail-success"}
+{"at": "2026-10-06T19:32:32.577238+00:00", "stream": "tap", "line": "    ok 3 - changed-tail-success"}
+{"at": "2026-10-06T19:32:32.577267+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:32.577288+00:00", "stream": "tap", "line": "      duration_ms: 558.76918"}
+{"at": "2026-10-06T19:32:32.577309+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:32.577330+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:33.251861+00:00", "stream": "tap", "line": "    # Subtest: same-validity-success"}
+{"at": "2026-10-06T19:32:33.251970+00:00", "stream": "tap", "line": "    ok 4 - same-validity-success"}
+{"at": "2026-10-06T19:32:33.251999+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:33.252021+00:00", "stream": "tap", "line": "      duration_ms: 674.54022"}
+{"at": "2026-10-06T19:32:33.252042+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:33.252063+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:33.860759+00:00", "stream": "tap", "line": "    # Subtest: same-validity-failure"}
+{"at": "2026-10-06T19:32:33.860856+00:00", "stream": "tap", "line": "    ok 5 - same-validity-failure"}
+{"at": "2026-10-06T19:32:33.860894+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:33.860921+00:00", "stream": "tap", "line": "      duration_ms: 605.713766"}
+{"at": "2026-10-06T19:32:33.860954+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:33.860974+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:34.319099+00:00", "stream": "tap", "line": "    # Subtest: same-validity-owner-only"}
+{"at": "2026-10-06T19:32:34.319169+00:00", "stream": "tap", "line": "    ok 6 - same-validity-owner-only"}
+{"at": "2026-10-06T19:32:34.319185+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:34.319198+00:00", "stream": "tap", "line": "      duration_ms: 459.604754"}
+{"at": "2026-10-06T19:32:34.319211+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:34.319224+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:34.745760+00:00", "stream": "tap", "line": "    # Subtest: generation alone fences capture"}
+{"at": "2026-10-06T19:32:34.745853+00:00", "stream": "tap", "line": "    ok 7 - generation alone fences capture"}
+{"at": "2026-10-06T19:32:34.745998+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:34.746035+00:00", "stream": "tap", "line": "      duration_ms: 426.514882"}
+{"at": "2026-10-06T19:32:34.746054+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:34.746071+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:36.005216+00:00", "stream": "tap", "line": "    # Subtest: generation alone fences failure"}
+{"at": "2026-10-06T19:32:36.005295+00:00", "stream": "tap", "line": "    ok 8 - generation alone fences failure"}
+{"at": "2026-10-06T19:32:36.005315+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:36.005332+00:00", "stream": "tap", "line": "      duration_ms: 1259.145509"}
+{"at": "2026-10-06T19:32:36.005368+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:36.005385+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:36.663293+00:00", "stream": "tap", "line": "    # Subtest: current missing and failed fixture pause; current poll completes"}
+{"at": "2026-10-06T19:32:36.663375+00:00", "stream": "tap", "line": "    ok 9 - current missing and failed fixture pause; current poll completes"}
+{"at": "2026-10-06T19:32:36.663397+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:36.663413+00:00", "stream": "tap", "line": "      duration_ms: 655.672404"}
+{"at": "2026-10-06T19:32:36.663431+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:36.663448+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:37.009369+00:00", "stream": "tap", "line": "    # Subtest: generation check and seed serialize on the shared lock"}
+{"at": "2026-10-06T19:32:37.009483+00:00", "stream": "tap", "line": "    ok 10 - generation check and seed serialize on the shared lock"}
+{"at": "2026-10-06T19:32:37.009514+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:37.009532+00:00", "stream": "tap", "line": "      duration_ms: 341.200041"}
+{"at": "2026-10-06T19:32:37.009546+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:37.009559+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:37.009571+00:00", "stream": "tap", "line": "    1..10"}
+{"at": "2026-10-06T19:32:37.009584+00:00", "stream": "tap", "line": "ok 38 - B-R1 real fixture callbacks fenced by durable owner and source generation"}
+{"at": "2026-10-06T19:32:37.009598+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:32:37.009612+00:00", "stream": "tap", "line": "  duration_ms: 6573.021046"}
+{"at": "2026-10-06T19:32:37.009661+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:32:37.009676+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:32:38.541274+00:00", "stream": "tap", "line": "# Subtest: F06 A real PostgreSQL protected cabinet, exact built assets and persistent accepted APIs"}
+{"at": "2026-10-06T19:32:38.541367+00:00", "stream": "tap", "line": "    # Subtest: A1 route auth and A6 MIME/CSP/allowlist/build binding"}
+{"at": "2026-10-06T19:32:38.541653+00:00", "stream": "tap", "line": "    ok 1 - A1 route auth and A6 MIME/CSP/allowlist/build binding"}
+{"at": "2026-10-06T19:32:38.541715+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:38.541743+00:00", "stream": "tap", "line": "      duration_ms: 351.347155"}
+{"at": "2026-10-06T19:32:38.541759+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:38.541773+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:38.705108+00:00", "stream": "tap", "line": "    # Subtest: A2 mailbox save has no consent, persists masked, limit and independent grant/revoke"}
+{"at": "2026-10-06T19:32:38.705312+00:00", "stream": "tap", "line": "    ok 2 - A2 mailbox save has no consent, persists masked, limit and independent grant/revoke"}
+{"at": "2026-10-06T19:32:38.705351+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:38.705387+00:00", "stream": "tap", "line": "      duration_ms: 162.661178"}
+{"at": "2026-10-06T19:32:38.705399+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:38.705410+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:38.772553+00:00", "stream": "tap", "line": "    # Subtest: A3 actual campaign form contract and preview/edit invalidation, no consent start denied"}
+{"at": "2026-10-06T19:32:38.773548+00:00", "stream": "tap", "line": "    ok 3 - A3 actual campaign form contract and preview/edit invalidation, no consent start denied"}
+{"at": "2026-10-06T19:32:38.773592+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:38.773612+00:00", "stream": "tap", "line": "      duration_ms: 68.102245"}
+{"at": "2026-10-06T19:32:38.773658+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:38.773712+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:38.956431+00:00", "stream": "tap", "line": "    # Subtest: A4 manual source privacy and real compare/share/copy/link/revoke; A5 persistent checkout and partner"}
+{"at": "2026-10-06T19:32:38.956517+00:00", "stream": "tap", "line": "    ok 4 - A4 manual source privacy and real compare/share/copy/link/revoke; A5 persistent checkout and partner"}
+{"at": "2026-10-06T19:32:38.956537+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:38.956554+00:00", "stream": "tap", "line": "      duration_ms: 184.283346"}
+{"at": "2026-10-06T19:32:38.956569+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:38.956583+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:39.289983+00:00", "stream": "tap", "line": "    # Subtest: A1 logout/relogin durability and session marker changes"}
+{"at": "2026-10-06T19:32:39.290070+00:00", "stream": "tap", "line": "    ok 5 - A1 logout/relogin durability and session marker changes"}
+{"at": "2026-10-06T19:32:39.290099+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:32:39.290117+00:00", "stream": "tap", "line": "      duration_ms: 329.551257"}
+{"at": "2026-10-06T19:32:39.290133+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:32:39.290148+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:32:39.290163+00:00", "stream": "tap", "line": "    1..5"}
+{"at": "2026-10-06T19:32:39.290177+00:00", "stream": "tap", "line": "ok 39 - F06 A real PostgreSQL protected cabinet, exact built assets and persistent accepted APIs"}
+{"at": "2026-10-06T19:32:39.290193+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:32:39.290208+00:00", "stream": "tap", "line": "  duration_ms: 1745.194353"}
+{"at": "2026-10-06T19:32:39.290222+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:32:39.290236+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:32:39.336212+00:00", "stream": "tap", "line": "1..39"}
+{"at": "2026-10-06T19:32:39.336297+00:00", "stream": "tap", "line": "# tests 169"}
+{"at": "2026-10-06T19:32:39.336318+00:00", "stream": "tap", "line": "# suites 0"}
+{"at": "2026-10-06T19:32:39.336335+00:00", "stream": "tap", "line": "# pass 163"}
+{"at": "2026-10-06T19:32:39.336349+00:00", "stream": "tap", "line": "# fail 6"}
+{"at": "2026-10-06T19:32:39.336363+00:00", "stream": "tap", "line": "# cancelled 0"}
+{"at": "2026-10-06T19:32:39.336378+00:00", "stream": "tap", "line": "# skipped 0"}
+{"at": "2026-10-06T19:32:39.336394+00:00", "stream": "tap", "line": "# todo 0"}
+{"at": "2026-10-06T19:32:39.336409+00:00", "stream": "tap", "line": "# duration_ms 157713.73876"}

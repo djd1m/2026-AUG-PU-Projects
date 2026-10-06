@@ -1,0 +1,26 @@
+{"at": "2026-10-06T19:24:07.189120+00:00", "stream": "tap", "line": "TAP version 13"}
+{"at": "2026-10-06T19:28:00.313851+00:00", "stream": "tap", "line": "# Subtest: persistent fair workers serve every eligible mailbox"}
+{"at": "2026-10-06T19:28:00.313940+00:00", "stream": "tap", "line": "not ok 1 - persistent fair workers serve every eligible mailbox"}
+{"at": "2026-10-06T19:28:00.313966+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:28:00.313987+00:00", "stream": "tap", "line": "  duration_ms: 232105.860417"}
+{"at": "2026-10-06T19:28:00.314008+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:28:00.314028+00:00", "stream": "tap", "line": "  location: '/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/expanded-mvp-04.test.ts:1:459'"}
+{"at": "2026-10-06T19:28:00.314050+00:00", "stream": "tap", "line": "  failureType: 'testCodeFailure'"}
+{"at": "2026-10-06T19:28:00.314070+00:00", "stream": "tap", "line": "  error: 'Connection terminated due to connection timeout'"}
+{"at": "2026-10-06T19:28:00.314089+00:00", "stream": "tap", "line": "  code: 'ERR_TEST_FAILURE'"}
+{"at": "2026-10-06T19:28:00.314110+00:00", "stream": "tap", "line": "  stack: |-"}
+{"at": "2026-10-06T19:28:00.314130+00:00", "stream": "tap", "line": "    /tmp/n7-f08-dependency-fix-20261006/projects/07-cold-email-warmup/node_modules/pg-pool/index.js:45:11"}
+{"at": "2026-10-06T19:28:00.314150+00:00", "stream": "tap", "line": "    process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+{"at": "2026-10-06T19:28:00.314169+00:00", "stream": "tap", "line": "    async TestContext.<anonymous> (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/expanded-mvp-04.test.ts:23:1659)"}
+{"at": "2026-10-06T19:28:00.314190+00:00", "stream": "tap", "line": "    async Test.run (node:internal/test_runner/test:1054:7)"}
+{"at": "2026-10-06T19:28:00.314210+00:00", "stream": "tap", "line": "    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)"}
+{"at": "2026-10-06T19:28:00.314230+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:28:01.249759+00:00", "stream": "tap", "line": "1..1"}
+{"at": "2026-10-06T19:28:01.249872+00:00", "stream": "tap", "line": "# tests 1"}
+{"at": "2026-10-06T19:28:01.249908+00:00", "stream": "tap", "line": "# suites 0"}
+{"at": "2026-10-06T19:28:01.249930+00:00", "stream": "tap", "line": "# pass 0"}
+{"at": "2026-10-06T19:28:01.249948+00:00", "stream": "tap", "line": "# fail 1"}
+{"at": "2026-10-06T19:28:01.249966+00:00", "stream": "tap", "line": "# cancelled 0"}
+{"at": "2026-10-06T19:28:01.249983+00:00", "stream": "tap", "line": "# skipped 0"}
+{"at": "2026-10-06T19:28:01.250011+00:00", "stream": "tap", "line": "# todo 0"}
+{"at": "2026-10-06T19:28:01.250029+00:00", "stream": "tap", "line": "# duration_ms 233931.063408"}

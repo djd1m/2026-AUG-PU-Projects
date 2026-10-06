@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-06T19:36:56.351009+00:00",
+  "source_revision": "eae17bbea36312ee5290adb8390e066b1f0d6c2a",
+  "fullPG_native_returncode": 1,
+  "tests": 169,
+  "passed": 163,
+  "failed_including_parents": 6,
+  "actual_subtests": [
+    {
+      "file": "tests/capacity-integration.test.ts",
+      "title": "complaint quarantine immediately releases capacity for another tenant",
+      "actual": "active",
+      "expected": "waiting_capacity",
+      "classification": "UNRESOLVED; source permits prior29/30 race either winner, later case assumes30waiting without reset; harness dependency inferred, actual winning row not captured"
+    },
+    {
+      "file": "tests/submission-integration.test.ts",
+      "title": "B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan",
+      "error_code": "57014",
+      "classification": "UNRESOLVED statement_timeout; no waiver or proved cause"
+    },
+    {
+      "file": "tests/suppression-integration.test.ts",
+      "title": "B5/B6 actual operator CLI durable seed\u2192poll\u2192ReplyStore stops pending; tenant status safe",
+      "actual_operator_exit": 1,
+      "classification": "CONFIRMED harness stat remap omission: compiled operator stat(file) uses absent legacy path; immutable helperv2 fixes exactpath metadata mapping; fresh diagnostic pending"
+    }
+  ],
+  "post_join_quiescent": true,
+  "fullPG_wait_and_PID_snapshots_before_next_reset_retained": true
+}

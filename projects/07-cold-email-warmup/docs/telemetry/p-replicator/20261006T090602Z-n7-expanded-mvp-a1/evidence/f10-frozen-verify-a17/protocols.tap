@@ -1,0 +1,93 @@
+TAP version 13
+# Subtest: pinned SMTP accepts only the final DATA completion
+ok 1 - pinned SMTP accepts only the final DATA completion
+  ---
+  duration_ms: 1354.801894
+  type: 'test'
+  ...
+# Subtest: post DATA uncertainty never retries or releases quota
+ok 2 - post DATA uncertainty never retries or releases quota
+  ---
+  duration_ms: 1479.466018
+  type: 'test'
+  ...
+# Subtest: IMAP proves bounded read only UID range coverage
+ok 3 - IMAP proves bounded read only UID range coverage
+  ---
+  duration_ms: 456.508693
+  type: 'test'
+  ...
+# Subtest: hostile framing and cancellation release bounded resources
+ok 4 - hostile framing and cancellation release bounded resources
+  ---
+  duration_ms: 914.363267
+  type: 'test'
+  ...
+# Subtest: transport secrets and fixture authority remain isolated
+ok 5 - transport secrets and fixture authority remain isolated
+  ---
+  duration_ms: 619.678481
+  type: 'test'
+  ...
+# Subtest: fragmented literals numeric gaps empty tails and exact byte bounds fail closed
+ok 6 - fragmented literals numeric gaps empty tails and exact byte bounds fail closed
+  ---
+  duration_ms: 3772.469057
+  type: 'test'
+  ...
+# Subtest: write drain TLS hostname receive limits and cleanup use actual sockets
+ok 7 - write drain TLS hostname receive limits and cleanup use actual sockets
+  ---
+  duration_ms: 704.639871
+  type: 'test'
+  ...
+# Subtest: pre DATA proof post DATA truncated final and acceptance before close remain distinct
+ok 8 - pre DATA proof post DATA truncated final and acceptance before close remain distinct
+  ---
+  duration_ms: 2379.313629
+  type: 'test'
+  ...
+# Subtest: receive line bound rejects8193 bytes before peer text is accepted
+ok 9 - receive line bound rejects8193 bytes before peer text is accepted
+  ---
+  duration_ms: 200.525532
+  type: 'test'
+  ...
+# {"phase":"EHLO","elapsedMs":10013.419614999999,"outcome":"pre_data_transient","commands":["EHLO"]}
+# Subtest: whole SMTP EHLO challenge phase expires once at ten seconds
+ok 10 - whole SMTP EHLO challenge phase expires once at ten seconds
+  ---
+  duration_ms: 10262.430953
+  type: 'test'
+  ...
+# {"phase":"AUTH","elapsedMs":10017.823145999999,"outcome":"pre_data_transient","commands":["EHLO","AUTH","AUTH_RESPONSE"]}
+# Subtest: whole SMTP AUTH challenge phase expires once at ten seconds
+ok 11 - whole SMTP AUTH challenge phase expires once at ten seconds
+  ---
+  duration_ms: 10359.945388
+  type: 'test'
+  ...
+# Subtest: same UID coverage remains fixed while a smaller declared horizon fails
+ok 12 - same UID coverage remains fixed while a smaller declared horizon fails
+  ---
+  duration_ms: 474.91633
+  type: 'test'
+  ...
+# Subtest: transport grants are separate scoped expiring authority
+ok 13 - transport grants are separate scoped expiring authority
+  ---
+  duration_ms: 1573.944212
+  type: 'test'
+  ...
+# Subtest: final live submission preserves all eligibility fences
+ok 14 - final live submission preserves all eligibility fences
+  ---
+  duration_ms: 35096.656419
+  type: 'test'
+  ...
+# Subtest: UID reset crash and replay preserve atomic stop effects
+ok 15 - UID reset crash and replay preserve atomic stop effects
+  ---
+  duration_ms: 10331.526188
+  type: 'test'
+  ...

@@ -434,6 +434,10 @@
     },
     {
       "id": "f10-frozen-verify-a17",
+      "status": "failed"
+    },
+    {
+      "id": "f10-diagnostic-a18",
       "status": "active"
     }
   ],
@@ -473,7 +477,7 @@
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-06T18:03:50.086021+00:00",
+    "last_reported_at": "2026-10-06T19:45:37.665981+00:00",
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true
   }
