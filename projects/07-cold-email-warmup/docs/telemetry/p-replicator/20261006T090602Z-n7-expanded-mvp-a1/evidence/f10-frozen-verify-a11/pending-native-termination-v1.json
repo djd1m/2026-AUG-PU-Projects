@@ -1,0 +1,41 @@
+{
+  "begun": "2026-10-06T17:52:24.566482+00:00",
+  "ended": "2026-10-06T17:52:24.868343+00:00",
+  "records": [
+    {
+      "pid": 3956668,
+      "parentPid": 124366,
+      "startTicks": 123199789,
+      "depth": 0
+    },
+    {
+      "pid": 3956672,
+      "parentPid": 3956668,
+      "startTicks": 123199792,
+      "depth": 1
+    },
+    {
+      "pid": 3956701,
+      "parentPid": 3956672,
+      "startTicks": 123199801,
+      "depth": 2
+    },
+    {
+      "pid": 3956745,
+      "parentPid": 3956701,
+      "startTicks": 123199813,
+      "depth": 3
+    },
+    {
+      "pid": 3982595,
+      "parentPid": 3956745,
+      "startTicks": 123209875,
+      "depth": 4
+    }
+  ],
+  "signal": "SIGTERM deepest first",
+  "forcedKilled": [],
+  "remainingAlive": [],
+  "databaseOccupancy": "unchanged; no blind DB slot/lease release; no graceful runtime drain claimed",
+  "pendingJobSession": 63899
+}

@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-06T17:43:44.163504+00:00",
+  "source": "52cad40204deed91d93c969fe95ed89f3d95a8c7",
+  "session": 15358,
+  "db": "n7f10_a2",
+  "heavyMutex": "/tmp/codex-heavy-build.lock",
+  "processes": [
+    {
+      "pid": 3832609,
+      "parentPid": 124366,
+      "state": "S",
+      "startTicks": 123156198,
+      "label": "A11 runner"
+    },
+    {
+      "pid": 3832616,
+      "parentPid": 3832609,
+      "state": "S",
+      "startTicks": 123156202,
+      "label": "A11 all30 observer"
+    },
+    {
+      "pid": 3832618,
+      "parentPid": 3832609,
+      "state": "S",
+      "startTicks": 123156202,
+      "label": "canonical parent runner"
+    },
+    {
+      "pid": 3832646,
+      "parentPid": 3832618,
+      "state": "S",
+      "startTicks": 123156213,
+      "label": "canonical parent runner"
+    },
+    {
+      "pid": 3832704,
+      "parentPid": 3832646,
+      "state": "S",
+      "startTicks": 123156224,
+      "label": "canonical parent runner"
+    },
+    {
+      "pid": 3833039,
+      "parentPid": 3832704,
+      "state": "S",
+      "startTicks": 123156426,
+      "label": "compiled native worker fixture"
+    }
+  ]
+}

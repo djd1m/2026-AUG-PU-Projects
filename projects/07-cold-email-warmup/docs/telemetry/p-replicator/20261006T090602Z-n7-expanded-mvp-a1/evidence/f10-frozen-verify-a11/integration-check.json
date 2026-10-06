@@ -1,0 +1,20 @@
+{
+  "checked_at": "2026-10-06T17:58:39.951149+00:00",
+  "source_build_files_verified": 210,
+  "sealed_artifact_hashes_verified": 53,
+  "preserved_artifacts": 51,
+  "large_raw_retained_in_tmp": 2,
+  "receipt_gate_exit": 1,
+  "receipt_gate_classification": "failed/delivered-failure, not acceptance",
+  "known_runtime_secret_scan_files": 57,
+  "known_runtime_secret_hits": 0,
+  "source_revision": "52cad40204deed91d93c969fe95ed89f3d95a8c7",
+  "missing": [
+    "fresh full realPG",
+    "current physical SIGSTOP120",
+    "F09 fixture reconciliation/native",
+    "current guard mutations and broad canary projections",
+    "postrepair frozen330",
+    "fresh planner-context review"
+  ]
+}

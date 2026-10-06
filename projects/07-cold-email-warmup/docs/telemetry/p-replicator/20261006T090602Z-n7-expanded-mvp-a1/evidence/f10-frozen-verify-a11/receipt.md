@@ -1,0 +1,21 @@
+# f10-frozen-verify-a11 — terminal failed verification
+
+Sealed 2026-10-06T17:53:17.369196+00:00. Launch 2026-10-06T17:33:03.202055Z; first actual ACK17:33:43UTC. Final deadline17:53:03.202055Z. Artifact snapshot17:51:53.871863Z exceeded planned17:51:33.202055 freeze by20.670s; terminal sealed before final deadline.
+
+Source/baseline/result unchanged52cad40204deed91d93c969fe95ed89f3d95a8c7. ALL tracked product files read-only. Source+build manifest210 hashes, recheck0mismatch. Existing native compiled build reused; Docker image/browser N/A. Accepted cadence READY2f24e06cc8460450c88d2103c38221fa85f32b48; originalF10 spec410d329fcc9d433f51e554310318457096a8dfdd82aad9754e47d7122744eeb8 superseded cadence clauses. LaunchSHA46472a266b594b236b3e9eeee3c9fdd1cd2f70a555f3fa2de3aa103e53f45bea.
+
+Executed commands and results (raw named logs/exits in artifact directory):
+- `node guard-negative-v3.mjs`:exit0; inherited external TCP/TLS/DNS denied beforeIO. `node ipc-negative.mjs`:v2exit0; missingfixture rejected before listener. Real numeric-loopback TLS/certificate positive:v2exit0. Guard-v2 NODE_OPTIONS inheritance works despiteexecArgv:[]; numeric127.0.0.1 ports + exactownedPG192.168.176.2:5432 only, hostnameDNS denied. Explicit fixture fifthargument mandatory; sourceenv safeenv.sh thenDATABASE_NAME=n7f10_a2. No external provider publication/network capability allowed.
+- `tsx --test --test-concurrency=1 tests/expanded-mvp-04.test.ts`:v2exit0 TAP1/1,332.735s;100connected/30active/3tenants on2CPU. All30 initial cadence pass. Pool maxgap61.329s/min6turns; actualUID FETCH60 and explicit local retry30. Worker/descendant CPU114.727% onecore, maxRSS338920KiB/FD124/slots5; PG CPU not included. Both joined drains71/51ms,exit0/signalnull/drainedtrue.
+- Independent all30 observer RED afterrestart:3 eligible mailboxes firstcompletion127.833/127.845/128.069s, fullgaps131.019/131.101/131.172s; fourth entersrescan_incomplete and staysheld (no auto-retry). Canonical assertions onlyfirst90s; canonicalPASS is NOT overallF10 cadencePASS. analysis-v2.json preservesall30/censored deadlines/phases.
+- `npm test`:v2exit0 TAP61/61 (82.552s).
+- Five selected `tests/f09-live-transport.test.ts` native regressions:v2partial RED finalsubmission fixtureclaim null atfixture81/finalFenceScenario66, before protocolIO; grantPASS, remaining cases uncompleted. Exact product-versus-fixture cause unresolved. Known owned pending process tree terminated/joined17:52:24.868UTC using verifiedPID/startTicks, SIGTERM only,0forced/0alive. No blind DB slot/lease release; occupancy preserved; not a graceful runtime drain claim.
+- Guardv1 legitimate numeric-listenerlookup defect: canonicalexit1, fullunit51/61exit1; fullPG82/99 failed17/partial runner exit unavailable. These original raw failures retained, NOT product acceptance. Guardnegative-v2 was a stale synchronous assertion against async DNS rejection; retainedexit1, correctedv3exit0.
+
+Guard aggregate2560 records includes rawfilename/SHA; rawfiles retained/tmp. Canary scan2653 logs/JSON artifacts, bounded runtime values +3synthetic canaries/encodings,0hits; no currentAPI/DOM/DB canary replay claim. Historical A7three cadence mutants andA10 projectionred preserved; no current all-mutationPASS. Static type/lint/buildA10exit0 reused because exact210source/buildhashes unchanged.
+
+Remaining required: repair3 eligible runtime claims surviving joined restart (freshMEDIUM coding); preserveincomplete explicitretryhold. Resolve native null-claimRED and complete five native cases. Fresh complete realPG regression/currentF10 physicalSIGSTOP>120/DBfault/staleproof/exitproof, fullfail-capablemutation inventory and broadercanary projections, repeatedfrozen330 afterrepair, freshindependentreview. Futurephysical guard must accept validated fixtureBufferCA and provepositive; no currentphysicalPASS claim. New sole responsible owner /root/n7_sol_coordinator, root notified; no newcodingHIGH or push.
+
+Manifest /tmp/n7-f10-frozen-verify-a11/terminal-artifact-manifest-v1.json, SHA256 fa77aeb683815268c97817f44df19ebf48136827505957c412b2c8ef49328608. Source/build manifest full-source-build-manifest-v1.json and frozen-inventory-recheck-v1.json. RequestedSol6.1/high; actualmodel/effort/usage/cost null(host_not_exposed), profilecompact-quality-first-v2/XL. Duration~19min22s; featureNOTaccepted.
+
+Status: failed
