@@ -69,7 +69,7 @@
     "No prelaunch serialized launch digest for native PLAN receipt; terminal receipt and output SHA verified, not companion delivery attestation",
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred."
   ],
-  "current_stage": "Legacy R1 exact correction; F07 READY waiting integration",
+  "current_stage": "IMPLEMENT F07 prelaunch",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -94,7 +94,14 @@
   "toolkit_checker": {
     "version": "1.13.4",
     "path": "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
-    "resolution": "NODE_PATH=/root/.npm-global/lib/node_modules"
+    "resolution": "NODE_PATH=/root/.npm-global/lib/node_modules",
+    "n7_patch": {
+      "version": "1.13.4+n7patch1",
+      "path": "/tmp/n7-checker-1.13.4-n7patch1/check-pipeline-gaps.sh",
+      "sha256": "635390797a395f63a3b40119b271a13eeb92d261dd2156af6019bc69fa1e03db",
+      "independent_review": "ACCEPT",
+      "global_package_unchanged": true
+    }
   },
   "browser_readiness_smoke": {
     "container": "codex-ui-playwright",
@@ -108,10 +115,11 @@
     "canonical_requirements": 16,
     "expanded_requirements": 18,
     "legacy_requirements": 60,
-    "features_checked": 7,
+    "features_checked": 8,
     "source_revision": "b2433e8f467df182600f1525318422887a917dde",
     "scope": "full project before adding F07 contour",
-    "semantic_review": "pending; concrete When trigger correction in a3"
+    "semantic_review": "ACCEPT after R1 correction",
+    "integrated_phase12_exit": 0
   },
   "selected_traceability": {
     "exit_code": 0,
@@ -122,9 +130,9 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "root",
-    "executor": "n7_expanded_coordinator; contract_author_a1 (legacy-r1-fix)",
-    "next": "reviewer confirms exact diff then integrate/push and start F07 Sol20min",
-    "source_revision": "c80504ac43876345084f57eb47287d5f9712f184"
+    "executor": "n7_expanded_coordinator; f07_author_a1 dispatch preparing",
+    "next": "F07 implementation20min then independent review8min",
+    "source_revision": "48b4f3ff4853f48690e4a0a0e56fd6d9aa44c79e"
   },
   "blockers": [
     "Legacy full-project role-map/traceability reconciliation before IMPLEMENT",
@@ -148,7 +156,10 @@
   "legacy_completion": {
     "exit_code": 2,
     "cause": "installed1.13.4 doubles canonical completion absolute path; legacy6 tables missing/malformed; expanded9futuretests absent",
-    "package_bug_notified_root": true
+    "package_bug_notified_root": true,
+    "patched_exit_code": 2,
+    "inconclusive_count": 1,
+    "reason": "Known expanded9 + F06B5/B6 gaps; newly integrated F07 pre-code completion table absent. No Phase3 pass claimed."
   },
   "reporting": {
     "required_by_owner": "2026-10-06 via root message",

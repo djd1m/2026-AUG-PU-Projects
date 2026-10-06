@@ -151,7 +151,7 @@
       "number": 7,
       "name": "Unlimited connected mailboxes and bounded active capacity",
       "priority": "mvp",
-      "status": "planned",
+      "status": "in_progress",
       "complexity": "complex",
       "depends_on": [
         "f02-mailboxes-consent",
@@ -167,7 +167,8 @@
       ],
       "sprint": "expanded-mvp",
       "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
-      "preimplementation_gate": "Legacy contract reconciliation before IMPLEMENT"
+      "preimplementation_gate": "Full PLAN/VALIDATE and independent legacy review accepted; F07 READY",
+      "plan_revision": "sha256:8c55e447d6a5e9f8b98f5bbb0415102089ed300b31142dab42f73d44ac9d7712"
     },
     {
       "id": "f08-live-diagnostics",
