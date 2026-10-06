@@ -1,0 +1,11 @@
+--- src/pool/store.ts
++++ src/pool/store.ts
+@@ -33,7 +33,7 @@
+      const pair=[a.id,b.id].sort().join(':')+':'+day;
+      const inserted=(await client.query(`INSERT INTO send_job(id,tenant_id,mailbox_id,recipient_mailbox_id,scope,state,pair_key,due_at,payload) VALUES($1,$2,$3,$4,'pool','queued',$5,$6,$7) ON CONFLICT(pair_key) WHERE scope='pool' AND kind='initial' DO NOTHING`,[randomUUID(),a.tenant_id,a.id,b.id,pair,now,payload])).rowCount??0;
+      await client.query(`INSERT INTO runtime_mailbox(tenant_id,mailbox_id,pool_peer_after,pool_day,pool_round_started_at) VALUES($1,$2,$3,$4,$5) ON CONFLICT(mailbox_id) DO UPDATE SET pool_peer_after=$3,pool_day=$4,pool_round_started_at=$5`,[a.tenant_id,a.id,b.id,day,now]);
+-     created+=inserted;if(inserted)break;
++     created+=inserted;break;
+     }
+    }
+    const parents=(await client.query(`SELECT j.* FROM send_job j JOIN mailbox m ON m.id=j.recipient_mailbox_id WHERE j.scope='pool' AND j.kind='initial' AND j.state='submitted' AND ${poolEligible} AND EXISTS(SELECT 1 FROM mailbox m WHERE m.id=j.mailbox_id AND ${poolEligible}) ORDER BY j.due_at,j.id LIMIT 30`,[now])).rows;

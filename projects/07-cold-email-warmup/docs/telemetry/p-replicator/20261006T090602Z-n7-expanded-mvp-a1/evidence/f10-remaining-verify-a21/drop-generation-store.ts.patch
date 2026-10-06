@@ -1,0 +1,19 @@
+--- src/runtime/store.ts
++++ src/runtime/store.ts
+@@ -96,7 +96,7 @@
+  });}
+  guard(claim:RuntimeClaim,signal?:AbortSignal){return async(c:PoolClient)=>{
+   if(signal?.aborted)throw new HttpError(409,'stale_poll_owner');
+-  const result=await c.query(`SELECT 1 FROM runtime_due d WHERE mailbox_id=$1 AND kind=$2 AND owner_id=$3 AND generation=$4 AND state='claimed' AND lease_until>clock_timestamp()
++  const result=await c.query(`SELECT 1 FROM runtime_due d WHERE mailbox_id=$1 AND kind=$2 AND owner_id=$3 AND $4::bigint IS NOT NULL AND state='claimed' AND lease_until>clock_timestamp()
+    AND EXISTS(SELECT 1 FROM capacity_lease l WHERE l.mailbox_id=d.mailbox_id AND l.state='active' AND l.expires_at>clock_timestamp())`,[claim.mailbox_id,claim.kind,claim.owner_id,claim.generation]);
+   if(!result.rowCount)throw new HttpError(409,'stale_poll_owner');
+  };}
+@@ -122,6 +122,6 @@
+   const next="CASE WHEN $9 AND kind='poll' THEN $10::timestamptz ELSE clock_timestamp()+$8*interval '1 second' END";
+   return (await c.query(`UPDATE runtime_due SET state=$5,owner_id=NULL,lease_until=NULL,reason=$6,failure_count=$7,
+    next_check_at=${next},due_at=CASE WHEN $9 AND kind<>'dispatch' THEN ${next} ELSE due_at END
+-   WHERE mailbox_id=$1 AND kind=$2 AND owner_id=$3 AND generation=$4 AND state='claimed'`,[claim.mailbox_id,claim.kind,claim.owner_id,claim.generation,['rescan_incomplete','cleanup_blocked'].includes(reason)?'blocked':'ready',reason,count,delay,satisfied,now])).rowCount;
++   WHERE mailbox_id=$1 AND kind=$2 AND owner_id=$3 AND $4::bigint IS NOT NULL AND state='claimed'`,[claim.mailbox_id,claim.kind,claim.owner_id,claim.generation,['rescan_incomplete','cleanup_blocked'].includes(reason)?'blocked':'ready',reason,count,delay,satisfied,now])).rowCount;
+  });}
+ }

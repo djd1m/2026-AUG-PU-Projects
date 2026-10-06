@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T20:28:43.886088+00:00",
+  "cases": [
+    {
+      "name": "first-pair-conflict-forced-existing-pair",
+      "changes": [
+        {
+          "path": "src/pool/store.ts",
+          "old": "created+=inserted;if(inserted)break;",
+          "new": "created+=inserted;break;",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f10-runtime-integration.test.ts",
+      "title": "automatic pool allocation skips pair conflicts and remains idempotent",
+      "expected_material_assertion": "pair conflict must skip to another eligible tenant",
+      "budget_s": 70,
+      "status": "pending",
+      "fixture_precondition": "existing pair submitted, reset pool_peer_after=NULL before next tick; original product bytes unchanged"
+    }
+  ]
+}

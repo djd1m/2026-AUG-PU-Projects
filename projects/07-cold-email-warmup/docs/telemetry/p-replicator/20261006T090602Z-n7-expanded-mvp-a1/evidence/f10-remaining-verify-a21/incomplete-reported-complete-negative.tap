@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: poll quanta persist the fixed tail before yielding and never retry incomplete scans
+not ok 1 - poll quanta persist the fixed tail before yielding and never retry incomplete scans
+  ---
+  duration_ms: 585.883019
+  type: 'test'
+  location: '/tmp/n7-f10-remaining-verify-a21/compact-shadow-v1/tests/f10-runtime-integration.test.ts:1:4110'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'complete'
+    - 'rescan_incomplete'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'rescan_incomplete'
+  actual: 'complete'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/n7-f10-remaining-verify-a21/compact-shadow-v1/tests/f10-runtime-integration.test.ts:61:60)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1063.85933

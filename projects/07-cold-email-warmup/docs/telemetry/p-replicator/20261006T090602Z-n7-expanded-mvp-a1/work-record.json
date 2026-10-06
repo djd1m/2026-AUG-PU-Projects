@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "implement",
+  "stage": "F10 A22 fresh MEDIUM durable pair-fixture correction active; F11 draft complete, independent native slot unavailable and CLI approval rejection",
   "roots": {
     "project": "."
   },
@@ -446,6 +446,22 @@
     },
     {
       "id": "f10-frozen-verify-a20",
+      "status": "completed"
+    },
+    {
+      "id": "f10-remaining-verify-a21",
+      "status": "active"
+    },
+    {
+      "id": "f11-context-plan-a1",
+      "status": "failed"
+    },
+    {
+      "id": "f11-context-plan-a1b-cli",
+      "status": "failed"
+    },
+    {
+      "id": "f11-context-plan-a1c-cli",
       "status": "active"
     }
   ],
@@ -485,8 +501,14 @@
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-06T20:03:34.334846+00:00",
+    "last_reported_at": "2026-10-06T20:31:03.337724+00:00",
     "responsible": "n7_sol_coordinator sends root; root reports owner",
-    "no_background_claim_without_actual_worker": true
+    "no_background_claim_without_actual_worker": true,
+    "latest_checkpoint": {
+      "at": "2026-10-06T20:40:08.137449+00:00",
+      "disk_available_bytes": 3088171008,
+      "remaining_AC": "F10 pairfixture and fresh independent review; F11 independentplanvalidation then implementation; F12–14 untouched",
+      "executor": "/root/n7_sol_coordinator/f10_pair_fixture_author_a22"
+    }
   }
 }

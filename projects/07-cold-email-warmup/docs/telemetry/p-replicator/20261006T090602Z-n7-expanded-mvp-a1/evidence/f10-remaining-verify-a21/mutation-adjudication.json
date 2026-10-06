@@ -1,0 +1,339 @@
+{
+  "at": "2026-10-06T20:35:03.943302+00:00",
+  "original_experiments": [
+    {
+      "name": "oldest-due-order",
+      "status": "caught_material_assertion",
+      "actual_failure_titles": [
+        "not ok 1 - overload backoff preserves due age and independent tenant progress"
+      ],
+      "negative_native": 1,
+      "restored_native": 0,
+      "timed_out": false,
+      "expectation_mapping": "A-D old due turns must yield to healthy E before a second turn",
+      "native_gap_values": null
+    },
+    {
+      "name": "reset-sequence-on-yield",
+      "status": "caught_material_assertion",
+      "actual_failure_titles": [
+        "not ok 1 - overload backoff preserves due age and independent tenant progress"
+      ],
+      "negative_native": 1,
+      "restored_native": 0,
+      "timed_out": false,
+      "expectation_mapping": "A-D old due turns must yield to healthy E before a second turn",
+      "native_gap_values": null
+    },
+    {
+      "name": "drop-generation",
+      "status": "caught_material_assertion",
+      "actual_failure_titles": [
+        "not ok 1 - durable runtime drains and recovers without replaying uncertain sends"
+      ],
+      "negative_native": 1,
+      "restored_native": 0,
+      "timed_out": false,
+      "expectation_mapping": "same owner UUID cannot bypass changed generation",
+      "native_gap_values": null
+    },
+    {
+      "name": "sleep30-completion",
+      "status": "caught_material_assertion",
+      "actual_failure_titles": [
+        "not ok 1 - complete proof becomes immediately eligible without resetting its selected fair turn"
+      ],
+      "negative_native": 1,
+      "restored_native": 0,
+      "timed_out": false,
+      "expectation_mapping": "complete proof adds no successful-poll sleep",
+      "native_gap_values": null
+    },
+    {
+      "name": "failure-held-as-success",
+      "status": "caught_material_assertion",
+      "actual_failure_titles": [
+        "not ok 1 - complete proof becomes immediately eligible without resetting its selected fair turn",
+        "not ok 2 - partial and held scans cannot manufacture successful polling readiness"
+      ],
+      "negative_native": 1,
+      "restored_native": 0,
+      "timed_out": false,
+      "expectation_mapping": "failure cannot become successful readiness even with a satisfied flag; partial held due age",
+      "native_gap_values": null
+    },
+    {
+      "name": "reset-sequence-on-completed-poll",
+      "status": "caught_material_assertion",
+      "actual_failure_titles": [
+        "not ok 1 - complete proof becomes immediately eligible without resetting its selected fair turn"
+      ],
+      "negative_native": 1,
+      "restored_native": 0,
+      "timed_out": false,
+      "expectation_mapping": "completion retains the selected mailbox turn",
+      "native_gap_values": null
+    },
+    {
+      "name": "first-pair-conflict",
+      "status": "pending_not_caught_or_restored",
+      "actual_failure_titles": [],
+      "negative_native": 0,
+      "restored_native": 0,
+      "timed_out": false,
+      "expectation_mapping": "pair conflict must skip to another eligible tenant",
+      "native_gap_values": null
+    },
+    {
+      "name": "pacing-bypass",
+      "status": "caught_material_assertion",
+      "actual_failure_titles": [
+        "not ok 1 - paced dispatch preserves current day quota and every stop fence"
+      ],
+      "negative_native": 1,
+      "restored_native": 0,
+      "timed_out": false,
+      "expectation_mapping": "60000 expected due-after-first-attempt",
+      "native_gap_values": null
+    },
+    {
+      "name": "occupied-slot-ttl-release",
+      "status": "caught_material_assertion",
+      "actual_failure_titles": [
+        "not ok 1 - expired slot age alone cannot replace its allocated identity"
+      ],
+      "negative_native": 1,
+      "restored_native": 0,
+      "timed_out": false,
+      "expectation_mapping": "Missing expected rejection transport_busy",
+      "native_gap_values": null
+    },
+    {
+      "name": "source-guard-drop",
+      "status": "caught_material_assertion",
+      "actual_failure_titles": [
+        "not ok 1 - settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences"
+      ],
+      "negative_native": 1,
+      "restored_native": 0,
+      "timed_out": false,
+      "expectation_mapping": "poll or source named fence assert denies capture",
+      "native_gap_values": null
+    },
+    {
+      "name": "incomplete-reported-complete",
+      "status": "caught_material_assertion",
+      "actual_failure_titles": [
+        "not ok 1 - poll quanta persist the fixed tail before yielding and never retry incomplete scans"
+      ],
+      "negative_native": 1,
+      "restored_native": 0,
+      "timed_out": false,
+      "expectation_mapping": "expected rescan_incomplete actual complete",
+      "native_gap_values": null
+    },
+    {
+      "name": "yield-reported-complete",
+      "status": "caught_material_assertion",
+      "actual_failure_titles": [
+        "not ok 1 - poll quanta persist the fixed tail before yielding and never retry incomplete scans"
+      ],
+      "negative_native": 1,
+      "restored_native": 0,
+      "timed_out": false,
+      "expectation_mapping": "expected scanning actual complete",
+      "native_gap_values": null
+    },
+    {
+      "name": "consent-check-remove",
+      "status": "caught_material_assertion",
+      "actual_failure_titles": [
+        "not ok 1 - independent capacity and consent predicates deny live transport"
+      ],
+      "negative_native": 1,
+      "restored_native": 0,
+      "timed_out": false,
+      "expectation_mapping": "senderConsentPredicate or recipientConsentPredicate transport denied",
+      "native_gap_values": null
+    },
+    {
+      "name": "freshness-check-remove",
+      "status": "caught_material_assertion",
+      "actual_failure_titles": [
+        "not ok 2 - A3/A5 fresh complete current opt-in aggregate privacy, pair/day and one submitted-parent reply",
+        "not ok 1 - F03a realPG campaign/pool/shared quota/lease seams without transport"
+      ],
+      "negative_native": 1,
+      "restored_native": 0,
+      "timed_out": false,
+      "expectation_mapping": "A3/A5 fresh complete current opt-in aggregate privacy",
+      "native_gap_values": null
+    },
+    {
+      "name": "tenant-predicate-bypass",
+      "status": "caught_material_assertion",
+      "actual_failure_titles": [
+        "not ok 21 - B3 durable rendered sink/token/message refs with own OR intended pool peer read only",
+        "not ok 1 - F03b real PG durable final authority, all stop races, sink privacy and outcomes"
+      ],
+      "negative_native": 1,
+      "restored_native": 0,
+      "timed_out": false,
+      "expectation_mapping": "B3 own OR intended pool peer read only; foreign tenant must see0",
+      "native_gap_values": null
+    },
+    {
+      "name": "shared-current-day-quota-weaken",
+      "status": "caught_material_assertion",
+      "actual_failure_titles": [
+        "not ok 19 - B1/B2 SC-US-003-4 limit",
+        "not ok 1 - F03b real PG durable final authority, all stop races, sink privacy and outcomes"
+      ],
+      "negative_native": 1,
+      "restored_native": 0,
+      "timed_out": false,
+      "expectation_mapping": "quota caught actual B1/B2 limit assertion; original anticipated B5 title not claimed",
+      "native_gap_values": null
+    },
+    {
+      "name": "native-delayed-success-gap",
+      "status": "caught_material_assertion",
+      "actual_failure_titles": [
+        "not ok 1 - compiled healthy polling completes twice without a TypeScript loader"
+      ],
+      "negative_native": 1,
+      "restored_native": 0,
+      "timed_out": false,
+      "expectation_mapping": "gaps.every gap<=30000",
+      "native_gap_values": [
+        35161,
+        35451,
+        35112,
+        35259,
+        35354,
+        35721,
+        35601,
+        35542,
+        35721,
+        35431,
+        35041,
+        35213,
+        35145,
+        35694,
+        35473,
+        35063,
+        35844,
+        35326,
+        35839,
+        35679,
+        35145,
+        35349,
+        35032,
+        35514,
+        35599,
+        35170,
+        35383,
+        35409,
+        35056,
+        35056
+      ]
+    }
+  ],
+  "original_caught_count": 16,
+  "original_survived": [
+    "first-pair-conflict"
+  ],
+  "supplemental_existing_fixture": {
+    "name": "first-pair-conflict-forced-existing-pair",
+    "expected_material_assertion": "pair conflict must skip to another eligible tenant",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=automatic pool allocation skips pair conflicts and remains idempotent",
+      "tests/f10-runtime-integration.test.ts"
+    ],
+    "original_sha256": {
+      "src/pool/store.ts": "5c79c8cabbdf6f47bf49b1e2e54b0f85f1631dc9992ed69c7849afa097fa9ba1"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:30:36.599410+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1729.1218370664865,
+      "pid": 2147245,
+      "startticks": "124164487",
+      "pgid": 2147245,
+      "TAP_sha256": "855b3f86f59350823a59e81003e811e6153235d0df981010738c0193a3e9821a",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:30:36.753Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/pool/store.ts": "013329d7e2dc07b3a613d7e02a1d379c11c70726df56f7713125ea2b13514217"
+    },
+    "negative": {
+      "at": "2026-10-06T20:30:38.256330+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 1272.4206841085106,
+      "pid": 2147735,
+      "startticks": "124164698",
+      "pgid": 2147735,
+      "TAP_sha256": "ea26daf0ea20c1a5310731133f723fe64f0cdf65ec67b081b92bfa579c84713d",
+      "failure_titles": [
+        "not ok 1 - automatic pool allocation skips pair conflicts and remains idempotent"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:30:38.408Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/pool/store.ts": "5c79c8cabbdf6f47bf49b1e2e54b0f85f1631dc9992ed69c7849afa097fa9ba1"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:30:40.053680+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1371.7244600411505,
+      "pid": 2148124,
+      "startticks": "124164868",
+      "pgid": 2148124,
+      "TAP_sha256": "27b89611cef073b1b34488e9066b6c1005e333c1e2cf038dd46b159321c3885b",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:30:40.210Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  },
+  "durable_fixture_fix_required": true,
+  "product_handoff": "/tmp/n7-f10-remaining-verify-a21/pair-fixture-fix-handoff.json",
+  "no_claim_original_survivor_caught": true
+}

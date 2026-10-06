@@ -1,0 +1,11 @@
+--- src/runtime/store.ts
++++ src/runtime/store.ts
+@@ -120,7 +120,7 @@
+   const count=failed?Math.min(5,claim.failure_count+1):0;
+   const delay=reason==='transport_busy'?1:failed?[30,60,120,300,300][count-1]!:satisfied?(claim.kind==='poll'?30:claim.kind==='pool'?60:1):0;
+   const next="CASE WHEN $9 AND kind='poll' THEN $10::timestamptz ELSE clock_timestamp()+$8*interval '1 second' END";
+-  return (await c.query(`UPDATE runtime_due SET state=$5,owner_id=NULL,lease_until=NULL,reason=$6,failure_count=$7,
++  return (await c.query(`UPDATE runtime_due SET service_seq=CASE WHEN $9 AND kind='poll' THEN 0 ELSE service_seq END,state=$5,owner_id=NULL,lease_until=NULL,reason=$6,failure_count=$7,
+    next_check_at=${next},due_at=CASE WHEN $9 AND kind<>'dispatch' THEN ${next} ELSE due_at END
+    WHERE mailbox_id=$1 AND kind=$2 AND owner_id=$3 AND generation=$4 AND state='claimed'`,[claim.mailbox_id,claim.kind,claim.owner_id,claim.generation,['rescan_incomplete','cleanup_blocked'].includes(reason)?'blocked':'ready',reason,count,delay,satisfied,now])).rowCount;
+  });}

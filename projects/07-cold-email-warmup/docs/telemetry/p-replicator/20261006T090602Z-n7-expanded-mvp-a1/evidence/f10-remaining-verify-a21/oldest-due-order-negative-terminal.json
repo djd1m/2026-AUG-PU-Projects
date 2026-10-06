@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T20:24:36.952560+00:00",
+  "native_returncode": 1,
+  "timed_out": false,
+  "elapsed_ms": 1430.2065910305828,
+  "pid": 2048084,
+  "startticks": "124128552",
+  "pgid": 2048084,
+  "TAP_sha256": "915df8c2c86f67164f44878d1892f85a48d8907259684a0691e0a930f3dccb9f",
+  "failure_titles": [
+    "not ok 1 - overload backoff preserves due age and independent tenant progress"
+  ],
+  "assertion_failure": true,
+  "PG": {
+    "at": "2026-10-06T20:24:37.105Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "owned_nodes": []
+}

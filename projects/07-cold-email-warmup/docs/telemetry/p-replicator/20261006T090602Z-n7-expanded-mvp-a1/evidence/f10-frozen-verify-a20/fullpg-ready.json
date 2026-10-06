@@ -1,0 +1,85 @@
+{
+  "at": "2026-10-06T20:10:29.379591+00:00",
+  "status": "ready",
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-frozen-verify-a20",
+  "source_revision": "afb58dc9b26f814433b117a63e45994c71e7cbde",
+  "manifest_sha256": "237ad9bb03ef3afafdfdde1a55dc3298163978e152c109c978f19e55936c54d2",
+  "source_count": 120,
+  "build_count": 73,
+  "runner_path": "/tmp/n7-f10-frozen-verify-a20/run-fullpg-v2.py",
+  "runner_sha256": "42c6accfafff24cc6bbb750d542a842349a732b710f90a591875d1d270d1b17a",
+  "preloads": {
+    "guard-v1.mjs": "f50f46408191d17e69a250d7f682dc746a069b7ef0817d90bb8923466b7246d5",
+    "suite-output-v2.mjs": "92aa73261c5c8ab0f66d50693ae491add3bb2ef65517f75b35759bca9af82cd5",
+    "observer-v1.mjs": "4c238946e866911b387ce36b8dbfe0bbdf3e2bbc37e5656af1210a05d8389eb1",
+    "sql-observe-v2.mjs": "255f186a2b00762188187ee2ef47c279f515e24eb00119419593390ce1241573"
+  },
+  "fixtures": {
+    "tests/diagnostics-fixture.ts": "889f428735c251a33c18a026d3afbdd761bc3e4b9d7e965ab6848ac788740017",
+    "tests/f09-transport-fixture.ts": "984e6242be0a61880750c114dde53e5993588d9d3c82990c608e7e4db0eb5328",
+    "tests/f10-runtime-fixture.ts": "654fb5e45e5dcc0f520bdae5906c5340baf68eb8fb0dd9a8e9d29b6d6a91aa2f",
+    "tests/f10-runtime-process-fixture.ts": "af3523f51274e34d420ca1e8cd01927e7c3e262cfeb229cbe0dc1535b66a6340"
+  },
+  "environment": {
+    "DATABASE_NAME": "n7f10_a2",
+    "TMPDIR": "/tmp/n7-f10-frozen-verify-a20",
+    "NODE_OPTIONS": "--import=/tmp/n7-f10-frozen-verify-a20/guard-v1.mjs --import=/tmp/n7-f10-frozen-verify-a20/suite-output-v2.mjs --import=/tmp/n7-f10-frozen-verify-a20/sql-observe-v2.mjs",
+    "credentials": "available; values omitted"
+  },
+  "DB_assertion": {
+    "at": "2026-10-06T20:10:29.355Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true,
+    "counts": {
+      "max_connections": 100,
+      "server_connections": "7",
+      "scoped_connections": "1"
+    },
+    "query_elapsed_ms": 10.972983999999997,
+    "host": {
+      "/proc/loadavg": "5.22 5.29 5.66 1/2253 1838802\n",
+      "/proc/stat": "cpu  83993762 1143035 69613915 802679856 1161557 0 1586551 33047554 0 0\ncpu0 10441495 127815 8686600 100199566 138153 0 464838 4323102 0 0\ncpu1 10607137 154234 8684153 100130194 152873 0 281576 4219813 0 0\ncpu2 10552239 143922 8683795 100290427 150488 0 201267 4142157 0 0\ncpu3 10489669 158000 8698012 100361743 149983 0 165121 4102343 0 0\ncpu4 10484248 148110 8705625 100404321 144986 0 140584 4076836 0 0\ncpu5 10442804 137188 8703640 100479424 144912 0 123718 4059354 0 0\ncpu6 10439073 138603 8711553 100473085 140433 0 112064 4047121 0 0\ncpu7 10537092 135158 8740533 100341093 139725 0 97378 4076824 0 0\nintr 15202625284 0 9 0 0 0 0 3 0 0 0 0 20650 15 0 0 1214529 0 0 0 0 0 0 0 0 0 36 0 28776569 0 20748215 19466392 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nctxt 20972817132\nbtime 1790076990\nprocesses 219832030\nprocs_running 1\nprocs_blocked 0\nsoftirq 3743714756 1 244940703 17105 141580472 28875614 0 104565 795256025 4656 2532935615\n",
+      "/proc/pressure/cpu": "some avg10=6.43 avg60=15.84 avg300=15.97 total=79031256413\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=0\n",
+      "/proc/pressure/io": "some avg10=0.20 avg60=0.75 avg300=0.65 total=2559475218\nfull avg10=0.14 avg60=0.45 avg300=0.38 total=1682000598\n",
+      "/proc/pressure/memory": "some avg10=0.00 avg60=0.01 avg300=0.01 total=191888028\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=141598483\n"
+    },
+    "MemAvailable": "MemAvailable:    4086964 kB"
+  },
+  "command": [
+    "node",
+    "node_modules/tsx/dist/cli.mjs",
+    "--test",
+    "--test-concurrency=1",
+    "tests/auth-integration.test.ts",
+    "tests/billing-integration.test.ts",
+    "tests/capacity-integration.test.ts",
+    "tests/diagnostics-disconnect-integration.test.ts",
+    "tests/diagnostics-final-cancel-integration.test.ts",
+    "tests/diagnostics-integration.test.ts",
+    "tests/diagnostics-ordered-integration.test.ts",
+    "tests/dispatch-integration.test.ts",
+    "tests/evidence-integration.test.ts",
+    "tests/f09-transport-integration.test.ts",
+    "tests/f10-runtime-integration.test.ts",
+    "tests/mailboxes-integration.test.ts",
+    "tests/replies-integration.test.ts",
+    "tests/submission-integration.test.ts",
+    "tests/suppression-integration.test.ts",
+    "tests/suppression-owner-integration.test.ts",
+    "tests/web-integration.test.ts"
+  ],
+  "budget_s": 300,
+  "disk": {
+    "available_bytes": 3159506944,
+    "free_inodes": 4775950
+  },
+  "sideeffects": [
+    "own scratch",
+    "n7f10_a2",
+    "numeric local TLS"
+  ],
+  "source_build_readonly": true
+}

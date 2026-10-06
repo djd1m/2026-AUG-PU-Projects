@@ -1,0 +1,11 @@
+--- tests/f10-runtime-integration.test.ts
++++ tests/f10-runtime-integration.test.ts
+@@ -65,7 +65,7 @@
+  const {pool,actors,now}=await poolRuntimeFixture();try{
+   const cohort=new PoolStore(pool),a=actors[0]!;assert.equal((await cohort.tick(now,a.id)).created,1);
+   const initial=(await pool.query("SELECT * FROM send_job WHERE mailbox_id=$1",[a.id])).rows[0];
+-  await pool.query("UPDATE send_job SET state='submitted' WHERE id=$1",[initial.id]);
++  await pool.query("UPDATE send_job SET state='submitted' WHERE id=$1",[initial.id]);await pool.query('UPDATE runtime_mailbox SET pool_peer_after=NULL WHERE mailbox_id=$1',[a.id]);
+   assert.equal((await cohort.tick(now,a.id)).created,1,'pair conflict must skip to another eligible tenant');
+   assert.equal((await cohort.tick(now,a.id)).created,0,'one movable outbound per sender');
+   assert.equal((await pool.query("SELECT count(*) FROM send_job WHERE mailbox_id=$1 AND kind='initial'",[a.id])).rows[0].count,'2');

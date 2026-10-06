@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-06T20:40:08.137449+00:00",
+  "status": "planner_draft_completed_not_validated",
+  "native_exit": 0,
+  "exec_session": 21808,
+  "actual_exit_time": null,
+  "exit_observed_by_coordinator": "2026-10-06T20:35 observation; exact UTC unknown",
+  "plan_file_mtime": "2026-10-06T20:31:29.904000Z",
+  "plan_sha256": "6a55facebae60282a6580a3809cbfa9e662214e4621814447c6ffac03523e364",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": {
+    "input_tokens": 499993,
+    "cached_input_tokens": 433152,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 8127,
+    "reasoning_output_tokens": 2334
+  },
+  "usage_source": "CLI turn.completed raw; no context-window or billing causality inferred",
+  "own_timeout_codex_pids_absent": [
+    2097145,
+    2097147
+  ],
+  "remaining": [
+    "fresh independent plan validation",
+    "F10 accepted before F11 coding"
+  ]
+}

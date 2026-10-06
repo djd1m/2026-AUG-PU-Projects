@@ -1,0 +1,28 @@
+TAP version 13
+# Subtest: compiled healthy polling completes twice without a TypeScript loader
+not ok 1 - compiled healthy polling completes twice without a TypeScript loader
+  ---
+  duration_ms: 44508.075608
+  type: 'test'
+  location: '/tmp/n7-f10-remaining-verify-a21/compact-shadow-v1/tests/f10-runtime-protocol.test.ts:1:4960'
+  failureType: 'testCodeFailure'
+  error: '[35161,35451,35112,35259,35354,35721,35601,35542,35721,35431,35041,35213,35145,35694,35473,35063,35844,35326,35839,35679,35145,35349,35032,35514,35599,35170,35383,35409,35056,35056]'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (/tmp/n7-f10-remaining-verify-a21/compact-shadow-v1/tests/f10-runtime-protocol.test.ts:40:506)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 44890.750755

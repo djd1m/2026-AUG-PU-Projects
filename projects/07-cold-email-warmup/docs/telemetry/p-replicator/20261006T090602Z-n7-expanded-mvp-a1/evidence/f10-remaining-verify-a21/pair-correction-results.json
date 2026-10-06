@@ -1,0 +1,92 @@
+[
+  {
+    "name": "first-pair-conflict-forced-existing-pair",
+    "expected_material_assertion": "pair conflict must skip to another eligible tenant",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=automatic pool allocation skips pair conflicts and remains idempotent",
+      "tests/f10-runtime-integration.test.ts"
+    ],
+    "original_sha256": {
+      "src/pool/store.ts": "5c79c8cabbdf6f47bf49b1e2e54b0f85f1631dc9992ed69c7849afa097fa9ba1"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:30:36.599410+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1729.1218370664865,
+      "pid": 2147245,
+      "startticks": "124164487",
+      "pgid": 2147245,
+      "TAP_sha256": "855b3f86f59350823a59e81003e811e6153235d0df981010738c0193a3e9821a",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:30:36.753Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/pool/store.ts": "013329d7e2dc07b3a613d7e02a1d379c11c70726df56f7713125ea2b13514217"
+    },
+    "negative": {
+      "at": "2026-10-06T20:30:38.256330+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 1272.4206841085106,
+      "pid": 2147735,
+      "startticks": "124164698",
+      "pgid": 2147735,
+      "TAP_sha256": "ea26daf0ea20c1a5310731133f723fe64f0cdf65ec67b081b92bfa579c84713d",
+      "failure_titles": [
+        "not ok 1 - automatic pool allocation skips pair conflicts and remains idempotent"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:30:38.408Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/pool/store.ts": "5c79c8cabbdf6f47bf49b1e2e54b0f85f1631dc9992ed69c7849afa097fa9ba1"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:30:40.053680+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1371.7244600411505,
+      "pid": 2148124,
+      "startticks": "124164868",
+      "pgid": 2148124,
+      "TAP_sha256": "27b89611cef073b1b34488e9066b6c1005e333c1e2cf038dd46b159321c3885b",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:30:40.210Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  }
+]

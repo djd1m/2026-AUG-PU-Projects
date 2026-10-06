@@ -1,0 +1,32 @@
+{
+  "kind": "legitimate minimal product fixture patch; candidate remains immutable; coordinator MEDIUM implementer owns promotion",
+  "at": "2026-10-06T20:33:34.440924+00:00",
+  "source_revision": "afb58dc9b26f814433b117a63e45994c71e7cbde",
+  "candidate_project": "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup",
+  "target_file": "tests/f10-runtime-integration.test.ts",
+  "candidate_baseline_sha256": "ce3cdd57354a75dab304567eaf686347e9c8df13469402f4fbedbaf61bdb9695",
+  "derived_fixture_sha256": "97fb303f49f165f1242b37172644bcab5300ecd06358d3263ba0935bb03d1501",
+  "patch_path": "/tmp/n7-f10-remaining-verify-a21/pair-correction-fixture.patch",
+  "patch_sha256": "4ed562ae7d83b2d312f3d6a1033ed4a4cb60d9ea14a29cf853ea14aa3d58f8e7",
+  "production_component": "src/pool/store.ts",
+  "production_component_sha256": "5c79c8cabbdf6f47bf49b1e2e54b0f85f1631dc9992ed69c7849afa097fa9ba1",
+  "selected_title": "automatic pool allocation skips pair conflicts and remains idempotent",
+  "exact_command": [
+    "node",
+    "node_modules/tsx/dist/cli.mjs",
+    "--test",
+    "--test-concurrency=1",
+    "--test-name-pattern=automatic pool allocation skips pair conflicts and remains idempotent",
+    "tests/f10-runtime-integration.test.ts"
+  ],
+  "baseline_native_exit": 0,
+  "negative_native_exit": 1,
+  "restored_native_exit": 0,
+  "negative_assertion": "pair conflict must skip to another eligible tenant",
+  "negative_patch_path": "/tmp/n7-f10-remaining-verify-a21/first-pair-conflict-forced-existing-pair-store.ts.patch",
+  "negative_patch_sha256": "249fffe036caa8226896b203b7b4c3fd9c51f473d0a82427d349719b7eee7663",
+  "original_survivor_evidence": "/tmp/n7-f10-remaining-verify-a21/first-pair-conflict-negative-native-exit.json",
+  "supplemental_raw_evidence_prefix": "/tmp/n7-f10-remaining-verify-a21/first-pair-conflict-forced-existing-pair",
+  "minimal_change": "After marking initial pair submitted, reset runtime_mailbox.pool_peer_after=NULL for sender a.id before next tick; forces first existing peer conflict",
+  "required_after_promotion": "exact targeted positive baseline; break-on-first-conflict negative named assertion; exact restore positive; source/build/SQL joins scoped integrity; no broad330/PG assurance repeat authorized"
+}

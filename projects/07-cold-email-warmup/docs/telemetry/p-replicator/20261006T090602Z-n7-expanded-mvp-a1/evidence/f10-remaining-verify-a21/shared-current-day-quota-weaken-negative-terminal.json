@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T20:28:15.495063+00:00",
+  "native_returncode": 1,
+  "timed_out": false,
+  "elapsed_ms": 25734.01405615732,
+  "pid": 2101395,
+  "startticks": "124147976",
+  "pgid": 2101395,
+  "TAP_sha256": "6539b1ecdd78456992cd0d05f2f71d5f98b9bdfc33d1a6142d5713a434608e38",
+  "failure_titles": [
+    "not ok 19 - B1/B2 SC-US-003-4 limit",
+    "not ok 1 - F03b real PG durable final authority, all stop races, sink privacy and outcomes"
+  ],
+  "assertion_failure": true,
+  "PG": {
+    "at": "2026-10-06T20:28:15.634Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "owned_nodes": []
+}

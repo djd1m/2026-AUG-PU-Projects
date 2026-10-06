@@ -1,0 +1,1537 @@
+[
+  {
+    "name": "oldest-due-order",
+    "expected_material_assertion": "A-D old due turns must yield to healthy E before a second turn",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=overload backoff preserves due age and independent tenant progress",
+      "tests/f10-runtime-integration.test.ts"
+    ],
+    "original_sha256": {
+      "src/runtime/store.ts": "33ac7a7b48c5dee3d4b1a7444957733ff0b02a4ead55750e022ff67f33a6ba3c"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:24:35.171673+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1628.6998419091105,
+      "pid": 2047560,
+      "startticks": "124128354",
+      "pgid": 2047560,
+      "TAP_sha256": "7e2acb0914df21f9dec82c6683a33a6c6a4d2ec508a00c053b19398949fe46cf",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:24:35.308Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/runtime/store.ts": "499c14a5d0e69922bc57502310d2111298a637443a350028beadcbd771701bef"
+    },
+    "negative": {
+      "at": "2026-10-06T20:24:36.952560+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 1430.2065910305828,
+      "pid": 2048084,
+      "startticks": "124128552",
+      "pgid": 2048084,
+      "TAP_sha256": "915df8c2c86f67164f44878d1892f85a48d8907259684a0691e0a930f3dccb9f",
+      "failure_titles": [
+        "not ok 1 - overload backoff preserves due age and independent tenant progress"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:24:37.105Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/runtime/store.ts": "33ac7a7b48c5dee3d4b1a7444957733ff0b02a4ead55750e022ff67f33a6ba3c"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:24:38.862378+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1477.7009470853955,
+      "pid": 2048510,
+      "startticks": "124128738",
+      "pgid": 2048510,
+      "TAP_sha256": "d3c272b85c97e824f0cf4a6b46fedce9bf8cff62a25b4d5b535fe7bb37405d52",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:24:38.999Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  },
+  {
+    "name": "reset-sequence-on-yield",
+    "expected_material_assertion": "A-D old due turns must yield to healthy E before a second turn",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=overload backoff preserves due age and independent tenant progress",
+      "tests/f10-runtime-integration.test.ts"
+    ],
+    "original_sha256": {
+      "src/runtime/store.ts": "33ac7a7b48c5dee3d4b1a7444957733ff0b02a4ead55750e022ff67f33a6ba3c"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:24:35.171673+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1628.6998419091105,
+      "pid": 2047560,
+      "startticks": "124128354",
+      "pgid": 2047560,
+      "TAP_sha256": "7e2acb0914df21f9dec82c6683a33a6c6a4d2ec508a00c053b19398949fe46cf",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:24:35.308Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/runtime/store.ts": "5f14c08b34dfd5fdba65e23b181aea8c71d7d7fe93b89eee02494488beab4ccc"
+    },
+    "negative": {
+      "at": "2026-10-06T20:24:40.761134+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 1526.7510849516839,
+      "pid": 2049100,
+      "startticks": "124128923",
+      "pgid": 2049100,
+      "TAP_sha256": "a1756c370aaa52fe6d7c374b0f88538a67027d91653590b88c07d096f47c766e",
+      "failure_titles": [
+        "not ok 1 - overload backoff preserves due age and independent tenant progress"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:24:40.906Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/runtime/store.ts": "33ac7a7b48c5dee3d4b1a7444957733ff0b02a4ead55750e022ff67f33a6ba3c"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:24:42.422482+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1277.0173461176455,
+      "pid": 2049783,
+      "startticks": "124129114",
+      "pgid": 2049783,
+      "TAP_sha256": "d5bac139725c295bf1620829bf1c12bd4b0a7ec0ab2d3515d35867a3fc740dbd",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:24:42.591Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  },
+  {
+    "name": "drop-generation",
+    "expected_material_assertion": "same owner UUID cannot bypass changed generation",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=durable runtime drains and recovers without replaying uncertain sends",
+      "tests/f10-runtime-integration.test.ts"
+    ],
+    "original_sha256": {
+      "src/runtime/store.ts": "33ac7a7b48c5dee3d4b1a7444957733ff0b02a4ead55750e022ff67f33a6ba3c"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:24:44.439244+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1624.0590501111,
+      "pid": 2050301,
+      "startticks": "124129281",
+      "pgid": 2050301,
+      "TAP_sha256": "bc4062ced215ef2755977e1cb4ae45e8e6aa1cdbad1546039b952b24d8570527",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:24:44.570Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/runtime/store.ts": "7ed1b3e420fa0a8e02c734c7680d9ee2dff1de02311ba52f55b6d722d89bf6bd"
+    },
+    "negative": {
+      "at": "2026-10-06T20:24:46.830388+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 2033.3984158933163,
+      "pid": 2050878,
+      "startticks": "124129479",
+      "pgid": 2050878,
+      "TAP_sha256": "13cb7db466d5d49a1c1ac7fb5de8fafe10d5ddc3d983682261d78dda07f3f95c",
+      "failure_titles": [
+        "not ok 1 - durable runtime drains and recovers without replaying uncertain sends"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:24:46.947Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/runtime/store.ts": "33ac7a7b48c5dee3d4b1a7444957733ff0b02a4ead55750e022ff67f33a6ba3c"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:24:49.336435+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 2127.277828985825,
+      "pid": 2051815,
+      "startticks": "124129720",
+      "pgid": 2051815,
+      "TAP_sha256": "af86b33b776f4434859138b3d5450e59caedcd17c718bb16dc7b46d1c09a68c0",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:24:49.465Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  },
+  {
+    "name": "sleep30-completion",
+    "expected_material_assertion": "complete proof adds no successful-poll sleep",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=complete proof becomes immediately eligible without resetting its selected fair turn",
+      "tests/f10-runtime-integration.test.ts"
+    ],
+    "original_sha256": {
+      "src/runtime/store.ts": "33ac7a7b48c5dee3d4b1a7444957733ff0b02a4ead55750e022ff67f33a6ba3c"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:24:51.221008+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1523.2929338235408,
+      "pid": 2052587,
+      "startticks": "124129969",
+      "pgid": 2052587,
+      "TAP_sha256": "3f847b5b01afeef8167d723fe52d5776e6207d4ed198856897ede03635c46224",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:24:51.344Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/runtime/store.ts": "d97bb3616e6e93528f54356b2cfbf2a0f350403d07c6b29c938bb502e8b8a6f6"
+    },
+    "negative": {
+      "at": "2026-10-06T20:24:53.016307+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 1423.214458161965,
+      "pid": 2053283,
+      "startticks": "124130159",
+      "pgid": 2053283,
+      "TAP_sha256": "c6fc9b761f034da881c294856abd55af7cff0a094732f57a5bf741a794690436",
+      "failure_titles": [
+        "not ok 1 - complete proof becomes immediately eligible without resetting its selected fair turn"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:24:53.176Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/runtime/store.ts": "33ac7a7b48c5dee3d4b1a7444957733ff0b02a4ead55750e022ff67f33a6ba3c"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:24:54.745843+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1275.7721948437393,
+      "pid": 2053850,
+      "startticks": "124130346",
+      "pgid": 2053850,
+      "TAP_sha256": "9138710deb2622f1699170a7bf558cbcffb1a9a2a2f4bfac455e05ce6d9a1c2a",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:24:54.882Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  },
+  {
+    "name": "failure-held-as-success",
+    "expected_material_assertion": "failure cannot become successful readiness even with a satisfied flag; partial held due age",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=complete proof becomes immediately eligible without resetting its selected fair turn|partial and held scans cannot manufacture successful polling readiness",
+      "tests/f10-runtime-integration.test.ts"
+    ],
+    "original_sha256": {
+      "src/runtime/store.ts": "33ac7a7b48c5dee3d4b1a7444957733ff0b02a4ead55750e022ff67f33a6ba3c"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:24:57.237932+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 2074.584891088307,
+      "pid": 2054337,
+      "startticks": "124130516",
+      "pgid": 2054337,
+      "TAP_sha256": "b9aedc8d8f67526efe3b6b9cd795b3411e02825355aaf0e2b6e677e64f9f6701",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:24:57.355Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/runtime/store.ts": "7a44e969726cc43d99f45432e34e4b9a80418f10656c2aac9cb0f0b55dab7717"
+    },
+    "negative": {
+      "at": "2026-10-06T20:24:59.316152+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 1723.575534997508,
+      "pid": 2055223,
+      "startticks": "124130759",
+      "pgid": 2055223,
+      "TAP_sha256": "ae590dd749d0e5f69def413fbf32409ba5ccd464fc444bd1aad4a469833a22f9",
+      "failure_titles": [
+        "not ok 1 - complete proof becomes immediately eligible without resetting its selected fair turn",
+        "not ok 2 - partial and held scans cannot manufacture successful polling readiness"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:24:59.461Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/runtime/store.ts": "33ac7a7b48c5dee3d4b1a7444957733ff0b02a4ead55750e022ff67f33a6ba3c"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:25:01.546350+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1836.396326078102,
+      "pid": 2055801,
+      "startticks": "124130971",
+      "pgid": 2055801,
+      "TAP_sha256": "2a65e3432faa4d3d676bc75910bfc39a1a808346cc07ed4129c7b11186720497",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:25:01.684Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  },
+  {
+    "name": "reset-sequence-on-completed-poll",
+    "expected_material_assertion": "completion retains the selected mailbox turn",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=complete proof becomes immediately eligible without resetting its selected fair turn",
+      "tests/f10-runtime-integration.test.ts"
+    ],
+    "original_sha256": {
+      "src/runtime/store.ts": "33ac7a7b48c5dee3d4b1a7444957733ff0b02a4ead55750e022ff67f33a6ba3c"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:24:51.221008+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1523.2929338235408,
+      "pid": 2052587,
+      "startticks": "124129969",
+      "pgid": 2052587,
+      "TAP_sha256": "3f847b5b01afeef8167d723fe52d5776e6207d4ed198856897ede03635c46224",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:24:51.344Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/runtime/store.ts": "a93173a68d33b32c647314dc08920144de52f7a80f6dacb267808afd64dac7e8"
+    },
+    "negative": {
+      "at": "2026-10-06T20:25:03.145416+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 1228.4365391824394,
+      "pid": 2056633,
+      "startticks": "124131191",
+      "pgid": 2056633,
+      "TAP_sha256": "8e43f1c443d38f8413df80f1367cd3188a3a75ccef01d07f4cde4238d5a4f832",
+      "failure_titles": [
+        "not ok 1 - complete proof becomes immediately eligible without resetting its selected fair turn"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:25:03.266Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/runtime/store.ts": "33ac7a7b48c5dee3d4b1a7444957733ff0b02a4ead55750e022ff67f33a6ba3c"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:25:04.816998+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1323.4796330798417,
+      "pid": 2057088,
+      "startticks": "124131349",
+      "pgid": 2057088,
+      "TAP_sha256": "cca68a5560956af3c8bdf14fae3e73df543b8871fc39e6c2029e8f5602fbeb61",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:25:04.975Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  },
+  {
+    "name": "first-pair-conflict",
+    "expected_material_assertion": "pair conflict must skip to another eligible tenant",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=automatic pool allocation skips pair conflicts and remains idempotent",
+      "tests/f10-runtime-integration.test.ts"
+    ],
+    "original_sha256": {
+      "src/pool/store.ts": "5c79c8cabbdf6f47bf49b1e2e54b0f85f1631dc9992ed69c7849afa097fa9ba1"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:25:07.175519+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1938.7336920481175,
+      "pid": 2057683,
+      "startticks": "124131523",
+      "pgid": 2057683,
+      "TAP_sha256": "9c2092727c25991b76f5ba2b9ebe5a5c4d088cf69647036044d2138aff9d2f36",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:25:07.355Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/pool/store.ts": "013329d7e2dc07b3a613d7e02a1d379c11c70726df56f7713125ea2b13514217"
+    },
+    "negative": {
+      "at": "2026-10-06T20:25:10.029471+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 2384.2391709331423,
+      "pid": 2058564,
+      "startticks": "124131764",
+      "pgid": 2058564,
+      "TAP_sha256": "5512a26cbaefd7c2e8324e33f119ef2966b70caa1146ef4f21e928b4f7a75b69",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:25:10.231Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/pool/store.ts": "5c79c8cabbdf6f47bf49b1e2e54b0f85f1631dc9992ed69c7849afa097fa9ba1"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:25:12.165439+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1579.0795739740133,
+      "pid": 2059420,
+      "startticks": "124132058",
+      "pgid": 2059420,
+      "TAP_sha256": "b34e7295c869638e153d710b3d0141beea736aaa8524ed0a31ad5e7950f602d3",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:25:12.325Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "pending_not_caught_or_restored"
+  },
+  {
+    "name": "pacing-bypass",
+    "expected_material_assertion": "60000 expected due-after-first-attempt",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=paced dispatch preserves current day quota and every stop fence",
+      "tests/f10-runtime-integration.test.ts"
+    ],
+    "original_sha256": {
+      "src/dispatch/submission.ts": "c1ff349f29beb7267982ee5e4e02b2339a60524c6df3b8ec4fcfd7e0bcf5085f"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:25:14.094876+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1527.911646058783,
+      "pid": 2060065,
+      "startticks": "124132256",
+      "pgid": 2060065,
+      "TAP_sha256": "93cedfb77293b21ab306f32ed29c916be96e0d938bd43f936943ad03e36aa29f",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:25:14.227Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/dispatch/submission.ts": "7efa2b2130a454576b63a174c552490635e55dc759a8861465c57dc9a31a90b3"
+    },
+    "negative": {
+      "at": "2026-10-06T20:25:15.924895+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 1475.3859769552946,
+      "pid": 2060518,
+      "startticks": "124132444",
+      "pgid": 2060518,
+      "TAP_sha256": "ba5d87c2fe4acc359d3ad92cade8f070c9df5fb17f830bd65973046771eacc70",
+      "failure_titles": [
+        "not ok 1 - paced dispatch preserves current day quota and every stop fence"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:25:16.074Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/dispatch/submission.ts": "c1ff349f29beb7267982ee5e4e02b2339a60524c6df3b8ec4fcfd7e0bcf5085f"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:25:17.954952+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1586.601736024022,
+      "pid": 2061198,
+      "startticks": "124132636",
+      "pgid": 2061198,
+      "TAP_sha256": "ca8eb51e8f1c1846e1af2329edb278239dbf66f1238a150591c939001fa4c53a",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:25:18.128Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  },
+  {
+    "name": "occupied-slot-ttl-release",
+    "expected_material_assertion": "Missing expected rejection transport_busy",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=expired slot age alone cannot replace its allocated identity",
+      "tests/f09-live-transport.test.ts"
+    ],
+    "original_sha256": {
+      "src/mailboxes/transport-slots.ts": "6621adc517b5808548fa23c20880aba57a3780ed7df93cf38089d05025fafbd6"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:25:20.697705+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 2294.0518190152943,
+      "pid": 2061871,
+      "startticks": "124132840",
+      "pgid": 2061871,
+      "TAP_sha256": "cc02cc8ef03392362dbaf61fd506352e4c8752570e404631963ac0c2effdc37d",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:25:20.878Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/mailboxes/transport-slots.ts": "9320f206f26b1d2b730ececbb594a344c3aa7740dc5848994fd94680ce51789e"
+    },
+    "negative": {
+      "at": "2026-10-06T20:25:23.217821+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 2041.0630281548947,
+      "pid": 2062679,
+      "startticks": "124133117",
+      "pgid": 2062679,
+      "TAP_sha256": "e5b136b90d58853a9c2160a6398288f199f14eb7ffa06d4735a89d96d405d4da",
+      "failure_titles": [
+        "not ok 1 - expired slot age alone cannot replace its allocated identity"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:25:23.381Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/mailboxes/transport-slots.ts": "6621adc517b5808548fa23c20880aba57a3780ed7df93cf38089d05025fafbd6"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:25:25.471225+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1833.2553149666637,
+      "pid": 2063498,
+      "startticks": "124133363",
+      "pgid": 2063498,
+      "TAP_sha256": "9c3c65e02a298914005e2334cfc383880f283ce914022835a19e4eb94a759452",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:25:25.635Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  },
+  {
+    "name": "source-guard-drop",
+    "expected_material_assertion": "poll or source named fence assert denies capture",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences",
+      "tests/f09-live-transport.test.ts"
+    ],
+    "original_sha256": {
+      "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:25:39.267075+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 13384.69280791469,
+      "pid": 2064153,
+      "startticks": "124133588",
+      "pgid": 2064153,
+      "TAP_sha256": "3a8badf7cbb4ccd170023a74210e1f6f51b6791b97c9fe2f6f18e34dda1c8cb9",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:25:39.400Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/replies/worker.ts": "fb2dc49c9f14da1896cdae93bc788d7bbc24ad7cc6d4adb7d4f5c9caf2f7f822"
+    },
+    "negative": {
+      "at": "2026-10-06T20:25:43.560414+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 3952.6694510132074,
+      "pid": 2068394,
+      "startticks": "124134960",
+      "pgid": 2068394,
+      "TAP_sha256": "cf9cc9e5cefd0169c1fdefea0589c8563fa2ea1ccf373e307980538eb1cc77e6",
+      "failure_titles": [
+        "not ok 1 - settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:25:43.685Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:25:56.594095+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 12699.107334017754,
+      "pid": 2069750,
+      "startticks": "124135389",
+      "pgid": 2069750,
+      "TAP_sha256": "bf1c607c89fc3d8994d06ab2e20ca038a3d018d6d2344889959f6730b69f2af8",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:25:56.732Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  },
+  {
+    "name": "incomplete-reported-complete",
+    "expected_material_assertion": "expected rescan_incomplete actual complete",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=poll quanta persist the fixed tail before yielding and never retry incomplete scans",
+      "tests/f10-runtime-integration.test.ts"
+    ],
+    "original_sha256": {
+      "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:25:58.238885+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1271.5023742057383,
+      "pid": 2073736,
+      "startticks": "124136696",
+      "pgid": 2073736,
+      "TAP_sha256": "7a8497749b101552153b3796b064dd8458aef40a7c4fb8639106a4a6b8ec3975",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:25:58.385Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/replies/worker.ts": "923cc6435c5578f33b6a5b0fb1d704b31567f966ee0d86166a92db90da4f1292"
+    },
+    "negative": {
+      "at": "2026-10-06T20:25:59.960463+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 1330.1585540175438,
+      "pid": 2074224,
+      "startticks": "124136863",
+      "pgid": 2074224,
+      "TAP_sha256": "7009a8244ce32ee9742f090ae746d39e4ec9458dae6626e6bd4fa4b1f87c8c75",
+      "failure_titles": [
+        "not ok 1 - poll quanta persist the fixed tail before yielding and never retry incomplete scans"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:26:00.091Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:26:01.464151+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1168.790667084977,
+      "pid": 2074447,
+      "startticks": "124137029",
+      "pgid": 2074447,
+      "TAP_sha256": "1e034cce5b31d90341d2bbf2c12607dcd998750bbc6a4e7b2c4334b04b9f85bb",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:26:01.607Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  },
+  {
+    "name": "yield-reported-complete",
+    "expected_material_assertion": "expected scanning actual complete",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=poll quanta persist the fixed tail before yielding and never retry incomplete scans",
+      "tests/f10-runtime-integration.test.ts"
+    ],
+    "original_sha256": {
+      "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:25:58.238885+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1271.5023742057383,
+      "pid": 2073736,
+      "startticks": "124136696",
+      "pgid": 2073736,
+      "TAP_sha256": "7a8497749b101552153b3796b064dd8458aef40a7c4fb8639106a4a6b8ec3975",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:25:58.385Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/replies/worker.ts": "02e59be42e70112d1ebc97c6a3a2a1cc7dad0b1bd800c401cfd757cbeb94adf4"
+    },
+    "negative": {
+      "at": "2026-10-06T20:26:02.849529+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 1022.4027149379253,
+      "pid": 2074792,
+      "startticks": "124137182",
+      "pgid": 2074792,
+      "TAP_sha256": "250168f09dc28c67b1f2e6e8c8a22f785361994cd67f50f308cf59e814049bd4",
+      "failure_titles": [
+        "not ok 1 - poll quanta persist the fixed tail before yielding and never retry incomplete scans"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:26:02.979Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:26:04.677275+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 1472.0339952036738,
+      "pid": 2075126,
+      "startticks": "124137320",
+      "pgid": 2075126,
+      "TAP_sha256": "68737d2955282458639c1aad0112ad0859b00f091ddfbc54b82d7888dc407c27",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:26:04.829Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  },
+  {
+    "name": "consent-check-remove",
+    "expected_material_assertion": "senderConsentPredicate or recipientConsentPredicate transport denied",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=independent capacity and consent predicates deny live transport",
+      "tests/f09-live-transport.test.ts"
+    ],
+    "original_sha256": {
+      "src/dispatch/eligibility.ts": "f892ba9b553ba881c8ffea2dfacc79205e484df7aff9e85e4caf75923256736a"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:26:11.449371+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 6378.037027083337,
+      "pid": 2075502,
+      "startticks": "124137507",
+      "pgid": 2075502,
+      "TAP_sha256": "4d7a5c0c82c349aea6f8d11d6b0d2d236acc7fef80bc5eca422c451a32862521",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:26:11.606Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/dispatch/eligibility.ts": "2d31c7efb35c9b38ffd892936512f0d6bbbc723d062442c5ee7357094a0cfa09"
+    },
+    "negative": {
+      "at": "2026-10-06T20:26:14.055069+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 2227.020264836028,
+      "pid": 2076771,
+      "startticks": "124138182",
+      "pgid": 2076771,
+      "TAP_sha256": "e8d63eecf98fa6a70867f441249f5688481f3062bd634acefef75113ad7e6dd2",
+      "failure_titles": [
+        "not ok 1 - independent capacity and consent predicates deny live transport"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:26:14.184Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/dispatch/eligibility.ts": "f892ba9b553ba881c8ffea2dfacc79205e484df7aff9e85e4caf75923256736a"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:26:19.704998+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 5295.972680905834,
+      "pid": 2077341,
+      "startticks": "124138440",
+      "pgid": 2077341,
+      "TAP_sha256": "5dd62e99924bddb09d79843d2c104e77be630d43338115c362e3a7fce40acebe",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:26:19.854Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  },
+  {
+    "name": "freshness-check-remove",
+    "expected_material_assertion": "A3/A5 fresh complete current opt-in aggregate privacy",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=F03a realPG campaign/pool/shared quota/lease seams without transport",
+      "tests/dispatch-integration.test.ts"
+    ],
+    "original_sha256": {
+      "src/dispatch/eligibility.ts": "f892ba9b553ba881c8ffea2dfacc79205e484df7aff9e85e4caf75923256736a"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:26:24.330706+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 4253.866409184411,
+      "pid": 2078363,
+      "startticks": "124139007",
+      "pgid": 2078363,
+      "TAP_sha256": "df2aa07b652ff3002331c9f76b7f8730f4d0a45116be4ad81097f3f4723696a2",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:26:24.454Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/dispatch/eligibility.ts": "384197f78677bc80cc3d665226a4a29d8a61779f93c72e5bed21f6e54b6e181e"
+    },
+    "negative": {
+      "at": "2026-10-06T20:26:29.015557+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 4341.3961990736425,
+      "pid": 2079264,
+      "startticks": "124139467",
+      "pgid": 2079264,
+      "TAP_sha256": "4b019cea2e4696143b5fad704a543e03c8fee7d68a5a7ef018fe1a16d86263b3",
+      "failure_titles": [
+        "not ok 2 - A3/A5 fresh complete current opt-in aggregate privacy, pair/day and one submitted-parent reply",
+        "not ok 1 - F03a realPG campaign/pool/shared quota/lease seams without transport"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:26:29.162Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/dispatch/eligibility.ts": "f892ba9b553ba881c8ffea2dfacc79205e484df7aff9e85e4caf75923256736a"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:26:33.076085+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 3682.569634867832,
+      "pid": 2080212,
+      "startticks": "124139939",
+      "pgid": 2080212,
+      "TAP_sha256": "086bfc6dc4c0bafba2fef6d7696ef12ae5fe066804fb956b2d353bd1d953acef",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:26:33.208Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  },
+  {
+    "name": "tenant-predicate-bypass",
+    "expected_material_assertion": "B3 own OR intended pool peer read only; foreign tenant must see0",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=F03b real PG durable final authority, all stop races, sink privacy and outcomes",
+      "tests/submission-integration.test.ts"
+    ],
+    "original_sha256": {
+      "src/dispatch/submission.ts": "c1ff349f29beb7267982ee5e4e02b2339a60524c6df3b8ec4fcfd7e0bcf5085f"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:26:56.052713+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 22635.32430003397,
+      "pid": 2080820,
+      "startticks": "124140341",
+      "pgid": 2080820,
+      "TAP_sha256": "e81d498f533177a942658995e51f5ffe5c1fba05dc3fdc3cb5bde44c76f0abc6",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:26:56.189Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/dispatch/submission.ts": "67427229c47d168f99a9f28c661ef2571f12c4a9f623a213fd23272a92f98009"
+    },
+    "negative": {
+      "at": "2026-10-06T20:27:22.112985+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 25689.846081193537,
+      "pid": 2085005,
+      "startticks": "124142642",
+      "pgid": 2085005,
+      "TAP_sha256": "e2fd71a6af5bf62f49e11a92edd05cbb195bc5babbf079f48e9267f83972d2f2",
+      "failure_titles": [
+        "not ok 21 - B3 durable rendered sink/token/message refs with own OR intended pool peer read only",
+        "not ok 1 - F03b real PG durable final authority, all stop races, sink privacy and outcomes"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:27:22.265Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/dispatch/submission.ts": "c1ff349f29beb7267982ee5e4e02b2339a60524c6df3b8ec4fcfd7e0bcf5085f"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:27:49.408520+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 26894.76118120365,
+      "pid": 2093057,
+      "startticks": "124145251",
+      "pgid": 2093057,
+      "TAP_sha256": "6e63405a5a9bb8aebe02ff4809ff28bdb9898d0152cfef208be7616117f598d8",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:27:49.540Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  },
+  {
+    "name": "shared-current-day-quota-weaken",
+    "expected_material_assertion": "B5 midnight reservations move under concurrent final guard",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=F03b real PG durable final authority, all stop races, sink privacy and outcomes",
+      "tests/submission-integration.test.ts"
+    ],
+    "original_sha256": {
+      "src/dispatch/submission.ts": "c1ff349f29beb7267982ee5e4e02b2339a60524c6df3b8ec4fcfd7e0bcf5085f"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:26:56.052713+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 22635.32430003397,
+      "pid": 2080820,
+      "startticks": "124140341",
+      "pgid": 2080820,
+      "TAP_sha256": "e81d498f533177a942658995e51f5ffe5c1fba05dc3fdc3cb5bde44c76f0abc6",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:26:56.189Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/dispatch/submission.ts": "2be56fd1ae7ed03f46e86d6c56788a1098ff38a04b892d91cd3b5d8539dc98d7"
+    },
+    "negative": {
+      "at": "2026-10-06T20:28:15.495063+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 25734.01405615732,
+      "pid": 2101395,
+      "startticks": "124147976",
+      "pgid": 2101395,
+      "TAP_sha256": "6539b1ecdd78456992cd0d05f2f71d5f98b9bdfc33d1a6142d5713a434608e38",
+      "failure_titles": [
+        "not ok 19 - B1/B2 SC-US-003-4 limit",
+        "not ok 1 - F03b real PG durable final authority, all stop races, sink privacy and outcomes"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:28:15.634Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/dispatch/submission.ts": "c1ff349f29beb7267982ee5e4e02b2339a60524c6df3b8ec4fcfd7e0bcf5085f"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:28:39.074098+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 23193.275418831035,
+      "pid": 2109114,
+      "startticks": "124150588",
+      "pgid": 2109114,
+      "TAP_sha256": "8072e2fd02314d863d87fb1d14f0bf3e71150426f19b1b90046fe899f9cc70e3",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:28:39.248Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  },
+  {
+    "name": "native-delayed-success-gap",
+    "expected_material_assertion": "gaps.every gap<=30000",
+    "command": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=compiled healthy polling completes twice without a TypeScript loader",
+      "tests/f10-runtime-protocol.test.ts"
+    ],
+    "original_sha256": {
+      "src/runtime/store.ts": "33ac7a7b48c5dee3d4b1a7444957733ff0b02a4ead55750e022ff67f33a6ba3c",
+      "dist/runtime/store.js": "4f022e11e812813e495b3376b6c7d39c6842b3f6b7da8dd14d65dba235051716"
+    },
+    "baseline": {
+      "at": "2026-10-06T20:28:57.502083+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 18008.26244894415,
+      "pid": 2113359,
+      "startticks": "124152949",
+      "pgid": 2113359,
+      "TAP_sha256": "291cad338c0d0cabfdbff27409ef6bf3b353fb216dd5b6184ba4d69372afb2d6",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:28:57.627Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "mutant_sha256": {
+      "src/runtime/store.ts": "d97bb3616e6e93528f54356b2cfbf2a0f350403d07c6b29c938bb502e8b8a6f6",
+      "dist/runtime/store.js": "93f1a123c1c3b81dfddd992f1e74c6eb052f40d884e8c28393221ec9d6bbb977"
+    },
+    "negative": {
+      "at": "2026-10-06T20:29:42.957265+00:00",
+      "native_returncode": 1,
+      "timed_out": false,
+      "elapsed_ms": 45123.997948132455,
+      "pid": 2118018,
+      "startticks": "124154783",
+      "pgid": 2118018,
+      "TAP_sha256": "51e37a50306e8b3c20f2031a9dc1944bbb60f8036585c6ff57d8e3fae4344ddf",
+      "failure_titles": [
+        "not ok 1 - compiled healthy polling completes twice without a TypeScript loader"
+      ],
+      "assertion_failure": true,
+      "PG": {
+        "at": "2026-10-06T20:29:43.110Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "candidate_after_negative": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored_sha256": {
+      "src/runtime/store.ts": "33ac7a7b48c5dee3d4b1a7444957733ff0b02a4ead55750e022ff67f33a6ba3c",
+      "dist/runtime/store.js": "4f022e11e812813e495b3376b6c7d39c6842b3f6b7da8dd14d65dba235051716"
+    },
+    "candidate_after_restore": {
+      "source120_build73_SQL15_drift": []
+    },
+    "restored": {
+      "at": "2026-10-06T20:30:03.137563+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 19774.999778950587,
+      "pid": 2131074,
+      "startticks": "124159336",
+      "pgid": 2131074,
+      "TAP_sha256": "35b185435a9b8b7f43ad9e6216c51875dd7be7b2fdc1864d90eff35b7a388b6f",
+      "failure_titles": [],
+      "assertion_failure": false,
+      "PG": {
+        "at": "2026-10-06T20:30:03.246Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "owned_nodes": []
+    },
+    "status": "caught_material_assertion"
+  }
+]

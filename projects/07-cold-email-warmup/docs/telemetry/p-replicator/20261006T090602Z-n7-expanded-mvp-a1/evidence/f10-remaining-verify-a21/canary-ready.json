@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-06T20:32:08.625981+00:00",
+  "status": "ready",
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-remaining-verify-a21",
+  "source_revision": "afb58dc9b26f814433b117a63e45994c71e7cbde",
+  "manifest_sha256": "237ad9bb03ef3afafdfdde1a55dc3298163978e152c109c978f19e55936c54d2",
+  "source_count": 120,
+  "build_count": 73,
+  "runner_path": "/tmp/n7-f10-remaining-verify-a21/run-canary-v4.py",
+  "runner_sha256": "6cf1fce325d6b2b083fe13ba4aa4d26012303281c1b86bbb3c7a7d5cdaa3349d",
+  "preloads": {
+    "guard-v1.mjs": "47c8b0b66df075a348520818750dd906e56e71a077cbe7b76b4b685486b8d9cf",
+    "suite-output-v2.mjs": "1350975c491623e2367f47ae39a0f96ca7e9e76a610fb60037e19d59115a12ac",
+    "pg-snapshot-v1.mjs": "9f829e4efe2dce6f3e8125996cd9fe9e83e4cdc12e6c25d7550ee0fbb1c40bf1",
+    "canary-v3.mjs": "4d6474d63521e3db1f2b55e59c156cebd8c703c7a6c2734e1cb6a7472d8b4922"
+  },
+  "fixtures": {
+    "tests/diagnostics-fixture.ts": "889f428735c251a33c18a026d3afbdd761bc3e4b9d7e965ab6848ac788740017",
+    "tests/f09-transport-fixture.ts": "984e6242be0a61880750c114dde53e5993588d9d3c82990c608e7e4db0eb5328",
+    "tests/f10-runtime-fixture.ts": "654fb5e45e5dcc0f520bdae5906c5340baf68eb8fb0dd9a8e9d29b6d6a91aa2f",
+    "tests/f10-runtime-process-fixture.ts": "af3523f51274e34d420ca1e8cd01927e7c3e262cfeb229cbe0dc1535b66a6340"
+  },
+  "environment": {
+    "DATABASE_NAME": "n7f10_a2",
+    "TMPDIR": "/tmp/n7-f10-remaining-verify-a21",
+    "NODE_OPTIONS": "--import=/tmp/n7-f10-remaining-verify-a21/guard-v1.mjs --import=/tmp/n7-f10-remaining-verify-a21/suite-output-v2.mjs",
+    "credentials": "available; values omitted"
+  },
+  "DB_assertion": {
+    "at": "2026-10-06T20:32:08.580Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "command": [
+    "node",
+    "/tmp/n7-f10-remaining-verify-a21/canary-v3.mjs"
+  ],
+  "budget_s": 60,
+  "disk": {
+    "available_bytes": 3109253120,
+    "free_inodes": 4771693
+  },
+  "sideeffects": [
+    "own scratch",
+    "n7f10_a2",
+    "numeric local TLS"
+  ],
+  "source_build_readonly": true
+}

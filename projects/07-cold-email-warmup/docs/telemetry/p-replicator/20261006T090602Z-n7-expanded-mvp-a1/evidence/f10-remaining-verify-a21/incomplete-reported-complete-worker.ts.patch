@@ -1,0 +1,11 @@
+--- src/replies/worker.ts
++++ src/replies/worker.ts
+@@ -62,7 +62,7 @@
+   if(this.mode==='disabled')return {state:'paused'};
+   if(this.mode==='live_provider'&&this.adapter.mode==='local_test')return {state:'paused'};
+   let run=await this.store.status(tenant,mailbox);
+-  if(run?.state==='rescan_incomplete')return {state:run.state};
++  if(run?.state==='rescan_incomplete')return {state:'complete'};
+   const owner=await claimPoll(this.pool,tenant,mailbox),source=await observePoll(this.pool,tenant,mailbox,owner),transport=await this.adapter.fence?.(tenant,mailbox);
+   const guard:TransactionGuard=async c=>{await runtimeGuard(c);await source(c);await transport?.(c);};
+   try{

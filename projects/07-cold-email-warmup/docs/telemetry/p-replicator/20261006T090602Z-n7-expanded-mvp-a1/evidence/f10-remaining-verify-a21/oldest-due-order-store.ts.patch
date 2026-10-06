@@ -1,0 +1,11 @@
+--- src/runtime/store.ts
++++ src/runtime/store.ts
+@@ -82,7 +82,7 @@
+   let row=(await c.query(`SELECT d.* FROM runtime_due d JOIN runtime_tenant_turn t ON t.tenant_id=d.tenant_id AND t.kind=d.kind
+    WHERE d.kind=$1 AND d.state='ready' AND d.next_check_at<=$2
+    AND EXISTS(SELECT 1 FROM capacity_lease l WHERE l.mailbox_id=d.mailbox_id AND l.state='active' AND l.expires_at>$2)
+-   ORDER BY t.service_seq,d.service_seq,d.due_at,d.mailbox_id FOR UPDATE OF d SKIP LOCKED LIMIT 1`,[kind,now])).rows[0];
++   ORDER BY d.due_at,d.mailbox_id FOR UPDATE OF d SKIP LOCKED LIMIT 1`,[kind,now])).rows[0];
+   if(!row)return null;
+   await c.query("UPDATE runtime_tenant_turn SET service_seq=nextval('runtime_service_seq') WHERE tenant_id=$1 AND kind=$2",[row.tenant_id,kind]);
+   await c.query("UPDATE runtime_due SET service_seq=nextval('runtime_service_seq') WHERE mailbox_id=$1 AND kind=$2",[row.mailbox_id,kind]);

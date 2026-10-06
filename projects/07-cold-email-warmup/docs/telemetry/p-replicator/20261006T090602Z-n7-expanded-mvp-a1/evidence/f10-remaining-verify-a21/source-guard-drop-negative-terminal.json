@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T20:25:43.560414+00:00",
+  "native_returncode": 1,
+  "timed_out": false,
+  "elapsed_ms": 3952.6694510132074,
+  "pid": 2068394,
+  "startticks": "124134960",
+  "pgid": 2068394,
+  "TAP_sha256": "cf9cc9e5cefd0169c1fdefea0589c8563fa2ea1ccf373e307980538eb1cc77e6",
+  "failure_titles": [
+    "not ok 1 - settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences"
+  ],
+  "assertion_failure": true,
+  "PG": {
+    "at": "2026-10-06T20:25:43.685Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "owned_nodes": []
+}

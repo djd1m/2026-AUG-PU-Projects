@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T20:25:15.924895+00:00",
+  "native_returncode": 1,
+  "timed_out": false,
+  "elapsed_ms": 1475.3859769552946,
+  "pid": 2060518,
+  "startticks": "124132444",
+  "pgid": 2060518,
+  "TAP_sha256": "ba5d87c2fe4acc359d3ad92cade8f070c9df5fb17f830bd65973046771eacc70",
+  "failure_titles": [
+    "not ok 1 - paced dispatch preserves current day quota and every stop fence"
+  ],
+  "assertion_failure": true,
+  "PG": {
+    "at": "2026-10-06T20:25:16.074Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "owned_nodes": []
+}

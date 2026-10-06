@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-06T20:31:35.955500+00:00",
+  "files": {
+    "run-canary-v4.py": "6cf1fce325d6b2b083fe13ba4aa4d26012303281c1b86bbb3c7a7d5cdaa3349d",
+    "canary-v3.mjs": "4d6474d63521e3db1f2b55e59c156cebd8c703c7a6c2734e1cb6a7472d8b4922",
+    "guard-v1.mjs": "47c8b0b66df075a348520818750dd906e56e71a077cbe7b76b4b685486b8d9cf",
+    "suite-output-v2.mjs": "1350975c491623e2367f47ae39a0f96ca7e9e76a610fb60037e19d59115a12ac",
+    "pg-snapshot-v1.mjs": "9f829e4efe2dce6f3e8125996cd9fe9e83e4cdc12e6c25d7550ee0fbb1c40bf1",
+    "canary-fixture-definitions.json": "c7187eb14cc3500c2b8b613f7a5a340718d256a8b5e20cdee2ea3210b809b73b"
+  },
+  "command": [
+    "node",
+    "/tmp/n7-f10-remaining-verify-a21/canary-v3.mjs"
+  ],
+  "budget_s": 60,
+  "scope": "fullencoded actualcurrentartifact+frozen193source/build+DB diagnostic/audit/sink scan, previous rawoutputs referenced not copied"
+}

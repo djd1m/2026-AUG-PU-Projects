@@ -1,0 +1,90 @@
+{
+  "at": "2026-10-06T20:35:03.944025+00:00",
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-remaining-verify-a21",
+  "launch_sha256": "c7fa33a1f6229aedea147dfc5de17ea1433cfa0266910ec5e31e518cf6c41e46",
+  "source_revision": "afb58dc9b26f814433b117a63e45994c71e7cbde",
+  "source_count": 120,
+  "build_count": 73,
+  "SQL_count": 15,
+  "shadow_count": 208,
+  "drift": {
+    "source": [],
+    "build": [],
+    "SQL": [],
+    "shadow": [],
+    "runners_preloads_guards": []
+  },
+  "own_or_prior_nodes": [],
+  "PG": {
+    "at": "2026-10-06T20:35:03.828Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "mutex": "free independently acquired/released",
+  "disk_available_bytes": 3107586048,
+  "free_inodes": 4771681,
+  "private_probe_key_removed": true,
+  "protocol_native": {
+    "at": "2026-10-06T20:19:09.241791+00:00",
+    "native_returncode": 0,
+    "timed_out": false,
+    "elapsed_ms": 61103.988303104416,
+    "pid": 1952074,
+    "startticks": "124089813"
+  },
+  "protocol_selected_titles": [
+    "native ambiguous submission and UID recovery compose with runtime transport guards",
+    "compiled healthy polling completes twice without a TypeScript loader",
+    "explicit retry captures changed native UID proof in one quantum without old FETCH or freshness"
+  ],
+  "physical_title_excluded_inventory": 1,
+  "actual_TAP_skipped": 0,
+  "original_material_caught": 16,
+  "original_material_total": 17,
+  "original_survivor": "first-pair-conflict",
+  "supplemental_pair_assertion_caught": true,
+  "canary_native": {
+    "at": "2026-10-06T20:32:10.775970+00:00",
+    "native_returncode": 0,
+    "timed_out": false,
+    "elapsed_ms": 2148.9697080105543,
+    "pid": 2168710,
+    "startticks": "124173862"
+  },
+  "canary_hit_count": 0,
+  "canary_inventory_files": 3862,
+  "canary_inventory_bytes": 24902172,
+  "canary_scope_gaps": [
+    "API response artifacts inspected where captured by existing tests; no separately uncaptured live HTTP response corpus",
+    "trusted fixture/tool definition literals, encrypted credential/business storage and TSX cache excluded explicitly",
+    "scanner generated result/inventory and later terminal seal are metadata, produced after read-only scan"
+  ],
+  "model_profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "elapsed_wall_s": 1113.576544,
+  "scoped_verification_status": "completed_with_confirmed_fixture_findings",
+  "source_acceptance": false,
+  "overall_F10": "UNACCEPTED",
+  "remaining_required": [
+    "durable MEDIUM integration of exact test fixture patch with focused sensitivity validation",
+    "fresh independent HIGH fork-none final source review and coordinator integration"
+  ],
+  "measurement_gaps": [
+    "provider actual-model/effort/token/cost metadata unavailable",
+    "Node22 positive filter removes physical case; rawTAPskip0 preserved, sourceinventoryexcluded1",
+    "native short fixture output reused before baseline/negative full-receipt archive; exactnativeexits/rawTAP/all30negativegaparray preserved; restoredfullreceipt archived",
+    "API responses only where captured; no uncaptured HTTPcorpus; currentDB sinks0rows stated",
+    "scanner own output and final seal/product handoff/footer metadata generated after canary; final artifactmanifest bindscurrentbytes"
+  ],
+  "next_responsible": "/root/n7_sol_coordinator",
+  "source_DB_ownership": "released after seal",
+  "no_more_native_tests": true
+}

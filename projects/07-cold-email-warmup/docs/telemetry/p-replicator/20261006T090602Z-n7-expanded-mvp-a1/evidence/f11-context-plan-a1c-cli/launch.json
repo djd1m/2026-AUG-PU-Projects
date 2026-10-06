@@ -1,0 +1,19 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-context-plan-a1c-cli",
+  "launched_at": "2026-10-06T20:27:35.646235+00:00",
+  "freeze_at": "2026-10-06T20:33:35.646235+00:00",
+  "deadline": "2026-10-06T20:35:35.646235+00:00",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "cli_model_argument": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "sandbox": "read-only",
+  "fresh_session": true,
+  "correction_reason": "prior unsupported gpt-6.1 alias; exact supported gpt-6.1-sol verified localcache and root successfulargv; no model downgrade",
+  "source_revision": "afb58dc9b26f814433b117a63e45994c71e7cbde",
+  "source_DB_read_only": true,
+  "disk_available_bytes": 3144245248,
+  "free_inodes": 4754274
+}

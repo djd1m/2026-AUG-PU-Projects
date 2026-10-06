@@ -1,0 +1,69 @@
+{
+  "at": "2026-10-06T20:04:33.950607+00:00",
+  "status": "ready",
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-frozen-verify-a20",
+  "source_revision": "afb58dc9b26f814433b117a63e45994c71e7cbde",
+  "manifest_sha256": "237ad9bb03ef3afafdfdde1a55dc3298163978e152c109c978f19e55936c54d2",
+  "source_count": 120,
+  "build_count": 73,
+  "runner_path": "/tmp/n7-f10-frozen-verify-a20/run-full330-v2.py",
+  "runner_sha256": "e191dd15fe647949a66f514144b74a550e9ad44de4331e57af1f919fe609b7e5",
+  "preloads": {
+    "guard-v1.mjs": "f50f46408191d17e69a250d7f682dc746a069b7ef0817d90bb8923466b7246d5",
+    "suite-output-v2.mjs": "92aa73261c5c8ab0f66d50693ae491add3bb2ef65517f75b35759bca9af82cd5",
+    "observer-v1.mjs": "4c238946e866911b387ce36b8dbfe0bbdf3e2bbc37e5656af1210a05d8389eb1",
+    "sql-observe-v2.mjs": "255f186a2b00762188187ee2ef47c279f515e24eb00119419593390ce1241573"
+  },
+  "fixtures": {
+    "tests/diagnostics-fixture.ts": "889f428735c251a33c18a026d3afbdd761bc3e4b9d7e965ab6848ac788740017",
+    "tests/f09-transport-fixture.ts": "984e6242be0a61880750c114dde53e5993588d9d3c82990c608e7e4db0eb5328",
+    "tests/f10-runtime-fixture.ts": "654fb5e45e5dcc0f520bdae5906c5340baf68eb8fb0dd9a8e9d29b6d6a91aa2f",
+    "tests/f10-runtime-process-fixture.ts": "af3523f51274e34d420ca1e8cd01927e7c3e262cfeb229cbe0dc1535b66a6340"
+  },
+  "environment": {
+    "DATABASE_NAME": "n7f10_a2",
+    "TMPDIR": "/tmp/n7-f10-frozen-verify-a20",
+    "NODE_OPTIONS": "--import=/tmp/n7-f10-frozen-verify-a20/guard-v1.mjs --import=/tmp/n7-f10-frozen-verify-a20/suite-output-v2.mjs --import=/tmp/n7-f10-frozen-verify-a20/sql-observe-v2.mjs",
+    "credentials": "available; values omitted"
+  },
+  "DB_assertion": {
+    "at": "2026-10-06T20:04:33.903Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true,
+    "counts": {
+      "max_connections": 100,
+      "server_connections": "7",
+      "scoped_connections": "1"
+    },
+    "query_elapsed_ms": 18.346035999999998,
+    "host": {
+      "/proc/loadavg": "2.60 3.56 5.46 1/2230 1736835\n",
+      "/proc/stat": "cpu  83931009 1142525 69574708 802524612 1158731 0 1584548 33021293 0 0\ncpu0 10427174 127801 8680480 100187734 137962 0 464384 4320062 0 0\ncpu1 10592721 154214 8677895 100118631 152628 0 281174 4216775 0 0\ncpu2 10546567 143808 8679425 100268433 150038 0 201021 4138784 0 0\ncpu3 10483933 157950 8693495 100339949 149505 0 164913 4098960 0 0\ncpu4 10478505 148024 8701083 100382556 144608 0 140387 4073434 0 0\ncpu5 10437168 137134 8699162 100457378 144526 0 123525 4056008 0 0\ncpu6 10433368 138514 8707110 100451012 140089 0 111900 4043797 0 0\ncpu7 10531571 135076 8736055 100318916 139371 0 97240 4073470 0 0\nintr 15196074277 0 9 0 0 0 0 3 0 0 0 0 20644 15 0 0 1214181 0 0 0 0 0 0 0 0 0 36 0 28731315 0 20736121 19454362 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nctxt 20963690677\nbtime 1790076990\nprocesses 219730064\nprocs_running 1\nprocs_blocked 0\nsoftirq 3741398249 1 244802080 17105 141170102 28830581 0 104462 794881080 4656 2531588182\n",
+      "/proc/pressure/cpu": "some avg10=9.86 avg60=9.17 avg300=9.72 total=78962031803\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=0\n",
+      "/proc/pressure/io": "some avg10=0.00 avg60=0.04 avg300=0.28 total=2554727727\nfull avg10=0.00 avg60=0.02 avg300=0.18 total=1678462199\n",
+      "/proc/pressure/memory": "some avg10=0.00 avg60=0.00 avg300=0.00 total=191631741\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=141408449\n"
+    },
+    "MemAvailable": "MemAvailable:    3922560 kB"
+  },
+  "command": [
+    "node",
+    "node_modules/tsx/dist/cli.mjs",
+    "--test",
+    "--test-concurrency=1",
+    "tests/expanded-mvp-04.test.ts"
+  ],
+  "budget_s": 420,
+  "disk": {
+    "available_bytes": 3196272640,
+    "free_inodes": 4778356
+  },
+  "sideeffects": [
+    "own scratch",
+    "n7f10_a2",
+    "numeric local TLS"
+  ],
+  "source_build_readonly": true
+}
