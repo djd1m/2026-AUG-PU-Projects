@@ -4,14 +4,14 @@ import type { Config } from '../config.js';
 import { eligibilityTransaction } from '../consent/transaction.js';
 import { HttpError } from '../errors.js';
 import { normalizeHost } from './network.js';
-export type TransportCapability='smtp_submit'|'imap_headers';
+export type TransportCapability='smtp_submit'|'imap_headers'|'imap_body';
 export interface TransportGrant {scope:'transport';tenant:string;mailbox:string;capabilities:TransportCapability[];smtpHost:string;smtpPort:465|587;imapHost:string;imapPort:993;mailboxTransportRevision:string;configFingerprint:string;expiresAt:string}
 export interface TransportSnapshot {tenant:string;mailbox:string;revision:string;mailboxRevision:string;credentialEnvelope:unknown;grant:TransportGrant}
 export const transportFingerprint=(allowlist:ReadonlyMap<string,number>)=>createHash('sha256').update(JSON.stringify(['n7-transport-v1',[...allowlist].sort()])).digest('hex');
 const uuid=(x:unknown)=>typeof x==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(x);
 export function parseTransportGrant(raw:unknown):TransportGrant {
  const g=raw as TransportGrant;
- if(!g||Object.keys(g).some(k=>!['scope','tenant','mailbox','capabilities','smtpHost','smtpPort','imapHost','imapPort','mailboxTransportRevision','configFingerprint','expiresAt'].includes(k))||g.scope!=='transport'||!uuid(g.tenant)||!uuid(g.mailbox)||!Array.isArray(g.capabilities)||!g.capabilities.length||g.capabilities.length>2||new Set(g.capabilities).size!==g.capabilities.length||g.capabilities.some(c=>!['smtp_submit','imap_headers'].includes(c))||![465,587].includes(g.smtpPort)||g.imapPort!==993||typeof g.mailboxTransportRevision!=='string'||!/^(0|[1-9]\d{0,18})$/.test(g.mailboxTransportRevision)||!/^[a-f0-9]{64}$/.test(g.configFingerprint)||typeof g.expiresAt!=='string'||!Number.isFinite(Date.parse(g.expiresAt)))throw new HttpError(400,'invalid_transport_grant');
+ if(!g||Object.keys(g).some(k=>!['scope','tenant','mailbox','capabilities','smtpHost','smtpPort','imapHost','imapPort','mailboxTransportRevision','configFingerprint','expiresAt'].includes(k))||g.scope!=='transport'||!uuid(g.tenant)||!uuid(g.mailbox)||!Array.isArray(g.capabilities)||!g.capabilities.length||g.capabilities.length>3||new Set(g.capabilities).size!==g.capabilities.length||g.capabilities.some(c=>!['smtp_submit','imap_headers','imap_body'].includes(c))||![465,587].includes(g.smtpPort)||g.imapPort!==993||typeof g.mailboxTransportRevision!=='string'||!/^(0|[1-9]\d{0,18})$/.test(g.mailboxTransportRevision)||!/^[a-f0-9]{64}$/.test(g.configFingerprint)||typeof g.expiresAt!=='string'||!Number.isFinite(Date.parse(g.expiresAt)))throw new HttpError(400,'invalid_transport_grant');
  return {...g,smtpHost:normalizeHost(g.smtpHost),imapHost:normalizeHost(g.imapHost),expiresAt:new Date(g.expiresAt).toISOString()};
 }
 export function operatorCapability(config:Config,token:string) {

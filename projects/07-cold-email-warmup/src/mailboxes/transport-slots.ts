@@ -4,16 +4,20 @@ import { hostname } from 'node:os';
 import type { Pool,PoolClient } from 'pg';
 import { eligibilityTransaction } from '../consent/transaction.js';
 import { HttpError } from '../errors.js';
-export interface TransportSlot {protocol:'smtp'|'imap';slot:number;operation:string;ownerProcess:string;ownerHost:string;tenant:string;mailbox:string}
+export interface TransportSlot {protocol:'smtp'|'imap';slot:number;operation:string;ownerProcess:string;ownerHost:string;tenant:string;mailbox:string;purpose?:'body'}
 const owners=new WeakMap<TransportSlot,{child:ChildProcess|null;sealed:boolean;consumed:boolean;unusedProof?:object}>();
 export async function acquireTransportSlot(pool:Pool,protocol:TransportSlot['protocol'],tenant:string,mailbox:string):Promise<TransportSlot> {
  return eligibilityTransaction(pool,c=>acquireTransportSlotInTransaction(c,protocol,tenant,mailbox));
 }
 // Trusted caller must already hold FIRST pg_advisory_xact_lock(7,1).
-export async function acquireTransportSlotInTransaction(c:PoolClient,protocol:TransportSlot['protocol'],tenant:string,mailbox:string):Promise<TransportSlot> {
+export async function acquireTransportSlotInTransaction(c:PoolClient,protocol:TransportSlot['protocol'],tenant:string,mailbox:string,purpose?:'body'):Promise<TransportSlot> {
+  if(purpose==='body'){
+   if(protocol!=='imap'||(await c.query("SELECT 1 FROM mailbox_poll WHERE mailbox_id=$1 AND NOT scan_complete UNION ALL SELECT 1 FROM runtime_due WHERE mailbox_id=$1 AND kind='poll' AND (state='claimed' OR due_at<=clock_timestamp())",[mailbox])).rowCount)throw new HttpError(503,'transport_busy');
+   if(Number((await c.query("SELECT count(*) AS n FROM transport_operation WHERE protocol='imap' AND operation IS NOT NULL")).rows[0].n)>=3)throw new HttpError(503,'transport_busy');
+  }
   if((await c.query('SELECT 1 FROM transport_operation WHERE protocol=$1 AND mailbox_id=$2 AND operation IS NOT NULL',[protocol,mailbox])).rowCount)throw new HttpError(503,'transport_busy');
   const free=(await c.query('SELECT slot FROM transport_operation WHERE protocol=$1 AND operation IS NULL ORDER BY slot LIMIT 1 FOR UPDATE',[protocol])).rows[0];if(!free)throw new HttpError(503,'transport_busy');
-  const result={protocol,slot:free.slot,operation:randomUUID(),ownerProcess:randomUUID(),ownerHost:hostname(),tenant,mailbox};
+  const result={protocol,slot:free.slot,operation:randomUUID(),ownerProcess:randomUUID(),ownerHost:hostname(),tenant,mailbox,...(purpose?{purpose}:{})};
   await c.query(`UPDATE transport_operation SET operation=$3,tenant_id=$4,mailbox_id=$5,owner_process=$6,owner_host=$7,expires_at=clock_timestamp()+interval '120 seconds' WHERE protocol=$1 AND slot=$2`,[protocol,result.slot,result.operation,tenant,mailbox,result.ownerProcess,result.ownerHost]);owners.set(result,{child:null,sealed:false,consumed:false});return Object.freeze(result);
 }
 export function consumePreadmittedSlot(slot:TransportSlot,tenant:string,mailbox:string){

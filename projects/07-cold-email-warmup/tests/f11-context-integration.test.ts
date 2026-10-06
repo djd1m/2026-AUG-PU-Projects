@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
-import { test } from 'node:test';
+import { test,type TestContext } from 'node:test';
+import { LiveReplyAdapter } from '../src/replies/adapter.js';
+import { publishTransportGrant,transportFingerprint } from '../src/mailboxes/transport-authority.js';
+import { acquireTransportSlot,releaseUnusedTransportSlot } from '../src/mailboxes/transport-slots.js';
+import { bodyFixture } from './f11-body-fixture.js';
 import { readFile } from 'node:fs/promises';
 import { loadConfig } from '../src/config.js';
 import { createPool,migrate,ready } from '../src/db.js';
@@ -9,7 +13,7 @@ import { ReplyStore } from '../src/replies/store.js';
 import { ContextStore } from '../src/replies/context-store.js';
 import { encryptContent } from '../src/replies/crypto.js';
 import { seedCapacity } from './capacity-fixture.js';
-test('F11 real PG additive migration, stop-first authenticated intent and retention',async t=>{
+export async function runF11ContextIntegration(t:TestContext){
  const config={...loadConfig(),dispatchMode:'local_test' as const},pool=createPool(config.databaseUrl);
  assert.equal((await pool.query('SELECT current_database() AS db')).rows[0].db,'n7f10_a2');
  await migrate(pool);await migrate(pool);assert.equal(await ready(pool),true);
@@ -18,6 +22,7 @@ test('F11 real PG additive migration, stop-first authenticated intent and retent
  const store=new ReplyStore(pool,config.credentialKeyring,{clock:()=>now}),context=new ContextStore(pool,config.credentialKeyring);
  async function setup(){
   await pool.query('TRUNCATE tenant,auth_bucket CASCADE');
+  await pool.query("INSERT INTO transport_operation(protocol,slot) VALUES('smtp',1),('smtp',2),('imap',1),('imap',2),('imap',3),('imap',4) ON CONFLICT DO NOTHING");
   await pool.query('INSERT INTO tenant(id) VALUES($1),($2)',[tenant,foreign]);await pool.query('INSERT INTO account(id,tenant_id,email,password_hash) VALUES($1,$2,$3,$4)',[account,tenant,'f11@example.test','fixture']);
   mailbox=(await app.mailboxes.save(tenant,{label:'F11',senderAddress:'sender@example.test',smtpHost:'smtp.gmail.com',smtpPort:587,imapHost:'imap.gmail.com',imapPort:993,requiredTLS:true,smtpUsername:'synthetic',smtpPassword:'synthetic',imapUsername:'synthetic',imapPassword:'synthetic'})).id;
   await pool.query("UPDATE mailbox SET state='verified_test'");await seedCapacity(pool,now);
@@ -25,7 +30,8 @@ test('F11 real PG additive migration, stop-first authenticated intent and retent
   await app.consents.act(actor,mailbox,{scope:'campaign',action:'grant',affirmative:true,scopeVersion:campaign.content_version,campaignId:campaign.id,recipientFingerprint:campaign.recipient_fingerprint});await app.campaigns.start(actor,campaign.id,{mailboxIds:[mailbox]},now);
   const j=(await pool.query("UPDATE send_job SET state='submitted',message_id='<f11-'||id::text||'@example.test>' WHERE step=0 RETURNING *")).rows[0];job=j.id;enrollment=j.enrollment_id;message=j.message_id;
  }
- const run=async(v:string)=>store.capture(tenant,mailbox,{uidvalidity:v,uidNext:2,observedAt:now,provenance:'local_fixture'});
+ let provenance:'local_fixture'|'imap_headers'='local_fixture';
+ const run=async(v:string)=>store.capture(tenant,mailbox,{uidvalidity:v,uidNext:2,observedAt:now,provenance});
  async function page(v:string,sender='reply@example.test') {const r=await run(v);return store.page(tenant,mailbox,{runId:r.runId,attempt:r.attempt,uidvalidity:v,expectedCursor:0,coveredThrough:1,kind:'scan',startedAt:now,completedAt:now,headers:[{uid:1,from:sender,references:[message],messageId:'<reused@example.test>'}]});}
  try {
   await setup();
@@ -75,5 +81,32 @@ test('F11 real PG additive migration, stop-first authenticated intent and retent
    const r=await run('4');await store.page(tenant,mailbox,{runId:r.runId,attempt:r.attempt,uidvalidity:'4',expectedCursor:0,coveredThrough:1,kind:'scan',startedAt:now,completedAt:now,headers:[{uid:1,from:'reply@example.test',references:[message,'<ambiguous@example.test>']}]});
    const e=(await pool.query("SELECT * FROM incoming_ai_event WHERE uidvalidity='4'")).rows[0];assert.equal(e.capture_state,'held');assert.equal(e.root_job_id,null);assert.equal(e.content_envelope,null);assert.equal(e.enrollment_id,null);assert.equal((await pool.query('SELECT state FROM enrollment WHERE id=$1',[enrollment])).rows[0].state,'replied');await assert.rejects(context.readContext(tenant,e.id));
   });
+  await t.test('native claim grant fences semantic replay and physical poll reservation',async()=>{
+   await setup();provenance='imap_headers';await page('1');
+   await store.page(tenant,mailbox,{runId:(await store.status(tenant,mailbox))!.runId,attempt:1,uidvalidity:'1',expectedCursor:1,coveredThrough:1,kind:'tail',tailHighWater:1,startedAt:now,completedAt:now,headers:[]});
+   const live={...config,pollMode:'live_provider' as const},f=await bodyFixture(),adapter=new LiveReplyAdapter(pool,live,f.fixture),e=(await pool.query('SELECT * FROM incoming_ai_event')).rows[0];
+   const token=(await readFile(process.env.OPERATOR_TOKEN_FILE!,'utf8')).trim();const grant={scope:'transport',tenant,mailbox,capabilities:['imap_headers'],smtpHost:'smtp.gmail.com',smtpPort:587,imapHost:'imap.gmail.com',imapPort:993,mailboxTransportRevision:'0',configFingerprint:transportFingerprint(config.providerAllowlist),expiresAt:new Date(Date.now()+600000).toISOString()};
+   try{
+    await publishTransportGrant(pool,live,token,tenant,mailbox,'0',grant);const claim=await context.claim(tenant,e.id);await assert.rejects(adapter.captureBody(claim));assert.equal(f.commands.length,0);await assert.rejects(context.claim(tenant,e.id));await assert.rejects(context.commitNative({},live));
+    await publishTransportGrant(pool,live,token,tenant,mailbox,'1',{...grant,capabilities:['imap_body']});
+    // Grant publication invalidates header completion: no body socket until poll completes.
+    await assert.rejects(adapter.captureBody(claim));assert.equal(f.commands.length,0);await pool.query('UPDATE mailbox_poll SET scan_complete=true WHERE mailbox_id=$1',[mailbox]);
+    const bad=new LiveReplyAdapter(pool,live,{...f.fixture,address:'fixture.invalid'});await assert.rejects(bad.captureBody(claim));assert.equal(f.commands.length,0);
+    const before=(await pool.query('SELECT cursor_uid,completed_at FROM mailbox_poll WHERE mailbox_id=$1',[mailbox])).rows[0];const proof=await adapter.captureBody(claim);assert.deepEqual(await context.commitNative(proof,live),{kind:'ready'});assert.deepEqual(await context.readContext(tenant,e.id),['What does the product do?']);await assert.rejects(context.commitNative(proof,live));assert.deepEqual((await pool.query('SELECT cursor_uid,completed_at FROM mailbox_poll WHERE mailbox_id=$1',[mailbox])).rows[0],before);
+    const semantic=(await pool.query('SELECT semantic_event_id FROM incoming_ai_event WHERE id=$1',[e.id])).rows[0].semantic_event_id;
+    // UID-reset replay uses a fresh current run/claim, then links the opaque semantic event.
+    await page('2');await pool.query('UPDATE mailbox_poll SET scan_complete=true WHERE mailbox_id=$1',[mailbox]);const e2=(await pool.query("SELECT * FROM incoming_ai_event WHERE uidvalidity='2'")).rows[0];f.commands.length=0;
+    // A different EXAMINE generation cannot be asserted by caller labels.
+    const claim2=await context.claim(tenant,e2.id);await assert.rejects(adapter.captureBody(claim2));assert.equal(f.commands.filter(c=>c.includes('FETCH')).length,0);
+    f.behavior.validity='2';const replay=await adapter.captureBody(claim2);assert.deepEqual(await context.commitNative(replay,live),{kind:'replay'});assert.equal((await pool.query('SELECT semantic_event_id FROM incoming_ai_event WHERE id=$1',[e2.id])).rows[0].semantic_event_id,semantic);
+    await page('3');await pool.query('UPDATE mailbox_poll SET scan_complete=true WHERE mailbox_id=$1',[mailbox]);f.behavior.validity='3';f.behavior.body=Buffer.from('A genuinely different own reply');const e3=(await pool.query("SELECT * FROM incoming_ai_event WHERE uidvalidity='3'")).rows[0],claim3=await context.claim(tenant,e3.id);const distinct=await adapter.captureBody(claim3);assert.deepEqual(await context.commitNative(distinct,live),{kind:'ready'});assert.notEqual((await pool.query('SELECT semantic_event_id FROM incoming_ai_event WHERE id=$1',[e3.id])).rows[0].semantic_event_id,semantic);
+    await page('4');await pool.query('UPDATE mailbox_poll SET scan_complete=true WHERE mailbox_id=$1',[mailbox]);f.behavior.validity='4';const e4=(await pool.query("SELECT * FROM incoming_ai_event WHERE uidvalidity='4'")).rows[0],old=await context.claim(tenant,e4.id),staleProof=await adapter.captureBody(old);await pool.query("UPDATE incoming_ai_event SET lease_until=now()-interval '1 second' WHERE id=$1",[e4.id]);const newer=await context.claim(tenant,e4.id);await assert.rejects(context.commitNative(staleProof,live));assert.equal((await pool.query('SELECT owner_id FROM incoming_ai_event WHERE id=$1',[e4.id])).rows[0].owner_id,newer.owner);
+    assert.equal((await pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');
+    const held=[];for(let i=0;i<3;i++){const m=randomUUID();await pool.query("INSERT INTO mailbox(id,tenant_id,label,metadata,state) SELECT $2,tenant_id,'slot',metadata,state FROM mailbox WHERE id=$1",[mailbox,m]);held.push(await acquireTransportSlot(pool,'imap',tenant,m));}
+    try{const commandsBefore=f.commands.length;await assert.rejects(adapter.captureBody(newer),/transport_busy/);assert.equal(f.commands.length,commandsBefore);const pollSlot=await acquireTransportSlot(pool,'imap',tenant,mailbox);assert.equal(pollSlot.slot,4);await releaseUnusedTransportSlot(pool,pollSlot);}finally{for(const slot of held)await releaseUnusedTransportSlot(pool,slot);}
+    const revokedProof=await adapter.captureBody(newer);await publishTransportGrant(pool,live,token,tenant,mailbox,'2',null);await assert.rejects(context.commitNative(revokedProof,live));assert.equal((await pool.query('SELECT content_envelope FROM incoming_ai_event WHERE id=$1',[e4.id])).rows[0].content_envelope,null);
+   }finally{await f.close();}
+  });
  }finally{await pool.query('TRUNCATE tenant,auth_bucket CASCADE');await pool.end();}
-});
+}
+test('F11 real PG additive migration, stop-first authenticated intent and retention',runF11ContextIntegration);

@@ -115,7 +115,7 @@ export class ReplyStore {
     if(root)roots.add(root);else invalid=true;
    }
    const enrollments=new Set(matched.map(m=>m.enrollment)),owned=!invalid&&roots.size===1&&enrollments.size===1;
-   await enqueueCaptureClient(c,{tenant,mailbox,uidvalidity:v,uid:h.uid,runId:run.runId,attempt:run.attempt,source:run.provenance,observedAt:now,enrollment:owned?matched[0]!.enrollment:null,root:owned?[...roots][0]!:null});
+   await enqueueCaptureClient(c,{tenant,mailbox,uidvalidity:v,uid:h.uid,runId:run.runId,attempt:run.attempt,source:run.provenance,observedAt:now,sender:h.sender,enrollment:owned?matched[0]!.enrollment:null,root:owned?[...roots][0]!:null});
   }
   return effects;
  }

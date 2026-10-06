@@ -14,7 +14,7 @@ CREATE TABLE incoming_ai_event (
  metadata_expires_at timestamptz NOT NULL DEFAULT now()+interval '30 days',
  content_envelope jsonb, message_bytes integer[], body_bytes integer, thread_message_count integer,
  intent_candidate text CHECK(intent_candidate IN ('product_overview','supported_features','supported_integrations','setup_steps','documentation')),
- rules_version text, rules_hash char(64), content_fingerprint char(64),
+ sender_binding char(64), rules_version text, rules_hash char(64), content_fingerprint char(64),
  owner_id uuid, generation bigint NOT NULL DEFAULT 0, lease_until timestamptz, next_attempt_at timestamptz NOT NULL DEFAULT now(),
  UNIQUE(tenant_id,id), UNIQUE(tenant_id,mailbox_id,uidvalidity,uid),
  FOREIGN KEY(tenant_id,mailbox_id) REFERENCES mailbox(tenant_id,id),
