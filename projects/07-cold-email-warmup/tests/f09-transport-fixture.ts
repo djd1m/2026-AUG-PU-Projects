@@ -6,20 +6,20 @@ import type { TransportFixture } from '../src/mailboxes/transport-channel.js';
 import type { ChildRequest } from '../src/mailboxes/transport-lifetime.js';
 export const transportInput=diagnosticInput;
 export const transportAllowlist=new Map([['smtp.gmail.com',30],['imap.gmail.com',30]]);
-export interface TransportBehavior {controlBytes?:number;mailCode?:number;rcptCode?:number;authCode?:number;greetingCode?:number;partialFinal?:boolean;closeAfterFinal?:boolean;fragmentBytes?:number;rev2?:boolean;fetchSuffix?:string;fetchPrefix?:string;taggedFailure?:string;onData?:()=>void;finalCode?:number;disconnectAfterData?:boolean;uidvalidity?:string;uidNext?:number;headers?:{uid:number;text:string}[];wrongTag?:boolean;stall?:boolean;oversizeLiteral?:boolean}
+export interface TransportBehavior {slowEhlo?:boolean;slowAuthChallenge?:boolean;controlBytes?:number;mailCode?:number;rcptCode?:number;authCode?:number;greetingCode?:number;partialFinal?:boolean;closeAfterFinal?:boolean;fragmentBytes?:number;rev2?:boolean;fetchSuffix?:string;fetchPrefix?:string;taggedFailure?:string;onData?:()=>void;finalCode?:number;disconnectAfterData?:boolean;uidvalidity?:string;uidNext?:number;headers?:{uid:number;text:string}[];wrongTag?:boolean;stall?:boolean;oversizeLiteral?:boolean}
 export async function transportFixture(behavior:TransportBehavior={}){
- const cert=certificates(),sockets=new Set<Socket>(),servers:Server[]=[],verbs:string[]=[];let connections=0,maxConnections=0;
+ const cert=certificates(),sockets=new Set<Socket>(),servers:Server[]=[],verbs:string[]=[];let connections=0,maxConnections=0;const timers=new Set<NodeJS.Timeout>();const later=(milliseconds:number,call:()=>void)=>{const timer=setTimeout(()=>{timers.delete(timer);call();},milliseconds);timers.add(timer);};
  const watch=(socket:Socket)=>{sockets.add(socket);connections++;maxConnections=Math.max(maxConnections,connections);socket.on('error',()=>{});socket.on('close',()=>{sockets.delete(socket);connections--;});};
  const speak=(socket:Socket,protocol:'smtp'|'imap',starttls=false,greet=true)=>{
   watch(socket);if(behavior.stall)return;if(greet)socket.write(protocol==='smtp'?(behavior.greetingCode??220)+' '+(behavior.controlBytes?'A'.repeat(behavior.controlBytes):'fixture')+'\r\n':'* OK fixture\r\n');let pending='',authenticating=false,body=false;
   socket.on('data',(chunk:Buffer)=>{pending+=chunk.toString();for(;;){const end=pending.indexOf('\r\n');if(end<0)break;const line=pending.slice(0,end);pending=pending.slice(end+2);
    if(body){if(line==='.'){body=false;behavior.onData?.();if(behavior.disconnectAfterData)socket.destroy();else if(behavior.partialFinal)socket.end('250 incomplete');else{socket.write((behavior.finalCode??250)+' SECRET_PEER_CANARY\r\n');if(behavior.closeAfterFinal)setTimeout(()=>socket.destroy(),10);}}continue;}
-   if(authenticating){authenticating=false;verbs.push('AUTH_RESPONSE');socket.write('a2 OK authenticated\r\n');continue;}
+   if(authenticating){authenticating=false;verbs.push('AUTH_RESPONSE');if(protocol==='smtp')later(6000,()=>{if(!socket.destroyed)socket.write('235 authenticated\r\n');});else socket.write('a2 OK authenticated\r\n');continue;}
    const verb=line.split(' ')[protocol==='smtp'?0:1]!;verbs.push(verb);
    if(protocol==='smtp'){
-    if(line.startsWith('EHLO '))socket.write(starttls?'250-fixture\r\n250 STARTTLS\r\n':'250-fixture\r\n250 AUTH PLAIN\r\n');
+    if(line.startsWith('EHLO ')){if(behavior.slowEhlo){later(6000,()=>{if(!socket.destroyed)socket.write('250-fixture\r\n');});later(12000,()=>{if(!socket.destroyed)socket.write(starttls?'250 STARTTLS\r\n':'250 AUTH PLAIN\r\n');});}else socket.write(starttls?'250-fixture\r\n250 STARTTLS\r\n':'250-fixture\r\n250 AUTH PLAIN\r\n');}
     else if(line==='STARTTLS'){socket.removeAllListeners('data');socket.write('220 upgrade\r\n',()=>speak(new TLSSocket(socket,{isServer:true,...cert}),'smtp',false,false));return;}
-    else if(line.startsWith('AUTH PLAIN '))socket.write((behavior.authCode??235)+' authenticated\r\n');
+    else if(line.startsWith('AUTH PLAIN ')){if(behavior.slowAuthChallenge){authenticating=true;later(6000,()=>{if(!socket.destroyed)socket.write('334 challenge\r\n');});}else socket.write((behavior.authCode??235)+' authenticated\r\n');}
     else if(line.startsWith('MAIL FROM:'))socket.write((behavior.mailCode??250)+' envelope\r\n');else if(line.startsWith('RCPT TO:'))socket.write((behavior.rcptCode??250)+' envelope\r\n');
     else if(line==='DATA'){body=true;socket.write('354 body\r\n');}else socket.destroy();
    }else{
@@ -39,7 +39,7 @@ export async function transportFixture(behavior:TransportBehavior={}){
  const port=(s:Server)=>(s.address() as {port:number}).port;
  const options:ChildRequest['fixture']={ca:cert.cert.toString(),address:'127.0.0.1',smtp465:port(smtp),smtp587:port(plain),imap993:port(imap)};
  const connector:TransportFixture={ca:cert.cert,resolver:async()=>[{address:'8.8.8.8',family:4}],dial:(_address,p)=>({address:'127.0.0.1',port:p===465?port(smtp):p===587?port(plain):port(imap)})};
- return {options,connector,verbs,sockets,cert,get maxConnections(){return maxConnections;},async close(){for(const socket of sockets)socket.destroy();await Promise.all(servers.map(s=>new Promise<void>(r=>s.close(()=>r()))));}};
+ return {options,connector,verbs,sockets,cert,get maxConnections(){return maxConnections;},async close(){for(const timer of timers)clearTimeout(timer);timers.clear();for(const socket of sockets)socket.destroy();await Promise.all(servers.map(s=>new Promise<void>(r=>s.close(()=>r()))));}};
 }
 export async function recoveryScenario(){
  const {readFile}=await import('node:fs/promises'),{randomUUID}=await import('node:crypto');

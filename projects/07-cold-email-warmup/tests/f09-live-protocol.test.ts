@@ -27,3 +27,12 @@ test('pre DATA proof post DATA truncated final and acceptance before close remai
  for(const [behavior,kind] of [[{mailCode:450},'pre_data_transient'],[{mailCode:550},'permanent'],[{authCode:535},'permanent'],[{greetingCode:250},'permanent'],[{partialFinal:true},'ambiguous'],[{closeAfterFinal:true},'accepted']] as const){const f=await transportFixture(behavior);try{assert.equal((await submitSmtp(transportInput,message(),transportAllowlist,new AbortController().signal,f.connector)).kind,kind);}finally{await f.close();}}
 });
 test('receive line bound rejects8193 bytes before peer text is accepted',async()=>{const f=await transportFixture({controlBytes:8187});try{assert.equal((await submitSmtp(transportInput,message(),transportAllowlist,new AbortController().signal,f.connector)).kind,'permanent');}finally{await f.close();}});
+for(const phase of ['EHLO','AUTH'] as const)test(`whole SMTP ${phase} challenge phase expires once at ten seconds`,{timeout:15000},async()=>{
+ const f=await transportFixture(phase==='EHLO'?{slowEhlo:true}:{slowAuthChallenge:true});try{
+  const started=performance.now(),outcome=await submitSmtp(transportInput,message(),transportAllowlist,new AbortController().signal,f.connector),elapsed=performance.now()-started;
+  process.stdout.write(JSON.stringify({phase,elapsedMs:elapsed,outcome:outcome.kind,commands:f.verbs})+'\n');
+  assert.equal(outcome.kind,'pre_data_transient',phase);if(outcome.kind==='pre_data_transient')assert.equal(outcome.proof,'no_data_submitted');assert.ok(elapsed>=9500&&elapsed<11500,`${phase} total elapsed ${elapsed}`);
+  assert.equal(f.verbs.filter(v=>v==='DATA').length,0);assert.equal(f.verbs.filter(v=>v==='MAIL').length,0);if(phase==='EHLO')assert.equal(f.verbs.filter(v=>v==='AUTH').length,0);else assert.equal(f.verbs.filter(v=>v==='AUTH_RESPONSE').length,1);
+  await new Promise(r=>setTimeout(r,25));assert.equal(f.sockets.size,0);
+ }finally{await f.close();}
+});
