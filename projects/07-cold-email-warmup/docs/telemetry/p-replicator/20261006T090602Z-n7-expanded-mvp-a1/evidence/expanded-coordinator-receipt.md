@@ -49,3 +49,7 @@ New source-bound attempt f08-verify-a2 preallocated at11:48:24 UTC; exclusive So
 ## 2026-10-06 12:32 UTC — F08 accepted, F09 next
 
 Accepted source521ae2b3, integrated e7db9146; independent full8AC review ACCEPT after two High corrections. Exact final realPG146 and affected20, newdeps lint/type/build, audit0; prior unchanged unit54/TLS/mutations/browser20 retain correct component bindings. Full integratedPhase12=0 and review/source gates0; completion1 remains exactly9future/F06 gaps. Source/runtime diff after integration empty. A2 receipt55s sealing overrun disclosed, A3 and finalreview withinbounds. Actualmodel/usage/cost remain unavailable. Scope unchanged, no external provider/spend/deploy. Next chosen F09 /go mechanicalM0 upliftXL, isolated Astra PLAN then independentVALIDATE.
+
+## 2026-10-06T13:05:03.592170+00:00 — F09 narrow requirements correction
+
+F08 accepted source521ae2b integratede7db9146, delivery801b1102. F09 complete PLAN independently recovered at61084db8; historical initial author receipt remains timing-failed. V1 physical socket reclaim HIGH found despite full PhaseI/II0. Narrow correctionbf613a4a completed13:01:19 beforebound; fresh validationr2 actualfirstaction13:02:48, bound13:06:15. Main sole writer coordinator; original report and receipts preserved. Next Sol implementation contingent on actual READY; no active coder claim. Status reporting every10min UTC to root continues. Native model/usage null host_not_exposed.

@@ -1,0 +1,16 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f09-implement-a1",
+  "stage": "IMPLEMENT F09 native bounded transport",
+  "source_revision": "dcd85ce797f4765e5de8e430cb20cfdadf45453c",
+  "spec_sha256": "6e10f17fd5373c92a8725d6298827265f6b5082d8c37bba45777c3d7a7a756e9",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "worktree": "/tmp/n7-f09-implement-20261006",
+  "trace_path": "/tmp/n7-f09-implement-a1-receipt.md",
+  "created_at": "2026-10-06T13:08:29.647570+00:00",
+  "budget_minutes": 20,
+  "scope": "Implement independently READY F09 9AC in exact isolated ownership; no external calls/spend, no UI; complete all mandatory real protocol/PG/fault/canary/mutation/build checks, otherwise freeze truthful bounded partial for concrete continuation."
+}
