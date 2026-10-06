@@ -1,0 +1,62 @@
+[
+  {
+    "fixture": "canonical-positive",
+    "tool": "original",
+    "exit_code": 2,
+    "expected": 2
+  },
+  {
+    "fixture": "canonical-positive",
+    "tool": "patched",
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "fixture": "nested-positive",
+    "tool": "original",
+    "exit_code": 2,
+    "expected": 2
+  },
+  {
+    "fixture": "nested-positive",
+    "tool": "patched",
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "fixture": "missing-completion",
+    "tool": "original",
+    "exit_code": 2,
+    "expected": 2
+  },
+  {
+    "fixture": "missing-completion",
+    "tool": "patched",
+    "exit_code": 2,
+    "expected": 2
+  },
+  {
+    "fixture": "missing-test",
+    "tool": "original",
+    "exit_code": 2,
+    "expected": 2
+  },
+  {
+    "fixture": "missing-test",
+    "tool": "patched",
+    "exit_code": 1,
+    "expected": 1
+  },
+  {
+    "fixture": "mismatched-title",
+    "tool": "original",
+    "exit_code": 2,
+    "expected": 2
+  },
+  {
+    "fixture": "mismatched-title",
+    "tool": "patched",
+    "exit_code": 1,
+    "expected": 1
+  }
+]

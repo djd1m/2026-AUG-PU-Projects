@@ -1,0 +1,62 @@
+diff --git a/projects/07-cold-email-warmup/docs/features/f01-foundation-auth/validation-report.md b/projects/07-cold-email-warmup/docs/features/f01-foundation-auth/validation-report.md
+index d8862514..f248d5a6 100644
+--- a/projects/07-cold-email-warmup/docs/features/f01-foundation-auth/validation-report.md
++++ b/projects/07-cold-email-warmup/docs/features/f01-foundation-auth/validation-report.md
+@@ -42,4 +42,4 @@ Previous index: `history/validation-report.pre-a2-bdd.md`, sha256:c439845b462d58
+ ## Input digests
+ 
+ - `01_specification.md`: sha256:0a62915da4cad8837bdd4c6e3387fe11453b33386537d124bb543fe3cf4bbfca
+-- `scenarios.md`: sha256:816573f3577be50ea99ef937e8a7cc5045189af4fe7637848e2f79aa91c7f9eb
++- `scenarios.md`: sha256:f1ab6d5801dbbb584dbd5499975787bd7934d8656b7232618a650bf7a64a6503
+diff --git a/projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/validation-report.md b/projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/validation-report.md
+index 45feb948..0f290268 100644
+--- a/projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/validation-report.md
++++ b/projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/validation-report.md
+@@ -42,4 +42,4 @@ Previous index: `history/validation-report.pre-a2-bdd.md`, sha256:9fa60c57ae8a0c
+ ## Input digests
+ 
+ - `01_specification.md`: sha256:65603ddd620ddeda59392fb673994aaf41b3199f46af6d0f03bf99eabd3a9bc4
+-- `scenarios.md`: sha256:9240dfab40841529acafc1ffebd21c302e9afe8cd262a0eca4d71fc78599dd5b
++- `scenarios.md`: sha256:bca9a48648cfe0a5182e01fc472227b1691efc499cae7493a81fe197fbacd61c
+diff --git a/projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/validation-report.md b/projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/validation-report.md
+index d0898834..ebec4e29 100644
+--- a/projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/validation-report.md
++++ b/projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/validation-report.md
+@@ -52,4 +52,4 @@ Previous index: `history/validation-report.pre-a2-bdd.md`, sha256:5594feba6a9e0a
+ ## Input digests
+ 
+ - `01_specification.md`: sha256:6f88ae14deba475af0edfb89c37ec452d34c85df44b9e5c8aefeed802b36566f
+-- `scenarios.md`: sha256:c05156497c6d3f8eeee1ee7e70965c4e5b57df6a36dfc2209b989b552162026f
++- `scenarios.md`: sha256:4a4f3f8aba1d7cd201b053426c63695e88f8913466ac0f25a59afc203a5bc26e
+diff --git a/projects/07-cold-email-warmup/docs/features/f04-reply-suppression/validation-report.md b/projects/07-cold-email-warmup/docs/features/f04-reply-suppression/validation-report.md
+index bd234d9e..a6825a3b 100644
+--- a/projects/07-cold-email-warmup/docs/features/f04-reply-suppression/validation-report.md
++++ b/projects/07-cold-email-warmup/docs/features/f04-reply-suppression/validation-report.md
+@@ -54,4 +54,4 @@ Previous index: `history/validation-report.pre-a2-bdd.md`, sha256:8dbc8955662db6
+ ## Input digests
+ 
+ - `01_specification.md`: sha256:73a4dc62c00e08718bde936bd6fede36bd1bae07c48cf9c963d3c56a552237a6
+-- `scenarios.md`: sha256:3230a9f662c0ffe2434a2108d3f68c270b98555fb98d85f4f7729da3b2bdef35
++- `scenarios.md`: sha256:fd9ca238af7b2493f584d6e8e03b67f27bd149d4559ad698c24be0772a093f8f
+diff --git a/projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/validation-report.md b/projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/validation-report.md
+index 151536d0..0e994a20 100644
+--- a/projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/validation-report.md
++++ b/projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/validation-report.md
+@@ -54,4 +54,4 @@ Previous index: `history/validation-report.pre-a2-bdd.md`, sha256:2d03e764c046ca
+ ## Input digests
+ 
+ - `01_specification.md`: sha256:ac249fab21a4dbf9c35ffd81daa5bd5874df3aa431b4cdedbfa28ea2adf66d0c
+-- `scenarios.md`: sha256:4053451438df3a42ad372c2c0220d0ad08a3f32c911006be3d319c03fdb1788f
++- `scenarios.md`: sha256:0ec50085f614c9cda936452ba02b0469f443498ac62686ff1ee03448487cd36e
+diff --git a/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/validation-report.md b/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/validation-report.md
+index 7d13f353..a98bf2a8 100644
+--- a/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/validation-report.md
++++ b/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/validation-report.md
+@@ -54,6 +54,6 @@ Previous index: `history/validation-report.pre-a2-bdd.md`, sha256:11810a7376e88f
+ ## Input digests
+ 
+ - `01_specification.md`: sha256:044d738715cc33c29c453805648b209176ecdcf12c8c8c7320b2e7cd3265e1ce
+-- `scenarios.md`: sha256:4d3866b1804ca97d5301dd1edfbc5cad66e3c26aafa5f68f0896a027d773d08b
++- `scenarios.md`: sha256:27f3431cf25443232fa0b81c5d4cb3090754a0a51347d9947ce4119eec416a5e
+ 
+ F06 B6 remains not met: GitHub403 PR creation, no PR and no newly authorized release. Full documentation testability does not remove this delivery blocker.

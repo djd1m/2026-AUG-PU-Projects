@@ -1,0 +1,564 @@
+diff --git a/projects/07-cold-email-warmup/docs/features/f01-foundation-auth/scenarios.md b/projects/07-cold-email-warmup/docs/features/f01-foundation-auth/scenarios.md
+index 62abf77d..0fd8eeea 100644
+--- a/projects/07-cold-email-warmup/docs/features/f01-foundation-auth/scenarios.md
++++ b/projects/07-cold-email-warmup/docs/features/f01-foundation-auth/scenarios.md
+@@ -14,7 +14,7 @@ Source: `01_specification.md` heading `AC-f01-foundation-auth-001`, legacy `AC-F
+ Scenario Outline: SC-f01-foundation-auth-001
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant startup, registration/session lookup, request authorization, KDF/password validation, atomic auth admission, identity verification gates operation runs for <case> against authoritative persistent state
++  When the isolated Node22/API/worker/PG16 stack starts, migrations run and health/readiness probes execute for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: runnable Node22/TypeScript web/API+PostgreSQL16 isolated Compose
+   And the unchanged contract assertion holds: DB has no host port
+@@ -37,7 +37,7 @@ Source: `01_specification.md` heading `AC-f01-foundation-auth-002`, legacy `AC-F
+ Scenario Outline: SC-f01-foundation-auth-002
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant startup, registration/session lookup, request authorization, KDF/password validation, atomic auth admission, identity verification gates operation runs for <case> against authoritative persistent state
++  When the client registers, logs in and logs out, then the server resolves the resulting session for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: register creates tenant/account and usable7day opaque session
+   And the unchanged contract assertion holds: login/logout
+@@ -60,7 +60,7 @@ Source: `01_specification.md` heading `AC-f01-foundation-auth-003`, legacy `AC-F
+ Scenario Outline: SC-f01-foundation-auth-003
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant startup, registration/session lookup, request authorization, KDF/password validation, atomic auth admission, identity verification gates operation runs for <case> against authoritative persistent state
++  When the server authorizes the mailbox request and validates its UUID, tenant, session and Origin for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: no/forged/revoked cookie401, badOrigin403 with0writes
+   And the unchanged contract assertion holds: secondtenant mailbox fixture returns404
+@@ -87,7 +87,7 @@ Source: `01_specification.md` heading `AC-f01-foundation-auth-004`, legacy `AC-F
+ Scenario Outline: SC-f01-foundation-auth-004
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant startup, registration/session lookup, request authorization, KDF/password validation, atomic auth admission, identity verification gates operation runs for <case> against authoritative persistent state
++  When the server validates password/hash parameters and attempts KDF admission/hash/verify for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: exact Argon2id v19 m65536/t3/p1/salt16/out32 only
+   And the unchanged contract assertion holds: password8–200Unicode chars<=800bytes, reject before KDF
+@@ -112,7 +112,7 @@ Source: `01_specification.md` heading `AC-f01-foundation-auth-005`, legacy `AC-F
+ Scenario Outline: SC-f01-foundation-auth-005
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant startup, registration/session lookup, request authorization, KDF/password validation, atomic auth admission, identity verification gates operation runs for <case> against authoritative persistent state
++  When the server atomically admits a login or registration attempt against its fixed UTC email/trusted-IP bucket for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: atomicDB fixedUTC windows login email5/15min+trustedIP10/min, registerIP5/hour
+   And the unchanged contract assertion holds: attempts count
+@@ -139,7 +139,7 @@ Source: `01_specification.md` heading `AC-f01-foundation-auth-006`, legacy `AC-F
+ Scenario Outline: SC-f01-foundation-auth-006
+   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
+   And the concrete case is <case>
+-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
++  When the authorized source-bound identity verification procedure executes build/typecheck/lint/auth unit/realPG checks, canary scan and license/donor audit for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: build/typecheck/lint/authunit+realPGintegration pass
+   And the unchanged contract assertion holds: secretcanary scan
+diff --git a/projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/scenarios.md b/projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/scenarios.md
+index 433814ee..ea4063b6 100644
+--- a/projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/scenarios.md
++++ b/projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/scenarios.md
+@@ -16,7 +16,7 @@ Source: `01_specification.md` heading `AC-f02-mailboxes-consent-001`, legacy `AC
+ Scenario Outline: SC-f02-mailboxes-consent-001
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant mailbox save/read/update, AEAD decrypt, bounded connector verification, explicit consent change, shared stop mutation, mailbox verification gates operation runs for <case> against authoritative persistent state
++  When the authenticated tenant saves, updates, lists or reads the mailbox settings for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: authenticated tenant can save/list/read/update own SMTP465/587 requiredTLS and IMAP993 TLS settings
+   And the unchanged contract assertion holds: API returns masked metadata only.
+@@ -46,7 +46,7 @@ Source: `01_specification.md` heading `AC-f02-mailboxes-consent-002`, legacy `AC
+ Scenario Outline: SC-f02-mailboxes-consent-002
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant mailbox save/read/update, AEAD decrypt, bounded connector verification, explicit consent change, shared stop mutation, mailbox verification gates operation runs for <case> against authoritative persistent state
++  When the credential store encrypts a save or decrypts a transport credential and scrubs the adapter error for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: AES256GCM freshnonce with external versioned credential key and AAD (tenant,mailbox,keyversion)
+   And the unchanged contract assertion holds: DB/API/logs contain0 plaintext credentials.
+@@ -76,7 +76,7 @@ Source: `01_specification.md` heading `AC-f02-mailboxes-consent-003`, legacy `AC
+ Scenario Outline: SC-f02-mailboxes-consent-003
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant mailbox save/read/update, AEAD decrypt, bounded connector verification, explicit consent change, shared stop mutation, mailbox verification gates operation runs for <case> against authoritative persistent state
++  When the connector resolves the allowlisted endpoint again, validates every address, pins the selected IP and performs bounded TLS I/O for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: operator-allowlisted normalized hostname only
+   And the unchanged contract assertion holds: public-IP resolution, reject loopback/private/linklocal/metadata/reserved/IPv4mapped forms and mixed unsafeDNS
+@@ -108,7 +108,7 @@ Source: `01_specification.md` heading `AC-f02-mailboxes-consent-004`, legacy `AC
+ Scenario Outline: SC-f02-mailboxes-consent-004
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant mailbox save/read/update, AEAD decrypt, bounded connector verification, explicit consent change, shared stop mutation, mailbox verification gates operation runs for <case> against authoritative persistent state
++  When the owner explicitly grants or revokes one versioned pool/campaign consent or edits its recipient/content snapshot for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: separate affirmative versioned pool and campaign consent persisted with actor/time/scope/version/revokedat.
+   And the unchanged contract assertion holds: Registration/save grantneither.
+@@ -141,7 +141,7 @@ Source: `01_specification.md` heading `AC-f02-mailboxes-consent-005`, legacy `AC
+ Scenario Outline: SC-f02-mailboxes-consent-005
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant mailbox save/read/update, AEAD decrypt, bounded connector verification, explicit consent change, shared stop mutation, mailbox verification gates operation runs for <case> against authoritative persistent state
++  When the consent/mailbox/limit/campaign writer acquires lock(7,1) FIRST and commits the corresponding stop mutation for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: grants/revokes/mailboxstate/limits/campaignversion changes acquire SAME transaction advisory lock(7,1) FIRST before eligibility reads/mutations.
+   And the unchanged contract assertion holds: Revoke cancels queued/claimed jobs and pool membership atomically
+@@ -172,7 +172,7 @@ Source: `01_specification.md` heading `AC-f02-mailboxes-consent-006`, legacy `AC
+ Scenario Outline: SC-f02-mailboxes-consent-006
+   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
+   And the concrete case is <case>
+-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
++  When the authorized mailbox verification procedure executes focused unit/realPG, affected auth regression, typecheck/lint/build and security gates for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: focused unit and realPG integration prove above, including ciphertext substitution,0transport/canary, two tenants, distinct scopes/version invalidation and revocation queue state.
+   And the unchanged contract assertion holds: F01 auth regression only where server/config/schema changes affect it
+diff --git a/projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/scenarios.md b/projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/scenarios.md
+index 16490431..9726b690 100644
+--- a/projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/scenarios.md
++++ b/projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/scenarios.md
+@@ -18,7 +18,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-001`, legac
+ Scenario Outline: SC-f03-dispatch-pool-campaign-001
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
++  When the owner lists, reads, previews, edits, starts or pauses the bounded campaign through the authoritative API for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: owned campaigns expose list/read/preview/edit/start/pause with tenant404, session401 and Origin403. <=5 steps, <=100 recipients/import, delay>=24h, known personalization fields
+   And the unchanged contract assertion holds: reject missing field, subject/address CRLF and unsafe source markup before jobs.
+@@ -46,7 +46,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-002`, legac
+ Scenario Outline: SC-f03-dispatch-pool-campaign-002
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
++  When the owner explicitly starts or pauses the consent-bound campaign and durable enrollment/step jobs are inserted or canceled for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: explicit start requires current campaign-version/recipient consent for selected owned mailboxes and inserts durable unique(campaign,enrollment,step) jobs once.
+   And the unchanged contract assertion holds: Store encrypted recipient address and keyed recipient hash, no plaintext contacts/credential dumps in logs.
+@@ -73,7 +73,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-003`, legac
+ Scenario Outline: SC-f03-dispatch-pool-campaign-003
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
++  When the pool scheduler computes the eligible aggregate and creates or replays the pair/day initial or single-parent reply job for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: pool aggregate counts only current opted-in, eligible, freshly polled, non-quarantined mailboxes
+   And the unchanged contract assertion holds: reports waiting with fewer than two distinct tenants.
+@@ -103,7 +103,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-004`, legac
+ Scenario Outline: SC-f03-dispatch-pool-campaign-004
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
++  When concurrent dispatcher workers claim or recover a lease and reserve the shared warmup/campaign quota for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: atomic claim under shared lock first + SKIP LOCKED reserves common warmup/campaign quota, min(user,provider,30), default10.
+   And the unchanged contract assertion holds: Twenty contenders with remaining3 obtain<=3 reservations.
+@@ -133,7 +133,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-005`, legac
+ Scenario Outline: SC-f03-dispatch-pool-campaign-005
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
++  When the planning/final-guard path reads the durable poll, scan, suppression and enrollment evidence for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: add durable poll/suppression/enrollment seams needed by final guards
+   And the unchanged contract assertion holds: absent poll or incomplete scan stays blocked.
+@@ -161,7 +161,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-006`, legac
+ Scenario Outline: SC-f03-dispatch-pool-campaign-006
+   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
+   And the concrete case is <case>
+-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
++  When the authorized planning verification procedure executes validation/idempotence/privacy/quota/lease tests, guard mutation and full affected regression for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: unit + realPG prove validation, idempotence, isolation, shared pool privacy, quota concurrency and leases
+   And the unchanged contract assertion holds: meaningful guard mutation, full affected F01/F02 regression, typecheck/lint/build/securityscan.
+@@ -190,7 +190,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-007`, legac
+ Scenario Outline: SC-f03-dispatch-pool-campaign-007
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
++  When the final submit transaction acquires lock(7,1) FIRST, rechecks all current predicates and transfers the UTC-day reservation for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: fresh transaction takes same lock(7,1) FIRST and conditionally updates claimed→submitting after job/lease owner, current sender consent/version, enrollment/suppression, campaign state/version, mailbox/quarantine, pool recipient eligibility, complete poll age0<=age<60s and operator test/live gate checks.
+   And the unchanged contract assertion holds: Move prior UTC-day reservation atomically to current day or defer when full.
+@@ -217,7 +217,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-008`, legac
+ Scenario Outline: SC-f03-dispatch-pool-campaign-008
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
++  When each real stop writer commits before or after the final submitting barrier, then the dispatcher attempts submission and later work for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: commit is irreversible boundary
+   And the unchanged contract assertion holds: no lock held across adapter I/O.
+@@ -245,7 +245,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-009`, legac
+ Scenario Outline: SC-f03-dispatch-pool-campaign-009
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
++  When the local durable sink renders and stores the TEST message and an owner/intended pool peer reads its disclosed projection for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: local isolated durable sink records actual rendered test messages with sender/headers/test body and body unsubscribe plus List-Unsubscribe one-click headers.
+   And the unchanged contract assertion holds: Message-ID stored for later reference matching.
+@@ -274,7 +274,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-010`, legac
+ Scenario Outline: SC-f03-dispatch-pool-campaign-010
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
++  When the submission result classifier handles proved pre-DATA failure or an ambiguous outcome and the retry scheduler evaluates <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: typed proved pre-DATA transient failure only: max3 total attempts within 120s, delays5/30, all current guards and quota rechecked.
+   And the unchanged contract assertion holds: Ambiguous timeout/crash after submitting=>unknown_delivery, quota retained, zero automatic resend.
+@@ -298,7 +298,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-011`, legac
+ Scenario Outline: SC-f03-dispatch-pool-campaign-011
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant campaign edit/start/preview, pool schedule/claim, final submit and adapter outcome, stop barrier verification operation runs for <case> against authoritative persistent state
++  When the final guard/retry/inspection path samples the controlled post-lock clock at the stated boundary and checks operator authority for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: deterministic clock boundaries include midnight with provider lower limit, 59.999/60/future poll time, lease expiry,120s retry ceiling.
+   And the unchanged contract assertion holds: State inspection and operator test tick are scoped to local test mode
+@@ -325,7 +325,7 @@ Source: `01_specification.md` heading `AC-f03-dispatch-pool-campaign-012`, legac
+ Scenario Outline: SC-f03-dispatch-pool-campaign-012
+   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
+   And the concrete case is <case>
+-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
++  When the authorized final-dispatch verification procedure executes realPG races/outcomes, final-guard mutation, regression/build/security and independent review for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: full realPG races/outcome tests, mutation for final guard, regressions, typecheck/lint/build/security and fresh independent review
+   And the unchanged contract assertion holds: F04 unsubscribe and IMAP runtime, F06 full cabinet UI remain tracked, never claimed complete here.
+diff --git a/projects/07-cold-email-warmup/docs/features/f04-reply-suppression/scenarios.md b/projects/07-cold-email-warmup/docs/features/f04-reply-suppression/scenarios.md
+index f7b56903..53f52b8d 100644
+--- a/projects/07-cold-email-warmup/docs/features/f04-reply-suppression/scenarios.md
++++ b/projects/07-cold-email-warmup/docs/features/f04-reply-suppression/scenarios.md
+@@ -13,7 +13,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-001`, legacy `AC
+ Scenario Outline: SC-f04-reply-suppression-001
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
++  When the reply reader normalizes the bounded header page and matches its sender/References to our tenant/mailbox sent message for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: validate bounded header-only pages <=100, UIDs/UIDVALIDITY and normalized single sender/References/In-Reply-To.
+   And the unchanged contract assertion holds: Match only OUR sent message within tenant+mailbox AND decrypted enrollment recipient exact normalized sender
+@@ -40,7 +40,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-002`, legacy `AC
+ Scenario Outline: SC-f04-reply-suppression-002
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
++  When the reply page transaction takes lock(7,1) FIRST, writes observations/semantic effects/cancellation/cursor and commits or crashes for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: all page writes use shared advisory lock(7,1) FIRST.
+   And the unchanged contract assertion holds: Observation unique(mailbox,validity,UID), additional valid normalized Message-ID ledger
+@@ -68,7 +68,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-003`, legacy `AC
+ Scenario Outline: SC-f04-reply-suppression-003
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
++  When the poll reader begins or resets the immutable rescan run, then applies the supplied trusted UID coverage for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: initial poll or UIDVALIDITY change creates durable run_id with captured UIDNEXT-1 high-water H, cursor0, state scanning and mailbox_poll scan_complete=false.
+   And the unchanged contract assertion holds: Keep mailbox operational state (quarantine/revocation) intact
+@@ -95,7 +95,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-004`, legacy `AC
+ Scenario Outline: SC-f04-reply-suppression-004
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
++  When the rescan applies its attempt budget, handles explicit retry/restart and attempts same-validity tail completion for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: per-attempt max20 pages×100 headers and120s elapsed
+   And the unchanged contract assertion holds: future clock failsclosed.
+@@ -121,7 +121,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-005`, legacy `AC
+ Scenario Outline: SC-f04-reply-suppression-005
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
++  When the realPG crash/concurrency/stop-barrier verification drives production page ingestion and final dispatch for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: realPG crash BEFORE page COMMIT rollback observation/effect/cursor, AFTER COMMIT retained
+   And the unchanged contract assertion holds: old replyR effect1 and unseenS0→1 after replay with sameH.
+@@ -144,7 +144,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-006`, legacy `AC
+ Scenario Outline: SC-f04-reply-suppression-006
+   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
+   And the concrete case is <case>
+-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
++  When the authorized reply-source verification procedure checks additive migration, full unit/PG/build gates, dedup/page mutation and source/image/canary receipts for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: additive migration only (006), type/lint/build, fullunit/realPGregression, meaningful dedup or page-atomicity mutation red/restoredgreen, secret/header/body canary checks and source/image hashes.
+   And the unchanged contract assertion holds: Fresh independent Astra review and unique terminal receipt.
+@@ -170,7 +170,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-007`, legacy `AC
+ Scenario Outline: SC-f04-reply-suppression-007
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
++  When the public unsubscribe handler validates the bound capability and processes GET confirmation or HTML/RFC one-click POST for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: existing opaque32byte hashed unsubscribe capability, purpose implicit dedicated table, bound expiry30days/job/mailbox/enrollment/digest.
+   And the unchanged contract assertion holds: GET validates and shows accessible confirmation with zero business mutations
+@@ -194,7 +194,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-008`, legacy `AC
+ Scenario Outline: SC-f04-reply-suppression-008
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
++  When the unsubscribe POST transaction takes lock(7,1) FIRST, revalidates post-lock expiry and applies suppression/cancellation/pool withdrawal for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: POST takes same lock FIRST, validates capability at current post-lock time and atomically UPSERTs tenant suppression/cancels recipient pending enrollments
+   And the unchanged contract assertion holds: repeated/concurrent requests idempotent.
+@@ -219,7 +219,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-009`, legacy `AC
+ Scenario Outline: SC-f04-reply-suppression-009
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
++  When the complaint intake authenticates the operator, validates/deduplicates the event and commits suppression/quarantine/cancellation for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: operator-only authenticated complaint intake, no generic unsigned provider webhook.
+   And the unchanged contract assertion holds: Durable event dedup bound to operator,event,tenant,mailbox and recipient
+@@ -244,7 +244,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-010`, legacy `AC
+ Scenario Outline: SC-f04-reply-suppression-010
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
++  When the public token/complaint handler applies trusted-IP admission and GET/POST token/security policies during concurrent requests and stop barriers for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: public token/complaint requests atomic30/min per socket/trusted configured IP (no arbitrary forwarded headers), invalid requests count
+   And the unchanged contract assertion holds: duplicate POST still stable
+@@ -266,7 +266,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-011`, legacy `AC
+ Scenario Outline: SC-f04-reply-suppression-011
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant header page ingestion/rescan/reset/tail, public GET/POST capability, operator complaint/poll, reply/stop verification gates operation runs for <case> against authoritative persistent state
++  When the gated poll worker reads the independently durable local fixture with bounded I/O and applies its coverage/tail/status state for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: bounded poll worker every30s with disabled default or explicit local_test fixture protocol adapter
+   And the unchanged contract assertion holds: reads only headers, <=100/page, operation<=30s, same durable A run/coverage/tail contracts, no DBlock over adapter IO.
+@@ -292,7 +292,7 @@ Source: `01_specification.md` heading `AC-f04-reply-suppression-012`, legacy `AC
+ Scenario Outline: SC-f04-reply-suppression-012
+   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
+   And the concrete case is <case>
+-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
++  When the authorized local end-to-end procedure seeds/polls an actual reply, drives unsubscribe/complaint HTTP and evaluates full regression/mutation/source/fresh-review gates for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: end-to-end local operator seed/poll→actual persisted reply→pending stop and local unsubscribe/complaint HTTP flows with realPG
+   And the unchanged contract assertion holds: fullregression, relevant negative guards/mutation, sourcebuild/receipts/freshAstra.
+diff --git a/projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/scenarios.md b/projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/scenarios.md
+index 51707a37..63536a9a 100644
+--- a/projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/scenarios.md
++++ b/projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/scenarios.md
+@@ -13,7 +13,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-001`, lega
+ Scenario Outline: SC-f05-evidence-billing-growth-001
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
++  When the server evaluates current entitlement while creating a mailbox or starting a new campaign under serialized resource admission for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: server-owned free/team config
+   And the unchanged contract assertion holds: TESTteam100minorRUB30days immutable
+@@ -42,7 +42,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-002`, lega
+ Scenario Outline: SC-f05-evidence-billing-growth-002
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
++  When the referral landing/checkout attribution selector verifies explicit code or purpose-bound cookie and freezes the partner snapshot for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: unique nonPII partnercode pertenant, owner-only status/aggregate endpoints
+   And the unchanged contract assertion holds: signed boundedpurpose-specific30daycookie landing /r/:code, invalid/inactivecodeexplicitrejection.
+@@ -68,7 +68,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-003`, lega
+ Scenario Outline: SC-f05-evidence-billing-growth-003
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
++  When the owner POSTs checkout and the service creates/reuses the immutable intent/provider binding outside the database transaction for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: session/Origin POSTcheckout acceptsclosedbody plan='team', clientidempotencykey8–128, optionalexplicitcode only.
+   And the unchanged contract assertion holds: Unique(tenant,key) immutable plan/amount/currency/attribution/providerkey
+@@ -95,7 +95,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-004`, lega
+ Scenario Outline: SC-f05-evidence-billing-growth-004
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
++  When the authenticated adapter/operator wakes reconciliation, fetches independent canonical provider truth and checks fields/version before commit for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: independentdurable localproviderfixture separatefromintent/entitlement, operator-only simulate pending→success/cancel and revocation/expiryteststate withmonotonicversion.
+   And the unchanged contract assertion holds: Publicredirect/status/query/bodycannotwriteprovidertruth.
+@@ -120,7 +120,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-005`, lega
+ Scenario Outline: SC-f05-evidence-billing-growth-005
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
++  When canonical reconciliation applies or rejects the unique grant/first-buyer conversion and current entitlement reads its fixed expiry/terminal state for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: atmostoneentitlementgrant perintent, fixedexpires_at=verifiedpaidAt+30days, no replayextension
+   And the unchanged contract assertion holds: currenttimeexpiryservertruth, canceled/revoked/expired cannotresurrectfromstaleevent.
+@@ -145,7 +145,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-006`, lega
+ Scenario Outline: SC-f05-evidence-billing-growth-006
+   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
+   And the concrete case is <case>
+-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
++  When the authorized billing acceptance procedure drives HTTP checkout/operator canonical state/grant negatives and full mutation/regression/source/donor review gates for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: actuallocalHTTPcheckout→operatorfixture success→canonicalfetch→oneTESTgrant+attributedconversion, cancel/expiry/redirect/mismatchnegativebranches allSC009/011/013.
+   And the unchanged contract assertion holds: Type/lint/build/fullunit/realPG, meaningfultamperedcanonicalguardmutation+restoredgreen, rate/body/secretcanary/sourceimagebinding andfreshAstra.
+@@ -171,7 +171,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-007`, lega
+ Scenario Outline: SC-f05-evidence-billing-growth-007
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
++  When the owner submits the bounded manually verified observation and the server validates/persists its private metadata for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: owner-only boundedmanualobservations require sourceURL/reference, observeddates, metric/unit/windows, rawvalue/denominator andexplicitmanualverification.
+   And the unchanged contract assertion holds: NoexternalURLfetch
+@@ -195,7 +195,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-008`, lega
+ Scenario Outline: SC-f05-evidence-billing-growth-008
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
++  When the server compares the selected own observation pair using UTC windows, direction, freshness and denominator guards for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: comparability same source/metric/unit/direction/equalUTCwindowduration nonoverlap, latestage<=7days exactboundary, baseline<=28days beforelatest, nofuturedata.
+   And the unchanged contract assertion holds: Strictdeclaredhigher/lower improvement
+@@ -219,7 +219,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-009`, lega
+ Scenario Outline: SC-f05-evidence-billing-growth-009
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
++  When the owner explicitly POSTs share and the transaction rechecks the pair, idempotency payload and anonymous public projection for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: explicitauthenticatedPOSTshare selectsowncomparablepair, idempotencykey boundpayload.
+   And the unchanged contract assertion holds: Createone randomopaqueanonymousreport/token andone shareevent
+@@ -245,7 +245,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-010`, lega
+ Scenario Outline: SC-f05-evidence-billing-growth-010
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
++  When the public report handler renders the snapshot using current server entitlement, freshness and token state for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: public report dynamicallyconsultscurrentserverentitlement onEVERYview
+   And the unchanged contract assertion holds: free/expired/revokedreturnsonevisibleN7sourcebadge, paidTESTteammayhide, paid=true/clientflagsignored.
+@@ -269,7 +269,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-011`, lega
+ Scenario Outline: SC-f05-evidence-billing-growth-011
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant resource creation/start, attribution/checkout/canonical reconcile, manual observation/compare/share/report-view, billing/evidence verification gates operation runs for <case> against authoritative persistent state
++  When the owner queries partner/report history or explicitly records a copy/link event against bounded aggregate storage for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: partnerpanelownaggregate events(counts onlyunder30), twoeligibleconversionscount2, duplicates0, foreigntenant404/noidentities.
+   And the unchanged contract assertion holds: Shareeventcopy/link UIseam explicit andidempotent, metricprovenanceandTESTconversionlabelspreserved.
+@@ -291,7 +291,7 @@ Source: `01_specification.md` heading `AC-f05-evidence-billing-growth-012`, lega
+ Scenario Outline: SC-f05-evidence-billing-growth-012
+   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
+   And the concrete case is <case>
+-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
++  When the authorized evidence acceptance procedure drives realPG share/badge races, relevant mutations and full regression/source/fresh-review gates for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: realPG/API(publicreportHTTP) source-boundallSC008/010/012/013, concurrencyshare/dedup andentitlementexpiry/revocation races, meaningfulshareguardorbadgepredicate mutantRED/restoredGREEN, fullregression/type/lint/build/securitysourceimageproof+freshAstra.
+   And the unchanged contract assertion holds: FullcabinetPlaywrightF06stillmandatorylater
+diff --git a/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/scenarios.md b/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/scenarios.md
+index b342a656..442ddab9 100644
+--- a/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/scenarios.md
++++ b/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/scenarios.md
+@@ -13,7 +13,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-001`, legacy
+ Scenario Outline: SC-f06-cabinet-e2e-delivery-001
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant real cabinet forms and session lifecycle, source verification, actual browser/operations validation, documentation and PR delivery workflow operation runs for <case> against authoritative persistent state
++  When the user enters or reloads the protected cabinet, logs out/switches identity, or an asynchronous request resolves against the current epoch for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: public auth register/login transitions into protected/app
+   And the unchanged contract assertion holds: direct unauthenticated/app redirects signin.
+@@ -39,7 +39,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-002`, legacy
+ Scenario Outline: SC-f06-cabinet-e2e-delivery-002
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant real cabinet forms and session lifecycle, source verification, actual browser/operations validation, documentation and PR delivery workflow operation runs for <case> against authoritative persistent state
++  When the user saves/edits mailbox settings or explicitly grants/revokes consent/quarantine and reloads the authoritative state for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: real mailbox save/edit/limit1..30/quarantine controls, SMTP465or587/IMAP993 mandatoryTLS, secret inputs never populated fromAPI and cleared on success
+   And the unchanged contract assertion holds: defaultlimit10.
+@@ -67,7 +67,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-003`, legacy
+ Scenario Outline: SC-f06-cabinet-e2e-delivery-003
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant real cabinet forms and session lifecycle, source verification, actual browser/operations validation, documentation and PR delivery workflow operation runs for <case> against authoritative persistent state
++  When the user edits/imports the labelled campaign form, previews it and explicitly starts/pauses or reconsents after its version changes for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: actual campaign create/edit with1..5steps subject/body/delay>=24h and recipients<=100 with allowlisted personalization
+   And the unchanged contract assertion holds: usable labelled form/importlines rather than rawJSON editor.
+@@ -93,7 +93,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-004`, legacy
+ Scenario Outline: SC-f06-cabinet-e2e-delivery-004
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant real cabinet forms and session lifecycle, source verification, actual browser/operations validation, documentation and PR delivery workflow operation runs for <case> against authoritative persistent state
++  When the user saves manual observations, compares their own pair and explicitly shares/copies/opens/revokes its public report for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: owner manual observation form source/ref/UTC windows/metric/direction/numerator/denominator/manualcheckbox, real saved history
+   And the unchanged contract assertion holds: compareownselectedpair throughAPI.
+@@ -120,7 +120,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-005`, legacy
+ Scenario Outline: SC-f06-cabinet-e2e-delivery-005
+   Given two isolated tenants, controlled clock/barriers and explicit local TEST fixtures; real transports and charges disabled
+   And the concrete case is <case>
+-  When the relevant real cabinet forms and session lifecycle, source verification, actual browser/operations validation, documentation and PR delivery workflow operation runs for <case> against authoritative persistent state
++  When the user retries/refreshes TEST checkout or activates/deactivates/copies their partner code while an operator changes canonical fixture state outside the browser for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: billing currentfree/teamlimits+expiry+TEST100minorRUB30days, disabled typedunavailable.
+   And the unchanged contract assertion holds: Explicitpartnercode beforecheckout (cookie fallback statusvisible), retryusesstableidempotencykey untilpayloadchange
+@@ -145,7 +145,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-006`, legacy
+ Scenario Outline: SC-f06-cabinet-e2e-delivery-006
+   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
+   And the concrete case is <case>
+-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
++  When the authorized cabinet-source verification runs type/lint/build/full unit/PG/HTTP/static checks and a session-authority mutation with source/image/canary review for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: implementationtype/lint/build/unit/fullPG and focused HTTP route/auth/staticsecurity tests
+   And the unchanged contract assertion holds: meaningful central401/sessionguard or relevant UIauthority mutation RED/restoredGREEN
+@@ -173,7 +173,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-007`, legacy
+ Scenario Outline: SC-f06-cabinet-e2e-delivery-007
+   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
+   And the concrete case is <case>
+-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
++  When the authorized harness passes exact READY preflight, acquires shared UI flock and drives the stated viewport/engine/keyboard/screenshot matrix in existing Docker Playwright for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: actual existingDocker codex-ui-playwright@1.63.0 only
+   And the unchanged contract assertion holds: nohostbrowser install/newcontainer.
+@@ -197,7 +197,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-008`, legacy
+ Scenario Outline: SC-f06-cabinet-e2e-delivery-008
+   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
+   And the concrete case is <case>
+-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
++  When the harness drives real cabinet clicks and reloads while trusted operator fixture code supplies reply/complaint/unsubscribe/payment prerequisites outside the browser for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: real browser actions register/login/addeditmailbox/separateuncheckedconsents/poolwaiting/campaignpreviewstartpause/observationscompareexplicitshare/publicreport/revoke/checkoutpartner
+   And the unchanged contract assertion holds: page reload provesserverpersistence.
+@@ -222,7 +222,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-009`, legacy
+ Scenario Outline: SC-f06-cabinet-e2e-delivery-009
+   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
+   And the concrete case is <case>
+-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
++  When two real tenant browser contexts perform foreign requests, logout/expiry and delayed-response/negative-state journeys for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: two independenttenantcontexts
+   And the unchanged contract assertion holds: privatebox/campaign/evidence/reportIDsforeign404, no cross-tenantDOMdata
+@@ -248,7 +248,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-010`, legacy
+ Scenario Outline: SC-f06-cabinet-e2e-delivery-010
+   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
+   And the concrete case is <case>
+-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
++  When the authorized harness measures at least100 authenticated API samples with10workers on CPU2 and verifies source-bound health/secret/regression evidence for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: actual source-bound10concurrent authenticated localAPIrequests (>=100samples,excludingKDF/providerIO) measurep95<500ms target, disclose exactcommands/source/CPU2/environment/errors
+   And the unchanged contract assertion holds: noestimatedbenchmark.
+@@ -272,7 +272,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-011`, legacy
+ Scenario Outline: SC-f06-cabinet-e2e-delivery-011
+   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
+   And the concrete case is <case>
+-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
++  When the authorized documentation workflow reconciles actual canonical decisions, bilingual setup/operator TEST guides, twelve accepted criteria/telemetry and unchanged inherited toolkit evidence for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: canonicaldocs Markdown updated PRD/Specification/Architecture/ADR onlyifactualdecisions, Completioncurrentstatus, README Russian and README.en.md withlocalsetup/secretfiles/modes/operatorTESTflow/tests/limitations, pipeline-walkthrough.md completechronologyandcurrentartifacts.
+   And the unchanged contract assertion holds: Source-reuseinventory/provenanceknown, no unrelateddocs copy.
+@@ -296,7 +296,7 @@ Source: `01_specification.md` heading `AC-f06-cabinet-e2e-delivery-012`, legacy
+ Scenario Outline: SC-f06-cabinet-e2e-delivery-012
+   Given an immutable candidate source/build snapshot and the required scoped heavy-test/browser grant
+   And the concrete case is <case>
+-  When the original verification or delivery procedure is evaluated for <case> with actual commands, receipts and independent review
++  When the authorized delivery workflow checks clean scoped commit/push and attempts the required branch-target PR creation while retaining the deployment checkpoint and excluded live actions for <case>
+   Then the required outcome is <expected>
+   And the unchanged contract assertion holds: commit/push Russian messages noCoAuthoredBy, clean N7scope diff/secretcheck, create PR feature/07-cold-email-warmup→defaultclaude/install-npm-packages-n7l3m5
+   And the unchanged contract assertion holds: do notcreate main/changdefault.

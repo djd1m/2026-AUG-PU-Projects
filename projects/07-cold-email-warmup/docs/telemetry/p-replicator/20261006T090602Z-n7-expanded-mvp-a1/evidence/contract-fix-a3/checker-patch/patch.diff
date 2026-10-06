@@ -1,0 +1,20 @@
+--- 1.13.4/check-pipeline-gaps.sh
++++ 1.13.4+n7patch1/check-pipeline-gaps.sh
+@@ -760,7 +760,7 @@
+ else
+   PROJECT_SPEC="$DOCS_ROOT/$PROJECT_SPECIFICATION"
+   PROJECT_PSEUDO="$DOCS_ROOT/$PROJECT_PSEUDOCODE"
+-  PROJECT_COMPLETION="$DOCS_ROOT/$PROJECT_COMPLETION"
++  PROJECT_COMPLETION_FILE="$DOCS_ROOT/$PROJECT_COMPLETION"
+   PROJECT_VALIDATION="$DOCS_ROOT/validation-report.md"
+   if [ "$TRACEABILITY_MODE" -eq 1 ] && { [ -e "$PROJECT_SPEC" ] || [ -L "$PROJECT_SPEC" ] || \
+      [ -e "$PROJECT_PSEUDO" ] || [ -L "$PROJECT_PSEUDO" ]; }; then
+@@ -768,7 +768,7 @@
+     CHECKED_CONTOURS=$((CHECKED_CONTOURS + 1))
+   fi
+   if [ "$COMPLETION_MODE" -eq 1 ] && { [ -e "$PROJECT_SPEC" ] || [ -L "$PROJECT_SPEC" ] || \
+-     [ -e "$PROJECT_COMPLETION" ] || [ -L "$PROJECT_COMPLETION" ]; }; then
++     [ -e "$PROJECT_COMPLETION_FILE" ] || [ -L "$PROJECT_COMPLETION_FILE" ]; }; then
+     process_completion_contour project "$DOCS_ROOT" "$PROJECT_SPECIFICATION" "$PROJECT_COMPLETION"
+     COMPLETION_CHECKED_CONTOURS=$((COMPLETION_CHECKED_CONTOURS + 1))
+   fi

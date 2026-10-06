@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-06T10:06:28.198381+00:00",
+  "donor": "n7f06a-web-1",
+  "node": "22.20.0",
+  "lock_sha256": "49b300c360c2c1471596b225ced88d8b509bb57fcc2787a83c0dd5190089eb1a",
+  "target": "/tmp/n7-expanded-runtime-20261006/node_modules",
+  "method": "docker cp existing exact-lock dependencies; no install/download",
+  "runtime_tests": "not run; use Node22 Docker for required suite"
+}

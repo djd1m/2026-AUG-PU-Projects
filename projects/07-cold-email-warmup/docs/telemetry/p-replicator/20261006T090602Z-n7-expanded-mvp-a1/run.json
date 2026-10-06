@@ -69,7 +69,7 @@
     "No prelaunch serialized launch digest for native PLAN receipt; terminal receipt and output SHA verified, not companion delivery attestation",
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred."
   ],
-  "current_stage": "Legacy contracts author; independent F07 PLAN",
+  "current_stage": "Legacy R1 exact correction; F07 READY waiting integration",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -104,12 +104,14 @@
     "scope": "runtime smoke only, no N7 E2E claim"
   },
   "legacy_traceability": {
-    "exit_code": 2,
+    "exit_code": 0,
     "canonical_requirements": 16,
-    "canonical_algorithms": 16,
-    "canonical_result": "pass",
-    "features_inconclusive": 6,
-    "reason": "Historical hyphenated role targets incompatible with current underscore map; keep historical evidence, reconcile before implementation"
+    "expanded_requirements": 18,
+    "legacy_requirements": 60,
+    "features_checked": 7,
+    "source_revision": "b2433e8f467df182600f1525318422887a917dde",
+    "scope": "full project before adding F07 contour",
+    "semantic_review": "pending; concrete When trigger correction in a3"
   },
   "selected_traceability": {
     "exit_code": 0,
@@ -120,8 +122,8 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "root",
-    "executor": "n7_expanded_coordinator, contract_author_a1, f07_planner_a1",
-    "next": "inspect contract-author result; concrete document corrections if gaps then fresh Astra review; F07 VALIDATE before Sol IMPLEMENT",
+    "executor": "n7_expanded_coordinator; contract_author_a1 (legacy-r1-fix)",
+    "next": "reviewer confirms exact diff then integrate/push and start F07 Sol20min",
     "source_revision": "c80504ac43876345084f57eb47287d5f9712f184"
   },
   "blockers": [
@@ -142,5 +144,27 @@
     "plan_published_revision": "298960ce",
     "scope": "plan, A1-A3, team, roles, models, skills",
     "source": "docs/decisions-owner.md"
+  },
+  "legacy_completion": {
+    "exit_code": 2,
+    "cause": "installed1.13.4 doubles canonical completion absolute path; legacy6 tables missing/malformed; expanded9futuretests absent",
+    "package_bug_notified_root": true
+  },
+  "reporting": {
+    "required_by_owner": "2026-10-06 via root message",
+    "interval_minutes": 10,
+    "timestamp_timezone": "UTC",
+    "fields": [
+      "what is executing or waiting",
+      "actual worker/receipt/commit/gate status",
+      "next step and executor"
+    ],
+    "also_on": [
+      "stage_change",
+      "blocker"
+    ],
+    "last_reported_at": "2026-10-06T10:24:56.503533+00:00",
+    "responsible": "n7_expanded_coordinator sends root; root reports owner",
+    "no_background_claim_without_actual_worker": true
   }
 }

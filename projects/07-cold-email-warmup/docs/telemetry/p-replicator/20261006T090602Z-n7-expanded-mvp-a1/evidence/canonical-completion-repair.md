@@ -1,0 +1,3 @@
+# Canonical completion structural repair
+
+2026-10-06: corrected-copy1.13.4+n7patch1 exposes missing Criterion coverage table after canonical path bug is fixed. Canonical Specification declares zero AC machine headings, therefore current table has zero rows. Source/content assertions unchanged; no runtime PASS implied. Original bytes preserved at docs/validation-history/Completion.pre-contract-table-20261006.md; SHA256 da3cc96fdfc3d973fb3c09b9220bd0feb50141949aa63713cd79797321e447a3. New completion SHA256 15dee58b5f62847dd0839a988d81d5e3e01aef387992e0ce850af54c0cca9873. Fresh independent review required.
