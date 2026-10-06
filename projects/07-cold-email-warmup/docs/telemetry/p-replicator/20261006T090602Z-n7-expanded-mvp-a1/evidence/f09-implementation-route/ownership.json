@@ -35,7 +35,8 @@
     "tests/f09-transport-fixture.ts",
     "tests/f09-slot-owner-fixture.ts",
     "tests/f09-transport-unit.test.ts",
-    "tests/f09-transport-integration.test.ts"
+    "tests/f09-transport-integration.test.ts",
+    "tests/diagnostics-integration.test.ts"
   ],
   "allowed_tmp_artifacts": "/tmp/n7-f09-implement-a1 only, secrets never committed",
   "excluded": "root/toolkit/canon/telemetry/UI/package/manifests outside listed migration; existing auth/crypto/shared transaction unchanged unless confirmed need then coordinator extension",
@@ -57,5 +58,13 @@
   "browser": "not_applicable if UI unchanged; no final-image browserclaim",
   "source_revision": "dcd85ce797f4765e5de8e430cb20cfdadf45453c",
   "independent_validation_revision": "f0ae85a4737db9aedd11a5c5bcf45ba4e8e518ca",
-  "integrated_phase12_exit": 0
+  "integrated_phase12_exit": 0,
+  "scope_extensions": [
+    {
+      "timestamp": "2026-10-06T13:27:03.746982+00:00",
+      "path": "tests/diagnostics-integration.test.ts",
+      "scope": "Only expectedMAX(schema_migration.version)13\u219214 after approved additive db014; F08 behavior assertions unchanged",
+      "reason": "Actual fullPG140/142 includes historical hardcodedexpected13 failure; meaningful migration compatibility correction"
+    }
+  ]
 }
