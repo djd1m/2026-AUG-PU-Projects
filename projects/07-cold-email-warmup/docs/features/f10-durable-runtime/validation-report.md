@@ -1,34 +1,32 @@
 # F10 — независимая проверка требований
-Spec revision: sha256:1876538a2cc043784f3aea64bee485c4e43cb0fed28524a4a9f5de8ac78b2539
+Spec revision: sha256:410d329fcc9d433f51e554310318457096a8dfdd82aad9754e47d7122744eeb8
 
-Verdict: NEEDS_WORK
-Source revision: be68bf655084cb3fa9fc607469a42998de276bb7
+Verdict: READY
+Source revision: 952e356dea272af16d8cc19807ea0408c34e1b9b
 RUN_ID: 20261006T090602Z-n7-expanded-mvp-a1
-WORK_UNIT_ID: f10-validate-a1
+WORK_UNIT_ID: f10-validate-r2
 Profile: compact-quality-first-v2; requested gpt-6-astra/high; actual model/effort/usage/cost: null (host_not_exposed).
-Actual first successful tool ACK: 2026-10-06T14:50:35.361178876Z, exec date -u. Default sandbox failed before this ACK; narrowly scoped escalation read the isolated worktree.
+Actual r2 tool ACK: 2026-10-06T15:04:12.804453174Z, exec date -u in the isolated worktree; narrow escalation reused because default bwrap cannot start.
 
 ## Scope and source inventory
 
-Fresh requirements-validator pass over all five F10 roles at the source revision above, followed by substantive reads of accepted runtime primitives. Only this report is changed. OWN-N7-005 covers the existing expanded scope; no new owner checkpoint, research, provider access, installation, runtime execution or publication is requested. Substantive XL and full /feature gates remain; inherited mechanical M/exit0 is only a lower bound. Companion E2E preflight: not_applicable, documentary validation only. Coordinator owns run telemetry and subsequent implementation routing.
+Fresh requirements-validator r2 checks all required current inputs and the complete four-role diff f0c580b6..952e356d. The earlier substantive independent five-role/runtime reads are retained as source analysis; unchanged runtime and F09 contracts were verified by the source diff, not rerun as runtime tests. All five role files and their current hashes were checked afresh. Only this report changes. OWN-N7-005 covers scope; substantive XL and full /feature gates remain. Companion E2E preflight: not_applicable, documentary validation only. Coordinator owns telemetry and subsequent implementation routing.
 
 | Role | SHA-256 |
 |---|---|
-| 01_specification.md | 1876538a2cc043784f3aea64bee485c4e43cb0fed28524a4a9f5de8ac78b2539 |
-| 02_pseudocode.md | c6924a02fa719970ef950d385bd1542c68cac454f7c65146dc0bda829ac86389 |
-| 03_architecture.md | a9083f4cc5bded0e414b81d30dc030604735b45761d04d724607876715da5f1d |
-| 04_refinement.md | e1fbfb9b35f3eaca163dac163e6ed1203bcdcc21cc9764be8347253e521eaee3 |
+| 01_specification.md | 410d329fcc9d433f51e554310318457096a8dfdd82aad9754e47d7122744eeb8 |
+| 02_pseudocode.md | fab8c4f63782f59e07fb19b073bed73fe41e0d5822da1c4cd39887591c6902ae |
+| 03_architecture.md | c76c1fc569c4116ce7e70eafb624b83dd5de3a7288ac937fc03ece15ef43064b |
+| 04_refinement.md | 34f8cc017558c31cd92fc022fe32f4ef084c6c632dcf57f251ba4f876d95ce4c |
 | 05_completion.md | 913b45a0e49dbfc95e98d33db485c382d1e935f77f3559c2fd1e4835e2278b27 |
 
-All roles exist and contain substantive content. Fresh original full-project Phase I traceability returned0: features11, gaps0, inconclusive0; evidence /tmp/n7-f10-validate-a1/phase1.txt and phase1.exit. This establishes present source completeness independently. Planner A1 missing-role/timing failure and A2 freeze-time failure remain historical failed attempts; their receipts are not accepted by aggregation here.
+All five current roles are available and substantive. The r2 full-project original Phase I/II command and actual exit are stored in /tmp/n7-f10-validate-r2/phase12.txt and phase12.exit. Historical planner A1/A2 failures, validation a1 timing failure, and corrective planner r3 freeze failure remain failed; their receipts are not aggregated as accepted. The original a1 report is preserved by commit f0c580b6 and coordinator evidence/f10-validate-a1 with SHA184d5a231ab1c74fa0705c4cba160a989d441fb0c06be050bc6983e21b2e9e1b. This fresh verdict binds the present source independently.
 
-## Blocking finding
+## F10-V1 closure
 
-**F10-V1 — High: page yield does not rotate mailboxes within a tenant.** 02_pseudocode.md:36 selects a tenant by service_seq but then its earliest due mailbox; :37 requeues a successful page, :38 advances the poll due only on complete proof, and :84 explicitly preserves due_at for unsatisfied work. 01_specification.md, Eligibility, priorities and measurements likewise requires oldest due mailbox. RuntimeDue has service_seq, but neither selection nor quantum completion specifies its use to rotate mailboxes within the selected tenant. next_check_at is an eligibility filter, not a defined continuation fairness rule. 03_architecture.md:45 supplies indexes, not the missing ordering.
+**F10-V1 — formerly High, resolved in source952e356d.** Current01 AC002/003 and Eligibility explicitly separate service order from original due age. Current02:36 orders each tenant's eligible unclaimed mailbox by RuntimeDue.service_seq first, with due_at/UUID only as ties. In the same FIRST-lock claim transaction both tenant and mailbox receive fresh PG sequence values before I/O; rollback starts no operation. Every committed selected quantum consumes its turn, including later busy/failure. Current02:37 retains this order on page yield, and:84 forbids reset or double advancement on completion/reconciliation/restart. New rows initialize0 only on INSERT; original due_at remains the overdue observation.
 
-Concrete counterexample: one tenant has four older incomplete rescans A–D and a later-due healthy mailbox E; four poll lanes are available. Each rescan needs many successful bounded page operations and remains due. After every yield, the next free lane again takes an older A–D; E waits until an old scan completes or exhausts its120s attempt. Other tenants can rotate correctly while E exceeds both30s healthy cadence and60s due round. This is a permitted schedule even without a transport failure; a5s page is within the30s operation bound. One page per quantum alone does not prohibit it. SC-F10-002/003 and the explicit slow-rescan matrix in04 require the missing property.
-
-Minimal repair: use the existing durable per-mailbox service sequence (or equally precise persisted round membership) to ensure an already-served continuation cannot precede unserved eligible mailboxes of its tenant in the same round. Keep original due_at separately for overdue measurements; advance service order on every selected quantum, including busy/failure, and preserve it across restart. Specify the ordering consistently in01/02 and its architecture index. Add the four-old-rescans-plus-healthy-peer counterexample to SC-F10-002/003 with measured per-mailbox selection/completion gaps and restart, retaining20pages/120s and fixed physical slots. No new scheduling platform or control plane is needed. Coordinator owns the corrective role revision and fresh spec-bound validation; this validator does not edit those roles.
+Architecture03:45 maps the service ordering index and separate wakeup index without changing authority or physical ownership. Refinement04 SC002/003 now specifies four older long rescans A–D plus later-due healthy E: after first quanta E precedes any A–D continuation, restart preserves ordering and original age, and actual per-mailbox selection/completion gaps are measured. The mutation replacing service order with oldest due or resetting it must fail this witness. The original counterexample is therefore excluded by the corrected design; no new engine or control plane is required. No unresolved High/Medium requirement findings remain. Seven AC identities and exact future test bindings remain intact. Timing targets,20pages/120s, no automatic incomplete-rescan retry and exact physical close/exit proofs are preserved. Runtime implementation and measurements remain future obligations.
 
 ## Resolved source questions and implementation boundaries
 
@@ -42,20 +40,20 @@ Minimal repair: use the existing durable per-mailbox service sequence (or equall
 
 ## INVEST and SMART scoring
 
-One composite F10 story has seven AC. The rubric is applied to the frozen artifact, not to hypothetical code. INVEST: Independent8/8 (accepted F09 dependency is already available); Negotiable8/8 (native safety contracts fixed, internal implementation open); Valuable10/10 (automatic consented operation and visible waits); Estimable4/8 (concrete decomposition, unresolved scheduling correction); Small4/8 (cross-store work requires bounded slices); Testable8/8 (quoted AC below and named scenarios). INVEST42/50.
+One composite F10 story has seven AC. The rubric is applied to the frozen artifact, not to hypothetical code. INVEST: Independent8/8 (accepted F09 dependency is already available); Negotiable8/8 (native safety contracts fixed, internal implementation open); Valuable10/10 (automatic consented operation and visible waits); Estimable8/8 (concrete decomposition and resolved scheduling correction); Small4/8 (cross-store work requires bounded slices); Testable8/8 (quoted AC below and named scenarios). INVEST46/50.
 
-SMART: Specific6/6 (literal states, authorities and thresholds); Measurable8/8 (per-mailbox gaps, counts, faults); Achievable3/6 (F10-V1 prevents the specified scheduler from establishing the fair-round claim); Relevant5/5 (all seven support the story); Time-bound5/5 (15/30/60/120/300s and UTC boundaries). SMART27/30. Quality: Traceability10/10 via this report's Criterion scenarios table; Completeness10/10 via quoted AC and happy/error/edge/security scenarios below. Base89/100. Security bonus+5 (tenant, grants, stop/quota/freshness/socket proofs specified). Growth bonus+5: existing discovery seeds FR-GROWTH-001..004 survive explicitly in canonical Specification.md; F10 adds no acquisition obligation. Adjusted99/100 is testability, not acceptance. The concrete High algorithm contradiction blocks READY irrespective of that score.
+SMART: Specific6/6 (literal states, authorities and thresholds); Measurable8/8 (per-mailbox gaps, counts, faults); Achievable6/6 (F10-V1 ordering is corrected; conditional timings still require real runtime evidence); Relevant5/5 (all seven support the story); Time-bound5/5 (15/30/60/120/300s and UTC boundaries). SMART30/30. Quality: Traceability10/10 via this report's Criterion scenarios table; Completeness10/10 via quoted AC and happy/error/edge/security scenarios below. Base96/100. Security bonus+5 (tenant, grants, stop/quota/freshness/socket proofs specified). Growth bonus+5: existing discovery seeds FR-GROWTH-001..004 survive explicitly in canonical Specification.md; F10 adds no acquisition obligation. Bonuses are recorded separately from the bounded96/100 base and are not used to inflate the base above100. No blocking requirement findings remain; READY authorizes the next implementation stage, not runtime acceptance.
 
 Blocking floors are all nonzero on actual artifacts: Testable8, Completeness10 and Traceability10. No unnamed or uncovered AC. All runtime results remain unexecuted.
 
 | Criterion | Quoted AC text from01, corresponding AC heading | SMART assessment |
 |---|---|---|
 | AC-f10-durable-runtime-001 | “новые claims после начала drain отсутствуют”; “Graceful drain≤15s” | Specific shutdown/recovery states, conditional measurable bound; feasible with retained blocked outcome |
-| AC-f10-durable-runtime-002 | “healthy complete poll cadence≤30s, fair due-work round≤60s” | Specific and measured per mailbox; F10-V1 blocks planned attainability |
-| AC-f10-durable-runtime-003 | “peer-observed sockets≤2 SMTP/4 IMAP/1 per protocol mailbox”; “20pages/120s attempt” | Physical and attempt limits measurable; within-tenant page fairness needs V1 repair |
+| AC-f10-durable-runtime-002 | “healthy complete poll cadence≤30s, fair due-work round≤60s” | Specific and measured per mailbox; F10-V1 closed by durable per-mailbox order |
+| AC-f10-durable-runtime-003 | “peer-observed sockets≤2 SMTP/4 IMAP/1 per protocol mailbox”; “20pages/120s attempt” | Physical and attempt limits measurable; within-tenant page fairness now explicit |
 | AC-f10-durable-runtime-004 | “current-day shared default10/ceiling30/provider lower cap preserved”; “sender starts≥60s apart” | Literal quota/pacing/UTC and before-after stop outcomes; feasible existing final fence |
 | AC-f10-durable-runtime-005 | “unordered pair/day≤1 и thread≤2 total”; “рассматривается≤5min” | Bounded peer cursor, duplicate/error cases and observable deadline |
-| AC-f10-durable-runtime-006 | “due age не обнуляется”; “backoff30/60/120/300s capped300s” | Failure outcomes and time/cap bounds explicit, independent progress must include V1 case |
+| AC-f10-durable-runtime-006 | “due age не обнуляется”; “backoff30/60/120/300s capped300s” | Failure outcomes and time/cap bounds explicit, independent progress includes the specified V1 adversarial witness |
 | AC-f10-durable-runtime-007 | “loop переживает больше одного round”; “disabled default даёт0 external calls” | Reproducible candidate/build/config and named full gates, no future test counted as execution |
 
 ## Criterion scenarios
@@ -76,7 +74,7 @@ Blocking floors are all nonzero on actual artifacts: Testable8, Completeness10 a
 Given queued, claimed, submitting, unknown and scanning work, When SIGTERM drains or crash/restart occurs, Then admission stops immediately, expired logical owners are fenced, safe work resumes and cursor/pause survive; submitting becomes unknown after120s and is never resent. Given missing exact exit proof or DB cleanup failure, When the conditional15s budget ends, Then cleanup_blocked retains occupation and unknown quota. Given complete exact exit and available DB, Then drain finishes within15s.
 
 ### SC-F10-002 — Every requested active mailbox receives a fair turn
-Given100 connected/30 explicitly active across≥3 tenants, When healthy rounds and restart execute, Then each active mailbox completes within30s gaps, due selection within60s, leases renew before120s and global admission never exceeds30. Given deletion/revoke racing upkeep, Then deleted intent is not recreated and waiting admission fairly uses released capacity. Given four older long rescans and a later-due healthy same-tenant peer, When page quanta repeatedly yield, Then the peer must receive its bounded turn without resetting original due age; this last witness exposes F10-V1 in the frozen algorithm.
+Given100 connected/30 explicitly active across≥3 tenants, When healthy rounds and restart execute, Then each active mailbox completes within30s gaps, due selection within60s, leases renew before120s and global admission never exceeds30. Given deletion/revoke racing upkeep, Then deleted intent is not recreated and waiting admission fairly uses released capacity. Given four older long rescans and a later-due healthy same-tenant peer, When page quanta repeatedly yield, Then the peer must receive its bounded turn without resetting original due age; the corrected algorithm must select E before any A–D second quantum. Restart after claims/yields preserves service_seq and original due_at; busy/failure consumes the already committed turn. Record E completion≤30s and selection≤60s in the declared healthy fixture window.
 
 ### SC-F10-003 — Suspended physical owners retain slots
 Given competing workers and an actual child SIGSTOP longer than120s, When leases expire or another process restarts, Then observed physical sockets stay≤2SMTP/4IMAP/1protocol-mailbox and no orphan slot is reclaimed. When the exact child exits, Then only its identity-fenced slot releases; DB failure defers release and stale proof cannot clear a new owner. Given yielded or exhausted scan, Then no false freshness appears and20pages/120s remains enforced.
@@ -114,4 +112,4 @@ After correction, implementation must execute real PG20-worker concurrency, nati
 
 ## Handoff and gate evidence
 
-Final verdict is NEEDS_WORK solely for F10-V1. The source-bound requirements review is complete; product implementation is not accepted. Next responsible actor is the N7 coordinator, who assigns the narrow role correction and fresh affected validation without rewriting earlier failed receipts. Final original full-project Phase I/II command and actual exit are recorded outside the report in /tmp/n7-f10-validate-a1/phase12.txt and phase12.exit; the terminal receipt /tmp/n7-f10-validate-a1-receipt.md binds report commit, timing and launch SHA. Structural gate success cannot override F10-V1. Coordinator telemetry: docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/; usage/cost and actual host model remain unavailable rather than estimated.
+Final verdict is READY for requirements at source952e356dea272af16d8cc19807ea0408c34e1b9b and the exact spec digest above. F10-V1 is closed by the independently inspected correction; all seven AC remain source-bound and scenario-covered. Next responsible actor is the N7 coordinator, who may assign bounded implementation and its mandatory runtime/review gates within existing authority. The original full-project Phase I/II command and exit are recorded in /tmp/n7-f10-validate-r2/phase12.txt and phase12.exit. Terminal receipt /tmp/n7-f10-validate-r2-receipt.md binds commit, actual timings and launch SHA. No Phase III/runtime success is claimed. Coordinator telemetry remains docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/; model/usage/cost remain null (host_not_exposed). Historical failed receipts remain failed, and inherited F06/F11–F15 gaps remain as stated above.
