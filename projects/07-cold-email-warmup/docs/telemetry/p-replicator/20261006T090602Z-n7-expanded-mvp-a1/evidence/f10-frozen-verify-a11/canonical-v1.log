@@ -1,0 +1,31 @@
+TAP version 13
+# Subtest: persistent fair workers serve every eligible mailbox
+not ok 1 - persistent fair workers serve every eligible mailbox
+  ---
+  duration_ms: 2713.281758
+  type: 'test'
+  location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/expanded-mvp-04.test.ts:1:459'
+  failureType: 'testCodeFailure'
+  error: 'fixture_dns_denied'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.denied (file:///tmp/n7-f10-frozen-verify-a11/guard.mjs:5:44)
+    lookupAndListen (node:net:2196:7)
+    Server.listen (node:net:2098:7)
+    <anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/f09-transport-fixture.ts:39:122)
+    new Promise (<anonymous>)
+    transportFixture (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/f09-transport-fixture.ts:39:94)
+    TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/expanded-mvp-04.test.ts:10:150)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13179.010084

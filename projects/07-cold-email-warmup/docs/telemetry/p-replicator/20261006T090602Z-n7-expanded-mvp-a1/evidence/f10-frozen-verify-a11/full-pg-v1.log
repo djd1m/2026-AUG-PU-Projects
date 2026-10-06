@@ -1,0 +1,830 @@
+
+> n7-cold-email-warmup@0.1.0 test:integration
+> tsx --test --test-concurrency=1 tests/*-integration.test.ts
+
+TAP version 13
+# Subtest: F01 real PostgreSQL16 HTTP identity acceptance
+not ok 1 - F01 real PostgreSQL16 HTTP identity acceptance
+  ---
+  duration_ms: 728.5029
+  type: 'test'
+  location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/auth-integration.test.ts:1:517'
+  failureType: 'testCodeFailure'
+  error: 'fixture_dns_denied'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.denied (file:///tmp/n7-f10-frozen-verify-a11/guard.mjs:5:44)
+    lookupAndListen (node:net:2196:7)
+    Server.listen (node:net:2098:7)
+    <anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/auth-integration.test.ts:18:47)
+    new Promise (<anonymous>)
+    TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/auth-integration.test.ts:18:9)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: F05 A1–A6 real PostgreSQL HTTP and canonical race gates
+not ok 2 - F05 A1–A6 real PostgreSQL HTTP and canonical race gates
+  ---
+  duration_ms: 593.516672
+  type: 'test'
+  location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/billing-integration.test.ts:1:666'
+  failureType: 'testCodeFailure'
+  error: 'fixture_dns_denied'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.denied (file:///tmp/n7-f10-frozen-verify-a11/guard.mjs:5:44)
+    lookupAndListen (node:net:2196:7)
+    Server.listen (node:net:2098:7)
+    <anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/billing-integration.test.ts:17:40)
+    new Promise (<anonymous>)
+    TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/billing-integration.test.ts:17:8)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: F07 real PostgreSQL capacity boundaries and atomic safety
+    # Subtest: creates101st connected mailbox for free and expired TEST team without send
+    ok 1 - creates101st connected mailbox for free and expired TEST team without send
+      ---
+      duration_ms: 1648.592368
+      type: 'test'
+      ...
+    # Subtest: tenant pages remain bounded and foreign capacity actions cause no side effects
+    ok 2 - tenant pages remain bounded and foreign capacity actions cause no side effects
+      ---
+      duration_ms: 49.931658
+      type: 'test'
+      ...
+    # Subtest: global30 admission serializes competing tenants and duplicate requests
+    ok 3 - global30 admission serializes competing tenants and duplicate requests
+      ---
+      duration_ms: 1537.560339
+      type: 'test'
+      ...
+    # Subtest: lease120 expiry release and stale renewal never resurrect stopped mailbox
+    ok 4 - lease120 expiry release and stale renewal never resurrect stopped mailbox
+      ---
+      duration_ms: 76.326027
+      type: 'test'
+      ...
+    # Subtest: complaint quarantine immediately releases capacity for another tenant
+    ok 5 - complaint quarantine immediately releases capacity for another tenant
+      ---
+      duration_ms: 315.011573
+      type: 'test'
+      ...
+    # Subtest: sender and pool recipient need active lease at scheduling claim and final fence
+    ok 6 - sender and pool recipient need active lease at scheduling claim and final fence
+      ---
+      duration_ms: 277.307389
+      type: 'test'
+      ...
+    # Subtest: capacity writers sample database time after shared lock and rollback admission
+    ok 7 - capacity writers sample database time after shared lock and rollback admission
+      ---
+      duration_ms: 150.462514
+      type: 'test'
+      ...
+    # Subtest: strict own capacity API rejects auth origin malformed cursor and rate abuse
+    not ok 8 - strict own capacity API rejects auth origin malformed cursor and rate abuse
+      ---
+      duration_ms: 259.864983
+      type: 'test'
+      location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/capacity-integration.test.ts:1:9686'
+      failureType: 'testCodeFailure'
+      error: 'fixture_dns_denied'
+      code: 'ERR_TEST_FAILURE'
+      stack: |-
+        Object.denied (file:///tmp/n7-f10-frozen-verify-a11/guard.mjs:5:44)
+        lookupAndListen (node:net:2196:7)
+        Server.listen (node:net:2098:7)
+        <anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/capacity-integration.test.ts:94:83)
+        new Promise (<anonymous>)
+        TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/capacity-integration.test.ts:94:51)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/capacity-integration.test.ts:93:3)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: real schema11 to12 upgrade preserves envelope states and has no automatic leases
+    ok 9 - real schema11 to12 upgrade preserves envelope states and has no automatic leases
+      ---
+      duration_ms: 1226.840688
+      type: 'test'
+      ...
+    # Subtest: additive migration idempotency keeps records without implicit lease
+    ok 10 - additive migration idempotency keeps records without implicit lease
+      ---
+      duration_ms: 25.152149
+      type: 'test'
+      ...
+    1..10
+not ok 3 - F07 real PostgreSQL capacity boundaries and atomic safety
+  ---
+  duration_ms: 6807.1976
+  type: 'test'
+  location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/capacity-integration.test.ts:1:995'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: HTTP disconnect in every phase clears owned resources and admission without late publication
+not ok 4 - HTTP disconnect in every phase clears owned resources and admission without late publication
+  ---
+  duration_ms: 458.445893
+  type: 'test'
+  location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/diagnostics-disconnect-integration.test.ts:1:579'
+  failureType: 'testCodeFailure'
+  error: 'fixture_dns_denied'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.denied (file:///tmp/n7-f10-frozen-verify-a11/guard.mjs:5:44)
+    lookupAndListen (node:net:2196:7)
+    Server.listen (node:net:2098:7)
+    <anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/diagnostics-fixture.ts:39:126)
+    new Promise (<anonymous>)
+    protocolFixture (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/diagnostics-fixture.ts:39:98)
+    TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/diagnostics-disconnect-integration.test.ts:13:25)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: final cancellation after FIRST wait and persisted SQL rolls back and releases admission
+not ok 5 - final cancellation after FIRST wait and persisted SQL rolls back and releases admission
+  ---
+  duration_ms: 554.490958
+  type: 'test'
+  location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/diagnostics-final-cancel-integration.test.ts:1:857'
+  failureType: 'testCodeFailure'
+  error: 'fixture_dns_denied'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.denied (file:///tmp/n7-f10-frozen-verify-a11/guard.mjs:5:44)
+    lookupAndListen (node:net:2196:7)
+    Server.listen (node:net:2098:7)
+    <anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/diagnostics-fixture.ts:39:126)
+    new Promise (<anonymous>)
+    protocolFixture (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/diagnostics-fixture.ts:39:98)
+    TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/diagnostics-final-cancel-integration.test.ts:17:22)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: diagnostic authority and tenant checks open no unauthorized sockets
+not ok 6 - diagnostic authority and tenant checks open no unauthorized sockets
+  ---
+  duration_ms: 650.181532
+  type: 'test'
+  location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/diagnostics-integration.test.ts:1:722'
+  failureType: 'testCodeFailure'
+  error: 'fixture_dns_denied'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.denied (file:///tmp/n7-f10-frozen-verify-a11/guard.mjs:5:44)
+    lookupAndListen (node:net:2196:7)
+    Server.listen (node:net:2098:7)
+    <anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/diagnostics-fixture.ts:39:126)
+    new Promise (<anonymous>)
+    protocolFixture (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/diagnostics-fixture.ts:39:98)
+    TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/diagnostics-integration.test.ts:25:22)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: real schema12 to13 upgrade preserves encrypted data without verified backfill
+ok 7 - real schema12 to13 upgrade preserves encrypted data without verified backfill
+  ---
+  duration_ms: 100.345796
+  type: 'test'
+  ...
+# Subtest: post-lock expiry queued revoke complaint order and actual CLI are fenced
+not ok 8 - post-lock expiry queued revoke complaint order and actual CLI are fenced
+  ---
+  duration_ms: 431.742984
+  type: 'test'
+  location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/diagnostics-ordered-integration.test.ts:1:1039'
+  failureType: 'testCodeFailure'
+  error: 'fixture_dns_denied'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.denied (file:///tmp/n7-f10-frozen-verify-a11/guard.mjs:5:44)
+    lookupAndListen (node:net:2196:7)
+    Server.listen (node:net:2098:7)
+    <anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/diagnostics-fixture.ts:39:126)
+    new Promise (<anonymous>)
+    protocolFixture (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/diagnostics-fixture.ts:39:98)
+    TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/diagnostics-ordered-integration.test.ts:25:22)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: F03a realPG campaign/pool/shared quota/lease seams without transport
+not ok 9 - F03a realPG campaign/pool/shared quota/lease seams without transport
+  ---
+  duration_ms: 518.553525
+  type: 'test'
+  location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/dispatch-integration.test.ts:1:595'
+  failureType: 'testCodeFailure'
+  error: 'fixture_dns_denied'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.denied (file:///tmp/n7-f10-frozen-verify-a11/guard.mjs:5:44)
+    lookupAndListen (node:net:2196:7)
+    Server.listen (node:net:2098:7)
+    <anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/dispatch-integration.test.ts:16:46)
+    new Promise (<anonymous>)
+    TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/dispatch-integration.test.ts:16:8)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: F05 B1–B6 real PostgreSQL HTTP evidence and public report gates
+not ok 10 - F05 B1–B6 real PostgreSQL HTTP evidence and public report gates
+  ---
+  duration_ms: 894.17651
+  type: 'test'
+  location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/evidence-integration.test.ts:1:977'
+  failureType: 'testCodeFailure'
+  error: 'fixture_dns_denied'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.denied (file:///tmp/n7-f10-frozen-verify-a11/guard.mjs:5:44)
+    lookupAndListen (node:net:2196:7)
+    Server.listen (node:net:2098:7)
+    <anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/evidence-integration.test.ts:17:81)
+    new Promise (<anonymous>)
+    TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/evidence-integration.test.ts:17:49)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: F09 real PG child transport ambiguity reset and semantic replay
+not ok 11 - F09 real PG child transport ambiguity reset and semantic replay
+  ---
+  duration_ms: 446.598789
+  type: 'test'
+  location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/f09-transport-integration.test.ts:1:86'
+  failureType: 'testCodeFailure'
+  error: 'fixture_dns_denied'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.denied (file:///tmp/n7-f10-frozen-verify-a11/guard.mjs:5:44)
+    lookupAndListen (node:net:2196:7)
+    Server.listen (node:net:2098:7)
+    <anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/f09-transport-fixture.ts:39:122)
+    new Promise (<anonymous>)
+    transportFixture (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/f09-transport-fixture.ts:39:94)
+    TestContext.recoveryScenario (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/f09-transport-fixture.ts:49:230)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: overload backoff preserves due age and independent tenant progress
+ok 12 - overload backoff preserves due age and independent tenant progress
+  ---
+  duration_ms: 823.788624
+  type: 'test'
+  ...
+# Subtest: durable runtime drains and recovers without replaying uncertain sends
+ok 13 - durable runtime drains and recovers without replaying uncertain sends
+  ---
+  duration_ms: 1144.953679
+  type: 'test'
+  ...
+# Subtest: fair polling serves thirty active mailboxes and preserves activity intent
+ok 14 - fair polling serves thirty active mailboxes and preserves activity intent
+  ---
+  duration_ms: 2331.507532
+  type: 'test'
+  ...
+# Subtest: poll quanta persist the fixed tail before yielding and never retry incomplete scans
+ok 15 - poll quanta persist the fixed tail before yielding and never retry incomplete scans
+  ---
+  duration_ms: 791.437292
+  type: 'test'
+  ...
+# Subtest: automatic pool allocation skips pair conflicts and remains idempotent
+ok 16 - automatic pool allocation skips pair conflicts and remains idempotent
+  ---
+  duration_ms: 569.319623
+  type: 'test'
+  ...
+# Subtest: paced dispatch preserves current day quota and every stop fence
+ok 17 - paced dispatch preserves current day quota and every stop fence
+  ---
+  duration_ms: 566.125142
+  type: 'test'
+  ...
+# Subtest: persisted keyset reconciliation advances beyond first hundred without recreating activity
+ok 18 - persisted keyset reconciliation advances beyond first hundred without recreating activity
+  ---
+  duration_ms: 2663.635001
+  type: 'test'
+  ...
+# Subtest: actual dispatch job age survives restart backoff pacing quota and an empty queue
+ok 19 - actual dispatch job age survives restart backoff pacing quota and an empty queue
+  ---
+  duration_ms: 697.535229
+  type: 'test'
+  ...
+# Subtest: actual database failure during a poll quantum propagates without provider backoff writes
+ok 20 - actual database failure during a poll quantum propagates without provider backoff writes
+  ---
+  duration_ms: 400.934913
+  type: 'test'
+  ...
+# Subtest: denied live submission returns typed authority outcome before acquiring a physical slot
+ok 21 - denied live submission returns typed authority outcome before acquiring a physical slot
+  ---
+  duration_ms: 457.256773
+  type: 'test'
+  ...
+# Subtest: projection recovers expired logical claims without self quota deadlock and holds fresh owners
+ok 22 - projection recovers expired logical claims without self quota deadlock and holds fresh owners
+  ---
+  duration_ms: 712.353784
+  type: 'test'
+  ...
+# Subtest: new and proved completed jobs reset backoff while the same failed job retains original age
+ok 23 - new and proved completed jobs reset backoff while the same failed job retains original age
+  ---
+  duration_ms: 616.2691
+  type: 'test'
+  ...
+# Subtest: expired claimed reservation is recovered before quota projection independently of a fresh hold
+ok 24 - expired claimed reservation is recovered before quota projection independently of a fresh hold
+  ---
+  duration_ms: 480.210781
+  type: 'test'
+  ...
+# Subtest: a new oldest logical job clears prior backoff independently of terminal history
+ok 25 - a new oldest logical job clears prior backoff independently of terminal history
+  ---
+  duration_ms: 901.680572
+  type: 'test'
+  ...
+# Subtest: a fresh logical owner holds the sender even when another queued job is older
+ok 26 - a fresh logical owner holds the sender even when another queued job is older
+  ---
+  duration_ms: 662.531827
+  type: 'test'
+  ...
+# Subtest: complete proof becomes immediately eligible without resetting its selected fair turn
+ok 27 - complete proof becomes immediately eligible without resetting its selected fair turn
+  ---
+  duration_ms: 568.520253
+  type: 'test'
+  ...
+# Subtest: partial and held scans cannot manufacture successful polling readiness
+ok 28 - partial and held scans cannot manufacture successful polling readiness
+  ---
+  duration_ms: 582.772428
+  type: 'test'
+  ...
+# Subtest: dispatch claims project only one sender and rotate deferred candidates
+ok 29 - dispatch claims project only one sender and rotate deferred candidates
+  ---
+  duration_ms: 881.732645
+  type: 'test'
+  ...
+# Subtest: F02 real PostgreSQL tenant, AEAD, scopes, locking and atomic stop writers
+not ok 30 - F02 real PostgreSQL tenant, AEAD, scopes, locking and atomic stop writers
+  ---
+  duration_ms: 689.671966
+  type: 'test'
+  location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/mailboxes-integration.test.ts:1:536'
+  failureType: 'testCodeFailure'
+  error: 'fixture_dns_denied'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.denied (file:///tmp/n7-f10-frozen-verify-a11/guard.mjs:5:44)
+    lookupAndListen (node:net:2196:7)
+    Server.listen (node:net:2098:7)
+    <anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/mailboxes-integration.test.ts:16:47)
+    new Promise (<anonymous>)
+    TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/mailboxes-integration.test.ts:16:9)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: F04a real PG reply matching, durable rescan, crash atomicity and stop serialization
+    # Subtest: A1 exact sender + own tenant/mailbox references; no/malformed/reused IDs
+    ok 1 - A1 exact sender + own tenant/mailbox references; no/malformed/reused IDs
+      ---
+      duration_ms: 1178.952771
+      type: 'test'
+      ...
+    # Subtest: A2/A3/A5 SC-US-006-3 R1/S0 → R1/S1 crash before COMMIT
+    ok 2 - A2/A3/A5 SC-US-006-3 R1/S0 → R1/S1 crash before COMMIT
+      ---
+      duration_ms: 643.83487
+      type: 'test'
+      ...
+    # Subtest: A2/A3/A5 SC-US-006-3 R1/S0 → R1/S1 crash after COMMIT
+    ok 3 - A2/A3/A5 SC-US-006-3 R1/S0 → R1/S1 crash after COMMIT
+      ---
+      duration_ms: 712.287204
+      type: 'test'
+      ...
+    # Subtest: A2 concurrent duplicate page/effect has no partial writes or budget advance
+    ok 4 - A2 concurrent duplicate page/effect has no partial writes or budget advance
+      ---
+      duration_ms: 409.424536
+      type: 'test'
+      ...
+    # Subtest: A3 sparse/expunged and initial empty trusted fixture coverage; no unquarantine
+    ok 5 - A3 sparse/expunged and initial empty trusted fixture coverage; no unquarantine
+      ---
+      duration_ms: 513.492693
+      type: 'test'
+      ...
+    # Subtest: A3 stale page/tail and second validity reset cannot complete current run
+    ok 6 - A3 stale page/tail and second validity reset cannot complete current run
+      ---
+      duration_ms: 395.314651
+      type: 'test'
+      ...
+    # Subtest: A4 exact twenty pages, explicit retry preserves H/run/cursor; crash restart same attempt
+    ok 7 - A4 exact twenty pages, explicit retry preserves H/run/cursor; crash restart same attempt
+      ---
+      duration_ms: 551.752956
+      type: 'test'
+      ...
+    # Subtest: A4 post-lock exact120s, future clock, failed/future/slow tail fail closed
+    ok 8 - A4 post-lock exact120s, future clock, failed/future/slow tail fail closed
+      ---
+      duration_ms: 2027.102563
+      type: 'test'
+      ...
+    # Subtest: A4 successful tail completion timestamp samples actual post-lock clock
+    ok 9 - A4 successful tail completion timestamp samples actual post-lock clock
+      ---
+      duration_ms: 494.356677
+      type: 'test'
+      ...
+    # Subtest: R1 P1 101 tail headers: first100 stays paused S0 and dispatch/submission calls0; last coverage S1 completes
+    ok 10 - R1 P1 101 tail headers: first100 stays paused S0 and dispatch/submission calls0; last coverage S1 completes
+      ---
+      duration_ms: 501.060659
+      type: 'test'
+      ...
+    # Subtest: R1 empty/sparse tail prefix stays paused; immutable snapshot survives failure/retry and rejects changed horizon/epoch
+    ok 11 - R1 empty/sparse tail prefix stays paused; immutable snapshot survives failure/retry and rejects changed horizon/epoch
+      ---
+      duration_ms: 734.523252
+      type: 'test'
+      ...
+    # Subtest: A6 header display/body/credential canaries never enter durable reply data
+    ok 12 - A6 header display/body/credential canaries never enter durable reply data
+      ---
+      duration_ms: 418.21374
+      type: 'test'
+      ...
+    # Subtest: A5 production ingestion stop before final submitting: calls 0, later0
+    ok 13 - A5 production ingestion stop before final submitting: calls 0, later0
+      ---
+      duration_ms: 574.638455
+      type: 'test'
+      ...
+    # Subtest: A5 production ingestion stop after final submitting: calls 1, later0
+    ok 14 - A5 production ingestion stop after final submitting: calls 1, later0
+      ---
+      duration_ms: 588.83822
+      type: 'test'
+      ...
+    1..14
+ok 31 - F04a real PG reply matching, durable rescan, crash atomicity and stop serialization
+  ---
+  duration_ms: 10051.801789
+  type: 'test'
+  ...
+# Subtest: F03b real PG durable final authority, all stop races, sink privacy and outcomes
+    # Subtest: B1/B2 SC-US-003-4 revoke
+    ok 1 - B1/B2 SC-US-003-4 revoke
+      ---
+      duration_ms: 529.910059
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 revoke
+    ok 2 - B1/B2 SC-US-003-5 revoke
+      ---
+      duration_ms: 606.197897
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 version
+    ok 3 - B1/B2 SC-US-003-4 version
+      ---
+      duration_ms: 588.35865
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 version
+    ok 4 - B1/B2 SC-US-003-5 version
+      ---
+      duration_ms: 602.322695
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 pause
+    ok 5 - B1/B2 SC-US-003-4 pause
+      ---
+      duration_ms: 451.289111
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 pause
+    ok 6 - B1/B2 SC-US-003-5 pause
+      ---
+      duration_ms: 418.99629
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 sender_withdraw
+    ok 7 - B1/B2 SC-US-003-4 sender_withdraw
+      ---
+      duration_ms: 386.279728
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 sender_withdraw
+    ok 8 - B1/B2 SC-US-003-5 sender_withdraw
+      ---
+      duration_ms: 465.222376
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 recipient_withdraw
+    ok 9 - B1/B2 SC-US-003-4 recipient_withdraw
+      ---
+      duration_ms: 445.957259
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 recipient_withdraw
+    ok 10 - B1/B2 SC-US-003-5 recipient_withdraw
+      ---
+      duration_ms: 568.065852
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 reply
+    ok 11 - B1/B2 SC-US-003-4 reply
+      ---
+      duration_ms: 504.564621
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 reply
+    ok 12 - B1/B2 SC-US-003-5 reply
+      ---
+      duration_ms: 996.535155
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 unsubscribe
+    ok 13 - B1/B2 SC-US-003-4 unsubscribe
+      ---
+      duration_ms: 1051.934355
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 unsubscribe
+    ok 14 - B1/B2 SC-US-003-5 unsubscribe
+      ---
+      duration_ms: 1080.839906
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 complaint
+    ok 15 - B1/B2 SC-US-003-4 complaint
+      ---
+      duration_ms: 553.927868
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 complaint
+    ok 16 - B1/B2 SC-US-003-5 complaint
+      ---
+      duration_ms: 679.066212
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 disable
+    ok 17 - B1/B2 SC-US-003-4 disable
+      ---
+      duration_ms: 776.952347
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 disable
+    ok 18 - B1/B2 SC-US-003-5 disable
+      ---
+      duration_ms: 694.785178
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 limit
+    ok 19 - B1/B2 SC-US-003-4 limit
+      ---
+      duration_ms: 742.773525
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 limit
+    ok 20 - B1/B2 SC-US-003-5 limit
+      ---
+      duration_ms: 586.595939
+      type: 'test'
+      ...
+    # Subtest: B3 durable rendered sink/token/message refs with own OR intended pool peer read only
+    not ok 21 - B3 durable rendered sink/token/message refs with own OR intended pool peer read only
+      ---
+      duration_ms: 572.748555
+      type: 'test'
+      location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/submission-integration.test.ts:1:8128'
+      failureType: 'testCodeFailure'
+      error: 'fixture_dns_denied'
+      code: 'ERR_TEST_FAILURE'
+      stack: |-
+        Object.denied (file:///tmp/n7-f10-frozen-verify-a11/guard.mjs:5:44)
+        lookupAndListen (node:net:2196:7)
+        Server.listen (node:net:2098:7)
+        <anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/submission-integration.test.ts:118:42)
+        new Promise (<anonymous>)
+        TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/submission-integration.test.ts:118:10)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/submission-integration.test.ts:108:3)
+        async Test.run (node:internal/test_runner/test:1054:7)
+      ...
+    # Subtest: R2 B5 authenticated disabled inspection unavailable before either reader
+    not ok 22 - R2 B5 authenticated disabled inspection unavailable before either reader
+      ---
+      duration_ms: 843.427181
+      type: 'test'
+      location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/submission-integration.test.ts:1:11761'
+      failureType: 'testCodeFailure'
+      error: 'fixture_dns_denied'
+      code: 'ERR_TEST_FAILURE'
+      stack: |-
+        Object.denied (file:///tmp/n7-f10-frozen-verify-a11/guard.mjs:5:44)
+        lookupAndListen (node:net:2196:7)
+        Server.listen (node:net:2098:7)
+        <anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/submission-integration.test.ts:151:47)
+        new Promise (<anonymous>)
+        TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/submission-integration.test.ts:151:10)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/submission-integration.test.ts:144:3)
+        async Test.run (node:internal/test_runner/test:1054:7)
+      ...
+    # Subtest: R1 post-lock clock lease45s rejects expired waiter with zero adapter calls
+    ok 23 - R1 post-lock clock lease45s rejects expired waiter with zero adapter calls
+      ---
+      duration_ms: 480.134671
+      type: 'test'
+      ...
+    # Subtest: R1 post-lock clock poll60s rejects stale waiter with live lease and zero adapter calls
+    ok 24 - R1 post-lock clock poll60s rejects stale waiter with live lease and zero adapter calls
+      ---
+      duration_ms: 550.698387
+      type: 'test'
+      ...
+    # Subtest: R1 post-lock clock retry120s rejects ceiling waiter with zero adapter calls
+    ok 25 - R1 post-lock clock retry120s rejects ceiling waiter with zero adapter calls
+      ---
+      duration_ms: 735.507733
+      type: 'test'
+      ...
+    # Subtest: R1 post-lock clock midnight concurrent waiters enforce new-day provider limit1 and reservations
+    ok 26 - R1 post-lock clock midnight concurrent waiters enforce new-day provider limit1 and reservations
+      ---
+      duration_ms: 679.317272
+      type: 'test'
+      ...
+    # Subtest: B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan
+    ok 27 - B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan
+      ---
+      duration_ms: 4276.981107
+      type: 'test'
+      ...
+    # Subtest: B5 midnight reservations move under concurrent final guard; provider lowered, no off-by-one
+    ok 28 - B5 midnight reservations move under concurrent final guard; provider lowered, no off-by-one
+      ---
+      duration_ms: 742.600215
+      type: 'test'
+      ...
+    # Subtest: B4 proved pre-DATA only, 60s pacing within original120s ceiling, re-enter guards/quota
+    ok 29 - B4 proved pre-DATA only, 60s pacing within original120s ceiling, re-enter guards/quota
+      ---
+      duration_ms: 1336.155997
+      type: 'test'
+      ...
+    # Subtest: B4/B5 retry120s exact ceiling, ambiguous timeout/crash retain quota, never recover resend
+    ok 30 - B4/B5 retry120s exact ceiling, ambiguous timeout/crash retain quota, never recover resend
+      ---
+      duration_ms: 3303.96345
+      type: 'test'
+      ...
+    1..30
+not ok 32 - F03b real PG durable final authority, all stop races, sink privacy and outcomes
+  ---
+  duration_ms: 26600.788516
+  type: 'test'
+  location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/submission-integration.test.ts:1:1282'
+  failureType: 'subtestsFailed'
+  error: '2 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: F04B real PostgreSQL public stop and durable local operator polling
+not ok 33 - F04B real PostgreSQL public stop and durable local operator polling
+  ---
+  duration_ms: 347.126064
+  type: 'test'
+  location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/suppression-integration.test.ts:1:1793'
+  failureType: 'testCodeFailure'
+  error: 'fixture_dns_denied'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.denied (file:///tmp/n7-f10-frozen-verify-a11/guard.mjs:5:44)
+    lookupAndListen (node:net:2196:7)
+    Server.listen (node:net:2098:7)
+    <anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/suppression-integration.test.ts:34:40)
+    new Promise (<anonymous>)
+    TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/suppression-integration.test.ts:34:8)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: B-R1 real fixture callbacks fenced by durable owner and source generation
+    # Subtest: first-success
+    ok 1 - first-success
+      ---
+      duration_ms: 641.789569
+      type: 'test'
+      ...
+    # Subtest: first-failure
+    ok 2 - first-failure
+      ---
+      duration_ms: 549.373287
+      type: 'test'
+      ...
+    # Subtest: changed-tail-success
+    ok 3 - changed-tail-success
+      ---
+      duration_ms: 477.25594
+      type: 'test'
+      ...
+    # Subtest: same-validity-success
+    ok 4 - same-validity-success
+      ---
+      duration_ms: 414.661558
+      type: 'test'
+      ...
+    # Subtest: same-validity-failure
+    ok 5 - same-validity-failure
+      ---
+      duration_ms: 575.024216
+      type: 'test'
+      ...
+    # Subtest: same-validity-owner-only
+    ok 6 - same-validity-owner-only
+      ---
+      duration_ms: 487.947854
+      type: 'test'
+      ...
+    # Subtest: generation alone fences capture
+    ok 7 - generation alone fences capture
+      ---
+      duration_ms: 463.568656
+      type: 'test'
+      ...
+    # Subtest: generation alone fences failure
+    ok 8 - generation alone fences failure
+      ---
+      duration_ms: 539.974773
+      type: 'test'
+      ...
+    # Subtest: current missing and failed fixture pause; current poll completes
+    ok 9 - current missing and failed fixture pause; current poll completes
+      ---
+      duration_ms: 653.847313
+      type: 'test'
+      ...
+    # Subtest: generation check and seed serialize on the shared lock
+    ok 10 - generation check and seed serialize on the shared lock
+      ---
+      duration_ms: 514.774484
+      type: 'test'
+      ...
+    1..10
+ok 34 - B-R1 real fixture callbacks fenced by durable owner and source generation
+  ---
+  duration_ms: 5400.738448
+  type: 'test'
+  ...
+# Subtest: F06 A real PostgreSQL protected cabinet, exact built assets and persistent accepted APIs
+not ok 35 - F06 A real PostgreSQL protected cabinet, exact built assets and persistent accepted APIs
+  ---
+  duration_ms: 651.748523
+  type: 'test'
+  location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/web-integration.test.ts:1:438'
+  failureType: 'testCodeFailure'
+  error: 'fixture_dns_denied'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.denied (file:///tmp/n7-f10-frozen-verify-a11/guard.mjs:5:44)
+    lookupAndListen (node:net:2196:7)
+    Server.listen (node:net:2098:7)
+    <anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/web-integration.test.ts:13:46)
+    new Promise (<anonymous>)
+    TestContext.<anonymous> (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/web-integration.test.ts:13:8)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..35
+# tests 99
+# suites 0
+# pass 82
+# fail 17
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 187952.072604
