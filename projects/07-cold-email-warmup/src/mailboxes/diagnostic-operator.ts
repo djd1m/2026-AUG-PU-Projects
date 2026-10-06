@@ -5,7 +5,7 @@ import { parseGrant,publishAuthority,type DiagnosticGrant } from './diagnostic-a
 // Privileged local process/file authority. External use needs separate owner authorization.
 const config=loadConfig(),pool=createPool(config.databaseUrl);
 try{
- if(!await ready(pool))throw new Error();const [action,expected,file]=process.argv.slice(2);if(!expected||!['publish','revoke'].includes(action??''))throw new Error();
+ if(!config.operatorTokenDigest || !await ready(pool))throw new Error();const [action,expected,file]=process.argv.slice(2);if(!expected||!['publish','revoke'].includes(action??''))throw new Error();
  let grant:DiagnosticGrant|null=null;let invalid=false;
  if(action==='publish'){
   try{if(!file)throw new Error();const handle=await open(file,'r');try{const buffer=Buffer.alloc(16385);const {bytesRead}=await handle.read(buffer,0,buffer.length,0);if(bytesRead>16384)throw new Error();grant=parseGrant(JSON.parse(buffer.subarray(0,bytesRead).toString('utf8')));if(new Date(grant.expiresAt)<=new Date())throw new Error();}finally{await handle.close();}}catch{grant=null;invalid=true;}

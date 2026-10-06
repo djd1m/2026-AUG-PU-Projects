@@ -55,6 +55,14 @@ test('post-lock expiry queued revoke complaint order and actual CLI are fenced',
  const states=(await pool.query('SELECT state FROM send_job WHERE id=ANY($1::uuid[]) ORDER BY state',[jobs])).rows.map(r=>r.state);assert.deepEqual(states,['cancelled','cancelled','submitting']);
  await boxes.save(tenant,diagnosticInput,id);await run();await stop.complaint(tenant,id);assert.equal((await boxes.read(tenant,id)).diagnostics.state,'stale');await boxes.save(tenant,diagnosticInput,id);
  });
+ await t.test('actual CLI without configured operator capability cannot publish or revoke',async()=>{
+ await authorize();await writeFile(file,JSON.stringify(grant()));const before=(await pool.query('SELECT * FROM diagnostic_authority')).rows[0];
+ for(const action of ['publish','revoke']){
+  const env={...process.env};delete env.OPERATOR_TOKEN_FILE;
+  const result=await promisify(execFile)(process.execPath,['dist/mailboxes/diagnostic-operator.js',action,revision,...(action==='publish'?[file]:[])],{env,timeout:10000}).then(r=>({...r,exit:0}),e=>({stdout:e.stdout as string,stderr:e.stderr as string,exit:e.code as number}));
+  assert.equal(result.exit,1);assert.equal(result.stdout,'');assert.match(result.stderr,/authority_action_failed/);assert.deepEqual((await pool.query('SELECT * FROM diagnostic_authority')).rows[0],before);
+ }
+ });
  await t.test('actual privileged CLI commits revoke for invalid missing and expired input',async()=>{
  for(const input of ['missing','invalid','expired'] as const){await authorize();if(input==='invalid')await writeFile(file,'{invalid SERVER_SECRET_CANARY');if(input==='expired')await writeFile(file,JSON.stringify(grant(Date.now()-1000)));
  const result=await cli('publish',revision,input==='missing'?join(directory,'absent.json'):file);assert.equal(result.exit,1);assert.match(result.stderr,/invalid_input_authority_revoked/);assert.match(result.stdout,/authority_committed_revision=/);const current=(await pool.query('SELECT authority_revision,state FROM diagnostic_authority')).rows[0];assert.notEqual(current.authority_revision,revision);assert.equal(current.state,'revoked');revision=current.authority_revision;assert.ok(!JSON.stringify(result).includes('CANARY'));
