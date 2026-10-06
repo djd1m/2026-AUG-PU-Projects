@@ -1,0 +1,44 @@
+# F08 — bounded algorithms
+
+Source baseline e61006749f69bd352759c7520f2a7e99aef24bd2. Each requirement below has one substantive algorithm claim; pseudocode is a plan, not implemented evidence.
+
+### Algorithm: Authorize diagnostics
+REQUIREMENT: `AC-f08-live-diagnostics-001`
+INPUT: server-derived identity, id, config, operator grant, mode.
+STEPS: validate session/Origin/id and own mailbox first; reject disabled/missing/expired grant before decrypt or DNS. Grant must bind scope=diagnostics, tenant/id, endpoint tuples and config revision; production constructor has no arbitrary resolver/socket/CA options. Acquire bounded admission with finally release. Test harness explicitly constructs fixture connector, never through production configuration. RETURN typed rejection or immutable authorized snapshot.
+COMPLEXITY: O(1) bounded grant membership and own row.
+
+### Algorithm: Resolve and secure an exact peer
+REQUIREMENT: `AC-f08-live-diagnostics-002`
+STEPS: normalize configured host; validate allowlist and port; resolve all answers within budget; reject if any prohibited/family mismatch or answer count outside1..32. Choose first numeric address; net.connect that IP/family with no hostname re-resolution or reconnect. Wrap raw socket using tls.connect({socket,servername:originalHost,rejectUnauthorized:true,minVersion:'TLSv1.2'}); preserve default checkServerIdentity. Require authorized secureConnect before auth. For587 read220/EHLO250, require STARTTLS extension, send STARTTLS, require220, discard pre-TLS capabilities and reject leftover plaintext, wrap same socket, then repeat EHLO. Abort destroys both socket references. RETURN pinned TLS channel, not an authorization.
+COMPLEXITY: O(32 + bounded received bytes).
+
+### Algorithm: Authenticate two independent protocols
+REQUIREMENT: `AC-f08-live-diagnostics-003`
+STEPS: start SMTP and IMAP operations under shared total deadline; each catches its own typed result. SMTP465: secure first,220 greeting, EHLO n7.invalid, multiline250 capability parse, require AUTH PLAIN, send base64(NUL+username+NUL+password) using AUTH PLAIN; allow at most one334 continuation, require235. SMTP587 follows upgrade algorithm first. IMAP993: secure, require `* OK`, send a1 CAPABILITY; collect bounded untagged capabilities and exact a1 OK; require AUTH=PLAIN; send a2 AUTHENTICATE PLAIN, require one continuation then base64 response and exact a2 OK. NO/BAD/auth failure stays separate; unsolicited BYE fails. Reject PREAUTH, literals and unexpected tags/states. Never expose generic command/send method. On result destroy connection in finally (no blocking QUIT/LOGOUT). RETURN both status objects with tls/auth stage truth.
+COMPLEXITY: O(receive cap); supported dialect deliberately finite.
+
+### Algorithm: Bound lifetime and parser memory
+REQUIREMENT: `AC-f08-live-diagnostics-004`
+STEPS: admission counters cap2/process and1/mailbox; acquire before work or429. Record monotonic request deadline now+30s; each operation owns child AbortController and phase timer min(10s,remaining). DNS late resolution after cancellation cannot initiate connect. Raw decrypted data callback increments total byte count before Buffer.concat/string conversion; reject >65536 total or line>8192, including incomplete line, and invalid CRLF. Feed only bounded complete lines to state parser. Store at most one pending phase response. On timeout/abort/overflow/error/success: mark settled once; abort children; destroy raw+TLS; remove listeners/timers; release admission. RETURN typed phase failure without retry. DNS system work may finish asynchronously; it receives no credentials and cannot open later socket.
+COMPLEXITY: O(65536) time/storage per protocol;2 requests bounds fanout.
+
+### Algorithm: Fence evidence against current database state
+REQUIREMENT: `AC-f08-live-diagnostics-005`
+STEPS: begin eligibilityTransaction (global lock FIRST), lock own mailbox, reject stopped state, increment diagnostic_revision/start new UUID and clear current success, snapshot ciphertext+revision+attempt+config/grant fingerprint; commit. Decrypt/connect outside TX. Shared cancellation and every credentials/settings replacement increment revision and clear current evidence; all existing quarantine writers reach this common invalidation. Finish eligibilityTransaction, own row FOR UPDATE, read clock_timestamp AFTER lock; compare all snapshot fields and current gate expiry. Mismatch rejects without update. Match persists diagnostic results only, leaving mailbox.state/capacity/consents/jobs untouched. Fresh-start invalidation prevents previous success being current during recheck. Independent diagnostics never enter claimed→submitting; existing dispatch final fence remains untouched.
+COMPLEXITY: O(1) row work excluding existing bounded cancellation effects.
+
+### Algorithm: Minimize secret exposure
+REQUIREMENT: `AC-f08-live-diagnostics-006`
+STEPS: decrypt with existing AEAD tenant/id/key-version binding before network; reject failure without embedding caught exception. Build enum-only public error at protocol boundary; drop native error.message/response/stack and all raw server lines after parsing. Persist explicit allowlisted fields rather than spreading adapter/error objects. Log opaque ids, phase and code only; never protocol transcripts. On exit release credential references. Test independent credential and hostile-server canaries across all sinks, including base64 credential forms.
+COMPLEXITY: O(bounded credential+response bytes).
+
+### Algorithm: Project diagnostic truth to owner
+REQUIREMENT: `AC-f08-live-diagnostics-007`
+STEPS: tenant-filter reads; derive current flag by row revision/attempt, provider configuration and grant mode, never client input. Return separate SMTP/IMAP tls/auth/result enums and checkedAt/evidenceMode; never merge failure into a boolean verified. Mark pending/stale/disabled explicitly; mode label is server-derived. Render two status rows with accessible button/live announcement; preserve session epoch against late fetches/logout; refresh from DB after reload. Retain separate capacity and consent controls without automatic POSTs.
+COMPLEXITY: O(1) per mailbox detail; existing bounded pagination unchanged.
+
+### Algorithm: Accept only observed adapter behavior
+REQUIREMENT: `AC-f08-live-diagnostics-008`
+STEPS: bind code/spec/build hashes and Node22.20 runtime; use same production state machine with test-only trusted local CA and peer dial seam, actual local TLS sockets. Assert transcript verbs, independent failures and hard-close deadline/caps. Execute real PG stop/replacement/attempt overlap under blocked advisory lock and fault rollback; verify schema12→13. Run mandatory regressions and UI after read-only preflight; isolate three safety mutations and require red tests then restore exact accepted bytes. Fresh reviewer checks AC-by-AC with validation-report spec SHA. RETURN source-bound acceptance only when checks pass; future expanded gaps remain pending.
+COMPLEXITY: bounded fixture cases, no external accounts or spending.
