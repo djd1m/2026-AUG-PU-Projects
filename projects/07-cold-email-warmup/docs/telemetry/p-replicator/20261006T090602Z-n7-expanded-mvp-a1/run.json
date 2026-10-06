@@ -54,7 +54,7 @@
     "false_positive_findings": null,
     "known_defects_missed": null,
     "regressions": null,
-    "followup_status": "F07/F08/F09 locally accepted, expanded AC001–003 met; AC004–009 pending. Whole required_gates_passed remains false."
+    "followup_status": "F07/F08/F09 locally accepted, expanded AC001\u2013003 met; AC004\u2013009 pending. Whole required_gates_passed remains false."
   },
   "metrics": {
     "elapsed_wall_ms": 22010349,
@@ -74,7 +74,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "IMPLEMENT F10 A2 prepared",
+  "current_stage": "IMPLEMENT F10 exact projection correction A4",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -136,13 +136,14 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_expanded_coordinator",
-    "executor": "f08_author_a1 A2 running; actualfirsttool2026-10-06T15:33:20Z",
-    "source_revision": "457f006c76d3b4a908e1a2e9ae9a372e01ba20e3",
-    "next": "Three concrete implementation gaps then separate mandatory full/native/resource verification and fresh review"
+    "executor": "retained Sol f08_author_a1; actual tool ACK15:56:46Z",
+    "source_revision": "e0c93e196aac89610ba1b5d69ccb64ce571d86bc",
+    "next": "Reproduced red defects minimal repair, affected checks, then mandatory full/native verification"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
-    "F06 PR access403; retry only on access/state change; independent local implementation continues"
+    "F06 PR access403; retry only on access/state change; independent local implementation continues",
+    "Branch push cc69b0c3 blocked by automatic approval review twice: delegated owner quote/file authorization not recognized as trusted. Exact destination/payload and secret scans checked; no workaround. Independent local work continues."
   ],
   "selected_validation": {
     "verdict": "CAVEATS",
@@ -313,5 +314,14 @@
       "initial4/5 and interim5/5 focused logs overwritten"
     ],
     "profile_note": "Receipt XL/full is risk/workflow description; canonical model profile compact-quality-first-v2 unchanged, no fallback inferred"
+  },
+  "f10_candidate_runtime_a2": {
+    "source_revision": "05059f473ff5618d074c2fc2a63dd7cc0f8019f6",
+    "focused_pg_pass": 11,
+    "unit_pass": 2,
+    "type_lint_build_exit": 0,
+    "guard_mutations_caught": 3,
+    "status": "unaccepted; claimed recovery/newjob backoff edge pending",
+    "receipt_status": "failed incomplete scope and timing16.691448s; author postseal timing note disclosed"
   }
 }

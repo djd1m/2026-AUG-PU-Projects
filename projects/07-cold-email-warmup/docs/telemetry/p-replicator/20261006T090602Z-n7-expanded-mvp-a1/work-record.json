@@ -8,7 +8,7 @@
   "identity": {
     "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
     "work_unit_id": "expanded-mvp",
-    "current_attempt_id": "f10-implement-a2"
+    "current_attempt_id": "f10-projection-fix-a4"
   },
   "telemetry": {
     "run": {
@@ -22,7 +22,7 @@
   },
   "source": {
     "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
-    "current_revision": "457f006c76d3b4a908e1a2e9ae9a372e01ba20e3",
+    "current_revision": "e0c93e196aac89610ba1b5d69ccb64ce571d86bc",
     "build_revision": null,
     "requirements": [
       {
@@ -45,8 +45,8 @@
       }
     ],
     "continuity": {
-      "expected_revision": "457f006c76d3b4a908e1a2e9ae9a372e01ba20e3",
-      "observed_revision": "457f006c76d3b4a908e1a2e9ae9a372e01ba20e3",
+      "expected_revision": "e0c93e196aac89610ba1b5d69ccb64ce571d86bc",
+      "observed_revision": "e0c93e196aac89610ba1b5d69ccb64ce571d86bc",
       "reconciliation": null
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
@@ -358,6 +358,14 @@
     },
     {
       "id": "f10-implement-a2",
+      "status": "failed"
+    },
+    {
+      "id": "f10-projection-fix-a3",
+      "status": "failed"
+    },
+    {
+      "id": "f10-projection-fix-a4",
       "status": "active"
     }
   ],
@@ -397,7 +405,7 @@
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-06T14:01:29.204247+00:00",
+    "last_reported_at": "2026-10-06T15:54:44.034032+00:00",
     "responsible": "n7_expanded_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true
   }
