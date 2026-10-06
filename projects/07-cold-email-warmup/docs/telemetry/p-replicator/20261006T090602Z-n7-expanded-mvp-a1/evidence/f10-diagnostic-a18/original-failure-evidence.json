@@ -1,0 +1,463 @@
+{
+  "at": "2026-10-06T19:50:01.240528+00:00",
+  "raw_untouched": {
+    "/tmp/n7-f10-frozen-verify-a17/fullpg.tap": "c42b16dc8ee6888949d8557223927915180afa027fac9a49cf24e0be0bac2c68",
+    "/tmp/n7-f10-frozen-verify-a17/fullpg-native-exit.json": "4b94fca4edd2f55a2301799ccd0d7a51310edc0f630c13c3f28391332f9cc1e6",
+    "/tmp/n7-f10-frozen-verify-a17/fullpg-chronology.jsonl": "5d64f7b8cae1412c9e46b48a23fb1a1190aaf23833f3e7af7f858454d35e4142",
+    "/tmp/n7-f10-frozen-verify-a17/fullpg-live-snapshots.json": "09ddf6a2886cb69e03928052bd6435a2bf1c5226c00d4a791eb0e4d29678f197",
+    "/tmp/n7-f10-frozen-verify-a17/full330.tap": "9c18fb885eb5260f1292f490ee9431896e376b02c23aab2b599a59d85ccabefc",
+    "/tmp/n7-f10-frozen-verify-a17/full330-chronology.jsonl": "da06c6c3025597b99050e7babc47e2efd06d6a6a16f7a3c23a914a623434e8db",
+    "/tmp/n7-f10-frozen-verify-a17/full330-live-snapshots.json": "2d02f543716046f9beaf3b629be61470e10cfa53b41be8989eb696997f689144"
+  },
+  "failures": [
+    {
+      "failure": {
+        "at": "2026-10-06T19:30:20.047462+00:00",
+        "stream": "tap",
+        "line": "    not ok 5 - complaint quarantine immediately releases capacity for another tenant"
+      },
+      "nearest_snapshots": [
+        {
+          "at": "2026-10-06T19:30:17.698330+00:00",
+          "owned_node_identities": [
+            {
+              "pid": 1231313,
+              "startticks": "123801118",
+              "state": "S",
+              "command_sha256": "bbcf1c271d8d7df4a77ff361909b28fe182fe596967fbab76b8b8d851fc0e031"
+            },
+            {
+              "pid": 1231342,
+              "startticks": "123801139",
+              "state": "S",
+              "command_sha256": "fe579ae0d52a36fbefa55a3b79a1b4a23ffa13401fb10584fd4b57e6aa454f6a"
+            },
+            {
+              "pid": 1231372,
+              "startticks": "123801152",
+              "state": "S",
+              "command_sha256": "c68c76fe8ff34847cc48565799fa849e1eacfd27f976e0ec0406a7e60d053d4c"
+            },
+            {
+              "pid": 1233733,
+              "startticks": "123802459",
+              "state": "S",
+              "command_sha256": "9a813b01a68a49d30a21677611a3b4ac2331f4b7b1e6bb57c6e3ad86a281eca0"
+            }
+          ],
+          "PG": {
+            "at": "2026-10-06T19:30:17.888Z",
+            "database": "n7f10_a2",
+            "reset": false,
+            "rows": [
+              {
+                "pid": 839155,
+                "state": "idle",
+                "wait_event_type": null,
+                "wait_event": null,
+                "xact_start": null,
+                "query_start": "2026-10-06T19:30:17.884Z",
+                "blocking": [],
+                "query_sha256": "29caef750326962248aeef25a4bbcdd7a7737d219665414072c37c62ab04301c"
+              }
+            ],
+            "quiescent": false
+          }
+        },
+        {
+          "at": "2026-10-06T19:30:25.909779+00:00",
+          "owned_node_identities": [
+            {
+              "pid": 1231313,
+              "startticks": "123801118",
+              "state": "S",
+              "command_sha256": "bbcf1c271d8d7df4a77ff361909b28fe182fe596967fbab76b8b8d851fc0e031"
+            },
+            {
+              "pid": 1231342,
+              "startticks": "123801139",
+              "state": "S",
+              "command_sha256": "fe579ae0d52a36fbefa55a3b79a1b4a23ffa13401fb10584fd4b57e6aa454f6a"
+            },
+            {
+              "pid": 1231372,
+              "startticks": "123801152",
+              "state": "S",
+              "command_sha256": "c68c76fe8ff34847cc48565799fa849e1eacfd27f976e0ec0406a7e60d053d4c"
+            },
+            {
+              "pid": 1235465,
+              "startticks": "123803346",
+              "state": "S",
+              "command_sha256": "8f41c582425f1aa5b6b094a04a66b0ec7423b14c5e4bc7204f0c32ea6ac1befd"
+            }
+          ],
+          "PG": {
+            "at": "2026-10-06T19:30:26.061Z",
+            "database": "n7f10_a2",
+            "reset": false,
+            "rows": [
+              {
+                "pid": 839179,
+                "state": "idle",
+                "wait_event_type": "Client",
+                "wait_event": "ClientRead",
+                "xact_start": null,
+                "query_start": "2026-10-06T19:30:25.898Z",
+                "blocking": [],
+                "query_sha256": "29caef750326962248aeef25a4bbcdd7a7737d219665414072c37c62ab04301c"
+              }
+            ],
+            "quiescent": false
+          }
+        }
+      ]
+    },
+    {
+      "failure": {
+        "at": "2026-10-06T19:32:09.061702+00:00",
+        "stream": "tap",
+        "line": "    not ok 27 - B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan"
+      },
+      "nearest_snapshots": [
+        {
+          "at": "2026-10-06T19:32:12.848456+00:00",
+          "owned_node_identities": [
+            {
+              "pid": 1231313,
+              "startticks": "123801118",
+              "state": "S",
+              "command_sha256": "bbcf1c271d8d7df4a77ff361909b28fe182fe596967fbab76b8b8d851fc0e031"
+            },
+            {
+              "pid": 1231342,
+              "startticks": "123801139",
+              "state": "S",
+              "command_sha256": "fe579ae0d52a36fbefa55a3b79a1b4a23ffa13401fb10584fd4b57e6aa454f6a"
+            },
+            {
+              "pid": 1231372,
+              "startticks": "123801152",
+              "state": "S",
+              "command_sha256": "c68c76fe8ff34847cc48565799fa849e1eacfd27f976e0ec0406a7e60d053d4c"
+            },
+            {
+              "pid": 1257103,
+              "startticks": "123811306",
+              "state": "S",
+              "command_sha256": "a10458cace178bf2f043f1f57d54f6334eebdbad90c6707182413624fe08669e"
+            }
+          ],
+          "PG": {
+            "at": "2026-10-06T19:32:13.029Z",
+            "database": "n7f10_a2",
+            "reset": false,
+            "rows": [
+              {
+                "pid": 839472,
+                "state": "idle",
+                "wait_event_type": "Client",
+                "wait_event": "ClientRead",
+                "xact_start": null,
+                "query_start": "2026-10-06T19:32:11.041Z",
+                "blocking": [],
+                "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+              },
+              {
+                "pid": 839529,
+                "state": "active",
+                "wait_event_type": "IO",
+                "wait_event": "WALSync",
+                "xact_start": "2026-10-06T19:32:12.566Z",
+                "query_start": "2026-10-06T19:32:12.566Z",
+                "blocking": [],
+                "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+              }
+            ],
+            "quiescent": false
+          }
+        },
+        {
+          "at": "2026-10-06T19:32:04.593645+00:00",
+          "owned_node_identities": [
+            {
+              "pid": 1231313,
+              "startticks": "123801118",
+              "state": "S",
+              "command_sha256": "bbcf1c271d8d7df4a77ff361909b28fe182fe596967fbab76b8b8d851fc0e031"
+            },
+            {
+              "pid": 1231342,
+              "startticks": "123801139",
+              "state": "S",
+              "command_sha256": "fe579ae0d52a36fbefa55a3b79a1b4a23ffa13401fb10584fd4b57e6aa454f6a"
+            },
+            {
+              "pid": 1231372,
+              "startticks": "123801152",
+              "state": "S",
+              "command_sha256": "c68c76fe8ff34847cc48565799fa849e1eacfd27f976e0ec0406a7e60d053d4c"
+            },
+            {
+              "pid": 1257103,
+              "startticks": "123811306",
+              "state": "S",
+              "command_sha256": "a10458cace178bf2f043f1f57d54f6334eebdbad90c6707182413624fe08669e"
+            }
+          ],
+          "PG": {
+            "at": "2026-10-06T19:32:04.807Z",
+            "database": "n7f10_a2",
+            "reset": false,
+            "rows": [
+              {
+                "pid": 839472,
+                "state": "idle",
+                "wait_event_type": "Client",
+                "wait_event": "ClientRead",
+                "xact_start": null,
+                "query_start": "2026-10-06T19:32:01.663Z",
+                "blocking": [],
+                "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+              },
+              {
+                "pid": 839481,
+                "state": "idle",
+                "wait_event_type": "Client",
+                "wait_event": "ClientRead",
+                "xact_start": null,
+                "query_start": "2026-10-06T19:32:01.662Z",
+                "blocking": [],
+                "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+              },
+              {
+                "pid": 839482,
+                "state": "active",
+                "wait_event_type": "IO",
+                "wait_event": "DataFileImmediateSync",
+                "xact_start": "2026-10-06T19:32:04.552Z",
+                "query_start": "2026-10-06T19:32:04.552Z",
+                "blocking": [],
+                "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+              },
+              {
+                "pid": 839529,
+                "state": "idle",
+                "wait_event_type": "Client",
+                "wait_event": "ClientRead",
+                "xact_start": null,
+                "query_start": "2026-10-06T19:32:01.716Z",
+                "blocking": [],
+                "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+              }
+            ],
+            "quiescent": false
+          }
+        }
+      ]
+    },
+    {
+      "failure": {
+        "at": "2026-10-06T19:32:26.736279+00:00",
+        "stream": "tap",
+        "line": "    not ok 11 - B5/B6 actual operator CLI durable seed\u2192poll\u2192ReplyStore stops pending; tenant status safe"
+      },
+      "nearest_snapshots": [
+        {
+          "at": "2026-10-06T19:32:29.279810+00:00",
+          "owned_node_identities": [
+            {
+              "pid": 1231313,
+              "startticks": "123801118",
+              "state": "S",
+              "command_sha256": "bbcf1c271d8d7df4a77ff361909b28fe182fe596967fbab76b8b8d851fc0e031"
+            },
+            {
+              "pid": 1231342,
+              "startticks": "123801139",
+              "state": "S",
+              "command_sha256": "fe579ae0d52a36fbefa55a3b79a1b4a23ffa13401fb10584fd4b57e6aa454f6a"
+            },
+            {
+              "pid": 1231372,
+              "startticks": "123801152",
+              "state": "S",
+              "command_sha256": "c68c76fe8ff34847cc48565799fa849e1eacfd27f976e0ec0406a7e60d053d4c"
+            },
+            {
+              "pid": 1265034,
+              "startticks": "123814659",
+              "state": "S",
+              "command_sha256": "8903ac63e73f9c6ae0acd19ccfd319061e3de15931a56432219b5df607f63ce4"
+            }
+          ],
+          "PG": {
+            "at": "2026-10-06T19:32:29.471Z",
+            "database": "n7f10_a2",
+            "reset": false,
+            "rows": [
+              {
+                "pid": 839563,
+                "state": "idle",
+                "wait_event_type": "Client",
+                "wait_event": "ClientRead",
+                "xact_start": null,
+                "query_start": "2026-10-06T19:32:25.740Z",
+                "blocking": [],
+                "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+              },
+              {
+                "pid": 839572,
+                "state": "idle",
+                "wait_event_type": "Client",
+                "wait_event": "ClientRead",
+                "xact_start": null,
+                "query_start": "2026-10-06T19:32:21.975Z",
+                "blocking": [],
+                "query_sha256": "6dbcfbf33084d3932b9ed62b232c409c8f53f4c41a766ce5a480381a0546ba46"
+              },
+              {
+                "pid": 839573,
+                "state": "idle",
+                "wait_event_type": "Client",
+                "wait_event": "ClientRead",
+                "xact_start": null,
+                "query_start": "2026-10-06T19:32:21.966Z",
+                "blocking": [],
+                "query_sha256": "6dbcfbf33084d3932b9ed62b232c409c8f53f4c41a766ce5a480381a0546ba46"
+              },
+              {
+                "pid": 839574,
+                "state": "idle",
+                "wait_event_type": "Client",
+                "wait_event": "ClientRead",
+                "xact_start": null,
+                "query_start": "2026-10-06T19:32:21.976Z",
+                "blocking": [],
+                "query_sha256": "6dbcfbf33084d3932b9ed62b232c409c8f53f4c41a766ce5a480381a0546ba46"
+              },
+              {
+                "pid": 839575,
+                "state": "idle",
+                "wait_event_type": "Client",
+                "wait_event": "ClientRead",
+                "xact_start": null,
+                "query_start": "2026-10-06T19:32:25.741Z",
+                "blocking": [],
+                "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+              },
+              {
+                "pid": 839576,
+                "state": "idle",
+                "wait_event_type": "Client",
+                "wait_event": "ClientRead",
+                "xact_start": null,
+                "query_start": "2026-10-06T19:32:29.467Z",
+                "blocking": [],
+                "query_sha256": "29caef750326962248aeef25a4bbcdd7a7737d219665414072c37c62ab04301c"
+              }
+            ],
+            "quiescent": false
+          }
+        },
+        {
+          "at": "2026-10-06T19:32:21.053552+00:00",
+          "owned_node_identities": [
+            {
+              "pid": 1231313,
+              "startticks": "123801118",
+              "state": "S",
+              "command_sha256": "bbcf1c271d8d7df4a77ff361909b28fe182fe596967fbab76b8b8d851fc0e031"
+            },
+            {
+              "pid": 1231342,
+              "startticks": "123801139",
+              "state": "S",
+              "command_sha256": "fe579ae0d52a36fbefa55a3b79a1b4a23ffa13401fb10584fd4b57e6aa454f6a"
+            },
+            {
+              "pid": 1231372,
+              "startticks": "123801152",
+              "state": "S",
+              "command_sha256": "c68c76fe8ff34847cc48565799fa849e1eacfd27f976e0ec0406a7e60d053d4c"
+            },
+            {
+              "pid": 1265034,
+              "startticks": "123814659",
+              "state": "R",
+              "command_sha256": "8903ac63e73f9c6ae0acd19ccfd319061e3de15931a56432219b5df607f63ce4"
+            }
+          ],
+          "PG": {
+            "at": "2026-10-06T19:32:21.256Z",
+            "database": "n7f10_a2",
+            "reset": false,
+            "rows": [
+              {
+                "pid": 839563,
+                "state": "active",
+                "wait_event_type": "IO",
+                "wait_event": "DataFileImmediateSync",
+                "xact_start": "2026-10-06T19:32:21.075Z",
+                "query_start": "2026-10-06T19:32:21.075Z",
+                "blocking": [],
+                "query_sha256": "17adb0c4cf827797ccd5d41bbdcb2d02205404ec1cd43fa51bf988d200586436"
+              },
+              {
+                "pid": 839572,
+                "state": "idle",
+                "wait_event_type": "Client",
+                "wait_event": "ClientRead",
+                "xact_start": null,
+                "query_start": "2026-10-06T19:32:19.457Z",
+                "blocking": [],
+                "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+              },
+              {
+                "pid": 839573,
+                "state": "idle",
+                "wait_event_type": "Client",
+                "wait_event": "ClientRead",
+                "xact_start": null,
+                "query_start": "2026-10-06T19:32:20.381Z",
+                "blocking": [],
+                "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+              },
+              {
+                "pid": 839574,
+                "state": "idle",
+                "wait_event_type": "Client",
+                "wait_event": "ClientRead",
+                "xact_start": null,
+                "query_start": "2026-10-06T19:32:20.174Z",
+                "blocking": [],
+                "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+              },
+              {
+                "pid": 839575,
+                "state": "idle",
+                "wait_event_type": "Client",
+                "wait_event": "ClientRead",
+                "xact_start": null,
+                "query_start": "2026-10-06T19:32:19.470Z",
+                "blocking": [],
+                "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+              },
+              {
+                "pid": 839576,
+                "state": "idle",
+                "wait_event_type": "Client",
+                "wait_event": "ClientRead",
+                "xact_start": null,
+                "query_start": "2026-10-06T19:32:19.483Z",
+                "blocking": [],
+                "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+              }
+            ],
+            "quiescent": false
+          }
+        }
+      ]
+    }
+  ]
+}

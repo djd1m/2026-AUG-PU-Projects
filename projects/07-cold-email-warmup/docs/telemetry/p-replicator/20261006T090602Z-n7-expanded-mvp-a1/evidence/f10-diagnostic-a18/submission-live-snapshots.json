@@ -1,0 +1,1620 @@
+[
+  {
+    "at": "2026-10-06T19:48:25.511023+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "R",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:25.711Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [],
+      "quiescent": true
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:26.741986+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:26.920Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "active",
+          "wait_event_type": "IO",
+          "wait_event": "DataFileImmediateSync",
+          "xact_start": "2026-10-06T19:48:26.508Z",
+          "query_start": "2026-10-06T19:48:26.508Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:27.947780+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "R",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:28.148Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "idle in transaction",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": "2026-10-06T19:48:28.141Z",
+          "query_start": "2026-10-06T19:48:28.144Z",
+          "blocking": [],
+          "query_sha256": "9e0d0606e80a9c433b5fcc8cedfb9aee0bf9013ed5a0415e1c4135245be161c8"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:28.091Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:28.089Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:29.172659+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:29.389Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:28.721Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842255,
+          "state": "active",
+          "wait_event_type": "IO",
+          "wait_event": "DataFileImmediateSync",
+          "xact_start": "2026-10-06T19:48:28.772Z",
+          "query_start": "2026-10-06T19:48:28.772Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:28.719Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:30.419261+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "R",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:30.625Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "active",
+          "wait_event_type": "IO",
+          "wait_event": "WALSync",
+          "xact_start": "2026-10-06T19:48:30.600Z",
+          "query_start": "2026-10-06T19:48:30.621Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:29.861Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:29.860Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:31.646487+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:31.858Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "active",
+          "wait_event_type": null,
+          "wait_event": null,
+          "xact_start": "2026-10-06T19:48:31.383Z",
+          "query_start": "2026-10-06T19:48:31.383Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:31.337Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:31.334Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:32.879689+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:33.077Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "active",
+          "wait_event_type": "IO",
+          "wait_event": "DataFileImmediateSync",
+          "xact_start": "2026-10-06T19:48:33.030Z",
+          "query_start": "2026-10-06T19:48:33.030Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:32.991Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:32.990Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:34.118226+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:34.321Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:33.812Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842255,
+          "state": "active",
+          "wait_event_type": "IO",
+          "wait_event": "DataFileImmediateSync",
+          "xact_start": "2026-10-06T19:48:33.873Z",
+          "query_start": "2026-10-06T19:48:33.873Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:33.811Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:35.348661+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:35.580Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "idle in transaction",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": "2026-10-06T19:48:35.573Z",
+          "query_start": "2026-10-06T19:48:35.574Z",
+          "blocking": [],
+          "query_sha256": "5fc2de4fbedec089a334e84a3149b5b0b3f3914e0c1db0470a91ea928fae7293"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:34.684Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:34.681Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:36.611421+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:36.837Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "active",
+          "wait_event_type": "IO",
+          "wait_event": "DataFileImmediateSync",
+          "xact_start": "2026-10-06T19:48:36.710Z",
+          "query_start": "2026-10-06T19:48:36.710Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:36.646Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:36.643Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:37.869002+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:38.069Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:37.482Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842255,
+          "state": "active",
+          "wait_event_type": "IO",
+          "wait_event": "DataFileImmediateSync",
+          "xact_start": "2026-10-06T19:48:37.522Z",
+          "query_start": "2026-10-06T19:48:37.522Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:37.481Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:39.104562+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:39.302Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:39.011Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842255,
+          "state": "active",
+          "wait_event_type": "IO",
+          "wait_event": "DataFileImmediateSync",
+          "xact_start": "2026-10-06T19:48:39.090Z",
+          "query_start": "2026-10-06T19:48:39.090Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:39.009Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:40.339311+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:40.549Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "active",
+          "wait_event_type": null,
+          "wait_event": null,
+          "xact_start": "2026-10-06T19:48:40.232Z",
+          "query_start": "2026-10-06T19:48:40.232Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:40.174Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:40.173Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:41.572645+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "R",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:41.795Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "active",
+          "wait_event_type": null,
+          "wait_event": null,
+          "xact_start": "2026-10-06T19:48:41.783Z",
+          "query_start": "2026-10-06T19:48:41.787Z",
+          "blocking": [],
+          "query_sha256": "883d7f1f9132180c86abe21a9ef241cdc17ccdba3866416af4feb3b36171ff1d"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:41.749Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:41.748Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:42.825419+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "R",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:43.025Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "active",
+          "wait_event_type": "IO",
+          "wait_event": "WALSync",
+          "xact_start": "2026-10-06T19:48:43.005Z",
+          "query_start": "2026-10-06T19:48:43.020Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:41.749Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:41.748Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:44.048712+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:44.256Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "active",
+          "wait_event_type": "IO",
+          "wait_event": "DataFileImmediateSync",
+          "xact_start": "2026-10-06T19:48:43.867Z",
+          "query_start": "2026-10-06T19:48:43.867Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:43.819Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:43.817Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:45.291217+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:45.485Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:45.482Z",
+          "blocking": [],
+          "query_sha256": "29caef750326962248aeef25a4bbcdd7a7737d219665414072c37c62ab04301c"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:43.819Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:43.817Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:46.503808+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:46.678Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "active",
+          "wait_event_type": "IO",
+          "wait_event": "DataFileImmediateSync",
+          "xact_start": "2026-10-06T19:48:46.408Z",
+          "query_start": "2026-10-06T19:48:46.408Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:43.819Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:43.817Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:47.705328+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:47.894Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:47.610Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        },
+        {
+          "pid": 842255,
+          "state": "active",
+          "wait_event_type": "IO",
+          "wait_event": "DataFileImmediateSync",
+          "xact_start": "2026-10-06T19:48:47.632Z",
+          "query_start": "2026-10-06T19:48:47.632Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:47.611Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:48.920014+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:49.116Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.040Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.039Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        },
+        {
+          "pid": 842256,
+          "state": "active",
+          "wait_event_type": null,
+          "wait_event": null,
+          "xact_start": "2026-10-06T19:48:49.112Z",
+          "query_start": "2026-10-06T19:48:49.112Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        },
+        {
+          "pid": 842334,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.097Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:50.147527+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:50.326Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.040Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.039Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:50.318Z",
+          "blocking": [],
+          "query_sha256": "43e7a89afa835c6e40f54c0bceb4ef2afc52cc44bcb651b18a0f9e8c45cbf5e8"
+        },
+        {
+          "pid": 842334,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.097Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:51.353858+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:51.543Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.040Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.039Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        },
+        {
+          "pid": 842256,
+          "state": "active",
+          "wait_event_type": "IO",
+          "wait_event": "DataFileImmediateSync",
+          "xact_start": "2026-10-06T19:48:51.316Z",
+          "query_start": "2026-10-06T19:48:51.316Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        },
+        {
+          "pid": 842334,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.097Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:52.567946+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:52.756Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.040Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.039Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        },
+        {
+          "pid": 842256,
+          "state": "idle in transaction",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": "2026-10-06T19:48:52.744Z",
+          "query_start": "2026-10-06T19:48:52.748Z",
+          "blocking": [],
+          "query_sha256": "3383a1950c03eff1adc6c4b072c6e0f14fc665ba7b9000416a3bbf262df40caf"
+        },
+        {
+          "pid": 842334,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.097Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:53.776070+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "R",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:53.921Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.040Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.039Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:53.917Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842334,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.097Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:54.943890+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:55.140Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.040Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.039Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:54.597Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842334,
+          "state": "active",
+          "wait_event_type": "IO",
+          "wait_event": "WALSync",
+          "xact_start": "2026-10-06T19:48:55.133Z",
+          "query_start": "2026-10-06T19:48:55.133Z",
+          "blocking": [],
+          "query_sha256": "43e7a89afa835c6e40f54c0bceb4ef2afc52cc44bcb651b18a0f9e8c45cbf5e8"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:56.177009+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:56.384Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.040Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.039Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:54.597Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842334,
+          "state": "active",
+          "wait_event_type": null,
+          "wait_event": null,
+          "xact_start": "2026-10-06T19:48:56.260Z",
+          "query_start": "2026-10-06T19:48:56.260Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:57.412399+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:57.628Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.040Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.039Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:54.597Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842334,
+          "state": "active",
+          "wait_event_type": "IO",
+          "wait_event": "DataFileImmediateSync",
+          "xact_start": "2026-10-06T19:48:57.106Z",
+          "query_start": "2026-10-06T19:48:57.106Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:58.674411+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:48:58.854Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842253,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.040Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842255,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:49.039Z",
+          "blocking": [],
+          "query_sha256": "dc24461caa5408999828a1e63a4d4bcab8208d23561fe87ad61ddb8e830f2cbb"
+        },
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:54.597Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842334,
+          "state": "active",
+          "wait_event_type": "IO",
+          "wait_event": "DataFileImmediateSync",
+          "xact_start": "2026-10-06T19:48:58.436Z",
+          "query_start": "2026-10-06T19:48:58.436Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        }
+      ],
+      "quiescent": false
+    }
+  },
+  {
+    "at": "2026-10-06T19:48:59.879898+00:00",
+    "owned_node_identities": [
+      {
+        "pid": 1503445,
+        "startticks": "123911550",
+        "state": "S",
+        "command_sha256": "f76d79f7b319ceb80eacaf01ac68de3a06fc19fd278a358e55c27fef60cc0faa"
+      },
+      {
+        "pid": 1503461,
+        "startticks": "123911557",
+        "state": "S",
+        "command_sha256": "f6c6bb76813e6326e6242a17a4357098c6f1422082117908763d24404c892af7"
+      }
+    ],
+    "PG": {
+      "at": "2026-10-06T19:49:00.022Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [
+        {
+          "pid": 842256,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "xact_start": null,
+          "query_start": "2026-10-06T19:48:54.597Z",
+          "blocking": [],
+          "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "pid": 842334,
+          "state": "active",
+          "wait_event_type": "IO",
+          "wait_event": "DataFileImmediateSync",
+          "xact_start": "2026-10-06T19:48:59.735Z",
+          "query_start": "2026-10-06T19:48:59.735Z",
+          "blocking": [],
+          "query_sha256": "5969cf4da93f4b6b588a42d843c19d70263e3b04bc5c0cd7337787b708541462"
+        }
+      ],
+      "quiescent": false
+    }
+  }
+]

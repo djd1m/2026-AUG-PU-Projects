@@ -1,0 +1,44 @@
+{
+  "suppression": {
+    "literal_target": "B5/B6 actual operator CLI durable seed\u2192poll\u2192ReplyStore stops pending; tenant status safe",
+    "target_line": "    ok 11 - B5/B6 actual operator CLI durable seed\u2192poll\u2192ReplyStore stops pending; tenant status safe",
+    "native_exit": {
+      "at": "2026-10-06T19:47:28.256076+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 17955.401789862663,
+      "pid": 1481454,
+      "startticks": "123904030"
+    },
+    "tap_sha256": "7a46e9cae8e69b5f2f8e21aefb6f951bbead2d0998db3c178bcba1b1060379dc",
+    "chronology_sha256": "e7fc4a6a019824d8a353cd807dc5e902831f42b62b70e2ee5d074710f68baae9"
+  },
+  "capacity": {
+    "literal_target": "complaint quarantine immediately releases capacity for another tenant",
+    "target_line": "    ok 5 - complaint quarantine immediately releases capacity for another tenant",
+    "native_exit": {
+      "at": "2026-10-06T19:48:02.202566+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 11834.826515056193,
+      "pid": 1493228,
+      "startticks": "123908036"
+    },
+    "tap_sha256": "2866d17812943bbf1715998467077928ff372e64a4b875bdbfc4ad239f28b748",
+    "chronology_sha256": "2928bb4bcf9fb7fa7065d0d6a97c6b86a6b82c79dd042f025ec2692023944e7d"
+  },
+  "submission": {
+    "literal_target": "B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan",
+    "target_line": "    ok 27 - B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan",
+    "native_exit": {
+      "at": "2026-10-06T19:49:00.371682+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 34864.82768598944,
+      "pid": 1503445,
+      "startticks": "123911550"
+    },
+    "tap_sha256": "1739df65d806de86350e87221ddce52ee64cb9f72d94630a7d45a8cd5bfb6f4e",
+    "chronology_sha256": "daeb020c9b526cd1c7552f0d677c54564a2fb71334cb3de545664f03bb46d2a6"
+  }
+}

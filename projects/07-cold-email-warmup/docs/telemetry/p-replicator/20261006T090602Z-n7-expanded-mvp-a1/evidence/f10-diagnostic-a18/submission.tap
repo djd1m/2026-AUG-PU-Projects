@@ -1,0 +1,197 @@
+TAP version 13
+# Subtest: F03b real PG durable final authority, all stop races, sink privacy and outcomes
+    # Subtest: B1/B2 SC-US-003-4 revoke
+    ok 1 - B1/B2 SC-US-003-4 revoke
+      ---
+      duration_ms: 759.752621
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 revoke
+    ok 2 - B1/B2 SC-US-003-5 revoke
+      ---
+      duration_ms: 895.75369
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 version
+    ok 3 - B1/B2 SC-US-003-4 version
+      ---
+      duration_ms: 607.099326
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 version
+    ok 4 - B1/B2 SC-US-003-5 version
+      ---
+      duration_ms: 1134.377365
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 pause
+    ok 5 - B1/B2 SC-US-003-4 pause
+      ---
+      duration_ms: 764.698483
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 pause
+    ok 6 - B1/B2 SC-US-003-5 pause
+      ---
+      duration_ms: 709.169553
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 sender_withdraw
+    ok 7 - B1/B2 SC-US-003-4 sender_withdraw
+      ---
+      duration_ms: 825.085344
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 sender_withdraw
+    ok 8 - B1/B2 SC-US-003-5 sender_withdraw
+      ---
+      duration_ms: 821.320534
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 recipient_withdraw
+    ok 9 - B1/B2 SC-US-003-4 recipient_withdraw
+      ---
+      duration_ms: 839.601869
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 recipient_withdraw
+    ok 10 - B1/B2 SC-US-003-5 recipient_withdraw
+      ---
+      duration_ms: 871.995381
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 reply
+    ok 11 - B1/B2 SC-US-003-4 reply
+      ---
+      duration_ms: 1084.061847
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 reply
+    ok 12 - B1/B2 SC-US-003-5 reply
+      ---
+      duration_ms: 880.886905
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 unsubscribe
+    ok 13 - B1/B2 SC-US-003-4 unsubscribe
+      ---
+      duration_ms: 812.38342
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 unsubscribe
+    ok 14 - B1/B2 SC-US-003-5 unsubscribe
+      ---
+      duration_ms: 869.722451
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 complaint
+    ok 15 - B1/B2 SC-US-003-4 complaint
+      ---
+      duration_ms: 697.454989
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 complaint
+    ok 16 - B1/B2 SC-US-003-5 complaint
+      ---
+      duration_ms: 1142.430668
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 disable
+    ok 17 - B1/B2 SC-US-003-4 disable
+      ---
+      duration_ms: 812.2668
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 disable
+    ok 18 - B1/B2 SC-US-003-5 disable
+      ---
+      duration_ms: 754.007779
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 limit
+    ok 19 - B1/B2 SC-US-003-4 limit
+      ---
+      duration_ms: 1438.012893
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 limit
+    ok 20 - B1/B2 SC-US-003-5 limit
+      ---
+      duration_ms: 629.300405
+      type: 'test'
+      ...
+    # Subtest: B3 durable rendered sink/token/message refs with own OR intended pool peer read only
+    ok 21 - B3 durable rendered sink/token/message refs with own OR intended pool peer read only
+      ---
+      duration_ms: 1793.06381
+      type: 'test'
+      ...
+    # Subtest: R2 B5 authenticated disabled inspection unavailable before either reader
+    ok 22 - R2 B5 authenticated disabled inspection unavailable before either reader
+      ---
+      duration_ms: 744.309506
+      type: 'test'
+      ...
+    # Subtest: R1 post-lock clock lease45s rejects expired waiter with zero adapter calls
+    ok 23 - R1 post-lock clock lease45s rejects expired waiter with zero adapter calls
+      ---
+      duration_ms: 675.076471
+      type: 'test'
+      ...
+    # Subtest: R1 post-lock clock poll60s rejects stale waiter with live lease and zero adapter calls
+    ok 24 - R1 post-lock clock poll60s rejects stale waiter with live lease and zero adapter calls
+      ---
+      duration_ms: 550.845077
+      type: 'test'
+      ...
+    # Subtest: R1 post-lock clock retry120s rejects ceiling waiter with zero adapter calls
+    ok 25 - R1 post-lock clock retry120s rejects ceiling waiter with zero adapter calls
+      ---
+      duration_ms: 685.808465
+      type: 'test'
+      ...
+    # Subtest: R1 post-lock clock midnight concurrent waiters enforce new-day provider limit1 and reservations
+    ok 26 - R1 post-lock clock midnight concurrent waiters enforce new-day provider limit1 and reservations
+      ---
+      duration_ms: 794.790393
+      type: 'test'
+      ...
+    # Subtest: B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan
+    ok 27 - B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan
+      ---
+      duration_ms: 4806.887345
+      type: 'test'
+      ...
+    # Subtest: B5 midnight reservations move under concurrent final guard; provider lowered, no off-by-one
+    ok 28 - B5 midnight reservations move under concurrent final guard; provider lowered, no off-by-one
+      ---
+      duration_ms: 695.795438
+      type: 'test'
+      ...
+    # Subtest: B4 proved pre-DATA only, 60s pacing within original120s ceiling, re-enter guards/quota
+    ok 29 - B4 proved pre-DATA only, 60s pacing within original120s ceiling, re-enter guards/quota
+      ---
+      duration_ms: 1644.461017
+      type: 'test'
+      ...
+    # Subtest: B4/B5 retry120s exact ceiling, ambiguous timeout/crash retain quota, never recover resend
+    ok 30 - B4/B5 retry120s exact ceiling, ambiguous timeout/crash retain quota, never recover resend
+      ---
+      duration_ms: 4044.364724
+      type: 'test'
+      ...
+    1..30
+ok 1 - F03b real PG durable final authority, all stop races, sink privacy and outcomes
+  ---
+  duration_ms: 34154.045722
+  type: 'test'
+  ...
+1..1
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 34799.682573
