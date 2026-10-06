@@ -8,7 +8,7 @@
   "identity": {
     "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
     "work_unit_id": "expanded-mvp",
-    "current_attempt_id": "f08-plan-r2"
+    "current_attempt_id": "f08-validate-r2"
   },
   "telemetry": {
     "run": {
@@ -22,7 +22,7 @@
   },
   "source": {
     "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
-    "current_revision": "b3aa56cd45d2dad46c523e146b193ca0f3e22ac4",
+    "current_revision": "8c2f4dc57aeb6b71f19b160755b4372d338f1ee1",
     "build_revision": null,
     "requirements": [
       {
@@ -45,8 +45,8 @@
       }
     ],
     "continuity": {
-      "expected_revision": "b3aa56cd45d2dad46c523e146b193ca0f3e22ac4",
-      "observed_revision": "b3aa56cd45d2dad46c523e146b193ca0f3e22ac4",
+      "expected_revision": "8c2f4dc57aeb6b71f19b160755b4372d338f1ee1",
+      "observed_revision": "8c2f4dc57aeb6b71f19b160755b4372d338f1ee1",
       "reconciliation": null
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
@@ -262,7 +262,11 @@
     },
     {
       "id": "f08-plan-r2",
-      "status": "active"
+      "status": "completed"
+    },
+    {
+      "id": "f08-validate-r2",
+      "status": "completed"
     }
   ],
   "work_units": [

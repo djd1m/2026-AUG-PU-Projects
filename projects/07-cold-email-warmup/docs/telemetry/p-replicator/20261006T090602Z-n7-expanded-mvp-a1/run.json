@@ -73,7 +73,7 @@
     "No prelaunch serialized launch digest for native PLAN receipt; terminal receipt and output SHA verified, not companion delivery attestation",
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred."
   ],
-  "current_stage": "PLAN_FIX F08-V1",
+  "current_stage": "INTEGRATE F08 PLAN",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -135,9 +135,9 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "root",
-    "executor": "f08_planner_a1 actually running f08-plan-r2 in isolated fix worktree; n7_expanded_coordinator",
-    "source_revision": "b3aa56cd45d2dad46c523e146b193ca0f3e22ac4",
-    "next": "Bounded4min targetedplanfix then3min narrowindependentvalidation; noSolbeforeREADY"
+    "executor": "f08_validator_a1 followup allocated f08-validate-r2; n7_expanded_coordinator",
+    "source_revision": "8c2f4dc57aeb6b71f19b160755b4372d338f1ee1",
+    "next": "Narrow3minindependentdisposition; SolonlyafterREADY/fullPhase1/2/repeatedroute"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -201,11 +201,12 @@
     "integrated_phase12_exit": 0
   },
   "f08_validation": {
-    "verdict": "NEEDS WORK",
-    "high_findings": [
+    "verdict": "READY",
+    "closed_findings": [
       "F08-V1"
     ],
     "phase12_exit": 0,
-    "scope": "Required authority linearization under existing FIRST global lock; no externalblocker"
+    "validated_source": "8c2f4dc57aeb6b71f19b160755b4372d338f1ee1",
+    "validation_artifact_revision": "db47f8fd3597d547f79e501b9afa7d08a800b67a"
   }
 }
