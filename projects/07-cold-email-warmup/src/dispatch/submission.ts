@@ -6,20 +6,39 @@ import { decryptCredentials } from '../mailboxes/crypto.js';
 import type { MailboxInput } from '../mailboxes/input.js';
 import { openRecipient,recipientDigest } from '../campaigns/store.js';
 import { freshMailbox,poolEligible } from './eligibility.js';
-import { renderTestMessage } from './message.js';
+import { authorizeTransport } from '../mailboxes/transport-authority.js';
+import { acquireTransportSlot,closedOwnerProof,releaseTransportSlot,type TransportSlot } from '../mailboxes/transport-slots.js';
+import { runTransportChild,type ChildRequest } from '../mailboxes/transport-lifetime.js';
+import { renderLiveMessage,type LiveMessage,type TestMessage,renderTestMessage } from './message.js';
 import { localSinkAdapter,retryDelay,type SubmissionAdapter,type TestOutcome } from './adapter.js';
 export interface SubmissionFixtures {
  clock?:()=>Date;adapter?:SubmissionAdapter;
- beforeFinal?:()=>Promise<void>;afterCommit?:()=>Promise<void>;
+ beforeFinal?:()=>Promise<void>;afterCommit?:()=>Promise<void>;signal?:AbortSignal;transportFixture?:ChildRequest['fixture'];
 }
 export class SubmissionStore {
  constructor(readonly pool:Pool,readonly config:Config,readonly fixtures:SubmissionFixtures={}) {}
  private now() {return this.fixtures.clock?.()??new Date();}
  async submit(id:string,owner:string) {
+  let slot:TransportSlot|undefined,handedToChild=false;
+  if(this.config.dispatchMode==='live_provider') {
+   try {
+    const row=(await this.pool.query("SELECT tenant_id,mailbox_id FROM send_job WHERE id=$1 AND state='claimed' AND lease_owner=$2",[id,owner])).rows[0];if(!row)return {state:'blocked',calls:0};
+    await eligibilityTransaction(this.pool,c=>authorizeTransport(c,this.config,row.tenant_id,row.mailbox_id,'smtp_submit'));
+    slot=await acquireTransportSlot(this.pool,'smtp',row.tenant_id,row.mailbox_id);
+   }catch{return {state:'blocked',calls:0};}
+  }
+  try{return await this.submitWithSlot(id,owner,slot,()=>{handedToChild=true;});}
+  catch(e){if(e instanceof HttpError&&e.code==='transport_denied')return {state:'blocked',calls:0};throw e;}
+  finally{if(slot&&!handedToChild)await releaseTransportSlot(this.pool,closedOwnerProof(slot));}
+ }
+ private async submitWithSlot(id:string,owner:string,slot:TransportSlot|undefined,handedToChild:()=>void) {
   await this.fixtures.beforeFinal?.();
   const prepared=await eligibilityTransaction(this.pool,async client=>{
    // Operator authority is configured at process startup, never chosen by HTTP input.
-   if(this.config.dispatchMode!=='local_test' || (this.fixtures.adapter && this.fixtures.adapter.mode!=='local_test')) return null;
+   if(!['local_test','live_provider'].includes(this.config.dispatchMode) || (this.config.dispatchMode==='live_provider'&&!slot) || (this.fixtures.adapter && this.config.dispatchMode!=='local_test')) return null;
+   let transport:Awaited<ReturnType<typeof authorizeTransport>>|undefined;
+   if(slot){transport=await authorizeTransport(client,this.config,slot.tenant,slot.mailbox,'smtp_submit');await authorizeTransport(client,this.config,slot.tenant,slot.mailbox,'imap_headers');
+    const peer=(await client.query("SELECT m.tenant_id,m.id FROM send_job j JOIN mailbox m ON m.id=j.recipient_mailbox_id WHERE j.id=$1 AND j.scope='pool'",[id])).rows[0];if(peer)await authorizeTransport(client,this.config,peer.tenant_id,peer.id,'imap_headers');}
    // The shared lock may have waited across a deadline or UTC midnight.
    const now=this.fixtures.clock?.()??(await client.query('SELECT clock_timestamp() AS now')).rows[0].now as Date;
    const day=now.toISOString().slice(0,10);
@@ -61,25 +80,27 @@ export class SubmissionStore {
     to=openRecipient(e.recipient_envelope,row.tenant_id,row.enrollment_id,this.config.credentialKeyring);digest=e.recipient_hash;
    }
    const parent=row.parent_id?(await client.query('SELECT message_id FROM send_job WHERE id=$1',[row.parent_id])).rows[0]?.message_id:undefined;
-   const rendered=renderTestMessage(from,to,row.payload,this.config.origin,parent);
-   await client.query('UPDATE send_job SET message_id=$2 WHERE id=$1',[id,rendered.message.messageId]);
+   const rendered=slot?renderLiveMessage(from,to,row.payload,this.config.origin,parent,row.message_id??undefined):renderTestMessage(from,to,row.payload,this.config.origin,parent);
+   await client.query('UPDATE send_job SET message_id=$2,transport_mode=$3,transport_grant_revision=$4,transport_mailbox_revision=$5 WHERE id=$1',[id,rendered.message.messageId,slot?(this.fixtures.transportFixture?'protocol_fixture':'live_provider'):'local_test',transport?.revision??null,transport?.mailboxRevision??null]);
    await client.query(`INSERT INTO unsubscribe_token(token_hash,job_id,tenant_id,mailbox_id,enrollment_id,recipient_hash,expires_at)
     VALUES($1,$2,$3,$4,$5,$6,$7::timestamptz+interval '30 days')`,[rendered.tokenHash,id,row.tenant_id,row.mailbox_id,row.enrollment_id,digest,now]);
-   return {row,message:rendered.message,recipientTenant};
-  });
+   return {row,message:rendered.message,recipientTenant,input:slot?decryptCredentials<MailboxInput>(sender.credential_envelope,row.tenant_id,row.mailbox_id,this.config.credentialKeyring):null};
+  },()=>{if(this.fixtures.signal?.aborted)throw new HttpError(503,'transport_cancelled');});
   if(!prepared) return {state:'blocked',calls:0};
   // COMMIT above is irreversible, including a caller crash before the adapter.
   await this.fixtures.afterCommit?.();
   let outcome:TestOutcome;
-  try {outcome=await (this.fixtures.adapter??localSinkAdapter).submit(prepared.message);} catch {outcome={kind:'ambiguous'};}
+  try {if(slot){handedToChild();outcome=await runTransportChild<TestOutcome>(this.pool,slot,{kind:'smtp',input:prepared.input,message:prepared.message as LiveMessage,allowlist:[...this.config.providerAllowlist],fixture:this.fixtures.transportFixture},this.fixtures.signal);}else outcome=await (this.fixtures.adapter??localSinkAdapter).submit(prepared.message as TestMessage);} catch {outcome={kind:'ambiguous'};}
   return eligibilityTransaction(this.pool,async client=>{
    const current=(await client.query("SELECT * FROM send_job WHERE id=$1 AND state='submitting' AND attempt_count=$2 FOR UPDATE",[id,prepared.row.attempt_count])).rows[0];
    if(!current) return {state:'unknown_delivery',calls:1};
    const finished=this.now();let state:string='unknown',reason='unknown_delivery';
    if(outcome?.kind==='accepted') {
-    await client.query(`INSERT INTO local_test_message(job_id,tenant_id,recipient_tenant_id,scope,message_id,sender,recipient,subject,body,headers,test_label,accepted_at)
-     VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,[id,current.tenant_id,prepared.recipientTenant,current.scope,prepared.message.messageId,prepared.message.sender,prepared.message.recipient,prepared.message.subject,prepared.message.body,prepared.message.headers,prepared.message.testLabel,finished]);
-    state='submitted';reason='smtp_accepted_local_test';
+    if(!slot)await client.query(`INSERT INTO local_test_message(job_id,tenant_id,recipient_tenant_id,scope,message_id,sender,recipient,subject,body,headers,test_label,accepted_at)
+     VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,[id,current.tenant_id,prepared.recipientTenant,current.scope,prepared.message.messageId,prepared.message.sender,prepared.message.recipient,prepared.message.subject,prepared.message.body,prepared.message.headers,(prepared.message as TestMessage).testLabel,finished]);
+    await client.query('INSERT INTO transport_receipt(job_id,attempt_count,tenant_id,message_id,mode,accepted_at) VALUES($1,$2,$3,$4,$5,$6)',[id,current.attempt_count,current.tenant_id,prepared.message.messageId,slot?(this.fixtures.transportFixture?'protocol_fixture':'live_provider'):'local_test',finished]);
+    state='submitted';reason=slot?'smtp_accepted':'smtp_accepted_local_test';
+   } else if(outcome?.kind==='rejected_after_data'){state='cancelled';reason='rejected_after_data';
    } else if((outcome?.kind==='pre_data_transient' || outcome?.kind==='permanent') && outcome.proof==='no_data_submitted') {
     const delay=outcome.kind==='pre_data_transient'?retryDelay(current.attempt_count,current.first_attempt_at,finished):null;
     state=delay===null?'cancelled':'queued';reason=delay===null?'definite_failure':'proved_pre_data_retry';

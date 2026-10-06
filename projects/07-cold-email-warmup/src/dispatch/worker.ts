@@ -7,7 +7,7 @@ import { DispatchStore } from './store.js';
 const config=loadConfig();const pool=createPool(config.databaseUrl);
 try {
  if(!await ready(pool)) throw new Error('database_not_ready');
- if(config.dispatchMode!=='local_test') throw new Error('dispatch_disabled');
+ if(config.dispatchMode==='disabled') throw new Error('dispatch_disabled');
  const submissions=new SubmissionStore(pool,config);await submissions.recoverAbandoned();
  const scheduled=await new PoolStore(pool).tick();
  const reservation=await new DispatchStore(pool).claim();

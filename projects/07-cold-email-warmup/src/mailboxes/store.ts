@@ -9,7 +9,9 @@ import { maskEmail, parseMailbox, dailyLimit, type MailboxInput } from './input.
 import { resolveEndpoint, type Resolver } from './network.js';
 import { localTestAdapter, verifyTest, type TestAdapter } from './provider.js';
 export async function cancelMailbox(client:import('pg').PoolClient,id:string) {
-  await client.query('UPDATE mailbox SET diagnostic_revision=diagnostic_revision+1,diagnostic_attempt=NULL WHERE id=$1',[id]);
+  await client.query('UPDATE mailbox SET diagnostic_revision=diagnostic_revision+1,transport_revision=transport_revision+1,diagnostic_attempt=NULL WHERE id=$1',[id]);
+  await client.query("UPDATE transport_grant SET revision=revision+1,state='revoked',scope=NULL WHERE mailbox_id=$1",[id]);
+  await client.query('UPDATE mailbox_poll SET scan_complete=false,poll_owner=NULL WHERE mailbox_id=$1',[id]);
   await releaseCapacity(client,id);
   await client.query("UPDATE consent SET revoked_at=now() WHERE mailbox_id=$1 AND revoked_at IS NULL",[id]);
   await client.query('DELETE FROM pool_member WHERE mailbox_id=$1',[id]);
@@ -53,7 +55,7 @@ export class MailboxStore {
   async change(tenant:string,id:string,input:Record<string,unknown>) {
     await eligibilityTransaction(this.pool,async client=>{
       if(!(await client.query('SELECT id FROM mailbox WHERE tenant_id=$1 AND id=$2 FOR UPDATE',[tenant,id])).rowCount) throw new HttpError(404,'not_found');
-      if(input.dailyLimit!==undefined) await client.query('UPDATE mailbox SET daily_limit=$3,diagnostic_revision=diagnostic_revision+1,diagnostic_attempt=NULL WHERE tenant_id=$1 AND id=$2',[tenant,id,dailyLimit(input.dailyLimit)]);
+      if(input.dailyLimit!==undefined) await client.query('UPDATE mailbox SET daily_limit=$3,diagnostic_revision=diagnostic_revision+1,transport_revision=transport_revision+1,diagnostic_attempt=NULL WHERE tenant_id=$1 AND id=$2',[tenant,id,dailyLimit(input.dailyLimit)]);
       if(input.state!==undefined) {
         if(input.state!=='paused' && input.state!=='quarantined') throw new HttpError(400,'invalid_state');
         await cancelMailbox(client,id); await client.query('UPDATE mailbox SET state=$3 WHERE tenant_id=$1 AND id=$2',[tenant,id,input.state]);

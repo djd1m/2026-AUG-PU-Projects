@@ -35,9 +35,11 @@ export async function migrate(pool: pg.Pool) {
     if(!twelfth.rowCount) await client.query(await readFile(new URL('../db/012-connected-capacity.sql',import.meta.url),'utf8'));
     const thirteenth=await client.query('SELECT version FROM schema_migration WHERE version=13');
     if(!thirteenth.rowCount) await client.query(await readFile(new URL('../db/013-live-diagnostics.sql',import.meta.url),'utf8'));
+    const fourteenth=await client.query('SELECT version FROM schema_migration WHERE version=14');
+    if(!fourteenth.rowCount) await client.query(await readFile(new URL('../db/014-live-transport.sql',import.meta.url),'utf8'));
     await client.query('COMMIT');
   } catch (error) { await client.query('ROLLBACK'); throw error; } finally { client.release(); }
 }
 export async function ready(pool: pg.Pool): Promise<boolean> {
-  try { return (await pool.query('SELECT version FROM schema_migration WHERE version IN (1,2,3,4,5,6,7,8,9,10,11,12,13)')).rowCount === 13; } catch { return false; }
+  try { return (await pool.query('SELECT version FROM schema_migration WHERE version IN (1,2,3,4,5,6,7,8,9,10,11,12,13,14)')).rowCount === 14; } catch { return false; }
 }

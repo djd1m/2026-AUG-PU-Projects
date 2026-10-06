@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { parseKeyring, type Keyring } from './mailboxes/crypto.js';
 import { normalizeHost } from './mailboxes/network.js';
-export interface Config { billingMode?:'disabled'|'local_test'; pollMode?:'disabled'|'local_test'; operatorTokenDigest?:Buffer|null; dispatchMode:'disabled'|'local_test'; databaseUrl: string; recipientHashKey: Buffer; sessionKey: Buffer; origin: string; port: number; secureCookie: boolean; credentialKeyring:Keyring; providerAllowlist:ReadonlyMap<string,number> }
+export interface Config { billingMode?:'disabled'|'local_test'; pollMode?:'disabled'|'local_test'|'live_provider'; operatorTokenDigest?:Buffer|null; dispatchMode:'disabled'|'local_test'|'live_provider'; databaseUrl: string; recipientHashKey: Buffer; sessionKey: Buffer; origin: string; port: number; secureCookie: boolean; credentialKeyring:Keyring; providerAllowlist:ReadonlyMap<string,number> }
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   if (env.SAFETY_POLICY_VERSION !== 'n7-safety-v1') throw new Error('invalid_safety_policy');
   const encoded = env.SESSION_HMAC_KEY_FILE ? readFileSync(env.SESSION_HMAC_KEY_FILE, 'utf8').trim() : env.SESSION_HMAC_KEY;
@@ -42,9 +42,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     if(!providerAllowlist.size || providerAllowlist.size>100) throw new Error();
   } catch { throw new Error('invalid_provider_allowlist'); }
   const dispatchMode=env.DISPATCH_MODE ?? 'disabled';
-  if(dispatchMode!=='disabled' && dispatchMode!=='local_test') throw new Error('invalid_dispatch_mode');
+  if(dispatchMode!=='disabled' && dispatchMode!=='local_test' && dispatchMode!=='live_provider') throw new Error('invalid_dispatch_mode');
   const pollMode=env.POLL_MODE ?? 'disabled';
-  if(pollMode!=='disabled' && pollMode!=='local_test') throw new Error('invalid_poll_mode');
+  if(pollMode!=='disabled' && pollMode!=='local_test' && pollMode!=='live_provider') throw new Error('invalid_poll_mode');
   let operatorTokenDigest:Buffer|null=null;
   if(env.OPERATOR_TOKEN_FILE) {
     try {

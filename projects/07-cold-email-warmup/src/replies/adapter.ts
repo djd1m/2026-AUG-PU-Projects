@@ -1,10 +1,17 @@
+import type { Config } from '../config.js';
+import { eligibilityTransaction } from '../consent/transaction.js';
+import { decryptCredentials,type Envelope } from '../mailboxes/crypto.js';
+import type { MailboxInput } from '../mailboxes/input.js';
+import { authorizeTransport } from '../mailboxes/transport-authority.js';
+import { acquireTransportSlot } from '../mailboxes/transport-slots.js';
+import { runTransportChild,type ChildRequest } from '../mailboxes/transport-lifetime.js';
 import type { Pool } from 'pg';
 import { HttpError } from '../errors.js';
 import type { HeaderInput } from './input.js';
-export interface Snapshot {uidvalidity:string;uidNext:number;observedAt:Date;provenance:'local_fixture'}
+export interface Snapshot {uidvalidity:string;uidNext:number;observedAt:Date;provenance:'local_fixture'|'imap_headers'}
 export interface HeaderPage {uidvalidity:string;coveredThrough:number;headers:HeaderInput[];startedAt:Date;completedAt:Date}
 export interface ReplyAdapter {
- readonly mode:'local_test';
+ readonly mode:'local_test'|'live_provider'|'protocol_fixture';
  snapshot(tenant:string,mailbox:string):Promise<Snapshot>;
  read(tenant:string,mailbox:string,validity:string,cursor:number,horizon:number):Promise<HeaderPage>;
 }
@@ -35,4 +42,18 @@ export async function boundedOperation<T>(operation:()=>Promise<T>,timeoutMs=300
  let timer:ReturnType<typeof setTimeout>|undefined;
  try {return await Promise.race([operation(),new Promise<never>((_resolve,reject)=>{timer=setTimeout(()=>reject(new HttpError(503,'poll_timeout')),timeoutMs);})]);}
  finally {if(timer) clearTimeout(timer);}
+}
+
+export class LiveReplyAdapter implements ReplyAdapter {
+ readonly mode:'live_provider'|'protocol_fixture';
+ constructor(readonly pool:Pool,readonly config:Config,readonly fixture?:ChildRequest['fixture']){this.mode=fixture?'protocol_fixture':'live_provider';}
+ private async operation<T>(tenant:string,mailbox:string,extra:{kind:'snapshot'|'read';validity?:string;cursor?:number;horizon?:number}):Promise<T>{
+  if(this.config.pollMode!=='live_provider')throw new HttpError(503,'transport_denied');
+  const snapshot=await eligibilityTransaction(this.pool,c=>authorizeTransport(c,this.config,tenant,mailbox,'imap_headers'));
+  const input=decryptCredentials<MailboxInput>(snapshot.credentialEnvelope as Envelope,tenant,mailbox,this.config.credentialKeyring);
+  const slot=await acquireTransportSlot(this.pool,'imap',tenant,mailbox);
+  return runTransportChild<T>(this.pool,slot,{...extra,input,allowlist:[...this.config.providerAllowlist],fixture:this.fixture});
+ }
+ snapshot(tenant:string,mailbox:string){return this.operation<Snapshot>(tenant,mailbox,{kind:'snapshot'});}
+ read(tenant:string,mailbox:string,validity:string,cursor:number,horizon:number){return this.operation<HeaderPage>(tenant,mailbox,{kind:'read',validity,cursor,horizon});}
 }

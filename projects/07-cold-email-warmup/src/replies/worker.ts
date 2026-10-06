@@ -4,16 +4,16 @@ import type { Keyring } from '../mailboxes/crypto.js';
 import { eligibilityTransaction } from '../consent/transaction.js';
 import { loadConfig } from '../config.js';
 import { createPool,ready } from '../db.js';
-import { FixtureAdapter,boundedOperation,type ReplyAdapter } from './adapter.js';
+import { LiveReplyAdapter,FixtureAdapter,boundedOperation,type ReplyAdapter } from './adapter.js';
 import { ReplyStore,type Rescan,type TransactionGuard } from './store.js';
 import { claimPoll,observePoll } from './fixture.js';
 import { HttpError } from '../errors.js';
 export const identity=(r:Rescan)=>({runId:r.runId,attempt:r.attempt,uidvalidity:r.uidvalidity,expectedCursor:r.cursor});
 export class PollWorker {
  readonly store:ReplyStore;
- constructor(readonly pool:Pool,ring:Keyring,readonly mode:'disabled'|'local_test'='disabled',readonly adapter:ReplyAdapter=new FixtureAdapter(pool)) {this.store=new ReplyStore(pool,ring);}
+ constructor(readonly pool:Pool,ring:Keyring,readonly mode:'disabled'|'local_test'|'live_provider'='disabled',readonly adapter:ReplyAdapter=new FixtureAdapter(pool)) {this.store=new ReplyStore(pool,ring);}
  async poll(tenant:string,mailbox:string) {
-  if(this.mode!=='local_test') return {mode:this.mode,state:'disabled'};
+  if(this.mode==='disabled') return {mode:this.mode,state:'disabled'};
   let run:Rescan|null=null;let guard:TransactionGuard|undefined;let deadline=Date.now()+120000;
   const operation=<T>(call:()=>Promise<T>)=>boundedOperation(call,Math.max(1,Math.min(30000,deadline-Date.now())));
   try {
@@ -54,9 +54,10 @@ export class PollWorker {
   }
  }
  async tick() {
-  if(this.mode!=='local_test') return {mode:this.mode,processed:0};
+  if(this.mode==='disabled') return {mode:this.mode,processed:0};
   // At most one attempt per tick keeps this process bounded by the A attempt budget.
   // Due-time claim is durable; no transaction remains over adapter I/O.
+  if(this.mode==='live_provider'){const rows=(await this.pool.query("SELECT tenant_id,mailbox_id FROM transport_grant WHERE state='active' ORDER BY mailbox_id LIMIT 1")).rows;for(const row of rows)await this.poll(row.tenant_id,row.mailbox_id);return {mode:this.mode,processed:rows.length};}
   const rows=(await this.pool.query(`UPDATE local_reply_fixture SET next_poll_at=clock_timestamp()+interval '30 seconds'
    WHERE mailbox_id IN (SELECT mailbox_id FROM local_reply_fixture WHERE next_poll_at<=clock_timestamp() ORDER BY next_poll_at,mailbox_id LIMIT 1 FOR UPDATE SKIP LOCKED)
    RETURNING tenant_id,mailbox_id`)).rows;
@@ -67,8 +68,8 @@ export class PollWorker {
 async function main() {
  const config=loadConfig(),pool=createPool(config.databaseUrl);
  try {
-  if(!await ready(pool) || config.pollMode!=='local_test') throw new Error();
-  const worker=new PollWorker(pool,config.credentialKeyring,config.pollMode);
+  if(!await ready(pool) || !config.pollMode || config.pollMode==='disabled') throw new Error();
+  const worker=new PollWorker(pool,config.credentialKeyring,config.pollMode,config.pollMode==='live_provider'?new LiveReplyAdapter(pool,config):new FixtureAdapter(pool));
   const loop=process.argv[2]==='loop';let stopped=false;
   process.once('SIGTERM',()=>{stopped=true;});process.once('SIGINT',()=>{stopped=true;});
   do {const start=Date.now();process.stdout.write(JSON.stringify(await worker.tick())+'\n');if(loop && !stopped) await new Promise(r=>setTimeout(r,Math.max(0,30000-(Date.now()-start))));} while(loop && !stopped);
