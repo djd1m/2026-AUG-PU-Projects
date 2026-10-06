@@ -1,10 +1,10 @@
 # Requirements Testability Analysis
 Spec revision: sha256:8c55e447d6a5e9f8b98f5bbb0415102089ed300b31142dab42f73d44ac9d7712
 
-Verdict: READY
-Source revision: d38719924e4bd36a14ae999aaea272cd68eabc81
+Verdict: NEEDS WORK
+Source revision: b18648c6bdc0df02964a238a7ec2f48d978137f0
 RUN_ID: 20261006T090602Z-n7-expanded-mvp-a1
-WORK_UNIT_ID: f07-validate-r2
+WORK_UNIT_ID: f07-validate-a1
 Дата: 2026-10-06. Независимая VALIDATE; продуктовая реализация не проверялась.
 
 ## Область и основание
@@ -20,9 +20,9 @@ references/{feature-report-contracts,scoring-system}.md. Применён compan
 
 Одна история US-201, восемь AC. Testability: 92/100 до внешних бонусов:
 INVEST 42/50 + SMART 30/30 + Quality 20/20. Security +5 и growth +5
-отдельно; итог ограничен100. F07-VAL-001 закрыт узкой повторной проверкой r2.
-Нет блокировки по нулевому floor. READY относится к требованиям F07;
-переход к IMPLEMENT сохраняет отдельный обязательный full-project gate.
+отдельно; итог ограничен100. Числовой балл не отменяет противоречие F07-VAL-001.
+Нет блокировки по нулевому floor; переход к IMPLEMENT требует исправления
+подтверждённого конфликта и повторной проверки изменённых документов.
 
 ## Criterion scenarios
 
@@ -37,40 +37,33 @@ INVEST 42/50 + SMART 30/30 + Quality 20/20. Security +5 и growth +5
 | AC-f07-connected-capacity-007 | SC-US-201-7 — Поздняя страница, waiting, retry и смена session |
 | AC-f07-connected-capacity-008 | SC-US-201-8 — Schema12 без auto-lease и прежний TEST billing |
 
-## Узкая повторная VALIDATE r2 — F07-VAL-001 закрыт
+## Подтверждённое замечание
 
-Проверен только diff95bafa00..d3871992 в 02_pseudocode.md,
-03_architecture.md и 04_refinement.md против исходного F07-VAL-001.
-Spec SHA256 не изменился. Полный исходный анализ сохранён точными байтами
-в history/validation-report.pre-r2.md; остальные выводы r1 наследуются,
-нового широкого ревью и runtime проверки не было.
+### F07-VAL-001 — HIGH: quarantine через complaint противоречит release AC003
 
-02_pseudocode § Reserve renew release global capacity, шаг6, теперь требует
-release через общий cancelMailbox во всех PUT/pause/quarantine, включая
-suppression → complaintClient → cancelMailbox → quarantined. Release и
-quarantine коммитятся либо откатываются вместе, в существующей eligibility
-transaction с global(7,1) первым; вложенная транзакция запрещена.
-03_architecture Component Breakdown и описание consent явно убирают
-исключение для quarantine: unusable lease не удерживается до expiry.
-Отзыв одного consent scope остаётся независимым, сам по себе mailbox quarantine
-не означает и не обязан освобождать capacity; send authority не восстанавливает.
+01_specification.md:45–46 требует: «Deactivate, PUT credentials, pause и
+quarantine освобождают lease в той же eligibility transaction».
+03_architecture.md:37–38 разрешает существующим stop writers в suppression/replies
+оставлять unusable lease до expiry. Это включает настоящий mailbox quarantine:
+src/suppression/store.ts:65 вызывает complaintClient; src/dispatch/seams.ts:47–52
+вызывает cancelMailbox и переводит mailbox в quarantined под eligibility lock.
+В таблице компонентов нет отдельной интеграции complaint release; описанное
+исключение прямо позволяет удержать слот после этого quarantine.
 
-Повторно прочитан реальный src/dispatch/seams.ts complaintClient: он уже
-вызывает src/mailboxes/store.ts cancelMailbox перед state=quarantined.
-Расширение этого общего helper покрывает указанный путь без нового transaction
-boundary; существующие PUT/pause также используют helper. Код ещё не содержит
-нового lease release: это ожидаемая будущая реализация принятого плана.
+Воспроизводимый сценарий проекта:30 unexpired active; подтверждённая complaint
+карантинит один mailbox; другой tenant явно activates31-й. По архитектурному
+исключению count остаётся30 и ответ waiting_capacity до120s; по AC003 слот уже
+свободен в момент commit, поэтому новый mailbox должен получить active.
+Существующая state/consent защита запрещает отправку; замечание относится к
+обязательному атомарному освобождению, не утверждает обход безопасности SMTP.
 
-04_refinement § F07-VAL-001 назначает точный будущий real-PG тест
-`tests/capacity-integration.test.ts` / `complaint quarantine immediately releases capacity for another tenant`.
-SC-F07-Q включает30 active, authenticated complaint, явный activate другого tenant
-до прежней expiry, удаление quarantined lease и global count30; одновременно
-проверяются cancellation, stale renew409, transport0, rollback обоих изменений
-и сохранение irreversible submitting/unknown границы. Это закрывает исходный
-контрпример и связано с AC003/SC-US-201-3 и назначением теста в05_completion.
-
-Вердикт исправления: CLOSED. Непогашенных подтверждённых замечаний VALIDATE нет.
-READY означает готовность требований; оно не подтверждает реализацию или E2E.
+Минимальная коррекция: убрать исключение для mailbox quarantine; release helper
+вызвать из общего cancelMailbox либо complaintClient в уже открытой
+eligibilityTransaction, без вложенной транзакции и без смены lock-first порядка.
+Согласовать 02/03/04/05 роли с этим путём и назначить SC-F07-Q реальному PG тесту.
+Исключение для отзыва одного consent scope может остаться: такой revoke сам по
+себе не является mailbox quarantine и не даёт полномочий на отправку.
+Спецификация и продуктовый код этим валидатором не исправлялись.
 
 ## INVEST и SMART с источниками
 
@@ -85,7 +78,7 @@ READY означает готовность требований; оно не п
 
 | SMART | Баллы | Основание |
 |---|---:|---|
-| Specific | 6/6 | Конкретные состояния, коды API, tenant и lock-first контракты; F07-VAL-001 закрыт в r2 |
+| Specific | 6/6 | Конкретные состояния, коды API, tenant и lock-first контракты; конфликт F07-VAL-001 выделен отдельно |
 | Measurable | 8/8 | 101-й connected, global30, lease120s, transport0, page25/max100, campaign3/10 |
 | Achievable | 6/6 | Используется PostgreSQL transaction/advisory lock, существующие auth/AEAD/TEST adapters |
 | Relevant | 5/5 | Все восемь AC поддерживают US-201 и expanded AC001/009 |
@@ -102,7 +95,7 @@ AC006 «Malformed limit/cursor400, foreign/missing cursor404»;
 AC007 «Campaign mailbox chooser листает все страницы» и «игнорирует поздние ответы»;
 AC008 «нет автоматически выданных lease» и «single entitlement grant».
 Источники цитат: 01_specification.md, соответствующие AC-f07-connected-capacity-001..008.
-Это баллы наличия проверяемых требований; исправление архитектуры проверено отдельно в r2.
+Это баллы наличия проверяемых требований; архитектурное противоречие ими не скрыто.
 
 Security +5: сохранены auth/Origin/tenant/AEAD/allowlist, no-send-on-save,
 fail-closed и отдельные consent. Дополнительные обязательные сценарии ниже.
@@ -173,19 +166,19 @@ single grant и expiry/revoke остаются обязательными. Verif
 ## Проверки и границы результата
 
 Selected exact-byte F07 staging: installed check-pipeline-gaps.sh с --traceability,
---report-revision и --criterion-scenarios. Role maps из этого дерева:
-.claude/commands/feature.md и .claude/skills/sparc-prd-mini/SKILL.md.
-Full-project gate остаётся отдельным обязательным шагом координатора после
-legacy repair; selected PASS его не заменяет. Коммит только validation-report.md
-и его точной исторической копии; спецификация, план и код не изменялись.
-Runtime/build/E2E: not_applicable — docs-only VALIDATE. Все сценарии назначают
-будущие проверки, а не утверждают выполненную продуктовую acceptance.
+--report-revision и --criterion-scenarios; фактический результат записан ниже.
+Role maps взяты из этого дерева: .claude/commands/feature.md и
+.claude/skills/sparc-prd-mini/SKILL.md. Full-project gate остаётся отдельным
+обязательным шагом координатора после legacy repair; selected PASS его не заменяет.
+Runtime/build/E2E: not_applicable — docs-only VALIDATE. Все тестовые сценарии
+выше являются назначением будущей реализации, не утверждением выполненных тестов.
 Профиль политики: compact-quality-first-v2; проектные роли Astra high/Sol6.1 high.
-Фактические model/effort/tokens/cost: null, метаданные хоста не предоставлены.
-Квитанция r2: /tmp/n7-f07-validate-r2-receipt.md; telemetry принадлежит координатору.
-Следующий ответственный: /root/n7_expanded_coordinator; после принятого legacy
-review/full gate — повторный substantive ROUTE и ограниченный IMPLEMENT.
+Фактическая модель/effort/tokens/cost: null, метаданные хоста не предоставлены.
+Терминальная квитанция: /tmp/n7-f07-validate-a1-receipt.md; общая telemetry
+принадлежит координатору. Следующий шаг: ограниченная коррекция F07-VAL-001,
+повторная source-bound VALIDATE изменённых ролей, затем разрешённый IMPLEMENT.
 
-Фактические r2 проверки: selected traceability PASS (8/8), report-revision PASS,
-criterion-scenarios PASS (8/8); exit0. Журнал: /tmp/n7-f07-validate-r2-selected.log.
-Предыдущий report archive byte equality подтверждён; git diff --check exit0.
+Фактически выполнено: selected traceability PASS (8 requirements/8 claims),
+report-revision PASS (exact SHA256), criterion-scenarios PASS (8/8); общий exit0.
+Журнал: /tmp/n7-f07-validate-a1-selected.log. Содержательные замечания этим
+структурным PASS не снимаются; окончательный вердикт остаётся NEEDS WORK.
