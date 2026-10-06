@@ -69,7 +69,7 @@
     "No prelaunch serialized launch digest for native PLAN receipt; terminal receipt and output SHA verified, not companion delivery attestation",
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred."
   ],
-  "current_stage": "PREPARE legacy contract reconciliation",
+  "current_stage": "PREPARE legacy contracts: bounded PLAN established",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -120,8 +120,9 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "root",
-    "next": "Bounded model-routed legacy document reconciliation, then F07 through /go → /feature",
-    "status": "approval recorded; dispatch preparing"
+    "executor": "n7_expanded_coordinator (dispatch preparing)",
+    "next": "Sol6.1 high documentary reconciliation in isolated worktree, independent Astra review, then F07",
+    "source_revision": "d6b1b9df"
   },
   "blockers": [
     "Legacy full-project role-map/traceability reconciliation before IMPLEMENT",
