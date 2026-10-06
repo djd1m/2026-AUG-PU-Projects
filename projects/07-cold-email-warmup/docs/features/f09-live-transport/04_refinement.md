@@ -16,7 +16,9 @@ All cases are planned; no runtime pass is claimed by this file.
 | Reset/replay | new UIDVALIDITY, reused message ID, same enrollment | pause until full+tail; one semantic effect | existing unique reply_effect |
 | Crash | before/after page commit and after submitting commit | atomic page; abandoned send unknown | durable recovery |
 | Authority ABA | identical replace, stop/resume, stale publish | revision mismatch denies | monotonic CAS |
-| Resource denial | six slots full, same mailbox concurrent | no socket/no unbounded queue | durable admission |
+| Resource denial | six slots full, same mailbox concurrent, expired occupied row | no socket/no unbounded queue | occupied rows retain exclusion |
+| Suspended owner | SIGSTOP after real socket open, lease expires | no replacement socket until observed close/confirmed exit | real processes and peer connection counts |
+| Cleanup failure | DB down at release, parent restart, kill request without exit | slot remains occupied; later proof-bound CAS only | bounded recovery, unknown never retried |
 | Rev1/rev2 syntax | both explicit capability sets | same finite subset succeeds | unsupported auth/extension rejects |
 | Secret exception | credential and server canaries | typed reason only | sinks inspected |
 
@@ -28,7 +30,7 @@ Integration: real PostgreSQL16 schema13→14 preserves encrypted records/local h
 
 E2E: actual production state machine with trusted explicit local TLS SMTP465/STARTTLS587/IMAP993 fixtures, socket-level transcripts and PG effects. Positive250, pre-DATA421/450/550, final450/550, body socket failure, missing final reply, cancellation and crash all distinct. Fake successful connect alone is insufficient. No host/browser installation. No UI change means browser not_applicable; if UI changes, coordinator runs companion preflight and existing Docker Playwright390/1440/keyboard/persistence under UI mutex.
 
-Performance: assert protocol hard deadlines under slow trickle, write backpressure, bounded queues, zero owned active sockets/timers/listeners after cleanup and admission≤2/4 across processes. Do not invent RSS/SLO numbers; F10/F14 load acceptance separate.
+Performance: assert protocol hard deadlines under slow trickle, write backpressure, bounded queues, zero owned active sockets/timers/listeners after cleanup and admission≤2/4 across processes. Timers are conditional on process scheduling and do not prove closure under OS suspension. Required real multi-process witness: owner A opens an actual local TLS socket, parent SIGSTOPs A, wait past its actual120s lease, then B attempts the same mailbox and all occupied SMTP2/IMAP4 slots. Observe peer-side simultaneous connections and assert no new admission/overlap while A is stopped; expiry alone must not free A. Send termination request but withhold exit proof and assert still blocked; then confirm exact A exit plus fixture socket closure, permit CAS release and prove B can connect. Also resume A into normal sealed-close acknowledgement and verify release only after underlying close. Use real process signals/time for this witness, not mocked deadlines. Test stale acknowledgement against replacement owner, DB release failure and recovery, parent restart with orphan, lost identity/cross-host proof absence and bounded cleanup failure. Assert a committed A SMTP attempt remains unknown with reserved quota and zero retries. Mutation restoring expiry-based reclaim must turn this witness red. Do not invent RSS/SLO numbers; F10/F14 load acceptance separate.
 
 ## Test Cases
 

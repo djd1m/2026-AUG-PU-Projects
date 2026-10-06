@@ -24,13 +24,15 @@ PLAN: original installed check-pipeline-gaps.sh full PROJECT --traceability with
 
 Next responsible executor: coordinator assigns independent validator immediately after this coherent PLAN receipt, then bounded Sol implementation and fresh Astra review. Requested model names are intent; actual native model/effort/token/cost are null with host_not_exposed until host metadata exists. Telemetry owner is coordinator at docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/. No root/shared toolkit changes.
 
+F09-V1 corrective acceptance is pending independent revalidation; historical NEEDS_WORK report stays unchanged. The AC007 future witness must include real suspended owner past120s, physical peer socket counts≤2SMTP/4IMAP and1/protocol/mailbox, no expiry reclaim, confirmed close/exit release, stale CAS, DB failure and orphan restart. Structural traceability alone does not accept this safety design.
+
 ## Deployment Plan
 
 Pre-deployment checklist (future, all unchecked): [ ] mandatory checks passing on exact source; [ ] security review complete; [ ] accepted docs reconciled; [ ] rollback/recovery tested; [ ] explicit external authorization. F09 local acceptance does not deploy or send externally.
 
 Deployment Sequence:1 validate candidate and migration13→14 against real local PG;2 start disabled configuration and inspect zero transport grants, test local fixtures;3 only separately authorized later pilot supplies scoped operator grants and endpoints. No deploy.sh invocation is authorized here. Existing CI/CD conceptual order test → build → deploy; run npm test, npm run lint, npm run build and package typecheck command during implementation; deploy remains a separate authorization gate.
 
-Rollback Procedure: disable transport process modes, revoke grants under FIRST lock, abort/drain bounded workers, preserve submitting/unknown and reply cursor/effects. Revert runtime after compatibility check; additive grant/receipt history is retained, never destructively rolled back to make sends retryable. Reconcile unknown manually before any future action.
+Rollback Procedure: disable transport process modes, revoke grants under FIRST lock, abort/drain bounded workers, preserve submitting/unknown and reply cursor/effects. Revert runtime after compatibility check; additive grant/receipt history is retained, never destructively rolled back to make sends retryable. Reconcile unknown manually before any future action. Occupied transport slots survive expiry and DB failure; release only after sealed-owner close acknowledgement or confirmed exact-process termination. Privileged recovery attempts5s graceful stop then kill and≤5s confirmed-exit wait; unsuccessful proof returns cleanup_blocked. Parent/container restart alone is not old-owner termination proof. Lost identity requires confirmed termination of the exact old isolated worker container; unavailable/cross-host evidence leaves slots blocked. Never force-free on age or retry unknown sends.
 
 ## Monitoring and Logging
 
