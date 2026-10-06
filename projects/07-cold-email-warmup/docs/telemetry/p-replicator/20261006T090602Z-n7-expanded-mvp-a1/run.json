@@ -46,7 +46,7 @@
   ],
   "quality": {
     "required_gates_passed": false,
-    "ac_met": 0,
+    "ac_met": 1,
     "ac_total": 9,
     "confirmed_findings_by_severity": {
       "high": 1
@@ -54,7 +54,7 @@
     "false_positive_findings": null,
     "known_defects_missed": null,
     "regressions": null,
-    "followup_status": "Expanded plan CAVEATS approved OWN-N7-005; legacy independent ACCEPT and integrated Phase I/II=0; F07 VALIDATE READY. F07 implementation/runtime acceptance pending; expanded product AC not yet accepted."
+    "followup_status": "Expanded AC001 locally accepted through F07 independent8AC review and actualruntime; AC002–009 remain. F08 PLAN active. Whole required_gates_passed stays false."
   },
   "metrics": {
     "elapsed_wall_ms": 5697479,
@@ -73,7 +73,7 @@
     "No prelaunch serialized launch digest for native PLAN receipt; terminal receipt and output SHA verified, not companion delivery attestation",
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred."
   ],
-  "current_stage": "ROUTE F08",
+  "current_stage": "PLAN F08",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -135,9 +135,9 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "root",
-    "executor": "n7_expanded_coordinator allocating f08 planner",
-    "next": "/next F08 → /go risk route → full /feature PLAN; actual planner launch follows",
-    "source_revision": "7fbc1874"
+    "executor": "f08_planner_a1 actually running (native status observed); n7_expanded_coordinator",
+    "source_revision": "e61006749f69bd352759c7520f2a7e99aef24bd2",
+    "next": "Five-role PLAN + pinned primary capability contracts10min, then fresh requirements-validator"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -180,7 +180,7 @@
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-06T10:50:00Z",
+    "last_reported_at": "2026-10-06T11:02:00Z",
     "responsible": "n7_expanded_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true
   },
