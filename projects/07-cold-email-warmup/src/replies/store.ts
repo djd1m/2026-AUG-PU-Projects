@@ -38,7 +38,7 @@ export class ReplyStore {
   const row=(await this.pool.query('SELECT * FROM reply_rescan WHERE tenant_id=$1 AND mailbox_id=$2',[tenant,mailbox])).rows[0];return row?view(row):null;
  }
  // Same validity resumes unfinished work. A completed poll starts bounded incremental coverage.
- async capture(tenant:string,mailbox:string,input:Capture,guard?:TransactionGuard):Promise<Rescan> {
+ async capture(tenant:string,mailbox:string,input:Capture,guard?:TransactionGuard,expected?:RunIdentity):Promise<Rescan> {
   const v=validity(input.uidvalidity),highWater=uid(input.uidNext)-1,observed=date(input.observedAt);
   if(!['local_fixture','imap_headers'].includes(input.provenance)) throw evidenceError();
   return eligibilityTransaction(this.pool,async c=>{
@@ -46,6 +46,12 @@ export class ReplyStore {
    await this.owned(c,tenant,mailbox);const now=this.now();
    if(observed.getTime()>now.getTime() || now.getTime()-observed.getTime()>30000) throw evidenceError();
    const prior=(await c.query('SELECT * FROM reply_rescan WHERE tenant_id=$1 AND mailbox_id=$2 FOR UPDATE',[tenant,mailbox])).rows[0];
+   if(expected){
+    if(!prior)throw stale();const current=view(prior);
+    if(current.runId!==expected.runId||current.attempt!==expected.attempt||current.uidvalidity!==expected.uidvalidity||current.cursor!==expected.expectedCursor||current.state==='rescan_incomplete')throw stale();
+   }
+   if(prior&&prior.provenance!==input.provenance)throw evidenceError();
+   if(prior?.state==='rescan_incomplete'){if(prior.uidvalidity===v)return view(prior);throw stale();}
    if(prior && prior.uidvalidity===v && prior.state!=='complete') return view(prior);
    const cursor=prior && prior.uidvalidity===v?Math.min(Number(prior.cursor_uid),highWater):0;
    const id=randomUUID();
@@ -53,6 +59,16 @@ export class ReplyStore {
     ON CONFLICT(mailbox_id) DO UPDATE SET run_id=$3,uidvalidity=$4,high_water=$5,cursor_uid=$8,state='scanning',attempt=1,attempt_started_at=$6,pages=0,provenance=$7,tail_high_water=NULL RETURNING *`,[tenant,mailbox,id,v,highWater,now,input.provenance,cursor])).rows[0];
    await c.query(`INSERT INTO mailbox_poll(mailbox_id,scan_complete,uidvalidity,cursor_uid) VALUES($1,false,$2,$3)
     ON CONFLICT(mailbox_id) DO UPDATE SET scan_complete=false,uidvalidity=$2,cursor_uid=$3`,[mailbox,v,cursor]);return view(row);
+  });
+ }
+ async checkpointTail(tenant:string,mailbox:string,identity:RunIdentity,input:Capture,guard?:TransactionGuard){
+  return eligibilityTransaction(this.pool,async c=>{
+   await guard?.(c);const run=await this.current(c,tenant,mailbox,identity),now=this.now();
+   if(run.state!=='scanning'||run.cursor<run.highWater||input.uidvalidity!==run.uidvalidity||input.provenance!==run.provenance)throw stale();
+   const observed=date(input.observedAt);if(observed>now||now.getTime()-observed.getTime()>30000)throw evidenceError();
+   if(now.getTime()-run.attemptStartedAt.getTime()>=120000||run.pages>=20){await this.incomplete(c,tenant,mailbox);return;}
+   const horizon=uid(input.uidNext)-1;if(horizon<run.cursor)throw evidenceError();
+   await c.query('UPDATE reply_rescan SET tail_high_water=COALESCE(tail_high_water,$3) WHERE tenant_id=$1 AND mailbox_id=$2',[tenant,mailbox,horizon]);
   });
  }
  async retry(tenant:string,mailbox:string,identity:RunIdentity):Promise<Rescan> {

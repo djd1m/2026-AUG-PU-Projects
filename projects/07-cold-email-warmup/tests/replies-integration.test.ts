@@ -19,7 +19,7 @@ async function waiting(pool:Pool) {
  assert.fail('production writer did not wait on actual lock');
 }
 test('F04a real PG reply matching, durable rescan, crash atomicity and stop serialization',async t=>{
- const config={...loadConfig(),dispatchMode:'local_test' as const},pool=createPool(config.databaseUrl);await migrate(pool);await migrate(pool);
+ const config={...loadConfig(),dispatchMode:'local_test' as const},pool=createPool(config.databaseUrl);assert.equal((await pool.query('SELECT current_database() AS name')).rows[0].name,'n7f10_a2','only owned A15 fixture database may reset');await migrate(pool);await migrate(pool);
  const app=await application(config,pool,{resolver:async()=>[{address:'8.8.8.8',family:4}]});
  let now=new Date('2026-10-02T12:00:00Z'),tenant='',mailbox='',foreignTenant='',foreignMailbox='',otherMailbox='',calls=0;
  let sent:{id:string;enrollment_id:string;message_id:string}[]=[];

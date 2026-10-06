@@ -64,6 +64,7 @@ test('F07 real PostgreSQL capacity boundaries and atomic safety',{timeout:90000}
    await assert.rejects(capacity.act(tenants[0]!,ids[0]!,'activate'),{code:'mailbox_changed'});await boxes.verify(tenants[0]!,ids[0]!);await capacity.act(tenants[0]!,ids[0]!,'activate');
   });
   await t.test('complaint quarantine immediately releases capacity for another tenant',async()=>{
+   await capacity.act(tenants[0]!,ids[30]!,'deactivate');
    for(let i=0;i<30;i++)await capacity.act(tenants[i%3]!,ids[i]!,'activate');
    await capacity.act(tenants[0]!,ids[30]!,'activate');assert.equal((await boxes.read(tenants[0]!,ids[30]!)).capacity.state,'waiting_capacity');
    await assert.rejects(eligibilityTransaction(pool,async c=>{await complaintClient(c,tenants[1]!,ids[1]!);throw new Error('rollback');}),/rollback/);

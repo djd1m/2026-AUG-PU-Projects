@@ -1,5 +1,6 @@
 import type { Pool } from 'pg';
 import type { Config } from '../config.js';
+import { runtimeFailure } from '../runtime/store.js';
 import { HttpError } from '../errors.js';
 import { eligibilityTransaction } from '../consent/transaction.js';
 import { decryptCredentials } from '../mailboxes/crypto.js';
@@ -12,7 +13,7 @@ import { runTransportChild,type ChildRequest } from '../mailboxes/transport-life
 import { renderLiveMessage,type LiveMessage,type TestMessage,renderTestMessage } from './message.js';
 import { localSinkAdapter,retryDelay,type SubmissionAdapter,type TestOutcome } from './adapter.js';
 export interface SubmissionFixtures {
- clock?:()=>Date;adapter?:SubmissionAdapter;
+ clock?:()=>Date;adapter?:SubmissionAdapter;guard?:(client:import('pg').PoolClient)=>Promise<void>;
  beforeFinal?:()=>Promise<void>;afterCommit?:()=>Promise<void>;signal?:AbortSignal;transportFixture?:ChildRequest['fixture'];
 }
 export class SubmissionStore {
@@ -25,15 +26,16 @@ export class SubmissionStore {
     const row=(await this.pool.query("SELECT tenant_id,mailbox_id FROM send_job WHERE id=$1 AND state='claimed' AND lease_owner=$2",[id,owner])).rows[0];if(!row)return {state:'blocked',calls:0};
     await eligibilityTransaction(this.pool,c=>authorizeTransport(c,this.config,row.tenant_id,row.mailbox_id,'smtp_submit'));
     slot=await acquireTransportSlot(this.pool,'smtp',row.tenant_id,row.mailbox_id);
-   }catch{return {state:'blocked',calls:0};}
+   }catch(error){const reason=runtimeFailure(error);if(reason===null)throw error;return {state:'blocked',calls:0,reason};}
   }
   try{return await this.submitWithSlot(id,owner,slot,()=>{handedToChild=true;});}
-  catch(e){if(e instanceof HttpError&&e.code==='transport_denied')return {state:'blocked',calls:0};throw e;}
+  catch(e){if(e instanceof HttpError&&e.code==='transport_denied')return {state:'blocked',calls:0,reason:'authority_denied' as const};throw e;}
   finally{if(slot&&!handedToChild)await releaseTransportSlot(this.pool,closedOwnerProof(slot));}
  }
  private async submitWithSlot(id:string,owner:string,slot:TransportSlot|undefined,handedToChild:()=>void) {
   await this.fixtures.beforeFinal?.();
   const prepared=await eligibilityTransaction(this.pool,async client=>{
+   await this.fixtures.guard?.(client);
    // Operator authority is configured at process startup, never chosen by HTTP input.
    if(!['local_test','live_provider'].includes(this.config.dispatchMode) || (this.config.dispatchMode==='live_provider'&&!slot) || (this.fixtures.adapter && this.config.dispatchMode!=='local_test')) return null;
    let transport:Awaited<ReturnType<typeof authorizeTransport>>|undefined;
@@ -42,10 +44,16 @@ export class SubmissionStore {
    // The shared lock may have waited across a deadline or UTC midnight.
    const now=this.fixtures.clock?.()??(await client.query('SELECT clock_timestamp() AS now')).rows[0].now as Date;
    const day=now.toISOString().slice(0,10);
+   await client.query("UPDATE send_job SET state='cancelled',outcome='expired_pool_day',reserved_day=NULL,lease_owner=NULL,lease_until=NULL WHERE scope='pool' AND kind='initial' AND state IN ('queued','claimed') AND right(pair_key,10)<>$1",[day]);
+   const pace=(await client.query(`SELECT j.tenant_id,j.mailbox_id FROM send_job j WHERE j.id=$1 AND j.state='claimed' AND j.lease_owner=$2`,[id,owner])).rows[0];
+   if(!pace)return null;
+   await client.query('INSERT INTO runtime_mailbox(tenant_id,mailbox_id) VALUES($1,$2) ON CONFLICT DO NOTHING',[pace.tenant_id,pace.mailbox_id]);
+   await client.query('SELECT next_smtp_at FROM runtime_mailbox WHERE mailbox_id=$1 FOR UPDATE',[pace.mailbox_id]);
    const row=(await client.query(`UPDATE send_job j SET state='submitting',reserved_day=$4,
      attempt_count=attempt_count+1,first_attempt_at=COALESCE(first_attempt_at,$1),submitting_at=$1,outcome=NULL
     FROM mailbox m WHERE j.id=$2 AND j.mailbox_id=m.id AND j.tenant_id=m.tenant_id
     AND j.state='claimed' AND (j.outcome IS NULL OR j.outcome='proved_pre_data_retry') AND j.lease_owner=$3 AND j.lease_until>$1 AND j.due_at<=$1
+    AND EXISTS(SELECT 1 FROM runtime_mailbox r WHERE r.mailbox_id=j.mailbox_id AND r.next_smtp_at<=$1)
     AND j.attempt_count<3 AND (j.first_attempt_at IS NULL OR ($1>=j.first_attempt_at AND $1<j.first_attempt_at+interval '120 seconds'))
     AND ${freshMailbox}
     AND ((j.scope='pool' AND ${poolEligible} AND EXISTS(SELECT 1 FROM mailbox m WHERE m.id=j.recipient_mailbox_id AND m.tenant_id<>j.tenant_id AND ${poolEligible}))
@@ -66,6 +74,7 @@ export class SubmissionStore {
        AND q.state IN ('claimed','submitting','submitted','unknown'))>=LEAST(m.daily_limit,m.provider_limit,30)`,[now,id,owner,day]);
     return null;
    }
+   await client.query("UPDATE runtime_mailbox SET next_smtp_at=$2::timestamptz+interval '60 seconds' WHERE mailbox_id=$1",[row.mailbox_id,now]);
    const sender=(await client.query('SELECT credential_envelope FROM mailbox WHERE tenant_id=$1 AND id=$2',[row.tenant_id,row.mailbox_id])).rows[0];
    // Reuse AEAD solely to obtain addresses; adapter receives no credential object.
    const from=decryptCredentials<MailboxInput>(sender.credential_envelope,row.tenant_id,row.mailbox_id,this.config.credentialKeyring).senderAddress;
@@ -102,7 +111,10 @@ export class SubmissionStore {
     state='submitted';reason=slot?'smtp_accepted':'smtp_accepted_local_test';
    } else if(outcome?.kind==='rejected_after_data'){state='cancelled';reason='rejected_after_data';
    } else if((outcome?.kind==='pre_data_transient' || outcome?.kind==='permanent') && outcome.proof==='no_data_submitted') {
-    const delay=outcome.kind==='pre_data_transient'?retryDelay(current.attempt_count,current.first_attempt_at,finished):null;
+    const original=outcome.kind==='pre_data_transient'?retryDelay(current.attempt_count,current.first_attempt_at,finished):null;
+    const pacing=(await client.query('SELECT next_smtp_at FROM runtime_mailbox WHERE mailbox_id=$1',[current.mailbox_id])).rows[0];
+    const candidate=new Date(Math.max(finished.getTime()+(original??0),pacing?.next_smtp_at?.getTime()??0));
+    const delay=original===null||candidate.getTime()>=current.first_attempt_at.getTime()+120000?null:candidate.getTime()-finished.getTime();
     state=delay===null?'cancelled':'queued';reason=delay===null?'definite_failure':'proved_pre_data_retry';
     await client.query(`UPDATE send_job SET reserved_day=NULL,lease_owner=NULL,lease_until=NULL,due_at=$2 WHERE id=$1`,[id,new Date(finished.getTime()+(delay??0))]);
    }

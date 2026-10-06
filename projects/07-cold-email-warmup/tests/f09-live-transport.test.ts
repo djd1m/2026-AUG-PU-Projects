@@ -19,7 +19,7 @@ test('expired occupied slots survive actual SIGSTOP120s until exact child exit',
  const config=loadConfig(),pool=createPool(config.databaseUrl),f=await transportFixture({stall:true});
  const children:{child:ReturnType<typeof fork>;slot:TransportSlot;exit:Promise<void>}[]=[];
  try{
-  assert.equal((await pool.query('SELECT current_database() AS name')).rows[0].name,'n7f09_a1');await migrate(pool);await pool.query('TRUNCATE tenant,auth_bucket CASCADE');await pool.query("INSERT INTO transport_operation(protocol,slot) VALUES('smtp',1),('smtp',2),('imap',1),('imap',2),('imap',3),('imap',4) ON CONFLICT DO NOTHING");
+  assert.equal((await pool.query('SELECT current_database() AS name')).rows[0].name,'n7f10_a2');await migrate(pool);await pool.query('TRUNCATE tenant,auth_bucket CASCADE');await pool.query("INSERT INTO transport_operation(protocol,slot) VALUES('smtp',1),('smtp',2),('imap',1),('imap',2),('imap',3),('imap',4) ON CONFLICT DO NOTHING");
   const tenant=randomUUID();await pool.query('INSERT INTO tenant(id) VALUES($1)',[tenant]);
   for(const protocol of ['smtp','smtp','imap','imap','imap','imap'] as const){
    const mailbox=randomUUID();await pool.query("INSERT INTO mailbox(id,tenant_id,label,state,daily_limit,provider_limit) VALUES($1,$2,'f09','configured',10,30)",[mailbox,tenant]);
@@ -82,7 +82,7 @@ async function finalFenceScenario(only?:string[]){
   let result:{state:string;calls:number};try{result=await submit.submit(job.id,job.lease_owner);}catch{assert.ok(['beforeCommitAbort','finalQueryAbort'].includes(kind));result={state:'blocked',calls:0};}
   const allowed=['accepted','finalRejected','revokeAfter','preDataRetry','preDataPermanent'].includes(kind);assert.equal(result.calls,allowed?1:0,kind);assert.equal(f.verbs.filter(v=>v==='DATA').length,allowed&&!['preDataRetry','preDataPermanent'].includes(kind)?1:0,kind);
   if(kind==='preDataPermanent'){assert.equal(result.state,'cancelled');assert.equal((await c.pool.query('SELECT reserved_day FROM send_job WHERE id=$1',[job.id])).rows[0].reserved_day,null);}
-  if(kind==='preDataRetry'){assert.equal(result.state,'queued');const first=(await c.pool.query('SELECT * FROM send_job WHERE id=$1',[job.id])).rows[0];assert.equal(first.due_at.getTime()-clock.getTime(),5000);behavior.mailCode=250;clock=new Date(clock.getTime()+5000);await c.refresh(clock);const retry=await c.claim(clock);assert.equal(retry.id,job.id);assert.equal((await submit.submit(retry.id,retry.lease_owner)).state,'submitted');assert.equal((await c.pool.query('SELECT message_id FROM send_job WHERE id=$1',[job.id])).rows[0].message_id,first.message_id);assert.equal(f.verbs.filter(v=>v==='DATA').length,1);}
+  if(kind==='preDataRetry'){assert.equal(result.state,'queued');const first=(await c.pool.query('SELECT * FROM send_job WHERE id=$1',[job.id])).rows[0];assert.equal(first.due_at.getTime()-clock.getTime(),60000);behavior.mailCode=250;clock=new Date(clock.getTime()+60000);await c.refresh(clock);const retry=await c.claim(clock);assert.equal(retry.id,job.id);assert.equal((await submit.submit(retry.id,retry.lease_owner)).state,'submitted');assert.equal((await c.pool.query('SELECT message_id FROM send_job WHERE id=$1',[job.id])).rows[0].message_id,first.message_id);assert.equal(f.verbs.filter(v=>v==='DATA').length,1);}
   if(kind==='accepted'||kind==='revokeAfter'){assert.equal(result.state,'submitted');const receipt=(await c.pool.query('SELECT * FROM transport_receipt WHERE job_id=$1',[job.id])).rows[0];assert.equal(receipt.mode,'protocol_fixture');assert.match(receipt.message_id,/@example.com>$/);assert.equal((await c.pool.query('SELECT count(*) FROM local_test_message')).rows[0].count,'0');}
   if(kind==='finalRejected'){assert.equal(result.state,'cancelled');assert.equal((await c.pool.query('SELECT outcome FROM send_job WHERE id=$1',[job.id])).rows[0].outcome,'rejected_after_data');assert.equal((await submit.submit(job.id,job.lease_owner)).calls,0);}
   assert.equal((await c.pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');
@@ -103,3 +103,49 @@ async function atomicPageScenario(){
 
 test('independent capacity and consent predicates deny live transport',()=>finalFenceScenario(['senderCapacity','recipientCapacity','senderConsentPredicate','recipientConsentPredicate']));
 test('expired slot age alone cannot replace its allocated identity',async()=>{const c=await transportContext();try{const first=await acquireTransportSlot(c.pool,'smtp',c.actors[0]!.tenant_id,c.boxes[0]!),second=await acquireTransportSlot(c.pool,'smtp',c.actors[1]!.tenant_id,c.boxes[1]!);await c.pool.query("UPDATE transport_operation SET expires_at=clock_timestamp()-interval '1 second' WHERE operation IS NOT NULL");const third=randomUUID();await c.pool.query("INSERT INTO mailbox(id,tenant_id,label,state,daily_limit,provider_limit) VALUES($1,$2,'third','configured',10,30)",[third,c.actors[0]!.tenant_id]);await assert.rejects(acquireTransportSlot(c.pool,'smtp',c.actors[0]!.tenant_id,third),/transport_busy/);await releaseTransportSlot(c.pool,closedOwnerProof(first));await releaseTransportSlot(c.pool,closedOwnerProof(second));}finally{await c.close();}});
+
+test('native pool fixture uses canonical current UTC pair day and malformed initial keys stay denied',async()=>{
+ const c=await transportContext('pool');try{
+  const day=(await c.pool.query("SELECT (clock_timestamp() AT TIME ZONE 'UTC')::date::text AS day")).rows[0].day;
+  const before=(await c.pool.query("SELECT id,pair_key FROM send_job WHERE scope='pool' AND kind='initial'")).rows[0];
+  assert.equal(before.pair_key,[...c.boxes].sort().join(':')+':'+day,'fixture must follow canonical pool current-day identity');
+  await c.pool.query('UPDATE send_job SET pair_key=$2 WHERE id=$1',[before.id,randomUUID()]);
+  assert.equal(await c.app.dispatch.claim(),null,'malformed legacy key must fail current-day fence before live transport');
+  const denied=(await c.pool.query('SELECT state,outcome FROM send_job WHERE id=$1',[before.id])).rows[0];assert.equal(denied.state,'cancelled');assert.equal(denied.outcome,'expired_pool_day');
+ }finally{await c.close();}
+});
+
+test('full poll captures a reset between snapshot and read and incomplete entry performs no IO',async()=>{
+ const {PollWorker}=await import('../src/replies/worker.js');const c=await transportContext(),behavior={uidvalidity:'1',uidNext:2,headers:[]},f=await transportFixture(behavior);try{
+  const tenant=c.actors[0]!.tenant_id,mailbox=c.boxes[0]!,adapter=new LiveReplyAdapter(c.pool,c.config,f.options),snapshot=adapter.snapshot.bind(adapter);let snapshots=0;
+  adapter.snapshot=async(...args)=>{const proof=await snapshot(...args);snapshots++;if(snapshots===1)behavior.uidvalidity='2';return proof;};
+  const worker=new PollWorker(c.pool,c.config.credentialKeyring,'live_provider',adapter);
+  assert.equal((await worker.poll(tenant,mailbox)).state,'scanning');assert.equal(snapshots,1);assert.equal(f.verbs.filter(v=>v==='UID').length,0);
+  const reset=(await worker.store.status(tenant,mailbox))!;assert.equal(reset.uidvalidity,'2');assert.equal(reset.cursor,0);assert.equal(reset.tailHighWater,null);assert.equal((await c.pool.query('SELECT scan_complete FROM mailbox_poll WHERE mailbox_id=$1',[mailbox])).rows[0].scan_complete,false);
+  assert.equal((await worker.poll(tenant,mailbox)).state,'complete');
+  const current=(await worker.store.status(tenant,mailbox))!;await c.pool.query("UPDATE reply_rescan SET state='rescan_incomplete' WHERE mailbox_id=$1",[mailbox]);const before=f.verbs.length;
+  assert.equal((await worker.poll(tenant,mailbox)).state,'rescan_incomplete');assert.equal(f.verbs.length,before);assert.equal((await worker.store.status(tenant,mailbox))!.runId,current.runId);
+ }finally{await f.close();await c.close();}
+});
+
+test('settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences',async()=>{
+ const {RuntimeStore}=await import('../src/runtime/store.js');const {PollWorker,identity}=await import('../src/replies/worker.js');const {seedFixture}=await import('../src/replies/fixture.js');
+ for(const fence of ['runtime','poll','source','run','grant','mailbox','expiry'] as const){
+  const c=await transportContext(),f=await transportFixture({uidvalidity:'2',uidNext:2,headers:[]});try{
+   const tenant=c.actors[0]!.tenant_id,mailbox=c.boxes[0]!;await c.pool.query('DELETE FROM capacity_lease WHERE mailbox_id=$1',[c.boxes[1]]);
+   const runtime=new RuntimeStore(c.pool),adapter=new LiveReplyAdapter(c.pool,c.config,f.options),worker=new PollWorker(c.pool,c.config.credentialKeyring,'live_provider',adapter);await runtime.maintenance();
+   let run=await worker.store.capture(tenant,mailbox,{uidvalidity:'1',uidNext:1,observedAt:new Date(),provenance:'imap_headers'});await worker.store.checkpointTail(tenant,mailbox,identity(run),{uidvalidity:'1',uidNext:1,observedAt:new Date(),provenance:'imap_headers'});
+   const read=adapter.read.bind(adapter);adapter.read=async(...args)=>{const result=await read(...args);assert.equal(result.kind,'uidvalidity_changed');
+    if(fence==='runtime')await c.pool.query("UPDATE runtime_due SET generation=generation+1 WHERE mailbox_id=$1 AND kind='poll'",[mailbox]);
+    if(fence==='poll')await c.pool.query('UPDATE mailbox_poll SET poll_owner=$2 WHERE mailbox_id=$1',[mailbox,randomUUID()]);
+    if(fence==='source')await seedFixture(c.pool,tenant,mailbox,{uidvalidity:'1',uidNext:1,headers:[]});
+    if(fence==='run'){await worker.store.failTail(tenant,mailbox,identity(run));run=await worker.store.retry(tenant,mailbox,identity(run));}
+    if(fence==='grant')await c.publish(0);
+    if(fence==='mailbox')await c.pool.query('UPDATE mailbox SET transport_revision=transport_revision+1 WHERE id=$1',[mailbox]);
+    if(fence==='expiry')await c.pool.query("UPDATE transport_grant SET scope=jsonb_set(scope,'{expiresAt}',to_jsonb('2000-01-01T00:00:00Z'::text)) WHERE mailbox_id=$1",[mailbox]);
+    return result;};
+   const claim=await runtime.claim('poll');assert.ok(claim);const outcome=await worker.quantum(tenant,mailbox,runtime.guard(claim),new AbortController().signal);assert.ok(['superseded','authority_denied'].includes(outcome.state),fence);
+   const current=(await worker.store.status(tenant,mailbox))!;assert.equal(current.uidvalidity,'1',fence);assert.equal(current.runId,run.runId,fence);assert.equal(current.attempt,run.attempt,fence);assert.equal(current.cursor,0,fence);assert.equal(current.tailHighWater,0,fence);assert.equal(f.verbs.filter(v=>v==='UID').length,0);assert.equal((await c.pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');
+  }finally{await f.close();await c.close();}
+ }
+});

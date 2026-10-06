@@ -1,6 +1,8 @@
-# F10 — будущая приёмка и передача
+# F10 — принятая локальная реализация и передача
 
-PLAN / AUTO, f10-plan-a2. Candidate originates at partial commit7c8f7334e2950fe9326034e0184ba4f3b7d5ef4e. All tests in the table are FUTURE implementation assignments, not executed files/results or a PhaseIII pass. No F10 runtime, independent validation or review has been accepted by this document.
+Локальный F10 принят 2026-10-06: source `db50798a76a97fed75931544f24cd1181ff082d8`, независимый [review](review-report.md), AC001–007 met. Ранее BLOCKED A35 и все неуспешные попытки сохранены в том же RUN_ID; A37 закрыл шесть UID-контрпроверок без изменения source. Приняты реальные локальные canonical330/all30 и adversarial all5/20pages/5s, PG170/170, unit64/64, physical/native regressions, static gates и source/compiled material negatives. Эти результаты не устанавливают F11–F15, реальную почту, OpenAI, расходы или deployment.
+
+Исторический PLAN / AUTO f10-plan-a2 происходил от partial commit7c8f7334e2950fe9326034e0184ba4f3b7d5ef4e. Следующие команды и ограничения сохраняют обязательный контракт; фактические результаты привязаны в review и ledger, а не предобъявлены этим историческим планом.
 
 ## Criterion coverage
 

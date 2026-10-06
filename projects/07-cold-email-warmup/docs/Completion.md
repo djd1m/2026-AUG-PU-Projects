@@ -9,7 +9,7 @@
 ## Текущее расширение — 2026-10-06
 
 F07 connected capacity, F08 диагностика и F09 SMTP/UID IMAP transport приняты локально.
-F09 source `e043bb27` принят независимым [ревью](features/f09-live-transport/review-report.md): все 9 AC выполнены. Реальные локальные PG147/147, unit57/57 и физический SIGSTOP/socket test сохранены с проверенными неизменёнными компонентами; после исправления общего SMTP deadline affected12/12, type/lint/build прошли. Две регрессии отвергли прежнее поведение, независимый TLS probe остановился на EHLO за10006ms без AUTH/DATA. Полные PLAN/VALIDATE проходят для10 контуров; completion остаётся FAIL8: шесть будущих expanded witnesses и две F06-привязки. Следующий этап — F10 persistent fair workers. Live-провайдеры, LLM, расходы и deployment требуют соответствующего отдельного разрешения.
+F09 source `e043bb27` принят независимым [ревью](features/f09-live-transport/review-report.md): все 9 AC выполнены. Реальные локальные PG147/147, unit57/57 и физический SIGSTOP/socket test сохранены с проверенными неизменёнными компонентами; после исправления общего SMTP deadline affected12/12, type/lint/build прошли. Две регрессии отвергли прежнее поведение, независимый TLS probe остановился на EHLO за10006ms без AUTH/DATA. Полные PLAN/VALIDATE проходят для10 контуров; completion остаётся FAIL8: шесть будущих expanded witnesses и две F06-привязки. F10 source `db50798a` принят [независимым review](features/f10-durable-runtime/review-report.md): AC001–007 met; canonical330, PG170/170, unit64/64, native physical/fairness и UID/material negatives привязаны к неизменному source/build. Следующий этап — F11 ограниченный входящий контекст и retention. Историческое значение completion FAIL8 выше не является новым запуском после F10. Live-провайдеры, LLM, расходы и deployment требуют соответствующего отдельного разрешения.
 
 ## Историческая приёмка исходного локального MVP
 
@@ -73,4 +73,4 @@ SC scenarios are unchanged. This canonical table has zero rows for that reason.
 Per-feature AC coverage remains in each active feature completion role.
 This format correction is not a fresh runtime acceptance: prior bytes are retained
 at validation-history/Completion.pre-contract-table-20261006.md. The prior final
-paragraph describes the historical local MVP; F07/F08/F09 are now locally accepted; expanded F10-F15 work remains pending.
+paragraph describes the historical local MVP; F07/F08/F09/F10 are now locally accepted; expanded F11-F15 work remains pending.

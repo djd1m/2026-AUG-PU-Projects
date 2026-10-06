@@ -23,10 +23,12 @@ elapsed/usage/null gaps recorded. F03 done only after both six-AC matrices pass.
 | AC-f03-dispatch-pool-campaign-007 | tests/submission-integration.test.ts | B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan |
 | AC-f03-dispatch-pool-campaign-008 | tests/submission-integration.test.ts | F03b real PG durable final authority, all stop races, sink privacy and outcomes |
 | AC-f03-dispatch-pool-campaign-009 | tests/submission-integration.test.ts | B3 durable rendered sink/token/message refs with own OR intended pool peer read only |
-| AC-f03-dispatch-pool-campaign-010 | tests/submission-integration.test.ts | B4 proved pre-DATA only, exact5/30s, max3, re-enter guards/quota |
+| AC-f03-dispatch-pool-campaign-010 | tests/submission-integration.test.ts | B4 proved pre-DATA only, 60s pacing within original120s ceiling, re-enter guards/quota |
 | AC-f03-dispatch-pool-campaign-011 | tests/submission-integration.test.ts | R1 post-lock clock poll60s rejects stale waiter with live lease and zero adapter calls |
 | AC-f03-dispatch-pool-campaign-012 | scripts/check-f03b-final.sh | python3 scripts/check-f03b-r1-clock-mutation.py |
 
 ## Coverage limits and current status
 
 Each row is one existing literal executable witness, not proof of its entire composite AC or of a rerun. Full unit/integration/build/type/lint/meaningful mutation/security/canary/license/donor/source-image and fresh-review procedures remain required by the original clauses and historical receipts. Build-script guard phrases cover only the named command path; they do not independently prove licenses, acceptance or delivery. Additional existing same-feature tests and accepted receipts remain normative. Source paragraphs are quoted in `scenarios.md`; derived BDD describes the remaining procedure conditions. Prior completion bytes: `history/05_completion.pre-contract-coverage.md`, sha256:2448c0d7a2e6eb41202c3234b00ab6d206e7e28b670ddeec4ebbdc55b5445b52. No original completion prose outside the archived/replaced F05 table was removed.
+
+F10 integration binding: the accepted current test title above implements F10’s literal60s SMTP pacing within the inherited120s retry ceiling. Historical `exact5/30s, max3` title/proof remains in prior revisions; this table update records the current already-tested binding and does not rewrite historical execution.

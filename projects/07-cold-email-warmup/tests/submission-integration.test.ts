@@ -218,17 +218,20 @@ test('F03b real PG durable final authority, all stop races, sink privacy and out
    assert.equal(jobs.filter(j=>j.reserved_day==='2026-10-03').length,1);assert.equal(jobs.filter(j=>j.state==='queued' && j.reserved_day===null).length,1);
    assert.ok(jobs.every(j=>j.claim_order!==null));
   });
-  await t.test('B4 proved pre-DATA only, exact5/30s, max3, re-enter guards/quota',async()=>{
+  await t.test('B4 proved pre-DATA only, 60s pacing within original120s ceiling, re-enter guards/quota',async()=>{
    const job=await setup();const firstTime=now.getTime();const retry=new SubmissionStore(pool,config,{clock:()=>now,adapter:{mode:'local_test',async submit(){calls++;return {kind:'pre_data_transient',proof:'no_data_submitted'};}}});
-   for(const [attempt,elapsed,delay] of [[1,0,5000],[2,5000,30000],[3,35000,0]] as const) {
-    now=new Date(firstTime+elapsed!);let claimed=job;if(attempt!==1) {claimed=await app.dispatch.claim(randomUUID(),now);assert.ok(claimed);}
-    const result=await retry.submit(claimed.id,claimed.lease_owner);assert.equal(result.state,attempt===3?'cancelled':'queued');
-    const row=(await pool.query('SELECT * FROM send_job WHERE id=$1',[job.id])).rows[0];assert.equal(row.attempt_count,attempt);assert.equal(row.reserved_day,null);assert.equal(row.due_at.getTime(),now.getTime()+delay!);
-    if(attempt<3) assert.equal(await app.dispatch.claim(randomUUID(),new Date(row.due_at.getTime()-1)),null);
+   for(const [attempt,elapsed,delay] of [[1,0,60000],[2,60000,0]] as const) {
+    now=new Date(firstTime+elapsed);await seams.recordPoll(actors[0]!.tenant_id,boxes[0]!,{completedAt:now,scanComplete:true,uidvalidity:'fixture',cursorUid:1});
+    let claimed=job;if(attempt!==1) {claimed=await app.dispatch.claim(randomUUID(),now);assert.ok(claimed);}
+    const result=await retry.submit(claimed.id,claimed.lease_owner);assert.equal(result.state,attempt===2?'cancelled':'queued');
+    const row=(await pool.query('SELECT * FROM send_job WHERE id=$1',[job.id])).rows[0];assert.equal(row.attempt_count,attempt);assert.equal(row.reserved_day,null);assert.equal(row.due_at.getTime(),now.getTime()+delay);
+    if(attempt===1) assert.equal(await app.dispatch.claim(randomUUID(),new Date(row.due_at.getTime()-1)),null);
    }
-   assert.equal(calls,3);assert.equal(await app.dispatch.claim(randomUUID(),new Date(firstTime+36000)),null);
+   assert.equal(calls,2);assert.equal(await app.dispatch.claim(randomUUID(),new Date(firstTime+120000)),null);
    const again=await setup();const transient=new SubmissionStore(pool,config,{clock:()=>now,adapter:{mode:'local_test',async submit(){calls++;return {kind:'pre_data_transient',proof:'no_data_submitted'};}}});
-   await transient.submit(again.id,again.lease_owner);now=new Date(now.getTime()+5000);const claimed=await app.dispatch.claim(randomUUID(),now);assert.ok(claimed);
+   await transient.submit(again.id,again.lease_owner);now=new Date(now.getTime()+60000);
+   await seams.recordPoll(actors[0]!.tenant_id,boxes[0]!,{completedAt:now,scanComplete:true,uidvalidity:'fixture',cursorUid:1});
+   const claimed=await app.dispatch.claim(randomUUID(),now);assert.ok(claimed);
    await app.consents.act(actors[0]!,boxes[0]!,{scope:'campaign',campaignId:campaign.id,action:'revoke'});assert.equal((await transient.submit(claimed.id,claimed.lease_owner)).calls,0);assert.equal(calls,1);
   });
   await t.test('B4/B5 retry120s exact ceiling, ambiguous timeout/crash retain quota, never recover resend',async()=>{

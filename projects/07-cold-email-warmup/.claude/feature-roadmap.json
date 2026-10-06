@@ -218,7 +218,7 @@
       "number": 10,
       "name": "Persistent fair workers and automatic pool",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "f09-live-transport"
@@ -233,7 +233,9 @@
         "AC-expanded-mvp-004"
       ],
       "sprint": "expanded-mvp",
-      "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a"
+      "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+      "accepted_source_revision": "db50798a76a97fed75931544f24cd1181ff082d8",
+      "independent_review": "docs/features/f10-durable-runtime/review-report.md"
     },
     {
       "id": "f11-inbound-context",
