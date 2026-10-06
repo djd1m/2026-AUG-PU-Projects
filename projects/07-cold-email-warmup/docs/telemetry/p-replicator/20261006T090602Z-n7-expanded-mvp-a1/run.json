@@ -353,5 +353,16 @@
     "approval_scope": "Trusted explicit owner reply exact cc69b0c3 / 54 N7 files; newer local payload excluded",
     "exit_code": 0,
     "prior_review_rejections_preserved": true
+  },
+  "model_policy_boundary": {
+    "owner_decision": "OWN-N7-006",
+    "recorded_at": "2026-10-06T17:46:11.863570+00:00",
+    "next_planner_reviewer_coordinator_requested": "gpt-6.1-sol/high",
+    "next_coder_requested": "gpt-6.1-sol/medium",
+    "independent_executor_retained": true,
+    "existing_A11": "read-only Sol/high continues until checkpoint",
+    "actual_model": null,
+    "reason": "host_not_exposed",
+    "global_config_changed": false
   }
 }
