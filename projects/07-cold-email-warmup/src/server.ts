@@ -12,6 +12,8 @@ import { AuthService } from './auth/service.js';
 import { readToken, sessionCookie, tokenDigest } from './auth/session.js';
 import { PgAuthStore } from './auth/store.js';
 import { CapacityStore, capacityAction, mailboxPageInput } from './mailboxes/capacity.js';
+import { DiagnosticStore } from './mailboxes/diagnostic-store.js';
+import type { ChannelFactory } from './mailboxes/diagnostic-channel.js';
 import { MailboxStore } from './mailboxes/store.js';
 import { CampaignStore } from './campaigns/store.js';
 import { PoolStore } from './pool/store.js';
@@ -52,10 +54,11 @@ async function body(req: IncomingMessage): Promise<Record<string, unknown>> {
 function json(res: ServerResponse, status: number, data: unknown) {
   res.writeHead(status, {'Content-Type':'application/json; charset=utf-8'}); res.end(JSON.stringify(data));
 }
-export async function application(config: Config, pool: Pool, fixtures?:{resolver?:Resolver; adapter?:TestAdapter}) {
+export async function application(config: Config, pool: Pool, fixtures?:{resolver?:Resolver; adapter?:TestAdapter;diagnosticChannel?:ChannelFactory}) {
   const store = new PgAuthStore(pool); const auth = new AuthService(store, config.sessionKey);
   await auth.initialize();
   const mailboxes=new MailboxStore(pool,config.credentialKeyring,config.providerAllowlist,fixtures?.resolver,fixtures?.adapter);
+  const diagnostics=new DiagnosticStore(pool,config.credentialKeyring,config.providerAllowlist,fixtures?.diagnosticChannel,fixtures?.diagnosticChannel?'protocol_fixture':'live_provider');
   const capacity=new CapacityStore(pool);
   const consents=new ConsentStore(pool,config.credentialKeyring);
   const campaigns=new CampaignStore(pool,config.credentialKeyring,config.recipientHashKey);
@@ -182,10 +185,17 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
           const poll=(await pool.query('SELECT scan_complete,completed_at FROM mailbox_poll WHERE mailbox_id=$1',[pollMatch[1]])).rows[0];
           return json(res,200,{data:{mode:config.pollMode??'disabled',scan:await replies.status(identity.tenant_id,pollMatch[1]!),lastComplete:poll?.completed_at??null,scanComplete:poll?.scan_complete??false,realVerification:'unknown'},meta:{}});
         }
-        const mailboxMatch=/^\/api\/mailboxes\/([^/]+)(?:\/(consents|verify-test|capacity))?$/.exec(path);
+        const mailboxMatch=/^\/api\/mailboxes\/([^/]+)(?:\/(consents|verify-test|capacity|diagnostics))?$/.exec(path);
         if(mailboxMatch) {
           const id=mailboxMatch[1]!; if(!UUID.test(id)) throw new HttpError(400,'invalid_input');
-          if(mailboxMatch[2]==='capacity' && req.method==='POST') {
+          if(mailboxMatch[2]==='diagnostics' && req.method==='POST') {
+            await mailboxes.read(identity.tenant_id,id);
+            await body(req);await suppression.charge(req.socket.remoteAddress??'unknown');
+            const controller=new AbortController();const abort=()=>controller.abort();
+            req.once('aborted',abort);res.once('close',abort);req.socket.setTimeout(35000);
+            try{await diagnostics.run(identity.tenant_id,id,controller.signal);return json(res,200,{data:await mailboxes.read(identity.tenant_id,id),meta:{}});}
+            finally{req.removeListener('aborted',abort);res.removeListener('close',abort);}
+          } else if(mailboxMatch[2]==='capacity' && req.method==='POST') {
             await suppression.charge(req.socket.remoteAddress??'unknown');
             return json(res,200,{data:await capacity.act(identity.tenant_id,id,capacityAction(await body(req))),meta:{}});
           } else if(mailboxMatch[2]==='consents') {
@@ -234,5 +244,5 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
     });
   });
   server.requestTimeout = 10000; server.headersTimeout = 10000; server.timeout = 10000; server.maxHeadersCount = 64;
-  return { server, auth, store, mailboxes, consents, campaigns, cohort, dispatch, submissions, suppression, replies, billing, billingProvider, partners, evidence, reports };
+  return { server, auth, store, diagnostics, mailboxes, consents, campaigns, cohort, dispatch, submissions, suppression, replies, billing, billingProvider, partners, evidence, reports };
 }

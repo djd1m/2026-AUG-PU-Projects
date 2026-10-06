@@ -1,21 +1,27 @@
-# F08 — planned completion, not runtime acceptance
+# F08 — implementation witnesses; acceptance verification remains
 
-PLAN only at baseline e61006749f69bd352759c7520f2a7e99aef24bd2. No code, dependencies, protocol sockets, PG tests, browser, external provider, paid API or deployment executed by planner. Initial independent VALIDATE at b3aa56cd reported NEEDS WORK / F08-V1. This targeted correction defines durable serialized authority without changing the specification; the original report/scenarios remain preserved and narrow independent revalidation is next; all runtime criteria below remain pending. Companion E2E preflight: not_applicable for docs-only PLAN.
+Historical PLAN baseline e61006749f69bd352759c7520f2a7e99aef24bd2. No code, dependencies, protocol sockets, PG tests, browser, external provider, paid API or deployment executed by planner. Initial independent VALIDATE at b3aa56cd reported NEEDS WORK / F08-V1. This targeted correction defines durable serialized authority without changing the specification; the original report/scenarios remain preserved and narrow independent revalidation is next; all runtime criteria below remain pending. Companion E2E preflight: not_applicable for docs-only PLAN.
 
-## Planned criterion coverage
+## Criterion coverage
 
-These are assignments, not an executed `Criterion coverage` table. Implementation must replace with actual existing test file/title bindings and source-bound receipts.
+Actual authored bindings, bounded implementation attempt f08-implement-a1. These bind executable witnesses, not blanket acceptance of all derived scenario variants. Exact executed counts, immutable source/build/image and remaining obligations are in /tmp/n7-f08-implement-a1-receipt.md; coordinator integrates the receipt into the project run. No external provider is contacted.
 
-| Criterion | Planned test file | Planned test title |
+| Criterion | Test file | Test title |
 |---|---|---|
 | AC-f08-live-diagnostics-001 | tests/diagnostics-integration.test.ts | diagnostic authority and tenant checks open no unauthorized sockets |
-| AC-f08-live-diagnostics-002 | tests/diagnostics-integration.test.ts | production TLS adapter pins peer and rejects certificate downgrade rebinding |
-| AC-f08-live-diagnostics-003 | tests/diagnostics-integration.test.ts | SMTP and IMAP authenticate independently without message commands |
+| AC-f08-live-diagnostics-002 | tests/diagnostics-unit.test.ts | production TLS adapter pins peer and rejects certificate downgrade rebinding |
+| AC-f08-live-diagnostics-003 | tests/diagnostics-unit.test.ts | SMTP and IMAP authenticate independently without message commands |
 | AC-f08-live-diagnostics-004 | tests/diagnostics-unit.test.ts | diagnostic byte deadlines cancellation and admission are bounded |
 | AC-f08-live-diagnostics-005 | tests/diagnostics-integration.test.ts | diagnostic revision fences replacement stop quarantine and newer attempt |
 | AC-f08-live-diagnostics-006 | tests/diagnostics-integration.test.ts | AEAD and protocol error canaries never escape diagnostic sinks |
 | AC-f08-live-diagnostics-007 | scripts/ui/f08-diagnostics.mjs | separate diagnostic status persists and respects keyboard capacity consent |
 | AC-f08-live-diagnostics-008 | tests/expanded-mvp-02.test.ts | live diagnostics enforce pinned TLS without DATA |
+
+The separate parent witness is explicitly run using `node node_modules/tsx/dist/cli.mjs --test tests/expanded-mvp-02.test.ts`; the default integration glob does not discover it. No dependency, package script or lock changes were required.
+
+Runtime observed: real TLS465/587/993, independent rejection, wrong-host/untrusted/downgrade, unsafe/mixed/count/family DNS, one lookup per protocol, late DNS cancellation, caps, actual socket cancellation, real-PG settings/stop/quarantine/child-process overlap, revision-only guard, authority revoke before/after publication, identical grant ABA, authority/final rollback, isolated real-PG schema12→13 without backfill, and three discriminating mutations. Docker browser observes real production-adapter fixture results only after a committed revoke, preserving the production network gate.
+
+Remaining acceptance verification: real 10s stalled DNS/raw-connect/TLS/auth and trickle phase cases; simultaneous failure/success callbacks with explicit owned timer/listener counters; HTTP disconnect at each phase; DB-clock expiry while waiting on FIRST lock and an overlapping revoke queued behind a final transaction after its authority read; missing/invalid operator-file committed revoke and expected-revision conflict via the actual CLI; complaint via shared cancel with finalization both orderings; pending/stale UI variants and diagnostics-specific late-session response. Common budget, cleanup, durable authority and shared-cancel guards exist and have focused witnesses, but these unexecuted compositions are not reported PASS. Independent review and source/canon/completion gates remain coordinator-owned.
 
 ## Gates and handoff
 

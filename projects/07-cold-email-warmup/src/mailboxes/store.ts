@@ -1,3 +1,4 @@
+import { configFingerprint,diagnosticProjection } from './diagnostic-authority.js';
 import { randomUUID } from 'node:crypto';
 import type { Pool } from 'pg';
 import { capacityProjection, releaseCapacity } from './capacity.js';
@@ -8,6 +9,7 @@ import { maskEmail, parseMailbox, dailyLimit, type MailboxInput } from './input.
 import { resolveEndpoint, type Resolver } from './network.js';
 import { localTestAdapter, verifyTest, type TestAdapter } from './provider.js';
 export async function cancelMailbox(client:import('pg').PoolClient,id:string) {
+  await client.query('UPDATE mailbox SET diagnostic_revision=diagnostic_revision+1,diagnostic_attempt=NULL WHERE id=$1',[id]);
   await releaseCapacity(client,id);
   await client.query("UPDATE consent SET revoked_at=now() WHERE mailbox_id=$1 AND revoked_at IS NULL",[id]);
   await client.query('DELETE FROM pool_member WHERE mailbox_id=$1',[id]);
@@ -16,16 +18,16 @@ export async function cancelMailbox(client:import('pg').PoolClient,id:string) {
 export class MailboxStore {
   constructor(readonly pool:Pool, readonly ring:Keyring, readonly allowlist:ReadonlyMap<string,number>, readonly resolver?:Resolver, readonly adapter:TestAdapter=localTestAdapter) {}
   async read(tenant:string,id:string) {
-    const row=(await this.pool.query(`SELECT m.id,m.label,m.state,m.metadata,m.daily_limit,m.provider_limit,LEAST(m.daily_limit,m.provider_limit,30) AS effective_limit,${capacityProjection} FROM mailbox m LEFT JOIN capacity_lease l ON l.mailbox_id=m.id AND l.tenant_id=m.tenant_id WHERE m.tenant_id=$1 AND m.id=$2`,[tenant,id])).rows[0];
+    const row=(await this.pool.query(`SELECT m.id,m.label,m.state,m.metadata,m.daily_limit,m.provider_limit,LEAST(m.daily_limit,m.provider_limit,30) AS effective_limit,${capacityProjection},${diagnosticProjection(configFingerprint(this.allowlist))} FROM mailbox m LEFT JOIN capacity_lease l ON l.mailbox_id=m.id AND l.tenant_id=m.tenant_id LEFT JOIN diagnostic_authority a ON a.id=1 WHERE m.tenant_id=$1 AND m.id=$2`,[tenant,id])).rows[0];
     if(!row) throw new HttpError(404,'not_found'); return row;
   }
   async list(tenant:string,limit=25,after?:string) {
     if(!Number.isInteger(limit) || limit<1 || limit>100) throw new HttpError(400,'invalid_input');
     const anchor=after?(await this.pool.query('SELECT created_at,id FROM mailbox WHERE tenant_id=$1 AND id=$2',[tenant,after])).rows[0]:null;
     if(after && !anchor) throw new HttpError(404,'not_found');
-    const items=(await this.pool.query(`SELECT m.id,m.label,m.state,m.metadata,m.daily_limit,m.provider_limit,LEAST(m.daily_limit,m.provider_limit,30) AS effective_limit,${capacityProjection}
+    const items=(await this.pool.query(`SELECT m.id,m.label,m.state,m.metadata,m.daily_limit,m.provider_limit,LEAST(m.daily_limit,m.provider_limit,30) AS effective_limit,${capacityProjection},${diagnosticProjection(configFingerprint(this.allowlist))}
       FROM mailbox m LEFT JOIN capacity_lease l ON l.mailbox_id=m.id AND l.tenant_id=m.tenant_id
-      WHERE m.tenant_id=$1 AND ($3::uuid IS NULL OR (m.created_at,m.id)>(SELECT created_at,id FROM mailbox WHERE tenant_id=$1 AND id=$3)) ORDER BY m.created_at,m.id LIMIT $2`,[tenant,limit+1,after??null])).rows;
+      LEFT JOIN diagnostic_authority a ON a.id=1 WHERE m.tenant_id=$1 AND ($3::uuid IS NULL OR (m.created_at,m.id)>(SELECT created_at,id FROM mailbox WHERE tenant_id=$1 AND id=$3)) ORDER BY m.created_at,m.id LIMIT $2`,[tenant,limit+1,after??null])).rows;
     const total=Number((await this.pool.query('SELECT count(*) FROM mailbox WHERE tenant_id=$1',[tenant])).rows[0].count);
     const more=items.length>limit; if(more) items.pop();
     return {items,total,limit,nextCursor:more?items.at(-1)!.id:null};
@@ -51,7 +53,7 @@ export class MailboxStore {
   async change(tenant:string,id:string,input:Record<string,unknown>) {
     await eligibilityTransaction(this.pool,async client=>{
       if(!(await client.query('SELECT id FROM mailbox WHERE tenant_id=$1 AND id=$2 FOR UPDATE',[tenant,id])).rowCount) throw new HttpError(404,'not_found');
-      if(input.dailyLimit!==undefined) await client.query('UPDATE mailbox SET daily_limit=$3 WHERE tenant_id=$1 AND id=$2',[tenant,id,dailyLimit(input.dailyLimit)]);
+      if(input.dailyLimit!==undefined) await client.query('UPDATE mailbox SET daily_limit=$3,diagnostic_revision=diagnostic_revision+1,diagnostic_attempt=NULL WHERE tenant_id=$1 AND id=$2',[tenant,id,dailyLimit(input.dailyLimit)]);
       if(input.state!==undefined) {
         if(input.state!=='paused' && input.state!=='quarantined') throw new HttpError(400,'invalid_state');
         await cancelMailbox(client,id); await client.query('UPDATE mailbox SET state=$3 WHERE tenant_id=$1 AND id=$2',[tenant,id,input.state]);

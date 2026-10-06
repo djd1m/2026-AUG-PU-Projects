@@ -1,5 +1,6 @@
 export interface MailboxPage {items: Mailbox[]; total:number; limit:number; nextCursor:string|null;}
 export interface Mailbox {
+    diagnostics:{state:'disabled'|'never_run'|'pending'|'stale'|'current';result:null|{evidenceMode:string;checkedAt:string;smtp:{tls:string;auth:string;phase:string;code:string|null};imap:{tls:string;auth:string;phase:string;code:string|null}}};
     capacity:{state:'inactive'|'active'|'waiting_capacity';expiresAt:string|null};
     id: string;
     label: string;
