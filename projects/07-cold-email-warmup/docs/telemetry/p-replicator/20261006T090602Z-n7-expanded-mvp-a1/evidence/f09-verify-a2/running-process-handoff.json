@@ -1,0 +1,15 @@
+{
+  "session": 1982,
+  "source": "35039ad32e933d7a4d0bf0f7621f7722e5774ef6",
+  "processes": [
+    {
+      "pid": 336175,
+      "ppid": 124366,
+      "command": "bash /tmp/n7-f09-verify-a2/run-final.sh"
+    }
+  ],
+  "command": "bash /tmp/n7-f09-verify-a2/run-final.sh",
+  "database": "n7f09_a1",
+  "handoff_to": "/root/n7_expanded_coordinator",
+  "continuation": "collect ongoing exact-source fullPG/fullunit/lint exits; no restart"
+}

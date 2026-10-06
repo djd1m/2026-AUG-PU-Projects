@@ -1,0 +1,24 @@
+{
+  "src/mailboxes/transport-slots.ts": {
+    "captured": "6621adc517b5808548fa23c20880aba57a3780ed7df93cf38089d05025fafbd6",
+    "final": "6621adc517b5808548fa23c20880aba57a3780ed7df93cf38089d05025fafbd6",
+    "same": true
+  },
+  "tests/f09-slot-owner-fixture.ts": {
+    "captured": "c9c11e48e5e7af7e1fdb57f9860d043a8791f65095c35ad0683f7f51c3bd36df",
+    "final": "c9c11e48e5e7af7e1fdb57f9860d043a8791f65095c35ad0683f7f51c3bd36df",
+    "same": true
+  },
+  "physical-test-function": {
+    "captured": "6ea328e6dddf2c6eb9c7ad7140fba683daa57292b4e93fd315671d41ac8906ca",
+    "final": "6ea328e6dddf2c6eb9c7ad7140fba683daa57292b4e93fd315671d41ac8906ca",
+    "same": true
+  },
+  "TLS-stall-branch": {
+    "baseline": "2554bcb9a7fb8e69af46378778fc87e1e6fe9cfc9afd4a4abf231c41982e9e8f",
+    "final": "2554bcb9a7fb8e69af46378778fc87e1e6fe9cfc9afd4a4abf231c41982e9e8f",
+    "same": true,
+    "basis": "Actual early factory prefix captured SHA matches baseline full prefix; unchanged stall code composed with unchanged real owner/slot witness"
+  },
+  "early-fixture-prefix-baseline-match": true
+}

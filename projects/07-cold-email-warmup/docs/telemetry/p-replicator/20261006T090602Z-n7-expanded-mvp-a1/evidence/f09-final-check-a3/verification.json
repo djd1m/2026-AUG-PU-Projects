@@ -1,0 +1,33 @@
+{
+  "source_revision": "35039ad32e933d7a4d0bf0f7621f7722e5774ef6",
+  "checks": {
+    "all-source-manifest.json": {
+      "files": 127,
+      "mismatches": 0
+    },
+    "accepted-source-manifest.json": {
+      "files": 12,
+      "mismatches": 0
+    },
+    "build-manifest.json": {
+      "files": 70,
+      "mismatches": 0
+    }
+  },
+  "physical_composition_verified": true,
+  "original_empty_manifest": "retained as failed original artifact; nonempty all-source manifest independentlyverified",
+  "mutation_guards_caught_restored": 9,
+  "full_pg": 147,
+  "full_unit": 57,
+  "focused_pg_parent": 6,
+  "protocol_final": 9,
+  "canary_log_scan": {
+    "hits": [],
+    "log_count": 27,
+    "secret_values_emitted": false
+  },
+  "known_runtime_secret_matches": 0,
+  "runtime_process_present": false,
+  "session_collection_note": "write_stdin1982 unknown after authorhandoff/end; actual .exit/TAP and processabsence establishfinished without restart",
+  "no_source_changes": true
+}
