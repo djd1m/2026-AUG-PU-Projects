@@ -1,0 +1,34 @@
+TRACE contour=project specification=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/Specification.md pseudocode=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/Pseudocode.md
+COUNT requirements=16 algorithms=16 missing-algorithm=0 orphan-algorithm=0
+PASS contour=project bidirectional traceability complete
+TRACE contour=expanded-mvp specification=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/expanded-mvp/01_specification.md pseudocode=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/expanded-mvp/02_pseudocode.md
+COUNT requirements=18 algorithms=18 missing-algorithm=0 orphan-algorithm=0
+PASS contour=expanded-mvp bidirectional traceability complete
+TRACE contour=f01-foundation-auth specification=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f01-foundation-auth/01_specification.md pseudocode=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f01-foundation-auth/02_pseudocode.md
+COUNT requirements=6 algorithms=6 missing-algorithm=0 orphan-algorithm=0
+PASS contour=f01-foundation-auth bidirectional traceability complete
+TRACE contour=f02-mailboxes-consent specification=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/01_specification.md pseudocode=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/02_pseudocode.md
+COUNT requirements=6 algorithms=6 missing-algorithm=0 orphan-algorithm=0
+PASS contour=f02-mailboxes-consent bidirectional traceability complete
+TRACE contour=f03-dispatch-pool-campaign specification=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/01_specification.md pseudocode=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/02_pseudocode.md
+COUNT requirements=12 algorithms=12 missing-algorithm=0 orphan-algorithm=0
+PASS contour=f03-dispatch-pool-campaign bidirectional traceability complete
+TRACE contour=f04-reply-suppression specification=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f04-reply-suppression/01_specification.md pseudocode=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f04-reply-suppression/02_pseudocode.md
+COUNT requirements=12 algorithms=12 missing-algorithm=0 orphan-algorithm=0
+PASS contour=f04-reply-suppression bidirectional traceability complete
+TRACE contour=f05-evidence-billing-growth specification=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/01_specification.md pseudocode=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/02_pseudocode.md
+COUNT requirements=12 algorithms=12 missing-algorithm=0 orphan-algorithm=0
+PASS contour=f05-evidence-billing-growth bidirectional traceability complete
+TRACE contour=f06-cabinet-e2e-delivery specification=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/01_specification.md pseudocode=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/02_pseudocode.md
+COUNT requirements=12 algorithms=12 missing-algorithm=0 orphan-algorithm=0
+PASS contour=f06-cabinet-e2e-delivery bidirectional traceability complete
+TRACE contour=f07-connected-capacity specification=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f07-connected-capacity/01_specification.md pseudocode=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f07-connected-capacity/02_pseudocode.md
+COUNT requirements=8 algorithms=8 missing-algorithm=0 orphan-algorithm=0
+PASS contour=f07-connected-capacity bidirectional traceability complete
+TRACE contour=f08-live-diagnostics specification=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f08-live-diagnostics/01_specification.md pseudocode=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f08-live-diagnostics/02_pseudocode.md
+COUNT requirements=8 algorithms=8 missing-algorithm=0 orphan-algorithm=0
+PASS contour=f08-live-diagnostics bidirectional traceability complete
+TRACE contour=f09-live-transport specification=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f09-live-transport/01_specification.md pseudocode=/tmp/n7-f09-plan-20261006/projects/07-cold-email-warmup/docs/features/f09-live-transport/02_pseudocode.md
+COUNT requirements=18 algorithms=18 missing-algorithm=0 orphan-algorithm=0
+PASS contour=f09-live-transport bidirectional traceability complete
+VERDICT traceability=PASS features=10 gaps=0 inconclusive=0

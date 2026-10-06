@@ -57,13 +57,13 @@
     "followup_status": "F07/F08 locally accepted, expanded AC001/002 met; AC003\u2013009 pending. Whole required_gates_passed remains false."
   },
   "metrics": {
-    "elapsed_wall_ms": 12390538,
+    "elapsed_wall_ms": 13401691,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-06T12:32:33.417127+00:00"
+    "elapsed_as_of": "2026-10-06T12:49:24.569775+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -73,7 +73,7 @@
     "No prelaunch serialized launch digest for native PLAN receipt; terminal receipt and output SHA verified, not companion delivery attestation",
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred."
   ],
-  "current_stage": "PLAN F09",
+  "current_stage": "VALIDATE F09 candidate and independent PLAN recovery",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -135,9 +135,9 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_expanded_coordinator",
-    "executor": "f09_planner_a1 actual read/source confirmation received; PLAN running",
-    "source_revision": "801b1102972f76e67f17ce7f7dada7cc79de5ec7",
-    "next": "10min five-role PLAN then independent VALIDATE, Sol implementation on READY"
+    "executor": "f09_validator_a1 actual first tool12:48:25UTC confirmed, clean fbc42325",
+    "source_revision": "fbc4232548cefc441cf7cf5e9a5b321eef80b825",
+    "next": "8min independent complete-plan proof and substantive PhaseII; no code until READY"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",

@@ -8,7 +8,7 @@
   "identity": {
     "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
     "work_unit_id": "expanded-mvp",
-    "current_attempt_id": "f09-plan-a1"
+    "current_attempt_id": "f09-validate-a1"
   },
   "telemetry": {
     "run": {
@@ -22,7 +22,7 @@
   },
   "source": {
     "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
-    "current_revision": "801b1102972f76e67f17ce7f7dada7cc79de5ec7",
+    "current_revision": "fbc4232548cefc441cf7cf5e9a5b321eef80b825",
     "build_revision": null,
     "requirements": [
       {
@@ -45,8 +45,8 @@
       }
     ],
     "continuity": {
-      "expected_revision": "801b1102972f76e67f17ce7f7dada7cc79de5ec7",
-      "observed_revision": "801b1102972f76e67f17ce7f7dada7cc79de5ec7",
+      "expected_revision": "fbc4232548cefc441cf7cf5e9a5b321eef80b825",
+      "observed_revision": "fbc4232548cefc441cf7cf5e9a5b321eef80b825",
       "reconciliation": null
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
@@ -294,6 +294,10 @@
     },
     {
       "id": "f09-plan-a1",
+      "status": "failed"
+    },
+    {
+      "id": "f09-validate-a1",
       "status": "active"
     }
   ],
