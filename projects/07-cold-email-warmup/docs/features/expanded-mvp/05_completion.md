@@ -1,6 +1,6 @@
 # Completion — expanded-mvp delta v1
 
-Progressive completion index. AC001 and AC002 name actual accepted F07/F08 tests at sources10c8e946 and521ae2b3; the remaining seven rows are future assignments, not executed tests. F07 runtime evidence and independent acceptance are recorded in its feature report. No whole expanded-MVP or live pass is claimed; the whole Phase3 criterion gate remains unmet until the remaining bindings exist and required checks pass.
+Progressive completion index. AC001–AC003 name actual accepted F07/F08/F09 tests at sources10c8e946,521ae2b3,e043bb27; the remaining six rows are future assignments, not executed tests. F09 final review accepts the exact parent witness and explicit unchanged-component runtime evidence. F07 runtime evidence and independent acceptance are recorded in its feature report. No whole expanded-MVP or live pass is claimed; the whole Phase3 criterion gate remains unmet until the remaining bindings exist and required checks pass.
 
 ## Criterion coverage
 | Criterion | Test file | Test title |

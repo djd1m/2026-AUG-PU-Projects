@@ -8,15 +8,8 @@
 
 ## Текущее расширение — 2026-10-06
 
-F07 connected capacity и F08 независимая SMTP/IMAP диагностика приняты локально.
-F08 source `521ae2b3`, интегрированный код `e7db9146`: итоговые realPG146/146,
-affected20/20, type/lint/build и dependency audit проходят. Независимый отчёт
-[F08 ACCEPT](features/f08-live-diagnostics/review-report.md) сохраняет точные привязки
-unit54/TLS/mutations/browser20 к неизменённым компонентам; новый финальный browser run не заявлен.
-Полные PLAN/VALIDATE проходят для9 контуров; completion остаётся FAIL9
-(семь будущих expanded witnesses и две F06-привязки), без пробелов F08.
-Следующий этап — F09 live transport; AI, persistent workers и live-пилот пока не приняты.
-Внешние отправки/LLM/расходы/deployment требуют соответствующего разрешения.
+F07 connected capacity, F08 диагностика и F09 SMTP/UID IMAP transport приняты локально.
+F09 source `e043bb27` принят независимым [ревью](features/f09-live-transport/review-report.md): все 9 AC выполнены. Реальные локальные PG147/147, unit57/57 и физический SIGSTOP/socket test сохранены с проверенными неизменёнными компонентами; после исправления общего SMTP deadline affected12/12, type/lint/build прошли. Две регрессии отвергли прежнее поведение, независимый TLS probe остановился на EHLO за10006ms без AUTH/DATA. Полные PLAN/VALIDATE проходят для10 контуров; completion остаётся FAIL8: шесть будущих expanded witnesses и две F06-привязки. Следующий этап — F10 persistent fair workers. Live-провайдеры, LLM, расходы и deployment требуют соответствующего отдельного разрешения.
 
 ## Историческая приёмка исходного локального MVP
 
@@ -80,4 +73,4 @@ SC scenarios are unchanged. This canonical table has zero rows for that reason.
 Per-feature AC coverage remains in each active feature completion role.
 This format correction is not a fresh runtime acceptance: prior bytes are retained
 at validation-history/Completion.pre-contract-table-20261006.md. The prior final
-paragraph describes the historical local MVP; F07/F08 are now locally accepted; expanded F09-F15 work remains pending.
+paragraph describes the historical local MVP; F07/F08/F09 are now locally accepted; expanded F10-F15 work remains pending.

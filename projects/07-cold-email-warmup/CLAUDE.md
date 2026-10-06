@@ -10,7 +10,7 @@ Canonical product/architecture docs: docs/. Validated design: docs/validation-re
 Общий пул начинается с добровольной когорты курса; без пары показываем waiting.
 Репутация unknown до проверяемых наблюдений. OWN-N7-004 включает AI replies,
 unlimited connected mailboxes и живой автопрогрев в expanded MVP. CRM и покупка
-доменов исключены. F07 и F08 приняты на локальных протокольных fixtures; F09–F14 и
+доменов исключены. F07, F08 и F09 приняты на локальных протокольных fixtures; F10–F14 и
 отдельно разрешаемый F15 live-пилот ещё не завершены.
 
 ## Architecture
@@ -21,7 +21,7 @@ src/auth, src/mailboxes, src/dispatch, src/replies, src/billing, src/growth и w
 
 ## Tech Stack
 Node22, TypeScript, native HTTP, pg, Argon2id; F08 использует native TLS для SMTP/IMAP
-диагностики подключения и AUTH. Отправка и чтение почты пока local adapters. UI — доступная
+диагностики подключения и AUTH. F09 добавляет native SMTP и read-only UID IMAP с отдельной transport authority; внешние подключения остаются отключены. UI — доступная
 серверная оболочка и TypeScript по CJM A. Browser только общий Docker Playwright1.63.0.
 Версии закреплены в package-lock.json; внутреннее reuse описано в docs/reuse-inventory.md.
 

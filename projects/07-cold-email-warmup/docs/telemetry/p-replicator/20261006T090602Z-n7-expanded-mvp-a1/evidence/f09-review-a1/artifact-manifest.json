@@ -1,0 +1,39 @@
+{
+  "files": [
+    {
+      "name": "smtp-phase-result.json",
+      "original_sha256": "721a0f52458b2e58103ee58cc95c57c6c535f64806a34b30dd2e969a4d4db711",
+      "stored_sha256": "721a0f52458b2e58103ee58cc95c57c6c535f64806a34b30dd2e969a4d4db711"
+    },
+    {
+      "name": "independent-verification.json",
+      "original_sha256": "a31b5f96955462623b73cbaecd39683749ddec85dfc4e74123b19a9e581dc02a",
+      "stored_sha256": "a31b5f96955462623b73cbaecd39683749ddec85dfc4e74123b19a9e581dc02a"
+    },
+    {
+      "name": "review-contract.log.gz",
+      "original_sha256": "1a71bd573af3e55dd7380c6a4478b1b1b64b405f55ebb75baae9fa2acbe4d718",
+      "stored_sha256": "f26af96b0b7a4d1227cffa71fbc586ce37014a0bd2715391aa186af9a83b0256"
+    },
+    {
+      "name": "smtp-phase-probe.mts.gz",
+      "original_sha256": "57b84f6b4160dce4849a7972f01f7cfab3c39c882bdcee76d6f52e0c0ce46466",
+      "stored_sha256": "5d360ff79e6e058615c5774ddd60d4296eeb6e36944765eb8e68237d402ccfdd"
+    },
+    {
+      "name": "smtp-phase-probe.log.gz",
+      "original_sha256": "0dcde43816537b02036aca61574e2f496600b4ba6faba000db47a10c4150732d",
+      "stored_sha256": "ba262141f289bf74c5b9ccd7d197927cd28288ec6a7e8266beeb5ccc92c858c7"
+    },
+    {
+      "name": "build.log.gz",
+      "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stored_sha256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec"
+    }
+  ],
+  "source_revision": "35039ad32e933d7a4d0bf0f7621f7722e5774ef6",
+  "receipt_status": "failed",
+  "overrun_seconds": 33.936451,
+  "semantic_verdict": "NEEDS_WORK",
+  "finding": "F09-R1"
+}

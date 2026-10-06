@@ -46,7 +46,7 @@
   ],
   "quality": {
     "required_gates_passed": false,
-    "ac_met": 2,
+    "ac_met": 3,
     "ac_total": 9,
     "confirmed_findings_by_severity": {
       "high": 3
@@ -54,7 +54,7 @@
     "false_positive_findings": null,
     "known_defects_missed": null,
     "regressions": null,
-    "followup_status": "F07/F08 locally accepted, expanded AC001/002 met; AC003\u2013009 pending. Whole required_gates_passed remains false."
+    "followup_status": "F07/F08 locally accepted, expanded AC001/002 met; AC003–009 pending. Whole required_gates_passed remains false."
   },
   "metrics": {
     "elapsed_wall_ms": 15081214,
@@ -73,7 +73,7 @@
     "No prelaunch serialized launch digest for native PLAN receipt; terminal receipt and output SHA verified, not companion delivery attestation",
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred."
   ],
-  "current_stage": "REVIEW F09 independent",
+  "current_stage": "F09 accepted delivery; F10 planning preparation",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -135,9 +135,9 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_expanded_coordinator",
-    "executor": "f09_reviewer_a1 actual firsttool14:00:00.089728568UTC verified source35039ad3; independent review running",
-    "source_revision": "35039ad32e933d7a4d0bf0f7621f7722e5774ef6",
-    "next": "8min independent source/spec/evidence review then confirmedfixes or acceptedintegration/F10"
+    "executor": "coordinator integration; F10 planner not launched yet",
+    "source_revision": "5bf5653d2f66b69d51756f36a6c92aadffba6444",
+    "next": "Verify integration gates, commit/push and launch F10 full feature PLAN"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -180,7 +180,7 @@
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-06T14:01:29.204247+00:00",
+    "last_reported_at": "2026-10-06T14:28:14.429874+00:00",
     "responsible": "n7_expanded_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true
   },
@@ -265,5 +265,23 @@
     "completion_gaps": 8,
     "collection_receipt_exit": 0,
     "independent_review": "pending"
+  },
+  "f09_review": {
+    "verdict": "ACCEPT",
+    "source_revision": "e043bb270a8dec50d2e090379ffff5f655a3461f",
+    "integrated_revision": "5bf5653d2f66b69d51756f36a6c92aadffba6444",
+    "report_revision": "e6fdbb4d54c89ce99ec3a19f8d76ea0d62d09d1f",
+    "receipt_exit": 0,
+    "resolved_findings": [
+      "F09-R1"
+    ],
+    "affected_pass": 12,
+    "independent_tls_timeout_ms": 10006,
+    "full_suite_binding": "PG147/unit57/physical1 unchanged components; final affected12/type/lint/build; no final full suite rerun",
+    "integrated_phase12_exit": 0,
+    "integrated_completion_exit": 1,
+    "completion_gaps": 8,
+    "review_contract_exit": 0,
+    "runtime_continuity": "exact src/tests/db/package bytes match e043bb27"
   }
 }

@@ -1,0 +1,16 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f09-review-fix-a4",
+  "stage": "IMPLEMENT confirmed F09-R1 correction only",
+  "source_revision": "35039ad32e933d7a4d0bf0f7621f7722e5774ef6",
+  "spec_sha256": "6e10f17fd5373c92a8725d6298827265f6b5082d8c37bba45777c3d7a7a756e9",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "worktree": "/tmp/n7-f09-implement-20261006",
+  "trace_path": "/tmp/n7-f09-review-fix-a4-receipt.md",
+  "created_at": "2026-10-06T14:10:02.332726+00:00",
+  "budget_minutes": 8,
+  "scope": "Absolute SMTP phase budget over write/drain, all multiline reply lines and AUTH334 exchange; preserve finalDATA30/total90 and classifications. Only smtp.ts, optional minimaltransport-channel.ts ifnecessary, existingf09protocoltest/fixture. RealEHLO/AUTH negativeguards+mutation and affectedchecks, no broadpolish."
+}

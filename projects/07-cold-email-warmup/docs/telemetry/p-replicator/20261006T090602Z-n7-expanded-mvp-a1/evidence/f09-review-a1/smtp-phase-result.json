@@ -1,0 +1,14 @@
+{
+  "source": "35039ad32e933d7a4d0bf0f7621f7722e5774ef6",
+  "result": "accepted",
+  "ehloElapsedMs": 12010,
+  "commands": [
+    "EHLO",
+    "AUTH",
+    "MAIL",
+    "RCPT",
+    "DATA"
+  ],
+  "expected": "EHLO phase must time out at 10000 ms before AUTH/DATA",
+  "node": "v22.20.0"
+}

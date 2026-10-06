@@ -1,0 +1,37 @@
+{
+  "all-source-manifest.json": {
+    "files": 127,
+    "mismatches": []
+  },
+  "accepted-source-manifest.json": {
+    "files": 12,
+    "mismatches": []
+  },
+  "build-manifest.json": {
+    "files": 70,
+    "mismatches": [],
+    "basis": "fresh reviewer build under /tmp/n7-f09-review-a1/dist"
+  },
+  "physical_components": {
+    "src/mailboxes/transport-slots.ts": true,
+    "tests/f09-slot-owner-fixture.ts": true
+  },
+  "probe": {
+    "source": "35039ad32e933d7a4d0bf0f7621f7722e5774ef6",
+    "result": "accepted",
+    "ehloElapsedMs": 12010,
+    "commands": [
+      "EHLO",
+      "AUTH",
+      "MAIL",
+      "RCPT",
+      "DATA"
+    ],
+    "expected": "EHLO phase must time out at 10000 ms before AUTH/DATA",
+    "node": "v22.20.0"
+  },
+  "original_build_path_check": {
+    "result": "unavailable",
+    "reason": "coordinator checkout does not retain dist; initial path lookup was not code drift"
+  }
+}

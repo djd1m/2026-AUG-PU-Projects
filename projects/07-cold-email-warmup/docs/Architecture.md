@@ -15,7 +15,11 @@ SMTP/IMAP проверки TLS и AUTH без операций с письмам
 revision/attempt проверяются под первым global lock(7,1). Отмена до отправки COMMIT
 откатывает результат; отправленный COMMIT нельзя отменить задним числом. Диагностика
 не выдаёт lease, consent или право отправки. Локальные fixtures приняты; внешние
-провайдеры и F09 отправка/чтение требуют собственных проверок и разрешений.
+провайдеры требуют отдельного разрешения.
+
+## Реализованная delta F09
+
+[Архитектура F09](features/f09-live-transport/03_architecture.md) и [capability contract](features/f09-live-transport/capability-contracts.md) описывают принятые native SMTP465/STARTTLS587 и read-only UID IMAP993. Отдельная scoped authority, final submission fence и общий лимит сохраняются. IO находится вне DB transaction. Общий deadline охватывает всю SMTP фазу, включая multiline и AUTH334; final DATA30s и total90s ограничены отдельно. Unknown delivery не повторяется автоматически. Физические socket slots2SMTP/4IMAP и1 на протокол/mailbox освобождаются только после подтверждённого закрытия точного владельца; истечение120s не доказывает закрытие. UID reset/replay атомарно сохраняет stop effects. Локальная приёмка не разрешает внешние отправки; постоянный runtime составляет F10.
 
 ## Architecture Overview
 

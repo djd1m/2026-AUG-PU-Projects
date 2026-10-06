@@ -1,0 +1,62 @@
+{
+  "src/mailboxes/transport-channel.ts": {
+    "baseline_sha256": "aed6062d25aa48fbb927f002887f9a2537f2f4aa483f762a2bf01c91af3dca65",
+    "candidate_sha256": "aed6062d25aa48fbb927f002887f9a2537f2f4aa483f762a2bf01c91af3dca65",
+    "same": true
+  },
+  "src/mailboxes/transport-slots.ts": {
+    "baseline_sha256": "6621adc517b5808548fa23c20880aba57a3780ed7df93cf38089d05025fafbd6",
+    "candidate_sha256": "6621adc517b5808548fa23c20880aba57a3780ed7df93cf38089d05025fafbd6",
+    "same": true
+  },
+  "src/mailboxes/transport-lifetime.ts": {
+    "baseline_sha256": "287b7c4449da552a2bc2df511d81fe2cb2dfe481edcdaf5a5fe0e8a39c4e83f0",
+    "candidate_sha256": "287b7c4449da552a2bc2df511d81fe2cb2dfe481edcdaf5a5fe0e8a39c4e83f0",
+    "same": true
+  },
+  "src/mailboxes/transport-child.ts": {
+    "baseline_sha256": "3b0be9a1481567cdd6c27423b8f7ef3a88007d3a92311fed21594af8b42eea20",
+    "candidate_sha256": "3b0be9a1481567cdd6c27423b8f7ef3a88007d3a92311fed21594af8b42eea20",
+    "same": true
+  },
+  "src/replies/imap.ts": {
+    "baseline_sha256": "fee7b624f6d10580e6948efc2e7b54613ba2bde0543cb40b9d6a4929006be9eb",
+    "candidate_sha256": "fee7b624f6d10580e6948efc2e7b54613ba2bde0543cb40b9d6a4929006be9eb",
+    "same": true
+  },
+  "src/replies/adapter.ts": {
+    "baseline_sha256": "1c8297159342829d7958e0b8fbb1388489c7a30eda0a4ede4bc9d66b66d50e22",
+    "candidate_sha256": "1c8297159342829d7958e0b8fbb1388489c7a30eda0a4ede4bc9d66b66d50e22",
+    "same": true
+  },
+  "src/replies/store.ts": {
+    "baseline_sha256": "76259ef3aa335eb82f2359925121dd22c6f48e59c4a34bf35cdd5d6e429cd0bd",
+    "candidate_sha256": "76259ef3aa335eb82f2359925121dd22c6f48e59c4a34bf35cdd5d6e429cd0bd",
+    "same": true
+  },
+  "src/dispatch/submission.ts": {
+    "baseline_sha256": "3a1c2f10ffc91f26317fb319dcf648f649bbafde4377ec6ac3885e00be5ade4d",
+    "candidate_sha256": "3a1c2f10ffc91f26317fb319dcf648f649bbafde4377ec6ac3885e00be5ade4d",
+    "same": true
+  },
+  "src/dispatch/message.ts": {
+    "baseline_sha256": "6a7f0d55ae5f4cd8eccf20850ce33edce58cd55fc6f785dbccdde770598d07db",
+    "candidate_sha256": "6a7f0d55ae5f4cd8eccf20850ce33edce58cd55fc6f785dbccdde770598d07db",
+    "same": true
+  },
+  "tests/f09-live-transport.test.ts": {
+    "baseline_sha256": "e1ed414155125f33bc711b605a9d4ba48fc5912af952b5db2d6e119f91db2dbd",
+    "candidate_sha256": "e1ed414155125f33bc711b605a9d4ba48fc5912af952b5db2d6e119f91db2dbd",
+    "same": true
+  },
+  "tests/f09-slot-owner-fixture.ts": {
+    "baseline_sha256": "c9c11e48e5e7af7e1fdb57f9860d043a8791f65095c35ad0683f7f51c3bd36df",
+    "candidate_sha256": "c9c11e48e5e7af7e1fdb57f9860d043a8791f65095c35ad0683f7f51c3bd36df",
+    "same": true
+  },
+  "tests/f09-transport-unit.test.ts": {
+    "baseline_sha256": "63db7fa184ea1cd05afc5e24627e49b35be810e38e2f6bbdf0d2502d2e9ff99a",
+    "candidate_sha256": "63db7fa184ea1cd05afc5e24627e49b35be810e38e2f6bbdf0d2502d2e9ff99a",
+    "same": true
+  }
+}

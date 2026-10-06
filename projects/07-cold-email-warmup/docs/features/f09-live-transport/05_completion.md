@@ -1,6 +1,6 @@
-# F09 — completion plan and future acceptance bindings
+# F09 — local acceptance and delivery bindings
 
-PLAN only, source801b1102972f76e67f17ce7f7dada7cc79de5ec7. No implementation, PhaseII verdict or runtime PASS is asserted. The following files/titles are FUTURE PhaseIII targets and must physically exist with passing assertions before --completion may pass.
+Local acceptance source `e043bb270a8dec50d2e090379ffff5f655a3461f`; independent review ACCEPT all9AC, report artifact e6fdbb4d. Final affected12/12 and type/lint/build pass; prior PG147/unit57/physical socket1 are explicitly composed through unchanged-component hashes, not claimed rerun. Two old-behavior mutations fail; independent TLS probe times out at10006ms with onlyEHLO. Historical failed timing receipts remain failed. These nine files/titles now exist; full-project completion retains8 unrelated future/inherited gaps. External activation is not authorized.
 
 ## Criterion coverage
 
@@ -22,9 +22,9 @@ Parent binding: AC-expanded-mvp-003 → tests/expanded-mvp-03.test.ts → `ambig
 
 PLAN: original installed check-pipeline-gaps.sh full PROJECT --traceability with root feature.md and sparc-prd-mini role-map sources; only exit0 advances. Preserve stdout/exit and spec SHA in planner receipt. Independent VALIDATE owns validation-report.md, INVEST/SMART/BDD and exact revision/scenario gate. Planner cannot issue own PhaseII verdict. Implementation freezes source/spec and ownership; original --completion must verify actual test files/titles. Fresh independent review receives specification+validation and AC witnesses; --review contract requires current spec SHA. Full tests/typecheck/lint/build, PG/TLS/races/crash/canaries/mutations from04 are mandatory. E2E preflight during PLAN: not_applicable, documentation-only; actual runtime preflight belongs immediately before E2E.
 
-Next responsible executor: coordinator assigns independent validator immediately after this coherent PLAN receipt, then bounded Sol implementation and fresh Astra review. Requested model names are intent; actual native model/effort/token/cost are null with host_not_exposed until host metadata exists. Telemetry owner is coordinator at docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/. No root/shared toolkit changes.
+Next responsible executor: coordinator delivers the accepted source and assigns F10 planning, then independent validation and bounded implementation. Requested model names are intent; actual native model/effort/token/cost are null with host_not_exposed until host metadata exists. Telemetry owner is coordinator at docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/. No root/shared toolkit changes.
 
-F09-V1 corrective acceptance is pending independent revalidation; historical NEEDS_WORK report stays unchanged. The AC007 future witness must include real suspended owner past120s, physical peer socket counts≤2SMTP/4IMAP and1/protocol/mailbox, no expiry reclaim, confirmed close/exit release, stale CAS, DB failure and orphan restart. Structural traceability alone does not accept this safety design.
+F09-V1 and F09-R1 are closed by independent revalidation/review; historical NEEDS_WORK reports remain archived. The accepted AC007 witness includes real suspended owner past120s, physical peer socket counts≤2SMTP/4IMAP and1/protocol/mailbox, no expiry reclaim, confirmed close/exit release, stale CAS, DB failure and orphan restart. Structural traceability alone does not accept this safety design.
 
 ## Deployment Plan
 

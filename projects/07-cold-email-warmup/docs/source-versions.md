@@ -1,9 +1,9 @@
-# Source versions — current F08 coordination
+# Source versions — current F09 coordination
 
 **Правки и выводы:** да
 **Проверка версий:** ВЫПОЛНЕНА
 
-This declaration binds the current planning conclusions to actual source bytes. F08 runtime acceptance is established separately by its source-bound final review and attempt manifests. These rows only verify unchanged planning sources. Coordinator owns this declaration; the isolated author cannot edit these sources.
+This declaration binds the current planning conclusions to actual source bytes. F08 runtime acceptance is established separately by its source-bound final review and attempt manifests. These rows verify frozen planning and independent acceptance report bytes. Coordinator owns this declaration; the isolated author cannot edit these sources.
 
 ## Выводы и правки
 
@@ -14,3 +14,7 @@ This declaration binds the current planning conclusions to actual source bytes. 
 | F08 native protocol capability contract | вывод | docs/features/f08-live-diagnostics/capability-contracts.md | 6c91d0b611c24a9129dda339d9ed9b12000889bc53691879d8f17f821f4e8fb4 |
 | Approved expanded scope and later external gate | вывод | docs/features/expanded-mvp/01_specification.md | dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a |
 | F08 accepted scoped review on521ae2b3 | вывод | docs/features/f08-live-diagnostics/review-report.md | 2a76aba82599eff797fd0d76ccb57b6016671888300e64561e5d84ecac13a801 |
+| F09 scope frozen | вывод | docs/features/f09-live-transport/01_specification.md | 6e10f17fd5373c92a8725d6298827265f6b5082d8c37bba45777c3d7a7a756e9 |
+| F09 plan READY after physical owner correction | вывод | docs/features/f09-live-transport/validation-report.md | 3edc2464fa605bad47f6cc7783d41081d5b2f33c3fcb5fa79f367a11adf19d17 |
+| F09 native transport capabilities | вывод | docs/features/f09-live-transport/capability-contracts.md | e0ff418c52f33b4ad566a0a546add3b911dce78331f08566af3e79893f766dfb |
+| F09 ACCEPT source e043bb27; R1 closed | вывод | docs/features/f09-live-transport/review-report.md | ce41730fd3368f0cfe404a65fc717cf676afc8e245bb6701ce7ed7f9f06e15e0 |
