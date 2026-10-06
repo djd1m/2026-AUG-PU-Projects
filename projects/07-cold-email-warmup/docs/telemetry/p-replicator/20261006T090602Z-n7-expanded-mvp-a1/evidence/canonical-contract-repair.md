@@ -1,0 +1,3 @@
+# Canonical validation index bounded repair
+
+Actual installed checker established missing Spec revision and Criterion scenarios at project contour. Source c80504ac; Specification unchanged SHA256 9faaacfa11f4c6351f936d26e1ee74839eadab6b47289a7d1890ba5878dd211c. Historical report bytes archived at docs/validation-history/canonical-pre-contract-format-20261006.md SHA256 c7dd0c816ff40e724423aa8773dbb3afe8ddee4574e1932ccec38734da03ce45. Coordinator owns only canonical index/archive; Sol legacy writer owns six feature indices. No AC headings occur in canonical Specification; FR/NFR count16; table has zero rows intentionally. Independent format/spec review required before integration acceptance.

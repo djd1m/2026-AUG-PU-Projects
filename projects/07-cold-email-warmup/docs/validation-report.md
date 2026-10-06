@@ -1,20 +1,18 @@
-**Verdict:** 🟢 READY — design validation; runtime acceptance pending
+# Canonical design validation index
+Spec revision: sha256:9faaacfa11f4c6351f936d26e1ee74839eadab6b47289a7d1890ba5878dd211c
 
-Validated specification at source `1ed1bc40b52f0a489ae27ec1177df83a52e0c0a9`.
-This index summarizes independent reports; it does not replace historical findings.
+Updated 2026-10-06 from source c80504ac. This is a source-bound format index, not a rerun of runtime acceptance or independent design review.
 
-- [Original review](validation-history/initial-validation-0d644c2e.md):2high/4medium.
-- [Revalidation](validation-recheck-report.md) closes V01,V02,V04,V05,V06.
-- [Focused V03 review](validation-v03-report.md) closes explicit crash-before/after
-  page commit rollback/replay acceptance branch. All six findings now closed.
+The exact prior index is preserved at [canonical-pre-contract-format-20261006.md](validation-history/canonical-pre-contract-format-20261006.md). Its source-bound historical design verdict and limitations remain historical.
 
-V03 terminal receipt was written within172.665s of launch. CLI wrapper later hit
-its180s deadline(exit124) before final chat return; no exit0 is claimed. The
-substantive terminal file, bound source and preserved launch digest are the
-completion evidence. Host rollout independently confirms gpt-6-astra/high;
-rawusage and timeout are preserved in run evidence/v03-runtime.json.
+Canonical Specification.md declares 16 FR/NFR machine headings and no AC machine headings. Its detailed scenarios remain SC-US-001-1 through SC-US-013-3 and security Examples; per-feature AC are indexed in their own active feature validation reports. No canonical AC was invented or omitted to populate this table.
 
-This accepts written design for toolkit/implementation. Backend is absent;
-54 scenario IDs remain future runtime tests. Historical source-journey
-check-look-trace exit2 is a named limitation, not a pass. No real SMTP, provider
-permission, charge, deployment or productE2E is authorized or certified here.
+## Criterion scenarios
+| Criterion | Scenario |
+| --- | --- |
+
+## Scope of evidence
+
+This empty canonical AC table is intentional because the canonical document has no AC headings; original SC scenarios and FR/NFR algorithm claims are unchanged. Legacy AC-N7-001..012 referenced in prose live in plans/mvp-xl-plan.md, not machine AC headings in Specification.md. The full installed checker must confirm this inventory; a format pass is not runtime evidence.
+
+Current software acceptance is recorded in Completion.md and accepted feature receipts. F06 PR delivery remains blocked by GitHub403. Expanded implementation and external live gates remain pending.
