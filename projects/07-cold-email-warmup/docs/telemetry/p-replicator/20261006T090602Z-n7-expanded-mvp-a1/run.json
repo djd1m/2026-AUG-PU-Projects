@@ -46,7 +46,7 @@
   ],
   "quality": {
     "required_gates_passed": false,
-    "ac_met": 1,
+    "ac_met": 2,
     "ac_total": 9,
     "confirmed_findings_by_severity": {
       "high": 3
@@ -54,16 +54,16 @@
     "false_positive_findings": null,
     "known_defects_missed": null,
     "regressions": null,
-    "followup_status": "F07 locally accepted. F08 coherent implementation candidate; specific phase/race/CLI/UI/canary witnesses pending; not accepted."
+    "followup_status": "F07/F08 locally accepted, expanded AC001/002 met; AC003\u2013009 pending. Whole required_gates_passed remains false."
   },
   "metrics": {
-    "elapsed_wall_ms": 10227884,
+    "elapsed_wall_ms": 12390538,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-06T11:56:30.762591+00:00"
+    "elapsed_as_of": "2026-10-06T12:32:33.417127+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -73,7 +73,7 @@
     "No prelaunch serialized launch digest for native PLAN receipt; terminal receipt and output SHA verified, not companion delivery attestation",
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred."
   ],
-  "current_stage": "REVIEW F08 R1/R2 corrections",
+  "current_stage": "DELIVERY F08 then PLAN F09",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -135,9 +135,9 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_expanded_coordinator",
-    "executor": "f08_reviewer_a1 r2 actual first read12:23:15UTC confirmed",
+    "executor": "coordinator finishing accepted F08 delivery, next F09 planner launch immediately",
     "source_revision": "521ae2b3208c7ffa2f33a6701c84a816f07c3d5a",
-    "next": "Focused independent acceptance then integrate/push and actual F09 full feature route"
+    "next": "Commit/push accepted docs and actual M0-to-XL route, launch F09 PLAN"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -210,13 +210,19 @@
     "validation_artifact_revision": "db47f8fd3597d547f79e501b9afa7d08a800b67a"
   },
   "f08_review": {
-    "verdict": "NEEDS_WORK",
-    "source_revision": "00f6888fe753a546ac17f63eb1eda270e260600a",
-    "findings": [
+    "verdict": "ACCEPT",
+    "source_revision": "521ae2b3208c7ffa2f33a6701c84a816f07c3d5a",
+    "integrated_code_revision": "e7db91461aa58724eecb0443be470c8dc20f8682",
+    "resolved_findings": [
       "F08-R1",
       "F08-R2"
     ],
-    "receipt_exit": 0
+    "report_sha256": "d8f8b00f4857ed932637c4b5d9e3b825c4dcae4e1e3778e271b7a4348be820c2",
+    "receipt_exit": 0,
+    "integrated_phase12_exit": 0,
+    "integrated_completion_exit": 1,
+    "completion_gaps": 9,
+    "review_contract_exit": 0
   },
   "f08_candidate_runtime": {
     "source_revision": "00f6888fe753a546ac17f63eb1eda270e260600a",

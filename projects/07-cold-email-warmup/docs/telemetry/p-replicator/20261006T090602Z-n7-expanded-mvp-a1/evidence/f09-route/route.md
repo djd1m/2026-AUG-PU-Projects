@@ -1,0 +1,5 @@
+# F09 /run mvp → /next → /go → full /feature AUTO
+
+F08 is independently accepted on521ae2b3 and integrated e7db9146. Roadmap marks F08 done and selects F09, whose dependency is met. Actual mechanical route M/exit0 on dispatch adapter/submission, replies adapter/store and config is only a lower bound. Effective XL: external SMTP submission ambiguity and UID IMAP recovery affect irreversible delivery, stop fencing, quotas and credential use. Preserve full five-role PLAN, independent requirements validation, actual protocol/PG/fault/concurrency/secret/mutation checks and independent code review. OWN-N7-005 already covers this slice/team/model route; no new plan approval. Real external mail/provider access/deployment/spend remain separately gated.
+
+Next author is bounded Astra/high planner in a fresh isolated worktree; docs-only, source runtime untouched. Native actual model and usage are unavailable/null. Local no-semantic recall executed11:54 before dependent work; F09 primary protocol memo is preparation only.

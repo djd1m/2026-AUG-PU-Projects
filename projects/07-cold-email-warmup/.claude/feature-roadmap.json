@@ -176,7 +176,7 @@
       "number": 8,
       "name": "Independent pinned SMTP and IMAP diagnostics",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "f07-connected-capacity"
@@ -197,7 +197,7 @@
       "number": 9,
       "name": "Safe live SMTP and bounded UID IMAP adapters",
       "priority": "mvp",
-      "status": "planned",
+      "status": "next",
       "complexity": "complex",
       "depends_on": [
         "f08-live-diagnostics"
@@ -344,7 +344,7 @@
       "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a"
     }
   ],
-  "last_completed": "f07-connected-capacity",
+  "last_completed": "f08-live-diagnostics",
   "scope_decision": "OWN-N7-004",
   "scope_plan": "docs/plans/expanded-mvp-plan.md",
   "scope_checkpoint": "approved OWN-N7-005",

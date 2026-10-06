@@ -1,8 +1,7 @@
 # Project: N7 — Почтовый прогрев
 
 ## Overview
-Принятый локальный MVP SMTP/IMAP warmup и цепочек; expanded MVP по OWN-N7-004
-планируется в docs/plans/expanded-mvp-plan.md.
+Принятый локальный MVP SMTP/IMAP warmup и цепочек; expanded MVP утверждён OWN-N7-005 и реализуется по плану в docs/plans/expanded-mvp-plan.md.
 Canonical product/architecture docs: docs/. Validated design: docs/validation-report.md.
 Локальный backend и кабинет приняты; source-bound status/PR: docs/Completion.md.
 
@@ -11,7 +10,8 @@ Canonical product/architecture docs: docs/. Validated design: docs/validation-re
 Общий пул начинается с добровольной когорты курса; без пары показываем waiting.
 Репутация unknown до проверяемых наблюдений. OWN-N7-004 включает AI replies,
 unlimited connected mailboxes и живой автопрогрев в expanded MVP. CRM и покупка
-доменов исключены; реализация и acceptance расширения пока не выполнены.
+доменов исключены. F07 и F08 приняты на локальных протокольных fixtures; F09–F14 и
+отдельно разрешаемый F15 live-пилот ещё не завершены.
 
 ## Architecture
 Distributed monolith: web/API и отдельный worker используют PostgreSQL16, очередь
@@ -20,7 +20,8 @@ src/auth, src/mailboxes, src/dispatch, src/replies, src/billing, src/growth и w
 Схема и алгоритмы: docs/Architecture.md, docs/Pseudocode.md.
 
 ## Tech Stack
-Node22, TypeScript, native HTTP, pg, Argon2id; SMTP/IMAP только local adapters. UI — доступная
+Node22, TypeScript, native HTTP, pg, Argon2id; F08 использует native TLS для SMTP/IMAP
+диагностики подключения и AUTH. Отправка и чтение почты пока local adapters. UI — доступная
 серверная оболочка и TypeScript по CJM A. Browser только общий Docker Playwright1.63.0.
 Версии закреплены в package-lock.json; внутреннее reuse описано в docs/reuse-inventory.md.
 

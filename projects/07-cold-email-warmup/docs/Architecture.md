@@ -6,6 +6,17 @@
 > принятого локального MVP; его тесты не доказывают готовность расширения.
 
 
+## Реализованная delta F08
+
+[Архитектура F08](features/f08-live-diagnostics/03_architecture.md) реализует отдельные
+SMTP/IMAP проверки TLS и AUTH без операций с письмами. Native Node TLS использует
+проверенные DNS-ответы и числовой IP с исходным TLS hostname, ограниченные фазы/байты
+и отмену. Операторская capability обязательна; durable authority revision и mailbox
+revision/attempt проверяются под первым global lock(7,1). Отмена до отправки COMMIT
+откатывает результат; отправленный COMMIT нельзя отменить задним числом. Диагностика
+не выдаёт lease, consent или право отправки. Локальные fixtures приняты; внешние
+провайдеры и F09 отправка/чтение требуют собственных проверок и разрешений.
+
 ## Architecture Overview
 
 Distributed Monolith in project monorepo. Local Docker Compose on the development host, separate N7 network and volumes.

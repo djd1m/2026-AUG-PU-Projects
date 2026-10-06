@@ -139,7 +139,7 @@ bounded inbox context → OpenAI draft → HITL/отдельный autopilot con
 
 2026-10-06 legacy F01–F06 согласованы с текущим role map с сохранением исходных
 требований и исторических отчётов. Полные PLAN/VALIDATE проверки восьми feature
-контуров проходят; независимое ревью приняло подготовку. F07 принят независимым ревью: unit40, realPG126, focused11 и browser10 проверок прошли;93 runtime-файла совпадают с исходниками. Full completion остаётся FAIL10: восемь будущих expanded-привязок и две F06-привязки. Следующий этап — F08 SMTP/IMAP диагностика; live-действия требуют отдельного разрешения.
+контуров проходят; независимое ревью приняло подготовку. F07 принят независимым ревью: unit40, realPG126, focused11 и browser10 проверок прошли;93 runtime-файла совпадают с исходниками. F08 затем принят на source521ae2b3: realPG146, affected20 и новые type/lint/build/audit проходят. Независимое ревью выявило и закрыло две High-ошибки: отмена во время финального ожидания БД и обязательная operator capability. Unit54, TLS/mutations и browser20 сохранены с точными компонентными source bindings; новый browser run для521 не заявлен. Полные PLAN/VALIDATE проходят для9 контуров, completion остаётся FAIL9: семь будущих expanded-привязок и две F06-привязки. Следующий этап — F09 SMTP/IMAP transport; live-действия требуют отдельного разрешения.
 Local fixture acceptance и live acceptance учитываются отдельно.
 
 

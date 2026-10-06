@@ -1,6 +1,6 @@
 # Completion — expanded-mvp delta v1
 
-Progressive completion index. AC001 now names an actual F07 test at source10c8e946; the remaining eight rows are future assignments, not executed tests. F07 runtime evidence and independent acceptance are recorded in its feature report. No whole expanded-MVP or live pass is claimed; the whole Phase3 criterion gate remains unmet until the remaining bindings exist and required checks pass.
+Progressive completion index. AC001 and AC002 name actual accepted F07/F08 tests at sources10c8e946 and521ae2b3; the remaining seven rows are future assignments, not executed tests. F07 runtime evidence and independent acceptance are recorded in its feature report. No whole expanded-MVP or live pass is claimed; the whole Phase3 criterion gate remains unmet until the remaining bindings exist and required checks pass.
 
 ## Criterion coverage
 | Criterion | Test file | Test title |
@@ -48,4 +48,8 @@ AC006/007 evidence includes [ai-policy-v1](ai-policy-v1.md) frozen C01–C24 and
 
 ## F07 source-bound AC001 evidence
 
-The named parent test contains the actual101st connection, global30 admission/races, lease120 expiry/renewal/release, tenant pagination, both send endpoints and additive migration cases. Additional F07 billing/unit/browser and existing full dispatch/submission/suppression regressions are required by `../f07-connected-capacity/05_completion.md`; one table witness does not alone prove the composite criterion. Source10c8e946 runtime receipt and logs are preserved under `../../telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f07-implement-a1/`. AC002–009 remain pending their corresponding implementation/runtime stages; F15 needs separate live authorization.
+The named parent test contains the actual101st connection, global30 admission/races, lease120 expiry/renewal/release, tenant pagination, both send endpoints and additive migration cases. Additional F07 billing/unit/browser and existing full dispatch/submission/suppression regressions are required by `../f07-connected-capacity/05_completion.md`; one table witness does not alone prove the composite criterion. Source10c8e946 runtime receipt and logs are preserved under `../../telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f07-implement-a1/`. AC003–009 remain pending their corresponding implementation/runtime stages; F15 needs separate live authorization.
+
+## F08 source-bound AC002 evidence
+
+F08 accepted on `521ae2b3208c7ffa2f33a6701c84a816f07c3d5a` after independent R1/R2 correction review. The parent witness runs explicitly outside the integration glob. Exact final PostgreSQL146 and affected20 checks pass; unchanged unit54, real TLS, three guard mutations and browser20 evidence retain their earlier component source bindings. Browser evidence is00f6888f, not a claimed521 final-image run. [Scoped completion](../f08-live-diagnostics/05_completion.md) and [independent review](../f08-live-diagnostics/review-report.md) define the composed acceptance. Native authentication diagnostics are implemented; external provider authorization, sending/reading transports, workers and the live pilot remain separate pending stages.

@@ -6,6 +6,20 @@
 > принятого локального MVP; его тесты не доказывают готовность расширения.
 
 
+## Текущее расширение — 2026-10-06
+
+F07 connected capacity и F08 независимая SMTP/IMAP диагностика приняты локально.
+F08 source `521ae2b3`, интегрированный код `e7db9146`: итоговые realPG146/146,
+affected20/20, type/lint/build и dependency audit проходят. Независимый отчёт
+[F08 ACCEPT](features/f08-live-diagnostics/review-report.md) сохраняет точные привязки
+unit54/TLS/mutations/browser20 к неизменённым компонентам; новый финальный browser run не заявлен.
+Полные PLAN/VALIDATE проходят для9 контуров; completion остаётся FAIL9
+(семь будущих expanded witnesses и две F06-привязки), без пробелов F08.
+Следующий этап — F09 live transport; AI, persistent workers и live-пилот пока не приняты.
+Внешние отправки/LLM/расходы/deployment требуют соответствующего разрешения.
+
+## Историческая приёмка исходного локального MVP
+
 2026-10-03: F01–F05 и F06 A1–A6/B1–B4 приняты. B5 документы/toolkit завершены.
 B6: фактическая попытка GitHub create_pull_request получила403
 `Resource not accessible by integration`; PR не создан. AC-N7-012 остаётся PARTIAL,
@@ -66,4 +80,4 @@ SC scenarios are unchanged. This canonical table has zero rows for that reason.
 Per-feature AC coverage remains in each active feature completion role.
 This format correction is not a fresh runtime acceptance: prior bytes are retained
 at validation-history/Completion.pre-contract-table-20261006.md. The prior final
-paragraph describes the historical local MVP; expanded F07-F15 work remains pending.
+paragraph describes the historical local MVP; F07/F08 are now locally accepted; expanded F09-F15 work remains pending.
