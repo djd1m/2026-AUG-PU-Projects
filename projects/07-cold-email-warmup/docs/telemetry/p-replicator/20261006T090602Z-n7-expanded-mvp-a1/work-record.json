@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "plan",
+  "stage": "implement",
   "roots": {
     "project": "."
   },
   "identity": {
     "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
     "work_unit_id": "expanded-mvp",
-    "current_attempt_id": "f08-validate-r2"
+    "current_attempt_id": "f08-implement-a1"
   },
   "telemetry": {
     "run": {
@@ -22,7 +22,7 @@
   },
   "source": {
     "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
-    "current_revision": "8c2f4dc57aeb6b71f19b160755b4372d338f1ee1",
+    "current_revision": "a746ad2ce67cc70afd53306713f311045b1a0a92",
     "build_revision": null,
     "requirements": [
       {
@@ -45,12 +45,12 @@
       }
     ],
     "continuity": {
-      "expected_revision": "8c2f4dc57aeb6b71f19b160755b4372d338f1ee1",
-      "observed_revision": "8c2f4dc57aeb6b71f19b160755b4372d338f1ee1",
+      "expected_revision": "a746ad2ce67cc70afd53306713f311045b1a0a92",
+      "observed_revision": "a746ad2ce67cc70afd53306713f311045b1a0a92",
       "reconciliation": null
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
-    "integration_note": "F07 accepted source10c8e946 integrated unchanged productbytes to7fbc1874; reviewed docs/runtimeevidence androute saved e6100674"
+    "integration_note": "F08 five-role plan and F08-V1 correction accepted READY, integrated b23d5b40 then full Phase I/II0/re-route/dispatch frozen a746ad2c. Existing F07 product source remains accepted."
   },
   "prepare": {
     "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
@@ -154,9 +154,9 @@
       "phase": "implementation",
       "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
       "tier": "XL",
-      "rationale": "F07 commercial entitlement, global active admission and final sending fence; approved OWN-N7-005, full PLAN/VALIDATE0, independent preparation ACCEPT, F07 READY",
+      "rationale": "F08 credential/TLS/DNS/protocol/authority safety; actual mechanicalL1, inheritedXL, corrected independentREADY fullPhase1/2=0; owner005",
       "script": {
-        "input": "src/billing/plans.ts; src/mailboxes/store.ts; src/mailboxes/capacity.ts; db/012-capacity.sql; src/dispatch/eligibility.ts; src/web/mailboxes.ts",
+        "input": "F08diagnostics,diagnostic-authority,network,store,sharedstop,db013,config,server,web",
         "exit_code": 1
       }
     }
@@ -183,7 +183,7 @@
   },
   "preflight": {
     "status": "not_applicable",
-    "reason": "F08 planningdocs only; F07 actualready/browserproof immutable under f07-implement-a1 evidence. Freshpreflight mandatory before any later actualE2E.",
+    "reason": "F08 implementation started; actual new E2E not yet executed. Read-only exact source/build/environment readiness required immediately before actual E2E; F07 historical evidence remains separate.",
     "external_actions_executed": false,
     "e2e_claim": null
   },
@@ -267,6 +267,10 @@
     {
       "id": "f08-validate-r2",
       "status": "completed"
+    },
+    {
+      "id": "f08-implement-a1",
+      "status": "active"
     }
   ],
   "work_units": [
@@ -305,7 +309,7 @@
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-06T11:18:00Z",
+    "last_reported_at": "2026-10-06T11:26:00Z",
     "responsible": "n7_expanded_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true
   }
