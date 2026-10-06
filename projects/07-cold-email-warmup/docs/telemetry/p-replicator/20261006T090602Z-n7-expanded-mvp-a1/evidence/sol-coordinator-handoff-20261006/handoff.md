@@ -55,3 +55,5 @@ Keep A11 canonical+observer running through ~17:48 and remaining fittingchecks. 
 ## Owner disk instruction, 2026-10-06 18:00 UTC
 
 Measure statvfs available bytes/inodes before each heavy build and new worktree, report in the 10-minute status. Warn below2GiB and reconsider that heavy operation while continuing independent light work. Reuse safely completed committed isolated trees where possible. No broad prune or media/DB cleanup; delete only own confirmed obsolete artifacts after terminal receipts and verified absence of active/dirty ownership. No monitoring daemon is introduced.
+
+2026-10-06 runner immutability lesson: bind every runner, guard, preload and fixture SHA before launch and leave those bytes unchanged until owned children join and the terminal receipt is sealed. Correct harness code only in a new runner filename after the previous owned children exit. A16 edited its running shell and lost the exact native exit despite successful TAP; preserve wrapper exit2/native exit null, repeat only the missing mandatory witness in a new bounded attempt. No new validator or global hook.

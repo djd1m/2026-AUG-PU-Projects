@@ -1,0 +1,1353 @@
+{
+  "source_revision": "eae17bbea36312ee5290adb8390e066b1f0d6c2a",
+  "raw_path": "/tmp/n7-f10-frozen-verify-a16/cadence-1791313358589.json",
+  "raw_sha256": "85ef9a60197e5105acf42582eeb3033ec2de8ff17b92f9fcd70ab132506eb78a",
+  "begun": 1791313358589,
+  "ended": 1791313689259,
+  "duration_ms": 330670,
+  "phases": [
+    {
+      "phase": "fault",
+      "at": 1791313448719
+    },
+    {
+      "phase": "explicit_fixture_operator_retry",
+      "count": 30,
+      "at": 1791313479213
+    },
+    {
+      "phase": "fault_restored",
+      "at": 1791313479213
+    },
+    {
+      "phase": "explicit_fixture_operator_retry_after_drain",
+      "count": 0,
+      "at": 1791313508792
+    },
+    {
+      "phase": "restart",
+      "at": 1791313509107,
+      "drainMs": 167
+    }
+  ],
+  "drain_ms": 167,
+  "drain_outcomes": [
+    {
+      "at": 1791313508789,
+      "elapsedMs": 167,
+      "code": 0,
+      "signal": null,
+      "drained": true
+    },
+    {
+      "at": 1791313689258,
+      "elapsedMs": 149,
+      "code": 0,
+      "signal": null,
+      "drained": true
+    }
+  ],
+  "all30_count": 30,
+  "fixture_max_connections": 4,
+  "resource_samples": 609,
+  "max_slots": 4,
+  "max_child_operations": 4,
+  "max_rss_kb_aggregate": 359244,
+  "max_fds_aggregate": 124,
+  "CPU_count": 2,
+  "per_mailbox": [
+    {
+      "id": "4fc3ed3b-dfea-44aa-81ac-3611110ae94c",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 11599,
+        "max_gap_ms": 13329,
+        "censored_tail_ms": 3400,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 2623,
+        "max_gap_ms": 5102,
+        "censored_tail_ms": 3991,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 10415,
+        "max_gap_ms": 14458,
+        "censored_tail_ms": 4075,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 812,
+        "max_gap_ms": 5109,
+        "censored_tail_ms": 4360,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 2029,
+        "max_gap_ms": 61007,
+        "censored_tail_ms": 25636,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "2c30df6f-b8d7-49f7-a7f0-be4535ec8493",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 12230,
+        "max_gap_ms": 13322,
+        "censored_tail_ms": 3441,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 3102,
+        "max_gap_ms": 5198,
+        "censored_tail_ms": 3815,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 10706,
+        "max_gap_ms": 14455,
+        "censored_tail_ms": 3818,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 1444,
+        "max_gap_ms": 5150,
+        "censored_tail_ms": 4123,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 2194,
+        "max_gap_ms": 61032,
+        "censored_tail_ms": 24485,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "1af35c57-9111-4b4d-902f-5349d37ec973",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 10880,
+        "max_gap_ms": 13308,
+        "censored_tail_ms": 4288,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 22,
+        "first_ms": 1298,
+        "max_gap_ms": 4946,
+        "censored_tail_ms": 61,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 13,
+        "first_ms": 14282,
+        "max_gap_ms": 14094,
+        "censored_tail_ms": 12063,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 41,
+        "first_ms": 4791,
+        "max_gap_ms": 5206,
+        "censored_tail_ms": 4929,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 1716,
+        "max_gap_ms": 60905,
+        "censored_tail_ms": 25936,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "7c3742f8-0261-49ea-9d7f-3f2f37ff4435",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 13602,
+        "max_gap_ms": 13295,
+        "censored_tail_ms": 2339,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 3934,
+        "max_gap_ms": 4927,
+        "censored_tail_ms": 2872,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 11894,
+        "max_gap_ms": 14336,
+        "censored_tail_ms": 2773,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 2495,
+        "max_gap_ms": 5092,
+        "censored_tail_ms": 3395,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 2954,
+        "max_gap_ms": 60972,
+        "censored_tail_ms": 24016,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "cb611985-afba-44a2-9115-bb8ae0f316fe",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 14574,
+        "max_gap_ms": 13476,
+        "censored_tail_ms": 991,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 4965,
+        "max_gap_ms": 5036,
+        "censored_tail_ms": 1808,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 12980,
+        "max_gap_ms": 14612,
+        "censored_tail_ms": 1269,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 3701,
+        "max_gap_ms": 5300,
+        "censored_tail_ms": 1844,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 3386,
+        "max_gap_ms": 61472,
+        "censored_tail_ms": 22071,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "f682e3af-3801-42f0-a784-fc00245f2020",
+      "healthy_completions": {
+        "count": 6,
+        "first_ms": 14864,
+        "max_gap_ms": 13449,
+        "censored_tail_ms": 11524,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 5529,
+        "max_gap_ms": 4992,
+        "censored_tail_ms": 505,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 9639,
+        "max_gap_ms": 14439,
+        "censored_tail_ms": 4816,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 4334,
+        "max_gap_ms": 5158,
+        "censored_tail_ms": 1018,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 3607,
+        "max_gap_ms": 61422,
+        "censored_tail_ms": 21636,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "172c9479-8bfa-4293-b746-8c730958cd85",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 11311,
+        "max_gap_ms": 13539,
+        "censored_tail_ms": 3843,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 2123,
+        "max_gap_ms": 5105,
+        "censored_tail_ms": 4281,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 13,
+        "first_ms": 14150,
+        "max_gap_ms": 13886,
+        "censored_tail_ms": 11816,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 41,
+        "first_ms": 5125,
+        "max_gap_ms": 5184,
+        "censored_tail_ms": 4789,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 1860,
+        "max_gap_ms": 60940,
+        "censored_tail_ms": 25836,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "c504050b-456a-4a24-88e8-cec0ea0eefbf",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 14007,
+        "max_gap_ms": 13524,
+        "censored_tail_ms": 1943,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 4545,
+        "max_gap_ms": 5003,
+        "censored_tail_ms": 2232,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 12464,
+        "max_gap_ms": 14379,
+        "censored_tail_ms": 1687,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 3330,
+        "max_gap_ms": 5174,
+        "censored_tail_ms": 2162,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 3201,
+        "max_gap_ms": 61346,
+        "censored_tail_ms": 22351,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "46cda45c-dc36-45cd-98fa-c1237710322f",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 12212,
+        "max_gap_ms": 13617,
+        "censored_tail_ms": 3303,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 2858,
+        "max_gap_ms": 5041,
+        "censored_tail_ms": 3823,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 10673,
+        "max_gap_ms": 14532,
+        "censored_tail_ms": 3720,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 830,
+        "max_gap_ms": 5529,
+        "censored_tail_ms": 4218,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 2110,
+        "max_gap_ms": 61017,
+        "censored_tail_ms": 25584,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "58c8f2f8-d6ad-405b-ac31-97af69d92ed8",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 12241,
+        "max_gap_ms": 13268,
+        "censored_tail_ms": 3147,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 3160,
+        "max_gap_ms": 5172,
+        "censored_tail_ms": 3704,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 11120,
+        "max_gap_ms": 14428,
+        "censored_tail_ms": 3699,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 1610,
+        "max_gap_ms": 5043,
+        "censored_tail_ms": 4056,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 2317,
+        "max_gap_ms": 60993,
+        "censored_tail_ms": 24402,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "0d7b5a76-92cf-48eb-bee7-e8d33cee78ef",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 10720,
+        "max_gap_ms": 13669,
+        "censored_tail_ms": 4154,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 22,
+        "first_ms": 1225,
+        "max_gap_ms": 5036,
+        "censored_tail_ms": 365,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 9586,
+        "max_gap_ms": 14678,
+        "censored_tail_ms": 4954,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 4515,
+        "max_gap_ms": 5200,
+        "censored_tail_ms": 880,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 1370,
+        "max_gap_ms": 60901,
+        "censored_tail_ms": 26098,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "c1dda6c7-202c-42e1-8ec1-f34708ac39d3",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 13921,
+        "max_gap_ms": 13246,
+        "censored_tail_ms": 1734,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 4483,
+        "max_gap_ms": 5078,
+        "censored_tail_ms": 2308,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 12582,
+        "max_gap_ms": 14693,
+        "censored_tail_ms": 1977,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 3085,
+        "max_gap_ms": 5105,
+        "censored_tail_ms": 2703,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 3146,
+        "max_gap_ms": 61324,
+        "censored_tail_ms": 22529,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "65f130ed-1f7c-43b5-a93f-c112269e5098",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 12912,
+        "max_gap_ms": 13113,
+        "censored_tail_ms": 2908,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 3669,
+        "max_gap_ms": 4719,
+        "censored_tail_ms": 3284,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 11330,
+        "max_gap_ms": 14290,
+        "censored_tail_ms": 2796,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 2092,
+        "max_gap_ms": 5213,
+        "censored_tail_ms": 3695,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 2716,
+        "max_gap_ms": 60953,
+        "censored_tail_ms": 24192,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "123993c6-216e-4fef-9ba6-2b707b838d1f",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 11116,
+        "max_gap_ms": 13543,
+        "censored_tail_ms": 4022,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 1387,
+        "max_gap_ms": 5069,
+        "censored_tail_ms": 4454,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 13,
+        "first_ms": 14250,
+        "max_gap_ms": 14146,
+        "censored_tail_ms": 12087,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 41,
+        "first_ms": 4847,
+        "max_gap_ms": 5259,
+        "censored_tail_ms": 4858,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 1800,
+        "max_gap_ms": 60906,
+        "censored_tail_ms": 25904,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "9d9c80f6-46e7-4d04-9da3-4f3d144c5916",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 13079,
+        "max_gap_ms": 13871,
+        "censored_tail_ms": 2899,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 3301,
+        "max_gap_ms": 5143,
+        "censored_tail_ms": 3426,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 10817,
+        "max_gap_ms": 14511,
+        "censored_tail_ms": 3430,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 1738,
+        "max_gap_ms": 5135,
+        "censored_tail_ms": 3913,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 2551,
+        "max_gap_ms": 60991,
+        "censored_tail_ms": 24286,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "f8b86143-33fa-4a31-ab22-1e5487167fe8",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 14886,
+        "max_gap_ms": 13595,
+        "censored_tail_ms": 112,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 5417,
+        "max_gap_ms": 5005,
+        "censored_tail_ms": 916,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 13,
+        "first_ms": 13583,
+        "max_gap_ms": 14233,
+        "censored_tail_ms": 12575,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 4286,
+        "max_gap_ms": 5293,
+        "censored_tail_ms": 1221,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 3585,
+        "max_gap_ms": 61480,
+        "censored_tail_ms": 21701,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "f0f35722-8e66-4667-8b94-153946ccd79f",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 14689,
+        "max_gap_ms": 13592,
+        "censored_tail_ms": 271,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 5250,
+        "max_gap_ms": 5009,
+        "censored_tail_ms": 929,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 13,
+        "first_ms": 13631,
+        "max_gap_ms": 14166,
+        "censored_tail_ms": 12620,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 4095,
+        "max_gap_ms": 5597,
+        "censored_tail_ms": 1325,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 3546,
+        "max_gap_ms": 61508,
+        "censored_tail_ms": 21783,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "f349b875-c736-47b0-942e-e113a9b60806",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 14376,
+        "max_gap_ms": 13259,
+        "censored_tail_ms": 433,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 5151,
+        "max_gap_ms": 4961,
+        "censored_tail_ms": 940,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 13143,
+        "max_gap_ms": 13996,
+        "censored_tail_ms": 913,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 4039,
+        "max_gap_ms": 5486,
+        "censored_tail_ms": 1564,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 3511,
+        "max_gap_ms": 61491,
+        "censored_tail_ms": 21869,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "96fadb76-74a1-49d3-b843-01c7760a716d",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 13546,
+        "max_gap_ms": 13302,
+        "censored_tail_ms": 1868,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 4265,
+        "max_gap_ms": 4931,
+        "censored_tail_ms": 2547,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 12689,
+        "max_gap_ms": 14470,
+        "censored_tail_ms": 1862,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 3037,
+        "max_gap_ms": 5164,
+        "censored_tail_ms": 2721,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 3063,
+        "max_gap_ms": 61310,
+        "censored_tail_ms": 22682,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "403d50b5-394e-43bd-8120-7e90f81d1fa2",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 13211,
+        "max_gap_ms": 13304,
+        "censored_tail_ms": 2563,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 3816,
+        "max_gap_ms": 4914,
+        "censored_tail_ms": 2877,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 11900,
+        "max_gap_ms": 14270,
+        "censored_tail_ms": 2787,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 2366,
+        "max_gap_ms": 5195,
+        "censored_tail_ms": 3408,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 2902,
+        "max_gap_ms": 60959,
+        "censored_tail_ms": 24075,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "c9933544-4018-4292-8dd6-52734d759817",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 13947,
+        "max_gap_ms": 13364,
+        "censored_tail_ms": 969,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 4782,
+        "max_gap_ms": 5052,
+        "censored_tail_ms": 1921,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 12967,
+        "max_gap_ms": 14496,
+        "censored_tail_ms": 1362,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 3571,
+        "max_gap_ms": 5363,
+        "censored_tail_ms": 1954,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 3335,
+        "max_gap_ms": 61410,
+        "censored_tail_ms": 22189,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "aa5734c6-c810-4128-8636-19fc05312e38",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 14300,
+        "max_gap_ms": 13186,
+        "censored_tail_ms": 999,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 4594,
+        "max_gap_ms": 4965,
+        "censored_tail_ms": 2097,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 12387,
+        "max_gap_ms": 14518,
+        "censored_tail_ms": 1592,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 3386,
+        "max_gap_ms": 5371,
+        "censored_tail_ms": 2075,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 3293,
+        "max_gap_ms": 61404,
+        "censored_tail_ms": 22243,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "715ca785-d2b6-4f27-8568-3bd96d6ab834",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 13408,
+        "max_gap_ms": 13652,
+        "censored_tail_ms": 2116,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 4165,
+        "max_gap_ms": 4954,
+        "censored_tail_ms": 2599,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 11913,
+        "max_gap_ms": 14553,
+        "censored_tail_ms": 2178,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 2808,
+        "max_gap_ms": 5167,
+        "censored_tail_ms": 2736,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 3002,
+        "max_gap_ms": 61211,
+        "censored_tail_ms": 22781,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "9ed76254-eef4-462a-b24b-ba0cec63ec02",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 12729,
+        "max_gap_ms": 13691,
+        "censored_tail_ms": 2625,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 3700,
+        "max_gap_ms": 4874,
+        "censored_tail_ms": 3127,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 11173,
+        "max_gap_ms": 14642,
+        "censored_tail_ms": 3269,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 2263,
+        "max_gap_ms": 5120,
+        "censored_tail_ms": 3676,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 2835,
+        "max_gap_ms": 60971,
+        "censored_tail_ms": 24136,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "be91b0e0-5bc3-438f-abaf-f13e4131996d",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 14408,
+        "max_gap_ms": 13343,
+        "censored_tail_ms": 546,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 5090,
+        "max_gap_ms": 4986,
+        "censored_tail_ms": 1694,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 13053,
+        "max_gap_ms": 14589,
+        "censored_tail_ms": 1094,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 3846,
+        "max_gap_ms": 5513,
+        "censored_tail_ms": 1673,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 3411,
+        "max_gap_ms": 61482,
+        "censored_tail_ms": 21999,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "2ab7282d-6bf8-460c-858d-5e4087666b05",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 11282,
+        "max_gap_ms": 13232,
+        "censored_tail_ms": 3835,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 2519,
+        "max_gap_ms": 5182,
+        "censored_tail_ms": 4146,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 10489,
+        "max_gap_ms": 14404,
+        "censored_tail_ms": 4226,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 793,
+        "max_gap_ms": 5183,
+        "censored_tail_ms": 4478,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 1981,
+        "max_gap_ms": 60960,
+        "censored_tail_ms": 25732,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "28ed9b10-7447-4778-a3ec-b50e2a85df2a",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 11458,
+        "max_gap_ms": 13091,
+        "censored_tail_ms": 3722,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 2232,
+        "max_gap_ms": 5005,
+        "censored_tail_ms": 4212,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 10261,
+        "max_gap_ms": 14347,
+        "censored_tail_ms": 3923,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 759,
+        "max_gap_ms": 5018,
+        "censored_tail_ms": 4626,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 1943,
+        "max_gap_ms": 60944,
+        "censored_tail_ms": 25794,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "123fe6a6-5665-43d0-bdd8-9093a06f07fa",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 10591,
+        "max_gap_ms": 13137,
+        "censored_tail_ms": 4218,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 22,
+        "first_ms": 1256,
+        "max_gap_ms": 5071,
+        "censored_tail_ms": 179,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 13,
+        "first_ms": 14013,
+        "max_gap_ms": 14237,
+        "censored_tail_ms": 11882,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 41,
+        "first_ms": 4594,
+        "max_gap_ms": 5269,
+        "censored_tail_ms": 5089,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 1483,
+        "max_gap_ms": 60849,
+        "censored_tail_ms": 26044,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "2ed5dfce-782d-4fed-a9a7-bbc8c4c4e1ae",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 12842,
+        "max_gap_ms": 13322,
+        "censored_tail_ms": 2672,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 3517,
+        "max_gap_ms": 5183,
+        "censored_tail_ms": 3365,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 11018,
+        "max_gap_ms": 14501,
+        "censored_tail_ms": 3410,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 1842,
+        "max_gap_ms": 5305,
+        "censored_tail_ms": 3813,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 2656,
+        "max_gap_ms": 60927,
+        "censored_tail_ms": 24257,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    },
+    {
+      "id": "c153a4bd-8ab3-46ad-8063-f273bd2140f5",
+      "healthy_completions": {
+        "count": 7,
+        "first_ms": 13522,
+        "max_gap_ms": 13234,
+        "censored_tail_ms": 2238,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "healthy_selections": {
+        "count": 21,
+        "first_ms": 4159,
+        "max_gap_ms": 4845,
+        "censored_tail_ms": 2655,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "postrestart_completions": {
+        "count": 14,
+        "first_ms": 11908,
+        "max_gap_ms": 14516,
+        "censored_tail_ms": 2086,
+        "bound_ms": 30000,
+        "pass": true
+      },
+      "postrestart_selections": {
+        "count": 42,
+        "first_ms": 2750,
+        "max_gap_ms": 5108,
+        "censored_tail_ms": 2843,
+        "bound_ms": 60000,
+        "pass": true
+      },
+      "pool": {
+        "count": 6,
+        "first_ms": 2978,
+        "max_gap_ms": 61055,
+        "censored_tail_ms": 22895,
+        "bound_ms": 300000,
+        "pass": true
+      }
+    }
+  ],
+  "strict_all30_pass": true,
+  "native_exit": null,
+  "wrapper_exit": 2
+}

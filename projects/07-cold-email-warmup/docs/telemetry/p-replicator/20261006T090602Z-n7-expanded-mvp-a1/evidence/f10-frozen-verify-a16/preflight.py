@@ -1,0 +1,10 @@
+from pathlib import Path
+import hashlib,json,os,subprocess,sys,datetime
+r=Path('/tmp/n7-f10-frozen-verify-a16');l=json.loads((r/'launch.json').read_text());p=Path(l['worktree'])/l['project'];m=json.loads(Path(l['source_build_manifest']).read_text());sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+assert sha(r/'launch.json')=='e17fa1e792ec4de72ea66ad8d16c72fc1951b1dd1717551e5667d6ef6e094f38';assert sha(l['source_build_manifest'])==l['source_build_manifest_sha256'];assert sha(l['planner_plan'])==l['planner_plan_sha256']
+for group in ['source','build']:
+ for f,h in m[group].items():assert sha(p/f)==h,f
+v=os.statvfs(r);d={'available_bytes':v.f_bavail*v.f_frsize,'free_inodes':v.f_favail};print('DISK',d,'WARN_LT_2G',d['available_bytes']<2*1024**3)
+db=json.loads((r/'db-assert.json').read_text());assert db['database']=='n7f10_a2'
+obj={'status':'ready','at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'run_id':l['run_id'],'work_unit_id':l['work_unit_id'],'source_revision':l['source_revision'],'manifest_sha256':sha(l['source_build_manifest']),'source_count':len(m['source']),'build_count':len(m['build']),'guard_sha256':sha(r/'guard-v3.mjs'),'suite_output_sha256':sha(r/'suite-output.mjs'),'command':sys.argv[2:],'runner_path':os.environ.get('STAGE_RUNNER_PATH'),'runner_sha256':sha(os.environ['STAGE_RUNNER_PATH']) if os.environ.get('STAGE_RUNNER_PATH') else None,'environment':{'node22':True,'DATABASE_NAME':os.environ.get('DATABASE_NAME'),'DB_assertion_before_reset':db,'TMPDIR':os.environ.get('TMPDIR'),'NODE_OPTIONS':os.environ.get('NODE_OPTIONS'),'credentials':'availability_only_never_output'},'sideeffects':['own scratch','n7f10_a2 local PostgreSQL','127.0.0.1 ephemeral local TLS'],'excluded':['product writes','build writes','external network','install','Docker changes'],'disk':d,'external_actions_executed':False,'e2e_claim':None}
+assert os.environ.get('DATABASE_NAME')=='n7f10_a2';assert os.environ.get('TMPDIR')==str(r);assert str(r/'guard-v3.mjs') in os.environ.get('NODE_OPTIONS','');(r/(sys.argv[1]+'-ready.json')).write_text(json.dumps(obj,indent=2)+'\n')

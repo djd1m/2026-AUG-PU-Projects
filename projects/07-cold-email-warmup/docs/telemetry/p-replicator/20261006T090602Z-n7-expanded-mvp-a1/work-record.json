@@ -8,7 +8,7 @@
   "identity": {
     "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
     "work_unit_id": "expanded-mvp",
-    "current_attempt_id": "f10-frozen-verify-a16"
+    "current_attempt_id": "f10-frozen-verify-a17"
   },
   "telemetry": {
     "run": {
@@ -50,7 +50,7 @@
       "reconciliation": null
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
-    "integration_note": "Frozen unaccepted A15 eae17:4replysource+6tests,120source73build hashes0mismatch;150raw/knownsecrets0. Scoped focused4/affected50/unit62/native8/static pass, baseline+mutantred/restoredgreen. A16 fresh HIGH fork-none verifier actual ACK18:59:05; full330/fullPG/physical assigned, allremainingmutants/canary+separatecleanHIGHreview mandatory; no main runtime integration."
+    "integration_note": "Frozen eae17 unaccepted. A16 allraw/source/build verified; full330 TAP/all30green but nativeexitNULL/wrapper2; fullPG124partial; physical2PASS exact0 reused. A16late17.662s+pre-resetorderinggap retained. A17 fixedHIGH cleanplanner-origin actualACK19:21:42 rechecksjoins/source/PG before anyreset, immutable runners, exact330exit/fullPG300 chronology plus remainingmutants/canary; finalfreshHIGHreview mandatory."
   },
   "prepare": {
     "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
@@ -430,6 +430,10 @@
     },
     {
       "id": "f10-frozen-verify-a16",
+      "status": "failed"
+    },
+    {
+      "id": "f10-frozen-verify-a17",
       "status": "active"
     }
   ],

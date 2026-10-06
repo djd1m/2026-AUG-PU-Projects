@@ -1,0 +1,39 @@
+{
+  "verified_at": "2026-10-06T19:25:02.933477+00:00",
+  "raw_manifest_files": 2255,
+  "all_raw_hash_size_mismatches": 0,
+  "known_runtime_secret_hits": 0,
+  "synthetic_private_keys_excluded": [
+    "probe-key.pem"
+  ],
+  "copied_raw": 2252,
+  "excluded_raw": [
+    {
+      "path": "/tmp/n7-f10-frozen-verify-a16/cadence-1791313358589.json",
+      "sha256": "85ef9a60197e5105acf42582eeb3033ec2de8ff17b92f9fcd70ab132506eb78a",
+      "bytes": 9972254,
+      "reason": "large raw cadence retained immutable protected scratch"
+    },
+    {
+      "path": "/tmp/n7-f10-frozen-verify-a16/probe-key.pem",
+      "sha256": "e80e518d45d495921520b37d6a20c76347c6bd06c0126b0fcb53c76d449e56c3",
+      "bytes": 1704,
+      "reason": "Synthetic local TLS probe private key retained immutable scratch; never published"
+    },
+    {
+      "path": "/tmp/n7-f10-frozen-verify-a16/cadence-partial-1791313358589.json",
+      "sha256": "5703b5126e2cf32ab728d15d15447a890f04adf76741584b38cffb36dfd20acf",
+      "bytes": 9963899,
+      "reason": "large raw cadence retained immutable protected scratch"
+    }
+  ],
+  "receipt_sha256": "a846c3e24da700a14c1bace901038a2a3e9628fec5ba69235f15100519e44f04",
+  "initial_receipt_sha256": "06d149c2ab55eed5b1c0112acc00367aa464ad67118a1f59a611c0972e1fdfc4",
+  "initial_receipt_provenance": "Byte-recovered retained content before timing annotation plus original terminal marker; matches independently reported original digest. No unknown counters reconstructed.",
+  "physical_source_bound_exit": 0,
+  "full330_native_exit": null,
+  "full330_wrapper_exit": 2,
+  "fullPG_exit": 124,
+  "late_seal_seconds": 17.662013,
+  "overall_F10_acceptance": false
+}
