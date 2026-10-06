@@ -56,14 +56,3 @@ Astra/high — независимое review. Native coordinator actualmodel/usa
 Точный [черновик](pr-draft.md) и [ответ API](telemetry/features/20261003T023900Z-f06/pr-attempt.json) сохранены.
 Нужна GitHub-интеграция с правом создания PR; доступ автоматически не расширялся.
 Всё независимое локально разрешённое выполнено, новых продуктовых задач не осталось.
-
-## Criterion coverage
-| Criterion | Test file | Test title |
-| --- | --- | --- |
-
-Canonical Specification.md has no machine AC headings; its16 FR/NFR headings and
-SC scenarios are unchanged. This canonical table has zero rows for that reason.
-Per-feature AC coverage remains in each active feature completion role.
-This format correction is not a fresh runtime acceptance: prior bytes are retained
-at validation-history/Completion.pre-contract-table-20261006.md. The prior final
-paragraph describes the historical local MVP; expanded F07-F15 work remains pending.
