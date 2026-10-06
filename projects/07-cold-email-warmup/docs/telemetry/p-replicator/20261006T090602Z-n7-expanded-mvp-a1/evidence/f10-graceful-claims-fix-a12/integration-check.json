@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-06T18:16:45.719903+00:00",
+  "raw_hashes_verified": 32,
+  "selected_raw_copies": 30,
+  "known_runtime_secret_hits": 0,
+  "large_raw_preserved": [
+    {
+      "file": "cadence-1791309671910.json",
+      "bytes": 10028696,
+      "sha256": "0e56e68ff0bcec639dc53d52c3d265fae028a4e0d0f6e34c640b28fbab7d5af7",
+      "retained_at": "/tmp/n7-f10-graceful-claims-fix-a12/cadence-1791309671910.json"
+    },
+    {
+      "file": "cadence-partial-1791309671910.json",
+      "bytes": 10020971,
+      "sha256": "56bf00c18472bddfdabc3a4bd9c770af27716e9bf6800335dfcc879eacca64e9",
+      "retained_at": "/tmp/n7-f10-graceful-claims-fix-a12/cadence-partial-1791309671910.json"
+    }
+  ],
+  "source_files_verified": 5,
+  "build_files_verified": 73,
+  "source_revision": "a8d4b6b2d46f1f45f27fe0a8028288057d0fa491",
+  "canonical985_exit": 1,
+  "fullunit": 62,
+  "focused": 26,
+  "static_exit": 0,
+  "final_source_native_pending": true,
+  "verdict": "failed/incomplete, no acceptance"
+}

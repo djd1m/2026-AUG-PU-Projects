@@ -1,0 +1,53 @@
+{
+  "at": "2026-10-06T18:04:49.369Z",
+  "reasons": [
+    {
+      "kind": "dispatch",
+      "state": "ready",
+      "reason": "authority_denied",
+      "count": "17"
+    },
+    {
+      "kind": "dispatch",
+      "state": "ready",
+      "reason": "waiting_peer",
+      "count": "13"
+    },
+    {
+      "kind": "poll",
+      "state": "blocked",
+      "reason": "rescan_incomplete",
+      "count": "1"
+    },
+    {
+      "kind": "poll",
+      "state": "claimed",
+      "reason": "ready",
+      "count": "4"
+    },
+    {
+      "kind": "poll",
+      "state": "ready",
+      "reason": "provider_backoff",
+      "count": "25"
+    },
+    {
+      "kind": "pool",
+      "state": "ready",
+      "reason": "ready",
+      "count": "1"
+    },
+    {
+      "kind": "pool",
+      "state": "ready",
+      "reason": "waiting_peer",
+      "count": "29"
+    }
+  ],
+  "physical": [
+    {
+      "protocol": "imap",
+      "count": "2"
+    }
+  ]
+}

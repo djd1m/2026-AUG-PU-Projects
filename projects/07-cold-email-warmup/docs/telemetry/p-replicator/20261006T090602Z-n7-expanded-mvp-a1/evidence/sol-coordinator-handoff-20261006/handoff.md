@@ -51,3 +51,7 @@ Rootforecast requestedowner17:35 rough6â€“10h remaininglocal, F10conditional30â€
 ## Immediate next step
 
 Keep A11 canonical+observer running through ~17:48 and remaining fittingchecks. Get actual receipt by17:53:03; preserve failedv1guardruns. Assign exact remainder to new Sol/high verifier or confirmed productfix to new Sol/medium writer inisolatedtree; explicitlaunch/digest/ownership/source/freeze-beforedeadline and actualACK. Never leave unfinished authorized localwork without responsible executor. Root will explicitly transfer solemainwriter to replacement; this coordinator stops writes immediately after that message.
+
+## Owner disk instruction, 2026-10-06 18:00 UTC
+
+Measure statvfs available bytes/inodes before each heavy build and new worktree, report in the 10-minute status. Warn below2GiB and reconsider that heavy operation while continuing independent light work. Reuse safely completed committed isolated trees where possible. No broad prune or media/DB cleanup; delete only own confirmed obsolete artifacts after terminal receipts and verified absence of active/dirty ownership. No monitoring daemon is introduced.

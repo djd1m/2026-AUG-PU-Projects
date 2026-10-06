@@ -1,0 +1,72 @@
+TAP version 13
+# Subtest: finite runtime lanes join owned operations on abort before returning
+not ok 1 - finite runtime lanes join owned operations on abort before returning
+  ---
+  duration_ms: 38.400983
+  type: 'test'
+  location: '/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-unit.test.ts:1:229'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0 !== 7
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 7
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-unit.test.ts:15:99)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: database faults stop admission and abort the internal signal before joining sibling lanes
+ok 2 - database faults stop admission and abort the internal signal before joining sibling lanes
+  ---
+  duration_ms: 23.816958
+  type: 'test'
+  ...
+# Subtest: settled runtime operations yield to the event loop before another fair claim
+ok 3 - settled runtime operations yield to the event loop before another fair claim
+  ---
+  duration_ms: 2.898051
+  type: 'test'
+  ...
+# Subtest: maintenance reconciles after five seconds without an immediate duplicate sweep
+ok 4 - maintenance reconciles after five seconds without an immediate duplicate sweep
+  ---
+  duration_ms: 5303.467033
+  type: 'test'
+  ...
+# Subtest: abort after committed claim settles ownership without starting an operation
+not ok 5 - abort after committed claim settles ownership without starting an operation
+  ---
+  duration_ms: 1.363431
+  type: 'test'
+  location: '/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-unit.test.ts:1:3348'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-unit.test.ts:37:56)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 3
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5863.994503

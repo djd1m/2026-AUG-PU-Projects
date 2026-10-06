@@ -1,0 +1,387 @@
+
+> n7-cold-email-warmup@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*-unit.test.ts
+
+TAP version 13
+# Subtest: R1 actual authScript passive valid identity redirects silently
+ok 1 - R1 actual authScript passive valid identity redirects silently
+  ---
+  duration_ms: 8.873013
+  type: 'test'
+  ...
+# Subtest: R1 actual successful register notifies exactly once
+ok 2 - R1 actual successful register notifies exactly once
+  ---
+  duration_ms: 3.064252
+  type: 'test'
+  ...
+# Subtest: R1 actual successful login notifies exactly once
+ok 3 - R1 actual successful login notifies exactly once
+  ---
+  duration_ms: 2.666381
+  type: 'test'
+  ...
+# Subtest: R1 failed action/no identity emits zero false/true
+ok 4 - R1 failed action/no identity emits zero false/true
+  ---
+  duration_ms: 4.928401
+  type: 'test'
+  ...
+# Subtest: R1 failed action/no identity emits zero true/false
+ok 5 - R1 failed action/no identity emits zero true/false
+  ---
+  duration_ms: 2.629761
+  type: 'test'
+  ...
+# Subtest: R1 actual app channel login invalidates, aborts and passive followup never echoes
+ok 6 - R1 actual app channel login invalidates, aborts and passive followup never echoes
+  ---
+  duration_ms: 259.728533
+  type: 'test'
+  ...
+# Subtest: R1 actual app channel logout invalidates, aborts and passive followup never echoes
+ok 7 - R1 actual app channel logout invalidates, aborts and passive followup never echoes
+  ---
+  duration_ms: 102.773877
+  type: 'test'
+  ...
+# Subtest: AC-F01-4 Unicode/password byte boundaries reject before invoking KDF
+ok 8 - AC-F01-4 Unicode/password byte boundaries reject before invoking KDF
+  ---
+  duration_ms: 2.5162
+  type: 'test'
+  ...
+# Subtest: AC-F01-4 exact PHC params/salt/output reject adversarial stored costs
+ok 9 - AC-F01-4 exact PHC params/salt/output reject adversarial stored costs
+  ---
+  duration_ms: 0.95949
+  type: 'test'
+  ...
+# Subtest: AC-F01-4 two active KDFs: no queue, unrelated free slot, release on rejection
+ok 10 - AC-F01-4 two active KDFs: no queue, unrelated free slot, release on rejection
+  ---
+  duration_ms: 0.74448
+  type: 'test'
+  ...
+# Subtest: AC-F01-2 opaque canonical cookie and absolute7day HMAC session
+ok 11 - AC-F01-2 opaque canonical cookie and absolute7day HMAC session
+  ---
+  duration_ms: 1.940171
+  type: 'test'
+  ...
+# Subtest: AC-F01-1 safety config fails closed without external runtime key/policy
+ok 12 - AC-F01-1 safety config fails closed without external runtime key/policy
+  ---
+  duration_ms: 20.758778
+  type: 'test'
+  ...
+# Subtest: F05 immutable server plans and closed checkout input
+ok 13 - F05 immutable server plans and closed checkout input
+  ---
+  duration_ms: 2.612581
+  type: 'test'
+  ...
+# Subtest: F05 bounded purpose HMAC cookie exact30day expiration and tamper
+ok 14 - F05 bounded purpose HMAC cookie exact30day expiration and tamper
+  ---
+  duration_ms: 1.998811
+  type: 'test'
+  ...
+# Subtest: F07 strict bounded pages and explicit closed capacity actions
+ok 15 - F07 strict bounded pages and explicit closed capacity actions
+  ---
+  duration_ms: 4.198062
+  type: 'test'
+  ...
+# Subtest: actual phase deadlines and trickle close sockets listeners timers and settle once
+    # Subtest: dns
+    ok 1 - dns
+      ---
+      duration_ms: 10271.021427
+      type: 'test'
+      ...
+    # Subtest: connect
+    ok 2 - connect
+      ---
+      duration_ms: 10527.706968
+      type: 'test'
+      ...
+    # Subtest: tls
+    ok 3 - tls
+      ---
+      duration_ms: 10839.482179
+      type: 'test'
+      ...
+    # Subtest: greeting
+    ok 4 - greeting
+      ---
+      duration_ms: 10348.377145
+      type: 'test'
+      ...
+    # Subtest: auth
+    ok 5 - auth
+      ---
+      duration_ms: 10538.895772
+      type: 'test'
+      ...
+    # Subtest: trickle
+    ok 6 - trickle
+      ---
+      duration_ms: 10978.868099
+      type: 'test'
+      ...
+    1..6
+ok 16 - actual phase deadlines and trickle close sockets listeners timers and settle once
+  ---
+  duration_ms: 63509.650331
+  type: 'test'
+  ...
+# Subtest: simultaneous abort peer completion and error cannot publish late success
+ok 17 - simultaneous abort peer completion and error cannot publish late success
+  ---
+  duration_ms: 634.160087
+  type: 'test'
+  ...
+# Subtest: diagnostic byte deadlines cancellation and admission are bounded
+ok 18 - diagnostic byte deadlines cancellation and admission are bounded
+  ---
+  duration_ms: 47.079777
+  type: 'test'
+  ...
+# Subtest: SMTP and IMAP authenticate independently without message commands
+ok 19 - SMTP and IMAP authenticate independently without message commands
+  ---
+  duration_ms: 964.629824
+  type: 'test'
+  ...
+# Subtest: production TLS adapter pins peer and rejects certificate downgrade rebinding
+ok 20 - production TLS adapter pins peer and rejects certificate downgrade rebinding
+  ---
+  duration_ms: 878.672194
+  type: 'test'
+  ...
+# Subtest: hostile TLS protocol states fail closed and cancellation destroys owned sockets
+ok 21 - hostile TLS protocol states fail closed and cancellation destroys owned sockets
+  ---
+  duration_ms: 2435.000079
+  type: 'test'
+  ...
+# Subtest: untrusted certificates TLS downgrade and late cancelled DNS never authenticate
+ok 22 - untrusted certificates TLS downgrade and late cancelled DNS never authenticate
+  ---
+  duration_ms: 1396.071989
+  type: 'test'
+  ...
+# Subtest: A1 canonical bounds, missing fields, source/header injection and escaped preview
+ok 23 - A1 canonical bounds, missing fields, source/header injection and escaped preview
+  ---
+  duration_ms: 9.520624
+  type: 'test'
+  ...
+# Subtest: A2 versioned enrollment AEAD purpose, tenant/id substitution and separately keyed digest
+ok 24 - A2 versioned enrollment AEAD purpose, tenant/id substitution and separately keyed digest
+  ---
+  duration_ms: 4.103881
+  type: 'test'
+  ...
+# Subtest: B1 bounded manual observation input and explicit verification
+ok 25 - B1 bounded manual observation input and explicit verification
+  ---
+  duration_ms: 20.220047
+  type: 'test'
+  ...
+# Subtest: B2 exact 7days/+1ms, 28days/+1ms, equal UTC windows, future and reasons
+ok 26 - B2 exact 7days/+1ms, 28days/+1ms, equal UTC windows, future and reasons
+  ---
+  duration_ms: 2.641711
+  type: 'test'
+  ...
+# Subtest: B2 denominators 29/30 gate ratios and strict raw count improvement
+ok 27 - B2 denominators 29/30 gate ratios and strict raw count improvement
+  ---
+  duration_ms: 1.510501
+  type: 'test'
+  ...
+# Subtest: B3/B4 explicit public whitelist, escaping, historical copy and exactly one badge
+ok 28 - B3/B4 explicit public whitelist, escaping, historical copy and exactly one badge
+  ---
+  duration_ms: 0.95711
+  type: 'test'
+  ...
+# Subtest: B5 bounded history pagination
+ok 29 - B5 bounded history pagination
+  ---
+  duration_ms: 1.495051
+  type: 'test'
+  ...
+# Subtest: F1 primitive enums reject array/object/null before any write
+ok 30 - F1 primitive enums reject array/object/null before any write
+  ---
+  duration_ms: 2.591851
+  type: 'test'
+  ...
+# Subtest: F2 validated UUID uses canonical lowercase identity
+ok 31 - F2 validated UUID uses canonical lowercase identity
+  ---
+  duration_ms: 0.62755
+  type: 'test'
+  ...
+# Subtest: live MIME enforces literal bounds and preserves seven bit wire
+ok 32 - live MIME enforces literal bounds and preserves seven bit wire
+  ---
+  duration_ms: 5.685062
+  type: 'test'
+  ...
+# Subtest: headers reject duplicates ambiguous sender oversized references and literal tags
+ok 33 - headers reject duplicates ambiguous sender oversized references and literal tags
+  ---
+  duration_ms: 4.045851
+  type: 'test'
+  ...
+# Subtest: transport phase deadlines and cancellation remain finite
+ok 34 - transport phase deadlines and cancellation remain finite
+  ---
+  duration_ms: 11.208284
+  type: 'test'
+  ...
+# Subtest: finite runtime lanes join owned operations on abort before returning
+ok 35 - finite runtime lanes join owned operations on abort before returning
+  ---
+  duration_ms: 35.407243
+  type: 'test'
+  ...
+# Subtest: database faults stop admission and abort the internal signal before joining sibling lanes
+ok 36 - database faults stop admission and abort the internal signal before joining sibling lanes
+  ---
+  duration_ms: 23.826349
+  type: 'test'
+  ...
+# Subtest: settled runtime operations yield to the event loop before another fair claim
+ok 37 - settled runtime operations yield to the event loop before another fair claim
+  ---
+  duration_ms: 3.854311
+  type: 'test'
+  ...
+# Subtest: maintenance reconciles after five seconds without an immediate duplicate sweep
+ok 38 - maintenance reconciles after five seconds without an immediate duplicate sweep
+  ---
+  duration_ms: 5303.315653
+  type: 'test'
+  ...
+# Subtest: abort after committed claim settles ownership without starting an operation
+ok 39 - abort after committed claim settles ownership without starting an operation
+  ---
+  duration_ms: 3.509411
+  type: 'test'
+  ...
+# Subtest: AEAD fresh nonce, ciphertext/tag/AAD substitution and retained versions fail closed before transport
+ok 40 - AEAD fresh nonce, ciphertext/tag/AAD substitution and retained versions fail closed before transport
+  ---
+  duration_ms: 5.134771
+  type: 'test'
+  ...
+# Subtest: operator host normalization and conservative public address oracle
+ok 41 - operator host normalization and conservative public address oracle
+  ---
+  duration_ms: 10.490133
+  type: 'test'
+  ...
+# Subtest: IANA reserved and unallocated IPv6 reject before any adapter call, alone or mixed
+ok 42 - IANA reserved and unallocated IPv6 reject before any adapter call, alone or mixed
+  ---
+  duration_ms: 65.246154
+  type: 'test'
+  ...
+# Subtest: save input enforces TLS ports and limits
+ok 43 - save input enforces TLS ports and limits
+  ---
+  duration_ms: 1.53923
+  type: 'test'
+  ...
+# Subtest: connector revalidation, IP pin/TLS identity, canary scrub and abort deadlines
+ok 44 - connector revalidation, IP pin/TLS identity, canary scrub and abort deadlines
+  ---
+  duration_ms: 23.337509
+  type: 'test'
+  ...
+# Subtest: F04a bounded header-only input normalization and optional incoming ID
+ok 45 - F04a bounded header-only input normalization and optional incoming ID
+  ---
+  duration_ms: 4.408011
+  type: 'test'
+  ...
+# Subtest: F04a explicit page/header/reference/range/validity limits reject before any writes
+ok 46 - F04a explicit page/header/reference/range/validity limits reject before any writes
+  ---
+  duration_ms: 1.84987
+  type: 'test'
+  ...
+# Subtest: B3 plain local test message, random bound token, one-click and reference headers
+ok 47 - B3 plain local test message, random bound token, one-click and reference headers
+  ---
+  duration_ms: 8.224823
+  type: 'test'
+  ...
+# Subtest: B4 retry delays/max3 and exact120s ceiling
+ok 48 - B4 retry delays/max3 and exact120s ceiling
+  ---
+  duration_ms: 0.45035
+  type: 'test'
+  ...
+# Subtest: operator distinct hash auth, malformed secrets and complaint payload bounds
+ok 49 - operator distinct hash auth, malformed secrets and complaint payload bounds
+  ---
+  duration_ms: 5.039002
+  type: 'test'
+  ...
+# Subtest: fixture header-only bounds and ordered source coverage; operation timeout
+ok 50 - fixture header-only bounds and ordered source coverage; operation timeout
+  ---
+  duration_ms: 7.422453
+  type: 'test'
+  ...
+# Subtest: native default transport preserves its global receiver and injected transport still works
+ok 51 - native default transport preserves its global receiver and injected transport still works
+  ---
+  duration_ms: 36.784693
+  type: 'test'
+  ...
+# Subtest: A6 central401 clears private state, aborts pending, redirects; late success/error stay obsolete
+ok 52 - A6 central401 clears private state, aborts pending, redirects; late success/error stay obsolete
+  ---
+  duration_ms: 1.812391
+  type: 'test'
+  ...
+# Subtest: A1 session change fences old identity and body-resolution race
+ok 53 - A1 session change fences old identity and body-resolution race
+  ---
+  duration_ms: 4.018671
+  type: 'test'
+  ...
+# Subtest: A1 late action catch/finally cannot change fresh UI or release its pending bound
+ok 54 - A1 late action catch/finally cannot change fresh UI or release its pending bound
+  ---
+  duration_ms: 0.823341
+  type: 'test'
+  ...
+# Subtest: A6 product source security: explicit assets, same-origin shell, no private storage/untrusted HTML/operator access
+ok 55 - A6 product source security: explicit assets, same-origin shell, no private storage/untrusted HTML/operator access
+  ---
+  duration_ms: 2.13485
+  type: 'test'
+  ...
+# Subtest: diagnostic late success and error cannot repopulate a different session
+ok 56 - diagnostic late success and error cannot repopulate a different session
+  ---
+  duration_ms: 1.363661
+  type: 'test'
+  ...
+1..56
+# tests 62
+# suites 0
+# pass 62
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 84365.617157

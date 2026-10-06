@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: graceful stop after committed claim releases logical owners before lease expiry
+ok 1 - graceful stop after committed claim releases logical owners before lease expiry
+  ---
+  duration_ms: 789.577442
+  type: 'test'
+  ...
+# Subtest: inflight graceful drain joins cleanup and retains explicit holds and fairness
+ok 2 - inflight graceful drain joins cleanup and retains explicit holds and fairness
+  ---
+  duration_ms: 1038.644731
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2335.635214
