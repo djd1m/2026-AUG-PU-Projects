@@ -152,3 +152,7 @@ none
 
 Claimed by an algorithm but absent from Specification.md:
 none
+
+## Normative AI correction N7-VAL-001
+
+Algorithms OpenAI draft и HITL / Отдельное разрешение AI reply MUST implement [ai-policy-v1](ai-policy-v1.md): deterministic server intent+topic mapping and current own snapshot admission before generation; model only selects allowed exact snippet IDs; verify exact required set and deterministically assemble approved bytes. Arbitrary model text cannot autosend. Intent/language ambiguity, missing/foreign facts, unsupported authority yield hold. Event admission immutable for denominator; subsequent generation/error/quality hold remain eligible. Nearest-rank p95 sorts all eligible effective latencies, takes ceil(0.95*N),1-based; errors/unknown/overdue infinity, N0 unverifiable. Active capacity admission locks a GLOBAL installation capacity row30, not one30-row allowance per tenant.

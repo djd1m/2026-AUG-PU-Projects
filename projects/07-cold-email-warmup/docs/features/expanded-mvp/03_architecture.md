@@ -53,3 +53,7 @@ Commercial connected records are paginated and not always-active sockets. Finite
 
 ## Reconciliation with Pseudocode
 Расхождений с `02_pseudocode.md` не найдено. Сверены сущности: CapacityLease, WorkDue, IncomingAIEvent, AIPolicy, AIDraft, AIReplyJob, TimingOutcome; алгоритмы: Unlimited connected и active admission, Live connection capability, Safe SMTP и bounded IMAP, Persistent fair warmup runtime, Inbound context и retention, OpenAI draft и HITL, Отдельное разрешение AI reply, Честный full-path SLO, Безопасность и эксплуатационные ворота. Physical tables derive fields from logical role; event queued covers transport submitting without adding a contradictory event enum.
+
+## N7-VAL-001 placement
+
+[ai-policy-v1](ai-policy-v1.md) uses existing src/ai policy/validator/assembly boundaries and versioned JSON fixtures; no new service. Immutable own-tenant snapshot stores approved fields/snippets, language/intent/topic mapping and version/hash. API approval binds exact output; server assembly checks current hashes at final fence. Global installation capacity row caps all tenant leases combined at30. New logical snapshot/mapping data is normative in ai-policy-v1, no independent conflicting schema.

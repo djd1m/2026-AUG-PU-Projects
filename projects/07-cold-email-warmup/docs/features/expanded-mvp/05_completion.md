@@ -28,7 +28,7 @@ Rollback: revoke live gate/AI policy under global first lock, stop new claims, d
 | Complete poll age | ≥60s blocks sending; operator-visible alert |
 | Oldest due / fairness | >60s atA1 records saturation and SLO risk |
 | Pool eligible wait | >5min with available budgets reports starvation |
-| Arrival→SMTP accepted | >300s marks miss, no unsafe acceleration |
+| Arrival→SMTP accepted | ≥300s marks miss, no unsafe acceleration |
 | LLM tokens/currency | configured cap reached: block generation |
 | API p99 / error / CPU | baseline sample then operator-configured threshold; no fake PagerDuty/Slack integration |
 | Unknown delivery / timestamp | exact count and reconciliation needed; never retry automatically |
@@ -41,3 +41,7 @@ Development: accepted source SHA, frozen docs, owner/file map, receipts, actual 
 
 ## Gates and evidence
 PLAN checker --traceability; VALIDATE --report-revision --criterion-scenarios; IMPLEMENT --completion; REVIEW check-review-contract all require0. Keep checker stdout/stderr/exit verbatim;1 means repair,2 means not-established, neither warning. Fresh reviewer gets exact spec SHA plus validation report; all AC verdicts must cite actual evidence. Source-version/canon/ownership/receipt checkers before aggregation. Final summary lists profile, actual model evidence/fallbacks, elapsed wall time incl coordination, available usage/cost and missing measurements, telemetry paths, fixture readiness and live status separately. Pending external live permission is explicitly a blocker on live AC, not a fake pass or voluntary pause.
+
+## Mandatory AI content gates — N7-VAL-001
+
+AC006/007 evidence includes [ai-policy-v1](ai-policy-v1.md) frozen C01–C24 and variants, threshold0 unauthorized,100% correct holds,≥90% useful positive answers, model/prompt/policy/snapshot/cases hashes. Distinguish local deterministic/recorded fixtures from separately permitted actual-model gate, then full-path live pilot. None executed in PLAN. New specification bytes require fresh validation/review bound to new SHA; old report cannot certify them. Arrival latency≥300s is a miss.

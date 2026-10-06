@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "plan",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+    "work_unit_id": "expanded-mvp",
+    "current_attempt_id": "validate-r2"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
+    "current_revision": "61ea349f05faa75d581112bedfc3c71318a39813",
+    "build_revision": null,
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/features/expanded-mvp/01_specification.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/features/expanded-mvp/03_architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "61ea349f05faa75d581112bedfc3c71318a39813",
+      "observed_revision": "61ea349f05faa75d581112bedfc3c71318a39813",
+      "reconciliation": null
+    },
+    "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a"
+  },
+  "prepare": {
+    "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+    "scope": [
+      "Unlimited connected mailbox entitlement with finite active admission",
+      "Real automatic warmup and persistent fair SMTP/IMAP workers",
+      "OpenAI drafts/HITL and separately consented autopilot, arrival-to-SMTP-accepted p95<300s"
+    ],
+    "exclusions": [
+      "CRM and domain purchase",
+      "Real billing",
+      "Automatic external live activation or deployment"
+    ],
+    "action_limits": [
+      "No real external mail, paid API calls or deployment without applicable permission",
+      "Preserve tenant, AEAD, stop fence, quotas and unknown_delivery safeguards"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-expanded-mvp-001",
+        "required": true
+      },
+      {
+        "id": "AC-expanded-mvp-002",
+        "required": true
+      },
+      {
+        "id": "AC-expanded-mvp-003",
+        "required": true
+      },
+      {
+        "id": "AC-expanded-mvp-004",
+        "required": true
+      },
+      {
+        "id": "AC-expanded-mvp-005",
+        "required": true
+      },
+      {
+        "id": "AC-expanded-mvp-006",
+        "required": true
+      },
+      {
+        "id": "AC-expanded-mvp-007",
+        "required": true
+      },
+      {
+        "id": "AC-expanded-mvp-008",
+        "required": true
+      },
+      {
+        "id": "AC-expanded-mvp-009",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "docs/research/instantly-donors-20261006/README.md"
+          }
+        },
+        "provenance": "donor00 02689350083fa6961df07d47aca8ea9079b1f527; donor01 fdf565827880813c97535c9aa68ea7fa08ee4339",
+        "useful_fragment": "Selective CSV and transport/UI reference; preserve N7 auth/crypto/queue",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Whole donor systems violate existing N7 safety boundaries; only independently tested compatible fragments"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No schedule/cost forecast attempted: no comparable accepted expanded/live run; exact seven-day pilot window is a proposed external test duration",
+      "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [
+        "Unmeasured implementation and external permission wait"
+      ],
+      "external_expectations": [
+        "Owner concrete XL plan checkpoint; later authorized seven-day pilot"
+      ],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+      "tier": "XL",
+      "rationale": "Changing commercial connection entitlements and adding sending authority/external providers requires full feature cycle and owner plan checkpoint",
+      "script": {
+        "input": "src/billing/plans.ts; src/dispatch/worker.ts; src/replies/worker.ts; src/mailboxes/provider.ts",
+        "exit_code": 1
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "required",
+    "reason": "Root .claude/rules/complexity-router.md XL: остановка на плане у владельца; OWN-N7-004 authorizes expanded goals, concrete A1–A3 plan checkpoint is pending",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Planning/docs stage; actual N7 product E2E not run. Docker browser connection smoke passed separately.",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "plan-1",
+      "status": "completed"
+    },
+    {
+      "id": "validate-1",
+      "status": "completed"
+    },
+    {
+      "id": "plan-r2",
+      "status": "completed"
+    },
+    {
+      "id": "validate-r2",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "expanded-mvp",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/plans/expanded-mvp-plan.md"
+        },
+        {
+          "root": "project",
+          "path": "docs/features/expanded-mvp/01_specification.md"
+        },
+        {
+          "root": "project",
+          "path": "docs/features/expanded-mvp/ai-policy-v1.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [],
+  "receipts": [],
+  "delivery": null
+}

@@ -1,6 +1,6 @@
 # Specification — expanded-mvp delta v1
 
-Source: 98d4418c; RUN_ID: 20261006T090602Z-n7-expanded-mvp-a1. Scope/assumptions: ../../plans/expanded-mvp-plan.md (coordinator relocates link on integration).
+Source: 61ea349f; RUN_ID: 20261006T090602Z-n7-expanded-mvp-a1. Scope/assumptions: ../../plans/expanded-mvp-plan.md (coordinator relocates link on integration).
 
 ## Executive Summary
 Обязательны unlimited connected, автоматический живой прогрев и OpenAI AI replies/HITL+consented autopilot. Canonical safety-v1 сохраняется, новый purpose входит в ту же общую квоту. Параметры A1–A3 предложены для checkpoint, не измеренные результаты. Commercial unlimited не отменяет finite active admission. Live billing не входит.
@@ -65,7 +65,7 @@ US-106: как владелец я хочу openai draft и hitl, чтобы п�
 
 [SC-US-106-1]
 Given bounded own context и explicit content-processing consent, When generation or timeout/budget saturation/replay, Then one versioned draft per event/policy, no SMTP by model, input≤8000/output≤500 tokens, timeout30s/max2 safe attempts/65s total; changed draft invalidates prior approval and UI clearly shows pending/error/hold.
-Связано: FR-expanded-mvp-006.
+Связано: FR-expanded-mvp-006. Дополнительно обязательны normative [ai-policy-v1](ai-policy-v1.md): deterministic intent/snapshot/snippet oracle и gates0 unauthorized,100% correct holds,≥90% useful supported answers; fixture pass не live model proof.
 
 ### FR-expanded-mvp-007 — Отдельное разрешение AI reply
 
@@ -75,7 +75,7 @@ US-107: как владелец я хочу отдельное разрешен�
 
 [SC-US-107-1]
 Given separate unexpired policy scoped by mailbox/recipient/thread/intent/business context and approved draft hash or autopilot, When enqueue/revoke/suppress race, Then explicit ai_reply purpose uses all current final fence predicates, parent campaign stays stopped, quota shared, duplicate dispatch0 and post-boundary inflight limitation disclosed.
-Связано: FR-expanded-mvp-007.
+Связано: FR-expanded-mvp-007. Дополнительно обязательны [ai-policy-v1](ai-policy-v1.md): exact approved assembly, no free-form autosend, immutable authority hashes и разрешённый actual-model gate до автопилота; ошибки/quality holds остаются в первоначальном eligible denominator.
 
 ### FR-expanded-mvp-008 — Честный full-path SLO
 
@@ -101,7 +101,7 @@ Given live gates absent/revoked or model budget exhausted, When workers/start/se
 MVP: все FR-n7x и NFR-n7x выше, live pilot после внешнего gate. V1/v2: расширение измеренной ёмкости/OAuth/provider integrations только отдельным планом. CRM, domain purchase, fake opens, paid billing вне этого scope.
 
 ## Non-Functional Requirements
-Существующие tenant/auth/AEAD/pinning/stop/quota/unknown invariants обязательны во всех новых ветвях. Poll freshness<60s и no automatic incomplete-rescan resume сохраняются. Active capacity30; SMTP2/global1/mailbox, IMAP4/global1/mailbox, LLM2/global; provider lower limits wins; input/body/token/time/retention bounds A3. До outbound AI обязательны optout/bounce/OOO/bulk/loop detection и approved scope; модель не решает свои полномочия.
+Существующие tenant/auth/AEAD/pinning/stop/quota/unknown invariants обязательны во всех новых ветвях. Poll freshness<60s и no automatic incomplete-rescan resume сохраняются. Active capacity30 globally per installation, not per tenant; SMTP2/global1/mailbox, IMAP4/global1/mailbox, LLM2/global; provider lower limits wins; input/body/token/time/retention bounds A3. До outbound AI обязательны optout/bounce/OOO/bulk/loop detection и approved scope; модель не решает свои полномочия.
 
 ## Success Metrics
 | Metric | Target | Source |

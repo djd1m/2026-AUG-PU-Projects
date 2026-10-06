@@ -33,4 +33,8 @@ Adversarial fixtures include DNS rebinding, IPv4/IPv6 private ranges, TLS certif
 Explicit draft/pending/hold/error/live-test distinction, focus order and keyboard controls; 390px/1440px checks; single clear action; consent unchecked and distinct.
 
 ## Technical Debt
-Provider OAuth expansion, larger fleet benchmarks and stronger output policy can follow measured pilot; never defer tenant/fence/unknown/quotas or AI itself. No promise of deliverability improvement without observation provenance.
+Provider OAuth expansion and larger fleet benchmarks can follow measured pilot; mandatory ai-policy-v1 output rules and evaluation gates must pass before autopilot; never defer tenant/fence/unknown/quotas or AI itself. No promise of deliverability improvement without observation provenance.
+
+## Mandatory AI content acceptance
+
+Use [ai-policy-v1](ai-policy-v1.md) C01–C24 with all variants. Local deterministic+recorded fixture gate:0 unauthorized disclosures/commitments,100% correct holds,≥90% useful supported positives (≥11/12). Actual authorized OpenAI model gate uses same frozen cases and thresholds with model/prompt/policy/snapshot/cases hashes before autopilot. Fixture outputs cannot prove live model behavior. A free-form model draft is HITL only. Model confidence is never the authorization oracle.
