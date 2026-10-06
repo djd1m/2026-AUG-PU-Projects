@@ -1,0 +1,19 @@
+# F09 — checked native protocol capability contracts
+
+Checked2026-10-06 by opening the primary pages below. These confirm protocol/runtime primitives, not provider support or authorization. Narrow selection reuses F08 native Node22.20.0 and current lockfile; no new package/download. Broader Nodemailer/ImapFlow adoption rejected for this slice because it would require new dependency/pinning/retry contracts beyond the bounded native path.
+
+| Capability | Exact primary source and short quote | N7 choice and limit |
+|---|---|---|
+| Final SMTP acceptance | [RFC5321 §4.2.5](https://www.rfc-editor.org/rfc/rfc5321.html#section-4.2.5), “positive completion status” | Only complete final DATA250 accepted;250 after MAIL/RCPT is not message acceptance |
+| SMTP timeouts/classes | [RFC5321 §4.5.3.2](https://www.rfc-editor.org/rfc/rfc5321.html#section-4.5.3.2) |90s total/30s final is application resource policy, shorter than RFC final-response recommendation; uncertainty maps unknown, never safe retry |
+| SMTP AUTH | [RFC4954 §4](https://www.rfc-editor.org/rfc/rfc4954.html#section-4), “235 2.7.0 Authentication successful” | Advertised PLAIN only after TLS; at most one334; no OAuth/LOGIN fallback |
+| SASL PLAIN security | [RFC4616 §1](https://www.rfc-editor.org/rfc/rfc4616.html#section-1), “does not provide a security layer” | TLS mandatory, credentials never logged; password/app-password compatibility only |
+| Stable UID and readonly | [RFC9051 §2.3.1.1 and6.3.3](https://www.rfc-editor.org/rfc/rfc9051.html#section-6.3.3), “identified as read-only” | UIDVALIDITY+UID, EXAMINE INBOX; BODY.PEEK selected headers; no body/Seen mutations |
+| Common rev1 UID subset | [RFC3501 §6.4.8](https://www.rfc-editor.org/rfc/rfc3501.html#section-6.4.8), “A non-existent unique identifier is ignored” | Explicit IMAP4rev1 or IMAP4rev2 token; numeric ranges and tagged OK prove sparse coverage; sequence position never identity |
+| Literal syntax and PEEK | [RFC9051 §4.3 and6.4.5](https://www.rfc-editor.org/rfc/rfc9051.html#section-4.3) | Separate byte/literal/control states; finite common server response grammar; unexpected extensions fail closed without advancing |
+| Timestamp limitation | [RFC9051 §6.3.12](https://www.rfc-editor.org/rfc/rfc9051.html#section-6.3.12) | APPEND accepts supplied date; INTERNALDATE alone cannot establish trusted arrival |
+| TLS pin/hostname | [Node22.20.0 TLS](https://nodejs.org/download/release/v22.20.0/docs/api/tls.html#tlsconnectoptions-callback), “servername” | net numeric IP + tls socket, original SNI, rejectUnauthorized, default checkServerIdentity, minTLS1.2 |
+| Backpressure | [Node22.20.0 Stream](https://nodejs.org/download/release/v22.20.0/docs/api/stream.html#event-drain), “drain” | write false waits bounded drain; receive queue byte cap and pause/resume; abort destroys socket |
+| Seven-bit UTF-8 MIME | [RFC2045 §6.8](https://www.rfc-editor.org/rfc/rfc2045.html#section-6.8), “Base64 Content-Transfer-Encoding”; [RFC2047](https://www.rfc-editor.org/rfc/rfc2047.html), “encoded-word” | Base64 body/folded encoded subject, ASCII envelope; no SMTPUTF8/8BITMIME negotiation or attachments |
+
+SMTP understands complete4xx versus5xx and exact expected2xx/354 at each phase; malformed/unexpected replies fail closed. Valid final4xx/5xx is explicit rejection but deliberately not auto-retried by N7. No broad RFC-conformance or universal provider claim. IMAP tag correlation, reordered FETCH items, literal byte lengths and bounded unsolicited metadata must be tested through actual local TLS, not inferred from source citations.
