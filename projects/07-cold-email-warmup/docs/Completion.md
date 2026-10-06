@@ -1,5 +1,11 @@
 # Completion — локальное ПО принято; PR заблокирован доступом GitHub
 
+> **Расширение scope от 2026-10-06:** OWN-N7-004 включает unlimited connected
+> mailboxes, реальный автоматический прогрев и AI-ответы ≤5 минут. План:
+> [expanded-mvp-plan](plans/expanded-mvp-plan.md). Ниже сохранена документация
+> принятого локального MVP; его тесты не доказывают готовность расширения.
+
+
 2026-10-03: F01–F05 и F06 A1–A6/B1–B4 приняты. B5 документы/toolkit завершены.
 B6: фактическая попытка GitHub create_pull_request получила403
 `Resource not accessible by integration`; PR не создан. AC-N7-012 остаётся PARTIAL,

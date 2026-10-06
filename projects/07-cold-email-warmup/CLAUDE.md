@@ -1,14 +1,17 @@
 # Project: N7 — Почтовый прогрев
 
 ## Overview
-Локальный MVP SMTP/IMAP warmup и персонализированных цепочек для небольшой B2B команды.
+Принятый локальный MVP SMTP/IMAP warmup и цепочек; expanded MVP по OWN-N7-004
+планируется в docs/plans/expanded-mvp-plan.md.
 Canonical product/architecture docs: docs/. Validated design: docs/validation-report.md.
 Локальный backend и кабинет приняты; source-bound status/PR: docs/Completion.md.
 
 ## Problem & Solution
 Команде нужны общий лимит, отдельное согласие и надёжная остановка после ответа.
 Общий пул начинается с добровольной когорты курса; без пары показываем waiting.
-Репутация unknown до проверяемых наблюдений. AI replies, CRM и покупка доменов исключены.
+Репутация unknown до проверяемых наблюдений. OWN-N7-004 включает AI replies,
+unlimited connected mailboxes и живой автопрогрев в expanded MVP. CRM и покупка
+доменов исключены; реализация и acceptance расширения пока не выполнены.
 
 ## Architecture
 Distributed monolith: web/API и отдельный worker используют PostgreSQL16, очередь

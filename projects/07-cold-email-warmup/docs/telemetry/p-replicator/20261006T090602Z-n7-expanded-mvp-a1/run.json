@@ -1,0 +1,110 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "batch_id": "n7-expanded-mvp-20261006",
+  "project": "projects/07-cold-email-warmup",
+  "feature": "expanded-mvp-scope",
+  "pipeline": "feature",
+  "tier": "XL",
+  "risk_flags": [
+    "mailbox entitlements",
+    "live SMTP IMAP architecture",
+    "AI automated replies and paid provider boundary"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "OpenAI only",
+    "gpt-6.1-sol high coding",
+    "gpt-6-astra high planning and independent review"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
+  "final_revision": null,
+  "spec_sha256": "09ba7b742094e0e5e22c27010ebcb4d7155de2c406772c0c589a795bae6f1a5b",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex API multi-agent",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-10-06T09:06:02.878171Z",
+  "ended_at": null,
+  "status": "running",
+  "acceptance_evidence": [
+    "evidence/cli-update.md",
+    "evidence/architect-receipt.md",
+    "evidence/selected-gate-manifest.json"
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": 0,
+    "ac_total": null,
+    "confirmed_findings_by_severity": {},
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending"
+  },
+  "metrics": {
+    "elapsed_wall_ms": null,
+    "active_wall_ms": null,
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null,
+    "cost_basis": "unavailable"
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Preparation CLI update preceded run creation; exact start unavailable, not retroactively measured",
+    "Coordinator actual model and host usage unavailable",
+    "Native agent requested Astra/high; actual model and usage not exposed by host",
+    "No prelaunch serialized launch digest for native PLAN receipt; terminal receipt and output SHA verified, not companion delivery attestation"
+  ],
+  "current_stage": "VALIDATE",
+  "cli_update": {
+    "package": "@dzhechkov/harness-cli",
+    "before": "0.8.35",
+    "after": "0.8.44",
+    "registry_latest": "0.8.44",
+    "install_flags": [
+      "--ignore-scripts",
+      "--no-audit",
+      "--no-fund"
+    ],
+    "version_smoke_exit": 0,
+    "sqlite_rebuild_exit": 0,
+    "store_health": "OK",
+    "historical_patterns_preserved": 2,
+    "teach_recall_verified": true
+  },
+  "route": {
+    "mechanical_exit": 1,
+    "mechanical_tier": "XL",
+    "rationale": "Commercial entitlements, external provider IO and automated reply authorization affect money and sending invariants; full lifecycle; existing scope approval does not establish live pilot permissions"
+  },
+  "toolkit_checker": {
+    "version": "1.13.4",
+    "path": "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+    "resolution": "NODE_PATH=/root/.npm-global/lib/node_modules"
+  },
+  "browser_readiness_smoke": {
+    "container": "codex-ui-playwright",
+    "version": "1.63.0",
+    "chromium_connect_exit": 0,
+    "isolated_context": "opened and closed",
+    "scope": "runtime smoke only, no N7 E2E claim"
+  },
+  "legacy_traceability": {
+    "exit_code": 2,
+    "canonical_requirements": 16,
+    "canonical_algorithms": 16,
+    "canonical_result": "pass",
+    "features_inconclusive": 6,
+    "reason": "Historical hyphenated role targets incompatible with current underscore map; keep historical evidence, reconcile before implementation"
+  },
+  "selected_traceability": {
+    "exit_code": 0,
+    "scope": "canonical plus exact-byte expanded-mvp only",
+    "requirement_algorithm_pairs": 18,
+    "full_project_result": "not established: legacy6"
+  }
+}

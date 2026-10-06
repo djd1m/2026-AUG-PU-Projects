@@ -121,3 +121,23 @@ Seed strategy — добровольная когорта курса, цель30
 после разрешённого pilot; это ещё не измеренный результат. Для живого провайдера,
 списаний и внешнего deployment нужен [отдельный checkpoint](deployment-checkpoint.md).
 У текущего MVP есть локальная проверенная функциональность, но нет live-пилота.
+
+## Расширенный pipeline от 2026-10-06
+
+[Новый XL-план](plans/expanded-mvp-plan.md) и [дельта требований](features/expanded-mvp/01_specification.md)
+включают unlimited connected, живой автопрогрев и AI replies. F07 снимает
+тарифный лимит подключений, сохраняя finite active admission; F08–F10 добавляют
+проверку провайдеров, SMTP/IMAP и постоянные fair workers; F11–F13 связывают
+bounded inbox context → OpenAI draft → HITL/отдельный autopilot consent →
+существующую необратимую submitting границу; F14 измеряет всю цепочку, F15 —
+живой разрешённый пилот. Оплата остаётся TEST.
+
+Предлагаемый пилот: 100 connected/30 active, 3 tenants, 300 eligible arrivals
+за 7 суток. Цель p95 arrival→SMTP accepted <300s, минимум95% eligible on-time;
+ошибки, просрочки и unknown включены. Draft/API latency не заменяет эту метрику.
+Пилотные параметры — предложение для checkpoint, а не достигнутая ёмкость.
+
+Новый контур прошёл package-owned traceability на exact-byte staging; legacy
+контуры F01–F06 несовместимы с текущим role map и требуют согласования до
+IMPLEMENT. Независимая requirements validation и конкретный XL checkpoint
+предшествуют коду. Local fixture acceptance и live acceptance учитываются отдельно.

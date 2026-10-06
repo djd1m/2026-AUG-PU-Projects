@@ -1,5 +1,11 @@
 # PRD — Когорта
 
+> **Расширение scope от 2026-10-06:** OWN-N7-004 включает unlimited connected
+> mailboxes, реальный автоматический прогрев и AI-ответы ≤5 минут. План:
+> [expanded-mvp-plan](plans/expanded-mvp-plan.md). Ниже сохранена документация
+> принятого локального MVP; его тесты не доказывают готовность расширения.
+
+
 Версия 1, 2026-10-02, CHOSEN_CJM: A. Source: секция 07 исходного prompt.
 Состояние 2026-10-03: локальное ПО реализовано и прошло независимую приёмку;
 почтовые/платёжные адаптеры TEST. Статус PR и deployment — в [Completion](Completion.md).
@@ -19,9 +25,9 @@ tenant isolation, encrypted credentials, real evidence для reputation.
 Free/team entitlement и partner attribution реализованы; локальный TEST
 payment adapter не выполняет live charge. FR/SC/AC — в Specification.md.
 
-Вне scope: AI-ответы, CRM, domain/mailbox purchase, email existence validation,
+Вне scope расширения: CRM, domain/mailbox purchase, email existence validation,
 искусственные открытия/изъятие из spam, автоматическая публикация от имени
-пользователя. README-строка про AI replies отклонена в пользу explicit prompt.
+пользователя. AI-ответы включены решением OWN-N7-004; прежнее исключение отменено.
 
 ## Метрика недели
 

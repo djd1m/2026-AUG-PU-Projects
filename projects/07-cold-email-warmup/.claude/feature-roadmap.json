@@ -1,7 +1,7 @@
 {
-  "version": "1.0",
+  "version": "1.1",
   "project": "07-cold-email-warmup",
-  "current_sprint": "local-mvp",
+  "current_sprint": "expanded-mvp-planning",
   "features": [
     {
       "id": "f01-foundation-auth",
@@ -145,7 +145,210 @@
       "current_slice": "Local software A1–A6/B1–B5 accepted; B6 PR external403",
       "product_accepted_revision": "21e42881",
       "local_accepted_revision": "224508e81ddfbc734241ebdb8c7cdaf4e99931c7"
+    },
+    {
+      "id": "f07-connected-capacity",
+      "number": 7,
+      "name": "Unlimited connected mailboxes and bounded active capacity",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "depends_on": [
+        "f02-mailboxes-consent",
+        "f05-evidence-billing-growth"
+      ],
+      "blockers": [
+        "Concrete expanded XL plan checkpoint; preparatory contract reconciliation"
+      ],
+      "expected_files": [
+        "src/billing/plans.ts",
+        "src/mailboxes/store.ts"
+      ],
+      "requirements": [
+        "AC-expanded-mvp-001"
+      ],
+      "sprint": "expanded-mvp",
+      "scope_revision": "sha256:09ba7b742094e0e5e22c27010ebcb4d7155de2c406772c0c589a795bae6f1a5b"
+    },
+    {
+      "id": "f08-live-diagnostics",
+      "number": 8,
+      "name": "Independent pinned SMTP and IMAP diagnostics",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "f07-connected-capacity"
+      ],
+      "blockers": [],
+      "expected_files": [
+        "src/mailboxes/provider.ts",
+        "src/mailboxes/network.ts"
+      ],
+      "requirements": [
+        "AC-expanded-mvp-002"
+      ],
+      "sprint": "expanded-mvp",
+      "scope_revision": "sha256:09ba7b742094e0e5e22c27010ebcb4d7155de2c406772c0c589a795bae6f1a5b"
+    },
+    {
+      "id": "f09-live-transport",
+      "number": 9,
+      "name": "Safe live SMTP and bounded UID IMAP adapters",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "f08-live-diagnostics"
+      ],
+      "blockers": [],
+      "expected_files": [
+        "src/dispatch/adapter.ts",
+        "src/replies/adapter.ts"
+      ],
+      "requirements": [
+        "AC-expanded-mvp-003"
+      ],
+      "sprint": "expanded-mvp",
+      "scope_revision": "sha256:09ba7b742094e0e5e22c27010ebcb4d7155de2c406772c0c589a795bae6f1a5b"
+    },
+    {
+      "id": "f10-durable-runtime",
+      "number": 10,
+      "name": "Persistent fair workers and automatic pool",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "f09-live-transport"
+      ],
+      "blockers": [],
+      "expected_files": [
+        "src/dispatch/worker.ts",
+        "src/replies/worker.ts",
+        "src/pool/store.ts"
+      ],
+      "requirements": [
+        "AC-expanded-mvp-004"
+      ],
+      "sprint": "expanded-mvp",
+      "scope_revision": "sha256:09ba7b742094e0e5e22c27010ebcb4d7155de2c406772c0c589a795bae6f1a5b"
+    },
+    {
+      "id": "f11-inbound-context",
+      "number": 11,
+      "name": "Bounded tenant-bound incoming context and retention",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "f09-live-transport"
+      ],
+      "blockers": [],
+      "expected_files": [
+        "src/replies/store.ts"
+      ],
+      "requirements": [
+        "AC-expanded-mvp-005"
+      ],
+      "sprint": "expanded-mvp",
+      "scope_revision": "sha256:09ba7b742094e0e5e22c27010ebcb4d7155de2c406772c0c589a795bae6f1a5b"
+    },
+    {
+      "id": "f12-ai-drafts-hitl",
+      "number": 12,
+      "name": "OpenAI drafts and versioned human approval",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "f11-inbound-context"
+      ],
+      "blockers": [],
+      "expected_files": [
+        "src/ai",
+        "src/web/app.ts"
+      ],
+      "requirements": [
+        "AC-expanded-mvp-006"
+      ],
+      "sprint": "expanded-mvp",
+      "scope_revision": "sha256:09ba7b742094e0e5e22c27010ebcb4d7155de2c406772c0c589a795bae6f1a5b"
+    },
+    {
+      "id": "f13-ai-authority-send",
+      "number": 13,
+      "name": "Explicit AI autopilot consent and shared dispatch fence",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "f10-durable-runtime",
+        "f12-ai-drafts-hitl"
+      ],
+      "blockers": [],
+      "expected_files": [
+        "src/dispatch/submission.ts",
+        "src/consent/store.ts"
+      ],
+      "requirements": [
+        "AC-expanded-mvp-007"
+      ],
+      "sprint": "expanded-mvp",
+      "scope_revision": "sha256:09ba7b742094e0e5e22c27010ebcb4d7155de2c406772c0c589a795bae6f1a5b"
+    },
+    {
+      "id": "f14-capacity-slo",
+      "number": 14,
+      "name": "Full-path telemetry and finite-capacity acceptance",
+      "priority": "mvp",
+      "status": "planned",
+      "complexity": "complex",
+      "depends_on": [
+        "f07-connected-capacity",
+        "f13-ai-authority-send"
+      ],
+      "blockers": [],
+      "expected_files": [
+        "src/ai",
+        "scripts",
+        "docs"
+      ],
+      "requirements": [
+        "AC-expanded-mvp-008"
+      ],
+      "sprint": "expanded-mvp",
+      "scope_revision": "sha256:09ba7b742094e0e5e22c27010ebcb4d7155de2c406772c0c589a795bae6f1a5b"
+    },
+    {
+      "id": "f15-authorized-live-pilot",
+      "number": 15,
+      "name": "Authorized seven-day live pilot and full-path acceptance",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "depends_on": [
+        "f14-capacity-slo"
+      ],
+      "blockers": [
+        "Explicit live pilot account/provider/recipient/OpenAI budget and deployment authorization"
+      ],
+      "expected_files": [
+        "docs"
+      ],
+      "requirements": [
+        "AC-expanded-mvp-009"
+      ],
+      "sprint": "expanded-mvp",
+      "scope_revision": "sha256:09ba7b742094e0e5e22c27010ebcb4d7155de2c406772c0c589a795bae6f1a5b"
     }
   ],
-  "last_completed": "f05-evidence-billing-growth"
+  "last_completed": "f05-evidence-billing-growth",
+  "scope_decision": "OWN-N7-004",
+  "scope_plan": "docs/plans/expanded-mvp-plan.md",
+  "scope_checkpoint": "pending concrete XL plan approval",
+  "preimplementation_gates": [
+    "Reconcile legacy six feature contours with current role-map/traceability contracts without invalidating historical acceptance",
+    "Confirm primary SMTP/IMAP/OpenAI capability contracts before dependent implementation"
+  ]
 }

@@ -1,5 +1,11 @@
 # Architecture — N7 v1.1
 
+> **Расширение scope от 2026-10-06:** OWN-N7-004 включает unlimited connected
+> mailboxes, реальный автоматический прогрев и AI-ответы ≤5 минут. План:
+> [expanded-mvp-plan](plans/expanded-mvp-plan.md). Ниже сохранена документация
+> принятого локального MVP; его тесты не доказывают готовность расширения.
+
+
 ## Architecture Overview
 
 Distributed Monolith in project monorepo. Local Docker Compose on the development host, separate N7 network and volumes.
