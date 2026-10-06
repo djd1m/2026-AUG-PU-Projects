@@ -42,4 +42,4 @@ Previous index: `history/validation-report.pre-a2-bdd.md`, sha256:9fa60c57ae8a0c
 ## Input digests
 
 - `01_specification.md`: sha256:65603ddd620ddeda59392fb673994aaf41b3199f46af6d0f03bf99eabd3a9bc4
-- `scenarios.md`: sha256:9240dfab40841529acafc1ffebd21c302e9afe8cd262a0eca4d71fc78599dd5b
+- `scenarios.md`: sha256:bca9a48648cfe0a5182e01fc472227b1691efc499cae7493a81fe197fbacd61c

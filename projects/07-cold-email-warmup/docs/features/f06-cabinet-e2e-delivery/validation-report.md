@@ -54,6 +54,6 @@ Previous index: `history/validation-report.pre-a2-bdd.md`, sha256:11810a7376e88f
 ## Input digests
 
 - `01_specification.md`: sha256:044d738715cc33c29c453805648b209176ecdcf12c8c8c7320b2e7cd3265e1ce
-- `scenarios.md`: sha256:4d3866b1804ca97d5301dd1edfbc5cad66e3c26aafa5f68f0896a027d773d08b
+- `scenarios.md`: sha256:27f3431cf25443232fa0b81c5d4cb3090754a0a51347d9947ce4119eec416a5e
 
 F06 B6 remains not met: GitHub403 PR creation, no PR and no newly authorized release. Full documentation testability does not remove this delivery blocker.
