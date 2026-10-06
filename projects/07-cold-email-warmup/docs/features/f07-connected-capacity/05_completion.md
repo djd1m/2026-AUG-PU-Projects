@@ -1,11 +1,11 @@
 # F07 — Implementation and executed checks
 
-IMPLEMENT attempt f07-implement-a1; independent acceptance remains pending.
+IMPLEMENT attempt f07-implement-a1 accepted by fresh independent f07-review-a1 at source10c8e946; integrated code revision7fbc1874. All8 AC met; review-contract0.
 RUN_ID: 20261006T090602Z-n7-expanded-mvp-a1.
 Spec SHA256: 8c55e447d6a5e9f8b98f5bbb0415102089ed300b31142dab42f73d44ac9d7712.
 Source/build/actual image bindings and final results are in the terminal receipt
 /tmp/n7-f07-implement-a1-receipt.md and evidence /tmp/n7-f07-implement-a1.
-Coordinator integrates permanent evidence paths; these files do not claim delivery.
+Permanent receipts,93-file runtime source reconciliation, archived raw logs and browser reports: `../../telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f07-implement-a1/`. Independent report: `review-report.md`. F07 local acceptance does not complete expanded MVP or authorize live delivery.
 
 ## Criterion coverage
 

@@ -151,7 +151,7 @@
       "number": 7,
       "name": "Unlimited connected mailboxes and bounded active capacity",
       "priority": "mvp",
-      "status": "in_progress",
+      "status": "done",
       "complexity": "complex",
       "depends_on": [
         "f02-mailboxes-consent",
@@ -168,14 +168,15 @@
       "sprint": "expanded-mvp",
       "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
       "preimplementation_gate": "Full PLAN/VALIDATE and independent legacy review accepted; F07 READY",
-      "plan_revision": "sha256:8c55e447d6a5e9f8b98f5bbb0415102089ed300b31142dab42f73d44ac9d7712"
+      "plan_revision": "sha256:8c55e447d6a5e9f8b98f5bbb0415102089ed300b31142dab42f73d44ac9d7712",
+      "accepted_source": "10c8e946ca7f9e7e6d30f386c9e5069acb0097f2"
     },
     {
       "id": "f08-live-diagnostics",
       "number": 8,
       "name": "Independent pinned SMTP and IMAP diagnostics",
       "priority": "mvp",
-      "status": "planned",
+      "status": "in_progress",
       "complexity": "complex",
       "depends_on": [
         "f07-connected-capacity"
@@ -343,7 +344,7 @@
       "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a"
     }
   ],
-  "last_completed": "f05-evidence-billing-growth",
+  "last_completed": "f07-connected-capacity",
   "scope_decision": "OWN-N7-004",
   "scope_plan": "docs/plans/expanded-mvp-plan.md",
   "scope_checkpoint": "approved OWN-N7-005",

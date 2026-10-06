@@ -73,7 +73,7 @@
     "No prelaunch serialized launch digest for native PLAN receipt; terminal receipt and output SHA verified, not companion delivery attestation",
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred."
   ],
-  "current_stage": "INTEGRATE F07",
+  "current_stage": "ROUTE F08",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -135,9 +135,9 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "root",
-    "executor": "n7_expanded_coordinator integrating accepted F07; next f08 planner allocation follows gates",
-    "next": "Independent source-bound review8min, then only confirmed corrections/integration and F08 route",
-    "source_revision": "10c8e946ca7f9e7e6d30f386c9e5069acb0097f2"
+    "executor": "n7_expanded_coordinator allocating f08 planner",
+    "next": "/next F08 → /go risk route → full /feature PLAN; actual planner launch follows",
+    "source_revision": "7fbc1874"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -163,9 +163,9 @@
     "exit_code": 2,
     "cause": "Historical installed bug/legacy deficiencies retained; current patched integrated result below is authoritative",
     "package_bug_notified_root": true,
-    "patched_exit_code": 2,
-    "inconclusive_count": 1,
-    "reason": "Known expanded9 + F06B5/B6 gaps; newly integrated F07 pre-code completion table absent. No Phase3 pass claimed."
+    "patched_exit_code": 1,
+    "inconclusive_count": 0,
+    "reason": "F07 and active F05 bindings established. Eight future expanded witnesses and F06 B5/B6 remain10explicit gaps; no whole completion PASS."
   },
   "reporting": {
     "required_by_owner": "2026-10-06 via root message",
@@ -193,8 +193,11 @@
     "guard_mutations_caught": 2,
     "independent_review": "ACCEPT",
     "full_completion_exit": 1,
-    "known_completion_gaps": 12,
+    "known_completion_gaps": 10,
     "source_continuity_files": 93,
-    "source_continuity_mismatches": 0
+    "source_continuity_mismatches": 0,
+    "integrated_code_revision": "7fbc1874",
+    "review_contract_exit": 0,
+    "integrated_phase12_exit": 0
   }
 }

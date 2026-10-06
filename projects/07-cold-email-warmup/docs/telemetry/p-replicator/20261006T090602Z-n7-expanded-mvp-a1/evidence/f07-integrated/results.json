@@ -1,0 +1,22 @@
+[
+  {
+    "check": "phase12",
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "check": "completion",
+    "exit_code": 1,
+    "expected": 1
+  },
+  {
+    "check": "review-contract",
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "check": "runtime-source-continuity",
+    "files": 93,
+    "mismatches": 0
+  }
+]
