@@ -4,28 +4,52 @@ Canonical FR-n7-008/009 and FR-GROWTH-001..004, SC-US-008..013; Pseudocode evide
 
 ## F05a — billing and attribution (six AC)
 
+### AC-f05-evidence-billing-growth-001
+
 AC-A1: server-owned free/team config; TESTteam100minorRUB30days immutable; no clientamount/currency/duration override. Free limits3mailboxes/3activecampaigns, team10/10, currententitlement checked transactionally on creatingmailbox/startingnewcampaign. Expiry doesn't delete existing resources; existingover-limit read/pause/edit allowed, newcreation/activationdenied untilunderlimit. Duplicateactive start idempotent. No tariff raises hardmailquota30 orremovesunsubscribe/consent. API returns limits/mode/TESTlabel; unauthorized401/foreign404/Origin preserved. Existing testfixtures may explicitlyfixturegrant team where test needscapacity, never weaken safety assertions.
+
+### AC-f05-evidence-billing-growth-002
 
 AC-A2: unique nonPII partnercode pertenant, owner-only status/aggregate endpoints; signed boundedpurpose-specific30daycookie landing /r/:code, invalid/inactivecodeexplicitrejection. Before checkout validexplicitcodewins, invalidexplicitcodeerrors no cookiefallback, otherwise validatedcookie; tampered/expiredcookie noattribution and explicitstatus. Selfreferraldenied, snapshots storepartner/code before providercreate. Cookieblocked validexplicitcodeworks. Deactivationafterintent doesn't rewrite frozen snapshot; firsteligibleconversionusesvalid-at-checkout snapshot, no rewardpromise.
 
+### AC-f05-evidence-billing-growth-003
+
 AC-A3: session/Origin POSTcheckout acceptsclosedbody plan='team', clientidempotencykey8–128, optionalexplicitcode only. Unique(tenant,key) immutable plan/amount/currency/attribution/providerkey; changedpayload conflict409, identicalparallelrepeat oneintent/providerpayment. Existingproviderbinding reused notnewcreate onretry; crashafterprovidercreate beforebinding recoverssameprovideridempotencykey. Providercall outsideDBtransaction. Usabletestcheckout/status, notunavailable-only. Disabledmode503(orconsistenttypedunavailable) creates0providerstate/grants; no livefallback.
+
+### AC-f05-evidence-billing-growth-004
 
 AC-A4: independentdurable localproviderfixture separatefromintent/entitlement, operator-only simulate pending→success/cancel and revocation/expiryteststate withmonotonicversion. Publicredirect/status/query/bodycannotwriteprovidertruth. Reconcilefetchcanonicalamountcurrencytenant/intentmetadata/status outsideapplicationtransaction; callbackmerelywake-up, authenticatedlocaladapter/operator route withboundedbody. Matchallimmutablefieldsbeforegrant. Serializeproviderfixturechanges/reconciliation commit or comparecurrentversionatomically torejectstalesuccessfetch aftercancel/expiry, noIOunderDBlock. Eventdedup cannotbypasscanonicalreverification.
 
+### AC-f05-evidence-billing-growth-005
+
 AC-A5: atmostoneentitlementgrant perintent, fixedexpires_at=verifiedpaidAt+30days, no replayextension; currenttimeexpiryservertruth, canceled/revoked/expired cannotresurrectfromstaleevent. Attribution snapshot existedbeforegrant; atmostone firsteligibleTESTconversion perbuyertenant, duplicates/replays/self/tampered0fraud,2distincteligiblebuyers=>2aggregate. Nootherbuyeridentitiesrevealed. Concurrent/reorderedcanonicalevents anddelayedfetch barriers actualPG. Providerfixturefailure typed503 grants0.
+
+### AC-f05-evidence-billing-growth-006
 
 AC-A6: actuallocalHTTPcheckout→operatorfixture success→canonicalfetch→oneTESTgrant+attributedconversion, cancel/expiry/redirect/mismatchnegativebranches allSC009/011/013. Type/lint/build/fullunit/realPG, meaningfultamperedcanonicalguardmutation+restoredgreen, rate/body/secretcanary/sourceimagebinding andfreshAstra. Reuse auditedN3/N6primitivepatterns withexactSHA/securityadaptationrecord; no unrelateddonorcode/docs. B later consumes authoritative entitlement/partnerinterfaces; Adoesnotclaimreportbadge yet.
 
 ## F05b — evidence, sharing and server badge (six AC)
 
+### AC-f05-evidence-billing-growth-007
+
 AC-B1: owner-only boundedmanualobservations require sourceURL/reference, observeddates, metric/unit/windows, rawvalue/denominator andexplicitmanualverification. NoexternalURLfetch; strictfinitevalues/direction/window validation, untrustedstringsescaped. Labelmanual/user-confirmed, notindependentproviderverification. Missingvalidobservation reputationunknown; SMTPaccepted/localfixturecounts separately no inventedscore/causalclaim.
+
+### AC-f05-evidence-billing-growth-008
 
 AC-B2: comparability same source/metric/unit/direction/equalUTCwindowduration nonoverlap, latestage<=7days exactboundary, baseline<=28days beforelatest, nofuturedata. Strictdeclaredhigher/lower improvement; n<30 rawcountsonly, bothdenominators>=30forratios. Unknown/stale/incomparable/noimprovement explicitreason, shareblocked. Tenantbinding404foreign. Deterministic7days/7days+1ms/28days+1ms/29/30/badwindow tests allSC008-3.
 
+### AC-f05-evidence-billing-growth-009
+
 AC-B3: explicitauthenticatedPOSTshare selectsowncomparablepair, idempotencykey boundpayload. Createone randomopaqueanonymousreport/token andone shareevent; noautoemail/post. Publicprojectionwhitelist generatedtitle, constrainedmetric/unit/dates/rawvalues, privacy-safeprovenance (sourceorigin/manuallabel, omitprivateURLpath/query/reference); no emails/mailboxIDs/tenantIDs/credentials/contactfields/rawHTML. Privateinputsource/reference maycontain sensitiveinfo andmustnotpasspublic. No broad sanitizer guess replacesexplicitwhitelist. Authorizepair/recheckfreshnessatcreation, noforeignreads.
+
+### AC-f05-evidence-billing-growth-010
 
 AC-B4: public report dynamicallyconsultscurrentserverentitlement onEVERYview; free/expired/revokedreturnsonevisibleN7sourcebadge, paidTESTteammayhide, paid=true/clientflagsignored. Immutablehistoricalsnapshot retainsrawvalues/provenance; onstaleview labelhistorical anddisablecurrentimprovementclaim, notfalselyfresh. Sharingneverremovesunsubscribeinmailrenderer. Accessiblepublicreport HTML noactiveusercontent, opaque404unknown/revoked token, noPIIcanaries.
 
+### AC-f05-evidence-billing-growth-011
+
 AC-B5: partnerpanelownaggregate events(counts onlyunder30), twoeligibleconversionscount2, duplicates0, foreigntenant404/noidentities. Shareeventcopy/link UIseam explicit andidempotent, metricprovenanceandTESTconversionlabelspreserved. Serverpagination bounds histories/reports/events. No fabricatedgrowth/reputation/socialproof.
+
+### AC-f05-evidence-billing-growth-012
 
 AC-B6: realPG/API(publicreportHTTP) source-boundallSC008/010/012/013, concurrencyshare/dedup andentitlementexpiry/revocation races, meaningfulshareguardorbadgepredicate mutantRED/restoredGREEN, fullregression/type/lint/build/securitysourceimageproof+freshAstra. FullcabinetPlaywrightF06stillmandatorylater; reportHTMLbackendtestsnotclaimwholeUX. EntireF05requiresA+B12/12.
