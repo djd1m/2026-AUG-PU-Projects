@@ -1,6 +1,6 @@
 # F10 — ошибки, проверяемые границы и тестовый план
 
-PLAN, f10-plan-a2. Все tests ниже FUTURE. Выполнение не заявлено. 01/02 immutable from7c8f7334; independent VALIDATE должен проверить смысл контрактов до IMPLEMENT.
+PLAN, f10-plan-r3 targeted F10-V1 correction. Все tests ниже FUTURE. Выполнение не заявлено. Изменённая01/02 требует свежей spec-bound independent VALIDATE до IMPLEMENT.
 
 ## Edge Cases Matrix
 
@@ -18,7 +18,7 @@ PLAN, f10-plan-a2. Все tests ниже FUTURE. Выполнение не за�
 | Midnight | old queued pair and current-day reservation | current day pair uniqueness and quota, unknown history retained | final recheck after actual lock wait |
 | Stop versus upkeep | deactivate/revoke racing renewal/reconciliation | no restored activity/consent or send | FIRST global lock and existing-row intent |
 | Noisy tenant | large campaign queue plus other tenants | every eligible tenant selected, healthy measured rounds | durable tenant rotation independent of job volume |
-| Slow rescan | one mailbox continuously older due | other mailbox due times remain bounded | adversarial per-mailbox witness; no average-only assertion |
+| Slow rescan | four older long rescans A–D and later-due healthy E in same tenant with4 poll lanes | after first selected quanta E precedes any eligible A–D continuation; age preserved | persisted mailbox service_seq and actual per-mailbox selection/completion gaps, including restart |
 | Peer conflict | earliest pair already allocated | next legal pair visited same bounded round | advance persistent cursor and continue |
 | Unknown parent | parent submitting/unknown | zero reply jobs | reply only submitted initial and unique parent |
 | Gate missing | live mode but no active grant | no external decrypt/DNS/socket operation | retained F09 authority checks |
@@ -39,9 +39,9 @@ Browser: not_applicable, no UI changes planned. If implementation adds UI, read 
 
 SC-F10-001 happy/error — Given queued/claimed/submitting/unknown plus partially scanned UID state, When a built worker drains then restarts or dies after submitting commit, Then safe queued work progresses, expired owner callbacks fail, unknown is never resent and cursor/pause survive. Assert no new claims after drain start and measured15s conditional cleanup; absent exit proof yields cleanup_blocked, not a forced release.
 
-SC-F10-002 happy/error — Given30 active across3 tenants and100 connected with one waiting activation, When several fair poll rounds and restart run, Then each active participant's measured healthy completion gap≤30s and selection round≤60s; lease120s refreshes, freed capacity admits waiting fairly. Concurrent deactivate must remain deleted; one stale provider is reported and cannot monopolize other tenants.
+SC-F10-002 happy/error — Given30 active across3 tenants and100 connected with one waiting activation, When several fair poll rounds and restart run, Then each active participant's measured healthy completion gap≤30s and selection round≤60s; lease120s refreshes, freed capacity admits waiting fairly. Concurrent deactivate must remain deleted; one stale provider is reported and cannot monopolize other tenants. F10-V1 adversarial case: same tenant A–D have older due_at and enough successful5s page quanta to exceed a30s window; later-due healthy E is eligible before their first claims. After A–D each receive one quantum, E must be selected before any A–D second quantum. Record each mailbox selection/completion/max-gap, not aggregate averages, and require E healthy completion<=30s and fair selection<=60s under the declared fixture window. Restart after first claims/yields retains the same order and original due_at; successful pages, transport_busy and provider failures all consume the selected turn while next_check_at only gates re-entry. No exclusion of E or extra lanes is permitted.
 
-SC-F10-003 happy/error — Given all physical slots occupied including a suspended child, When expiry passes and competitors claim, Then physical global2/4 and mailbox1 limits hold, no orphan reclaim occurs. Resume/abort and confirm exit releases exact slot; DB failure delays release; a stale proof cannot release a newer operation. Rescan page yield never sets scan_complete without the existing complete proof.
+SC-F10-003 happy/error — Given all physical slots occupied including a suspended child, When expiry passes and competitors claim, Then physical global2/4 and mailbox1 limits hold, no orphan reclaim occurs. Resume/abort and confirm exit releases exact slot; DB failure delays release; a stale proof cannot release a newer operation. Rescan page yield never sets scan_complete without the existing complete proof. Repeat the SC-F10-002 A–D/E case under competing workers and restart; assert each selected quantum durably advances mailbox service_seq once before I/O, claimed rows cannot overlap, and continuation cannot jump E by retaining older due_at. Preserve20pages/120s and fixed physical slots; exhausted rescan stays held until the existing explicitly authorized retry, never a scheduler timer.
 
 SC-F10-004 happy/error — Given mixed campaigns/pool, provider cap3, current UTC day and pending stop, When20 workers compete through final fence on both sides of midnight and stop commit, Then shared quota and current consent/freshness win, same mailbox starts≥60s apart, stop-before gives0 calls and after allows only in-flight. Proven pre-DATA retry does not override pacing/120s; ambiguous state has0 resubmissions.
 
@@ -53,7 +53,7 @@ SC-F10-007 happy/error — Given frozen candidate/spec and trusted fixtures, Whe
 
 ## Mutation obligations
 
-Each material guard must fail with a targeted temporary mutation and pass after exact restoration: bypass tenant predicate; remove consent/freshness check; weaken current-day/shared quota; allow pacing bypass; release expired occupied slot; drop generation/source guard; return on first pair conflict; mark yielded/incomplete scan complete. Test expected values are independent of implementation constants. Mutation harness must preserve diff/source hashes and restore bytes; coordinator owns whole-suite final gate. Do not call an unexecuted mutation PASS.
+Each material guard must fail with a targeted temporary mutation and pass after exact restoration: bypass tenant predicate; remove consent/freshness check; weaken current-day/shared quota; allow pacing bypass; release expired occupied slot; drop generation/source guard; return on first pair conflict; mark yielded/incomplete scan complete; replace mailbox service_seq ordering with oldest due_at or reset mailbox sequence on yield/restart (the A–D/E witness must turn red). Test expected values are independent of implementation constants. Mutation harness must preserve diff/source hashes and restore bytes; coordinator owns whole-suite final gate. Do not call an unexecuted mutation PASS.
 
 ## Performance Optimizations
 
@@ -69,6 +69,6 @@ No new user surface in F10. Existing waiting/paused explanations may use current
 
 ## Technical Debt and independent review targets
 
-The immutable01/02 design needs independent semantic validation, particularly: (1) who may invoke explicit ReplyStore.retry and that rescan_incomplete is not silently auto-resumed; (2) whether tenant rotation plus oldest-due mailbox and page quantum actually prevent within-tenant starvation; (3) how all-slot orphan crash affects the parent persistent recovery promise; (4) current-day pair uniqueness when old initial/reply jobs cross midnight; (5) DB timeouts, cancellation and all callbacks fit conditional15s drain. These are named review questions, not findings declared fixed by architecture prose. Any required01/02 change returns to coordinator for a separately owned corrective revision and fresh spec-bound validation. No general orphan attestation platform is authorized: until exact previous isolated-container termination proof exists, F09 fail-closed slots remain blocked.
+The corrected01/02 design needs fresh independent semantic validation, particularly: (1) who may invoke explicit ReplyStore.retry and that rescan_incomplete is not silently auto-resumed; (2) F10-V1 correction: persisted per-mailbox service_seq selection/claim ordering and A–D/E restart witness must establish within-tenant fairness; (3) how all-slot orphan crash affects the parent persistent recovery promise; (4) current-day pair uniqueness when old initial/reply jobs cross midnight; (5) DB timeouts, cancellation and all callbacks fit conditional15s drain. These are named review questions, not findings declared fixed by architecture prose. Any required01/02 change returns to coordinator for a separately owned corrective revision and fresh spec-bound validation. No general orphan attestation platform is authorized: until exact previous isolated-container termination proof exists, F09 fail-closed slots remain blocked.
 
 Inherited F06 AC011 executable documentary witness is UNVERIFIABLE; AC012 PR delivery remains not met (historical GitHub403). F10 does not erase these gaps. F11–F15 and external live pilot are separate pending slices; safe local runtime does not prove AI, arrival SLO or7day live performance.

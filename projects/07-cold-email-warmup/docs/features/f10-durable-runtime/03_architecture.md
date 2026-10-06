@@ -1,6 +1,6 @@
 # F10 — архитектура постоянного runtime
 
-PLAN / AUTO, attempt f10-plan-a2, 2026-10-06. Исходный partial commit7c8f7334e2950fe9326034e0184ba4f3b7d5ef4e; parent baseline2248aa17. 01_specification.md и02_pseudocode.md неизменны. Это placement и физическое отображение их контрактов, не приёмка реализации.
+PLAN / AUTO, attempt f10-plan-a2, 2026-10-06. Исходный partial commit7c8f7334e2950fe9326034e0184ba4f3b7d5ef4e; parent baseline2248aa17. Точечная коррекция F10-V1 (f10-plan-r3) согласует durable mailbox rotation с01/02; остальные контракты сохраняются. Это placement и физическое отображение их контрактов, не приёмка реализации.
 
 ## Architecture Overview
 
@@ -42,7 +42,7 @@ These paths are a future implementation split; no implementation writer is dispa
 
 Logical field authority is exclusively02_pseudocode.md, Data Structures. Map RuntimeDue→runtime_due, RuntimeTenantTurn→runtime_tenant_turn, RuntimeMailbox→runtime_mailbox via additive migrations. Each mailbox relation has composite tenant/mailbox foreign ownership binding; unique(mailbox,kind) and unique(tenant,kind) enforce the logical identities. Use timestamptz for timestamps, date for UTC pool_day, bigint for generation/service sequence, UUID for IDs/cursor; CHECK constraints preserve the exact enums in02. Do not maintain a second consent or capacity ledger.
 
-Index due selection by(kind,next_check_at,due_at,mailbox_id), tenant rotation by(kind,service_seq,tenant_id), and mailbox metadata by tenant/mailbox. Bounded due SELECT uses SKIP LOCKED, but all eligibility mutations still acquire global(7,1) FIRST; SKIP LOCKED never replaces this serialization. Sequence gaps from rollbacks are harmless ordering tokens, not counts of delivered messages. Restart keeps original due_at and persisted service order; a heartbeat cannot reset starvation age.
+Index eligible-mailbox service ordering by(kind,tenant_id,service_seq,due_at,mailbox_id), with due_at<=now/next_check_at<=now and claim state as eligibility filters; retain a separate(kind,next_check_at) index for bounded wakeup lookup. Index tenant rotation by(kind,service_seq,tenant_id), and mailbox metadata by tenant/mailbox. RuntimeDue.service_seq starts0 only on INSERT; the same FIRST-lock selection transaction assigns fresh PG sequence values to tenant and selected mailbox before I/O, including turns later returning busy/failure. Completion and reconciliation preserve those values, so an older continuation cannot precede an unserved eligible mailbox solely by due_at. Bounded due SELECT uses SKIP LOCKED, but all eligibility mutations still acquire global(7,1) FIRST; SKIP LOCKED never replaces this serialization. Sequence gaps from rollbacks are harmless ordering tokens, not counts of delivered messages. Restart keeps original due_at and persisted service order; a heartbeat cannot reset starvation age.
 
 Existing capacity_lease rows remain activity intent. Deactivation deletes intent and must not be reversed by reconciliation UPSERT. Existing consent/pool_member relationship remains authoritative. Existing send_job pair_key and unique initial pair/day and parent reply constraints are retained; metadata cursor does not create authority. Existing send_job claimed45s and submitting/unknown reservations are not converted to runtime leases. Runtime120s lease merely fences quantum state.
 
@@ -64,7 +64,7 @@ Config keeps disabled/local_test/live_provider distinctions and independent SMTP
 
 ## Scalability Considerations
 
-100 connected/30 active/≥3 tenants is the approved measured A1 fixture workload, not a global connected cap. Reconciliation keyset pages≤100; at most30 active peer candidates per sender quantum; no full list of unlimited records or unbounded promises. Tenant rotation occurs on selected work even if the operation fails; next_check separates backoff from original due age. Poll4 and send2 capacity are independent; maintenance cannot wait for SMTP completion. A rescan yields after one protocol quantum while preserving20page/120s attempt bounds.
+100 connected/30 active/≥3 tenants is the approved measured A1 fixture workload, not a global connected cap. Reconciliation keyset pages≤100; at most30 active peer candidates per sender quantum; no full list of unlimited records or unbounded promises. Tenant AND mailbox rotation occur durably on selected work even if the operation fails; next_check separates backoff eligibility from original due age. Four old same-tenant rescans must yield to a later-due unserved healthy mailbox before taking another quantum; restart preserves that service order. Poll4 and send2 capacity are independent; maintenance cannot wait for SMTP completion. A rescan yields after one protocol quantum while preserving20page/120s attempt bounds.
 
 Healthy poll≤30s, due round≤60s and pool round≤300s are acceptance targets measured per participant. Slow providers, orphan slots and outages remain visible misses/blocked states. Fixed slots prevent resource escalation to hide overload. Queue class precedence and retry pacing follow01/02; no invented aggregate throughput guarantee.
 
