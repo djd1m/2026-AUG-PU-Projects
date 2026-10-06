@@ -1,6 +1,6 @@
 # F08 — planned completion, not runtime acceptance
 
-PLAN only at baseline e61006749f69bd352759c7520f2a7e99aef24bd2. No code, dependencies, protocol sockets, PG tests, browser, external provider, paid API or deployment executed by planner. Source-bound independent VALIDATE is next; all runtime criteria below remain pending. Companion E2E preflight: not_applicable for docs-only PLAN.
+PLAN only at baseline e61006749f69bd352759c7520f2a7e99aef24bd2. No code, dependencies, protocol sockets, PG tests, browser, external provider, paid API or deployment executed by planner. Initial independent VALIDATE at b3aa56cd reported NEEDS WORK / F08-V1. This targeted correction defines durable serialized authority without changing the specification; the original report/scenarios remain preserved and narrow independent revalidation is next; all runtime criteria below remain pending. Companion E2E preflight: not_applicable for docs-only PLAN.
 
 ## Planned criterion coverage
 
@@ -29,10 +29,10 @@ After real tests exist: actual Criterion coverage table, source/canon/ownership/
 
 Pre-deployment requires approved scope, all tests/security/docs/review and tested rollback. Sequence:1 coordinator integrates accepted commit;2 operator separately authorizes scoped external diagnostic accounts/endpoints/grant expiry;3 run and observe only authorized diagnostics. No current publication/live permission follows from this plan. Pipeline uses test → build → separately authorized deployment, existing scripts only; no invented deploy.sh.
 
-Rollback: disable/revoke diagnostic grant, abort in-flight diagnostics, invalidate current evidence under global lock; restore prior app while keeping additive columns and encrypted data. Never discard unknown send attempts or fabricate verified state. Test schema12→13 and old-app compatibility; do not drop mailbox data.
+Rollback: run privileged diagnostic-authority revoke with expected current revision and verify its committed new revision (file deletion alone is not revocation), abort in-flight diagnostics, invalidate current evidence under global lock; restore prior app while keeping additive columns and encrypted data. Never discard unknown send attempts or fabricate verified state. Test schema12→13 and old-app compatibility; do not drop mailbox data.
 
 ## Monitoring and operations
 
 Track scrubbed counts by protocol/phase/code, diagnostic total duration, admission429, stale-result409, timeout and byte-limit rejections from application metadata; no mailbox-body/raw transcript aggregation. Operator-visible typed status is the initial alert channel; no fictitious PagerDuty/Slack integration. Existing project log retention applies; current diagnostic row holds only latest metadata, replaces old result on attempt and contains no secret.
 
-Development handoff: six doc hashes, exact result commit, profile compact-quality-first-v2, requested Astra high vs actual host evidence/null, elapsed and unavailable usage. QA: frozen spec, validated scenarios, local TLS fixture CA/hosts and exact test commands. Operations: external grant authorization, kill switch/expiry and rollback. Future F09–F15, F06 residual gaps and external live pilot remain coordinator-owned and pending; no whole-MVP done claim.
+Development handoff: six doc hashes, exact result commit, profile compact-quality-first-v2, requested Astra high vs actual host evidence/null, elapsed and unavailable usage. QA: frozen spec, validated scenarios, local TLS fixture CA/hosts and exact test commands. Operations: external grant authorization, privileged publication/revocation with committed revision receipts, expiry and rollback; failed/rolled-back revoke is not reported complete. Additional F08-V1 real-PG witnesses in refinement cover both commit orderings, stale importer, missing input and authority rollback. Future F09–F15, F06 residual gaps and external live pilot remain coordinator-owned and pending; no whole-MVP done claim.
