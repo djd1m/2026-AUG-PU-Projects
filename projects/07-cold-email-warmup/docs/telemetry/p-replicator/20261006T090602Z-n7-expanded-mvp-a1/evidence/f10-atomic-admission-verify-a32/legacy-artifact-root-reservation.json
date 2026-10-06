@@ -1,0 +1,18 @@
+{
+  "utc": "2026-10-06T22:24:39.028935+00:00",
+  "authority": "root explicit exact2 legacy-file reversible reservation from coordinator message; archiveNEWonlyafterprotocolshortactualjoin and restoreoriginalSHA beforeterminal; no other namespacechange",
+  "checks": [
+    {
+      "name": "short-native-v2.json",
+      "backup_and_legacy_equal": true,
+      "expected_sha256": "60d07dcb6bcec2d5faa0419f86ccb41fce2997564376df6f25d197f5b4ce1007",
+      "bytes": 30677
+    },
+    {
+      "name": "short-native-v2-drain.json",
+      "backup_and_legacy_equal": true,
+      "expected_sha256": "3d19f0b8d4ed427ae24293f9d897c17f0165ef5bc6132b2fffbd8af01f663b2a",
+      "bytes": 56
+    }
+  ]
+}

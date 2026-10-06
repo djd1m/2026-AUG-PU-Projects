@@ -1,0 +1,355 @@
+{
+  "utc": "2026-10-06T22:16:01.797262+00:00",
+  "helper_sha256": "334cfc34f2cb3e0eacc8600c56cbf2bb339c4583c2d3f70b24b5130b936f7dfa",
+  "inventory_sha256": "0225631429945d37277df1dc865030342195c5a0a5b61185aaf2034ef5a8983d",
+  "existing17": [
+    {
+      "name": "oldest-due-order",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "source_sha256": "983a1e5331f17bc7312a4c3f8ea95c7c2728e60b24d5e14708a9084e50fcff28",
+          "anchor_expected": 1,
+          "anchor_actual": 1,
+          "compiled_pair_required": false,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        }
+      ],
+      "exact_test_file": "tests/f10-runtime-integration.test.ts",
+      "exact_test_pattern": "overload backoff preserves due age and independent tenant progress",
+      "expected_material_assertion": "A-D old due turns must yield to healthy E before a second turn",
+      "all_anchors_match": true,
+      "status": "not_executed_A32_baseline_owns_processes"
+    },
+    {
+      "name": "reset-sequence-on-yield",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "source_sha256": "983a1e5331f17bc7312a4c3f8ea95c7c2728e60b24d5e14708a9084e50fcff28",
+          "anchor_expected": 1,
+          "anchor_actual": 1,
+          "compiled_pair_required": false,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        }
+      ],
+      "exact_test_file": "tests/f10-runtime-integration.test.ts",
+      "exact_test_pattern": "overload backoff preserves due age and independent tenant progress",
+      "expected_material_assertion": "A-D old due turns must yield to healthy E before a second turn",
+      "all_anchors_match": true,
+      "status": "not_executed_A32_baseline_owns_processes"
+    },
+    {
+      "name": "drop-generation",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "source_sha256": "983a1e5331f17bc7312a4c3f8ea95c7c2728e60b24d5e14708a9084e50fcff28",
+          "anchor_expected": 2,
+          "anchor_actual": 2,
+          "compiled_pair_required": false,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        }
+      ],
+      "exact_test_file": "tests/f10-runtime-integration.test.ts",
+      "exact_test_pattern": "durable runtime drains and recovers without replaying uncertain sends",
+      "expected_material_assertion": "same owner UUID cannot bypass changed generation",
+      "all_anchors_match": true,
+      "status": "not_executed_A32_baseline_owns_processes"
+    },
+    {
+      "name": "sleep30-completion",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "source_sha256": "983a1e5331f17bc7312a4c3f8ea95c7c2728e60b24d5e14708a9084e50fcff28",
+          "anchor_expected": 1,
+          "anchor_actual": 1,
+          "compiled_pair_required": false,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        }
+      ],
+      "exact_test_file": "tests/f10-runtime-integration.test.ts",
+      "exact_test_pattern": "complete proof becomes immediately eligible without resetting its selected fair turn",
+      "expected_material_assertion": "complete proof adds no successful-poll sleep",
+      "all_anchors_match": true,
+      "status": "not_executed_A32_baseline_owns_processes"
+    },
+    {
+      "name": "failure-held-as-success",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "source_sha256": "983a1e5331f17bc7312a4c3f8ea95c7c2728e60b24d5e14708a9084e50fcff28",
+          "anchor_expected": 1,
+          "anchor_actual": 1,
+          "compiled_pair_required": false,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        }
+      ],
+      "exact_test_file": "tests/f10-runtime-integration.test.ts",
+      "exact_test_pattern": "complete proof becomes immediately eligible without resetting its selected fair turn|partial and held scans cannot manufacture successful polling readiness",
+      "expected_material_assertion": "failure cannot become successful readiness even with a satisfied flag; partial held due age",
+      "all_anchors_match": true,
+      "status": "not_executed_A32_baseline_owns_processes"
+    },
+    {
+      "name": "reset-sequence-on-completed-poll",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "source_sha256": "983a1e5331f17bc7312a4c3f8ea95c7c2728e60b24d5e14708a9084e50fcff28",
+          "anchor_expected": 1,
+          "anchor_actual": 1,
+          "compiled_pair_required": false,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        }
+      ],
+      "exact_test_file": "tests/f10-runtime-integration.test.ts",
+      "exact_test_pattern": "complete proof becomes immediately eligible without resetting its selected fair turn",
+      "expected_material_assertion": "completion retains the selected mailbox turn",
+      "all_anchors_match": true,
+      "status": "not_executed_A32_baseline_owns_processes"
+    },
+    {
+      "name": "first-pair-conflict",
+      "changes": [
+        {
+          "path": "src/pool/store.ts",
+          "source_sha256": "5c79c8cabbdf6f47bf49b1e2e54b0f85f1631dc9992ed69c7849afa097fa9ba1",
+          "anchor_expected": 1,
+          "anchor_actual": 1,
+          "compiled_pair_required": false,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        }
+      ],
+      "exact_test_file": "tests/f10-runtime-integration.test.ts",
+      "exact_test_pattern": "automatic pool allocation skips pair conflicts and remains idempotent",
+      "expected_material_assertion": "pair conflict must skip to another eligible tenant",
+      "all_anchors_match": true,
+      "status": "not_executed_A32_baseline_owns_processes"
+    },
+    {
+      "name": "pacing-bypass",
+      "changes": [
+        {
+          "path": "src/dispatch/submission.ts",
+          "source_sha256": "c1ff349f29beb7267982ee5e4e02b2339a60524c6df3b8ec4fcfd7e0bcf5085f",
+          "anchor_expected": 1,
+          "anchor_actual": 1,
+          "compiled_pair_required": false,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        }
+      ],
+      "exact_test_file": "tests/f10-runtime-integration.test.ts",
+      "exact_test_pattern": "paced dispatch preserves current day quota and every stop fence",
+      "expected_material_assertion": "60000 expected due-after-first-attempt",
+      "all_anchors_match": true,
+      "status": "not_executed_A32_baseline_owns_processes"
+    },
+    {
+      "name": "occupied-slot-ttl-release",
+      "changes": [
+        {
+          "path": "src/mailboxes/transport-slots.ts",
+          "source_sha256": "93c3509a79bf43296b99f20610045da188e26d057fd6f8b14c2fb1e6bd23bb66",
+          "anchor_expected": 1,
+          "anchor_actual": 1,
+          "compiled_pair_required": false,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        }
+      ],
+      "exact_test_file": "tests/f09-live-transport.test.ts",
+      "exact_test_pattern": "expired slot age alone cannot replace its allocated identity",
+      "expected_material_assertion": "Missing expected rejection transport_busy",
+      "all_anchors_match": true,
+      "status": "not_executed_A32_baseline_owns_processes"
+    },
+    {
+      "name": "source-guard-drop",
+      "changes": [
+        {
+          "path": "src/replies/worker.ts",
+          "source_sha256": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+          "anchor_expected": 1,
+          "anchor_actual": 1,
+          "compiled_pair_required": false,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        }
+      ],
+      "exact_test_file": "tests/f09-live-transport.test.ts",
+      "exact_test_pattern": "settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences",
+      "expected_material_assertion": "poll or source named fence assert denies capture",
+      "all_anchors_match": true,
+      "status": "not_executed_A32_baseline_owns_processes"
+    },
+    {
+      "name": "incomplete-reported-complete",
+      "changes": [
+        {
+          "path": "src/replies/worker.ts",
+          "source_sha256": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+          "anchor_expected": 1,
+          "anchor_actual": 1,
+          "compiled_pair_required": false,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        }
+      ],
+      "exact_test_file": "tests/f10-runtime-integration.test.ts",
+      "exact_test_pattern": "poll quanta persist the fixed tail before yielding and never retry incomplete scans",
+      "expected_material_assertion": "expected rescan_incomplete actual complete",
+      "all_anchors_match": true,
+      "status": "not_executed_A32_baseline_owns_processes"
+    },
+    {
+      "name": "yield-reported-complete",
+      "changes": [
+        {
+          "path": "src/replies/worker.ts",
+          "source_sha256": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+          "anchor_expected": 2,
+          "anchor_actual": 2,
+          "compiled_pair_required": false,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        }
+      ],
+      "exact_test_file": "tests/f10-runtime-integration.test.ts",
+      "exact_test_pattern": "poll quanta persist the fixed tail before yielding and never retry incomplete scans",
+      "expected_material_assertion": "expected scanning actual complete",
+      "all_anchors_match": true,
+      "status": "not_executed_A32_baseline_owns_processes"
+    },
+    {
+      "name": "consent-check-remove",
+      "changes": [
+        {
+          "path": "src/dispatch/eligibility.ts",
+          "source_sha256": "f892ba9b553ba881c8ffea2dfacc79205e484df7aff9e85e4caf75923256736a",
+          "anchor_expected": 1,
+          "anchor_actual": 1,
+          "compiled_pair_required": false,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        }
+      ],
+      "exact_test_file": "tests/f09-live-transport.test.ts",
+      "exact_test_pattern": "independent capacity and consent predicates deny live transport",
+      "expected_material_assertion": "senderConsentPredicate or recipientConsentPredicate transport denied",
+      "all_anchors_match": true,
+      "status": "not_executed_A32_baseline_owns_processes"
+    },
+    {
+      "name": "freshness-check-remove",
+      "changes": [
+        {
+          "path": "src/dispatch/eligibility.ts",
+          "source_sha256": "f892ba9b553ba881c8ffea2dfacc79205e484df7aff9e85e4caf75923256736a",
+          "anchor_expected": 1,
+          "anchor_actual": 1,
+          "compiled_pair_required": false,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        }
+      ],
+      "exact_test_file": "tests/dispatch-integration.test.ts",
+      "exact_test_pattern": "F03a realPG campaign/pool/shared quota/lease seams without transport",
+      "expected_material_assertion": "A3/A5 fresh complete current opt-in aggregate privacy",
+      "all_anchors_match": true,
+      "status": "not_executed_A32_baseline_owns_processes"
+    },
+    {
+      "name": "tenant-predicate-bypass",
+      "changes": [
+        {
+          "path": "src/dispatch/submission.ts",
+          "source_sha256": "c1ff349f29beb7267982ee5e4e02b2339a60524c6df3b8ec4fcfd7e0bcf5085f",
+          "anchor_expected": 1,
+          "anchor_actual": 1,
+          "compiled_pair_required": false,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        }
+      ],
+      "exact_test_file": "tests/submission-integration.test.ts",
+      "exact_test_pattern": "F03b real PG durable final authority, all stop races, sink privacy and outcomes",
+      "expected_material_assertion": "B3 own OR intended pool peer read only; foreign tenant must see0",
+      "all_anchors_match": true,
+      "status": "not_executed_A32_baseline_owns_processes"
+    },
+    {
+      "name": "shared-current-day-quota-weaken",
+      "changes": [
+        {
+          "path": "src/dispatch/submission.ts",
+          "source_sha256": "c1ff349f29beb7267982ee5e4e02b2339a60524c6df3b8ec4fcfd7e0bcf5085f",
+          "anchor_expected": 1,
+          "anchor_actual": 1,
+          "compiled_pair_required": false,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        }
+      ],
+      "exact_test_file": "tests/submission-integration.test.ts",
+      "exact_test_pattern": "F03b real PG durable final authority, all stop races, sink privacy and outcomes",
+      "expected_material_assertion": "B5 midnight reservations move under concurrent final guard",
+      "all_anchors_match": true,
+      "status": "not_executed_A32_baseline_owns_processes"
+    },
+    {
+      "name": "native-delayed-success-gap",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "source_sha256": "983a1e5331f17bc7312a4c3f8ea95c7c2728e60b24d5e14708a9084e50fcff28",
+          "anchor_expected": 1,
+          "anchor_actual": 1,
+          "compiled_pair_required": false,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        },
+        {
+          "path": "dist/runtime/store.js",
+          "source_sha256": "f579feda5be195e46e021cc73a81012eb940b9ca5360f6ca055ea188a079dd6c",
+          "anchor_expected": 1,
+          "anchor_actual": 1,
+          "compiled_pair_required": true,
+          "executed_path_caution": "Nativeworker executes dist module; ordinary TS tests execute src. Preserve both changes when native path is targeted."
+        }
+      ],
+      "exact_test_file": "tests/f10-runtime-protocol.test.ts",
+      "exact_test_pattern": "compiled healthy polling completes twice without a TypeScript loader",
+      "expected_material_assertion": "gaps.every gap<=30000",
+      "all_anchors_match": true,
+      "status": "not_executed_A32_baseline_owns_processes"
+    }
+  ],
+  "new_atomic_negatives": [
+    {
+      "name": "atomic-split-admission",
+      "module": "src/runtime/store.ts + dist/runtime/store.js where native",
+      "test": "native poll claim reserves physical admission atomically across competing processes",
+      "material": "claim commits turn/owner without exact physical reservation; full capacity changes no turn/claim; E release skew before old second"
+    },
+    {
+      "name": "unused-reservation-leak",
+      "module": "src/runtime/store.ts disposeUnusedAdmission/cancel + src/runtime/worker.ts finally",
+      "test": "abort after committed claim settles ownership without starting an operation; atomic claim SQL PG test",
+      "material": "cancel/early return must leave zero unused reservations"
+    },
+    {
+      "name": "bound-owner-unused-release",
+      "module": "src/mailboxes/transport-slots.ts releaseUnusedTransportSlot",
+      "test": "preadmitted slots are one-use and unused cleanup refuses a child-bound owner; physical120s needed if composition changed",
+      "material": "bound child cannot use unused proof to release physically occupied identity"
+    },
+    {
+      "name": "one-use-slot-bypass",
+      "module": "src/mailboxes/transport-slots.ts consumePreadmittedSlot",
+      "test": "preadmitted slots are one-use and unused cleanup refuses a child-bound owner",
+      "material": "second consumption, forged copy, mailbox/tenant mismatches must throw"
+    },
+    {
+      "name": "selected-sequence-stale-fence",
+      "module": "src/runtime/store.ts + replies worker existing runtime/source/grant/UID guards",
+      "test": "existing17 seq/generation/source cases + settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences",
+      "material": "selected service seq exactlyoncebeforeIO, stale source/currentgrant/runtime/UID never commit"
+    }
+  ],
+  "status": "mandatory pending distinct bounded slice if baseline consumes this attempt; no negative run while baseline owns children",
+  "reuse_policy": "no historic allproof acceptance; source/dependency bindings and material baseline-red-restored required"
+}

@@ -1,0 +1,19 @@
+{
+  "utc": "2026-10-06T22:25:15.127698+00:00",
+  "source_head": "db50798a76a97fed75931544f24cd1181ff082d8",
+  "acceptance": "pending mandatory gates; slice completion not product acceptance",
+  "next_executor": "root coordinator must actually launch distinct bounded HIGH operational mutation/regression slice after A32 join/mutexrelease",
+  "exact_material17_plan": "mutation-relevance-plan.json",
+  "five_slot_negatives_prepared": "slot-mutation-plan-a32.json + slot-mutations-a32.py; execute if A32 has>=35s beforefreeze afterbaselinejoin otherwise nextslice",
+  "additional_new_atomic": "split logical claim/physical admission and skip selectedseq; PG rollback/fullcapacity/Ereleasedslot witnesses; source/runtime/sourcegrant/UIDstaleguards as approvedplan",
+  "F09_positive_remaining_outside_glob": [
+    "transport grants are separate scoped expiring authority",
+    "final live submission preserves all eligibility fences",
+    "UID reset crash and replay preserve atomic stop effects",
+    "independent capacity and consent predicates deny live transport",
+    "native pool fixture uses canonical current UTC pair day and malformed initial keys stay denied"
+  ],
+  "reuse_requires": "current exact source/dependency and title witness bindings; no historic allproof acceptance",
+  "source_final_HIGH_review": "laterfreshforknone with cleanplanner + frozennewsource + rawonly remainsmandatory",
+  "prior_acceptance_gaps": "F06 delivery/F11-15 remainpending; no publishing/liveprovider/spend"
+}

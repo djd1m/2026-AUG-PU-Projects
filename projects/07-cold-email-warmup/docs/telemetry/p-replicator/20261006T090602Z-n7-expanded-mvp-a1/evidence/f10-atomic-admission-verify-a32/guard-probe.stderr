@@ -1,0 +1,16 @@
+file:///tmp/n7-f10-atomic-admission-verify-a32/guard-probe-a32.mjs:4
+const server=tls.createServer({key,cert},socket=>{socket.on('error',()=>{});socket.end('guard_fixture_positive');});await new Promise(r=>server.listen(0,'127.0.0.1',r));const port=server.address().port;let received='';const outcome=await new Promise((resolve,reject)=>{const socket=tls.connect({host:'127.0.0.1',port,servername:'fixture.local',ca:cert},()=>{assert.equal(socket.authorized,true);});socket.on('data',b=>received+=b.toString());socket.on('error',reject);socket.on('close',()=>resolve({closed:true}));});await new Promise(r=>server.close(r));assert.equal(received,'guard_fixture_positive');writeFileSync(root+'/guard-probe-result.json',JSON.stringify({at:new Date().toISOString(),pid:process.pid,dns_negative_count:2,external_socket_negative_count:1,numeric_resolver:true,buffer_CA_validated:true,real_numeric_TLS_authorized:true,exact_socket_closed:outcome.closed,guard:globalThis.__fixtureNetworkGuard})+'
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ^
+
+SyntaxError: Invalid or unexpected token
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:107:18)
+    at #translate (node:internal/modules/esm/loader:546:20)
+    at afterLoad (node:internal/modules/esm/loader:596:29)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:601:12)
+    at #createModuleJob (node:internal/modules/esm/loader:624:36)
+    at #getJobFromResolveResult (node:internal/modules/esm/loader:343:34)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:311:41)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:664:25)
+
+Node.js v22.20.0

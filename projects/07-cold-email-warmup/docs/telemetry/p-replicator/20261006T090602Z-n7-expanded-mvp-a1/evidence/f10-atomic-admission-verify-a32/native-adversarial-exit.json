@@ -1,0 +1,32 @@
+{
+  "stage": "native-adversarial",
+  "started": {
+    "at": "2026-10-06T22:26:36.109652+00:00",
+    "pid": 3914160,
+    "startticks": "124860610",
+    "runner_pid": 3684977,
+    "command": [
+      "/tmp/n7-expanded-runtime-20261006/bin/node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^native five-second rescans yield fairly to later healthy E across competing worker restart$",
+      "tests/f10-runtime-protocol.test.ts"
+    ],
+    "inventory_sha256": "8ed8ceef27f5a5fb3f3b3430b96232b3dfe7cc0fb8393e1b3cfc4d0084783263"
+  },
+  "joined_utc": "2026-10-06T22:28:26.931420+00:00",
+  "native_returncode": 0,
+  "timed_out": false,
+  "elapsed_seconds": 110.82330051087774,
+  "PG": {
+    "at": "2026-10-06T22:28:26.891Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "remaining_owned_nodes": [],
+  "tap_sha256": "f796a8cd9e7a8fa990a23e6db03019ec14af81a3ba370e962f0fa1effbf88ece",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

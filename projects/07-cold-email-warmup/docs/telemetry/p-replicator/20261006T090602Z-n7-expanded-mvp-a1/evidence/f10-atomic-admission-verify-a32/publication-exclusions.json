@@ -1,0 +1,14 @@
+{
+  "recorded_at": "2026-10-06T22:33:54.774845+00:00",
+  "original_raw_manifest_preserved": "raw-artifact-manifest.json",
+  "original_manifest_sha256": "562007f57c9af0fc58e289fe892ddb239c1fd736c9ea7aa611bc7ad762dc76aa",
+  "export_exclusions": [
+    {
+      "path": "guard-probe-key.pem",
+      "bytes": 1704,
+      "sha256": "242c211745c576a04ce19f3792dc7e20a5a77e1b83919708d75835abc6147c31",
+      "reason": "Generated localTLS probe private key; unpublished copied artifact excluded. Original owned scratch bytes preserved. Generic private-key scan caught before commit/push."
+    }
+  ],
+  "scope": "All other sealed manifest artifacts exported byte-identical; export is explicitly narrower than original local raw inventory."
+}

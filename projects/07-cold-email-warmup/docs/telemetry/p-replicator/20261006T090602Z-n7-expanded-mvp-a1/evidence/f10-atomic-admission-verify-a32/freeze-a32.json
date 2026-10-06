@@ -1,0 +1,71 @@
+{
+  "utc": "2026-10-06T22:28:18.524435+00:00",
+  "freeze_contract_utc": "2026-10-06T22:28:02.209734+00:00",
+  "source_head": "db50798a76a97fed75931544f24cd1181ff082d8",
+  "source120_build73_sql15_drift": [],
+  "active_existing_native": {
+    "at": "2026-10-06T22:26:36.109652+00:00",
+    "pid": 3914160,
+    "startticks": "124860610",
+    "runner_pid": 3684977,
+    "command": [
+      "/tmp/n7-expanded-runtime-20261006/bin/node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^native five-second rescans yield fairly to later healthy E across competing worker restart$",
+      "tests/f10-runtime-protocol.test.ts"
+    ],
+    "inventory_sha256": "8ed8ceef27f5a5fb3f3b3430b96232b3dfe7cc0fb8393e1b3cfc4d0084783263",
+    "observed_state": "S"
+  },
+  "new_test_children_after_freeze": "prohibited; none launched",
+  "joined_stages": [
+    {
+      "stage": "instrumentation",
+      "native_returncode": 0,
+      "elapsed_seconds": 1.0662208409048617
+    },
+    {
+      "stage": "canonical330",
+      "native_returncode": 0,
+      "elapsed_seconds": 333.16429089196026
+    },
+    {
+      "stage": "full-pg",
+      "native_returncode": 0,
+      "elapsed_seconds": 105.4563357848674
+    },
+    {
+      "stage": "full-unit",
+      "native_returncode": 0,
+      "elapsed_seconds": 80.33271352713928
+    },
+    {
+      "stage": "f10-physical120",
+      "native_returncode": 0,
+      "elapsed_seconds": 123.35134065314196
+    },
+    {
+      "stage": "f09-physical120",
+      "native_returncode": 0,
+      "elapsed_seconds": 124.17896784911864
+    },
+    {
+      "stage": "protocol-short",
+      "native_returncode": 0,
+      "elapsed_seconds": 55.16433591186069
+    },
+    {
+      "stage": "f09-short",
+      "native_returncode": 0,
+      "elapsed_seconds": 14.872293748892844
+    }
+  ],
+  "remaining_mandatory": "A33 existing17+fivepreparedslotnegatives+newatomicPG split/order/abort/fences+remainingF09predicates+appropriatecanary; laterfreshfinalsourceHIGHreview",
+  "next_executor": "root actualA33 launch afterA32terminal; notyetlaunched",
+  "runner_sha256": "c6de8b785b768427a18f7a0d658fc21bb1a8ed7cc617fd3c68f06c0b60fbe311",
+  "guard_sha256": "9cd44ec53734dbcca18c16aed7cabde854b8af4d08d92d7f62ebd34837052c1f",
+  "own_canary_pending_untilbaselinejoin": true,
+  "disk_available_bytes": 2902720512
+}

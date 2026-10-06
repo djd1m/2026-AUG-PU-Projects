@@ -1,0 +1,31 @@
+{
+  "prepared_at": "2026-10-06T22:30:14.594870+00:00",
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "attempt": "f10-atomic-admission-negatives-a33",
+  "source_revision": "db50798a76a97fed75931544f24cd1181ff082d8",
+  "executor": "/root/n7_sol_coordinator/f10_atomic_admission_verifier_a32",
+  "same_fixed_independent_actor": true,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_usage": null,
+  "launch_status": "prepared; actual followup/ACK required after A32 terminal",
+  "budget_seconds": 1200,
+  "sealing_reserve_seconds": 180,
+  "read_only_candidate": true,
+  "ownership": "Own A33 scratch/shadow plus isolated n7f10_a2 under heavy mutex; no candidate/main/runtime/legacy evidence writes. Never external providers.",
+  "inputs": [
+    "/tmp/n7-f10-atomic-admission-verify-a32/mandatory-continuation-plan.json",
+    "/tmp/n7-f10-atomic-admission-verify-a32/mutation-relevance-plan.json",
+    "/tmp/n7-f10-atomic-admission-verify-a32/slot-mutation-plan-a32.json",
+    "/tmp/n7-f10-atomic-admission-verify-a32/slot-mutations-a32.py"
+  ],
+  "scope": [
+    "Five exact remaining F09 native positive titles in continuation inventory",
+    "17 material mutants on current executed paths plus five prepared slot negatives",
+    "New atomic split/sequence/rollback/full-capacity/released-slot probes and existing stop/final transport fences",
+    "Bounded encoded canary and explicit artifact/uncaptured scope limitations"
+  ],
+  "checks": "Exact positive inventory and baseline0 / mutation named-assertion RED / restored0; compiler/anchor/import/timeouts do not prove caught material defect. Freeze runner/guard/shadow inputs before child start; no edits until all owned child joins. Source120/build73/SQL15 bindings before and after, own PID/ticks joins, isolated DB quiescence/physical slots and mutex release.",
+  "reuse": "Only unchanged A32 green baselines with exact source/dependency/digest provenance; no 330/PG/unit/physical repetition. Fresh source review is a separate new fork-none HIGH actor with planner context."
+}

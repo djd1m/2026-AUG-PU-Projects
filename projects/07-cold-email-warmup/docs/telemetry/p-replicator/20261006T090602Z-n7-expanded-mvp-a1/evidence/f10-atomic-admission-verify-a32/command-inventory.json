@@ -1,0 +1,525 @@
+{
+  "utc": "2026-10-06T22:12:07.159596+00:00",
+  "stages": [
+    {
+      "name": "instrumentation",
+      "files": [
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "positive_titles": {
+        "tests/f10-runtime-protocol.test.ts": [
+          "owned fairness instrumentation removes forced stale triggers idempotently"
+        ]
+      },
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^owned fairness instrumentation removes forced stale triggers idempotently$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "timeout_seconds": 30,
+      "known_budget_seconds": 30,
+      "expected_test_count": 1
+    },
+    {
+      "name": "canonical330",
+      "files": [
+        "tests/expanded-mvp-04.test.ts"
+      ],
+      "positive_titles": {
+        "tests/expanded-mvp-04.test.ts": [
+          "persistent fair workers serve every eligible mailbox"
+        ]
+      },
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^persistent fair workers serve every eligible mailbox$",
+        "tests/expanded-mvp-04.test.ts"
+      ],
+      "timeout_seconds": 430,
+      "known_budget_seconds": 430,
+      "expected_test_count": 1
+    },
+    {
+      "name": "full-pg",
+      "files": [
+        "tests/auth-integration.test.ts",
+        "tests/billing-integration.test.ts",
+        "tests/capacity-integration.test.ts",
+        "tests/diagnostics-disconnect-integration.test.ts",
+        "tests/diagnostics-final-cancel-integration.test.ts",
+        "tests/diagnostics-integration.test.ts",
+        "tests/diagnostics-ordered-integration.test.ts",
+        "tests/dispatch-integration.test.ts",
+        "tests/evidence-integration.test.ts",
+        "tests/f09-transport-integration.test.ts",
+        "tests/f10-runtime-integration.test.ts",
+        "tests/mailboxes-integration.test.ts",
+        "tests/replies-integration.test.ts",
+        "tests/submission-integration.test.ts",
+        "tests/suppression-integration.test.ts",
+        "tests/suppression-owner-integration.test.ts",
+        "tests/web-integration.test.ts"
+      ],
+      "positive_titles": {
+        "tests/auth-integration.test.ts": [
+          "F01 real PostgreSQL16 HTTP identity acceptance",
+          "AC-F01-1 migrated readiness serves without exposing secrets",
+          "AC-F01-2 registration atomically creates tenants and only HMAC sessions; no consent",
+          "AC-F01-3 own200/foreign404; UUID and SQL injection400; auth/origin bypass0writes",
+          "AC-F01-2 logout/login/logout durable rejection, expired/inactive accounts and tenants",
+          "AC-F01-5 atomic concurrent ceilings and fixed UTC resets count rejected attempts",
+          "AC-F01-5 HTTP wrong attempts count; spoofed forwarded IP cannot evade10/min",
+          "AC-F01-6 error secret canary redaction, invalid input no KDF/state, duplicate registration rollback"
+        ],
+        "tests/billing-integration.test.ts": [
+          "F05 A1\u2013A6 real PostgreSQL HTTP and canonical race gates",
+          "A2 explicit priority, cookie failure reasons, self/inactive and tenant404",
+          "A3 parallel HTTP idempotency, immutable payload, crash recovery and disabled zero-state",
+          "A4/5 HTTP canonical success, frozen attribution, replay fixed expiry, two buyers and cancellation",
+          "A4 canonical mismatch, unavailable503, bounded callback, stale cancel/expiry barriers",
+          "A1 unlimited connected preserves TEST billing and post-lock expiry, existing edit retained",
+          "A1 campaign concurrency and active duplicate after expiry"
+        ],
+        "tests/capacity-integration.test.ts": [
+          "F07 real PostgreSQL capacity boundaries and atomic safety",
+          "creates101st connected mailbox for free and expired TEST team without send",
+          "tenant pages remain bounded and foreign capacity actions cause no side effects",
+          "global30 admission serializes competing tenants and duplicate requests",
+          "lease120 expiry release and stale renewal never resurrect stopped mailbox",
+          "complaint quarantine immediately releases capacity for another tenant",
+          "sender and pool recipient need active lease at scheduling claim and final fence",
+          "capacity writers sample database time after shared lock and rollback admission",
+          "strict own capacity API rejects auth origin malformed cursor and rate abuse",
+          "real schema11 to12 upgrade preserves envelope states and has no automatic leases",
+          "additive migration idempotency keeps records without implicit lease"
+        ],
+        "tests/diagnostics-disconnect-integration.test.ts": [
+          "HTTP disconnect in every phase clears owned resources and admission without late publication"
+        ],
+        "tests/diagnostics-final-cancel-integration.test.ts": [
+          "final cancellation after FIRST wait and persisted SQL rolls back and releases admission",
+          "actual HTTP disconnect during final lock wait observes server abort before release",
+          "abort after committed success cannot retroactively invalidate the observation"
+        ],
+        "tests/diagnostics-integration.test.ts": [
+          "diagnostic authority and tenant checks open no unauthorized sockets",
+          "owner origin session and disabled authority precede decrypt DNS sockets",
+          "AEAD and protocol error canaries never escape diagnostic sinks",
+          "diagnostic revision fences replacement stop quarantine and newer attempt",
+          "grant revoke orders before final publication and after publication invalidates projection",
+          "authority and final persistence rollback leave no partial current result",
+          "real schema12 to13 upgrade preserves encrypted data without verified backfill"
+        ],
+        "tests/diagnostics-ordered-integration.test.ts": [
+          "post-lock expiry queued revoke complaint order and actual CLI are fenced",
+          "DB clock sampled after FIRST lock denies authority expiry while waiting",
+          "revoke waits behind final authority read and makes committed observation noncurrent",
+          "complaint shared cancel before and after final publication preserves submitting",
+          "actual CLI without configured operator capability cannot publish or revoke",
+          "actual privileged CLI commits revoke for invalid missing and expired input",
+          "actual stale importer and database failure never claim successful revoke"
+        ],
+        "tests/dispatch-integration.test.ts": [
+          "F03a realPG campaign/pool/shared quota/lease seams without transport",
+          "A1/A2 owned API, validation no jobs, explicit consent, unique starts, AEAD and version atomicity",
+          "A3/A5 fresh complete current opt-in aggregate privacy, pair/day and one submitted-parent reply",
+          "A3 aggregate counts30 eligible mailboxes and excludes quarantine/disconnected/withdrawn",
+          "A4 shared pool/campaign quota 20 contenders remaining3, 45s lease and conservative irreversible states",
+          "A4/A5 common lock first, suppression seam and sender rotation"
+        ],
+        "tests/evidence-integration.test.ts": [
+          "F05 B1\u2013B6 real PostgreSQL HTTP evidence and public report gates",
+          "B1 owner input manual provenance unknown and no external source IO",
+          "F1 primitive direction rejects arrays objects null with zero observation/event writes",
+          "B2 owner pair, stale/incomparable/noimprovement and foreign404",
+          "B3 concurrent explicit share yields ONE report/event and payload409",
+          "B2/B3 HTTP denominators29/30 raw counts versus ratios and window guard",
+          "B3 authoritative clock after waiting lock blocks expired create",
+          "B4 EVERY view current TEST entitlement, expiry and committed revocation",
+          "F1 primitive kind rejects arrays objects null with zero observation/event writes",
+          "B5 own aggregate counts explicit idempotent copy/link and bounded histories",
+          "B1/B5 server storage caps observations1000 reports200 events600"
+        ],
+        "tests/f09-transport-integration.test.ts": [
+          "F09 real PG child transport ambiguity reset and semantic replay"
+        ],
+        "tests/f10-runtime-integration.test.ts": [
+          "overload backoff preserves due age and independent tenant progress",
+          "durable runtime drains and recovers without replaying uncertain sends",
+          "fair polling serves thirty active mailboxes and preserves activity intent",
+          "poll quanta persist the fixed tail before yielding and never retry incomplete scans",
+          "automatic pool allocation skips pair conflicts and remains idempotent",
+          "paced dispatch preserves current day quota and every stop fence",
+          "persisted keyset reconciliation advances beyond first hundred without recreating activity",
+          "actual dispatch job age survives restart backoff pacing quota and an empty queue",
+          "actual database failure during a poll quantum propagates without provider backoff writes",
+          "denied live submission returns typed authority outcome before acquiring a physical slot",
+          "projection recovers expired logical claims without self quota deadlock and holds fresh owners",
+          "new and proved completed jobs reset backoff while the same failed job retains original age",
+          "expired claimed reservation is recovered before quota projection independently of a fresh hold",
+          "a new oldest logical job clears prior backoff independently of terminal history",
+          "a fresh logical owner holds the sender even when another queued job is older",
+          "complete proof becomes immediately eligible without resetting its selected fair turn",
+          "partial and held scans cannot manufacture successful polling readiness",
+          "dispatch claims project only one sender and rotate deferred candidates",
+          "graceful stop after committed claim releases logical owners before lease expiry",
+          "inflight graceful drain joins cleanup and retains explicit holds and fairness",
+          "cancel scopes occupied cleanup to its own protocol without releasing physical ownership",
+          "reset capture fences expected identity provenance tenant holds and transaction rollback",
+          "native poll claim reserves physical admission atomically across competing processes"
+        ],
+        "tests/mailboxes-integration.test.ts": [
+          "F02 real PostgreSQL tenant, AEAD, scopes, locking and atomic stop writers",
+          "AC1 authenticated masked persistence sends0, no implicit consent, foreign404 and origin0writes",
+          "AC2/3 tampered/substituted ciphertext0transport, scrubbed error, verified_test only and DNS revalidation",
+          "AC4 distinct affirmative scopes/version/content/recipient snapshots and tenant ownership",
+          "AC5 revoke queue/member atomicity, submitting preserved and real rollback",
+          "AC5 all real writers wait on shared advisory lock first; default/ceiling/provider cap"
+        ],
+        "tests/replies-integration.test.ts": [
+          "F04a real PG reply matching, durable rescan, crash atomicity and stop serialization",
+          "A1 exact sender + own tenant/mailbox references; no/malformed/reused IDs",
+          "A2 concurrent duplicate page/effect has no partial writes or budget advance",
+          "A3 sparse/expunged and initial empty trusted fixture coverage; no unquarantine",
+          "A3 stale page/tail and second validity reset cannot complete current run",
+          "A4 exact twenty pages, explicit retry preserves H/run/cursor; crash restart same attempt",
+          "A4 post-lock exact120s, future clock, failed/future/slow tail fail closed",
+          "A4 successful tail completion timestamp samples actual post-lock clock",
+          "R1 P1 101 tail headers: first100 stays paused S0 and dispatch/submission calls0; last coverage S1 completes",
+          "R1 empty/sparse tail prefix stays paused; immutable snapshot survives failure/retry and rejects changed horizon/epoch",
+          "A6 header display/body/credential canaries never enter durable reply data"
+        ],
+        "tests/submission-integration.test.ts": [
+          "F03b real PG durable final authority, all stop races, sink privacy and outcomes",
+          "B3 durable rendered sink/token/message refs with own OR intended pool peer read only",
+          "R2 B5 authenticated disabled inspection unavailable before either reader",
+          "R1 post-lock clock lease45s rejects expired waiter with zero adapter calls",
+          "R1 post-lock clock poll60s rejects stale waiter with live lease and zero adapter calls",
+          "R1 post-lock clock retry120s rejects ceiling waiter with zero adapter calls",
+          "R1 post-lock clock midnight concurrent waiters enforce new-day provider limit1 and reservations",
+          "B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan",
+          "B5 midnight reservations move under concurrent final guard; provider lowered, no off-by-one",
+          "B4 proved pre-DATA only, 60s pacing within original120s ceiling, re-enter guards/quota",
+          "B4/B5 retry120s exact ceiling, ambiguous timeout/crash retain quota, never recover resend"
+        ],
+        "tests/suppression-integration.test.ts": [
+          "F04B real PostgreSQL public stop and durable local operator polling",
+          "B1/B4 generic accessible GET zero business writes; negative GET/POST and strict Origin",
+          "B1 exact30day expiry boundary and corrupted job binding zero business writes",
+          "B2 concurrent stable tenant-wide suppression and post-lock expiry",
+          "B3 complaints operator auth, closed absent config, durable dedup bound payload and 0 writes",
+          "B4 concurrent 31st request 429 counts failures and ignores forwarded IP",
+          "B2 pool optout globally withdraws intended recipient, preserves sender and in-flight",
+          "B5/B6 actual operator CLI durable seed\u2192poll\u2192ReplyStore stops pending; tenant status safe",
+          "B5 default/missing/failure pause, empty explicit complete, reset and incomplete explicit retry",
+          "B5 adapter source 101-tail honest prefix boundary and restart immutable H/tailH"
+        ],
+        "tests/suppression-owner-integration.test.ts": [
+          "B-R1 real fixture callbacks fenced by durable owner and source generation",
+          "generation alone fences ",
+          "current missing and failed fixture pause; current poll completes",
+          "generation check and seed serialize on the shared lock"
+        ],
+        "tests/web-integration.test.ts": [
+          "F06 A real PostgreSQL protected cabinet, exact built assets and persistent accepted APIs",
+          "A1 route auth and A6 MIME/CSP/allowlist/build binding",
+          "A2 mailbox save has no consent, persists masked, limit and independent grant/revoke",
+          "A3 actual campaign form contract and preview/edit invalidation, no consent start denied",
+          "A4 manual source privacy and real compare/share/copy/link/revoke; A5 persistent checkout and partner",
+          "A1 logout/relogin durability and session marker changes"
+        ]
+      },
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "tests/auth-integration.test.ts",
+        "tests/billing-integration.test.ts",
+        "tests/capacity-integration.test.ts",
+        "tests/diagnostics-disconnect-integration.test.ts",
+        "tests/diagnostics-final-cancel-integration.test.ts",
+        "tests/diagnostics-integration.test.ts",
+        "tests/diagnostics-ordered-integration.test.ts",
+        "tests/dispatch-integration.test.ts",
+        "tests/evidence-integration.test.ts",
+        "tests/f09-transport-integration.test.ts",
+        "tests/f10-runtime-integration.test.ts",
+        "tests/mailboxes-integration.test.ts",
+        "tests/replies-integration.test.ts",
+        "tests/submission-integration.test.ts",
+        "tests/suppression-integration.test.ts",
+        "tests/suppression-owner-integration.test.ts",
+        "tests/web-integration.test.ts"
+      ],
+      "timeout_seconds": 230,
+      "known_budget_seconds": 230,
+      "expected_test_count": 133
+    },
+    {
+      "name": "full-unit",
+      "files": [
+        "tests/auth-script-unit.test.ts",
+        "tests/auth-unit.test.ts",
+        "tests/billing-unit.test.ts",
+        "tests/capacity-unit.test.ts",
+        "tests/diagnostics-deadline-unit.test.ts",
+        "tests/diagnostics-unit.test.ts",
+        "tests/dispatch-unit.test.ts",
+        "tests/evidence-unit.test.ts",
+        "tests/f09-transport-unit.test.ts",
+        "tests/f10-runtime-unit.test.ts",
+        "tests/mailboxes-unit.test.ts",
+        "tests/replies-unit.test.ts",
+        "tests/submission-unit.test.ts",
+        "tests/suppression-unit.test.ts",
+        "tests/web-unit.test.ts"
+      ],
+      "positive_titles": {
+        "tests/auth-script-unit.test.ts": [
+          "R1 actual authScript passive valid identity redirects silently",
+          "R1 actual successful ",
+          "R1 failed action/no identity emits zero ",
+          "R1 actual app channel "
+        ],
+        "tests/auth-unit.test.ts": [
+          "AC-F01-4 Unicode/password byte boundaries reject before invoking KDF",
+          "AC-F01-4 exact PHC params/salt/output reject adversarial stored costs",
+          "AC-F01-4 two active KDFs: no queue, unrelated free slot, release on rejection",
+          "AC-F01-2 opaque canonical cookie and absolute7day HMAC session",
+          "AC-F01-1 safety config fails closed without external runtime key/policy"
+        ],
+        "tests/billing-unit.test.ts": [
+          "F05 immutable server plans and closed checkout input",
+          "F05 bounded purpose HMAC cookie exact30day expiration and tamper"
+        ],
+        "tests/capacity-unit.test.ts": [
+          "F07 strict bounded pages and explicit closed capacity actions"
+        ],
+        "tests/diagnostics-deadline-unit.test.ts": [
+          "actual phase deadlines and trickle close sockets listeners timers and settle once",
+          "simultaneous abort peer completion and error cannot publish late success"
+        ],
+        "tests/diagnostics-unit.test.ts": [
+          "diagnostic byte deadlines cancellation and admission are bounded",
+          "SMTP and IMAP authenticate independently without message commands",
+          "production TLS adapter pins peer and rejects certificate downgrade rebinding",
+          "hostile TLS protocol states fail closed and cancellation destroys owned sockets",
+          "untrusted certificates TLS downgrade and late cancelled DNS never authenticate"
+        ],
+        "tests/dispatch-unit.test.ts": [
+          "A1 canonical bounds, missing fields, source/header injection and escaped preview",
+          "A2 versioned enrollment AEAD purpose, tenant/id substitution and separately keyed digest"
+        ],
+        "tests/evidence-unit.test.ts": [
+          "B1 bounded manual observation input and explicit verification",
+          "B2 exact 7days/+1ms, 28days/+1ms, equal UTC windows, future and reasons",
+          "B2 denominators 29/30 gate ratios and strict raw count improvement",
+          "B3/B4 explicit public whitelist, escaping, historical copy and exactly one badge",
+          "B5 bounded history pagination",
+          "F1 primitive enums reject array/object/null before any write",
+          "F2 validated UUID uses canonical lowercase identity"
+        ],
+        "tests/f09-transport-unit.test.ts": [
+          "live MIME enforces literal bounds and preserves seven bit wire",
+          "headers reject duplicates ambiguous sender oversized references and literal tags",
+          "transport phase deadlines and cancellation remain finite"
+        ],
+        "tests/f10-runtime-unit.test.ts": [
+          "finite runtime lanes join owned operations on abort before returning",
+          "database faults stop admission and abort the internal signal before joining sibling lanes",
+          "settled runtime operations yield to the event loop before another fair claim",
+          "maintenance reconciles after five seconds without an immediate duplicate sweep",
+          "abort after committed claim settles ownership without starting an operation",
+          "preadmitted slots are one-use and unused cleanup refuses a child-bound owner",
+          "unused reservation cleanup retains exact proof after a database release failure"
+        ],
+        "tests/mailboxes-unit.test.ts": [
+          "AEAD fresh nonce, ciphertext/tag/AAD substitution and retained versions fail closed before transport",
+          "operator host normalization and conservative public address oracle",
+          "IANA reserved and unallocated IPv6 reject before any adapter call, alone or mixed",
+          "save input enforces TLS ports and limits",
+          "connector revalidation, IP pin/TLS identity, canary scrub and abort deadlines"
+        ],
+        "tests/replies-unit.test.ts": [
+          "F04a bounded header-only input normalization and optional incoming ID",
+          "F04a explicit page/header/reference/range/validity limits reject before any writes"
+        ],
+        "tests/submission-unit.test.ts": [
+          "B3 plain local test message, random bound token, one-click and reference headers",
+          "B4 retry delays/max3 and exact120s ceiling"
+        ],
+        "tests/suppression-unit.test.ts": [
+          "operator distinct hash auth, malformed secrets and complaint payload bounds",
+          "fixture header-only bounds and ordered source coverage; operation timeout"
+        ],
+        "tests/web-unit.test.ts": [
+          "native default transport preserves its global receiver and injected transport still works",
+          "A6 central401 clears private state, aborts pending, redirects; late success/error stay obsolete",
+          "A1 session change fences old identity and body-resolution race",
+          "A1 late action catch/finally cannot change fresh UI or release its pending bound",
+          "A6 product source security: explicit assets, same-origin shell, no private storage/untrusted HTML/operator access",
+          "diagnostic late success and error cannot repopulate a different session"
+        ]
+      },
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "tests/auth-script-unit.test.ts",
+        "tests/auth-unit.test.ts",
+        "tests/billing-unit.test.ts",
+        "tests/capacity-unit.test.ts",
+        "tests/diagnostics-deadline-unit.test.ts",
+        "tests/diagnostics-unit.test.ts",
+        "tests/dispatch-unit.test.ts",
+        "tests/evidence-unit.test.ts",
+        "tests/f09-transport-unit.test.ts",
+        "tests/f10-runtime-unit.test.ts",
+        "tests/mailboxes-unit.test.ts",
+        "tests/replies-unit.test.ts",
+        "tests/submission-unit.test.ts",
+        "tests/suppression-unit.test.ts",
+        "tests/web-unit.test.ts"
+      ],
+      "timeout_seconds": 150,
+      "known_budget_seconds": 150,
+      "expected_test_count": 55
+    },
+    {
+      "name": "f10-physical120",
+      "files": [
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "positive_titles": {
+        "tests/f10-runtime-protocol.test.ts": [
+          "suspended transport owners retain physical slots across runtime restart"
+        ]
+      },
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^suspended transport owners retain physical slots across runtime restart$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "timeout_seconds": 145,
+      "known_budget_seconds": 145,
+      "expected_test_count": 1
+    },
+    {
+      "name": "f09-physical120",
+      "files": [
+        "tests/f09-live-transport.test.ts"
+      ],
+      "positive_titles": {
+        "tests/f09-live-transport.test.ts": [
+          "expired occupied slots survive actual SIGSTOP120s until exact child exit"
+        ]
+      },
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^expired occupied slots survive actual SIGSTOP120s until exact child exit$",
+        "tests/f09-live-transport.test.ts"
+      ],
+      "timeout_seconds": 145,
+      "known_budget_seconds": 145,
+      "expected_test_count": 1
+    },
+    {
+      "name": "protocol-short",
+      "files": [
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "positive_titles": {
+        "tests/f10-runtime-protocol.test.ts": [
+          "native ambiguous submission and UID recovery compose with runtime transport guards",
+          "compiled healthy polling completes twice without a TypeScript loader",
+          "explicit retry captures changed native UID proof in one quantum without old FETCH or freshness"
+        ]
+      },
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^(compiled healthy polling completes twice without a TypeScript loader|explicit retry captures changed native UID proof in one quantum without old FETCH or freshness|native ambiguous submission and UID recovery compose with runtime transport guards)$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "timeout_seconds": 70,
+      "known_budget_seconds": 70,
+      "expected_test_count": 3
+    },
+    {
+      "name": "f09-short",
+      "files": [
+        "tests/f09-live-transport.test.ts"
+      ],
+      "positive_titles": {
+        "tests/f09-live-transport.test.ts": [
+          "expired slot age alone cannot replace its allocated identity",
+          "full poll captures a reset between snapshot and read and incomplete entry performs no IO",
+          "settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences"
+        ]
+      },
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^(expired slot age alone cannot replace its allocated identity|settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences|full poll captures a reset between snapshot and read and incomplete entry performs no IO)$",
+        "tests/f09-live-transport.test.ts"
+      ],
+      "timeout_seconds": 65,
+      "known_budget_seconds": 65,
+      "expected_test_count": 3
+    },
+    {
+      "name": "native-adversarial",
+      "files": [
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "positive_titles": {
+        "tests/f10-runtime-protocol.test.ts": [
+          "native five-second rescans yield fairly to later healthy E across competing worker restart"
+        ]
+      },
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^native five-second rescans yield fairly to later healthy E across competing worker restart$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "timeout_seconds": 150,
+      "known_budget_seconds": 150,
+      "expected_test_count": 1
+    }
+  ],
+  "manifest_sha256": "77cc744dfe793d599abd0300a9ab03d6060a7481d88091686a7a1bb79d88c536",
+  "source_all120_build73_sql15_match": true,
+  "input_sha256": {
+    "package.json": "c987d43200253960ac825b7b4656e32fa4d10853d51493829a2708d4ee6bc867",
+    "tests/f10-runtime-fixture.ts": "c42e2a6862249baecd05617d4cb8dd8c4f0cb0b5eb023e9c8254c0cd2cdaae95",
+    "tests/f10-runtime-unit.test.ts": "148a2b4a8444c66b83219b84a60d02ff2f9b8f8bbae1ebcb72ad977ef510a6e4",
+    "tests/f10-runtime-protocol.test.ts": "4edb0be1f37ae1a1b32e1d530db4a5db5ea3f79bfab993be9197b009cfbdc366",
+    "tests/f10-runtime-integration.test.ts": "e7fabd24ea02d2d52bc5b7571d4338c4d471cde58741812496061afaa5679929",
+    "tests/f10-runtime-process-fixture.ts": "e3d889eba4dda70d1236c508e6819111eb38cd8b3e6de0e8047f8bacac76cadd",
+    "tests/f09-live-transport.test.ts": "64d166c0bcb983f647a9885ae29d21bc191e7980aa4bb800461af2c33bcd67b3",
+    "tests/f09-transport-fixture.ts": "984e6242be0a61880750c114dde53e5993588d9d3c82990c608e7e4db0eb5328",
+    "tests/expanded-mvp-04.test.ts": "4b910abd04ea6686eda746079432eed7a83528a68163452ad080fbe17c1f7faa"
+  },
+  "preflight_policy": "ready only after numeric DB health/current_database, zero prior owned nodes, DB quiescence and mutex held"
+}

@@ -1,0 +1,332 @@
+{
+  "at": "2026-10-06T22:28:27.084031+00:00",
+  "results": [
+    {
+      "stage": "instrumentation",
+      "started": {
+        "at": "2026-10-06T22:12:38.516117+00:00",
+        "pid": 3685146,
+        "startticks": "124776851",
+        "runner_pid": 3684977,
+        "command": [
+          "/tmp/n7-expanded-runtime-20261006/bin/node",
+          "node_modules/tsx/dist/cli.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^owned fairness instrumentation removes forced stale triggers idempotently$",
+          "tests/f10-runtime-protocol.test.ts"
+        ],
+        "inventory_sha256": "8ed8ceef27f5a5fb3f3b3430b96232b3dfe7cc0fb8393e1b3cfc4d0084783263"
+      },
+      "joined_utc": "2026-10-06T22:12:39.580248+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_seconds": 1.0662208409048617,
+      "PG": {
+        "at": "2026-10-06T22:12:39.542Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "remaining_owned_nodes": [],
+      "tap_sha256": "55f239eb809b23e2c732da4be92a20623db90e5a676d381b8a68d409de49798d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "canonical330",
+      "started": {
+        "at": "2026-10-06T22:12:39.582305+00:00",
+        "pid": 3685503,
+        "startticks": "124776958",
+        "runner_pid": 3684977,
+        "command": [
+          "/tmp/n7-expanded-runtime-20261006/bin/node",
+          "node_modules/tsx/dist/cli.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^persistent fair workers serve every eligible mailbox$",
+          "tests/expanded-mvp-04.test.ts"
+        ],
+        "inventory_sha256": "8ed8ceef27f5a5fb3f3b3430b96232b3dfe7cc0fb8393e1b3cfc4d0084783263"
+      },
+      "joined_utc": "2026-10-06T22:18:12.745162+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_seconds": 333.16429089196026,
+      "PG": {
+        "at": "2026-10-06T22:18:12.706Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "remaining_owned_nodes": [],
+      "tap_sha256": "8897b4a989ec98d8415b314c6df19a245a254c1a4d5088070ee8bf2e9ef6aa15",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "full-pg",
+      "started": {
+        "at": "2026-10-06T22:18:12.747333+00:00",
+        "pid": 3783534,
+        "startticks": "124810274",
+        "runner_pid": 3684977,
+        "command": [
+          "/tmp/n7-expanded-runtime-20261006/bin/node",
+          "node_modules/tsx/dist/cli.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "tests/auth-integration.test.ts",
+          "tests/billing-integration.test.ts",
+          "tests/capacity-integration.test.ts",
+          "tests/diagnostics-disconnect-integration.test.ts",
+          "tests/diagnostics-final-cancel-integration.test.ts",
+          "tests/diagnostics-integration.test.ts",
+          "tests/diagnostics-ordered-integration.test.ts",
+          "tests/dispatch-integration.test.ts",
+          "tests/evidence-integration.test.ts",
+          "tests/f09-transport-integration.test.ts",
+          "tests/f10-runtime-integration.test.ts",
+          "tests/mailboxes-integration.test.ts",
+          "tests/replies-integration.test.ts",
+          "tests/submission-integration.test.ts",
+          "tests/suppression-integration.test.ts",
+          "tests/suppression-owner-integration.test.ts",
+          "tests/web-integration.test.ts"
+        ],
+        "inventory_sha256": "8ed8ceef27f5a5fb3f3b3430b96232b3dfe7cc0fb8393e1b3cfc4d0084783263"
+      },
+      "joined_utc": "2026-10-06T22:19:58.202307+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_seconds": 105.4563357848674,
+      "PG": {
+        "at": "2026-10-06T22:19:58.175Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "remaining_owned_nodes": [],
+      "tap_sha256": "bdc8bcd4981f002d35e7c5ecb7515ad44adeac8d7d07cb22cba9941348b7ce99",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "full-unit",
+      "started": {
+        "at": "2026-10-06T22:19:58.204211+00:00",
+        "pid": 3812288,
+        "startticks": "124820820",
+        "runner_pid": 3684977,
+        "command": [
+          "/tmp/n7-expanded-runtime-20261006/bin/node",
+          "node_modules/tsx/dist/cli.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "tests/auth-script-unit.test.ts",
+          "tests/auth-unit.test.ts",
+          "tests/billing-unit.test.ts",
+          "tests/capacity-unit.test.ts",
+          "tests/diagnostics-deadline-unit.test.ts",
+          "tests/diagnostics-unit.test.ts",
+          "tests/dispatch-unit.test.ts",
+          "tests/evidence-unit.test.ts",
+          "tests/f09-transport-unit.test.ts",
+          "tests/f10-runtime-unit.test.ts",
+          "tests/mailboxes-unit.test.ts",
+          "tests/replies-unit.test.ts",
+          "tests/submission-unit.test.ts",
+          "tests/suppression-unit.test.ts",
+          "tests/web-unit.test.ts"
+        ],
+        "inventory_sha256": "8ed8ceef27f5a5fb3f3b3430b96232b3dfe7cc0fb8393e1b3cfc4d0084783263"
+      },
+      "joined_utc": "2026-10-06T22:21:18.535784+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_seconds": 80.33271352713928,
+      "PG": {
+        "at": "2026-10-06T22:21:18.486Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "remaining_owned_nodes": [],
+      "tap_sha256": "8e6ae882f7eb854b59fbb20163baee00e7392678daa9829a0414702e5610c86c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "f10-physical120",
+      "started": {
+        "at": "2026-10-06T22:21:18.540951+00:00",
+        "pid": 3834274,
+        "startticks": "124828853",
+        "runner_pid": 3684977,
+        "command": [
+          "/tmp/n7-expanded-runtime-20261006/bin/node",
+          "node_modules/tsx/dist/cli.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^suspended transport owners retain physical slots across runtime restart$",
+          "tests/f10-runtime-protocol.test.ts"
+        ],
+        "inventory_sha256": "8ed8ceef27f5a5fb3f3b3430b96232b3dfe7cc0fb8393e1b3cfc4d0084783263"
+      },
+      "joined_utc": "2026-10-06T22:23:21.888119+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_seconds": 123.35134065314196,
+      "PG": {
+        "at": "2026-10-06T22:23:21.853Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "remaining_owned_nodes": [],
+      "tap_sha256": "806570fb49c927ac80fb59342a8798dbc0739eff849a25ed8ef5c795d13da14c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "f09-physical120",
+      "started": {
+        "at": "2026-10-06T22:23:21.891248+00:00",
+        "pid": 3864715,
+        "startticks": "124841188",
+        "runner_pid": 3684977,
+        "command": [
+          "/tmp/n7-expanded-runtime-20261006/bin/node",
+          "node_modules/tsx/dist/cli.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^expired occupied slots survive actual SIGSTOP120s until exact child exit$",
+          "tests/f09-live-transport.test.ts"
+        ],
+        "inventory_sha256": "8ed8ceef27f5a5fb3f3b3430b96232b3dfe7cc0fb8393e1b3cfc4d0084783263"
+      },
+      "joined_utc": "2026-10-06T22:25:26.068653+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_seconds": 124.17896784911864,
+      "PG": {
+        "at": "2026-10-06T22:25:26.038Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "remaining_owned_nodes": [],
+      "tap_sha256": "aa8d53b20b6907bd4b6bf10e1a84f549ad019af6d151bc6ddc72f78c7fc5dbae",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "protocol-short",
+      "started": {
+        "at": "2026-10-06T22:25:26.070568+00:00",
+        "pid": 3895558,
+        "startticks": "124853606",
+        "runner_pid": 3684977,
+        "command": [
+          "/tmp/n7-expanded-runtime-20261006/bin/node",
+          "node_modules/tsx/dist/cli.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^(compiled healthy polling completes twice without a TypeScript loader|explicit retry captures changed native UID proof in one quantum without old FETCH or freshness|native ambiguous submission and UID recovery compose with runtime transport guards)$",
+          "tests/f10-runtime-protocol.test.ts"
+        ],
+        "inventory_sha256": "8ed8ceef27f5a5fb3f3b3430b96232b3dfe7cc0fb8393e1b3cfc4d0084783263"
+      },
+      "joined_utc": "2026-10-06T22:26:21.233914+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_seconds": 55.16433591186069,
+      "PG": {
+        "at": "2026-10-06T22:26:21.191Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "remaining_owned_nodes": [],
+      "tap_sha256": "8ba9006f4a795589c2486fdb86c333123b6de1dcbd381faee699853cf34366c3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "f09-short",
+      "started": {
+        "at": "2026-10-06T22:26:21.236108+00:00",
+        "pid": 3911316,
+        "startticks": "124859123",
+        "runner_pid": 3684977,
+        "command": [
+          "/tmp/n7-expanded-runtime-20261006/bin/node",
+          "node_modules/tsx/dist/cli.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^(expired slot age alone cannot replace its allocated identity|settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences|full poll captures a reset between snapshot and read and incomplete entry performs no IO)$",
+          "tests/f09-live-transport.test.ts"
+        ],
+        "inventory_sha256": "8ed8ceef27f5a5fb3f3b3430b96232b3dfe7cc0fb8393e1b3cfc4d0084783263"
+      },
+      "joined_utc": "2026-10-06T22:26:36.107190+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_seconds": 14.872293748892844,
+      "PG": {
+        "at": "2026-10-06T22:26:36.073Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "remaining_owned_nodes": [],
+      "tap_sha256": "7accd7f8613e8da42251b4b0d2e0fa7d40945b4bdb21c514d2bcb5d10f5dc350",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "native-adversarial",
+      "started": {
+        "at": "2026-10-06T22:26:36.109652+00:00",
+        "pid": 3914160,
+        "startticks": "124860610",
+        "runner_pid": 3684977,
+        "command": [
+          "/tmp/n7-expanded-runtime-20261006/bin/node",
+          "node_modules/tsx/dist/cli.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^native five-second rescans yield fairly to later healthy E across competing worker restart$",
+          "tests/f10-runtime-protocol.test.ts"
+        ],
+        "inventory_sha256": "8ed8ceef27f5a5fb3f3b3430b96232b3dfe7cc0fb8393e1b3cfc4d0084783263"
+      },
+      "joined_utc": "2026-10-06T22:28:26.931420+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_seconds": 110.82330051087774,
+      "PG": {
+        "at": "2026-10-06T22:28:26.891Z",
+        "database": "n7f10_a2",
+        "reset": false,
+        "rows": [],
+        "quiescent": true
+      },
+      "remaining_owned_nodes": [],
+      "tap_sha256": "f796a8cd9e7a8fa990a23e6db03019ec14af81a3ba370e962f0fa1effbf88ece",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "PG": {
+    "at": "2026-10-06T22:28:27.066Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "owned_nodes": [],
+  "mutex": "released after this receipt",
+  "runner_sha256": "c6de8b785b768427a18f7a0d658fc21bb1a8ed7cc617fd3c68f06c0b60fbe311",
+  "guard_sha256": "9cd44ec53734dbcca18c16aed7cabde854b8af4d08d92d7f62ebd34837052c1f"
+}

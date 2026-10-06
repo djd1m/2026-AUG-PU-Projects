@@ -1,0 +1,1 @@
+A31 first focused preflight rejected DATABASE_NAME inherited from authorized env.sh: n7f09_a1 != n7f10_a2. Assertion occurred before mutex acquisition / PG snapshot / reset. Corrected explicit DATABASE_NAME=n7f10_a2; inherited env.sh unchanged. Default sandbox also rejected bwrap mkdir .codex before any command executed; narrow escalated authorized actions used.

@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-06T22:12:38.516117+00:00",
+  "pid": 3685146,
+  "startticks": "124776851",
+  "runner_pid": 3684977,
+  "command": [
+    "/tmp/n7-expanded-runtime-20261006/bin/node",
+    "node_modules/tsx/dist/cli.mjs",
+    "--test",
+    "--test-concurrency=1",
+    "--test-name-pattern=^owned fairness instrumentation removes forced stale triggers idempotently$",
+    "tests/f10-runtime-protocol.test.ts"
+  ],
+  "inventory_sha256": "8ed8ceef27f5a5fb3f3b3430b96232b3dfe7cc0fb8393e1b3cfc4d0084783263"
+}

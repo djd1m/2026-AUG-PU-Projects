@@ -1,0 +1,264 @@
+{
+  "utc": "2026-10-06T22:29:53.423784+00:00",
+  "raw_path": "/tmp/n7-f10-atomic-admission-verify-a32/fairness-1791325603563.json",
+  "raw_sha256": "90bfbbf69b42923c7ff9944eb58c8bb77f1bc814e2d2a6740060f6c6f69d6481",
+  "checks": {
+    "native_actual_exit0": true,
+    "all5_denominator": true,
+    "all4_first_real_success_ge5000_and_committed": true,
+    "ADfirst4distinct_E5beforeoldsecond": true,
+    "all5eligible_before_first_claim": true,
+    "E_later_due": true,
+    "ADliteral20pagesheld_originaldue": true,
+    "all5selectiongap_le60000": true,
+    "E_uniquecompletegap_le30000": true,
+    "exactonce_turn_before_selection": true,
+    "3actualjoins0drained": true,
+    "physicalmax4": true,
+    "all_physical_acquires_released_exactop": true,
+    "each_selection_sameTXphysicalreservation": true
+  },
+  "all_checks_pass": true,
+  "all5_rows": [
+    {
+      "label": "A",
+      "id": "4d2ee803-d58d-4a8a-919e-bc419baae494",
+      "selections": 19,
+      "selection_gap_ms": 5708.0,
+      "unique_completions": 0,
+      "complete_gap_ms": 0,
+      "pages": 20,
+      "scan_state": "rescan_incomplete",
+      "first_success": {
+        "label": "A",
+        "mailbox": "4d2ee803-d58d-4a8a-919e-bc419baae494",
+        "started": 1791325604179,
+        "completed": 1791325609180,
+        "elapsedMs": 5000.845006,
+        "command": "a4 UID FETCH 101:200 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+      },
+      "first_response_written": {
+        "connection": 9,
+        "label": "A",
+        "mailbox": "4d2ee803-d58d-4a8a-919e-bc419baae494",
+        "phase": "response_written",
+        "verb": "FETCH",
+        "utc": "2026-10-06T22:26:49.180Z",
+        "monotonicMs": 12862.770792
+      },
+      "first_durable_page": {
+        "event_id": "18",
+        "at": "2026-10-06T22:26:49.212Z",
+        "kind": "page",
+        "mailbox": "4d2ee803-d58d-4a8a-919e-bc419baae494",
+        "body": {
+          "pages": 2,
+          "state": "scanning",
+          "run_id": "1f554beb-c2fa-4ff3-b17e-0dae10289873",
+          "attempt": 1,
+          "tenant_id": "06961c90-f3af-40c1-8f99-ef0064d56027",
+          "cursor_uid": 200,
+          "high_water": 3000,
+          "mailbox_id": "4d2ee803-d58d-4a8a-919e-bc419baae494",
+          "provenance": "imap_headers",
+          "uidvalidity": "1",
+          "tail_high_water": null,
+          "attempt_started_at": "2026-10-06T22:26:37.869+00:00"
+        }
+      },
+      "due_preserved": true
+    },
+    {
+      "label": "B",
+      "id": "c218fdac-20a9-4d6e-9782-6062c057a096",
+      "selections": 19,
+      "selection_gap_ms": 5725.0,
+      "unique_completions": 0,
+      "complete_gap_ms": 0,
+      "pages": 20,
+      "scan_state": "rescan_incomplete",
+      "first_success": {
+        "label": "B",
+        "mailbox": "c218fdac-20a9-4d6e-9782-6062c057a096",
+        "started": 1791325604210,
+        "completed": 1791325609211,
+        "elapsedMs": 5000.510805000001,
+        "command": "a4 UID FETCH 101:200 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+      },
+      "first_response_written": {
+        "connection": 11,
+        "label": "B",
+        "mailbox": "c218fdac-20a9-4d6e-9782-6062c057a096",
+        "phase": "response_written",
+        "verb": "FETCH",
+        "utc": "2026-10-06T22:26:49.211Z",
+        "monotonicMs": 12893.825863
+      },
+      "first_durable_page": {
+        "event_id": "27",
+        "at": "2026-10-06T22:26:49.244Z",
+        "kind": "page",
+        "mailbox": "c218fdac-20a9-4d6e-9782-6062c057a096",
+        "body": {
+          "pages": 2,
+          "state": "scanning",
+          "run_id": "e7eeb55a-66a9-4c8a-9e72-7466e65d2c49",
+          "attempt": 1,
+          "tenant_id": "06961c90-f3af-40c1-8f99-ef0064d56027",
+          "cursor_uid": 200,
+          "high_water": 3000,
+          "mailbox_id": "c218fdac-20a9-4d6e-9782-6062c057a096",
+          "provenance": "imap_headers",
+          "uidvalidity": "1",
+          "tail_high_water": null,
+          "attempt_started_at": "2026-10-06T22:26:37.918+00:00"
+        }
+      },
+      "due_preserved": true
+    },
+    {
+      "label": "C",
+      "id": "e894246d-6f8c-4dd1-aac3-744b73aa1de7",
+      "selections": 19,
+      "selection_gap_ms": 6007.0,
+      "unique_completions": 0,
+      "complete_gap_ms": 0,
+      "pages": 20,
+      "scan_state": "rescan_incomplete",
+      "first_success": {
+        "label": "C",
+        "mailbox": "e894246d-6f8c-4dd1-aac3-744b73aa1de7",
+        "started": 1791325604213,
+        "completed": 1791325609213,
+        "elapsedMs": 5000.088225,
+        "command": "a4 UID FETCH 101:200 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+      },
+      "first_response_written": {
+        "connection": 12,
+        "label": "C",
+        "mailbox": "e894246d-6f8c-4dd1-aac3-744b73aa1de7",
+        "phase": "response_written",
+        "verb": "FETCH",
+        "utc": "2026-10-06T22:26:49.213Z",
+        "monotonicMs": 12895.994824
+      },
+      "first_durable_page": {
+        "event_id": "29",
+        "at": "2026-10-06T22:26:49.251Z",
+        "kind": "page",
+        "mailbox": "e894246d-6f8c-4dd1-aac3-744b73aa1de7",
+        "body": {
+          "pages": 2,
+          "state": "scanning",
+          "run_id": "c182dbec-5033-4fc0-9c46-5c438e5b7c80",
+          "attempt": 1,
+          "tenant_id": "06961c90-f3af-40c1-8f99-ef0064d56027",
+          "cursor_uid": 200,
+          "high_water": 3000,
+          "mailbox_id": "e894246d-6f8c-4dd1-aac3-744b73aa1de7",
+          "provenance": "imap_headers",
+          "uidvalidity": "1",
+          "tail_high_water": null,
+          "attempt_started_at": "2026-10-06T22:26:37.859+00:00"
+        }
+      },
+      "due_preserved": true
+    },
+    {
+      "label": "D",
+      "id": "8b39efc4-9386-4472-b3ab-b4631db054e0",
+      "selections": 19,
+      "selection_gap_ms": 5712.0,
+      "unique_completions": 0,
+      "complete_gap_ms": 0,
+      "pages": 20,
+      "scan_state": "rescan_incomplete",
+      "first_success": {
+        "label": "D",
+        "mailbox": "8b39efc4-9386-4472-b3ab-b4631db054e0",
+        "started": 1791325604194,
+        "completed": 1791325609195,
+        "elapsedMs": 5001.3027250000005,
+        "command": "a4 UID FETCH 101:200 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+      },
+      "first_response_written": {
+        "connection": 10,
+        "label": "D",
+        "mailbox": "8b39efc4-9386-4472-b3ab-b4631db054e0",
+        "phase": "response_written",
+        "verb": "FETCH",
+        "utc": "2026-10-06T22:26:49.195Z",
+        "monotonicMs": 12877.943327
+      },
+      "first_durable_page": {
+        "event_id": "22",
+        "at": "2026-10-06T22:26:49.228Z",
+        "kind": "page",
+        "mailbox": "8b39efc4-9386-4472-b3ab-b4631db054e0",
+        "body": {
+          "pages": 2,
+          "state": "scanning",
+          "run_id": "44ac28e5-6764-42fd-b867-8ef9295e6622",
+          "attempt": 1,
+          "tenant_id": "06961c90-f3af-40c1-8f99-ef0064d56027",
+          "cursor_uid": 200,
+          "high_water": 3000,
+          "mailbox_id": "8b39efc4-9386-4472-b3ab-b4631db054e0",
+          "provenance": "imap_headers",
+          "uidvalidity": "1",
+          "tail_high_water": null,
+          "attempt_started_at": "2026-10-06T22:26:37.908+00:00"
+        }
+      },
+      "due_preserved": true
+    },
+    {
+      "label": "E",
+      "id": "6ce049bc-df4e-4e2f-8e84-a1ffdef769ba",
+      "selections": 28,
+      "selection_gap_ms": 5483.0,
+      "unique_completions": 9,
+      "complete_gap_ms": 16146.0,
+      "pages": 1,
+      "scan_state": "complete",
+      "first_success": null,
+      "first_response_written": null,
+      "first_durable_page": null,
+      "due_preserved": false
+    }
+  ],
+  "duration_ms": 103009,
+  "observer_query_count": 866,
+  "joins": [
+    {
+      "pid": 3915462,
+      "code": 0,
+      "signal": null,
+      "stderr": "",
+      "drained": true,
+      "at": 1791325609288
+    },
+    {
+      "pid": 3916632,
+      "code": 0,
+      "signal": null,
+      "stderr": "",
+      "drained": true,
+      "at": 1791325706520
+    },
+    {
+      "pid": 3916639,
+      "code": 0,
+      "signal": null,
+      "stderr": "",
+      "drained": true,
+      "at": 1791325706511
+    }
+  ],
+  "observer_gaps": [
+    "Slot snapshots are same runtime selection/yield transaction READ COMMITTED observations; the transport_busy read-only admission transaction rolls back without a trigger. Its exact failure boundary remains unobserved.",
+    "Database UTC timestamps and fixture monotonic timestamps correlate through recorded UTC pairs; clocks are not a shared monotonic clock.",
+    "Server response write records do not prove client receipt or child exit; socket close and DB physical_release are distinct phases."
+  ],
+  "unsupported_completed_before_E_not_asserted": true
+}

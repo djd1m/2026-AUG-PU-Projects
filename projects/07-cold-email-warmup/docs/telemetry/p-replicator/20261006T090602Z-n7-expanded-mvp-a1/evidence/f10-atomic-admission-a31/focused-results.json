@@ -1,0 +1,53 @@
+{
+  "at": "2026-10-06T22:03:10.051121+00:00",
+  "results": {
+    "typecheck": {
+      "exit": 0,
+      "pid": 3532718,
+      "startticks": "124717847",
+      "joined_utc": "2026-10-06T22:02:54.130455+00:00",
+      "elapsed_seconds": 5.65835641999729,
+      "sha": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "lint": {
+      "exit": 0,
+      "pid": 3534298,
+      "startticks": "124718413",
+      "joined_utc": "2026-10-06T22:02:58.122217+00:00",
+      "elapsed_seconds": 3.990784623892978,
+      "sha": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "build": {
+      "exit": 0,
+      "pid": 3535537,
+      "startticks": "124718812",
+      "joined_utc": "2026-10-06T22:03:02.126598+00:00",
+      "elapsed_seconds": 4.002889999188483,
+      "sha": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unit": {
+      "exit": 0,
+      "pid": 3536710,
+      "startticks": "124719212",
+      "joined_utc": "2026-10-06T22:03:08.227896+00:00",
+      "elapsed_seconds": 6.098739827051759,
+      "sha": "eb4067263a0db021f1a82e1f958f88165c703b471039b8dec463206d2d2c64bb"
+    },
+    "pg": {
+      "exit": 1,
+      "pid": 3538636,
+      "startticks": "124719822",
+      "joined_utc": "2026-10-06T22:03:09.904489+00:00",
+      "elapsed_seconds": 1.6744498969055712,
+      "sha": "ee5e491e1727b927a818bbfc98bf251d5379db6f310f2093a9e95959db854cd8"
+    }
+  },
+  "post": {
+    "at": "2026-10-06T22:03:10.033Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "remaining_nodes": []
+}
