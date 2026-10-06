@@ -54,16 +54,16 @@
     "false_positive_findings": null,
     "known_defects_missed": null,
     "regressions": null,
-    "followup_status": "F07/F08 locally accepted, expanded AC001/002 met; AC003–009 pending. Whole required_gates_passed remains false."
+    "followup_status": "F07/F08/F09 locally accepted, expanded AC001–003 met; AC004–009 pending. Whole required_gates_passed remains false."
   },
   "metrics": {
-    "elapsed_wall_ms": 15081214,
+    "elapsed_wall_ms": 19875052,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-06T13:17:24.092287+00:00"
+    "elapsed_as_of": "2026-10-06T14:37:17.930173+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -73,7 +73,7 @@
     "No prelaunch serialized launch digest for native PLAN receipt; terminal receipt and output SHA verified, not companion delivery attestation",
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred."
   ],
-  "current_stage": "PLAN F10 durable runtime",
+  "current_stage": "PLAN F10-V1 narrow correction",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -135,9 +135,9 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_expanded_coordinator",
-    "executor": "f10_planner_a1 running; actual first tool 2026-10-06T14:31:14.531188248Z",
-    "source_revision": "2248aa17df74822cb9e82f62046e3c1a26032cba",
-    "next": "10min PLAN then independent requirements validator"
+    "executor": "f09_validator_a1 authoring F10-r3; actual tool2026-10-06T14:59:18Z",
+    "source_revision": "f0c580b6cd9e92423a3f07afb9105902ef8b7e90",
+    "next": "F10-V1 narrow repair then fresh source-bound validation"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -264,7 +264,7 @@
     "completion_exit": 1,
     "completion_gaps": 8,
     "collection_receipt_exit": 0,
-    "independent_review": "pending"
+    "independent_review": "Historical source35039 NEEDS_WORK (F09-R1); corrected sourcee043 accepted in f09_review"
   },
   "f09_review": {
     "verdict": "ACCEPT",
@@ -283,5 +283,13 @@
     "completion_gaps": 8,
     "review_contract_exit": 0,
     "runtime_continuity": "exact src/tests/db/package bytes match e043bb27"
+  },
+  "f10_validation": {
+    "verdict": "NEEDS_WORK",
+    "source_revision": "be68bf655084cb3fa9fc607469a42998de276bb7",
+    "report_revision": "f0c580b6cd9e92423a3f07afb9105902ef8b7e90",
+    "phase12_exit": 0,
+    "receipt_status": "failed timing; concrete advisory finding preserved",
+    "finding": "F10-V1 HIGH within-tenant continuation starvation"
   }
 }
