@@ -7,6 +7,8 @@ export type FailureCode='dns_unavailable'|'unsafe_address'|'host_denied'|'timeou
 export class DiagnosticFailure extends Error { constructor(readonly code:FailureCode){super(code);} }
 export class Budget {
  readonly deadline:number;
+ private phases=0;
+ resources(){return {timers:this.phases,abortListeners:this.phases};}
  constructor(readonly signal:AbortSignal,milliseconds=30000){this.deadline=performance.now()+milliseconds;}
  async phase<T>(op:()=>Promise<T>):Promise<T>{
   if(this.signal.aborted) throw new DiagnosticFailure('cancelled');
@@ -14,9 +16,9 @@ export class Budget {
   if(remaining<=0) throw new DiagnosticFailure('timeout');
   let timer:NodeJS.Timeout|undefined; let abort:()=>void=()=>{};
   try { return await Promise.race([op(),new Promise<never>((_,reject)=>{
-   abort=()=>reject(new DiagnosticFailure('cancelled'));this.signal.addEventListener('abort',abort,{once:true});
+   this.phases++;abort=()=>reject(new DiagnosticFailure('cancelled'));this.signal.addEventListener('abort',abort,{once:true});
    timer=setTimeout(()=>reject(new DiagnosticFailure('timeout')),remaining);
-  })]); } finally {if(timer)clearTimeout(timer);this.signal.removeEventListener('abort',abort);}
+  })]); } finally {if(timer)clearTimeout(timer);this.signal.removeEventListener('abort',abort);if(timer)this.phases--;}
  }
 }
 // Byte counters run before decoding, and never retain more than one bounded line.
@@ -35,8 +37,9 @@ export class LineBuffer {
  }
  get incomplete(){return this.bytes.length>0;}
 }
-interface FixtureOptions {ca:string|Buffer; dial:(address:string,port:number)=>{address:string;port:number};resolver:Resolver}
+interface FixtureOptions {ca:string|Buffer; dial:(address:string,port:number)=>{address:string;port:number};resolver:Resolver;connectSocket?:(target:{address:string;port:number})=>Socket}
 export class Channel {
+ private cleanups=new Set<()=>void>();private attached=new Set<Socket>();
  private raw:Socket|undefined;private tls:TLSSocket|undefined;private current:Socket|undefined;
  private parser=new LineBuffer();private queue:string[]=[];
  private pending:{resolve:(line:string)=>void;reject:(e:DiagnosticFailure)=>void}|undefined;
@@ -48,8 +51,8 @@ export class Channel {
  private error=()=>this.fail(new DiagnosticFailure(this.tls?'tls_failed':'connection_failed'));
  private end=()=>this.fail(new DiagnosticFailure('protocol_invalid'));
  constructor(readonly budget:Budget,private fixture?:FixtureOptions){budget.signal.addEventListener('abort',this.abort,{once:true});}
- private attach(socket:Socket){this.current=socket;socket.on('data',this.data);socket.on('error',this.error);socket.on('end',this.end);socket.on('close',this.end);}
- private detach(socket:Socket){socket.removeListener('data',this.data);socket.removeListener('error',this.error);socket.removeListener('end',this.end);socket.removeListener('close',this.end);}
+ private attach(socket:Socket){this.attached.add(socket);this.current=socket;socket.on('data',this.data);socket.on('error',this.error);socket.on('end',this.end);socket.on('close',this.end);}
+ private detach(socket:Socket){this.attached.delete(socket);socket.removeListener('data',this.data);socket.removeListener('error',this.error);socket.removeListener('end',this.end);socket.removeListener('close',this.end);}
  private fail(error:DiagnosticFailure){if(this.closed)return;this.failure=error;this.pending?.reject(error);this.pending=undefined;this.close();}
  async open(host:string,port:number,allowlist:ReadonlyMap<string,number>){
   host=normalizeHost(host);if(!allowlist.has(host))throw new DiagnosticFailure('host_denied');
@@ -58,11 +61,11 @@ export class Channel {
   if(!addresses.length||addresses.length>32||addresses.some(a=>!isPublicIp(a.address)||isIP(a.address)!==a.family))throw new DiagnosticFailure('unsafe_address');
   if(this.closed||this.budget.signal.aborted)throw new DiagnosticFailure('cancelled');
   const chosen=addresses[0]!;const target=this.fixture?.dial(chosen.address,port)??{address:chosen.address,port};
-  this.raw=connect({host:target.address,port:target.port,family:this.fixture?isIP(target.address):chosen.family});this.attach(this.raw);
+  this.raw=this.fixture?.connectSocket?.(target)??connect({host:target.address,port:target.port,family:this.fixture?isIP(target.address):chosen.family});this.attach(this.raw);
   await this.budget.phase(()=>new Promise<void>((resolve,reject)=>{
    const socket=this.raw!;const done=()=>{clean();resolve();};const failed=()=>{clean();reject(new DiagnosticFailure('connection_failed'));};
-   const clean=()=>{socket.removeListener('connect',done);socket.removeListener('error',failed);socket.removeListener('close',failed);};
-   socket.once('connect',done);socket.once('error',failed);socket.once('close',failed);
+   const clean=()=>{this.cleanups.delete(clean);socket.removeListener('connect',done);socket.removeListener('error',failed);socket.removeListener('close',failed);};
+   this.cleanups.add(clean);socket.once('connect',done);socket.once('error',failed);socket.once('close',failed);
   }));
  }
  async upgrade(host:string){
@@ -73,15 +76,17 @@ export class Channel {
   await this.budget.phase(()=>new Promise<void>((resolve,reject)=>{
    const socket=this.tls!;const done=()=>{clean();if(socket.authorized)resolve();else reject(new DiagnosticFailure('tls_failed'));};
    const failed=()=>{clean();reject(new DiagnosticFailure('tls_failed'));};
-   const clean=()=>{socket.removeListener('secureConnect',done);socket.removeListener('error',failed);socket.removeListener('close',failed);};
-   socket.once('secureConnect',done);socket.once('error',failed);socket.once('close',failed);
+   const clean=()=>{this.cleanups.delete(clean);socket.removeListener('secureConnect',done);socket.removeListener('error',failed);socket.removeListener('close',failed);};
+   this.cleanups.add(clean);socket.once('secureConnect',done);socket.once('error',failed);socket.once('close',failed);
   }));
  }
  async line(){if(this.failure)throw this.failure;if(this.queue.length)return this.queue.shift()!;
   return this.budget.phase(()=>new Promise<string>((resolve,reject)=>{this.pending={resolve,reject};}));}
  write(command:string){if(this.closed||this.failure)throw this.failure??new DiagnosticFailure('cancelled');this.current!.write(command+'\r\n');}
+ resources(){return {sockets:[...new Set([this.raw,this.tls])].filter(s=>s&&!s.destroyed).length,listeners:this.attached.size*4+this.cleanups.size*3+(this.closed?0:1),pending:this.pending?1:0,...this.budget.resources()};}
  close(){if(this.closed)return;this.closed=true;this.budget.signal.removeEventListener('abort',this.abort);
   this.pending?.reject(this.failure??new DiagnosticFailure('cancelled'));this.pending=undefined;
+  for(const cleanup of this.cleanups)cleanup();
   for(const socket of new Set([this.raw,this.tls]))if(socket){this.detach(socket);socket.destroy();}
   this.queue=[];
  }

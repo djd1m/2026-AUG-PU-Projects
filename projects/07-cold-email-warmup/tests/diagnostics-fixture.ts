@@ -13,13 +13,13 @@ export function certificates(){
  execFileSync('openssl',['req','-x509','-newkey','rsa:2048','-nodes','-keyout',key,'-out',cert,'-days','1','-subj','/CN=smtp.gmail.com','-addext','subjectAltName=DNS:smtp.gmail.com,DNS:imap.gmail.com'],{stdio:'ignore'});
  const result={key:readFileSync(key),cert:readFileSync(cert)};rmSync(directory,{recursive:true});return result;
 }
-export interface FixtureBehavior {smtpReject?:boolean;imapReject?:boolean;noStarttls?:boolean;noPostTlsPlain?:boolean;preauth?:boolean;hostile?:string;oversize?:boolean;stall?:boolean;wrongTag?:boolean;holdAuth?:()=>Promise<void>}
+export interface FixtureBehavior {smtpReject?:boolean;imapReject?:boolean;noStarttls?:boolean;noPostTlsPlain?:boolean;preauth?:boolean;hostile?:string;oversize?:boolean;stall?:boolean;wrongTag?:boolean;holdAuth?:()=>Promise<void>;onReady?:()=>void}
 export async function protocolFixture(behavior:FixtureBehavior={},options?:TlsOptions,providedCertificate?:{key:Buffer;cert:Buffer}){
  const cert=providedCertificate??certificates();const verbs:string[]=[];const sockets=new Set<Socket>();const servers:Server[]=[];
  const tlsOptions={...cert,...options};
  const watch=(socket:Socket)=>{sockets.add(socket);socket.on('error',()=>{});socket.on('close',()=>sockets.delete(socket));};
  const speak=(socket:Socket,protocol:'smtp'|'imap',starttls=false)=>{
-  watch(socket);if(behavior.stall)return;
+  watch(socket);behavior.onReady?.();if(behavior.stall)return;
   if(behavior.oversize){socket.write(Buffer.alloc(65537,65));return;}
   socket.write(protocol==='smtp'?'220 ready\r\n':behavior.preauth?'* PREAUTH ready\r\n':'* OK ready\r\n');let pending='';let authenticating=false;
   socket.on('data',(chunk:Buffer)=>{pending+=chunk.toString();for(;;){const index=pending.indexOf('\r\n');if(index<0)break;const line=pending.slice(0,index);pending=pending.slice(index+2);

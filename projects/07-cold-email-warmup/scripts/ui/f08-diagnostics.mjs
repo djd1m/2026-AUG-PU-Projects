@@ -23,6 +23,12 @@ try{
  check('unchecked separate consent '+width,await page.locator('input[name=affirmative]').first().isChecked()===false);
  check('no horizontal overflow '+width,await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  }
+ for(const state of ['pending','stale']){
+  const path='**/api/mailboxes/'+fixture.id;const row=fixture[state];assert.equal(row.diagnostics.state,state);
+  await page.route(path,async route=>{const original=await route.fetch();await route.fulfill({response:original,json:{data:row,meta:{}}});});
+  await page.getByRole('button',{name:'Обновить опрос и согласия',exact:true}).click();await page.getByText(state==='pending'?'выполняется':'устарела · непригодна',{exact:true}).waitFor();check('actual PG '+state+' snapshot renders unusable',true);await page.unroute(path);
+ }
+ await page.getByRole('button',{name:'Обновить опрос и согласия',exact:true}).click();await page.getByText('отключена оператором',{exact:true}).waitFor();
  let requests=0;await page.route('**/diagnostics',async route=>{requests++;await new Promise(r=>setTimeout(r,200));await route.continue();});
  const button=page.getByRole('button',{name:'Проверить SMTP / IMAP',exact:true});await button.focus();await page.keyboard.press('Enter');await page.locator('#content[aria-busy=true]').waitFor();check('keyboard busy state',true);
  await button.evaluate(b=>b.click());await page.getByText(/live_provider_disabled/).waitFor();check('busy duplicate suppressed',requests===1);

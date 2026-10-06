@@ -27,6 +27,7 @@ export async function publishAuthority(pool:Pool,expectedRevision:string,grant:D
 }
 export const diagnosticProjection=(fingerprint:string)=>`jsonb_build_object('state',CASE
  WHEN a.state IS DISTINCT FROM 'active' OR a.expires_at<=clock_timestamp() THEN 'disabled'
+ WHEN m.diagnostic_attempt IS NULL AND m.diagnostic_result IS NULL AND m.diagnostic_revision>0 THEN 'stale'
  WHEN m.diagnostic_attempt IS NULL AND m.diagnostic_result IS NULL THEN 'never_run'
  WHEN m.diagnostic_attempt IS NULL THEN 'stale'
  WHEN m.diagnostic_result IS NULL THEN 'pending'

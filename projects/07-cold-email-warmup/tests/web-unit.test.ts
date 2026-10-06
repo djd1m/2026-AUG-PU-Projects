@@ -55,3 +55,12 @@ test('A6 product source security: explicit assets, same-origin shell, no private
  }
  const source=readFileSync(new URL('../src/server.ts',import.meta.url),'utf8');assert.match(source,/if\(!ASSETS.has\(asset\)\)throw/);assert.doesNotMatch(cabinetPage,/<script[^>]*>[^<]+<\/script>/);
 });
+
+test('diagnostic late success and error cannot repopulate a different session',async()=>{
+ for(const kind of ['success','error']){const pending=deferred<Response>();let clears=0;let signal:AbortSignal|undefined;
+ const client=new SessionClient(()=>clears++,()=>{},(async(path,options)=>{assert.equal(path,'/api/mailboxes/fixture/diagnostics');signal=options?.signal as AbortSignal;return pending.promise;}) as typeof fetch);
+ const old=client.request('/api/mailboxes/fixture/diagnostics','POST',{});client.invalidate(false);assert.equal(signal?.aborted,true);assert.equal(clears,1);
+ if(kind==='success')pending.resolve(response(200,'old',{diagnostics:{state:'current',result:{smtp:{auth:'success'},imap:{auth:'success'}}}}));else pending.reject(new Error('CREDENTIAL_PASSWORD_CANARY'));
+ await assert.rejects(old,/obsolete/);assert.equal(clears,1);
+ }
+});

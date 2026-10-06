@@ -15,7 +15,7 @@ export class DiagnosticStore {
   // Ownership before admission or authority; unavailable grant never decrypts or resolves.
   if(!(await this.pool.query('SELECT id FROM mailbox WHERE tenant_id=$1 AND id=$2',[tenant,id])).rowCount)throw new HttpError(404,'not_found');
   let release:()=>void;try{release=admitDiagnostic(id);}catch{throw new HttpError(429,'diagnostic_busy');}
-  let input:MailboxInput|undefined;
+  let input:MailboxInput|undefined;let owned:{revision:string;attempt:string}|undefined;
   try{
    const snapshot=await eligibilityTransaction(this.pool,async client=>{
     const grant=await authority(client);
@@ -26,12 +26,16 @@ export class DiagnosticStore {
     const attempt=randomUUID();const revision=(await client.query('UPDATE mailbox SET diagnostic_revision=diagnostic_revision+1,diagnostic_attempt=$3,diagnostic_result=NULL WHERE tenant_id=$1 AND id=$2 RETURNING diagnostic_revision',[tenant,id,attempt])).rows[0].diagnostic_revision as string;
     return {...row,diagnostic_revision:revision,diagnostic_attempt:attempt,authorityRevision:grant.authority_revision};
    });
+   owned={revision:snapshot.diagnostic_revision,attempt:snapshot.diagnostic_attempt};
    const decoded=decryptCredentials<MailboxInput>(snapshot.credential_envelope,tenant,id,this.ring);
    input=parseMailbox({...decoded,requiredTLS:true});
    const outcomes=await diagnose(input,this.allowlist,signal,this.factory);
    if(signal.aborted)throw new HttpError(409,'diagnostic_cancelled');
    await this.finish(tenant,id,snapshot,outcomes);
    return outcomes;
+  }catch(error){
+   if(owned)await eligibilityTransaction(this.pool,async client=>{await client.query('UPDATE mailbox SET diagnostic_attempt=NULL WHERE tenant_id=$1 AND id=$2 AND diagnostic_revision=$3 AND diagnostic_attempt=$4',[tenant,id,owned!.revision,owned!.attempt]);});
+   throw error;
   }finally{input=undefined;release();}
  }
  private async finish(tenant:string,id:string,snapshot:Snapshot&{authorityRevision:string},outcomes:DiagnosticResults){
