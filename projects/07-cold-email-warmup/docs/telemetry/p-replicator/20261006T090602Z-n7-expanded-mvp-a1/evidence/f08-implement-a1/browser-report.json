@@ -1,0 +1,82 @@
+{
+  "testTitle": "separate diagnostic status persists and respects keyboard capacity consent",
+  "status": "pass",
+  "source": "64acccfdd7343f1c4a7c31d92a99d1c0ebdb10d621716876dd11f07e7a7cb9a8",
+  "build": "6bd6175daad0d693443d38a7b7a8debcc67845b31e75421c12e59e6b46e7b73e",
+  "image": "sha256:4f1f9ba37efd782b0d1da9865be33be7053f49bd170e98bcb61cd51e6b686240",
+  "checks": [
+    {
+      "name": "SMTP fixture success 1440",
+      "pass": true
+    },
+    {
+      "name": "IMAP independent rejection 1440",
+      "pass": true
+    },
+    {
+      "name": "revoked authority unusable 1440",
+      "pass": true
+    },
+    {
+      "name": "capacity independent 1440",
+      "pass": true
+    },
+    {
+      "name": "unchecked separate consent 1440",
+      "pass": true
+    },
+    {
+      "name": "no horizontal overflow 1440",
+      "pass": true
+    },
+    {
+      "name": "SMTP fixture success 390",
+      "pass": true
+    },
+    {
+      "name": "IMAP independent rejection 390",
+      "pass": true
+    },
+    {
+      "name": "revoked authority unusable 390",
+      "pass": true
+    },
+    {
+      "name": "capacity independent 390",
+      "pass": true
+    },
+    {
+      "name": "unchecked separate consent 390",
+      "pass": true
+    },
+    {
+      "name": "no horizontal overflow 390",
+      "pass": true
+    },
+    {
+      "name": "keyboard busy state",
+      "pass": true
+    },
+    {
+      "name": "busy duplicate suppressed",
+      "pass": true
+    },
+    {
+      "name": "separate result persists on reload",
+      "pass": true
+    },
+    {
+      "name": "DOM canary absent",
+      "pass": true
+    },
+    {
+      "name": "session clears diagnostics",
+      "pass": true
+    },
+    {
+      "name": "no page errors",
+      "pass": true
+    }
+  ],
+  "pageErrors": []
+}

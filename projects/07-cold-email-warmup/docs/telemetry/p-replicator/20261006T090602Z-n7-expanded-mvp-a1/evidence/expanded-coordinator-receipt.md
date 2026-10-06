@@ -39,3 +39,9 @@ F07 local acceptance integrated and pushed e6100674 (code7fbc1874 from frozen10c
 ## F08 READY and implementation actually started (2026-10-06 11:26 UTC)
 
 Targeted plan repair8c2f4dc5 took171.494s; narrow independent validationdb47f8fd took108.493s and closed F08-V1 READY. First NEEDS WORK bytes remain archived. Integrated full Phase I/II0 for9 features and repeated mechanicalL/1 with inheritedXL; source a746ad2c pushed. f08_author_a1 requested Sol6.1/high actually started isolated /tmp/n7-f08-implement-20261006,20minute attempt ending11:46UTC. Scope is bounded native TLS connect/auth diagnostics, current durable authority revision, actual local protocol/PG/browser acceptance. Fresh independent review follows; no external provider/spend/deploy action authorized or executed.
+
+## 2026-10-06 11:50 UTC — F08 acceptance continuation
+
+F08 initial author ended before bound with coherent candidate `967acf90519b0a81d4adee3ffac52244d89219ba` and honest failed status: exact phase/cleanup, ordered authority/expiry/complaint, CLI and UI witnesses remain. Initial nonterminal-form receipt bytes archived before final failed marker correction; failed attempt is not accepted aggregation. 104 runtime source files independently match candidate commit; whitelisted initial evidence scanned for 20 representations of five runtime secrets, zero hits. Raw logs preserved gzip with decoded hashes; local TLS key excluded.
+
+New source-bound attempt f08-verify-a2 preallocated at11:48:24 UTC; exclusive Sol author native running and first action11:48:50 UTC verified. Fifteen-minute bound12:03:24 UTC. Next fresh Astra AC review after exact remainder, or specific bounded correction from terminal receipt. Whole task remains active; external live gates unchanged.
