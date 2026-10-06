@@ -59,13 +59,13 @@
     "followup_status": "F07/F08/F09 locally accepted, expanded AC001–003 met; AC004–009 pending. Whole required_gates_passed remains false."
   },
   "metrics": {
-    "elapsed_wall_ms": 52030723,
+    "elapsed_wall_ms": 53220665,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-06T23:33:13.602123Z"
+    "elapsed_as_of": "2026-10-06T23:53:03.543943Z"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 inbound context first MEDIUM implementation",
+  "current_stage": "F11 second fresh MEDIUM body/proof implementation; full runtime fairness pending",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -138,18 +138,18 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_context_author_a1",
-    "attempt": "f11-context-author-a1",
+    "executor": "/root/n7_sol_coordinator/f11_body_author_a2",
+    "attempt": "f11-context-author-a2",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-06T23:30:35Z",
-    "source_revision": "3566a6a785cc1d0cd0f6b35140af1604ee05c003",
+    "actual_ACK_at": "2026-10-06T23:43:29Z",
     "requested_model": "gpt-6.1-sol",
     "requested_effort": "medium",
     "actual_model": null,
-    "freeze_at": "2026-10-06T23:47:35Z",
-    "deadline": "2026-10-06T23:50:35Z",
-    "launch_sha256": "1142392264056c91cda88efda19992ef1cf3ad5174b0a5993d6bc55a4f80e2af",
-    "next": "Seal first9file slice/actual checks/remaining native body AC. Distinct bounded second slice after exact prior revision and checks; independent HIGH source review after F11 mandatory evidence."
+    "source_revision": "3b78670faad673711fd38b784c576243149b17f9",
+    "freeze_at": "2026-10-07T00:00:29Z",
+    "deadline": "2026-10-07T00:03:29Z",
+    "launch_sha256": "7d87134efbacacee1e94b795b265364a087acc85306f013ec58666c57460ea2d",
+    "next": "Seal coherent second body/proof revision and exact remaining C1/retention AC; actual bounded MEDIUM runtime continuation if incomplete; fresh independent HIGH review only after all mandatory F11 checks."
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -601,10 +601,18 @@
     "no_runtime_deployment": true
   },
   "f11_implementation_a1": {
-    "source_revision": "3566a6a785cc1d0cd0f6b35140af1604ee05c003",
-    "approved_corrected_plan": "745545a9fb09eda73264c957fd6f1eb225702e42492c2da9a98f4581bc1da201",
-    "actual_ACK_at": "2026-10-06T23:30:35Z",
-    "status": "active",
-    "feature_accepted": false
+    "status": "completed_partial_F11",
+    "source_revision": "3b78670faad673711fd38b784c576243149b17f9",
+    "receipt_sha256": "2323718522c57d063a5cdf6f95127b5d634776915696ac08c209f49e2d35a763",
+    "finished_at": "2026-10-06T23:39:35.780840Z",
+    "elapsed_seconds": 540.780888,
+    "feature_accepted": false,
+    "checks": "static0/unit3/PG7/affectedreply14subtests0; failingfixture/runner/helper preserved",
+    "guard_denials": {
+      "count": 22,
+      "destinations": "unavailable",
+      "DNS": 0,
+      "not_classified_retrospectively": true
+    }
   }
 }

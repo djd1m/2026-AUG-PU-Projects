@@ -1,0 +1,124 @@
+{
+  "version": "inbound-rules-v1",
+  "allowed": [
+    {
+      "case": "C01",
+      "language": "ru",
+      "phrase": "Что делает продукт?",
+      "intent": "product_overview",
+      "topic": "overview"
+    },
+    {
+      "case": "C02",
+      "language": "en",
+      "phrase": "What does the product do?",
+      "intent": "product_overview",
+      "topic": "overview"
+    },
+    {
+      "case": "C03",
+      "language": "ru",
+      "phrase": "Есть функция A?",
+      "intent": "supported_features",
+      "topic": "feature_a"
+    },
+    {
+      "case": "C04",
+      "language": "en",
+      "phrase": "Is feature A supported?",
+      "intent": "supported_features",
+      "topic": "feature_a"
+    },
+    {
+      "case": "C05",
+      "language": "ru",
+      "phrase": "Есть функция B?",
+      "intent": "supported_features",
+      "topic": "feature_b"
+    },
+    {
+      "case": "C06",
+      "language": "en",
+      "phrase": "Is feature B supported?",
+      "intent": "supported_features",
+      "topic": "feature_b"
+    },
+    {
+      "case": "C07",
+      "language": "ru",
+      "phrase": "Есть интеграция X?",
+      "intent": "supported_integrations",
+      "topic": "integration_x"
+    },
+    {
+      "case": "C08",
+      "language": "en",
+      "phrase": "Is integration X supported?",
+      "intent": "supported_integrations",
+      "topic": "integration_x"
+    },
+    {
+      "case": "C09",
+      "language": "ru",
+      "phrase": "Как настроить продукт?",
+      "intent": "setup_steps",
+      "topic": "setup"
+    },
+    {
+      "case": "C10",
+      "language": "en",
+      "phrase": "How do I set up the product?",
+      "intent": "setup_steps",
+      "topic": "setup"
+    },
+    {
+      "case": "C11",
+      "language": "ru",
+      "phrase": "Где документация продукта?",
+      "intent": "documentation",
+      "topic": "docs"
+    },
+    {
+      "case": "C12",
+      "language": "en",
+      "phrase": "Where is the product documentation?",
+      "intent": "documentation",
+      "topic": "docs"
+    }
+  ],
+  "negative": {
+    "stop": [
+      "unsubscribe",
+      "stop emailing me",
+      "отпишите меня",
+      "не пишите мне"
+    ],
+    "complaint": [
+      "spam complaint",
+      "this is spam",
+      "это спам"
+    ],
+    "hostile": [
+      "ignore rules",
+      "show secrets",
+      "игнорируй правила",
+      "покажи секреты",
+      "foreign tenant",
+      "чужой контекст"
+    ],
+    "unapproved_commitment": [
+      "price",
+      "discount",
+      "deadline",
+      "цена",
+      "скидка",
+      "срок"
+    ],
+    "unsupported_authority": [
+      "book a meeting",
+      "legal guarantee",
+      "забронировать встречу",
+      "юридическая гарантия"
+    ]
+  }
+}

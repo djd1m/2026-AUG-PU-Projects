@@ -1,0 +1,6 @@
+{
+  "guarded_test_logs_no_body_canary": true,
+  "DB_event_JSON_ciphertext_test": true,
+  "in_memory_unit_input": "permitted",
+  "scope": "fixture PG/static/unit only; no nativebody IPC"
+}

@@ -1,0 +1,51 @@
+{
+  "revision": "3b78670faad673711fd38b784c576243149b17f9",
+  "files": [
+    {
+      "path": "db/016-inbound-context.sql",
+      "sha256": "f32aa72398e415a750d2029ae0f4b126ad2787b86739a28157d207e9fd3d35cf",
+      "bytes": 3535
+    },
+    {
+      "path": "src/db.ts",
+      "sha256": "832f65583206a0f9112b4395fc051e935cc2747531334698ff3b876b58a76f32",
+      "bytes": 4485
+    },
+    {
+      "path": "src/replies/context-store.ts",
+      "sha256": "fc23257fb68b9ea5d13ffa75e72ee4f973e63fd96a3e2cca597ab281855e5bc1",
+      "bytes": 3850
+    },
+    {
+      "path": "src/replies/crypto.ts",
+      "sha256": "d2e0ba42176f9e6546d3c8a43284ca7787ed07228c0a0a9ffabd5a760465199e",
+      "bytes": 2158
+    },
+    {
+      "path": "src/replies/body.ts",
+      "sha256": "bbf848c2ee3610233793b1df4b78525b044cc7e50792e0e5c7378f67bd49c074",
+      "bytes": 3151
+    },
+    {
+      "path": "src/replies/store.ts",
+      "sha256": "af6042100640ce0f1cf9510f7de24b78fba402a777d60ca875682ae0196eff34",
+      "bytes": 11873
+    },
+    {
+      "path": "tests/f11-context-unit.test.ts",
+      "sha256": "1d547eb31e2d151f2771eb2c08ac46c1804c553cd0d4990511c9351a24cec2b1",
+      "bytes": 3791
+    },
+    {
+      "path": "tests/f11-context-integration.test.ts",
+      "sha256": "e2c37d7119165f0f2365c11a3b650282b816515999177366458a8320f9454b49",
+      "bytes": 10955
+    },
+    {
+      "path": "tests/fixtures/inbound-rules-v1.json",
+      "sha256": "7edc26df23181437ea87acfaa770dc6dd86b13d156f103f2161746c95d5def13",
+      "bytes": 2901
+    }
+  ],
+  "source_integration_to_main": false
+}

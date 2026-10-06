@@ -1,0 +1,24 @@
+{
+  "source_revision": "3b78670faad673711fd38b784c576243149b17f9",
+  "pre_code_utc": "2026-10-06T23:44:43.844691+00:00",
+  "files": {
+    "db/016-inbound-context.sql": "f32aa72398e415a750d2029ae0f4b126ad2787b86739a28157d207e9fd3d35cf",
+    "src/replies/context-store.ts": "fc23257fb68b9ea5d13ffa75e72ee4f973e63fd96a3e2cca597ab281855e5bc1",
+    "src/replies/store.ts": "af6042100640ce0f1cf9510f7de24b78fba402a777d60ca875682ae0196eff34",
+    "src/replies/adapter.ts": "54e40ca7270ca7299c6a9601b3cf268663877413fc131a8e9c76b4e117d1fcf9",
+    "src/mailboxes/transport-authority.ts": "12ceabeab74af78d271cfe6dbbd6479bf3176713d9158b4dca9c130bcb8e0fab",
+    "src/mailboxes/transport-child.ts": "3b0be9a1481567cdd6c27423b8f7ef3a88007d3a92311fed21594af8b42eea20",
+    "src/mailboxes/transport-channel.ts": "aed6062d25aa48fbb927f002887f9a2537f2f4aa483f762a2bf01c91af3dca65",
+    "src/mailboxes/transport-lifetime.ts": "287b7c4449da552a2bc2df511d81fe2cb2dfe481edcdaf5a5fe0e8a39c4e83f0",
+    "src/mailboxes/transport-slots.ts": "93c3509a79bf43296b99f20610045da188e26d057fd6f8b14c2fb1e6bd23bb66",
+    "src/runtime/store.ts": "983a1e5331f17bc7312a4c3f8ea95c7c2728e60b24d5e14708a9084e50fcff28",
+    "src/runtime/loop.ts": "96041a5d3f55a02ba6e55faeda69142a9f6826ea50ce988beceaa00a1b85edc6",
+    "src/runtime/worker.ts": "820513ecaa13b25bededc8845306365f635d1dae41232451cd96a2decc31c774",
+    "tests/f11-context-unit.test.ts": "1d547eb31e2d151f2771eb2c08ac46c1804c553cd0d4990511c9351a24cec2b1",
+    "tests/f11-context-integration.test.ts": "e2c37d7119165f0f2365c11a3b650282b816515999177366458a8320f9454b49"
+  },
+  "inputs": {
+    "/tmp/n7-f11-context-plan-a1c-cli/plan.md": "6a55facebae60282a6580a3809cbfa9e662214e4621814447c6ffac03523e364",
+    "/tmp/n7-f11-context-plan-validation-a28-native/report.md": "745545a9fb09eda73264c957fd6f1eb225702e42492c2da9a98f4581bc1da201"
+  }
+}
