@@ -55,7 +55,7 @@ One implementation → fresh independent review → confirmed corrections only.
 | Planning/architecture | Sol6.1 high | exact feature scope |
 | Product code/tests/UI | Sol6.1 medium | 20minutes per attempt |
 | Independent review | fresh Sol6.1 high, fork_turns=none | 8minutes per bounded slice |
-OWN-N7-006 overrides the former Astra/high and Sol/high split for new stages. Reviewer receives the approved planner packet and frozen source/tests, without author history or reasoning. Existing A11 HIGH and historical records remain unchanged.
+Active profile `model-routing-econom` (OWN-N7-006) overrides the former Astra/high and Sol/high split for new stages. Reviewer receives the approved planner packet and frozen source/tests, without author history or reasoning. Existing A11 HIGH and historical records remain unchanged.
 Actual models require host evidence. Never change global configuration. Parent can lend its
 lane to one CLI worker while monitoring only; max4 actual working units across projects.
 
