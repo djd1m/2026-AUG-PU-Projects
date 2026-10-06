@@ -1,0 +1,11 @@
+{
+  "status": "ready",
+  "source": "a8d4b6b2d46f1f45f27fe0a8028288057d0fa491",
+  "guard_sha256": "62b140748555f6ca9d5cdd4f6cb3c0a432906ba082bf7408e7a7b4df51640df1",
+  "guard_negative_positive": "all exits0; stringfixture/BufferCA actual localTLS",
+  "command": "node --import tsx /tmp/n7-f10-verify-a13/diagnose.mjs",
+  "inputs": "2active2connected2tenants; old fixed UID1 tail vs completedUID1; resetUID2+FETCHNO;restore;explicitretry;37s accelerated restart",
+  "expected_effects": "ownedDB fixture reset; exactPG/numericloopback TLS only; scratch child diagnostic copy; sanitized enums/errorclass/messageSHA; no runtime edits",
+  "e2e_claim": null,
+  "external_actions_executed": false
+}

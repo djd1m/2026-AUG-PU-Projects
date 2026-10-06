@@ -1,0 +1,215 @@
+{
+  "source": "a8d4b6b2 runtime unchanged",
+  "guard_sha": "0e40094d148dd350f2b007850093d75bd3f96e006d5f49a5cbe252a24b1d4e8b",
+  "states": [
+    {
+      "phase": "failed_before_restore",
+      "at": 1791311036928,
+      "rows": [
+        {
+          "mailbox_id": "6cd4a121-39dc-48f0-8f11-61ae184c7911",
+          "uidvalidity": "1",
+          "rescan_state": "rescan_incomplete",
+          "attempt": 1,
+          "pages": 0,
+          "tail_high_water": "0",
+          "reason": "provider_backoff",
+          "failure_count": 1,
+          "completed_at": "2026-10-06T18:23:52.466Z",
+          "scan_complete": false,
+          "next_check_at": "2026-10-06T18:24:23.685Z",
+          "generation": "1"
+        },
+        {
+          "mailbox_id": "ae829cbf-d605-445b-9c35-bc124f9ab478",
+          "uidvalidity": "2",
+          "rescan_state": "rescan_incomplete",
+          "attempt": 1,
+          "pages": 0,
+          "tail_high_water": null,
+          "reason": "provider_backoff",
+          "failure_count": 1,
+          "completed_at": "2026-10-06T18:23:52.918Z",
+          "scan_complete": false,
+          "next_check_at": "2026-10-06T18:24:24.180Z",
+          "generation": "2"
+        }
+      ]
+    },
+    {
+      "phase": "after_explicit_retry",
+      "at": 1791311036947,
+      "rows": [
+        {
+          "mailbox_id": "6cd4a121-39dc-48f0-8f11-61ae184c7911",
+          "uidvalidity": "1",
+          "rescan_state": "scanning",
+          "attempt": 2,
+          "pages": 0,
+          "tail_high_water": "0",
+          "reason": "provider_backoff",
+          "failure_count": 1,
+          "completed_at": "2026-10-06T18:23:52.466Z",
+          "scan_complete": false,
+          "next_check_at": "2026-10-06T18:24:23.685Z",
+          "generation": "1"
+        },
+        {
+          "mailbox_id": "ae829cbf-d605-445b-9c35-bc124f9ab478",
+          "uidvalidity": "2",
+          "rescan_state": "scanning",
+          "attempt": 2,
+          "pages": 0,
+          "tail_high_water": null,
+          "reason": "provider_backoff",
+          "failure_count": 1,
+          "completed_at": "2026-10-06T18:23:52.918Z",
+          "scan_complete": false,
+          "next_check_at": "2026-10-06T18:24:24.180Z",
+          "generation": "2"
+        }
+      ]
+    },
+    {
+      "phase": "after_original_provider_backoff",
+      "at": 1791311069952,
+      "rows": [
+        {
+          "mailbox_id": "6cd4a121-39dc-48f0-8f11-61ae184c7911",
+          "uidvalidity": "1",
+          "rescan_state": "rescan_incomplete",
+          "attempt": 2,
+          "pages": 0,
+          "tail_high_water": "0",
+          "reason": "provider_backoff",
+          "failure_count": 2,
+          "completed_at": "2026-10-06T18:23:52.466Z",
+          "scan_complete": false,
+          "next_check_at": "2026-10-06T18:25:24.471Z",
+          "generation": "2"
+        },
+        {
+          "mailbox_id": "ae829cbf-d605-445b-9c35-bc124f9ab478",
+          "uidvalidity": "2",
+          "rescan_state": "scanning",
+          "attempt": 1,
+          "pages": 0,
+          "tail_high_water": null,
+          "reason": "ready",
+          "failure_count": 0,
+          "completed_at": "2026-10-06T18:24:29.171Z",
+          "scan_complete": false,
+          "next_check_at": "2026-10-06T18:24:29.730Z",
+          "generation": "13"
+        }
+      ]
+    },
+    {
+      "phase": "after_graceful_join",
+      "at": 1791311069976,
+      "rows": [
+        {
+          "mailbox_id": "6cd4a121-39dc-48f0-8f11-61ae184c7911",
+          "uidvalidity": "1",
+          "rescan_state": "rescan_incomplete",
+          "attempt": 2,
+          "pages": 0,
+          "tail_high_water": "0",
+          "reason": "provider_backoff",
+          "failure_count": 2,
+          "completed_at": "2026-10-06T18:23:52.466Z",
+          "scan_complete": false,
+          "next_check_at": "2026-10-06T18:25:24.471Z",
+          "generation": "2"
+        },
+        {
+          "mailbox_id": "ae829cbf-d605-445b-9c35-bc124f9ab478",
+          "uidvalidity": "2",
+          "rescan_state": "scanning",
+          "attempt": 1,
+          "pages": 0,
+          "tail_high_water": null,
+          "reason": "ready",
+          "failure_count": 0,
+          "completed_at": "2026-10-06T18:24:29.171Z",
+          "scan_complete": false,
+          "next_check_at": "2026-10-06T18:24:29.730Z",
+          "generation": "13"
+        }
+      ]
+    },
+    {
+      "phase": "after_restart",
+      "at": 1791311072979,
+      "rows": [
+        {
+          "mailbox_id": "6cd4a121-39dc-48f0-8f11-61ae184c7911",
+          "uidvalidity": "1",
+          "rescan_state": "rescan_incomplete",
+          "attempt": 2,
+          "pages": 0,
+          "tail_high_water": "0",
+          "reason": "provider_backoff",
+          "failure_count": 2,
+          "completed_at": "2026-10-06T18:23:52.466Z",
+          "scan_complete": false,
+          "next_check_at": "2026-10-06T18:25:24.471Z",
+          "generation": "2"
+        },
+        {
+          "mailbox_id": "ae829cbf-d605-445b-9c35-bc124f9ab478",
+          "uidvalidity": "2",
+          "rescan_state": "complete",
+          "attempt": 1,
+          "pages": 1,
+          "tail_high_water": "1",
+          "reason": "ready",
+          "failure_count": 0,
+          "completed_at": "2026-10-06T18:24:32.909Z",
+          "scan_complete": true,
+          "next_check_at": "2026-10-06T18:24:32.915Z",
+          "generation": "19"
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "at": 1791311033636,
+      "pid": 278491,
+      "kind": "read",
+      "errorClass": "TransportFailure",
+      "code": "protocol_invalid",
+      "messageSHA": "fa69d70b11e9d833f8b6bb83b7864c1c5ba6649e93308b53953d33f70af9964a",
+      "signalAborted": false,
+      "validity": "1",
+      "cursor": 0,
+      "horizon": 0
+    },
+    {
+      "at": 1791311034133,
+      "pid": 278582,
+      "kind": "read",
+      "errorClass": "TransportFailure",
+      "code": "protocol_invalid",
+      "messageSHA": "fa69d70b11e9d833f8b6bb83b7864c1c5ba6649e93308b53953d33f70af9964a",
+      "signalAborted": false,
+      "validity": "2",
+      "cursor": 0,
+      "horizon": 1
+    },
+    {
+      "at": 1791311064406,
+      "pid": 287634,
+      "kind": "read",
+      "errorClass": "TransportFailure",
+      "code": "protocol_invalid",
+      "messageSHA": "fa69d70b11e9d833f8b6bb83b7864c1c5ba6649e93308b53953d33f70af9964a",
+      "signalAborted": false,
+      "validity": "1",
+      "cursor": 0,
+      "horizon": 0
+    }
+  ],
+  "causality": "Old UID1 fixed tail read fails against declared UID2 EXAMINE before UID FETCH even after explicit retry. Fresh UID2 participant failed taggedNO initially, then explicit retry completes after original30s backoff. Both transport errors signalAborted=false. Guard early-listener race separately proven and fixed locally; not conflated with direct cancellation."
+}

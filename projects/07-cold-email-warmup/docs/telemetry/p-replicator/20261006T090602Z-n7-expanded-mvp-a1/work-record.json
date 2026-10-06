@@ -8,7 +8,7 @@
   "identity": {
     "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
     "work_unit_id": "expanded-mvp",
-    "current_attempt_id": "f10-retry-diagnose-fixture-a13"
+    "current_attempt_id": "f10-uidreset-implement-a15"
   },
   "telemetry": {
     "run": {
@@ -22,7 +22,7 @@
   },
   "source": {
     "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
-    "current_revision": "a8d4b6b2d46f1f45f27fe0a8028288057d0fa491",
+    "current_revision": "6255b8f19a456103f062b0d1d5fd2313b914af94",
     "build_revision": "a8d4b6b2d46f1f45f27fe0a8028288057d0fa491",
     "requirements": [
       {
@@ -45,12 +45,12 @@
       }
     ],
     "continuity": {
-      "expected_revision": "a8d4b6b2d46f1f45f27fe0a8028288057d0fa491",
-      "observed_revision": "a8d4b6b2d46f1f45f27fe0a8028288057d0fa491",
+      "expected_revision": "6255b8f19a456103f062b0d1d5fd2313b914af94",
+      "observed_revision": "6255b8f19a456103f062b0d1d5fd2313b914af94",
       "reconciliation": null
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
-    "integration_note": "Frozen unaccepted final A12 a8d4: five source and73build hashes verified. Focused26/unit62/static0; native985 RED cannot transfer across protocol predicate correction. A13 deterministic hold diagnosis/test-fixture compatibility owns next step; no runtime main integration or acceptance."
+    "integration_note": "A13 bounded diagnostics and two fixture tests completed;125 evidence files copied/secret0;120source73build hashes verified. Runtime a8d4 unchanged. Fresh independent A14b HIGH typed UID result plan ready. A15 MEDIUM implements exact private contract; F10 source remains unaccepted/no main runtime integration."
   },
   "prepare": {
     "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
@@ -183,7 +183,7 @@
   },
   "preflight": {
     "status": "not_applicable",
-    "reason": "Current final a8d4 native E2E has not run; A12 prior985 ready preflight and RED native retained in evidence/f10-graceful-claims-fix-a12. A13 must record immediately before each actual local E2E. No current E2E pass claim.",
+    "reason": "A15 current source implementation underway; no finalsource native acceptance. PriorA13 F09native6/6 ready evidence retained, no330/fullPG/physical/mutations claim. Own preflight/probes mandatory before every future native launch.",
     "external_actions_executed": false,
     "e2e_claim": null
   },
@@ -414,6 +414,18 @@
     },
     {
       "id": "f10-retry-diagnose-fixture-a13",
+      "status": "completed"
+    },
+    {
+      "id": "f10-uidreset-contract-plan-a14",
+      "status": "failed"
+    },
+    {
+      "id": "f10-uidreset-contract-plan-a14b-cli",
+      "status": "completed"
+    },
+    {
+      "id": "f10-uidreset-implement-a15",
       "status": "active"
     }
   ],
