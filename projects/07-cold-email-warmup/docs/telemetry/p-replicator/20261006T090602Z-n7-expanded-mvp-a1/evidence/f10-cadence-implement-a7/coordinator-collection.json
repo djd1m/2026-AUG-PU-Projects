@@ -1,0 +1,204 @@
+{
+  "collected_at": "2026-10-06T17:05:42.323243+00:00",
+  "known_secret_hit_files": [],
+  "source_hash_mismatches": 0,
+  "source_files": 90,
+  "build_files": 73,
+  "source_revision": "87bb94944f33bf99f9f9fd6d6390d097ca415dc2",
+  "terminal_overrun_seconds": 17.257738,
+  "cadence_accepted": false,
+  "short_probe_2cpu_claim": false,
+  "artifacts": [
+    {
+      "path": "build-v2.exit",
+      "decoded_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "stored_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "affected-v2.exit",
+      "decoded_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "stored_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "mutation-failure_success-v1.exit",
+      "decoded_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "stored_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "frozen-source-build-manifest-v1.json",
+      "decoded_sha256": "044ba405cd558bd17f7249a91915937eafe15563b2fd6ecaa28a7e5f0d315172",
+      "stored_sha256": "044ba405cd558bd17f7249a91915937eafe15563b2fd6ecaa28a7e5f0d315172"
+    },
+    {
+      "path": "short-native-v1.exit",
+      "decoded_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "stored_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "type-v1.exit",
+      "decoded_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "stored_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "short-native-v2.exit",
+      "decoded_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "stored_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "short-native-v2-drain.json",
+      "decoded_sha256": "3d19f0b8d4ed427ae24293f9d897c17f0165ef5bc6132b2fffbd8af01f663b2a",
+      "stored_sha256": "3d19f0b8d4ed427ae24293f9d897c17f0165ef5bc6132b2fffbd8af01f663b2a"
+    },
+    {
+      "path": "mutation-reset_sequence-v1.exit",
+      "decoded_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "stored_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "lint-v1.exit",
+      "decoded_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "stored_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "lint-v2.exit",
+      "decoded_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "stored_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "mutation-sleep30-v1.exit",
+      "decoded_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "stored_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "mutation-sleep30-v1.log.gz",
+      "decoded_sha256": "2050561b14fb79c8003a95bfb9d9f726d76aae05f776b1e6694f54da279be29e",
+      "stored_sha256": "6e31ad03ed0af1a9e30411ee99e9c206a613e072d84fb8d5bf0beb54e0d956d9"
+    },
+    {
+      "path": "native-recovery-v1.exit",
+      "decoded_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "stored_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "type-v3.log.gz",
+      "decoded_sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393",
+      "stored_sha256": "5ac31778b249f652b5851bfe3330059b96ceab466d05e6703d93fd903802291b"
+    },
+    {
+      "path": "affected-v1.exit",
+      "decoded_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "stored_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "lint-v3.exit",
+      "decoded_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "stored_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "build-v1.exit",
+      "decoded_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "stored_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "short-native-v2.json",
+      "decoded_sha256": "60d07dcb6bcec2d5faa0419f86ccb41fce2997564376df6f25d197f5b4ce1007",
+      "stored_sha256": "60d07dcb6bcec2d5faa0419f86ccb41fce2997564376df6f25d197f5b4ce1007"
+    },
+    {
+      "path": "native-recovery-v1.log.gz",
+      "decoded_sha256": "a0316d481cdd3d2f1b0e5e386191279e90207ced7e0effa4a1e2bda172590b65",
+      "stored_sha256": "96682728901773abd2d83e146f51a07e30fc604a5db17b407acdd9487b28688d"
+    },
+    {
+      "path": "short-native-v1.log.gz",
+      "decoded_sha256": "4a832d71214c73e3e0273df04ad055398887e551c0d587cfa4829bf1385ff365",
+      "stored_sha256": "ea08ee41026666ed610d84625c2085485af06cc47f23401bc32f6fd1daad91da"
+    },
+    {
+      "path": "type-v3.exit",
+      "decoded_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "stored_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "mutation-reset_sequence-v1.log.gz",
+      "decoded_sha256": "c4bcf3c3aa53a9bee78e56beedfd94006ed3a1e87568592eec54a456bf1ac2f6",
+      "stored_sha256": "5ed8bdfcdf10c5cd13667f77501aa89856642770393bfe30ee55f34bb6306328"
+    },
+    {
+      "path": "build-v1.log.gz",
+      "decoded_sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323",
+      "stored_sha256": "cd9f5e708cdc56a1975d2ee6e2bc1d6d80f3b1bdf7c928864938ba5c5a7ca887"
+    },
+    {
+      "path": "full-source-build-manifest-v1.json",
+      "decoded_sha256": "ee36b9d5683dbbc8550b34b5fe59e962d0d0eb05402003ce8342a286ef71cbc0",
+      "stored_sha256": "ee36b9d5683dbbc8550b34b5fe59e962d0d0eb05402003ce8342a286ef71cbc0"
+    },
+    {
+      "path": "short-native-v1.json",
+      "decoded_sha256": "ce7db985e09c4410d9075b8fe0764a915877b38fa168078595420ebbbf47703b",
+      "stored_sha256": "ce7db985e09c4410d9075b8fe0764a915877b38fa168078595420ebbbf47703b"
+    },
+    {
+      "path": "type-v2.log.gz",
+      "decoded_sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393",
+      "stored_sha256": "5ac31778b249f652b5851bfe3330059b96ceab466d05e6703d93fd903802291b"
+    },
+    {
+      "path": "lint-v2.log.gz",
+      "decoded_sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e",
+      "stored_sha256": "af69e9d91dc7a6b27e9a131a05765f96f0c2b75aa44f7934a1027fd593c96fc7"
+    },
+    {
+      "path": "lint-v3.log.gz",
+      "decoded_sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e",
+      "stored_sha256": "af69e9d91dc7a6b27e9a131a05765f96f0c2b75aa44f7934a1027fd593c96fc7"
+    },
+    {
+      "path": "affected-v1.log.gz",
+      "decoded_sha256": "ff8932fec2d456b5d1bf961af77cb9361a2c678d57f3d72e721bcdc354a0926f",
+      "stored_sha256": "b068ec1ad1d4fb709679975293dfd35fa953334ed67e903733a91816e7f6e0b5"
+    },
+    {
+      "path": "build-v2.log.gz",
+      "decoded_sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323",
+      "stored_sha256": "cd9f5e708cdc56a1975d2ee6e2bc1d6d80f3b1bdf7c928864938ba5c5a7ca887"
+    },
+    {
+      "path": "mutation-failure_success-v1.log.gz",
+      "decoded_sha256": "c8e66279928146dd56636d0f20352beb824acaac9410f3e5f1d763240f4c58c5",
+      "stored_sha256": "31d97d5b63b8e00c2877752e69d9603924284c869b3c70374237550e4ccfdda4"
+    },
+    {
+      "path": "type-v2.exit",
+      "decoded_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "stored_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "mutations-v1.json",
+      "decoded_sha256": "be1bf95d40d25127144738487b4fd4c5703ed65008a917610ca0d917a6bd3aa5",
+      "stored_sha256": "be1bf95d40d25127144738487b4fd4c5703ed65008a917610ca0d917a6bd3aa5"
+    },
+    {
+      "path": "short-native-v2.log.gz",
+      "decoded_sha256": "1d3fd88f9f03efbe1801c7494bb1706807a1d4e8abc973056bee10c1fa4cde88",
+      "stored_sha256": "64a26439577151e1bfab681c5fdaa59c1aaf1356658af92ee90bed3fe1a01d33"
+    },
+    {
+      "path": "lint-v1.log.gz",
+      "decoded_sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e",
+      "stored_sha256": "af69e9d91dc7a6b27e9a131a05765f96f0c2b75aa44f7934a1027fd593c96fc7"
+    },
+    {
+      "path": "type-v1.log.gz",
+      "decoded_sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393",
+      "stored_sha256": "5ac31778b249f652b5851bfe3330059b96ceab466d05e6703d93fd903802291b"
+    },
+    {
+      "path": "affected-v2.log.gz",
+      "decoded_sha256": "0b6fb73f520e7819b0659e1cf8b322e70cdebab050bf31058754ef9ff0f11d6d",
+      "stored_sha256": "6ec13adc81bfc0a72a91be895f747c8f27665fb505345b9b8de4bb56211d62ab"
+    }
+  ],
+  "changed_runtime_and_test_files_verified": 8
+}
