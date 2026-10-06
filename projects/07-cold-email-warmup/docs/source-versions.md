@@ -1,4 +1,4 @@
-# Source versions — current F09 coordination
+# Source versions — current F10 coordination
 
 **Правки и выводы:** да
 **Проверка версий:** ВЫПОЛНЕНА
@@ -18,3 +18,6 @@ This declaration binds the current planning conclusions to actual source bytes. 
 | F09 plan READY after physical owner correction | вывод | docs/features/f09-live-transport/validation-report.md | 3edc2464fa605bad47f6cc7783d41081d5b2f33c3fcb5fa79f367a11adf19d17 |
 | F09 native transport capabilities | вывод | docs/features/f09-live-transport/capability-contracts.md | e0ff418c52f33b4ad566a0a546add3b911dce78331f08566af3e79893f766dfb |
 | F09 ACCEPT source e043bb27; R1 closed | вывод | docs/features/f09-live-transport/review-report.md | ce41730fd3368f0cfe404a65fc717cf676afc8e245bb6701ce7ed7f9f06e15e0 |
+| F10 frozen scope after V1 fairness correction | вывод | docs/features/f10-durable-runtime/01_specification.md | 410d329fcc9d433f51e554310318457096a8dfdd82aad9754e47d7122744eeb8 |
+| F10 independent READY at952e356d | вывод | docs/features/f10-durable-runtime/validation-report.md | 7d2863788c8a601e5d90a9dbccc91fadaf52f1d9f93d5fe6520e982a25f2038d |
+| F10 physical runtime mapping | вывод | docs/features/f10-durable-runtime/03_architecture.md | c76c1fc569c4116ce7e70eafb624b83dd5de3a7288ac937fc03ece15ef43064b |

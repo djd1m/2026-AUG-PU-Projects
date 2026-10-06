@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "plan",
+  "stage": "implement",
   "roots": {
     "project": "."
   },
   "identity": {
     "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
     "work_unit_id": "expanded-mvp",
-    "current_attempt_id": "f10-plan-r3"
+    "current_attempt_id": "f10-implement-a1"
   },
   "telemetry": {
     "run": {
@@ -22,7 +22,7 @@
   },
   "source": {
     "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
-    "current_revision": "f0c580b6cd9e92423a3f07afb9105902ef8b7e90",
+    "current_revision": "9951c9e0f3c51cbca560de4763f3cc71b73e6835",
     "build_revision": null,
     "requirements": [
       {
@@ -45,12 +45,12 @@
       }
     ],
     "continuity": {
-      "expected_revision": "f0c580b6cd9e92423a3f07afb9105902ef8b7e90",
-      "observed_revision": "f0c580b6cd9e92423a3f07afb9105902ef8b7e90",
+      "expected_revision": "9951c9e0f3c51cbca560de4763f3cc71b73e6835",
+      "observed_revision": "9951c9e0f3c51cbca560de4763f3cc71b73e6835",
       "reconciliation": null
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
-    "integration_note": "Accepted source e043bb27 cherry-picked unchanged; final report e6fdbb4d. Historical failed timing receipts preserved."
+    "integration_note": "F10 READY report60c15daf integrated9951c9e0, five roles exact accepted952e356d; historical timing failures retained."
   },
   "prepare": {
     "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
@@ -154,9 +154,9 @@
       "phase": "implementation",
       "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
       "tier": "XL",
-      "rationale": "F09 irreversibleSMTPunknown,physicalsocketadmission,UIDatomicrecovery; actual mechanicalM0 lowerbound, fullPhaseI/II READY0; scope005",
+      "rationale": "Persistent shared scheduling/automatic pool/pacing; mechanicalS0 lowerbound, independentREADY/fullPhaseI-II0",
       "script": {
-        "input": "33exact paths in evidence/f09-implementation-route/ownership.json",
+        "input": "33paths evidence/f10-implement-a1/ownership.json",
         "exit_code": 0
       }
     }
@@ -183,7 +183,7 @@
   },
   "preflight": {
     "status": "not_applicable",
-    "reason": "F10 PLAN documentation only; mandatory actual E2E preflight before applicable later UI checks",
+    "reason": "F10 no UI changes; mandatory local PG/TLS/runtime checks. Actual E2E would require immediate separate readiness.",
     "external_actions_executed": false,
     "e2e_claim": null
   },
@@ -346,6 +346,14 @@
     },
     {
       "id": "f10-plan-r3",
+      "status": "failed"
+    },
+    {
+      "id": "f10-validate-r2",
+      "status": "completed"
+    },
+    {
+      "id": "f10-implement-a1",
       "status": "active"
     }
   ],

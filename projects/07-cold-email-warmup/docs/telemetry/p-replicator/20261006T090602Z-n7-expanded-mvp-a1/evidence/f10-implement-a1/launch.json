@@ -1,0 +1,18 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-implement-a1",
+  "stage": "IMPLEMENT bounded coherent code plus focused checks",
+  "source_revision": "9951c9e0f3c51cbca560de4763f3cc71b73e6835",
+  "spec_sha256": "410d329fcc9d433f51e554310318457096a8dfdd82aad9754e47d7122744eeb8",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_model_reason": "host_not_exposed",
+  "worktree": "/tmp/n7-f10-implement-20261006",
+  "trace_path": "/tmp/n7-f10-implement-a1-receipt.md",
+  "created_at": "2026-10-06T15:10:18.283812+00:00",
+  "freeze_by": "2026-10-06T15:28:48.283812+00:00",
+  "deadline": "2026-10-06T15:30:18.283812+00:00",
+  "budget_minutes": 20,
+  "scope": "Implement validated F10 minimal 7AC in exact33paths; significant focused realPG/protocol tests and type/build. Full mandatory verification remains explicit next bounded continuation if not completed, then fresh independent review. No local acceptance before full required gates. No external actions."
+}
