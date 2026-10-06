@@ -22,7 +22,7 @@
   },
   "source": {
     "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
-    "current_revision": "87bb94944f33bf99f9f9fd6d6390d097ca415dc2",
+    "current_revision": "52cad40204deed91d93c969fe95ed89f3d95a8c7",
     "build_revision": null,
     "requirements": [
       {
@@ -45,8 +45,8 @@
       }
     ],
     "continuity": {
-      "expected_revision": "87bb94944f33bf99f9f9fd6d6390d097ca415dc2",
-      "observed_revision": "87bb94944f33bf99f9f9fd6d6390d097ca415dc2",
+      "expected_revision": "52cad40204deed91d93c969fe95ed89f3d95a8c7",
+      "observed_revision": "52cad40204deed91d93c969fe95ed89f3d95a8c7",
       "reconciliation": null
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
@@ -402,6 +402,10 @@
     },
     {
       "id": "f10-contention-fix-a10",
+      "status": "completed"
+    },
+    {
+      "id": "f10-frozen-verify-a11",
       "status": "active"
     }
   ],
@@ -441,7 +445,7 @@
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-06T17:17:33.306351+00:00",
+    "last_reported_at": "2026-10-06T17:35:16.886558+00:00",
     "responsible": "n7_expanded_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true
   }
