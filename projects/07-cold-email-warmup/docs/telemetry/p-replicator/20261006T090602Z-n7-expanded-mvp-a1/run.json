@@ -49,7 +49,7 @@
     "ac_met": 1,
     "ac_total": 9,
     "confirmed_findings_by_severity": {
-      "high": 1
+      "high": 3
     },
     "false_positive_findings": null,
     "known_defects_missed": null,
@@ -73,7 +73,7 @@
     "No prelaunch serialized launch digest for native PLAN receipt; terminal receipt and output SHA verified, not companion delivery attestation",
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred."
   ],
-  "current_stage": "IMPLEMENT F08 verification continuation",
+  "current_stage": "IMPLEMENT F08 confirmed R1/R2 corrections",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -135,10 +135,9 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_expanded_coordinator",
-    "executor": "f08_author_a1 native running; first action 11:48:50UTC confirmed",
-    "source_revision": "967acf90519b0a81d4adee3ffac52244d89219ba",
-    "next": "15min exact acceptance remainder, then fresh independent Astra review",
-    "parallel_bounded_fix": "f08_dependency_fix_a1 actual started, isolated two manifests only, bound12:01:32UTC; no shared dependencies mutated"
+    "executor": "f08_author_a1 actual first command12:13:39UTC confirmed; bounded R1/R2 corrections",
+    "source_revision": "00f6888fe753a546ac17f63eb1eda270e260600a",
+    "next": "8min confirmedfixes+affectedregressions then fresh independent focusedAstrareview"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -181,7 +180,7 @@
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-06T11:48:24.619903+00:00",
+    "last_reported_at": "2026-10-06T12:13:00Z",
     "responsible": "n7_expanded_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true
   },
@@ -209,5 +208,30 @@
     "phase12_exit": 0,
     "validated_source": "8c2f4dc57aeb6b71f19b160755b4372d338f1ee1",
     "validation_artifact_revision": "db47f8fd3597d547f79e501b9afa7d08a800b67a"
+  },
+  "f08_review": {
+    "verdict": "NEEDS_WORK",
+    "source_revision": "00f6888fe753a546ac17f63eb1eda270e260600a",
+    "findings": [
+      "F08-R1",
+      "F08-R2"
+    ],
+    "receipt_exit": 0
+  },
+  "f08_candidate_runtime": {
+    "source_revision": "00f6888fe753a546ac17f63eb1eda270e260600a",
+    "independent_verdict": "NEEDS_WORK",
+    "unit_pass": 54,
+    "final_affected_pg_pass": 14,
+    "browser_checks_pass": 20,
+    "phase12_exit": 0,
+    "completion_exit": 1,
+    "inherited_future_completion_gaps": 9,
+    "exact_image_lint_exit": 0,
+    "exact_image_typecheck_exit": 0,
+    "typescript_eslint_version": "8.48.0",
+    "source_files_match": 108,
+    "secret_candidate_files_scanned": 1729,
+    "known_secret_hits": 0
   }
 }

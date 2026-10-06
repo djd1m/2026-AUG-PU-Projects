@@ -1,0 +1,16 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f08-review-a1",
+  "stage": "REVIEW",
+  "source_revision": "00f6888fe753a546ac17f63eb1eda270e260600a",
+  "spec_sha256": "a3ad1300fde78f396c850627e9fd833391d3a572214801315519b92ad197a0a8",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "worktree": "/tmp/n7-f08-review-20261006",
+  "trace_path": "/tmp/n7-f08-review-a1-receipt.md",
+  "report_path": "/tmp/n7-f08-review-a1-report.md",
+  "created_at": "2026-10-06T12:04:26.978691+00:00",
+  "budget_minutes": 8,
+  "scope": "Fresh independent 8AC code/evidence review of combined F08 after bounded correction and dev dependency fix. Read-only source, report+receipt only, no nested agents or external calls."
+}
