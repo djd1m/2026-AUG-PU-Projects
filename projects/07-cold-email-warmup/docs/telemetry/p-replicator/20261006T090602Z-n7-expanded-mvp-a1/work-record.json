@@ -8,7 +8,7 @@
   "identity": {
     "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
     "work_unit_id": "expanded-mvp",
-    "current_attempt_id": "f07-implement-a1"
+    "current_attempt_id": "f07-review-a1"
   },
   "telemetry": {
     "run": {
@@ -22,8 +22,8 @@
   },
   "source": {
     "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
-    "current_revision": "1841a68bc9d496c5c7908d01d5f89508eb4c8379",
-    "build_revision": null,
+    "current_revision": "10c8e946ca7f9e7e6d30f386c9e5069acb0097f2",
+    "build_revision": "e2f695ace69688f62ed74f861c27c84e0adb9aa23aa1273f22e943561ace7828",
     "requirements": [
       {
         "root": "project",
@@ -45,8 +45,8 @@
       }
     ],
     "continuity": {
-      "expected_revision": "1841a68bc9d496c5c7908d01d5f89508eb4c8379",
-      "observed_revision": "1841a68bc9d496c5c7908d01d5f89508eb4c8379",
+      "expected_revision": "10c8e946ca7f9e7e6d30f386c9e5069acb0097f2",
+      "observed_revision": "10c8e946ca7f9e7e6d30f386c9e5069acb0097f2",
       "reconciliation": null
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a"
@@ -181,10 +181,29 @@
     }
   },
   "preflight": {
-    "status": "not_applicable",
-    "reason": "F07 code author started; actual browser E2E not yet run; source/build readiness must be checked immediately before actual E2E",
+    "status": "ready",
+    "source_revision": "10c8e946ca7f9e7e6d30f386c9e5069acb0097f2",
+    "build_revision": "e2f695ace69688f62ed74f861c27c84e0adb9aa23aa1273f22e943561ace7828",
+    "environment": "owned n7f06a web/db private network; existing Docker Playwright1.63.0 on19320",
+    "test_command": "docker exec codex-ui-playwright node /opt/browser/n7-f07-implement-a1-r3/f07-capacity.mjs",
+    "evidence_root": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f07-implement-a1/runtime"
+    },
+    "inputs": [
+      {
+        "name": "isolated local TEST fixture session;101boxes/global30; no live external adapters",
+        "available": true
+      }
+    ],
+    "expected_effects": [
+      "own N7 local TEST capacity HTTP and isolated browser context"
+    ],
+    "environment_available": true,
     "external_actions_executed": false,
-    "e2e_claim": null
+    "e2e_claim": null,
+    "checked_at": "2026-10-06T10:46:21.602664+00:00",
+    "reconciliation": "Author original readiness checked immediately before E2E against93-file hash manifest; coordinator later matched all93 bytes to frozen git source. This field records readiness, actual browser PASS is separate report."
   },
   "attempts": [
     {
@@ -217,7 +236,7 @@
     },
     {
       "id": "f07-implement-a1",
-      "status": "active"
+      "status": "completed"
     },
     {
       "id": "contract-fix-a3",
@@ -245,6 +264,10 @@
     },
     {
       "id": "legacy-review-r2",
+      "status": "completed"
+    },
+    {
+      "id": "f07-review-a1",
       "status": "completed"
     }
   ],
@@ -284,7 +307,7 @@
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-06T10:39:00Z",
+    "last_reported_at": "2026-10-06T10:50:00Z",
     "responsible": "n7_expanded_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true
   }

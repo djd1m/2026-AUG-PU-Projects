@@ -1,0 +1,14 @@
+[
+  {
+    "mutation": "missing-lease",
+    "exit": 1,
+    "changed_sha256": "bab644d51e0d5febd39ab15edbf730676c76161038f62bf921fe7bba88316e46",
+    "guard_failed": true
+  },
+  {
+    "mutation": "expired-lease",
+    "exit": 1,
+    "changed_sha256": "900b43e609e4b1587453ff1ccd4d86ca07bae9e78c5dbcbca5db682fd4843f43",
+    "guard_failed": true
+  }
+]

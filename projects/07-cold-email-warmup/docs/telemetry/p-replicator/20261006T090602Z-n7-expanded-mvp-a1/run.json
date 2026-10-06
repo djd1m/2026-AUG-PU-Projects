@@ -73,7 +73,7 @@
     "No prelaunch serialized launch digest for native PLAN receipt; terminal receipt and output SHA verified, not companion delivery attestation",
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred."
   ],
-  "current_stage": "IMPLEMENT F07",
+  "current_stage": "INTEGRATE F07",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -135,9 +135,9 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "root",
-    "executor": "f07_author_a1 (actually started 2026-10-06T10:30:05.656613+00:00); n7_expanded_coordinator",
-    "next": "F07 implementation20min then independent review8min",
-    "source_revision": "1841a68bc9d496c5c7908d01d5f89508eb4c8379"
+    "executor": "n7_expanded_coordinator integrating accepted F07; next f08 planner allocation follows gates",
+    "next": "Independent source-bound review8min, then only confirmed corrections/integration and F08 route",
+    "source_revision": "10c8e946ca7f9e7e6d30f386c9e5069acb0097f2"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -180,8 +180,21 @@
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-06T10:39:00Z",
+    "last_reported_at": "2026-10-06T10:50:00Z",
     "responsible": "n7_expanded_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true
+  },
+  "f07_runtime_candidate": {
+    "source_revision": "10c8e946ca7f9e7e6d30f386c9e5069acb0097f2",
+    "unit_pass": 40,
+    "integration_pass": 126,
+    "focused_pass": 11,
+    "browser_checks_pass": 10,
+    "guard_mutations_caught": 2,
+    "independent_review": "ACCEPT",
+    "full_completion_exit": 1,
+    "known_completion_gaps": 12,
+    "source_continuity_files": 93,
+    "source_continuity_mismatches": 0
   }
 }

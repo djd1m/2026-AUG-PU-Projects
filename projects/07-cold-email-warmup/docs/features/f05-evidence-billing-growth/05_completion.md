@@ -9,7 +9,7 @@ Additional HTTP29/30 raw-count/ratio check, current clock after waiting share lo
 ## Criterion coverage
 | Criterion | Test file | Test title |
 | --- | --- | --- |
-| AC-f05-evidence-billing-growth-001 | tests/billing-integration.test.ts | A1 concurrent free/team mailbox limits and post-lock expiry, existing edit retained |
+| AC-f05-evidence-billing-growth-001 | tests/billing-integration.test.ts | A1 unlimited connected preserves TEST billing and post-lock expiry, existing edit retained |
 | AC-f05-evidence-billing-growth-002 | tests/billing-integration.test.ts | A2 explicit priority, cookie failure reasons, self/inactive and tenant404 |
 | AC-f05-evidence-billing-growth-003 | tests/billing-integration.test.ts | A3 parallel HTTP idempotency, immutable payload, crash recovery and disabled zero-state |
 | AC-f05-evidence-billing-growth-004 | tests/billing-integration.test.ts | A4 canonical mismatch, unavailable503, bounded callback, stale cancel/expiry barriers |
@@ -25,3 +25,7 @@ Additional HTTP29/30 raw-count/ratio check, current clock after waiting share lo
 ## Coverage limits and current status
 
 Each row is one existing literal executable witness, not proof of its entire composite AC or of a rerun. Full unit/integration/build/type/lint/meaningful mutation/security/canary/license/donor/source-image and fresh-review procedures remain required by the original clauses and historical receipts. Build-script guard phrases cover only the named command path; they do not independently prove licenses, acceptance or delivery. Additional existing same-feature tests and accepted receipts remain normative. Source paragraphs are quoted in `scenarios.md`; derived BDD describes the remaining procedure conditions. Prior completion bytes: `history/05_completion.pre-contract-coverage.md`, sha256:cad4dca2db1ed7b37fe63e59242090143e49a2497bd5cd0402fc8c7a5b1fa967. No original completion prose outside the archived/replaced F05 table was removed.
+
+## Current F07 supersession (OWN-N7-005)
+
+The historical A1 free3/team10 connected-mailbox limit was explicitly superseded by OWN-N7-005 and AC-f07-connected-capacity-001/008. Its active literal witness now checks unlimited connected mailboxes across entitlement expiry/revocation while preserving TEST billing and existing edits. The separate A1 campaign concurrency test retains active-campaign3/10. This link update does not reinterpret the old source paragraphs or historical accepted runtime reports as evidence for unlimited connections; F07 current-source execution and independent acceptance are recorded separately.

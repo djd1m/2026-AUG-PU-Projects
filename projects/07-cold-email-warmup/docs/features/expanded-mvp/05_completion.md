@@ -1,11 +1,11 @@
 # Completion — expanded-mvp delta v1
 
-PLAN artifact only. Tests named below are planned; none have been created/run by this work unit. No implementation/live pass is claimed. Phase3 criterion gate must fail until real matching tests exist.
+Progressive completion index. AC001 now names an actual F07 test at source10c8e946; the remaining eight rows are future assignments, not executed tests. F07 runtime evidence and independent acceptance are recorded in its feature report. No whole expanded-MVP or live pass is claimed; the whole Phase3 criterion gate remains unmet until the remaining bindings exist and required checks pass.
 
 ## Criterion coverage
 | Criterion | Test file | Test title |
 |-----------|-----------|------------|
-| AC-expanded-mvp-001 | tests/expanded-mvp-01.test.ts | unlimited connected preserves atomic active capacity |
+| AC-expanded-mvp-001 | tests/capacity-integration.test.ts | F07 real PostgreSQL capacity boundaries and atomic safety |
 | AC-expanded-mvp-002 | tests/expanded-mvp-02.test.ts | live diagnostics enforce pinned TLS without DATA |
 | AC-expanded-mvp-003 | tests/expanded-mvp-03.test.ts | ambiguous SMTP and UID reset preserve recovery safety |
 | AC-expanded-mvp-004 | tests/expanded-mvp-04.test.ts | persistent fair workers serve every eligible mailbox |
@@ -45,3 +45,7 @@ PLAN checker --traceability; VALIDATE --report-revision --criterion-scenarios; I
 ## Mandatory AI content gates — N7-VAL-001
 
 AC006/007 evidence includes [ai-policy-v1](ai-policy-v1.md) frozen C01–C24 and variants, threshold0 unauthorized,100% correct holds,≥90% useful positive answers, model/prompt/policy/snapshot/cases hashes. Distinguish local deterministic/recorded fixtures from separately permitted actual-model gate, then full-path live pilot. None executed in PLAN. New specification bytes require fresh validation/review bound to new SHA; old report cannot certify them. Arrival latency≥300s is a miss.
+
+## F07 source-bound AC001 evidence
+
+The named parent test contains the actual101st connection, global30 admission/races, lease120 expiry/renewal/release, tenant pagination, both send endpoints and additive migration cases. Additional F07 billing/unit/browser and existing full dispatch/submission/suppression regressions are required by `../f07-connected-capacity/05_completion.md`; one table witness does not alone prove the composite criterion. Source10c8e946 runtime receipt and logs are preserved under `../../telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f07-implement-a1/`. AC002–009 remain pending their corresponding implementation/runtime stages; F15 needs separate live authorization.
