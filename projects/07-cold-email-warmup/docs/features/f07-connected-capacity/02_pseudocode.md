@@ -23,7 +23,7 @@ INPUT: authenticated tenant, bounded mailbox input. OUTPUT: masked mailbox.
 2. Validate existing parseMailbox/allowlist/pinning input; DNS outside transaction;
    encrypt using current tenant/mailbox AAD. Never call send or grant consent.
 3. BEGIN through eligibilityTransaction: lock(7,1) FIRST. IF PUT recheck ownership,
-   cancelMailbox and delete capacity lease, set configured; ELSE insert configured
+   cancelMailbox (including capacity release), set configured; ELSE insert configured
    without commercial checkCapacity(mailboxes). COMMIT; RETURN masked record.
 COMPLEXITY: O(1) indexed own mutation, existing cancellation cost unchanged.
 
@@ -44,8 +44,15 @@ INPUT: tenant/mailbox/action activate|renew|deactivate. OUTPUT: capacity project
 5. IF own unexpired active extend expires_at=now+120s. ELSE IF count active<30,
    upsert active expires_at=now+120s; ELSE upsert waiting_capacity, expiry NULL.
    COMMIT; RETURN current projection. Saturation is200 persisted waiting, not rollback409.
-6. PUT/pause/quarantine call release helper within existing transaction. Their
-   cancelMailbox behavior remains; helper never opens nested transaction.
+6. Extend shared cancelMailbox(client, mailbox) to delete the capacity lease via
+   release helper inside the caller's existing eligibility transaction. Every
+   PUT/pause/quarantine cancellation uses that path, including
+   suppression → complaintClient → cancelMailbox → quarantined. Release and
+   quarantine commit atomically; rollback preserves both prior states. No nested
+   transaction or lock before global(7,1); preserve existing consent revocation,
+   pool membership removal and queued/claimed job cancellation. The next activation can reuse
+   the slot immediately after commit; never wait for120s expiry. A revoke of one
+   consent scope is not mailbox quarantine and need not release its lease.
 COMPLEXITY: active scan≤30; O(log connected) own index lookup.
 
 ### Algorithm: Require capacity throughout real dispatch

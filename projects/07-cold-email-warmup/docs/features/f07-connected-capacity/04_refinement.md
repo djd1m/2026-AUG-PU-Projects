@@ -7,7 +7,8 @@
 | Expiry exactly now / waited behind lock | expires_at>post-lock now strict; no claim/final send on equality |
 | Deactivate then stale renew |404 for foreign; own missing lease409; no resurrection |
 | PUT during activation/verification | Existing envelope/state compare retained; release atomically; fresh verification required |
-| Paused/quarantined with consent | Activation409; consent cannot overwrite mailbox state or lease |
+| Paused/quarantined with consent | Shared cancelMailbox deletes lease in same transaction; activation409; consent cannot overwrite mailbox state or lease |
+| Complaint at capacity30 | complaintClient → cancelMailbox releases immediately; next tenant activation gets freed slot, no expiry wait |
 | Capacity loss after claim | final fence0 calls; movable claim expires/requeues safely; no quota refund after submitting |
 | Recipient pool capacity lost | Both sides checked; pair not allocated/claimed/submitted |
 | DB error after lease write | Entire transaction rollback; configured record and consent preserved |
@@ -44,3 +45,25 @@ first page controls; no eager whole-tenant fetch.
 
 No new general validator. Reviewer must inspect semantic linkage and races;
 traceability names alone cannot prove these invariants.
+
+## F07-VAL-001 — complaint release regression (pending runtime test)
+
+SC-F07-Q refines SC-US-201-3 / AC-f07-connected-capacity-003 and the existing
+planned capacity integration test assignment in 05_completion.md. Implement in
+`tests/capacity-integration.test.ts` as
+`complaint quarantine immediately releases capacity for another tenant`.
+Given30 unexpired active leases, a verified waiting mailbox owned by another
+tenant, and a claimed job for the mailbox to be quarantined; When authenticated
+complaint handling commits through complaintClient → cancelMailbox and the
+waiting tenant explicitly activates before the old120s expiry; Then the old
+mailbox is quarantined with no capacity lease, the waiting mailbox is active,
+and global unexpired count is30. Existing consent/pool/job cancellation is
+committed with quarantine; stale renew of the quarantined mailbox returns409,
+and its claimed job cannot cross final fence (transport calls0). An injected
+transaction failure rolls back quarantine and release together. A final send
+committed before complaint retains only the already documented in-flight bound;
+submitting/unknown reservations are never refunded or retried by release.
+
+This is a concrete planned real-PG scenario, not an executed acceptance result.
+Revoking one consent scope alone may retain capacity; it never substitutes for
+mailbox quarantine or revives permission to send.

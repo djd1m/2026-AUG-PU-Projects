@@ -21,7 +21,7 @@ flowchart LR
 | Files inside project | Bounded implementation |
 |---|---|
 | src/billing/plans.ts | null mailbox limits; activeCampaigns-only checkCapacity |
-| src/mailboxes/store.ts | paginated list/read projection; remove cap; release on PUT/stop |
+| src/mailboxes/store.ts | paginated list/read projection; remove cap; shared cancelMailbox releases lease for every PUT/pause/quarantine caller |
 | src/mailboxes/capacity.ts (new) | transaction wrapper and client helper; active30/TTL120 constants |
 | db/012-connected-capacity.sql; src/db.ts | additive schema12, migration list and ready() requiring12 |
 | src/dispatch/eligibility.ts | tenant-bound unexpired lease predicate |
@@ -34,8 +34,13 @@ flowchart LR
 src/consent/store.ts remains source of authority; lease does not grant or revive
 consent. Revoke may leave active slot reserved until explicit deactivate/expiry;
 this is bounded120s and cannot allow sending. Do not infer release after one
-scope revoke when another remains. Existing stop writers in suppression/replies
-may leave unusable lease until expiry; mailbox state and all final guards still deny.
+scope revoke when another remains. Mailbox quarantine is different: every
+quarantine/PUT/pause cancellation must release capacity atomically through shared
+cancelMailbox in src/mailboxes/store.ts. The existing src/dispatch/seams.ts
+complaintClient path (called by src/suppression/store.ts) already invokes that
+helper before setting quarantined; extending the helper covers complaint release
+without a second transaction. No suppression/reply caller that quarantines a
+mailbox may keep its lease until expiry. State/consent/final guards remain intact.
 F10 owns automatic fair admission/renewal, not this implementation slice.
 
 ## Schema and lock order
