@@ -5,6 +5,3 @@ export * from './stoplist.ts';
 export * from './health.ts';
 export * from './partner.ts';
 export * from './billing.ts';
-export * from './campaign.ts';
-export * from './dispatch.ts';
-export * from './inbound.ts';
