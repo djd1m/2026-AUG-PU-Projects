@@ -55,7 +55,7 @@
 - id: UUID · owner_user_id → user · code: Text (unique) · commission_pct: Int · created_at: Timestamp
 
 ### attribution
-- id: UUID · new_user_id → user (unique) · partner_code_id → partner_code | null · captured_via: Enum('cookie','param','manual') · manual_code: Text | null (введённый вручную, даже не валидный) · valid: Boolean · captured_at: Timestamp (90-дневная политика в коде) · created_at: Timestamp
+- id: UUID · new_user_id → user (unique) · partner_code_id → partner_code | null · captured_via: Enum('cookie','param','manual') · valid: Boolean (false — self-referral и невалидный код; невалидный ручной код НЕ сохраняется как запись атрибуции, фиксируется только в audit_log) · captured_at: Timestamp (90-дневная политика в коде) · created_at: Timestamp
 
 ### commission_event
 - id: UUID · partner_code_id → partner_code · payment_id: Text (unique — идемпотентность по платежу) · amount: Numeric · currency: Enum('RUB','USD') · created_at: Timestamp
@@ -92,7 +92,7 @@ INPUT: domain name
 OUTPUT: {spf, dkim, dmarc}: status, dns_checked_at
 STEPS:
 1. TXT-запись домена; если начинается с «v=spf1» → spf=ok; присутствует, но не «v=spf1» → warn; нет → fail.
-2. DKIM: TXT `default._domainkey.<domain>` (селектор фиксируется в конфигурации проекта); есть → ok, нет → fail.
+2. DKIM: TXT `default._domainkey.<domain>` (селектор фиксируется в конфигурации проекта); есть → ok, нет → warn (запуск кампании блокирует pre-flight по правилу «DKIM ok» — FR-CAMP-003).
 3. DMARC: TXT `_dmarc.<domain>`; есть с «v=DMARC1;» → ok; нет → warn.
 4. Записать статусы + dns_checked_at в domain; RETURN результат.
 5. Логировать action 'dns_check' в audit_log.
@@ -109,7 +109,7 @@ STEPS:
 3. SMTP probe: AUTH LOGIN c App Password → успех/код ошибки.
 4. IMAP probe: LOGIN + SELECT INBOX.
 5. Если оба ок → status=verified; иначе unverified + diag (какой шаг, код).
-6. Сохранить mx с шифрованием секретов (Алгоритм: Encrypt mailbox secrets), diag в поле.
+6. Сохранить mailbox с шифрованием секретов (Алгоритм: Encrypt mailbox secrets), diag в поле.
 COMPLEXITY: O(1), сетевые коннекции
 
 ### Algorithm: Encrypt mailbox secrets
@@ -137,7 +137,7 @@ STEPS:
 COMPLEXITY: O(1)
 
 ### Algorithm: Build daily warmup plan
-REALISES: SC-US-004-2, SC-US-004-4
+REALISES: SC-US-004-2
 REQUIREMENT: `FR-POOL-002`
 INPUT: membership, тарифные потолки
 OUTPUT: warmup_plan дня с ≤ cap писем
@@ -169,7 +169,7 @@ STEPS:
 1. Проверить стоп-лист на адрес получателя (даже прогрев) → при попадании cancel pair.
 2. Взять распределённый lock (Redis) на idempotency_key; если уже есть send_log с этим ключом → RETURN (повтор).
 3. Одиночная отправка через SMTP ящика-отправителя (расшифровка секрета — Алгоритм: Encrypt mailbox secrets, обратное затирание plaintext).
-4. Успех → status=sent; сетевой сбой → failed + код; ретраи — только по сетевым кодам и в пределах лимита попыток.
+4. Записать send_log: ключ, ящик, слот, статус; успех → sent; сетевой сбой → failed + код; ретраи — только по сетевым кодам и в пределах лимита попыток.
 5. Уменьшить остаток квоты отправителя на 1.
 COMPLEXITY: O(1)
 
@@ -228,14 +228,15 @@ REQUIREMENT: `FR-CAMP-003`, `FR-CAMP-004`, `FR-MAILBOX-004`
 INPUT: campaign_id, нажатие кнопки запуска
 OUTPUT: campaign.status = launched | 4xx
 STEPS:
-1. Pre-flight: DNS ok (DKIM хотя бы), список получателей после импорта отклоняется отсечений (см. Import), хотя бы 1 verified ящик, лимит тарифа не исчерпан.
-2. Явное согласие: форма с текстом «запуск выполнен от имени ваших ящиков SMTP»; сохранение в audit_log + consent_record; без него — 409.
-3. Установить статус launched; запланировать слоты (Algorithm: Schedule campaign slots); RETURN.
+1. Pre-flight: DNS ok (DKIM обязательно — warn невозможно), список получателей прошёл отсечения Import'а, хотя бы 1 verified ящик, лимит тарифа не исчерпан.
+2. RU-предупреждение: если список содержит RU-адресатов — подтверждение владельцем текста «рекламные письма по РФ — только с согласия адресата (ст. 18 38-ФЗ)»; международная проверка per campaign (Q-004).
+3. Явное согласие: форма с текстом «запуск выполнен от имени ваших ящиков SMTP»; сохранение в audit_log + consent_record; без него — 409.
+4. Установить статус launched; запланировать слоты (Algorithm: Schedule campaign slots); RETURN.
 COMPLEXITY: O(recipients)
 
 ### Algorithm: Process inbound event
 REALISES: SC-US-008-3, SC-US-011-1, SC-US-012-1
-REQUIREMENT: `FR-CAMP-005`, `FR-SEC-001`, `FR-SEC-003`
+REQUIREMENT: `FR-CAMP-006`, `FR-CAMP-001`, `FR-SEC-001`, `FR-SEC-003`
 INPUT: IMAP-новый элемент (заголовки)
 OUTPUT: inbound_event + последствия
 STEPS:
@@ -263,7 +264,7 @@ REQUIREMENT: `FR-SEC-003`
 INPUT: complaint события по кампании
 OUTPUT: campaign.status = paused + уведомление
 STEPS:
-1. Считать получателей с жалобами / одну застрявшую отправку... rate = complained / confirmed_delivered по скользящим окнам; порог 0,3 % (наш target [Google]).
+1. Считать rate = complained / delivered по скользящему окну; порог 0,3 % (наш target [Google]).
 2. rate > порог → campaign.status = paused; очередь отправки останавливается; запись в audit_log + уведомление владельцу (сервисное письмо на email аккаунта).
 3. Возобновление — только явным действием владельца (после редакции списка).
 COMPLEXITY: O(1) по счетчикам событий
@@ -300,20 +301,20 @@ STEPS:
 1. ЮKassa: проверить IP-сеть источника по их опубликованным сетям и ПЕРЕЗАПРОСИТЬ статус объекта через API (тело не истина — паттерн донора N1, payment.ts). Stripe: верифицировать подпись webhook (Stripe-Signature).
 2. Дедуп: payload_id уникален; повтор — RETURN 200 без действий.
 3. По статусу события: paid/active → подписка active + current_until; past_due/canceled → статус + fail-closed (новые слоты кампаний ставятся на паузу, прогрев остаётся).
-4. commission_event создается для attribution ПРИ ФАКТИЧЕСКОЙ оплате (Алгоритм: ниже)...
+4. commission_event создаётся для attribution с valid=true ПРИ ФАКТИЧЕСКОЙ оплате (см. Алгоритм: Attribute partner referral).
 5. Логировать в billing_event (processed=true).
 COMPLEXITY: O(1)
 
 ### Algorithm: Attribute partner referral
-REALISES: SC-US-010-1, SC-US-010-2, SC-US-010-3
+REALISES: SC-US-010-1, SC-US-010-2, SC-US-010-3, SC-US-010-4
 REQUIREMENT: `FR-PARTNER-001`, `FR-PARTNER-002`
 INPUT: ref-код в URL/поле, новый пользователь
 OUTPUT: attribution
 STEPS:
 1. При открытии лендинга: ref-код из URL → сохранение в cookie-профиль (90 дней) + запись параметра.
-2. При регистрации: если user укажет код вручную: проверка на существование кода; код НЕ найден → attribution не сохраняется (фолбэк на cookie ЗАПРЕЩЁН); код существует → captured_via='manual'.
+2. При регистрации: если user укажет код вручную: проверка на существование кода; код НЕ найден → attribution не сохраняется (фолбэк на cookie ЗАПРЕЩЁН), факт фиктивного ввода — в audit_log; код существует → captured_via='manual'.
 3. Если код не указан вручную — взять из cookie (captured_via='cookie').
-4. self-referral: тот же user (email/аккаунт/cookie создателя) → valid=false.
+4. self-referral: тот же user (email/аккаунт/cookie создателя) → запись атрибуции НЕ создаётся, факт — в audit_log.
 5. Иначе attribution(owner = partner_code.owner, valid=true, captured_at=now).
 6. При фактической оплате (billing webhook шаг 4) — commission_event для attributions с valid=true (уникальный payment_id).
 COMPLEXITY: O(1)
@@ -368,15 +369,17 @@ stateDiagram-v2
         paused --> launched: владелец
         launched --> completed: stepы завершены
     }
-    state subscription {
+    state     subscription {
         [*] --> free
         free --> base_or_pro: webhook paid
         base_or_pro --> past_due: неоплата
         past_due --> base_or_pro: оплата
         base_or_pro --> free: отмена
     }
-    membership: active --> left (выход из пула)
 ```
+
+Состояние membership (вне диаграммы, простой переход): `active → left` (выход из пула прекращает
+новые прогрев-письма на этот ящик; повторный вход — новая запись с согласием).
 
 ## Error Handling Strategy
 
@@ -387,17 +390,17 @@ stateDiagram-v2
 | Очередь | job потерян/stalled | BullMQ + фенс попыток (донор N6); SLA-монитор; idempotency | QW-300..399 |
 | Платежи | webhook фейк, дубль, 502 провайдера | IP/подпись-проверки, дедуп payload_id, 502 + retry текст | BL-400..499 |
 | Антиспам | жалобы/стоп-лист/роли | пауза/отсечение, причина в отчёте | SA-500..599 |
-| Инфраструктура | нет DNS, ошибки БД | 503 + ledger retry; записи. |
+| Инфраструктура | нет DNS, ошибки БД | 503 + периодическая повторная попытка; запись в журнал |
 
 ## Scenario Coverage
 
-Scenarios in Specification.md: 30 · claimed by an algorithm: 30
+Scenarios in Specification.md: 32 · claimed by an algorithm: 31
 
 Not claimed by any algorithm:
 
 | Scenario | Reason |
 |---|---|
-| none | — |
+| SC-US-010-5 | ui-only |
 
 Claimed by an algorithm but absent from Specification.md:
 
@@ -405,4 +408,4 @@ Claimed by an algorithm but absent from Specification.md:
 |---|---|
 | none | — |
 
-(Детали: SC-US-001-1/2 → Register; SC-US-002-1/2 → Verify domain; SC-US-003-1/2 → Connect mailbox; SC-US-003-3 → Encrypt secrets; SC-US-004-1 → Join pool; SC-US-004-2 → Build plan; SC-US-004-3 → Select pair; SC-US-004-4 → Dispatch warmup email; SC-US-005-1/2 → Score; SC-US-006-1/2 → Import; SC-US-007-1 → Validate chain; SC-US-007-2/3 → Schedule; SC-US-008-1 → Launch; SC-US-008-2 → Dispatch campaign email; SC-US-008-3, SC-US-011-1, SC-US-012-1 → Inbound; SC-US-011-2 → Stoplist; SC-US-012-2 → Auto-pause; SC-US-009-1 → Checkout; SC-US-009-2 → Webhook; SC-US-010-1/2/3 → Attribution.)
+(Детали: SC-US-001-1/2 → Register; SC-US-002-1/2 → Verify domain; SC-US-003-1/2 → Connect mailbox; SC-US-003-3 → Encrypt secrets; SC-US-004-1 → Join pool; SC-US-004-2 → Build plan; SC-US-004-3 → Select pair; SC-US-004-4 → Dispatch warmup email; SC-US-005-1/2 → Score; SC-US-006-1/2 → Import; SC-US-007-1 → Validate chain; SC-US-007-2/3 → Schedule; SC-US-008-1 → Launch; SC-US-008-2 → Dispatch campaign email; SC-US-008-3, SC-US-011-1, SC-US-012-1 → Inbound; SC-US-011-2 → Stoplist; SC-US-012-2 → Auto-pause; SC-US-009-1 → Checkout; SC-US-009-2 → Webhook; SC-US-010-1/2/3/4 → Attribution; SC-US-010-5 → ui-only: текст приглашения — содержимое лендинга.)
