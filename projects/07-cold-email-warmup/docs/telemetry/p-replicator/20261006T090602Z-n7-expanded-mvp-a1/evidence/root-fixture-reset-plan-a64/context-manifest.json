@@ -1,0 +1,110 @@
+{
+  "measured_at": "2026-10-07T13:04:40.406409+00:00",
+  "source_revision": "bf8a5373a409181a42d5dc06be06a2c6aca611e6",
+  "origin": "Frozen current source and clean A62 objective/raw only; retained applicable project policies; no authorA65 context exists",
+  "objective_artifacts_verified": 96,
+  "objective_hash_mismatches": [],
+  "inputs": [
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-fixture.ts",
+      "sha256": "6773d5575a317e721552fb5aad6865058de2cc825885f1d6820c9a94f89a3053",
+      "bytes": 12547,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/db.ts",
+      "sha256": "81141899c2f675759d7c79a0d97475dfdfe95f596bc2fd172a48c14a1a8902c0",
+      "bytes": 4720,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+      "sha256": "bcfedf23511d32f8b41f38a8d83ee6d655887461b9023b4d58ac03885560b658",
+      "bytes": 138373,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts",
+      "sha256": "62a266f1e0020aca1971988271ed1061968adbb36ef925ff5fbed0e4e7229f63",
+      "bytes": 20927,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-integration.test.ts",
+      "sha256": "2d79ea1b4a9d92f5dc390b40bf75b6f2ea5c05e58af14d3873360380bdd24536",
+      "bytes": 53709,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-material-regression-prep-a60-20261007/runtime-objective-packet.json",
+      "sha256": "9f1c500d9c257bc3d32dee213f078f867c77087863a6f4e38db35c6638637a11",
+      "bytes": 25189,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-material-regression-prep-a60-20261007/genuine_empty_tail.raw",
+      "sha256": "d7a295833d11c4a72ab10841a28fb252ffd8c66a4e52937fe043cc6e86c97940",
+      "bytes": 1233,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-material-regression-prep-a60-20261007/runtime_external.raw",
+      "sha256": "983095580091107ca22fbb0f00f2fa2637dff1624db57dd85bf8b38f2cddfe24",
+      "bytes": 323,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-material-regression-prep-a60-20261007/readonly_reset_diagnosis.raw",
+      "sha256": "57dcfed5e6f4692267c9fc321612f9591989bfea7d2f405c62f0de870043be2e",
+      "bytes": 603,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-material-regression-prep-a60-20261007/runtime-log-time-binding.json",
+      "sha256": "8148d8c8cde03b7c5d337d6a8704b925d5a5f0f60b7b066010c15f9c2c082516",
+      "bytes": 509,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-material-regression-prep-a60-20261007/fixture-container-log-window.redacted.json",
+      "sha256": "148cb2508baf3f39a213606faf386f8144f8b1692ccf6c56054a4bb4c700e408",
+      "bytes": 519,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-material-regression-prep-a60-20261007/db-runtime_final_snapshot.json",
+      "sha256": "ece792ce9a3c9478adbb5391483ff130b17fd2072bcee8e351c474ea74e8840b",
+      "bytes": 188239,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-material-regression-prep-a60-20261007/runtime_final_snapshot-joins.json",
+      "sha256": "5ac4865644bab867eb2613d02e9991c955932ed1e8e5ed8f839d79017bd8dcca",
+      "bytes": 2356,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-material-regression-prep-a60-20261007/runtime-release.json",
+      "sha256": "2b673c55ed8161ea9ce82c85c8a42e5fc067edeb3a49ff68cc85cf174263c402",
+      "bytes": 879,
+      "regular_non_symlink": true
+    }
+  ],
+  "risk": {
+    "mechanical_ROUTE": "S",
+    "mechanical_exit": 0,
+    "input": "projects/07-cold-email-warmup/tests/f10-runtime-fixture.ts",
+    "substantive": "Inherited F11 XL approved process; one test-only observability change does not downgrade invariants or mandatory gates"
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Plan only; no DB/runtime/test command executed"
+  },
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null
+}

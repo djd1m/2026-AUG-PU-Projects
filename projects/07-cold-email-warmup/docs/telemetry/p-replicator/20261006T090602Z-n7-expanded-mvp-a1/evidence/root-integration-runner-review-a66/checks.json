@@ -1,0 +1,105 @@
+{
+  "utc": "2026-10-07T13:12:52.957892+00:00",
+  "verdict": "LOCAL_RUNNER_PREPARATION_ACCEPT",
+  "planner_sha256": "d77b774bc3cbfd0ec843520fa999d5f5472059d53251224d5c0f70a788632876",
+  "objective_sha256": "63371ec605934dfe43b589185e590363fb58bb89edb3287fc812f240cee52d21",
+  "artifact_count": 18,
+  "artifact_hashes_all_match": true,
+  "source_paths": 227,
+  "source_hashes_all_match": true,
+  "A58_projection_equal_paths": 226,
+  "only_changed_source": "tests/f10-runtime-protocol.test.ts",
+  "protocol_import_references": [],
+  "guard_accepted_sha256": "125074670c455bdc126f9ecdb8a5e84f6ef41882085f752d3de1365396ac036f",
+  "guard_exact_four_binding_substitutions": true,
+  "guard_semantic_body_unchanged": true,
+  "python_ast_parse": [
+    "launch.py",
+    "joins.py",
+    "prepare.py"
+  ],
+  "existing_bash_n_evidence_exit": 0,
+  "node_or_application_executed": false,
+  "DB_access": false,
+  "runtime_lease_absent": true,
+  "protected_baseline_absent": true,
+  "whole_file_default_count": 15,
+  "optional_file_count": 2,
+  "callback_inventory": {
+    "auth": {
+      "top": 1,
+      "literal_nested": 7
+    },
+    "billing": {
+      "top": 1,
+      "literal_nested": 6
+    },
+    "disconnect": {
+      "top": 1,
+      "literal_nested": 0
+    },
+    "finalcancel": {
+      "top": 1,
+      "literal_nested": 3
+    },
+    "ordered": {
+      "top": 1,
+      "literal_nested": 6
+    },
+    "dispatch": {
+      "top": 1,
+      "literal_nested": 5
+    },
+    "evidence": {
+      "top": 1,
+      "literal_nested": 10
+    },
+    "transport": {
+      "top": 1,
+      "literal_nested": 0
+    },
+    "runtime": {
+      "top": 25,
+      "literal_nested": 0
+    },
+    "mailboxes": {
+      "top": 1,
+      "literal_nested": 5
+    },
+    "replies": {
+      "top": 1,
+      "literal_nested": 12
+    },
+    "submission": {
+      "top": 1,
+      "literal_nested": 11
+    },
+    "suppression": {
+      "top": 1,
+      "literal_nested": 10
+    },
+    "owner": {
+      "top": 1,
+      "literal_nested": 4
+    },
+    "web": {
+      "top": 1,
+      "literal_nested": 5
+    },
+    "diagnostics": {
+      "top": 2,
+      "literal_nested": 5
+    },
+    "capacity": {
+      "top": 1,
+      "literal_nested": 10
+    }
+  },
+  "all_commands_exact_unfiltered": true,
+  "helper_bindings_all_match": true,
+  "dependency_bindings_all_match": true,
+  "runtime_activation": "BLOCKED pending actual root lease and ALL36 fulltable baseline/input continuity judgment",
+  "actual_model": null,
+  "actual_usage": null,
+  "fresh_fork": false
+}
