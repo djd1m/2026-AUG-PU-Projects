@@ -1561,5 +1561,130 @@
     "state": "actual independent review running",
     "context": "approved planner+objective, no A69 coderconversation",
     "finding": "prepared namespaces incompatible with unchanged assertFairDatabase short|fault|checks; runtime withheld; narrow mapping correction required"
+  },
+  "f11_root_fullfleet_runner_review_a70_terminal": {
+    "at": "2026-10-07T14:00:25.341864+00:00",
+    "verdict": "LOCAL_RUNNER_PREPARATION_REJECT",
+    "native_receipt_checker_exit": 1,
+    "finding": "exact prepared schema bindings incompatible with unchanged native short|fault|checks prerequisite",
+    "runtime_executed": false,
+    "successor": "A73 actual MEDIUM correction ACK13:58:43",
+    "actual_model": null
+  },
+  "f11_root_final_material_review_a72": {
+    "actual_ACK_at": "2026-10-07T13:59:21Z",
+    "agent": "/root/n7_a59_unstarted_granularity_review",
+    "state": "actual HIGH independent source-only review",
+    "context": "planner+objective no A71 coderconversation",
+    "actual_model": null
+  },
+  "f11_root_fullfleet_namespace_fix_a73": {
+    "actual_ACK_at": "2026-10-07T13:58:43Z",
+    "agent": "/root/n7_a58_integration_readiness_author",
+    "state": "actual MEDIUM precise correction",
+    "source_cut": "2026-10-07T14:01:43Z",
+    "seal_cut": "2026-10-07T14:03:43Z",
+    "actual_model": null
+  },
+  "f11_root_final_material_review_a72_terminal": {
+    "at": "2026-10-07T14:09:42.787140+00:00",
+    "verdict": "LOCAL_RUNNER_PREPARATION_ACCEPT",
+    "native_receipt_checker_exit": 0,
+    "objective_artifacts_verified": 18,
+    "full_F11_accepted": false,
+    "actual_model": null
+  },
+  "f11_root_final_four_runtime_a74": {
+    "actual_ACK_at": "2026-10-07T14:04:51Z",
+    "started_at": "2026-10-07T14:04:04.367533Z",
+    "source_cut": "2026-10-07T14:10:04.367533Z",
+    "seal_cut": "2026-10-07T14:12:04.367533Z",
+    "agent": "/root/n7_a59_unstarted_granularity_review",
+    "sole_runtime_DB_actor": true,
+    "protected_schemas": 48,
+    "protected_whole_tables": 1886,
+    "state": "actual serial native run",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "actual_model": null
+  },
+  "f11_root_fullfleet_namespace_fix_a73_terminal": {
+    "delivery_checker_exit": 0,
+    "objective_artifacts_verified": 21,
+    "objective_sha256": "580f103ff85ed65f7957b749dd846366df9f1c6e774601dbf3cdac4beafb3f10",
+    "correction_overrun_seconds": 34,
+    "seal_overrun_seconds": 47,
+    "independent_review": "pending A75 after A74 release",
+    "runtime_executed": false,
+    "actual_model": null
+  },
+  "f11_root_whole_integration_rebind_a76": {
+    "actual_ACK_at": "2026-10-07T14:07:30Z",
+    "agent": "/root/n7_a58_integration_readiness_author",
+    "source_cut": "2026-10-07T14:13:30Z",
+    "seal_cut": "2026-10-07T14:15:30Z",
+    "state": "actual source-only preparation",
+    "actual_model": null
+  },
+  "f11_root_final_four_runtime_a74_terminal": {
+    "at": "2026-10-07T14:19:13.477892+00:00",
+    "status": "failed",
+    "native_receipt_checker_exit": 1,
+    "actual_passed": 2,
+    "actual_failed": 1,
+    "unlaunched": 1,
+    "failure": "new_uid_semantic_stop plan_limit_reached; TEST team already10campaigns/tenant, attempted11th",
+    "artifact_hashes_verified": 167,
+    "old48_full1886_unchanged": true,
+    "final_schemas": 51,
+    "final_table_pairs": 2009,
+    "final_snapshot_sha256": "86801471bedc8e1af903d832ec1897aef71b3b5b55438fdde9c44603144a497a",
+    "all33_PIDticks_joined": true,
+    "runtime_released": true,
+    "seal_overrun_seconds": 29.212,
+    "full_F11_accepted": false,
+    "actual_model": null
+  },
+  "f11_root_whole_integration_rebind_a76_terminal": {
+    "sealed_at": "2026-10-07T14:11:19Z",
+    "source_only": true,
+    "objective_sha256": "ac3b1cd53eb9c8f169f5af34b4c250010b1674c4fd33b36b32f91b56e99fbc4e",
+    "independent_review": "pending; sourceprojection after future A78 testdelta needs reconciliation",
+    "full_F11_accepted": false,
+    "actual_model": null
+  },
+  "f11_root_semantic_fixture_plan_a77": {
+    "actual_ACK_at": "2026-10-07T14:14:16Z",
+    "agent": "/root/n7_a59_unstarted_granularity_review",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "actual_model": null,
+    "state": "concrete plan sealing; MEDIUM author waiting for packet",
+    "scope": "optional newUID-only4actor headroom with100mailboxes/30participants preserved; TESTlimits and fullfleet3actor default unchanged"
+  },
+  "f11_root_semantic_fixture_plan_a77_terminal": {
+    "sealed_at": "2026-10-07T14:18:31.999660Z",
+    "seal_overrun_seconds": 15.99966,
+    "plan_sha256": "4107b559f0335b8bc443cdbb1b47e6bfdb850f118cc3f026c2f82fcdb9ffe58f",
+    "native_receipt_checker_exit": 0,
+    "runtime_executed": false,
+    "actual_model": null
+  },
+  "f11_root_semantic_fixture_author_a78": {
+    "actual_ACK_at": "2026-10-07T14:21:26Z",
+    "agent": "/root/n7_a58_integration_readiness_author",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "medium",
+    "actual_model": null,
+    "state": "actual isolated source implementation; runtime not authorized yet",
+    "source_cut": "2026-10-07T14:29:26Z",
+    "seal_cut": "2026-10-07T14:31:26Z"
+  },
+  "f11_root_fullfleet_correction_review_a75": {
+    "actual_followup_dispatched": true,
+    "agent": "/root/n7_a59_unstarted_granularity_review",
+    "context": "prior planner+clean A73 objective only no coderchat",
+    "runtime_executed": false,
+    "actual_model": null
   }
 }

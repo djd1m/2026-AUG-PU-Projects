@@ -1,0 +1,93 @@
+{
+  "sealed_at": "2026-10-07T14:02:31.354927+00:00",
+  "planner": {
+    "path": "/tmp/n7-f11-integration-readiness-plan-a53-20261007/plan.md",
+    "sha256": "d77b774bc3cbfd0ec843520fa999d5f5472059d53251224d5c0f70a788632876"
+  },
+  "clean_objective": {
+    "path": "/tmp/n7-f11-final-material-prep-a71-20261007/objective-packet.json",
+    "sha256": "f6712e1743f6bf4659cefa5b68f93de561f07efc58c04c1bd75e58b8fb7d2fa4"
+  },
+  "source_revision": "e7f03164549f011b0adef80f1e2d6df3d734487a",
+  "reviewed_artifacts": {
+    "activation-handoff.json": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/activation-handoff.json",
+      "sha256": "9097bbcb0f0a64eb9c110ba11fecb1ee96c1dae94687ab1f0bb2a6a6f59e0048"
+    },
+    "copy-provenance.json": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/copy-provenance.json",
+      "sha256": "7fc3e543a181043e841195174f3cb6dd3b0dd2f7db0ed9a859f0643bc19fe2a0"
+    },
+    "db-protected-a68-placeholder.json": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/db-protected-a68-placeholder.json",
+      "sha256": "57233e63e21232720ea3a15ad658656e4dafa68dbbe359274cd410bf83c5a543"
+    },
+    "dependency-bindings.json": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/dependency-bindings.json",
+      "sha256": "32206efe9dbc32799ca91df02c474c839ae14bf40b0ca63bf0e6aaeec502da81"
+    },
+    "guard-a71.mjs": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/guard-a71.mjs",
+      "sha256": "c016c3454992bab5cf694113a950d486a61210d479d92102c9ea54bcddb31f44"
+    },
+    "helper-bindings.json": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/helper-bindings.json",
+      "sha256": "011326c8e5525bac3d9762118e59499b9bdde3d0e2740fecce9fc4c4687bd885"
+    },
+    "joins.py": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/joins.py",
+      "sha256": "4ae07fc2ec40a78921cb63b71dc004f97d792431cc355086d6aaf871be53ab4e"
+    },
+    "launch.py": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/launch.py",
+      "sha256": "375b8c1cfa566213ac564d0e958e89286e3a11e3a666b6e8851fe14538f760f0"
+    },
+    "prepare.py": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/prepare.py",
+      "sha256": "678eb9b9e67663f5fad4d0cfed080e0f1a91f0b5b91dacc26cbc675b62ebaedc"
+    },
+    "public-before.json": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/public-before.json",
+      "sha256": "f9b6e85cf2ac2ed457e13d6cab4ba461da56457056d7445495fcd740a36e131b"
+    },
+    "root-source-preparation.json": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/root-source-preparation.json",
+      "sha256": "0c18f66fff8d6081be5012134aa03cb7dda4d95e956dc3dded9f842428cc38a7"
+    },
+    "run-a71.sh": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/run-a71.sh",
+      "sha256": "7c2a5ff97e00259f28724e410c159dde9f5df8cc92a4c46f9d00d7718240d42e"
+    },
+    "scenario-inventory.json": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/scenario-inventory.json",
+      "sha256": "8dcd84abc8d4a95b4dc46362998abcc9089a67f0b38654158254e7c93ce3062b"
+    },
+    "schema-setup-a71.mjs": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/schema-setup-a71.mjs",
+      "sha256": "d3c91c76ab5a958c927c055e314f06d070e5fb6e2bfe970d3995b7443bf79c84"
+    },
+    "snapshot-a71.mjs": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/snapshot-a71.mjs",
+      "sha256": "3689280ddf64094463671465c98fa9c72f10756a867e11bcd0910da9c9fa6b47"
+    },
+    "source-binding.json": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/source-binding.json",
+      "sha256": "f6db8217b02ec7707a9f6044c6eefab2e9d0e68ee751fa584609cf6a85d54c22"
+    },
+    "source-freeze.json": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/source-freeze.json",
+      "sha256": "db0a58a26cded08ce01100ace7fabfaf7020eae52cc387faa2b2f33f92964001"
+    },
+    "syntax-checks.json": {
+      "path": "/tmp/n7-f11-final-material-prep-a71-20261007/syntax-checks.json",
+      "sha256": "1fc036e9c4dbcf93da9112788baa9c6508171ae74b5bbb0a0c0a0ae844ef5611"
+    }
+  },
+  "review_outputs": {
+    "review.md": "bcdbe29815ad66efe28aaa1e5f30ee4edb1effc06c26e822a0d22f2e110ea1ab",
+    "checks.json": "252c66c3273f1a0e593de1d429360d6b7beb4e1ca9a20f688c7b2eec5a5c5b17"
+  },
+  "runtime_lease": false,
+  "freshfork": false,
+  "context": "approved planner + immutable source + clean objective only; no author narrative"
+}

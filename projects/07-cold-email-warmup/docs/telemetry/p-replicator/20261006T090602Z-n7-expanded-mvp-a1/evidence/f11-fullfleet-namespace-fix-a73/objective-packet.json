@@ -1,0 +1,108 @@
+{
+  "attempt": "A73",
+  "source_revision": "e7f03164549f011b0adef80f1e2d6df3d734487a",
+  "sealed_utc": "2026-10-07T14:04:30.304845+00:00",
+  "scope": "copied harness namespace correction only; no runtime",
+  "artifacts": {
+    "db-protected-a68-placeholder.json": {
+      "sha256": "57233e63e21232720ea3a15ad658656e4dafa68dbbe359274cd410bf83c5a543",
+      "bytes": 256143
+    },
+    "snapshot-a73.mjs": {
+      "sha256": "28e1e3ea59bbeb22b8657125033f0768d84342df8df2108f22a7b2b0a33d0a16",
+      "bytes": 3012
+    },
+    "scenario-inventory.json": {
+      "sha256": "92883a1d06f88144a184db19f6a36cb4946c10248d073af5dc859443420cbd9a",
+      "bytes": 3530
+    },
+    "syntax-checks.json": {
+      "sha256": "a11f0057c32bd3ac9535efa2936f97eb928495f3b956350eb85555d85d973adc",
+      "bytes": 434
+    },
+    "guard-a73.mjs": {
+      "sha256": "046c27290feede39a0944fdad4caae4690223a9ded0d1d927d03a6ba33de5388",
+      "bytes": 5932
+    },
+    "helper-bindings.json": {
+      "sha256": "3493d43e7deac21b0f9ffd69f4087a1a080407174822922c06d4bd158b6cc3e3",
+      "bytes": 607
+    },
+    "public-before.json": {
+      "sha256": "f9b6e85cf2ac2ed457e13d6cab4ba461da56457056d7445495fcd740a36e131b",
+      "bytes": 4825
+    },
+    "clock-bound-proof.json": {
+      "sha256": "ef193ad8aea16e65dc7ee1146836d5439556f86aa72e69a322ac14bd160e730a",
+      "bytes": 1150
+    },
+    "root-source-preparation.json": {
+      "sha256": "f80ee7442ee32d89a3c56bbe1e47529efca323b5470055d2bbc74142a3165a78",
+      "bytes": 712
+    },
+    "namespace-correction-proof.json": {
+      "sha256": "1e90382bf7d28472dedca158dd6a03b4eb80980983983ae0240e61a2c7f8f6e7",
+      "bytes": 1075
+    },
+    "prepare.py": {
+      "sha256": "bc22d95f2f7622a404581426326f1c40b2d3e7ba0357eb513ca2b964275ede49",
+      "bytes": 8141
+    },
+    "source-binding.json": {
+      "sha256": "0599b0d0173b10f46f69939a9fbde51cb2e8032f4ef19a61a969df24afb1c9d0",
+      "bytes": 2708
+    },
+    "schema-setup-a73.mjs": {
+      "sha256": "5a8febcc6e6e56a25bd2c187eb4181fc4a627ea780964f7f4f62abfa3da558f2",
+      "bytes": 4259
+    },
+    "source-freeze.json": {
+      "sha256": "db0a58a26cded08ce01100ace7fabfaf7020eae52cc387faa2b2f33f92964001",
+      "bytes": 22444
+    },
+    "run-a73.sh": {
+      "sha256": "1a9cc46fd82b15f852e9917ac4aceb2316a0e1e66c3ce5188594563d05e9e891",
+      "bytes": 1163
+    },
+    "activation-handoff.json": {
+      "sha256": "05b74fbe07a7abf1ddf850f35c3cc3566880d1b8593023911cce9dd248dab15e",
+      "bytes": 4471
+    },
+    "copy-diff.raw": {
+      "sha256": "67d40bf2490571427516cfb83be5de9e15cb8e53426ded22f3f368c48bd17d82",
+      "bytes": 50896
+    },
+    "launch.py": {
+      "sha256": "a4e27f20cab656826d37d6e1972a84b35e1a1d0e94386c73ecf7b9378445b422",
+      "bytes": 5889
+    },
+    "dependency-bindings.json": {
+      "sha256": "32206efe9dbc32799ca91df02c474c839ae14bf40b0ca63bf0e6aaeec502da81",
+      "bytes": 704
+    },
+    "joins.py": {
+      "sha256": "0943013b89be7958cf1585762557b8409ba7ce493511e03a11b96ae895a1dff3",
+      "bytes": 773
+    },
+    "copy-provenance.json": {
+      "sha256": "51d77773356839986e65342afcb51f01b6c726273e018351bce10b8cd062e41e",
+      "bytes": 2024
+    }
+  },
+  "runtime_lease_present": false,
+  "db_protected_live_present": false,
+  "future_executor_requirements": "Root HIGH review and explicit fresh exclusive lease, owner_role n7, current full-table retained baseline after all joins including A68 and later namespaces, fresh disk/identity/session/absence/source/helper/dependency preflight. No execution authorized by this preparation.",
+  "cut_accounting": {
+    "ack_utc": "2026-10-07T13:58:43Z",
+    "correction_cut_utc": "2026-10-07T14:01:43Z",
+    "seal_cut_utc": "2026-10-07T14:03:43Z",
+    "substantive_mapping_completed_utc": "2026-10-07T14:00:51.515183Z",
+    "final_prepare_metadata_reconciliation_utc": "2026-10-07T14:02:16.995404Z",
+    "correction_phase_overrun_seconds": 34,
+    "scope_expansion": false,
+    "seal_phase_overrun_seconds": 47,
+    "total_attempt_seconds": 347
+  },
+  "actual_model": null,
+  "actual_usage": null
+}

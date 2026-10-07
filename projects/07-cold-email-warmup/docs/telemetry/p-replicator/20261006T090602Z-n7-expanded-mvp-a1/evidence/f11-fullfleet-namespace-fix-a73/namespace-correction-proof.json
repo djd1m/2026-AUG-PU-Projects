@@ -1,0 +1,28 @@
+{
+  "utc": "2026-10-07T14:00:51.514522+00:00",
+  "source_namespace_assertion_path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+  "source_sha256": "bcfedf23511d32f8b41f38a8d83ee6d655887461b9023b4d58ac03885560b658",
+  "unchanged_pattern": "^n7_a[0-9]+_(short|fault|checks)_[0-9]{12}$",
+  "rejected_old_mapping": {
+    "full_fault": "n7_a69_full_fault_261007134053",
+    "full_healthy": "n7_a69_full_healthy_261007134053",
+    "legacy": "n7_a69_legacy_261007134053"
+  },
+  "accepted_new_mapping": {
+    "full_fault": "n7_a73_fault_261007135843",
+    "full_healthy": "n7_a73_short_261007135843",
+    "legacy": "n7_a73_checks_261007135843"
+  },
+  "all_old_fail_pattern": true,
+  "all_new_match_unchanged_pattern": true,
+  "bounds_order_unchanged": [
+    330,
+    330,
+    145
+  ],
+  "prior_exit0_ALLjoins_unchanged": true,
+  "guard_network_IPC_DNS_socket_ancestry_unchanged_after_exact_trace_rebinding": true,
+  "source_product_regex_unchanged": true,
+  "placeholder_protected_schemas": 48,
+  "runtime_authorized": false
+}
