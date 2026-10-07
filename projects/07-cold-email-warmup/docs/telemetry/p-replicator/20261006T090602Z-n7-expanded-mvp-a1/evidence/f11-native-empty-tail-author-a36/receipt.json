@@ -1,0 +1,122 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "attempt_id": "a36",
+  "status": "completed",
+  "verdict": "scoped source candidate implemented and sealed; not product completion",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host actual execution model/effort and usage/cost unavailable",
+    "Fullfleet originalfault/nativelegacy20page and unchanged wider proof/privacy/AEAD/unit gates remain coordinator-owned",
+    "Revision-only authority race material mutants require independent HIGH coverage; local grant revocation and config fingerprint mutation deny passed"
+  ],
+  "started_at": "2026-10-07T06:16:29Z",
+  "ended_at": "2026-10-07T06:35:59Z",
+  "elapsed_wall_ms": 1170000,
+  "source_revision": "b6e8ae16e8feb6c67888eb2f006cfbb299b40197",
+  "delta_files": 8,
+  "native_final": {
+    "utc": "2026-10-07T06:32:14.031862+00:00",
+    "command": [
+      "bash",
+      "/tmp/n7-f11-native-empty-tail-author-a36/run-local.sh",
+      "/tmp/n7-expanded-runtime-20261006/bin/node",
+      "--test",
+      "--test-name-pattern",
+      "^(F11 native complete empty-tail refresh|F11 native empty-tail counterproofs)",
+      "tests/f10-runtime-protocol.test.ts"
+    ],
+    "binding_sha256": "6b74b80fe6879ea30fb802097ed4b9e082a012929eb6ab55c889c275883375ba",
+    "preflight": "ready: exact source/build frozen; local PG only; own schema; fixtures guarded; no external actions",
+    "disk_bytes": 3947597824,
+    "pid": 2992802,
+    "startTicks": "127774403",
+    "exit": 0,
+    "join_utc": "2026-10-07T06:32:50.585571+00:00",
+    "pid_absent": true,
+    "bindings_unchanged": true
+  },
+  "integration": {
+    "utc": "2026-10-07T06:31:07.528153+00:00",
+    "command": [
+      "bash",
+      "/tmp/n7-f11-native-empty-tail-author-a36/run-local.sh",
+      "/tmp/n7-expanded-runtime-20261006/bin/node",
+      "--test",
+      "--test-name-pattern",
+      ".",
+      "tests/f10-runtime-integration.test.ts"
+    ],
+    "binding_sha256": "5aace027e8e4a0915213148fd55e5a6e4bc2866d59bebe0d0b17b0cadefa1b5c",
+    "preflight": "ready: exact source/build frozen; local PG only; own schema; fixtures guarded; no external actions",
+    "disk_bytes": 3948204032,
+    "pid": 2976182,
+    "startTicks": "127767752",
+    "exit": 0,
+    "join_utc": "2026-10-07T06:31:47.493185+00:00",
+    "pid_absent": true,
+    "bindings_unchanged": true
+  },
+  "static_checks": [
+    {
+      "name": "typecheck-final",
+      "started": "2026-10-07T06:32:38.712523+00:00",
+      "joined": "2026-10-07T06:32:46.715904+00:00",
+      "pid": 2997338,
+      "exit": 0
+    },
+    {
+      "name": "lint-final",
+      "started": "2026-10-07T06:32:46.715953+00:00",
+      "joined": "2026-10-07T06:32:53.272780+00:00",
+      "pid": 2998929,
+      "exit": 0
+    }
+  ],
+  "build": {
+    "name": "build",
+    "command": [
+      "/tmp/n7-expanded-runtime-20261006/bin/node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.build.json"
+    ],
+    "started": "2026-10-07T06:30:41.405064+00:00",
+    "joined": "2026-10-07T06:30:47.139398+00:00",
+    "pid": 2968846,
+    "exit": 0
+  },
+  "baseline_red": {
+    "utc": "2026-10-07T06:21:54.267141+00:00",
+    "command": [
+      "bash",
+      "/tmp/n7-f11-native-empty-tail-author-a36/run-local.sh",
+      "/tmp/n7-expanded-runtime-20261006/bin/node",
+      "--test",
+      "--test-name-pattern",
+      "^F11 native complete empty-tail refresh",
+      "tests/f10-runtime-protocol.test.ts"
+    ],
+    "binding_sha256": "190cd9e5602708dc8a06b905eb6c9764d210a224a1dbecd63f39bcfc2ff91c53",
+    "preflight": "ready: exact source/build frozen; local PG only; own schema; fixtures guarded; no external actions",
+    "disk_bytes": 3957886976,
+    "pid": 2842635,
+    "startTicks": "127712426",
+    "exit": 1,
+    "join_utc": "2026-10-07T06:22:02.450579+00:00",
+    "pid_absent": true,
+    "bindings_unchanged": true
+  },
+  "public_rows": "all unchanged per full-row hashes and savedBODYclaim",
+  "own_occupancy": "physical/runtime/BODY0",
+  "own_pid_ticks": "163 guarded processes all absent",
+  "initial_sandbox_failure": "bwrap Cannot mkdir workspace/.codex Permission denied; narrow authorized require_escalated subsequently approved",
+  "auto_review_rejections": [],
+  "clean_high_packet": "/tmp/n7-f11-native-empty-tail-author-a36/clean-next-high-input-manifest.json",
+  "continuation_owner": "/root/n7_sol_coordinator",
+  "source_cutoff": "No source changes after 06:33:29; own local source-only commit and terminal sealing occurred later within 06:36:29"
+}

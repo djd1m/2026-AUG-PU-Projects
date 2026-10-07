@@ -632,6 +632,25 @@
       "status": "active samefixedHIGH distinct operational attempt actualACK",
       "actual_ACK_at": "2026-10-07T01:57:58Z",
       "initial_resume_failure": "native threadlimit/noactor, retryafterA12finishedslot"
+    },
+    {
+      "id": "f11-header-urgency-author-a34",
+      "status": "completed bounded candidate; product unaccepted",
+      "finished_at": "2026-10-07T05:56:45.416862+00:00",
+      "revision": "1632d295d8eae3eb46f44cd48c96df3ff5abbdb8",
+      "receipt_sha256": "d8a2d660fd9b36b9a0ba5d84b9770d87eb1da894bc323c71bbb18677ca8fc584"
+    },
+    {
+      "id": "f11-native-empty-tail-author-a36",
+      "status": "active actualACK verified",
+      "actual_ACK_at": "2026-10-07T06:16:29Z"
+    },
+    {
+      "id": "f11-native-empty-tail-author-a36",
+      "status": "completed bounded candidate; full F11 unaccepted",
+      "revision": "b6e8ae16e8feb6c67888eb2f006cfbb299b40197",
+      "elapsed_wall_ms": 1170000,
+      "receipt_sha256": "141e6142348d23293435e58a0c9aae703d1ff5c91da28ffc594722f16bc41b41"
     }
   ],
   "work_units": [
@@ -680,34 +699,21 @@
       "remaining_AC": "Genuine continuation FIRST SQL/rowCounts/urgency/ownership and shortnative diagnostic; production unchanged; exactnarrow compatible HIGHrepair/amendment adjudication afterraw; nofullfleetblindrepeat or time/cap relaxation"
     }
   },
-  "current_stage": "F11 unaccepted; A33 full300 capture30/30 HEADER47.523 FAILED sealed with cause overruns/missingbindings preserved; fresh MEDIUM A34 urgency-enable-only correction active",
+  "current_stage": "F11 A36 candidateb6e8 scoped native2/2 andPG25/25 passed; mandatory HIGH fullfleet NOTstarted; actual coordinator continuation gap and thread-limit blocker, root releasing separate planner slot",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_header_urgency_decoupling_author_a34",
-    "attempt": "f11-header-urgency-author-a34",
-    "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T05:41:14.623637Z",
+    "executor": null,
+    "requested_executor": "/root/n7_sol_coordinator/f11_continuation_fleet_diagnostic_a26",
+    "attempt": "f11-native-empty-tail-fleet-verify-a37",
+    "actual_ACK_received": false,
+    "status": "not launched: native followup rejected agent thread limit; root independent planner early sealing to release slot",
     "requested_model": "gpt-6.1-sol",
-    "requested_effort": "medium",
+    "requested_effort": "high",
     "actual_model": null,
     "usage": null,
-    "fork_turns": "none",
-    "source_revision": "2d80cc06e73f911889c1801fedfcfdb740b9652b",
-    "freeze_at": "2026-10-07T05:58:14.623637Z",
-    "deadline": "2026-10-07T06:01:14.623637Z",
-    "allowed_files": [
-      "src/replies/context-store.ts",
-      "src/runtime/store.ts",
-      "docs/features/f10-durable-runtime/02_pseudocode.md",
-      "docs/features/f10-durable-runtime/03_architecture.md",
-      "tests/f10-runtime-integration.test.ts",
-      "tests/f10-runtime-protocol.test.ts"
-    ],
-    "context_manifest": "/tmp/n7-f11-fifo-fleet-verify-a33/clean-next-author-input-manifest.json",
-    "context_sha256": "ade4b090ca16676d0b6d8af6d0ea9196b1e93c6cf6651e2f05bc9b990b7e1a05",
-    "context_files": 1717,
-    "all_context_hashes_verified": true,
-    "plan_sha256": "c7d551fc6b8900af064d13ddceac64acba2423a72383d085e306d7407e464c81",
-    "next": "Only independently approved bounded urgency-enable separation with unchanged fair within-tier order, explicit fallback amendment and baselineRED/material/native/restored-positive proof. No stickyEDF/extra settlement priority; current fault and healthy HIGH mandatory then remaining current checks/fresh source review."
+    "source_revision": "b6e8ae16e8feb6c67888eb2f006cfbb299b40197",
+    "context_manifest": "/tmp/n7-f11-native-empty-tail-author-a36/clean-next-high-input-manifest.json",
+    "context_sha256": "416893f1c24e5ce763cab81629d1aa68cf2b804d39dd654e4f5ad856f8e8ceeb",
+    "next": "After actual planner FINAL release retry same fixedHIGH followup once; verify frozen source/context and own joined processes before authentic current fullfault300. No CLI bypass/prototype author before actual F11 continuation."
   }
 }
