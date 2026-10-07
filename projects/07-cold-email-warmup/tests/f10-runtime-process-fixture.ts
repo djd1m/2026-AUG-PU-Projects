@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import type { ChildRequest } from '../src/mailboxes/transport-lifetime.js';
 // Only this trusted test entrypoint accepts IPC fixtures; production CLI cannot.
 process.once('message',(value:unknown)=>{const fixture=value as ChildRequest['fixture'];void (async()=>{
@@ -5,7 +6,15 @@ process.once('message',(value:unknown)=>{const fixture=value as ChildRequest['fi
  const config={...loadConfig(),dispatchMode:'live_provider' as const,pollMode:'live_provider' as const},pool=createPool(config.databaseUrl),abort=new AbortController();
  process.once('SIGTERM',()=>abort.abort());process.once('SIGINT',()=>abort.abort());
  try{const built=await import(new URL('../dist/runtime/worker.js',import.meta.url).href);process.send?.({started:true,execArgv:process.execArgv});await built.runWorker(pool,config,abort.signal,process.env.F10_FAIR_ONCE==='1',fixture);const {readFile}=await import('node:fs/promises');process.send?.({drained:true,stat:await readFile('/proc/self/stat','utf8')});}
- catch(error){process.send?.({failed:true,code:(error as {code?:string}).code??'runtime_failure'});process.exitCode=1;}finally{await pool.end();process.disconnect?.();}
+ catch(error){
+  const e=error as {name?:unknown;code?:unknown;message?:unknown;stack?:unknown},root=new URL('../',import.meta.url).pathname;
+  const label=(v:unknown,fallback:string)=>typeof v==='string'&&/^[A-Za-z0-9_]{1,64}$/.test(v)?v:fallback;
+  const frames=typeof e.stack==='string'?e.stack.split('\n').slice(1).flatMap(line=>{
+   const location=line.match(/(?:file:\/\/)?(\/[^ ()]+):(\d+):(\d+)\)?$/),node=line.match(/(node:internal\/[a-zA-Z0-9_/-]{1,160}):(\d+):(\d+)\)?$/);
+   const relative=location?.[1]?.startsWith(root)?location[1].slice(root.length):null;
+   return relative&&/^(?:src|dist)\/[a-zA-Z0-9_/-]{1,160}\.[cm]?[jt]s$/.test(relative)?[{file:relative,line:Number(location![2]),column:Number(location![3])}]:node?[{file:node[1],line:Number(node[2]),column:Number(node[3])}]:[];
+  }).slice(0,6):[];
+  process.send?.({failed:true,code:label(e.code,'runtime_failure'),name:label(e.name,'Error'),messageSha256:createHash('sha256').update(typeof e.message==='string'?e.message:'non_error_throw').digest('hex'),frames,utc:new Date().toISOString(),monotonicNs:process.hrtime.bigint().toString()});process.exitCode=1;}finally{await pool.end();process.disconnect?.();}
  })();});
 
 // Parent-owned additive cohort seed. Workers never seed, reset, or relabel evidence.
