@@ -1,6 +1,6 @@
 {
   "started_at": "2026-10-07T17:36:32.187188+00:00",
-  "status": "UI independently accepted; Docker E2E corrections in progress",
+  "status": "local live-capable billing/UI code and Docker E2E accepted; production activation blocked by external inputs",
   "owner_request": "Real business effect: real email sending and ability to pay, beyond TEST preview",
   "authorization_scope": "Prepare and implement requested live-capable release; no unspecified charges or external pilot executed",
   "source_revision": "a0896402",
@@ -24,9 +24,9 @@
     "BillingService reconcile and entitlement are coupled to local_provider_payment; provider injection alone insufficient",
     "Real Team tariff amount is not agreed; TEST100minorunits must not become real price by accident"
   ],
-  "next": "Complete corrected source-bound Docker E2E; real merchant credentials and controlled mailbox setup pending",
+  "next": "Operator supplies merchant credentials, controlled mailbox role and off-host encrypted backup destination; then source-bound rollout and separately controlled real pilot",
   "elapsed": null,
-  "updated_at": "2026-10-07T20:27:20.340525+00:00",
+  "updated_at": "2026-10-07T20:50:26.482076+00:00",
   "plan": "docs/plans/live-business-release-20261007.md",
   "planner_result": "bounded plan completed; nativehostusage unknown",
   "owner_plan_checkpoint": "Latest owner response: давай делай",
@@ -72,7 +72,13 @@
     "corrective_canonical": "10/10 author,8/8 independent",
     "independent_review": "ACCEPT_LOCAL_CANONICAL_SLICE",
     "typecheck_lint_build": "native0",
-    "gate_method": "Composite source-bound suites; initial all-integration failed guard/schema cases retained, not relabeled green"
+    "gate_method": "Composite source-bound suites; initial all-integration failed guard/schema cases retained, not relabeled green",
+    "short_mail_protocol_regression": {
+      "tests": 14,
+      "native_exit": 0,
+      "source_revision": "cdffae297b9aae51ae4a921e88e659d324867e96",
+      "scope": "F09 TLS/protocol/recovery only, no F11/full-expanded-MVP claim"
+    }
   },
   "live_actions_executed": false,
   "receipt_provenance_gap": "Corrective review launch manifest allocated by reviewer rather than root before checks; timing/provenance disclosed in review; no retroactive parent-prelaunch claim",
@@ -134,7 +140,46 @@
       "native_exit": 1,
       "checks": 1,
       "cause": "harness expected raw disabled instead of accepted localized отключено; specific correction running"
+    },
+    {
+      "evidence": "/tmp/n7-live-ui-e2e-a6-20261007",
+      "native_exit": 1,
+      "checks": 23,
+      "passed_checks": 22,
+      "confirmed_flows": [
+        "checkout",
+        "canonical success",
+        "fixed30dayteam",
+        "reload",
+        "history",
+        "outage",
+        "refundrevocation",
+        "cancel",
+        "foreign and forged return"
+      ],
+      "cause": "minute public_stop_bucket reached31 preventing provider hold; add pacing without reducing real limits",
+      "next": "fresh root-owned RAM namespace n7_live_ui_a7_20261007; old database retained"
+    },
+    {
+      "evidence": "docker-ui-a7",
+      "native_exit": 0,
+      "checks": 52,
+      "source_revision": "0a0890c47d8fa716a4ebd8f13888bd30d2a4dea2",
+      "image_id": "sha256:4ecf3a89a3a543e0464e18bfbc764e3b45a350e5a407d1da54e181bc2fd922c2",
+      "duration_seconds": 216.229,
+      "production_tls_proof": false,
+      "real_provider_calls": false,
+      "real_mail_sent": false,
+      "screenshots": 4
     }
   ],
-  "validation_deviation": "UI legacy web integration TRUNCATE tenant/auth_bucket on assigned disposable fake n7billing DB contrary namespace-only instruction; no production DB operations"
+  "validation_deviation": "UI legacy web integration TRUNCATE tenant/auth_bucket on assigned disposable fake n7billing DB contrary namespace-only instruction; no production DB operations",
+  "published_head": "eae568f341841e165422c9d71c1030dcb4643480",
+  "external_blockers": [
+    "real merchant credentials owner will supply later",
+    "controlled sender/receiver mailbox role unresolved",
+    "off-host encrypted backup destination required before production migration"
+  ],
+  "source_composition_a7_byte_equal_files": 233,
+  "e2e_evidence_review": "ACCEPT_LOCAL_E2E_EVIDENCE"
 }

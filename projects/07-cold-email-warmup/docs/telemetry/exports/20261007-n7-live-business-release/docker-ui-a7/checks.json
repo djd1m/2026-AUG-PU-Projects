@@ -1,0 +1,414 @@
+{
+  "status": "pass",
+  "source_revision": "0a0890c47d8fa716a4ebd8f13888bd30d2a4dea2",
+  "image_id": "sha256:4ecf3a89a3a543e0464e18bfbc764e3b45a350e5a407d1da54e181bc2fd922c2",
+  "build_sha256": "f23a5963d53dbe9865dc74a07ce84656418405578bc2e48e8b4b069e4975bf67",
+  "checks": [
+    {
+      "viewport": "1440",
+      "name": "mail egress remains disabled",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "server mail modes independently disabled",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "configured LIVE Team price",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "pending checkout never grants",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "allowed canonical provider anchor",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "provider navigation intercepted locally",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "return stays free",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "canonical success grants team",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "fixed thirty day expiry",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "password fields cleared",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "no horizontal overflow",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "reload preserves confirmed expiry",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "history keeps LIVE identity",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "history opens bound confirmed intent",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "outage preserves confirmed team",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "verified partial refund revokes",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "password fields cleared",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "no horizontal overflow",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "canonical cancel cannot grant",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "foreign return cannot grant",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "foreign intent status denied",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "forged return cannot grant",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "late canonical fetch held",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "late response cannot restore cabinet",
+      "pass": true
+    },
+    {
+      "viewport": "1440",
+      "name": "actual UI login session valid",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "mail egress remains disabled",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "server mail modes independently disabled",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "configured LIVE Team price",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "pending checkout never grants",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "allowed canonical provider anchor",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "provider navigation intercepted locally",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "return stays free",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "canonical success grants team",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "fixed thirty day expiry",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "password fields cleared",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "no horizontal overflow",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "reload preserves confirmed expiry",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "history keeps LIVE identity",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "history opens bound confirmed intent",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "outage preserves confirmed team",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "verified partial refund revokes",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "password fields cleared",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "no horizontal overflow",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "canonical cancel cannot grant",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "foreign return cannot grant",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "foreign intent status denied",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "forged return cannot grant",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "late canonical fetch held",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "late response cannot restore cabinet",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "actual UI login session valid",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "no unexpected runtime failures",
+      "pass": true
+    },
+    {
+      "viewport": "390",
+      "name": "two local provider navigations",
+      "pass": true
+    }
+  ],
+  "screenshots": [
+    "1440-team.png",
+    "1440-refund.png",
+    "390-team.png",
+    "390-refund.png"
+  ],
+  "failures": [],
+  "provider_navigations_intercepted": 2,
+  "external_requests_executed": 0,
+  "production_tls_proof": false,
+  "started_at": "2026-10-07T20:43:10.058Z",
+  "auth_diagnostics": [
+    {
+      "viewport": 1440,
+      "step": "cabinet_ready",
+      "http": [
+        {
+          "path": "/api/auth/me",
+          "method": "GET",
+          "status": 401
+        },
+        {
+          "path": "/api/auth/register",
+          "method": "POST",
+          "status": 201
+        },
+        {
+          "path": "/api/auth/me",
+          "method": "GET",
+          "status": 200
+        },
+        {
+          "path": "/api/auth/me",
+          "method": "GET",
+          "status": 401
+        },
+        {
+          "path": "/api/auth/login",
+          "method": "POST",
+          "status": 200
+        },
+        {
+          "path": "/api/auth/me",
+          "method": "GET",
+          "status": 200
+        },
+        {
+          "path": "/api/auth/me",
+          "method": "GET",
+          "status": 200
+        }
+      ],
+      "signin_status": 200
+    },
+    {
+      "viewport": 1440,
+      "step": "cabinet_ready",
+      "http": [
+        {
+          "path": "/api/auth/me",
+          "method": "GET",
+          "status": 401
+        },
+        {
+          "path": "/api/auth/register",
+          "method": "POST",
+          "status": 201
+        },
+        {
+          "path": "/api/auth/me",
+          "method": "GET",
+          "status": 200
+        }
+      ],
+      "signin_status": 200
+    },
+    {
+      "viewport": 390,
+      "step": "cabinet_ready",
+      "http": [
+        {
+          "path": "/api/auth/me",
+          "method": "GET",
+          "status": 401
+        },
+        {
+          "path": "/api/auth/register",
+          "method": "POST",
+          "status": 201
+        },
+        {
+          "path": "/api/auth/me",
+          "method": "GET",
+          "status": 200
+        },
+        {
+          "path": "/api/auth/me",
+          "method": "GET",
+          "status": 401
+        },
+        {
+          "path": "/api/auth/login",
+          "method": "POST",
+          "status": 200
+        },
+        {
+          "path": "/api/auth/me",
+          "method": "GET",
+          "status": 200
+        },
+        {
+          "path": "/api/auth/me",
+          "method": "GET",
+          "status": 200
+        }
+      ],
+      "signin_status": 200
+    },
+    {
+      "viewport": 390,
+      "step": "cabinet_ready",
+      "http": [
+        {
+          "path": "/api/auth/me",
+          "method": "GET",
+          "status": 401
+        },
+        {
+          "path": "/api/auth/register",
+          "method": "POST",
+          "status": 201
+        },
+        {
+          "path": "/api/auth/me",
+          "method": "GET",
+          "status": 200
+        }
+      ],
+      "signin_status": 200
+    }
+  ],
+  "cleanup": {
+    "own_contexts_closed": true,
+    "shared_browser_server_preserved": true
+  },
+  "finished_at": "2026-10-07T20:46:46.287Z"
+}

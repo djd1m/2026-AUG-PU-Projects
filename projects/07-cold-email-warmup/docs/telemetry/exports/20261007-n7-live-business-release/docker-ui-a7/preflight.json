@@ -1,0 +1,40 @@
+{
+  "status": "ready",
+  "recorded_at": "2026-10-07T20:42:50.569462+00:00",
+  "source_revision": "0a0890c47d8fa716a4ebd8f13888bd30d2a4dea2",
+  "image_id": "sha256:4ecf3a89a3a543e0464e18bfbc764e3b45a350e5a407d1da54e181bc2fd922c2",
+  "build_sha256": "f23a5963d53dbe9865dc74a07ce84656418405578bc2e48e8b4b069e4975bf67",
+  "origin": "https://n7-ui.example.test",
+  "production_tls_proof": false,
+  "fixture_host": "n7-live-ui-fixture-a7-20261007",
+  "fixture_port": 3000,
+  "database_name": "n7_live_ui_a7_20261007",
+  "evidence_destination": "/tmp/n7-live-ui-e2e-a7-20261007",
+  "scripts": {
+    "live-billing-browser.mjs": "e5a0d2e37a35296ecbc9e60b74afae17daba69dc4a38ca1f3fad4841ad4d7c60",
+    "live-billing-run.py": "355bfed32d59f395f73fb2dcafc4a1332b5426dfc7cb4c93043dfc73be6defac",
+    "live-billing-fixture.mjs": "eb9e865619be6cbda5247fc906499c5b6d10a8baea3968730d6afd29f2809ee6"
+  },
+  "environment": {
+    "browser_container": "codex-ui-playwright",
+    "fixture_container": "n7-live-ui-fixture-a7-20261007",
+    "database_container": "n7-live-business-testpg-20261007",
+    "database_network": "n7f06a_network",
+    "browser_network": "codex-ui-browser"
+  },
+  "allowed_effects": [
+    "only private fixture signup/checkout/refund/session mutations",
+    "local provider fake only",
+    "screenshots with password cleared"
+  ],
+  "external_connections_allowed": false,
+  "public_runtime_changed": false,
+  "build_exit": 0,
+  "docker_build_exit": 0,
+  "port_check_exit": 0,
+  "fixture_schema": 17,
+  "prior_attempt": "/tmp/n7-live-ui-e2e-a6-20261007",
+  "correction": "phase pacing without changing product limits; fresh ownedRAM namespace; old history retained",
+  "host_and_container_build_bytes_equal": true,
+  "new_image_build_bytes_verified": true
+}
