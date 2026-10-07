@@ -108,7 +108,8 @@ function draw(){[...tabs.children].forEach((b,i)=>{b.className="tab"+(i===["A","
  </div>
  <div class="screen"><h3>⚖️ Сравнение и фиксация <span class="badge">мета</span></h3>
    <table><tr><th>Экран</th><th>Стадия</th><th>AARRR</th></tr>${META.map(m=>`<tr><td>${m[1]}</td><td>${m[2]}</td><td>${m[3]}</td></tr>`).join("")}</table>
-   <p class="note">Выбор владельцем: гибрид H (ядро A + партнёрский минимум B) — 2026-10-07. Прототип иллюстрирует и не заменяет брифа:的收入 decisions — docs/product-discovery-brief.md + discovery/CJM_Variants.md.</p></div>`;
+   <p class="note">Выбор владельцем: гибрид H (ядро A + партнёрский минимум B) — 2026-10-07. Прототип иллюстрирует варианты и не заменяет документы: решения — docs/product-discovery-brief.md + discovery/CJM_Variants.md.</p></div>`;
+
 }
 window.__lockWarm=()=>{lock=cur;draw()};
 draw();
