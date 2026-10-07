@@ -88,7 +88,7 @@ async function installCaptureObserver(pool:import('pg').Pool,config:import('../s
 }
 
 // Parent-owned additive cohort seed. Workers never seed, reset, or relabel evidence.
-export async function seedBodyPressureCohort(){
+export async function seedBodyPressureCohort(semanticHeadroom=false){
  const {randomUUID}=await import('node:crypto'),{readFile}=await import('node:fs/promises');
  const {loadConfig}=await import('../src/config.js'),{createPool,migrate}=await import('../src/db.js'),{application}=await import('../src/server.js');
  const {seedTestEntitlement}=await import('./billing-fixture.js');
@@ -108,9 +108,9 @@ export async function seedBodyPressureCohort(){
  });
  const app=await application(config,pool,{resolver:async()=>[{address:'8.8.8.8',family:4}]}),token=(await readFile(process.env.OPERATOR_TOKEN_FILE!,'utf8')).trim();
  const actors:{tenant_id:string;account_id:string}[]=[],connected:string[]=[],participants:{tenant:string;mailbox:string;root:string;enrollment:string;recipient:string}[]=[],mailboxes=new Map<string,{headers:Buffer}>();
- for(let i=0;i<3;i++){const actor={tenant_id:randomUUID(),account_id:randomUUID()};actors.push(actor);await pool.query('INSERT INTO tenant(id) VALUES($1)',[actor.tenant_id]);await pool.query("INSERT INTO account(id,tenant_id,email,password_hash) VALUES($1,$2,$3,'fixture')",[actor.account_id,actor.tenant_id,actor.account_id+'@example.test']);await seedTestEntitlement(pool,actor.tenant_id);}
+ for(let i=0;i<(semanticHeadroom?4:3);i++){const actor={tenant_id:randomUUID(),account_id:randomUUID()};actors.push(actor);await pool.query('INSERT INTO tenant(id) VALUES($1)',[actor.tenant_id]);await pool.query("INSERT INTO account(id,tenant_id,email,password_hash) VALUES($1,$2,$3,'fixture')",[actor.account_id,actor.tenant_id,actor.account_id+'@example.test']);await seedTestEntitlement(pool,actor.tenant_id);}
  for(let i=0;i<100;i++){
-  const actor=actors[i%3]!,mailbox=(await app.mailboxes.save(actor.tenant_id,{...transportInput,label:'body cohort '+i,senderAddress:`sender-${i}@example.test`,imapUsername:'pending'})).id;connected.push(mailbox);
+  const actor=actors[i%actors.length]!,mailbox=(await app.mailboxes.save(actor.tenant_id,{...transportInput,label:'body cohort '+i,senderAddress:`sender-${i}@example.test`,imapUsername:'pending'})).id;connected.push(mailbox);
   const input={...transportInput,senderAddress:`sender-${i}@example.test`,imapUsername:mailbox};await pool.query("UPDATE mailbox SET state='verified_test',credential_envelope=$2 WHERE id=$1",[mailbox,encryptCredentials(input,actor.tenant_id,mailbox,config.credentialKeyring)]);
   if(i>=30)continue;
   await pool.query("INSERT INTO capacity_lease(id,tenant_id,mailbox_id,state,expires_at) VALUES($1,$2,$1,'active',clock_timestamp()+interval '120 seconds')",[mailbox,actor.tenant_id]);
