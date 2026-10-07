@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "F11 unaccepted: A42 five-file cancellation candidate e6e7ef44 sealed; fresh HIGH A43 actualACK08:39:20 independent C1/typed-fixture plan",
+  "stage": "F11 unaccepted; A44 candidate535 sealed, A45 actual MEDIUM test-only correction/material witnesses active",
   "roots": {
     "project": "."
   },
   "identity": {
     "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
     "work_unit_id": "expanded-mvp",
-    "current_attempt_id": "f11-c1-planned-drain-planner-a43"
+    "current_attempt_id": "f11-monotonic-material-fixture-author-a45"
   },
   "telemetry": {
     "run": {
@@ -22,8 +22,8 @@
   },
   "source": {
     "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
-    "current_revision": "e6e7ef4406288f5674607ad7198b1665f328bfe9",
-    "build_revision": "e6e7ef4406288f5674607ad7198b1665f328bfe9",
+    "current_revision": "535251adf8392f4e4c0258ccaec86abefd0810d5",
+    "build_revision": "535251adf8392f4e4c0258ccaec86abefd0810d5",
     "requirements": [
       {
         "root": "project",
@@ -45,9 +45,9 @@
       }
     ],
     "continuity": {
-      "expected_revision": "e6e7ef4406288f5674607ad7198b1665f328bfe9",
-      "observed_revision": "e6e7ef4406288f5674607ad7198b1665f328bfe9",
-      "reconciliation": "A42 terminal source/dist/helper freeze; A43 independently rechecks before/after reads. Isolated candidate only; no F11 main integration or acceptance."
+      "last_sealed_candidate": "535251adf8392f4e4c0258ccaec86abefd0810d5",
+      "current_workspace_status": "A45 test-only authoring isolated tree; production baseline535 immutable, no current-workspace clean/hash inference",
+      "F11_main_integrated": false
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
     "integration_note": "F10 accepted main3566 baseline retained. Current F11 candidate406 isolated only; library experiment530 separately delivered negative assessment; no production migration."
@@ -670,6 +670,18 @@
         "units16/PG18/bodyprotocol5/privacyAEAD",
         "fresh independent final HIGH review"
       ]
+    },
+    {
+      "id": "f11-c1-prefix-planned-fixture-author-a44",
+      "status": "completed coherent partial; strict planned-text timing failed",
+      "revision": "535251adf8392f4e4c0258ccaec86abefd0810d5",
+      "sealed_at": "2026-10-07T09:07:32.515053+00:00",
+      "receipt_sha256": "b5904b07ef3bf3414a6a893c13f21fe31b42531ef82d673e6d54df5a86eb6ffd"
+    },
+    {
+      "id": "f11-monotonic-material-fixture-author-a45",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T09:11:50Z"
     }
   ],
   "work_units": [
@@ -702,43 +714,70 @@
     "fields": [
       "what is executing or waiting",
       "actual worker/receipt/commit/gate status",
-      "next step and executor"
+      "next step and executor",
+      "conditional ETA, assumptions and accepted/failed/missing AC"
     ],
     "also_on": [
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-06T20:31:03.337724+00:00",
+    "last_reported_at": "2026-10-07T09:17:34.268854+00:00",
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true,
     "latest_checkpoint": {
-      "at": "2026-10-07T03:48:40.120279+00:00",
-      "disk_available_bytes": 2148302848,
-      "executor": "/root/n7_sol_coordinator/f11_continuation_observer_author_a25",
-      "remaining_AC": "Genuine continuation FIRST SQL/rowCounts/urgency/ownership and shortnative diagnostic; production unchanged; exactnarrow compatible HIGHrepair/amendment adjudication afterraw; nofullfleetblindrepeat or time/cap relaxation"
-    }
+      "at": "2026-10-07T09:17:34.268854+00:00",
+      "disk_available_bytes": 3579957248,
+      "executor": "/root/n7_sol_coordinator/f11_monotonic_material_fixture_author_a45",
+      "remaining_AC": [
+        "Drain14/ordinary9 material obligations with exact source binding",
+        "Original six unstarted controls current binding",
+        "Fault and healthy fleet all30/header30/selection60",
+        "Relevant full unit/PG/AEAD/MIME/current-authority/retention/stop regression",
+        "Legacy20-page native obligation and fresh independent source review"
+      ]
+    },
+    "forecast": {
+      "as_of": "2026-10-07T09:17:34.268854+00:00",
+      "local_coding_and_fresh_review_minutes": [
+        40,
+        60
+      ],
+      "confidence": "low conditional estimate, not calibrated guarantee",
+      "assumptions": [
+        "No newly confirmed production defect",
+        "Remaining material fixtures fit current or one additional bounded coding attempt",
+        "Fresh HIGH native slot available; validation and review pass without correction"
+      ],
+      "includes": "Coding, verification, coordination, sealing and independent review; does not promise the current attempt will finish all AC",
+      "F11_acceptance_ETA": null,
+      "F11_remaining": [
+        "Drain14/ordinary9 material obligations with exact source binding",
+        "Original six unstarted controls current binding",
+        "Fault and healthy fleet all30/header30/selection60",
+        "Relevant full unit/PG/AEAD/MIME/current-authority/retention/stop regression",
+        "Legacy20-page native obligation and fresh independent source review"
+      ],
+      "whole_N7_ETA": null,
+      "reason_unknown": "F12–14 not implemented and later real provider/pilot gates separate"
+    },
+    "chat_notification_scheduler_available": false
   },
-  "current_stage": "F11 unaccepted: A42 five-file cancellation candidate e6e7ef44 sealed; fresh HIGH A43 actualACK08:39:20 independent C1/typed-fixture plan",
+  "current_stage": "F11 unaccepted; A44 candidate535 sealed, A45 actual MEDIUM test-only correction/material witnesses active",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_c1_and_planned_drain_planner_a43",
-    "attempt": "f11-c1-planned-drain-planner-a43",
+    "executor": "/root/n7_sol_coordinator/f11_monotonic_material_fixture_author_a45",
+    "attempt": "f11-monotonic-material-fixture-author-a45",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T08:39:20Z",
-    "freeze_at": "2026-10-07T08:45:20Z",
-    "deadline": "2026-10-07T08:47:20Z",
+    "actual_ACK_at": "2026-10-07T09:11:50Z",
+    "freeze_at": "2026-10-07T09:28:50Z",
+    "deadline": "2026-10-07T09:31:50Z",
     "requested_model": "gpt-6.1-sol",
-    "requested_effort": "high",
+    "requested_effort": "medium",
     "actual_model": null,
     "usage": null,
-    "source_revision": "e6e7ef4406288f5674607ad7198b1665f328bfe9",
-    "context_manifest": "/tmp/n7-f11-unstarted-admission-cancel-author-a42/context_manifest.json",
-    "context_sha256": "8bb9d5fd99619a99b0bc78017e42725a544675d7acd527e35922a9333d386f3b",
-    "context_exclusions": [
-      "author receipt/report/chat/workingnotes/precise-findings.json",
-      "coordinator accumulated reasoning"
-    ],
-    "status": "actual fresh independent HIGH read-only planner active; C1 complete-prefix branch and production planned-drain fixture composition independently reconciled",
-    "next": "Early sealed minimal plan then actual fresh MEDIUM corrective source/fixture executor. Full load and fresh final source review remain mandatory; F11 not accepted."
+    "baseline_revision": "535251adf8392f4e4c0258ccaec86abefd0810d5",
+    "approved_plan_sha256": "9e179fcecd5fecd13e45b12a359e4bd2ca3655e0c63ea13a1f4930128e1341a8",
+    "status": "actual fresh MEDIUM test-only author; strict planned metadata/text native0 after real monotonic timer fix; C1 removal counterproof and remaining material fixtures underway",
+    "next": "Seal exact candidate/joins/remaining AC, then actual bounded HIGH frozen operational checks; fresh independent source review after mandatory witnesses complete; no full F11 acceptance."
   }
 }

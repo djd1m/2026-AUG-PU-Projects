@@ -1,0 +1,19 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "approved_at": "2026-10-07T09:03:52.144157+00:00",
+  "planner": "n7_sol_coordinator requested HIGH; actual host null",
+  "scope_kind": "minimal fixture timing correction under unchanged approved genuine2800ms AC",
+  "approved_plan": "/tmp/n7-f11-c1-planned-drain-planner-a43/plan.md",
+  "approved_plan_sha256": "9e179fcecd5fecd13e45b12a359e4bd2ca3655e0c63ea13a1f4930128e1341a8",
+  "allowed_additional_path": "tests/f11-body-fixture.ts",
+  "scope_count": 6,
+  "objective_observation": "Configured setTimeout(2800) yielded measured native phase durations2799.611869ms and2799.969360ms; existing strict assertion fails and remains unchanged.",
+  "implementation_limit": "Only replace phase-delay send scheduling with real monotonic deadline recheck anchored AFTER recorded phase_start; if remaining positive, wait actual remaining duration and recheck before sending. Configured phaseDelayMs stays2800. No fabricated/clamped recorded times, tolerance, alternate2801 input, changed phase5s/window12s/origin450s/producer behavior. Existing zero-delay behavior unchanged. No new timing framework.",
+  "verification": "After all current child joins, new source/helper freeze, unchanged planned text positive and actual per-phase raw durations>=2800. Source/test assertions unchanged. Preserve original timing failure/raw.",
+  "attempt_bounds_unchanged": {
+    "work_cutoff": "2026-10-07T09:05:10Z",
+    "terminal_deadline": "2026-10-07T09:08:10Z"
+  },
+  "if_not_fits": "Seal honest missing-positive gap and next bounded fresh MEDIUM, no silent extension.",
+  "no_external_or_production_authority": true
+}

@@ -1,0 +1,77 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "A43",
+  "stage": "scoped independent planner reconciliation",
+  "status": "completed",
+  "verdict": "PLAN_READY_NOT_PRODUCT_ACCEPTANCE",
+  "started_at": "2026-10-07T08:39:20Z",
+  "finished_at": "2026-10-07T08:45:28.167162+00:00",
+  "duration_seconds": 368.167162,
+  "attempt_bound_seconds": 480,
+  "work_bound_seconds": 360,
+  "seal_bound_seconds": 120,
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning_effort": "HIGH",
+  "actual_host_model": null,
+  "actual_usage": {
+    "input_tokens": null,
+    "cached_tokens": null,
+    "output_tokens": null,
+    "reasoning_tokens": null,
+    "cost": null
+  },
+  "measurement_gap": "Host model metadata/token/usage counters not exposed; requested model is not asserted actual. No historical counters inferred.",
+  "source_revision": "e6e7ef4406288f5674607ad7198b1665f328bfe9",
+  "source_hashes_before": {
+    "path": "/tmp/n7-f11-c1-planned-drain-planner-a43/source-before.json",
+    "sha256": "43a8192e07f4b7ea9c5e52fb34f3367243a3577a09bcbe0d6a734dec55a00202"
+  },
+  "source_hashes_after": {
+    "path": "/tmp/n7-f11-c1-planned-drain-planner-a43/source-after.json",
+    "sha256": "ece8710cb1d5f643d73323dc27073cadcdebc1e3c92ed83f2ad68c075134ab7c"
+  },
+  "source_unchanged": true,
+  "raw_c1_diagnostic_sha256": "812284e444f9e8ac7ab49432dc21a5534e6d3f9bd601f7eb7bb27e22006d3b69",
+  "plan": {
+    "path": "/tmp/n7-f11-c1-planned-drain-planner-a43/plan.md",
+    "sha256": "9e179fcecd5fecd13e45b12a359e4bd2ca3655e0c63ea13a1f4930128e1341a8"
+  },
+  "provenance": {
+    "path": "/tmp/n7-f11-c1-planned-drain-planner-a43/context_manifest.json",
+    "sha256": "0ca0db6e9b8378dccf9814e0b095bfa2722277469ce5eeb1224125884c075fb8"
+  },
+  "route": {
+    "mechanical_exit_code": 0,
+    "mechanical_tier": "S",
+    "mechanical_scope_files": 5,
+    "substantive_risk": "XL inherited native closure/current authority/retention invariants",
+    "narrow_scope": "compatible approved bug and test correction, no invariant amendment"
+  },
+  "read_only_checks": {
+    "clean_normative_SHA": true,
+    "frozen_source_SHA": true,
+    "source_HEAD": "e6e7ef4406288f5674607ad7198b1665f328bfe9",
+    "source_before_after_equal": true,
+    "disk_floor_pass": true,
+    "disk_available_bytes": 3621986304,
+    "tests": "NOT_RUN planner read-only",
+    "DB": "NO_CONNECTION_NO_MUTATION",
+    "E2E_preflight": "not_applicable read-only planning"
+  },
+  "next_executor": {
+    "role": "fresh clean MEDIUM author",
+    "requested_model": "gpt-6.1-sol",
+    "effort": "MEDIUM",
+    "max_files": 5,
+    "total_minutes": 20,
+    "work_minutes": 17,
+    "seal_minutes": 3,
+    "implementation_AC": "AC1-AC5 in plan.md",
+    "stop_condition": "Concrete scope/contract violation or work budget: seal bound artifacts and remaining AC; MAIN assigns bounded continuation. Never weaken tests/timings.",
+    "fullsuite_or_fleet": "not authorized for this author attempt"
+  },
+  "full_F11_accepted": false,
+  "A42_code_accepted": false,
+  "remaining": "Source-bound corrective implementation and material controls, fresh independent HIGH review, justified original fault full300 then healthy, legacy20x5s/native19 and other mandatory F11 gates. Final NEW clean HIGH product reviewer later."
+}
