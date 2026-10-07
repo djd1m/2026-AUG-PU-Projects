@@ -1,0 +1,155 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-current-fleet-verifier-a23",
+  "status": "completed",
+  "verdict": "FAILED_CURRENT_MANDATORY_FLEET_GATES",
+  "F11_accepted": false,
+  "finished_at": "2026-10-07T03:38:45.427978+00:00",
+  "ack": "2026-10-07T03:26:13.088000+00:00",
+  "elapsed_wall_UTC_seconds": 752.339978,
+  "ack_monotonic": null,
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host actual model, effort, tokens and cost not exposed.",
+    "ACK monotonic clock not captured; elapsed UTC wall duration is measured separately from actual native/measurement monotonic stamps.",
+    "Four native transport child guard exit receipts missing; actual PID-tick absence verified, no exit-code reconstruction.",
+    "Wire does not expose exact native child PID/socket identity; actual worker PID, physical operation/owner/socket mapping retained.",
+    "Observer records initial finish/open-capture admission; later continuation admission SQL itself not observed."
+  ],
+  "source_revision": "fb6fff054701663104ab24607915c2ab52b5baae",
+  "production_source_revision": "5c707737fdcb2be4c579eac4cbd71a9a026b8820",
+  "build": "76",
+  "fault_native_exit": 1,
+  "actual_measurement_duration_ms": 240412,
+  "full300s": false,
+  "ALL30_ready": 18,
+  "ALL30_denominator": 30,
+  "unready_partition": {
+    "pending:body_authority_required": 9,
+    "held:capture_cancelled": 2,
+    "held:capture_window_expired": 1
+  },
+  "actual_header_gap_max_ms": 32553,
+  "actual_due_selection_max_ms": 31790,
+  "native_phases": 42,
+  "native_phase_actual_max_ms": 3635,
+  "healthy": "not_run: first exact fault fleet failed, no blind second run",
+  "healthy_schema_absent": true,
+  "own_schema_retained": "n7_a23_fault_261007032613",
+  "native_worker_joins": [
+    {
+      "pid": 168441,
+      "startTicks": "126671024",
+      "code": 0,
+      "signal": null,
+      "drained": true,
+      "stderr": "",
+      "failed": [],
+      "exitStamp": {
+        "utc": "2026-10-07T03:30:50.411Z",
+        "monotonicNs": "1266860410841921"
+      }
+    },
+    {
+      "pid": 168517,
+      "startTicks": "126671060",
+      "code": 0,
+      "signal": null,
+      "drained": true,
+      "stderr": "",
+      "failed": [],
+      "exitStamp": {
+        "utc": "2026-10-07T03:32:20.394Z",
+        "monotonicNs": "1266950393753963"
+      }
+    },
+    {
+      "pid": 214500,
+      "startTicks": "126686041",
+      "code": 0,
+      "signal": null,
+      "drained": true,
+      "stderr": "",
+      "failed": [],
+      "exitStamp": {
+        "utc": "2026-10-07T03:32:20.402Z",
+        "monotonicNs": "1266950402149636"
+      }
+    }
+  ],
+  "safety": {
+    "source_drift": [],
+    "all_frozen_hashes_match": true,
+    "own_node_identities_alive": 0,
+    "guard_start_count": 1235,
+    "guard_exit_count": 1231,
+    "guard_denied_unix": 2460,
+    "guard_external_denied_or_allowed": "numeric/defaultHost/other denied categories 0; only numeric PG and127.0.0.1 allowed by copied guard",
+    "mutex_free": true,
+    "public_counts_digests_unchanged": true,
+    "saved_public_claim_id": "67731754-17e4-4f3d-8c40-02e812a9eaad",
+    "saved_public_claim_sha256": "a4365e60d9b1ab7ae22180e383b8ab17bd367596aaef50542fc094b3677a0b1f",
+    "public_resources": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 1
+    },
+    "own_resources": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0,
+      "tenants": 3,
+      "connected": 100
+    },
+    "retained_a21_synthetic_physical1_runtime1": true,
+    "PG_other_sessions": 0,
+    "PG_advisory_locks": []
+  },
+  "disk_history": [
+    {
+      "utc": "2026-10-07T03:26:13.088Z",
+      "bytes": 2215198720
+    },
+    {
+      "utc": "2026-10-07T03:32:30.341345Z",
+      "bytes": 2167410688
+    },
+    {
+      "utc": "2026-10-07T03:36:27.612645+00:00",
+      "bytes": 1912393728,
+      "threshold": 2147483648,
+      "cause": "UNKNOWN; no cleanup/no heavy child after warning"
+    },
+    {
+      "utc": "2026-10-07T03:37:02.713843Z",
+      "bytes": 1912066048
+    },
+    {
+      "utc": "2026-10-07T03:38:45.427978+00:00",
+      "bytes": 2162651136
+    }
+  ],
+  "clean_next_planner_manifest": "/tmp/n7-f11-current-fleet-verify-a23/clean-next-planner-input-manifest.json",
+  "clean_next_planner_manifest_sha256": "603d4e05c75e45da473c92af899adcde0ac5f1201f7745d6de289a22d90c6174",
+  "clean_next_planner_manifest_files": 248,
+  "launch_sha256": "96e938e01efb601fb1d14ca0b04f36025674fe5aae3dc75b5473267785b197e2",
+  "remaining_mandatory_checks": [
+    "Repair planning on current raw/normative source first",
+    "Both actual full300 native exit0 ALL30 fleets including healthy",
+    "Current full unit and safe full PG integration",
+    "Current protocol/mutation/physical-unknown concurrent safety gates as required",
+    "Current material/content lifetime purge and privacy fences",
+    "NEW fresh HIGH clean final source product reviewer after all mandatory checks"
+  ],
+  "next_responsible": "n7_sol_coordinator: remains active; explicitly confirmed will actually launch fresh HIGH A24 immediately after A23 FINAL because lane is currently occupied",
+  "next_launch_before_terminal": false,
+  "next_launch_reason": "No free lane until current agent terminal; parent instructed immediate FINAL, no false prior launch claim",
+  "no_source_code_fixture_guard_edits_after_childstart": true,
+  "no_external_provider_spend_publish": true
+}

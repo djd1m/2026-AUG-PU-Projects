@@ -1,0 +1,28 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-current-fleet-verifier-a23",
+  "ack": "2026-10-07T03:26:13.088Z",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "missing_data": "host counters/model metadata not exposed",
+  "risk_tier": "XL inherited runtime safety",
+  "mechanical_route": "not_applicable no source edits; strict inherited scope preserved",
+  "readiness": "ready",
+  "source": "fb6fff054701663104ab24607915c2ab52b5baae",
+  "schemas": {
+    "fault": "n7_a23_fault_261007032613",
+    "healthy": "n7_a23_checks_261007032613"
+  },
+  "scope": "two exact existing full300 fleet tests only; source immutable; local fixtures only",
+  "guard_donor": {
+    "path": "/tmp/n7-f11-context-verify-a19/guard-a19.mjs",
+    "sha256": "1563b3fe8713ee68056e76b9940039b3241ba501537c26db92098848cbbb19ae",
+    "changed": "only receipt root and own schema prefix"
+  },
+  "checkpoint": "not_applicable native checkpoint unavailable",
+  "accepted_F11": false
+}

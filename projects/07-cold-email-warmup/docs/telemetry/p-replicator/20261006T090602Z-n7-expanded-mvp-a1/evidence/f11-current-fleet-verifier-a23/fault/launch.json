@@ -1,0 +1,56 @@
+{
+  "mode": "fault",
+  "schema": "n7_a23_fault_261007032613",
+  "pid": 166797,
+  "startTicks": "126670519",
+  "launcher": {
+    "utc": "2026-10-07T03:28:15.274768+00:00",
+    "monotonic_ns": 1266705274175161
+  },
+  "disk_available_bytes": 2211254272,
+  "source": "fb6fff054701663104ab24607915c2ab52b5baae",
+  "trace_prelaunch_absent": true,
+  "native-runner.py_sha256": "8a2d8d1ee7348cbea3a5efacbca18271622706eb6296e2a49b2c218e1145827a",
+  "guard-a23.mjs_sha256": "dca1cd895c863d43dcb8aa5557096c40d2c867291cf483d8bca53cfbb5512018",
+  "schema-setup.mjs_sha256": "163babd4adf789e7a8617d45843e928d397b3e1b5abd2f086d59bd5943c09d2c",
+  "launch.sh_sha256": "63a84222c1cdc942d3efb7e8bd00bcc2fab32d7f4b1088ad37b0f6ccb4b10c00",
+  "source-before.json_sha256": "df87bb695eda1b1794800bec2f3648775d177ed1623381d76b155eae0344353b",
+  "setup_pid": 166801,
+  "setup_startTicks": "126670527",
+  "setup_started": {
+    "utc": "2026-10-07T03:28:15.276668+00:00",
+    "monotonic_ns": 1266705276066062
+  },
+  "setup_exit": 0,
+  "setup_join": {
+    "utc": "2026-10-07T03:28:16.452321+00:00",
+    "monotonic_ns": 1266706451731101
+  },
+  "before_heavy_disk_bytes": 2209533952,
+  "command": [
+    "/tmp/n7-expanded-runtime-20261006/bin/node",
+    "--test",
+    "--test-name-pattern",
+    "^F11 ALL30 finite native BODY fault recovers both2800ms phases full300s$",
+    "tests/f10-runtime-protocol.test.ts"
+  ],
+  "native_prework": {
+    "utc": "2026-10-07T03:28:16.453297+00:00",
+    "monotonic_ns": 1266706452688762
+  },
+  "native_pid": 167221,
+  "native_startTicks": "126670645",
+  "native_spawned": {
+    "utc": "2026-10-07T03:28:16.454516+00:00",
+    "monotonic_ns": 1266706453910132
+  },
+  "native_exit": 1,
+  "native_join": {
+    "utc": "2026-10-07T03:32:21.266781+00:00",
+    "monotonic_ns": 1266951266192304
+  },
+  "lock_released": {
+    "utc": "2026-10-07T03:32:21.267371+00:00",
+    "monotonic_ns": 1266951266760034
+  }
+}
