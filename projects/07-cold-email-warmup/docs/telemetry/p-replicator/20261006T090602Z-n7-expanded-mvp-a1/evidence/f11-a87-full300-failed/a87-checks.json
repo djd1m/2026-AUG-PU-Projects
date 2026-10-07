@@ -1,0 +1,77 @@
+{
+  "status": "failed",
+  "source_revision": "f79543db87bc3188c3707e6bf773e446bef7a3ae",
+  "driver_sha256": "0bcfc86778142fc17455539517472fc040a04acf157d4dcf8ff63ba117fd89de",
+  "source_preflight": "/tmp/n7-f11-accepted-runners-rebind-a83-20261007/fullfleet/a87-source-preflight.json",
+  "source227_helpers7_dependencies_verified_before_READY": true,
+  "actual_READY_utc": "2026-10-07T15:21:00.065262+00:00",
+  "lease_start_utc": "2026-10-07T15:21:39.981512+00:00",
+  "full_fault_actual_native_exit": 1,
+  "actual_callback_count": 1,
+  "actual_pass_count": 0,
+  "actual_fail_count": 1,
+  "actual_skipped": 0,
+  "exact_native_title": "F11 ALL30 finite native BODY fault recovers both2800ms phases full300s",
+  "failure_assertion": "assert.ok(times[0]!-begun<=30000)",
+  "failure_source": "tests/f10-runtime-protocol.test.ts:187:202",
+  "raw_sha256": "4a44c2c43b8a9796cfab8baff126747b534c4918b402da8150460c8b3b10d9e9",
+  "actual_witness_elapsed_ms": 300943,
+  "actual_connected": 100,
+  "actual_participants": 30,
+  "actual_ready_count": 30,
+  "offending_first_completion_count": 30,
+  "first_completion_min_ms": 32540,
+  "first_completion_max_ms": 45736,
+  "actual_SIGTERM_restart_utc": "2026-10-07T15:24:28.044Z",
+  "original_three_workers_code0_drained": true,
+  "witness_cleanupFailure": null,
+  "witness_occupied": 0,
+  "later_assertions_not_accepted": true,
+  "healthy_unlaunched": true,
+  "legacy_unlaunched": true,
+  "precise_cause": "UNRESOLVED; first selection/native timestamps retained, no transient/startup/scheduler attribution established",
+  "all_old54_fulltables2132_preserved": true,
+  "release": {
+    "utc": "2026-10-07T15:31:37.772031+00:00",
+    "runtime_lease_released": true,
+    "all_guard_PIDticks_joined": 977,
+    "driver_PIDticks_and_session77109_joined": true,
+    "counts": {
+      "old_schemas": 54,
+      "old_table_pairs": 2132,
+      "final_schemas": 55,
+      "final_table_pairs": 2173
+    },
+    "old_all_fulltables_preserved": true,
+    "own_claim_classification": {
+      "n7_a83_fault_261007144719": {
+        "physical": 0,
+        "runtime_claims": 0,
+        "body_claims": 0
+      }
+    },
+    "claimRows": {
+      "n7_a83_fault_261007144719": []
+    },
+    "identity_at_post_snapshot": {
+      "db": "n7f11_a8",
+      "role": "n7",
+      "owner": "n7",
+      "other_sessions": 0
+    },
+    "last_snapshot_path": "/tmp/n7-f11-accepted-runners-rebind-a83-20261007/fullfleet/db-post_full_fault.json",
+    "last_snapshot_sha256": "147d844f990af6155c98c57b7b6f309d4c88ad5e2269c6f6720b4aeea49de010",
+    "source_cut_unchanged": "2026-10-07T15:38:39.981512+00:00",
+    "seal_cut_unchanged": "2026-10-07T15:41:39.981512+00:00",
+    "no_further_DB_runtime_work": true
+  },
+  "source_helpers_lease_and_deadlines_unchanged": true,
+  "full_F11_acceptance": false,
+  "root_responsible_successor": "A89 source-only HIGH planner, preallocated not yet started; actual root followup required",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_host_model": null,
+  "actual_usage": null,
+  "actual_cost": null,
+  "fresh_fork": false
+}

@@ -1,0 +1,21 @@
+{
+  "runId": "20261006T090602Z-n7-expanded-mvp-a1",
+  "launchMs": 1791385891641.0515,
+  "units": [
+    {
+      "workUnitId": "f11_a87_fullfleet_fault_healthy_legacy_runtime",
+      "tracePath": "/tmp/n7-f11-accepted-runners-rebind-a83-20261007/fullfleet/runtime-receipt-a87.md"
+    }
+  ],
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "source_revision": "f79543db87bc3188c3707e6bf773e446bef7a3ae",
+  "trace_absent_before_dispatch": true,
+  "runtime_db_lease": true,
+  "preflight_max_seconds": 240,
+  "runtime_lease_source_seconds": 1020,
+  "runtime_lease_seal_seconds": 1200,
+  "total_attempt_max_seconds": 1440,
+  "dispatch_status": "predispatch ready; preflight then actual20min17+3 lease pending"
+}

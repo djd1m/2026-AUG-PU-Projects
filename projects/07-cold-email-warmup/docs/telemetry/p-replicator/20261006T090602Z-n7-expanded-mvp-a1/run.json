@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 A87 actual fullfault300; healthy300 and legacy145 still pending",
+  "current_stage": "F11 fresh A89 first-header causal diagnosis; fullfleet RED notaccepted",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -1834,7 +1834,7 @@
     "actor": "/root/n7_a59_unstarted_granularity_review",
     "requested_model": "gpt-6.1-sol",
     "requested_effort": "high",
-    "state": "actual native full_fault330/full300 executing",
+    "state": "native fault failed; natural process/post joins0; independent failed sealing in progress",
     "baseline_schemas": 54,
     "baseline_whole_table_pairs": 2132,
     "source_revision": "f79543db87bc3188c3707e6bf773e446bef7a3ae",
@@ -1846,6 +1846,42 @@
     "driver_pid": 2411673,
     "driver_startTicks": "130946999",
     "first_native_started_at": "2026-10-07T15:21:51.965291Z",
-    "exec_session": 77109
+    "exec_session": 77109,
+    "fault_native_exit": 1,
+    "fault_tap_tests": 1,
+    "fault_tap_pass": 0,
+    "fault_tap_fail": 1,
+    "fault_tap_skipped": 0,
+    "fault_terminal_at": "2026-10-07T15:26:59.903313Z",
+    "fault_duration_ms": 307400.692465,
+    "assertion": "times[0]-begun<=30000",
+    "healthy_unlaunched": true,
+    "legacy_unlaunched": true,
+    "post_snapshot_exit": 0,
+    "driver_terminal_at": "2026-10-07T15:27:04.970823Z"
+  },
+  "f11_root_fullfleet_runtime_a87_terminal": {
+    "status": "failed",
+    "sealed_at": "2026-10-07T15:31:37.974848Z",
+    "released_at": "2026-10-07T15:31:37.772031Z",
+    "native_receipt_checker_exit": 1,
+    "all_977_scoped_PIDticks_joined": true,
+    "driver_and_session_joined": true,
+    "old54_fulltables2132_preserved": true,
+    "final_schemas": 55,
+    "final_whole_table_pairs": 2173,
+    "baseline_sha256": "147d844f990af6155c98c57b7b6f309d4c88ad5e2269c6f6720b4aeea49de010",
+    "actual_model": null,
+    "full_F11_accepted": false
+  },
+  "f11_root_first_header_plan_a89": {
+    "actual_followup_dispatched": true,
+    "actor": "/root/n7_a59_unstarted_granularity_review",
+    "source_only": true,
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "actual_model": null,
+    "state": "fresh actual diagnosis/plan after A87 strict release",
+    "attempt_max_seconds": 300
   }
 }
