@@ -4,6 +4,8 @@ import test from 'node:test';
 import { SessionClient } from '../src/web/client.js';
 import { Ui } from '../src/web/dom.js';
 import { cabinetPage,cabinetCss } from '../src/web/cabinet.js';
+import { resolveEndpoint } from '../src/mailboxes/network.js';
+import { HttpError } from '../src/errors.js';
 function deferred<T>() {let resolve!:(value:T)=>void;let reject!:(reason:Error)=>void;const promise=new Promise<T>((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};}
 const response=(status=200,session='A',data:unknown={private:'A'})=>new Response(JSON.stringify({data}),{status,headers:{'X-N7-Session':session}});
 test('native default transport preserves its global receiver and injected transport still works',async(t)=>{
@@ -63,4 +65,25 @@ test('diagnostic late success and error cannot repopulate a different session',a
  if(kind==='success')pending.resolve(response(200,'old',{diagnostics:{state:'current',result:{smtp:{auth:'success'},imap:{auth:'success'}}}}));else pending.reject(new Error('CREDENTIAL_PASSWORD_CANARY'));
  await assert.rejects(old,/obsolete/);assert.equal(clears,1);
  }
+});
+
+test('mailbox validation errors reach actionable UI feedback without DNS or real providers',async(t)=>{
+ const cases=[
+  {host:'smtp.other.test',code:'host_denied',action:/разрешённые SMTP\/IMAP|список у оператора/},
+  {host:'https://imap.gmail.com',code:'invalid_host',action:/без протокола.*пути.*порта/},
+  {host:'imap.gmail.com',code:'unsafe_address',action:/Проверьте DNS|обратитесь к оператору/}
+ ];
+ for(const item of cases)await t.test(item.code,async(t)=>{
+  let resolutions=0;
+  t.mock.method(globalThis,'fetch',async(url:RequestInfo|URL,init?:RequestInit)=>{
+   assert.equal(url,'/api/mailboxes');assert.equal(init?.method,'POST');
+   try{await resolveEndpoint(item.host,993,new Map([['imap.gmail.com',30]]),async()=>{resolutions++;return [{address:'127.0.0.1',family:4}];});assert.fail('validation should reject');}
+   catch(error){assert.ok(error instanceof HttpError);assert.equal(error.status,400);assert.equal(error.code,item.code);return new Response(JSON.stringify({error:{code:error.code}}),{status:error.status});}
+  });
+  const content={inert:false,setAttribute(){},removeAttribute(){},replaceChildren(){}} as unknown as HTMLElement;
+  const feedback={textContent:'',setAttribute(){},focus(){}} as unknown as HTMLElement,ui=new Ui(content,feedback);
+  await ui.run(async()=>{await ui.api.request('/api/mailboxes','POST',{});});
+  assert.match(feedback.textContent!,item.action);assert.doesNotMatch(feedback.textContent!,/Действие отклонено|Проверьте поля и повторите/);assert.equal(content.inert,false);
+  assert.equal(resolutions,item.code==='unsafe_address'?1:0);
+ });
 });
