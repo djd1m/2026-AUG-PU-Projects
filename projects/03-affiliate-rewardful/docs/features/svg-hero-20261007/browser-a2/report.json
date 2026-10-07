@@ -1,0 +1,88 @@
+{
+  "unit": "03-browser-proof-a2",
+  "sourcePath": "/opt/browser/hero-03-a2/product-flow.svg",
+  "sourceSHA256": "15291af0178a99424cbd076c13b5270b76634a9276292bc75adb8ab9745d4235",
+  "runnerSHA256": "c792e025e3b0cff14b4c823a0898326cf718b1782056cb4b19f1ec43f6015806",
+  "case": "img-light-900-no-preference-refund-phase",
+  "phase": {
+    "marker": "marker-refund",
+    "sourceKeyframes": "70% translate(368,455) -> 83% translate(368,605)",
+    "continuousMotionSeconds": [
+      7,
+      8.3
+    ]
+  },
+  "startedAt": "2026-10-07T21:58:50.405Z",
+  "samples": [
+    {
+      "target": 7.2,
+      "captureStart": "2026-10-07T21:58:58.489Z",
+      "captureEnd": "2026-10-07T21:58:58.688Z",
+      "elapsedStart": 7.204,
+      "elapsedEnd": 7.403,
+      "sourcePhaseBounds": [
+        7.204,
+        7.582
+      ],
+      "withinContinuousPhase": true,
+      "frame": "refund-7.2.png",
+      "markerPixels": {
+        "pixels": 134,
+        "centroid": {
+          "x": 517,
+          "y": 707.3656716417911
+        }
+      }
+    },
+    {
+      "target": 7.6,
+      "captureStart": "2026-10-07T21:58:58.956Z",
+      "captureEnd": "2026-10-07T21:58:59.194Z",
+      "elapsedStart": 7.671,
+      "elapsedEnd": 7.909,
+      "sourcePhaseBounds": [
+        7.671,
+        8.088
+      ],
+      "withinContinuousPhase": true,
+      "frame": "refund-7.6.png",
+      "markerPixels": {
+        "pixels": 135,
+        "centroid": {
+          "x": 517,
+          "y": 789.2518518518518
+        }
+      }
+    }
+  ],
+  "unexpected": [],
+  "markerRGB": [
+    138,
+    75,
+    0
+  ],
+  "animationOriginBounds": {
+    "earliest": "2026-10-07T21:58:51.106Z",
+    "latest": "2026-10-07T21:58:51.285Z",
+    "navigationDecodeMillis": 179
+  },
+  "matchMedia": false,
+  "rasterDelta": {
+    "changedPixels": 423,
+    "centroid": {
+      "x": 516.9550827423168,
+      "y": 748.2127659574468
+    },
+    "bounds": {
+      "xmin": 508,
+      "ymin": 698,
+      "xmax": 526,
+      "ymax": 799
+    },
+    "width": 900,
+    "height": 1196
+  },
+  "coordinateMovement": 81.88618021006073,
+  "pass": true,
+  "finishedAt": "2026-10-07T21:58:59.514Z"
+}

@@ -1,0 +1,9 @@
+{
+  "source_sha256": "99a07d2431b5bb7c942171320b12b0e0b305904e218072b5c659b3cce652b497",
+  "copy_sha256": "99a07d2431b5bb7c942171320b12b0e0b305904e218072b5c659b3cce652b497",
+  "asset_present": true,
+  "source_seam": "apps/web/Dockerfile:46 COPY /app/apps/web/public ./apps/web/public; .dockerignore does notexclude apps/web/public",
+  "scope": "drypublicstaticcopysimulatingunchangedCOPYseam; not full app build",
+  "app_build": "not_run",
+  "reason": "README/vectorasset-only scope, sparseisolatedcheckout; no runtime changes/providers/DBallowed"
+}
