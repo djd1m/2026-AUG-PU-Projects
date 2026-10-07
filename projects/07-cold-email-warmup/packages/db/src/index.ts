@@ -4,7 +4,9 @@ import { MIGRATIONS } from './migrations.ts';
 
 type AnyClient = {
   query<T>(sql: string, args: unknown[]): Promise<{ rows: T[] }>;
+  exec?(sql: string): Promise<unknown>;
 };
+
 
 export interface Db {
   rows<T>(sql: string, args?: unknown[]): Promise<T[]>;
@@ -20,7 +22,7 @@ export interface Driver {
 }
 
 const q2 = <T>(client: AnyClient, sql: string, args?: unknown[]) =>
-  client.query<T>(sql, args ?? []);
+  client.query<T>(sql, args && args.length > 0 ? args : undefined);
 
 function clientDb(client: AnyClient, inTx = false): Db {
   return {
@@ -33,7 +35,12 @@ function clientDb(client: AnyClient, inTx = false): Db {
       return r.rows[0] ?? null;
     },
     async exec(sql: string, args?: unknown[]) {
-      await q2(client, sql, args);
+      if (args && args.length > 0) {
+        await q2(client, sql, args);
+        return;
+      }
+      if (typeof client.exec === 'function') await client.exec(sql);
+      else await q2(client, sql);
     },
     async transaction<T>(fn: (tx: Db) => Promise<T>): Promise<T> {
       if (inTx) return fn(clientDb(client, true));
