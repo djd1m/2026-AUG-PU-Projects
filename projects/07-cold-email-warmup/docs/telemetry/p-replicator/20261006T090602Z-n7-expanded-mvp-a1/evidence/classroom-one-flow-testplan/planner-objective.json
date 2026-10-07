@@ -1,0 +1,14 @@
+{
+  "workUnitId": "n7_lesson_one_flow_planner",
+  "tracePath": "/tmp/n7-lesson-testplan-20261007-1549/planner-receipt.md",
+  "objective": "Один урок N7: Мария планирует двухшаговое согласованное обращение к двум синтетическим контактам; ответ A останавливает follow-up, B получает follow-up, прогрев и кампания разделяют лимит 3/сутки",
+  "artifact": "/tmp/n7-lesson-testplan-20261007-1549/planner-plan.md",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_usage": null,
+  "scope": "plan only; source-bound UI labels; no runtime, accounts, network, database or source changes",
+  "acceptance": ["one coherent business goal", "12 UI/operator steps with business reasons and evidence", "exact current source UI labels", "shared daily quota and no sending on save", "stop-on-reply and duplicate reply", "preview/local/runtime distinctions", "synthetic example.test data"],
+  "result": "plan delivered; all proposed product checks remain unexecuted"
+}
