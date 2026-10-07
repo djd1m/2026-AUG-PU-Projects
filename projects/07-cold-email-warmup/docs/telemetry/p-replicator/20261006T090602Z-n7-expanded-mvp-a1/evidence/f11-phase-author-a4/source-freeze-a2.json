@@ -1,0 +1,1985 @@
+{
+  "utc": "2026-10-07T00:17:10.068782+00:00",
+  "files": [
+    {
+      "path": "projects/07-cold-email-warmup/.gitignore",
+      "sha256": "fc4e8adc690ac21f1494f575b25d9c7accc437f3b8aee92eb223f7d241ffe2f9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/Dockerfile",
+      "sha256": "f8d6728ac4337c589cf55983654e2cf51ac437ef4711e20086f12d775cc997f5"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.dockerignore",
+      "sha256": "107d6a876157794829e69438afb92ddb78b40837e030cbb670c350882ad5e747"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/package-lock.json",
+      "sha256": "60086a5a5261060e17ca41c4b3d3aaf5fc3d6150a552563ab0677b2858e3574c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/DEVELOPMENT_GUIDE.md",
+      "sha256": "7781884a2baacc4afe875701d825bc8dade048f8d8f7962eb46a0d2bc2a436e7"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/package.json",
+      "sha256": "6baf9f1e19020eecc054eb76e1731b8f9336dc32bffe19a408d039baeac2eb83"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/INSTALL.md",
+      "sha256": "38ceff17836a756d490baf8f74721e37eb4d7e83d6af26f00f327196022b160e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/eslint.config.js",
+      "sha256": "613fe065d6896d4a08985ac678e967ec5c4aa7e95c30f4ca69159814de59e976"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tsconfig.json",
+      "sha256": "0fe3705422763f10ffc11ebc6cb3712acc7159b70c51b76ee487ba5cc625de78"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README.en.md",
+      "sha256": "fc9f66e58ea9072fd4a93408d6789c1a3d52249edda489eb2895d3b9325e634f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/CLAUDE.md",
+      "sha256": "3b548fa6dea02c7639aa7fbdfdc3fa1f7bbf90b6726c406501d89cc2b3fe3ba0"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tsconfig.build.json",
+      "sha256": "8604911ac658f73989bc22831fb4fe040b7285ea85575b3edefcc384674a6330"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README.md",
+      "sha256": "afaf1632c0989257ab84eea6f7910b561d4b44ac35184b40ffa06968391a369a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docker-compose.yml",
+      "sha256": "f28c1872f1261a7c30fac4883b71c1784548a6fcc78c5cf960c36a4cf280e6a4"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.env.example",
+      "sha256": "f72f77af4bf3793552d2aae52dd1f2cbb737d4366b57404b9037a11adee521a1"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/server.ts",
+      "sha256": "71191b8dc16cdd7cf3074ad727cb8c6d4835f19cd7535f4e18b3ce82108c1aba"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/db.ts",
+      "sha256": "832f65583206a0f9112b4395fc051e935cc2747531334698ff3b876b58a76f32"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/config.ts",
+      "sha256": "4d73ade5756b1d2eaa8da10d355f1c3f314f3e5b38a4c52ec4c541deba41181f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/main.ts",
+      "sha256": "ecfba84e123b44de26946d5bd21daff3f3636eb2a11030163132d6b11da1467a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/errors.ts",
+      "sha256": "b2c4f5fbc7536791c64e69430426550d97ed2138a55033cfef5e1cd311fc5cd0"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/migrate.ts",
+      "sha256": "35c855b6c506aa4bf67cdf2b14413dc7d33f35ca398f4f70e172d22b018f3abb"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/auth-script-unit.test.ts",
+      "sha256": "1fd64f840001738b5f8515e2f7a5ae89e3f12c63fcea51400aa234a19cd87fb3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/diagnostics-disconnect-integration.test.ts",
+      "sha256": "e9d0bfbe42ece08c9503bff6743eb06cf95b20747602f4877328961cacf9abaa"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f09-transport-integration.test.ts",
+      "sha256": "a043d3d8044efb787d0b9b3dea70f92be0e56841b11918a0867c00e01ea1978c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/capacity-fixture.ts",
+      "sha256": "8b6b6e928dd627dc8a0fcdc2f5cb73b3e5e0f2679f42be6e20bea134ff26dc32"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f11-context-integration.test.ts",
+      "sha256": "28ed258d7a61f4c35c0c70d77fac4e186e4639c711013dadd85b5472a6ef49f7"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/billing-integration.test.ts",
+      "sha256": "5f9591e96337e41a06374c46c255e08961e5f0c266644542519b4eee891d3087"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/dispatch-unit.test.ts",
+      "sha256": "ae4ead459e54086153e3d289c55660eb3700a22fe4906122ffdff24c1f0e98c8"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/diagnostics-fixture.ts",
+      "sha256": "889f428735c251a33c18a026d3afbdd761bc3e4b9d7e965ab6848ac788740017"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/dispatch-integration.test.ts",
+      "sha256": "78ad4012111d02e618a813f59247784e4e523ec79171e9b80576cd191e393f3b"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f09-live-transport.test.ts",
+      "sha256": "64d166c0bcb983f647a9885ae29d21bc191e7980aa4bb800461af2c33bcd67b3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f10-runtime-fixture.ts",
+      "sha256": "c42e2a6862249baecd05617d4cb8dd8c4f0cb0b5eb023e9c8254c0cd2cdaae95"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/diagnostics-integration.test.ts",
+      "sha256": "27ba7b2d3652779f6888ce362d90053019a01e3950e13bb115c699433a2c84ba"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f10-runtime-unit.test.ts",
+      "sha256": "148a2b4a8444c66b83219b84a60d02ff2f9b8f8bbae1ebcb72ad977ef510a6e4"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/expanded-mvp-05.test.ts",
+      "sha256": "8cce2904c063a38ea8b8f6568efbc3a01bb92f64248f8d4d9e4759de87d4df36"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/diagnostics-overlap-fixture.ts",
+      "sha256": "dc691f236c778d310914b3af609cf4cdaa8081dc7df2dd261fc24c9271ac6ca2"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f09-transport-fixture.ts",
+      "sha256": "984e6242be0a61880750c114dde53e5993588d9d3c82990c608e7e4db0eb5328"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/evidence-unit.test.ts",
+      "sha256": "be3dbc5e838e8daa7889f33f434ff02d3c0b31f999072a23f25fe8efc7ffec0d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/replies-unit.test.ts",
+      "sha256": "3c73f4d5030b7c505aba19abe334c155823ea22603f306e9269e94188235b420"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/web-integration.test.ts",
+      "sha256": "7ea40927de0644e4305d3a7ab6cf5b3928129575fc6e921ddd25e7b0e7d8683d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/diagnostics-ordered-integration.test.ts",
+      "sha256": "795225b1535dea4d7f3c570fed1961dc1f66a431026b0c60eb93f2f1a8b65871"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/expanded-mvp-04.test.ts",
+      "sha256": "4b910abd04ea6686eda746079432eed7a83528a68163452ad080fbe17c1f7faa"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+      "sha256": "4edb0be1f37ae1a1b32e1d530db4a5db5ea3f79bfab993be9197b009cfbdc366"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/capacity-unit.test.ts",
+      "sha256": "aa98667cb7a3974be9cfa807a66d45c7b610cac883c4fae8b83e57b659958946"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/submission-unit.test.ts",
+      "sha256": "a61eaae79d360933e4c462cd8e397ceb69465a7b0cd3c1ac15aedbefd6d18ba8"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/capacity-integration.test.ts",
+      "sha256": "c6148b977a1fa39a035e19a2c70c15f891326a737abd10990e3a2aeec585e184"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/billing-fixture.ts",
+      "sha256": "57793f79d6c5b2f51d1daac35175663e98c0c25dc95d4e22bb5187cb7422f28d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/expanded-mvp-02.test.ts",
+      "sha256": "bfa8ce6af3e0760735ca459283d720dc32f46598daaabfb156caefbdc2c1a14b"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f09-live-protocol.test.ts",
+      "sha256": "9922a78ba4e713b4af4a529b373dff418a8314b6479c970f73c9b18729f21e3f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/diagnostics-deadline-unit.test.ts",
+      "sha256": "93e584f7ef6a4b9ff5f0e2c4771e8a1cc7153148682d8d1f35198ff5b41abd34"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/mailboxes-integration.test.ts",
+      "sha256": "c072c3a693cfc63d9e5e5a768de3cdead03564b6b197822d052e0a7567068e3a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/mailboxes-unit.test.ts",
+      "sha256": "22d74a6341a2125d78b10f8a3627584df1625a63d422f1a702a5536df634386b"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/billing-unit.test.ts",
+      "sha256": "f1e34f0481891208271b7b115c42d1c42f976e1ea5264687b0ca5ff41381b5ad"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/diagnostics-unit.test.ts",
+      "sha256": "4aea3a7e1c91254d5626aa1e38c9b3dc944eda67f2b64c91cdb092216a60f9b5"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f09-slot-owner-fixture.ts",
+      "sha256": "c9c11e48e5e7af7e1fdb57f9860d043a8791f65095c35ad0683f7f51c3bd36df"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f11-context-unit.test.ts",
+      "sha256": "7346a12177f1a564a6a21a630ecd8c83754842d03e80c5953de4cde719796370"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/auth-unit.test.ts",
+      "sha256": "8fbb186cc10cea7f9ca5e978f159715bef084b018a9b984d8378982bef299df8"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/suppression-integration.test.ts",
+      "sha256": "26afb13cfc49b2a55a6b166c9a2f8a29a5e6ae67d12054aa4cf8d31289a9c8d4"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/evidence-integration.test.ts",
+      "sha256": "e8d4e30a27e2022787e2a86b8072d9d0558ab124e436be8839e93d59beab651b"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f11-body-protocol.test.ts",
+      "sha256": "fc8f2d0babad638d064d49264d49e74729e72eecb1c3bec556b9f9c9b91ec2c8"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f10-runtime-integration.test.ts",
+      "sha256": "e7fabd24ea02d2d52bc5b7571d4338c4d471cde58741812496061afaa5679929"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f11-body-fixture.ts",
+      "sha256": "a06d7f5db71485587be716b2df4a54f12578aa91c1c39af7ca677d3c67819a72"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts",
+      "sha256": "e3d889eba4dda70d1236c508e6819111eb38cd8b3e6de0e8047f8bacac76cadd"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/auth-integration.test.ts",
+      "sha256": "cba20b7dfb4bdfc5c2a0dc37b6973db623d3b33ed32d5f53299a0638d2eb9efa"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f09-transport-unit.test.ts",
+      "sha256": "63db7fa184ea1cd05afc5e24627e49b35be810e38e2f6bbdf0d2502d2e9ff99a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/web-unit.test.ts",
+      "sha256": "220835b187a400c49edd543bcfc6274890212a9ab3e540667afd17d3b3ba9b3d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/submission-integration.test.ts",
+      "sha256": "350b22220e81b829490ae47fbb4bdc30c1757217551da2c0410aafc3f11a2d1a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/replies-integration.test.ts",
+      "sha256": "cd79f7ec1a6345f9e63a1782afd7010acec1e2d808f7e22bc76726b0f426c051"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/expanded-mvp-03.test.ts",
+      "sha256": "033d9ac1acbeff7623f7310551299072c57932b5fa10c50b6cc1fbce37aa590c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/diagnostics-final-cancel-integration.test.ts",
+      "sha256": "d412dad9622659e21aabcb168021c01919dfad9366584635ef74929a63c7ad93"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/suppression-unit.test.ts",
+      "sha256": "ac0765ebd53fc254562d99d25445f68d4258ddf8723d11b5d6d8579a2d5723b2"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/diagnostics-deadline-fixture.ts",
+      "sha256": "50e208a0e801cbc9fc8937a6d44db125949875b6a91fd32ea1955ceb81f98deb"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/suppression-owner-integration.test.ts",
+      "sha256": "eb1fe102d46d46ab359342d41cc1b6230f5c3f0b8d0be1b332df3a02a95544d1"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f02-heavy.sh",
+      "sha256": "c89cf32f9d6be57cbdfd6adebd2e4b97797bc306905ffc34a5bc795f57b05a9b"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f05b-secrets.py",
+      "sha256": "6740fddf243ba4ecd64bada34b34f84374d0b48957a3a74e7ad230848ba24ffb"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f04a-heavy.sh",
+      "sha256": "dff124de1c27d64532f423552525c718603f7698c52f28024a1d6565f51386f6"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f06a-r1-heavy.sh",
+      "sha256": "ba8882ee321ca3654278be5b31273738c71eb88c0661c18d404fcaa8a34d13fb"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f06a-r1-secrets.py",
+      "sha256": "b40494f2fdf3731c91281a496b7653e4caee684cb74259596a2d53d0266d83f8"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f03a-final.sh",
+      "sha256": "c07a919f3cb8c707b824fa8d430172ef1f5d6ca96268054bb9f8f0b4b31f2e31"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f04a-r1-snapshot.py",
+      "sha256": "4fbe6b4d510d60dcf230cfd431af78b9c32173af2c25c989c6c057db16161729"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f06a-secrets.py",
+      "sha256": "23fab39175493b11aec45d859860935e2ea288f53308292b05060b07f4814a48"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f06a-heavy.sh",
+      "sha256": "37ba732e831b8f2d50b31c410a53984310d8fa1dc696666ea57b4716a6d3d4c5"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f06b-r1-native.mjs",
+      "sha256": "a308f6cabf30ce87be11b48e79a49fb5ac2bee82fcfa9b1bc1ea04818bbcefca"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f04a-snapshot.py",
+      "sha256": "bf0d479c7b7e0cc28cdeffedf96eb10a81e293bd85c35b578fdd6744aa6c3154"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f05a-secrets.py",
+      "sha256": "013847aab0395380fa1e1eb7b2499e83e4acf4cf2065819f3684268f1b31c665"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f02-secrets.py",
+      "sha256": "dfc6f0636b82fb954ddc4570faeb9e9e59365e8123d74478e7b83e8530b428cb"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f02-mutation.py",
+      "sha256": "d7d959663ee5500add443b4a9cbef9c8038338bc9fb42a038bf3b8c57ffbdce3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f03a-heavy.sh",
+      "sha256": "e1706190ef7634bf37da9988e023b3af07fc6844c1c1d5510822935f727ea1e6"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f03a-mutation.py",
+      "sha256": "4bf724b7853f903800cf05b4e93ec0d5ed15ab4b9ef21c7a0664c318ca802372"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f06a-r1-mutation.py",
+      "sha256": "b50659001c51e66bc2ee193233e11de76d51ccb6a33964e6e70d70d5123a1ebf"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f03b-r1-snapshot.py",
+      "sha256": "39c20aa7250fe6132f6323262bccf615109f25b2ba53f0f740ff60c7508edadc"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f05a-snapshot.py",
+      "sha256": "fc1fbabfb67c2d5e172e6800a8742dff3b26229d394ccc7dc448dd6b8a2625be"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f04b-secrets.py",
+      "sha256": "91a5ae5b4262e51b645fe41d2feb10b84b2b9d2c8ad03ec0e5464d9f1f5f29e1"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/local-runtime.sh",
+      "sha256": "216a9e117cf8cb96ff81699ca283ee0ebf1ce4ed90fc71b251389cdcdccfa765"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f06a-mutation.py",
+      "sha256": "c1d5733826280096b72fd785dbedbc3a4e69c66b21a9a059d6d98792b08e2b86"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f05b-heavy.sh",
+      "sha256": "86c390c64c9c0c68f6943a0d98138a9f55f3fb6afcaa2929684adedc8276d7bd"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f03a-r1.py",
+      "sha256": "527627318a080b10df9d4cb1b1bb90acdc3c68bce761cfc105d32bee869468a8"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f03b-heavy.sh",
+      "sha256": "c0f313ba317158075bfa7a383a5d98c33e8c9baf4948b9a11ca8a5cb80c0b476"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f04b-final.sh",
+      "sha256": "b4caf676392023ae112ca4c5e61948e72777b55e71d1a2fb018de2124f98712b"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f03a-secrets.py",
+      "sha256": "5b8d490e6c44bf9f6a67d9f347cebb503faaef92fa2294934504020c57617988"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f07-safety.py",
+      "sha256": "67e9fe6347f50a3c502a8a928fedb43a7b4e5ab89cdb329624aade1933f79563"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f05b-snapshot.py",
+      "sha256": "b117ec51cb698ad931ff7453c709d49bcff96ed251e6df15a251562242a61326"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f04b-r1-mutation.py",
+      "sha256": "f9a475cf3a9ddc6ad7481d1ac0ccff4783181f2660d805acf04baea2f5e38f64"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f05b-r1-secrets.py",
+      "sha256": "6740fddf243ba4ecd64bada34b34f84374d0b48957a3a74e7ad230848ba24ffb"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f06b-r1-native.py",
+      "sha256": "d2217beb82521931c1b6d2c9d44f8d00ec6ad956aebd7d042074b4a3047af61f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f02-r1-heavy.sh",
+      "sha256": "c6086f6e49d4810d0a9d159ccdae895a17187c3d9578f6d7f66d3faff385fb10"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f04b-heavy.sh",
+      "sha256": "b0392aeb5f9b3b610ea7780cb3801012fac4bfa334271d9736802897f1f8d321"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f03b-secrets.py",
+      "sha256": "9f88823082a166a1e46ad07aa5180930f6462c79da9dbedfba8220bf05ead72f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f04b-mutation.py",
+      "sha256": "2d98a8de49bafe8ea22a6f2d7f36145148f29f24626811b8aa911c2e610adc97"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f03b-final.sh",
+      "sha256": "90bfcd5b40184f80bda0243a01ff644693fefd6628dba8e30b09bfa503838d7a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f03b-r1-clock-mutation.py",
+      "sha256": "eafe9454937fa4fadfb9ca312353a084481726223c967ae7060a2896960a19d5"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f02-r1.py",
+      "sha256": "3225675f464d95ee8d874404062913d2fa461d11181ff2e520ee30c4afd533fb"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f04a-r1-secrets.py",
+      "sha256": "929af73c4f8713cf43852172744f7a96f217aa9696a82a912411c8436f779fcb"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f04b-r1-snapshot.py",
+      "sha256": "8477ff5418824d7c974d1ec9452badeee4b869958c2ce13df57d1451b9a31722"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f04b-snapshot.py",
+      "sha256": "2f28202edd037f6f655c4cadb5ee17ba8d15dac0fc0919b3d7ab57231e836cbe"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f05a-heavy.sh",
+      "sha256": "75b7e478491fbd4df577ad66e18908842836e52f9d2f8328314b59f214b18203"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f05b-mutation.py",
+      "sha256": "7e14e03917db3590f3225205ff27a5c12e8d64136b9e975686d0ac4d999c56a7"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/dependency-licenses.py",
+      "sha256": "b8312cb3c106e1563281d89dd4702e437176cb52a1feb243010a40bb7203b347"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f04a-mutation.py",
+      "sha256": "173f057eacf11804dc00b24aa6c826049a401dd66cfa23a4ea87c06374fed107"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f04b-r1-secrets.py",
+      "sha256": "91a5ae5b4262e51b645fe41d2feb10b84b2b9d2c8ad03ec0e5464d9f1f5f29e1"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f05b-r1-heavy.sh",
+      "sha256": "53776f82a271b8e0295001c9e14de1ecd396f88415bb71b0427be4bf501a2b9c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f01.py",
+      "sha256": "09b11c23a2de8708871a8100fe0b9e1caa43ae35da16f309384f91f5a3b49aae"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f06b-r1-snapshot.py",
+      "sha256": "9c092583c6449ef180b9730e8bf28ad9eee1ef171ec98e190f39ae72935ee3f0"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-tenant-mutation.py",
+      "sha256": "f3da295045e08b6d3c0787a213218609e1690b43470f08ab847600dcec37ff30"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f03b-mutation.py",
+      "sha256": "e8ac248fa52ac6c726fd18d500d1c8ef0c8ea6b614f0f50a7850b1caa4d37255"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f04a-r1-heavy.sh",
+      "sha256": "3e3ecc987bf8db5599ff48ac88ea8d57ed0d7841c645e291678be99964d567e7"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f06a-snapshot.py",
+      "sha256": "9e180d54c1ca7aa9fbee9d55317828e4e934266dcb464e2c53e27ed06d62b850"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f04a-r1-mutation.py",
+      "sha256": "e3a5359da660758aa317f139adcee115e6b4e636fafabd7e3ec800d8d0df5ca1"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f04a-secrets.py",
+      "sha256": "929af73c4f8713cf43852172744f7a96f217aa9696a82a912411c8436f779fcb"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f06a-r1-snapshot.py",
+      "sha256": "f1b6bb4e44370aaf1a8d187530b47f7b109121ed6154690d911053cb8782a62b"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f05a-mutation.py",
+      "sha256": "82c599cfa1f968718b72d2f711edeabf782cef0fcc68465d115b46b81af9fb28"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-secret-scan.py",
+      "sha256": "7209a481fdfa1868d15c1f0884d10417e911ca8a59cb23aaf1b547e57c56d846"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f05b-r1-snapshot.py",
+      "sha256": "40a1860bfeb55aca3a57732710b335b785089206f95ab60d005ea84f89f101a7"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f07-mutations.py",
+      "sha256": "c6b973da2081630b98f91a677319523737d6a33652ea1887f805b73f44133862"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f06b-r1-mutation.py",
+      "sha256": "3ee2f420b4fa26f77b58744eeb84388ff787be14b0a666aab88ad98c0557c6e0"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f06b-r1-heavy.sh",
+      "sha256": "76232f0fd08ca6f4cb2ccc8d19cee949642121e58bf242b6db9c83cd06ae228d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f04b-r1.sh",
+      "sha256": "0cd741cc36ea82dff7b599a146d59e7c396bb5c1c9fb7841a01286ad8f82cbf1"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f06b-r1-secrets.py",
+      "sha256": "23ccc3348277f0200b6aefaba631e55d0fdb36aafb3336150dfedf907ab11a0a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f05b-r1-mutation.py",
+      "sha256": "0bf4144002aac717cdf95dcf43240cfad7765abed5f0fc09cda138e70eae238d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/check-f02-r1-evidence.py",
+      "sha256": "832c9797e60a8a3b5c6f4b9dcabddf769839a8194b1f9f3a663e999afb923c31"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/db/008-suppression-fixture.sql",
+      "sha256": "037a9da324ecd5666c398522e3c40effa73259122518c143a22b17fbcc4b23aa"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/db/011-evidence.sql",
+      "sha256": "c4ba8a7cb793a394a50f29684e217aba9e76cf87ab2eb828d095ec26a2a6016e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/db/012-connected-capacity.sql",
+      "sha256": "2325d39a09b12861da5ab231accfd0058c5035f273b94685c38d80f8414b3538"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/db/005-submission.sql",
+      "sha256": "a8d25ee87438dfe5fda97ae736d2376e59f0825f73d4d1b0f4a6176cda23b8b3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/db/004-claim-order.sql",
+      "sha256": "9a97339cd7b036b6d0fa9d5228b508b20981704173f98d341f6163042e2f792e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/db/001-init.sql",
+      "sha256": "6c6ca7cc74530a6bee78b2c60b5f08bbb1e6cb76b47ab35ffb4aac359a7948e7"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/db/007-reply-tail-horizon.sql",
+      "sha256": "002c8eba0a4e978ab4dfec371f0c82e52d12c9ce5be8ef7caad9dd9786522b6a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/db/015-durable-runtime.sql",
+      "sha256": "70bd0248636e06577f56d867e3b983f44e82dbe38877067749122ee34b297581"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/db/016-inbound-context.sql",
+      "sha256": "daac2f541bab281ed9e30ad6bf4e64eafd33e9a97c4f59679e4e87f478b6b252"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/db/006-replies.sql",
+      "sha256": "e0da744dacb1a1856b2d95d03ae37b3d5070b137b5a9f1faae6abb9873608171"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/db/002-mailboxes-consent.sql",
+      "sha256": "6f23a16557abfd8223de32e9c5e01442941ef2ff08bbdb89d9ae31c006680f5c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/db/013-live-diagnostics.sql",
+      "sha256": "61984ae86e21a8ba29993e7abc0cd02d516246fe107de7cfda6e6d92657377d7"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/db/014-live-transport.sql",
+      "sha256": "dd9e55eb7edc38a57c38df9fb3054b38b800e9e5c45a81cffa10b65c265bfec8"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/db/009-poll-owner.sql",
+      "sha256": "e77a0c252adb49a99597c914e28a7192e2b56f4af55de1f19e790a60ecf85c39"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/db/010-billing.sql",
+      "sha256": "1e97188e9b0fda6a47308d56e33c8570e6477e0f3605762c5855e3b017cc9c04"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/db/003-dispatch.sql",
+      "sha256": "13551a8e261d141c8d8b5bf32066ef136ac6c8cdac359746f22e898df1e54cd2"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/feature-roadmap.json",
+      "sha256": "daf7ebceb4019de6a1d0c0a617a118e9ea6ca0bf06e97b98cc20f8b574ae9771"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/deployment-checkpoint.md",
+      "sha256": "992d9d03856da530c32b7e2ccd614c2a0c0d692151a4cd9e5c98dee7504e635a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/Final_Summary.md",
+      "sha256": "6f0ccd3bbb96dff2e6b25c5cc2537835e5f2019235604bf10517a6bb969659c3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/CJM_Variants.md",
+      "sha256": "8beeb179658f2909e11cc154041de0af74e44e6bc19f921712889a3a0706c2e7"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/source-versions.md",
+      "sha256": "678b4e1251d039d1f0024fc66b211ed4878053f2595e2b16cf3a9243221c3b42"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/validation-recheck-report.md",
+      "sha256": "06f5ed632bd1158f48319ab75c0c70f38a72582ed9684eb2ab8951cc51350c0d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/revalidation-handoff.md",
+      "sha256": "301e3f9ad22359bcc98227f79dfc631eafaa3a769e200426d4df4cd3ad47fb5e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/Pseudocode.md",
+      "sha256": "4cfb8ac0df218e1e16eefa418d76414d9c928ecc4da63ec0c05cc3578bcc4011"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/correction-handoff.md",
+      "sha256": "995570bf898cf9b7c6d0bc0117dbc04ae5bd9eec4ef15b555d3173a458d8ae98"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/test-scenarios.md",
+      "sha256": "f8cc37cf874d03121ece8932b3860bbadfc2a4e80d2a2b0a26cfbcb235e1b490"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/dispatch-plan.md",
+      "sha256": "291a1d5341c493bd609db37c75a3f75c49e5f04a5a7abe84ba534e339fa87f85"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/validation-report.md",
+      "sha256": "ad80f1ae549310e24c5eecb613cb36b2c2a80b7b644aad619109549b8635121b"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/source-product-profile.md",
+      "sha256": "c459e0eac2ad5513047e317bf263348812ebdcb571fd17582c1765dfd89f36ec"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/Completion.md",
+      "sha256": "a8d1ea70b793d83756fac2f052efbb951962840b5b447df7eef31576ca4cdaed"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/acceptance-traceability.md",
+      "sha256": "b85f7ab5c4ab6b7ed917ca9d6089b88a37f41cd72cfeebefb335fff4e0a35197"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/validation-v03-report.md",
+      "sha256": "1058f4dd49df7d0f823716df37dbd5b67dc4de3ab0e343352e93339cdd20d17b"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/reuse-inventory.md",
+      "sha256": "c92da227abe48410864c0c1a7d520b7ef89113b8d9abc686ccd586d3bfddbdf5"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/Solution_Strategy.md",
+      "sha256": "1378a5d0e520b24f8699e9750e97a70d4a7224d45f387a6764ec0362985d792e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/CLAUDE.md",
+      "sha256": "b77f2933f13b44cfc014d47f2420dca8a76482dac6d664eeb1814ab9cfde06e3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/toolkit-generation.md",
+      "sha256": "19bcb6c46f6fe6acf8f941e238eccb9d7ec34c67c438323ab483e7068c7cd444"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/product-discovery-brief.md",
+      "sha256": "dffbe777c54991e1e495dfc20eebfe09c538b0b25011752d3a7a59e0fa67002a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/decisions-owner.md",
+      "sha256": "c20b00148c16f0f94c83c96dbfba61551c67e6855109a29e309abcc7a4ff30f9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/toolkit-validation.md",
+      "sha256": "d51b69e32b5c9933906e986cfb081f79b20b299eb641a3ae208508f690f28a4b"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/PRD.md",
+      "sha256": "02423250728448bbcdc5f1fbfdcc40fcf5430752b44741b28bd85d4088c5d0dd"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/validation-handoff.md",
+      "sha256": "a650b926b7105d17fe9ccfd7f267bdbeb913ddcbe63106c5f597f51b08bca04c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/ADR.md",
+      "sha256": "6baf1874848d3c4bceb8eab65ccfc12ccd6bf6920c9a9a19a2e6bcc7a32880a4"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/pr-draft.md",
+      "sha256": "e08b374d5132221c3e88c1d3f8ee318e57cae124768ab46ce8ec4a85be1cefb4"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/Architecture.md",
+      "sha256": "9ca1e9631bdc2247c9ad1be140b16e734f0a8141977bf8032da39d65b917ddc9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/Refinement.md",
+      "sha256": "a06f2b4a277d23e822f6f13cc28ab06dbe0da84e9d71a56a003ed44487208d9c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/Research_Findings.md",
+      "sha256": "029c7863a8dfe148b31617d7f5bbc43d61ed5e700361c9a7034a7965f370fb1d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/Specification.md",
+      "sha256": "9faaacfa11f4c6351f936d26e1ee74839eadab6b47289a7d1890ba5878dd211c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/pipeline-walkthrough.md",
+      "sha256": "0068843e1940dfa970e1dc29e14863c1b05efc114da48324ba02481649f587ac"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/growth/partner.ts",
+      "sha256": "41317996b1938ecf0be1ca8a4f6e518e6c2eaaf031e8f9f8349e241fdfaa3a27"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/growth/reports.ts",
+      "sha256": "d8579c27a049a3b9b9efe59428b2888049647d72643ed29b65572c224c90385a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/growth/attribution.ts",
+      "sha256": "2c81a8f678266d7f63041186c64abfc063364d89a6f75e0c926c52a7f7e23c65"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/web/models.ts",
+      "sha256": "6a24bd2faf8600f61bba0294632e27ee63288f69e485a55fc4ab80771be8d6a9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/web/client.ts",
+      "sha256": "aeb51b15356750ed55eff22a09e2d6019b09ef83553a79967583692917b6dc04"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/web/cabinet.ts",
+      "sha256": "b34d4cad4b67c6a9cc3724bf9d426490a876db75b2a5f4f9d5a98442afc7633e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/web/app.ts",
+      "sha256": "9456b5c512122ebb3240e3ed6578d706a9fd689971bc7c369cb6bba58e024107"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/web/mailboxes.ts",
+      "sha256": "a61952b537844ecc3356f27dbf471a48abac71761563b8b468cb5a9ab9a7aff4"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/web/page.ts",
+      "sha256": "bef7627af341fd831552d010612bedf6120542cd0cda5e13c25621b3034963c5"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/web/dom.ts",
+      "sha256": "11b7d784cd39c1e791caf575bbdb981a8ca6cba1144c50b34cd5c9907a3099d9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/web/evidence.ts",
+      "sha256": "a4c537cf6f1f908519c7df7080fd95c83719cd87a9324f675783fb184ea2f5fa"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/web/billing.ts",
+      "sha256": "6323739d57b7e40f7ebef8d8853b3ad2a828410015184a055b0c2051683ceba7"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/web/campaigns.ts",
+      "sha256": "fb36a6ade860e0aad29edb2884b025ad3b3ef0607d3364064eb7123c12f50e8a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/evidence/store.ts",
+      "sha256": "89f1164dd74b13546d2bf680e17f70ded0b39b58f25f93ed9b1ffecc7b5e08c9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/evidence/input.ts",
+      "sha256": "2e0e6290219b06b15c7576024b00aab627612c1c7781eee4556758b3f914cacf"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/evidence/compare.ts",
+      "sha256": "a2185780606417405d34a7b70901f1bef336a2f97622707a3485ee551f076bf5"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/dispatch/submission.ts",
+      "sha256": "c1ff349f29beb7267982ee5e4e02b2339a60524c6df3b8ec4fcfd7e0bcf5085f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/dispatch/adapter.ts",
+      "sha256": "169f8fbc8a7a2f529f2f065d3c655caf5d189487d7fce7aa2b7d27831512f0a9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/dispatch/worker.ts",
+      "sha256": "04a221a61a99ec248b6207303708c81d14864e4399398d695ebc7becb3da1b8c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/dispatch/store.ts",
+      "sha256": "366115624196439b5f759c6a04c7699a90136063d770ddafb3b022d0a0af6b07"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/dispatch/message.ts",
+      "sha256": "6a7f0d55ae5f4cd8eccf20850ce33edce58cd55fc6f785dbccdde770598d07db"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/dispatch/seams.ts",
+      "sha256": "c3038b12db1c223de870c7e707fb56d11836275227543068874c88aec7aa211e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/dispatch/eligibility.ts",
+      "sha256": "f892ba9b553ba881c8ffea2dfacc79205e484df7aff9e85e4caf75923256736a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/dispatch/smtp.ts",
+      "sha256": "be65ba01ba2349c52de66806d337b285321a868d0b6c1f80bd1e45ed4e020887"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/adapter.ts",
+      "sha256": "ef72a5726f6bd0f2d17a4430a640a11f0ade4696a9539dd85b92fb718d12aa73"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/context-store.ts",
+      "sha256": "ec4da4d41c2e39cb8ddaf364c175cf3656eb9ce4cc121ee9a64af4aaaa0a9c10"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/worker.ts",
+      "sha256": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/crypto.ts",
+      "sha256": "d2e0ba42176f9e6546d3c8a43284ca7787ed07228c0a0a9ffabd5a760465199e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/store.ts",
+      "sha256": "867993c5161382e870ecab97a1f336290b1e85f81a750059ae5180f107fa196d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/input.ts",
+      "sha256": "45f451e88364c37dcfcce9e2bda12c3d4aef04c10676377688a958593fb95476"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/headers.ts",
+      "sha256": "0987bc97311908e5042b1ec1df86576fbd2574908da171bafbca0519b18f4475"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/body.ts",
+      "sha256": "e70c4f6501b980bd48e1f003bdd420af61000062e6d9db711195ffd22a53552f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/operator.ts",
+      "sha256": "60fbbdef1edeba5c275b863bce73ce780a13e839d3965e435b6a1f31b44a01e6"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/fixture.ts",
+      "sha256": "738683ca7eec34d3d2a959593367035406d6c68d8909f751c90939911dabf0d7"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/imap.ts",
+      "sha256": "e84dfccb60b3236ab3004815b19ecb4eee6c2233e601e0e8cbbd14d117df0200"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/campaigns/store.ts",
+      "sha256": "c9df14658c9bc7f0bd028c68a87135c942cad92286ed1cbc1b53b6e069b0f60d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/campaigns/input.ts",
+      "sha256": "13499a78e34b58472c336b4538dba7291374759c42f7d7661357135da261b3ef"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/suppression/store.ts",
+      "sha256": "2e2274522cf5b150fcf1bd1561c8ba164a34da08aee1fb9b0fd1f1afb4bc1847"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/suppression/http.ts",
+      "sha256": "d447d901179a6d7cfb7d1dffa27ac85a42cf4b489e00c350dfa09e1dd33e301e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/auth/password.ts",
+      "sha256": "f8b36c41d1022d2e21e6a080150f8c93f7485b2f98aa3f03771683d2a9748251"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/auth/store.ts",
+      "sha256": "d5be57fc9270cd8e12a95015b32ce115c2cd3687fc592e4e01cc226292f7d70d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/auth/session.ts",
+      "sha256": "c5c6b26aff298e7f64b79648a72a61951a4399b3eff25a4a29b1893c1eea35a5"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/auth/service.ts",
+      "sha256": "eee97c44ef39becf6edce05dc0df1e3d764ee05a445cb9a3b3745005ea129628"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/transaction.ts",
+      "sha256": "182c375531d2dbafbb3ca29591a628b3637ec86e60cf8d9ceb029a1a00e1d313"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/plans.ts",
+      "sha256": "7f88cb875c18c789616873750045b1a88c67ec30a8f5878c79a32283e652a9f4"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/provider.ts",
+      "sha256": "e24a9f5bf6ac8d1f35b8efe1edd87b846799aa5fc0f88cc631d98dd93297664e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/service.ts",
+      "sha256": "7692e0850b12843053a7838df9f1d3d913431ae2cdfca0c0c1289c1dc507fcde"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/pool/store.ts",
+      "sha256": "5c79c8cabbdf6f47bf49b1e2e54b0f85f1631dc9992ed69c7849afa097fa9ba1"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/consent/transaction.ts",
+      "sha256": "830899e94ae29d9cbc9a25e150dbe46fbc4fb4494438a709514023b60d9088c9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/consent/store.ts",
+      "sha256": "b6104faac42e56826247d3179d66dd7a136c11a62882d2181bc4417537f0dd82"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/diagnostics.ts",
+      "sha256": "e746ab18f528bfc24ed9f3b01759176e6b7046bfea5cb0e039e89003f4240336"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/transport-child.ts",
+      "sha256": "a5e234a6cd31d511fca1d9bcdc3b5cf74521f26f2e6890e2729e040b0e8b7dc3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/crypto.ts",
+      "sha256": "cfcd13a73ccd7126825ef40ae7624ad7f945659a02a74a1d7cfcebcfa097f020"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/store.ts",
+      "sha256": "6d61b806290777c4a543c90381707589c6deded1f3f8d135955c0831f86b5c15"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/input.ts",
+      "sha256": "127f2e4787a0afe49e2c485ae752bed05077a48b18c4912cfc9a1c4a23de91b3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/transport-operator.ts",
+      "sha256": "406bea107e773e3041780081bc34f4f7c41266645e1679a41f77d37bff93f3ea"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/transport-authority.ts",
+      "sha256": "0143e31bb23808b59a64f5dbfa4724ad849ecd3418fe84820c141c4aac291153"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/transport-lifetime.ts",
+      "sha256": "9c51f72fede40727026781083f60371ec160ddc7e6a09c780697336eb7d6ce0e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/diagnostic-operator.ts",
+      "sha256": "1a2d33ddf686c8569aeb340c7119108addffe3eae6a4ed8efbb6ed98a93d19fd"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/network.ts",
+      "sha256": "7d3346a620d53b6ca245b02b455604afc8dddd74ce0944a8e43d2d717e95abfb"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/diagnostic-channel.ts",
+      "sha256": "e30dd22747fd60f0e28651bf338b8084db5d270859416cc3498c4db909eb8d94"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/provider.ts",
+      "sha256": "064c9aad2964ade6913e442e67cf1d7bbb607d20297fc63d0c0a2188b7de65ac"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/diagnostic-store.ts",
+      "sha256": "d9188835ce6f33ce0923d88bf7bd8ae5c0928de1867b99fbec107182aaa515c3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/transport-slots.ts",
+      "sha256": "d71a32e71b66fa419e118aa6b93fd355c662bd9188f7f97dab3b995409c7d76c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/transport-channel.ts",
+      "sha256": "f4a54315ac5c547b2cf40c59fbcbd5e99ef228ae02b2a62b0796ebbcf84ad36f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/capacity.ts",
+      "sha256": "4f9538f0f5e5137f30760c15eac64c4dfe9b6d22021441a956a0a633ac3e17ae"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/diagnostic-authority.ts",
+      "sha256": "93d65b5bc8d2bfe13527a29891bb3e46507596f5b65254f55e69f139203795d3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/runtime/loop.ts",
+      "sha256": "c34da549a41be813b60551bbd1a6e2a4a4dafb97762a0d824b7eafc45430063c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/runtime/worker.ts",
+      "sha256": "820513ecaa13b25bededc8845306365f635d1dae41232451cd96a2decc31c774"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/runtime/store.ts",
+      "sha256": "983a1e5331f17bc7312a4c3f8ea95c7c2728e60b24d5e14708a9084e50fcff28"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/fixtures/inbound-rules-v1.json",
+      "sha256": "7edc26df23181437ea87acfaa770dc6dd86b13d156f103f2161746c95d5def13"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/ui/f06-b3-focused.mjs",
+      "sha256": "44c7a00af6de94cbe0a03728635cd8dbbca9e8af4ec8ef5369c755052c96e4a9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/ui/f01-auth.mjs",
+      "sha256": "4fc00f36b50de74a7f6222e6bc500a79f42331e543a8da71091a56025af9d47f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/ui/f08-diagnostics.mjs",
+      "sha256": "1f545e5d6d010a7fcbab437aa46626da2e706cdb6d70fdf0f545007e98db2c03"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/ui/f06-report-layout.mjs",
+      "sha256": "4d9d71457e6181971dec0726c03d02c66ef210cebdab403106c4af09eeb34507"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/ui/f06-audit.py",
+      "sha256": "5c64c71c603fa51f53d26dc42aa9f59f5b20897bf06f6725ed05f6e966b157f0"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/ui/f06-fixture.mjs",
+      "sha256": "ca751a67aa14fd9b6d85217f909dbd40545767b00aad3ddbda47b72cb3eb615e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/ui/f06-b3-login.mjs",
+      "sha256": "fe6319789d9e539971b1a32ff8318e20365aeac3f4b9294bedc3f6938637e916"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/ui/f07-capacity.mjs",
+      "sha256": "c5ab9d6558086ebd3a3b8f93725553996a854a5f52a1d4a300f099d934b6432a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/ui/f06-b3-extra.mjs",
+      "sha256": "49a6db6662085f3f8ce1b094117975577a3bccc8738be0e5d8e7a144570fba43"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/ui/f06-run.py",
+      "sha256": "b2f6232cd59010abb9ddd8deddfa82a214571f8a8e00e589d115fb0b9ef43f64"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/ui/f06-journey.mjs",
+      "sha256": "5b0da60e0b7fd03d4dffff1e93246a6a86484b6de53288cfc8f42005b3393d9e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/ui/f06-security.mjs",
+      "sha256": "b8e011c18270ca204e78f2f892404aa628fcf7faed97aba3dbf56c498e7fc773"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/ui/f06-unsubscribe-probe.py",
+      "sha256": "c1e26091e1e2610460e2a424259f9f17762564b449091b6bee5e77a796ff39b7"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/ui/f06-unsubscribe-probe.mjs",
+      "sha256": "a32b671965c2bcc46946ac6650b36e6093cf69849cdb08c8da8c67a94be66b76"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/scripts/ui/f06-browser.mjs",
+      "sha256": "905c0f8df1f7fd82adc24380ba6bba601263aafae3412b15c3c017b10d84c947"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/insights/index.md",
+      "sha256": "9af6e552eda28ca4a3fd1893ae419cb5728fda5951c1570331c0f18cf1de1b2c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/rules/long-running-job.md",
+      "sha256": "e6bd0efff89338998d34440a94dc9288cf7bcf790b27bcaa51b83d43f57942ed"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/rules/skill-interface-protocol.md",
+      "sha256": "c3f624d0a8a4c7e0f5744e529eb4486cc0589fdb732b9799bccc75091a6d63ca"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/rules/insights-capture.md",
+      "sha256": "d529e6be79178636ca362d83366b1dd7a843371e8ba4f2b09d65c009fab52dc4"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/rules/git-workflow.md",
+      "sha256": "7d8d2ded47fcc0fb95da3dc226efa6cb3c80d6adf7296977588c181dfce20192"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/rules/testing.md",
+      "sha256": "d947a5c3a074289bbc5d88b5906d68ffa7ce3278ea3765c1353f687dd586e8a9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/rules/feature-lifecycle.md",
+      "sha256": "4e926f84f244feb6824114a0624733738669c93e0508693fa2afa4e9a35c2aa3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/rules/coding-style.md",
+      "sha256": "b17531ec92d831316af27dd6fab6a4b8d30b645093c5d16d464447e8e6914e9d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/rules/swarm-file-evidence.md",
+      "sha256": "c71a216dbc3fd633c30949823ceac354f8439b96279a1a8dd606afb1b3ef5c45"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/rules/incoming-webhooks.md",
+      "sha256": "92f3de02814ed0610df644acf554f4b41b2bae2f9d281695e2e217a1d6558e84"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/rules/secrets-management.md",
+      "sha256": "a808cbbc8470c1c202ca52caf64dfcc8a3c8cba812d9f6db91c16cd4c451ba66"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/rules/cost-of-detection-ladder.md",
+      "sha256": "f15309ee8f1494478ff7678380dbe8fc8eecd154be36d57c9090cd17126a07da"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/rules/model-call-cost.md",
+      "sha256": "26c3b20ac3ed7f9cf6deb5e94302ade87f9e3e51fffca7ac2377ff31bc144f34"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/rules/docker-ports.md",
+      "sha256": "59eb430f29dd762e8b76ad6d1177fe8b5b250de007856c743387cb88ee157942"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/rules/honest-configuration.md",
+      "sha256": "851bc28e9e2baf1043bc09b982f3df3431bc7af1e076f8ff9df3d6729835bad5"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/rules/security.md",
+      "sha256": "2d3cf96555effe91cee61dbbc6893c2fbc95ba0389453df8e80885c8387580b3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/rules/replicate-pipeline.md",
+      "sha256": "13bf073273820addeb87167402495b2f683cefac70a9f6cb07b6e054b1851e0f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/rules/embeddable-widget.md",
+      "sha256": "0159224f8e9599b67a860738bb42e3e40adf598176c48ea6c86a01c891f0f18c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/skills/skills.json",
+      "sha256": "55f0a9b0a8bf02a92673beeb5272b82d012f52e1a6b928a637abf3bfaf6ef2b8"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/agents/architect.md",
+      "sha256": "46044fa50fc8ebeb45d5a9ea92546995a3bab633a80653766ed1cc182cf0f97d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/agents/code-reviewer.md",
+      "sha256": "795b282034b44ce1623d7510dd4fa6701c7a1e3a5ca9f9258b42f1d8088426c3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/agents/planner.md",
+      "sha256": "62f4acd3f64050c36f9c220307066d40e7eae7ddd333e58fb88f0d6256d7e2c7"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/skills/testing-patterns/SKILL.md",
+      "sha256": "98977612d5444d26fa9448241e2c6adffa0bd16c40ee96d97855d1f5c19b28e7"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/skills/feature-navigator/SKILL.md",
+      "sha256": "6695a35945987930622ca58823d8fe80c07dcc5bb95309333e83431d7013e726"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/skills/project-context/SKILL.md",
+      "sha256": "5c5298d6bf6a9f47a41e71c410abebd8c997d4ec29ee08b7a105e4e39b31d3ee"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/skills/coding-standards/SKILL.md",
+      "sha256": "d8c33ed34ef97b1ba4bc7dbf0c94e77c2adfdef67c5734bffc7e3bcefe63440c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/.claude/skills/security-patterns/SKILL.md",
+      "sha256": "d3447f43bfe6e340c2e0f3dc79fd96c8484e6285660ac1a713ce8847af6a3d47"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/plans/expanded-mvp-plan.md",
+      "sha256": "cb9449fb233471275dd6ee67a496d8d04f38ddedf637bdfe4588dfc9689fb13d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/plans/mvp-xl-plan.md",
+      "sha256": "6f86b59c06e5a6b170b135d6b3ae93a84700d367efc14d6b1443c70a8e051b10"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/cjm/operator-review.html",
+      "sha256": "eb6572948b0fa47a908a7d965ec89d5bee92d76a41a939933457f9869cf7f9df"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/cjm/cohort-desk.html",
+      "sha256": "9e464965d558a6cfdc3d7e8f1a99aa9a0ff70937dd1876f165074f1a38cf1172"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/cjm/partner-studio.html",
+      "sha256": "a61b702732881c4a09532f2f0ede6719841b0781655bf74533072b5d19d41bd2"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/cjm/check-cjm.mjs",
+      "sha256": "5a3b02bb2654941acdbbc2dab909f205c92ed0eaa7feef80292828a76d685587"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/tests/security-scenarios.md",
+      "sha256": "5f5efc82aae396982928591c5c8a8ba736a83337078f12ce1d73708927ec4591"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/validation-history/Completion.pre-contract-table-20261006.md",
+      "sha256": "da3cc96fdfc3d973fb3c09b9220bd0feb50141949aa63713cd79797321e447a3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/validation-history/initial-validation-0d644c2e.md",
+      "sha256": "5b5661c610c8eaee5baee9d4bacaad94f21150d8f6b1b50a24534fafc7394717"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/validation-history/canonical-pre-contract-format-20261006.md",
+      "sha256": "c7dd0c816ff40e724423aa8773dbb3afe8ddee4574e1932ccec38734da03ce45"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/operations/authorized-live-pilot-package.md",
+      "sha256": "7e5c4f8880786df7f3f6f8c9dc49a64df3ca6603923cf1d9876f087e10ccaa0a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/implementation-a.md",
+      "sha256": "ce4fc60231fbda3741b6801b9390a1b84499634c855490826d2dd1a6aa36aef6"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/03_architecture.md",
+      "sha256": "dda20e26a470e82f5172fd4f8a8d8a1b4531c18349fa79ed9c60a95ad383c962"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/implementation-b-r3.md",
+      "sha256": "13e553d9ea1b39a55a7a1d0ede796821edd41004c4b267070e2b1b939937e23f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/review-b-r1.md",
+      "sha256": "3578b9f90735c6077c393c83bda060efa3c43b90dbefb58ffd39f1c35b14504a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/05_completion.md",
+      "sha256": "0cfe6c03b24c3cf03789643dcbb3070244eb039b137b533b7269630c0116bd74"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/review-b-r2.md",
+      "sha256": "0c006570c34d0971d3deb03f81dcffcaa7004b1b9cbad563b6654beb0bac018c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/01_specification.md",
+      "sha256": "044d738715cc33c29c453805648b209176ecdcf12c8c8c7320b2e7cd3265e1ce"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/correction-a-r1.md",
+      "sha256": "89500ac0e020269b9740ce01d3658b9d686dd150fb035c84a3288c6eff6bb3a5"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/review-b-r3.md",
+      "sha256": "36dea511fe2d2cef692d94a5a86c9879116109b74a57a327f0e96141435fc8e8"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/04_refinement.md",
+      "sha256": "5850acd92c0b7717258966ff53455ed11a8a2c6c4b57f0f81f59334bef205792"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/implementation-b-r1.md",
+      "sha256": "18781c29c91e23b4b899080080fbce0e8730740c7056bde977180a4cad57e940"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/validation-report.md",
+      "sha256": "20c234fad4219111e4bf013e201b835aa93539b8c4980e35baa1fb06efd40688"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/review-a-r1.md",
+      "sha256": "dfb7ed25931b8a4510f7ae3b69ecf903617560cf9326da945a99f5ec32f8243a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/scenarios.md",
+      "sha256": "f07cb6e8da966b4c857aab1911c4c11ffe2edb46462117b29b50867a9619b31c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/02_pseudocode.md",
+      "sha256": "ae51c0ba21e1594e371dc3e6e6e9ebb047cd673161be0e4a967c1ce09bb8719b"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/implementation-b2.md",
+      "sha256": "56b471d77321e6007df2fc0e927cbc8159a08cbaa7c8777ca608c9a1b8f9c308"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/implementation-b-r2.md",
+      "sha256": "518adddc4251167609aa32822713460416ac7010ef9526ecff8fbe72537544e3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/implementation-b3.md",
+      "sha256": "70468546389866dc99b7c2e3b10affb3611e5daa58973d036ed69fafefdcc5ef"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/review-a.md",
+      "sha256": "c97b5179e31bec90ab622b98d48b6e499f3f7707b8705c862e0ca77224b0bed3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/implementation-b.md",
+      "sha256": "c89edabcbf0d1aacdcc9f109567a4ad9782a77435789c6895c2a8b4b29995fbf"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/review-b.md",
+      "sha256": "91c64d72f171f585678001b5e5096e9291bc6ea11431f2621ae2bf9f76921b77"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f07-connected-capacity/review-report.md",
+      "sha256": "b05e2fac950e7100917952bbefc156597eec442a67f84b8508066528c241b336"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f07-connected-capacity/03_architecture.md",
+      "sha256": "05fc405670fe5d1d8485713cfc77d89276c7312a7c478558d9080ce1563f5470"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f07-connected-capacity/05_completion.md",
+      "sha256": "f8421c2ab2c243d40e69920f22e4b5271eabdf47f2c50fa7df20a6346af12ae9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f07-connected-capacity/01_specification.md",
+      "sha256": "8c55e447d6a5e9f8b98f5bbb0415102089ed300b31142dab42f73d44ac9d7712"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f07-connected-capacity/04_refinement.md",
+      "sha256": "8f4ad401101b421668cc7ecead352587aa2217274ec45dec14140df23746f099"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f07-connected-capacity/validation-report.md",
+      "sha256": "61084e63926cded7e0e500a8f57152d0688601464aeefa22af11b91c13e25b0c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f07-connected-capacity/02_pseudocode.md",
+      "sha256": "7c291bbe1588c6cd278399e2011185fb4444aa1df1d56d01aad7f644372e6adc"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/expanded-mvp/03_architecture.md",
+      "sha256": "307b5f5fc82e483f3d880b108c6abac25c44ba43e01ec6eaa001864179850dfe"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/expanded-mvp/05_completion.md",
+      "sha256": "5bb05f10bbcc155b96d0f0d0b8594305fb1ee1cebfdf1fef1aac28e1303da6f2"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/expanded-mvp/01_specification.md",
+      "sha256": "dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/expanded-mvp/04_refinement.md",
+      "sha256": "ca4f3cb774b0a3cad91cb4e3cbab21f0e951c9fc9e9fd52b2308794c441fa8de"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/expanded-mvp/ai-policy-v1.md",
+      "sha256": "d3d7c9d4614134f1dca9078ed797e3f8ee94a7bc613856bb54f2f2628b566512"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/expanded-mvp/validation-report.md",
+      "sha256": "f91e92c3dd3f23669fed01ba41b9e3f3c97db2aa0ba5e8eb454cbbad07453e74"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/expanded-mvp/02_pseudocode.md",
+      "sha256": "1deb0b3d98038350f2284e9af0313df8d3792c0b0b1c8be869b8da750b5a1752"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/expanded-mvp/provider-capabilities.md",
+      "sha256": "51fcee2b8e4fbb74e10238d16f21283b07046fc30bc704536eee314732409339"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/implementation-a.md",
+      "sha256": "fca1d97406c0b1059a0fc200ac616a90d37a79e7253b10939c3e293a3195b4a8"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/03_architecture.md",
+      "sha256": "86a4f3b60e821ce30f303886a7f67f2cafe2c43da5678a25243b4fd8d047fece"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/review-b-r1.md",
+      "sha256": "f205ba1bb02b0881b8091b8fce596d7accc15310f8f65e6b73773beb06a0841b"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/05_completion.md",
+      "sha256": "4a5ad3b3d69b39d5e40bb66a3693f37fe4438c8d8abf5817fb40513c04a93677"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/01_specification.md",
+      "sha256": "ac249fab21a4dbf9c35ffd81daa5bd5874df3aa431b4cdedbfa28ea2adf66d0c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/correction-b-r1.md",
+      "sha256": "9cbb4bc4440ba709fc1da12bae3e5dc9977d4cc2d9dd9258506fd222060804bf"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/04_refinement.md",
+      "sha256": "135d97debff4e516f5e1b9514108ffbfd53016cecc7ce16613dd890f72e59b0c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/acceptance.md",
+      "sha256": "86165eb6c004ab10bff7509cb94aa586e952cd463450d6fe6c93a0eeb074d9f9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/reuse-a.md",
+      "sha256": "56af832161e3cc080bf499b4823e1f86e839ca6a20d044d563ebb7b8aecc9630"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/validation-report.md",
+      "sha256": "b7d2f32c9cda736649697a6b686961ae5423bdcf54b5a171a870ed29a98066b4"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/scenarios.md",
+      "sha256": "0ec50085f614c9cda936452ba02b0469f443498ac62686ff1ee03448487cd36e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/02_pseudocode.md",
+      "sha256": "2b99ad3df28594485f33c3fd73cfe01cc4d5df9c78f07f210c1eeeb08ea5c1a5"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/review-a.md",
+      "sha256": "35220c420e441b309c1219b14b9b4e32b194246f4558a2bea0a5e7fe9fca415d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/implementation-b.md",
+      "sha256": "15b3105d3eb88a3c3afd9119bb5ef21dfe9188bc9cb25084513870b0e67a1533"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/review-b.md",
+      "sha256": "2986bd9b4b630991c683322e8945cb6e708e4e3e92afcf07aace0b5a5c7997e3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/acceptance-a.md",
+      "sha256": "0fa73e4e026a3ce87d9920095e6e889f61736e6cef79074f448464f9efa05b32"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/implementation-a.md",
+      "sha256": "e1e0a494027e8a8c0e68e93af6503f30802caffbb7656a6d00f2be89de6305ca"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/03_architecture.md",
+      "sha256": "c377e4a0fcca7a28b60c9e3b2fb2a73de502152f02c77142a9c8a586619009c9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/review-b-r1.md",
+      "sha256": "ef23514facf4a9d0413c8c984c8b416802f95da56492414b2958701de58ad40f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/05_completion.md",
+      "sha256": "85ddff9fcbe8a426b61a54590909a29aba519f61a0477313ce249b961b25668c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/01_specification.md",
+      "sha256": "73a4dc62c00e08718bde936bd6fede36bd1bae07c48cf9c963d3c56a552237a6"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/correction-a-r1.md",
+      "sha256": "45e327f38092a09ae9d3f5514e82989386529e03c917610f67515a050dda0a10"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/correction-b-r1.md",
+      "sha256": "c1514698abfd7e17c05efd9f0727d8b2b6e78961e837e7506d674241c3e5658b"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/04_refinement.md",
+      "sha256": "416286c8f6b689d84be90dd33d13e1198a1028c3e58cfe47466e8d6cf27492b2"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/acceptance.md",
+      "sha256": "c016ea73d2e08d33de9e39bf99fb679e12b446c82651f29130602f943b0b0232"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/reuse-a.md",
+      "sha256": "fde97968ed120bd171a1a18588b6413563709302aa71e900c981bfc8af58d3b1"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/validation-report.md",
+      "sha256": "fbb22e24ab3e6e9b5c1e363adcc7423d1a8f19839964e3d8312492c0d5bb81e2"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/review-a-r1.md",
+      "sha256": "b20caac2b160b17ab47f4cd79ee78bc74b026eb7d84bf3dd9b5b2921bbc14e3a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/scenarios.md",
+      "sha256": "fd9ca238af7b2493f584d6e8e03b67f27bd149d4559ad698c24be0772a093f8f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/reuse-b.md",
+      "sha256": "c0e57f0b671c8d9df4ef97a06eacd919157dcff6bd17845b2f3c502cf3e3d99e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/02_pseudocode.md",
+      "sha256": "fc9eb9de0bfb35d568b573446aea394cf8d49d99c210025cdd5772a3db5e273d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/review-a.md",
+      "sha256": "07c6cbd9c1d7cf1967cc53ca3ad9b3de044515e9270c062a9cb1da5557514873"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/implementation-b.md",
+      "sha256": "c30b2cb8c85cbe13e166b2e0c91601d579eccefcf9171b53e52ac38a5bb21695"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/review-b.md",
+      "sha256": "94e65e52797ffe0d441cc70a081e08b45750128ce2c9af045f3e9baa870f072e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/acceptance-a.md",
+      "sha256": "71b4db573e4c677a4de6d797ebef25dda61240eec6a8e80dea45c04f7e194d6e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f08-live-diagnostics/review-report.md",
+      "sha256": "2a76aba82599eff797fd0d76ccb57b6016671888300e64561e5d84ecac13a801"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f08-live-diagnostics/03_architecture.md",
+      "sha256": "6504e68afcc5466e582904d0f86b88b1f46e2807fcceea0c5f5cc14b1781c6d0"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f08-live-diagnostics/05_completion.md",
+      "sha256": "58cc6bfd6ea29fcf6a768f38a837f3d82eb6b3d8ba72ed56268530b67444ebdb"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f08-live-diagnostics/capability-contracts.md",
+      "sha256": "6c91d0b611c24a9129dda339d9ed9b12000889bc53691879d8f17f821f4e8fb4"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f08-live-diagnostics/01_specification.md",
+      "sha256": "a3ad1300fde78f396c850627e9fd833391d3a572214801315519b92ad197a0a8"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f08-live-diagnostics/04_refinement.md",
+      "sha256": "fb409427b883001cb9636029b2f22ce9d2987d2fd1884ef27e6f70132095d8f7"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f08-live-diagnostics/validation-report.md",
+      "sha256": "fdcb3fe3a14c4bacdc158394b0beac08890a8f7e3e99071cf23c26eb1b3b4384"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f08-live-diagnostics/scenarios.md",
+      "sha256": "d5471acb0f5e57bd6462470357064a4db690d8edd649722af6d6d4fe07d8adab"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f08-live-diagnostics/02_pseudocode.md",
+      "sha256": "c9720a7e3f0dd7134e1d09386328250332b86981dd0224940351a7227e3f6321"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/review-report.md",
+      "sha256": "27d45a5d73d5c49ae100f3275ff80843dec91f5afd03b0b04c61969b174602e9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/03_architecture.md",
+      "sha256": "7ba1644e010feb420901d5b24e5a41fd2ec959a237f5f72b85d4fb31f6b12df1"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/05_completion.md",
+      "sha256": "de65117d907add1fbd95d6cf3a581ab5f7612ab94f1131ec4643d507e36a6b0a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/01_specification.md",
+      "sha256": "410d329fcc9d433f51e554310318457096a8dfdd82aad9754e47d7122744eeb8"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/04_refinement.md",
+      "sha256": "a28d4e29ae8e54ae487caaa285938059b67c215546443baa66e1d7b4c70e1300"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/validation-report.md",
+      "sha256": "22eabfaba1f78ec1f9c74d5b0eb8763c2d28babcd00be98b5d86e88b57e1400d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/02_pseudocode.md",
+      "sha256": "c08da0230b35a07f749f186ce0c54d363662c1c70e3e95e617e321974e456fdb"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f01-foundation-auth/review-report.md",
+      "sha256": "ae6ce2a2b3c7a80236f879548f6b83952bda4aa3ac3f5980ce73776ddccc9ec4"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f01-foundation-auth/03_architecture.md",
+      "sha256": "5fa3337a6ace31083c5b7aee436a82dc184146dfd4555fda2dd45af5615c19c8"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f01-foundation-auth/05_completion.md",
+      "sha256": "80be5347be9f6275e525ae4d1a2bb239d43ec40afe5974b5d284c4ded5cbfa65"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f01-foundation-auth/01_specification.md",
+      "sha256": "0a62915da4cad8837bdd4c6e3387fe11453b33386537d124bb543fe3cf4bbfca"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f01-foundation-auth/04_refinement.md",
+      "sha256": "bb1f6cf2f53d8472e1b424c6ac692d793446559fde6ab40227c17366bffc4a73"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f01-foundation-auth/acceptance.md",
+      "sha256": "79e7dfa71efacb808012aba1dec5cf3888c91b8255e725c7ddab760444b3bb3c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f01-foundation-auth/dependency-licenses.md",
+      "sha256": "bac0670b1f497beb950600dfae70afc5676030dd1458a79da81861025bbe74c3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f01-foundation-auth/validation-report.md",
+      "sha256": "ca9ce61c8f2753c4d5523c590a9a503fdc570a7302eaa8bcd317d3c0b451981a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f01-foundation-auth/scenarios.md",
+      "sha256": "f1ab6d5801dbbb584dbd5499975787bd7934d8656b7232618a650bf7a64a6503"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f01-foundation-auth/02_pseudocode.md",
+      "sha256": "31b005eb9b1bc15480a2a912f0bf47d1f63c650c842922a6d12dbec8c21bcdf1"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f01-foundation-auth/reuse-implementation.md",
+      "sha256": "63d41e326248b9441df6ac3bb79a24e82d999a3de2468f941cb49e69d9d20514"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/implementation-a.md",
+      "sha256": "84ede25f0fd0d5dc052df6c4547203a83bd1d2cfc8e0cd9cae015f355d30c250"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/03_architecture.md",
+      "sha256": "3c03d54097421a208cd4676187a65a6ad61ea077c94518fa1e5e25fe956abd77"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/review-b-r1.md",
+      "sha256": "21805be16d35b86614aace9441da3114556a3630915157bde5a5bca3458dfa80"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/05_completion.md",
+      "sha256": "455bebfe3261ff4ce2ca1e9c972472fcfb103acc58a4c5e1f3da35e6ff1b3661"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/01_specification.md",
+      "sha256": "6f88ae14deba475af0edfb89c37ec452d34c85df44b9e5c8aefeed802b36566f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/correction-b-r1.md",
+      "sha256": "8496b17eb979663c57c3007be1daa500e0fb141ec55f63d0129fe42a9c9ff22a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/04_refinement.md",
+      "sha256": "7a7719f5df35dea3e0106e9a0d398c78a32e3e3623f460bf8fbe838e5414dc1a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/acceptance.md",
+      "sha256": "1169b4792634989ffbbba67bcd7c4235eb56811cd9af9580cc8422adc09ecaf1"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/reuse-a.md",
+      "sha256": "25fb4fb74772dac1c2d8477974f01c16e6255e9d2e98ea42e42a43a05bedba7e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/validation-report.md",
+      "sha256": "7619d15673cd83aa6d84b61e98200e4fd0b75452e10732ec449e52f7428774fc"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/review-a-r1.md",
+      "sha256": "25bf9175c2b8129f6193f92d76a1f4680dc2fd4ff952da28ca6cea76d315d3ae"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/scenarios.md",
+      "sha256": "4a4f3f8aba1d7cd201b053426c63695e88f8913466ac0f25a59afc203a5bc26e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/reuse-b.md",
+      "sha256": "554c8fbe23c451ce5b3810cd307566f457a1bfd3e19e1c427d6f48347e4a6e93"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/02_pseudocode.md",
+      "sha256": "9d6ee16da9efa48b6e1727a9eb5f9d3be77ee784e9a94a22b264b754b5682244"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/review-a.md",
+      "sha256": "fc53a654949fc87bc4c0910bb488bcb80bd1a0e36c931aab4452eff8bcfa8a37"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/implementation-b.md",
+      "sha256": "74469296a84631a7d9dccaa361fc9f5b1b366d8cf6f11b99bf8e5f4fe67418d9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/review-b.md",
+      "sha256": "b989aaaeaef421c11ce64051157a4d182f26837cbc6f960749ab362ad5bb27a0"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f09-live-transport/review-report.md",
+      "sha256": "ce41730fd3368f0cfe404a65fc717cf676afc8e245bb6701ce7ed7f9f06e15e0"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f09-live-transport/03_architecture.md",
+      "sha256": "9d278e1dbe604082da0ebb27500ae856ddd2b487c4805781b06998c6542332e7"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f09-live-transport/05_completion.md",
+      "sha256": "32e325cd2908b0c88f2fbf34655717543c62bcc771c6b546875815daf82ca05e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f09-live-transport/capability-contracts.md",
+      "sha256": "e0ff418c52f33b4ad566a0a546add3b911dce78331f08566af3e79893f766dfb"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f09-live-transport/01_specification.md",
+      "sha256": "6e10f17fd5373c92a8725d6298827265f6b5082d8c37bba45777c3d7a7a756e9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f09-live-transport/04_refinement.md",
+      "sha256": "412a981765ad7a7ed521447bb56482399b2ffeef7460e571dae7343906bd1034"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f09-live-transport/validation-report.md",
+      "sha256": "3edc2464fa605bad47f6cc7783d41081d5b2f33c3fcb5fa79f367a11adf19d17"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f09-live-transport/scenarios.md",
+      "sha256": "42bb4b9f3ff32efcf237140bb0c08c75dff63a0a3342be7a5bef6af8e9fd7f72"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f09-live-transport/02_pseudocode.md",
+      "sha256": "ae26b6ae97bdcecc3e834ed23f6110cc5ae319ec4d9b5cddc2bf761bd85c89f8"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/review-report.md",
+      "sha256": "194a96fcc8b0fee359083b3a2355478ef01fbd9b865cc9c2e65dd4027f67c794"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/03_architecture.md",
+      "sha256": "1b85a0b86475e9564bb6c97591f462bd2024a79975ba9c02605038102924f52b"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/05_completion.md",
+      "sha256": "2fbcb9ff71b7a2c414123df5182f517f869a8467c6fa940f34546907870dd97b"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/01_specification.md",
+      "sha256": "65603ddd620ddeda59392fb673994aaf41b3199f46af6d0f03bf99eabd3a9bc4"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/review-r1-report.md",
+      "sha256": "ced5bb969308afa15b6693e8ab88f04b9fcee88f466e86079d3020e9195ff1bb"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/04_refinement.md",
+      "sha256": "92c4515c8a3d385316a431c4ebc42fe2e0dd71be7f9911c246b06336df736e93"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/dependency-licenses.md",
+      "sha256": "41bab20d6f790e8b30cd8a0c37f1c953445fb9e9410713ea7d12cdd74c7723bf"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/validation-report.md",
+      "sha256": "7f6daa663ac81c9459b5f4fc7f325d6230f59654bd0d07186f18b6e34837ad9e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/scenarios.md",
+      "sha256": "bca9a48648cfe0a5182e01fc472227b1691efc499cae7493a81fe197fbacd61c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/02_pseudocode.md",
+      "sha256": "f686614535f57c7a938524b25fa130939fe33c27280cee8063edb7e3e3aaee31"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/reuse-implementation.md",
+      "sha256": "27c6d44eb6b77da2330c53d63d1508296fcd1920027b68b8a457fba8bba3726f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/history/05_completion.pre-contract-coverage.md",
+      "sha256": "860dee6adc7a82ea9330918b652dd3807eae3dc896dd7f6daa08e717203aaebc"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/history/validation-report.pre-a2-bdd.md",
+      "sha256": "11810a7376e88f48a11e010f9319f1444cf4eb4ebb2e8530c9ae01826eeae4a2"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/history/validation-report.pre-contract-format.md",
+      "sha256": "970f0b6fa6f7355bd92282e7fafa2610f2862fa57a363ec5cafffad823f77a4c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f07-connected-capacity/history/validation-report.pre-r2.md",
+      "sha256": "121a0705a829fcb62c1e357f231acd291e4b4bd509ce2a7b25c3fbdd7cd71eee"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/history/05_completion.pre-contract-coverage.md",
+      "sha256": "cad4dca2db1ed7b37fe63e59242090143e49a2497bd5cd0402fc8c7a5b1fa967"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/history/validation-report.pre-a2-bdd.md",
+      "sha256": "2d03e764c046ca3ff84d000f5b6c58500fe1d5418ec10f4bc2e9ab5553e84cec"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f05-evidence-billing-growth/history/validation-report.pre-contract-format.md",
+      "sha256": "43b6219c7a61413c1c3c2e320399b1f6e5cd98fddc6bec4b3c7e91dab5e4b6ac"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/history/05_completion.pre-contract-coverage.md",
+      "sha256": "8d1e07eaff504470fb92c20acb0db9b52e6b8a1e0011e078696088c24d9dfddf"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/history/validation-report.pre-a2-bdd.md",
+      "sha256": "8dbc8955662db6167bdd6975acf4088546fe62b7e8061286f8dd050b632cf773"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f04-reply-suppression/history/validation-report.pre-contract-format.md",
+      "sha256": "cb87c85fed3776fb47bfb64e7d9e96d6b7b7bf941cebfdd5b1078aa82d239cf7"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f08-live-diagnostics/history/validation-report.pre-r2.md",
+      "sha256": "ec02efb1090671519b9feb6871d360716c8671da3eedd3f4e72fcee94e29708a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f01-foundation-auth/history/05_completion.pre-contract-coverage.md",
+      "sha256": "a626345250e1774b6e62c705c433af4d53a19d6df94dd3044c5dd65ce28de8a9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f01-foundation-auth/history/validation-report.pre-a2-bdd.md",
+      "sha256": "c439845b462d58b3b08a519406aad03e2f283c4b7ec9899f3146ee0be02d406c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f01-foundation-auth/history/validation-report.pre-contract-format.md",
+      "sha256": "1dd2c761ad7ede94842d0798389f1b7e66b7703da4aa97993dbcb3994c628613"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/history/05_completion.pre-contract-coverage.md",
+      "sha256": "2448c0d7a2e6eb41202c3234b00ab6d206e7e28b670ddeec4ebbdc55b5445b52"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/history/validation-report.pre-a2-bdd.md",
+      "sha256": "5594feba6a9e0a1aeb5c12432926255742c50c93e046255dc1cde98bf796af9d"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/history/validation-report.pre-contract-format.md",
+      "sha256": "d299eb53621853edcae48b5df00b23ad1a0d0ea8669c458815d6c8d35e1b6680"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/history/05_completion.pre-contract-coverage.md",
+      "sha256": "53f532942f38356d556cde24f457b17af79e289455188ecd2ff17b42009be035"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/history/validation-report.pre-a2-bdd.md",
+      "sha256": "9fa60c57ae8a0c7e5327d17aa7da99e1212089956db7a508054bcdd9bb29c751"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/f02-mailboxes-consent/history/validation-report.pre-contract-format.md",
+      "sha256": "3e4782569cd32a9a408ec9fab1af858d8a011865443e9b1623e163a4df6cd3f2"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/research/target-gap-20261006/benchmark.md",
+      "sha256": "1a66579998748081bbc0391bead060a0d689d20eb76f9c090f3c824205e71049"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/research/target-gap-20261006/capabilities.md",
+      "sha256": "3f363ba44e51f204cf9fa0c515891993048f38b441c49d1628eeed0e8246e677"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/research/target-gap-20261006/README.md",
+      "sha256": "1ffe49cd669369b3ac083aeae124ffffec14fb69d99f76494487324500bbec54"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/research/target-gap-20261006/run.json",
+      "sha256": "1360ab9d65acd598748c6aacac0833e62d4702d47197bb42c587439e7a426452"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/research/target-gap-20261006/target-gap.md",
+      "sha256": "5a71e138ef89b7173625729dae281debcb43c3c3ea63d308bfccaf29fb289436"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/research/instantly-donors-20261006/donor00-review.md",
+      "sha256": "90277d2648fef210365f336db6d7424f0e22556b064cfdb281825f4ffed2bc53"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/research/instantly-donors-20261006/n7-compatibility.md",
+      "sha256": "2d02b1dbdfe65c42173d4fa362543c2a9424d216e15deba3b3e31accfff9a707"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/research/instantly-donors-20261006/donor01-review.md",
+      "sha256": "d9013bad29dfc7a51b8a4fc94ce9659f5faf93f1fa699e7db805f741779bd1d4"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/research/instantly-donors-20261006/2026-PU-APR-LESSON-05-instanly-01-inventory.json",
+      "sha256": "9557047aedce2c18e261e90bd4cdb5b058200b310c469c224eabe3ece3bbdb31"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/research/instantly-donors-20261006/2026-PU-APR-LESSON-05-instantly-00-inventory.json",
+      "sha256": "d3fbfb690fd1c06e151f0b39fb8246ee98b2af91af11d80672ab2ee8af984f53"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/research/instantly-donors-20261006/README.md",
+      "sha256": "b52ee07c942b90970f73cb5be9c384b95dbdfc39dcf8f48f8ea35ff75c3edd4c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/research/instantly-donors-20261006/run.json",
+      "sha256": "bb273170c9b342df70d3a78991e8c91acb2add7ee9c5fd48dc8e9c99669bba0c"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README/ru/03_admin_guide.md",
+      "sha256": "2d61e2fa5095e36ae8115b156dc158fedae7cd63aa28444b2c6e1c9202be5c2e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README/ru/02_user_guide.md",
+      "sha256": "163984cd604aed9e809a1c0e1ab14f8e27cee999da329fdb2ca79e46ee24db19"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README/ru/04_api_reference.md",
+      "sha256": "433833d3e39e1bfeff7942e2e25bebd02790b70b86f15389ecd40bb7d40fb3be"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README/ru/07_changelog.md",
+      "sha256": "ab91327662db49f2a3f39bd6f4298db2cf840de7f3949279182974f6a5a4a33e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README/ru/01_quickstart.md",
+      "sha256": "760cf26ea695fbc0c3de4468ac6c766c198d99b7cb2e0f2cd99b62c6e2509cfc"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README/ru/06_troubleshooting.md",
+      "sha256": "71a62f6ea301c3537b91d0fdf320104c97e1e879c35e65d0025c9ed3f2bb1be5"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README/ru/README.md",
+      "sha256": "fb7474d2da0c81c474f6e45028db81945e1c45a11306a30935a925b7a5e86f07"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README/ru/05_architecture.md",
+      "sha256": "7657588fc07ad324282e5fb13cba49ddd40078553bc66d463ce568ede4eded08"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README/eng/03_admin_guide.md",
+      "sha256": "ee50f8da2a961cb2e4479e07434719fb963d1c231cacbcd420f8f650afadfda5"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README/eng/02_user_guide.md",
+      "sha256": "6b6c35cdbe0bbe69b096c942c49fd6c3869bc1028aed257fd9ea1fbb0e822bc4"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README/eng/04_api_reference.md",
+      "sha256": "4e1a3e75b925b4873644c2eb2500c8e4f92ebb7b64284764a064f229cf66e5aa"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README/eng/07_changelog.md",
+      "sha256": "ab91327662db49f2a3f39bd6f4298db2cf840de7f3949279182974f6a5a4a33e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README/eng/01_quickstart.md",
+      "sha256": "0c4415c581f3c0f3ec50625fc7993464c0d5347ffbc1e758a0e5c0893677d178"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README/eng/06_troubleshooting.md",
+      "sha256": "8882e63a6524fc31f765fa0b65e9c26370796f2ff5dff19c29de7d77c00eeb14"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README/eng/README.md",
+      "sha256": "4b477365b9d9e679309711c577bc0ef730ae5a4aa5f1ef9327c16031587dd4ee"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/README/eng/05_architecture.md",
+      "sha256": "4098faeb8a1b890225a55f90fb99cf4b1855f08a93047187066bf2f92907ca22"
+    }
+  ]
+}

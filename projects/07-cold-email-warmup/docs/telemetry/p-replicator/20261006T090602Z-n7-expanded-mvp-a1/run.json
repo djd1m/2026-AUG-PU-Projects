@@ -59,13 +59,13 @@
     "followup_status": "F07/F08/F09 locally accepted, expanded AC001–003 met; AC004–009 pending. Whole required_gates_passed remains false."
   },
   "metrics": {
-    "elapsed_wall_ms": 54418172,
+    "elapsed_wall_ms": 55138255,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-07T00:13:01.050976+00:00"
+    "elapsed_as_of": "2026-10-07T00:25:01.133804+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 fourth fresh MEDIUM finite body runtime quantum and C1 pressure implementation",
+  "current_stage": "F11 fresh HIGH narrow normative scheduler adjudication; durable phase source partial, runtime body OFF",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -138,18 +138,18 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_runtime_author_a4",
-    "attempt": "f11-context-author-a4",
+    "executor": "/root/n7_sol_coordinator/f11_c1_normative_planner_a5",
+    "attempt": "f11-c1-adjudication-a5-native",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T00:11:43.110842969Z",
+    "actual_ACK_at": "2026-10-07T00:23:22Z",
     "requested_model": "gpt-6.1-sol",
-    "requested_effort": "medium",
+    "requested_effort": "high",
     "actual_model": null,
-    "source_revision": "a0f29eaee46b6639ad8d473caca8cc9dbbf5a89a",
-    "freeze_at": "2026-10-07T00:28:43.110842969Z",
-    "deadline": "2026-10-07T00:31:43.110842969Z",
-    "launch_sha256": "30f5cabab05c49cbe5020adf63b77d810a97c3ee53be8ef04ed63dd1f9d1d367",
-    "next": "Finite existing four-IMAP durable metadata/text quanta and all30 pressure C1; explicit C2/C3 remaining witnesses; fresh independent HIGH source review only after mandatory checks."
+    "source_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+    "freeze_at": "2026-10-07T00:29:22Z",
+    "deadline": "2026-10-07T00:31:22Z",
+    "launch_sha256": "07991b093645002851040f4085998f8e2b077cbfbcd77709609d456cb8de32a7",
+    "next": "Independent narrow C1/F10 scheduling adjudication then actual distinct bounded MEDIUM implementation; runtimebodyOFF until mandatory all30 witnesses; fresh independent HIGH finalsource review."
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -452,12 +452,12 @@
     "whole_runtime_accepted": false
   },
   "branch_push": {
-    "revision": "51c28474fcc598f5a8c7d8844d071a141ce0320e",
+    "revision": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
     "actual_published_at": null,
-    "confirmation_clock": "2026-10-07T00:04:42Z root postpush HOSTclock",
-    "parent_remote": "de96459b34535728c6e78e21500f3614ac62a411",
+    "confirmation_clock": "2026-10-07T00:13:37Z root clock_tool postpush",
+    "parent_remote": "51c28474fcc598f5a8c7d8844d071a141ce0320e",
     "trusted_executor": "root",
-    "scope": "F11 A2 partial receipt+A3 actual continuation docs; F11 production unaccepted"
+    "scope": "F11 partial classifier receipts and C1 actual executor docs only; F11 production unaccepted"
   },
   "model_policy_boundary": {
     "owner_decision": "OWN-N7-006",

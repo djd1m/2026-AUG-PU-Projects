@@ -1,0 +1,18 @@
+{
+  "reports": 160,
+  "installed_all": true,
+  "socketDenied": 282,
+  "socketAllowed": 238,
+  "dnsDenied": 0,
+  "ipcValidated": 120,
+  "ipcDenied": 6,
+  "deniedCategories": {
+    "unix": 282,
+    "defaultHost": 0,
+    "numeric": 0,
+    "other": 0
+  },
+  "unknown_denials": 0,
+  "same_pid_startticks_live": [],
+  "boundary": "inherited socket/DNS/fixture-IPC guard; denials alone are not zero-network proof"
+}

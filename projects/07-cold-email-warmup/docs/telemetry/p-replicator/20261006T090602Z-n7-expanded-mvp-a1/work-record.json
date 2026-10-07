@@ -531,6 +531,18 @@
       "id": "f11-context-author-a4",
       "status": "active actual ACK verified",
       "actual_ACK_at": "2026-10-07T00:11:43.110842969Z"
+    },
+    {
+      "id": "f11-context-author-a4",
+      "status": "completed coherent partial early; runtimeOFF",
+      "finished_at": "2026-10-07T00:21:55.732233+00:00",
+      "revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "receipt_sha256": "284c8f82420bf591158d2f3cb16be8a6b4d2cb02d60ee9fcc172f16f4077edf7"
+    },
+    {
+      "id": "f11-c1-adjudication-a5-native",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T00:23:22Z"
     }
   ],
   "work_units": [
@@ -573,34 +585,33 @@
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true,
     "latest_checkpoint": {
-      "at": "2026-10-07T00:13:01.050976+00:00",
-      "disk_available_bytes": 2704982016,
+      "at": "2026-10-07T00:25:01.133804+00:00",
+      "disk_available_bytes": 2689863680,
       "remaining_AC": [
-        "C1 RuntimeKind remains poll|pool|dispatch; loop exactly4 poll+2 dispatch+pool lanes. body must use these4 IMAP workers with atomic logical claim+physical admission under SAME FIRST(7,1), real durable metadata/text scheduler quanta, <=3 body physical slots, >=1 headers, mailbox due/claimed/incomplete header precedence, originaldue/serviceorder preserved and boundedretry. No body runtime launch was enabled.",
-        "C1 adapter.captureBody still runs metadata then setImmediate then text in one promise. Existing native5s budget/closedchild release and unknowncleanup occupancy remain. Next writer must split stages through existing context-store/adapter and runtime claim paths; existing bodyProof WeakMap is whole-operation proof, not durable phase scheduling.",
-        "C1 mandatory competing-worker/body-pressure witnesses ALL30 exactdenominator healthycompletion<=30s/dueselection<=60s; all ownership and phaseyield witnesses absent; no threshold waiver.",
-        "C2 authenticated pending UPSERT only refreshes same physicalUID under a newly authenticated header page and unchanged source/root/enrollment/sender, pending+unexpired; activeclaims and clocks untouched. Normal incremental newpollrun does not automatically reobserve oldpendingUID. Safe fresh observation/recovery still required before later runtime capture; never relabel oldproof.",
-        "C2 complete source/run/root/recipient/config/authority race matrix and copy earliest-deadline/restart physical deletion retention witnesses remain. No copy API introduced.",
-        "C3 supportedFAQ candidates/rules SHA, unsubscribe/complaint atomic production effects, nativeautomatic metadata noTEXT now covered. Pure classifier ownLoop negative covered; explicit native own-loop provenance variant and complete production variant matrix remain.",
-        "Full integration/full protocol/traceability/scenario/criterion/review gates and fresh independent HIGH F11 acceptance remain coordinator-owned."
+        "C1 scheduling adjudication: F10 successful polling remains immediately due; body admission denies actual due/claimed/incomplete headers. Runtime worker body wiring OFF. Optional four-lane callback seam exists only; no new body lane or RuntimeKind.",
+        "C1 mandatory independent native socket/ownership/phase observer with real competing process body/header workers and ALL30 participants/failure denominator healthy completed-poll<=30s and due-selection<=60s under body pressure is absent. No cap/tolerance waiver. Slow-body exact-child-exit/restart physical-release matrix still required.",
+        "C2 normal incremental new poll run does not reobserve old pending UID; safe fresh authenticated continuation/recovery for stale pending origins remains absent. New phase resets only on actual accepted pending header reobservation, preserving original expiry and semantic identity.",
+        "C2 new phase_metadata encrypted copy is expiry-gated in quantum, cleared by expiry purge and current terminal capture/reobservation paths; explicit new-column terminal24h/absolute7d/restart/copy physical-deletion boundary witnesses are mandatory remaining. Full source/run/root/recipient/config/grant race matrix remains.",
+        "C3 explicit native own-loop provenance and full production variant matrix remain from A3.",
+        "Coordinator full gates and independent fresh HIGH review required. This author does not accept F11. Legacy captureBody convenience still combines metadata/text; only new ContextStore.quantum/adapter phase path provides durable scheduling."
       ],
-      "executor": "/root/n7_sol_coordinator/f11_runtime_author_a4"
+      "executor": "/root/n7_sol_coordinator/f11_c1_normative_planner_a5"
     }
   },
-  "current_stage": "F11 fourth fresh MEDIUM finite body runtime quantum and C1 pressure implementation",
+  "current_stage": "F11 fresh HIGH narrow normative scheduler adjudication; durable phase source partial, runtime body OFF",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_runtime_author_a4",
-    "attempt": "f11-context-author-a4",
+    "executor": "/root/n7_sol_coordinator/f11_c1_normative_planner_a5",
+    "attempt": "f11-c1-adjudication-a5-native",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T00:11:43.110842969Z",
+    "actual_ACK_at": "2026-10-07T00:23:22Z",
     "requested_model": "gpt-6.1-sol",
-    "requested_effort": "medium",
+    "requested_effort": "high",
     "actual_model": null,
-    "source_revision": "a0f29eaee46b6639ad8d473caca8cc9dbbf5a89a",
-    "freeze_at": "2026-10-07T00:28:43.110842969Z",
-    "deadline": "2026-10-07T00:31:43.110842969Z",
-    "launch_sha256": "30f5cabab05c49cbe5020adf63b77d810a97c3ee53be8ef04ed63dd1f9d1d367",
-    "next": "Finite existing four-IMAP durable metadata/text quanta and all30 pressure C1; explicit C2/C3 remaining witnesses; fresh independent HIGH source review only after mandatory checks."
+    "source_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+    "freeze_at": "2026-10-07T00:29:22Z",
+    "deadline": "2026-10-07T00:31:22Z",
+    "launch_sha256": "07991b093645002851040f4085998f8e2b077cbfbcd77709609d456cb8de32a7",
+    "next": "Independent narrow C1/F10 scheduling adjudication then actual distinct bounded MEDIUM implementation; runtimebodyOFF until mandatory all30 witnesses; fresh independent HIGH finalsource review."
   }
 }

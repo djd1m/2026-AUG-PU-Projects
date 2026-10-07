@@ -1,0 +1,55 @@
+{
+  "measured_at": "2026-10-07T00:21:55.732233+00:00",
+  "database": {
+    "db": "n7f10_a2",
+    "other_sessions": 0,
+    "occupied": 0,
+    "runtime_claims": 0,
+    "body_claims": 0
+  },
+  "owned_runners": [
+    {
+      "pid": 1409554,
+      "startticks": "125523998",
+      "started_at": "2026-10-07T00:17:10.175437+00:00",
+      "record": "owned-build-a2.json",
+      "same_process_live": false
+    },
+    {
+      "pid": 1443199,
+      "startticks": "125537187",
+      "started_at": "2026-10-07T00:19:22.099813+00:00",
+      "record": "owned-build-a3.json",
+      "same_process_live": false
+    },
+    {
+      "pid": 1420098,
+      "startticks": "125527428",
+      "started_at": "2026-10-07T00:17:44.404453+00:00",
+      "record": "owned-checks-a2.json",
+      "same_process_live": false
+    },
+    {
+      "pid": 1452619,
+      "startticks": "125540280",
+      "started_at": "2026-10-07T00:19:52.910890+00:00",
+      "record": "owned-checks-a3.json",
+      "same_process_live": false
+    },
+    {
+      "utc": "2026-10-07T00:16:28.130776+00:00",
+      "pid": 1390370,
+      "startticks": "125515443",
+      "host_session": 57976,
+      "record": "owned-runner-a1.json",
+      "same_process_live": false
+    }
+  ],
+  "matching_live_guarded_nodes": [],
+  "mutex": {
+    "/tmp/codex-heavy-build.lock": "available_at_seal",
+    "/tmp/codex-ui-e2e.lock": "available_at_seal"
+  },
+  "ui_mutex_acquired_by_a4": false,
+  "build_a1_shell_pid_startticks": null
+}
