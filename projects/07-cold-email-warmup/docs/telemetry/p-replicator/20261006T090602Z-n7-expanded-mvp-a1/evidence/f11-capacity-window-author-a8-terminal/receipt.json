@@ -1,0 +1,54 @@
+{
+  "status": "completed",
+  "scope": "bounded20-file author correction; F11 acceptance pending",
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-context-author-a8",
+  "source_revision": "feb0aae996c80c6e591ebfba5585ec7d5ca27c62",
+  "base_revision": "6a63de504df498a08906e13e73e4528f0a7e494c",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gap": "model/usage metadata not exposed",
+  "duration_seconds": 1025.124872,
+  "ended_at": "2026-10-07T01:15:24.124872+00:00",
+  "checks": {
+    "typecheck": 0,
+    "lint": 0,
+    "build": 0,
+    "focused_native_final": 0,
+    "focused_tests": 16,
+    "focused_pass": 16,
+    "final_readonly_quiescence": 0,
+    "mechanical_route": 127,
+    "mechanical_route_reason": "referenced scripts/complexity-router.sh absent in supplied worktree; substantive HIGH risk retained"
+  },
+  "db": "n7f11_a8",
+  "old_db_untouched": "n7f10_a2",
+  "terminal_state": {
+    "other_sessions": 0,
+    "claims": 0,
+    "physical_slots": 0,
+    "own_running_native_children": 0
+  },
+  "required_next": "fresh final HIGH verifies exact immutable source, ALL30 full300 and remaining negative/fault/full-suite matrix",
+  "acceptance_passed": false,
+  "auto_review_rejection": {
+    "action": "old n7f10_a2 reset TRUNCATE tenant/auth_bucket CASCADE; DROP incoming_ai_event/index; DELETE migration16; migrate",
+    "reason": "irreversible database mutations without trusted exact reset scope authorization",
+    "executed": false,
+    "proposed_setup_file_sha": null,
+    "resolution": "root created independent fresh n7f11_a8 with exact ownership lease; no rejected reset retried"
+  },
+  "canary_scope": "final focused raw TAP only: no body/recipient/password/username/phase canaries; synthetic earlier wire username retained in prior immutable evidence and corrected in final source",
+  "remaining_ac": [
+    "ALL30 both2800ms ready<=240 and headers<=30/fair<=60 over full300 actual proof",
+    "fleet separate fault phase and negative mutation matrix",
+    "normal production branch current/missing/revoked grant negative matrix",
+    "independent final HIGH review",
+    "full F11 C2 privacy/limit/full regression matrix"
+  ],
+  "no_external_provider_enablement": true
+}

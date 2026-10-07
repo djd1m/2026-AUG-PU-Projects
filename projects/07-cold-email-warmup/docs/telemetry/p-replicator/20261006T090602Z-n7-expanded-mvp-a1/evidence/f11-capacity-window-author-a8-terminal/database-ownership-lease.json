@@ -1,0 +1,21 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-context-author-a8",
+  "database": "n7f11_a8",
+  "server_numeric_address": "192.168.176.2:5432",
+  "owner_role": "n7",
+  "responsible": "n7_sol_coordinator",
+  "authorized_worker": "/root/n7_sol_coordinator/f11_capacity_window_author_a8",
+  "creation_executor": "root",
+  "prior_existence": "root readonly pg_database confirmed absent before creation; old n7f10_a2 present",
+  "create_statement": "CREATE DATABASE n7f11_a8 TEMPLATE template0",
+  "actual_create_native_exit": 0,
+  "root_post_create_confirmation_clock": "2026-10-07T01:06:39Z",
+  "actual_creation_process_UTC": null,
+  "creation_authority": "Root trusted explicit local disposable testing authorization; fresh separate database is nondestructive alternative to rejected old database reset",
+  "old_database_untouched": "n7f10_a2 schema/data/history; no DROP/TRUNCATE/deletemigration",
+  "initial_schema": "none at root creation; A8 current migrations1\u201316 required",
+  "required_before_fixture": "verify current_database=n7f11_a8 and pg_database owner n7; bind DATABASE_NAME after sourcing env; preserve lease and preflight before own synthetic fixture writes",
+  "no_other_database_reset": true,
+  "recorded_at": "2026-10-07T01:07:16.357232+00:00"
+}

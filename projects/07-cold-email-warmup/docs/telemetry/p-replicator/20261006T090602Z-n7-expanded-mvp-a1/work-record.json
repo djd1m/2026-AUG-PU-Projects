@@ -577,6 +577,18 @@
       "id": "f11-context-author-a8",
       "status": "active actual ACK verified",
       "actual_ACK_at": "2026-10-07T00:58:19Z"
+    },
+    {
+      "id": "f11-context-author-a8",
+      "status": "completed early scoped candidate",
+      "revision": "feb0aae996c80c6e591ebfba5585ec7d5ca27c62",
+      "ended_at": "2026-10-07T01:15:24.124872+00:00",
+      "receipt_sha256": "0dbeb2fb963a7e73a55767ba670c2a2e397f85db15233b932de3710f84fa4835"
+    },
+    {
+      "id": "f11-operational-verifier-a9",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T01:18:44Z"
     }
   ],
   "work_units": [
@@ -619,27 +631,26 @@
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true,
     "latest_checkpoint": {
-      "at": "2026-10-07T00:59:21.371562+00:00",
-      "disk_available_bytes": 2695135232,
-      "remaining_AC": "Implement sealedA7 capacity-admitted nonrenewable12s strategy with eachstage5s, normal current-authority-gated entry and existing-harness ALL30 sourcefixture legal2x2800 bothready240/header30/due60/full300; single native discriminators first, source frozen HIGH checks next; restore durableC2coverage and NEW clean finalreview. F11 acceptance remains pending.",
-      "executor": "/root/n7_sol_coordinator/f11_capacity_window_author_a8"
+      "at": "2026-10-07T01:20:38.033856+00:00",
+      "disk_available_bytes": 2665979904,
+      "remaining_AC": "Exact authored ALL30 full300 actuallaunch/nativeexit/allparticipant proof; distinct F12 clean planning6+2 duringchildwait; current regressions/remaining fleetfault/currentgrant/privacy/material gaps; finalF11review NEWfreshHIGH. No F11 acceptance.",
+      "executor": "/root/n7_sol_coordinator/f11_operational_verifier_a9"
     }
   },
-  "current_stage": "F11 fresh MEDIUM capacity-admitted window + current-authority entry + ALL30 fixture implementation",
+  "current_stage": "F11 fresh HIGH immutable operational checks; distinct bounded clean F12 planning only after actual full300 child launch",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_capacity_window_author_a8",
-    "attempt": "f11-context-author-a8",
+    "executor": "/root/n7_sol_coordinator/f11_operational_verifier_a9",
+    "attempt": "f11-operational-verifier-a9",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T00:58:19Z",
+    "actual_ACK_at": "2026-10-07T01:18:44Z",
     "requested_model": "gpt-6.1-sol",
-    "requested_effort": "medium",
+    "requested_effort": "high",
     "actual_model": null,
-    "source_revision": "6a63de504df498a08906e13e73e4528f0a7e494c",
-    "product_code_base": "b731e362155710ec1014d9b26625d155c15f81e9",
-    "freeze_at": "2026-10-07T01:15:19Z",
-    "deadline": "2026-10-07T01:18:19Z",
-    "launch_sha256": "5bb3406d837f4350c45fef8e2098f4055c99de4a4ea049c26a4d4b537c53f3b7",
-    "next": "Implement sealedA7 capacity-admitted nonrenewable12s strategy with eachstage5s, normal current-authority-gated entry and existing-harness ALL30 sourcefixture legal2x2800 bothready240/header30/due60/full300; single native discriminators first, source frozen HIGH checks next; restore durableC2coverage and NEW clean finalreview. F11 acceptance remains pending."
+    "source_revision": "feb0aae996c80c6e591ebfba5585ec7d5ca27c62",
+    "freeze_at": "2026-10-07T01:35:44Z",
+    "deadline": "2026-10-07T01:38:44Z",
+    "launch_sha256": "8d98eaf9d2f1bd5e50da66a1d6e784395295075b889d3a5a70fe2f2c326b6c8e",
+    "next": "Exact authored ALL30 full300 actuallaunch/nativeexit/allparticipant proof; distinct F12 clean planning6+2 duringchildwait; current regressions/remaining fleetfault/currentgrant/privacy/material gaps; finalF11review NEWfreshHIGH. No F11 acceptance."
   }
 }

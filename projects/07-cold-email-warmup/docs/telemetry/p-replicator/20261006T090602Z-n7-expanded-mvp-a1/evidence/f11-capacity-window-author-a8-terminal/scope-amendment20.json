@@ -1,0 +1,25 @@
+{
+  "authority": "root explicit test-only scope amendment received 2026-10-07; exact two current fixture database bindings",
+  "exclusive_files": [
+    "projects/07-cold-email-warmup/db/016-inbound-context.sql",
+    "projects/07-cold-email-warmup/src/runtime/store.ts",
+    "projects/07-cold-email-warmup/src/runtime/loop.ts",
+    "projects/07-cold-email-warmup/src/runtime/worker.ts",
+    "projects/07-cold-email-warmup/src/replies/context-store.ts",
+    "projects/07-cold-email-warmup/src/replies/adapter.ts",
+    "projects/07-cold-email-warmup/src/replies/worker.ts",
+    "projects/07-cold-email-warmup/src/replies/store.ts",
+    "projects/07-cold-email-warmup/src/mailboxes/transport-slots.ts",
+    "projects/07-cold-email-warmup/src/mailboxes/transport-lifetime.ts",
+    "projects/07-cold-email-warmup/src/mailboxes/transport-child.ts",
+    "projects/07-cold-email-warmup/src/mailboxes/transport-channel.ts",
+    "projects/07-cold-email-warmup/tests/f11-body-fixture.ts",
+    "projects/07-cold-email-warmup/tests/f11-body-protocol.test.ts",
+    "projects/07-cold-email-warmup/tests/f11-context-integration.test.ts",
+    "projects/07-cold-email-warmup/tests/expanded-mvp-05.test.ts",
+    "projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts",
+    "projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+    "projects/07-cold-email-warmup/tests/f10-runtime-fixture.ts",
+    "projects/07-cold-email-warmup/tests/f09-transport-fixture.ts"
+  ]
+}

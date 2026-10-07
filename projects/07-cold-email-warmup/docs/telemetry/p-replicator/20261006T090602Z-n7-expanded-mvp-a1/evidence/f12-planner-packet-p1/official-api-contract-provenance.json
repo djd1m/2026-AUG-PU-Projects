@@ -1,0 +1,34 @@
+{
+  "prepared_at": "2026-10-07T01:02:45.241605+00:00",
+  "path": "/tmp/n7-f12-drafts-plan-p1-native/official-api-contract-preflight.md",
+  "sha256": "014333e3bc5bfdf6c95c93bb9495797d76c62335dc7c4f75894eda9203319c08",
+  "bytes": 1959,
+  "skill": "/root/.codex/skills/.system/openai-docs/SKILL.md",
+  "official_pages_actually_fetched": [
+    {
+      "url": "https://developers.openai.com/api/reference/python/resources/responses/methods/create",
+      "result": "fetched"
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/guides/structured-outputs",
+      "result": "fetched"
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/guides/migrate-to-responses",
+      "result": "fetched"
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/guides/your-data",
+      "result": "fetched"
+    },
+    {
+      "url": "https://developers.openai.com/api/reference/typescript/resources/responses/methods/create",
+      "result": "timeout"
+    }
+  ],
+  "private_payload_sent": false,
+  "API_provider_calls": 0,
+  "secret_access": false,
+  "model_or_price_selected": false,
+  "native_F12_planner_launch": "one allowed followup rejected threadlimit; no actor or CLIretry"
+}
