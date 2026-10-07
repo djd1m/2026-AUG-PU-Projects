@@ -1,0 +1,55 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20261007T165155Z-replicate-07-cold-email-warmup-00b7",
+  "batch_id": null,
+  "project": "projects/07-cold-email-warmup",
+  "feature": "replicate (конвейер /replicate полностью: Phase 0 discovery → 0.5 source profile → 1 SPARC → 2 validation → 3 toolkit → 4 finalize) для Instantly-клона · cold email с прогревом",
+  "pipeline": "координатор (+ Task-субагенты при необходимости)",
+  "tier": "M",
+  "risk_flags": [
+    "docs-only",
+    "no-code-change",
+    "interactive-checkpoints",
+    "network-effect-seed-required",
+    "anti-spam-ethical-boundaries"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "исполнители — текущая модель хоста Kilo (z-ai/glm-5.3-flash); политика Sol/Terra/Astra недоступна хосту, отклонения от requested фиксируются в событиях",
+    "телеметрия: только координатор, счётчики токенов хост недоступны"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+  "final_revision": null,
+  "spec_sha256": null,
+  "policy_sha256": null,
+  "host": "kilo",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-10-07T16:51:55Z",
+  "ended_at": null,
+  "status": "running",
+  "acceptance_evidence": {
+    "guard": "детерминированные стражи конвейера: check-docs-complete.cjs, check-growth-trace.cjs, check-look-trace.cjs, check-look-origin.cjs, check-handoff-manifest.cjs, grep-паттерны методологии (FR-GROWTH>=4, @security>=FR-GROWTH)",
+    "review": "рой валидации Phase 2 + вердикт validation-report.md"
+  },
+  "quality": {
+    "required_gates_passed": null,
+    "ac_met": null,
+    "ac_total": null,
+    "confirmed_findings_by_severity": null,
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "pending"
+  },
+  "metrics": {},
+  "telemetry_status": "partial",
+  "missing_data": [
+    "host_version: хост не отдаёт версию агенту",
+    "usage: счётчики токенов хост Kilo не exposes координатору",
+    "billing_mode: неизвестен",
+    "policy_sha256: файл политики и свод полей — заполнить при завершении"
+  ]
+}
