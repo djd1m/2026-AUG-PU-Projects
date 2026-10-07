@@ -818,7 +818,7 @@
     },
     "chat_notification_scheduler_available": false
   },
-  "current_stage": "A82 negative-only native preflight and A83 source-only rebind actual running",
+  "current_stage": "F11 A87 actual fullfault300; healthy300 and legacy145 still pending",
   "continuation": {
     "updated_at": "2026-10-07T14:49:45.050373+00:00",
     "responsible": "root",
@@ -837,6 +837,12 @@
       },
       "reason": "old A46 continuation ended and coordinator errored; root now owns actual continuation",
       "structural_validation": "not rerun/not claimed; historical schema gaps retained"
+    },
+    {
+      "utc": "2026-10-07T15:19:45.652739+00:00",
+      "step": "A82/A84/A86/A88 checker0; A87 actual ACK; no runtime lease yet",
+      "actual_model": null,
+      "full_F11_accepted": false
     }
   ]
 }

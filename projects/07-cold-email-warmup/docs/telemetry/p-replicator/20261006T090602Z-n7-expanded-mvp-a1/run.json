@@ -30,7 +30,7 @@
   "billing_mode": "unknown",
   "started_at": "2026-10-06T09:06:02.878171Z",
   "ended_at": null,
-  "status": "running",
+  "status": "in_progress",
   "acceptance_evidence": [
     "evidence/cli-update.md",
     "evidence/architect-receipt.md",
@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 A68 actual guarded material continuation on accepted diagnostic instrumentation",
+  "current_stage": "F11 A87 actual fullfault300; healthy300 and legacy145 still pending",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -1785,5 +1785,67 @@
     "actor": "/root/n7_a58_integration_readiness_author",
     "state": "actual source-only rebind for future accepted f79543 Original fastforward; not activated",
     "actual_model": null
+  },
+  "f11_root_semantic_omission_native_a82_terminal": {
+    "verdict": "LOCAL_TEST_DELTA_ACCEPT",
+    "source_revision": "f79543db87bc3188c3707e6bf773e446bef7a3ae",
+    "negative_native_exit": 1,
+    "negative_exact_count": 1,
+    "negative_error": "plan_limit_reached",
+    "baseline_schemas": 53,
+    "baseline_whole_table_pairs": 2091,
+    "all_11_PIDticks_joined": true,
+    "native_receipt_checker_exit": 0,
+    "actual_model": null
+  },
+  "f11_root_current_runners_review_a84_terminal": {
+    "verdict": "LOCAL_CURRENT_SOURCE_RUNNERS_ACCEPT",
+    "sealed_at": "2026-10-07T15:00:42Z",
+    "inventory_metadata_full_equality": "resolved all17 entries",
+    "native_receipt_checker_exit": 0,
+    "runtime_executed": false,
+    "actual_model": null
+  },
+  "f11_root_runtime_external_a86_terminal": {
+    "native_exit": 0,
+    "exact_count": 1,
+    "skipped": 0,
+    "sealed_at": "2026-10-07T15:06:59Z",
+    "all_5_PIDticks_joined": true,
+    "other_db_sessions": 0,
+    "baseline_schemas": 54,
+    "baseline_whole_table_pairs": 2132,
+    "native_receipt_checker_exit": 0,
+    "actual_model": null
+  },
+  "f11_root_fullfleet_driver_a88_terminal": {
+    "sealed_at": "2026-10-07T15:14:28Z",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "medium",
+    "driver_sha256": "0bcfc86778142fc17455539517472fc040a04acf157d4dcf8ff63ba117fd89de",
+    "ast_exit": 0,
+    "native_receipt_checker_exit": 0,
+    "runtime_executed": false,
+    "actual_model": null
+  },
+  "f11_root_fullfleet_runtime_a87": {
+    "actual_ACK_at": "2026-10-07T15:18:37Z",
+    "source_preflight_cut": "2026-10-07T15:22:37Z",
+    "actor": "/root/n7_a59_unstarted_granularity_review",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "state": "actual native full_fault330/full300 executing",
+    "baseline_schemas": 54,
+    "baseline_whole_table_pairs": 2132,
+    "source_revision": "f79543db87bc3188c3707e6bf773e446bef7a3ae",
+    "full_F11_accepted": false,
+    "actual_model": null,
+    "lease_started_at": "2026-10-07T15:21:39.981512+00:00",
+    "source_cut": "2026-10-07T15:38:39.981512+00:00",
+    "seal_cut": "2026-10-07T15:41:39.981512+00:00",
+    "driver_pid": 2411673,
+    "driver_startTicks": "130946999",
+    "first_native_started_at": "2026-10-07T15:21:51.965291Z",
+    "exec_session": 77109
   }
 }
