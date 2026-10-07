@@ -1,0 +1,38 @@
+# Opt-in only after reviewed source/image and separately approved release gates.
+name: ${COMPOSE_PROJECT_NAME:-n7f02}
+services:
+  web:
+    image: ${N7_ACCEPTED_IMAGE:?frozen accepted source image required}
+  runtime-worker:
+    image: ${N7_ACCEPTED_IMAGE:?frozen accepted source image required}
+    build: .
+    cpus: 2
+    command: ["node", "dist/runtime/worker.js", "loop"]
+    ports: []
+    restart: unless-stopped
+    environment:
+      BILLING_MODE: disabled
+      POLL_MODE: live_provider
+      DISPATCH_MODE: live_provider
+      OPERATOR_TOKEN_FILE: /run/secrets/operator_token
+      SAFETY_POLICY_VERSION: n7-safety-v1
+      RECIPIENT_HASH_KEY_FILE: /run/secrets/recipient_hash_key
+      CREDENTIAL_KEYRING_FILE: /run/secrets/credential_keyring
+      MAIL_PROVIDER_ALLOWLIST: ${MAIL_PROVIDER_ALLOWLIST:?operator allowlist required}
+      SESSION_HMAC_KEY_FILE: /run/secrets/session_key
+      DATABASE_PASSWORD_FILE: /run/secrets/db_password
+      DATABASE_USER: n7
+      DATABASE_NAME: n7
+      DATABASE_HOST: db
+      APP_ORIGIN: ${N7_APP_ORIGIN:-http://127.0.0.1:18702}
+      PORT: "3000"
+    secrets: [session_key, db_password, credential_keyring, recipient_hash_key, operator_token]
+    networks: [n7]
+    depends_on:
+      db: {condition: service_healthy}
+    healthcheck:
+      # Configuration/schema readiness only; this does not witness runtime progress.
+      test: ["CMD", "node", "--input-type=module", "-e", "import {loadConfig} from './dist/config.js';import {createPool,ready} from './dist/db.js';let p;let ok=false;try{p=createPool(loadConfig().databaseUrl);ok=await ready(p)}catch{}finally{if(p)try{await p.end()}catch{ok=false}}process.exit(ok?0:1)"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
