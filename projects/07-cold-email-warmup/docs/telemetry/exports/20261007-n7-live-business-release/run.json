@@ -1,6 +1,6 @@
 {
   "started_at": "2026-10-07T17:36:32.187188+00:00",
-  "status": "payment_backend_independent_review_running; compose_accepted_integrated",
+  "status": "backend_accepted_integrated; UI_writer_running",
   "owner_request": "Real business effect: real email sending and ability to pay, beyond TEST preview",
   "authorization_scope": "Prepare and implement requested live-capable release; no unspecified charges or external pilot executed",
   "source_revision": "a0896402",
@@ -24,9 +24,9 @@
     "BillingService reconcile and entitlement are coupled to local_provider_payment; provider injection alone insufficient",
     "Real Team tariff amount is not agreed; TEST100minorunits must not become real price by accident"
   ],
-  "next": "Accept backend or fix independent findings, implement payment/mail UI, Docker browser E2E then release gates",
+  "next": "Implement payment/mail UI then independent review and Docker Playwright local fixture",
   "elapsed": null,
-  "updated_at": "2026-10-07T19:22:13.507361+00:00",
+  "updated_at": "2026-10-07T19:49:34.827584+00:00",
   "plan": "docs/plans/live-business-release-20261007.md",
   "planner_result": "bounded plan completed; nativehostusage unknown",
   "owner_plan_checkpoint": "Latest owner response: давай делай",
@@ -96,5 +96,15 @@
     "merchant file paths/live merchant configuration",
     "controlled mail pilot identities/recipients",
     "offhost encrypted backup destination"
-  ]
+  ],
+  "owner_team_price_rub": 990,
+  "owner_team_price_minor": 99000,
+  "owner_team_duration_days": 30,
+  "merchant_credentials": "owner will add later; activation pending",
+  "mail_pilot_confirmed_address": "corrected gmail domain confirmed; sender/recipient role pending",
+  "backend_review": "ACCEPT_BACKEND_SLICE",
+  "backend_integrated_revision": "4c7441a8",
+  "ui_launch": "/tmp/n7-live-ui-author-a4-20261007/launch.json",
+  "backend_review_finished_at": "2026-10-07T19:27:00.457568+00:00",
+  "continuation_gap": "UI continuation was not started immediately after review; observed idle at19:45 and new writer launched with ACK at19:47. Not reported as active work during gap."
 }

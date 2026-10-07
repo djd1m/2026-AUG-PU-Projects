@@ -14,7 +14,8 @@ install -d -m 700 /private/n7-billing
 export N7_YOOKASSA_SHOP_ID_FILE=/private/n7-billing/shop-id
 export N7_YOOKASSA_SECRET_KEY_FILE=/private/n7-billing/secret-key
 export N7_APP_ORIGIN=https://n7.194.85.249.105.sslip.io
-# Set N7_TEAM_PRICE_MINOR to the owner's approved price; no default exists.
+# Owner approved Team: 990 RUB for 30 days (2026-10-07).
+export N7_TEAM_PRICE_MINOR=99000
 : "${N7_TEAM_PRICE_MINOR:?set the owner-approved positive integer price first}"
 docker compose -f docker-compose.yml -f docker-compose.live-billing.yml config --format json
 ```
@@ -74,7 +75,7 @@ fallback is added.
 Before activation the coordinator must separately verify live merchant activation
 and subscription/routing of the exact webhook
 `https://n7.194.85.249.105.sslip.io/api/billing/webhooks/yookassa`, including verified
-refund discovery. Owner price is pending. Config rendering proves no actual payment
+refund discovery. Owner approved Team price is 990 RUB/30 days; merchant credentials are pending. Config rendering proves no actual payment
 or merchant activation. Accepted source/image, worker, TLS/proxy bindings, protected
 backup/restore, container starts and actual transactions remain separate release
 steps under the approved plans. Preserve existing data encryption keys; do not
