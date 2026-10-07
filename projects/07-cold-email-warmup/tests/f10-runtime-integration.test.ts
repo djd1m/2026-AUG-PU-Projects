@@ -308,3 +308,48 @@ test('native poll claim reserves physical admission atomically across competing 
   const operation=async()=>{operations++;return {};};await runRuntime(committed,{poll:operation,pool:operation,dispatch:operation},abort.signal,true);assert.equal(operations,0);assert.equal((await pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');
  }finally{for(const owned of reservations.reverse())await owned.store.cancel(owned.claim);await pool.end();}
 });
+
+
+test('F11 FIFO HEADER preference retains urgent fairness and exact bounded admission gates',async()=>{
+ const {seedBodyPressureCohort}=await import('./f10-runtime-process-fixture.js'),{enqueueCaptureClient,captureHeaderFrontierClient}=await import('../src/replies/context-store.js'),{authorizeTransport}=await import('../src/mailboxes/transport-authority.js');
+ const {createPool}=await import('../src/db.js'),{loadConfig}=await import('../src/config.js'),pre=createPool(loadConfig().databaseUrl);try{const facts=(await pre.query("SELECT current_schema() schema,(SELECT count(*)::int FROM transport_operation WHERE operation IS NOT NULL) physical,(SELECT count(*)::int FROM runtime_due WHERE state='claimed') runtime")).rows[0];assert.equal(facts.schema,process.env.N7_TEST_SCHEMA);assert.equal(facts.physical,0);assert.equal(facts.runtime,0);}finally{await pre.end();}
+ const empty=await runtimeFixture(0);await empty.pool.end();
+ const c=await seedBodyPressureCohort(),targets=c.participants.slice(0,4),ordinary=c.participants[4]!;
+ const runtime=new RuntimeStore(c.pool,(client,t,m)=>authorizeTransport(client,c.config,t,m,'imap_headers'),c.config);
+ const ownedClaims:import('../src/runtime/store.js').RuntimeClaim[]=[],claimOriginal=runtime.claim.bind(runtime);runtime.claim=async kind=>{const claim=await claimOriginal(kind);if(claim)ownedClaims.push(claim);return claim;};
+ try{
+  await runtime.maintenance();
+  for(const target of targets)await eligibilityTransaction(c.pool,client=>enqueueCaptureClient(client,{tenant:target.tenant,mailbox:target.mailbox,uidvalidity:'1',uid:1,runId:randomUUID(),attempt:1,source:'imap_headers',observedAt:new Date(),enrollment:target.enrollment,root:target.root,sender:target.recipient}));
+  await c.pool.query("INSERT INTO mailbox_poll(mailbox_id,scan_complete,completed_at) SELECT mailbox_id,true,clock_timestamp() FROM capacity_lease WHERE state='active' ON CONFLICT(mailbox_id) DO UPDATE SET completed_at=EXCLUDED.completed_at");
+  await c.pool.query("UPDATE runtime_due SET service_seq=100,next_check_at=clock_timestamp() WHERE kind='poll'");await c.pool.query("UPDATE runtime_due SET service_seq=0 WHERE kind='poll' AND mailbox_id=$1",[ordinary.mailbox]);
+  const expected=targets.slice(0,3).map(t=>({tenant:t.tenant,mailbox:t.mailbox}));
+  assert.deepEqual(await eligibilityTransaction(c.pool,client=>captureHeaderFrontierClient(client,c.config)),expected);
+  const selected=await runtime.claim('poll');assert.ok(selected);await runtime.cancel(selected);assert.ok(expected.some(t=>t.mailbox===selected.mailbox_id),'genuine frontier HEADER must beat older ordinary service');
+  const turns=(await c.pool.query("SELECT d.service_seq mailbox,t.service_seq tenant FROM runtime_due d JOIN runtime_tenant_turn t ON t.tenant_id=d.tenant_id AND t.kind=d.kind WHERE d.mailbox_id=$1 AND d.kind='poll'",[selected.mailbox_id])).rows[0];assert.notEqual(Number(turns.mailbox),100);assert.ok(Number(turns.tenant)>0);assert.equal(selected.owner_id,runtime.pollAdmission(selected)!.slot!.operation);
+  const second=await runtime.claim('poll');assert.ok(second);assert.notEqual(second.mailbox_id,selected.mailbox_id,'unserved frontier peer retains tenant/mailbox turn priority');await runtime.cancel(second);
+  await c.pool.query("UPDATE mailbox_poll SET completed_at=clock_timestamp()-interval '26 seconds' WHERE mailbox_id=$1",[ordinary.mailbox]);
+  const urgent=await runtime.claim('poll');assert.ok(urgent);assert.equal(urgent.mailbox_id,ordinary.mailbox);await runtime.cancel(urgent);
+  await c.pool.query('UPDATE mailbox_poll SET completed_at=NULL WHERE mailbox_id=$1',[ordinary.mailbox]);const missing=await runtime.claim('poll');assert.ok(missing);assert.equal(missing.mailbox_id,ordinary.mailbox);await runtime.cancel(missing);
+  const client=await c.pool.connect();try{await client.query('BEGIN');await client.query('SELECT pg_advisory_xact_lock(7,1)');
+   for(const [name,sql,args] of [
+    ['BODY grant',"UPDATE transport_grant SET scope=jsonb_set(scope,'{capabilities}','[\"imap_headers\"]')",[]],
+    ['expired grant',"UPDATE transport_grant SET scope=jsonb_set(scope,'{expiresAt}',to_jsonb((clock_timestamp()-interval '1 second')::text))",[]],
+    ['suppression',"INSERT INTO suppression(tenant_id,recipient_hash,reason) SELECT tenant_id,authenticated_recipient_hash,'unsubscribe' FROM incoming_ai_event",[]],
+    ['root',"UPDATE incoming_ai_event SET authenticated_root_message_id='<wrong@example.test>'",[]],
+    ['sender',"UPDATE incoming_ai_event SET sender_binding=repeat('0',64)",[]],
+    ['recipient AEAD',"UPDATE enrollment SET recipient_envelope='{}'::jsonb",[]],
+    ['activity',"UPDATE capacity_lease SET state='waiting_capacity',expires_at=NULL",[]],
+    ['TTL',"UPDATE incoming_ai_event SET expires_at=clock_timestamp()-interval '1 second'",[]],
+    ['continuation',"UPDATE incoming_ai_event SET window_start=statement_timestamp(),window_end=statement_timestamp()+interval '12 seconds',window_completed_at=statement_timestamp(),window_revision='1',window_mailbox_revision='0' WHERE mailbox_id=$1",[targets[3]!.mailbox]],
+    ['three windows',"UPDATE incoming_ai_event SET capture_state='claimed',owner_id=gen_random_uuid(),lease_until=clock_timestamp()+interval '12 seconds',window_start=statement_timestamp(),window_end=statement_timestamp()+interval '12 seconds',window_completed_at=statement_timestamp(),window_revision='1',window_mailbox_revision='0' WHERE mailbox_id=ANY($1::uuid[])",[targets.slice(0,3).map(t=>t.mailbox)]],
+    ['ordinary capacity',"UPDATE transport_operation SET operation=gen_random_uuid(),tenant_id=$1,mailbox_id=($2::uuid[])[slot],owner_process=gen_random_uuid(),owner_host='test',expires_at=clock_timestamp()+interval '1 minute',operation_purpose='header' WHERE protocol='imap' AND NOT header_reserved",[ordinary.tenant,[1,4,7,10].map(i=>c.participants[i]!.mailbox)]],
+    ['BODY UNKNOWN cap',"UPDATE transport_operation SET operation=gen_random_uuid(),tenant_id=$1,mailbox_id=($2::uuid[])[slot],owner_process=gen_random_uuid(),owner_host='test',expires_at=clock_timestamp()+interval '1 minute',operation_purpose=NULL WHERE protocol='imap' AND slot>=2",[ordinary.tenant,[1,4,7,10].map(i=>c.participants[i]!.mailbox)]],
+    ['missing reservation',"UPDATE transport_operation SET header_reserved=false",[]],
+   ] as [string,string,unknown[]][]){await client.query('SAVEPOINT gate');await client.query(sql,args);assert.deepEqual(await captureHeaderFrontierClient(client,c.config),[],name);await client.query('ROLLBACK TO SAVEPOINT gate');}
+   await client.query("UPDATE transport_grant SET scope=jsonb_set(scope,'{capabilities}','[\"imap_headers\"]') WHERE mailbox_id=ANY($1::uuid[])",[targets.slice(0,3).map(t=>t.mailbox)]);assert.deepEqual(await captureHeaderFrontierClient(client,c.config),[],'do not promote fourth past denied oldest three');
+   assert.deepEqual(await captureHeaderFrontierClient(client,{...c.config,pollMode:'local_test'}),[]);
+  }finally{await client.query('ROLLBACK');client.release();}
+  const legacy=new RuntimeStore(c.pool,(client,t,m)=>authorizeTransport(client,c.config,t,m,'imap_headers'));await c.pool.query("UPDATE runtime_due SET service_seq=100 WHERE kind='poll'");await c.pool.query("UPDATE runtime_due SET service_seq=0 WHERE kind='poll' AND mailbox_id=$1",[ordinary.mailbox]);await c.pool.query("UPDATE runtime_tenant_turn SET service_seq=0 WHERE kind='poll'");const normal=await legacy.claim('poll');assert.ok(normal);assert.equal(normal.mailbox_id,ordinary.mailbox);await legacy.cancel(normal);
+  assert.equal((await c.pool.query('SELECT count(*) FROM incoming_ai_event WHERE window_start IS NOT NULL')).rows[0].count,'0');assert.equal((await c.pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');
+ }finally{for(const owned of ownedClaims.reverse())await runtime.cancel(owned);const claims=(await c.pool.query("SELECT * FROM runtime_due WHERE state='claimed'")).rows;for(const owned of claims)await runtime.cancel(owned);await c.pool.query('TRUNCATE tenant CASCADE');await c.pool.end();}
+});

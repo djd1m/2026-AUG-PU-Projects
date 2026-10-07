@@ -160,3 +160,35 @@ export async function openCaptureWindowClient(c:PoolClient,config:Config,tenant:
  const identity:BodyIdentity={tenant,mailbox,event:row.id,owner,generation:claimed.generation,runId:row.authenticated_run_id,attempt:row.authenticated_attempt,source:row.source,uidvalidity:row.uidvalidity,uid:Number(row.uid),root:row.root_job_id,enrollment:row.enrollment_id,senderBinding:row.sender_binding};
  return {row:{...row,window_end:end},identity,slot};
 }
+
+// Same FIRST(7,1), read-only scheduling preference: never admit or manufacture proof.
+export async function captureHeaderFrontierClient(c:PoolClient,config:Config):Promise<{tenant:string;mailbox:string}[]> {
+ if(config.pollMode!=='live_provider')return [];
+ if((await c.query("SELECT 1 FROM incoming_ai_event WHERE window_end>clock_timestamp() AND capture_state='pending' AND next_attempt_at<=clock_timestamp() LIMIT 1")).rowCount)return [];
+ const capacity=(await c.query(`SELECT
+  (SELECT count(*) FROM incoming_ai_event WHERE window_end>clock_timestamp() AND capture_state IN ('pending','claimed')) AS windows,
+  count(*) FILTER (WHERE header_reserved) AS reserved,
+  count(*) FILTER (WHERE operation IS NOT NULL AND (operation_purpose='body' OR operation_purpose IS NULL)) AS bodies,
+  count(*) FILTER (WHERE NOT header_reserved AND operation IS NULL) AS free
+  FROM transport_operation WHERE protocol='imap'`)).rows[0];
+ if(Number(capacity.windows)>=3||Number(capacity.reserved)!==1||Number(capacity.bodies)>=3||Number(capacity.free)===0)return [];
+ // Bound the original oldest three BEFORE filtering invalid/denied identities.
+ const rows=(await c.query(`SELECT e.*,n.recipient_envelope,n.recipient_hash FROM
+  (SELECT * FROM incoming_ai_event WHERE capture_state='pending' AND window_start IS NULL AND source='imap_headers' AND attempt_deadline>clock_timestamp() ORDER BY capture_service_seq,id LIMIT 3) e
+  JOIN enrollment n ON n.tenant_id=e.tenant_id AND n.id=e.enrollment_id
+  JOIN send_job j ON j.tenant_id=e.tenant_id AND j.mailbox_id=e.mailbox_id AND j.id=e.root_job_id AND j.enrollment_id=e.enrollment_id AND j.parent_id IS NULL
+  WHERE e.expires_at>clock_timestamp() AND e.authenticated_root_message_id=j.message_id AND e.authenticated_recipient_hash=n.recipient_hash
+  AND EXISTS(SELECT 1 FROM capacity_lease l WHERE l.mailbox_id=e.mailbox_id AND l.state='active' AND l.expires_at>clock_timestamp())
+  AND NOT EXISTS(SELECT 1 FROM suppression s WHERE s.tenant_id=e.tenant_id AND s.recipient_hash=e.authenticated_recipient_hash)
+  ORDER BY e.capture_service_seq,e.id`)).rows;
+ const eligible:{tenant:string;mailbox:string}[]=[];
+ for(const row of rows){
+  try{await authorizeTransport(c,config,row.tenant_id,row.mailbox_id,'imap_body');await authorizeTransport(c,config,row.tenant_id,row.mailbox_id,'imap_headers');}
+  catch(error){if(error instanceof HttpError&&error.code==='transport_denied')continue;throw error;}
+  let recipient:unknown;try{recipient=openRecipient(row.recipient_envelope as Envelope,row.tenant_id,row.enrollment_id,config.credentialKeyring);}
+  catch(error){if(error instanceof HttpError&&error.code==='credential_unavailable')continue;throw error;}
+  const sender=typeof recipient==='string'?singleAddress(recipient):null;
+  if(sender&&createHash('sha256').update(sender).digest('hex')===row.sender_binding)eligible.push({tenant:row.tenant_id,mailbox:row.mailbox_id});
+ }
+ return eligible;
+}
