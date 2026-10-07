@@ -59,13 +59,13 @@
     "followup_status": "F07/F08/F09/F10 locally accepted and F10 integrated3566; expanded AC001–004 met, AC005–009 pending. Whole required_gates_passed remains false. F11 code remains unaccepted candidate."
   },
   "metrics": {
-    "elapsed_wall_ms": 87906584,
+    "elapsed_wall_ms": 99467734,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-07T09:31:09.463093+00:00"
+    "elapsed_as_of": "2026-10-07T12:43:50.612200+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 A61 independent fixture readiness review; A60 runtime preparation completed, no runtimelease yet",
+  "current_stage": "F11 A62 actual guarded15 native scenarios; A63 source-only integration runner preparation",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -1347,5 +1347,34 @@
     "source_push_exit": 0,
     "independent_review": "A61 actual running",
     "full_F11_accepted": false
+  },
+  "f11_root_integration_readiness_review_a61_terminal": {
+    "verdict": "LOCAL_FIXTURE_READINESS_ACCEPT",
+    "duration_seconds": 410.624,
+    "native_receipt_checker_exit": 0,
+    "full_F11_accepted": false,
+    "actual_model": null
+  },
+  "f11_root_material_execution_a62": {
+    "agent": "/root/n7_a59_unstarted_granularity_review",
+    "actual_ack": "2026-10-07T12:42:12Z",
+    "lease_start": "2026-10-07T12:41:28.700001+00:00",
+    "source_cut": "2026-10-07T12:58:28.700001+00:00",
+    "seal_cut": "2026-10-07T13:01:28.700001+00:00",
+    "source_revision": "bf8a5373a409181a42d5dc06be06a2c6aca611e6",
+    "protected_baseline_schemas": 34,
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "actual_model": null,
+    "actual_outcomes": "pending"
+  },
+  "f11_root_integration_runner_prepare_a63": {
+    "agent": "/root/n7_a58_integration_readiness_author",
+    "actual_followup": true,
+    "actual_ack": null,
+    "runtime_lease": false,
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "medium",
+    "actual_model": null
   }
 }
