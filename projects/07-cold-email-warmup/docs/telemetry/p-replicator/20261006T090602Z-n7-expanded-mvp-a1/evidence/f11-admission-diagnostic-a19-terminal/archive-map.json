@@ -1,0 +1,546 @@
+{
+  "files": [
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/clean-strategy-input-manifest.json",
+      "original_sha256": "4943b571abd31e66047f9ab364b6f6a8c796ad3e743a44eddafec73671de7878",
+      "original_bytes": 5983,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/clean-strategy-input-manifest.json",
+      "archive_sha256": "4943b571abd31e66047f9ab364b6f6a8c796ad3e743a44eddafec73671de7878",
+      "archive_bytes": 5983,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/fault/actual-joined.txt",
+      "original_sha256": "1a8081c2442103e5dae5bc5fc6ab70371ffa531d4d1088df47c9c33e5237bb75",
+      "original_bytes": 31,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/fault/actual-joined.txt",
+      "archive_sha256": "1a8081c2442103e5dae5bc5fc6ab70371ffa531d4d1088df47c9c33e5237bb75",
+      "archive_bytes": 31,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/fault/all30-body-1791341623553.json",
+      "original_sha256": "a23dd4b5d5eaface203fcf1a9b9d56565b2137e153f8c115d1fbe22de0e10fd8",
+      "original_bytes": 40868917,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/fault/all30-body-1791341623553.json.gz",
+      "archive_sha256": "117c871121dfac68b2610873493f186a60738a70b6a541d87a6c4499caf13809",
+      "archive_bytes": 1296551,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/fault/launcher-start.txt",
+      "original_sha256": "044e0e8d62e96531f80aa8835d886ad1662ce4f8641901d997ba1460c3ba77cc",
+      "original_bytes": 31,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/fault/launcher-start.txt",
+      "archive_sha256": "044e0e8d62e96531f80aa8835d886ad1662ce4f8641901d997ba1460c3ba77cc",
+      "archive_bytes": 31,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/fault/native-exit.txt",
+      "original_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "original_bytes": 2,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/fault/native-exit.txt",
+      "archive_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "archive_bytes": 2,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/fault/native.log",
+      "original_sha256": "6ea62cf233c2544e12db13a8d675c4cec04fc081846d6da4941f22c020b53d6c",
+      "original_bytes": 1048,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/fault/native.log",
+      "archive_sha256": "6ea62cf233c2544e12db13a8d675c4cec04fc081846d6da4941f22c020b53d6c",
+      "archive_bytes": 1048,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/fault/runner-proc-stat.txt",
+      "original_sha256": "3f1049448bc5f2c46154c9db90a5f9b307c0424b955e5eac55fee126d9a46959",
+      "original_bytes": 325,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/fault/runner-proc-stat.txt",
+      "archive_sha256": "3f1049448bc5f2c46154c9db90a5f9b307c0424b955e5eac55fee126d9a46959",
+      "archive_bytes": 325,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/independent-admission-audit.json",
+      "original_sha256": "7d95a846341d60f702594afed06f8aa81534160019f71bbc3975681bb8fdfa14",
+      "original_bytes": 192896,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/independent-admission-audit.json.gz",
+      "archive_sha256": "0e82b5148cfc183c38fd217becd42c6134bcd3bb831c290b443a018945f68209",
+      "archive_bytes": 17662,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/phase-and-slo-audit.json",
+      "original_sha256": "790fe94c3a68d22e5c03fb5961dfd10afe58dd335033992327fb6048e371aef4",
+      "original_bytes": 22328,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/phase-and-slo-audit.json",
+      "archive_sha256": "790fe94c3a68d22e5c03fb5961dfd10afe58dd335033992327fb6048e371aef4",
+      "archive_bytes": 22328,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/public-before.json",
+      "original_sha256": "f9b6e85cf2ac2ed457e13d6cab4ba461da56457056d7445495fcd740a36e131b",
+      "original_bytes": 4825,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/public-before.json",
+      "archive_sha256": "f9b6e85cf2ac2ed457e13d6cab4ba461da56457056d7445495fcd740a36e131b",
+      "archive_bytes": 4825,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/raw-manifest.json",
+      "original_sha256": "c9afbef9a2867f053f771cd4536758bf9048d70eb84e6c554d9856a81f34d402",
+      "original_bytes": 397642,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/raw-manifest.json.gz",
+      "archive_sha256": "1dac9bddde4944a85e99d1f36fd837ff7c12f2a7b794f6c8122ad771e2b61990",
+      "archive_bytes": 129006,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/receipt-a19.json",
+      "original_sha256": "4ee4f67f0849c345af77a2333f6a0fcb9f74f4e1f074a7fed936fcb87cc1cb4d",
+      "original_bytes": 171506,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/receipt-a19.json.gz",
+      "archive_sha256": "02543975a3af48069e980b17a5168949fbbf2b79f23c3374c751cb362d339053",
+      "archive_bytes": 14401,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/report.md",
+      "original_sha256": "0b1eee76f34b782c950081650654e88001bb7539bb14d6ed06222221270d68c4",
+      "original_bytes": 3677,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/report.md",
+      "archive_sha256": "0b1eee76f34b782c950081650654e88001bb7539bb14d6ed06222221270d68c4",
+      "archive_bytes": 3677,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/runner-a19.sh",
+      "original_sha256": "e8c425b8bbdb165626f8891e2d991e77ededb095fdab99a2a1f396c172c40cee",
+      "original_bytes": 1469,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/runner-a19.sh",
+      "archive_sha256": "e8c425b8bbdb165626f8891e2d991e77ededb095fdab99a2a1f396c172c40cee",
+      "archive_bytes": 1469,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/runner-freeze.json",
+      "original_sha256": "44fe4401d7c488084b74cfc9684c16055a5913ae3d62c4a65633a28b5891a238",
+      "original_bytes": 511,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/runner-freeze.json",
+      "archive_sha256": "44fe4401d7c488084b74cfc9684c16055a5913ae3d62c4a65633a28b5891a238",
+      "archive_bytes": 511,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-fault-setup.json",
+      "original_sha256": "0303fffd14db4f99521182a473a4e648d0239ddfdef732fd6b302d8ddc0a4d43",
+      "original_bytes": 5629,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-fault-setup.json",
+      "archive_sha256": "0303fffd14db4f99521182a473a4e648d0239ddfdef732fd6b302d8ddc0a4d43",
+      "archive_bytes": 5629,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3829897-913300.json",
+      "original_sha256": "492b18f53a4736fbf1d70d1e522d1c9a80cf41ae32ed4c376d2b88105b1d70eb",
+      "original_bytes": 310,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3829897-913300.json",
+      "archive_sha256": "492b18f53a4736fbf1d70d1e522d1c9a80cf41ae32ed4c376d2b88105b1d70eb",
+      "archive_bytes": 310,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3830449-913310.json",
+      "original_sha256": "234cd1ad435785e7e96335ac1dfa9b4df6e58f63e590e067eb07b7edc3b17203",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3830449-913310.json",
+      "archive_sha256": "234cd1ad435785e7e96335ac1dfa9b4df6e58f63e590e067eb07b7edc3b17203",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3830449-913318.json",
+      "original_sha256": "faa2df18d2fda51cf9ff012a3392cc4993c766248e1c671fea787fef220f530e",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3830449-913318.json",
+      "archive_sha256": "faa2df18d2fda51cf9ff012a3392cc4993c766248e1c671fea787fef220f530e",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3830449-913319.json",
+      "original_sha256": "fde4c7cb7043e35d6d2c642eeb2265ce36c0a4f7842356d5b5a9a665a7181d54",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3830449-913319.json",
+      "archive_sha256": "fde4c7cb7043e35d6d2c642eeb2265ce36c0a4f7842356d5b5a9a665a7181d54",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3830449-913320.json",
+      "original_sha256": "e1373bde0863f3c4a97f16e69b34211b510ba1e213efb847bae9d96f98ad3001",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3830449-913320.json",
+      "archive_sha256": "e1373bde0863f3c4a97f16e69b34211b510ba1e213efb847bae9d96f98ad3001",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3830449-913321.json",
+      "original_sha256": "9a3688c9314859cc327fe7e39e8d2f86abfe6da3950cee5b40f67de8070e9700",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3830449-913321.json",
+      "archive_sha256": "9a3688c9314859cc327fe7e39e8d2f86abfe6da3950cee5b40f67de8070e9700",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3830449-913322.json",
+      "original_sha256": "5c1c57fa668f3465fc995157f3c8d3d56f82e3a5a9299b33dae2a3d48ea45264",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3830449-913322.json",
+      "archive_sha256": "5c1c57fa668f3465fc995157f3c8d3d56f82e3a5a9299b33dae2a3d48ea45264",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3830449-913388.json",
+      "original_sha256": "215bb3e59c0e24ef428d315a4a964981491257ac3e98fb2fe4ce609affc06c42",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3830449-913388.json",
+      "archive_sha256": "215bb3e59c0e24ef428d315a4a964981491257ac3e98fb2fe4ce609affc06c42",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3830449-913525.json",
+      "original_sha256": "2849bdc4300ce658b00ce9d5fafdb61472262a77a96be1582a3fcbec6436be20",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3830449-913525.json",
+      "archive_sha256": "2849bdc4300ce658b00ce9d5fafdb61472262a77a96be1582a3fcbec6436be20",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3830461-913323.json",
+      "original_sha256": "2a619a6876d8b7bb9e519c7d6a415eab65730b14a941f013c020562b92793ad1",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3830461-913323.json",
+      "archive_sha256": "2a619a6876d8b7bb9e519c7d6a415eab65730b14a941f013c020562b92793ad1",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3830461-913325.json",
+      "original_sha256": "f6fcd31fbf5979c6bf9fc5b35b32e89891c6045c7045949be2d3b22d7cf0bde9",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3830461-913325.json",
+      "archive_sha256": "f6fcd31fbf5979c6bf9fc5b35b32e89891c6045c7045949be2d3b22d7cf0bde9",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3830461-913326.json",
+      "original_sha256": "59cf7bc1ea41fa93097756bcf65740a1126da1e878ccac451327ca994ba71d7a",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3830461-913326.json",
+      "archive_sha256": "59cf7bc1ea41fa93097756bcf65740a1126da1e878ccac451327ca994ba71d7a",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3830461-913327.json",
+      "original_sha256": "d8ccc8e43f25c1d19dc45e7a059ef342e2bbab78ed6c37aea14c1f20a01159de",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3830461-913327.json",
+      "archive_sha256": "d8ccc8e43f25c1d19dc45e7a059ef342e2bbab78ed6c37aea14c1f20a01159de",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3830461-913328.json",
+      "original_sha256": "5c693d99d17afce3ef14f26d5d155b79c65b8259b8aabd43dde9faec00a4dd67",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3830461-913328.json",
+      "archive_sha256": "5c693d99d17afce3ef14f26d5d155b79c65b8259b8aabd43dde9faec00a4dd67",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3830461-913329.json",
+      "original_sha256": "df6564c728c3d758f74210b72944a57f723a34914286c34984142a69fb5bc38f",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3830461-913329.json",
+      "archive_sha256": "df6564c728c3d758f74210b72944a57f723a34914286c34984142a69fb5bc38f",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3830461-913526.json",
+      "original_sha256": "62916c2f95e71e377ed54fc9c3c4245b5961ab3c6cd51b8c9412e546c14d9c36",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3830461-913526.json",
+      "archive_sha256": "62916c2f95e71e377ed54fc9c3c4245b5961ab3c6cd51b8c9412e546c14d9c36",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3830461-913875.json",
+      "original_sha256": "7bccf94a71fbc2d9cbea659fc91f1dc69e3f0f0a6dfb717ff74b7e28bf6f10f1",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3830461-913875.json",
+      "archive_sha256": "7bccf94a71fbc2d9cbea659fc91f1dc69e3f0f0a6dfb717ff74b7e28bf6f10f1",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3876292-913723.json",
+      "original_sha256": "2a699c0fb9b5f1a484f3aad4dd783abf9017fc85faacd6e4f02b64b6400aa725",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3876292-913723.json",
+      "archive_sha256": "2a699c0fb9b5f1a484f3aad4dd783abf9017fc85faacd6e4f02b64b6400aa725",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3876292-913724.json",
+      "original_sha256": "caa45245e8fc51cf3ade6317eb9fe36ab0e4fc9b0cc5ced8e068e55e75794fa2",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3876292-913724.json",
+      "archive_sha256": "caa45245e8fc51cf3ade6317eb9fe36ab0e4fc9b0cc5ced8e068e55e75794fa2",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3876292-913725.json",
+      "original_sha256": "fa9a53fe5f7c9b131b846b45f4f1548ba1f20fc5a5a5d536d085a7f44bc7659f",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3876292-913725.json",
+      "archive_sha256": "fa9a53fe5f7c9b131b846b45f4f1548ba1f20fc5a5a5d536d085a7f44bc7659f",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3876292-913726.json",
+      "original_sha256": "14f31845da776230339936bd8f21892e123081f273e404536db3cfdf2ba67003",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3876292-913726.json",
+      "archive_sha256": "14f31845da776230339936bd8f21892e123081f273e404536db3cfdf2ba67003",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3876292-913727.json",
+      "original_sha256": "ae86e13daf8c36470b5b826d49a3f8c5abc1ee42adcdb429acc03a051fe9eb05",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3876292-913727.json",
+      "archive_sha256": "ae86e13daf8c36470b5b826d49a3f8c5abc1ee42adcdb429acc03a051fe9eb05",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3876292-913728.json",
+      "original_sha256": "c4ae86263ca2b037189e1c7562efe1714890ed83905aaf749785bd03f5d7ec8a",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3876292-913728.json",
+      "archive_sha256": "c4ae86263ca2b037189e1c7562efe1714890ed83905aaf749785bd03f5d7ec8a",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3876292-913848.json",
+      "original_sha256": "2174dcd44f82124fdef2f61ce9e6438d92fe568456f51d6d1d27026796014dcb",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3876292-913848.json",
+      "archive_sha256": "2174dcd44f82124fdef2f61ce9e6438d92fe568456f51d6d1d27026796014dcb",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3876292-913874.json",
+      "original_sha256": "62357bf05c9d347ff36666420b9f9d19b581124f9e8cf2175a0e5db86f85224a",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3876292-913874.json",
+      "archive_sha256": "62357bf05c9d347ff36666420b9f9d19b581124f9e8cf2175a0e5db86f85224a",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-session-3876292-913876.json",
+      "original_sha256": "53ddc4181efd095cc6bef39d49493593001b42700fa199a9cb39624be856522c",
+      "original_bytes": 312,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-session-3876292-913876.json",
+      "archive_sha256": "53ddc4181efd095cc6bef39d49493593001b42700fa199a9cb39624be856522c",
+      "archive_bytes": 312,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-setup-freeze.json",
+      "original_sha256": "7818a54cb4c4fd1bf0941186358b17142f19e541b134611e9ca1b5189a88305b",
+      "original_bytes": 346,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-setup-freeze.json",
+      "archive_sha256": "7818a54cb4c4fd1bf0941186358b17142f19e541b134611e9ca1b5189a88305b",
+      "archive_bytes": 346,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/schema-setup.mjs",
+      "original_sha256": "459754e36d854fdf5529a0795729b072186ba7c1c60ee6d49fcdfa18981e06fa",
+      "original_bytes": 3666,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/schema-setup.mjs",
+      "archive_sha256": "459754e36d854fdf5529a0795729b072186ba7c1c60ee6d49fcdfa18981e06fa",
+      "archive_bytes": 3666,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/source-binding.json",
+      "original_sha256": "607be31ac771348d6f04876071115882cc201d635a1f33954ddaacb5a562f102",
+      "original_bytes": 36842,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/source-binding.json.gz",
+      "archive_sha256": "b1a5c95fbd6d5b5ed70cdf673cfe44df4d535a97df0df417e6d47879def0c415",
+      "archive_bytes": 10974,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/strategy-clarification.md",
+      "original_sha256": "04eef2ba8e96aa12c7653e8c7e3b4e0c2444a5e467ee53b3ea050b0965b0f5b5",
+      "original_bytes": 1714,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/strategy-clarification.md",
+      "archive_sha256": "04eef2ba8e96aa12c7653e8c7e3b4e0c2444a5e467ee53b3ea050b0965b0f5b5",
+      "archive_bytes": 1714,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/strategy-pack-seal.json",
+      "original_sha256": "f788e28a95b92bb29c0af491221f93bde8d6e7f05cc528a22f6721801fd4b6d5",
+      "original_bytes": 415,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/strategy-pack-seal.json",
+      "archive_sha256": "f788e28a95b92bb29c0af491221f93bde8d6e7f05cc528a22f6721801fd4b6d5",
+      "archive_bytes": 415,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/terminal-db-readonly-freeze.json",
+      "original_sha256": "83ede9c84c048cf1e033f34347737bad2a8cd29039be17cd4ad1f9872d8298a1",
+      "original_bytes": 224,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/terminal-db-readonly-freeze.json",
+      "archive_sha256": "83ede9c84c048cf1e033f34347737bad2a8cd29039be17cd4ad1f9872d8298a1",
+      "archive_bytes": 224,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/terminal-db-readonly.json",
+      "original_sha256": "a01b0f4c616b1a4883b81a0adf5bad31666a5e4b0cb99fea59c052087a2605a0",
+      "original_bytes": 46088,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/terminal-db-readonly.json.gz",
+      "archive_sha256": "ede3527d1cba452be0c4929da2d28710891085a37ee7190cb5eb0bccd9146d45",
+      "archive_bytes": 6486,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/terminal-db-readonly.mjs",
+      "original_sha256": "43215b041d144d01a907d68ddec81729d40542838becebdae04ab5f841e72495",
+      "original_bytes": 4818,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/terminal-db-readonly.mjs",
+      "archive_sha256": "43215b041d144d01a907d68ddec81729d40542838becebdae04ab5f841e72495",
+      "archive_bytes": 4818,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/unready-admission-results.json",
+      "original_sha256": "269ff9358b3a3711165d1669a6d8a4af15e7ce62145e9c6f2b786c099b54e921",
+      "original_bytes": 165536,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/unready-admission-results.json.gz",
+      "archive_sha256": "b337e9412d6efba67e4506e3af8e3d662c267021a6ea3469562ef5bf6542848a",
+      "archive_bytes": 17146,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/worker-start-3830449-1791341623623.json",
+      "original_sha256": "54be97cf4a0be78ae52b04e9d7502150c3b6063062b4bf075b6de17b5eddeaeb",
+      "original_bytes": 77,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/worker-start-3830449-1791341623623.json",
+      "archive_sha256": "54be97cf4a0be78ae52b04e9d7502150c3b6063062b4bf075b6de17b5eddeaeb",
+      "archive_bytes": 77,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/worker-start-3830461-1791341623960.json",
+      "original_sha256": "f444d6ddd556b7169246d0b6729c225c95580fd56ba8afc9c218665b9feb9437",
+      "original_bytes": 77,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/worker-start-3830461-1791341623960.json",
+      "archive_sha256": "f444d6ddd556b7169246d0b6729c225c95580fd56ba8afc9c218665b9feb9437",
+      "archive_bytes": 77,
+      "lossless": true,
+      "original_retained": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a19/worker-start-3876292-1791341773765.json",
+      "original_sha256": "7f13e535851e00329d430f22fbf301189ee06b40adf75b7d86fb4d48c55a4a1e",
+      "original_bytes": 77,
+      "archived_path": "evidence/f11-admission-diagnostic-a19-terminal/worker-start-3876292-1791341773765.json",
+      "archive_sha256": "7f13e535851e00329d430f22fbf301189ee06b40adf75b7d86fb4d48c55a4a1e",
+      "archive_bytes": 77,
+      "lossless": true,
+      "original_retained": true
+    }
+  ],
+  "original_bytes": 41944810,
+  "archive_bytes": 1557609
+}

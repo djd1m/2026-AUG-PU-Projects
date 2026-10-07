@@ -1,0 +1,39 @@
+{
+  "stage": "PLAN",
+  "status": "completed",
+  "ack_utc": "2026-10-07T03:05:50Z",
+  "substantive_deadline_utc": "2026-10-07T03:11:50Z",
+  "terminal_deadline_utc": "2026-10-07T03:13:50Z",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "HIGH",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gap": "Host actual model, token usage and cost unavailable",
+  "profile": "model-routing-econom",
+  "input_manifest_sha256": "4943b571abd31e66047f9ab364b6f6a8c796ad3e743a44eddafec73671de7878",
+  "verdict": "READY_FOR_BOUNDED_IMPLEMENTATION",
+  "product_acceptance": "BLOCKED_PENDING_REQUIRED_WITNESSES_AND_NEW_HIGH_REVIEW",
+  "finished_at_utc": "2026-10-07T03:11:50.602176+00:00",
+  "elapsed_wall_ms": 360602,
+  "active_wall_ms": null,
+  "source_revision": "8c00eb55cda2be0f8d8dec827d8fbd995665e74d",
+  "production_source_revision": "c67eb5aa13d0917a817581bd4bf548beb6a4a1d8",
+  "input_unchanged": true,
+  "checks": {
+    "all_input_sha256_before_after": "pass",
+    "query_hash_actual_rowcount_binding": "pass",
+    "substantive_algorithm_and_counterexamples": "completed",
+    "tests": "not_run_authorized_planning_only",
+    "build": "not_run_authorized_planning_only",
+    "database": "not_accessed",
+    "e2e_preflight": "not_applicable_planning_only"
+  },
+  "artifacts": {
+    "repair_plan.md": "ca48029d438e6e8a64690137f85cdd6898cf914468ce7f3a2ca6022ad0d2b02e",
+    "raw_binding_excerpt.json": "0dac31dde56835b347242a6f4927fd34f211d47fbe0d4d956480fa57f1c7473d",
+    "context_manifest.json": "95d30ff23ff68fc119aa927a0f6cf483c39e9ac26c10f8338392cc270f5895e0"
+  },
+  "next_executor": "parent coordinator must launch bounded MEDIUM implementation and verify actual launch",
+  "model_measurement_gap": "Host actual model/effort, usage, cost unavailable; requested is not actual"
+}
