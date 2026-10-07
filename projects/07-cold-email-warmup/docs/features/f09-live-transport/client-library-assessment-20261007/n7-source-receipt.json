@@ -1,0 +1,41 @@
+{
+  "revision": "b6e8ae16e8feb6c67888eb2f006cfbb299b40197",
+  "files": [
+    {
+      "path": "src/dispatch/smtp.ts",
+      "bytes": 3599,
+      "physical_lines": 25,
+      "sha256": "be65ba01ba2349c52de66806d337b285321a868d0b6c1f80bd1e45ed4e020887"
+    },
+    {
+      "path": "src/dispatch/message.ts",
+      "bytes": 3899,
+      "physical_lines": 34,
+      "sha256": "6a7f0d55ae5f4cd8eccf20850ce33edce58cd55fc6f785dbccdde770598d07db"
+    },
+    {
+      "path": "src/replies/imap.ts",
+      "bytes": 4253,
+      "physical_lines": 35,
+      "sha256": "62485b58caa0da5e9211418c7c880dafb24d584a6fbd5654235e51e3cd57c838"
+    },
+    {
+      "path": "src/replies/body.ts",
+      "bytes": 7736,
+      "physical_lines": 38,
+      "sha256": "e70c4f6501b980bd48e1f003bdd420af61000062e6d9db711195ffd22a53552f"
+    },
+    {
+      "path": "src/mailboxes/transport-channel.ts",
+      "bytes": 10281,
+      "physical_lines": 83,
+      "sha256": "720e9f8f70bf258a354be82d1cd0e3bf56ffe34e8eb8510baa39adc6c2b55e45"
+    },
+    {
+      "path": "src/mailboxes/transport-child.ts",
+      "bytes": 1731,
+      "physical_lines": 17,
+      "sha256": "7480aee06523bacc2157e87b05c3e51774894f24c6ca44d7ba1241f1576b9f59"
+    }
+  ]
+}
