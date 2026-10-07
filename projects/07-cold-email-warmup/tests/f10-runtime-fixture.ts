@@ -1,13 +1,29 @@
 import { performance } from 'node:perf_hooks';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
+import { appendFile } from 'node:fs/promises';
 import { loadConfig } from '../src/config.js';
 import { createPool,migrate } from '../src/db.js';
 export async function runtimeFixture(count=5){
  const config=loadConfig(),pool=createPool(config.databaseUrl);
- await assertOwnedFixtureDatabase(pool);
-
- await migrate(pool);await pool.query('TRUNCATE tenant CASCADE');await pool.query('UPDATE runtime_reconcile SET after_created_at=NULL,after_mailbox=NULL WHERE id=1');
+ const evidenceDir=process.env.F10_EVIDENCE_DIR,fixtureRun=evidenceDir?randomUUID():undefined;
+ let currentPhase:'assert_owned'|'migrate'|'truncate_tenant'|'reconcile_reset'='assert_owned';
+ const checkpoint=async(event:'begin'|'complete'|'failed',error?:unknown)=>{
+  if(!evidenceDir)return;
+  const safe=(value:unknown)=>typeof value==='string'&&/^[A-Za-z0-9_]{1,64}$/.test(value)?value:null;
+  const failure=error as {name?:unknown;code?:unknown}|null|undefined;
+  await appendFile(`${evidenceDir}/runtime-fixture-reset.jsonl`,JSON.stringify({fixtureRun,count,pid:process.pid,phase:currentPhase,event,utc:new Date().toISOString(),monotonicMs:performance.now(),...(event==='failed'?{errorName:safe(failure?.name),errorCode:safe(failure?.code)}:{})})+'\n');
+ };
+ try{
+  await checkpoint('begin');await assertOwnedFixtureDatabase(pool);await checkpoint('complete');
+  currentPhase='migrate';await checkpoint('begin');await migrate(pool);await checkpoint('complete');
+  currentPhase='truncate_tenant';await checkpoint('begin');await pool.query('TRUNCATE tenant CASCADE');await checkpoint('complete');
+  currentPhase='reconcile_reset';await checkpoint('begin');await pool.query('UPDATE runtime_reconcile SET after_created_at=NULL,after_mailbox=NULL WHERE id=1');await checkpoint('complete');
+ }catch(error){
+  // An absent failed entry makes the journal incomplete; journal IO never replaces the original error.
+  try{await checkpoint('failed',error);}catch{}
+  throw error;
+ }
  await pool.query("INSERT INTO transport_operation(protocol,slot,header_reserved) VALUES('smtp',1,false),('smtp',2,false),('imap',1,false),('imap',2,false),('imap',3,false),('imap',4,true) ON CONFLICT DO NOTHING");
  const tenant=randomUUID(),boxes:string[]=[];await pool.query('INSERT INTO tenant(id) VALUES($1)',[tenant]);
  for(let i=0;i<count;i++){
