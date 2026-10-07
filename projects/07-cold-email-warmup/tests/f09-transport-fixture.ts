@@ -48,7 +48,7 @@ export async function recoveryScenario(){
  const {publishTransportGrant,transportFingerprint}=await import('../src/mailboxes/transport-authority.js'),{SubmissionStore}=await import('../src/dispatch/submission.js'),{DispatchSeams}=await import('../src/dispatch/seams.js'),{LiveReplyAdapter}=await import('../src/replies/adapter.js'),{PollWorker,identity}=await import('../src/replies/worker.js');
  const config={...loadConfig(),dispatchMode:'live_provider' as const,pollMode:'live_provider' as const},pool=createPool(config.databaseUrl),behavior:TransportBehavior={disconnectAfterData:true,uidNext:2,headers:[]},fixture=await transportFixture(behavior);
  try{
-  assert.equal((await pool.query('SELECT current_database() AS name')).rows[0].name,'n7f10_a2');await migrate(pool);await pool.query('TRUNCATE tenant,auth_bucket CASCADE');await pool.query("INSERT INTO transport_operation(protocol,slot) VALUES('smtp',1),('smtp',2),('imap',1),('imap',2),('imap',3),('imap',4) ON CONFLICT DO NOTHING");const app=await application(config,pool,{resolver:async()=>[{address:'8.8.8.8',family:4}]});
+  await assertOwnedFixtureDatabase(pool);await migrate(pool);await pool.query('TRUNCATE tenant,auth_bucket CASCADE');await pool.query("INSERT INTO transport_operation(protocol,slot) VALUES('smtp',1),('smtp',2),('imap',1),('imap',2),('imap',3),('imap',4) ON CONFLICT DO NOTHING");const app=await application(config,pool,{resolver:async()=>[{address:'8.8.8.8',family:4}]});
   const tenant=randomUUID(),account=randomUUID();await pool.query('INSERT INTO tenant(id) VALUES($1)',[tenant]);await pool.query('INSERT INTO account(id,tenant_id,email,password_hash) VALUES($1,$2,$3,$4)',[account,tenant,'f09@example.com','not-login']);
   const actor={tenant_id:tenant,account_id:account},mailbox=(await app.mailboxes.save(tenant,{...transportInput,senderAddress:'a@example.com'})).id;
   await pool.query("UPDATE mailbox SET state='verified_test' WHERE id=$1",[mailbox]);await seedCapacity(pool,new Date());
@@ -68,7 +68,7 @@ export async function transportContext(scope:'campaign'|'pool'='campaign',grants
  const {readFile}=await import('node:fs/promises'),{randomUUID}=await import('node:crypto');
  const {loadConfig}=await import('../src/config.js'),{createPool,migrate}=await import('../src/db.js'),{application}=await import('../src/server.js'),{seedCapacity}=await import('./capacity-fixture.js');
  const {publishTransportGrant,transportFingerprint}=await import('../src/mailboxes/transport-authority.js'),{DispatchSeams}=await import('../src/dispatch/seams.js');
- const config={...loadConfig(),dispatchMode:'live_provider' as const,pollMode:'live_provider' as const},pool=createPool(config.databaseUrl);assert.equal((await pool.query('SELECT current_database() AS name')).rows[0].name,'n7f10_a2');await migrate(pool);await pool.query('TRUNCATE tenant,auth_bucket CASCADE');await pool.query("INSERT INTO transport_operation(protocol,slot) VALUES('smtp',1),('smtp',2),('imap',1),('imap',2),('imap',3),('imap',4) ON CONFLICT DO NOTHING");
+ const config={...loadConfig(),dispatchMode:'live_provider' as const,pollMode:'live_provider' as const},pool=createPool(config.databaseUrl);await assertOwnedFixtureDatabase(pool);await migrate(pool);await pool.query('TRUNCATE tenant,auth_bucket CASCADE');await pool.query("INSERT INTO transport_operation(protocol,slot) VALUES('smtp',1),('smtp',2),('imap',1),('imap',2),('imap',3),('imap',4) ON CONFLICT DO NOTHING");
  const app=await application(config,pool,{resolver:async()=>[{address:'8.8.8.8',family:4}]}),actors:import('../src/auth/store.js').Identity[]=[],boxes:string[]=[];
  const token=(await readFile(process.env.OPERATOR_TOKEN_FILE!,'utf8')).trim();
  for(let i=0;i<2;i++){const tenant=randomUUID(),account=randomUUID();await pool.query('INSERT INTO tenant(id) VALUES($1)',[tenant]);await pool.query('INSERT INTO account(id,tenant_id,email,password_hash) VALUES($1,$2,$3,$4)',[account,tenant,`f09-${i}@example.com`,'not-login']);actors.push({tenant_id:tenant,account_id:account});boxes.push((await app.mailboxes.save(tenant,{...transportInput,senderAddress:i?'b@example.com':'a@example.com'})).id);await pool.query("UPDATE mailbox SET state='verified_test' WHERE id=$1",[boxes[i]]);}
@@ -81,4 +81,13 @@ export async function transportContext(scope:'campaign'|'pool'='campaign',grants
  if(scope==='campaign')await app.campaigns.start(actors[0]!,campaign.id,{mailboxIds:[boxes[0]]},new Date());else await pool.query("INSERT INTO send_job(id,tenant_id,mailbox_id,recipient_mailbox_id,scope,state,due_at,payload,pair_key) VALUES($1,$2,$3,$4,'pool','queued',clock_timestamp(),$5,$6)",[randomUUID(),actors[0]!.tenant_id,boxes[0],boxes[1],{subject:'Hello',body:'Body'},[...boxes].sort().join(':')+':'+day]);
  const claim=async(now?:Date)=>{const job=await app.dispatch.claim(randomUUID(),now);assert.ok(job);return job;};
  return {pool,config,app,actors,boxes,token,campaign,publish,refresh,claim,async close(){await pool.end();}};
+}
+
+async function assertOwnedFixtureDatabase(pool:import('pg').Pool){
+ const row=(await pool.query("SELECT current_database() AS name,current_user AS role,(SELECT pg_get_userbyid(datdba) FROM pg_database WHERE datname=current_database()) AS owner")).rows[0];
+ if(process.env.DATABASE_NAME==='n7f11_a8'){
+  const {readFile}=await import('node:fs/promises'),lease=JSON.parse(await readFile(process.env.N7_DB_OWNERSHIP_LEASE!,'utf8'));
+  assert.equal(row.name,'n7f11_a8');assert.equal(lease.database,row.name);assert.equal(row.role,lease.owner_role);assert.equal(row.owner,lease.owner_role);
+  if((await pool.query("SELECT to_regclass('public.transport_operation') AS present")).rows[0].present)assert.equal((await pool.query('SELECT count(*) AS n FROM transport_operation WHERE operation IS NOT NULL')).rows[0].n,'0','owned fixture reset waits for exact physical joins');
+ }else assert.equal(row.name,'n7f10_a2','legacy fixture namespace remains unchanged');
 }

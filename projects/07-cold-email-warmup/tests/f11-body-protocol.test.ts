@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { readImapBodyStage } from '../src/mailboxes/transport-channel.js';
+import { performance } from 'node:perf_hooks';
+import { readImapBodyStage,TransportFailure } from '../src/mailboxes/transport-channel.js';
 import { consumeNativeBodyProof } from '../src/replies/adapter.js';
 import { parsePlainBody } from '../src/replies/body.js';
 import { bodyFixture,bodyInput,bodyAllowlist } from './f11-body-fixture.js';
@@ -25,6 +26,13 @@ test('F11 two slow native phases cannot both fit a single absolute five-second w
  const f=await bodyFixture({phaseDelayMs:2800}),end=Date.now()+5000;try{
   const metadata=await readImapBodyStage(bodyInput,bodyAllowlist,'1',1,'body_metadata',new AbortController().signal,f.connector,end);assert.ok(metadata.length>0);
   await new Promise<void>(r=>setImmediate(r));
-  await assert.rejects(readImapBodyStage(bodyInput,bodyAllowlist,'1',1,'body_text',new AbortController().signal,f.connector,end));await new Promise(r=>setTimeout(r,25));assert.equal(f.sockets.size,0);assert.ok(Date.now()-end<300);assert.equal(f.commands.filter(c=>c.includes('BODY.PEEK[TEXT]')).length,1);
+  await assert.rejects(readImapBodyStage(bodyInput,bodyAllowlist,'1',1,'body_text',new AbortController().signal,f.connector,end),error=>error instanceof TransportFailure&&error.code==='timeout');await new Promise(r=>setTimeout(r,25));assert.equal(f.sockets.size,0);assert.ok(Date.now()-end<300);assert.equal(f.commands.filter(c=>c.includes('BODY.PEEK[TEXT]')).length,1);console.info(JSON.stringify({witness:'two_phase_5s_negative',end,errorCode:'timeout',wire:f.wire}));
  }finally{await f.close();}
 });
+
+export async function twoPhaseWindowWitness(){
+ const f=await bodyFixture({phaseDelayMs:2800}),start=Date.now(),end=start+12000,phases:unknown[]=[];
+ const phase=async(kind:'body_metadata'|'body_text')=>{const begun={utc:new Date().toISOString(),monotonicMs:performance.now()};const bytes=await readImapBodyStage(bodyInput,bodyAllowlist,'1',1,kind,new AbortController().signal,f.connector,end);const finished={utc:new Date().toISOString(),monotonicMs:performance.now()};phases.push({kind,begun,finished,elapsedMs:finished.monotonicMs-begun.monotonicMs});assert.ok(finished.monotonicMs-begun.monotonicMs<=5000);return bytes;};
+ try{const metadata=await phase('body_metadata');const yielded={utc:new Date().toISOString(),monotonicMs:performance.now()};await new Promise<void>(r=>setImmediate(r));const bytes=await phase('body_text');assert.equal(parsePlainBody(metadata,bytes).kind,'text');assert.ok(Date.now()<end);await new Promise(r=>setTimeout(r,25));assert.equal(f.sockets.size,0);assert.equal(f.peak,1);console.info(JSON.stringify({witness:'two_phase_12s_positive',start,end,yielded,phases,wire:f.wire}));}finally{await f.close();}
+}
+test('F11 admitted twelve-second window completes both legal 2800ms native phases',twoPhaseWindowWitness);

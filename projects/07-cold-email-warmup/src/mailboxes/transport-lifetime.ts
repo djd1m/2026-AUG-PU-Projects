@@ -15,12 +15,12 @@ export async function runTransportChild<T>(pool:Pool,slot:TransportSlot,request:
  if(request.deadline!==undefined&&(!Number.isFinite(request.deadline)||request.deadline<=Date.now()))throw new Error('transport_timeout');
  const child=fork(new URL(import.meta.url.endsWith('.ts')?'./transport-child.ts':'./transport-child.js',import.meta.url),[],{stdio:['ignore','ignore','ignore','ipc'],serialization:'advanced'});
  bindTransportChild(slot,child);
- const exit=new Promise<void>(resolve=>child.once('exit',()=>resolve()));let timer:NodeJS.Timeout|undefined;let abort:()=>void=()=>{};let result:T|undefined;let failed=false;
+ const exit=new Promise<void>(resolve=>child.once('exit',()=>resolve()));let timer:NodeJS.Timeout|undefined;let abort:()=>void=()=>{};let result:T|undefined;let failed=false,failureCode='transport_child_failed';
  try{
   await new Promise<void>((resolve,reject)=>{
    child.once('error',()=>{failed=true;reject(new Error('transport_child_failed'));});
-   child.on('message',(value:unknown)=>{const v=value as {ok:boolean;result?:T};if(!v||v.ok!==true){failed=true;return;}result=v.result;});
-   child.once('exit',()=>{if(failed||result===undefined)reject(new Error('transport_child_failed'));else resolve();});
+   child.on('message',(value:unknown)=>{const v=value as {ok:boolean;result?:T;code?:string};if(!v||v.ok!==true){failed=true;failureCode=v?.code==='timeout'?'transport_timeout':v?.code==='cancelled'?'transport_cancelled':'transport_child_failed';return;}result=v.result;});
+   child.once('exit',code=>{if(code!==0||failed||result===undefined)reject(new Error(failureCode));else resolve();});
    abort=()=>reject(new Error('transport_cancelled'));signal?.addEventListener('abort',abort,{once:true});timer=setTimeout(()=>reject(new Error('transport_timeout')),request.kind==='smtp'?95000:request.kind.startsWith('body_')?Math.max(1,Math.min(5000,(request.deadline??Date.now()+5000)-Date.now())):35000);
    if(signal?.aborted){reject(new Error('transport_cancelled'));return;}child.send(request);
   });return result!;

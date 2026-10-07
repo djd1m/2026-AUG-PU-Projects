@@ -63,6 +63,7 @@ export class TransportChannel {
 // Body stages have a separate five-second budget and explicit sentinel limit.
 // Header callers keep the default 8192-byte literal cap.
 export async function readImapBodyStage(input:import('./input.js').MailboxInput,allowlist:ReadonlyMap<string,number>,expected:string,targetUid:number,stage:'body_metadata'|'body_text',signal:AbortSignal,fixture?:TransportFixture,deadline?:number):Promise<Buffer>{
+ if(deadline!==undefined&&!Number.isFinite(deadline))throw new TransportFailure('timeout');
  if(!/^[1-9]\d{0,9}$/.test(expected)||!Number.isInteger(targetUid)||targetUid<1||targetUid>4294967295)throw new TransportFailure('protocol_invalid');
  const c=new TransportChannel(new TransportBudget(signal,Math.min(5000,(deadline??Date.now()+5000)-Date.now())),65536,fixture),invalid=()=>new TransportFailure('protocol_invalid');
  try{

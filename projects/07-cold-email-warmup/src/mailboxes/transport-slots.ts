@@ -12,6 +12,8 @@ export async function acquireTransportSlot(pool:Pool,protocol:TransportSlot['pro
 // Trusted caller must already hold FIRST pg_advisory_xact_lock(7,1).
 export async function acquireTransportSlotInTransaction(c:PoolClient,protocol:TransportSlot['protocol'],tenant:string,mailbox:string,purpose?:'body'):Promise<TransportSlot> {
   if(purpose==='body'){
+   // All occupied operations, including unknown predecessors and headers, count
+   // against body admission. No lease or wall clock can reclaim this capacity.
    if(protocol!=='imap'||(await c.query("SELECT 1 FROM mailbox_poll WHERE mailbox_id=$1 AND NOT scan_complete UNION ALL SELECT 1 FROM runtime_due WHERE mailbox_id=$1 AND kind='poll' AND (state='claimed' OR due_at<=clock_timestamp())",[mailbox])).rowCount)throw new HttpError(503,'transport_busy');
    if(Number((await c.query("SELECT count(*) AS n FROM transport_operation WHERE protocol='imap' AND operation IS NOT NULL")).rows[0].n)>=3)throw new HttpError(503,'transport_busy');
   }

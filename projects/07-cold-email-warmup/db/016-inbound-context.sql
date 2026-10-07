@@ -18,8 +18,10 @@ CREATE TABLE incoming_ai_event (
  capture_phase text NOT NULL DEFAULT 'metadata' CHECK(capture_phase IN ('metadata','text')),
  phase_metadata jsonb, phase_revision text, phase_mailbox_revision text,
  authenticated_run_id uuid, authenticated_attempt integer, authenticated_at timestamptz, authenticated_root_message_id text, authenticated_recipient_hash text,
+ queue_eligible_at timestamptz, attempt_deadline timestamptz, capture_service_seq bigserial,
+ CHECK((queue_eligible_at IS NULL AND attempt_deadline IS NULL) OR (queue_eligible_at IS NOT NULL AND attempt_deadline<=queue_eligible_at+interval '450 seconds' )),
  window_start timestamptz, window_end timestamptz, window_completed_at timestamptz, window_revision text, window_mailbox_revision text,
- CHECK((window_start IS NULL AND window_end IS NULL) OR (window_start IS NOT NULL AND window_end=window_start+interval '5 seconds' AND window_completed_at IS NOT NULL)),
+ CHECK((window_start IS NULL AND window_end IS NULL) OR (window_start IS NOT NULL AND window_end=window_start+interval '12 seconds' AND window_completed_at IS NOT NULL)),
  owner_id uuid, generation bigint NOT NULL DEFAULT 0, lease_until timestamptz, next_attempt_at timestamptz NOT NULL DEFAULT now(),
  UNIQUE(tenant_id,id), UNIQUE(tenant_id,mailbox_id,uidvalidity,uid),
  FOREIGN KEY(tenant_id,mailbox_id) REFERENCES mailbox(tenant_id,id),
@@ -43,7 +45,7 @@ INSERT INTO schema_migration(version) VALUES(16);
 -- Deferred result fence also checks the actual COMMIT clock, after encryption/classification work.
 CREATE OR REPLACE FUNCTION inbound_context_result_deadline() RETURNS trigger LANGUAGE plpgsql AS $$
 BEGIN
- IF NEW.window_end<=clock_timestamp() OR NEW.expires_at<=clock_timestamp() THEN
+ IF NEW.window_end<=clock_timestamp() OR NEW.expires_at<=clock_timestamp() OR NEW.attempt_deadline<=clock_timestamp() THEN
   RAISE EXCEPTION 'capture_window_expired';
  END IF;
  RETURN NEW;

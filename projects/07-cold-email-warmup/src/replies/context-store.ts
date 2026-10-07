@@ -1,7 +1,7 @@
 import { randomUUID,createHash,createHmac } from 'node:crypto';
 import type { Pool,PoolClient } from 'pg';
 import type { Envelope,Keyring } from '../mailboxes/crypto.js';
-import { acquireTransportSlotInTransaction,releaseUnusedTransportSlot } from '../mailboxes/transport-slots.js';
+import { acquireTransportSlotInTransaction,releaseUnusedTransportSlot,type TransportSlot } from '../mailboxes/transport-slots.js';
 import { authorizeTransport } from '../mailboxes/transport-authority.js';
 import type { Config } from '../config.js';
 import { consumeNativeBodyProof,LiveReplyAdapter,type BodyIdentity } from './adapter.js';
@@ -16,10 +16,10 @@ export interface IntentBinding {tenant:string;mailbox:string;uidvalidity:string;
 // Caller already holds FIRST(7,1) and has committed semantic stops before this insert.
 export async function enqueueCaptureClient(c:PoolClient,b:IntentBinding) {
  const owned=b.enrollment!==null&&b.root!==null;
- await c.query(`INSERT INTO incoming_ai_event(id,semantic_event_id,tenant_id,mailbox_id,uidvalidity,uid,origin_run_id,origin_attempt,source,observed_at,enrollment_id,root_job_id,capture_state,reason,state,terminal_at,expires_at,sender_binding,authenticated_run_id,authenticated_attempt,authenticated_at,authenticated_root_message_id,authenticated_recipient_hash)
- VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,CASE WHEN $16 THEN NULL ELSE now() END,CASE WHEN $16 THEN now()+interval '7 days' ELSE now()+interval '24 hours' END,$17,$7,$8,$10,(SELECT message_id FROM send_job WHERE id=$12 AND tenant_id=$3 AND mailbox_id=$4),(SELECT recipient_hash FROM enrollment WHERE id=$11 AND tenant_id=$3))
+ await c.query(`INSERT INTO incoming_ai_event(id,semantic_event_id,tenant_id,mailbox_id,uidvalidity,uid,origin_run_id,origin_attempt,source,observed_at,enrollment_id,root_job_id,capture_state,reason,state,terminal_at,expires_at,sender_binding,authenticated_run_id,authenticated_attempt,authenticated_at,authenticated_root_message_id,authenticated_recipient_hash,queue_eligible_at,attempt_deadline)
+ VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,CASE WHEN $16 THEN NULL ELSE now() END,CASE WHEN $16 THEN now()+interval '7 days' ELSE now()+interval '24 hours' END,$17,$7,$8,$10,(SELECT message_id FROM send_job WHERE id=$12 AND tenant_id=$3 AND mailbox_id=$4),(SELECT recipient_hash FROM enrollment WHERE id=$11 AND tenant_id=$3),CASE WHEN $16 AND $9='imap_headers' THEN statement_timestamp() END,CASE WHEN $16 AND $9='imap_headers' THEN statement_timestamp()+interval '450 seconds' END)
  ON CONFLICT(tenant_id,mailbox_id,uidvalidity,uid) DO UPDATE SET
- authenticated_run_id=EXCLUDED.authenticated_run_id,authenticated_attempt=EXCLUDED.authenticated_attempt,authenticated_at=EXCLUDED.authenticated_at,
+ queue_eligible_at=COALESCE(incoming_ai_event.queue_eligible_at,EXCLUDED.queue_eligible_at),attempt_deadline=CASE WHEN incoming_ai_event.queue_eligible_at IS NULL AND EXCLUDED.queue_eligible_at IS NULL THEN NULL ELSE LEAST(incoming_ai_event.attempt_deadline,EXCLUDED.attempt_deadline,incoming_ai_event.expires_at) END,authenticated_run_id=EXCLUDED.authenticated_run_id,authenticated_attempt=EXCLUDED.authenticated_attempt,authenticated_at=EXCLUDED.authenticated_at,
  authenticated_root_message_id=EXCLUDED.authenticated_root_message_id,authenticated_recipient_hash=EXCLUDED.authenticated_recipient_hash,generation=incoming_ai_event.generation+1,
  capture_phase='metadata',phase_metadata=NULL,phase_revision=NULL,phase_mailbox_revision=NULL
  WHERE incoming_ai_event.capture_state='pending' AND incoming_ai_event.window_start IS NULL AND incoming_ai_event.enrollment_id=EXCLUDED.enrollment_id
@@ -27,6 +27,7 @@ export async function enqueueCaptureClient(c:PoolClient,b:IntentBinding) {
  AND incoming_ai_event.source=EXCLUDED.source AND incoming_ai_event.expires_at>clock_timestamp()
  AND (incoming_ai_event.authenticated_run_id IS DISTINCT FROM EXCLUDED.authenticated_run_id OR incoming_ai_event.authenticated_attempt<>EXCLUDED.authenticated_attempt)`,[randomUUID(),randomUUID(),b.tenant,b.mailbox,b.uidvalidity,b.uid,b.runId,b.attempt,b.source,b.observedAt,b.enrollment,b.root,owned?'pending':'held',owned?'body_authority_required':'ambiguous_binding',owned?'pending':'held',owned,b.sender?createHash('sha256').update(b.sender).digest('hex'):null]);
 }
+export interface CaptureAdmission {row:{window_end:Date};identity:BodyIdentity;slot:TransportSlot}
 export class ContextStore {
  constructor(readonly pool:Pool,readonly ring:Keyring){}
  // Direct logical claims cannot authorize body IO; runtime quantum claims event and slot together.
@@ -35,9 +36,9 @@ export class ContextStore {
   const evidence=consumeNativeBodyProof(proof),b=evidence.identity;
   try{return await eligibilityTransaction(this.pool,async c=>{
    if(config.pollMode!=='live_provider')throw new HttpError(503,'transport_denied');
-   const authority=await authorizeTransport(c,config,b.tenant,b.mailbox,'imap_body');
+   const authority=await authorizeTransport(c,config,b.tenant,b.mailbox,'imap_body');await authorizeTransport(c,config,b.tenant,b.mailbox,'imap_headers');
    if(authority.revision!==evidence.revision||authority.mailboxRevision!==evidence.mailboxRevision)throw new HttpError(409,'stale_body_authority');
-   const r=(await c.query(`SELECT e.*,n.recipient_envelope,n.recipient_hash FROM incoming_ai_event e JOIN enrollment n ON n.id=e.enrollment_id AND n.tenant_id=e.tenant_id JOIN reply_rescan r ON r.tenant_id=e.tenant_id AND r.mailbox_id=e.mailbox_id JOIN send_job j ON j.tenant_id=e.tenant_id AND j.mailbox_id=e.mailbox_id AND j.id=e.root_job_id AND j.enrollment_id=e.enrollment_id AND j.parent_id IS NULL WHERE e.tenant_id=$1 AND e.mailbox_id=$2 AND e.id=$3 AND e.capture_state='claimed' AND e.window_end>clock_timestamp() AND e.owner_id=$4 AND e.generation=$5 AND e.lease_until>clock_timestamp() AND e.expires_at>clock_timestamp() AND e.authenticated_run_id=$6 AND e.authenticated_attempt=$7 AND e.source=$8 AND e.uidvalidity=$9 AND e.uid=$10 AND r.run_id=e.authenticated_run_id AND r.attempt=e.authenticated_attempt AND r.uidvalidity=e.uidvalidity AND r.provenance=e.source AND j.message_id=e.authenticated_root_message_id AND EXISTS(SELECT 1 FROM capacity_lease l WHERE l.mailbox_id=e.mailbox_id AND l.state='active' AND l.expires_at>clock_timestamp()) AND NOT EXISTS(SELECT 1 FROM suppression s WHERE s.tenant_id=e.tenant_id AND s.recipient_hash=e.authenticated_recipient_hash) AND EXISTS(SELECT 1 FROM mailbox_poll p WHERE p.mailbox_id=e.mailbox_id AND p.scan_complete AND p.completed_at=e.window_completed_at) AND NOT EXISTS(SELECT 1 FROM runtime_due d WHERE d.mailbox_id=e.mailbox_id AND d.kind='poll' AND (d.state='claimed' OR d.due_at<=clock_timestamp())) FOR UPDATE OF e`,[b.tenant,b.mailbox,b.event,b.owner,b.generation,b.runId,b.attempt,b.source,b.uidvalidity,b.uid])).rows[0];
+   const r=(await c.query(`SELECT e.*,n.recipient_envelope,n.recipient_hash FROM incoming_ai_event e JOIN enrollment n ON n.id=e.enrollment_id AND n.tenant_id=e.tenant_id JOIN reply_rescan r ON r.tenant_id=e.tenant_id AND r.mailbox_id=e.mailbox_id JOIN send_job j ON j.tenant_id=e.tenant_id AND j.mailbox_id=e.mailbox_id AND j.id=e.root_job_id AND j.enrollment_id=e.enrollment_id AND j.parent_id IS NULL WHERE e.tenant_id=$1 AND e.mailbox_id=$2 AND e.id=$3 AND e.capture_state='claimed' AND e.window_end>clock_timestamp() AND e.attempt_deadline>clock_timestamp() AND e.owner_id=$4 AND e.generation=$5 AND e.lease_until>clock_timestamp() AND e.expires_at>clock_timestamp() AND e.authenticated_run_id=$6 AND e.authenticated_attempt=$7 AND e.source=$8 AND e.uidvalidity=$9 AND e.uid=$10 AND r.state='complete' AND r.run_id=e.authenticated_run_id AND r.attempt=e.authenticated_attempt AND r.uidvalidity=e.uidvalidity AND r.provenance=e.source AND j.message_id=e.authenticated_root_message_id AND EXISTS(SELECT 1 FROM capacity_lease l WHERE l.mailbox_id=e.mailbox_id AND l.state='active' AND l.expires_at>clock_timestamp()) AND NOT EXISTS(SELECT 1 FROM suppression s WHERE s.tenant_id=e.tenant_id AND s.recipient_hash=e.authenticated_recipient_hash) AND EXISTS(SELECT 1 FROM mailbox_poll p WHERE p.mailbox_id=e.mailbox_id AND p.scan_complete AND p.completed_at=e.window_completed_at) AND NOT EXISTS(SELECT 1 FROM runtime_due d WHERE d.mailbox_id=e.mailbox_id AND d.kind='poll' AND (d.state='claimed' OR d.due_at<=clock_timestamp())) FOR UPDATE OF e`,[b.tenant,b.mailbox,b.event,b.owner,b.generation,b.runId,b.attempt,b.source,b.uidvalidity,b.uid])).rows[0];
    if(!r||evidence.phase!==r.capture_phase||r.window_revision!==authority.revision||r.window_mailbox_revision!==authority.mailboxRevision||r.authenticated_recipient_hash!==r.recipient_hash||r.root_job_id!==b.root||r.enrollment_id!==b.enrollment||r.sender_binding!==b.senderBinding)throw new HttpError(409,'stale_body_claim');
    const sender=singleAddress(openRecipient(r.recipient_envelope as Envelope,b.tenant,r.enrollment_id,this.ring));if(!sender||createHash('sha256').update(sender).digest('hex')!==r.sender_binding)throw new HttpError(409,'stale_body_binding');
    const update=async(sql:string,args:unknown[])=>{if(!(await c.query(sql,args)).rowCount)throw new HttpError(409,'stale_body_claim');};
@@ -68,23 +69,23 @@ export class ContextStore {
   });}finally{evidence.metadata.fill(0);evidence.bytes.fill(0);}
  }
  // One protocol stage per durable claim; the next stage is selected by a later IMAP lane turn.
- async quantum(adapter:LiveReplyAdapter,config:Config,signal:AbortSignal):Promise<boolean>{
+ async quantum(adapter:LiveReplyAdapter,config:Config,signal:AbortSignal,preadmitted?:CaptureAdmission):Promise<boolean>{
   if(signal.aborted)return false;
-  const admission=await eligibilityTransaction(this.pool,async c=>{
+  const admission=preadmitted??await eligibilityTransaction(this.pool,async c=>{
    await expireCaptureWindowsClient(c);
    const row=(await c.query(`SELECT e.* FROM incoming_ai_event e JOIN reply_rescan r ON r.tenant_id=e.tenant_id AND r.mailbox_id=e.mailbox_id
-    WHERE e.source='imap_headers' AND e.next_attempt_at<=clock_timestamp() AND e.expires_at>clock_timestamp() AND e.window_end>clock_timestamp()
+    WHERE e.source='imap_headers' AND e.next_attempt_at<=clock_timestamp() AND e.expires_at>clock_timestamp() AND e.window_end>clock_timestamp() AND e.attempt_deadline>clock_timestamp()
     AND (e.capture_state='pending' OR (e.capture_state='claimed' AND e.lease_until<=clock_timestamp()))
-    AND r.run_id=e.authenticated_run_id AND r.attempt=e.authenticated_attempt AND r.uidvalidity=e.uidvalidity AND r.provenance=e.source AND r.state='complete'
+    AND r.state='complete' AND r.run_id=e.authenticated_run_id AND r.attempt=e.authenticated_attempt AND r.uidvalidity=e.uidvalidity AND r.provenance=e.source AND r.state='complete'
     AND EXISTS(SELECT 1 FROM capacity_lease l WHERE l.mailbox_id=e.mailbox_id AND l.state='active' AND l.expires_at>clock_timestamp())
     AND NOT EXISTS(SELECT 1 FROM runtime_due d WHERE d.mailbox_id=e.mailbox_id AND d.kind='poll' AND (d.state='claimed' OR d.due_at<=clock_timestamp()))
     AND EXISTS(SELECT 1 FROM mailbox_poll p WHERE p.mailbox_id=e.mailbox_id AND p.scan_complete AND p.completed_at=e.window_completed_at)
     AND NOT EXISTS(SELECT 1 FROM suppression s WHERE s.tenant_id=e.tenant_id AND s.recipient_hash=e.authenticated_recipient_hash)
     AND NOT EXISTS(SELECT 1 FROM runtime_due urgent JOIN mailbox_poll hp ON hp.mailbox_id=urgent.mailbox_id WHERE urgent.kind='poll' AND urgent.state='ready' AND urgent.next_check_at<=clock_timestamp() AND hp.completed_at+interval '30 seconds'<=clock_timestamp()+interval '5 seconds')
     AND NOT EXISTS(SELECT 1 FROM transport_operation t WHERE t.protocol='imap' AND t.mailbox_id=e.mailbox_id AND t.operation IS NOT NULL)
-    ORDER BY e.created_at,e.id FOR UPDATE OF e SKIP LOCKED LIMIT 1`)).rows[0];
+    ORDER BY e.window_end,e.capture_service_seq,e.id FOR UPDATE OF e SKIP LOCKED LIMIT 1`)).rows[0];
    if(!row)return null;
-   let authority;try{authority=await authorizeTransport(c,config,row.tenant_id,row.mailbox_id,'imap_body');}catch(error){if(error instanceof HttpError&&error.code==='transport_denied')return null;throw error;}
+   let authority;try{authority=await authorizeTransport(c,config,row.tenant_id,row.mailbox_id,'imap_body');await authorizeTransport(c,config,row.tenant_id,row.mailbox_id,'imap_headers');}catch(error){if(error instanceof HttpError&&error.code==='transport_denied')return null;throw error;}
    if(row.window_revision!==authority.revision||row.window_mailbox_revision!==authority.mailboxRevision)return null;
    const binding=(await c.query(`SELECT n.recipient_envelope,n.recipient_hash FROM enrollment n JOIN send_job j ON j.enrollment_id=n.id AND j.tenant_id=n.tenant_id WHERE n.tenant_id=$1 AND n.id=$2 AND j.id=$3 AND j.mailbox_id=$4 AND j.parent_id IS NULL AND j.message_id=$5`,[row.tenant_id,row.enrollment_id,row.root_job_id,row.mailbox_id,row.authenticated_root_message_id])).rows[0];
    if(!binding||binding.recipient_hash!==row.authenticated_recipient_hash)return null;
@@ -106,7 +107,7 @@ export class ContextStore {
    await eligibilityTransaction(this.pool,async c=>{
     await expireCaptureWindowsClient(c);
     if(signal.aborted)await c.query(`UPDATE incoming_ai_event SET capture_state='held',state='held',reason='capture_cancelled',phase_metadata=NULL,phase_revision=NULL,phase_mailbox_revision=NULL,owner_id=NULL,lease_until=NULL,terminal_at=LEAST(COALESCE(terminal_at,clock_timestamp()),clock_timestamp()),expires_at=LEAST(expires_at,clock_timestamp()+interval '24 hours') WHERE id=$1 AND owner_id=$2 AND generation=$3`,[admission.identity.event,admission.identity.owner,admission.identity.generation]);
-    else await c.query(`UPDATE incoming_ai_event e SET capture_state='pending',owner_id=NULL,lease_until=NULL,next_attempt_at=LEAST(e.window_end,clock_timestamp()+interval '1 second') WHERE e.window_end>clock_timestamp() AND e.id=$1 AND e.owner_id=$2 AND e.generation=$3`,[admission.identity.event,admission.identity.owner,admission.identity.generation]);
+    else await c.query(`UPDATE incoming_ai_event e SET capture_state='pending',owner_id=NULL,lease_until=NULL,next_attempt_at=LEAST(e.window_end,clock_timestamp()+interval '1 second') WHERE e.window_end>clock_timestamp() AND e.attempt_deadline>clock_timestamp() AND e.id=$1 AND e.owner_id=$2 AND e.generation=$3`,[admission.identity.event,admission.identity.owner,admission.identity.generation]);
    });
    if(error instanceof HttpError&&['transport_busy','transport_denied','stale_body_claim','stale_body_binding','stale_body_authority'].includes(error.code)||error instanceof Error&&['transport_cancelled','transport_timeout','transport_child_failed','cleanup_blocked','capture_window_expired'].includes(error.message))return true;
    throw error;
@@ -135,14 +136,22 @@ export class ContextStore {
 
 // Called under FIRST(7,1); expiry never waits for physical cleanup and never renews a window.
 export async function expireCaptureWindowsClient(c:PoolClient){
- await c.query(`UPDATE incoming_ai_event SET capture_state='held',state='held',reason='capture_window_expired',owner_id=NULL,lease_until=NULL,phase_metadata=NULL,phase_revision=NULL,phase_mailbox_revision=NULL,terminal_at=LEAST(COALESCE(terminal_at,window_end),window_end),expires_at=LEAST(expires_at,window_end+interval '24 hours') WHERE window_end<=clock_timestamp() AND capture_state IN ('pending','claimed')`);
+ await c.query(`UPDATE incoming_ai_event SET capture_state='held',state='held',reason='capture_window_expired',owner_id=NULL,lease_until=NULL,phase_metadata=NULL,phase_revision=NULL,phase_mailbox_revision=NULL,terminal_at=LEAST(COALESCE(terminal_at,LEAST(window_end,attempt_deadline)),LEAST(window_end,attempt_deadline)),expires_at=LEAST(expires_at,LEAST(window_end,attempt_deadline)+interval '24 hours') WHERE (window_end<=clock_timestamp() OR attempt_deadline<=clock_timestamp()) AND capture_state IN ('pending','claimed')`);
 }
-export async function openCaptureWindowClient(c:PoolClient,config:Config,tenant:string,mailbox:string,now:Date):Promise<Date|null>{
+export async function openCaptureWindowClient(c:PoolClient,config:Config,tenant:string,mailbox:string,now:Date):Promise<CaptureAdmission|null>{
  await expireCaptureWindowsClient(c);
+ if((await c.query("SELECT 1 FROM incoming_ai_event WHERE window_end>clock_timestamp() AND capture_state='pending' AND next_attempt_at<=clock_timestamp() LIMIT 1")).rowCount)return null;
+ if(Number((await c.query("SELECT count(*) AS n FROM incoming_ai_event WHERE window_end>clock_timestamp() AND capture_state IN ('pending','claimed')")).rows[0].n)>=3)return null;
  let authority;try{authority=await authorizeTransport(c,config,tenant,mailbox,'imap_body');await authorizeTransport(c,config,tenant,mailbox,'imap_headers');}catch(error){if(error instanceof HttpError&&error.code==='transport_denied')return null;throw error;}
- const row=(await c.query(`SELECT e.*,p.completed_at,n.recipient_envelope,n.recipient_hash FROM incoming_ai_event e JOIN reply_rescan r ON r.tenant_id=e.tenant_id AND r.mailbox_id=e.mailbox_id JOIN mailbox_poll p ON p.mailbox_id=e.mailbox_id JOIN enrollment n ON n.tenant_id=e.tenant_id AND n.id=e.enrollment_id JOIN send_job j ON j.tenant_id=e.tenant_id AND j.mailbox_id=e.mailbox_id AND j.id=e.root_job_id AND j.enrollment_id=e.enrollment_id AND j.parent_id IS NULL WHERE e.tenant_id=$1 AND e.mailbox_id=$2 AND e.capture_state='pending' AND e.window_start IS NULL AND EXISTS(SELECT 1 FROM capacity_lease l WHERE l.mailbox_id=e.mailbox_id AND l.state='active' AND l.expires_at>clock_timestamp()) AND NOT EXISTS(SELECT 1 FROM suppression s WHERE s.tenant_id=e.tenant_id AND s.recipient_hash=e.authenticated_recipient_hash) AND e.expires_at>$3 AND e.source='imap_headers' AND r.state='complete' AND p.scan_complete AND p.uidvalidity=e.uidvalidity AND r.uidvalidity=e.uidvalidity AND r.provenance=e.source AND e.authenticated_run_id=r.run_id AND e.authenticated_attempt=r.attempt AND e.authenticated_root_message_id=j.message_id AND e.authenticated_recipient_hash=n.recipient_hash AND p.completed_at+interval '30 seconds'>$3::timestamptz+interval '5 seconds' ORDER BY e.created_at,e.id FOR UPDATE OF e SKIP LOCKED LIMIT 1`,[tenant,mailbox,now])).rows[0];
+ const row=(await c.query(`SELECT e.*,p.completed_at,n.recipient_envelope,n.recipient_hash FROM incoming_ai_event e JOIN reply_rescan r ON r.tenant_id=e.tenant_id AND r.mailbox_id=e.mailbox_id JOIN mailbox_poll p ON p.mailbox_id=e.mailbox_id JOIN enrollment n ON n.tenant_id=e.tenant_id AND n.id=e.enrollment_id JOIN send_job j ON j.tenant_id=e.tenant_id AND j.mailbox_id=e.mailbox_id AND j.id=e.root_job_id AND j.enrollment_id=e.enrollment_id AND j.parent_id IS NULL WHERE e.tenant_id=$1 AND e.mailbox_id=$2 AND e.capture_state='pending' AND e.window_start IS NULL AND EXISTS(SELECT 1 FROM capacity_lease l WHERE l.mailbox_id=e.mailbox_id AND l.state='active' AND l.expires_at>clock_timestamp()) AND NOT EXISTS(SELECT 1 FROM suppression s WHERE s.tenant_id=e.tenant_id AND s.recipient_hash=e.authenticated_recipient_hash) AND e.expires_at>$3 AND e.attempt_deadline>$3 AND e.id IN (SELECT id FROM incoming_ai_event WHERE capture_state='pending' AND window_start IS NULL AND source='imap_headers' AND attempt_deadline>clock_timestamp() ORDER BY capture_service_seq,id LIMIT 3) AND e.source='imap_headers' AND r.state='complete' AND p.scan_complete AND p.uidvalidity=e.uidvalidity AND r.uidvalidity=e.uidvalidity AND r.provenance=e.source AND e.authenticated_run_id=r.run_id AND e.authenticated_attempt=r.attempt AND e.authenticated_root_message_id=j.message_id AND e.authenticated_recipient_hash=n.recipient_hash AND p.completed_at+interval '30 seconds'>$3::timestamptz+interval '17 seconds' ORDER BY e.capture_service_seq,e.id FOR UPDATE OF e SKIP LOCKED LIMIT 1`,[tenant,mailbox,now])).rows[0];
  if(!row)return null;
  const sender=singleAddress(openRecipient(row.recipient_envelope as Envelope,tenant,row.enrollment_id,config.credentialKeyring));if(!sender||createHash('sha256').update(sender).digest('hex')!==row.sender_binding)return null;
- const end=new Date(now.getTime()+5000);
- await c.query(`UPDATE incoming_ai_event SET window_start=$2,window_end=$3,window_completed_at=$4,window_revision=$5,window_mailbox_revision=$6,next_attempt_at=$2 WHERE id=$1 AND window_start IS NULL`,[row.id,now,end,row.completed_at,authority.revision,authority.mailboxRevision]);return end;
+ const end=new Date(Math.min(now.getTime()+12000,row.attempt_deadline.getTime(),row.expires_at.getTime()));
+ // A full fixed window must fit the inherited deadline; do not shorten or renew it.
+ if(end.getTime()!==now.getTime()+12000)return null;
+ let slot;try{slot=await acquireTransportSlotInTransaction(c,'imap',tenant,mailbox,'body');}catch(error){if(error instanceof HttpError&&error.code==='transport_busy')return null;throw error;}
+ const owner=randomUUID(),claimed=(await c.query(`UPDATE incoming_ai_event SET capture_state='claimed',owner_id=$7,generation=generation+1,lease_until=$3,window_start=$2,window_end=$3,window_completed_at=$4,window_revision=$5,window_mailbox_revision=$6,next_attempt_at=$2 WHERE id=$1 AND window_start IS NULL RETURNING generation`,[row.id,now,end,row.completed_at,authority.revision,authority.mailboxRevision,owner])).rows[0];
+ if(!claimed)throw new HttpError(409,'stale_body_claim');
+ const identity:BodyIdentity={tenant,mailbox,event:row.id,owner,generation:claimed.generation,runId:row.authenticated_run_id,attempt:row.authenticated_attempt,source:row.source,uidvalidity:row.uidvalidity,uid:Number(row.uid),root:row.root_job_id,enrollment:row.enrollment_id,senderBinding:row.sender_binding};
+ return {row:{...row,window_end:end},identity,slot};
 }

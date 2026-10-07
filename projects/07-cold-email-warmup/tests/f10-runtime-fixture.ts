@@ -5,7 +5,7 @@ import { loadConfig } from '../src/config.js';
 import { createPool,migrate } from '../src/db.js';
 export async function runtimeFixture(count=5){
  const config=loadConfig(),pool=createPool(config.databaseUrl);
- assert.equal((await pool.query('SELECT current_database() AS name')).rows[0].name,'n7f10_a2','only the explicitly owned A2 disposable database may be reset');
+ await assertOwnedFixtureDatabase(pool);
 
  await migrate(pool);await pool.query('TRUNCATE tenant CASCADE');await pool.query('UPDATE runtime_reconcile SET after_created_at=NULL,after_mailbox=NULL WHERE id=1');
  await pool.query("INSERT INTO transport_operation(protocol,slot) VALUES('smtp',1),('smtp',2),('imap',1),('imap',2),('imap',3),('imap',4) ON CONFLICT DO NOTHING");
@@ -96,4 +96,13 @@ export async function adversarialFixture(){
  await pool.query("UPDATE runtime_due SET due_at=clock_timestamp()-CASE WHEN mailbox_id=$1 THEN interval '1 minute' ELSE interval '2 minutes' END,next_check_at=clock_timestamp() WHERE kind='poll'",[boxes[4]]);
  const eligibility={at:new Date().toISOString(),monotonicMs:performance.now(),primed,rows:(await pool.query("SELECT mailbox_id,due_at,next_check_at,service_seq,state FROM runtime_due WHERE kind='poll'")).rows};
  return {...c,boxes,eligibility,options,traffic,wire,sockets,get maxSockets(){return maxSockets;},async close(){for(const t of timers)clearTimeout(t);for(const s of sockets)s.destroy();await new Promise<void>(r=>server.close(()=>r()));await base.close();await pool.end();}};
+}
+
+async function assertOwnedFixtureDatabase(pool:import('pg').Pool){
+ const row=(await pool.query("SELECT current_database() AS name,current_user AS role,(SELECT pg_get_userbyid(datdba) FROM pg_database WHERE datname=current_database()) AS owner")).rows[0];
+ if(process.env.DATABASE_NAME==='n7f11_a8'){
+  const {readFile}=await import('node:fs/promises'),lease=JSON.parse(await readFile(process.env.N7_DB_OWNERSHIP_LEASE!,'utf8'));
+  assert.equal(row.name,'n7f11_a8');assert.equal(lease.database,row.name);assert.equal(row.role,lease.owner_role);assert.equal(row.owner,lease.owner_role);
+  if((await pool.query("SELECT to_regclass('public.transport_operation') AS present")).rows[0].present)assert.equal((await pool.query('SELECT count(*) AS n FROM transport_operation WHERE operation IS NOT NULL')).rows[0].n,'0','owned fixture reset waits for exact physical joins');
+ }else assert.equal(row.name,'n7f10_a2','legacy fixture namespace remains unchanged');
 }

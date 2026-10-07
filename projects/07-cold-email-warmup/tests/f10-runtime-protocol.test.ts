@@ -11,7 +11,7 @@ import { createPool } from '../src/db.js';
 import { loadConfig } from '../src/config.js';
 const fairTables=['runtime_due','reply_rescan','mailbox_poll','transport_operation'] as const;
 async function assertFairDatabase(pool:ReturnType<typeof createPool>){
- assert.equal((await pool.query('SELECT current_database() AS name')).rows[0].name,'n7f10_a2','only the explicitly owned A2 disposable database may change fixture instrumentation');
+ const name=(await pool.query('SELECT current_database() AS name')).rows[0].name;assert.equal(name,process.env.DATABASE_NAME);assert.ok(['n7f10_a2','n7f11_a8'].includes(String(name)),'only explicitly owned disposable namespaces permit fixture instrumentation');
 }
 async function cleanupFairInstrumentation(pool:ReturnType<typeof createPool>){
  await assertFairDatabase(pool);
@@ -147,3 +147,35 @@ test('native five-second rescans yield fairly to later healthy E across competin
   await cleanupFairInstrumentation(c.pool);await c.close();
  }
 });
+
+export async function bodyPressureFleetWitness(){
+ const {seedBodyPressureCohort}=await import('./f10-runtime-process-fixture.js'),{bodyFixture}=await import('./f11-body-fixture.js'),{readFile}=await import('node:fs/promises');
+ // This additive cohort requires a fresh owned database; no existing fixture reset.
+ const c=await seedBodyPressureCohort(),smtp=await transportFixture({uidNext:1,headers:[]}),imap=await bodyFixture({mailboxes:c.mailboxes,phaseDelayMs:2800}),fixture={...smtp.options!,ca:smtp.options!.ca+'\n'+imap.fixture.ca,imap993:imap.fixture.imap993};
+ const begun=Date.now(),children:{pid:number;startTicks:string;child:ReturnType<typeof fork>;exit:Promise<{code:number|null;signal:NodeJS.Signals|null;drained:boolean;stderr:string}>}[]=[],samples:unknown[]=[],readyAt=new Map<string,number>(),completions=new Map<string,number[]>();let failure:string|null=null;
+ const start=async()=>{const child=fork(new URL('./f10-runtime-process-fixture.ts',import.meta.url),[],{execArgv:[],stdio:['ignore','pipe','pipe','ipc'],serialization:'advanced'});let drained=false,stderr='';child.stderr?.on('data',b=>{stderr+=b.toString();});child.on('message',m=>{if((m as {drained?:boolean}).drained)drained=true;});const entry={pid:child.pid!,startTicks:(await readFile(`/proc/${child.pid}/stat`,'utf8')).split(') ')[1]!.split(' ')[19]!,child,exit:new Promise<{code:number|null;signal:NodeJS.Signals|null;drained:boolean;stderr:string}>(r=>child.once('exit',(code,signal)=>r({code,signal,drained,stderr})))};children.push(entry);const started=new Promise<void>((r,j)=>{child.once('message',m=>(m as {started?:boolean}).started?r():j(Error('worker_start_failed')));child.once('error',j);});child.send(fixture);await started;return entry;};
+ try{
+  assert.equal(c.connected.length,100);assert.equal(c.participants.length,30);assert.equal(c.actors.length,3);await installFairInstrumentation(c.pool);
+  await c.pool.query(`CREATE FUNCTION n7_body_record() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN INSERT INTO n7_fair_events(kind,mailbox,body) VALUES('body',NEW.mailbox_id,to_jsonb(NEW)-'phase_metadata'-'content_envelope'); RETURN NEW; END $$`);await c.pool.query('CREATE TRIGGER n7_body_record AFTER INSERT OR UPDATE ON incoming_ai_event FOR EACH ROW EXECUTE FUNCTION n7_body_record()');
+  await start();await start();let restarted=false;
+  while(Date.now()-begun<300000){
+   const at=Date.now(),rows=(await c.pool.query('SELECT e.id,e.mailbox_id,e.capture_state,e.capture_phase,e.window_start,e.window_end,e.queue_eligible_at,e.attempt_deadline,e.captured_at,p.completed_at,p.scan_complete FROM mailbox_poll p LEFT JOIN incoming_ai_event e ON e.mailbox_id=p.mailbox_id WHERE p.mailbox_id=ANY($1::uuid[])',[c.participants.map(p=>p.mailbox)])).rows;
+   for(const row of rows){if(row.capture_state==='ready'&&!readyAt.has(row.mailbox_id))readyAt.set(row.mailbox_id,row.captured_at.getTime());if(row.scan_complete&&row.completed_at){const times=completions.get(row.mailbox_id)??[];if(times.at(-1)!==row.completed_at.getTime())times.push(row.completed_at.getTime());completions.set(row.mailbox_id,times);}}
+   const counts=(await c.pool.query("SELECT (SELECT count(*)::int FROM incoming_ai_event WHERE window_end>clock_timestamp() AND capture_state IN ('pending','claimed')) AS windows,(SELECT count(*)::int FROM transport_operation WHERE protocol='imap' AND operation IS NOT NULL) AS imap,(SELECT count(*)::int FROM transport_operation WHERE protocol='smtp' AND operation IS NOT NULL) AS smtp")).rows[0];samples.push({utc:new Date().toISOString(),monotonicNs:process.hrtime.bigint().toString(),rows,counts});assert.ok(counts.windows<=3);assert.ok(counts.imap<=4);assert.ok(counts.smtp<=2);
+   if(at-begun>=240000)assert.equal(readyAt.size,30,'ALL30 legal both-phase captures ready <=240s');
+   if(!restarted&&at-begun>150000){const old=children[0]!;old.child.kill('SIGTERM');const join=await old.exit;assert.equal(join.code,0);assert.equal(join.drained,true);await start();restarted=true;}
+   await new Promise(r=>setTimeout(r,250));
+  }
+  assert.equal(readyAt.size,30);assert.ok([...readyAt.values()].every(at=>at-c.seededAt<=240000));
+  const events=(await c.pool.query('SELECT * FROM n7_fair_events ORDER BY event_id')).rows;
+  for(const p of c.participants){const times=completions.get(p.mailbox)??[];assert.ok(times.length>=2);assert.ok(times.slice(1).every((at,i)=>at-times[i]!<=30000),'ALL30 full header gap <=30s');assert.ok(times[0]!-begun<=30000);assert.ok(Date.now()-times.at(-1)!<=30000);const selected=events.filter(e=>e.kind==='selection'&&e.mailbox===p.mailbox);assert.ok(selected.length>0);assert.ok(selected.every(e=>e.at.getTime()-new Date(e.body.due_at).getTime()<=60000),'ALL30 fair due selection <=60s');const capture=events.filter(e=>e.kind==='body'&&e.mailbox===p.mailbox);assert.ok(capture.some(e=>e.body.capture_phase==='text'&&e.body.capture_state==='pending'));assert.ok(capture.some(e=>e.body.capture_state==='ready'));const windows=capture.filter(e=>e.body.window_start);assert.equal(new Set(windows.map(e=>e.body.window_end)).size,1);assert.equal(new Set(capture.map(e=>e.body.attempt_deadline)).size,1);assert.ok(windows.every(e=>new Date(e.body.window_end).getTime()-new Date(e.body.window_start).getTime()===12000));}
+  const occupiedPeers=new Map<string,number>();for(const event of imap.wire){if(event.phase==='authenticated'){const n=(occupiedPeers.get(event.mailbox)??0)+1;occupiedPeers.set(event.mailbox,n);assert.ok(n<=1,'independent peer mailbox concurrency <=1');}if(event.phase==='socket_close'&&event.mailbox)occupiedPeers.set(event.mailbox,(occupiedPeers.get(event.mailbox)??0)-1);}assert.ok(smtp.maxConnections<=2);
+  assert.ok(imap.peak<=4);assert.ok(imap.bodyPeak<=3);assert.ok(smtp.verbs.includes('DATA'),'SMTP continues under body pressure');
+ }catch(error){failure=error instanceof Error?error.message:String(error);throw error;}finally{
+  for(const e of children)if(e.child.exitCode===null&&e.child.signalCode===null)e.child.kill('SIGTERM');const joins=await Promise.all(children.map(e=>e.exit));const events=(await c.pool.query('SELECT * FROM n7_fair_events ORDER BY event_id')).rows;
+  const occupied=Number((await c.pool.query('SELECT count(*) AS n FROM transport_operation WHERE operation IS NOT NULL')).rows[0].n);
+  await writeFile(`${process.env.F10_EVIDENCE_DIR}/all30-body-${begun}.json`,JSON.stringify({begun,ended:Date.now(),seededAt:c.seededAt,failure,connected:c.connected,participants:c.participants.map(({tenant,mailbox,root,enrollment})=>({tenant,mailbox,root,enrollment})),readyAt:[...readyAt],completions:[...completions],samples,events,wire:imap.wire,imapPeak:imap.peak,bodyPeak:imap.bodyPeak,smtpPeak:smtp.maxConnections,smtpVerbs:smtp.verbs,children:children.map(e=>({pid:e.pid,startTicks:e.startTicks})),joins,occupied},null,2)+'\n');
+  await c.pool.query('DROP TRIGGER IF EXISTS n7_body_record ON incoming_ai_event');await c.pool.query('DROP FUNCTION IF EXISTS n7_body_record()');await cleanupFairInstrumentation(c.pool);await imap.close();await smtp.close();await c.pool.end();assert.equal(occupied,0);assert.ok(joins.every(e=>e.code===0&&e.signal===null&&e.drained&&e.stderr===''),'actual worker exits joined');
+ }
+}
+test('F11 ALL30 both2800ms phases preserve complete headers and existing fleet lanes full300s',{timeout:330000},bodyPressureFleetWitness);

@@ -18,12 +18,14 @@ import { encryptContent } from '../src/replies/crypto.js';
 import { seedCapacity } from './capacity-fixture.js';
 export async function runF11ContextIntegration(t:TestContext){
  const config={...loadConfig(),dispatchMode:'local_test' as const},pool=createPool(config.databaseUrl);
- assert.equal((await pool.query('SELECT current_database() AS db')).rows[0].db,'n7f10_a2');
+ assert.equal((await pool.query('SELECT current_database() AS db')).rows[0].db,'n7f11_a8');
  await migrate(pool);await migrate(pool);assert.equal(await ready(pool),true);
+ const lease=JSON.parse(await readFile(process.env.N7_DB_OWNERSHIP_LEASE!,'utf8'));assert.equal(lease.database,'n7f11_a8');assert.equal(lease.owner_role,(await pool.query('SELECT current_user AS role')).rows[0].role);
  const app=await application(config,pool,{resolver:async()=>[{address:'8.8.8.8',family:4}]});
  const tenant=randomUUID(),foreign=randomUUID(),account=randomUUID(),now=new Date();let mailbox='',job='',enrollment='',message='';
  const store=new ReplyStore(pool,config.credentialKeyring,{clock:()=>now}),context=new ContextStore(pool,config.credentialKeyring);
  async function setup(){
+  assert.equal((await pool.query('SELECT count(*) AS n FROM transport_operation WHERE operation IS NOT NULL')).rows[0].n,'0');assert.equal((await pool.query("SELECT count(*) AS n FROM runtime_due WHERE state='claimed'")).rows[0].n,'0');
   await pool.query('TRUNCATE tenant,auth_bucket CASCADE');
   await pool.query("INSERT INTO transport_operation(protocol,slot) VALUES('smtp',1),('smtp',2),('imap',1),('imap',2),('imap',3),('imap',4) ON CONFLICT DO NOTHING");
   await pool.query('INSERT INTO tenant(id) VALUES($1),($2)',[tenant,foreign]);await pool.query('INSERT INTO account(id,tenant_id,email,password_hash) VALUES($1,$2,$3,$4)',[account,tenant,'f11@example.test','fixture']);
@@ -91,15 +93,16 @@ export async function runF11ContextIntegration(t:TestContext){
   });
   await t.test('C1 actual native complete proof opens one window; two separate physical phases ready and no-body finish immediate',async()=>{
    await setup();
-   const live={...config,pollMode:'live_provider' as const},f=await bodyFixture({headers:Buffer.from(`From: reply@example.test\r\nMessage-ID: <owned@example.test>\r\nReferences: ${message}\r\n\r\n`)}),token=(await readFile(process.env.OPERATOR_TOKEN_FILE!,'utf8')).trim();
+   const live={...config,pollMode:'live_provider' as const},f=await bodyFixture({phaseDelayMs:2800,headers:Buffer.from(`From: reply@example.test\r\nMessage-ID: <owned@example.test>\r\nReferences: ${message}\r\n\r\n`)}),token=(await readFile(process.env.OPERATOR_TOKEN_FILE!,'utf8')).trim();
    const grant={scope:'transport',tenant,mailbox,capabilities:['imap_headers'],smtpHost:'smtp.gmail.com',smtpPort:587,imapHost:'imap.gmail.com',imapPort:993,mailboxTransportRevision:'0',configFingerprint:transportFingerprint(config.providerAllowlist),expiresAt:new Date(Date.now()+600000).toISOString()};
    const runtime=new RuntimeStore(pool,(c,t,m)=>authorizeTransport(c,live,t,m,'imap_headers'),live);
+   let firstCapture:import('../src/replies/context-store.js').CaptureAdmission|undefined;
    const complete=async()=>{for(let n=0;n<8;n++){
     const claim=await runtime.claim('poll');assert.ok(claim);const admission=runtime.pollAdmission(claim);assert.ok(admission?.slot);
     const worker=new PollWorker(pool,config.credentialKeyring,'live_provider',new LiveReplyAdapter(pool,live,f.fixture,admission.slot));
     const outcome=await worker.quantum(tenant,mailbox,runtime.guard(claim),new AbortController().signal);
     const turn=(await pool.query("SELECT service_seq FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[mailbox])).rows[0].service_seq;
-    await runtime.finish(claim,'ready',outcome.state==='complete');
+    await runtime.finish(claim,'ready',outcome.state==='complete');firstCapture=runtime.takeCaptureAdmission(claim)??firstCapture;
     assert.equal((await pool.query("SELECT service_seq FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[mailbox])).rows[0].service_seq,turn);
     if(outcome.state==='complete')return;
    }throw new Error('native_poll_not_complete');};
@@ -110,7 +113,7 @@ export async function runF11ContextIntegration(t:TestContext){
     const adapter=new LiveReplyAdapter(pool,live,f.fixture),before=f.commands.length;assert.equal(await context.quantum(adapter,live,new AbortController().signal),false);assert.equal(f.commands.length,before);
     // Incremental completion omits UID1, so old pending UID requires actual native revalidation.
     await publishTransportGrant(pool,live,token,tenant,mailbox,'1',{...grant,capabilities:['imap_headers','imap_body']});await complete();
-    const opened=(await pool.query('SELECT * FROM incoming_ai_event')).rows[0];assert.notEqual(opened.authenticated_run_id,pending.authenticated_run_id);assert.equal(opened.origin_run_id,pending.origin_run_id);assert.equal(opened.window_end.getTime()-opened.window_start.getTime(),5000);
+    const opened=(await pool.query('SELECT * FROM incoming_ai_event')).rows[0];assert.notEqual(opened.authenticated_run_id,pending.authenticated_run_id);assert.equal(opened.origin_run_id,pending.origin_run_id);assert.equal(opened.window_end.getTime()-opened.window_start.getTime(),12000);assert.equal(opened.attempt_deadline.getTime()-opened.queue_eligible_at.getTime(),450000);assert.deepEqual(opened.queue_eligible_at,pending.queue_eligible_at);assert.deepEqual(opened.attempt_deadline,pending.attempt_deadline);
     assert.ok(f.commands.filter(c=>c==='a4 UID FETCH 1:1 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])').length>=2);
     const pollBefore=(await pool.query('SELECT cursor_uid,completed_at FROM mailbox_poll WHERE mailbox_id=$1',[mailbox])).rows[0];
     const metadataStarted=Date.now();
@@ -118,7 +121,7 @@ export async function runF11ContextIntegration(t:TestContext){
     await pool.query("UPDATE mailbox SET state='verified_test' WHERE id=$1",[peer]);await pool.query("INSERT INTO capacity_lease(id,tenant_id,mailbox_id,state,expires_at) VALUES(gen_random_uuid(),$1,$2,'active',clock_timestamp()+interval '120 seconds')",[tenant,peer]);await runtime.maintenance();
     const peerDue=(await pool.query("SELECT due_at<=clock_timestamp() AS due FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[peer])).rows[0];assert.equal(peerDue.due,true);
     let bodySelectedWhilePeerDue=false,bodyCalls=0,peerTurns=0;
-    await runRuntime(runtime,{body:async signal=>{const due=(await pool.query("SELECT due_at<=clock_timestamp() AS due FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[peer])).rows[0].due;const selected=await workers[bodyCalls++%2]!.quantum(adapter,live,signal);if(selected&&due)bodySelectedWhilePeerDue=true;return selected;},poll:async claim=>{assert.equal(claim.mailbox_id,peer);peerTurns++;return {reason:'authority_denied'};},pool:async()=>({satisfied:true}),dispatch:async()=>({satisfied:false})},new AbortController().signal,true);
+    await runRuntime(runtime,{body:async signal=>{const due=(await pool.query("SELECT due_at<=clock_timestamp() AS due FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[peer])).rows[0].due;const admission=firstCapture;firstCapture=undefined;const selected=await workers[bodyCalls++%2]!.quantum(adapter,live,signal,admission);if(selected&&due)bodySelectedWhilePeerDue=true;return selected;},poll:async claim=>{assert.equal(claim.mailbox_id,peer);peerTurns++;return {reason:'authority_denied'};},pool:async()=>({satisfied:true}),dispatch:async()=>({satisfied:false})},new AbortController().signal,true);
     assert.equal(bodySelectedWhilePeerDue,true,'existing IMAP lane selects legal body even while another mailbox is due');assert.ok(peerTurns>0);
     const metadataFinished=Date.now(),middle=(await pool.query('SELECT * FROM incoming_ai_event')).rows[0];assert.equal(middle.capture_phase,'text');assert.ok(middle.phase_metadata);assert.equal(f.commands.filter(c=>c.includes('BODY.PEEK[TEXT]')).length,0);
     assert.equal((await pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');
@@ -138,6 +141,22 @@ export async function runF11ContextIntegration(t:TestContext){
    await pool.query("UPDATE incoming_ai_event SET capture_phase='metadata' WHERE id=$1",[e.id]);
    await assert.rejects(pool.query("UPDATE incoming_ai_event SET capture_phase='text',phase_metadata=$2 WHERE id=$1",[e.id,phase]),/capture_window_expired/,'deferred COMMIT fence rejects a phase transition after actual absolute deadline');
    assert.equal((await pool.query('SELECT phase_metadata FROM incoming_ai_event WHERE id=$1',[e.id])).rows[0].phase_metadata,null);
+  });
+  await t.test('durable native semantic replay, stop, complaint and failed stop transaction retain source-current coverage',async()=>{
+   const live={...config,pollMode:'live_provider' as const},token=(await readFile(process.env.OPERATOR_TOKEN_FILE!,'utf8')).trim();
+   for(const scenario of ['replay','stop','complaint','rollback']){
+    await setup();const text=scenario==='replay'?'What does the product do?':scenario==='complaint'?'this is spam':'unsubscribe';
+    const f=await bodyFixture({body:Buffer.from(text),headers:Buffer.from(`From: reply@example.test\r\nMessage-ID: <semantic@example.test>\r\nReferences: ${message}\r\n\r\n`)}),runtime=new RuntimeStore(pool,(c,t,m)=>authorizeTransport(c,live,t,m,'imap_headers'),live),adapter=new LiveReplyAdapter(pool,live,f.fixture);
+    const capture=async()=>{let admission:import('../src/replies/context-store.js').CaptureAdmission|undefined;for(let n=0;n<12;n++){const claim=await runtime.claim('poll');assert.ok(claim);const slot=runtime.pollAdmission(claim)!.slot!;const worker=new PollWorker(pool,config.credentialKeyring,'live_provider',new LiveReplyAdapter(pool,live,f.fixture,slot));const result=await worker.quantum(tenant,mailbox,runtime.guard(claim),new AbortController().signal);await runtime.finish(claim,'ready',result.state==='complete');admission=runtime.takeCaptureAdmission(claim);if(admission)break;}assert.ok(admission);await new Promise<void>(r=>setImmediate(r));await context.quantum(adapter,live,new AbortController().signal,admission);return (await pool.query('SELECT * FROM incoming_ai_event ORDER BY created_at DESC,id DESC LIMIT 1')).rows[0];};
+    try{
+     await publishTransportGrant(pool,live,token,tenant,mailbox,'0',{scope:'transport',tenant,mailbox,capabilities:['imap_headers','imap_body'],smtpHost:'smtp.gmail.com',smtpPort:587,imapHost:'imap.gmail.com',imapPort:993,mailboxTransportRevision:'0',configFingerprint:transportFingerprint(config.providerAllowlist),expiresAt:new Date(Date.now()+600000).toISOString()});await runtime.maintenance();let event=await capture();
+     if(scenario==='rollback'){await pool.query(`CREATE FUNCTION f11_stop_rollback() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.reason='stop' THEN RAISE EXCEPTION 'stop_commit_rejected'; END IF; RETURN NEW; END $$`);await pool.query('CREATE TRIGGER f11_stop_rollback BEFORE UPDATE ON incoming_ai_event FOR EACH ROW EXECUTE FUNCTION f11_stop_rollback()');await assert.rejects(context.quantum(adapter,live,new AbortController().signal),/stop_commit_rejected/);assert.equal((await pool.query('SELECT count(*) FROM suppression')).rows[0].count,'0');await pool.query('DROP TRIGGER f11_stop_rollback ON incoming_ai_event');await pool.query('DROP FUNCTION f11_stop_rollback()');await new Promise(r=>setTimeout(r,1050));}
+     await context.quantum(adapter,live,new AbortController().signal);event=(await pool.query('SELECT * FROM incoming_ai_event WHERE id=$1',[event.id])).rows[0];
+     if(scenario==='replay'){assert.equal(event.capture_state,'ready');await new Promise(r=>setTimeout(r,Math.max(0,event.window_end.getTime()-Date.now()+10)));f.behavior.validity='2';const duplicate=await capture();await context.quantum(adapter,live,new AbortController().signal);const replay=(await pool.query('SELECT * FROM incoming_ai_event WHERE id=$1',[duplicate.id])).rows[0];assert.equal(replay.reason,'semantic_replay');assert.equal(replay.semantic_event_id,event.semantic_event_id);assert.ok(replay.expires_at<=event.expires_at);assert.equal(replay.content_envelope,null);}
+     else{assert.equal(event.reason,scenario==='complaint'?'complaint':'stop');assert.equal(event.capture_state,'held');assert.equal(event.content_envelope,null);assert.equal((await pool.query('SELECT count(*) FROM suppression')).rows[0].count,'1');assert.ok(event.expires_at<=new Date(event.terminal_at.getTime()+86400000));}
+     assert.equal((await pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');
+    }finally{await pool.query('DROP TRIGGER IF EXISTS f11_stop_rollback ON incoming_ai_event');await pool.query('DROP FUNCTION IF EXISTS f11_stop_rollback()');await f.close();}
+   }
   });
  }finally{await pool.query('TRUNCATE tenant,auth_bucket CASCADE');await pool.end();}
 }
