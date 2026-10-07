@@ -14,7 +14,7 @@ const config=loadConfig();
 test('diagnostic authority and tenant checks open no unauthorized sockets',async t=>{
  const pool=createPool(config.databaseUrl);const prior=(await pool.query('SELECT max(version) AS version FROM schema_migration')).rows[0].version;
  const before=(await pool.query('SELECT id,state,credential_envelope FROM mailbox ORDER BY id')).rows;
- await migrate(pool);assert.equal((await pool.query('SELECT max(version) AS version FROM schema_migration')).rows[0].version,16);
+ await migrate(pool);assert.equal((await pool.query('SELECT max(version) AS version FROM schema_migration')).rows[0].version,17);
  assert.deepEqual((await pool.query('SELECT id,state,credential_envelope FROM mailbox ORDER BY id')).rows,before);
  if(prior===12)assert.equal((await pool.query('SELECT count(*) FROM mailbox WHERE diagnostic_result IS NOT NULL')).rows[0].count,'0');
  await pool.query('TRUNCATE send_job,pool_member,consent,campaign,mailbox,session,account,tenant,auth_bucket CASCADE');

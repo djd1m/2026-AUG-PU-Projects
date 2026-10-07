@@ -1,10 +1,10 @@
 import { randomUUID } from 'node:crypto';
 import type { Pool } from 'pg';
 import { HttpError } from '../errors.js';
-import type { CanonicalProvider, LiveBinding, VerifiedPayment, VerifiedRefund } from './provider.js';
+import { formatMinor,parseProviderTimestamp,validateConfirmationUrl,type CanonicalProvider,type CreateRequest,type LiveBinding,type VerifiedPayment,type VerifiedRefund } from './provider.js';
 import { billingTransaction } from './transaction.js';
 export interface LivePrice {provider:string;merchant:string;plan:'team';amountMinor:number;currency:string;durationDays:number}
-interface Intent {id:string;tenant_id:string;provider:string;merchant:string;mode:'live';plan:'team';amount_minor:number;currency:string;duration_days:number;payment_id:string|null;state:string}
+interface Intent {id:string;tenant_id:string;provider:string;merchant:string;mode:'live';plan:'team';amount_minor:number;currency:string;duration_days:number;payment_id:string|null;state:string;create_request:CreateRequest|null;first_create_attempt_at:Date|null;confirmation_url:string|null}
 const terminal=(state:string)=>['canceled','declined','refunded'].includes(state);
 function bounded(value:unknown,max:number):value is string {return typeof value==='string' && value.length>0 && value.length<=max;}
 export function validateLivePrice(p:LivePrice) {
@@ -18,26 +18,39 @@ export function matchesLiveRefund(b:LiveBinding,paymentId:string,r:VerifiedRefun
  return !!r && bounded(r.id,200) && r.paymentId===paymentId && r.provider===b.provider && r.merchant===b.merchant && r.mode==='live' && r.currency===b.currency && Number.isSafeInteger(r.amountMinor) && r.amountMinor>0 && r.amountMinor<=b.amountMinor && ['pending','succeeded','canceled'].includes(r.status);
 }
 function paidTime(p:VerifiedPayment,now:Date) {
- const n=typeof p.paidAt==='string' && /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,3})?Z$/.test(p.paidAt)?Date.parse(p.paidAt):NaN;
- if(!p.paid || !Number.isFinite(n) || n>now.getTime()) throw new HttpError(409,'payment_mismatch');return new Date(n);
+ const time=parseProviderTimestamp(p.paidAt);
+ if(!p.paid || time>now) throw new HttpError(409,'payment_mismatch');return time;
+}
+export interface CheckoutOptions {returnUrl:(intentId:string)=>string;description:string}
+function createRequest(b:LiveBinding,options:CheckoutOptions):CreateRequest {
+ const returnUrl=options.returnUrl(b.intent);let url:URL;
+ try {url=new URL(returnUrl);} catch {throw new HttpError(400,'invalid_return_url');}
+ if(returnUrl.length>2048 || /[\u0000-\u0020\u007f]/.test(returnUrl) || url.protocol!=='https:' || url.username || url.password || !options.description || Array.from(options.description).length>128 || /[\u0000-\u001f\u007f]/.test(options.description) || b.currency!=='RUB') throw new HttpError(400,'invalid_checkout_request');
+ return {amount:{value:formatMinor(b.amountMinor),currency:'RUB'},capture:true,confirmation:{type:'redirect',return_url:returnUrl},description:options.description,metadata:{order_id:b.intent}};
 }
 // Internal offline slice: runtime config/UI and referrals are intentionally absent.
 export class LiveBillingService {
  readonly price:Readonly<LivePrice>;
- constructor(readonly pool:Pool,readonly provider:CanonicalProvider,price:LivePrice) {validateLivePrice(price);this.price=Object.freeze({...price});}
+ constructor(readonly pool:Pool,readonly provider:CanonicalProvider,price:LivePrice,readonly options?:CheckoutOptions) {validateLivePrice(price);this.price=Object.freeze({...price});}
  async checkout(tenant:string,key:string) {
   if(typeof key!=='string' || !/^[A-Za-z0-9_-]{8,128}$/.test(key)) throw new HttpError(400,'invalid_input');
   const i=await billingTransaction(this.pool,async c=>{
-   const old=(await c.query<Intent>('SELECT * FROM live_billing_intent WHERE tenant_id=$1 AND client_key=$2',[tenant,key])).rows[0];
-   if(old) {const b=binding(old);if(Object.entries(this.price).some(([k,v])=>b[k as keyof LiveBinding]!==v)) throw new HttpError(409,'idempotency_conflict');return old;}
-   return (await c.query<Intent>(`INSERT INTO live_billing_intent(id,tenant_id,client_key,provider,merchant,mode,plan,amount_minor,currency,duration_days) VALUES($1,$2,$3,$4,$5,'live',$6,$7,$8,$9) RETURNING *`,[randomUUID(),tenant,key,this.price.provider,this.price.merchant,this.price.plan,this.price.amountMinor,this.price.currency,this.price.durationDays])).rows[0]!;
+   let intent=(await c.query<Intent>('SELECT * FROM live_billing_intent WHERE tenant_id=$1 AND client_key=$2 FOR UPDATE',[tenant,key])).rows[0];
+   if(intent) {const b=binding(intent);if(Object.entries(this.price).some(([k,v])=>b[k as keyof LiveBinding]!==v)) throw new HttpError(409,'idempotency_conflict');}
+   else intent=(await c.query<Intent>(`INSERT INTO live_billing_intent(id,tenant_id,client_key,provider,merchant,mode,plan,amount_minor,currency,duration_days) VALUES($1,$2,$3,$4,$5,'live',$6,$7,$8,$9) RETURNING *`,[randomUUID(),tenant,key,this.price.provider,this.price.merchant,this.price.plan,this.price.amountMinor,this.price.currency,this.price.durationDays])).rows[0]!;
+   if(intent.payment_id) return intent;
+   if(!intent.first_create_attempt_at) intent=(await c.query<Intent>('UPDATE live_billing_intent SET create_request=$2,first_create_attempt_at=clock_timestamp() WHERE id=$1 RETURNING *',[intent.id,this.options?createRequest(binding(intent),this.options):null])).rows[0]!;
+   const deadline=(await c.query("SELECT first_create_attempt_at+interval '24 hours'<=clock_timestamp() AS expired FROM live_billing_intent WHERE id=$1",[intent.id])).rows[0];
+   if(deadline.expired) throw new HttpError(409,'checkout_reconciliation_required');
+   return intent;
   });
   // Ambiguous create persists the intent and always replays its immutable remote key.
-  const p=i.payment_id?await this.provider.fetch(i.payment_id):await this.provider.create(Object.freeze(binding(i)));
+  const p=i.payment_id?await this.provider.fetch(i.payment_id,Object.freeze(binding(i))):await this.provider.create(Object.freeze(binding(i)),i.create_request);
   await billingTransaction(this.pool,async c=>{
    const current=(await c.query<Intent>('SELECT * FROM live_billing_intent WHERE id=$1 FOR UPDATE',[i.id])).rows[0]!;
    if(!matchesLivePayment(binding(current),p,current.payment_id)) throw new HttpError(409,'provider_binding_conflict');
-   await c.query('UPDATE live_billing_intent SET payment_id=$2 WHERE id=$1',[i.id,p.id]);
+   const confirmation=p.confirmationUrl==null?null:validateConfirmationUrl(p.confirmationUrl);
+   await c.query('UPDATE live_billing_intent SET payment_id=$2,confirmation_url=COALESCE(confirmation_url,$3) WHERE id=$1',[i.id,p.id,confirmation]);
   });
   return this.status(tenant,i.id);
  }
@@ -47,7 +60,7 @@ export class LiveBillingService {
  async reconcile(tenant:string,id:string,refundId?:string) {
   const outside=await this.status(tenant,id);if(!outside.payment_id) throw new HttpError(409,'payment_unknown');
   // No DB transaction survives independent canonical remote GETs.
-  const p=await this.provider.fetch(outside.payment_id),r=refundId===undefined?null:await this.provider.fetchRefund(refundId);
+  const p=await this.provider.fetch(outside.payment_id,Object.freeze(binding(outside))),r=refundId===undefined?null:await this.provider.fetchRefund(refundId,Object.freeze(binding(outside)),outside.payment_id);
   return billingTransaction(this.pool,async c=>{
    const i=(await c.query<Intent>('SELECT * FROM live_billing_intent WHERE tenant_id=$1 AND id=$2 FOR UPDATE',[tenant,id])).rows[0]!;
    const b=binding(i);if(!matchesLivePayment(b,p,i.payment_id)) throw new HttpError(409,'payment_mismatch');

@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { test } from 'node:test';
 import { createPool,migrate } from '../src/db.js';
 import { loadConfig } from '../src/config.js';
+import { YooKassaProvider } from '../src/billing/yookassa.js';
 import { LiveBillingService } from '../src/billing/live.js';
 import { currentEntitlement } from '../src/billing/plans.js';
 import type { CanonicalProvider,LiveBinding,VerifiedPayment,VerifiedRefund } from '../src/billing/provider.js';
@@ -63,8 +64,40 @@ test('offline live ledger canonical identity, recovery, concurrency and sticky r
    assert.equal(await grants(i.id),1);assert.deepEqual((await pool.query('SELECT paid_at,expires_at FROM live_billing_entitlement WHERE intent_id=$1',[i.id])).rows[0],first);
    assert.equal((await currentEntitlement(pool,other)).plan,'free','expired success replay cannot unlock the paid plan');
   });
+  await t.test('saved YooKassa create body survives response loss and concurrent retries, bound checkout is GET only',async()=>{
+   const remote=new Map<string,Record<string,unknown>>(),posts:string[]=[],keys:string[]=[];let lose=true;
+   const adapter=new YooKassaProvider({shopId:'123',secretKey:'offline',async fetchImpl(url,init){
+    let value:Record<string,unknown>;
+    if(init?.method==='POST'){
+     posts.push(String(init.body));const key=new Headers(init.headers).get('idempotence-key')!;keys.push(key);
+     const request=JSON.parse(String(init.body));
+     if(!remote.has(key)) remote.set(key,{id:randomUUID(),status:'pending',paid:false,test:false,amount:request.amount,metadata:request.metadata,recipient:{account_id:'123'},confirmation:{confirmation_url:'https://yoomoney.ru/pay'}});
+     value=remote.get(key)!;if(lose){lose=false;throw new Error('response lost');}
+    } else {value=[...remote.values()].find(p=>String(url).endsWith(String(p.id)))!;}
+    return new Response(JSON.stringify(value),{headers:{'content-type':'application/json'}});
+   }});
+   const paidPrice={...price,provider:'yookassa',merchant:'123',durationDays:30};
+   const configured=new LiveBillingService(pool,adapter,paidPrice,{returnUrl:id=>'https://cabinet.example/app?billingIntent='+id,description:'Team original'});
+   const key=randomUUID();await assert.rejects(configured.checkout(other,key),/provider_unavailable/);
+   const saved=(await pool.query('SELECT * FROM live_billing_intent WHERE tenant_id=$1 AND client_key=$2',[other,key])).rows[0];assert.ok(saved.first_create_attempt_at);assert.equal(saved.create_request.description,'Team original');assert.equal(saved.payment_id,null);
+   const changed=new LiveBillingService(pool,adapter,paidPrice,{returnUrl:()=> 'https://changed.example/',description:'Changed'});
+   const recovered=await Promise.all(Array.from({length:4},()=>changed.checkout(other,key)));const i=recovered[0]!;
+   assert.equal(new Set(recovered.map(p=>p.payment_id)).size,1);assert.equal(remote.size,1);assert.equal(new Set(posts).size,1);assert.deepEqual(new Set(keys),new Set([i.id]));assert.equal(i.confirmation_url,'https://yoomoney.ru/pay');
+   const before=posts.length;await changed.checkout(other,key);assert.equal(posts.length,before,'bound checkout makes no new POST');
+   for(const sql of ["UPDATE live_billing_intent SET create_request='{}' WHERE id=$1",'UPDATE live_billing_intent SET first_create_attempt_at=clock_timestamp() WHERE id=$1',"UPDATE live_billing_intent SET confirmation_url='https://yoomoney.ru/other' WHERE id=$1"]) await assert.rejects(pool.query(sql,[i.id]),/immutable/);
+   const payment=[...remote.values()][0]!;const timestamp=new Date(Date.now()-1000).toISOString().replace(/(\.\d{3})Z$/,(_match,fraction:string)=>fraction+'456789Z');Object.assign(payment,{status:'succeeded',paid:true,captured_at:timestamp});
+   await configured.reconcile(other,i.id);const e=(await pool.query('SELECT paid_at,expires_at FROM live_billing_entitlement WHERE intent_id=$1',[i.id])).rows[0];assert.equal(e.paid_at.getTime(),Date.parse(timestamp));
+   const observation=(await pool.query("SELECT snapshot FROM live_billing_observation WHERE intent_id=$1 AND kind='payment' ORDER BY sequence DESC LIMIT 1",[i.id])).rows[0].snapshot;assert.equal(observation.paidAt,timestamp);
+  });
+  await t.test('unbound checkout at or after stored 24h boundary refuses any new create',async()=>{
+   for(const age of ['24 hours','25 hours']){
+    const id=randomUUID(),key=randomUUID();await pool.query(`INSERT INTO live_billing_intent(id,tenant_id,client_key,provider,merchant,mode,plan,amount_minor,currency,duration_days,first_create_attempt_at) VALUES($1,$2,$3,'double','shop','live','team',25000,'RUB',17,clock_timestamp()-$4::interval)`,[id,other,key,age]);
+    const before=provider.calls.length;await assert.rejects(service.checkout(other,key),/checkout_reconciliation_required/);assert.equal(provider.calls.length,before);assert.equal((await service.status(other,id)).payment_id,null);assert.equal(await grants(id),0);
+   }
+   const id=randomUUID(),key=randomUUID();await pool.query(`INSERT INTO live_billing_intent(id,tenant_id,client_key,provider,merchant,mode,plan,amount_minor,currency,duration_days,first_create_attempt_at) VALUES($1,$2,$3,'double','shop','live','team',25000,'RUB',17,clock_timestamp()-interval '23 hours')`,[id,other,key]);assert.equal((await service.checkout(other,key)).id,id);
+  });
   await t.test('all mismatches, TEST success, unpaid/invalid time and outage grant zero',async()=>{
-   const patches:Record<string,unknown>[]=[{tenant:other},{intent:randomUUID()},{id:'wrong'},{provider:'wrong'},{merchant:'wrong'},{mode:'local_test'},{plan:'free'},{durationDays:30},{amountMinor:100},{currency:'USD'},{paid:false},{paidAt:null},{paidAt:'invalid'},{paidAt:new Date(Date.now()+86400000).toISOString()}];
+   const patches:Record<string,unknown>[]=[{tenant:other},{intent:randomUUID()},{id:'wrong'},{provider:'wrong'},{merchant:'wrong'},{mode:'local_test'},{plan:'free'},{durationDays:30},{amountMinor:100},{currency:'USD'},{paid:false},{paidAt:null},{paidAt:'invalid'},{paidAt:'2025-02-29T00:00:00Z'},{paidAt:'2026-04-31T00:00:00Z'},{paidAt:new Date(Date.now()+86400000).toISOString()}];
    for(const patch of patches){const i=await checkout();provider.success(i.payment_id!);Object.assign(provider.payments.get(i.payment_id!)!,patch);await assert.rejects(service.reconcile(tenant,i.id));assert.equal(await grants(i.id),0,JSON.stringify(patch));}
    const i=await checkout();provider.failGet=true;await assert.rejects(service.reconcile(tenant,i.id),/outage/);provider.failGet=false;assert.equal(await grants(i.id),0);assert.equal((await service.status(tenant,i.id)).state,'pending');
    await service.reconcile(tenant,i.id);assert.equal(await grants(i.id),0);

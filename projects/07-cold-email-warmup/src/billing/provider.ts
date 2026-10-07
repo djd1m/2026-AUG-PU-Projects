@@ -50,7 +50,7 @@ export interface LiveBinding {
  plan:'team'; amountMinor:number; currency:string; durationDays:number;
 }
 export interface VerifiedPayment extends LiveBinding {
- id:string; status:'pending'|'succeeded'|'canceled'|'declined'; paid:boolean; paidAt:string|null;
+ id:string; status:'pending'|'succeeded'|'canceled'|'declined'; paid:boolean; paidAt:string|null; confirmationUrl?:ConfirmationUrl|null;
 }
 export interface VerifiedRefund {
  id:string; paymentId:string; provider:string; merchant:string; mode:'live';
@@ -58,7 +58,34 @@ export interface VerifiedRefund {
 }
 export interface CanonicalProvider {
  // Every replay uses binding.intent as the remote idempotency key.
- create(binding:Readonly<LiveBinding>):Promise<VerifiedPayment>;
- fetch(paymentId:string):Promise<VerifiedPayment>;
- fetchRefund(refundId:string):Promise<VerifiedRefund>;
+ create(binding:Readonly<LiveBinding>,request?:Readonly<CreateRequest>|null):Promise<VerifiedPayment>;
+ fetch(paymentId:string,expected?:Readonly<LiveBinding>):Promise<VerifiedPayment>;
+ fetchRefund(refundId:string,expected?:Readonly<LiveBinding>,paymentId?:string):Promise<VerifiedRefund>;
+}
+
+export type ConfirmationUrl=string & {readonly __confirmationUrl:unique symbol};
+export interface CreateRequest {
+ amount:{value:string;currency:'RUB'};capture:true;
+ confirmation:{type:'redirect';return_url:string};description:string;metadata:{order_id:string};
+}
+// Shared N3 timestamp contract: retain raw precision, truncate Date to milliseconds.
+export function parseProviderTimestamp(value:unknown):Date {
+ const m=typeof value==='string' && value.length<=64?/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d{1,9})?Z$/.exec(value):null;
+ if(!m) throw new HttpError(409,'payment_mismatch');
+ const year=Number(m[1]),month=Number(m[2]),day=Number(m[3]);
+ const leap=year%4===0 && (year%100!==0 || year%400===0);
+ const days=[31,leap?29:28,31,30,31,30,31,31,30,31,30,31];
+ const n=Date.parse(value as string);
+ if(month<1 || month>12 || day<1 || day>days[month-1]! || Number(m[4])>23 || Number(m[5])>59 || Number(m[6])>59 || !Number.isFinite(n)) throw new HttpError(409,'payment_mismatch');
+ return new Date(n);
+}
+export function validateConfirmationUrl(value:unknown):ConfirmationUrl {
+ if(typeof value!=='string' || value.length>2048 || /[\u0000-\u0020\u007f]/.test(value)) throw new HttpError(409,'invalid_confirmation_url');
+ let url:URL;try {url=new URL(value);} catch {throw new HttpError(409,'invalid_confirmation_url');}
+ if(url.protocol!=='https:' || url.hostname!=='yoomoney.ru' || url.username || url.password || url.port) throw new HttpError(409,'invalid_confirmation_url');
+ return value as ConfirmationUrl;
+}
+export function formatMinor(value:number) {
+ if(!Number.isSafeInteger(value) || value<1 || value>2147483647) throw new HttpError(400,'invalid_price');
+ return `${Math.floor(value/100)}.${String(value%100).padStart(2,'0')}`;
 }
