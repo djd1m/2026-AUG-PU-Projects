@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "F11 scoped healthy ALL30 full300 native0; MEDIUM A12 actual correction purge/authority/fault; F12 literalplan findings resolved, acceptedF11binding pending",
+  "stage": "F11 A13 faultshutdown RED; A15 exact SQL23514 retention cause proven; A16 fresh MEDIUM actual targeted correction",
   "roots": {
     "project": "."
   },
   "identity": {
     "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
     "work_unit_id": "expanded-mvp",
-    "current_attempt_id": "f11-retention-fault-author-a12"
+    "current_attempt_id": "f11-operational-verify-a13"
   },
   "telemetry": {
     "run": {
@@ -22,8 +22,8 @@
   },
   "source": {
     "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
-    "current_revision": "b2bbbf533a74485f46986bb8c6520a63fc8c45a1",
-    "build_revision": "b2bbbf533a74485f46986bb8c6520a63fc8c45a1",
+    "current_revision": "b369b016187641f678e424ccfc42c7db5df28274",
+    "build_revision": "b369b016187641f678e424ccfc42c7db5df28274",
     "requirements": [
       {
         "root": "project",
@@ -45,9 +45,9 @@
       }
     ],
     "continuity": {
-      "expected_revision": "b2bbbf533a74485f46986bb8c6520a63fc8c45a1",
-      "observed_revision": "b2bbbf533a74485f46986bb8c6520a63fc8c45a1",
-      "reconciliation": "A11 source20/build76 matched frozen b2bbbf through earlyterminal; A12 now may change owned5paths. Prior green binds oldcandidate, not future modified hashes."
+      "expected_revision": "b369b016187641f678e424ccfc42c7db5df28274",
+      "observed_revision": "b369b016187641f678e424ccfc42c7db5df28274",
+      "reconciliation": "A12 final seal ae8c4067 verifies exact5file source and production76+actualTSdriver/peer; A13 independent preflight pending, no actual300start claimed."
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
     "integration_note": "F10 accepted/integrated3566 remains main product baseline. F11 candidate b2bbbf healthy300 passes but unaccepted; A12 actual MEDIUM correcting existing mandatory gaps. F12 plan literalfindingsresolved; acceptedF11interfaces/real purge evidence still prerequisite."
@@ -621,9 +621,17 @@
     },
     {
       "id": "f11-retention-fault-author-a12",
-      "status": "active actual MEDIUM ACK",
+      "status": "completed early5file54native+finitefault",
       "actual_ACK_at": "2026-10-07T01:43:52Z",
-      "initial_spawn_failure": "native agent thread limit; noactor; retriedonlyafterA11completedslot"
+      "initial_spawn_failure": "native agent thread limit; noactor; retriedonlyafterA11completedslot",
+      "ended_at": "2026-10-07T01:57:12.446831Z",
+      "revision": "b369b016187641f678e424ccfc42c7db5df28274"
+    },
+    {
+      "id": "f11-operational-verify-a13",
+      "status": "active samefixedHIGH distinct operational attempt actualACK",
+      "actual_ACK_at": "2026-10-07T01:57:58Z",
+      "initial_resume_failure": "native threadlimit/noactor, retryafterA12finishedslot"
     }
   ],
   "work_units": [
@@ -672,20 +680,19 @@
       "executor": "/root/n7_sol_coordinator/f11_operational_verifier_a11"
     }
   },
-  "current_stage": "F11 scoped healthy ALL30 full300 native0; MEDIUM A12 actual correction purge/authority/fault; F12 literalplan findings resolved, acceptedF11binding pending",
+  "current_stage": "F11 A13 faultshutdown RED; A15 exact SQL23514 retention cause proven; A16 fresh MEDIUM actual targeted correction",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_retention_fault_author_a12",
-    "attempt": "f11-retention-fault-author-a12",
+    "executor": "/root/n7_sol_coordinator/f11_shutdown_timestamp_author_a16",
+    "attempt": "f11-shutdown-timestamp-author-a16",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T01:43:52Z",
+    "actual_ACK_at": "2026-10-07T02:25:37Z",
     "requested_model": "gpt-6.1-sol",
     "requested_effort": "medium",
     "actual_model": null,
-    "source_revision": "b2bbbf533a74485f46986bb8c6520a63fc8c45a1",
-    "freeze_at": "2026-10-07T02:00:52Z",
-    "deadline": "2026-10-07T02:03:52Z",
-    "max_files": 5,
-    "next": "author short actualproofs/staticcheck; freshHIGH executes frozenfault300/currentmandatorymatrix; NEWfreshHIGH independent finalF11review; F12coding onlyafteracceptedF11binding"
+    "source_revision": "8352feb9f6b970d5d42218b12e63bfbaecb180cc",
+    "freeze_at": "2026-10-07T02:31:37Z",
+    "deadline": "2026-10-07T02:33:37Z",
+    "next": "Exact2file stable cancellation timestamp+compiled short actualSIGTERM native0; current fault300/fullunit/fullPG/material; NEW clean HIGH finalreview; F12accepted-interface reconciliation"
   }
 }

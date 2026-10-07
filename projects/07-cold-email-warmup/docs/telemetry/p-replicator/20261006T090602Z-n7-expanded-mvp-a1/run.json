@@ -59,13 +59,13 @@
     "followup_status": "F07/F08/F09/F10 locally accepted and F10 integrated3566; expanded AC001–004 met, AC005–009 pending. Whole required_gates_passed remains false. F11 code remains unaccepted candidate."
   },
   "metrics": {
-    "elapsed_wall_ms": 59992342,
+    "elapsed_wall_ms": 62477441,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-07T01:45:55.220404+00:00"
+    "elapsed_as_of": "2026-10-07T02:27:20.319455+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 scoped healthy ALL30 full300 native0; MEDIUM A12 actual correction purge/authority/fault; F12 literalplan findings resolved, acceptedF11binding pending",
+  "current_stage": "F11 A13 faultshutdown RED; A15 exact SQL23514 retention cause proven; A16 fresh MEDIUM actual targeted correction",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -138,18 +138,17 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_retention_fault_author_a12",
-    "attempt": "f11-retention-fault-author-a12",
+    "executor": "/root/n7_sol_coordinator/f11_shutdown_timestamp_author_a16",
+    "attempt": "f11-shutdown-timestamp-author-a16",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T01:43:52Z",
+    "actual_ACK_at": "2026-10-07T02:25:37Z",
     "requested_model": "gpt-6.1-sol",
     "requested_effort": "medium",
     "actual_model": null,
-    "source_revision": "b2bbbf533a74485f46986bb8c6520a63fc8c45a1",
-    "freeze_at": "2026-10-07T02:00:52Z",
-    "deadline": "2026-10-07T02:03:52Z",
-    "max_files": 5,
-    "next": "author short actualproofs/staticcheck; freshHIGH executes frozenfault300/currentmandatorymatrix; NEWfreshHIGH independent finalF11review; F12coding onlyafteracceptedF11binding"
+    "source_revision": "8352feb9f6b970d5d42218b12e63bfbaecb180cc",
+    "freeze_at": "2026-10-07T02:31:37Z",
+    "deadline": "2026-10-07T02:33:37Z",
+    "next": "Exact2file stable cancellation timestamp+compiled short actualSIGTERM native0; current fault300/fullunit/fullPG/material; NEW clean HIGH finalreview; F12accepted-interface reconciliation"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",

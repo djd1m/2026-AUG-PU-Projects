@@ -1,0 +1,133 @@
+{
+  "utc": "2026-10-07T02:03:14.985470+00:00",
+  "failure": "Expected values to be strictly equal:\n\n1 !== 0\n",
+  "native_exit": {
+    "utc": "2026-10-07T02:01:27.147Z",
+    "exit": 1
+  },
+  "full300": false,
+  "runtime_ms": 150688,
+  "ready": 13,
+  "denominator": 30,
+  "children": [
+    {
+      "pid": 2973308,
+      "startTicks": "126134553"
+    },
+    {
+      "pid": 2973332,
+      "startTicks": "126134571"
+    }
+  ],
+  "joins": [
+    {
+      "code": 1,
+      "signal": null,
+      "drained": false,
+      "stderr": ""
+    },
+    {
+      "code": 0,
+      "signal": null,
+      "drained": true,
+      "stderr": ""
+    }
+  ],
+  "worker_guard_start_exit": [
+    {
+      "role": "ordinary",
+      "startTicks": "126134571",
+      "deniedCategories": {
+        "unix": 0,
+        "defaultHost": 0,
+        "numeric": 0,
+        "other": 0
+      },
+      "pid": 2973332,
+      "startedAt": 1791338335753,
+      "socketDenied": 0,
+      "socketAllowed": 10,
+      "dnsDenied": 0,
+      "ipcValidated": 1,
+      "ipcDenied": 0,
+      "installed": true,
+      "endedAt": 1791338485909
+    },
+    {
+      "role": "ordinary",
+      "startTicks": "126134553",
+      "deniedCategories": {
+        "unix": 0,
+        "defaultHost": 0,
+        "numeric": 0,
+        "other": 0
+      },
+      "pid": 2973308,
+      "startedAt": 1791338335578,
+      "socketDenied": 0,
+      "socketAllowed": 11,
+      "dnsDenied": 0,
+      "ipcValidated": 1,
+      "ipcDenied": 0,
+      "installed": true,
+      "endedAt": 1791338485829
+    }
+  ],
+  "native_guard_exits": 1572,
+  "native_guard_max_lifetime_ms": 2948,
+  "all_owned_guard_PIDticks_alive": [],
+  "physical_pairs": 1575,
+  "physical_unmatched": 0,
+  "physical_max_ms": 3358.0,
+  "faults": [
+    {
+      "fault": {
+        "connection": 94,
+        "mailbox": "0770c4e1-8f38-4088-a46b-8080cf168573",
+        "phase": "fault_injected",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+        "utc": "2026-10-07T01:59:04.499Z",
+        "monotonicMs": 12156.4854
+      },
+      "socket_close": {
+        "connection": 94,
+        "mailbox": "0770c4e1-8f38-4088-a46b-8080cf168573",
+        "phase": "socket_close",
+        "utc": "2026-10-07T01:59:04.500Z",
+        "monotonicMs": 12156.79877
+      },
+      "physical_matches": [
+        {
+          "mailbox": "0770c4e1-8f38-4088-a46b-8080cf168573",
+          "operation": "218b4aa1-2328-4014-a4aa-b752b4427cbd",
+          "owner_process": "37313a18-b47b-426a-84cf-4d63f68345c4",
+          "acquire": "2026-10-07T01:59:04.345Z",
+          "release": "2026-10-07T01:59:04.518Z",
+          "ms": 173.0
+        }
+      ],
+      "recovery_phases": [
+        {
+          "connection": 109,
+          "mailbox": "0770c4e1-8f38-4088-a46b-8080cf168573",
+          "phase": "phase_start",
+          "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+          "utc": "2026-10-07T01:59:05.709Z",
+          "monotonicMs": 13366.390732
+        },
+        {
+          "connection": 130,
+          "mailbox": "0770c4e1-8f38-4088-a46b-8080cf168573",
+          "phase": "phase_start",
+          "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+          "utc": "2026-10-07T01:59:08.835Z",
+          "monotonicMs": 16492.306667
+        }
+      ],
+      "ready": 1791338351712
+    }
+  ],
+  "source144_unchanged": true,
+  "build76_unchanged": true,
+  "runner_guard_unchanged": true
+}

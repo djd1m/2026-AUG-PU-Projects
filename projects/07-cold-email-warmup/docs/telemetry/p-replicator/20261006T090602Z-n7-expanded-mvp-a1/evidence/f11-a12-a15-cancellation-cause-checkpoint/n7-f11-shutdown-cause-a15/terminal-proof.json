@@ -1,0 +1,168 @@
+{
+  "sealedAt": "2026-10-07T02:21:59.055345+00:00",
+  "durationSeconds": 353.055345,
+  "sourceRevision": "8352feb9f6b970d5d42218b12e63bfbaecb180cc",
+  "sourceFiles": 144,
+  "compiledFiles": 76,
+  "sourceMismatch": [],
+  "runnerMismatch": [],
+  "ownedPidJoins": [
+    {
+      "pid": 3311761,
+      "startTicks": "126264175",
+      "ppid": 3311760,
+      "sameProcessAlive": false
+    },
+    {
+      "pid": 3311760,
+      "startTicks": "126264174",
+      "ppid": 3311757,
+      "sameProcessAlive": false
+    },
+    {
+      "pid": 3311757,
+      "startTicks": "126264172",
+      "ppid": 124366,
+      "sameProcessAlive": false
+    },
+    {
+      "pid": 3311761,
+      "startTicks": "126264175",
+      "sameProcessAlive": false,
+      "guardEnded": 1791339632167
+    },
+    {
+      "pid": 3318418,
+      "startTicks": "126267406",
+      "sameProcessAlive": false,
+      "guardEnded": 1791339664467
+    },
+    {
+      "pid": 3283061,
+      "startTicks": "126253416",
+      "sameProcessAlive": false,
+      "guardEnded": 1791339524546
+    }
+  ],
+  "heavyMutexReleased": true,
+  "sourceDatabaseOwnershipReleased": true,
+  "savedRowId": "67731754-17e4-4f3d-8c40-02e812a9eaad",
+  "beforeAfterRowSha256": "a4365e60d9b1ab7ae22180e383b8ab17bd367596aaef50542fc094b3677a0b1f",
+  "fullRollback": true,
+  "probeNativeExit": 0,
+  "terminalReadonlyNativeExit": 0,
+  "firstBadGuardPreflightPreserved": true,
+  "remainingLogicalBodyClaims": 1,
+  "actualModel": null,
+  "actualReasoningEffort": null,
+  "usage": null,
+  "cost": null,
+  "profile": "econom",
+  "requestedModel": "gpt-6.1-sol",
+  "requestedReasoningEffort": "high",
+  "ack": "2026-10-07T02:16:06Z",
+  "substantiveDeadline": "2026-10-07T02:22:06Z",
+  "terminalDeadline": "2026-10-07T02:24:06Z",
+  "terminalDatabase": {
+    "utc": "2026-10-07T02:21:04.460Z",
+    "identity": {
+      "db": "n7f11_a8",
+      "role": "n7",
+      "owner": "n7",
+      "other_sessions": 0,
+      "physical": 0,
+      "runtime_claims": 0
+    },
+    "constraints": [
+      {
+        "conname": "incoming_ai_event_binding_version_check",
+        "definition": "CHECK ((binding_version > 0))",
+        "knownMessageSha256": "56fc7cc09d6350cc54d4f6509c983a0c40acdbde24a94bdc017f7e99ff749c10"
+      },
+      {
+        "conname": "incoming_ai_event_capture_phase_check",
+        "definition": "CHECK ((capture_phase = ANY (ARRAY['metadata'::text, 'text'::text])))",
+        "knownMessageSha256": "a45f654f019df565a14c615497d18a072239aaaba234ffe5d8385742fa586687"
+      },
+      {
+        "conname": "incoming_ai_event_capture_state_check",
+        "definition": "CHECK ((capture_state = ANY (ARRAY['pending'::text, 'claimed'::text, 'ready'::text, 'held'::text, 'purged'::text])))",
+        "knownMessageSha256": "36e0ccfb1ae15bc4a264171f1d70fc3051cf2bc89710615488cb37c9e5922908"
+      },
+      {
+        "conname": "incoming_ai_event_check",
+        "definition": "CHECK ((((queue_eligible_at IS NULL) AND (attempt_deadline IS NULL)) OR ((queue_eligible_at IS NOT NULL) AND (attempt_deadline <= (queue_eligible_at + '00:07:30'::interval)))))",
+        "knownMessageSha256": "a4abccf9dab0d7c5496a3215a63718bc72e86e3c758cad80b3473f5eaff2374c"
+      },
+      {
+        "conname": "incoming_ai_event_check1",
+        "definition": "CHECK ((((window_start IS NULL) AND (window_end IS NULL)) OR ((window_start IS NOT NULL) AND (window_end = (window_start + '00:00:12'::interval)) AND (window_completed_at IS NOT NULL))))",
+        "knownMessageSha256": "3b10c7a12d2726bf4454869aad894b746d9c8b2b30c82c994f7774331185a7a2"
+      },
+      {
+        "conname": "incoming_ai_event_check2",
+        "definition": "CHECK ((((capture_state = 'claimed'::text) AND (owner_id IS NOT NULL) AND (lease_until IS NOT NULL)) OR ((capture_state <> 'claimed'::text) AND (owner_id IS NULL) AND (lease_until IS NULL))))",
+        "knownMessageSha256": "7c3bbb14d46b58c61fc1e6d5c6e983b98d5501a7a149d15ba9a9a9e7b8538fb8"
+      },
+      {
+        "conname": "incoming_ai_event_check3",
+        "definition": "CHECK (((expires_at <= (created_at + '7 days'::interval)) AND ((terminal_at IS NULL) OR (expires_at <= (terminal_at + '24:00:00'::interval)))))",
+        "knownMessageSha256": "7571ffe9266841b15f95afdd711faf2f0034ca9916a38f69ec57ab4e3e634efa"
+      },
+      {
+        "conname": "incoming_ai_event_check4",
+        "definition": "CHECK ((metadata_expires_at <= (created_at + '30 days'::interval)))",
+        "knownMessageSha256": "eb1a073246a2d95a9c3d5a4f49acc4e8e3b4071ea7da02ec419159a829f31b09"
+      },
+      {
+        "conname": "incoming_ai_event_check5",
+        "definition": "CHECK (((content_envelope IS NULL) OR ((enrollment_id IS NOT NULL) AND (root_job_id IS NOT NULL) AND (capture_state = 'ready'::text) AND (thread_message_count IS NOT NULL) AND (message_bytes IS NOT NULL) AND (body_bytes IS NOT NULL) AND ((thread_message_count >= 1) AND (thread_message_count <= 5)) AND (cardinality(message_bytes) = thread_message_count) AND (0 <= ALL (message_bytes)) AND (32768 >= ALL (message_bytes)) AND ((body_bytes >= 0) AND (body_bytes <= 65536)) AND (body_bytes = ((((COALESCE(message_bytes[1], 0) + COALESCE(message_bytes[2], 0)) + COALESCE(message_bytes[3], 0)) + COALESCE(message_bytes[4], 0)) + COALESCE(message_bytes[5], 0))))))",
+        "knownMessageSha256": "3eae27aba6d0b1d05af9a0adf2956f4d8de8b920e3b5d78ddec52fc52d07f8ca"
+      },
+      {
+        "conname": "incoming_ai_event_intent_candidate_check",
+        "definition": "CHECK ((intent_candidate = ANY (ARRAY['product_overview'::text, 'supported_features'::text, 'supported_integrations'::text, 'setup_steps'::text, 'documentation'::text])))",
+        "knownMessageSha256": "bfb9506940663a91c3ec40f7cf38283d820618d32120c36712dafe47ae2ce4ac"
+      },
+      {
+        "conname": "incoming_ai_event_origin_attempt_check",
+        "definition": "CHECK ((origin_attempt > 0))",
+        "knownMessageSha256": "3034dfd1780209c03776b02ff861e38e4773cfccb0302048324657e3bd92e093"
+      },
+      {
+        "conname": "incoming_ai_event_source_check",
+        "definition": "CHECK ((source = ANY (ARRAY['local_fixture'::text, 'imap_headers'::text])))",
+        "knownMessageSha256": "edcf0548ffc9292de94061e825eea6c04cb00a97cf0b845949ba848f1b5415b3"
+      },
+      {
+        "conname": "incoming_ai_event_state_check",
+        "definition": "CHECK ((state = ANY (ARRAY['pending'::text, 'held'::text, 'drafted'::text, 'approved'::text, 'queued'::text, 'submitted'::text, 'error'::text, 'unknown'::text])))",
+        "knownMessageSha256": "e7d1a563bb9ffb3a61851825d6c09830b3599c8b5a638abf462fbfb083e51c3a"
+      },
+      {
+        "conname": "incoming_ai_event_uid_check",
+        "definition": "CHECK (((uid >= 1) AND (uid <= '4294967295'::bigint)))",
+        "knownMessageSha256": "e9c46e8078db1a1f6418cac631210dcd618a2440154eaa2bc9be652dedbd4c97"
+      }
+    ],
+    "row": {
+      "id": "67731754-17e4-4f3d-8c40-02e812a9eaad",
+      "tenant_id": "e2f85af6-e4f9-4e59-b724-e9cdd7c44528",
+      "mailbox_id": "599bb27c-2367-4f23-82f8-473d494e6432",
+      "capture_state": "claimed",
+      "capture_phase": "metadata",
+      "owner_id": "12c1c899-838e-4b75-bc99-1704deda74ef",
+      "generation": "2",
+      "created_at": "2026-10-07T02:12:58.893Z",
+      "terminal_at": null,
+      "expires_at": "2026-10-14T02:12:58.893Z",
+      "metadata_expires_at": "2026-11-06T02:12:58.893Z",
+      "window_start": "2026-10-07T02:13:12.894Z",
+      "window_end": "2026-10-07T02:13:24.894Z",
+      "attempt_deadline": "2026-10-07T02:20:28.916Z",
+      "lease_until": "2026-10-07T02:13:24.894Z",
+      "has_phase_metadata": false,
+      "has_content": false
+    }
+  }
+}
