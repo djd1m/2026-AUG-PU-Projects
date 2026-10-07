@@ -14,6 +14,9 @@ import { createPool,migrate,ready } from '../src/db.js';
 import { application } from '../src/server.js';
 import { ReplyStore } from '../src/replies/store.js';
 import { ContextStore } from '../src/replies/context-store.js';
+import { runWorker } from '../src/runtime/worker.js';
+import { sealRecipient } from '../src/campaigns/store.js';
+import { releaseUnusedTransportSlot } from '../src/mailboxes/transport-slots.js';
 import { encryptContent } from '../src/replies/crypto.js';
 import { seedCapacity } from './capacity-fixture.js';
 export async function runF11ContextIntegration(t:TestContext){
@@ -24,13 +27,20 @@ export async function runF11ContextIntegration(t:TestContext){
  const app=await application(config,pool,{resolver:async()=>[{address:'8.8.8.8',family:4}]});
  const tenant=randomUUID(),foreign=randomUUID(),account=randomUUID(),now=new Date();let mailbox='',job='',enrollment='',message='';
  const store=new ReplyStore(pool,config.credentialKeyring,{clock:()=>now}),context=new ContextStore(pool,config.credentialKeyring);
+ async function assertResetOwnership(){
+  const lease=JSON.parse(await readFile(process.env.N7_DB_OWNERSHIP_LEASE!,'utf8'));
+  const identity=(await pool.query("SELECT current_database() AS db,current_user AS role,(SELECT pg_get_userbyid(datdba) FROM pg_database WHERE datname=current_database()) AS owner")).rows[0];
+  assert.equal(identity.db,'n7f11_a8');assert.equal(lease.database,identity.db);assert.equal(identity.role,lease.owner_role);assert.equal(identity.owner,lease.owner_role);
+  assert.equal((await pool.query('SELECT count(*) AS n FROM tenant WHERE id<>ALL($1::uuid[])',[[tenant,foreign]])).rows[0].n,'0','no foreign tenant reset');
+ }
  async function setup(){
+  await assertResetOwnership();
   assert.equal((await pool.query('SELECT count(*) AS n FROM transport_operation WHERE operation IS NOT NULL')).rows[0].n,'0');assert.equal((await pool.query("SELECT count(*) AS n FROM runtime_due WHERE state='claimed'")).rows[0].n,'0');
   await pool.query('TRUNCATE tenant,auth_bucket CASCADE');
   await pool.query("INSERT INTO transport_operation(protocol,slot) VALUES('smtp',1),('smtp',2),('imap',1),('imap',2),('imap',3),('imap',4) ON CONFLICT DO NOTHING");
   await pool.query('INSERT INTO tenant(id) VALUES($1),($2)',[tenant,foreign]);await pool.query('INSERT INTO account(id,tenant_id,email,password_hash) VALUES($1,$2,$3,$4)',[account,tenant,'f11@example.test','fixture']);
   mailbox=(await app.mailboxes.save(tenant,{label:'F11',senderAddress:'sender@example.test',smtpHost:'smtp.gmail.com',smtpPort:587,imapHost:'imap.gmail.com',imapPort:993,requiredTLS:true,smtpUsername:'synthetic',smtpPassword:'synthetic',imapUsername:'synthetic',imapPassword:'synthetic'})).id;
-  await pool.query("UPDATE mailbox SET state='verified_test'");await seedCapacity(pool,now);
+  await pool.query("UPDATE mailbox SET state='verified_test'");await seedCapacity(pool,new Date());
   const actor={tenant_id:tenant,account_id:account};const campaign=await app.consents.campaign(actor,{steps:[{subject:'First',body:'Fixture',delayHours:24},{subject:'Next',body:'Fixture',delayHours:24}],recipients:[{address:'reply@example.test',fields:{}}]});
   await app.consents.act(actor,mailbox,{scope:'campaign',action:'grant',affirmative:true,scopeVersion:campaign.content_version,campaignId:campaign.id,recipientFingerprint:campaign.recipient_fingerprint});await app.campaigns.start(actor,campaign.id,{mailboxIds:[mailbox]},now);
   const j=(await pool.query("UPDATE send_job SET state='submitted',message_id='<f11-'||id::text||'@example.test>' WHERE step=0 RETURNING *")).rows[0];job=j.id;enrollment=j.enrollment_id;message=j.message_id;
@@ -90,6 +100,68 @@ export async function runF11ContextIntegration(t:TestContext){
     SELECT $2,tenant_id,mailbox_id,scope,campaign_id,'submitted',enrollment_id,campaign_version,99,'initial','<ambiguous@example.test>' FROM send_job WHERE id=$1`,[job,other]);
    const r=await run('4');await store.page(tenant,mailbox,{runId:r.runId,attempt:r.attempt,uidvalidity:'4',expectedCursor:0,coveredThrough:1,kind:'scan',startedAt:now,completedAt:now,headers:[{uid:1,from:'reply@example.test',references:[message,'<ambiguous@example.test>']}]});
    const e=(await pool.query("SELECT * FROM incoming_ai_event WHERE uidvalidity='4'")).rows[0];assert.equal(e.capture_state,'held');assert.equal(e.root_job_id,null);assert.equal(e.content_envelope,null);assert.equal(e.enrollment_id,null);assert.equal((await pool.query('SELECT state FROM enrollment WHERE id=$1',[enrollment])).rows[0].state,'replied');await assert.rejects(context.readContext(tenant,e.id));
+  });
+  await t.test('normal and startup maintenance physically purge encrypted copies without renewing retention',async()=>{
+   await setup();await page('71');
+   const e=(await pool.query('SELECT * FROM incoming_ai_event')).rows[0],phase=encryptContent(['PRIVATE_PHASE_CANARY'],{tenant,mailbox,event:e.id,bindingVersion:1},config.credentialKeyring);
+   await pool.query("UPDATE incoming_ai_event SET capture_state='ready',content_envelope=$2,phase_metadata=$2,message_bytes=ARRAY[20],body_bytes=20,thread_message_count=1,created_at=statement_timestamp()-interval '6 days',terminal_at=statement_timestamp()-interval '1 day 1 second',expires_at=statement_timestamp()-interval '1 second',metadata_expires_at=statement_timestamp()+interval '21 days' WHERE id=$1",[e.id,phase]);
+   const before=(await pool.query('SELECT terminal_at,expires_at,metadata_expires_at FROM incoming_ai_event WHERE id=$1',[e.id])).rows[0];
+   await assert.rejects(new ContextStore(pool,{...config.credentialKeyring,keys:new Map()}).readContext(tenant,e.id),/context_unavailable/,'expired read rejects before decrypt even with unavailable keys');
+   const lag=await context.purgeExpired(1);assert.equal(lag.overdueBefore,1);assert.ok(lag.oldestLagSeconds>=1);
+   // Restore expired encrypted copies to exercise the actual normal worker startup composition.
+   await pool.query("UPDATE incoming_ai_event SET capture_state='ready',content_envelope=$2,phase_metadata=$2,message_bytes=ARRAY[20],body_bytes=20,thread_message_count=1 WHERE id=$1",[e.id,phase]);
+   await runWorker(pool,{...config,pollMode:'disabled',dispatchMode:'disabled'},new AbortController().signal,true);
+   let after=(await pool.query('SELECT capture_state,content_envelope,phase_metadata,terminal_at,expires_at,metadata_expires_at FROM incoming_ai_event WHERE id=$1',[e.id])).rows[0];assert.equal(after.capture_state,'purged');assert.equal(after.content_envelope,null);assert.equal(after.phase_metadata,null);assert.deepEqual({terminal_at:after.terminal_at,expires_at:after.expires_at,metadata_expires_at:after.metadata_expires_at},before);
+   await pool.query("UPDATE incoming_ai_event SET capture_state='ready',content_envelope=$2,phase_metadata=$2,message_bytes=ARRAY[20],body_bytes=20,thread_message_count=1 WHERE id=$1",[e.id,phase]);
+   const abort=new AbortController();let ticks=0;
+   await runRuntime(new RuntimeStore(pool),{maintenance:async()=>{ticks++;if(ticks===1)return;await context.purgeExpired(100);abort.abort();},poll:async()=>({reason:'authority_denied'}),pool:async()=>({}),dispatch:async()=>({})},abort.signal);
+   assert.equal(ticks,2);after=(await pool.query('SELECT content_envelope,phase_metadata,expires_at,terminal_at FROM incoming_ai_event WHERE id=$1',[e.id])).rows[0];assert.equal(after.content_envelope,null);assert.equal(after.phase_metadata,null);assert.deepEqual(after.expires_at,before.expires_at);assert.deepEqual(after.terminal_at,before.terminal_at);
+   await runWorker(pool,{...config,pollMode:'disabled',dispatchMode:'disabled'},new AbortController().signal,true);assert.equal((await pool.query('SELECT count(*) FROM incoming_ai_event WHERE id=$1',[e.id])).rows[0].count,'1','metadata survives until 30-day deadline');
+  });
+  await t.test('current authority mutations deny preIO and real native result commit',async()=>{
+   const token=(await readFile(process.env.OPERATOR_TOKEN_FILE!,'utf8')).trim();
+   const cases=['body_revoked','headers_revoked','grant_revoked','grant_expired','config','mailbox_revision','rescan_incomplete','poll_incomplete','poll_completed','source','uid','uidvalidity','run','attempt','root','recipient','owner','generation'];
+   for(const boundary of ['preIO','resultcommit','textresultcommit','finitefault'])for(const mutation of boundary==='finitefault'?['one_closed_socket']:cases){
+    await setup();let live={...config,pollMode:'live_provider' as const};
+    const f=await bodyFixture({... (boundary==='finitefault'?{bodyFaults:1,phaseDelayMs:2800}:{}),headers:Buffer.from(`From: reply@example.test\r\nMessage-ID: <mutation@example.test>\r\nReferences: ${message}\r\n\r\n`)}),runtime=new RuntimeStore(pool,(c,t,m)=>authorizeTransport(c,live,t,m,'imap_headers'),live);
+    let admission:import('../src/replies/context-store.js').CaptureAdmission|undefined;
+    try{
+     await publishTransportGrant(pool,live,token,tenant,mailbox,'0',{scope:'transport',tenant,mailbox,capabilities:['imap_headers','imap_body'],smtpHost:'smtp.gmail.com',smtpPort:587,imapHost:'imap.gmail.com',imapPort:993,mailboxTransportRevision:'0',configFingerprint:transportFingerprint(config.providerAllowlist),expiresAt:new Date(Date.now()+600000).toISOString()});await runtime.maintenance();
+     for(let n=0;n<8&&!admission;n++){const claim=await runtime.claim('poll');assert.ok(claim);const slot=runtime.pollAdmission(claim)!.slot!;const result=await new PollWorker(pool,config.credentialKeyring,'live_provider',new LiveReplyAdapter(pool,live,f.fixture,slot)).quantum(tenant,mailbox,runtime.guard(claim),new AbortController().signal);await runtime.finish(claim,'ready',result.state==='complete');admission=runtime.takeCaptureAdmission(claim);}
+     assert.ok(admission);const original=(await pool.query('SELECT * FROM incoming_ai_event WHERE id=$1',[admission.identity.event])).rows[0];
+     if(boundary==='finitefault'){
+      const adapter=new LiveReplyAdapter(pool,live,f.fixture);assert.equal(await context.quantum(adapter,live,new AbortController().signal,admission),true);
+      const failed=(await pool.query('SELECT * FROM incoming_ai_event WHERE id=$1',[admission.identity.event])).rows[0];assert.equal(failed.capture_state,'pending');assert.deepEqual(failed.window_end,original.window_end);assert.deepEqual(failed.attempt_deadline,original.attempt_deadline);assert.equal((await pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');
+      await new Promise(r=>setTimeout(r,1050));await context.quantum(adapter,live,new AbortController().signal);await context.quantum(adapter,live,new AbortController().signal);
+      const ready=(await pool.query('SELECT * FROM incoming_ai_event WHERE id=$1',[admission.identity.event])).rows[0];assert.equal(ready.capture_state,'ready');assert.deepEqual(ready.window_end,original.window_end);assert.deepEqual(ready.attempt_deadline,original.attempt_deadline);assert.ok(ready.captured_at<ready.window_end);const fault=f.wire.find(e=>e.phase==='fault_injected')!,closed=f.wire.find(e=>e.connection===fault.connection&&e.phase==='socket_close')!;assert.ok(closed.monotonicMs>=fault.monotonicMs);assert.equal(f.wire.filter(e=>e.phase==='fault_injected').length,1);assert.equal(f.wire.filter(e=>e.phase==='phase_response').length,2);assert.ok(f.wire.filter(e=>e.phase==='phase_start').every(e=>e.monotonicMs>closed.monotonicMs));assert.equal(f.sockets.size,0);console.info(JSON.stringify({witness:'finite_native_fault_recovery',windowEnd:ready.window_end,attemptDeadline:ready.attempt_deadline,ready:true,wire:f.wire}));continue;
+     }
+     let proof:object|undefined;if(boundary==='resultcommit')proof=await new LiveReplyAdapter(pool,live,f.fixture).captureBodyPhase(admission.identity,new AbortController().signal,admission.slot);
+     const mutate=async()=>{
+     if(mutation==='grant_revoked')await pool.query("UPDATE transport_grant SET state='revoked',scope=NULL WHERE mailbox_id=$1",[mailbox]);
+     else if(mutation.endsWith('_revoked'))await pool.query("UPDATE transport_grant SET scope=jsonb_set(scope,'{capabilities}',$2::jsonb) WHERE mailbox_id=$1",[mailbox,JSON.stringify([mutation==='body_revoked'?'imap_headers':'imap_body'])]);
+     else if(mutation==='grant_expired')await pool.query("UPDATE transport_grant SET scope=jsonb_set(scope,'{expiresAt}',to_jsonb((clock_timestamp()-interval '1 second')::text)) WHERE mailbox_id=$1",[mailbox]);
+     else if(mutation==='config')live={...live,providerAllowlist:new Map([['imap.gmail.com',29],['smtp.gmail.com',30]])};
+     else if(mutation==='mailbox_revision')await pool.query('UPDATE mailbox SET transport_revision=transport_revision+1 WHERE id=$1',[mailbox]);
+     else if(mutation==='poll_incomplete')await pool.query('UPDATE mailbox_poll SET scan_complete=false WHERE mailbox_id=$1',[mailbox]);
+     else if(mutation==='poll_completed')await pool.query("UPDATE mailbox_poll SET completed_at=completed_at-interval '1 second' WHERE mailbox_id=$1",[mailbox]);
+     else if(mutation==='rescan_incomplete')await pool.query("UPDATE reply_rescan SET state='rescan_incomplete' WHERE mailbox_id=$1",[mailbox]);
+     else if(mutation==='root')await pool.query("UPDATE send_job SET message_id='<changed@example.test>' WHERE id=$1",[job]);
+     else if(mutation==='recipient')await pool.query('UPDATE enrollment SET recipient_envelope=$2 WHERE id=$1',[enrollment,sealRecipient('changed@example.test',tenant,enrollment,config.credentialKeyring)]);
+     else {const assignments:Record<string,string>={source:"source='local_fixture'",uid:'uid=2',uidvalidity:"uidvalidity='2'",run:'authenticated_run_id=gen_random_uuid()',attempt:'authenticated_attempt=authenticated_attempt+1',owner:'owner_id=gen_random_uuid()',generation:'generation=generation+1'};await pool.query('UPDATE incoming_ai_event SET '+assignments[mutation]+' WHERE id=$1',[admission!.identity.event]);}
+     };
+     if(boundary==='textresultcommit'){
+      const adapter=new LiveReplyAdapter(pool,live,f.fixture);await context.quantum(adapter,live,new AbortController().signal,admission);
+      const native=adapter.captureBodyPhase.bind(adapter);let rejected=false;
+      adapter.captureBodyPhase=async(...args)=>{const realProof=await native(...args);await mutate();const commands=f.commands.length;let stale:unknown;await assert.rejects(async()=>{try{await context.commitNative(realProof,live);}catch(error){stale=error;throw error;}});rejected=true;assert.equal(f.commands.length,commands);throw stale;};
+      await context.quantum(adapter,live,new AbortController().signal);assert.equal(rejected,true,'real native text proof reaches rejecting result fence');
+     }else await mutate();
+     const commands=f.commands.length;
+     if(boundary==='preIO')await assert.rejects(new LiveReplyAdapter(pool,live,f.fixture).captureBodyPhase(admission.identity,new AbortController().signal,admission.slot));
+     else if(boundary==='resultcommit')await assert.rejects(context.commitNative(proof!,live));
+     assert.equal(f.commands.length,commands,'stale authority starts zero new IO');const stale=(await pool.query('SELECT * FROM incoming_ai_event WHERE id=$1',[admission.identity.event])).rows[0];assert.notEqual(stale.capture_state,'ready');assert.equal(stale.content_envelope,null);if(boundary==='textresultcommit'){assert.equal(stale.capture_phase,'text');assert.ok(stale.phase_metadata);}else assert.equal(stale.phase_metadata,null);assert.deepEqual(stale.expires_at,original.expires_at);assert.deepEqual(stale.window_end,original.window_end);
+     console.info(JSON.stringify({witness:'current_authority_mutation',boundary,mutation,newIO:0,ready:false}));
+    }finally{if(admission)await releaseUnusedTransportSlot(pool,admission.slot);await f.close();await pool.query("UPDATE incoming_ai_event SET capture_state='held',owner_id=NULL,lease_until=NULL WHERE capture_state='claimed'");}
+   }
   });
   await t.test('C1 actual native complete proof opens one window; two separate physical phases ready and no-body finish immediate',async()=>{
    await setup();
@@ -158,6 +230,6 @@ export async function runF11ContextIntegration(t:TestContext){
     }finally{await pool.query('DROP TRIGGER IF EXISTS f11_stop_rollback ON incoming_ai_event');await pool.query('DROP FUNCTION IF EXISTS f11_stop_rollback()');await f.close();}
    }
   });
- }finally{await pool.query('TRUNCATE tenant,auth_bucket CASCADE');await pool.end();}
+ }finally{await assertResetOwnership();await pool.query('TRUNCATE tenant,auth_bucket CASCADE');await pool.end();}
 }
 test('F11 real PG additive migration, stop-first authenticated intent and retention',runF11ContextIntegration);
