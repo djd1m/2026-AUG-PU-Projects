@@ -1,3 +1,4 @@
+import { constants } from 'node:fs';
 import { open } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -8,7 +9,7 @@ import { operatorCapability, publishTransportGrant } from './transport-authority
 
 // Local privileged CLI only; grant publication never starts a campaign.
 export async function readPrivateFile(file: string, limit: number): Promise<string> {
- const handle = await open(file, 'r');
+ const handle = await open(file, constants.O_RDONLY | constants.O_NONBLOCK);
  try {
   if (!(await handle.stat()).isFile()) throw new Error('private_input_invalid');
   const buffer = Buffer.alloc(limit + 1);

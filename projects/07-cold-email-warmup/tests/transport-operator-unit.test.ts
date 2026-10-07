@@ -4,6 +4,9 @@ import { createHash, randomUUID } from 'node:crypto';
 import { mkdtemp, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import type { Config } from '../src/config.js';
 import type { createPool } from '../src/db.js';
 import { HttpError } from '../src/errors.js';
@@ -43,4 +46,25 @@ test('bad authentication and readiness never reach publisher; errors hide privat
 test('private reader accepts exactly 16KiB and rejects oversized or missing files', async () => {
  const dir = await mkdtemp(join(tmpdir(), 'n7-operator-unit-'));
  try { const path = join(dir, 'grant'); await writeFile(path, 'x'.repeat(16384), { mode: 0o600 }); assert.equal((await readPrivateFile(path, 16384)).length, 16384); await writeFile(path, 'x'.repeat(16385)); await assert.rejects(readPrivateFile(path, 16384)); await assert.rejects(readPrivateFile(join(dir, 'missing'), 16384)); await assert.rejects(readPrivateFile(dir, 16384)); } finally { await rm(dir, { recursive: true }); }
+});
+
+// Supervise in a child so the blocking-open mutation fails within the bound and is joined.
+test('no-writer FIFO promptly commits invalid-input publication and closes pool', async () => {
+ const dir = await mkdtemp(join(tmpdir(), 'n7-operator-fifo-')), fifo = join(dir, 'private-grant');
+ const execute = promisify(execFile);
+ try {
+  await execute('mkfifo', ['-m', '600', fifo]);
+  const moduleUrl = pathToFileURL(join(process.cwd(), 'src/mailboxes/transport-operator.ts')).href;
+  const script = `
+   import {createHash} from 'node:crypto';
+   import {runTransportOperator,readPrivateFile} from ${JSON.stringify(moduleUrl)};
+   import {HttpError} from ${JSON.stringify(new URL('../src/errors.ts', import.meta.url).href)};
+   const token='fake-private-token';let published=0,ended=0,raw;const stdout=[],stderr=[];
+   const dependencies={loadConfig:()=>({databaseUrl:'fake-db',operatorTokenDigest:createHash('sha256').update(token).digest()}),createPool:()=>({end:async()=>{ended++;}}),ready:async()=>true,read:async(file,limit)=>file==='token'?token:readPrivateFile(file,limit),publish:async(_p,_c,_t,_tenant,_box,_rev,value)=>{published++;raw=value;throw new HttpError(400,'invalid_transport_grant');}};
+   const status=await runTransportOperator(['publish','${tenant}','${mailbox}','0',process.argv[1]],{OPERATOR_TOKEN_FILE:'token'},dependencies,{stdout:text=>stdout.push(text),stderr:text=>stderr.push(text)});
+   process.stdout.write(JSON.stringify({status,published,ended,raw,stdout,stderr}));
+  `;
+  const { stdout } = await execute(process.execPath, ['--import', 'tsx', '--input-type=module', '-e', script, fifo], { timeout: 2000, killSignal: 'SIGKILL', maxBuffer: 4096 });
+  assert.deepEqual(JSON.parse(stdout), { status: 1, published: 1, ended: 1, raw: {}, stdout: [], stderr: ['invalid_input_authority_revoked\n'] });
+ } finally { await rm(dir, { recursive: true }); }
 });
