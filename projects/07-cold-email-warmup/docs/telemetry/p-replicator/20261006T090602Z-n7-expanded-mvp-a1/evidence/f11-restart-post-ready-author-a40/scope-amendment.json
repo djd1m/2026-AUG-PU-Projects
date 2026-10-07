@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-07T07:43:54.834350+00:00",
+  "role": "coordinatorHIGH bounded plumbing scope amendment; not productreview",
+  "root_authority": "root explicit07:43 message: minimum ninthpath inplannerpacket thenactualMEDIUM; no broadreplan orACweakening",
+  "prior_plan": "/tmp/n7-f11-restart-post-ready-planner-a38/plan.md",
+  "prior_plan_sha256": "bbbbcd847f0abf82bb58eca1a58e8b1b6b4c91425d295d6f82498ce63d62fb48",
+  "source_revision": "b6e8ae16e8feb6c67888eb2f006cfbb299b40197",
+  "finding_receipt": "/tmp/n7-f11-restart-post-ready-author-a39/receipt.json",
+  "finding_receipt_sha256": "7849c08110177f8e8ac7264d83a998032bb14d7b0acb0dc90875a7816a07a47b",
+  "source_SHA256": "6c21b6a9d8b659e28bb3f4380f837a3da61fd986df51b0b35162c40a29a38cb6",
+  "original_line9": "const internal=new AbortController(); const stop=()=>internal.abort();",
+  "added_editable_path": "src/runtime/loop.ts",
+  "total_paths": 9,
+  "scope": "Preserve original external.signal.reason through existing internal AbortController. Capture immutable originalexternal BEFORE listener and initialabortedcheck; parameter signal is reassigned so do not capture reassignedparameter or access TDZ const. Unexpectedinternalfailure aborts remain generic. Same8A38paths/contract/material/nativegates unchanged. Typedreasonalone never closure proof; only genuine one-use nativeclosed+joined+released bodycapability canqualify. No newauthority/adapters/loop/state/schema/caps/order.",
+  "required_targeted_counterproofs": [
+    "externalalreadyaborted genericreason propagates without TDZ; no planneddrain exception",
+    "externaltypeddrain reachesnative lifetime unchanged through loop",
+    "unrelated internal operationfailure remains generic and denies drain recovery",
+    "forged/usercancellation reasons cannot create closed-capability"
+  ],
+  "source_edits_by_coordinator": false,
+  "actual_model": null,
+  "usage": null
+}

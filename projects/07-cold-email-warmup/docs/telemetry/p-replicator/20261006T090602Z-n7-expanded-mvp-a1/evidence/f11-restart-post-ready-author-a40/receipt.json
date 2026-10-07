@@ -1,0 +1,226 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-restart-post-ready-author-a40",
+  "status": "SEALED_PARTIAL_CANDIDATE",
+  "product_accepted": false,
+  "profile": "model-routing-econom",
+  "risk": "XL",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "ack_utc": "2026-10-07T07:44:54Z",
+  "work_cutoff_utc": "2026-10-07T08:01:54Z",
+  "seal_cutoff_utc": "2026-10-07T08:04:54Z",
+  "last_source_write_utc": "2026-10-07T08:01:34.755000Z",
+  "frozen_inventory_utc": "2026-10-07T08:01:55.359231+00:00",
+  "frozen_inventory_record_overrun_ms": 1359,
+  "source_write_overrun_ms": 0,
+  "sealed_at": "2026-10-07T08:04:44.963067+00:00",
+  "sealed_monotonic_ns": 1283294973771972,
+  "elapsed_wall_ms": 1190963,
+  "seal_overrun_ms": 0,
+  "baseline_source": "b6e8ae16e8feb6c67888eb2f006cfbb299b40197",
+  "code_commit_sha": "406499792cc78c7339ff67cf0a4d1df112630ce3",
+  "frozen_source_files": {
+    "docs/features/f10-durable-runtime/02_pseudocode.md": "26aab59387c62fe2256bbcf34980fd0cf606622c6d88fa56bce05c17db6c6f8d",
+    "docs/features/f10-durable-runtime/03_architecture.md": "30e63317588a1c46c7f3ae7a387204f0be8d0f40baf86d60433fcf3e1ad3ec07",
+    "src/runtime/worker.ts": "222c79b1c750e27aa25cd8b04778e2590dda3e39fc1604f1758be104c995b303",
+    "src/runtime/loop.ts": "56fa2795bf3a8d3fb0ae8756d3a2d9fdb3281880a1dcb3a96b7103157026af17",
+    "src/mailboxes/transport-lifetime.ts": "be57cd516949baf7ca91b302105ceadd82cf7dbb39c82472e06affabee4ded06",
+    "src/replies/context-store.ts": "0024911718a501dde619df373fe830642386ae4ce30f19abc39ddea6f0c67756",
+    "src/replies/worker.ts": "4b99be4ceb9ae5e95b55cc884330e6092af86947595ceaa4755757345a104fa3",
+    "src/replies/store.ts": "7f0418c6af8aa36092f80352eb910fa4ee8b5fcfaddb67f285d0782c9804a0d0",
+    "tests/f10-runtime-protocol.test.ts": "6e36e33dba7cd5d14dce460f8d56bfa1198cca6b51c65b74c7137388905f80e4"
+  },
+  "dist_inventory": {
+    "path": "/tmp/n7-f11-restart-post-ready-author-a40/dist-inventory.json",
+    "sha256": "fab2e544b0da8881f82dbc2e7311fc77111762ea5d3945ca5582392bb7729e62"
+  },
+  "helpers": {
+    "/tmp/n7-f11-restart-post-ready-author-a40/schema-setup.mjs": "6656c6a4348d93c3e5b85633bbe8044393ab67dcc66673f5630891463f019ee3",
+    "/tmp/n7-f11-restart-post-ready-author-a40/targeted.sh": "42a5a9b7a58bedd7bee0193944b540f4a8b2b43a426897cbb2a8ac55b11a203a",
+    "/tmp/n7-f11-restart-post-ready-author-a40/positives.sh": "d21b05cd9805f966c220e80d57df5e419391102e33c0b19be52cdbea9328de77",
+    "/tmp/n7-f11-restart-post-ready-author-a40/baseline.py": "eb0b3ba5efe5c6a092b38f01081343b1df6abe63ec613b3b62eba8c9bce15fc9",
+    "/tmp/n7-f11-restart-post-ready-author-a40/reset-own.mjs": "45c72fbd315a9a4569a766a95e93f6dbb636451b17de9bcc3dc98dd01af52eae",
+    "/tmp/n7-f11-restart-post-ready-author-a40/terminal-db-readonly.mjs": "e2e394b99a20b78472bb38601b7c85900926148a95e2638a98be0b347aa53ba2",
+    "/tmp/n7-f11-restart-post-ready-author-a40/guard-a40.mjs": "9c73dbd3049a22569a44269933077769645f6094fe3a88e1950cc60102851cf9"
+  },
+  "approved_plan": {
+    "path": "/tmp/n7-f11-restart-post-ready-planner-a38/plan.md",
+    "sha256": "bbbbcd847f0abf82bb58eca1a58e8b1b6b4c91425d295d6f82498ce63d62fb48",
+    "sealedreceipt_sha256": "9afc890bd81baf43a030c28fa4e70af0fcd2be391966c16deedf1e92c8d82fa7"
+  },
+  "scope_amendment": {
+    "path": "/tmp/n7-f11-restart-post-ready-scope-amendment-a40.json",
+    "sha256": "134202ac0a107a4d4c3b50a31a309ef6501ccb45f3328965b771d63114ec9139"
+  },
+  "scope_count": 9,
+  "sourceonly_commit": true,
+  "main_writes": false,
+  "checks": [
+    {
+      "stage": "baseline actual native/PG b6e8",
+      "exit": 1,
+      "tests": 3,
+      "RED": 3
+    },
+    {
+      "stage": "candidate first actual native metadata/text",
+      "passed": 2,
+      "failed": 1,
+      "failure": "ordinary scan zero range corrected to existing tail semantics"
+    },
+    {
+      "stage": "material first expansion",
+      "exit": 1,
+      "failure": "test-only misplaced phase variable",
+      "preserved": true
+    },
+    {
+      "stage": "material v2",
+      "exit": 1,
+      "passed": 15,
+      "failed": 1,
+      "failure": "revoke fixture constraint requires scope=NULL; production code unaffected"
+    },
+    {
+      "stage": "corrected revoke current final tests",
+      "exit": 0,
+      "passed": 1
+    },
+    {
+      "stage": "existing pure MIME/classifier/AEAD/native inventory",
+      "exit": 0,
+      "passed": 10
+    },
+    {
+      "stage": "existing native intent empty-tail18 counterproofs",
+      "passed": 1,
+      "native_counterproofs": 18
+    },
+    {
+      "stage": "existing compiled shutdown",
+      "exit": 1,
+      "failure": "cohort_requires_empty_owned_capacity at setup; no native worker startup"
+    },
+    {
+      "stage": "final typecheck/lint/build/diff",
+      "exit": 0,
+      "build": "v4 source code unchanged by final test fixture correction"
+    }
+  ],
+  "actual_material_obligations_satisfied": 16,
+  "actual_phase_results": "genuine2x2800 metadata and retained-text2800 resumed before same original12s end; raw UTC/monotonic per native witness JSON",
+  "database": {
+    "name": "n7f11_a8",
+    "schema": "n7_a40_checks_261007074924",
+    "public_whole_preserved": true,
+    "saved_BODY_id": "67731754-17e4-4f3d-8c40-02e812a9eaad",
+    "saved_BODY_sha256": "a4365e60d9b1ab7ae22180e383b8ab17bd367596aaef50542fc094b3677a0b1f",
+    "own_counts": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0,
+      "tenants": 0,
+      "connected": 0
+    },
+    "public_counts": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 1
+    },
+    "public_existing_body_claim_preserved": true
+  },
+  "owned_pid_joins": {
+    "path": "/tmp/n7-f11-restart-post-ready-author-a40/owned-pid-joins.json",
+    "count": 233,
+    "all_owned_absent": true
+  },
+  "raw": {
+    "/tmp/n7-f11-restart-post-ready-author-a40/candidate.raw": "5d8c336531bcf7e10e4c99d961517d2c13811f1b7b910a679c6df715eab66f0b",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material.raw": "971f67627784fbcb0ffb2b4b849bd4291a1691a242a3a20719c29a6877eef0cd",
+    "/tmp/n7-f11-restart-post-ready-author-a40/schema-setup.raw": "1b274506a31697d3c0a00c4872248cbb176fb9857ae945e3fb0f33621363e338",
+    "/tmp/n7-f11-restart-post-ready-author-a40/typecheck-v2.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/n7-f11-restart-post-ready-author-a40/revoke-fixed.raw": "df9a9d7406e5cea3dd0140e35618796411a8ed71b71814125839eb740e05922f",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material-v2.raw": "b81fcd24eb81c49b37640b63260b148474027c13bdd2a5ce5fdd2478408cb095",
+    "/tmp/n7-f11-restart-post-ready-author-a40/lint-v1.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/n7-f11-restart-post-ready-author-a40/diff-stat.raw": "e190b9ab56212641efc5f287dfa12efc46d9324a33c061384dd64b9acd3b0ba3",
+    "/tmp/n7-f11-restart-post-ready-author-a40/diff-check.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/n7-f11-restart-post-ready-author-a40/build-v4.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/n7-f11-restart-post-ready-author-a40/typecheck-v3.raw": "a4c1366d7187eeb8ff82a038c5f89fd56f966a3459379f3a3f24f424627767cd",
+    "/tmp/n7-f11-restart-post-ready-author-a40/route.raw": "2f68b8dbfe1a402b9a2db8a71abd8be14ba98c6ce76cc10d77f5bdcf86582e8d",
+    "/tmp/n7-f11-restart-post-ready-author-a40/positives-pure.raw": "ab4345c674db6666e19b0f26dcadd1c546dfa70ca70a989681627a4f82afde33",
+    "/tmp/n7-f11-restart-post-ready-author-a40/terminal-db-readonly.raw": "68d64a88e5ba2cafab595db059831d55b85380ed22a50e019a11f70b34be2c69",
+    "/tmp/n7-f11-restart-post-ready-author-a40/lint-v4.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/n7-f11-restart-post-ready-author-a40/typecheck-v4.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/n7-f11-restart-post-ready-author-a40/build-v3.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/n7-f11-restart-post-ready-author-a40/typecheck-final.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/n7-f11-restart-post-ready-author-a40/candidate-build.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/n7-f11-restart-post-ready-author-a40/baseline-build.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/n7-f11-restart-post-ready-author-a40/lint-final.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/n7-f11-restart-post-ready-author-a40/typecheck-v1.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/n7-f11-restart-post-ready-author-a40/commit.raw": "74c25f6b9589b77b153d8745d2829c5cf971b49ed3483af66853ce97344e6cb6",
+    "/tmp/n7-f11-restart-post-ready-author-a40/baseline.raw": "450d619697fd5961ffc2c7be284f2cc009836d71b8ad8f5f01e08444a85e2f09",
+    "/tmp/n7-f11-restart-post-ready-author-a40/positives-db.raw": "b1cbdabb62a3a529eb280e7735b8a547c100bc11efc6a1753167c4fa9f4c133a"
+  },
+  "native_raw": {
+    "/tmp/n7-f11-restart-post-ready-author-a40/baseline/a40-header-only.json": "4522a2cb797ef8868d5796707aaedffda4ee80698bbaebac4ab1911d92f19cfd",
+    "/tmp/n7-f11-restart-post-ready-author-a40/baseline/a40-drain-text.json": "4e2af9808220ad557af5ac76430cc43986bbf6e93cbd7157eb6ae2a34f6effac",
+    "/tmp/n7-f11-restart-post-ready-author-a40/baseline/a40-drain-metadata.json": "7af7958c857b13c5bc54ce2f03cc868db576e1c54c3c8212ad911c0712675a73",
+    "/tmp/n7-f11-restart-post-ready-author-a40/candidate/a40-header-only.json": "817c9de9d48782007285cf9d806b81018bf36014936934f6e33858a65f93c1fe",
+    "/tmp/n7-f11-restart-post-ready-author-a40/candidate/a40-drain-text.json": "39b4f2e3838b34b4cf7d1c070d8d0cb2e4886eca95317b06f875421e9e852a8d",
+    "/tmp/n7-f11-restart-post-ready-author-a40/candidate/a40-drain-metadata.json": "b839ec1c7c0d0e3eb41366038a5c2e8384b5c7f1ced746e5290031ea9849afc1",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-revision.json": "2e449383f99df95a7051ad24a2f41eb3db97d0819984e8927c10c8103ec75b2b",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-wrong_owner.json": "394f15c757251719a6c68a3f3dea6e3ce9d90573d9a532a116540bfd8cc8e43a",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-corrupt.json": "be1a8d6e1fca6847f0cf4d2f788e3c28cc5d97b745c97e435bce8bd6da1cee7e",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-header-only.json": "cbf7b9b5182864092238428ffcd74aee0ab17dd02658e9352c505a300079bb22",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-release_failure.json": "c2d7275d4ed5886ababfdc9de454f22514690daa2d9e340b55c4e815f29e2867",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-text.json": "b67d351b5ef8ce64f29879542e9ecebeb62f95d7ab28dc733621dcc365ed1a72",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-suppression.json": "514f4bde4b9e6bb494a29074692434926fbe507f9c34693923ac219e911aff76",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-generic.json": "9d7b9aec5df6e0a59d9b416bf8e4a7453296b2a5c10313c6ed8a0c48a3ad6eec",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-replay.json": "c686d308a90e32e50b893f446400737a73d163cb9c2ea9925556bc3e824a3f5f",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-wrong_uid.json": "f2face1662ccf1e103f2ae04c6cc39b28b314cf69a37addaa61a22ab6b848eeb",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-config.json": "4800bb83b5f03dd9f2a8618aaa0f972ca818b2aef7ea338d5cde726a6985f7f4",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-wrong_slot.json": "a1d2d7a858d8a1736c8548af93cd87224886a4ae29174a88d3ccfd59d1058575",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-revoke.json": "d583d1c47113e648fc7e2858a78717696ee72b5bda2474f2b2fe75070e5857bd",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-metadata.json": "5c6aaea3235e912a263cc1880ef9f4cfc258055734105e738483ba1d9ab8243a",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-forged.json": "41d0c7cef313b648ff078a1710379431de11cf9078fed0bf297fb7a70d40c69b",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-revision.json": "6f01733c0a0f0982b3017b7e929d7a95052bf679718da2d645bf09891c3b0925",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-wrong_owner.json": "df895379a04ea95da92898cef15127fc42cbd71464ade9235cc95c033e5e732e",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-corrupt.json": "548b628cd2001c4e00d103569d353ea8fcfb5e584f922687fdcaf05c4b527432",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-header-only.json": "590544d00f5b163793c542ee9576070223814705d4d122f50931504871647fe4",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-release_failure.json": "38c6e0b2e6f315c2a380a3401917c171d29ae172451b8adddb0e9f36437dab43",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-text.json": "c54b76161685279eff0f2e81f16f802064bde7779e8dca853ac048ec39606396",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-suppression.json": "cae4ffeb31faa06a026c2bc4413e1d40c1439345b745ca972308d93227a495aa",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-generic.json": "c7fe9a1a0599bb1564db1e245bdf26d95af476fdc87b2f034b0257846d0914d1",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-replay.json": "55d83a0dbe5524be46fd577e11534ad60b29beeb18ad0d15c46544c1d2838058",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-wrong_uid.json": "7702c4a7500b53aaec947d6a1519452701075b3754a860e86959e3bb1b96e284",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-config.json": "9995ef9a10654c7a7cd637df7f301b14293a1c9a25dfed9b1186baea85b9c448",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-wrong_slot.json": "d4bf11fbca84f93cb2e99b4155099b4f15c1ca7418360102d5bbe38b465b8caa",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-revoke.json": "7be3776ba33b91cab0bb627a80aa6438a5f7d742dcc66834e6c9ae117a10ee73",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-metadata.json": "23916cfcd0a741cd4a3e61acf012f456b7bfa61a67c80b94875b2494f9da8edc",
+    "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-forged.json": "3719911dc1063b56d7468885b6cc19133a67c31cf7755bf8e85bf9db7c5c4de9",
+    "/tmp/n7-f11-restart-post-ready-author-a40/revoke-fixed/a40-drain-revoke.json": "a5ed04603cd7926ed56c7a5a9fa632c906d4350dc4d552209fa92b225854b69c",
+    "/tmp/n7-f11-restart-post-ready-author-a40/positives/native-empty-tail-counterproofs.json": "a487a6f6c85acd0a1a95532bf4d6a5b5fc89a188ae5f0f70551e32913a15d1a3"
+  },
+  "measurement_gaps": [
+    "Host actual model/effort/usage/cost counters unavailable.",
+    "Mechanical route script absent in minimal worktree; substantive approved XL route preserved.",
+    "No original full-fleet or broad regression execution in A40."
+  ],
+  "remaining": [
+    "Fresh independent HIGH source review against exact approved normative packet and frozen4064997 candidate.",
+    "Rerun existing compiled worker SIGTERM with empty owned fixture namespace; current attempt failed cohort_requires_empty_owned_capacity before native worker launch.",
+    "Run relevant real PG F11 context retention/stop-first integration; prior combined script stopped on above harness failure.",
+    "Additional process-drain branch material controls: current mailbox revision, tenant/root/sender/recipient binding, expired original12s/450 deadline, provider UID reset/incomplete proof and delayed closure/restart boundary.",
+    "Additional ordinary HEADER-only controls for missing/decreased/reset snapshot and incomplete prefix; existing intent-mode18 controls passed but are distinct.",
+    "Original ALL30 fault and healthy full300s with exact original5/12/30/60/240/300/450 bounds; no author full300 run authorized.",
+    "Separate existing legacy20-page real5s/native19 RED obligation remains unwaived.",
+    "Broader unchanged mandatory regression suites remain for final verifier."
+  ],
+  "responsible_next": "/root/n7_sol_coordinator",
+  "next_action": "Parent launch actual fresh HIGH verifier from normative plan+amendment+frozen source/raw only; preserve all RED and missing gates."
+}

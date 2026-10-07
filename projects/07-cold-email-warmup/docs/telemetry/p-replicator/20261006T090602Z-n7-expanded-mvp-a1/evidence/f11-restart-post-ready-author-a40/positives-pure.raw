@@ -1,0 +1,72 @@
+TAP version 13
+# Subtest: F11 native body read-only UID sentinel and unforgeable proof
+ok 1 - F11 native body read-only UID sentinel and unforgeable proof
+  ---
+  duration_ms: 2067.584158
+  type: 'test'
+  ...
+# Subtest: F11 body native cancellation closes physical socket
+ok 2 - F11 body native cancellation closes physical socket
+  ---
+  duration_ms: 183.291415
+  type: 'test'
+  ...
+# Subtest: F11 fixed native deadline denies zero sockets and truncates a slow phase without renewing
+ok 3 - F11 fixed native deadline denies zero sockets and truncates a slow phase without renewing
+  ---
+  duration_ms: 889.778438
+  type: 'test'
+  ...
+# {"witness":"two_phase_5s_negative","end":1791359962296,"errorCode":"timeout","wire":[{"connection":1,"mailbox":"","phase":"socket_open","utc":"2026-10-07T07:59:17.312Z","monotonicMs":3997.231187},{"connection":1,"mailbox":"","phase":"command_received","command":"a1 CAPABILITY","utc":"2026-10-07T07:59:17.313Z","monotonicMs":3998.292278},{"connection":1,"mailbox":"","phase":"command_received","command":"a2 AUTHENTICATE PLAIN","utc":"2026-10-07T07:59:17.314Z","monotonicMs":3998.874658},{"connection":1,"mailbox":"single-fixture","phase":"authenticated","utc":"2026-10-07T07:59:17.315Z","monotonicMs":3999.471248},{"connection":1,"mailbox":"single-fixture","phase":"command_received","command":"a3 EXAMINE INBOX","utc":"2026-10-07T07:59:17.315Z","monotonicMs":3999.856828},{"connection":1,"mailbox":"single-fixture","phase":"command_received","command":"a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])","utc":"2026-10-07T07:59:17.316Z","monotonicMs":4000.856069},{"connection":1,"mailbox":"single-fixture","phase":"phase_start","command":"a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])","utc":"2026-10-07T07:59:17.316Z","monotonicMs":4000.863419},{"connection":1,"mailbox":"single-fixture","phase":"phase_response","command":"a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])","utc":"2026-10-07T07:59:20.119Z","monotonicMs":6804.317629},{"connection":1,"mailbox":"single-fixture","phase":"socket_close","utc":"2026-10-07T07:59:20.163Z","monotonicMs":6847.532665},{"connection":2,"mailbox":"","phase":"socket_open","utc":"2026-10-07T07:59:20.167Z","monotonicMs":6851.650426},{"connection":2,"mailbox":"","phase":"command_received","command":"a1 CAPABILITY","utc":"2026-10-07T07:59:20.167Z","monotonicMs":6852.276486},{"connection":2,"mailbox":"","phase":"command_received","command":"a2 AUTHENTICATE PLAIN","utc":"2026-10-07T07:59:20.168Z","monotonicMs":6852.850697},{"connection":2,"mailbox":"single-fixture","phase":"authenticated","utc":"2026-10-07T07:59:20.168Z","monotonicMs":6853.421367},{"connection":2,"mailbox":"single-fixture","phase":"command_received","command":"a3 EXAMINE INBOX","utc":"2026-10-07T07:59:20.169Z","monotonicMs":6853.867537},{"connection":2,"mailbox":"single-fixture","phase":"command_received","command":"a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)","utc":"2026-10-07T07:59:20.169Z","monotonicMs":6854.325247},{"connection":2,"mailbox":"single-fixture","phase":"phase_start","command":"a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)","utc":"2026-10-07T07:59:20.169Z","monotonicMs":6854.330167},{"connection":2,"mailbox":"single-fixture","phase":"socket_close","utc":"2026-10-07T07:59:22.296Z","monotonicMs":8981.417406}]}
+# Subtest: F11 two slow native phases cannot both fit a single absolute five-second window
+ok 4 - F11 two slow native phases cannot both fit a single absolute five-second window
+  ---
+  duration_ms: 5468.401992
+  type: 'test'
+  ...
+# {"witness":"two_phase_12s_positive","start":1791359962612,"end":1791359974612,"yielded":{"utc":"2026-10-07T07:59:25.491Z","monotonicMs":12176.415157},"phases":[{"kind":"body_metadata","begun":{"utc":"2026-10-07T07:59:22.612Z","monotonicMs":9296.946949},"finished":{"utc":"2026-10-07T07:59:25.491Z","monotonicMs":12176.382217},"elapsedMs":2879.435268000001},{"kind":"body_text","begun":{"utc":"2026-10-07T07:59:25.492Z","monotonicMs":12176.935847},"finished":{"utc":"2026-10-07T07:59:28.346Z","monotonicMs":15030.865656},"elapsedMs":2853.9298089999993}],"wire":[{"connection":1,"mailbox":"","phase":"socket_open","utc":"2026-10-07T07:59:22.637Z","monotonicMs":9322.361658},{"connection":1,"mailbox":"","phase":"command_received","command":"a1 CAPABILITY","utc":"2026-10-07T07:59:22.639Z","monotonicMs":9323.583879},{"connection":1,"mailbox":"","phase":"command_received","command":"a2 AUTHENTICATE PLAIN","utc":"2026-10-07T07:59:22.639Z","monotonicMs":9324.158299},{"connection":1,"mailbox":"single-fixture","phase":"authenticated","utc":"2026-10-07T07:59:22.640Z","monotonicMs":9324.579749},{"connection":1,"mailbox":"single-fixture","phase":"command_received","command":"a3 EXAMINE INBOX","utc":"2026-10-07T07:59:22.640Z","monotonicMs":9325.346209},{"connection":1,"mailbox":"single-fixture","phase":"command_received","command":"a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])","utc":"2026-10-07T07:59:22.641Z","monotonicMs":9326.055359},{"connection":1,"mailbox":"single-fixture","phase":"phase_start","command":"a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])","utc":"2026-10-07T07:59:22.641Z","monotonicMs":9326.087979},{"connection":1,"mailbox":"single-fixture","phase":"phase_response","command":"a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])","utc":"2026-10-07T07:59:25.444Z","monotonicMs":12129.28113},{"connection":1,"mailbox":"single-fixture","phase":"socket_close","utc":"2026-10-07T07:59:25.493Z","monotonicMs":12177.814767},{"connection":2,"mailbox":"","phase":"socket_open","utc":"2026-10-07T07:59:25.499Z","monotonicMs":12184.31969},{"connection":2,"mailbox":"","phase":"command_received","command":"a1 CAPABILITY","utc":"2026-10-07T07:59:25.500Z","monotonicMs":12185.04664},{"connection":2,"mailbox":"","phase":"command_received","command":"a2 AUTHENTICATE PLAIN","utc":"2026-10-07T07:59:25.501Z","monotonicMs":12185.55367},{"connection":2,"mailbox":"single-fixture","phase":"authenticated","utc":"2026-10-07T07:59:25.501Z","monotonicMs":12186.01392},{"connection":2,"mailbox":"single-fixture","phase":"command_received","command":"a3 EXAMINE INBOX","utc":"2026-10-07T07:59:25.501Z","monotonicMs":12186.387171},{"connection":2,"mailbox":"single-fixture","phase":"command_received","command":"a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)","utc":"2026-10-07T07:59:25.502Z","monotonicMs":12187.024391},{"connection":2,"mailbox":"single-fixture","phase":"phase_start","command":"a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)","utc":"2026-10-07T07:59:25.502Z","monotonicMs":12187.030491},{"connection":2,"mailbox":"single-fixture","phase":"phase_response","command":"a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)","utc":"2026-10-07T07:59:28.302Z","monotonicMs":14987.26764},{"connection":2,"mailbox":"single-fixture","phase":"socket_close","utc":"2026-10-07T07:59:28.348Z","monotonicMs":15032.503137}]}
+# Subtest: F11 admitted twelve-second window completes both legal 2800ms native phases
+ok 5 - F11 admitted twelve-second window completes both legal 2800ms native phases
+  ---
+  duration_ms: 6049.69695
+  type: 'test'
+  ...
+# Subtest: F11 literal body/MIME/aggregate boundaries and malformed encoding hold
+ok 6 - F11 literal body/MIME/aggregate boundaries and malformed encoding hold
+  ---
+  duration_ms: 15.718495
+  type: 'test'
+  ...
+# Subtest: F11 finite RU/EN candidates and negative precedence never grants send authority
+ok 7 - F11 finite RU/EN candidates and negative precedence never grants send authority
+  ---
+  duration_ms: 10.230603
+  type: 'test'
+  ...
+# Subtest: F11 tenant/mailbox/event/binding/key AEAD, content bounds and no plaintext envelope
+ok 8 - F11 tenant/mailbox/event/binding/key AEAD, content bounds and no plaintext envelope
+  ---
+  duration_ms: 3.391001
+  type: 'test'
+  ...
+# Subtest: F11 production frozen classifier uses authenticated metadata negatives before FAQ
+ok 9 - F11 production frozen classifier uses authenticated metadata negatives before FAQ
+  ---
+  duration_ms: 1.14295
+  type: 'test'
+  ...
+# Subtest: F11 body quanta share exactly four finite IMAP lanes and join cancellation
+ok 10 - F11 body quanta share exactly four finite IMAP lanes and join cancellation
+  ---
+  duration_ms: 152.223784
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 15729.706025

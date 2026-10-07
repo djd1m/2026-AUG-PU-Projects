@@ -8,8 +8,8 @@
   "root_actual_model": null,
   "usage": null,
   "cost": null,
-  "disk_free_bytes": 3709587456,
-  "status": "REVIEWED_NEGATIVE_ASSESSMENT_READY_FOR_DELIVERY",
+  "disk_free_bytes": 3698163712,
+  "status": "COMPLETED_NEGATIVE_ASSESSMENT_DELIVERED",
   "route": "L: new transport adapter boundaries, isolated nonproduction prototype; no product acceptance",
   "roles": {
     "planner": "gpt-6.1-sol/high requested",
@@ -36,7 +36,7 @@
     "actual_ack": null
   },
   "priority_dependency": "A37 terminal; prototype lane reserved through fresh independent HIGH review",
-  "updated_utc": "2026-10-07T07:30:43.990968+00:00",
+  "updated_utc": "2026-10-07T07:43:47.237837+00:00",
   "author_attempt_i1": {
     "actor": "/root/n7_mail_library_author_i1",
     "ack_utc": "2026-10-07T07:07:48Z",
@@ -95,5 +95,19 @@
     "push_exit": 0,
     "post_push_confirmed_utc": "2026-10-07T07:30:26Z",
     "exact_process_finish_utc": null
+  },
+  "finished_delivery_utc": "2026-10-07T07:43:06Z",
+  "elapsed_wall_ms_from_recorded_root_start": 3181000,
+  "elapsed_wall_ms_from_earliest_measured_planner_ack": 3235000,
+  "measurement_scope": "Elapsed includes planning, lane waiting, implementation, independent review, coordination and delivery; active vs waiting intervals unavailable",
+  "product_migration": false,
+  "main_delivery": {
+    "revision": "f7c354d449d94cb4d82be8b6707899cab41db407",
+    "branch": "feature/07-cold-email-warmup",
+    "push_exit": 0,
+    "post_push_confirmed_utc": "2026-10-07T07:43:06Z",
+    "exact_process_finish_utc": null,
+    "blobs_verified": 75,
+    "bytes_verified": 548132
   }
 }

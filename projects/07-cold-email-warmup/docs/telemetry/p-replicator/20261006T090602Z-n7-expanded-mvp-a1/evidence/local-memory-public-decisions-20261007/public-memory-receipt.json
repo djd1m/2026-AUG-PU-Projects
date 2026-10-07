@@ -1,0 +1,34 @@
+{
+  "scope": "ownerrequestedpubliclibrarydecision only; no credentials/body/provider calls/globalinstall/config changes",
+  "lesson_sha256": "daab883dcdef8b4be803d4a09b7570b37ffb16531300a48c033644689c9cbdee",
+  "store_command_unavailable_exit": 2,
+  "used_existing_teach_command": true,
+  "records": [
+    {
+      "operation": "teach",
+      "started_at": "2026-10-07T07:45:46.091519+00:00",
+      "finished_at": "2026-10-07T07:45:47.038598+00:00",
+      "exit_code": 0,
+      "stdout_bytes": 379,
+      "stdout_sha256": "cf36c8aadf6d1d1f23de6f6a7e334eee9e1abffd56cd0f7d14f82c704a0e7d52",
+      "local_project_pinned": true,
+      "mirror_disabled": true,
+      "semantic_disabled": false,
+      "contains_expected_reference": true,
+      "store_success_claim": true
+    },
+    {
+      "operation": "recall",
+      "started_at": "2026-10-07T07:45:47.038787+00:00",
+      "finished_at": "2026-10-07T07:45:47.940938+00:00",
+      "exit_code": 0,
+      "stdout_bytes": 430,
+      "stdout_sha256": "5f5a699e4888cb3621967dd5ebe1976765550a842701a03d979c48ac5d6c6c21",
+      "local_project_pinned": true,
+      "mirror_disabled": false,
+      "semantic_disabled": true,
+      "contains_expected_reference": true,
+      "store_success_claim": null
+    }
+  ]
+}

@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "F11 unaccepted; A31 explicit compatible FIFO/urgent HEADER scheduling amendment sealed; fresh MEDIUM A32 exact6file candidate actually active",
+  "stage": "F11 unaccepted: A40 sealed PARTIAL4064997; fresh independent HIGH A41 actualACK08:10:23 preflight/targeted checks",
   "roots": {
     "project": "."
   },
   "identity": {
     "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
     "work_unit_id": "expanded-mvp",
-    "current_attempt_id": "f11-operational-verify-a13"
+    "current_attempt_id": "f11-post-ready-operational-verify-a41"
   },
   "telemetry": {
     "run": {
@@ -22,8 +22,8 @@
   },
   "source": {
     "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
-    "current_revision": "8c00eb55cda2be0f8d8dec827d8fbd995665e74d",
-    "build_revision": "c67eb5aa13d0917a817581bd4bf548beb6a4a1d8",
+    "current_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
+    "build_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
     "requirements": [
       {
         "root": "project",
@@ -45,12 +45,12 @@
       }
     ],
     "continuity": {
-      "expected_revision": "8c00eb55cda2be0f8d8dec827d8fbd995665e74d",
-      "observed_revision": "8c00eb55cda2be0f8d8dec827d8fbd995665e74d",
-      "reconciliation": "A18 only2TESTfiles changed; production76/db16/build76 unchanged fromc67. A19 source/test/guard/runner prelaunch binding mandatory; no current fullfaultPASS yet."
+      "expected_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
+      "observed_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
+      "reconciliation": "A40 exact nine-file frozen candidate; dist-inventory SHA in frozen packet. F11 unaccepted/not integrated into main; A41 independently verifies source/build."
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
-    "integration_note": "F10 accepted/integrated3566 remains main product baseline. F11 c67 candidate unaccepted; A13 faultshutdown SQL23514 preserved, A15 exact rollback cause, A16 targeted static/build0, A17 actual safe unique-schema short before fault300. F12 accepted-interface prerequisite remains pending."
+    "integration_note": "F10 accepted main3566 baseline retained. Current F11 candidate406 isolated only; library experiment530 separately delivered negative assessment; no production migration."
   },
   "prepare": {
     "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
@@ -718,26 +718,24 @@
       "remaining_AC": "Genuine continuation FIRST SQL/rowCounts/urgency/ownership and shortnative diagnostic; production unchanged; exactnarrow compatible HIGHrepair/amendment adjudication afterraw; nofullfleetblindrepeat or time/cap relaxation"
     }
   },
-  "current_stage": "F11 unaccepted; A38 compatiblecandidate sealedwithinbound, freshMEDIUM A39 actualACK07:39:56/cut56:56/seal59:56 exact8files; reviewed negative library experiment readyGitdelivery",
+  "current_stage": "F11 unaccepted: A40 sealed PARTIAL4064997; fresh independent HIGH A41 actualACK08:10:23 preflight/targeted checks",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_continuation_fleet_diagnostic_a26",
-    "requested_executor": "/root/n7_sol_coordinator/f11_continuation_fleet_diagnostic_a26",
-    "attempt": "f11-native-empty-tail-fleet-verify-a37",
+    "executor": "/root/n7_sol_coordinator/f11_post_ready_operational_verify_a41",
+    "attempt": "f11-post-ready-operational-verify-a41",
     "actual_ACK_received": true,
-    "status": "actual native fullfault child running; measurement baseline not inferred from launcher",
+    "actual_ACK_at": "2026-10-07T08:10:23Z",
+    "freeze_at": "2026-10-07T08:27:23Z",
+    "deadline": "2026-10-07T08:30:23Z",
     "requested_model": "gpt-6.1-sol",
     "requested_effort": "high",
     "actual_model": null,
     "usage": null,
-    "source_revision": "b6e8ae16e8feb6c67888eb2f006cfbb299b40197",
-    "context_manifest": "/tmp/n7-f11-native-empty-tail-author-a36/clean-next-high-input-manifest.json",
-    "context_sha256": "416893f1c24e5ce763cab81629d1aa68cf2b804d39dd654e4f5ad856f8e8ceeb",
-    "next": "After actual planner FINAL release retry same fixedHIGH followup once; verify frozen source/context and own joined processes before authentic current fullfault300. No CLI bypass/prototype author before actual F11 continuation.",
-    "actual_ACK_at": "2026-10-07T06:54:50Z",
-    "freeze_at": "2026-10-07T07:11:50Z",
-    "deadline": "2026-10-07T07:14:50Z",
-    "context_files": 1438,
-    "all_context_hashes_verified": true
+    "source_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
+    "context_manifest": "/tmp/n7-f11-restart-post-ready-author-a40/clean-next-high-input-manifest.json",
+    "context_sha256": "145cb94d0577e430d0ff74d1f91706d7646e201c90d539796da491694b7daa96",
+    "context_provenance": "approved A38 planner normatives, approved ninthpath clause, frozen source/build/helpers and raw objective facts; excludes author chat/receipt/reasoning",
+    "status": "actual independent actor running preflight; no native fleet start inferred",
+    "next": "Fresh EMPTY SHORT and realPG/context plus exact material dependency coverage first; original fullfault only after these gates. Source immutable; final source review separate fresh HIGH. If material fixture missing, seal gap and allocate MEDIUM."
   }
 }

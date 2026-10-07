@@ -1,0 +1,14 @@
+[work/n7-f11-restart-post-ready-a40 40649979] fix(n7): сохранять окно BODY при доказанном drain и завершать пустой HEADER хвост
+ Committer: root <root@test-apps-server.com>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly:
+
+    git config --global user.name "Your Name"
+    git config --global user.email you@example.com
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 9 files changed, 115 insertions(+), 15 deletions(-)
