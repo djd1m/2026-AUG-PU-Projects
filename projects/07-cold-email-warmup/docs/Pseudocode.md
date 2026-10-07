@@ -34,7 +34,7 @@
 - id: UUID · user_id → user · name: Text · mailbox_ids: UUID[] (пул ротации кампании) · status: Enum('draft','ready','launched','paused','completed') · consent_record_id: UUID | null · daily_limit_per_mailbox: Int · created_at: Timestamp
 
 ### campaign_step
-- id: UUID · campaign_id → campaign · order: Int · offset_days: Int · template: Text (переменные {{first_name}} и т.п.) · created_at: Timestamp
+- id: UUID · campaign_id → campaign · order: Int · offset_days: Int · template: Text (переменные в нотации `{{first_name}}` и т.п.) · created_at: Timestamp
 
 ### recipient
 - id: UUID · campaign_id → campaign · address: Text · blocked_reason: Enum('stop_list','role','duplicate',null) · responded_at: Timestamp | null · complained: Boolean · created_at: Timestamp
@@ -193,7 +193,7 @@ INPUT: steps(offset_days, template), список полей
 OUTPUT: валидная цепочка или список ошибок
 STEPS:
 1. offset_days не убывают; хотя бы один шаг.
-2. Переменные шаблона {{field}} ∈ имя полей CSV; неизвестные → ошибка с позицией.
+2. Переменные шаблона (нотация `{{field}}`) ∈ имя полей CSV; неизвестные → ошибка с позицией.
 3. Превью-подстановка по первому получателю; RETURN цепочка/ошибки.
 COMPLEXITY: O(steps × variables)
 
