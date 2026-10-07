@@ -1,0 +1,87 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "attempt_id": "A47",
+  "source_root": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup",
+  "baseline_revision": "a382228814af1751df3f7176b2e7aec617d9e769",
+  "inputs": [
+    {
+      "path": "/tmp/n7-f11-c1-planned-drain-planner-a43/plan.md",
+      "sha256": "9e179fcecd5fecd13e45b12a359e4bd2ca3655e0c63ea13a1f4930128e1341a8"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-planned-drain-planner-a43/context_manifest.json",
+      "sha256": "0ca0db6e9b8378dccf9814e0b095bfa2722277469ce5eeb1224125884c075fb8"
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-planner-a38/plan.md",
+      "sha256": "bbbbcd847f0abf82bb58eca1a58e8b1b6b4c91425d295d6f82498ce63d62fb48"
+    },
+    {
+      "path": "/tmp/n7-f11-deferred-material-author-a46/final-freeze.json",
+      "sha256": "c87af9b8bf57c9bab4a4caa85e4730e34d5f9df07246c21e2fd45922894faf9d"
+    },
+    {
+      "path": "/tmp/n7-f11-deferred-material-author-a46/foreign-v2/a40-drain-foreign_tenant.json",
+      "sha256": "1a9277fc8fb437524b8dd9170c8b17902de75f50fb8f7c9877c114b304cb66de"
+    },
+    {
+      "path": "/tmp/n7-f11-deferred-material-author-a46/foreign-v2.raw",
+      "sha256": "012754cf6e735051a5088b2ca108e260f3ffe791c66aeb0bda93f9bbabd0bff7"
+    },
+    {
+      "path": "/tmp/n7-f11-deferred-material-author-a46/foreign-v2-launch-freeze.json",
+      "sha256": "c2c6ff5af54e91084e82636905fe0656735ce9e5eddff88d33df893dc10a4504"
+    },
+    {
+      "path": "/tmp/n7-f11-deferred-material-author-a46/inventory.json",
+      "sha256": "7328532dab9d7cc9170caf41fc149eae60a3d3444b4f951090479418d1dfa6cb"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/context-store.ts",
+      "sha256": "7a6926bb6382ed12930785cba14c87efec8cfba7a05cbae4985bf9e6fcb5c45d"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+      "sha256": "7dab1f5d143fbd21acf78a3c37edf5e7cf89182fd3197836491d123ca28275d8"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/mailboxes/transport-lifetime.ts",
+      "sha256": "be57cd516949baf7ca91b302105ceadd82cf7dbb39c82472e06affabee4ded06"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/mailboxes/transport-slots.ts",
+      "sha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/consent/transaction.ts",
+      "sha256": "830899e94ae29d9cbc9a25e150dbe46fbc4fb4494438a709514023b60d9088c9"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/package.json",
+      "sha256": "6baf9f1e19020eecc054eb76e1731b8f9336dc32bffe19a408d039baeac2eb83"
+    },
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/docs/features/expanded-mvp/01_specification.md",
+      "sha256": "dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a"
+    },
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/docs/features/expanded-mvp/02_pseudocode.md",
+      "sha256": "1deb0b3d98038350f2284e9af0313df8d3792c0b0b1c8be869b8da750b5a1752"
+    },
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/docs/features/expanded-mvp/03_architecture.md",
+      "sha256": "307b5f5fc82e483f3d880b108c6abac25c44ba43e01ec6eaa001864179850dfe"
+    }
+  ],
+  "excluded_context": [
+    "author receipts",
+    "author narrative/chat/notes",
+    "previous coordinator history"
+  ],
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null
+}

@@ -1,0 +1,60 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "A47",
+  "attempt_id": "A47",
+  "status": "completed",
+  "verdict": "confirmed scoped defect; actionable two-path plan ready; implementation/full F11 pending",
+  "started_at": "2026-10-07T10:07:54+00:00",
+  "finished_at": "2026-10-07T10:14:34.464567+00:00",
+  "elapsed_wall_ms": 400465,
+  "active_wall_ms": null,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "cost_basis": "unavailable",
+  "measurement_gaps": [
+    "host actual model/effort/usage/cost not exposed",
+    "parent launch record owns pre-stage telemetry; local detailed evidence record created after initial reads, not backdated",
+    "waiting intervals not separately instrumented"
+  ],
+  "owned_source_test_paths": [
+    "src/replies/context-store.ts",
+    "tests/f10-runtime-protocol.test.ts"
+  ],
+  "source_root": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup",
+  "baseline_revision": "a382228814af1751df3f7176b2e7aec617d9e769",
+  "checks_executed": [
+    {
+      "name": "read-only explicit two-path complexity route",
+      "exit_code": 1,
+      "meaning": "tier L lower bound, substantive inherited XL"
+    },
+    {
+      "name": "objective raw before/after plus source transaction review",
+      "result": "confirmed A47-F1"
+    }
+  ],
+  "application_test_runs": 0,
+  "application_source_writes": 0,
+  "db_mutations": 0,
+  "external_requests": 0,
+  "output_root": "/tmp/n7-f11-root-recovery-planner-a47-20261007",
+  "artifacts": {
+    "context_manifest.json": "37889a39ef46c743c2fd55a16941bfda31650df3d43ab34081a900cd5f104f3b",
+    "objective-diagnosis.json": "3f13aaff7989035eaa133c0546b7bd904e77f1cb886d4009af457a62bc4bbd3b",
+    "plan.md": "4f0250a386f9f067a2f8a8920a2f6f2f9f05100b3bb7b625309cf5d0126053ea",
+    "route.json": "ddd8af2f43cf4e486dc6e65e588cbd6dd94dfa9a3c6f847b6ff04c704d97a1ed"
+  },
+  "remaining_ac": [
+    "MEDIUM implement immutable BodyIdentity CAS across all three catch writes",
+    "candidate exact foreign_tenant GREEN plus guard-removal RED",
+    "positive recovery/generic cancellation and owner/generation regression controls",
+    "mandatory source/build/material/native/PG checks",
+    "fresh independent HIGH review",
+    "original fault and healthy full300 witnesses and legacy20page/native19 obligation"
+  ],
+  "next_executor": "root-appointed separate fresh gpt-6.1-sol/medium author, exact two-path scope, 20min attempt/17min work bound"
+}

@@ -59,13 +59,13 @@
     "followup_status": "F07/F08/F09/F10 locally accepted and F10 integrated3566; expanded AC001–004 met, AC005–009 pending. Whole required_gates_passed remains false. F11 code remains unaccepted candidate."
   },
   "metrics": {
-    "elapsed_wall_ms": 87091390,
+    "elapsed_wall_ms": 87906584,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-07T09:17:34.268854+00:00"
+    "elapsed_as_of": "2026-10-07T09:31:09.463093+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 unaccepted; A44 candidate535 sealed, A45 actual MEDIUM test-only correction/material witnesses active",
+  "current_stage": "F11 A48 local correction actual MEDIUM execution",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -135,23 +135,23 @@
     "full_project_result": "Original selected snapshot did not establish full pass; later integrated full Phase I/II=0, see integrated-preimplementation/phase12.txt",
     "historical": true
   },
-  "intermediate_revision": "535251adf8392f4e4c0258ccaec86abefd0810d5",
+  "intermediate_revision": "a382228814af1751df3f7176b2e7aec617d9e769",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_monotonic_material_fixture_author_a45",
-    "attempt": "f11-monotonic-material-fixture-author-a45",
+    "executor": "/root/n7_sol_coordinator/f11_deferred_material_fixture_author_a46",
+    "attempt": "f11-deferred-material-fixture-author-a46",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T09:11:50Z",
-    "freeze_at": "2026-10-07T09:28:50Z",
-    "deadline": "2026-10-07T09:31:50Z",
+    "actual_ACK_at": "2026-10-07T09:28:57Z",
+    "freeze_at": "2026-10-07T09:45:57Z",
+    "deadline": "2026-10-07T09:48:57Z",
     "requested_model": "gpt-6.1-sol",
     "requested_effort": "medium",
     "actual_model": null,
     "usage": null,
-    "baseline_revision": "535251adf8392f4e4c0258ccaec86abefd0810d5",
+    "baseline_revision": "a382228814af1751df3f7176b2e7aec617d9e769",
     "approved_plan_sha256": "9e179fcecd5fecd13e45b12a359e4bd2ca3655e0c63ea13a1f4930128e1341a8",
-    "status": "actual fresh MEDIUM test-only author; strict planned metadata/text native0 after real monotonic timer fix; C1 removal counterproof and remaining material fixtures underway",
-    "next": "Seal exact candidate/joins/remaining AC, then actual bounded HIGH frozen operational checks; fresh independent source review after mandatory witnesses complete; no full F11 acceptance."
+    "status": "actual fresh MEDIUM max3-test-file writer, production read-only; 11 drain material modes +1 new-UID semantic stop",
+    "next": "Seal exact source/joins/remaining AC then actual bounded HIGH frozen operational verification; final independent source reviewer NEW HIGH fork-none planner-only."
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -195,20 +195,14 @@
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-07T09:17:34.268854+00:00",
+    "last_reported_at": "2026-10-07T09:31:09.463093+00:00",
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true,
     "latest_checkpoint": {
-      "at": "2026-10-07T09:17:34.268854+00:00",
-      "disk_available_bytes": 3579957248,
-      "executor": "/root/n7_sol_coordinator/f11_monotonic_material_fixture_author_a45",
-      "remaining_AC": [
-        "Drain14/ordinary9 material obligations with exact source binding",
-        "Original six unstarted controls current binding",
-        "Fault and healthy fleet all30/header30/selection60",
-        "Relevant full unit/PG/AEAD/MIME/current-authority/retention/stop regression",
-        "Legacy20-page native obligation and fresh independent source review"
-      ]
+      "at": "2026-10-07T09:31:09.463093+00:00",
+      "disk_available_bytes": 3560300544,
+      "executor": "/root/n7_sol_coordinator/f11_deferred_material_fixture_author_a46",
+      "remaining_AC": "12 material modes; normal HEADER positive; relevant full regressions/fault+healthy300/legacy20pages/fresh final independent review"
     },
     "forecast": {
       "as_of": "2026-10-07T09:17:34.268854+00:00",
@@ -836,5 +830,56 @@
     "compiled76_unchanged": true,
     "actual_model": null,
     "usage": null
+  },
+  "root_resume_a47": {
+    "timestamp": "2026-10-07T10:07:24.025431+00:00",
+    "stage": "PLAN",
+    "attempt_id": "f11_a47_root_resume",
+    "actor": "/root",
+    "profile": "model-routing-econom",
+    "requested_model": null,
+    "actual_model": null,
+    "usage": null,
+    "cost": null,
+    "reason": "Coordinator content-safety error; root takes ownership of authorized local defensive defect correction",
+    "prior_actor": "/root/n7_sol_coordinator",
+    "prior_terminal": "errored: content flagged for possible cybersecurity risk",
+    "last_author_terminal": "2026-10-07T09:41:55.879639Z",
+    "unattended_interval_end_observed": "2026-10-07T10:04:35Z",
+    "unattended_interval_exact_start": null,
+    "baseline_revision": "a382228814af1751df3f7176b2e7aec617d9e769",
+    "dirty_test_sha256": "7dab1f5d143fbd21acf78a3c37edf5e7cf89182fd3197836491d123ca28275d8",
+    "route": {
+      "mechanical_exit": 0,
+      "mechanical_tier": "S",
+      "substantive_tier": "L",
+      "reason": "Preserve existing tenant isolation and native-operation lifetime during local recovery; full plan/validate/implement/independent review"
+    },
+    "next_actor": "fresh gpt-6.1-sol/high read-only diagnosis; not yet launched",
+    "disk_free_bytes": 3547070464,
+    "scope": "local owned source/fixtures only; no live providers, external accounts, deployment or changed invariants",
+    "status": "plan_complete"
+  },
+  "f11_root_author_a48": {
+    "event": "attempt_started",
+    "at": "2026-10-07T10:17:30.908813+00:00",
+    "attempt_id": "f11_a48_local_recovery",
+    "stage": "IMPLEMENT",
+    "actor": "/root/n7_a48_local_recovery_author",
+    "started_at": "2026-10-07T10:16:22Z",
+    "work_cut_at": "2026-10-07T10:33:22Z",
+    "seal_cut_at": "2026-10-07T10:36:22Z",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "medium",
+    "actual_model": null,
+    "usage": null,
+    "cost": null,
+    "plan_sha256": "4f0250a386f9f067a2f8a8920a2f6f2f9f05100b3bb7b625309cf5d0126053ea",
+    "validation": "root_read_plan_hash_verified_existing_norms_preserved",
+    "ownership": [
+      "src/replies/context-store.ts",
+      "tests/f10-runtime-protocol.test.ts"
+    ],
+    "mandatory_remaining": "targeted/guard-removal/current-regressions/freshHIGH; fullF11material/fleet/legacy remains unaccepted"
   }
 }
