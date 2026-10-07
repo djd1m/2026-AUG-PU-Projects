@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import type { Pool } from 'pg';
 import { HttpError } from '../errors.js';
 import { formatMinor,parseProviderTimestamp,validateConfirmationUrl,type CanonicalProvider,type CreateRequest,type LiveBinding,type VerifiedPayment,type VerifiedRefund } from './provider.js';
+import { currentEntitlement } from './plans.js';
 import { billingTransaction } from './transaction.js';
 export interface LivePrice {provider:string;merchant:string;plan:'team';amountMinor:number;currency:string;durationDays:number}
 interface Intent {id:string;tenant_id:string;provider:string;merchant:string;mode:'live';plan:'team';amount_minor:number;currency:string;duration_days:number;payment_id:string|null;state:string;create_request:CreateRequest|null;first_create_attempt_at:Date|null;confirmation_url:string|null}
@@ -57,10 +58,33 @@ export class LiveBillingService {
  async status(tenant:string,id:string) {
   const i=(await this.pool.query<Intent>('SELECT * FROM live_billing_intent WHERE tenant_id=$1 AND id=$2',[tenant,id])).rows[0];if(!i) throw new HttpError(404,'not_found');return i;
  }
+ async findPayment(paymentId:string) {
+  return (await this.pool.query<Intent>("SELECT * FROM live_billing_intent WHERE provider=$1 AND merchant=$2 AND mode='live' AND payment_id=$3",[this.price.provider,this.price.merchant,paymentId])).rows[0]??null;
+ }
+ async dto(tenant:string,id:string,availability='available') {
+  const i=await this.status(tenant,id);return {id:i.id,plan:i.plan,state:i.state,created_at:(i as Intent & {created_at:Date}).created_at,mode:'live_provider' as const,label:'LIVE' as const,price:{plan:i.plan,amountMinor:i.amount_minor,currency:i.currency,durationDays:i.duration_days,label:'LIVE'},checkoutUrl:i.state==='pending'?i.confirmation_url:null,availability,entitlement:await currentEntitlement(this.pool,tenant,'live_provider')};
+ }
+ async ownerStatus(tenant:string,availability='available') {return {...await currentEntitlement(this.pool,tenant,'live_provider'),mode:'live_provider' as const,label:'LIVE' as const,checkoutAvailable:true,availability,price:{plan:this.price.plan,amountMinor:this.price.amountMinor,currency:this.price.currency,durationDays:this.price.durationDays,label:'LIVE'}};}
+ async reconcileRefundNotification(refundId:string) {
+  if(!this.provider.fetchRefundContext)throw new HttpError(503,'provider_unavailable');
+  const context=await this.provider.fetchRefundContext(refundId,async lookup=>{
+   if(lookup.provider!==this.price.provider || lookup.merchant!==this.price.merchant || lookup.mode!=='live')throw new HttpError(409,'refund_mismatch');
+   const i=await this.findPayment(lookup.paymentId);return i?Object.freeze(binding(i)):null;
+  });
+  if(!context)return {ignored:true};
+  if(context.binding.provider!==this.price.provider || context.binding.merchant!==this.price.merchant || context.binding.mode!=='live')throw new HttpError(409,'refund_mismatch');
+  return {ignored:false,...await this.applyCanonical(context.binding.tenant,context.binding.intent,context.payment,context.refund,refundId)};
+ }
  async reconcile(tenant:string,id:string,refundId?:string) {
-  const outside=await this.status(tenant,id);if(!outside.payment_id) throw new HttpError(409,'payment_unknown');
-  // No DB transaction survives independent canonical remote GETs.
+  const outside=await this.status(tenant,id);if(!outside.payment_id)throw new HttpError(409,'payment_unknown');
+  if(refundId && this.provider.fetchRefundContext){
+   const b=binding(outside),context=await this.provider.fetchRefundContext(refundId,async lookup=>lookup.provider===b.provider && lookup.merchant===b.merchant && lookup.mode===b.mode && lookup.paymentId===outside.payment_id?Object.freeze(b):null);
+   if(!context)throw new HttpError(409,'refund_mismatch');return this.applyCanonical(tenant,id,context.payment,context.refund,refundId);
+  }
   const p=await this.provider.fetch(outside.payment_id,Object.freeze(binding(outside))),r=refundId===undefined?null:await this.provider.fetchRefund(refundId,Object.freeze(binding(outside)),outside.payment_id);
+  return this.applyCanonical(tenant,id,p,r,refundId);
+ }
+ private applyCanonical(tenant:string,id:string,p:Readonly<VerifiedPayment>,r:Readonly<VerifiedRefund>|null,refundId?:string) {
   return billingTransaction(this.pool,async c=>{
    const i=(await c.query<Intent>('SELECT * FROM live_billing_intent WHERE tenant_id=$1 AND id=$2 FOR UPDATE',[tenant,id])).rows[0]!;
    const b=binding(i);if(!matchesLivePayment(b,p,i.payment_id)) throw new HttpError(409,'payment_mismatch');

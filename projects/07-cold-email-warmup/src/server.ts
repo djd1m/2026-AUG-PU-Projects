@@ -1,7 +1,7 @@
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { cabinetPage,cabinetCss } from './web/cabinet.js';
-import { PLANS } from './billing/plans.js';
+import { PLANS,TEST_TEAM } from './billing/plans.js';
 import { POOL_DISCLOSURE } from './consent/store.js';
 import type { Pool } from 'pg';
 import type { Config } from './config.js';
@@ -26,8 +26,10 @@ import { authPage, authScript } from './web/page.js';
 import { SuppressionStore,authenticateOperator } from './suppression/store.js';
 import { confirmationPage,unsubscribeForm } from './suppression/http.js';
 import { ReplyStore } from './replies/store.js';
-import { BillingService } from './billing/service.js';
-import { LocalProvider } from './billing/provider.js';
+import { LiveBillingService } from './billing/live.js';
+import { YooKassaProvider } from './billing/yookassa.js';
+import { BillingService,parseCheckout } from './billing/service.js';
+import { LocalProvider,type CanonicalProvider } from './billing/provider.js';
 import { PartnerStore } from './growth/partner.js';
 import { referralToken,referralCookie } from './growth/attribution.js';
 import { EvidenceStore } from './evidence/store.js';
@@ -54,23 +56,41 @@ async function body(req: IncomingMessage): Promise<Record<string, unknown>> {
 function json(res: ServerResponse, status: number, data: unknown) {
   res.writeHead(status, {'Content-Type':'application/json; charset=utf-8'}); res.end(JSON.stringify(data));
 }
-export async function application(config: Config, pool: Pool, fixtures?:{resolver?:Resolver; adapter?:TestAdapter;diagnosticChannel?:ChannelFactory}) {
+export async function application(config: Config, pool: Pool, fixtures?:{resolver?:Resolver; adapter?:TestAdapter;diagnosticChannel?:ChannelFactory;canonicalProvider?:CanonicalProvider}) {
   const store = new PgAuthStore(pool); const auth = new AuthService(store, config.sessionKey);
   await auth.initialize();
   const mailboxes=new MailboxStore(pool,config.credentialKeyring,config.providerAllowlist,fixtures?.resolver,fixtures?.adapter);
   const diagnostics=new DiagnosticStore(pool,config.credentialKeyring,config.providerAllowlist,fixtures?.diagnosticChannel,fixtures?.diagnosticChannel?'protocol_fixture':'live_provider');
   const capacity=new CapacityStore(pool);
   const consents=new ConsentStore(pool,config.credentialKeyring);
-  const campaigns=new CampaignStore(pool,config.credentialKeyring,config.recipientHashKey);
+  const campaigns=new CampaignStore(pool,config.credentialKeyring,config.recipientHashKey,config.billingMode??'disabled');
   const cohort=new PoolStore(pool);const dispatch=new DispatchStore(pool);const submissions=new SubmissionStore(pool,config);
   const suppression=new SuppressionStore(pool,config.recipientHashKey);const replies=new ReplyStore(pool,config.credentialKeyring);
-  const billing=new BillingService(pool,config.sessionKey,config.billingMode??'disabled');const billingProvider=new LocalProvider(pool,config.billingMode??'disabled');const partners=new PartnerStore(pool);
-  const evidence=new EvidenceStore(pool),reports=new ReportStore(pool);
+  const billingMode=config.billingMode??'disabled';
+  if(billingMode==='live_provider' && (!config.liveBilling || !config.origin.startsWith('https://')))throw new HttpError(503,'invalid_live_provider_config');
+  const billing=billingMode==='live_provider'?null:new BillingService(pool,config.sessionKey,billingMode);
+  const billingProvider=billingMode==='live_provider'?null:new LocalProvider(pool,billingMode);
+  const live=billingMode==='live_provider'?new LiveBillingService(pool,fixtures?.canonicalProvider??new YooKassaProvider(config.liveBilling!),{provider:'yookassa',merchant:config.liveBilling!.shopId,plan:'team',amountMinor:config.liveBilling!.amountMinor,currency:'RUB',durationDays:30},{returnUrl:id=>config.origin+'/app?billingIntent='+id,description:'N7 Team 30 days'}):null;
+  let canonicalActive=0;
+  async function canonical<T>(operation:()=>Promise<T>) {if(canonicalActive>=2)throw new HttpError(429,'billing_busy',1);canonicalActive++;try{return await operation();}finally{canonicalActive--;}}
+  async function refreshLive(tenant:string,id:string) {const row=await live!.status(tenant,id);let availability='available';if(row.payment_id){try {await canonical(()=>live!.reconcile(tenant,id));}catch(e){if(!(e instanceof HttpError) || e.status!==503)throw e;availability='unavailable';}}return live!.dto(tenant,id,availability);}
+  const partners=new PartnerStore(pool);
+  const evidence=new EvidenceStore(pool),reports=new ReportStore(pool,config.billingMode??'disabled');
   const server = createServer((req, res) => {
     res.setHeader('Cache-Control', 'no-store'); res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
     void (async () => {
       const path = (req.url ?? '').split('?')[0]!; const unsafe = !['GET','HEAD','OPTIONS'].includes(req.method ?? '');
+      if(req.method==='POST' && path==='/api/billing/webhooks/yookassa') {
+        await suppression.charge(req.socket.remoteAddress??'unknown');
+        if(!live)throw new HttpError(503,'billing_unavailable');
+        if(req.headers.origin!==undefined || req.headers.cookie!==undefined || req.headers.authorization!==undefined)throw new HttpError(403,'webhook_header_denied');
+        const hint=await body(req),object=hint.object;
+        if(!['payment.succeeded','payment.canceled','payment.waiting_for_capture','refund.succeeded'].includes(String(hint.event)) || !object || typeof object!=='object' || Array.isArray(object) || !('id' in object) || typeof object.id!=='string' || !object.id || object.id.length>200)throw new HttpError(400,'invalid_input');
+        if(hint.event==='refund.succeeded')return json(res,200,{data:await canonical(()=>live.reconcileRefundNotification(object.id as string)),meta:{}});
+        const bound=await live.findPayment(object.id);if(!bound)return json(res,200,{data:{ignored:true},meta:{}});
+        await canonical(()=>live.reconcile(bound.tenant_id,bound.id));return json(res,200,{data:{ignored:false},meta:{}});
+      }
       const publicStop=path.startsWith('/unsubscribe/') && ['GET','POST'].includes(req.method??'');
       const operatorBilling=['/api/operator/billing/simulate','/api/operator/billing/reconcile'].includes(path) && req.method==='POST';
       const operatorStop=(path==='/api/complaints' && req.method==='POST') || operatorBilling;
@@ -93,12 +113,13 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
         await unsubscribeForm(req);return json(res,200,{data:await suppression.unsubscribe(token),meta:{}});
       }
       if(operatorBilling) {
+        if(billingMode!=='local_test')throw new HttpError(503,'billing_unavailable');
         const input=await body(req);
         const id=path.endsWith('/simulate')?input.paymentId:input.intentId;
         if(typeof id!=='string' || !UUID.test(id)) throw new HttpError(400,'invalid_input');
-        if(path.endsWith('/reconcile')) {if(Object.keys(input).length!==1) throw new HttpError(400,'invalid_input');return json(res,200,{data:await billing.reconcile(id),meta:{label:'TEST'}});}
+        if(path.endsWith('/reconcile')) {if(Object.keys(input).length!==1) throw new HttpError(400,'invalid_input');return json(res,200,{data:await billing!.reconcile(id),meta:{label:'TEST'}});}
         const {paymentId:ignored,...mutation}=input;void ignored;
-        const payment=await billingProvider.simulate(id,mutation);return json(res,200,{data:{id:payment.id,status:payment.status,version:payment.version,label:'TEST'},meta:{}});
+        const payment=await billingProvider!.simulate(id,mutation);return json(res,200,{data:{id:payment.id,status:payment.status,version:payment.version,label:'TEST'},meta:{}});
       }
       if(operatorStop) {
         return json(res,200,{data:await suppression.complaint(await body(req)),meta:{}});
@@ -143,7 +164,7 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
         const session=(await pool.query('SELECT id FROM session WHERE token_hash=$1',[tokenDigest(token!,config.sessionKey)])).rows[0];
         res.setHeader('X-N7-Session',session.id);
         if(path==='/api/app' && req.method==='GET') {
-          const intents=(await pool.query('SELECT id,state,created_at FROM billing_intent WHERE tenant_id=$1 ORDER BY created_at DESC LIMIT 50',[identity.tenant_id])).rows;
+          const intents=(await pool.query(`SELECT id,state,created_at,'TEST' AS label,'local_test' AS mode FROM billing_intent WHERE tenant_id=$1 UNION ALL SELECT id,state,created_at,'LIVE' AS label,'live_provider' AS mode FROM live_billing_intent WHERE tenant_id=$1 ORDER BY created_at DESC LIMIT 50`,[identity.tenant_id])).rows;
           return json(res,200,{data:{identity,modes:{dispatch:config.dispatchMode,poll:config.pollMode??'disabled',billing:config.billingMode??'disabled'},
             poolDisclosure:POOL_DISCLOSURE,plans:PLANS,intents,referralCookiePresent:!!req.headers.cookie?.split(';').some(c=>c.trim().startsWith('n7_referral=')),
             providers:[...config.providerAllowlist].map(([host,limit])=>({host,limit}))},meta:{}});
@@ -163,10 +184,31 @@ export async function application(config: Config, pool: Pool, fixtures?:{resolve
         if(path==='/api/growth/events' && req.method==='GET') {const p=pageInput(req.url!);return json(res,200,{data:await reports.events(identity.tenant_id,p.limit,p.offset),meta:{}});}
         const reportMatch=/^\/api\/reports\/([^/]+)\/(revoke|events)$/.exec(path);
         if(reportMatch && req.method==='POST') {const input=await body(req);if(reportMatch[2]==='revoke') {if(Object.keys(input).length) throw new HttpError(400,'invalid_input');return json(res,200,{data:await reports.revoke(identity.tenant_id,reportMatch[1]!),meta:{}});}return json(res,200,{data:await reports.event(identity.tenant_id,reportMatch[1]!,input),meta:{}});}
-        if(path==='/api/billing/status' && req.method==='GET') return json(res,200,{data:await billing.ownerStatus(identity.tenant_id),meta:{}});
-        if(path==='/api/billing/checkout' && req.method==='POST') {await suppression.charge(req.socket.remoteAddress??'unknown');return json(res,201,{data:await billing.checkout(identity.tenant_id,await body(req),req.headers.cookie),meta:{label:'TEST'}});}
+        if(path==='/api/billing/status' && req.method==='GET') {
+          if(!live)return json(res,200,{data:await billing!.ownerStatus(identity.tenant_id),meta:{}});
+          await suppression.charge(req.socket.remoteAddress??'unknown');
+          const latest=(await pool.query('SELECT id FROM live_billing_intent WHERE tenant_id=$1 ORDER BY created_at DESC LIMIT 1',[identity.tenant_id])).rows[0];
+          const refreshed=latest?await refreshLive(identity.tenant_id,latest.id):null;
+          return json(res,200,{data:await live.ownerStatus(identity.tenant_id,refreshed?.availability),meta:{}});
+        }
+        if(path==='/api/billing/checkout' && req.method==='POST') {
+          await suppression.charge(req.socket.remoteAddress??'unknown');const input=await body(req);
+          if(!live)return json(res,201,{data:await billing!.checkout(identity.tenant_id,input,req.headers.cookie),meta:{label:'TEST'}});
+          if(Object.keys(input).some(k=>!['plan','idempotencyKey'].includes(k)))throw new HttpError(400,'invalid_input');const parsed=parseCheckout(input);
+          const row=await canonical(async()=>{const created=await live.checkout(identity.tenant_id,parsed.key);await live.reconcile(identity.tenant_id,created.id);return created;});
+          return json(res,201,{data:await live.dto(identity.tenant_id,row.id),meta:{label:'LIVE'}});
+        }
         const intentMatch=/^\/api\/billing\/intents\/([^/]+)$/.exec(path);
-        if(intentMatch && req.method==='GET') {if(!UUID.test(intentMatch[1]!)) throw new HttpError(404,'not_found');return json(res,200,{data:await billing.status(identity.tenant_id,intentMatch[1]!),meta:{}});}
+        if(intentMatch && req.method==='GET') {
+          const id=intentMatch[1]!;if(!UUID.test(id))throw new HttpError(404,'not_found');
+          if(!live)return json(res,200,{data:await billing!.status(identity.tenant_id,id),meta:{}});
+          if(new URL(req.url!,config.origin).searchParams.get('history')==='TEST'){
+            const row=(await pool.query('SELECT id,plan,state,created_at FROM billing_intent WHERE tenant_id=$1 AND id=$2',[identity.tenant_id,id])).rows[0];if(!row)throw new HttpError(404,'not_found');
+            return json(res,200,{data:{...row,mode:'local_test',label:'TEST',price:TEST_TEAM,checkoutUrl:null,canonicalStatus:null},meta:{}});
+          }
+          await live.status(identity.tenant_id,id);await suppression.charge(req.socket.remoteAddress??'unknown');
+          return json(res,200,{data:await refreshLive(identity.tenant_id,id),meta:{}});
+        }
         if(path==='/api/partner') {
           if(req.method==='POST') {if(Object.keys(await body(req)).length) throw new HttpError(400,'invalid_input');return json(res,201,{data:await partners.create(identity.tenant_id),meta:{}});}
           if(req.method==='GET') return json(res,200,{data:{...await partners.status(identity.tenant_id),events:await reports.aggregate(identity.tenant_id)},meta:{}});

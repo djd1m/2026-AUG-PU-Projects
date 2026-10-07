@@ -56,7 +56,11 @@ export interface VerifiedRefund {
  id:string; paymentId:string; provider:string; merchant:string; mode:'live';
  status:'pending'|'succeeded'|'canceled'; amountMinor:number; currency:string;
 }
+export interface RefundBindingLookup {readonly provider:string;readonly merchant:string;readonly mode:'live';readonly paymentId:string}
+export type ResolveRefundBinding=(lookup:Readonly<RefundBindingLookup>)=>Promise<Readonly<LiveBinding>|null>;
+export interface VerifiedRefundContext {readonly binding:Readonly<LiveBinding>;readonly payment:Readonly<VerifiedPayment>;readonly refund:Readonly<VerifiedRefund>}
 export interface CanonicalProvider {
+ fetchRefundContext?(refundId:string,resolveBinding:ResolveRefundBinding):Promise<VerifiedRefundContext|null>;
  // Every replay uses binding.intent as the remote idempotency key.
  create(binding:Readonly<LiveBinding>,request?:Readonly<CreateRequest>|null,createExpiresAt?:number):Promise<VerifiedPayment>;
  fetch(paymentId:string,expected?:Readonly<LiveBinding>):Promise<VerifiedPayment>;

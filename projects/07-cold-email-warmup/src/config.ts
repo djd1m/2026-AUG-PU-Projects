@@ -1,8 +1,9 @@
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { parseKeyring, type Keyring } from './mailboxes/crypto.js';
+import type { BillingMode } from './billing/plans.js';
 import { normalizeHost } from './mailboxes/network.js';
-export interface Config { billingMode?:'disabled'|'local_test'; pollMode?:'disabled'|'local_test'|'live_provider'; operatorTokenDigest?:Buffer|null; dispatchMode:'disabled'|'local_test'|'live_provider'; databaseUrl: string; recipientHashKey: Buffer; sessionKey: Buffer; origin: string; port: number; secureCookie: boolean; credentialKeyring:Keyring; providerAllowlist:ReadonlyMap<string,number> }
+export interface Config { billingMode?:BillingMode;liveBilling?:{shopId:string;secretKey:string;amountMinor:number}; pollMode?:'disabled'|'local_test'|'live_provider'; operatorTokenDigest?:Buffer|null; dispatchMode:'disabled'|'local_test'|'live_provider'; databaseUrl: string; recipientHashKey: Buffer; sessionKey: Buffer; origin: string; port: number; secureCookie: boolean; credentialKeyring:Keyring; providerAllowlist:ReadonlyMap<string,number> }
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   if (env.SAFETY_POLICY_VERSION !== 'n7-safety-v1') throw new Error('invalid_safety_policy');
   const encoded = env.SESSION_HMAC_KEY_FILE ? readFileSync(env.SESSION_HMAC_KEY_FILE, 'utf8').trim() : env.SESSION_HMAC_KEY;
@@ -54,6 +55,17 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     } catch {throw new Error('invalid_operator_token');}
   }
   const billingMode=env.BILLING_MODE ?? 'disabled';
-  if(billingMode!=='disabled' && billingMode!=='local_test') throw new Error('invalid_billing_mode');
-  return { billingMode,pollMode,operatorTokenDigest,dispatchMode, databaseUrl, recipientHashKey, sessionKey, credentialKeyring, providerAllowlist, origin, port, secureCookie: url.protocol === 'https:' };
+  if(billingMode!=='disabled' && billingMode!=='local_test' && billingMode!=='live_provider') throw new Error('invalid_billing_mode');
+  let liveBilling:Config['liveBilling'];
+  if(billingMode==='live_provider') {
+    if(url.protocol!=='https:') throw new Error('invalid_live_origin');
+    if(!env.N7_TEAM_PRICE_MINOR || !/^[1-9]\d{0,9}$/.test(env.N7_TEAM_PRICE_MINOR) || Number(env.N7_TEAM_PRICE_MINOR)>2147483647) throw new Error('invalid_live_price');
+    try {
+      if(!env.YOOKASSA_SHOP_ID_FILE || !env.YOOKASSA_SECRET_KEY_FILE) throw new Error();
+      const shopId=readFileSync(env.YOOKASSA_SHOP_ID_FILE,'utf8').trim(),secretKey=readFileSync(env.YOOKASSA_SECRET_KEY_FILE,'utf8').trim();
+      if(!/^[0-9]{1,64}$/.test(shopId) || !secretKey || secretKey.length>512 || /[\u0000-\u001f\u007f]/.test(secretKey)) throw new Error();
+      liveBilling={shopId,secretKey,amountMinor:Number(env.N7_TEAM_PRICE_MINOR)};
+    } catch {throw new Error('invalid_live_provider_config');}
+  }
+  return { liveBilling,billingMode,pollMode,operatorTokenDigest,dispatchMode, databaseUrl, recipientHashKey, sessionKey, credentialKeyring, providerAllowlist, origin, port, secureCookie: url.protocol === 'https:' };
 }

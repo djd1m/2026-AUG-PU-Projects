@@ -37,7 +37,7 @@ test('F07 real PostgreSQL capacity boundaries and atomic safety',{timeout:90000}
     assert.ok((await boxes.save(tenant!,raw)).id);
    }
    assert.equal(await count(),0);assert.equal(Number((await pool.query('SELECT count(*) FROM send_job')).rows[0].count),0);
-   assert.equal((await currentEntitlement(pool,tenants[0]!)).limits.mailboxes,null);
+   assert.equal((await currentEntitlement(pool,tenants[0]!,'local_test')).limits.mailboxes,null);
   });
   await t.test('tenant pages remain bounded and foreign capacity actions cause no side effects',async()=>{
    const seen=new Set<string>();let after:string|undefined;
@@ -117,7 +117,7 @@ test('F07 real PostgreSQL capacity boundaries and atomic safety',{timeout:90000}
   });
   await t.test('additive migration idempotency keeps records without implicit lease',async()=>{
    const total=(await boxes.list(tenants[0]!)).total;await migrate(pool);assert.equal(await ready(pool),true);assert.equal((await boxes.list(tenants[0]!)).total,total);
-   const first=(await boxes.list(tenants[0]!)).items[0];assert.equal(first.capacity.state,'inactive');assert.equal((await currentEntitlement(pool,tenants[0]!)).limits.activeCampaigns,3);
+   const first=(await boxes.list(tenants[0]!)).items[0];assert.equal(first.capacity.state,'inactive');assert.equal((await currentEntitlement(pool,tenants[0]!,'local_test')).limits.activeCampaigns,3);
   });
  }finally{await pool.query('TRUNCATE tenant,auth_bucket,public_stop_bucket CASCADE');await pool.end();}
 });

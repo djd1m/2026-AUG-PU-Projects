@@ -1,7 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import type { Pool } from 'pg';
 import { HttpError } from '../errors.js';
-import { currentEntitlement } from '../billing/plans.js';
+import { currentEntitlement,type BillingMode } from '../billing/plans.js';
 import { METRICS,UUID,uuidInput,keyInput,type Observation } from '../evidence/input.js';
 import { compare,DAY } from '../evidence/compare.js';
 import { evidenceTransaction,ownObservation,serverNow } from '../evidence/store.js';
@@ -20,7 +20,7 @@ export function reportHtml(s:PublicSnapshot,badge:boolean,historical:boolean) {
  return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${historical?'Historical observations':escape(s.title)}</title><style>body{margin:1rem;font-family:system-ui,sans-serif;line-height:1.5}main{max-width:64rem;margin-inline:auto;overflow-wrap:anywhere}.report-scroll{overflow-x:auto;border:1px solid #767676}.report-scroll:focus-visible{outline:3px solid #165db5;outline-offset:3px}table{overflow-wrap:normal;min-width:52rem;border-collapse:collapse}caption{text-align:left;font-weight:700;padding:.75rem}th,td{padding:.75rem;text-align:left;vertical-align:top;border-bottom:1px solid #ccc}tbody th,time{white-space:nowrap}time{display:block}td:nth-child(2),td:nth-child(3){min-width:24ch}</style><body><main><h1>${historical?'Historical observations':escape(s.title)}</h1><p>${historical?'Historical snapshot; no current improvement claim.':'Observed change; no causal warmup claim.'}</p><p>${escape(METRICS[s.metric])}; ${escape(s.unit)}; ${escape(s.direction)} is the declared improvement direction.</p><p>Source origin: ${escape(s.sourceOrigin)}. Provenance: ${escape(s.provenance)}. No independent provider verification.</p><p id="report-scroll-help">Scroll the observations table horizontally to read every column. Keyboard: focus the table area and use the Left and Right arrow keys.</p><div class="report-scroll" role="region" aria-label="Immutable manual observations" aria-describedby="report-scroll-help" tabindex="0"><table><caption>Immutable manual observations</caption><thead><tr><th scope="col">Observation</th><th scope="col">Observed at (UTC)</th><th scope="col">Window (UTC)</th><th scope="col">Raw numerator</th><th scope="col">Raw denominator</th>${s.display==='ratios'?'<th scope="col">Ratio</th>':''}</tr></thead><tbody>${row('Baseline',s.baseline)}${row('Latest',s.latest)}</tbody></table></div>${badge?'<p data-n7-source-badge><a href="/">N7 source</a></p>':''}</main></body></html>`;
 }
 export class ReportStore {
- constructor(readonly pool:Pool){}
+ constructor(readonly pool:Pool,readonly billingMode:BillingMode){}
  async share(tenant:string,input:Record<string,unknown>) {
   if(Object.keys(input).length!==3 || typeof input.baselineId!=='string' || typeof input.latestId!=='string') throw new HttpError(400,'invalid_input');
   const key=keyInput(input.idempotencyKey),baselineId=uuidInput(input.baselineId),latestId=uuidInput(input.latestId);
@@ -46,7 +46,7 @@ export class ReportStore {
   if(!/^[A-Za-z0-9_-]{43}$/.test(token)) throw new HttpError(404,'not_found');
   const row=(await this.pool.query('SELECT tenant_id,snapshot FROM evidence_report WHERE token=$1 AND revoked_at IS NULL',[token])).rows[0];
   if(!row) throw new HttpError(404,'not_found');
-  const entitlement=await currentEntitlement(this.pool,row.tenant_id);
+  const entitlement=await currentEntitlement(this.pool,row.tenant_id,this.billingMode);
   const snapshot=row.snapshot as PublicSnapshot;
   const historical=await serverNow(this.pool)-Date.parse(snapshot.latest.observedAt)>7*DAY;
   return reportHtml(snapshot,entitlement.plan!=='team',historical);

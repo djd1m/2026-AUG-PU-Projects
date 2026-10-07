@@ -66,7 +66,7 @@ test('F05 A1–A6 real PostgreSQL HTTP and canonical race gates',async t=>{
    await clearRate();await Promise.all(Array.from({length:8},()=>reconcile(c.id)));assert.equal(Number((await pool.query('SELECT count(*) FROM billing_entitlement WHERE intent_id=$1',[c.id])).rows[0].count),1);assert.deepEqual((await pool.query('SELECT expires_at FROM billing_entitlement WHERE intent_id=$1',[c.id])).rows[0].expires_at,expiry);
    const second=(await pool.query("SELECT * FROM billing_intent WHERE tenant_id=$1 AND attribution_reason='cookie_valid'",[buyer2.identity.tenant_id])).rows[0];await simulate(second.payment_id,'succeeded');await reconcile(second.id);
    const aggregate=(await request('/api/partner','GET',partner.cookie)).data.data;assert.equal(aggregate.conversions,2);assert.equal(aggregate.label,'TEST');assert.ok(!JSON.stringify(aggregate).includes(buyer.identity.tenant_id));
-   await simulate(c.payment_id,'revoked');assert.equal((await currentEntitlement(pool,buyer.identity.tenant_id)).plan,'free');await reconcile(c.id);assert.equal((await simulate(c.payment_id,'succeeded')).status,409);
+   await simulate(c.payment_id,'revoked');assert.equal((await currentEntitlement(pool,buyer.identity.tenant_id,'local_test')).plan,'free');await reconcile(c.id);assert.equal((await simulate(c.payment_id,'succeeded')).status,409);
    await request('/api/partner','PATCH',partner.cookie,{active:true});await clearRate();
   });
   await t.test('A4 canonical mismatch, unavailable503, bounded callback, stale cancel/expiry barriers',async()=>{
@@ -95,7 +95,7 @@ test('F05 A1–A6 real PostgreSQL HTTP and canonical race gates',async t=>{
    const pending=app.mailboxes.save(expiryTenant,raw);await new Promise(r=>setTimeout(r,30));const paidAt=new Date(Date.now()-31*86400000);await blocker.query('UPDATE billing_entitlement SET paid_at=$2,expires_at=$3 WHERE tenant_id=$1',[expiryTenant,paidAt,new Date(paidAt.getTime()+30*86400000)]);
    await blocker.query('COMMIT');blocker.release();assert.ok((await pending).id);
    await pool.query("UPDATE billing_entitlement SET revoked_at=clock_timestamp() WHERE tenant_id=$1",[tenant]);
-   const boxes=(await app.mailboxes.list(tenant)).items;assert.equal(boxes.length,18);assert.equal((await currentEntitlement(pool,tenant)).plan,'free');assert.equal((await app.mailboxes.save(tenant,raw,boxes[0].id)).id,boxes[0].id);assert.equal((await app.mailboxes.change(tenant,boxes[0].id,{state:'paused'})).state,'paused');
+   const boxes=(await app.mailboxes.list(tenant)).items;assert.equal(boxes.length,18);assert.equal((await currentEntitlement(pool,tenant,'local_test')).plan,'free');assert.equal((await app.mailboxes.save(tenant,raw,boxes[0].id)).id,boxes[0].id);assert.equal((await app.mailboxes.change(tenant,boxes[0].id,{state:'paused'})).state,'paused');
   });
   await t.test('A1 campaign concurrency and active duplicate after expiry',async()=>{
    const tenant=other.identity.tenant_id,box=(await app.mailboxes.list(tenant)).items[0]!.id;

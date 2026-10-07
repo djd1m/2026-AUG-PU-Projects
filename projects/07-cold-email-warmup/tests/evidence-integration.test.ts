@@ -100,7 +100,7 @@ test('F05 B1–B6 real PostgreSQL HTTP evidence and public report gates',async t
    assert.equal((await request(reportUrl+'?paid=true')).text.includes('data-n7-source-badge'),true);
    await pool.query('UPDATE billing_entitlement SET revoked_at=NULL WHERE intent_id=$1',[entitlement.intent_id]);
    const payment=(await pool.query('SELECT payment_id FROM billing_intent WHERE id=$1',[entitlement.intent_id])).rows[0].payment_id;
-   await app.billingProvider.simulate(payment,{status:'revoked'});assert.ok((await request(reportUrl)).text.includes('data-n7-source-badge'));
+   assert.ok(app.billingProvider);await app.billingProvider.simulate(payment,{status:'revoked'});assert.ok((await request(reportUrl)).text.includes('data-n7-source-badge'));
    const snapshot=publicProjection(observation(now-10*day),observation(now-9*day,20),'ratios');
    const historicalToken=randomBytes(32).toString('base64url');
    await pool.query('INSERT INTO evidence_report(tenant_id,token,idempotency_key,baseline_id,latest_id,snapshot) VALUES($1,$2,$3,$4,$5,$6)',[tenant,historicalToken,randomUUID(),baselineId,latestId,snapshot]);

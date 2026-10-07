@@ -52,7 +52,7 @@ test('B5 bounded history pagination',()=>{
 test('F1 primitive enums reject array/object/null before any write',async()=>{
  const invalid=[['higher'],['lower'],{},null,new String('higher')];
  for(const direction of invalid) assert.throws(()=>observationInput({...observation(now),direction}),e=>e instanceof HttpError && e.status===400);
- let calls=0;const store=new ReportStore({connect:async()=>{calls++;throw new Error('unexpected database access');}} as unknown as Pool);
+ let calls=0;const store=new ReportStore({connect:async()=>{calls++;throw new Error('unexpected database access');}} as unknown as Pool,'local_test');
  for(const kind of [['copy'],['link'],{},null,new String('copy')]) await assert.rejects(store.event('tenant','ABCDEFAB-1234-1234-1234-ABCDEFABCDEF',{kind,idempotencyKey:'enumtest01'}),e=>e instanceof HttpError && e.status===400);
  assert.equal(calls,0);
  assert.equal(observationInput({...observation(now),direction:'lower'}).direction,'lower');

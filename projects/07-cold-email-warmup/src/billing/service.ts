@@ -42,9 +42,9 @@ export class BillingService {
   const row=(await this.pool.query('SELECT id,plan,state,payment_id,attribution_reason,created_at FROM billing_intent WHERE tenant_id=$1 AND id=$2',[tenant,id])).rows[0];if(!row) throw new HttpError(404,'not_found');
   let canonicalStatus:string|null=null;
   if(row.payment_id && this.mode==='local_test') canonicalStatus=(await this.provider.fetch(row.payment_id)).status;
-  return {...row,canonicalStatus,mode:this.mode,label:'TEST',price:TEST_TEAM,checkoutUrl:row.payment_id?`/api/billing/intents/${row.id}`:null,entitlement:await currentEntitlement(this.pool,tenant)};
+  return {...row,canonicalStatus,mode:this.mode,label:'TEST',price:TEST_TEAM,checkoutUrl:row.payment_id?`/api/billing/intents/${row.id}`:null,entitlement:await currentEntitlement(this.pool,tenant,this.mode)};
  }
- async ownerStatus(tenant:string) {return {...await currentEntitlement(this.pool,tenant),mode:this.mode,checkoutAvailable:this.mode==='local_test',testPlan:TEST_TEAM};}
+ async ownerStatus(tenant:string) {const entitlement=await currentEntitlement(this.pool,tenant,this.mode);return this.mode==='disabled'?{...entitlement,mode:'disabled' as const,checkoutAvailable:false}:{...entitlement,mode:'local_test' as const,label:'TEST',checkoutAvailable:true,testPlan:TEST_TEAM};}
  async reconcile(id:string) {
   this.requireAvailable();
   const outside=(await this.pool.query<Intent>('SELECT * FROM billing_intent WHERE id=$1',[id])).rows[0];if(!outside?.payment_id) throw new HttpError(404,'not_found');

@@ -46,7 +46,7 @@ test('offline live ledger canonical identity, recovery, concurrency and sticky r
    assert.equal(await grants(i.id),1);const e=(await pool.query('SELECT * FROM live_billing_entitlement WHERE intent_id=$1',[i.id])).rows[0];
    assert.equal(e.expires_at.getTime()-e.paid_at.getTime(),17*86400000);
    provider.success(i.payment_id!);await service.reconcile(tenant,i.id);assert.deepEqual((await pool.query('SELECT expires_at FROM live_billing_entitlement WHERE intent_id=$1',[i.id])).rows[0].expires_at,e.expires_at);
-   assert.equal((await currentEntitlement(pool,tenant)).label,'LIVE');
+   assert.equal((await currentEntitlement(pool,tenant,'live_provider')).label,'LIVE');
    Object.assign(provider.payments.get(i.payment_id!)!,{status:'pending',paid:false,paidAt:null});assert.equal((await service.reconcile(tenant,i.id)).state,'succeeded');
    await assert.rejects(pool.query('UPDATE live_billing_intent SET amount_minor=1 WHERE id=$1',[i.id]),/immutable/);
   });
@@ -57,12 +57,12 @@ test('offline live ledger canonical identity, recovery, concurrency and sticky r
    const first=(await pool.query('SELECT paid_at,expires_at FROM live_billing_entitlement WHERE intent_id=$1',[i.id])).rows[0];
    assert.ok(first,'expired canonical success must persist its original window');
    assert.equal(first.paid_at.getTime(),Date.parse(firstPaidAt));assert.equal(first.expires_at.getTime(),Date.parse(firstPaidAt)+17*86400000);
-   assert.equal((await currentEntitlement(pool,other)).plan,'free');
+   assert.equal((await currentEntitlement(pool,other,'live_provider')).plan,'free');
    provider.payments.get(i.payment_id!)!.paidAt=new Date(Date.now()-1000).toISOString();
    const restarted=new LiveBillingService(pool,provider,price);
    await Promise.all(Array.from({length:4},()=>restarted.reconcile(other,i.id)));
    assert.equal(await grants(i.id),1);assert.deepEqual((await pool.query('SELECT paid_at,expires_at FROM live_billing_entitlement WHERE intent_id=$1',[i.id])).rows[0],first);
-   assert.equal((await currentEntitlement(pool,other)).plan,'free','expired success replay cannot unlock the paid plan');
+   assert.equal((await currentEntitlement(pool,other,'live_provider')).plan,'free','expired success replay cannot unlock the paid plan');
   });
   await t.test('saved YooKassa create body survives response loss and concurrent retries, bound checkout is GET only',async()=>{
    const remote=new Map<string,Record<string,unknown>>(),posts:string[]=[],keys:string[]=[];let lose=true;

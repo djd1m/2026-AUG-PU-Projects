@@ -1,5 +1,5 @@
 import { HttpError } from '../errors.js';
-import { formatMinor,parseProviderTimestamp,validateConfirmationUrl,type CanonicalProvider,type CreateRequest,type LiveBinding,type VerifiedPayment,type VerifiedRefund } from './provider.js';
+import { formatMinor,parseProviderTimestamp,validateConfirmationUrl,type CanonicalProvider,type CreateRequest,type LiveBinding,type VerifiedPayment,type VerifiedRefund,type ResolveRefundBinding,type VerifiedRefundContext } from './provider.js';
 // Adapted: N3 shared/payments/yookassa.mjs bounded streaming JSON and exact money;
 // N6 apps/web/src/server/payments/yookassa.ts typed adapter boundary, not body buffering.
 const API='https://api.yookassa.ru/v3',LIMIT=64*1024;
@@ -74,12 +74,18 @@ export class YooKassaProvider implements CanonicalProvider {
  async fetch(paymentId:string,expected?:Readonly<LiveBinding>) {
   const b=this.expected(expected);id(paymentId);return this.payment(await this.request(`/payments/${encodeURIComponent(paymentId)}`),b,paymentId);
  }
+ async fetchRefundContext(refundId:string,resolveBinding:ResolveRefundBinding):Promise<VerifiedRefundContext|null> {
+  id(refundId);const raw=await this.request(`/refunds/${encodeURIComponent(refundId)}`);
+  verify(id(raw.id)===refundId);const paymentId=id(raw.payment_id);
+  verify(['pending','succeeded','canceled'].includes(String(raw.status)));const n=amount(raw.amount);parseProviderTimestamp(raw.created_at);
+  const found=await resolveBinding(Object.freeze({provider:'yookassa',merchant:this.shopId,mode:'live',paymentId}));if(!found)return null;
+  const b=this.expected(found);verify(n<=b.amountMinor);const payment=await this.fetch(paymentId,b);
+  const refund:VerifiedRefund=Object.freeze({id:refundId,paymentId,provider:b.provider,merchant:b.merchant,mode:'live',status:raw.status as VerifiedRefund['status'],amountMinor:n,currency:'RUB'});
+  return Object.freeze({binding:b,payment,refund});
+ }
  async fetchRefund(refundId:string,expected?:Readonly<LiveBinding>,paymentId?:string):Promise<VerifiedRefund> {
-  const b=this.expected(expected);id(refundId);id(paymentId);
-  const raw=await this.request(`/refunds/${encodeURIComponent(refundId)}`);verify(id(raw.id)===refundId && id(raw.payment_id)===paymentId);
-  verify(['pending','succeeded','canceled'].includes(String(raw.status)));const n=amount(raw.amount);verify(n<=b.amountMinor);parseProviderTimestamp(raw.created_at);
-  // Refunds lack shop/test fields: obtain them only from bound canonical payment GET.
-  await this.fetch(paymentId!,b);
-  return Object.freeze({id:refundId,paymentId:paymentId!,provider:b.provider,merchant:b.merchant,mode:'live',status:raw.status as VerifiedRefund['status'],amountMinor:n,currency:'RUB'});
+  const b=this.expected(expected);id(paymentId);
+  const context=await this.fetchRefundContext(refundId,async lookup=>lookup.provider===b.provider && lookup.merchant===b.merchant && lookup.mode===b.mode && lookup.paymentId===paymentId?b:null);
+  verify(context);return context.refund;
  }
 }
