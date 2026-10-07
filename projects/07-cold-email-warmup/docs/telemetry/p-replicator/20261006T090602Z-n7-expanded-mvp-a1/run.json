@@ -59,13 +59,13 @@
     "followup_status": "F07/F08/F09/F10 locally accepted and F10 integrated3566; expanded AC001–004 met, AC005–009 pending. Whole required_gates_passed remains false. F11 code remains unaccepted candidate."
   },
   "metrics": {
-    "elapsed_wall_ms": 83901876,
+    "elapsed_wall_ms": 85104098,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-07T08:24:24.755146+00:00"
+    "elapsed_as_of": "2026-10-07T08:44:26.976546+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 failed independent gates; fresh MEDIUM A42 actualACK08:22:09 confirmed stop/admission race fix +instrumented C1 diagnosis",
+  "current_stage": "F11 unaccepted: A42 five-file cancellation candidate e6e7ef44 sealed; fresh HIGH A43 actualACK08:39:20 independent C1/typed-fixture plan",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -135,32 +135,28 @@
     "full_project_result": "Original selected snapshot did not establish full pass; later integrated full Phase I/II=0, see integrated-preimplementation/phase12.txt",
     "historical": true
   },
-  "intermediate_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
+  "intermediate_revision": "e6e7ef4406288f5674607ad7198b1665f328bfe9",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_unstarted_admission_cancel_author_a42",
-    "attempt": "f11-unstarted-admission-cancel-author-a42",
+    "executor": "/root/n7_sol_coordinator/f11_c1_and_planned_drain_planner_a43",
+    "attempt": "f11-c1-planned-drain-planner-a43",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T08:22:09Z",
-    "freeze_at": "2026-10-07T08:39:09Z",
-    "deadline": "2026-10-07T08:42:09Z",
+    "actual_ACK_at": "2026-10-07T08:39:20Z",
+    "freeze_at": "2026-10-07T08:45:20Z",
+    "deadline": "2026-10-07T08:47:20Z",
     "requested_model": "gpt-6.1-sol",
-    "requested_effort": "medium",
+    "requested_effort": "high",
     "actual_model": null,
     "usage": null,
-    "baseline_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
-    "allowed_paths": [
-      "src/runtime/store.ts",
-      "src/replies/context-store.ts",
-      "src/runtime/loop.ts",
-      "tests/f10-runtime-protocol.test.ts",
-      "tests/f11-context-integration.test.ts"
+    "source_revision": "e6e7ef4406288f5674607ad7198b1665f328bfe9",
+    "context_manifest": "/tmp/n7-f11-unstarted-admission-cancel-author-a42/context_manifest.json",
+    "context_sha256": "8bb9d5fd99619a99b0bc78017e42725a544675d7acd527e35922a9333d386f3b",
+    "context_exclusions": [
+      "author receipt/report/chat/workingnotes/precise-findings.json",
+      "coordinator accumulated reasoning"
     ],
-    "scope_sha256": "4a2f57b0078b508bdb6446fe01fe29a2abf24bb3d5249a3d62fa1bffef72ab82",
-    "context_manifest": "/tmp/n7-f11-post-ready-operational-verify-a41/clean-next-fix-manifest.json",
-    "context_sha256": "86cc24a16ad8ed374f83889e07cee8f338c30556cc236f9faeeafb162b589466",
-    "status": "actual fresh MEDIUM author active in sole reused isolated source tree; no current candidate acceptance or background native fleet claim",
-    "next": "Confirmed unstarted disposal race fix +deterministic baseline/corrected proof; preserve generic stop assertions. Minimal C1 failure-finally instrumentation and concrete diagnosis; sourcefix only inside exact scope if supported. After actual candidate seal/joins, launch HIGH frozen targeted verification; fullfleet gated."
+    "status": "actual fresh independent HIGH read-only planner active; C1 complete-prefix branch and production planned-drain fixture composition independently reconciled",
+    "next": "Early sealed minimal plan then actual fresh MEDIUM corrective source/fixture executor. Full load and fresh final source review remain mandatory; F11 not accepted."
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -203,7 +199,7 @@
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-07T08:24:24.755146+00:00",
+    "last_reported_at": "2026-10-07T08:44:26.976546+00:00",
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true,
     "latest_checkpoint": {

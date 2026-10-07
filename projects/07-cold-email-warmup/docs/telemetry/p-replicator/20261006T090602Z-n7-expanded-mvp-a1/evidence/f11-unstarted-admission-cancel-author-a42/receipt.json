@@ -1,0 +1,42 @@
+{
+  "status": "completed bounded correction; full F11 not accepted",
+  "revision": "e6e7ef4406288f5674607ad7198b1665f328bfe9",
+  "started_at": "2026-10-07T08:22:09Z",
+  "ended_at": "2026-10-07T08:37:25.024553+00:00",
+  "elapsed_ms": 916024,
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "checks": {
+    "baseline_RED": "claimed!=held product assertion",
+    "A42_six_controls": "PASS",
+    "generic_compiled_short": "PASS",
+    "pure": "17/17 PASS",
+    "selected_native": "8/8 PASS",
+    "C1_exact_diagnostic": "RED 8 stale_reply_run; distinct out-of-scope concrete cause",
+    "typecheck": "PASS",
+    "focused_lint": "PASS",
+    "build": "PASS",
+    "diff": "PASS"
+  },
+  "remaining_AC": [
+    "Fresh independent HIGH review of cancellation correction",
+    "Direct replacement physical-owner stale disposal witness not newly added",
+    "C1 minimal worker fallback correction outside scope, original expiry dependentcase adjudication",
+    "A38 remaining material counterproofs in retained gapmap",
+    "Distinct production typed-drain compiled fixture and original ALL30fault240/full300 and healthyfull300",
+    "Legacy20pagexreal5s/native19 and required regression/privacy/canary/currentauthority gates"
+  ],
+  "evidence": "/tmp/n7-f11-unstarted-admission-cancel-author-a42/context_manifest.json",
+  "telemetry_owner": "coordinator MAIN only",
+  "missing_measurements": [
+    "actual host model/effort/usage/cost unavailable",
+    "active_wall intervals unavailable",
+    "per socket-denial path attribution unavailable"
+  ],
+  "commit_hook_note": "local commit used command-scoped core.hooksPath=/dev/null; no global hook/config edits; required scoped checks captured explicitly"
+}
