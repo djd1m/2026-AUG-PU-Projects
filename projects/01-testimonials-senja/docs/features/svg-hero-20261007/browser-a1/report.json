@@ -1,0 +1,2986 @@
+{
+  "unit": "01-browser-a1",
+  "sourcePath": "/opt/browser/hero-01-a1/product-flow.svg",
+  "sourceSHA256": "4296d9f4559e095c3c20ffc607170b210ab66ce036d4610d674fe87abb76efdd",
+  "cases": [
+    {
+      "name": "direct-light-360-no-preference",
+      "mode": "direct",
+      "colorScheme": "light",
+      "width": 360,
+      "reducedMotion": "no-preference",
+      "unexpected": [],
+      "first": {
+        "markers": [
+          {
+            "id": "marker-link",
+            "x": 183,
+            "y": 251.47402954101562,
+            "opacity": "1",
+            "animation": "link-travel"
+          },
+          {
+            "id": "marker-review",
+            "x": 183,
+            "y": 382,
+            "opacity": "0",
+            "animation": "review-travel"
+          },
+          {
+            "id": "marker-wall",
+            "x": 346,
+            "y": 455,
+            "opacity": "0",
+            "animation": "wall-travel"
+          },
+          {
+            "id": "marker-widget",
+            "x": 346,
+            "y": 455,
+            "opacity": "0",
+            "animation": "widget-travel"
+          }
+        ],
+        "texts": [
+          {
+            "text": "Proofwall",
+            "x": 28,
+            "y": 21,
+            "width": 114.078125,
+            "height": 37
+          },
+          {
+            "text": "Отзывы клиентов — на вашем сайте",
+            "x": 28,
+            "y": 65,
+            "width": 332.125,
+            "height": 24
+          },
+          {
+            "text": "1",
+            "x": 50,
+            "y": 148,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Отправьте ссылку",
+            "x": 82,
+            "y": 147,
+            "width": 189.84765625,
+            "height": 28
+          },
+          {
+            "text": "Довольному клиенту",
+            "x": 48,
+            "y": 187,
+            "width": 192.609375,
+            "height": 24
+          },
+          {
+            "text": "2",
+            "x": 50,
+            "y": 288,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Получите отзыв",
+            "x": 82,
+            "y": 287,
+            "width": 167.171875,
+            "height": 28
+          },
+          {
+            "text": "Текст, без регистрации",
+            "x": 48,
+            "y": 327,
+            "width": 213.296875,
+            "height": 24
+          },
+          {
+            "text": "3",
+            "x": 50,
+            "y": 428,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Решите, что показать",
+            "x": 82,
+            "y": 427,
+            "width": 224.7265625,
+            "height": 28
+          },
+          {
+            "text": "Одобрите публикацию",
+            "x": 48,
+            "y": 467,
+            "width": 208.203125,
+            "height": 24
+          },
+          {
+            "text": "4",
+            "x": 417,
+            "y": 388,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Стена",
+            "x": 449,
+            "y": 387,
+            "width": 60.984375,
+            "height": 28
+          },
+          {
+            "text": "Публичная страница",
+            "x": 415,
+            "y": 429,
+            "width": 187.46875,
+            "height": 24
+          },
+          {
+            "text": "5",
+            "x": 417,
+            "y": 518,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Виджет",
+            "x": 449,
+            "y": 517,
+            "width": 77.546875,
+            "height": 28
+          },
+          {
+            "text": "Блок на вашем сайте",
+            "x": 415,
+            "y": 559,
+            "width": 192.8125,
+            "height": 24
+          },
+          {
+            "text": "На стене и в виджете —",
+            "x": 28,
+            "y": 548,
+            "width": 218.4375,
+            "height": 24
+          },
+          {
+            "text": "одобренные отзывы",
+            "x": 28,
+            "y": 576,
+            "width": 184.3125,
+            "height": 24
+          }
+        ],
+        "textOverlaps": [],
+        "textOutside": []
+      },
+      "second": {
+        "markers": [
+          {
+            "id": "marker-link",
+            "x": 183,
+            "y": 260,
+            "opacity": "0",
+            "animation": "link-travel"
+          },
+          {
+            "id": "marker-review",
+            "x": 183,
+            "y": 400,
+            "opacity": "0",
+            "animation": "review-travel"
+          },
+          {
+            "id": "marker-wall",
+            "x": 355.9493713378906,
+            "y": 455,
+            "opacity": "1",
+            "animation": "wall-travel"
+          },
+          {
+            "id": "marker-widget",
+            "x": 346,
+            "y": 455,
+            "opacity": "0",
+            "animation": "widget-travel"
+          }
+        ],
+        "texts": [
+          {
+            "text": "Proofwall",
+            "x": 28,
+            "y": 21,
+            "width": 114.078125,
+            "height": 37
+          },
+          {
+            "text": "Отзывы клиентов — на вашем сайте",
+            "x": 28,
+            "y": 65,
+            "width": 332.125,
+            "height": 24
+          },
+          {
+            "text": "1",
+            "x": 50,
+            "y": 148,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Отправьте ссылку",
+            "x": 82,
+            "y": 147,
+            "width": 189.84765625,
+            "height": 28
+          },
+          {
+            "text": "Довольному клиенту",
+            "x": 48,
+            "y": 187,
+            "width": 192.609375,
+            "height": 24
+          },
+          {
+            "text": "2",
+            "x": 50,
+            "y": 288,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Получите отзыв",
+            "x": 82,
+            "y": 287,
+            "width": 167.171875,
+            "height": 28
+          },
+          {
+            "text": "Текст, без регистрации",
+            "x": 48,
+            "y": 327,
+            "width": 213.296875,
+            "height": 24
+          },
+          {
+            "text": "3",
+            "x": 50,
+            "y": 428,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Решите, что показать",
+            "x": 82,
+            "y": 427,
+            "width": 224.7265625,
+            "height": 28
+          },
+          {
+            "text": "Одобрите публикацию",
+            "x": 48,
+            "y": 467,
+            "width": 208.203125,
+            "height": 24
+          },
+          {
+            "text": "4",
+            "x": 417,
+            "y": 388,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Стена",
+            "x": 449,
+            "y": 387,
+            "width": 60.984375,
+            "height": 28
+          },
+          {
+            "text": "Публичная страница",
+            "x": 415,
+            "y": 429,
+            "width": 187.46875,
+            "height": 24
+          },
+          {
+            "text": "5",
+            "x": 417,
+            "y": 518,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Виджет",
+            "x": 449,
+            "y": 517,
+            "width": 77.546875,
+            "height": 28
+          },
+          {
+            "text": "Блок на вашем сайте",
+            "x": 415,
+            "y": 559,
+            "width": 192.8125,
+            "height": 24
+          },
+          {
+            "text": "На стене и в виджете —",
+            "x": 28,
+            "y": 548,
+            "width": 218.4375,
+            "height": 24
+          },
+          {
+            "text": "одобренные отзывы",
+            "x": 28,
+            "y": 576,
+            "width": 184.3125,
+            "height": 24
+          }
+        ],
+        "textOverlaps": [],
+        "textOutside": []
+      },
+      "movingMarkers": [
+        "marker-link",
+        "marker-review",
+        "marker-wall"
+      ],
+      "pass": true
+    },
+    {
+      "name": "direct-light-360-reduce",
+      "mode": "direct",
+      "colorScheme": "light",
+      "width": 360,
+      "reducedMotion": "reduce",
+      "unexpected": [],
+      "first": {
+        "markers": [
+          {
+            "id": "marker-link",
+            "x": 183,
+            "y": 242,
+            "opacity": "1",
+            "animation": "link-travel"
+          },
+          {
+            "id": "marker-review",
+            "x": 183,
+            "y": 382,
+            "opacity": "1",
+            "animation": "review-travel"
+          },
+          {
+            "id": "marker-wall",
+            "x": 368,
+            "y": 425,
+            "opacity": "1",
+            "animation": "wall-travel"
+          },
+          {
+            "id": "marker-widget",
+            "x": 368,
+            "y": 555,
+            "opacity": "1",
+            "animation": "widget-travel"
+          }
+        ],
+        "texts": [
+          {
+            "text": "Proofwall",
+            "x": 28,
+            "y": 21,
+            "width": 114.078125,
+            "height": 37
+          },
+          {
+            "text": "Отзывы клиентов — на вашем сайте",
+            "x": 28,
+            "y": 65,
+            "width": 332.125,
+            "height": 24
+          },
+          {
+            "text": "1",
+            "x": 50,
+            "y": 148,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Отправьте ссылку",
+            "x": 82,
+            "y": 147,
+            "width": 189.84765625,
+            "height": 28
+          },
+          {
+            "text": "Довольному клиенту",
+            "x": 48,
+            "y": 187,
+            "width": 192.609375,
+            "height": 24
+          },
+          {
+            "text": "2",
+            "x": 50,
+            "y": 288,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Получите отзыв",
+            "x": 82,
+            "y": 287,
+            "width": 167.171875,
+            "height": 28
+          },
+          {
+            "text": "Текст, без регистрации",
+            "x": 48,
+            "y": 327,
+            "width": 213.296875,
+            "height": 24
+          },
+          {
+            "text": "3",
+            "x": 50,
+            "y": 428,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Решите, что показать",
+            "x": 82,
+            "y": 427,
+            "width": 224.7265625,
+            "height": 28
+          },
+          {
+            "text": "Одобрите публикацию",
+            "x": 48,
+            "y": 467,
+            "width": 208.203125,
+            "height": 24
+          },
+          {
+            "text": "4",
+            "x": 417,
+            "y": 388,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Стена",
+            "x": 449,
+            "y": 387,
+            "width": 60.984375,
+            "height": 28
+          },
+          {
+            "text": "Публичная страница",
+            "x": 415,
+            "y": 429,
+            "width": 187.46875,
+            "height": 24
+          },
+          {
+            "text": "5",
+            "x": 417,
+            "y": 518,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Виджет",
+            "x": 449,
+            "y": 517,
+            "width": 77.546875,
+            "height": 28
+          },
+          {
+            "text": "Блок на вашем сайте",
+            "x": 415,
+            "y": 559,
+            "width": 192.8125,
+            "height": 24
+          },
+          {
+            "text": "На стене и в виджете —",
+            "x": 28,
+            "y": 548,
+            "width": 218.4375,
+            "height": 24
+          },
+          {
+            "text": "одобренные отзывы",
+            "x": 28,
+            "y": 576,
+            "width": 184.3125,
+            "height": 24
+          }
+        ],
+        "textOverlaps": [],
+        "textOutside": []
+      },
+      "second": {
+        "markers": [
+          {
+            "id": "marker-link",
+            "x": 183,
+            "y": 242,
+            "opacity": "1",
+            "animation": "link-travel"
+          },
+          {
+            "id": "marker-review",
+            "x": 183,
+            "y": 382,
+            "opacity": "1",
+            "animation": "review-travel"
+          },
+          {
+            "id": "marker-wall",
+            "x": 368,
+            "y": 425,
+            "opacity": "1",
+            "animation": "wall-travel"
+          },
+          {
+            "id": "marker-widget",
+            "x": 368,
+            "y": 555,
+            "opacity": "1",
+            "animation": "widget-travel"
+          }
+        ],
+        "texts": [
+          {
+            "text": "Proofwall",
+            "x": 28,
+            "y": 21,
+            "width": 114.078125,
+            "height": 37
+          },
+          {
+            "text": "Отзывы клиентов — на вашем сайте",
+            "x": 28,
+            "y": 65,
+            "width": 332.125,
+            "height": 24
+          },
+          {
+            "text": "1",
+            "x": 50,
+            "y": 148,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Отправьте ссылку",
+            "x": 82,
+            "y": 147,
+            "width": 189.84765625,
+            "height": 28
+          },
+          {
+            "text": "Довольному клиенту",
+            "x": 48,
+            "y": 187,
+            "width": 192.609375,
+            "height": 24
+          },
+          {
+            "text": "2",
+            "x": 50,
+            "y": 288,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Получите отзыв",
+            "x": 82,
+            "y": 287,
+            "width": 167.171875,
+            "height": 28
+          },
+          {
+            "text": "Текст, без регистрации",
+            "x": 48,
+            "y": 327,
+            "width": 213.296875,
+            "height": 24
+          },
+          {
+            "text": "3",
+            "x": 50,
+            "y": 428,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Решите, что показать",
+            "x": 82,
+            "y": 427,
+            "width": 224.7265625,
+            "height": 28
+          },
+          {
+            "text": "Одобрите публикацию",
+            "x": 48,
+            "y": 467,
+            "width": 208.203125,
+            "height": 24
+          },
+          {
+            "text": "4",
+            "x": 417,
+            "y": 388,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Стена",
+            "x": 449,
+            "y": 387,
+            "width": 60.984375,
+            "height": 28
+          },
+          {
+            "text": "Публичная страница",
+            "x": 415,
+            "y": 429,
+            "width": 187.46875,
+            "height": 24
+          },
+          {
+            "text": "5",
+            "x": 417,
+            "y": 518,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Виджет",
+            "x": 449,
+            "y": 517,
+            "width": 77.546875,
+            "height": 28
+          },
+          {
+            "text": "Блок на вашем сайте",
+            "x": 415,
+            "y": 559,
+            "width": 192.8125,
+            "height": 24
+          },
+          {
+            "text": "На стене и в виджете —",
+            "x": 28,
+            "y": 548,
+            "width": 218.4375,
+            "height": 24
+          },
+          {
+            "text": "одобренные отзывы",
+            "x": 28,
+            "y": 576,
+            "width": 184.3125,
+            "height": 24
+          }
+        ],
+        "textOverlaps": [],
+        "textOutside": []
+      },
+      "movingMarkers": [],
+      "pass": true
+    },
+    {
+      "name": "direct-light-900-no-preference",
+      "mode": "direct",
+      "colorScheme": "light",
+      "width": 900,
+      "reducedMotion": "no-preference",
+      "unexpected": [],
+      "first": {
+        "markers": [
+          {
+            "id": "marker-link",
+            "x": 183,
+            "y": 251.47386169433594,
+            "opacity": "1",
+            "animation": "link-travel"
+          },
+          {
+            "id": "marker-review",
+            "x": 183,
+            "y": 382,
+            "opacity": "0",
+            "animation": "review-travel"
+          },
+          {
+            "id": "marker-wall",
+            "x": 346,
+            "y": 455,
+            "opacity": "0",
+            "animation": "wall-travel"
+          },
+          {
+            "id": "marker-widget",
+            "x": 346,
+            "y": 455,
+            "opacity": "0",
+            "animation": "widget-travel"
+          }
+        ],
+        "texts": [
+          {
+            "text": "Proofwall",
+            "x": 28,
+            "y": 21,
+            "width": 114.078125,
+            "height": 37
+          },
+          {
+            "text": "Отзывы клиентов — на вашем сайте",
+            "x": 28,
+            "y": 65,
+            "width": 332.125,
+            "height": 24
+          },
+          {
+            "text": "1",
+            "x": 50,
+            "y": 148,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Отправьте ссылку",
+            "x": 82,
+            "y": 147,
+            "width": 189.84765625,
+            "height": 28
+          },
+          {
+            "text": "Довольному клиенту",
+            "x": 48,
+            "y": 187,
+            "width": 192.609375,
+            "height": 24
+          },
+          {
+            "text": "2",
+            "x": 50,
+            "y": 288,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Получите отзыв",
+            "x": 82,
+            "y": 287,
+            "width": 167.171875,
+            "height": 28
+          },
+          {
+            "text": "Текст, без регистрации",
+            "x": 48,
+            "y": 327,
+            "width": 213.296875,
+            "height": 24
+          },
+          {
+            "text": "3",
+            "x": 50,
+            "y": 428,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Решите, что показать",
+            "x": 82,
+            "y": 427,
+            "width": 224.7265625,
+            "height": 28
+          },
+          {
+            "text": "Одобрите публикацию",
+            "x": 48,
+            "y": 467,
+            "width": 208.203125,
+            "height": 24
+          },
+          {
+            "text": "4",
+            "x": 417,
+            "y": 388,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Стена",
+            "x": 449,
+            "y": 387,
+            "width": 60.984375,
+            "height": 28
+          },
+          {
+            "text": "Публичная страница",
+            "x": 415,
+            "y": 429,
+            "width": 187.46875,
+            "height": 24
+          },
+          {
+            "text": "5",
+            "x": 417,
+            "y": 518,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Виджет",
+            "x": 449,
+            "y": 517,
+            "width": 77.546875,
+            "height": 28
+          },
+          {
+            "text": "Блок на вашем сайте",
+            "x": 415,
+            "y": 559,
+            "width": 192.8125,
+            "height": 24
+          },
+          {
+            "text": "На стене и в виджете —",
+            "x": 28,
+            "y": 548,
+            "width": 218.4375,
+            "height": 24
+          },
+          {
+            "text": "одобренные отзывы",
+            "x": 28,
+            "y": 576,
+            "width": 184.3125,
+            "height": 24
+          }
+        ],
+        "textOverlaps": [],
+        "textOutside": []
+      },
+      "second": {
+        "markers": [
+          {
+            "id": "marker-link",
+            "x": 183,
+            "y": 260,
+            "opacity": "0",
+            "animation": "link-travel"
+          },
+          {
+            "id": "marker-review",
+            "x": 183,
+            "y": 400,
+            "opacity": "0",
+            "animation": "review-travel"
+          },
+          {
+            "id": "marker-wall",
+            "x": 355.42498779296875,
+            "y": 455,
+            "opacity": "1",
+            "animation": "wall-travel"
+          },
+          {
+            "id": "marker-widget",
+            "x": 346,
+            "y": 455,
+            "opacity": "0",
+            "animation": "widget-travel"
+          }
+        ],
+        "texts": [
+          {
+            "text": "Proofwall",
+            "x": 28,
+            "y": 21,
+            "width": 114.078125,
+            "height": 37
+          },
+          {
+            "text": "Отзывы клиентов — на вашем сайте",
+            "x": 28,
+            "y": 65,
+            "width": 332.125,
+            "height": 24
+          },
+          {
+            "text": "1",
+            "x": 50,
+            "y": 148,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Отправьте ссылку",
+            "x": 82,
+            "y": 147,
+            "width": 189.84765625,
+            "height": 28
+          },
+          {
+            "text": "Довольному клиенту",
+            "x": 48,
+            "y": 187,
+            "width": 192.609375,
+            "height": 24
+          },
+          {
+            "text": "2",
+            "x": 50,
+            "y": 288,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Получите отзыв",
+            "x": 82,
+            "y": 287,
+            "width": 167.171875,
+            "height": 28
+          },
+          {
+            "text": "Текст, без регистрации",
+            "x": 48,
+            "y": 327,
+            "width": 213.296875,
+            "height": 24
+          },
+          {
+            "text": "3",
+            "x": 50,
+            "y": 428,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Решите, что показать",
+            "x": 82,
+            "y": 427,
+            "width": 224.7265625,
+            "height": 28
+          },
+          {
+            "text": "Одобрите публикацию",
+            "x": 48,
+            "y": 467,
+            "width": 208.203125,
+            "height": 24
+          },
+          {
+            "text": "4",
+            "x": 417,
+            "y": 388,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Стена",
+            "x": 449,
+            "y": 387,
+            "width": 60.984375,
+            "height": 28
+          },
+          {
+            "text": "Публичная страница",
+            "x": 415,
+            "y": 429,
+            "width": 187.46875,
+            "height": 24
+          },
+          {
+            "text": "5",
+            "x": 417,
+            "y": 518,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Виджет",
+            "x": 449,
+            "y": 517,
+            "width": 77.546875,
+            "height": 28
+          },
+          {
+            "text": "Блок на вашем сайте",
+            "x": 415,
+            "y": 559,
+            "width": 192.8125,
+            "height": 24
+          },
+          {
+            "text": "На стене и в виджете —",
+            "x": 28,
+            "y": 548,
+            "width": 218.4375,
+            "height": 24
+          },
+          {
+            "text": "одобренные отзывы",
+            "x": 28,
+            "y": 576,
+            "width": 184.3125,
+            "height": 24
+          }
+        ],
+        "textOverlaps": [],
+        "textOutside": []
+      },
+      "movingMarkers": [
+        "marker-link",
+        "marker-review",
+        "marker-wall"
+      ],
+      "pass": true
+    },
+    {
+      "name": "direct-light-900-reduce",
+      "mode": "direct",
+      "colorScheme": "light",
+      "width": 900,
+      "reducedMotion": "reduce",
+      "unexpected": [],
+      "first": {
+        "markers": [
+          {
+            "id": "marker-link",
+            "x": 183,
+            "y": 242,
+            "opacity": "1",
+            "animation": "link-travel"
+          },
+          {
+            "id": "marker-review",
+            "x": 183,
+            "y": 382,
+            "opacity": "1",
+            "animation": "review-travel"
+          },
+          {
+            "id": "marker-wall",
+            "x": 368,
+            "y": 425,
+            "opacity": "1",
+            "animation": "wall-travel"
+          },
+          {
+            "id": "marker-widget",
+            "x": 368,
+            "y": 555,
+            "opacity": "1",
+            "animation": "widget-travel"
+          }
+        ],
+        "texts": [
+          {
+            "text": "Proofwall",
+            "x": 28,
+            "y": 21,
+            "width": 114.078125,
+            "height": 37
+          },
+          {
+            "text": "Отзывы клиентов — на вашем сайте",
+            "x": 28,
+            "y": 65,
+            "width": 332.125,
+            "height": 24
+          },
+          {
+            "text": "1",
+            "x": 50,
+            "y": 148,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Отправьте ссылку",
+            "x": 82,
+            "y": 147,
+            "width": 189.84765625,
+            "height": 28
+          },
+          {
+            "text": "Довольному клиенту",
+            "x": 48,
+            "y": 187,
+            "width": 192.609375,
+            "height": 24
+          },
+          {
+            "text": "2",
+            "x": 50,
+            "y": 288,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Получите отзыв",
+            "x": 82,
+            "y": 287,
+            "width": 167.171875,
+            "height": 28
+          },
+          {
+            "text": "Текст, без регистрации",
+            "x": 48,
+            "y": 327,
+            "width": 213.296875,
+            "height": 24
+          },
+          {
+            "text": "3",
+            "x": 50,
+            "y": 428,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Решите, что показать",
+            "x": 82,
+            "y": 427,
+            "width": 224.7265625,
+            "height": 28
+          },
+          {
+            "text": "Одобрите публикацию",
+            "x": 48,
+            "y": 467,
+            "width": 208.203125,
+            "height": 24
+          },
+          {
+            "text": "4",
+            "x": 417,
+            "y": 388,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Стена",
+            "x": 449,
+            "y": 387,
+            "width": 60.984375,
+            "height": 28
+          },
+          {
+            "text": "Публичная страница",
+            "x": 415,
+            "y": 429,
+            "width": 187.46875,
+            "height": 24
+          },
+          {
+            "text": "5",
+            "x": 417,
+            "y": 518,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Виджет",
+            "x": 449,
+            "y": 517,
+            "width": 77.546875,
+            "height": 28
+          },
+          {
+            "text": "Блок на вашем сайте",
+            "x": 415,
+            "y": 559,
+            "width": 192.8125,
+            "height": 24
+          },
+          {
+            "text": "На стене и в виджете —",
+            "x": 28,
+            "y": 548,
+            "width": 218.4375,
+            "height": 24
+          },
+          {
+            "text": "одобренные отзывы",
+            "x": 28,
+            "y": 576,
+            "width": 184.3125,
+            "height": 24
+          }
+        ],
+        "textOverlaps": [],
+        "textOutside": []
+      },
+      "second": {
+        "markers": [
+          {
+            "id": "marker-link",
+            "x": 183,
+            "y": 242,
+            "opacity": "1",
+            "animation": "link-travel"
+          },
+          {
+            "id": "marker-review",
+            "x": 183,
+            "y": 382,
+            "opacity": "1",
+            "animation": "review-travel"
+          },
+          {
+            "id": "marker-wall",
+            "x": 368,
+            "y": 425,
+            "opacity": "1",
+            "animation": "wall-travel"
+          },
+          {
+            "id": "marker-widget",
+            "x": 368,
+            "y": 555,
+            "opacity": "1",
+            "animation": "widget-travel"
+          }
+        ],
+        "texts": [
+          {
+            "text": "Proofwall",
+            "x": 28,
+            "y": 21,
+            "width": 114.078125,
+            "height": 37
+          },
+          {
+            "text": "Отзывы клиентов — на вашем сайте",
+            "x": 28,
+            "y": 65,
+            "width": 332.125,
+            "height": 24
+          },
+          {
+            "text": "1",
+            "x": 50,
+            "y": 148,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Отправьте ссылку",
+            "x": 82,
+            "y": 147,
+            "width": 189.84765625,
+            "height": 28
+          },
+          {
+            "text": "Довольному клиенту",
+            "x": 48,
+            "y": 187,
+            "width": 192.609375,
+            "height": 24
+          },
+          {
+            "text": "2",
+            "x": 50,
+            "y": 288,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Получите отзыв",
+            "x": 82,
+            "y": 287,
+            "width": 167.171875,
+            "height": 28
+          },
+          {
+            "text": "Текст, без регистрации",
+            "x": 48,
+            "y": 327,
+            "width": 213.296875,
+            "height": 24
+          },
+          {
+            "text": "3",
+            "x": 50,
+            "y": 428,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Решите, что показать",
+            "x": 82,
+            "y": 427,
+            "width": 224.7265625,
+            "height": 28
+          },
+          {
+            "text": "Одобрите публикацию",
+            "x": 48,
+            "y": 467,
+            "width": 208.203125,
+            "height": 24
+          },
+          {
+            "text": "4",
+            "x": 417,
+            "y": 388,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Стена",
+            "x": 449,
+            "y": 387,
+            "width": 60.984375,
+            "height": 28
+          },
+          {
+            "text": "Публичная страница",
+            "x": 415,
+            "y": 429,
+            "width": 187.46875,
+            "height": 24
+          },
+          {
+            "text": "5",
+            "x": 417,
+            "y": 518,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Виджет",
+            "x": 449,
+            "y": 517,
+            "width": 77.546875,
+            "height": 28
+          },
+          {
+            "text": "Блок на вашем сайте",
+            "x": 415,
+            "y": 559,
+            "width": 192.8125,
+            "height": 24
+          },
+          {
+            "text": "На стене и в виджете —",
+            "x": 28,
+            "y": 548,
+            "width": 218.4375,
+            "height": 24
+          },
+          {
+            "text": "одобренные отзывы",
+            "x": 28,
+            "y": 576,
+            "width": 184.3125,
+            "height": 24
+          }
+        ],
+        "textOverlaps": [],
+        "textOutside": []
+      },
+      "movingMarkers": [],
+      "pass": true
+    },
+    {
+      "name": "direct-dark-360-no-preference",
+      "mode": "direct",
+      "colorScheme": "dark",
+      "width": 360,
+      "reducedMotion": "no-preference",
+      "unexpected": [],
+      "first": {
+        "markers": [
+          {
+            "id": "marker-link",
+            "x": 183,
+            "y": 251.63088989257812,
+            "opacity": "1",
+            "animation": "link-travel"
+          },
+          {
+            "id": "marker-review",
+            "x": 183,
+            "y": 382,
+            "opacity": "0",
+            "animation": "review-travel"
+          },
+          {
+            "id": "marker-wall",
+            "x": 346,
+            "y": 455,
+            "opacity": "0",
+            "animation": "wall-travel"
+          },
+          {
+            "id": "marker-widget",
+            "x": 346,
+            "y": 455,
+            "opacity": "0",
+            "animation": "widget-travel"
+          }
+        ],
+        "texts": [
+          {
+            "text": "Proofwall",
+            "x": 28,
+            "y": 21,
+            "width": 114.078125,
+            "height": 37
+          },
+          {
+            "text": "Отзывы клиентов — на вашем сайте",
+            "x": 28,
+            "y": 65,
+            "width": 332.125,
+            "height": 24
+          },
+          {
+            "text": "1",
+            "x": 50,
+            "y": 148,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Отправьте ссылку",
+            "x": 82,
+            "y": 147,
+            "width": 189.84765625,
+            "height": 28
+          },
+          {
+            "text": "Довольному клиенту",
+            "x": 48,
+            "y": 187,
+            "width": 192.609375,
+            "height": 24
+          },
+          {
+            "text": "2",
+            "x": 50,
+            "y": 288,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Получите отзыв",
+            "x": 82,
+            "y": 287,
+            "width": 167.171875,
+            "height": 28
+          },
+          {
+            "text": "Текст, без регистрации",
+            "x": 48,
+            "y": 327,
+            "width": 213.296875,
+            "height": 24
+          },
+          {
+            "text": "3",
+            "x": 50,
+            "y": 428,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Решите, что показать",
+            "x": 82,
+            "y": 427,
+            "width": 224.7265625,
+            "height": 28
+          },
+          {
+            "text": "Одобрите публикацию",
+            "x": 48,
+            "y": 467,
+            "width": 208.203125,
+            "height": 24
+          },
+          {
+            "text": "4",
+            "x": 417,
+            "y": 388,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Стена",
+            "x": 449,
+            "y": 387,
+            "width": 60.984375,
+            "height": 28
+          },
+          {
+            "text": "Публичная страница",
+            "x": 415,
+            "y": 429,
+            "width": 187.46875,
+            "height": 24
+          },
+          {
+            "text": "5",
+            "x": 417,
+            "y": 518,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Виджет",
+            "x": 449,
+            "y": 517,
+            "width": 77.546875,
+            "height": 28
+          },
+          {
+            "text": "Блок на вашем сайте",
+            "x": 415,
+            "y": 559,
+            "width": 192.8125,
+            "height": 24
+          },
+          {
+            "text": "На стене и в виджете —",
+            "x": 28,
+            "y": 548,
+            "width": 218.4375,
+            "height": 24
+          },
+          {
+            "text": "одобренные отзывы",
+            "x": 28,
+            "y": 576,
+            "width": 184.3125,
+            "height": 24
+          }
+        ],
+        "textOverlaps": [],
+        "textOutside": []
+      },
+      "second": {
+        "markers": [
+          {
+            "id": "marker-link",
+            "x": 183,
+            "y": 260,
+            "opacity": "0",
+            "animation": "link-travel"
+          },
+          {
+            "id": "marker-review",
+            "x": 183,
+            "y": 400,
+            "opacity": "0",
+            "animation": "review-travel"
+          },
+          {
+            "id": "marker-wall",
+            "x": 356.4697265625,
+            "y": 455,
+            "opacity": "1",
+            "animation": "wall-travel"
+          },
+          {
+            "id": "marker-widget",
+            "x": 346,
+            "y": 455,
+            "opacity": "0",
+            "animation": "widget-travel"
+          }
+        ],
+        "texts": [
+          {
+            "text": "Proofwall",
+            "x": 28,
+            "y": 21,
+            "width": 114.078125,
+            "height": 37
+          },
+          {
+            "text": "Отзывы клиентов — на вашем сайте",
+            "x": 28,
+            "y": 65,
+            "width": 332.125,
+            "height": 24
+          },
+          {
+            "text": "1",
+            "x": 50,
+            "y": 148,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Отправьте ссылку",
+            "x": 82,
+            "y": 147,
+            "width": 189.84765625,
+            "height": 28
+          },
+          {
+            "text": "Довольному клиенту",
+            "x": 48,
+            "y": 187,
+            "width": 192.609375,
+            "height": 24
+          },
+          {
+            "text": "2",
+            "x": 50,
+            "y": 288,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Получите отзыв",
+            "x": 82,
+            "y": 287,
+            "width": 167.171875,
+            "height": 28
+          },
+          {
+            "text": "Текст, без регистрации",
+            "x": 48,
+            "y": 327,
+            "width": 213.296875,
+            "height": 24
+          },
+          {
+            "text": "3",
+            "x": 50,
+            "y": 428,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Решите, что показать",
+            "x": 82,
+            "y": 427,
+            "width": 224.7265625,
+            "height": 28
+          },
+          {
+            "text": "Одобрите публикацию",
+            "x": 48,
+            "y": 467,
+            "width": 208.203125,
+            "height": 24
+          },
+          {
+            "text": "4",
+            "x": 417,
+            "y": 388,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Стена",
+            "x": 449,
+            "y": 387,
+            "width": 60.984375,
+            "height": 28
+          },
+          {
+            "text": "Публичная страница",
+            "x": 415,
+            "y": 429,
+            "width": 187.46875,
+            "height": 24
+          },
+          {
+            "text": "5",
+            "x": 417,
+            "y": 518,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Виджет",
+            "x": 449,
+            "y": 517,
+            "width": 77.546875,
+            "height": 28
+          },
+          {
+            "text": "Блок на вашем сайте",
+            "x": 415,
+            "y": 559,
+            "width": 192.8125,
+            "height": 24
+          },
+          {
+            "text": "На стене и в виджете —",
+            "x": 28,
+            "y": 548,
+            "width": 218.4375,
+            "height": 24
+          },
+          {
+            "text": "одобренные отзывы",
+            "x": 28,
+            "y": 576,
+            "width": 184.3125,
+            "height": 24
+          }
+        ],
+        "textOverlaps": [],
+        "textOutside": []
+      },
+      "movingMarkers": [
+        "marker-link",
+        "marker-review",
+        "marker-wall"
+      ],
+      "pass": true
+    },
+    {
+      "name": "direct-dark-360-reduce",
+      "mode": "direct",
+      "colorScheme": "dark",
+      "width": 360,
+      "reducedMotion": "reduce",
+      "unexpected": [],
+      "first": {
+        "markers": [
+          {
+            "id": "marker-link",
+            "x": 183,
+            "y": 242,
+            "opacity": "1",
+            "animation": "link-travel"
+          },
+          {
+            "id": "marker-review",
+            "x": 183,
+            "y": 382,
+            "opacity": "1",
+            "animation": "review-travel"
+          },
+          {
+            "id": "marker-wall",
+            "x": 368,
+            "y": 425,
+            "opacity": "1",
+            "animation": "wall-travel"
+          },
+          {
+            "id": "marker-widget",
+            "x": 368,
+            "y": 555,
+            "opacity": "1",
+            "animation": "widget-travel"
+          }
+        ],
+        "texts": [
+          {
+            "text": "Proofwall",
+            "x": 28,
+            "y": 21,
+            "width": 114.078125,
+            "height": 37
+          },
+          {
+            "text": "Отзывы клиентов — на вашем сайте",
+            "x": 28,
+            "y": 65,
+            "width": 332.125,
+            "height": 24
+          },
+          {
+            "text": "1",
+            "x": 50,
+            "y": 148,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Отправьте ссылку",
+            "x": 82,
+            "y": 147,
+            "width": 189.84765625,
+            "height": 28
+          },
+          {
+            "text": "Довольному клиенту",
+            "x": 48,
+            "y": 187,
+            "width": 192.609375,
+            "height": 24
+          },
+          {
+            "text": "2",
+            "x": 50,
+            "y": 288,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Получите отзыв",
+            "x": 82,
+            "y": 287,
+            "width": 167.171875,
+            "height": 28
+          },
+          {
+            "text": "Текст, без регистрации",
+            "x": 48,
+            "y": 327,
+            "width": 213.296875,
+            "height": 24
+          },
+          {
+            "text": "3",
+            "x": 50,
+            "y": 428,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Решите, что показать",
+            "x": 82,
+            "y": 427,
+            "width": 224.7265625,
+            "height": 28
+          },
+          {
+            "text": "Одобрите публикацию",
+            "x": 48,
+            "y": 467,
+            "width": 208.203125,
+            "height": 24
+          },
+          {
+            "text": "4",
+            "x": 417,
+            "y": 388,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Стена",
+            "x": 449,
+            "y": 387,
+            "width": 60.984375,
+            "height": 28
+          },
+          {
+            "text": "Публичная страница",
+            "x": 415,
+            "y": 429,
+            "width": 187.46875,
+            "height": 24
+          },
+          {
+            "text": "5",
+            "x": 417,
+            "y": 518,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Виджет",
+            "x": 449,
+            "y": 517,
+            "width": 77.546875,
+            "height": 28
+          },
+          {
+            "text": "Блок на вашем сайте",
+            "x": 415,
+            "y": 559,
+            "width": 192.8125,
+            "height": 24
+          },
+          {
+            "text": "На стене и в виджете —",
+            "x": 28,
+            "y": 548,
+            "width": 218.4375,
+            "height": 24
+          },
+          {
+            "text": "одобренные отзывы",
+            "x": 28,
+            "y": 576,
+            "width": 184.3125,
+            "height": 24
+          }
+        ],
+        "textOverlaps": [],
+        "textOutside": []
+      },
+      "second": {
+        "markers": [
+          {
+            "id": "marker-link",
+            "x": 183,
+            "y": 242,
+            "opacity": "1",
+            "animation": "link-travel"
+          },
+          {
+            "id": "marker-review",
+            "x": 183,
+            "y": 382,
+            "opacity": "1",
+            "animation": "review-travel"
+          },
+          {
+            "id": "marker-wall",
+            "x": 368,
+            "y": 425,
+            "opacity": "1",
+            "animation": "wall-travel"
+          },
+          {
+            "id": "marker-widget",
+            "x": 368,
+            "y": 555,
+            "opacity": "1",
+            "animation": "widget-travel"
+          }
+        ],
+        "texts": [
+          {
+            "text": "Proofwall",
+            "x": 28,
+            "y": 21,
+            "width": 114.078125,
+            "height": 37
+          },
+          {
+            "text": "Отзывы клиентов — на вашем сайте",
+            "x": 28,
+            "y": 65,
+            "width": 332.125,
+            "height": 24
+          },
+          {
+            "text": "1",
+            "x": 50,
+            "y": 148,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Отправьте ссылку",
+            "x": 82,
+            "y": 147,
+            "width": 189.84765625,
+            "height": 28
+          },
+          {
+            "text": "Довольному клиенту",
+            "x": 48,
+            "y": 187,
+            "width": 192.609375,
+            "height": 24
+          },
+          {
+            "text": "2",
+            "x": 50,
+            "y": 288,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Получите отзыв",
+            "x": 82,
+            "y": 287,
+            "width": 167.171875,
+            "height": 28
+          },
+          {
+            "text": "Текст, без регистрации",
+            "x": 48,
+            "y": 327,
+            "width": 213.296875,
+            "height": 24
+          },
+          {
+            "text": "3",
+            "x": 50,
+            "y": 428,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Решите, что показать",
+            "x": 82,
+            "y": 427,
+            "width": 224.7265625,
+            "height": 28
+          },
+          {
+            "text": "Одобрите публикацию",
+            "x": 48,
+            "y": 467,
+            "width": 208.203125,
+            "height": 24
+          },
+          {
+            "text": "4",
+            "x": 417,
+            "y": 388,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Стена",
+            "x": 449,
+            "y": 387,
+            "width": 60.984375,
+            "height": 28
+          },
+          {
+            "text": "Публичная страница",
+            "x": 415,
+            "y": 429,
+            "width": 187.46875,
+            "height": 24
+          },
+          {
+            "text": "5",
+            "x": 417,
+            "y": 518,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Виджет",
+            "x": 449,
+            "y": 517,
+            "width": 77.546875,
+            "height": 28
+          },
+          {
+            "text": "Блок на вашем сайте",
+            "x": 415,
+            "y": 559,
+            "width": 192.8125,
+            "height": 24
+          },
+          {
+            "text": "На стене и в виджете —",
+            "x": 28,
+            "y": 548,
+            "width": 218.4375,
+            "height": 24
+          },
+          {
+            "text": "одобренные отзывы",
+            "x": 28,
+            "y": 576,
+            "width": 184.3125,
+            "height": 24
+          }
+        ],
+        "textOverlaps": [],
+        "textOutside": []
+      },
+      "movingMarkers": [],
+      "pass": true
+    },
+    {
+      "name": "direct-dark-900-no-preference",
+      "mode": "direct",
+      "colorScheme": "dark",
+      "width": 900,
+      "reducedMotion": "no-preference",
+      "unexpected": [],
+      "first": {
+        "markers": [
+          {
+            "id": "marker-link",
+            "x": 183,
+            "y": 251.47329711914062,
+            "opacity": "1",
+            "animation": "link-travel"
+          },
+          {
+            "id": "marker-review",
+            "x": 183,
+            "y": 382,
+            "opacity": "0",
+            "animation": "review-travel"
+          },
+          {
+            "id": "marker-wall",
+            "x": 346,
+            "y": 455,
+            "opacity": "0",
+            "animation": "wall-travel"
+          },
+          {
+            "id": "marker-widget",
+            "x": 346,
+            "y": 455,
+            "opacity": "0",
+            "animation": "widget-travel"
+          }
+        ],
+        "texts": [
+          {
+            "text": "Proofwall",
+            "x": 28,
+            "y": 21,
+            "width": 114.078125,
+            "height": 37
+          },
+          {
+            "text": "Отзывы клиентов — на вашем сайте",
+            "x": 28,
+            "y": 65,
+            "width": 332.125,
+            "height": 24
+          },
+          {
+            "text": "1",
+            "x": 50,
+            "y": 148,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Отправьте ссылку",
+            "x": 82,
+            "y": 147,
+            "width": 189.84765625,
+            "height": 28
+          },
+          {
+            "text": "Довольному клиенту",
+            "x": 48,
+            "y": 187,
+            "width": 192.609375,
+            "height": 24
+          },
+          {
+            "text": "2",
+            "x": 50,
+            "y": 288,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Получите отзыв",
+            "x": 82,
+            "y": 287,
+            "width": 167.171875,
+            "height": 28
+          },
+          {
+            "text": "Текст, без регистрации",
+            "x": 48,
+            "y": 327,
+            "width": 213.296875,
+            "height": 24
+          },
+          {
+            "text": "3",
+            "x": 50,
+            "y": 428,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Решите, что показать",
+            "x": 82,
+            "y": 427,
+            "width": 224.7265625,
+            "height": 28
+          },
+          {
+            "text": "Одобрите публикацию",
+            "x": 48,
+            "y": 467,
+            "width": 208.203125,
+            "height": 24
+          },
+          {
+            "text": "4",
+            "x": 417,
+            "y": 388,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Стена",
+            "x": 449,
+            "y": 387,
+            "width": 60.984375,
+            "height": 28
+          },
+          {
+            "text": "Публичная страница",
+            "x": 415,
+            "y": 429,
+            "width": 187.46875,
+            "height": 24
+          },
+          {
+            "text": "5",
+            "x": 417,
+            "y": 518,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Виджет",
+            "x": 449,
+            "y": 517,
+            "width": 77.546875,
+            "height": 28
+          },
+          {
+            "text": "Блок на вашем сайте",
+            "x": 415,
+            "y": 559,
+            "width": 192.8125,
+            "height": 24
+          },
+          {
+            "text": "На стене и в виджете —",
+            "x": 28,
+            "y": 548,
+            "width": 218.4375,
+            "height": 24
+          },
+          {
+            "text": "одобренные отзывы",
+            "x": 28,
+            "y": 576,
+            "width": 184.3125,
+            "height": 24
+          }
+        ],
+        "textOverlaps": [],
+        "textOutside": []
+      },
+      "second": {
+        "markers": [
+          {
+            "id": "marker-link",
+            "x": 183,
+            "y": 260,
+            "opacity": "0",
+            "animation": "link-travel"
+          },
+          {
+            "id": "marker-review",
+            "x": 183,
+            "y": 400,
+            "opacity": "0",
+            "animation": "review-travel"
+          },
+          {
+            "id": "marker-wall",
+            "x": 355.9469299316406,
+            "y": 455,
+            "opacity": "1",
+            "animation": "wall-travel"
+          },
+          {
+            "id": "marker-widget",
+            "x": 346,
+            "y": 455,
+            "opacity": "0",
+            "animation": "widget-travel"
+          }
+        ],
+        "texts": [
+          {
+            "text": "Proofwall",
+            "x": 28,
+            "y": 21,
+            "width": 114.078125,
+            "height": 37
+          },
+          {
+            "text": "Отзывы клиентов — на вашем сайте",
+            "x": 28,
+            "y": 65,
+            "width": 332.125,
+            "height": 24
+          },
+          {
+            "text": "1",
+            "x": 50,
+            "y": 148,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Отправьте ссылку",
+            "x": 82,
+            "y": 147,
+            "width": 189.84765625,
+            "height": 28
+          },
+          {
+            "text": "Довольному клиенту",
+            "x": 48,
+            "y": 187,
+            "width": 192.609375,
+            "height": 24
+          },
+          {
+            "text": "2",
+            "x": 50,
+            "y": 288,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Получите отзыв",
+            "x": 82,
+            "y": 287,
+            "width": 167.171875,
+            "height": 28
+          },
+          {
+            "text": "Текст, без регистрации",
+            "x": 48,
+            "y": 327,
+            "width": 213.296875,
+            "height": 24
+          },
+          {
+            "text": "3",
+            "x": 50,
+            "y": 428,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Решите, что показать",
+            "x": 82,
+            "y": 427,
+            "width": 224.7265625,
+            "height": 28
+          },
+          {
+            "text": "Одобрите публикацию",
+            "x": 48,
+            "y": 467,
+            "width": 208.203125,
+            "height": 24
+          },
+          {
+            "text": "4",
+            "x": 417,
+            "y": 388,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Стена",
+            "x": 449,
+            "y": 387,
+            "width": 60.984375,
+            "height": 28
+          },
+          {
+            "text": "Публичная страница",
+            "x": 415,
+            "y": 429,
+            "width": 187.46875,
+            "height": 24
+          },
+          {
+            "text": "5",
+            "x": 417,
+            "y": 518,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Виджет",
+            "x": 449,
+            "y": 517,
+            "width": 77.546875,
+            "height": 28
+          },
+          {
+            "text": "Блок на вашем сайте",
+            "x": 415,
+            "y": 559,
+            "width": 192.8125,
+            "height": 24
+          },
+          {
+            "text": "На стене и в виджете —",
+            "x": 28,
+            "y": 548,
+            "width": 218.4375,
+            "height": 24
+          },
+          {
+            "text": "одобренные отзывы",
+            "x": 28,
+            "y": 576,
+            "width": 184.3125,
+            "height": 24
+          }
+        ],
+        "textOverlaps": [],
+        "textOutside": []
+      },
+      "movingMarkers": [
+        "marker-link",
+        "marker-review",
+        "marker-wall"
+      ],
+      "pass": true
+    },
+    {
+      "name": "direct-dark-900-reduce",
+      "mode": "direct",
+      "colorScheme": "dark",
+      "width": 900,
+      "reducedMotion": "reduce",
+      "unexpected": [],
+      "first": {
+        "markers": [
+          {
+            "id": "marker-link",
+            "x": 183,
+            "y": 242,
+            "opacity": "1",
+            "animation": "link-travel"
+          },
+          {
+            "id": "marker-review",
+            "x": 183,
+            "y": 382,
+            "opacity": "1",
+            "animation": "review-travel"
+          },
+          {
+            "id": "marker-wall",
+            "x": 368,
+            "y": 425,
+            "opacity": "1",
+            "animation": "wall-travel"
+          },
+          {
+            "id": "marker-widget",
+            "x": 368,
+            "y": 555,
+            "opacity": "1",
+            "animation": "widget-travel"
+          }
+        ],
+        "texts": [
+          {
+            "text": "Proofwall",
+            "x": 28,
+            "y": 21,
+            "width": 114.078125,
+            "height": 37
+          },
+          {
+            "text": "Отзывы клиентов — на вашем сайте",
+            "x": 28,
+            "y": 65,
+            "width": 332.125,
+            "height": 24
+          },
+          {
+            "text": "1",
+            "x": 50,
+            "y": 148,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Отправьте ссылку",
+            "x": 82,
+            "y": 147,
+            "width": 189.84765625,
+            "height": 28
+          },
+          {
+            "text": "Довольному клиенту",
+            "x": 48,
+            "y": 187,
+            "width": 192.609375,
+            "height": 24
+          },
+          {
+            "text": "2",
+            "x": 50,
+            "y": 288,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Получите отзыв",
+            "x": 82,
+            "y": 287,
+            "width": 167.171875,
+            "height": 28
+          },
+          {
+            "text": "Текст, без регистрации",
+            "x": 48,
+            "y": 327,
+            "width": 213.296875,
+            "height": 24
+          },
+          {
+            "text": "3",
+            "x": 50,
+            "y": 428,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Решите, что показать",
+            "x": 82,
+            "y": 427,
+            "width": 224.7265625,
+            "height": 28
+          },
+          {
+            "text": "Одобрите публикацию",
+            "x": 48,
+            "y": 467,
+            "width": 208.203125,
+            "height": 24
+          },
+          {
+            "text": "4",
+            "x": 417,
+            "y": 388,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Стена",
+            "x": 449,
+            "y": 387,
+            "width": 60.984375,
+            "height": 28
+          },
+          {
+            "text": "Публичная страница",
+            "x": 415,
+            "y": 429,
+            "width": 187.46875,
+            "height": 24
+          },
+          {
+            "text": "5",
+            "x": 417,
+            "y": 518,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Виджет",
+            "x": 449,
+            "y": 517,
+            "width": 77.546875,
+            "height": 28
+          },
+          {
+            "text": "Блок на вашем сайте",
+            "x": 415,
+            "y": 559,
+            "width": 192.8125,
+            "height": 24
+          },
+          {
+            "text": "На стене и в виджете —",
+            "x": 28,
+            "y": 548,
+            "width": 218.4375,
+            "height": 24
+          },
+          {
+            "text": "одобренные отзывы",
+            "x": 28,
+            "y": 576,
+            "width": 184.3125,
+            "height": 24
+          }
+        ],
+        "textOverlaps": [],
+        "textOutside": []
+      },
+      "second": {
+        "markers": [
+          {
+            "id": "marker-link",
+            "x": 183,
+            "y": 242,
+            "opacity": "1",
+            "animation": "link-travel"
+          },
+          {
+            "id": "marker-review",
+            "x": 183,
+            "y": 382,
+            "opacity": "1",
+            "animation": "review-travel"
+          },
+          {
+            "id": "marker-wall",
+            "x": 368,
+            "y": 425,
+            "opacity": "1",
+            "animation": "wall-travel"
+          },
+          {
+            "id": "marker-widget",
+            "x": 368,
+            "y": 555,
+            "opacity": "1",
+            "animation": "widget-travel"
+          }
+        ],
+        "texts": [
+          {
+            "text": "Proofwall",
+            "x": 28,
+            "y": 21,
+            "width": 114.078125,
+            "height": 37
+          },
+          {
+            "text": "Отзывы клиентов — на вашем сайте",
+            "x": 28,
+            "y": 65,
+            "width": 332.125,
+            "height": 24
+          },
+          {
+            "text": "1",
+            "x": 50,
+            "y": 148,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Отправьте ссылку",
+            "x": 82,
+            "y": 147,
+            "width": 189.84765625,
+            "height": 28
+          },
+          {
+            "text": "Довольному клиенту",
+            "x": 48,
+            "y": 187,
+            "width": 192.609375,
+            "height": 24
+          },
+          {
+            "text": "2",
+            "x": 50,
+            "y": 288,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Получите отзыв",
+            "x": 82,
+            "y": 287,
+            "width": 167.171875,
+            "height": 28
+          },
+          {
+            "text": "Текст, без регистрации",
+            "x": 48,
+            "y": 327,
+            "width": 213.296875,
+            "height": 24
+          },
+          {
+            "text": "3",
+            "x": 50,
+            "y": 428,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Решите, что показать",
+            "x": 82,
+            "y": 427,
+            "width": 224.7265625,
+            "height": 28
+          },
+          {
+            "text": "Одобрите публикацию",
+            "x": 48,
+            "y": 467,
+            "width": 208.203125,
+            "height": 24
+          },
+          {
+            "text": "4",
+            "x": 417,
+            "y": 388,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Стена",
+            "x": 449,
+            "y": 387,
+            "width": 60.984375,
+            "height": 28
+          },
+          {
+            "text": "Публичная страница",
+            "x": 415,
+            "y": 429,
+            "width": 187.46875,
+            "height": 24
+          },
+          {
+            "text": "5",
+            "x": 417,
+            "y": 518,
+            "width": 12,
+            "height": 25
+          },
+          {
+            "text": "Виджет",
+            "x": 449,
+            "y": 517,
+            "width": 77.546875,
+            "height": 28
+          },
+          {
+            "text": "Блок на вашем сайте",
+            "x": 415,
+            "y": 559,
+            "width": 192.8125,
+            "height": 24
+          },
+          {
+            "text": "На стене и в виджете —",
+            "x": 28,
+            "y": 548,
+            "width": 218.4375,
+            "height": 24
+          },
+          {
+            "text": "одобренные отзывы",
+            "x": 28,
+            "y": 576,
+            "width": 184.3125,
+            "height": 24
+          }
+        ],
+        "textOverlaps": [],
+        "textOutside": []
+      },
+      "movingMarkers": [],
+      "pass": true
+    },
+    {
+      "name": "img-light-360-no-preference",
+      "mode": "img",
+      "colorScheme": "light",
+      "width": 360,
+      "reducedMotion": "no-preference",
+      "unexpected": [],
+      "frames": [
+        "img-light-360-no-preference-1.png",
+        "img-light-360-no-preference-4.png"
+      ],
+      "rasterDelta": {
+        "changedPixels": 110,
+        "centroid": {
+          "x": 150.33636363636364,
+          "y": 194.88181818181818
+        },
+        "width": 360,
+        "height": 366
+      },
+      "pass": true
+    },
+    {
+      "name": "img-light-360-reduce",
+      "mode": "img",
+      "colorScheme": "light",
+      "width": 360,
+      "reducedMotion": "reduce",
+      "unexpected": [],
+      "frames": [
+        "img-light-360-reduce-1.png",
+        "img-light-360-reduce-4.png"
+      ],
+      "rasterDelta": {
+        "changedPixels": 108,
+        "centroid": {
+          "x": 151.86111111111111,
+          "y": 196.88888888888889
+        },
+        "width": 360,
+        "height": 366
+      },
+      "pass": false
+    },
+    {
+      "name": "img-light-900-no-preference",
+      "mode": "img",
+      "colorScheme": "light",
+      "width": 900,
+      "reducedMotion": "no-preference",
+      "unexpected": [],
+      "frames": [
+        "img-light-900-no-preference-1.png",
+        "img-light-900-no-preference-4.png"
+      ],
+      "rasterDelta": {
+        "changedPixels": 475,
+        "centroid": {
+          "x": 393.04,
+          "y": 474.0421052631579
+        },
+        "width": 900,
+        "height": 915
+      },
+      "pass": true
+    },
+    {
+      "name": "img-light-900-reduce",
+      "mode": "img",
+      "colorScheme": "light",
+      "width": 900,
+      "reducedMotion": "reduce",
+      "unexpected": [],
+      "frames": [
+        "img-light-900-reduce-1.png",
+        "img-light-900-reduce-4.png"
+      ],
+      "rasterDelta": {
+        "changedPixels": 471,
+        "centroid": {
+          "x": 378.0212314225053,
+          "y": 488.9384288747346
+        },
+        "width": 900,
+        "height": 915
+      },
+      "pass": false
+    },
+    {
+      "name": "img-dark-360-no-preference",
+      "mode": "img",
+      "colorScheme": "dark",
+      "width": 360,
+      "reducedMotion": "no-preference",
+      "unexpected": [],
+      "frames": [
+        "img-dark-360-no-preference-1.png",
+        "img-dark-360-no-preference-4.png"
+      ],
+      "rasterDelta": {
+        "changedPixels": 128,
+        "centroid": {
+          "x": 154.3359375,
+          "y": 198.953125
+        },
+        "width": 360,
+        "height": 366
+      },
+      "pass": true
+    },
+    {
+      "name": "img-dark-360-reduce",
+      "mode": "img",
+      "colorScheme": "dark",
+      "width": 360,
+      "reducedMotion": "reduce",
+      "unexpected": [],
+      "frames": [
+        "img-dark-360-reduce-1.png",
+        "img-dark-360-reduce-4.png"
+      ],
+      "rasterDelta": {
+        "changedPixels": 127,
+        "centroid": {
+          "x": 152.73228346456693,
+          "y": 197.58267716535434
+        },
+        "width": 360,
+        "height": 366
+      },
+      "pass": false
+    },
+    {
+      "name": "img-dark-900-no-preference",
+      "mode": "img",
+      "colorScheme": "dark",
+      "width": 900,
+      "reducedMotion": "no-preference",
+      "unexpected": [],
+      "frames": [
+        "img-dark-900-no-preference-1.png",
+        "img-dark-900-no-preference-4.png"
+      ],
+      "rasterDelta": {
+        "changedPixels": 544,
+        "centroid": {
+          "x": 382.6709558823529,
+          "y": 493.5716911764706
+        },
+        "width": 900,
+        "height": 915
+      },
+      "pass": true
+    },
+    {
+      "name": "img-dark-900-reduce",
+      "mode": "img",
+      "colorScheme": "dark",
+      "width": 900,
+      "reducedMotion": "reduce",
+      "unexpected": [],
+      "frames": [
+        "img-dark-900-reduce-1.png",
+        "img-dark-900-reduce-4.png"
+      ],
+      "rasterDelta": {
+        "changedPixels": 558,
+        "centroid": {
+          "x": 385.39964157706095,
+          "y": 496.331541218638
+        },
+        "width": 900,
+        "height": 915
+      },
+      "pass": false
+    }
+  ],
+  "startedAt": "2026-10-07T21:14:16.436Z",
+  "finishedAt": "2026-10-07T21:15:34.141Z",
+  "pass": false
+}
