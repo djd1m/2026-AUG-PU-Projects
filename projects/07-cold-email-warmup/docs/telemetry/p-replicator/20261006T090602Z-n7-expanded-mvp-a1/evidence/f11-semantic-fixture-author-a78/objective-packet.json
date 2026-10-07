@@ -1,0 +1,125 @@
+{
+  "attempt": "A78",
+  "status": "SOURCE_STATIC_PREPARED_DYNAMIC_PROOF_PENDING",
+  "sealed_utc": "2026-10-07T14:30:13.959274+00:00",
+  "sourcecut_utc": "2026-10-07T14:29:26Z",
+  "last_source_helper_complete_utc": "2026-10-07T14:29:08.544911Z",
+  "sealcut_utc": "2026-10-07T14:31:26Z",
+  "artifacts": {
+    "db-protected-a68-placeholder.json": {
+      "sha256": "86801471bedc8e1af903d832ec1897aef71b3b5b55438fdde9c44603144a497a",
+      "bytes": 271334
+    },
+    "omission-source-freeze.json": {
+      "sha256": "877959c87b99fc6d5ef4c17bb077e69c538d8a5cebba7a9318d09a9aad40a16f",
+      "bytes": 22444
+    },
+    "scenario-inventory.json": {
+      "sha256": "b6f42d1953c3816d2a91cfe306d86a4811a784ca52cf32046f816bb9216daf9f",
+      "bytes": 2750
+    },
+    "run-a78.sh": {
+      "sha256": "a19ba4fd356a05a17f8e39adf3f5ece30f95b176b20cf0af122cb97a2682ad87",
+      "bytes": 1211
+    },
+    "static-results.json": {
+      "sha256": "9a25ca06db201be955d4ff880a24daa1def1d664507fe8801110dce0b7a9e864",
+      "bytes": 1082
+    },
+    "helper-preparation.json": {
+      "sha256": "f66f43766f44cb1c0b8c96297c8c226f11d71064d159bc9aee8b809208bb21f6",
+      "bytes": 1341
+    },
+    "guard-a78.mjs": {
+      "sha256": "f0ad7178ac6dbea6862bea5f415524affc6553a359dd009bd219ee141585f47e",
+      "bytes": 5956
+    },
+    "helper-bindings.json": {
+      "sha256": "8e421aedd6435fce10d9a9718b27a7972733c12a24eb1cbe4ac1a77244426bef",
+      "bytes": 523
+    },
+    "public-before.json": {
+      "sha256": "f9b6e85cf2ac2ed457e13d6cab4ba461da56457056d7445495fcd740a36e131b",
+      "bytes": 4825
+    },
+    "diffcheck.raw": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "omission-source.json": {
+      "sha256": "65ea58282c4fe7606f7995681ae13e7b5fe96d1eb458af1694ea712696af5766",
+      "bytes": 463
+    },
+    "source-diff.raw": {
+      "sha256": "7056f9c2c551d58164a23b5a3cc3fc9ee666e7c69481176d629f635a87f66939",
+      "bytes": 13831
+    },
+    "default-callback-projection.json": {
+      "sha256": "e31c469b77af0209f58c9ac749c1b6ee3fed175ff13e3456ebe07504e6b25058",
+      "bytes": 827
+    },
+    "schema-setup-a78.mjs": {
+      "sha256": "df3bf402671a80c9e19da57dd941ad561c2ba6f0a5617ca0c8de3cf07ae6359e",
+      "bytes": 4355
+    },
+    "source-binding.json": {
+      "sha256": "8d1ef9b8990f9958acf2ade0498e0099b68c528597c68a36613c8fa3ea30af5f",
+      "bytes": 2844
+    },
+    "build.raw": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "runtime-dispatch-manifest-a80.json": {
+      "sha256": "bc05ca462af483999697e885df4c0a6dc351b94c00155694091ae18655b81a0a",
+      "bytes": 605
+    },
+    "remaining-runtime-handoff.json": {
+      "sha256": "2d52e76b4c97ffda2ea64145f6047a8aecdeeee1d8d9774cebc0965ae5e22565",
+      "bytes": 959
+    },
+    "lint.raw": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "source-freeze.json": {
+      "sha256": "71f71f219db6496e96793387a7aee131f8aa018285934392e913483483711820",
+      "bytes": 22444
+    },
+    "typecheck.raw": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "snapshot-a78.mjs": {
+      "sha256": "c1651a99b08fa257d8c8ceecaefd24bb86b3af435a741488d9ea71623b9bd363",
+      "bytes": 3060
+    },
+    "launch.py": {
+      "sha256": "0c910a703586829ebd703070ac8385e51fc50b5b5c9920f9d695cffe7d3c04f8",
+      "bytes": 5050
+    },
+    "dependency-bindings.json": {
+      "sha256": "98fd5ed9d94ab781fa06ea2781a9f0c9d477ff396073ebb6e7e97a018e02bae4",
+      "bytes": 776
+    },
+    "joins.py": {
+      "sha256": "6cf1cc87e9d549c18bc6f1eaab39f34e63dfbfbf7eea4afd94b437ad9744eb50",
+      "bytes": 773
+    },
+    "candidate-source.json": {
+      "sha256": "0f1291e51a92287189fa6e4e9ed6cd5efc38ea76ef849c7e489ef75b79e56811",
+      "bytes": 632
+    }
+  },
+  "actual_model": null,
+  "actual_effort": null,
+  "actual_usage": null,
+  "actual_cost": null,
+  "runtime_executed": false,
+  "full_fixture_acceptance": false,
+  "mandatory_dynamic_missing": [
+    "positive native45 original semantic callback",
+    "real omission native45 counterproof; whole-table preservation and all runtime joins"
+  ],
+  "original_source_immutable_revision": "e7f03164549f011b0adef80f1e2d6df3d734487a"
+}

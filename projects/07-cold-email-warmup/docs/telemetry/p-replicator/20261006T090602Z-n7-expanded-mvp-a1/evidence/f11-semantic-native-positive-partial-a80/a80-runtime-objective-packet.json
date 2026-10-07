@@ -1,0 +1,624 @@
+{
+  "attempt": "A80",
+  "status": "failed",
+  "acceptance": "PARTIAL_POSITIVE_PASS_NEGATIVE_PENDING",
+  "ack_utc": "2026-10-07T14:33:37Z",
+  "sealed_utc": "2026-10-07T14:43:06.399682+00:00",
+  "source_revision": "f79543db87bc3188c3707e6bf773e446bef7a3ae",
+  "positive": {
+    "utc": "2026-10-07T14:38:12.196881+00:00",
+    "source_revision": "f79543db87bc3188c3707e6bf773e446bef7a3ae",
+    "title": "F11 ordinary HEADER material new_uid_semantic_stop",
+    "native_exit": 0,
+    "actual_callback_count": 1,
+    "actual_pass_names": [
+      "F11 ordinary HEADER material new_uid_semantic_stop"
+    ],
+    "actual_fail_names": [],
+    "actual_skipped": 0,
+    "status": "PASS",
+    "protected51_tablepairs2009_unchanged": true,
+    "final_identity": {
+      "db": "n7f11_a8",
+      "role": "n7",
+      "owner": "n7",
+      "other_sessions": 0
+    },
+    "own_claim_classification": {
+      "n7_a78_new_uid_semantic_stop_261007142126": {
+        "physical": 0,
+        "runtime_claims": 0,
+        "body_claims": 0
+      }
+    },
+    "all_schemas": 52,
+    "all_table_pairs": 2050,
+    "raw_sha256": "29f97727b932daf288665a5f6230f42d5442f4e47a74ecb963c0ccfb22c82cb9",
+    "witness_path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/new_uid_semantic_stop/a40-header-only-new_uid_semantic_stop.json",
+    "witness_sha256": "56ba1b6841ee00d3547e8194dce994b00567e8e10563b199f016b2bef81390f8",
+    "post_snapshot_path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/db-post_new_uid_semantic_stop.json",
+    "post_snapshot_sha256": "1073fec531e87fde7ff30cbd32b85dcea7e633197ab2d8ff464a2064ddf20917",
+    "runtime_lease_sha256_unchanged": "5781e00ecedc2f9d697b2aed6e03196ee59e694be656879453828cce3de3cd06",
+    "negative_not_executed": true
+  },
+  "witnesses": {
+    "utc": "2026-10-07T14:39:12.195292+00:00",
+    "genuine_TEST_team_limit": 10,
+    "hardMailQuota": 30,
+    "activeBefore": 8,
+    "activeAfter": 9,
+    "distribution": [
+      8,
+      8,
+      7,
+      7
+    ],
+    "connected": 100,
+    "participants": 30,
+    "phase_elapsed_ms": [
+      2802.1886300000006,
+      2801.50698
+    ],
+    "window_ms": 12000,
+    "queue_budget_ms": 450000,
+    "captured_before_window_end": true,
+    "READY_and_capture_fields_preserved": true,
+    "enrollment_before": "active",
+    "enrollment_after": "replied",
+    "queued_jobs_cancelled": true,
+    "complete": true,
+    "cursor_uid": 2,
+    "native_UID": true,
+    "reply_effect_count1_and_observation_count1": "original assertions passed natively; full rows preserved in final digest snapshot",
+    "journals": [
+      {
+        "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/new_uid_semantic_stop/runtime-fixture-reset.jsonl",
+        "sha256": "96fa8dc4da3d603f664f525eff299c78d8ea6f6e70212661bc364362f27fede6"
+      }
+    ]
+  },
+  "journal": {
+    "utc": "2026-10-07T14:40:37.166805+00:00",
+    "journal_sha256": "96fa8dc4da3d603f664f525eff299c78d8ea6f6e70212661bc364362f27fede6",
+    "events": 8,
+    "phases": [
+      "assert_owned",
+      "migrate",
+      "truncate_tenant",
+      "reconcile_reset"
+    ],
+    "fixed_begin_complete_order": true,
+    "one_UUID": true,
+    "one_PID": true,
+    "count": 0,
+    "monotonic_order": true,
+    "error_events": 0,
+    "all15_scoped_PIDticks_joined": true,
+    "negative_required_pending": true
+  },
+  "final_join_count": 15,
+  "final_allJoined": true,
+  "positive_lease_released_utc": "2026-10-07T14:39:12.195730+00:00",
+  "old_schemas": 51,
+  "old_table_pairs": 2009,
+  "all_schemas": 52,
+  "all_table_pairs": 2050,
+  "protected_all_full_tables_preserved": true,
+  "negative": {
+    "status": "UNLAUNCHED",
+    "source_revision": "0e20143b3826a73374e63ac46ec291b98516f84e",
+    "clean_objective_sha256": "027bdab93a33a110765893c919a99a13aa9fd69845b51458835d2f6a39194048",
+    "lease_absent": true,
+    "cause": "Root actual reservation failed before lease; cannot fit safe setup/preflight/native45+15 within unchanged cutoff",
+    "root_responsible_successor": "fresh bounded A82 negative-only actual followup required"
+  },
+  "cutoffs_unchanged": {
+    "source": "2026-10-07T14:42:04.508393+00:00",
+    "seal": "2026-10-07T14:45:04.508393+00:00"
+  },
+  "review_sha256": "457731d7f2f0cc587685c35df312ee2cdb2c42dde1ff7f8ae4acf1f6f3b08447",
+  "artifacts": [
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/a80-final-joins-native.json",
+      "sha256": "96b6ca5640c131ce20c93f5f57c1ef80b5d3ea6601a9b33f4f83b9c746ce88a4",
+      "bytes": 174
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/a80-initial-preflight.json",
+      "sha256": "ea9f22ea1519edee0d1622d397de2289c057c9de11b4959f960c5d63bafb81a3",
+      "bytes": 967
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/a80-initial-static-preflight-stop.json",
+      "sha256": "cab4a412a38ecc7773e42752225c40753901276c205857b2d61f354501eccf56",
+      "bytes": 484
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/a80-positive-journal-checks.json",
+      "sha256": "336ffa6498d223c1c2b658f837788aecfda470631e59f0d7fabeda15079e73fd",
+      "bytes": 466
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/a80-positive-result.json",
+      "sha256": "3eeec613baf4cdd8453c389a0e29bedd35921e6359f57ab97f33d009d7a48a91",
+      "bytes": 1405
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/a80-positive-runtime-release.json",
+      "sha256": "5efe71815ad71ba1f94c8eca9f7af8d18e4fb9aca4cb1aaa561001ed41bae892",
+      "bytes": 540
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/a80-positive-steps.json",
+      "sha256": "9efbb0812822868330bda59ea75524b3e648824a77251b8e3b3265c1f3dbbe06",
+      "bytes": 798
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/a80-positive-witness-checks.json",
+      "sha256": "4b74b50f882f7374f3e9572ed6eb3707d3bd0b1eeb4bf039efaaf6315ea99dfc",
+      "bytes": 967
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/a80_final-joins.json",
+      "sha256": "bfd30357dae16c380f4bf65d948c9b785287d21c3e109f8b875bdbc755bc5c74",
+      "bytes": 3365
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/build.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/candidate-source.json",
+      "sha256": "0f1291e51a92287189fa6e4e9ed6cd5efc38ea76ef849c7e489ef75b79e56811",
+      "bytes": 632
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/db-post_new_uid_semantic_stop.json",
+      "sha256": "1073fec531e87fde7ff30cbd32b85dcea7e633197ab2d8ff464a2064ddf20917",
+      "bytes": 276492
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/db-pre_new_uid_semantic_stop.json",
+      "sha256": "0c70b5f181ec7eb2a3a7fb5ddbfeae1b55620782675183fb265596e0e2a3fb5b",
+      "bytes": 276479
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/db-pre_setup.json",
+      "sha256": "0f6e9c2f80ff1ae0dae964b6fe3611a9107ccb96af85aed2b325012806655051",
+      "bytes": 270759
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/db-protected-a68-placeholder.json",
+      "sha256": "86801471bedc8e1af903d832ec1897aef71b3b5b55438fdde9c44603144a497a",
+      "bytes": 271334
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/db-protected.json",
+      "sha256": "86801471bedc8e1af903d832ec1897aef71b3b5b55438fdde9c44603144a497a",
+      "bytes": 271334
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/default-callback-projection.json",
+      "sha256": "e31c469b77af0209f58c9ac749c1b6ee3fed175ff13e3456ebe07504e6b25058",
+      "bytes": 827
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/dependency-bindings.json",
+      "sha256": "98fd5ed9d94ab781fa06ea2781a9f0c9d477ff396073ebb6e7e97a018e02bae4",
+      "bytes": 776
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/diffcheck.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/dispatch-manifest.json",
+      "sha256": "39685ce6990b0d8ccd2f82bd22aff17a94d2141aa27e684c46f9a48e78df7f5b",
+      "bytes": 567
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/guard-1773393-1791383797479.json",
+      "sha256": "692d25fff0443dd8ac9ba5ffe01fecd02af6790135e76f486b97930f4858ad98",
+      "bytes": 274
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/guard-1785389-1791383860819.json",
+      "sha256": "6dcdcebe4d701249c826b2d033d44ea2aa4b980af81ba2d2475b4ea2c5a1d50f",
+      "bytes": 274
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/guard-1785849-1791383862787.json",
+      "sha256": "19391cb39c75b630e8df56f59b6fb8a814b6c9167c558e8fbd6ee7714a86971b",
+      "bytes": 274
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/guard-1787069-1791383867601.json",
+      "sha256": "55901e8f8eb3643cbc69de844ae3837b77ece2eb09779a282be071419ca91a95",
+      "bytes": 274
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/guard-1789021-1791383874533.json",
+      "sha256": "c5d2e2f55851104ad77adcbda58a7b22b79258ade096f6a3a8db8870aa213d1e",
+      "bytes": 288
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/guard-1789314-1791383875176.json",
+      "sha256": "f29ac46a6515ab1c091f414254e22785ecc3986fa8a65c37dea721e3fbb5bcae",
+      "bytes": 288
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/guard-1789428-1791383875772.json",
+      "sha256": "31647c341719c63ce8750e1fa651d18cac84703202a04333e33d1aa31b208293",
+      "bytes": 288
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/guard-1789514-1791383876352.json",
+      "sha256": "c84af7c0fe78bab9be4b106ab5dd65eb61a35e0397cc5c59387a40005c5e2c8b",
+      "bytes": 288
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/guard-1789848-1791383876946.json",
+      "sha256": "b3fff45154a3ff176079705d164b7d30f820772eff3ede3285bdcc7872d2d19d",
+      "bytes": 288
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/guard-1790704-1791383880291.json",
+      "sha256": "5aaea6499ed0426ecf79d51ba613ad18f1524b3ad5177ab9e7717fddd560ea3b",
+      "bytes": 288
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/guard-1791982-1791383884062.json",
+      "sha256": "3a97574fec1b5d2dbfc04e95ee16d13938a54967ff06e45415fd41338822f59e",
+      "bytes": 288
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/guard-1792012-1791383884482.json",
+      "sha256": "c73cdbcc38284fb67c0441199cef388a126e0b97d3118f8e713f1dfdb6c79de5",
+      "bytes": 288
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/guard-1792090-1791383884994.json",
+      "sha256": "d9a2bc9b99f116d9250b37c4cb3034e343a47b5bc13f78c7d5e5e7c63e9d7502",
+      "bytes": 288
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/guard-1792390-1791383885501.json",
+      "sha256": "382b8d553924d744510a3528946a58f3a793c002118514c6b5a0e5fdc16c87aa",
+      "bytes": 288
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/guard-1792634-1791383886535.json",
+      "sha256": "adf611e97450950c0512604fac686b0e75b2c6661ba69aab96b3ae2daf68d716",
+      "bytes": 274
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/guard-a78.mjs",
+      "sha256": "f0ad7178ac6dbea6862bea5f415524affc6553a359dd009bd219ee141585f47e",
+      "bytes": 5956
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/helper-bindings.json",
+      "sha256": "8e421aedd6435fce10d9a9718b27a7972733c12a24eb1cbe4ac1a77244426bef",
+      "bytes": 523
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/helper-preparation.json",
+      "sha256": "f66f43766f44cb1c0b8c96297c8c226f11d71064d159bc9aee8b809208bb21f6",
+      "bytes": 1341
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/joins.py",
+      "sha256": "6cf1cc87e9d549c18bc6f1eaab39f34e63dfbfbf7eea4afd94b437ad9744eb50",
+      "bytes": 773
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/launch.py",
+      "sha256": "0c910a703586829ebd703070ac8385e51fc50b5b5c9920f9d695cffe7d3c04f8",
+      "bytes": 5050
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/lint.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/new_uid_semantic_stop-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/new_uid_semantic_stop-joins.json",
+      "sha256": "bd6756bbf07008ac19642454bd8bbac8f50e639b592e3c57daef80d55aaebbd8",
+      "bytes": 3156
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/new_uid_semantic_stop-launch.json",
+      "sha256": "d4abc19d56c7b587dd86604970b25515f76a063d0cd9b2cc8e1cccc2318c3d89",
+      "bytes": 50104
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/new_uid_semantic_stop.raw",
+      "sha256": "29f97727b932daf288665a5f6230f42d5442f4e47a74ecb963c0ccfb22c82cb9",
+      "bytes": 296
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/objective-packet.json",
+      "sha256": "721e87fa1d3f6530176f060c4a00e1b7aad65bf4c46baec0d6c05e5dc6c8df43",
+      "bytes": 4359
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/omission-source-freeze.json",
+      "sha256": "877959c87b99fc6d5ef4c17bb077e69c538d8a5cebba7a9318d09a9aad40a16f",
+      "bytes": 22444
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/omission-source.json",
+      "sha256": "65ea58282c4fe7606f7995681ae13e7b5fe96d1eb458af1694ea712696af5766",
+      "bytes": 463
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/post_new_uid_semantic_stop-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/post_new_uid_semantic_stop-joins.json",
+      "sha256": "3a0c02f2fdf83148654c32c1d15ba05c01aefb55c67d0f23b8302b47c1e1bd21",
+      "bytes": 3365
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/post_new_uid_semantic_stop-launch.json",
+      "sha256": "7023ca90c4f233394e22605829d1c679272bd7cb2077927850b5822fa0aa1059",
+      "bytes": 49661
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/post_new_uid_semantic_stop.raw",
+      "sha256": "187632ea0f937498361bc0d2c3364b3faeda207a1dfdbfc456a82f3e430a092d",
+      "bytes": 2178
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/pre_new_uid_semantic_stop-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/pre_new_uid_semantic_stop-joins.json",
+      "sha256": "c3afc5b590243f627ea51ff8a60f89978f14573d1e6f23326443f240f25124fd",
+      "bytes": 717
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/pre_new_uid_semantic_stop-launch.json",
+      "sha256": "2fe5e6a000e758fd9d8e7e9bf643cd7b2252a931792f08a9815e705f3c31c1e8",
+      "bytes": 49610
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/pre_new_uid_semantic_stop.raw",
+      "sha256": "26792a2e30ad939416d858c93c28412c869e7cc0b2b1080b737a3f7a2aa5b06b",
+      "bytes": 2177
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/pre_setup-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/pre_setup-joins.json",
+      "sha256": "49dfb9d297d8135d5fc954d323d322af475c4a6fc25b6ded5e2ae45284611d6b",
+      "bytes": 299
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/pre_setup-launch.json",
+      "sha256": "4fe977c66e81132d7b48251a2969aa0fa7711096d586ccba4c13ae4d6e0a3eb7",
+      "bytes": 49562
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/pre_setup.raw",
+      "sha256": "7211f170d5453cc71a1e0fd663b52718ee749ad341b36fb5d96eb61c3280312f",
+      "bytes": 2024
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/process-start-1773393-1791383797479.json",
+      "sha256": "c9be7ec1eeb6af41970bd49de1f004445d0e7b33b12f9dc66284363d23d5585f",
+      "bytes": 227
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/process-start-1785389-1791383860819.json",
+      "sha256": "ec87ecfed83ff193cf01d42b2a057f837cac7fb49987e5a948e818d4e0a54732",
+      "bytes": 227
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/process-start-1785849-1791383862787.json",
+      "sha256": "8bfe49956cf4eb38bb65aa3e372e85fc293835619e591ae44fc1675caa12cb56",
+      "bytes": 227
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/process-start-1787069-1791383867601.json",
+      "sha256": "c38ff955c8693a60fea11c956cb92afcf486e39daef61bc275d83c8505142d0b",
+      "bytes": 227
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/process-start-1789021-1791383874533.json",
+      "sha256": "b553d6412bc1bf84c9c42641c7beab99df04d29db4bb5fcffddb3da7305bf165",
+      "bytes": 241
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/process-start-1789314-1791383875176.json",
+      "sha256": "beeb12c1afb4e1e7b7ca2c0967ba7f9561e69085ea8435975d63fe62429c4b7b",
+      "bytes": 241
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/process-start-1789428-1791383875772.json",
+      "sha256": "4b02f27bd601c312e5da6cc0fa77fad009a66036917f8da792d9511fa5e3c4ea",
+      "bytes": 241
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/process-start-1789514-1791383876352.json",
+      "sha256": "ed4e77ffe854f8f3766e8d45c38eca2015d99b548282bc9481f160e3858761ff",
+      "bytes": 241
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/process-start-1789848-1791383876946.json",
+      "sha256": "d5073ad318514a48409907f7b0eb924278c6d3028ed46e40b75b3002aca3d8ee",
+      "bytes": 241
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/process-start-1790704-1791383880291.json",
+      "sha256": "9824c29d072f75ba811697860cbf7825df1aa9a1bfd18d3d4f845e43e653b5dc",
+      "bytes": 241
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/process-start-1791982-1791383884062.json",
+      "sha256": "bade39cc2530fa446c500cc3280d2d61d06a832e819b8bd67d89a11b08e22c41",
+      "bytes": 241
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/process-start-1792012-1791383884482.json",
+      "sha256": "92dbae31d71aec46f8000aa42e6f590b676882d9ef27b43f9fb1cea69d7cc688",
+      "bytes": 241
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/process-start-1792090-1791383884994.json",
+      "sha256": "296fcc971c6c1df9016c4cecc929304e891d41e179ef24a1e864b6676190c634",
+      "bytes": 241
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/process-start-1792390-1791383885501.json",
+      "sha256": "7fb7e00ed1f2f9abc25bc8f156ec8962317fb627297618975b1099256026fb43",
+      "bytes": 241
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/process-start-1792634-1791383886535.json",
+      "sha256": "4f2ace5960c1dbda21f5c8ebb7d0173097374d8172ed7679d044ad9ae8ae41c9",
+      "bytes": 227
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/public-before.json",
+      "sha256": "f9b6e85cf2ac2ed457e13d6cab4ba461da56457056d7445495fcd740a36e131b",
+      "bytes": 4825
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/remaining-runtime-handoff.json",
+      "sha256": "2d52e76b4c97ffda2ea64145f6047a8aecdeeee1d8d9774cebc0965ae5e22565",
+      "bytes": 959
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/root-source-preparation.json",
+      "sha256": "4d16ec68540393ecc50bb28b8aa5188d5476ed9ad2ca9bc43666af63a5db4d52",
+      "bytes": 753
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/run-a78.sh",
+      "sha256": "a19ba4fd356a05a17f8e39adf3f5ece30f95b176b20cf0af122cb97a2682ad87",
+      "bytes": 1211
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/runtime-dispatch-manifest-a80.json",
+      "sha256": "6350bf062bf820b49eedac6ef210501d5396dd8fce8d8ac22ea89d7e41726151",
+      "bytes": 742
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/runtime-lease.json",
+      "sha256": "5781e00ecedc2f9d697b2aed6e03196ee59e694be656879453828cce3de3cd06",
+      "bytes": 3991
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/scenario-inventory.json",
+      "sha256": "b6f42d1953c3816d2a91cfe306d86a4811a784ca52cf32046f816bb9216daf9f",
+      "bytes": 2750
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/schema-new_uid_semantic_stop-setup.json",
+      "sha256": "87f424cdf551ebd6523a39609f2e4a3ea13af742db6050b5c52b79fc178a3a66",
+      "bytes": 5909
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/schema-session-1785389-1028145.json",
+      "sha256": "bc1840bd944881a6e6e4822024df4aa6afdba5d0de3d6e9f87e41e172d99574d",
+      "bytes": 340
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/schema-session-1787069-1028176.json",
+      "sha256": "1802211f54336d080963b73847593d8ad8426310db715a8e9b8e537241bf2886",
+      "bytes": 367
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/schema-session-1787069-1028177.json",
+      "sha256": "a69c28a2124d62884ee36a7d8372ac5ee9c0edf49b7cf37012d7de259153fac1",
+      "bytes": 367
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/schema-setup-a78.mjs",
+      "sha256": "df3bf402671a80c9e19da57dd941ad561c2ba6f0a5617ca0c8de3cf07ae6359e",
+      "bytes": 4355
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/setup_new_uid_semantic_stop-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/setup_new_uid_semantic_stop-joins.json",
+      "sha256": "50e4a3086e387e2a44bfa44baf83222310e81a9883165d3ab155afb4b130114a",
+      "bytes": 508
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/setup_new_uid_semantic_stop-launch.json",
+      "sha256": "1af69d6c7a74e0fcafb073fe323424d4b39a48de1d4598250bdcfd4d394e0301",
+      "bytes": 49543
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/setup_new_uid_semantic_stop.raw",
+      "sha256": "dcd36d61f40e08b86c22bf8e5f7bbe4cfe93d1e9c18d16a94e6eba93f9f31816",
+      "bytes": 155
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/snapshot-a78.mjs",
+      "sha256": "c1651a99b08fa257d8c8ceecaefd24bb86b3af435a741488d9ea71623b9bd363",
+      "bytes": 3060
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/source-binding.json",
+      "sha256": "d4a5950ba8423c131831429ef0827a119073f07aa17d989b913d9e36a3515e28",
+      "bytes": 2845
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/source-diff.raw",
+      "sha256": "7056f9c2c551d58164a23b5a3cc3fc9ee666e7c69481176d629f635a87f66939",
+      "bytes": 13831
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/source-freeze.json",
+      "sha256": "71f71f219db6496e96793387a7aee131f8aa018285934392e913483483711820",
+      "bytes": 22444
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/static-results.json",
+      "sha256": "9a25ca06db201be955d4ff880a24daa1def1d664507fe8801110dce0b7a9e864",
+      "bytes": 1082
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/typecheck.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/new_uid_semantic_stop/a40-header-only-new_uid_semantic_stop.json",
+      "sha256": "56ba1b6841ee00d3547e8194dce994b00567e8e10563b199f016b2bef81390f8",
+      "bytes": 32987
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/new_uid_semantic_stop/runtime-fixture-reset.jsonl",
+      "sha256": "96fa8dc4da3d603f664f525eff299c78d8ea6f6e70212661bc364362f27fede6",
+      "bytes": 1421
+    }
+  ],
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_host_model": null,
+  "actual_usage": null,
+  "actual_cost": null,
+  "fresh_fork": false,
+  "full_F11_acceptance": false
+}

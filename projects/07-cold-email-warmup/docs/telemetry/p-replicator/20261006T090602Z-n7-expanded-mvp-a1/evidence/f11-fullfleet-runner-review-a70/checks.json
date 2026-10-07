@@ -1,0 +1,51 @@
+{
+  "utc": "2026-10-07T13:57:41.367167+00:00",
+  "verdict": "LOCAL_RUNNER_PREPARATION_REJECT",
+  "finding_count": 1,
+  "blocking_namespace_values": {
+    "full_fault": "n7_a69_full_fault_261007134053",
+    "full_healthy": "n7_a69_full_healthy_261007134053",
+    "legacy": "n7_a69_legacy_261007134053"
+  },
+  "unchanged_source_namespace_contract": "^n7_a[0-9]+_(short|fault|checks)_[0-9]{12}$",
+  "source_contract_path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+  "source_contract_line": 16,
+  "source_callers": {
+    "fullfleet_installFairInstrumentation": 174,
+    "legacy_cleanupFairInstrumentation": 124
+  },
+  "artifact_hashes_all_match": true,
+  "objective_artifact_count": 19,
+  "source_freeze_paths": 227,
+  "source_hashes_all_match": true,
+  "dependency_pins_match": true,
+  "helper_pins_match": true,
+  "Python_AST_parsed": [
+    "launch.py",
+    "joins.py",
+    "prepare.py"
+  ],
+  "recorded_bash_n_exit": 0,
+  "source_revision": "e7f03164549f011b0adef80f1e2d6df3d734487a",
+  "runtime_lease_absent": true,
+  "actual_A68_baseline_absent": true,
+  "saved_public_fields_preserved": true,
+  "public_whole_tables_preserved": true,
+  "runtime_timeout_total": 805,
+  "runtime_kill_grace_total": 45,
+  "future_actor_source_seconds": 1020,
+  "overhead_remaining_capacity_seconds": 170,
+  "native_order": [
+    "full_fault",
+    "full_healthy",
+    "legacy"
+  ],
+  "source_duration_full300": true,
+  "source_SIGTERM_original150000": true,
+  "source_legacy20_and_real5000_preserved": true,
+  "runtime_Node_DB_tests_executed": false,
+  "actual_model": null,
+  "actual_usage": null,
+  "fresh_fork": false,
+  "guard_exact_accepted_trace_source_substitutions": true
+}

@@ -1686,5 +1686,104 @@
     "context": "prior planner+clean A73 objective only no coderchat",
     "runtime_executed": false,
     "actual_model": null
+  },
+  "f11_root_fullfleet_correction_review_a75_terminal": {
+    "verdict": "LOCAL_RUNNER_PREPARATION_ACCEPT",
+    "sealed_at": "2026-10-07T14:24:29.715842Z",
+    "native_receipt_checker_exit": 0,
+    "limited_source_revision": "e7f03164549f011b0adef80f1e2d6df3d734487a",
+    "later_source_reconciliation_required": true,
+    "actual_model": null
+  },
+  "f11_root_semantic_fixture_author_a78_terminal": {
+    "status": "failed partial; mandatory dynamic proof absent",
+    "source_revision": "f79543db87bc3188c3707e6bf773e446bef7a3ae",
+    "negative_revision": "0e20143b3826a73374e63ac46ec291b98516f84e",
+    "static_checks_native_exit": {
+      "typecheck": 0,
+      "lint": 0,
+      "build": 0,
+      "diff": 0
+    },
+    "candidate_branch_push_native_exit": 0,
+    "branch": "work/n7-semantic-fixture-a78-20261007",
+    "actual_model": null
+  },
+  "f11_root_semantic_native_validation_a80": {
+    "actual_ACK_at": "2026-10-07T14:33:37Z",
+    "actor": "/root/n7_a59_unstarted_granularity_review",
+    "routing_change": "requestedHIGH beforeactualdispatch; A78MEDIUM preservedhistorical",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "actual_model": null,
+    "source_cut": "2026-10-07T14:42:04.508393Z",
+    "seal_cut": "2026-10-07T14:45:04.508393Z",
+    "state": "actual independent source-review and native preflight",
+    "protected_schemas": 51,
+    "protected_whole_table_pairs": 2009,
+    "full_F11_accepted": false
+  },
+  "f11_root_integration_rebind_review_a79_terminal": {
+    "verdict": "LOCAL_RUNNER_PREPARATION_ACCEPT limitede7",
+    "inventory_metadata_full_equality": "unresolved; nativepaths/closedargv independentlyunchanged",
+    "sourcecut_metadata_overrun_seconds": 35.6,
+    "actual_model": null
+  },
+  "f11_root_semantic_omission_prepare_a81_terminal": {
+    "sealed_at": "2026-10-07T14:34:44Z",
+    "runtime_executed": false,
+    "objective_sha256": "027bdab93a33a110765893c919a99a13aa9fd69845b51458835d2f6a39194048",
+    "future_positive_post_baseline_required": true,
+    "actual_model": null
+  },
+  "f11_root_semantic_native_validation_a80_terminal": {
+    "status": "partial failed",
+    "native_receipt_checker_exit": 1,
+    "positive_exact_count": 1,
+    "positive_native_exit": 0,
+    "negative_unlaunched": true,
+    "body_phases_ms": [
+      2802.18863,
+      2801.50698
+    ],
+    "connected": 100,
+    "participants": 30,
+    "campaign_distribution": [
+      8,
+      8,
+      7,
+      7
+    ],
+    "target_active_campaigns": [
+      8,
+      9
+    ],
+    "genuine_TEST_team_active_limit": 10,
+    "window_ms": 12000,
+    "queue_budget_ms": 450000,
+    "old51_fulltables2009_unchanged": true,
+    "final52_table_pairs": 2050,
+    "positive_15PIDticks_joined": true,
+    "runtime_released": true,
+    "candidate_feature_acceptance": false,
+    "full_F11_accepted": false,
+    "actual_model": null
+  },
+  "f11_root_semantic_omission_native_a82": {
+    "actual_ACK_at": "2026-10-07T14:46:11Z",
+    "source_cut": "2026-10-07T14:50:36.061869Z",
+    "seal_cut": "2026-10-07T14:52:36.061869Z",
+    "actor": "/root/n7_a59_unstarted_granularity_review",
+    "source_revision": "0e20143b3826a73374e63ac46ec291b98516f84e",
+    "state": "actual independent static-preflight reconciliation before native callback",
+    "actual_model": null
+  },
+  "f11_root_accepted_runners_rebind_a83": {
+    "actual_ACK_at": "2026-10-07T14:47:19Z",
+    "source_cut": "2026-10-07T14:53:19Z",
+    "seal_cut": "2026-10-07T14:55:19Z",
+    "actor": "/root/n7_a58_integration_readiness_author",
+    "state": "actual source-only rebind for future accepted f79543 Original fastforward; not activated",
+    "actual_model": null
   }
 }
