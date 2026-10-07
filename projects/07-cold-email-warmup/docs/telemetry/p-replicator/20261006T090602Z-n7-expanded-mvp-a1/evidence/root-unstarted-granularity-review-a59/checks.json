@@ -1,0 +1,198 @@
+{
+  "review_time": "2026-10-07T12:19:42.522869+00:00",
+  "verdict": "LOCAL_TEST_DELTA_ACCEPT",
+  "tests_executed_by_reviewer": false,
+  "source_revision": "a36767f921f8e9ff425728e5b80d0c38340b4475",
+  "source_base": "e9ec591e714932cfdd17339f5017b460f8476b16",
+  "planner_sha256": "f27a5f31a6491fe5e61809eac309b7b7fa1162337668a0647ad669337e5a7cf2",
+  "context_manifest_sha256": "732d2a50bcd895be3026802d66283b70121e0a313c137220bbbea75309580e09",
+  "scenario_inventory_sha256": "b0a3f829a0046a576aa45297ae82882cf8200b104e971ac31acaffc4f2e17c41",
+  "objective_packet_sha256": "1c7c979bce5acc5abc13b03834882f8df7af2dcc959f081d3aff6994c722587a",
+  "objective_hashed_files": 394,
+  "hash_mismatches": [],
+  "nine_scenarios": [
+    {
+      "mode": "finish_stop",
+      "exact_title": "F11 A42 unstarted admission cancellation closes only exact logical owner / finish_stop",
+      "actual_callback_passes": 1,
+      "completion_checkpoint": "fixture_cleanup_complete",
+      "expected_terminal": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 0
+      },
+      "whole_retained_logical_row_matches": false,
+      "all_joined": true
+    },
+    {
+      "mode": "already_aborted",
+      "exact_title": "F11 A42 unstarted admission cancellation closes only exact logical owner / already_aborted",
+      "actual_callback_passes": 1,
+      "completion_checkpoint": "fixture_cleanup_complete",
+      "expected_terminal": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 0
+      },
+      "whole_retained_logical_row_matches": false,
+      "all_joined": true
+    },
+    {
+      "mode": "body_failure",
+      "exact_title": "F11 A42 unstarted admission cancellation closes only exact logical owner / body_failure",
+      "actual_callback_passes": 1,
+      "completion_checkpoint": "fixture_cleanup_complete",
+      "expected_terminal": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 0
+      },
+      "whole_retained_logical_row_matches": false,
+      "all_joined": true
+    },
+    {
+      "mode": "generation",
+      "exact_title": "F11 A42 unstarted admission cancellation closes only exact logical owner / generation",
+      "actual_callback_passes": 1,
+      "completion_checkpoint": "fixture_cleanup_complete",
+      "expected_terminal": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 1
+      },
+      "whole_retained_logical_row_matches": true,
+      "all_joined": true
+    },
+    {
+      "mode": "owner",
+      "exact_title": "F11 A42 unstarted admission cancellation closes only exact logical owner / owner",
+      "actual_callback_passes": 1,
+      "completion_checkpoint": "fixture_cleanup_complete",
+      "expected_terminal": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 1
+      },
+      "whole_retained_logical_row_matches": true,
+      "all_joined": true
+    },
+    {
+      "mode": "started",
+      "exact_title": "F11 A42 unstarted admission cancellation closes only exact logical owner / started",
+      "actual_callback_passes": 1,
+      "completion_checkpoint": "fixture_cleanup_complete",
+      "expected_terminal": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 1
+      },
+      "whole_retained_logical_row_matches": true,
+      "all_joined": true
+    },
+    {
+      "mode": "physical_operation",
+      "exact_title": "F11 unstarted disposal preserves replacement physical operation owner_process owner_host / physical_operation",
+      "actual_callback_passes": 1,
+      "completion_checkpoint": "fixture_cleanup_complete",
+      "expected_terminal": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 1
+      },
+      "whole_retained_logical_row_matches": true,
+      "all_joined": true
+    },
+    {
+      "mode": "physical_owner_process",
+      "exact_title": "F11 unstarted disposal preserves replacement physical operation owner_process owner_host / physical_owner_process",
+      "actual_callback_passes": 1,
+      "completion_checkpoint": "fixture_cleanup_complete",
+      "expected_terminal": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 1
+      },
+      "whole_retained_logical_row_matches": true,
+      "all_joined": true
+    },
+    {
+      "mode": "physical_owner_host",
+      "exact_title": "F11 unstarted disposal preserves replacement physical operation owner_process owner_host / physical_owner_host",
+      "actual_callback_passes": 1,
+      "completion_checkpoint": "fixture_cleanup_complete",
+      "expected_terminal": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 1
+      },
+      "whole_retained_logical_row_matches": true,
+      "all_joined": true
+    }
+  ],
+  "source_freeze_files_checked": 222,
+  "protected_schema_count": 15,
+  "protected_tables_count": 615,
+  "all_protected_full_tables_equal": true,
+  "counterproof": {
+    "utc": "2026-10-07T12:05:54.930400+00:00",
+    "new_property": "fixed inventory requires actual owner callback once",
+    "inventory_required_count": 9,
+    "native_exit": 0,
+    "actual_owner_callbacks": 0,
+    "unchanged_one_callback_coverage_accepts": false,
+    "rejected_missing_coverage": true,
+    "all_descendants_joined_before_restore": true,
+    "candidate_sha256": "bcfedf23511d32f8b41f38a8d83ee6d655887461b9023b4d58ac03885560b658",
+    "derivative_sha256": "53dd995f8f9061739ca4b0f991a0cce4c9e2d7215c423f4fbf0079bb14941b90",
+    "restored_byte_equal": true
+  },
+  "recorded_processes": 79,
+  "fresh_same_PID_startTicks_live": [],
+  "static_checks": [
+    {
+      "check": "typecheck",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit": 0,
+      "utc": "2026-10-07T12:06:37.975791+00:00"
+    },
+    {
+      "check": "lint",
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit": 0,
+      "utc": "2026-10-07T12:06:45.018354+00:00"
+    },
+    {
+      "check": "build",
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit": 0,
+      "utc": "2026-10-07T12:06:50.848895+00:00"
+    },
+    {
+      "check": "diffcheck",
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "utc": "2026-10-07T12:06:50.872662+00:00"
+    }
+  ],
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "host_evidence_gap": "Requested gpt-6.1-sol/high is dispatch data; actual host model and usage metadata unavailable."
+}
