@@ -311,7 +311,7 @@ test('native poll claim reserves physical admission atomically across competing 
 
 
 test('F11 FIFO HEADER preference retains urgent fairness and exact bounded admission gates',async()=>{
- const {seedBodyPressureCohort}=await import('./f10-runtime-process-fixture.js'),{enqueueCaptureClient,captureHeaderFrontierClient}=await import('../src/replies/context-store.js'),{authorizeTransport}=await import('../src/mailboxes/transport-authority.js');
+ const {seedBodyPressureCohort}=await import('./f10-runtime-process-fixture.js'),{enqueueCaptureClient,captureHeaderFrontierClient,captureHeaderContextClient}=await import('../src/replies/context-store.js'),{authorizeTransport}=await import('../src/mailboxes/transport-authority.js');
  const {createPool}=await import('../src/db.js'),{loadConfig}=await import('../src/config.js'),pre=createPool(loadConfig().databaseUrl);try{const facts=(await pre.query("SELECT current_schema() schema,(SELECT count(*)::int FROM transport_operation WHERE operation IS NOT NULL) physical,(SELECT count(*)::int FROM runtime_due WHERE state='claimed') runtime")).rows[0];assert.equal(facts.schema,process.env.N7_TEST_SCHEMA);assert.equal(facts.physical,0);assert.equal(facts.runtime,0);}finally{await pre.end();}
  const empty=await runtimeFixture(0);await empty.pool.end();
  const c=await seedBodyPressureCohort(),targets=c.participants.slice(0,4),ordinary=c.participants[4]!;
@@ -330,13 +330,42 @@ test('F11 FIFO HEADER preference retains urgent fairness and exact bounded admis
   await c.pool.query("UPDATE mailbox_poll SET completed_at=clock_timestamp()-interval '26 seconds' WHERE mailbox_id=$1",[ordinary.mailbox]);
   const urgent=await runtime.claim('poll');assert.ok(urgent);assert.equal(urgent.mailbox_id,ordinary.mailbox);await runtime.cancel(urgent);
   await c.pool.query('UPDATE mailbox_poll SET completed_at=NULL WHERE mailbox_id=$1',[ordinary.mailbox]);const missing=await runtime.claim('poll');assert.ok(missing);assert.equal(missing.mailbox_id,ordinary.mailbox);await runtime.cancel(missing);
+  // Material selection witness: actual urgent age beats an older ordinary turn
+  // while admitted pressure disables only the first-window frontier.
+  for(const pressure of ['three windows','continuation']){
+   await c.pool.query("UPDATE mailbox_poll SET completed_at=clock_timestamp()");
+   await c.pool.query("UPDATE mailbox_poll SET completed_at=clock_timestamp()-interval '26 seconds' WHERE mailbox_id=$1",[targets[0]!.mailbox]);
+   await c.pool.query("UPDATE runtime_tenant_turn SET service_seq=0 WHERE kind='poll'");
+   await c.pool.query("UPDATE runtime_due SET service_seq=100 WHERE kind='poll'");
+   await c.pool.query("UPDATE runtime_due SET service_seq=0 WHERE kind='poll' AND mailbox_id=$1",[ordinary.mailbox]);
+   const admitted=pressure==='three windows'?targets.slice(1,4):targets.slice(1,2);
+   await c.pool.query("UPDATE incoming_ai_event SET window_start=statement_timestamp(),window_end=statement_timestamp()+interval '12 seconds',window_completed_at=statement_timestamp(),window_revision='1',window_mailbox_revision='0' WHERE mailbox_id=ANY($1::uuid[])",[admitted.map(p=>p.mailbox)]);
+   assert.deepEqual(await eligibilityTransaction(c.pool,client=>captureHeaderFrontierClient(client,c.config)),[],pressure);
+   assert.equal(await eligibilityTransaction(c.pool,client=>captureHeaderContextClient(client,c.config)),true,pressure);
+   const beforeEvents=(await c.pool.query('SELECT * FROM incoming_ai_event ORDER BY id')).rows;
+   const beforeProof=(await c.pool.query('SELECT * FROM mailbox_poll ORDER BY mailbox_id')).rows;
+   const beforeDue=(await c.pool.query("SELECT mailbox_id,due_at,next_check_at FROM runtime_due WHERE kind='poll' ORDER BY mailbox_id")).rows;
+   const selected=await runtime.claim('poll');assert.ok(selected);assert.equal(selected.mailbox_id,targets[0]!.mailbox,'urgent HEADER survives empty frontier '+pressure);await runtime.cancel(selected);
+   assert.deepEqual((await c.pool.query('SELECT * FROM incoming_ai_event ORDER BY id')).rows,beforeEvents,'selection never admits or changes BODY');
+   assert.deepEqual((await c.pool.query('SELECT * FROM mailbox_poll ORDER BY mailbox_id')).rows,beforeProof,'selection never manufactures completion');
+   assert.deepEqual((await c.pool.query("SELECT mailbox_id,due_at,next_check_at FROM runtime_due WHERE kind='poll' ORDER BY mailbox_id")).rows,beforeDue,'no phantom twelve-second deferral');
+   await c.pool.query('UPDATE incoming_ai_event SET window_start=NULL,window_end=NULL,window_completed_at=NULL,window_revision=NULL,window_mailbox_revision=NULL');
+  }
+  // All candidates in one urgency tier still consume both ordinary fair turns.
+  await c.pool.query('UPDATE mailbox_poll SET completed_at=NULL');await c.pool.query("UPDATE runtime_tenant_turn SET service_seq=0 WHERE kind='poll'");await c.pool.query("UPDATE runtime_due SET service_seq=0 WHERE kind='poll'");
+  const fair:string[]=[];for(let i=0;i<5;i++){const claim=await runtime.claim('poll');assert.ok(claim);fair.push(claim.mailbox_id);await runtime.cancel(claim);}assert.equal(new Set(fair).size,5,'urgent tier serves unserved peer before any second quantum');
   const client=await c.pool.connect();try{await client.query('BEGIN');await client.query('SELECT pg_advisory_xact_lock(7,1)');
    for(const [name,sql,args] of [
     ['BODY grant',"UPDATE transport_grant SET scope=jsonb_set(scope,'{capabilities}','[\"imap_headers\"]')",[]],
+    ['revoked grant',"UPDATE transport_grant SET state='revoked',scope=NULL",[]],
+    ['HEADER grant',"UPDATE transport_grant SET scope=jsonb_set(scope,'{capabilities}','[\"imap_body\"]')",[]],
+    ['recipient',"UPDATE incoming_ai_event SET authenticated_recipient_hash=repeat('0',64)",[]],
+    ['attempt expiry',"UPDATE incoming_ai_event SET attempt_deadline=clock_timestamp()-interval '1 second'",[]],
     ['expired grant',"UPDATE transport_grant SET scope=jsonb_set(scope,'{expiresAt}',to_jsonb((clock_timestamp()-interval '1 second')::text))",[]],
     ['suppression',"INSERT INTO suppression(tenant_id,recipient_hash,reason) SELECT tenant_id,authenticated_recipient_hash,'unsubscribe' FROM incoming_ai_event",[]],
     ['root',"UPDATE incoming_ai_event SET authenticated_root_message_id='<wrong@example.test>'",[]],
     ['sender',"UPDATE incoming_ai_event SET sender_binding=repeat('0',64)",[]],
+    ['recipient AAD',"UPDATE enrollment n SET recipient_envelope=(SELECT other.recipient_envelope FROM enrollment other WHERE other.id<>n.id ORDER BY other.id LIMIT 1)",[]],
     ['recipient AEAD',"UPDATE enrollment SET recipient_envelope='{}'::jsonb",[]],
     ['activity',"UPDATE capacity_lease SET state='waiting_capacity',expires_at=NULL",[]],
     ['TTL',"UPDATE incoming_ai_event SET expires_at=clock_timestamp()-interval '1 second'",[]],
@@ -345,9 +374,12 @@ test('F11 FIFO HEADER preference retains urgent fairness and exact bounded admis
     ['ordinary capacity',"UPDATE transport_operation SET operation=gen_random_uuid(),tenant_id=$1,mailbox_id=($2::uuid[])[slot],owner_process=gen_random_uuid(),owner_host='test',expires_at=clock_timestamp()+interval '1 minute',operation_purpose='header' WHERE protocol='imap' AND NOT header_reserved",[ordinary.tenant,[1,4,7,10].map(i=>c.participants[i]!.mailbox)]],
     ['BODY UNKNOWN cap',"UPDATE transport_operation SET operation=gen_random_uuid(),tenant_id=$1,mailbox_id=($2::uuid[])[slot],owner_process=gen_random_uuid(),owner_host='test',expires_at=clock_timestamp()+interval '1 minute',operation_purpose=NULL WHERE protocol='imap' AND slot>=2",[ordinary.tenant,[1,4,7,10].map(i=>c.participants[i]!.mailbox)]],
     ['missing reservation',"UPDATE transport_operation SET header_reserved=false",[]],
-   ] as [string,string,unknown[]][]){await client.query('SAVEPOINT gate');await client.query(sql,args);assert.deepEqual(await captureHeaderFrontierClient(client,c.config),[],name);await client.query('ROLLBACK TO SAVEPOINT gate');}
+   ] as [string,string,unknown[]][]){await client.query('SAVEPOINT gate');await client.query(sql,args);assert.deepEqual(await captureHeaderFrontierClient(client,c.config),[],name);assert.equal(await captureHeaderContextClient(client,c.config),['continuation','three windows','ordinary capacity','BODY UNKNOWN cap','missing reservation'].includes(name),'context '+name);await client.query('ROLLBACK TO SAVEPOINT gate');}
    await client.query("UPDATE transport_grant SET scope=jsonb_set(scope,'{capabilities}','[\"imap_headers\"]') WHERE mailbox_id=ANY($1::uuid[])",[targets.slice(0,3).map(t=>t.mailbox)]);assert.deepEqual(await captureHeaderFrontierClient(client,c.config),[],'do not promote fourth past denied oldest three');
-   assert.deepEqual(await captureHeaderFrontierClient(client,{...c.config,pollMode:'local_test'}),[]);
+   assert.equal(await captureHeaderContextClient(client,c.config),false,'no fourth unwindowed promotion');
+   await client.query("UPDATE incoming_ai_event SET window_start=statement_timestamp(),window_end=statement_timestamp()+interval '12 seconds',window_completed_at=statement_timestamp(),window_revision='1',window_mailbox_revision='0' WHERE mailbox_id=$1",[targets[3]!.mailbox]);assert.equal(await captureHeaderContextClient(client,c.config),true,'genuine admitted fourth remains context without frontier');
+   await client.query("UPDATE transport_grant SET state='revoked',scope=NULL WHERE mailbox_id=$1",[targets[3]!.mailbox]);assert.equal(await captureHeaderContextClient(client,c.config),false,'revoked admitted context remains denied');
+   assert.deepEqual(await captureHeaderFrontierClient(client,{...c.config,pollMode:'local_test'}),[]);assert.equal(await captureHeaderContextClient(client,{...c.config,pollMode:'local_test'}),false);
   }finally{await client.query('ROLLBACK');client.release();}
   const legacy=new RuntimeStore(c.pool,(client,t,m)=>authorizeTransport(client,c.config,t,m,'imap_headers'));await c.pool.query("UPDATE runtime_due SET service_seq=100 WHERE kind='poll'");await c.pool.query("UPDATE runtime_due SET service_seq=0 WHERE kind='poll' AND mailbox_id=$1",[ordinary.mailbox]);await c.pool.query("UPDATE runtime_tenant_turn SET service_seq=0 WHERE kind='poll'");const normal=await legacy.claim('poll');assert.ok(normal);assert.equal(normal.mailbox_id,ordinary.mailbox);await legacy.cancel(normal);
   assert.equal((await c.pool.query('SELECT count(*) FROM incoming_ai_event WHERE window_start IS NOT NULL')).rows[0].count,'0');assert.equal((await c.pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');

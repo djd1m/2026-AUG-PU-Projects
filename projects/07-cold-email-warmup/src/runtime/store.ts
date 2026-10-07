@@ -4,7 +4,7 @@ import { eligibilityTransaction } from '../consent/transaction.js';
 import { dispatchProjection } from '../dispatch/store.js';
 import { acquireTransportSlotInTransaction,releaseUnusedTransportSlot,type TransportSlot } from '../mailboxes/transport-slots.js';
 import type { Config } from '../config.js';
-import { openCaptureWindowClient,captureHeaderFrontierClient,type CaptureAdmission } from '../replies/context-store.js';
+import { openCaptureWindowClient,captureHeaderFrontierClient,captureHeaderContextClient,type CaptureAdmission } from '../replies/context-store.js';
 import { HttpError } from '../errors.js';
 export type RuntimeKind='poll'|'pool'|'dispatch';
 export type RuntimeReason='ready'|'waiting_peer'|'waiting_budget'|'waiting_capacity'|'waiting_pacing'|'transport_busy'|'provider_backoff'|'authority_denied'|'rescan_incomplete'|'cleanup_blocked'|'db_unavailable';
@@ -90,7 +90,8 @@ export class RuntimeStore {
   await c.query("UPDATE runtime_due SET state='ready',owner_id=NULL,lease_until=NULL,generation=generation+1 WHERE kind=$1 AND state='claimed' AND lease_until<=$2",[kind,now]);
   if(kind==='poll'&&this.nativePollAuthority&&!(await c.query("SELECT 1 FROM transport_operation WHERE protocol='imap' AND operation IS NULL LIMIT 1")).rowCount)return null;
   const frontier=kind==='poll'&&this.nativePollAuthority&&this.captureConfig?await captureHeaderFrontierClient(c,this.captureConfig):[];
-  let row=frontier.length?(await c.query(`SELECT d.* FROM runtime_due d JOIN runtime_tenant_turn t ON t.tenant_id=d.tenant_id AND t.kind=d.kind
+  const headerContext=kind==='poll'&&this.nativePollAuthority&&this.captureConfig?await captureHeaderContextClient(c,this.captureConfig):false;
+  let row=headerContext?(await c.query(`SELECT d.* FROM runtime_due d JOIN runtime_tenant_turn t ON t.tenant_id=d.tenant_id AND t.kind=d.kind
    LEFT JOIN mailbox_poll p ON p.mailbox_id=d.mailbox_id
    WHERE d.kind=$1 AND d.state='ready' AND d.next_check_at<=$2
    AND EXISTS(SELECT 1 FROM capacity_lease l WHERE l.mailbox_id=d.mailbox_id AND l.state='active' AND l.expires_at>$2)

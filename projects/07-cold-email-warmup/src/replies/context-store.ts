@@ -172,15 +172,25 @@ export async function captureHeaderFrontierClient(c:PoolClient,config:Config):Pr
   count(*) FILTER (WHERE NOT header_reserved AND operation IS NULL) AS free
   FROM transport_operation WHERE protocol='imap'`)).rows[0];
  if(Number(capacity.windows)>=3||Number(capacity.reserved)!==1||Number(capacity.bodies)>=3||Number(capacity.free)===0)return [];
- // Bound the original oldest three BEFORE filtering invalid/denied identities.
+ return authorizedCaptureHeadersClient(c,config,false);
+}
+
+// HEADER urgency is read-only and independent of first BODY-window capacity.
+export async function captureHeaderContextClient(c:PoolClient,config:Config):Promise<boolean>{
+ if(config.pollMode!=='live_provider')return false;
+ return (await authorizedCaptureHeadersClient(c,config,true)).length>0;
+}
+async function authorizedCaptureHeadersClient(c:PoolClient,config:Config,admitted:boolean):Promise<{tenant:string;mailbox:string}[]> {
+ // Bound identities before validating them; never promote an unwindowed fourth.
  const rows=(await c.query(`SELECT e.*,n.recipient_envelope,n.recipient_hash FROM
-  (SELECT * FROM incoming_ai_event WHERE capture_state='pending' AND window_start IS NULL AND source='imap_headers' AND attempt_deadline>clock_timestamp() ORDER BY capture_service_seq,id LIMIT 3) e
+  ((SELECT * FROM incoming_ai_event WHERE capture_state='pending' AND window_start IS NULL AND source='imap_headers' AND attempt_deadline>clock_timestamp() ORDER BY capture_service_seq,id LIMIT 3)
+   UNION ALL (SELECT * FROM incoming_ai_event WHERE $1 AND window_start IS NOT NULL AND window_end>clock_timestamp() AND capture_state IN ('pending','claimed') AND source='imap_headers' AND attempt_deadline>clock_timestamp() ORDER BY capture_service_seq,id LIMIT 3)) e
   JOIN enrollment n ON n.tenant_id=e.tenant_id AND n.id=e.enrollment_id
   JOIN send_job j ON j.tenant_id=e.tenant_id AND j.mailbox_id=e.mailbox_id AND j.id=e.root_job_id AND j.enrollment_id=e.enrollment_id AND j.parent_id IS NULL
   WHERE e.expires_at>clock_timestamp() AND e.authenticated_root_message_id=j.message_id AND e.authenticated_recipient_hash=n.recipient_hash
   AND EXISTS(SELECT 1 FROM capacity_lease l WHERE l.mailbox_id=e.mailbox_id AND l.state='active' AND l.expires_at>clock_timestamp())
   AND NOT EXISTS(SELECT 1 FROM suppression s WHERE s.tenant_id=e.tenant_id AND s.recipient_hash=e.authenticated_recipient_hash)
-  ORDER BY e.capture_service_seq,e.id`)).rows;
+  ORDER BY e.capture_service_seq,e.id`,[admitted])).rows;
  const eligible:{tenant:string;mailbox:string}[]=[];
  for(const row of rows){
   try{await authorizeTransport(c,config,row.tenant_id,row.mailbox_id,'imap_body');await authorizeTransport(c,config,row.tenant_id,row.mailbox_id,'imap_headers');}
