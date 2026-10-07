@@ -1,0 +1,97 @@
+{
+  "stage": "A18 MEDIUM test instrumentation",
+  "profile": "econom",
+  "requestedModel": "gpt-6.1-sol",
+  "requestedEffort": "medium",
+  "actualModel": null,
+  "actualEffort": null,
+  "usage": null,
+  "cost": null,
+  "missingData": [
+    "Host actual model/effort and usage/cost unavailable"
+  ],
+  "ack": "2026-10-07T02:44:41Z",
+  "sealedAt": "2026-10-07T02:51:20.177264+00:00",
+  "durationSeconds": 399.177264,
+  "baselineRevision": "c67eb5aa13d0917a817581bd4bf548beb6a4a1d8",
+  "sourceRevision": "8c00eb55cda2be0f8d8dec827d8fbd995665e74d",
+  "sourceScope": [
+    "tests/f10-runtime-process-fixture.ts",
+    "tests/f10-runtime-protocol.test.ts"
+  ],
+  "checks": {
+    "typecheck": 0,
+    "exactTwoFileLint": 0,
+    "diffCheck": 0,
+    "firstShortNative": 0,
+    "finalShortNative": 0,
+    "fairnessCleanupPrivateSchema": 0,
+    "observerAudit": {
+      "records": 42,
+      "entries": 3,
+      "opened": 1,
+      "denied": 2,
+      "sourceQueryBindingsVerified": true,
+      "missingActualRowCountMutationRejected": true
+    },
+    "immutableProductionDbBuild": true,
+    "allObservedPidsClosed": true
+  },
+  "actualWorker": {
+    "pid": 3764514,
+    "startTicks": "126437872",
+    "outcome": {
+      "code": 0,
+      "signal": null,
+      "utc": "2026-10-07T02:49:46.066Z",
+      "monotonicNs": "1264396065933469"
+    },
+    "joined": {
+      "utc": "2026-10-07T02:49:46.066Z",
+      "monotonicNs": "1264396066088179"
+    },
+    "drained": true,
+    "closedBodyOwners": true
+  },
+  "publicPreserved": true,
+  "publicResources": {
+    "physical": 0,
+    "runtime_claims": 0,
+    "body_claims": 1
+  },
+  "newOwnedSchemas": {
+    "short": {
+      "schema": "n7_a18_short_261007024441",
+      "counts": {
+        "physical": 0,
+        "runtime_claims": 0,
+        "body_claims": 0,
+        "tenants": 3,
+        "connected": 100
+      }
+    },
+    "short2": {
+      "schema": "n7_a18_short_261007024941",
+      "counts": {
+        "physical": 0,
+        "runtime_claims": 0,
+        "body_claims": 0,
+        "tenants": 3,
+        "connected": 100
+      }
+    }
+  },
+  "firstTypecheckConcreteFindingsPreserved": "typecheck.log",
+  "diskFreeBytes": 2322980864,
+  "observationalLimitations": [
+    "Same-client READ COMMITTED diagnostic snapshot is not production predicate reexecution.",
+    "Non-SQL decrypted-sender versus inherited-deadline null branch remains explicit non_sql_branch_gap if reached; actual main eligibility rowCount and selectedEvent are retained.",
+    "Short smoke validates successful and denied opens, not ALL30 convergence or full300s normative AC."
+  ],
+  "remainingMandatory": [
+    "fresh HIGH fullfault/current-unit/fullPG/material operational execution",
+    "fresh HIGH independent final review after execution"
+  ],
+  "nextActor": "n7_sol_coordinator assigns fresh HIGH verifier",
+  "status": "completed_author_scope"
+}

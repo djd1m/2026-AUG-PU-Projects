@@ -59,13 +59,13 @@
     "followup_status": "F07/F08/F09/F10 locally accepted and F10 integrated3566; expanded AC001–004 met, AC005–009 pending. Whole required_gates_passed remains false. F11 code remains unaccepted candidate."
   },
   "metrics": {
-    "elapsed_wall_ms": 62738858,
+    "elapsed_wall_ms": 64055364,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-07T02:31:41.736482+00:00"
+    "elapsed_as_of": "2026-10-07T02:53:38.242912+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 A16 timestamp fix frozen; A17 HIGH actual safe isolated native shutdown→fault verification",
+  "current_stage": "F11 A18 observer smoke passes; A19 actual HIGH exact instrumented admission diagnosis",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -139,16 +139,16 @@
   "continuation": {
     "responsible": "n7_sol_coordinator",
     "executor": "/root/n7_sol_coordinator/f11_operational_verifier_a11",
-    "attempt": "f11-operational-verify-a17",
+    "attempt": "f11-admission-diagnostic-a19",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T02:30:21Z",
+    "actual_ACK_at": "2026-10-07T02:52:28Z",
     "requested_model": "gpt-6.1-sol",
     "requested_effort": "high",
     "actual_model": null,
-    "source_revision": "c67eb5aa13d0917a817581bd4bf548beb6a4a1d8",
-    "freeze_at": "2026-10-07T02:47:21Z",
-    "deadline": "2026-10-07T02:50:21Z",
-    "next": "NEW own schema within existing n7f11_a8/public unchanged: inherited PGOPTIONS search_path genuine compiled short native0 first, then separate own schema fullFAULT300; current PG capacity fixture safe schema correction pending; NEW clean HIGH finalreview"
+    "source_revision": "8c00eb55cda2be0f8d8dec827d8fbd995665e74d",
+    "freeze_at": "2026-10-07T03:02:28Z",
+    "deadline": "2026-10-07T03:04:28Z",
+    "next": "ONE instrumented genuine fullFAULT title in fresh own schema inside existing DB; exact real admission branch/inputs correlate all30; sourcefix MEDIUM only if confirmed; remaining fullPG/unit/material/freshreview unchanged"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",

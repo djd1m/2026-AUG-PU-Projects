@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "F11 A16 timestamp fix frozen; A17 HIGH actual safe isolated native shutdown→fault verification",
+  "stage": "F11 A18 observer smoke passes; A19 actual HIGH exact instrumented admission diagnosis",
   "roots": {
     "project": "."
   },
@@ -22,7 +22,7 @@
   },
   "source": {
     "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
-    "current_revision": "c67eb5aa13d0917a817581bd4bf548beb6a4a1d8",
+    "current_revision": "8c00eb55cda2be0f8d8dec827d8fbd995665e74d",
     "build_revision": "c67eb5aa13d0917a817581bd4bf548beb6a4a1d8",
     "requirements": [
       {
@@ -45,9 +45,9 @@
       }
     ],
     "continuity": {
-      "expected_revision": "c67eb5aa13d0917a817581bd4bf548beb6a4a1d8",
-      "observed_revision": "c67eb5aa13d0917a817581bd4bf548beb6a4a1d8",
-      "reconciliation": "A16 exact2file cancellation timestamp correction build76; A17 independent prelaunch221 src76/tests53/db16/build76 universe immutable. Actual short compiled runtime private schema observed; current fault300 not yet launched."
+      "expected_revision": "8c00eb55cda2be0f8d8dec827d8fbd995665e74d",
+      "observed_revision": "8c00eb55cda2be0f8d8dec827d8fbd995665e74d",
+      "reconciliation": "A18 only2TESTfiles changed; production76/db16/build76 unchanged fromc67. A19 source/test/guard/runner prelaunch binding mandatory; no current fullfaultPASS yet."
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
     "integration_note": "F10 accepted/integrated3566 remains main product baseline. F11 c67 candidate unaccepted; A13 faultshutdown SQL23514 preserved, A15 exact rollback cause, A16 targeted static/build0, A17 actual safe unique-schema short before fault300. F12 accepted-interface prerequisite remains pending."
@@ -680,19 +680,19 @@
       "executor": "/root/n7_sol_coordinator/f11_operational_verifier_a11"
     }
   },
-  "current_stage": "F11 A16 timestamp fix frozen; A17 HIGH actual safe isolated native shutdown→fault verification",
+  "current_stage": "F11 A18 observer smoke passes; A19 actual HIGH exact instrumented admission diagnosis",
   "continuation": {
     "responsible": "n7_sol_coordinator",
     "executor": "/root/n7_sol_coordinator/f11_operational_verifier_a11",
-    "attempt": "f11-operational-verify-a17",
+    "attempt": "f11-admission-diagnostic-a19",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T02:30:21Z",
+    "actual_ACK_at": "2026-10-07T02:52:28Z",
     "requested_model": "gpt-6.1-sol",
     "requested_effort": "high",
     "actual_model": null,
-    "source_revision": "c67eb5aa13d0917a817581bd4bf548beb6a4a1d8",
-    "freeze_at": "2026-10-07T02:47:21Z",
-    "deadline": "2026-10-07T02:50:21Z",
-    "next": "NEW own schema within existing n7f11_a8/public unchanged: inherited PGOPTIONS search_path genuine compiled short native0 first, then separate own schema fullFAULT300; current PG capacity fixture safe schema correction pending; NEW clean HIGH finalreview"
+    "source_revision": "8c00eb55cda2be0f8d8dec827d8fbd995665e74d",
+    "freeze_at": "2026-10-07T03:02:28Z",
+    "deadline": "2026-10-07T03:04:28Z",
+    "next": "ONE instrumented genuine fullFAULT title in fresh own schema inside existing DB; exact real admission branch/inputs correlate all30; sourcefix MEDIUM only if confirmed; remaining fullPG/unit/material/freshreview unchanged"
   }
 }

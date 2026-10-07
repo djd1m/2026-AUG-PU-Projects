@@ -1,0 +1,564 @@
+{
+  "at": "2026-10-07T02:49:25.742371+00:00",
+  "files": [
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/receipt-a17.json",
+      "original_sha256": "8b5dda24f7594f448cf04c6a7b9472c98daa2660dbdd619c72f33e49ecf1ec3a",
+      "original_bytes": 205119,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/receipt-a17.json.gz",
+      "sha256": "0bdcc1f75e4851f029edcdcab396c1c8aaec0bf618e241b637579bf09e70de3d",
+      "bytes": 22559,
+      "lossless_gzip": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/report.md",
+      "original_sha256": "ac3d856b61c74839829c29f10820e3468ccf23907df0b2ddbad8e33d89561543",
+      "original_bytes": 3895,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/report.md",
+      "sha256": "ac3d856b61c74839829c29f10820e3468ccf23907df0b2ddbad8e33d89561543",
+      "bytes": 3895,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/raw-manifest.json",
+      "original_sha256": "a8239360903548e49f2b9332f6016dd80c848a43b07d4dc4fdf80a672b6a0fbb",
+      "original_bytes": 227539,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/raw-manifest.json.gz",
+      "sha256": "3051d366afa4eba84af09591bfe7f2e3c1cbe962f3083e5624ad62f463fa6c79",
+      "bytes": 76232,
+      "lossless_gzip": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/source-binding.json",
+      "original_sha256": "0f7132ed4ceb39734c475bdd2da3b4756a6ab73f844afee3ffc6b7a25bd75328",
+      "original_bytes": 36957,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/source-binding.json.gz",
+      "sha256": "3f7b85072fa74e9c16b8cffde01389f1f6e292eacfe1bca00137c21924c1a8bb",
+      "bytes": 11033,
+      "lossless_gzip": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/runner-freeze.json",
+      "original_sha256": "9e9ab0deb8f0683249975089ff3256d36e2e716dfc3384471907b8a0d66b0cf1",
+      "original_bytes": 515,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/runner-freeze.json",
+      "sha256": "9e9ab0deb8f0683249975089ff3256d36e2e716dfc3384471907b8a0d66b0cf1",
+      "bytes": 515,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/fault-analysis-partial.json",
+      "original_sha256": "fee658dd1dba7c314da9277366718256f7da6bbdbc3c642dbb8beb0125b6cad2",
+      "original_bytes": 46051,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/fault-analysis-partial.json.gz",
+      "sha256": "863dcf4e6c9890a99dd3f3fe7a02bd707e1b1e1c8d1fd15fe3bb2252e9324e6d",
+      "bytes": 6980,
+      "lossless_gzip": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/frontier-chronology-readonly.json",
+      "original_sha256": "a344c997cb23e14d68932acbcb0fc659969d0efb3dbadc88576b7177c8d1548f",
+      "original_bytes": 239754,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/frontier-chronology-readonly.json.gz",
+      "sha256": "d14b669382a270f8432c06ff7007c7761590fcad73d647308a6af9137c6f4578",
+      "bytes": 4976,
+      "lossless_gzip": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/phase-and-slo-audit.json",
+      "original_sha256": "ecf930ffc1b414f43a7b0593b857636d8e2318e145c6a208cbb4e449cc678ce8",
+      "original_bytes": 26253,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/phase-and-slo-audit.json",
+      "sha256": "ecf930ffc1b414f43a7b0593b857636d8e2318e145c6a208cbb4e449cc678ce8",
+      "bytes": 26253,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/public-before.json",
+      "original_sha256": "f9b6e85cf2ac2ed457e13d6cab4ba461da56457056d7445495fcd740a36e131b",
+      "original_bytes": 4825,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/public-before.json",
+      "sha256": "f9b6e85cf2ac2ed457e13d6cab4ba461da56457056d7445495fcd740a36e131b",
+      "bytes": 4825,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/public-live-catalog.json",
+      "original_sha256": "03c61913fb6be05f1ed177fb7fadffb260c779db46ec58646dd313e46f0ad967",
+      "original_bytes": 269,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/public-live-catalog.json",
+      "sha256": "03c61913fb6be05f1ed177fb7fadffb260c779db46ec58646dd313e46f0ad967",
+      "bytes": 269,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-short-setup.json",
+      "original_sha256": "ed36bbea3af740e0e0aee1c80eb7388e99c724df82c2f956f90ac7db94abcee8",
+      "original_bytes": 5629,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-short-setup.json",
+      "sha256": "ed36bbea3af740e0e0aee1c80eb7388e99c724df82c2f956f90ac7db94abcee8",
+      "bytes": 5629,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-fault-setup.json",
+      "original_sha256": "e754b27e5c0a48c15b74e118ebe7bbab1200dbb13f35f6a9142c13135e458489",
+      "original_bytes": 5629,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-fault-setup.json",
+      "sha256": "e754b27e5c0a48c15b74e118ebe7bbab1200dbb13f35f6a9142c13135e458489",
+      "bytes": 5629,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/terminal-db-readonly.json",
+      "original_sha256": "f5fe5d435278002e75693e57b819224b9f94f15850baa8355886f7ca9356d37c",
+      "original_bytes": 85699,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/terminal-db-readonly.json.gz",
+      "sha256": "6c36ef9d023750199fc703636d5c47987fc0b00be46ea7d812e6ca1107bc2867",
+      "bytes": 10241,
+      "lossless_gzip": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/units-a17.sh",
+      "original_sha256": "65df0f1e9c7906dc53223583d45455ac618493d1fe5e211cd659a5bcf8be2afe",
+      "original_bytes": 1393,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/units-a17.sh",
+      "sha256": "65df0f1e9c7906dc53223583d45455ac618493d1fe5e211cd659a5bcf8be2afe",
+      "bytes": 1393,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/units-freeze.json",
+      "original_sha256": "cc1b05322d6c3b01220dffefda8f4eedab42525b9d8af8e0bd9f69103119ce5e",
+      "original_bytes": 907,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/units-freeze.json",
+      "sha256": "cc1b05322d6c3b01220dffefda8f4eedab42525b9d8af8e0bd9f69103119ce5e",
+      "bytes": 907,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/units-native.log",
+      "original_sha256": "2d5406d5aebd3c47921eafef19b9e515e369a45b22ec04ca1259c64e6372c77d",
+      "original_bytes": 13066,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/units-native.log",
+      "sha256": "2d5406d5aebd3c47921eafef19b9e515e369a45b22ec04ca1259c64e6372c77d",
+      "bytes": 13066,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/units-native-exit.txt",
+      "original_sha256": "ca2ebdf97d7469496b1f4b78958f9dc8447efdcb623953fee7b6996b762f6fff",
+      "original_bytes": 4,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/units-native-exit.txt",
+      "sha256": "ca2ebdf97d7469496b1f4b78958f9dc8447efdcb623953fee7b6996b762f6fff",
+      "bytes": 4,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/units-start.txt",
+      "original_sha256": "dc9c3a91bc146559a70420e2df7e7c6e9ccc7637e275df72324efe931b640a1e",
+      "original_bytes": 31,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/units-start.txt",
+      "sha256": "dc9c3a91bc146559a70420e2df7e7c6e9ccc7637e275df72324efe931b640a1e",
+      "bytes": 31,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/units-joined.txt",
+      "original_sha256": "eb4167852a1487ccc93c3a629cd16f777dae947eb7525139302789a6e8b3094c",
+      "original_bytes": 31,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/units-joined.txt",
+      "sha256": "eb4167852a1487ccc93c3a629cd16f777dae947eb7525139302789a6e8b3094c",
+      "bytes": 31,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/f12-interface-candidate.md",
+      "original_sha256": "2ed9cab19d7b72dad70bd8e4b7509b3fc0605435406e34206e24c06ad19c786f",
+      "original_bytes": 4470,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/f12-interface-candidate.md",
+      "sha256": "2ed9cab19d7b72dad70bd8e4b7509b3fc0605435406e34206e24c06ad19c786f",
+      "bytes": 4470,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/f12-interface-provenance.json",
+      "original_sha256": "17fd6d1d2f491e77aaf74833f20152c71fed12bddc7856c82f4d4ef639f708aa",
+      "original_bytes": 1224,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/f12-interface-provenance.json",
+      "sha256": "17fd6d1d2f491e77aaf74833f20152c71fed12bddc7856c82f4d4ef639f708aa",
+      "bytes": 1224,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/fault/all30-body-1791340378350.json",
+      "original_sha256": "a02952055475b9714172dfcafdb6fe1997e859c6262b29a032bd03d1b7f2ee92",
+      "original_bytes": 37554200,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/fault/all30-body-1791340378350.json.gz",
+      "sha256": "c2dbc6e6cd691c7d6637e955d0b03805e75a3cbf2be1cb7343f3303266296704",
+      "bytes": 1161752,
+      "lossless_gzip": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3484032-909758.json",
+      "original_sha256": "cab30ba25273ac3f98ea8707bfc2c95b9adbc6837fb20aaa22c2a7c25f506848",
+      "original_bytes": 310,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3484032-909758.json",
+      "sha256": "cab30ba25273ac3f98ea8707bfc2c95b9adbc6837fb20aaa22c2a7c25f506848",
+      "bytes": 310,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3484032-909822.json",
+      "original_sha256": "f80cbb417dd72f7d6f5ed45d38d2b595b86b5674e5cc005e51d8e3401124e4a9",
+      "original_bytes": 310,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3484032-909822.json",
+      "sha256": "f80cbb417dd72f7d6f5ed45d38d2b595b86b5674e5cc005e51d8e3401124e4a9",
+      "bytes": 310,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3485529-909767.json",
+      "original_sha256": "6939d29af8dcfd46fcafb447d32fe4699355bfdf4bb7061fbf9fe429e1c18651",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3485529-909767.json",
+      "sha256": "6939d29af8dcfd46fcafb447d32fe4699355bfdf4bb7061fbf9fe429e1c18651",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3485529-909777.json",
+      "original_sha256": "d4f2035a8a9599574064a994213b0d7be8863c715a70a1b09936ee38b73ce406",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3485529-909777.json",
+      "sha256": "d4f2035a8a9599574064a994213b0d7be8863c715a70a1b09936ee38b73ce406",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3485529-909778.json",
+      "original_sha256": "20e207816551c3a465fc70be6130d3fcaf0346ddad292737141f9ac28efcc94c",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3485529-909778.json",
+      "sha256": "20e207816551c3a465fc70be6130d3fcaf0346ddad292737141f9ac28efcc94c",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3485529-909779.json",
+      "original_sha256": "eb5b1eb45a53555f68f23e8258c63aa208dd7cd2454bc89dfff8eda682700001",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3485529-909779.json",
+      "sha256": "eb5b1eb45a53555f68f23e8258c63aa208dd7cd2454bc89dfff8eda682700001",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3485529-909780.json",
+      "original_sha256": "6ae1710bf528e7569651e19c150d358dae7d2950054867b33d8a5ace37b8b4d2",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3485529-909780.json",
+      "sha256": "6ae1710bf528e7569651e19c150d358dae7d2950054867b33d8a5ace37b8b4d2",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3485529-909781.json",
+      "original_sha256": "d90ba3f62c77893bb6a4489950018ffcd4eb36eb9cbd46387d0cad68da7c78a4",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3485529-909781.json",
+      "sha256": "d90ba3f62c77893bb6a4489950018ffcd4eb36eb9cbd46387d0cad68da7c78a4",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3500340-909899.json",
+      "original_sha256": "e774dacd308be33a4f936ef8a71d205fc806a2ba6e9f7d5aaef8f98517eb4227",
+      "original_bytes": 310,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3500340-909899.json",
+      "sha256": "e774dacd308be33a4f936ef8a71d205fc806a2ba6e9f7d5aaef8f98517eb4227",
+      "bytes": 310,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501502-909908.json",
+      "original_sha256": "f2497d88db86d1c253935ae9131b85239c1f70bc3078aa9609ecc606295d3442",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501502-909908.json",
+      "sha256": "f2497d88db86d1c253935ae9131b85239c1f70bc3078aa9609ecc606295d3442",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501502-909910.json",
+      "original_sha256": "056e5f67a9522f78bdf7befe33f4b5e4cbdc4b449b021a769f64807a779f7214",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501502-909910.json",
+      "sha256": "056e5f67a9522f78bdf7befe33f4b5e4cbdc4b449b021a769f64807a779f7214",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501502-909911.json",
+      "original_sha256": "65ca458199397d0644fe542958242a52bb160cf5f59872b6d44d7c8bcbe3f513",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501502-909911.json",
+      "sha256": "65ca458199397d0644fe542958242a52bb160cf5f59872b6d44d7c8bcbe3f513",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501502-909912.json",
+      "original_sha256": "34072f9f750694b126fb7e303467fe6c31566af2b75fd22472e19c430dd78ac1",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501502-909912.json",
+      "sha256": "34072f9f750694b126fb7e303467fe6c31566af2b75fd22472e19c430dd78ac1",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501502-909913.json",
+      "original_sha256": "fa23bba3729a64d9020a99ecd23daaa04b2ae414fcc87ddad57a7ed729368dd8",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501502-909913.json",
+      "sha256": "fa23bba3729a64d9020a99ecd23daaa04b2ae414fcc87ddad57a7ed729368dd8",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501502-909914.json",
+      "original_sha256": "17ea1fe77b5d791f064ae67913d94efb4cf5ce4a93b54703d22d28fffe5629e7",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501502-909914.json",
+      "sha256": "17ea1fe77b5d791f064ae67913d94efb4cf5ce4a93b54703d22d28fffe5629e7",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501648-909909.json",
+      "original_sha256": "61e91a254c7201e3de94234ddcc20b54a6470dcce22b9eec0f63e6bffab6455d",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501648-909909.json",
+      "sha256": "61e91a254c7201e3de94234ddcc20b54a6470dcce22b9eec0f63e6bffab6455d",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501648-909915.json",
+      "original_sha256": "b1888c4fb9e7f74261371fc59e728a2fcae45ee7bbc0b454e37118935c2392c6",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501648-909915.json",
+      "sha256": "b1888c4fb9e7f74261371fc59e728a2fcae45ee7bbc0b454e37118935c2392c6",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501648-909916.json",
+      "original_sha256": "6f6bb769550bc44c8b7a0e1c55ab198deed85ce171bc7eae32ad610179c0f17f",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501648-909916.json",
+      "sha256": "6f6bb769550bc44c8b7a0e1c55ab198deed85ce171bc7eae32ad610179c0f17f",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501648-909917.json",
+      "original_sha256": "40748d666d491a8215a7f0e2a52a05eceb92ef3e066ee544b1913536ef30a534",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501648-909917.json",
+      "sha256": "40748d666d491a8215a7f0e2a52a05eceb92ef3e066ee544b1913536ef30a534",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501648-909918.json",
+      "original_sha256": "f4b7e9d0c3353a5de3a7b93e7989dfee4001f6d82e24ccc3e39c96edf1b92269",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501648-909918.json",
+      "sha256": "f4b7e9d0c3353a5de3a7b93e7989dfee4001f6d82e24ccc3e39c96edf1b92269",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501648-909919.json",
+      "original_sha256": "91d1dbacebecb7e571434a2f316692cf4dfec4472954047d0c385c4a52de2c97",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501648-909919.json",
+      "sha256": "91d1dbacebecb7e571434a2f316692cf4dfec4472954047d0c385c4a52de2c97",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501648-910368.json",
+      "original_sha256": "5a7a38e14df247c361948b5e5be7337e73e536ed699c997cc7c2c9b3a3c869c5",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501648-910368.json",
+      "sha256": "5a7a38e14df247c361948b5e5be7337e73e536ed699c997cc7c2c9b3a3c869c5",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501648-910369.json",
+      "original_sha256": "fe04229e023bfbed0f6f441d25b5f4cb2ced123a0dc89db622dc55b3776664e6",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501648-910369.json",
+      "sha256": "fe04229e023bfbed0f6f441d25b5f4cb2ced123a0dc89db622dc55b3776664e6",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501648-910396.json",
+      "original_sha256": "237b74fd47b3e1918d7a47eb914352c9b6bc933b72f180d9a9d96b967f93cdb8",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501648-910396.json",
+      "sha256": "237b74fd47b3e1918d7a47eb914352c9b6bc933b72f180d9a9d96b967f93cdb8",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501648-910397.json",
+      "original_sha256": "fecf811a95932305d714cec0583cee4775e657fb93886005335ac37e3856a271",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501648-910397.json",
+      "sha256": "fecf811a95932305d714cec0583cee4775e657fb93886005335ac37e3856a271",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501648-910483.json",
+      "original_sha256": "3932bf6a247e9b1bdd4c2a1a4c76217fa7e262a0f0c2ee170a6cf3338c0baae4",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501648-910483.json",
+      "sha256": "3932bf6a247e9b1bdd4c2a1a4c76217fa7e262a0f0c2ee170a6cf3338c0baae4",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3501648-910484.json",
+      "original_sha256": "0bdcb71115a417cf82a9c0890feea6212695fb51efaac114b0e3f32dfd619e1e",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3501648-910484.json",
+      "sha256": "0bdcb71115a417cf82a9c0890feea6212695fb51efaac114b0e3f32dfd619e1e",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3549124-910321.json",
+      "original_sha256": "befaff76e80d30e687e5d7c1f3cd8091093099a820268e383ea6689c5b052ff8",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3549124-910321.json",
+      "sha256": "befaff76e80d30e687e5d7c1f3cd8091093099a820268e383ea6689c5b052ff8",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3549124-910322.json",
+      "original_sha256": "ef779cf8c30c2392ed66a1253da66f04d161d3e4f4735061de3010f45e2e73ec",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3549124-910322.json",
+      "sha256": "ef779cf8c30c2392ed66a1253da66f04d161d3e4f4735061de3010f45e2e73ec",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3549124-910323.json",
+      "original_sha256": "061251224fe6d79151ea0b6751dabfbce3192f86c9eb2d20edd1513266934a5a",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3549124-910323.json",
+      "sha256": "061251224fe6d79151ea0b6751dabfbce3192f86c9eb2d20edd1513266934a5a",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3549124-910324.json",
+      "original_sha256": "b137c7753716fe4141f543bfab49d3c8257aa77908d070bc9c37152e4480ba3c",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3549124-910324.json",
+      "sha256": "b137c7753716fe4141f543bfab49d3c8257aa77908d070bc9c37152e4480ba3c",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3549124-910325.json",
+      "original_sha256": "71f0b2964f8dc32e73044e0fe3852494fc6c8ad442a704bb9889385e90e3b8ad",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3549124-910325.json",
+      "sha256": "71f0b2964f8dc32e73044e0fe3852494fc6c8ad442a704bb9889385e90e3b8ad",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3549124-910326.json",
+      "original_sha256": "65e4a4a0bcebf8bbd688f02dc5370a40bba3f1f4d4a83c516618445dbc613d40",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3549124-910326.json",
+      "sha256": "65e4a4a0bcebf8bbd688f02dc5370a40bba3f1f4d4a83c516618445dbc613d40",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3549124-910395.json",
+      "original_sha256": "3bbac1425002f1d93cf7355325c17c04144ed2439838f91856a02a17fb1ea55b",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3549124-910395.json",
+      "sha256": "3bbac1425002f1d93cf7355325c17c04144ed2439838f91856a02a17fb1ea55b",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3549124-910449.json",
+      "original_sha256": "245b5501197d7d937b44cc5119538119cb7c06c7ee5e7984ae9a3ea06470f482",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3549124-910449.json",
+      "sha256": "245b5501197d7d937b44cc5119538119cb7c06c7ee5e7984ae9a3ea06470f482",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3549124-910450.json",
+      "original_sha256": "f0eb6863c9d1c9ba5c3032d3686f5b3ecae5578696ee554c6c9c361346b1af75",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3549124-910450.json",
+      "sha256": "f0eb6863c9d1c9ba5c3032d3686f5b3ecae5578696ee554c6c9c361346b1af75",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3549124-910493.json",
+      "original_sha256": "b1f27a8962a76f2a9b1385566e2e28348ac91514aa50c9966bd6aea156a120cb",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3549124-910493.json",
+      "sha256": "b1f27a8962a76f2a9b1385566e2e28348ac91514aa50c9966bd6aea156a120cb",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3549124-910494.json",
+      "original_sha256": "c424a24d2ea1df9d1dd60e7b56e34a231071977364516e67a6c60433253879db",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3549124-910494.json",
+      "sha256": "c424a24d2ea1df9d1dd60e7b56e34a231071977364516e67a6c60433253879db",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3549124-910543.json",
+      "original_sha256": "ccdb90d2b2eec13c6b3779af73333740d9c5d1e43062b9662b0cf1d779338343",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3549124-910543.json",
+      "sha256": "ccdb90d2b2eec13c6b3779af73333740d9c5d1e43062b9662b0cf1d779338343",
+      "bytes": 312,
+      "lossless_gzip": false
+    },
+    {
+      "original_path": "/tmp/n7-f11-context-verify-a17/schema-session-3549124-910553.json",
+      "original_sha256": "a08a5388ae5789b2e7ba8d03d1b6f9890cf96d3fad47c738aa5a5b2ef0d87233",
+      "original_bytes": 312,
+      "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f11-operational-a17-terminal/schema-session-3549124-910553.json",
+      "sha256": "a08a5388ae5789b2e7ba8d03d1b6f9890cf96d3fad47c738aa5a5b2ef0d87233",
+      "bytes": 312,
+      "lossless_gzip": false
+    }
+  ],
+  "all_nonselected_original_raw_preserved": true
+}
