@@ -17,7 +17,10 @@ import { SubmissionStore } from '../src/dispatch/submission.js';
 import { seedTestEntitlement } from './billing-fixture.js';
 import { currentEntitlement } from '../src/billing/plans.js';
 test('F07 real PostgreSQL capacity boundaries and atomic safety',{timeout:90000},async t=>{
- const config=loadConfig(),pool=createPool(config.databaseUrl);await migrate(pool);await migrate(pool);
+ const config=loadConfig(),pool=createPool(config.databaseUrl),parent=process.env.N7_TEST_SCHEMA!;
+ assert.match(parent,/^n7_[a-z0-9_]{1,59}$/);const lease=JSON.parse(await readFile(process.env.N7_DB_OWNERSHIP_LEASE!,'utf8')),owner=await pool.connect();
+ try{await owner.query('BEGIN');await owner.query('SELECT pg_advisory_xact_lock(7,1)');const identity=(await owner.query("SELECT current_database() db,current_user role,current_schema() schema,(SELECT pg_get_userbyid(datdba) FROM pg_database WHERE datname=current_database()) owner")).rows[0];assert.equal(identity.db,'n7f11_a8');assert.equal(identity.db,lease.database);assert.equal(identity.role,'n7');assert.equal(identity.role,lease.owner_role);assert.equal(identity.owner,'n7');assert.equal(identity.schema,parent);assert.equal((await owner.query('SELECT pg_get_userbyid(nspowner) owner FROM pg_namespace WHERE nspname=$1',[parent])).rows[0].owner,'n7');await owner.query('COMMIT');}catch(error){await owner.query('ROLLBACK');throw error;}finally{owner.release();}
+ await migrate(pool);await migrate(pool);
  await pool.query('TRUNCATE tenant,auth_bucket,public_stop_bucket CASCADE');
  const boxes=new MailboxStore(pool,config.credentialKeyring,config.providerAllowlist,async()=>[{address:'8.8.8.8',family:4}]);
  const capacity=new CapacityStore(pool),consents=new ConsentStore(pool,config.credentialKeyring),seams=new DispatchSeams(pool);
@@ -105,15 +108,27 @@ test('F07 real PostgreSQL capacity boundaries and atomic safety',{timeout:90000}
    }finally{await new Promise<void>(r=>app.server.close(()=>r()));}
   });
   await t.test('real schema11 to12 upgrade preserves envelope states and has no automatic leases',async()=>{
-   const database='n7_f07_migration_'+randomUUID().replaceAll('-','');await pool.query('CREATE DATABASE '+database);
-   const url=new URL(config.databaseUrl);url.pathname='/'+database;const upgrade=createPool(url.toString());
+   const schema='n7_f07_upgrade_'+randomUUID().replaceAll('-','');
+   const lease=JSON.parse(await readFile(process.env.N7_DB_OWNERSHIP_LEASE!,'utf8'));
+   const parent=process.env.N7_TEST_SCHEMA!;assert.match(parent,/^n7_[a-z0-9_]{1,59}$/);
+   const digest=async()=>{const snapshot:Record<string,unknown>={};for(const namespace of ['public',parent])for(const {tablename}of(await pool.query('SELECT tablename FROM pg_tables WHERE schemaname=$1 ORDER BY tablename',[namespace])).rows){assert.match(tablename,/^[a-z_][a-z0-9_]*$/);snapshot[namespace+'.'+tablename]=(await pool.query(`SELECT count(*)::int n,md5(COALESCE(string_agg(to_jsonb(e)::text,E'\\n' ORDER BY to_jsonb(e)::text),'')) digest FROM "${namespace}"."${tablename}" e`)).rows[0];}return snapshot;};
+   const before=await digest(),owner=await pool.connect();
+   try{await owner.query('BEGIN');await owner.query('SELECT pg_advisory_xact_lock(7,1)');
+    const identity=(await owner.query("SELECT current_database() db,current_user role,current_schema() schema,(SELECT pg_get_userbyid(datdba) FROM pg_database WHERE datname=current_database()) owner")).rows[0];
+    assert.equal(identity.db,'n7f11_a8');assert.equal(identity.db,lease.database);assert.equal(identity.role,'n7');assert.equal(identity.role,lease.owner_role);assert.equal(identity.owner,'n7');assert.equal(identity.schema,parent);
+    assert.equal((await owner.query('SELECT count(*)::int n FROM pg_namespace WHERE nspname=$1',[schema])).rows[0].n,0);
+    await owner.query(`CREATE SCHEMA "${schema}" AUTHORIZATION n7`);await owner.query('COMMIT');
+   }catch(error){await owner.query('ROLLBACK');throw error;}finally{owner.release();}
+   const url=new URL(config.databaseUrl);url.searchParams.set('options','-c search_path='+schema);const upgrade=createPool(url.toString());
    try {
+    const identity=(await upgrade.query("SELECT current_database() db,current_user role,current_schema() schema,current_setting('search_path') path")).rows[0];assert.equal(identity.db,'n7f11_a8');assert.equal(identity.role,'n7');assert.equal(identity.schema,schema);assert.equal(identity.path,schema);
     const files=['001-init','002-mailboxes-consent','003-dispatch','004-claim-order','005-submission','006-replies','007-reply-tail-horizon','008-suppression-fixture','009-poll-owner','010-billing','011-evidence'];
     for(const file of files)await upgrade.query(await readFile(new URL('../db/'+file+'.sql',import.meta.url),'utf8'));
     const source=(await pool.query('SELECT * FROM mailbox WHERE id=$1',[ids[30]])).rows[0];await upgrade.query('INSERT INTO tenant(id) VALUES($1)',[source.tenant_id]);
     await upgrade.query('INSERT INTO mailbox(id,tenant_id,label,state,credential_envelope,metadata,daily_limit,provider_limit) VALUES($1,$2,$3,$4,$5,$6,$7,$8)',[source.id,source.tenant_id,source.label,source.state,source.credential_envelope,source.metadata,source.daily_limit,source.provider_limit]);
-    await migrate(upgrade);await migrate(upgrade);assert.equal(await ready(upgrade),true);const saved=(await upgrade.query('SELECT * FROM mailbox WHERE id=$1',[source.id])).rows[0];assert.deepEqual(saved.credential_envelope,source.credential_envelope);assert.equal(saved.state,source.state);assert.equal(Number((await upgrade.query('SELECT count(*) FROM capacity_lease')).rows[0].count),0);
-   }finally{await upgrade.end();await pool.query('DROP DATABASE '+database);}
+    await migrate(upgrade);assert.equal(await ready(upgrade),true);await migrate(upgrade);assert.equal(await ready(upgrade),true);const saved=(await upgrade.query('SELECT * FROM mailbox WHERE id=$1',[source.id])).rows[0];assert.deepEqual(saved.credential_envelope,source.credential_envelope);assert.equal(saved.state,source.state);assert.equal(Number((await upgrade.query('SELECT count(*) FROM capacity_lease')).rows[0].count),0);
+    assert.equal((await upgrade.query("SELECT count(*)::int n FROM pg_constraint k JOIN pg_class a ON a.oid=k.conrelid JOIN pg_namespace an ON an.oid=a.relnamespace JOIN pg_class b ON b.oid=k.confrelid JOIN pg_namespace bn ON bn.oid=b.relnamespace WHERE k.contype='f' AND an.nspname=$1 AND bn.nspname<>$1",[schema])).rows[0].n,0);
+   }finally{await upgrade.end();const after=await digest();assert.deepEqual(after,before);console.log(JSON.stringify({upgradeSchema:schema,parentSchema:parent,before,after}));}
   });
   await t.test('additive migration idempotency keeps records without implicit lease',async()=>{
    const total=(await boxes.list(tenants[0]!)).total;await migrate(pool);assert.equal(await ready(pool),true);assert.equal((await boxes.list(tenants[0]!)).total,total);
