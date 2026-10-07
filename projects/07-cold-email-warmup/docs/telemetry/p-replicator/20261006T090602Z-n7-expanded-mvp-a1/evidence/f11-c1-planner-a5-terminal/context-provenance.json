@@ -1,0 +1,368 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-c1-adjudication-a5-native",
+  "launch_sha256": "07991b093645002851040f4085998f8e2b077cbfbcd77709609d456cb8de32a7",
+  "context_manifest_sha256": "776cb38b51156789fd3b5bd271c2489029ad81b48db2f4349a61ed321138f69b",
+  "source_manifest_sha256": "1aec82094f050b4382a0cf75f54b83b7610a4bbf43b65d4acb97f1db4e610815",
+  "objective_sha256": "018fa7430bef42b47d09a6c190e6c742d3560a44413d4a1378dc1b4ec140589f",
+  "source_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+  "accepted_f10_revision": "3566a6a785cc1d0cd0f6b35140af1604ee05c003",
+  "read_scope": "bounded relevant clauses and frozen legitimate code/test; full-file hash verification is not full reading",
+  "excluded_context_read": false,
+  "normative_files": [
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/01_specification.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/f10-durable-runtime/01_specification.md",
+      "sha256": "410d329fcc9d433f51e554310318457096a8dfdd82aad9754e47d7122744eeb8",
+      "bytes": 16218,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/02_pseudocode.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/f10-durable-runtime/02_pseudocode.md",
+      "sha256": "c08da0230b35a07f749f186ce0c54d363662c1c70e3e95e617e321974e456fdb",
+      "bytes": 17902,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/03_architecture.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/f10-durable-runtime/03_architecture.md",
+      "sha256": "7ba1644e010feb420901d5b24e5a41fd2ec959a237f5f72b85d4fb31f6b12df1",
+      "bytes": 13233,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/04_refinement.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/f10-durable-runtime/04_refinement.md",
+      "sha256": "a28d4e29ae8e54ae487caaa285938059b67c215546443baa66e1d7b4c70e1300",
+      "bytes": 13981,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/05_completion.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/f10-durable-runtime/05_completion.md",
+      "sha256": "913b45a0e49dbfc95e98d33db485c382d1e935f77f3559c2fd1e4835e2278b27",
+      "bytes": 8866,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/01_specification.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/01_specification.md",
+      "sha256": "dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+      "bytes": 8592,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/02_pseudocode.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/02_pseudocode.md",
+      "sha256": "1deb0b3d98038350f2284e9af0313df8d3792c0b0b1c8be869b8da750b5a1752",
+      "bytes": 12226,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/03_architecture.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/03_architecture.md",
+      "sha256": "307b5f5fc82e483f3d880b108c6abac25c44ba43e01ec6eaa001864179850dfe",
+      "bytes": 6923,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/04_refinement.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/04_refinement.md",
+      "sha256": "ca4f3cb774b0a3cad91cb4e3cbab21f0e951c9fc9e9fd52b2308794c441fa8de",
+      "bytes": 4699,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/05_completion.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/05_completion.md",
+      "sha256": "5bb05f10bbcc155b96d0f0d0b8594305fb1ee1cebfdf1fef1aac28e1303da6f2",
+      "bytes": 7125,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/ADR.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/ADR.md",
+      "sha256": "6baf1874848d3c4bceb8eab65ccfc12ccd6bf6920c9a9a19a2e6bcc7a32880a4",
+      "bytes": 1739,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/decisions-owner.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/decisions-owner.md",
+      "sha256": "cf47d55af1d5ad4cd5f34c7531f1d2004dfdc98076e7459c76af8b93f3e709d8",
+      "bytes": 8783,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/plans/expanded-mvp-plan.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/plans/expanded-mvp-plan.md",
+      "sha256": "cb9449fb233471275dd6ee67a496d8d04f38ddedf637bdfe4588dfc9689fb13d",
+      "bytes": 18681,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/ai-policy-v1.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/ai-policy-v1.md",
+      "sha256": "d3d7c9d4614134f1dca9078ed797e3f8ee94a7bc613856bb54f2f2628b566512",
+      "bytes": 13041,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/n7-f11-context-plan-validation-a28-native/report.md",
+      "origin": "/tmp/n7-f11-context-plan-validation-a28-native/report.md",
+      "sha256": "745545a9fb09eda73264c957fd6f1eb225702e42492c2da9a98f4581bc1da201",
+      "bytes": 17397,
+      "role": "approved original planner / independently corrected planner context"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/n7-f11-context-plan-a1c-cli/plan.md",
+      "origin": "/tmp/n7-f11-context-plan-a1c-cli/plan.md",
+      "sha256": "6a55facebae60282a6580a3809cbfa9e662214e4621814447c6ffac03523e364",
+      "bytes": 18235,
+      "role": "approved original planner / independently corrected planner context"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/AGENTS.md",
+      "origin": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/AGENTS.md",
+      "git_revision": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
+      "sha256": "ca1b4cc25738f7d9d58f37da640c741d79befa45e2209364474bea6d097181d8",
+      "bytes": 7418,
+      "role": "owner execution instruction"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/CLAUDE.md",
+      "origin": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/CLAUDE.md",
+      "git_revision": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
+      "sha256": "c1669853c58eddd6994761d510f5f1a4d1b992b50e16f8ebedf18a10937144a2",
+      "bytes": 13438,
+      "role": "owner execution instruction"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/CLAUDE.md",
+      "origin": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/CLAUDE.md",
+      "git_revision": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
+      "sha256": "3b548fa6dea02c7639aa7fbdfdc3fa1f7bbf90b6726c406501d89cc2b3fe3ba0",
+      "bytes": 7533,
+      "role": "owner execution instruction"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/docs/development/model-routing-econom.md",
+      "origin": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/docs/development/model-routing-econom.md",
+      "git_revision": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
+      "sha256": "4622c96c879baa08d548f99b4f48ec19e7f59bb0eb91b2a58de46db4a079ee09",
+      "bytes": 5589,
+      "role": "owner execution instruction"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/.claude/rules/complexity-router.md",
+      "origin": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/.claude/rules/complexity-router.md",
+      "git_revision": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
+      "sha256": "422a1d1952f7755c1ea772b33e9e41e1bd78a239af8a0a490f03bc48eb4e0c70",
+      "bytes": 10185,
+      "role": "owner execution instruction"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/.claude/rules/project-work-companion-local.md",
+      "origin": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/.claude/rules/project-work-companion-local.md",
+      "git_revision": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
+      "sha256": "273c7cb0d069609ba2823786e98f914362bc1fb38d864e3e4f720d6f3ecddbc4",
+      "bytes": 799,
+      "role": "owner execution instruction"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/.claude/skills/project-work-companion/SKILL.md",
+      "origin": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/.claude/skills/project-work-companion/SKILL.md",
+      "git_revision": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
+      "sha256": "7d27b2e123cfab42ddb5d8930ac1a6fce3aaaeb3ceb626f77a9f2cad56858403",
+      "bytes": 6121,
+      "role": "owner execution instruction"
+    }
+  ],
+  "source_files": [
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/src/runtime/loop.ts",
+      "original_path": "projects/07-cold-email-warmup/src/runtime/loop.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "c34da549a41be813b60551bbd1a6e2a4a4dafb97762a0d824b7eafc45430063c",
+      "bytes": 2378,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/src/runtime/store.ts",
+      "original_path": "projects/07-cold-email-warmup/src/runtime/store.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "983a1e5331f17bc7312a4c3f8ea95c7c2728e60b24d5e14708a9084e50fcff28",
+      "bytes": 13726,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/src/runtime/worker.ts",
+      "original_path": "projects/07-cold-email-warmup/src/runtime/worker.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "820513ecaa13b25bededc8845306365f635d1dae41232451cd96a2decc31c774",
+      "bytes": 3559,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/src/replies/adapter.ts",
+      "original_path": "projects/07-cold-email-warmup/src/replies/adapter.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "bfd72f3411bac22931e1516ccae8c149aa2ccfa83579cbfd8c995a852294be3f",
+      "bytes": 14860,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/src/replies/context-store.ts",
+      "original_path": "projects/07-cold-email-warmup/src/replies/context-store.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "4945c6cb11c1c2654935fa60a1fbffda8f4515ec524ed08f78b2beef5a236c63",
+      "bytes": 15900,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/src/replies/store.ts",
+      "original_path": "projects/07-cold-email-warmup/src/replies/store.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "867993c5161382e870ecab97a1f336290b1e85f81a750059ae5180f107fa196d",
+      "bytes": 11889,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/src/replies/body.ts",
+      "original_path": "projects/07-cold-email-warmup/src/replies/body.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "e70c4f6501b980bd48e1f003bdd420af61000062e6d9db711195ffd22a53552f",
+      "bytes": 7736,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/src/replies/crypto.ts",
+      "original_path": "projects/07-cold-email-warmup/src/replies/crypto.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "d2e0ba42176f9e6546d3c8a43284ca7787ed07228c0a0a9ffabd5a760465199e",
+      "bytes": 2158,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/src/mailboxes/transport-slots.ts",
+      "original_path": "projects/07-cold-email-warmup/src/mailboxes/transport-slots.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "d71a32e71b66fa419e118aa6b93fd355c662bd9188f7f97dab3b995409c7d76c",
+      "bytes": 4483,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/src/mailboxes/transport-authority.ts",
+      "original_path": "projects/07-cold-email-warmup/src/mailboxes/transport-authority.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "0143e31bb23808b59a64f5dbfa4724ad849ecd3418fe84820c141c4aac291153",
+      "bytes": 5829,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/src/mailboxes/transport-channel.ts",
+      "original_path": "projects/07-cold-email-warmup/src/mailboxes/transport-channel.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "f4a54315ac5c547b2cf40c59fbcbd5e99ef228ae02b2a62b0796ebbcf84ad36f",
+      "bytes": 10123,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/src/mailboxes/transport-child.ts",
+      "original_path": "projects/07-cold-email-warmup/src/mailboxes/transport-child.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "a5e234a6cd31d511fca1d9bcdc3b5cf74521f26f2e6890e2729e040b0e8b7dc3",
+      "bytes": 1621,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/src/mailboxes/transport-lifetime.ts",
+      "original_path": "projects/07-cold-email-warmup/src/mailboxes/transport-lifetime.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "9c51f72fede40727026781083f60371ec160ddc7e6a09c780697336eb7d6ce0e",
+      "bytes": 2942,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/db/016-inbound-context.sql",
+      "original_path": "projects/07-cold-email-warmup/db/016-inbound-context.sql",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "daac2f541bab281ed9e30ad6bf4e64eafd33e9a97c4f59679e4e87f478b6b252",
+      "bytes": 3726,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/tests/f10-runtime-integration.test.ts",
+      "original_path": "projects/07-cold-email-warmup/tests/f10-runtime-integration.test.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "e7fabd24ea02d2d52bc5b7571d4338c4d471cde58741812496061afaa5679929",
+      "bytes": 37686,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/tests/f11-body-protocol.test.ts",
+      "original_path": "projects/07-cold-email-warmup/tests/f11-body-protocol.test.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "fc8f2d0babad638d064d49264d49e74729e72eecb1c3bec556b9f9c9b91ec2c8",
+      "bytes": 1990,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/tests/f11-context-integration.test.ts",
+      "original_path": "projects/07-cold-email-warmup/tests/f11-context-integration.test.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "36675e76d26cf74c0a79172b19fed225b738195b43582300720888962b4bccdb",
+      "bytes": 27662,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/tests/f11-context-unit.test.ts",
+      "original_path": "projects/07-cold-email-warmup/tests/f11-context-unit.test.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "7346a12177f1a564a6a21a630ecd8c83754842d03e80c5953de4cde719796370",
+      "bytes": 5869,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/tests/f11-body-fixture.ts",
+      "original_path": "projects/07-cold-email-warmup/tests/f11-body-fixture.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "a06d7f5db71485587be716b2df4a54f12578aa91c1c39af7ca677d3c67819a72",
+      "bytes": 2942,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/frozen-source/tests/expanded-mvp-05.test.ts",
+      "original_path": "projects/07-cold-email-warmup/tests/expanded-mvp-05.test.ts",
+      "git_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "sha256": "8cce2904c063a38ea8b8f6568efbc3a01bb92f64248f8d4d9e4759de87d4df36",
+      "bytes": 318,
+      "role": "frozen legitimate product implementation/test; no author narrative"
+    }
+  ],
+  "objective_files": [
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/objective/accepted-F10/src/runtime/store.ts",
+      "git_revision": "3566a6a785cc1d0cd0f6b35140af1604ee05c003",
+      "original_path": "projects/07-cold-email-warmup/src/runtime/store.ts",
+      "sha256": "983a1e5331f17bc7312a4c3f8ea95c7c2728e60b24d5e14708a9084e50fcff28",
+      "bytes": 13726,
+      "kind": "frozen accepted product code/test; no author narrative"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/objective/accepted-F10/tests/f10-runtime-integration.test.ts",
+      "git_revision": "3566a6a785cc1d0cd0f6b35140af1604ee05c003",
+      "original_path": "projects/07-cold-email-warmup/tests/f10-runtime-integration.test.ts",
+      "sha256": "e7fabd24ea02d2d52bc5b7571d4338c4d471cde58741812496061afaa5679929",
+      "bytes": 37686,
+      "kind": "frozen accepted product code/test; no author narrative"
+    }
+  ],
+  "before_all_digests_match": true,
+  "build_artifact_supplied": false,
+  "source_binding_pending_superseded": true,
+  "after_all_digests_match": true,
+  "sealed_at": "2026-10-07T00:28:55.922873+00:00",
+  "readonly_verification_exit_code": 0
+}
