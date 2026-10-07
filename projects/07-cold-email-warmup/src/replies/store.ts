@@ -1,5 +1,6 @@
+import { consumeNativeHeaderProof } from './adapter.js';
 import { enqueueCaptureClient } from './context-store.js';
-import { randomUUID } from 'node:crypto';
+import { createHash,randomUUID } from 'node:crypto';
 import type { Pool, PoolClient } from 'pg';
 import { HttpError } from '../errors.js';
 import { eligibilityTransaction } from '../consent/transaction.js';
@@ -118,6 +119,28 @@ export class ReplyStore {
    await enqueueCaptureClient(c,{tenant,mailbox,uidvalidity:v,uid:h.uid,runId:run.runId,attempt:run.attempt,source:run.provenance,observedAt:now,sender:h.sender,enrollment:owned?matched[0]!.enrollment:null,root:owned?[...roots][0]!:null});
   }
   return effects;
+ }
+ // Settled native EXAMINE+old UID FETCH composes a durable prefix with an actually empty new tail.
+ async completeNativeEmptyTail(tenant:string,mailbox:string,identity:RunIdentity,input:Extract<import('./adapter.js').ReadResult,{kind:'page'}>,target:number,guard:TransactionGuard){
+  const p=parsePage({...identity,...input.page,kind:'scan',expectedCursor:target-1}),snapshot=input.snapshot;
+  if(!snapshot)throw evidenceError();consumeNativeHeaderProof(input);
+  return eligibilityTransaction(this.pool,async c=>{
+   await guard(c);const prior=await this.current(c,tenant,mailbox,identity),now=(await c.query('SELECT clock_timestamp() AS now')).rows[0].now as Date;
+   const observed=date(snapshot.observedAt);
+   if(prior.state!=='complete'||prior.provenance!=='imap_headers'||prior.cursor<prior.highWater||prior.tailHighWater!==prior.cursor||snapshot.provenance!==prior.provenance||snapshot.uidvalidity!==prior.uidvalidity||uid(snapshot.uidNext)-1!==prior.cursor||target>prior.cursor||p.uidvalidity!==prior.uidvalidity||p.coveredThrough!==target||p.headers.length!==1||p.headers[0]!.uid!==target||p.startedAt>observed||observed>p.completedAt||p.completedAt>now||now.getTime()-observed.getTime()>30000||p.completedAt.getTime()-p.startedAt.getTime()>30000)throw evidenceError();
+   const proof=(await c.query('SELECT scan_complete,uidvalidity,cursor_uid FROM mailbox_poll WHERE mailbox_id=$1 FOR UPDATE',[mailbox])).rows[0];
+   if(!proof?.scan_complete||proof.uidvalidity!==prior.uidvalidity||Number(proof.cursor_uid)!==prior.cursor)throw stale();
+   if((await c.query('SELECT 1 FROM transport_operation WHERE mailbox_id=$1 AND operation IS NOT NULL',[mailbox])).rowCount)throw new HttpError(503,'transport_busy');
+   const event=(await c.query(`SELECT e.*,n.recipient_envelope,n.recipient_hash,j.message_id FROM incoming_ai_event e JOIN enrollment n ON n.tenant_id=e.tenant_id AND n.id=e.enrollment_id JOIN send_job j ON j.tenant_id=e.tenant_id AND j.mailbox_id=e.mailbox_id AND j.enrollment_id=e.enrollment_id AND j.id=e.root_job_id AND j.parent_id IS NULL WHERE e.tenant_id=$1 AND e.mailbox_id=$2 AND e.uidvalidity=$3 AND e.uid=$4 AND e.source='imap_headers' AND e.capture_state='pending' AND e.window_start IS NULL AND e.expires_at>clock_timestamp() AND e.attempt_deadline>clock_timestamp() AND EXISTS(SELECT 1 FROM capacity_lease l WHERE l.mailbox_id=e.mailbox_id AND l.state='active' AND l.expires_at>clock_timestamp()) AND NOT EXISTS(SELECT 1 FROM suppression s WHERE s.tenant_id=e.tenant_id AND s.recipient_hash=n.recipient_hash) FOR UPDATE OF e`,[tenant,mailbox,prior.uidvalidity,target])).rows[0];
+   const header=p.headers[0]!;
+   if(!event||event.authenticated_root_message_id!==event.message_id||event.authenticated_recipient_hash!==event.recipient_hash||!header.references.includes(event.message_id)||!header.sender||singleAddress(openRecipient(event.recipient_envelope as Envelope,tenant,event.enrollment_id,this.ring))!==header.sender||createHash('sha256').update(header.sender).digest('hex')!==event.sender_binding)throw evidenceError();
+   const run={...prior,runId:randomUUID(),attempt:1,pages:1,attemptStartedAt:now,highWater:prior.cursor,tailHighWater:prior.cursor};
+   await this.ingest(c,tenant,mailbox,run.uidvalidity,p.headers,now,run);
+   if(!(await c.query(`SELECT 1 FROM incoming_ai_event WHERE tenant_id=$1 AND id=$2 AND capture_state='pending' AND window_start IS NULL AND authenticated_run_id=$3 AND authenticated_attempt=1`,[tenant,event.id,run.runId])).rowCount)throw evidenceError();
+   await c.query(`UPDATE reply_rescan SET run_id=$3,attempt=1,pages=1,attempt_started_at=$4,high_water=cursor_uid,tail_high_water=cursor_uid,state='complete' WHERE tenant_id=$1 AND mailbox_id=$2`,[tenant,mailbox,run.runId,now]);
+   await c.query('UPDATE mailbox_poll SET scan_complete=true,completed_at=$2 WHERE mailbox_id=$1',[mailbox,now]);
+   await guard(c);return {state:'complete' as const};
+  });
  }
  // Exact bounded native observation authenticates a never-windowed intent without cursor/freshness writes.
  async revalidate(tenant:string,mailbox:string,identity:RunIdentity,input:import('./adapter.js').HeaderPage,target:number,guard:TransactionGuard){

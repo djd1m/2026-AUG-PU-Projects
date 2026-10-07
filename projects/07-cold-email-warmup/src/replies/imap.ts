@@ -23,13 +23,13 @@ export async function imapRead(input:MailboxInput,allowlist:ReadonlyMap<string,n
  try{
   const snapshot=await examine(c,input,allowlist);if(snapshot.uidvalidity!==expectedValidity)return {kind:'uidvalidity_changed',snapshot};if(snapshot.uidNext-1<horizon)throw invalid();
   const hi=Math.min(horizon,cursor+100),headers:HeaderPage['headers']=[],seen=new Set<number>();
-  if(hi===cursor)return {kind:'page',page:{uidvalidity:expectedValidity,coveredThrough:hi,headers,startedAt,completedAt:new Date()}};
+  if(hi===cursor)return {kind:'page',snapshot,page:{uidvalidity:expectedValidity,coveredThrough:hi,headers,startedAt,completedAt:new Date()}};
   await c.command(`a4 UID FETCH ${cursor+1}:${hi} (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])`);
   await c.budget.phase(async()=>{for(;;){const line=await c.line();if(/^a4 OK(?: |$)/i.test(line))break;if(/^\* \d+ (?:EXPUNGE|EXISTS|RECENT)$/i.test(line))continue;
    const prefix=/^\* [1-9]\d* FETCH \((?:UID ([1-9]\d*) )?BODY\[HEADER\.FIELDS \(FROM MESSAGE-ID IN-REPLY-TO REFERENCES\)\] \{(\d+)\}$/i.exec(line);if(!prefix)throw invalid();
    const literal=await c.literal(Number(prefix[2])),suffix=await c.line(),end=/^(?: UID ([1-9]\d*))?\)$/.exec(suffix);if(!end)throw invalid();
    if(prefix[1]&&end[1]||!prefix[1]&&!end[1])throw invalid();const n=uid(Number(prefix[1]??end[1]));if(n<=cursor||n>hi||seen.has(n)||headers.length>=100)throw invalid();seen.add(n);headers.push(parseTransportHeaders(n,literal));
   }});
-  return {kind:'page',page:{uidvalidity:expectedValidity,coveredThrough:hi,headers,startedAt,completedAt:new Date()}};
+  return {kind:'page',snapshot,page:{uidvalidity:expectedValidity,coveredThrough:hi,headers,startedAt,completedAt:new Date()}};
  }finally{await c.close();}
 }

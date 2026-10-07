@@ -14,7 +14,7 @@ import { decryptContent } from './crypto.js';
 import {date,uid,validity,singleAddress,type HeaderInput} from './input.js';
 export interface Snapshot {uidvalidity:string;uidNext:number;observedAt:Date;provenance:'local_fixture'|'imap_headers'}
 export interface HeaderPage {uidvalidity:string;coveredThrough:number;headers:HeaderInput[];startedAt:Date;completedAt:Date}
-export type ReadResult={kind:'page';page:HeaderPage}|{kind:'uidvalidity_changed';snapshot:Snapshot};
+export type ReadResult={kind:'page';page:HeaderPage;snapshot?:Snapshot}|{kind:'uidvalidity_changed';snapshot:Snapshot};
 export function validateReadResult(value:unknown,expected:string,provenance:Snapshot['provenance']):ReadResult {
  if(!value||typeof value!=='object')throw new HttpError(400,'invalid_reply_evidence');
  const r=value as ReadResult;
@@ -23,7 +23,8 @@ export function validateReadResult(value:unknown,expected:string,provenance:Snap
   uid(proof.uidNext);date(proof.observedAt);return r;
  }
  if(r.kind!=='page'||!r.page||validity(r.page.uidvalidity)!==expected||!Array.isArray(r.page.headers)||r.page.headers.length>100)throw new HttpError(400,'invalid_reply_evidence');
- uid(r.page.coveredThrough,true);date(r.page.startedAt);date(r.page.completedAt);return r;
+ uid(r.page.coveredThrough,true);const start=date(r.page.startedAt),end=date(r.page.completedAt);
+ if(r.snapshot){const snapshot=r.snapshot,observed=date(snapshot.observedAt);if(validity(snapshot.uidvalidity)!==expected||snapshot.provenance!==provenance||uid(snapshot.uidNext)-1<r.page.coveredThrough||observed<start||observed>end||start>end||end.getTime()-start.getTime()>30000)throw new HttpError(400,'invalid_reply_evidence');}return r;
 }
 export interface ReplyAdapter {
  readonly mode:'local_test'|'live_provider'|'protocol_fixture';
@@ -101,7 +102,7 @@ export class LiveReplyAdapter implements ReplyAdapter {
  // Legacy two-stage inline capture is closed: each phase requires a distinct runtime quantum.
  async captureBody(_identity:BodyIdentity,_signal?:AbortSignal):Promise<object>{throw new HttpError(503,'transport_denied');}
  snapshot(tenant:string,mailbox:string,signal?:AbortSignal){return this.operation<Snapshot>(tenant,mailbox,{kind:'snapshot'},signal);}
- async read(tenant:string,mailbox:string,validity:string,cursor:number,horizon:number,signal?:AbortSignal){return validateReadResult(await this.operation<ReadResult>(tenant,mailbox,{kind:'read',validity,cursor,horizon},signal),validity,'imap_headers');}
+ async read(tenant:string,mailbox:string,validity:string,cursor:number,horizon:number,signal?:AbortSignal){const result=validateReadResult(await this.operation<ReadResult>(tenant,mailbox,{kind:'read',validity,cursor,horizon},signal),validity,'imap_headers');if(result.kind==='page'&&result.snapshot)nativeHeaderProofs.set(result,createHash('sha256').update(JSON.stringify(result)).digest('hex'));return result;}
 }
 
 export interface BodyIdentity {tenant:string;mailbox:string;event:string;owner:string;generation:string;runId:string;attempt:number;source:string;uidvalidity:string;uid:number;root:string;enrollment:string;senderBinding:string}
@@ -109,4 +110,11 @@ export interface NativeBodyEvidence {phase?:'metadata'|'text';identity:BodyIdent
 const bodyProofs=new WeakMap<object,NativeBodyEvidence>();
 export function consumeNativeBodyProof(proof:object):NativeBodyEvidence {
  const evidence=bodyProofs.get(proof);if(!evidence)throw new HttpError(403,'body_unproved');bodyProofs.delete(proof);return evidence;
+}
+
+// A composition proof is the exact settled child result, consumed once. Caller snapshots cannot substitute it.
+const nativeHeaderProofs=new WeakMap<object,string>();
+export function consumeNativeHeaderProof(result:Extract<ReadResult,{kind:'page'}>){
+ const digest=nativeHeaderProofs.get(result);nativeHeaderProofs.delete(result);
+ if(!digest||digest!==createHash('sha256').update(JSON.stringify(result)).digest('hex'))throw new HttpError(403,'header_unproved');
 }

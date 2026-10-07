@@ -385,3 +385,11 @@ test('F11 FIFO HEADER preference retains urgent fairness and exact bounded admis
   assert.equal((await c.pool.query('SELECT count(*) FROM incoming_ai_event WHERE window_start IS NOT NULL')).rows[0].count,'0');assert.equal((await c.pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');
  }finally{for(const owned of ownedClaims.reverse())await runtime.cancel(owned);const claims=(await c.pool.query("SELECT * FROM runtime_due WHERE state='claimed'")).rows;for(const owned of claims)await runtime.cancel(owned);await c.pool.query('TRUNCATE tenant CASCADE');await c.pool.end();}
 });
+
+
+test('native joint snapshot validates observation provenance and order without inventing missing evidence',async()=>{
+ const {validateReadResult}=await import('../src/replies/adapter.js');const now=new Date(),page={uidvalidity:'1',coveredThrough:1,headers:[],startedAt:new Date(now.getTime()-10),completedAt:now},snapshot={uidvalidity:'1',uidNext:2,observedAt:new Date(now.getTime()-5),provenance:'imap_headers' as const};
+ assert.equal(validateReadResult({kind:'page',page},'1','imap_headers').kind,'page');
+ assert.equal((validateReadResult({kind:'page',page,snapshot},'1','imap_headers') as {snapshot:unknown}).snapshot,snapshot);
+ for(const mutation of [{...snapshot,uidNext:1},{...snapshot,uidvalidity:'2'},{...snapshot,provenance:'local_fixture'},{...snapshot,observedAt:new Date(now.getTime()+1)},{...snapshot,observedAt:new Date(now.getTime()-11)}])assert.throws(()=>validateReadResult({kind:'page',page,snapshot:mutation},'1','imap_headers'));
+});

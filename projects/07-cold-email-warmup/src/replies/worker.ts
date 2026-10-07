@@ -9,6 +9,7 @@ import { ReplyStore,type Rescan,type TransactionGuard } from './store.js';
 import { claimPoll,observePoll } from './fixture.js';
 import { runtimeFailure } from '../runtime/store.js';
 import { HttpError } from '../errors.js';
+import { authorizeTransport } from '../mailboxes/transport-authority.js';
 export const identity=(r:Rescan)=>({runId:r.runId,attempt:r.attempt,uidvalidity:r.uidvalidity,expectedCursor:r.cursor});
 export class PollWorker {
  readonly store:ReplyStore;
@@ -67,6 +68,21 @@ export class PollWorker {
   const guard:TransactionGuard=async c=>{await runtimeGuard(c);await source(c);await transport?.(c);};
   try{
    if(signal.aborted)throw new Error('aborted');
+   if(run?.state==='complete'&&run.provenance==='imap_headers'&&this.mode==='live_provider'&&this.adapter instanceof LiveReplyAdapter&&this.adapter.config.pollMode==='live_provider'){
+    const pending=(await this.pool.query(`SELECT uid FROM incoming_ai_event WHERE tenant_id=$1 AND mailbox_id=$2 AND source='imap_headers' AND capture_state='pending' AND window_start IS NULL AND expires_at>clock_timestamp() AND attempt_deadline>clock_timestamp() AND uidvalidity=$3 AND uid<=$4 ORDER BY created_at,id LIMIT 1`,[tenant,mailbox,run.uidvalidity,run.cursor])).rows[0];
+    if(pending){const adapter=this.adapter,config=adapter.config;
+     let authority:Awaited<ReturnType<typeof authorizeTransport>>|undefined;
+     try{authority=await eligibilityTransaction(this.pool,c=>authorizeTransport(c,config,tenant,mailbox,'imap_body'));}catch(error){if(!(error instanceof HttpError&&error.code==='transport_denied'))throw error;}
+     if(authority){const target=Number(pending.uid),read=validateReadResult(await adapter.read(tenant,mailbox,run.uidvalidity,target-1,target,signal),run.uidvalidity,'imap_headers');
+      if(read.kind==='uidvalidity_changed'){run=await this.store.capture(tenant,mailbox,read.snapshot,guard,identity(run));return {state:run.state};}
+      if(!read.snapshot)return {state:'paused'};
+      if(read.snapshot.uidNext-1!==run.cursor){run=await this.store.capture(tenant,mailbox,read.snapshot,guard,identity(run));return {state:run.state};}
+      const combined:TransactionGuard=async c=>{if(signal.aborted)throw new HttpError(503,'transport_cancelled');await guard(c);if(config.pollMode!=='live_provider')throw new HttpError(503,'transport_denied');const current=await authorizeTransport(c,config,tenant,mailbox,'imap_body');await authorizeTransport(c,config,tenant,mailbox,'imap_headers');if(current.revision!==authority.revision||current.mailboxRevision!==authority.mailboxRevision)throw new HttpError(409,'stale_poll_owner');};
+      if(read.page.coveredThrough!==target||read.page.headers.length!==1||read.page.headers[0]!.uid!==target){await eligibilityTransaction(this.pool,async c=>{await combined(c);await c.query(`UPDATE incoming_ai_event SET capture_state='held',state='held',reason='authentication_unavailable',phase_metadata=NULL,terminal_at=COALESCE(terminal_at,clock_timestamp()),expires_at=LEAST(expires_at,clock_timestamp()+interval '24 hours') WHERE tenant_id=$1 AND mailbox_id=$2 AND uidvalidity=$3 AND uid=$4 AND window_start IS NULL AND capture_state='pending'`,[tenant,mailbox,run!.uidvalidity,target]);});return {state:'scanning'};}
+      return await this.store.completeNativeEmptyTail(tenant,mailbox,identity(run),read,target,combined);
+     }
+    }
+   }
    if(!run||run.state==='complete'){
     const snapshot=await this.adapter.snapshot(tenant,mailbox,signal);run=await this.store.capture(tenant,mailbox,snapshot,guard,run?identity(run):undefined);return {state:run.state};
    }
