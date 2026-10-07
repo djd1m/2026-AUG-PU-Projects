@@ -1,0 +1,32 @@
+{
+  "started_at": "2026-10-07T17:36:32.187188+00:00",
+  "status": "plan_ready_provider_and_price_pending",
+  "owner_request": "Real business effect: real email sending and ability to pay, beyond TEST preview",
+  "authorization_scope": "Prepare and implement requested live-capable release; no unspecified charges or external pilot executed",
+  "source_revision": "a0896402",
+  "preview_image": "sha256:3791cac50f5b6c2c87dd5cd3975f8141a1dd846b405361ca7456623121ec0b37",
+  "profile": "model-routing-econom",
+  "planner_requested_model": "gpt-6.1-sol",
+  "planner_requested_effort": "high",
+  "planner_agent": "/root/n7_live_business_release_plan",
+  "actual_model": null,
+  "usage": null,
+  "measurement_gaps": [
+    "Actual host model/effort/tokens/cost unavailable"
+  ],
+  "scope": [
+    "Real SMTP/IMAP release path",
+    "Real provider checkout and canonical entitlement verification"
+  ],
+  "observed_gaps": [
+    "Published F08 TEST preview, no reply worker/fixtures",
+    "Local-only billing provider and reconciliation joins local payment table",
+    "BillingService reconcile and entitlement are coupled to local_provider_payment; provider injection alone insufficient",
+    "Real Team tariff amount is not agreed; TEST100minorunits must not become real price by accident"
+  ],
+  "next": "Provider/price clarification, independent plan validation, bounded billing implementation; no live actions executed",
+  "elapsed": null,
+  "updated_at": "2026-10-07T17:41:53.874356+00:00",
+  "plan": "docs/plans/live-business-release-20261007.md",
+  "planner_result": "bounded plan completed; nativehostusage unknown"
+}
