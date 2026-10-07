@@ -35,28 +35,40 @@
 | Драйвер | Гипотеза для этого проекта |
 |---|---|
 | **Виральность** | Прогрев работает через сеть аккаунтов пользователей — ценность растёт с числом участников (сетевой эффект). Продукт сам является каналом аутрича для собственных продаж. |
-| **Партнёрка** | _заполняется по итогам `/research/GROWTH-MECHANICS-REQUIREMENTS.md`_ |
-| **Блогеры / люди с аудиторией** | _заполняется по итогам `/research/GROWTH-MECHANICS-REQUIREMENTS.md`_ |
+| **Партнёрка** | Заполнено в Фазе 0 (M5): вторичная тактика — персональный код партнёра + атрибуция ДО оплаты, поле «кто привёл»; выплата — только от фактической оплаты приведённого; полный цикл выплат (НДФЛ/НПД, урок N3) — v1.0. Требования: FR-GROWTH-002/004, FR-PARTNER-001..004. |
+| **Блогеры / люди с аудиторией** | В недельный конверт не влезает (была бы «третья механика», постановка ограничила «максимум одна» = партнёрка). Остаток варианта C (шеринг health-снапшота) сохранён как черновик в docs/discovery/CJM_Variants.md. |
 
-> Обязательный блок требований по росту: [`/research/GROWTH-MECHANICS-REQUIREMENTS.md`](../../research/GROWTH-MECHANICS-REQUIREMENTS.md)
+> Обязательный блок требований по росту: [`/research/GROWTH-MECHANICS-REQUIREMENTS.md`](../../research/GROWTH-MECHANICS-REQUIREMENTS.md) · выполнен Фазой 0 M5: [`docs/product-discovery-brief.md`](docs/product-discovery-brief.md) (seed FR-GROWTH-001..007)
 
 ## Структура
 
 ```
 07-cold-email-warmup/
-├── README.md          # этот файл
+├── README.md          # этот файл (статусы фаз ниже)
+├── CLAUDE.md          # проектная инструкция для AI-исполнителей (SPARC)
 └── docs/
-    ├── discovery/     # Phase 0 — reverse-engineering референса
-    └── ...            # SPARC-документация из /replicate
+    ├── discovery/     # Фаза 0: CJM_Variants.md, cjm-prototype.html
+    ├── product-discovery-brief.md, source-product-profile.md   # Фаза 0 / 0.5
+    ├── PRD.md, Solution_Strategy.md, Specification.md, Pseudocode.md,
+    │   Architecture.md, Refinement.md, Completion.md,
+    │   Research_Findings.md, Final_Summary.md, ADR.md          # Фаза 1
+    ├── validation-report.md                                    # Фаза 2
+    └── telemetry/p-replicator/<run-id>/                        # запись прогона
 ```
+
+Рабочее имя продукта: «Грелка» (Q-001 у владельца). Палитра UI — подписанный фолбэк
+(Slate/Orange); облик источника Instantly НЕ ИЗМЕРЕН — docs/source-product-profile.md.
 
 ## Статус
 
 | Этап | Статус |
 |---|---|
-| Phase 0 — Product Discovery | ⬜ |
-| Phase 1 — SPARC (`/replicate`) | ⬜ |
-| Phase 2 — Validation | ⬜ |
-| Phase 3 — Toolkit | ⬜ |
-| Phase 4 — Finalize | ⬜ |
-| Реализация | ⬜ |
+| Phase 0 — Product Discovery | ✅ готова (M1–M5, 3 варианта CJM + выбор владельца: гибрид H; метрика 25 ящиков; RU + мир) |
+| Phase 1 — SPARC (`/replicate`) | ✅ 11 документов + CLAUDE.md; стражи: docs-complete, growth-trace 7/7, metric-source, handoff-manifest 14/14 |
+| Phase 2 — Validation | ✅ рой 3 валидатора, 4 major + 13/14 minor разобраны; вердикт PASS (docs/validation-report.md) |
+| Phase 3 — Toolkit | ✅ общий тулкит — корневой `.claude/` (политика репо: не дублировать по проектам); проектный CLAUDE.md сгенерирован |
+| Phase 4 — Finalize | ✅ README/статусы/телеметрия закрыты |
+| Реализация | ⬜ следующий шаг: реализация Must-ядра по Specification §8 + перенос доноров (Architecture §Reuse) |
+
+Телеметрия прогона: `docs/telemetry/p-replicator/20261007T165155Z-replicate-07-cold-email-warmup-00b7/`.
+

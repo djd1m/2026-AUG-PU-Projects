@@ -9,7 +9,7 @@
 - `docs/PRD.md` — продукт, персоны, метрики
 
 ### 2. Pseudocode (КАК работает)
-- `docs/Pseudocode.md` — 20 алгоритмов (REALISES/REQUIREMENT), контракты API, покрытие 30/30
+- `docs/Pseudocode.md` — 20 алгоритмов (REALISES/REQUIREMENT), контракты API, покрытие 32:31 (один сценарий ui-only)
 
 ### 3. Architecture (СИСТЕМА)
 - `docs/Architecture.md` — разделённый монолит, стек, внешние зависимости (цитаты+даты), §Reuse из 01–06
