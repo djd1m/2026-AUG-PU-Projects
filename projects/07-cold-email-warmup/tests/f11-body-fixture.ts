@@ -12,8 +12,8 @@ export async function bodyFixture(options:{body?:Buffer;metadata?:Buffer;declare
    if(line==='a1 CAPABILITY')socket.write('* CAPABILITY IMAP4rev1 AUTH=PLAIN\r\na1 OK done\r\n');
    else if(line==='a2 AUTHENTICATE PLAIN'){auth=true;socket.write('+ challenge\r\n');}
    else if(line==='a3 EXAMINE INBOX')socket.write(`* OK [UIDVALIDITY ${options.validity??'1'}] generation\r\n* OK [UIDNEXT 2] next\r\na3 OK [READ-ONLY] done\r\n`);
-   else if(line==='a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION)])'||line==='a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)'){
-    const metadata=line.includes('HEADER.FIELDS'),section=metadata?'HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION)':'TEXT',bytes=metadata?(options.metadata??Buffer.from('Content-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n')):(options.body??Buffer.from('What does the product do?'));
+   else if(line==='a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])'||line==='a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)'){
+    const metadata=line.includes('HEADER.FIELDS'),section=metadata?'HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)':'TEXT',bytes=metadata?(options.metadata??Buffer.from('Content-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n')):(options.body??Buffer.from('What does the product do?'));
     socket.write(`* 1 FETCH (UID ${options.wrongUid?2:1} BODY[${section}]${metadata?'':'<0>'} {${options.declared??bytes.length}}\r\n`);if(options.declared===undefined){socket.write(bytes);socket.write(')\r\na4 OK done\r\n');}
    }else socket.destroy();
   }});

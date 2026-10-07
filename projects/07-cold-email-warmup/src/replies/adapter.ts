@@ -10,7 +10,7 @@ import { runTransportChild,type ChildRequest } from '../mailboxes/transport-life
 import type { TransactionGuard } from './store.js';
 import type { Pool } from 'pg';
 import { HttpError } from '../errors.js';
-import { parsePlainBody } from './body.js';
+import { parsePlainBody,classifyCapturedInbound } from './body.js';
 import {date,uid,validity,singleAddress,type HeaderInput} from './input.js';
 export interface Snapshot {uidvalidity:string;uidNext:number;observedAt:Date;provenance:'local_fixture'|'imap_headers'}
 export interface HeaderPage {uidvalidity:string;coveredThrough:number;headers:HeaderInput[];startedAt:Date;completedAt:Date}
@@ -92,7 +92,7 @@ export class LiveReplyAdapter implements ReplyAdapter {
   };
   const metadata=await stage('body_metadata');
   // Yield and reserve anew: header work can take priority before text I/O.
-  await new Promise<void>(resolve=>setImmediate(resolve));const supported=parsePlainBody(metadata.bytes,Buffer.alloc(0));const text=supported.kind==='hold'?{bytes:Buffer.alloc(0),current:metadata.current}:await stage('body_text');
+  await new Promise<void>(resolve=>setImmediate(resolve));const supported=parsePlainBody(metadata.bytes,Buffer.alloc(0));const automatic=classifyCapturedInbound(metadata.bytes,'');const text=supported.kind==='hold'||automatic.kind==='hold'&&automatic.reason==='automatic'?{bytes:Buffer.alloc(0),current:metadata.current}:await stage('body_text');
   if(metadata.current.revision!==text.current.revision||metadata.current.mailboxRevision!==text.current.mailboxRevision)throw new HttpError(409,'stale_body_authority');
   const proof={};bodyProofs.set(proof,{identity:{...identity},metadata:metadata.bytes,bytes:text.bytes,revision:text.current.revision,mailboxRevision:text.current.mailboxRevision});return proof;
  }

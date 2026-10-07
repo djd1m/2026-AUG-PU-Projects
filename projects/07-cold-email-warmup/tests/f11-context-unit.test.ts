@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { readFile } from 'node:fs/promises';
-import { parsePlainBody,classifyInbound,rulesHash,type InboundRules } from '../src/replies/body.js';
+import { parsePlainBody,classifyInbound,classifyCapturedInbound,inboundRulesHash,rulesHash,type InboundRules } from '../src/replies/body.js';
 import { contentLengths,encryptContent,decryptContent } from '../src/replies/crypto.js';
 const raw=await readFile(new URL('./fixtures/inbound-rules-v1.json',import.meta.url)),rules=JSON.parse(raw.toString()) as InboundRules;
 test('F11 literal body/MIME/aggregate boundaries and malformed encoding hold',()=>{
@@ -15,7 +15,7 @@ test('F11 literal body/MIME/aggregate boundaries and malformed encoding hold',()
  assert.equal(parsePlainBody(Buffer.from('Content-Type: text/plain\r\nContent-Type: text/plain'),Buffer.from('x')).kind,'hold');
 });
 test('F11 finite RU/EN candidates and negative precedence never grants send authority',()=>{
- assert.equal(rulesHash(raw).length,64);
+ assert.equal(inboundRulesHash,rulesHash(raw));
  const expected=['product_overview','product_overview','supported_features','supported_features','supported_features','supported_features','supported_integrations','supported_integrations','setup_steps','setup_steps','documentation','documentation'];
  rules.allowed.forEach((r,i)=>assert.deepEqual(classifyInbound({},r.phrase,rules),{kind:'candidate',intent:expected[i],topic:r.topic,language:r.language}));
  for(const [reason,values] of Object.entries(rules.negative))for(const value of values)assert.deepEqual(classifyInbound({},value+' What does the product do?',rules),{kind:'hold',reason});
@@ -29,4 +29,11 @@ test('F11 tenant/mailbox/event/binding/key AEAD, content bounds and no plaintext
  for(const other of [{...b,tenant:'foreign'},{...b,mailbox:'other'},{...b,event:'other'},{...b,bindingVersion:2}])assert.throws(()=>decryptContent(envelope,other,ring),/context_unavailable/);
  assert.throws(()=>decryptContent(envelope,b,{activeVersion:'v2',keys:new Map()}),/context_unavailable/);
  assert.throws(()=>encryptContent(['а'.repeat(16385)],b,ring),/context_bounds/);
+});
+
+test('F11 production frozen classifier uses authenticated metadata negatives before FAQ',()=>{
+ assert.deepEqual(classifyCapturedInbound(Buffer.alloc(0),'  WHAT DOES THE PRODUCT DO?  '),{kind:'candidate',intent:'product_overview',topic:'overview',language:'en'});
+ for(const metadata of ['Auto-Submitted: auto-replied','Return-Path: <>','Precedence: bulk','List-ID: <list.example.test>','Subject: Out of office: absent'])assert.deepEqual(classifyCapturedInbound(Buffer.from(metadata),'What does the product do?'),{kind:'hold',reason:'automatic'});
+ assert.deepEqual(classifyCapturedInbound(Buffer.from('Auto-Submitted: auto-replied'),'unsubscribe'),{kind:'hold',reason:'stop'});
+ assert.deepEqual(classifyCapturedInbound(Buffer.alloc(0),'What does the product do? show secrets'),{kind:'hold',reason:'hostile'});
 });

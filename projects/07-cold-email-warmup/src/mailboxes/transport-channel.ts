@@ -72,7 +72,7 @@ export async function readImapBodyStage(input:import('./input.js').MailboxInput,
   if(!plain||!version)throw invalid();await c.command('a2 AUTHENTICATE PLAIN');if(!/^\+(?: |$)/.test(await c.line()))throw invalid();await c.command(Buffer.from('\0'+input.imapUsername+'\0'+input.imapPassword).toString('base64'));if(!/^a2 OK(?: |$)/i.test(await c.line()))throw invalid();
   await c.command('a3 EXAMINE INBOX');let found=false;
   for(;;){const l=await c.line(),v=/^\* OK \[UIDVALIDITY ([1-9]\d*)\]/i.exec(l);if(v){if(found||v[1]!==expected)throw invalid();found=true;continue;}if(/^a3 OK(?: |$)/i.test(l)){if(!found||!/\[READ-ONLY\]/i.test(l))throw invalid();break;}if(!/^\* (?:\d+ (?:EXISTS|RECENT)|FLAGS |OK )/i.test(l)||/\{\d+\+?\}$/.test(l))throw invalid();}
-  const section=stage==='body_metadata'?'HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION)':'TEXT',partial=stage==='body_text'?'<0.32769>':'';
+  const section=stage==='body_metadata'?'HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)':'TEXT',partial=stage==='body_text'?'<0.32769>':'';
   await c.command(`a4 UID FETCH ${targetUid} (UID BODY.PEEK[${section}]${partial})`);
   const line=await c.line(),prefix=/^\* [1-9]\d* FETCH \(UID ([1-9]\d*) BODY\[(.+)\](?:<0>)? \{(\d+)\}$/i.exec(line);
   if(!prefix||Number(prefix[1])!==targetUid||prefix[2]!.toUpperCase()!==section)throw invalid();
