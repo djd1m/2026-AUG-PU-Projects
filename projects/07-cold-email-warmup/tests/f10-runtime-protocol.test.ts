@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { fork,spawn } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import { writeFile } from 'node:fs/promises';
+import { readFile,writeFile } from 'node:fs/promises';
 import { acquireTransportSlot,bindTransportChild,closedOwnerProof,releaseTransportSlot,type TransportSlot } from '../src/mailboxes/transport-slots.js';
 import { cadenceFixture,runtimeFixture } from './f10-runtime-fixture.js';
 import { transportFixture,recoveryScenario } from './f09-transport-fixture.js';
@@ -12,17 +12,22 @@ import { loadConfig } from '../src/config.js';
 const fairTables=['runtime_due','reply_rescan','mailbox_poll','transport_operation'] as const;
 async function assertFairDatabase(pool:ReturnType<typeof createPool>){
  const name=(await pool.query('SELECT current_database() AS name')).rows[0].name;assert.equal(name,process.env.DATABASE_NAME);assert.ok(['n7f10_a2','n7f11_a8'].includes(String(name)),'only explicitly owned disposable namespaces permit fixture instrumentation');
+ if(name==='n7f10_a2')return 'public';
+ const schema=process.env.N7_TEST_SCHEMA;assert.match(schema??'',/^n7_a[0-9]+_(short|fault|checks)_[0-9]{12}$/);assert.notEqual(schema,'public');assert.equal(process.env.PGOPTIONS,`-c search_path=${schema}`);
+ const lease=JSON.parse(await readFile(process.env.N7_DB_OWNERSHIP_LEASE!,'utf8'));
+ const identity=(await pool.query("SELECT current_schema() schema,current_setting('search_path') search_path,current_user role,pg_get_userbyid(n.nspowner) owner,(SELECT pg_get_userbyid(datdba) FROM pg_database WHERE datname=current_database()) database_owner FROM pg_namespace n WHERE n.nspname=$1",[schema])).rows[0];
+ assert.equal(lease.database,name);assert.equal(identity?.schema,schema);assert.equal(identity.search_path,schema);assert.equal(identity.role,lease.owner_role);assert.equal(identity.owner,lease.owner_role);assert.equal(identity.database_owner,lease.owner_role);return schema!;
 }
 async function cleanupFairInstrumentation(pool:ReturnType<typeof createPool>){
- await assertFairDatabase(pool);
- for(const table of fairTables)await pool.query(`DROP TRIGGER IF EXISTS n7_fair_record ON public.${table}`);
- await pool.query('DROP FUNCTION IF EXISTS public.n7_fair_record()');
- await pool.query('DROP TABLE IF EXISTS public.n7_fair_events');
+ const schema=await assertFairDatabase(pool);
+ for(const table of fairTables)await pool.query(`DROP TRIGGER IF EXISTS n7_fair_record ON "${schema}".${table}`);
+ await pool.query(`DROP FUNCTION IF EXISTS "${schema}".n7_fair_record()`);
+ await pool.query(`DROP TABLE IF EXISTS "${schema}".n7_fair_events`);
 }
 async function installFairInstrumentation(pool:ReturnType<typeof createPool>){
- await assertFairDatabase(pool);
-  await pool.query('DROP TABLE IF EXISTS n7_fair_events');await pool.query('CREATE TABLE n7_fair_events(event_id bigserial,at timestamptz DEFAULT clock_timestamp(),kind text,mailbox uuid,body jsonb)');
-  await pool.query(`CREATE OR REPLACE FUNCTION n7_fair_record() RETURNS trigger LANGUAGE plpgsql AS $$ DECLARE occupancy jsonb; BEGIN
+ const schema=await assertFairDatabase(pool);
+  await pool.query(`DROP TABLE IF EXISTS "${schema}".n7_fair_events`);await pool.query(`CREATE TABLE "${schema}".n7_fair_events(event_id bigserial,at timestamptz DEFAULT clock_timestamp(),kind text,mailbox uuid,body jsonb)`);
+  await pool.query(`CREATE OR REPLACE FUNCTION "${schema}".n7_fair_record() RETURNS trigger LANGUAGE plpgsql SET search_path="${schema}" AS $$ DECLARE occupancy jsonb; BEGIN
    SELECT jsonb_agg(jsonb_build_object('protocol',t.protocol,'slot',t.slot,'operation',t.operation,'mailbox',t.mailbox_id,'owner_process',t.owner_process,'runtime_owner',d.owner_id,'generation',d.generation) ORDER BY t.protocol,t.slot) INTO occupancy FROM transport_operation t LEFT JOIN runtime_due d ON d.mailbox_id=t.mailbox_id AND d.kind='poll';
    IF TG_TABLE_NAME='transport_operation' THEN
     INSERT INTO n7_fair_events(kind,mailbox,body) VALUES(CASE WHEN OLD.operation IS NULL AND NEW.operation IS NOT NULL THEN 'physical_acquire' WHEN OLD.operation IS NOT NULL AND NEW.operation IS NULL THEN 'physical_release' ELSE 'physical_update' END,COALESCE(NEW.mailbox_id,OLD.mailbox_id),jsonb_build_object('old',jsonb_build_object('protocol',OLD.protocol,'slot',OLD.slot,'operation',OLD.operation,'mailbox',OLD.mailbox_id,'owner_process',OLD.owner_process),'new',jsonb_build_object('protocol',NEW.protocol,'slot',NEW.slot,'operation',NEW.operation,'mailbox',NEW.mailbox_id,'owner_process',NEW.owner_process),'runtime', (SELECT jsonb_build_object('owner_id',owner_id,'generation',generation,'service_seq',service_seq,'state',state) FROM runtime_due WHERE mailbox_id=COALESCE(NEW.mailbox_id,OLD.mailbox_id) AND kind='poll'),'slots',occupancy,'transaction_id',txid_current(),'backend_pid',pg_backend_pid(),'phase','after_slot_update'));
@@ -34,10 +39,11 @@ async function installFairInstrumentation(pool:ReturnType<typeof createPool>){
     IF OLD.state='claimed' AND NEW.state<>'claimed' THEN INSERT INTO n7_fair_events(kind,mailbox,body) VALUES('yield',NEW.mailbox_id,to_jsonb(NEW)||jsonb_build_object('slots',occupancy,'transaction_id',txid_current(),'backend_pid',pg_backend_pid(),'observation','same_runtime_update_transaction_read_committed_not_admission_failure')); END IF;
    END IF; ELSIF TG_TABLE_NAME='reply_rescan' THEN INSERT INTO n7_fair_events(kind,mailbox,body) VALUES('page',NEW.mailbox_id,to_jsonb(NEW));
    ELSIF TG_TABLE_NAME='mailbox_poll' THEN INSERT INTO n7_fair_events(kind,mailbox,body) VALUES('poll',NEW.mailbox_id,to_jsonb(NEW)); END IF; RETURN NEW; END $$`);
-  for(const table of fairTables)await pool.query(`CREATE TRIGGER n7_fair_record AFTER UPDATE ON ${table} FOR EACH ROW EXECUTE FUNCTION n7_fair_record()`);
+  for(const table of fairTables)await pool.query(`CREATE TRIGGER n7_fair_record AFTER UPDATE ON "${schema}".${table} FOR EACH ROW EXECUTE FUNCTION "${schema}".n7_fair_record()`);
 }
 async function fairCatalog(pool:ReturnType<typeof createPool>){
- return (await pool.query("SELECT (SELECT count(*)::int FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public' AND c.relname=ANY($1::text[]) AND t.tgname='n7_fair_record') AS triggers,to_regprocedure('public.n7_fair_record()') IS NOT NULL AS function,to_regclass('public.n7_fair_events') IS NOT NULL AS table",[fairTables])).rows[0];
+ const schema=await assertFairDatabase(pool);
+ return (await pool.query("SELECT (SELECT count(*)::int FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname=$2 AND c.relname=ANY($1::text[]) AND t.tgname='n7_fair_record') AS triggers,to_regprocedure(quote_ident($2)||'.n7_fair_record()') IS NOT NULL AS function,to_regclass(quote_ident($2)||'.n7_fair_events') IS NOT NULL AS table",[fairTables,schema])).rows[0];
 }
 test('owned fairness instrumentation removes forced stale triggers idempotently',{timeout:15000},async()=>{
  const pool=createPool(loadConfig().databaseUrl);const catalogs:unknown[]=[];
@@ -148,13 +154,22 @@ test('native five-second rescans yield fairly to later healthy E across competin
  }
 });
 
+
+function captureReceiver(records:unknown[],gaps:unknown[]){return (message:unknown)=>{
+ const m=message as {captureObservation?:Record<string,unknown>;captureObservationGap?:unknown};if(m.captureObservationGap)gaps.push(m.captureObservationGap);
+ if(!m.captureObservation)return;
+ const r=m.captureObservation;if(records.length>=48000||JSON.stringify(r).length>32768||!['entry','query','result','query_error'].includes(String(r.kind))||!Number.isInteger(r.pid)||!Number.isInteger(r.sequence)||typeof r.utc!=='string'||typeof r.monotonicNs!=='string') {gaps.push('invalid_or_oversized_observer_record');return;}
+ records.push(r);
+};}
+
 export async function bodyPressureFleetWitness(bodyFault=false){
  const {seedBodyPressureCohort}=await import('./f10-runtime-process-fixture.js'),{bodyFixture}=await import('./f11-body-fixture.js'),{readFile}=await import('node:fs/promises');
  // This additive cohort requires a fresh owned database; no existing fixture reset.
  const c=await seedBodyPressureCohort(),smtp=await transportFixture({uidNext:1,headers:[]}),imap=await bodyFixture({mailboxes:c.mailboxes,phaseDelayMs:2800,...(bodyFault?{bodyFaults:1}:{})}),fixture={...smtp.options!,ca:smtp.options!.ca+'\n'+imap.fixture.ca,imap993:imap.fixture.imap993};
+ const admissionObservations:unknown[]=[],admissionGaps:unknown[]=[];
  const begun=Date.now(),children:{pid:number;startTicks:string;child:ReturnType<typeof fork>;exit:Promise<{code:number|null;signal:NodeJS.Signals|null;drained:boolean;stderr:string;failed:unknown[];exitStamp:ReturnType<typeof diagnosticStamp>}>}[]=[],samples:unknown[]=[],readyAt=new Map<string,number>(),completions=new Map<string,number[]>();let failure:string|null=null;const signals:unknown[]=[],joinStamps:unknown[]=[];
  const stop=(e:typeof children[number])=>{const sent=e.child.kill('SIGTERM');signals.push({pid:e.pid,startTicks:e.startTicks,signal:'SIGTERM',sent,...diagnosticStamp()});};
- const start=async()=>{const child=fork(new URL('./f10-runtime-process-fixture.ts',import.meta.url),[],{execArgv:[],stdio:['ignore','pipe','pipe','ipc'],serialization:'advanced'});let drained=false,stderr='';const failed:unknown[]=[];child.stderr?.on('data',b=>{stderr+=b.toString();});child.on('message',m=>{if((m as {drained?:boolean}).drained)drained=true;if((m as {failed?:boolean}).failed)failed.push(m);});const entry={pid:child.pid!,startTicks:(await readFile(`/proc/${child.pid}/stat`,'utf8')).split(') ')[1]!.split(' ')[19]!,child,exit:new Promise<{code:number|null;signal:NodeJS.Signals|null;drained:boolean;stderr:string;failed:unknown[];exitStamp:ReturnType<typeof diagnosticStamp>}>(r=>child.once('exit',(code,signal)=>r({code,signal,drained,stderr,failed,exitStamp:diagnosticStamp()})))};children.push(entry);const started=new Promise<void>((r,j)=>{child.once('message',m=>(m as {started?:boolean}).started?r():j(Error('worker_start_failed')));child.once('error',j);});child.send(fixture);await started;return entry;};
+ const start=async()=>{const child=fork(new URL('./f10-runtime-process-fixture.ts',import.meta.url),[],{execArgv:[],stdio:['ignore','pipe','pipe','ipc'],serialization:'advanced'});let drained=false,stderr='';const failed:unknown[]=[];child.stderr?.on('data',b=>{stderr+=b.toString();});child.on('message',captureReceiver(admissionObservations,admissionGaps));child.on('message',m=>{if((m as {drained?:boolean}).drained)drained=true;if((m as {failed?:boolean}).failed)failed.push(m);});const entry={pid:child.pid!,startTicks:(await readFile(`/proc/${child.pid}/stat`,'utf8')).split(') ')[1]!.split(' ')[19]!,child,exit:new Promise<{code:number|null;signal:NodeJS.Signals|null;drained:boolean;stderr:string;failed:unknown[];exitStamp:ReturnType<typeof diagnosticStamp>}>(r=>child.once('exit',(code,signal)=>r({code,signal,drained,stderr,failed,exitStamp:diagnosticStamp()})))};children.push(entry);const started=new Promise<void>((r,j)=>{child.once('message',m=>(m as {started?:boolean}).started?r():j(Error('worker_start_failed')));child.once('error',j);});child.send(fixture);await started;return entry;};
  try{
   assert.equal(c.connected.length,100);assert.equal(c.participants.length,30);assert.equal(c.actors.length,3);await installFairInstrumentation(c.pool);
   await c.pool.query(`CREATE FUNCTION n7_body_record() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN INSERT INTO n7_fair_events(kind,mailbox,body) VALUES('body',NEW.mailbox_id,to_jsonb(NEW)-'phase_metadata'-'content_envelope'); RETURN NEW; END $$`);await c.pool.query('CREATE TRIGGER n7_body_record AFTER INSERT OR UPDATE ON incoming_ai_event FOR EACH ROW EXECUTE FUNCTION n7_body_record()');
@@ -182,7 +197,7 @@ export async function bodyPressureFleetWitness(bodyFault=false){
  }catch(error){failure=error instanceof Error?error.message:String(error);throw error;}finally{
   for(const e of children)if(e.child.exitCode===null&&e.child.signalCode===null)stop(e);const joins=await Promise.all(children.map(async e=>{const outcome=await e.exit;joinStamps.push({pid:e.pid,...diagnosticStamp()});return outcome;}));const events=(await c.pool.query('SELECT * FROM n7_fair_events ORDER BY event_id')).rows;
   const occupied=Number((await c.pool.query('SELECT count(*) AS n FROM transport_operation WHERE operation IS NOT NULL')).rows[0].n);
-  await writeFile(`${process.env.F10_EVIDENCE_DIR}/all30-body-${begun}.json`,JSON.stringify({bodyFault,signals,joinStamps,cleanupFailure:occupied!==0?'native physical ownership remains':joins.every(e=>e.code===0&&e.signal===null&&e.drained&&e.stderr==='')?null:'actual worker exits joined',begun,ended:Date.now(),seededAt:c.seededAt,failure,connected:c.connected,participants:c.participants.map(({tenant,mailbox,root,enrollment})=>({tenant,mailbox,root,enrollment})),readyAt:[...readyAt],completions:[...completions],samples,events,wire:imap.wire,imapPeak:imap.peak,bodyPeak:imap.bodyPeak,smtpPeak:smtp.maxConnections,smtpVerbs:smtp.verbs,children:children.map(e=>({pid:e.pid,startTicks:e.startTicks})),joins,occupied},null,2)+'\n');
+  await writeFile(`${process.env.F10_EVIDENCE_DIR}/all30-body-${begun}.json`,JSON.stringify({admissionObservations,admissionGaps,bodyFault,signals,joinStamps,cleanupFailure:occupied!==0?'native physical ownership remains':joins.every(e=>e.code===0&&e.signal===null&&e.drained&&e.stderr==='')?null:'actual worker exits joined',begun,ended:Date.now(),seededAt:c.seededAt,failure,connected:c.connected,participants:c.participants.map(({tenant,mailbox,root,enrollment})=>({tenant,mailbox,root,enrollment})),readyAt:[...readyAt],completions:[...completions],samples,events,wire:imap.wire,imapPeak:imap.peak,bodyPeak:imap.bodyPeak,smtpPeak:smtp.maxConnections,smtpVerbs:smtp.verbs,children:children.map(e=>({pid:e.pid,startTicks:e.startTicks})),joins,occupied},null,2)+'\n');
   await c.pool.query('DROP TRIGGER IF EXISTS n7_body_record ON incoming_ai_event');await c.pool.query('DROP FUNCTION IF EXISTS n7_body_record()');await cleanupFairInstrumentation(c.pool);await imap.close();await smtp.close();await c.pool.end();if(failure===null)assert.equal(occupied,0);const cleanupFailure=joins.every(e=>e.code===0&&e.signal===null&&e.drained&&e.stderr==='')?null:'actual worker exits joined';if(cleanupFailure&&failure===null)assert.fail(cleanupFailure);
  }
 }
@@ -192,11 +207,11 @@ test('F11 ALL30 finite native BODY fault recovers both2800ms phases full300s',{t
 function diagnosticStamp(){return {utc:new Date().toISOString(),monotonicNs:process.hrtime.bigint().toString()};}
 test('F11 short compiled worker SIGTERM while native BODY physically claimed',{timeout:45000},async()=>{
  const {seedBodyPressureCohort}=await import('./f10-runtime-process-fixture.js'),{bodyFixture}=await import('./f11-body-fixture.js'),{readFile}=await import('node:fs/promises');
- const c=await seedBodyPressureCohort(),smtp=await transportFixture({uidNext:1,headers:[]}),imap=await bodyFixture({mailboxes:c.mailboxes,phaseDelayMs:2800}),messages:unknown[]=[],signals:unknown[]=[];let child:ReturnType<typeof fork>|undefined,startTicks='',live:unknown=null,outcome:unknown=null,joined:unknown=null;
+ const c=await seedBodyPressureCohort(),smtp=await transportFixture({uidNext:1,headers:[]}),imap=await bodyFixture({mailboxes:c.mailboxes,phaseDelayMs:2800}),messages:unknown[]=[],signals:unknown[]=[],admissionObservations:unknown[]=[],admissionGaps:unknown[]=[];let child:ReturnType<typeof fork>|undefined,startTicks='',live:unknown=null,outcome:unknown=null,joined:unknown=null;
  try{
   await writeFile(`${process.env.F10_EVIDENCE_DIR}/short-owned-cohort.json`,JSON.stringify({database:'n7f11_a8',tenants:c.actors.map(a=>a.tenant_id),connected:c.connected,participants:c.participants})+'\n');
   child=fork(new URL('./f10-runtime-process-fixture.ts',import.meta.url),[],{execArgv:[],stdio:['ignore','pipe','pipe','ipc'],serialization:'advanced'});const worker=child;startTicks=(await readFile(`/proc/${worker.pid}/stat`,'utf8')).split(') ')[1]!.split(' ')[19]!;
-  const exit=new Promise(r=>worker.once('exit',(code,signal)=>r({code,signal,...diagnosticStamp()})));worker.on('message',m=>messages.push(m));const started=new Promise<void>((r,j)=>{worker.once('message',m=>(m as {started?:boolean}).started?r():j(Error('worker_start_failed')));worker.once('error',j);});worker.send({...smtp.options!,ca:smtp.options!.ca+'\n'+imap.fixture.ca,imap993:imap.fixture.imap993});await started;
+  const exit=new Promise(r=>worker.once('exit',(code,signal)=>r({code,signal,...diagnosticStamp()})));worker.on('message',captureReceiver(admissionObservations,admissionGaps));worker.on('message',m=>{if(!(m as {captureObservation?:unknown}).captureObservation)messages.push(m);});const started=new Promise<void>((r,j)=>{worker.once('message',m=>(m as {started?:boolean}).started?r():j(Error('worker_start_failed')));worker.once('error',j);});worker.send({...smtp.options!,ca:smtp.options!.ca+'\n'+imap.fixture.ca,imap993:imap.fixture.imap993});await started;
   const deadline=Date.now()+25000;while(Date.now()<deadline){const phase=imap.wire.filter(e=>e.phase==='phase_start').at(-1);if(phase){const rows=(await c.pool.query("SELECT t.protocol,t.slot,t.operation,t.owner_process,t.mailbox_id,e.id,e.capture_state,e.capture_phase FROM transport_operation t JOIN incoming_ai_event e ON e.mailbox_id=t.mailbox_id WHERE t.operation IS NOT NULL AND e.capture_state='claimed' AND t.mailbox_id=$1",[phase.mailbox])).rows;if(rows.length){live={phase,rows,...diagnosticStamp()};break;}}await new Promise(r=>setTimeout(r,20));}
   assert.ok(live,'actual native BODY phase and physical operation match a logical claim before SIGTERM');signals.push({pid:worker.pid,startTicks,signal:'SIGTERM',sent:worker.kill('SIGTERM'),...diagnosticStamp()});outcome=await exit;joined=diagnosticStamp();
  }finally{
@@ -205,7 +220,7 @@ test('F11 short compiled worker SIGTERM while native BODY physically claimed',{t
   const claimedIds=(live as {rows:{id:string}[]}|null)?.rows.map(row=>row.id)??[];
   const terminal=(await c.pool.query("SELECT id,capture_state,state,reason,owner_id,lease_until,terminal_at,expires_at,created_at,phase_metadata,phase_revision,phase_mailbox_revision,(expires_at<=created_at+interval '7 days' AND expires_at<=terminal_at+interval '24 hours') AS retention_valid FROM incoming_ai_event WHERE id=ANY($1::uuid[]) AND reason='capture_cancelled'",[claimedIds])).rows;
   const closedBodyOwners=imap.wire.filter(e=>e.phase==='phase_start').every(e=>imap.wire.some(close=>close.connection===e.connection&&close.phase==='socket_close'));
-  await writeFile(`${process.env.F10_EVIDENCE_DIR}/short-body-shutdown.json`,JSON.stringify({live,signals,messages,outcome,joined,physical,logical,terminal,closedBodyOwners,wire:imap.wire,pid:child?.pid,startTicks},null,2)+'\n');await imap.close();await smtp.close();await c.pool.end();
+  await writeFile(`${process.env.F10_EVIDENCE_DIR}/short-body-shutdown.json`,JSON.stringify({admissionObservations,admissionGaps,live,signals,messages,outcome,joined,physical,logical,terminal,closedBodyOwners,wire:imap.wire,pid:child?.pid,startTicks},null,2)+'\n');await imap.close();await smtp.close();await c.pool.end();
   assert.equal((outcome as {code:number|null}).code,0,'actual compiled worker exits successfully');assert.equal((outcome as {signal:NodeJS.Signals|null}).signal,null);assert.ok(messages.some(m=>(m as {drained?:boolean}).drained),'actual worker reports drain');
   assert.equal(physical.length,0,'native ownership released after actual join');assert.equal(logical.length,0,'logical BODY ownership released');assert.equal(closedBodyOwners,true,'native BODY sockets closed before fixture teardown');
   assert.ok(claimedIds.length>0);assert.equal(terminal.length,claimedIds.length,'each physically claimed BODY has a terminal cancellation row');for(const row of terminal){assert.equal(row.capture_state,'held');assert.equal(row.state,'held');assert.equal(row.owner_id,null);assert.equal(row.lease_until,null);assert.equal(row.phase_metadata,null);assert.equal(row.phase_revision,null);assert.equal(row.phase_mailbox_revision,null);assert.notEqual(row.terminal_at,null);assert.equal(row.retention_valid,true,'exact earliest terminal+24h and created+7d retention bounds');}
