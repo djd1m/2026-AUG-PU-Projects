@@ -22,7 +22,7 @@ export async function bodyFixture(options:{body?:Buffer;metadata?:Buffer;declare
     if(options.bodyFaults){options.bodyFaults--;record('fault_injected',line);socket.destroy();return;}
     isBody=true;bodyActive++;bodyPeak=Math.max(bodyPeak,bodyActive);record('phase_start',line);
     const metadata=line.includes('HEADER.FIELDS'),section=metadata?'HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)':'TEXT',bytes=metadata?(options.mailboxes?.get(mailbox)?.metadata??options.metadata??Buffer.from('Content-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n')):(options.mailboxes?.get(mailbox)?.body??options.body??Buffer.from('What does the product do?'));
-    const send=()=>{record('phase_response',line);socket.write(`* 1 FETCH (UID ${options.wrongUid?2:1} BODY[${section}]${metadata?'':'<0>'} {${options.declared??bytes.length}}\r\n`);if(options.declared===undefined){socket.write(bytes);socket.write(')\r\na4 OK done\r\n');}};if(options.phaseDelayMs)setTimeout(()=>{if(!socket.destroyed)send();},options.phaseDelayMs);else send();
+    const send=()=>{record('phase_response',line);socket.write(`* 1 FETCH (UID ${options.wrongUid?2:1} BODY[${section}]${metadata?'':'<0>'} {${options.declared??bytes.length}}\r\n`);if(options.declared===undefined){socket.write(bytes);socket.write(')\r\na4 OK done\r\n');}};if(options.phaseDelayMs){const deadline=performance.now()+options.phaseDelayMs;const delayedSend=()=>{if(socket.destroyed)return;const remaining=deadline-performance.now();if(remaining>0)setTimeout(delayedSend,remaining);else send();};setTimeout(delayedSend,options.phaseDelayMs);}else send();
    }else socket.destroy();
   }});
  });

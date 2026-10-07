@@ -169,7 +169,7 @@ export async function runF11ContextIntegration(t:TestContext){
    const grant={scope:'transport',tenant,mailbox,capabilities:['imap_headers'],smtpHost:'smtp.gmail.com',smtpPort:587,imapHost:'imap.gmail.com',imapPort:993,mailboxTransportRevision:'0',configFingerprint:transportFingerprint(config.providerAllowlist),expiresAt:new Date(Date.now()+600000).toISOString()};
    const runtime=new RuntimeStore(pool,(c,t,m)=>authorizeTransport(c,live,t,m,'imap_headers'),live);
    let firstCapture:import('../src/replies/context-store.js').CaptureAdmission|undefined;const outcomes:unknown[]=[];
-   const complete=async()=>{for(let n=0;n<8;n++){
+   const complete=async(expectFallback=false)=>{for(let n=0;n<8;n++){
     const claim=await runtime.claim('poll');assert.ok(claim);const admission=runtime.pollAdmission(claim);assert.ok(admission?.slot);
     const native=new LiveReplyAdapter(pool,live,f.fixture,admission.slot),read=native.read.bind(native);
     native.read=async(...args)=>{try{const value=await read(...args);outcomes.push({boundary:'native_read',kind:value.kind,snapshot:value.snapshot,page:value.kind==='page'?{coveredThrough:value.page.coveredThrough,uids:value.page.headers.map(h=>h.uid)}:null});return value;}catch(error){outcomes.push({boundary:'native_read',errorName:error instanceof Error?error.name:'unknown',code:error instanceof Object&&'code' in error?error.code:null});throw error;}};
@@ -180,6 +180,7 @@ export async function runF11ContextIntegration(t:TestContext){
     const turn=(await pool.query("SELECT service_seq FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[mailbox])).rows[0].service_seq;
     await runtime.finish(claim,'ready',outcome.state==='complete');firstCapture=runtime.takeCaptureAdmission(claim)??firstCapture;
     assert.equal((await pool.query("SELECT service_seq FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[mailbox])).rows[0].service_seq,turn);
+    if(expectFallback&&n===0)assert.equal(outcome.state,'scanning','invalidated complete prefix must take finite native capture');
     if(outcome.state==='complete')return;
    }throw new Error('native_poll_not_complete');};
    try{
@@ -190,9 +191,8 @@ export async function runF11ContextIntegration(t:TestContext){
     // Incremental completion omits UID1, so old pending UID requires actual native revalidation.
     await publishTransportGrant(pool,live,token,tenant,mailbox,'1',{...grant,capabilities:['imap_headers','imap_body']});
     const invalidated=(await pool.query('SELECT p.scan_complete,r.state,r.run_id FROM mailbox_poll p JOIN reply_rescan r ON r.mailbox_id=p.mailbox_id WHERE p.mailbox_id=$1',[mailbox])).rows[0];assert.equal(invalidated.scan_complete,false);assert.equal(invalidated.state,'complete');
-    const fallbackStart=outcomes.length;await complete();
+    const fallbackStart=outcomes.length;await complete(true);
     const fallback=outcomes.slice(fallbackStart) as {boundary?:string;outcome?:{state:string}}[];
-    assert.equal(fallback.find(x=>x.outcome)?.outcome?.state,'scanning','invalidated complete prefix must take finite native capture');
     assert.equal(fallback.some(x=>x.boundary==='empty_tail_commit'),false,'incomplete durable prefix never selects either shortcut');
     assert.ok(fallback.some(x=>x.boundary==='native_read'),'ordinary fallback reauthenticates old UID and reads native tail');
     const opened=(await pool.query('SELECT * FROM incoming_ai_event')).rows[0];assert.notEqual(opened.authenticated_run_id,pending.authenticated_run_id);assert.equal(opened.origin_run_id,pending.origin_run_id);assert.equal(opened.window_end.getTime()-opened.window_start.getTime(),12000);assert.equal(opened.attempt_deadline.getTime()-opened.queue_eligible_at.getTime(),450000);assert.deepEqual(opened.queue_eligible_at,pending.queue_eligible_at);assert.deepEqual(opened.attempt_deadline,pending.attempt_deadline);
