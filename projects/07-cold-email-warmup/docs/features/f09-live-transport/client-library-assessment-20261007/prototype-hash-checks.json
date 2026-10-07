@@ -1,0 +1,560 @@
+[
+  {
+    "category": "source",
+    "path": "/tmp/n7-mail-library-prototype-20261007/projects/07-cold-email-warmup/experiments/mail-library-prototype/package.json",
+    "expected": "3d58acc3f38ec430710a10989e2ba0122c9bc331bca449fb850cb73f1b54dffe",
+    "actual": "3d58acc3f38ec430710a10989e2ba0122c9bc331bca449fb850cb73f1b54dffe",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "source",
+    "path": "/tmp/n7-mail-library-prototype-20261007/projects/07-cold-email-warmup/experiments/mail-library-prototype/package-lock.json",
+    "expected": "d5f6245e15ba7d07bc4c3fc2ce41ea01f107596163526eccf22f6e9dec9ee3d8",
+    "actual": "d5f6245e15ba7d07bc4c3fc2ce41ea01f107596163526eccf22f6e9dec9ee3d8",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "source",
+    "path": "/tmp/n7-mail-library-prototype-20261007/projects/07-cold-email-warmup/experiments/mail-library-prototype/.gitignore",
+    "expected": "b16ddf1ac5e3f8e85384234af08a29654d144cce972458fe9bb722dce2f136de",
+    "actual": "b16ddf1ac5e3f8e85384234af08a29654d144cce972458fe9bb722dce2f136de",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "source",
+    "path": "/tmp/n7-mail-library-prototype-20261007/projects/07-cold-email-warmup/experiments/mail-library-prototype/fixture.mjs",
+    "expected": "79857732058c633009005b7c5e487a4cd7eead7397b53b508e75fc93da131c7e",
+    "actual": "79857732058c633009005b7c5e487a4cd7eead7397b53b508e75fc93da131c7e",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "source",
+    "path": "/tmp/n7-mail-library-prototype-20261007/projects/07-cold-email-warmup/experiments/mail-library-prototype/imap.mjs",
+    "expected": "596c376eff46b07cc1aa7c263394cf321b5bb1af03208235d49803ce438fda8e",
+    "actual": "596c376eff46b07cc1aa7c263394cf321b5bb1af03208235d49803ce438fda8e",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "source",
+    "path": "/tmp/n7-mail-library-prototype-20261007/projects/07-cold-email-warmup/experiments/mail-library-prototype/smtp.mjs",
+    "expected": "f322656e66140f9ff5689c0a3cbf2ab94b8cdec7d105834dd0874ee9cbe2a8ba",
+    "actual": "f322656e66140f9ff5689c0a3cbf2ab94b8cdec7d105834dd0874ee9cbe2a8ba",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "source",
+    "path": "/tmp/n7-mail-library-prototype-20261007/projects/07-cold-email-warmup/experiments/mail-library-prototype/test.mjs",
+    "expected": "b891dac782c0d230b8b76bc0b80766a1e075f5f950dab3d21c6e4e6950dff3bd",
+    "actual": "b891dac782c0d230b8b76bc0b80766a1e075f5f950dab3d21c6e4e6950dff3bd",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "source",
+    "path": "/tmp/n7-mail-library-prototype-20261007/projects/07-cold-email-warmup/experiments/mail-library-prototype/README.md",
+    "expected": "b5fbf957af901a005d08492a43b61942b07406c1eb199351bd277db59ddb4d36",
+    "actual": "b5fbf957af901a005d08492a43b61942b07406c1eb199351bd277db59ddb4d36",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-34.pem",
+    "expected": "d418951f8363c61bbc58a0f8fccf4833731fc01f6fabc51b206af3e656a9b004",
+    "actual": "d418951f8363c61bbc58a0f8fccf4833731fc01f6fabc51b206af3e656a9b004",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/disk-before.txt",
+    "expected": "f95efdbd4f2267a70e30bd5e42fde475dbbef4a19d6236ab5e200494dca3fa49",
+    "actual": "f95efdbd4f2267a70e30bd5e42fde475dbbef4a19d6236ab5e200494dca3fa49",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-13.pem",
+    "expected": "feae24cd9608a24dee0dcbf1138580ab828380d8b2a6d4f0b57ce68ec5f083c5",
+    "actual": "feae24cd9608a24dee0dcbf1138580ab828380d8b2a6d4f0b57ce68ec5f083c5",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/disk-after.txt",
+    "expected": "591ca87082bef62a050aed7c9451a198de91d136fe1261f18dab9cec461da27a",
+    "actual": "591ca87082bef62a050aed7c9451a198de91d136fe1261f18dab9cec461da27a",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-29.pem",
+    "expected": "7b212452ef361f005baddcf33a8003a1fbfa89caaa2f21c10710cafa5524943d",
+    "actual": "7b212452ef361f005baddcf33a8003a1fbfa89caaa2f21c10710cafa5524943d",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/syntax-load.json",
+    "expected": "5394550c42c1981c843d11d4618b06f70bbc289247f0b1cefa1f1484b2f184d0",
+    "actual": "5394550c42c1981c843d11d4618b06f70bbc289247f0b1cefa1f1484b2f184d0",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-8.pem",
+    "expected": "2f3b18aa0a34d35a598c0820491ae53f570888fba1cf1da291692dab3867a805",
+    "actual": "2f3b18aa0a34d35a598c0820491ae53f570888fba1cf1da291692dab3867a805",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/native-exit.txt",
+    "expected": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "actual": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-33.pem",
+    "expected": "6c2de21d96efc770d8140a014cdd407b1c3bdd295c401572bae0739758d3f7c4",
+    "actual": "6c2de21d96efc770d8140a014cdd407b1c3bdd295c401572bae0739758d3f7c4",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-api.json",
+    "expected": "e8354e0bd1c4248269112bc554c117ba1df4a7e089d06ee2ecc5cbca5f3af274",
+    "actual": "e8354e0bd1c4248269112bc554c117ba1df4a7e089d06ee2ecc5cbca5f3af274",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-6.pem",
+    "expected": "78e547a5a9f557ce9235f167135554ff63df3c5b2c920439a03026e317b6e194",
+    "actual": "78e547a5a9f557ce9235f167135554ff63df3c5b2c920439a03026e317b6e194",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-20.pem",
+    "expected": "b12941a218dec3b64e885acae70af58b655effcdd5c973925adb01c217d3be18",
+    "actual": "b12941a218dec3b64e885acae70af58b655effcdd5c973925adb01c217d3be18",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-7.pem",
+    "expected": "bb54075ea7f80263eeff873d6d5f9175fc57d882ff5d4de93528d5882dbe8632",
+    "actual": "bb54075ea7f80263eeff873d6d5f9175fc57d882ff5d4de93528d5882dbe8632",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-18.pem",
+    "expected": "a28146c01956505a938955ed241598e89b2b856b433809b7d11f863bbdb7b245",
+    "actual": "a28146c01956505a938955ed241598e89b2b856b433809b7d11f863bbdb7b245",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/preflight.json",
+    "expected": "e555e0803e6dc2227c8a34e189801b4a091e1d1526fb81a019b6079a1792d6a4",
+    "actual": "e555e0803e6dc2227c8a34e189801b4a091e1d1526fb81a019b6079a1792d6a4",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-32.pem",
+    "expected": "d41854ca0ecc9822ccd099188780e81ce5a54dae8ec4cd2d26101344bfab8f38",
+    "actual": "d41854ca0ecc9822ccd099188780e81ce5a54dae8ec4cd2d26101344bfab8f38",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/test.tap",
+    "expected": "8a5127660c4440cb41ad26fc9dcef96d17939c51c582694f3841c427785094d0",
+    "actual": "8a5127660c4440cb41ad26fc9dcef96d17939c51c582694f3841c427785094d0",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-14.pem",
+    "expected": "ed02ddf448589c54d45aee402882f6ac5a0a3b07069ab6153fcd0c22964c13db",
+    "actual": "ed02ddf448589c54d45aee402882f6ac5a0a3b07069ab6153fcd0c22964c13db",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-38.pem",
+    "expected": "a93b0abd0de92fab04e414ad4a653591e5f31402414da99f2816710b03fe8516",
+    "actual": "a93b0abd0de92fab04e414ad4a653591e5f31402414da99f2816710b03fe8516",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-25.pem",
+    "expected": "ff40f23c1cd08517bdbe5452c3f8ebd8da9dab1128c6198931a453b30140056d",
+    "actual": "ff40f23c1cd08517bdbe5452c3f8ebd8da9dab1128c6198931a453b30140056d",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-16.pem",
+    "expected": "2d56350b02768096c03ffd8b5f7c2388e5a2be3a7a931006d07bfef11efe9540",
+    "actual": "2d56350b02768096c03ffd8b5f7c2388e5a2be3a7a931006d07bfef11efe9540",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-3.pem",
+    "expected": "76065ea7f60ec55430ba4649aae449cd44de458dfe99afca23dc120e7ddede0c",
+    "actual": "76065ea7f60ec55430ba4649aae449cd44de458dfe99afca23dc120e7ddede0c",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-26.pem",
+    "expected": "9ca960303608bcc015425e2368e678bced10bd02f74089d1b7a4900125b1542e",
+    "actual": "9ca960303608bcc015425e2368e678bced10bd02f74089d1b7a4900125b1542e",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-1.pem",
+    "expected": "a66e169f87af813f5e4b1fd26143a21667f5a09f7e5755feaa6e92215e74e8c1",
+    "actual": "a66e169f87af813f5e4b1fd26143a21667f5a09f7e5755feaa6e92215e74e8c1",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-12.pem",
+    "expected": "3ad1eff174e5e89d3e433a49152cea5e20a8dbaa46c4c0e5c3813a7b2aa8ea59",
+    "actual": "3ad1eff174e5e89d3e433a49152cea5e20a8dbaa46c4c0e5c3813a7b2aa8ea59",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-30.pem",
+    "expected": "01db36cb81e635608e841eae80bb55f540a1a8af5eb2383d5468161bbed38581",
+    "actual": "01db36cb81e635608e841eae80bb55f540a1a8af5eb2383d5468161bbed38581",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-21.pem",
+    "expected": "ff853fdefc8d9aa57cd1b811a30bdea9d22fbf9deae42b8fc0cd717591f51053",
+    "actual": "ff853fdefc8d9aa57cd1b811a30bdea9d22fbf9deae42b8fc0cd717591f51053",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-37.pem",
+    "expected": "e417c4e392129475f482c4bf4efa30ff2c379fdf4459641f99fbecb26c8416d9",
+    "actual": "e417c4e392129475f482c4bf4efa30ff2c379fdf4459641f99fbecb26c8416d9",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-24.pem",
+    "expected": "3fbaa3351a483c0733c4448e7beefb8a7853b748578fc52cb2def90b5990fbed",
+    "actual": "3fbaa3351a483c0733c4448e7beefb8a7853b748578fc52cb2def90b5990fbed",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-10.pem",
+    "expected": "dc506697695c673305287b15ac1c77f4cf0f76336ba0239bc0376ee72f5c78bb",
+    "actual": "dc506697695c673305287b15ac1c77f4cf0f76336ba0239bc0376ee72f5c78bb",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-5.pem",
+    "expected": "2bd3a058b3a3a3e11b0b7a45fc7463a91e02f12c990fd3cd3eb20245079ea2c5",
+    "actual": "2bd3a058b3a3a3e11b0b7a45fc7463a91e02f12c990fd3cd3eb20245079ea2c5",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-9.pem",
+    "expected": "5dccf21f71efde7d58060a58a8fd0fe0c81a9a12974e7482aca755cf1a9149ba",
+    "actual": "5dccf21f71efde7d58060a58a8fd0fe0c81a9a12974e7482aca755cf1a9149ba",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-17.pem",
+    "expected": "0c6439d58b36d43ae88d9ce29fac1c0ef10be6f554db3c2232ca7d42724d529f",
+    "actual": "0c6439d58b36d43ae88d9ce29fac1c0ef10be6f554db3c2232ca7d42724d529f",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-28.pem",
+    "expected": "e7411f12190b461d2a14ce375983df69d239028856c85e50ea7d642e57ec2e04",
+    "actual": "e7411f12190b461d2a14ce375983df69d239028856c85e50ea7d642e57ec2e04",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-36.pem",
+    "expected": "3e21b3c46fbed2362c518be9fcc1cc751759d5c2962f005941fc211de366ecdd",
+    "actual": "3e21b3c46fbed2362c518be9fcc1cc751759d5c2962f005941fc211de366ecdd",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-2.pem",
+    "expected": "241a95506c4484a9096cd8c450321cdf240b27ad5a749c348d1106d7894432a8",
+    "actual": "241a95506c4484a9096cd8c450321cdf240b27ad5a749c348d1106d7894432a8",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-4.pem",
+    "expected": "15e64ecb307d9ff2cba827d78da56019f8543a836a6b34a8924faacedb424531",
+    "actual": "15e64ecb307d9ff2cba827d78da56019f8543a836a6b34a8924faacedb424531",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-19.pem",
+    "expected": "6804c90de58f500295eb244e6ec160e5e783963129d22fec6d5c1fa589ddaf32",
+    "actual": "6804c90de58f500295eb244e6ec160e5e783963129d22fec6d5c1fa589ddaf32",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-15.pem",
+    "expected": "7506da85887785e008c5ed8c0d1fdde26dcb68bc4e757b587abd81776d238bb7",
+    "actual": "7506da85887785e008c5ed8c0d1fdde26dcb68bc4e757b587abd81776d238bb7",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-11.pem",
+    "expected": "d416fe14c58e3f4f10a6ca6564ebe9c38ea5352b930bb0991a85584829bc0071",
+    "actual": "d416fe14c58e3f4f10a6ca6564ebe9c38ea5352b930bb0991a85584829bc0071",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/scenarios.json",
+    "expected": "81a05b13221e625f41c93341217a226e422e0903ba485b6e9bd697e3a73776ee",
+    "actual": "81a05b13221e625f41c93341217a226e422e0903ba485b6e9bd697e3a73776ee",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-22.pem",
+    "expected": "c074b9efd07bd69d2b7a00bc45cc62dc75cee8ee077c1734fccb475baf74267d",
+    "actual": "c074b9efd07bd69d2b7a00bc45cc62dc75cee8ee077c1734fccb475baf74267d",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-23.pem",
+    "expected": "8728b16664b491c49d2a171f105cd65edd4fd523c3e4f25b5616fbb179af42e5",
+    "actual": "8728b16664b491c49d2a171f105cd65edd4fd523c3e4f25b5616fbb179af42e5",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-0.pem",
+    "expected": "5fd2d1e08fb231c29cb30a8a76883741aa6fa6810775f83f7d573e8c2c798db2",
+    "actual": "5fd2d1e08fb231c29cb30a8a76883741aa6fa6810775f83f7d573e8c2c798db2",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/dependencies.json",
+    "expected": "d952377e43f61ef842933abef5837d615139805303971cfd481d7c550dd2ab7f",
+    "actual": "d952377e43f61ef842933abef5837d615139805303971cfd481d7c550dd2ab7f",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-35.pem",
+    "expected": "c1098b03448d04f8277f5a51925b72dd3623245c36aa25dc859b37e19c449403",
+    "actual": "c1098b03448d04f8277f5a51925b72dd3623245c36aa25dc859b37e19c449403",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-27.pem",
+    "expected": "2b763cfc7168280af6a51f61d253fbd66e1a14ff1536cbd44677321f1da2a7ce",
+    "actual": "2b763cfc7168280af6a51f61d253fbd66e1a14ff1536cbd44677321f1da2a7ce",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "evidence",
+    "path": "/tmp/n7-mail-library-prototype-author-i1-20261007/frozen/public-ca-31.pem",
+    "expected": "ffd98bcf354bf497dce586861346e6a0b8fc17d367ed3e6fa39ebc423dd127e8",
+    "actual": "ffd98bcf354bf497dce586861346e6a0b8fc17d367ed3e6fa39ebc423dd127e8",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "publicAPI",
+    "path": "/tmp/n7-mail-library-prototype-20261007/projects/07-cold-email-warmup/experiments/mail-library-prototype/node_modules/imapflow/package.json",
+    "expected": "2eaee15a684970bc74d2fc7d520435ecc2510fd8dc7f7b4b871ff468c3debecd",
+    "actual": "2eaee15a684970bc74d2fc7d520435ecc2510fd8dc7f7b4b871ff468c3debecd",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "publicAPI",
+    "path": "/tmp/n7-mail-library-prototype-20261007/projects/07-cold-email-warmup/experiments/mail-library-prototype/node_modules/imapflow/dist/esm/types.d.ts",
+    "expected": "4fb351c53e3151b147e71897c62d1ac8ab99271fec206b2a318804e1f24db6b4",
+    "actual": "4fb351c53e3151b147e71897c62d1ac8ab99271fec206b2a318804e1f24db6b4",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "publicAPI",
+    "path": "/tmp/n7-mail-library-prototype-20261007/projects/07-cold-email-warmup/experiments/mail-library-prototype/node_modules/imapflow/dist/esm/imap-flow.js",
+    "expected": "6a97b527bd05774874b0149f21883e9f022db089dfc5be8d298605ef5f55a55e",
+    "actual": "6a97b527bd05774874b0149f21883e9f022db089dfc5be8d298605ef5f55a55e",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "publicAPI",
+    "path": "/tmp/n7-mail-library-prototype-20261007/projects/07-cold-email-warmup/experiments/mail-library-prototype/node_modules/imapflow/dist/esm/handler/imap-stream.js",
+    "expected": "2e24457066fd4333b7a81e3da76040bff396e0b09aba3576c991c7090ba47be3",
+    "actual": "2e24457066fd4333b7a81e3da76040bff396e0b09aba3576c991c7090ba47be3",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "publicAPI",
+    "path": "/tmp/n7-mail-library-prototype-20261007/projects/07-cold-email-warmup/experiments/mail-library-prototype/node_modules/nodemailer/package.json",
+    "expected": "5fa4fd8866ae6b39faa90cc71d750ce44a96bbf4a0156e62ad80b43eb31f69e6",
+    "actual": "5fa4fd8866ae6b39faa90cc71d750ce44a96bbf4a0156e62ad80b43eb31f69e6",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  },
+  {
+    "category": "publicAPI",
+    "path": "/tmp/n7-mail-library-prototype-20261007/projects/07-cold-email-warmup/experiments/mail-library-prototype/node_modules/nodemailer/dist/esm/smtp-connection/index.js",
+    "expected": "f35b6dc75f1237d68235d65df2ef19c8058699651c4eb7e1fc376eae5e9c85c6",
+    "actual": "f35b6dc75f1237d68235d65df2ef19c8058699651c4eb7e1fc376eae5e9c85c6",
+    "match": true,
+    "regular": true,
+    "symlink": false
+  }
+]

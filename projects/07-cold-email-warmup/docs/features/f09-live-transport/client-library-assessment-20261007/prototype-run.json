@@ -1,0 +1,99 @@
+{
+  "run_id": "20261007-mail-library-prototype",
+  "started_utc": "2026-10-07T06:50:05Z",
+  "scope": "isolatedloopbackprototype;no liveproviders/sharedDB/publicdeployment",
+  "base_revision": "04ccbb65b0fb78dafecc1ab09106a09c5d267fe4",
+  "reference_candidate": "b6e8ae16e8feb6c67888eb2f006cfbb299b40197",
+  "profile": "model-routing-econom",
+  "root_actual_model": null,
+  "usage": null,
+  "cost": null,
+  "disk_free_bytes": 3709587456,
+  "status": "REVIEWED_NEGATIVE_ASSESSMENT_READY_FOR_DELIVERY",
+  "route": "L: new transport adapter boundaries, isolated nonproduction prototype; no product acceptance",
+  "roles": {
+    "planner": "gpt-6.1-sol/high requested",
+    "author": "gpt-6.1-sol/medium requested; native actor launched; host measurement unavailable",
+    "reviewer": "freshgpt-6.1-sol/high planned"
+  },
+  "plan_sha256": "db13c414fd1a881f72db70cf87527cf7280a16ccd72198e9d44e36f5ff812b0b",
+  "validated_utc": "2026-10-07T06:55:24Z",
+  "mechanical_route": {
+    "exit_code": 0,
+    "tier": "S",
+    "files": [
+      "imap.mjs",
+      "smtp.mjs"
+    ],
+    "substantive_tier": "L",
+    "reason": "New network protocol and lifetime safety boundaries; full bounded PLAN/VALIDATE/IMPLEMENT/REVIEW retained"
+  },
+  "implementation_route": "L unchanged after frozen planner scope validated",
+  "next_actor": "/root/n7_sol_coordinator: experiment/docs integration and F11 continuation",
+  "author_launch_attempt": {
+    "status": "failed_before_creation",
+    "reason": "agent thread limit reached",
+    "actual_ack": null
+  },
+  "priority_dependency": "A37 terminal; prototype lane reserved through fresh independent HIGH review",
+  "updated_utc": "2026-10-07T07:30:43.990968+00:00",
+  "author_attempt_i1": {
+    "actor": "/root/n7_mail_library_author_i1",
+    "ack_utc": "2026-10-07T07:07:48Z",
+    "work_cut_utc": "2026-10-07T07:22:48Z",
+    "seal_cut_utc": "2026-10-07T07:25:48Z",
+    "usage": null,
+    "cost": null,
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning": "medium",
+    "actual_model": null,
+    "actual_reasoning": null,
+    "status": "sealed",
+    "finished_utc": "2026-10-07T07:22:05.161951Z",
+    "elapsed_wall_ms": 857162,
+    "revision": "530a73fb5498ae873d48e4b05176946bee1734a4",
+    "freeze_sha256": "d458be3838f2c597edf00bd003dccf0fde616e7fd87267ba065937e622372dec",
+    "wrapper_test_exit": 0,
+    "wrapper_tests_passed": 7,
+    "author_compatibility_verdict": {
+      "imapflow": "FAIL",
+      "nodemailer": "INCONCLUSIVE"
+    },
+    "verdict_not_independently_accepted": true
+  },
+  "reviewer_attempt_r1": {
+    "actor": "/root/n7_mail_library_reviewer_r1",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning": "high",
+    "actual_model": null,
+    "actual_reasoning": null,
+    "usage": null,
+    "cost": null,
+    "fork_turns": "none",
+    "inputs": "approved planner packet + frozen code + objective raw; author narrative excluded",
+    "ack_utc": "2026-10-07T07:22:58Z",
+    "status": "sealed",
+    "work_cut_utc": "2026-10-07T07:30:58Z",
+    "elapsed_wall_ms": 393068,
+    "verdict": {
+      "imapflow": "FAIL",
+      "nodemailer": "INCONCLUSIVE"
+    },
+    "publication_ready": true,
+    "source_correction_required": false,
+    "raw_suite_rerun": false,
+    "artifacts_sha256": {
+      "review.md": "da5cb43aac79d9960e4d1fe4698ebeba38d3dc37fd9c0ef80f1957879ab3b449",
+      "review.json": "9fce439406c2e2b7c49f27f6460d26a927676e8b53d825efc861940884dc5059",
+      "final-seal.json": "4cea6ea4b83bc4d3a1708f5ed6ae2d0af5d8dd800eda71952a08b2b73f9b5aa7"
+    },
+    "final_clock_report": "Reviewer approximate07:29:31 UTC; exacttimestamp in final-seal.json"
+  },
+  "prototype_branch_delivery": {
+    "revision": "530a73fb5498ae873d48e4b05176946bee1734a4",
+    "branch": "work/n7-mail-library-prototype-20261007",
+    "push_exit": 0,
+    "post_push_confirmed_utc": "2026-10-07T07:30:26Z",
+    "exact_process_finish_utc": null
+  }
+}

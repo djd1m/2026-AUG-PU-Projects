@@ -1,0 +1,142 @@
+{
+  "source_revision": "b6e8ae16e8feb6c67888eb2f006cfbb299b40197",
+  "input_packet": "/tmp/n7-f11-post-ready-restart-planner-prep-20261007/context_manifest.json",
+  "input_packet_sha256": "f55759440f60bb6f62203a61e94b721dd97078da6e10b2fd32d85a517bc65ce3",
+  "approved_packet_entries": 1453,
+  "selected_hashed_inputs": [
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/01_specification.md",
+      "sha256": "dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+      "bytes": 8592,
+      "role": "approved normative source"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/02_pseudocode.md",
+      "sha256": "1deb0b3d98038350f2284e9af0313df8d3792c0b0b1c8be869b8da750b5a1752",
+      "bytes": 12226,
+      "role": "approved normative source"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/03_architecture.md",
+      "sha256": "307b5f5fc82e483f3d880b108c6abac25c44ba43e01ec6eaa001864179850dfe",
+      "bytes": 6923,
+      "role": "approved normative source"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/04_refinement.md",
+      "sha256": "ca4f3cb774b0a3cad91cb4e3cbab21f0e951c9fc9e9fd52b2308794c441fa8de",
+      "bytes": 4699,
+      "role": "approved normative source"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/05_completion.md",
+      "sha256": "5bb05f10bbcc155b96d0f0d0b8594305fb1ee1cebfdf1fef1aac28e1303da6f2",
+      "bytes": 7125,
+      "role": "approved normative source"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/decisions-owner.md",
+      "sha256": "cf47d55af1d5ad4cd5f34c7531f1d2004dfdc98076e7459c76af8b93f3e709d8",
+      "bytes": 8783,
+      "role": "approved normative source"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/ai-policy-v1.md",
+      "sha256": "d3d7c9d4614134f1dca9078ed797e3f8ee94a7bc613856bb54f2f2628b566512",
+      "bytes": 13041,
+      "role": "approved normative source"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/mailboxes/transport-lifetime.ts",
+      "sha256": "ef2963bffc4a99f2916ae01281c8c3f68e0f40f0dadd990dccf57a3342d659c7",
+      "bytes": 3337,
+      "role": "frozen code/build/fixtures"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/mailboxes/transport-slots.ts",
+      "sha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903",
+      "bytes": 5969,
+      "role": "frozen code/build/fixtures"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/adapter.ts",
+      "sha256": "a0240eeaf94c89431fa565eb19415b325ad16b46e86a37c6656c0fc309fc77d7",
+      "bytes": 13771,
+      "role": "frozen code/build/fixtures"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/context-store.ts",
+      "sha256": "9c138e11e3447cf02c8270f02341a01b32f4a3e98549e451ac8ec1535c731c78",
+      "bytes": 29328,
+      "role": "frozen code/build/fixtures"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/imap.ts",
+      "sha256": "62485b58caa0da5e9211418c7c880dafb24d584a6fbd5654235e51e3cd57c838",
+      "bytes": 4253,
+      "role": "frozen code/build/fixtures"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/store.ts",
+      "sha256": "95efd78454f7eeb1d8ed475e5125ddd9eb98f50acd48446ed6ffde7d2038cefd",
+      "bytes": 17266,
+      "role": "frozen code/build/fixtures"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/worker.ts",
+      "sha256": "00734b55edbffcc2fef735f26837b1edfd8fdc0c0edde21f335300addfef49ed",
+      "bytes": 12976,
+      "role": "frozen code/build/fixtures"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/runtime/worker.ts",
+      "sha256": "f3448d307fa7c4dc55e134113dbddb1b1abf711508459bc555d1f751b2025d3a",
+      "bytes": 4100,
+      "role": "frozen code/build/fixtures"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+      "sha256": "cfb92e9aba6ba962232cb9e09b32602e428a575fe6fd07de40da150a10fe83a7",
+      "bytes": 89403,
+      "role": "frozen code/build/fixtures"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/02_pseudocode.md",
+      "sha256": "eeebe53c60f3b940429172b54ff130378e313fa91b64538fda4f43e4c265adb6",
+      "bytes": 28542,
+      "role": "current narrowly amended normative source"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/03_architecture.md",
+      "sha256": "f8b9e2ee3946c8e9d569ed27f9e5d74c3df8711195c7ffcbc7210fbe6641b368",
+      "bytes": 23873,
+      "role": "current narrowly amended normative source"
+    },
+    {
+      "path": "/tmp/n7-f11-native-empty-tail-fleet-verify-a37/fault/native.log",
+      "sha256": "2864ac81c374b5d57d211250d5d532c3cf38f074c806de05ded18b34ad918d6f"
+    },
+    {
+      "path": "/tmp/n7-f11-native-empty-tail-fleet-verify-a37/fault/native-exit.txt",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "/tmp/n7-f11-native-empty-tail-fleet-verify-a37/objective-cause-facts.json",
+      "sha256": "76dd58c3da4d167376352b9e06b0fabd611ad56b8166aea6601418b07ff95822"
+    },
+    {
+      "path": "/tmp/n7-f11-native-empty-tail-fleet-verify-a37/normative-source-bindings.json",
+      "sha256": "5ce4483e1d3d6c71cd06070ff7b1f5b5db2b46b0b495e439e4571a92041b3dd7"
+    },
+    {
+      "path": "/tmp/n7-f11-post-ready-restart-planner-prep-20261007/existing-positive-gates.json",
+      "sha256": "ab7900d05e9af55a7d4fc9ffb530f399cfcc202eed645700f1cc5d9fd7a8671b",
+      "role": "positive inventory only; not execution/PASS"
+    }
+  ],
+  "read_scope": "Necessary normative lines and narrow selected code/objective lines only, not all1453 files",
+  "excluded": "A37 cause_plan.md and author/coordinator history, receipts, notes not read",
+  "network_or_provider_calls": false,
+  "source_edits": false,
+  "output_only": "/tmp/n7-f11-restart-post-ready-planner-a38"
+}

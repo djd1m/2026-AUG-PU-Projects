@@ -1,0 +1,20 @@
+{
+  "joins": {
+    "frozen_scenario_count": 39,
+    "raw_exact_exit_close_all_zero": true,
+    "raw_peer_accept_close_all_one": true,
+    "raw_final_fixture_sockets_listeners_timers_all_zero": true,
+    "scenario_pids_present": [],
+    "reviewer_owned_children": [],
+    "reviewer_owned_child_count": 0,
+    "all_reviewer_tool_processes_completed": true,
+    "limitation": "39 scenario ChildProcess joins verified from raw records; freeze self-report of 253 observed PIDs is not an independent exact exit witness for all non-scenario processes."
+  },
+  "privacy": {
+    "private_pem_evidence_paths": [],
+    "encoded_plain_evidence_paths": [],
+    "private_fixture_dirs_remaining": [],
+    "public_tmp_dirs_remaining": [],
+    "mutation_files_remaining": []
+  }
+}

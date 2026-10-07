@@ -1,0 +1,231 @@
+{
+  "run_id": "20261007-mail-library-prototype",
+  "attempt_id": "review-r1",
+  "source_revision": "530a73fb5498ae873d48e4b05176946bee1734a4",
+  "base_revision": "04ccbb65b0fb78dafecc1ab09106a09c5d267fe4",
+  "plan_path": "/tmp/n7-client-library-assessment-20261007/prototype-plan.md",
+  "plan_sha256": "db13c414fd1a881f72db70cf87527cf7280a16ccd72198e9d44e36f5ff812b0b",
+  "planner_provenance_path": "/tmp/n7-client-library-assessment-20261007/prototype-planner-receipt.json",
+  "author_history_received": false,
+  "author_receipt_read": false,
+  "README_used_as_oracle": false,
+  "README_audit": "Its FAIL/INCONCLUSIVE verdicts and no-replacement recommendation are honest and consistent with raw outcomes. No publication-blocking false PASS found. Additional auth fallback and cleanup limitations belong in coordinator decision evidence.",
+  "verdicts": {
+    "imapflow": "FAIL",
+    "nodemailer": "INCONCLUSIVE",
+    "combined_replacement": "not_recommended"
+  },
+  "compatibility_accepted": false,
+  "assessment_completed": true,
+  "frozen_native_suite": {
+    "tests": 7,
+    "pass": 7,
+    "exit": 0,
+    "elapsed_ms": 28112.097745,
+    "meaning": "Wrapper test pass, not compatibility approval"
+  },
+  "targeted_runtime_tests": [],
+  "targeted_runtime_tests_reason": "No concrete disputed outcome needs rerun: raw counterexample plus pinned source establish FAIL and absent scenario evidence establishes INCONCLUSIVE. Do not broadly repeat unchanged suite.",
+  "hash_checks": {
+    "count": 62,
+    "all_match": true,
+    "runtime_sha256": "e6ec2c188d83d813f81f2de8aea084d74dce603ac1abedd0a30ad941b10087b2"
+  },
+  "acceptance_criteria": [
+    {
+      "id": "I1",
+      "result": "PASS",
+      "evidence_indices": [
+        0,
+        37
+      ],
+      "note": "Read-only EXAMINE, numeric UID1:9 fixed authenticated UIDNEXT10/UIDVALIDITY7, sequence1 returning UID3, selected BODY.PEEK partials; readOnly mutation changes EXAMINE to SELECT and assertion fails."
+    },
+    {
+      "id": "I2",
+      "result": "PASS",
+      "evidence_indices": [
+        1,
+        2,
+        3,
+        6
+      ],
+      "note": "Out-of-range and duplicate reject; no tagged completion rejects; changed UIDVALIDITY explicitly resets; sparse normal UID3 completes only after tagged OK."
+    },
+    {
+      "id": "I3",
+      "result": "PASS",
+      "evidence_indices": [
+        0,
+        4,
+        5
+      ],
+      "note": "Metadata partial8192/text32768 observed; normal bounded MIME/text and oversized/unsupported metadata rejection; no whole-message/attachment request."
+    },
+    {
+      "id": "I4",
+      "result": "FAIL",
+      "evidence_indices": [
+        7,
+        8,
+        11
+      ],
+      "note": "Advertised64MiB and partial-ignoring8MiB fail LiteralTooLarge via supported public cap before literal accumulation; RSS deltas2752512/2609152B; sent1377/33120B, elapsed345/289ms. Total receive invariant concretely fails on aggregate scenario1134545B; total pending<=128KiB is unproven. Child baseline/peak include rss,heapUsed,external,arrayBuffers; sampling alone is not allocation proof."
+    },
+    {
+      "id": "I5",
+      "result": "FAIL",
+      "evidence_indices": [
+        9,
+        10,
+        12,
+        13,
+        27,
+        28,
+        31
+      ],
+      "note": "Observed deadline/stalled TLS, greeting, auth, literal and trickled literal close/exit; positive numericIP/SNI and certificate negatives pass. No independently changed resolver/endpoint witness. No-LOGIN-fallback violates common gate R2; fallback lifetime bound R3 incomplete."
+    },
+    {
+      "id": "S1",
+      "result": "INCONCLUSIVE",
+      "evidence_indices": [
+        14,
+        15,
+        16,
+        17,
+        33,
+        34
+      ],
+      "note": "Implicit/requiredSTARTTLS, verifiedTLS-beforePLAIN, exact UTF8 MIME/dot de-stuffing, one recipient/message/connection and bad certificate no-auth/no-body pass. Independently changed resolver/endpoint after pin witness missing."
+    },
+    {
+      "id": "S2",
+      "result": "PASS",
+      "evidence_indices": [
+        18,
+        19,
+        20
+      ],
+      "note": "DATA450/550 and disconnect after RCPT before354 nonaccepted with zero body; owned publicReadable never produced a byte for drop-pre. False marker proves no supplied MIME, true marker remains conservative."
+    },
+    {
+      "id": "S3",
+      "result": "PASS",
+      "evidence_indices": [
+        21,
+        22,
+        38
+      ],
+      "note": "Body/final drop unknown_delivery with one attempt/connection, body bytes observed; changing unknown to accepted makes the fixed assertion fail."
+    },
+    {
+      "id": "S4",
+      "result": "PASS",
+      "evidence_indices": [
+        17,
+        23,
+        25,
+        26
+      ],
+      "note": "Only complete final250 accepted; truncated250 unknown; final450/550 rejected; MAIL/RCPT250 never alone publishes accepted. Public SMTP callback parser and classify guard inspected."
+    },
+    {
+      "id": "S5",
+      "result": "INCONCLUSIVE",
+      "evidence_indices": [
+        24,
+        29,
+        30,
+        32,
+        35,
+        36
+      ],
+      "note": "StalledTLS/greeting/auth/final, slow-body and trickled-final deadline outcomes and exact native joins pass. Trickled greeting/auth and explicit abort before first MIME byte missing; exact cleanup fallback contract fails common harness R3. No full cancellation matrix PASS."
+    }
+  ],
+  "findings": [
+    {
+      "id": "R1",
+      "severity": "high",
+      "status": "confirmed",
+      "library": "imapflow",
+      "ac": [
+        "I4",
+        "compatibility envelope: total receive <=1MiB"
+      ],
+      "paths": [
+        "imap.mjs:4",
+        "imap.mjs:16",
+        "test.mjs:34",
+        "fixture.mjs:64"
+      ],
+      "evidence": "frozen/scenarios.json[11]: complete, received=1134545, peer.sentBytes=1134545, elapsed=459ms; this passing counterexample exceeds1048576B. public maxResponseSize resets per response (imap-stream.js187-190,277).",
+      "remedy": "Retain explicit compatibility FAIL/reject adoption. A later receive cap would require a separately demonstrated supported public enforcement path; no parser/private-hook work is requested."
+    },
+    {
+      "id": "R2",
+      "severity": "high",
+      "status": "confirmed_source",
+      "library": "imapflow",
+      "ac": [
+        "common gate: no OAuth/LOGIN fallback",
+        "I5 common gate"
+      ],
+      "paths": [
+        "imap.mjs:4",
+        "node_modules/imapflow/dist/esm/imap-flow.js:1536",
+        "node_modules/imapflow/dist/esm/imap-flow.js:1545",
+        "node_modules/imapflow/dist/esm/imap-flow.js:1556",
+        "node_modules/imapflow/dist/esm/commands/authenticate.js:210"
+      ],
+      "evidence": "No loginMethod override is configured. With AUTH=LOGIN but no AUTH=PLAIN, public implementation chooses SASL LOGIN; with neither capability it executes LOGIN. Frozen fixture only advertises AUTH=PLAIN, so raw normal scenarios cannot rule these branches out. No targeted execution needed to establish reachable source branches.",
+      "remedy": "Record additional compatibility FAIL in decision evidence. Public auth.loginMethod=AUTH=PLAIN prevents SASL-LOGIN selection, but alone cannot suppress imap-flow.js1556 LOGIN fallback with neither auth capability. Before claiming PLAIN-only compatibility require a supported public enforcement path and negative capability fixtures observing zero LOGIN/credential emission, or retain FAIL."
+    },
+    {
+      "id": "R3",
+      "severity": "medium",
+      "status": "confirmed_source",
+      "library": "common fixture harness",
+      "ac": [
+        "common lifetime: <=5s graceful then SIGKILL and <=5s exact exit wait"
+      ],
+      "paths": [
+        "test.mjs:19",
+        "test.mjs:21",
+        "test.mjs:22"
+      ],
+      "evidence": "Fallback watchdog is7000ms and await exited/closed has no second bounded exact-exit wait. All39 observed scenarios exit normally in<=675ms; these successes do not exercise or validate the prescribed cleanup fallback.",
+      "remedy": "For any future full-gate PASS, cap graceful wait at5s and separately bound the exact child exit/close wait after SIGKILL to5s. Preserve failed/missing join outcome; a stuck owned child must stay coordinator-owned. Current negative assessment can be published with this limitation, without repairing frozen source."
+    }
+  ],
+  "joins": {
+    "frozen_scenario_count": 39,
+    "raw_exact_exit_close_all_zero": true,
+    "raw_peer_accept_close_all_one": true,
+    "raw_final_fixture_sockets_listeners_timers_all_zero": true,
+    "scenario_pids_present": [],
+    "reviewer_owned_children": [],
+    "reviewer_owned_child_count": 0,
+    "all_reviewer_tool_processes_completed": true,
+    "limitation": "39 scenario ChildProcess joins verified from raw records; freeze self-report of 253 observed PIDs is not an independent exact exit witness for all non-scenario processes."
+  },
+  "privacy": {
+    "private_pem_evidence_paths": [],
+    "encoded_plain_evidence_paths": [],
+    "private_fixture_dirs_remaining": [],
+    "public_tmp_dirs_remaining": [],
+    "mutation_files_remaining": []
+  },
+  "limitations": [
+    "Total pending<=128KiB unproven",
+    "Common independently changed resolver/endpoint fixture missing for both libraries",
+    "SMTP cancellation matrix incomplete",
+    "Common fallback cleanup path not within normative bound",
+    "Actual model/effort/usage/cost unavailable",
+    "No product integration, scheduler, DB/privacy/TTL/quota/provider/performance acceptance"
+  ],
+  "required_source_changes_before_negative_assessment_publication": [],
+  "reviewer_children_spawned": 0,
+  "status": "completed"
+}

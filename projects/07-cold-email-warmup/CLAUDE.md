@@ -10,8 +10,9 @@ Canonical product/architecture docs: docs/. Validated design: docs/validation-re
 Общий пул начинается с добровольной когорты курса; без пары показываем waiting.
 Репутация unknown до проверяемых наблюдений. OWN-N7-004 включает AI replies,
 unlimited connected mailboxes и живой автопрогрев в expanded MVP. CRM и покупка
-доменов исключены. F07, F08 и F09 приняты на локальных протокольных fixtures; F10–F14 и
-отдельно разрешаемый F15 live-пилот ещё не завершены.
+доменов исключены. F07–F10 приняты на локальных протокольных fixtures и source-bound проверках; F11–F14 и
+отдельно разрешаемый F15 live-пилот ещё не завершены. Публичный кабинет пока использует
+прежний F08 preview; он не подтверждает развёртывание принятого F10 или кандидатов F11.
 
 ## Architecture
 Distributed monolith: web/API и отдельный worker используют PostgreSQL16, очередь
@@ -34,7 +35,9 @@ Node22, TypeScript, native HTTP, pg, Argon2id; F08 использует native T
 
 ## Security Rules
 Specification.md safety-v1 is authoritative. Unchecked separate pool/campaign consent;
-no sending on save. Live SMTP, real charge and deployment remain disabled.
+no sending on save. Live SMTP, product OpenAI calls and real charge remain disabled.
+Owner-authorized existing F08 preview publication is documented in docs/deployment-checkpoint.md;
+other deployment changes require their own gate.
 ADR001 explicitly uses SERVER AEAD plus external runtime key for background workers;
 generic client-only template guidance does not apply. Never expose credentials.
 Peer consent discloses sender/header/test body; private campaign/contact/credential APIs tenant-scoped.
