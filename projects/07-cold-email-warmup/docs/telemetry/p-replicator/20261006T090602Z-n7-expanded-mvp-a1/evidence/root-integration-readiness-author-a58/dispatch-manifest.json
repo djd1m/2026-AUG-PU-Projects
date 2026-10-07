@@ -1,0 +1,26 @@
+{
+  "runId": "20261006T090602Z-n7-expanded-mvp-a1",
+  "launchMs": 1791374864075.5127,
+  "units": [
+    {
+      "workUnitId": "f11_a58_integration_readiness_author",
+      "tracePath": "/tmp/n7-f11-integration-readiness-author-a58-20261007/receipt.md"
+    }
+  ],
+  "source_root": "/tmp/n7-integration-readiness-a58-20261007/projects/07-cold-email-warmup",
+  "baseline_revision": "e9ec591e714932cfdd17339f5017b460f8476b16",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "allocated_at": "2026-10-07T12:07:44.075537+00:00",
+  "trace_absent_before_dispatch": true,
+  "planner_sha256": "d77b774bc3cbfd0ec843520fa999d5f5472059d53251224d5c0f70a788632876",
+  "owned_delivered_paths": [
+    "tests/diagnostics-integration.test.ts",
+    "tests/capacity-integration.test.ts"
+  ],
+  "owned_local_guard": "/tmp/n7-f11-integration-readiness-author-a58-20261007/guard-a58.mjs",
+  "guard_baseline_sha256": "ae35c201b73173210edf457059bac5571df9d6b718e5b7a36a9468999780a65e",
+  "scope": "source-only readinessimplementation first, existing narrowlyregisteredfixturechild only no DBgrants/networkpermission expansion",
+  "runtime_db_lease": "NOTgranted before root explicit actualA57joined release; static sourcecheck/build allowed in independent sparseworktree"
+}

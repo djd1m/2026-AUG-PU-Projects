@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 A58 guarded integration readiness native checks; A60 actual source-only preparation followup",
+  "current_stage": "F11 A61 independent fixture readiness review; A60 runtime preparation completed, no runtimelease yet",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -1329,5 +1329,23 @@
     "runtime_lease": false,
     "actual_ack": null,
     "receipt": "/tmp/n7-f11-material-regression-prep-a60-20261007/followup-receipt.md"
+  },
+  "f11_root_material_regression_prepare_a60_terminal": {
+    "delivery_checker_exit": 0,
+    "verdict": "PREPARATION_ONLY_COMPLETE",
+    "duration_seconds": 402.181,
+    "exact_commands": 15,
+    "runtime_executed": false,
+    "source_revision": "a36767f921f8e9ff425728e5b80d0c38340b4475",
+    "next": "actual bounded runtime lease after A58 sealed protected-baseline measurement"
+  },
+  "f11_root_integration_readiness_author_a58_terminal": {
+    "source_revision": "1ca3c56a43df544d752a516afdd96d93f1bef1da",
+    "objective_files_hash_verified": 216,
+    "sealed_at": "2026-10-07T12:31:25.249489+00:00",
+    "native_receipt_checker_exit": 0,
+    "source_push_exit": 0,
+    "independent_review": "A61 actual running",
+    "full_F11_accepted": false
   }
 }

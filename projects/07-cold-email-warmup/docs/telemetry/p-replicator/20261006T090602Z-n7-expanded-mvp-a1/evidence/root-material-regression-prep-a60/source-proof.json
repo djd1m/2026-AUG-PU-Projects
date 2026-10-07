@@ -1,0 +1,27 @@
+{
+  "prepared_at": "2026-10-07T12:27:18.126002+00:00",
+  "source_revision": "a36767f921f8e9ff425728e5b80d0c38340b4475",
+  "test_source_sha256": "bcfedf23511d32f8b41f38a8d83ee6d655887461b9023b4d58ac03885560b658",
+  "source_freeze_files": 222,
+  "source_all_hashes_match": true,
+  "source_tracked_clean": true,
+  "exact_title_count": 15,
+  "callbacks_were_not_executed": true,
+  "exact_native_patterns": true,
+  "inner_native_timeout_45_60_preserved": true,
+  "guards_retained": [
+    "numeric PG + loopback only",
+    "DNS denial",
+    "descendant IPC fixture validation",
+    "PID/startTicks ancestry",
+    "exact owned schema connection identity"
+  ],
+  "protected_schema_count": 25,
+  "protected_table_count": 1025,
+  "syntactic_checks": {
+    "python_ast": true,
+    "bash_n": true,
+    "node_runtime_executed": false
+  },
+  "current_disk_available_bytes": 3328126976
+}
