@@ -2,6 +2,7 @@ import { loadMasterKey } from '@grelka/secrets';
 import { Plan } from '@grelka/shared';
 import { openDb } from '@grelka/db';
 import type { Queue } from '@grelka/queue';
+import { InProcessQueue } from '@grelka/queue';
 
 export interface Config {
   db: import('@grelka/db').Db;
@@ -23,6 +24,7 @@ export async function loadConfig(env: NodeJS.ProcessEnv = process.env): Promise<
   if (!secretHex || secretHex.length < 32) throw new Error('TOKEN_SECRET обязателен (hex, ≥32 символов)');
   return {
     db: driver.db,
+    queue: new InProcessQueue(),
     masterKey: loadMasterKey(env),
     tokenSecret: Buffer.from(secretHex, 'hex'),
     accessTtlSec: Number(env.JWT_ACCESS_TTL ?? 900),

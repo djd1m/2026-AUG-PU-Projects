@@ -69,9 +69,10 @@ describe('CSV и шаблоны (FR-CAMP-001, US-007)', () => {
 });
 
 describe('warmup: ramp и пары (FR-POOL-002/003)', () => {
-  it('ramp день 1 = 2, растёт, потолок соблюдает', () => {
-    assert.equal(ramp(1, 100), 2);
-    assert.ok(ramp(3, 100) >= 6 && ramp(3, 100) <= 7);
+  it('ramp день 1 = 2 (без джиттера), растёт, потолок соблюдает, объём рандомизируется', () => {
+    assert.equal(ramp(1, 100, 0), 2);
+    assert.ok(ramp(3, 100, 0) >= 6 && ramp(3, 100, 0) <= 7);
+    assert.ok(ramp(1, 100) >= 2 && ramp(1, 100) <= 3);
     assert.equal(ramp(30, 20), 20);
     assert.equal(ramp(30, 0), 0);
   });

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Грелка — промежуточная оболочка UI (N7)</title>
+<style>
+  :root{--bg:#0f172a;--panel:#1e293b;--line:#334155;--ink:#e2e8f0;--dim:#94a3b8;--acc:#f97316;--ok:#10b981}
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.55 system-ui,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+  header{display:flex;gap:14px;align-items:center;padding:14px 22px;border-bottom:1px solid var(--line)}
+  .logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--acc),#ef4444);display:grid;place-items:center;font-size:16px}
+  b.brand{font-size:17px}
+  nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+  nav button{padding:7px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;font-size:13px}
+  nav button.on{border-color:var(--acc);color:var(--acc);font-weight:600}
+  main{max-width:960px;margin:24px auto;padding:0 20px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:14px}
+  h2{margin:0 0 6px;font-size:17px;color:var(--acc)}
+  .dim{color:var(--dim);font-size:13px}
+  .grid{display:flex;gap:10px;flex-wrap:wrap}
+  .stat{flex:1;min-width:140px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .stat b{display:block;font-size:22px}
+  .btn{background:var(--acc);border:0;border-radius:8px;padding:9px 16px;font-weight:600;cursor:pointer;color:#0b1220}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .curve{height:90px;background:var(--bg);border:1px solid var(--line);border-radius:10px}
+  .curve svg{width:100%;height:100%}
+  .pill{font-size:11px;border:1px solid var(--line);border-radius:6px;padding:1px 8px;color:var(--dim);margin-left:6px}
+  .ok{color:var(--ok)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  td,th{border:1px solid var(--line);padding:6px 8px;text-align:left}
+  .banner{background:#26130a;border-left:3px solid var(--acc);border-radius:0 8px 8px 0;padding:8px 12px;font-size:13px;margin:10px 0}
+  section[data-screen]{display:none}
+  section[data-screen].on{display:block}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🔥</div><b class="brand">Грелка</b><span class="dim">· N7 · обработка промежуточная (µ-build)</span>
+  <nav id="nav"></nav>
+</header>
+<main>
+  <div class="banner">Промежуточная оболочка UI: статика + локальные данные-заглушки. Реальные экраны собираются из <b>apps/web</b> — этот файл показывает каркас навигации и данные-модели экранов, пока идёт бэкенд.</div>
+  <section data-screen="dash" class="on">
+    <div class="card">
+      <h2>Здоровье домена <span class="pill">FR-HEALTH-001</span></h2>
+      <div class="curve">
+        <svg viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,36 C15,34 30,26 45,20 S78,10 100,6" stroke="#10b981" stroke-width="2.5" fill="none"/><text x="2" y="7" fill="#94a3b8" font-size="4">health score</text><text x="82" y="37" fill="#64748b" font-size="3.4">14 дней</text></svg>
+      </div>
+      <div class="grid" style="margin-top:10px">
+        <div class="stat"><span class="dim">Score</span><b>68/100</b></div>
+        <div class="stat"><span class="dim">Доставляемость</span><b>96 %</b></div>
+        <div class="stat"><span class="dim">Спам-жалобы</span><b>0.05 %</b></div>
+        <div class="stat"><span class="dim">Ящиков в пуле</span><b class="ok">25/25</b></div>
+      </div>
+      <p class="dim">Момент ценности (FR-GROWTH-001): кривая растёт, метка сети честная — «сеть в рабочей массе».</p>
+      <button class="btn">Продолжить: собрать кампанию</button>
+    </div>
+  </section>
+  <section data-screen="onboard">
+    <div class="card">
+      <h2>Подключение <span class="pill">FR-DOMAIN/MAILBOX</span></h2>
+      <table>
+        <tr><th>Домен</th><th>SPF</th><th>DKIM</th><th>DMARC</th><th>Ящики</th></tr>
+        <tr><td>warm-out.example</td><td class="ok">ok</td><td class="ok">ok</td><td class="ok">ok</td><td>3 (verified)</td></tr>
+        <tr><td>fresh-domain.example</td><td class="ok">ok</td><td style="color:#ef4444">warn → блок запуска</td><td class="ok">ok</td><td>0</td></tr>
+      </table>
+      <p class="dim">Добавление ящика: SMTP/IMAP + App Password → живая probe → TLS-only (465/587). Секрет — конверт AES-256-GCM.</p>
+      <div class="banner"><b>Согласие</b> — вход в пул: «вам будут приходить прогрев-письма от участников сети» (запись текста+версии в аудит).</div>
+      <button class="btn ghost">Добавить домен</button>
+    </div>
+  </section>
+  <section data-screen="campaign">
+    <div class="card">
+      <h2>Кампания <span class="pill">FR-CAMP</span></h2>
+      <table>
+        <tr><th>Список (CSV)</th><th>Принято</th><th>Отсечено</th><th>Причины</th></tr>
+        <tr><td>Всего 240</td><td>211</td><td>29</td><td>роли 12 · стоп-лист 9 · дубли 8</td></tr>
+      </table>
+      <p class="dim">Цепочка: шаг 1 (день 0) → шаг 2 (+3) → стоп при ответе. Ротация ящиков, лимит Free 20/день.</p>
+      <button class="btn">Запустить: это действие от имени моих ящиков</button>
+      <p class="dim">Pre-flight: DKIM ✓ · verified ✓ · стоп-лист ✓ · RU-адресаты: подтверждение ст. 18 38-ФЗ.</p>
+    </div>
+  </section>
+  <section data-screen="paywall">
+    <div class="card">
+      <h2>Тарифы <span class="pill">FR-BILL</span></h2>
+      <div class="grid">
+        <div class="stat"><span class="dim">Free</span><b>0 ₽</b><span class="dim">1 ящик · 1 кампания · 20/день</span></div>
+        <div class="stat"><span class="dim">Base</span><b>1 490 ₽</b><span class="dim">5 ящиков · 3 кампании · 100/день</span></div>
+        <div class="stat"><span class="dim">Pro</span><b>4 900 ₽</b><span class="dim">300 ящиков Fair Use · 300/день</span></div>
+      </div>
+      <button class="btn">Оплатить Base (ЮKassa)</button>
+      <button class="btn ghost">Stripe ($19)</button>
+    </div>
+  </section>
+  <section data-screen="partner">
+    <div class="card">
+      <h2>Партнёрская <span class="pill">FR-PARTNER</span></h2>
+      <p>Ваш код: <b>GRE3K7</b> · ссылка: <span class="dim">grelka.app/r/GRE3K7</span></p>
+      <table>
+        <tr><th>Кто привёл</th><th>Клиент</th><th>Оплата</th><th>Комиссия</th></tr>
+        <tr><td>AGR5T2</td><td>studio@…</td><td>1 490 ₽</td><td class="ok">223 ₽</td></tr>
+      </table>
+      <p class="dim">Атрибуция до оплаты (90 дней), self-referral отсечён, невалидный код не фолбэкится. Приглашение раскрывает вознаграждение (FR-PARTNER-004).</p>
+    </div>
+  </section>
+  <div class="card dim">Палитра — подписанный фолбэк Slate/Orange (облик Instantly НЕ ИЗМЕРЕН: docs/source-product-profile.md). Никаких бейджей внутри писем.</div>
+</main>
+<script>
+const tabs = ["dash", "onboard", "campaign", "paywall", "partner"];
+const titles = { dash: "Здоровье", onboard: "Подключение", campaign: "Кампания", paywall: "Тарифы", partner: "Партнёр" };
+const nav = document.getElementById('nav');
+tabs.forEach((t, i) => {
+  const b = document.createElement('button');
+  b.textContent = titles[t];
+  if (i === 0) b.className = 'on';
+  b.onclick = () => {
+    document.querySelectorAll('[data-screen]').forEach(s => s.classList.toggle('on', s.dataset.screen === t));
+    [...nav.children].forEach(x => x.classList.remove('on'));
+    b.className = 'on';
+  };
+  nav.append(b);
+});
+</script>
+</body>
+</html>

@@ -155,8 +155,8 @@ export function registerCoreRoutes(app: FastifyInstance, cfg: Config) {
       [domainId, userId]);
     if (!domain) return reply.code(404).send({ ok: false, error: 'домен не найден' });
     const ev = await db.one<{ s: string; b: string; c: string }>(
-      `SELECT count(*) FILTER (WHERE status = 'sent')::text AS s,
-              count(*) FILTER (WHERE status = 'bounced')::text AS b,
+      `SELECT count(*) FILTER (WHERE sl.status = 'sent')::text AS s,
+              count(*) FILTER (WHERE sl.status = 'bounced')::text AS b,
               (SELECT count(*)::text FROM inbound_events e
                  JOIN mailboxes m2 ON m2.id = e.mailbox_id
                 WHERE e.kind = 'complaint' AND m2.domain_id = $1)::text AS c
