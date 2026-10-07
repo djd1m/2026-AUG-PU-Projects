@@ -4,12 +4,12 @@ import { RuntimeStore,runtimeFailure } from './store.js';
 export interface RuntimeOutcome {reason?:RuntimeReason;satisfied?:boolean}
 export type RuntimeOperation=(claim:RuntimeClaim,signal:AbortSignal)=>Promise<RuntimeOutcome>;
 // Each finite lane owns and joins exactly one operation before acquiring another.
-export async function runRuntime(store:RuntimeStore,operations:Record<RuntimeKind,RuntimeOperation>,signal:AbortSignal,once=false){
+export async function runRuntime(store:RuntimeStore,operations:Record<RuntimeKind,RuntimeOperation>&{body?:(signal:AbortSignal)=>Promise<boolean>},signal:AbortSignal,once=false){
  const internal=new AbortController();const stop=()=>internal.abort();signal.addEventListener('abort',stop,{once:true});if(signal.aborted)stop();
  const external=signal;signal=internal.signal;
  const lane=async(kind:RuntimeKind)=>{do {
   if(signal.aborted)return;
-  const claim=await store.claim(kind);if(!claim){if(once)return;try{await delay(1000,undefined,{signal});}catch{return;}continue;}
+  const claim=await store.claim(kind);if(!claim){if(kind==='poll'&&operations.body&&await operations.body(signal)){if(once)return;try{await yieldTurn(undefined,{signal});}catch{return;}continue;}if(once)return;try{await delay(1000,undefined,{signal});}catch{return;}continue;}
   if(signal.aborted){await store.cancel(claim);return;}
   let result:RuntimeOutcome;
   try{result=await operations[kind](claim,signal);}catch(error){const reason=runtimeFailure(error);if(reason===null){internal.abort();throw error;}result={reason};}

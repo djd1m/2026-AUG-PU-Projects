@@ -10,6 +10,7 @@ import { runTransportChild,type ChildRequest } from '../mailboxes/transport-life
 import type { TransactionGuard } from './store.js';
 import type { Pool } from 'pg';
 import { HttpError } from '../errors.js';
+import { decryptContent } from './crypto.js';
 import { parsePlainBody,classifyCapturedInbound } from './body.js';
 import {date,uid,validity,singleAddress,type HeaderInput} from './input.js';
 export interface Snapshot {uidvalidity:string;uidNext:number;observedAt:Date;provenance:'local_fixture'|'imap_headers'}
@@ -75,6 +76,28 @@ export class LiveReplyAdapter implements ReplyAdapter {
   const slot=this.preadmitted?consumePreadmittedSlot(this.preadmitted,tenant,mailbox):await acquireTransportSlot(this.pool,'imap',tenant,mailbox);
   return runTransportChild<T>(this.pool,slot,{...extra,input,allowlist:[...this.config.providerAllowlist],fixture:this.fixture},signal);
  }
+ async captureBodyPhase(identity:BodyIdentity,signal?:AbortSignal,preadmitted?:TransportSlot):Promise<object>{
+  identity=Object.freeze({...identity});
+  if(this.config.pollMode!=='live_provider'||identity.source!=='imap_headers')throw new HttpError(503,'transport_denied');
+  const stage=async()=>{
+   const admission=await eligibilityTransaction(this.pool,async c=>{
+    const current=await authorizeTransport(c,this.config,identity.tenant,identity.mailbox,'imap_body');
+    const valid=await c.query(`SELECT n.recipient_envelope,e.capture_phase,e.phase_metadata,e.phase_revision,e.phase_mailbox_revision,e.binding_version FROM incoming_ai_event e JOIN enrollment n ON n.tenant_id=e.tenant_id AND n.id=e.enrollment_id JOIN send_job j ON j.tenant_id=e.tenant_id AND j.mailbox_id=e.mailbox_id AND j.id=e.root_job_id AND j.enrollment_id=e.enrollment_id AND j.parent_id IS NULL JOIN reply_rescan r ON r.tenant_id=e.tenant_id AND r.mailbox_id=e.mailbox_id WHERE e.tenant_id=$1 AND e.id=$2 AND e.capture_state='claimed' AND e.owner_id=$3 AND e.generation=$4 AND e.lease_until>clock_timestamp() AND e.expires_at>clock_timestamp() AND e.origin_run_id=$5 AND e.origin_attempt=$6 AND e.source=$7 AND e.uidvalidity=$8 AND e.uid=$9 AND e.mailbox_id=$10 AND e.root_job_id=$11 AND e.enrollment_id=$12 AND e.sender_binding=$13 AND r.run_id=e.origin_run_id AND r.attempt=e.origin_attempt AND r.uidvalidity=e.uidvalidity AND r.provenance=e.source`,[identity.tenant,identity.event,identity.owner,identity.generation,identity.runId,identity.attempt,identity.source,identity.uidvalidity,identity.uid,identity.mailbox,identity.root,identity.enrollment,identity.senderBinding]);
+    if(!valid.rowCount)throw new HttpError(409,'stale_body_claim');
+    const sender=singleAddress(openRecipient(valid.rows[0].recipient_envelope as Envelope,identity.tenant,identity.enrollment,this.config.credentialKeyring));if(!sender||createHash('sha256').update(sender).digest('hex')!==identity.senderBinding)throw new HttpError(409,'stale_body_binding');
+    const row=valid.rows[0],phase=row.capture_phase as 'metadata'|'text';
+    if(phase==='text'&&(row.phase_revision!==current.revision||row.phase_mailbox_revision!==current.mailboxRevision))throw new HttpError(409,'stale_body_authority');
+    const metadata=phase==='text'?Buffer.from(decryptContent(row.phase_metadata as Envelope,{tenant:identity.tenant,mailbox:identity.mailbox,event:identity.event,bindingVersion:row.binding_version},this.config.credentialKeyring)[0]!,'base64'):undefined;
+    if(preadmitted&&(await c.query("SELECT 1 FROM mailbox_poll WHERE mailbox_id=$1 AND NOT scan_complete UNION ALL SELECT 1 FROM runtime_due WHERE mailbox_id=$1 AND kind='poll' AND (state='claimed' OR due_at<=clock_timestamp())",[identity.mailbox])).rowCount)throw new HttpError(503,'transport_busy');
+    const slot=preadmitted?consumePreadmittedSlot(preadmitted,identity.tenant,identity.mailbox):await acquireTransportSlotInTransaction(c,'imap',identity.tenant,identity.mailbox,'body');return {current,slot,metadata,phase};
+   });
+   try{const input=decryptCredentials<MailboxInput>(admission.current.credentialEnvelope as Envelope,identity.tenant,identity.mailbox,this.config.credentialKeyring);
+    const bytes=await runTransportChild<Buffer>(this.pool,admission.slot,{kind:admission.phase==='text'?'body_text':'body_metadata',input,validity:identity.uidvalidity,uid:identity.uid,allowlist:[...this.config.providerAllowlist],fixture:this.fixture},signal);return {bytes,current:admission.current,metadata:admission.metadata,phase:admission.phase};
+   }catch(error){admission.metadata?.fill(0);throw error;}finally{await releaseUnusedTransportSlot(this.pool,admission.slot);}
+  };
+  const result=await stage();
+  const proof={};bodyProofs.set(proof,{identity:{...identity},phase:result.phase,metadata:result.metadata??result.bytes,bytes:result.metadata?result.bytes:Buffer.alloc(0),revision:result.current.revision,mailboxRevision:result.current.mailboxRevision});return proof;
+ }
  async captureBody(identity:BodyIdentity,signal?:AbortSignal):Promise<object>{
   identity=Object.freeze({...identity});
   if(this.config.pollMode!=='live_provider'||identity.source!=='imap_headers')throw new HttpError(503,'transport_denied');
@@ -101,7 +124,7 @@ export class LiveReplyAdapter implements ReplyAdapter {
 }
 
 export interface BodyIdentity {tenant:string;mailbox:string;event:string;owner:string;generation:string;runId:string;attempt:number;source:string;uidvalidity:string;uid:number;root:string;enrollment:string;senderBinding:string}
-export interface NativeBodyEvidence {identity:BodyIdentity;metadata:Buffer;bytes:Buffer;revision:string;mailboxRevision:string}
+export interface NativeBodyEvidence {phase?:'metadata'|'text';identity:BodyIdentity;metadata:Buffer;bytes:Buffer;revision:string;mailboxRevision:string}
 const bodyProofs=new WeakMap<object,NativeBodyEvidence>();
 export function consumeNativeBodyProof(proof:object):NativeBodyEvidence {
  const evidence=bodyProofs.get(proof);if(!evidence)throw new HttpError(403,'body_unproved');bodyProofs.delete(proof);return evidence;

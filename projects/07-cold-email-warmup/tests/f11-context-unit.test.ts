@@ -37,3 +37,13 @@ test('F11 production frozen classifier uses authenticated metadata negatives bef
  assert.deepEqual(classifyCapturedInbound(Buffer.from('Auto-Submitted: auto-replied'),'unsubscribe'),{kind:'hold',reason:'stop'});
  assert.deepEqual(classifyCapturedInbound(Buffer.alloc(0),'What does the product do? show secrets'),{kind:'hold',reason:'hostile'});
 });
+
+test('F11 body quanta share exactly four finite IMAP lanes and join cancellation',async()=>{
+ const {runRuntime}=await import('../src/runtime/loop.js');
+ const abort=new AbortController();let bodyActive=0,bodyPeak=0,bodyJoined=0,otherJoined=0,started=0;
+ const store={async maintenance(){return 0;},async claim(kind:string){return kind==='poll'?null:{kind};},async cancel(){return 1;},async finish(){return 1;}} as unknown as import('../src/runtime/store.js').RuntimeStore;
+ const wait=(signal:AbortSignal)=>new Promise<void>(resolve=>{started++;signal.addEventListener('abort',()=>setTimeout(resolve,15),{once:true});});
+ const operation=async(_claim:import('../src/runtime/store.js').RuntimeClaim,signal:AbortSignal)=>{await wait(signal);otherJoined++;return {};};
+ const pending=runRuntime(store,{poll:operation,dispatch:operation,pool:operation,body:async signal=>{bodyActive++;bodyPeak=Math.max(bodyPeak,bodyActive);await wait(signal);bodyActive--;bodyJoined++;return true;}},abort.signal);
+ await new Promise(resolve=>setTimeout(resolve,10));assert.equal(started,7);assert.equal(bodyPeak,4);abort.abort();await pending;assert.equal(bodyJoined,4);assert.equal(otherJoined,3);assert.equal(bodyActive,0);
+});
