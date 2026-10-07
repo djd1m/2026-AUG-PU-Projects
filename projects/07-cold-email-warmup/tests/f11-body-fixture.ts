@@ -4,7 +4,7 @@ import { certificates,diagnosticInput } from './diagnostics-fixture.js';
 import type { TransportFixture } from '../src/mailboxes/transport-channel.js';
 export const bodyInput=diagnosticInput;
 export const bodyAllowlist=new Map([['imap.gmail.com',30]]);
-export async function bodyFixture(options:{body?:Buffer;metadata?:Buffer;declared?:number;validity?:string;wrongUid?:boolean;stall?:boolean}={}){
+export async function bodyFixture(options:{body?:Buffer;metadata?:Buffer;declared?:number;validity?:string;wrongUid?:boolean;stall?:boolean;headers?:Buffer;phaseDelayMs?:number}={}){
  const cert=certificates(),sockets=new Set<Socket>(),commands:string[]=[];let peak=0;
  const server=createServer(cert,(socket:TLSSocket)=>{
   sockets.add(socket);peak=Math.max(peak,sockets.size);socket.on('error',()=>{});socket.once('close',()=>sockets.delete(socket));if(options.stall)return;socket.write('* OK fixture\r\n');let pending='',auth=false;
@@ -12,9 +12,12 @@ export async function bodyFixture(options:{body?:Buffer;metadata?:Buffer;declare
    if(line==='a1 CAPABILITY')socket.write('* CAPABILITY IMAP4rev1 AUTH=PLAIN\r\na1 OK done\r\n');
    else if(line==='a2 AUTHENTICATE PLAIN'){auth=true;socket.write('+ challenge\r\n');}
    else if(line==='a3 EXAMINE INBOX')socket.write(`* OK [UIDVALIDITY ${options.validity??'1'}] generation\r\n* OK [UIDNEXT 2] next\r\na3 OK [READ-ONLY] done\r\n`);
+   else if(line==='a4 UID FETCH 1:1 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])'){
+    if(options.headers){socket.write(`* 1 FETCH (UID 1 BODY[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)] {${options.headers.length}}\r\n`);socket.write(options.headers);socket.write(')\r\n');}socket.write('a4 OK done\r\n');
+   }
    else if(line==='a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])'||line==='a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)'){
     const metadata=line.includes('HEADER.FIELDS'),section=metadata?'HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)':'TEXT',bytes=metadata?(options.metadata??Buffer.from('Content-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n')):(options.body??Buffer.from('What does the product do?'));
-    socket.write(`* 1 FETCH (UID ${options.wrongUid?2:1} BODY[${section}]${metadata?'':'<0>'} {${options.declared??bytes.length}}\r\n`);if(options.declared===undefined){socket.write(bytes);socket.write(')\r\na4 OK done\r\n');}
+    const send=()=>{socket.write(`* 1 FETCH (UID ${options.wrongUid?2:1} BODY[${section}]${metadata?'':'<0>'} {${options.declared??bytes.length}}\r\n`);if(options.declared===undefined){socket.write(bytes);socket.write(')\r\na4 OK done\r\n');}};if(options.phaseDelayMs)setTimeout(()=>{if(!socket.destroyed)send();},options.phaseDelayMs);else send();
    }else socket.destroy();
   }});
  });

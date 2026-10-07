@@ -62,9 +62,9 @@ export class TransportChannel {
 
 // Body stages have a separate five-second budget and explicit sentinel limit.
 // Header callers keep the default 8192-byte literal cap.
-export async function readImapBodyStage(input:import('./input.js').MailboxInput,allowlist:ReadonlyMap<string,number>,expected:string,targetUid:number,stage:'body_metadata'|'body_text',signal:AbortSignal,fixture?:TransportFixture):Promise<Buffer>{
+export async function readImapBodyStage(input:import('./input.js').MailboxInput,allowlist:ReadonlyMap<string,number>,expected:string,targetUid:number,stage:'body_metadata'|'body_text',signal:AbortSignal,fixture?:TransportFixture,deadline?:number):Promise<Buffer>{
  if(!/^[1-9]\d{0,9}$/.test(expected)||!Number.isInteger(targetUid)||targetUid<1||targetUid>4294967295)throw new TransportFailure('protocol_invalid');
- const c=new TransportChannel(new TransportBudget(signal,5000),65536,fixture),invalid=()=>new TransportFailure('protocol_invalid');
+ const c=new TransportChannel(new TransportBudget(signal,Math.min(5000,(deadline??Date.now()+5000)-Date.now())),65536,fixture),invalid=()=>new TransportFailure('protocol_invalid');
  try{
   await c.open(input.imapHost,993,allowlist);await c.upgrade(input.imapHost);if(!/^\* OK(?: |$)/i.test(await c.line()))throw invalid();
   await c.command('a1 CAPABILITY');let plain=false,version=false;

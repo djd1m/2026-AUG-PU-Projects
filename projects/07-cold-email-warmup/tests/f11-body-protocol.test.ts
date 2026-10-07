@@ -15,3 +15,16 @@ export async function bodyProtocolWitness(){
 }
 test('F11 native body read-only UID sentinel and unforgeable proof',bodyProtocolWitness);
 test('F11 body native cancellation closes physical socket',async()=>{const f=await bodyFixture({stall:true}),abort=new AbortController();try{const pending=readImapBodyStage(bodyInput,bodyAllowlist,'1',1,'body_text',abort.signal,f.connector);setTimeout(()=>abort.abort(),40);await assert.rejects(pending);await new Promise(r=>setTimeout(r,25));assert.equal(f.sockets.size,0);}finally{await f.close();}});
+
+test('F11 fixed native deadline denies zero sockets and truncates a slow phase without renewing',async()=>{
+ const expired=await bodyFixture();try{await assert.rejects(readImapBodyStage(bodyInput,bodyAllowlist,'1',1,'body_text',new AbortController().signal,expired.connector,Date.now()-1));assert.equal(expired.commands.length,0);assert.equal(expired.peak,0);}finally{await expired.close();}
+ const slow=await bodyFixture({phaseDelayMs:200}),end=Date.now()+80;try{await assert.rejects(readImapBodyStage(bodyInput,bodyAllowlist,'1',1,'body_text',new AbortController().signal,slow.connector,end));await new Promise(r=>setTimeout(r,25));assert.equal(slow.sockets.size,0);assert.ok(Date.now()-end<200);}finally{await slow.close();}
+});
+
+test('F11 two slow native phases cannot both fit a single absolute five-second window',async()=>{
+ const f=await bodyFixture({phaseDelayMs:2800}),end=Date.now()+5000;try{
+  const metadata=await readImapBodyStage(bodyInput,bodyAllowlist,'1',1,'body_metadata',new AbortController().signal,f.connector,end);assert.ok(metadata.length>0);
+  await new Promise<void>(r=>setImmediate(r));
+  await assert.rejects(readImapBodyStage(bodyInput,bodyAllowlist,'1',1,'body_text',new AbortController().signal,f.connector,end));await new Promise(r=>setTimeout(r,25));assert.equal(f.sockets.size,0);assert.ok(Date.now()-end<300);assert.equal(f.commands.filter(c=>c.includes('BODY.PEEK[TEXT]')).length,1);
+ }finally{await f.close();}
+});

@@ -70,6 +70,13 @@ export class PollWorker {
    if(!run||run.state==='complete'){
     const snapshot=await this.adapter.snapshot(tenant,mailbox,signal);run=await this.store.capture(tenant,mailbox,snapshot,guard,run?identity(run):undefined);return {state:run.state};
    }
+   if(this.adapter.mode!=='local_test'){
+    const pending=(await this.pool.query(`SELECT uid FROM incoming_ai_event WHERE tenant_id=$1 AND mailbox_id=$2 AND capture_state='pending' AND window_start IS NULL AND expires_at>clock_timestamp() AND uidvalidity=$3 AND authenticated_run_id IS DISTINCT FROM $4 ORDER BY created_at,id LIMIT 1`,[tenant,mailbox,run.uidvalidity,run.runId])).rows[0];
+    if(pending){const target=Number(pending.uid),read=await this.adapter.read(tenant,mailbox,run.uidvalidity,target-1,target,signal);
+     if(read.kind==='page'&&read.page.headers.length===1)return await this.store.revalidate(tenant,mailbox,identity(run),read.page,target,guard);
+     await eligibilityTransaction(this.pool,async c=>{await guard(c);await c.query(`UPDATE incoming_ai_event SET capture_state='held',state='held',reason='authentication_unavailable',phase_metadata=NULL,terminal_at=COALESCE(terminal_at,clock_timestamp()),expires_at=LEAST(expires_at,clock_timestamp()+interval '24 hours') WHERE tenant_id=$1 AND mailbox_id=$2 AND uid=$3 AND window_start IS NULL AND capture_state='pending'`,[tenant,mailbox,target]);});return {state:'scanning'};
+    }
+   }
    if(Date.now()-run.attemptStartedAt.getTime()>=120000){await this.store.failTail(tenant,mailbox,identity(run),guard);return {state:'rescan_incomplete'};}
    if(run.cursor>=run.highWater&&run.tailHighWater===null){
     const snapshot=await this.adapter.snapshot(tenant,mailbox,signal);

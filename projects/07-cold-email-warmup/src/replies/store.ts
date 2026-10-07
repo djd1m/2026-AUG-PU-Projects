@@ -119,6 +119,18 @@ export class ReplyStore {
   }
   return effects;
  }
+ // Exact bounded native observation authenticates a never-windowed intent without cursor/freshness writes.
+ async revalidate(tenant:string,mailbox:string,identity:RunIdentity,input:import('./adapter.js').HeaderPage,target:number,guard:TransactionGuard){
+  const p=parsePage({...identity,...input,kind:'scan',expectedCursor:target-1});
+  return eligibilityTransaction(this.pool,async c=>{
+   await guard(c);const run=await this.current(c,tenant,mailbox,identity);
+   const now=(await c.query('SELECT clock_timestamp() AS now')).rows[0].now as Date;
+   if(run.provenance!=='imap_headers'||p.uidvalidity!==run.uidvalidity||p.coveredThrough!==target||p.headers.length!==1||p.headers[0]!.uid!==target||p.completedAt>now||now.getTime()-p.completedAt.getTime()>30000)throw evidenceError();
+   await this.ingest(c,tenant,mailbox,run.uidvalidity,p.headers,now,run);
+   await c.query(`UPDATE incoming_ai_event SET capture_state='held',state='held',reason='authentication_failed',terminal_at=COALESCE(terminal_at,clock_timestamp()),expires_at=LEAST(expires_at,clock_timestamp()+interval '24 hours'),phase_metadata=NULL WHERE tenant_id=$1 AND mailbox_id=$2 AND uid=$3 AND window_start IS NULL AND capture_state='pending' AND authenticated_run_id IS DISTINCT FROM $4`,[tenant,mailbox,target,run.runId]);
+   return {state:'scanning' as const};
+  });
+ }
  async page(tenant:string,mailbox:string,input:PageInput,guard?:TransactionGuard) {
   const p=parsePage(input);
   const result=await eligibilityTransaction(this.pool,async c=>{

@@ -17,6 +17,9 @@ CREATE TABLE incoming_ai_event (
  sender_binding char(64), rules_version text, rules_hash char(64), content_fingerprint char(64),
  capture_phase text NOT NULL DEFAULT 'metadata' CHECK(capture_phase IN ('metadata','text')),
  phase_metadata jsonb, phase_revision text, phase_mailbox_revision text,
+ authenticated_run_id uuid, authenticated_attempt integer, authenticated_at timestamptz, authenticated_root_message_id text, authenticated_recipient_hash text,
+ window_start timestamptz, window_end timestamptz, window_completed_at timestamptz, window_revision text, window_mailbox_revision text,
+ CHECK((window_start IS NULL AND window_end IS NULL) OR (window_start IS NOT NULL AND window_end=window_start+interval '5 seconds' AND window_completed_at IS NOT NULL)),
  owner_id uuid, generation bigint NOT NULL DEFAULT 0, lease_until timestamptz, next_attempt_at timestamptz NOT NULL DEFAULT now(),
  UNIQUE(tenant_id,id), UNIQUE(tenant_id,mailbox_id,uidvalidity,uid),
  FOREIGN KEY(tenant_id,mailbox_id) REFERENCES mailbox(tenant_id,id),
@@ -36,3 +39,18 @@ CREATE INDEX incoming_capture_due ON incoming_ai_event(next_attempt_at) WHERE ca
 -- Fingerprints are authenticated tenant/root/content identities, never Message-ID.
 CREATE UNIQUE INDEX incoming_semantic_once ON incoming_ai_event(tenant_id,mailbox_id,root_job_id,content_fingerprint) WHERE content_fingerprint IS NOT NULL;
 INSERT INTO schema_migration(version) VALUES(16);
+
+-- Deferred result fence also checks the actual COMMIT clock, after encryption/classification work.
+CREATE OR REPLACE FUNCTION inbound_context_result_deadline() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+ IF NEW.window_end<=clock_timestamp() OR NEW.expires_at<=clock_timestamp() THEN
+  RAISE EXCEPTION 'capture_window_expired';
+ END IF;
+ RETURN NEW;
+END $$;
+CREATE CONSTRAINT TRIGGER inbound_context_result_deadline
+AFTER UPDATE ON incoming_ai_event DEFERRABLE INITIALLY DEFERRED
+FOR EACH ROW WHEN (NEW.window_end IS NOT NULL AND
+ ((NEW.capture_state='ready' AND OLD.capture_state<>'ready') OR
+  (NEW.capture_phase='text' AND OLD.capture_phase='metadata' AND NEW.phase_metadata IS NOT NULL)))
+EXECUTE FUNCTION inbound_context_result_deadline();

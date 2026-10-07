@@ -3,6 +3,8 @@ import type { Pool,PoolClient } from 'pg';
 import { eligibilityTransaction } from '../consent/transaction.js';
 import { dispatchProjection } from '../dispatch/store.js';
 import { acquireTransportSlotInTransaction,releaseUnusedTransportSlot,type TransportSlot } from '../mailboxes/transport-slots.js';
+import type { Config } from '../config.js';
+import { openCaptureWindowClient } from '../replies/context-store.js';
 import { HttpError } from '../errors.js';
 export type RuntimeKind='poll'|'pool'|'dispatch';
 export type RuntimeReason='ready'|'waiting_peer'|'waiting_budget'|'waiting_capacity'|'waiting_pacing'|'transport_busy'|'provider_backoff'|'authority_denied'|'rescan_incomplete'|'cleanup_blocked'|'db_unavailable';
@@ -24,7 +26,7 @@ export function runtimeFailure(error:unknown):RuntimeReason|null{
 }
 export class RuntimeStore {
  private readonly admissions=new WeakMap<RuntimeClaim,{slot?:TransportSlot;reason?:RuntimeReason}>();
- constructor(readonly pool:Pool,readonly nativePollAuthority?:(c:PoolClient,tenant:string,mailbox:string)=>Promise<unknown>){}
+ constructor(readonly pool:Pool,readonly nativePollAuthority?:(c:PoolClient,tenant:string,mailbox:string)=>Promise<unknown>,readonly captureConfig?:Config){}
  pollAdmission(claim:RuntimeClaim){return this.admissions.get(claim);}
  async disposeUnusedAdmission(claim:RuntimeClaim){const slot=this.admissions.get(claim)?.slot;if(slot)await releaseUnusedTransportSlot(this.pool,slot);}
  // Presence of an existing activity request is required: this never creates leases.
@@ -131,13 +133,14 @@ export class RuntimeStore {
  async finish(claim:RuntimeClaim,reason:RuntimeReason='ready',satisfied=false){await this.disposeUnusedAdmission(claim);return eligibilityTransaction(this.pool,async c=>{
   if(claim.kind==='dispatch'&&!['provider_backoff','authority_denied','db_unavailable','cleanup_blocked','rescan_incomplete','transport_busy'].includes(reason)){const now=(await c.query('SELECT clock_timestamp() AS now')).rows[0].now;return (await this.projectDispatch(c,claim.mailbox_id,now,claim)).updated;}
   const now=(await c.query('SELECT clock_timestamp() AS now')).rows[0].now;
-  if(claim.kind==='poll')satisfied=satisfied&&reason==='ready'&&Boolean((await c.query("SELECT 1 FROM reply_rescan r JOIN mailbox_poll p ON p.mailbox_id=r.mailbox_id WHERE r.mailbox_id=$1 AND r.state='complete' AND p.scan_complete AND p.uidvalidity=r.uidvalidity",[claim.mailbox_id])).rowCount);
+  if(claim.kind==='poll')satisfied=satisfied&&reason==='ready'&&Boolean((await c.query("SELECT 1 FROM reply_rescan r JOIN mailbox_poll p ON p.mailbox_id=r.mailbox_id WHERE r.mailbox_id=$1 AND r.state='complete' AND p.scan_complete AND p.uidvalidity=r.uidvalidity AND EXISTS(SELECT 1 FROM runtime_due d WHERE d.mailbox_id=r.mailbox_id AND d.kind='poll' AND d.state='claimed' AND d.owner_id=$2 AND d.generation=$3 AND p.completed_at>=d.last_served_at)",[claim.mailbox_id,claim.owner_id,claim.generation])).rowCount);
   const failed=reason==='provider_backoff'||reason==='authority_denied'||reason==='db_unavailable';
   const count=failed?Math.min(5,claim.failure_count+1):0;
+  const captureEnd=claim.kind==='poll'&&satisfied&&this.captureConfig?await openCaptureWindowClient(c,this.captureConfig,claim.tenant_id,claim.mailbox_id,now):null;
   const delay=reason==='transport_busy'?1:failed?[30,60,120,300,300][count-1]!:satisfied?(claim.kind==='poll'?30:claim.kind==='pool'?60:1):0;
   const next="CASE WHEN $9 AND kind='poll' THEN $10::timestamptz ELSE clock_timestamp()+$8*interval '1 second' END";
   return (await c.query(`UPDATE runtime_due SET state=$5,owner_id=NULL,lease_until=NULL,reason=$6,failure_count=$7,
    next_check_at=${next},due_at=CASE WHEN $9 AND kind<>'dispatch' THEN ${next} ELSE due_at END
-   WHERE mailbox_id=$1 AND kind=$2 AND owner_id=$3 AND generation=$4 AND state='claimed'`,[claim.mailbox_id,claim.kind,claim.owner_id,claim.generation,['rescan_incomplete','cleanup_blocked'].includes(reason)?'blocked':'ready',reason,count,delay,satisfied,now])).rowCount;
+   WHERE mailbox_id=$1 AND kind=$2 AND owner_id=$3 AND generation=$4 AND state='claimed'`,[claim.mailbox_id,claim.kind,claim.owner_id,claim.generation,['rescan_incomplete','cleanup_blocked'].includes(reason)?'blocked':'ready',reason,count,delay,satisfied,captureEnd??now])).rowCount;
  });}
 }

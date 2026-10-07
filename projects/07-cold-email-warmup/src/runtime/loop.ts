@@ -9,6 +9,7 @@ export async function runRuntime(store:RuntimeStore,operations:Record<RuntimeKin
  const external=signal;signal=internal.signal;
  const lane=async(kind:RuntimeKind)=>{do {
   if(signal.aborted)return;
+  if(kind==='poll'&&operations.body&&await operations.body(signal)){if(once)return;try{await yieldTurn(undefined,{signal});}catch{return;}continue;}
   const claim=await store.claim(kind);if(!claim){if(kind==='poll'&&operations.body&&await operations.body(signal)){if(once)return;try{await yieldTurn(undefined,{signal});}catch{return;}continue;}if(once)return;try{await delay(1000,undefined,{signal});}catch{return;}continue;}
   if(signal.aborted){await store.cancel(claim);return;}
   let result:RuntimeOutcome;

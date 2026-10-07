@@ -11,7 +11,6 @@ import type { TransactionGuard } from './store.js';
 import type { Pool } from 'pg';
 import { HttpError } from '../errors.js';
 import { decryptContent } from './crypto.js';
-import { parsePlainBody,classifyCapturedInbound } from './body.js';
 import {date,uid,validity,singleAddress,type HeaderInput} from './input.js';
 export interface Snapshot {uidvalidity:string;uidNext:number;observedAt:Date;provenance:'local_fixture'|'imap_headers'}
 export interface HeaderPage {uidvalidity:string;coveredThrough:number;headers:HeaderInput[];startedAt:Date;completedAt:Date}
@@ -82,43 +81,25 @@ export class LiveReplyAdapter implements ReplyAdapter {
   const stage=async()=>{
    const admission=await eligibilityTransaction(this.pool,async c=>{
     const current=await authorizeTransport(c,this.config,identity.tenant,identity.mailbox,'imap_body');
-    const valid=await c.query(`SELECT n.recipient_envelope,e.capture_phase,e.phase_metadata,e.phase_revision,e.phase_mailbox_revision,e.binding_version FROM incoming_ai_event e JOIN enrollment n ON n.tenant_id=e.tenant_id AND n.id=e.enrollment_id JOIN send_job j ON j.tenant_id=e.tenant_id AND j.mailbox_id=e.mailbox_id AND j.id=e.root_job_id AND j.enrollment_id=e.enrollment_id AND j.parent_id IS NULL JOIN reply_rescan r ON r.tenant_id=e.tenant_id AND r.mailbox_id=e.mailbox_id WHERE e.tenant_id=$1 AND e.id=$2 AND e.capture_state='claimed' AND e.owner_id=$3 AND e.generation=$4 AND e.lease_until>clock_timestamp() AND e.expires_at>clock_timestamp() AND e.origin_run_id=$5 AND e.origin_attempt=$6 AND e.source=$7 AND e.uidvalidity=$8 AND e.uid=$9 AND e.mailbox_id=$10 AND e.root_job_id=$11 AND e.enrollment_id=$12 AND e.sender_binding=$13 AND r.run_id=e.origin_run_id AND r.attempt=e.origin_attempt AND r.uidvalidity=e.uidvalidity AND r.provenance=e.source`,[identity.tenant,identity.event,identity.owner,identity.generation,identity.runId,identity.attempt,identity.source,identity.uidvalidity,identity.uid,identity.mailbox,identity.root,identity.enrollment,identity.senderBinding]);
+    const valid=await c.query(`SELECT n.recipient_envelope,e.capture_phase,e.phase_metadata,e.phase_revision,e.phase_mailbox_revision,e.binding_version,e.expires_at,e.window_end,e.window_revision,e.window_mailbox_revision,e.authenticated_root_message_id,e.authenticated_recipient_hash,n.recipient_hash FROM incoming_ai_event e JOIN enrollment n ON n.tenant_id=e.tenant_id AND n.id=e.enrollment_id JOIN send_job j ON j.tenant_id=e.tenant_id AND j.mailbox_id=e.mailbox_id AND j.id=e.root_job_id AND j.enrollment_id=e.enrollment_id AND j.parent_id IS NULL JOIN reply_rescan r ON r.tenant_id=e.tenant_id AND r.mailbox_id=e.mailbox_id WHERE e.tenant_id=$1 AND e.id=$2 AND e.capture_state='claimed' AND e.owner_id=$3 AND e.generation=$4 AND e.lease_until>clock_timestamp() AND e.expires_at>clock_timestamp() AND e.window_end>clock_timestamp() AND e.authenticated_run_id=$5 AND e.authenticated_attempt=$6 AND e.source=$7 AND e.uidvalidity=$8 AND e.uid=$9 AND e.mailbox_id=$10 AND e.root_job_id=$11 AND e.enrollment_id=$12 AND e.sender_binding=$13 AND r.run_id=e.authenticated_run_id AND r.attempt=e.authenticated_attempt AND r.uidvalidity=e.uidvalidity AND r.provenance=e.source AND j.message_id=e.authenticated_root_message_id AND EXISTS(SELECT 1 FROM capacity_lease l WHERE l.mailbox_id=e.mailbox_id AND l.state='active' AND l.expires_at>clock_timestamp()) AND NOT EXISTS(SELECT 1 FROM suppression s WHERE s.tenant_id=e.tenant_id AND s.recipient_hash=e.authenticated_recipient_hash) AND EXISTS(SELECT 1 FROM mailbox_poll p WHERE p.mailbox_id=e.mailbox_id AND p.scan_complete AND p.completed_at=e.window_completed_at)`,[identity.tenant,identity.event,identity.owner,identity.generation,identity.runId,identity.attempt,identity.source,identity.uidvalidity,identity.uid,identity.mailbox,identity.root,identity.enrollment,identity.senderBinding]);
     if(!valid.rowCount)throw new HttpError(409,'stale_body_claim');
     const sender=singleAddress(openRecipient(valid.rows[0].recipient_envelope as Envelope,identity.tenant,identity.enrollment,this.config.credentialKeyring));if(!sender||createHash('sha256').update(sender).digest('hex')!==identity.senderBinding)throw new HttpError(409,'stale_body_binding');
-    const row=valid.rows[0],phase=row.capture_phase as 'metadata'|'text';
+    const row=valid.rows[0];if(row.window_revision!==current.revision||row.window_mailbox_revision!==current.mailboxRevision||row.authenticated_recipient_hash!==row.recipient_hash)throw new HttpError(409,'stale_body_authority');
+    const phase=row.capture_phase as 'metadata'|'text';
     if(phase==='text'&&(row.phase_revision!==current.revision||row.phase_mailbox_revision!==current.mailboxRevision))throw new HttpError(409,'stale_body_authority');
     const metadata=phase==='text'?Buffer.from(decryptContent(row.phase_metadata as Envelope,{tenant:identity.tenant,mailbox:identity.mailbox,event:identity.event,bindingVersion:row.binding_version},this.config.credentialKeyring)[0]!,'base64'):undefined;
     if(preadmitted&&(await c.query("SELECT 1 FROM mailbox_poll WHERE mailbox_id=$1 AND NOT scan_complete UNION ALL SELECT 1 FROM runtime_due WHERE mailbox_id=$1 AND kind='poll' AND (state='claimed' OR due_at<=clock_timestamp())",[identity.mailbox])).rowCount)throw new HttpError(503,'transport_busy');
-    const slot=preadmitted?consumePreadmittedSlot(preadmitted,identity.tenant,identity.mailbox):await acquireTransportSlotInTransaction(c,'imap',identity.tenant,identity.mailbox,'body');return {current,slot,metadata,phase};
+    const slot=preadmitted?consumePreadmittedSlot(preadmitted,identity.tenant,identity.mailbox):await acquireTransportSlotInTransaction(c,'imap',identity.tenant,identity.mailbox,'body');return {current,slot,metadata,phase,deadline:Math.min(row.window_end.getTime(),row.expires_at.getTime())};
    });
    try{const input=decryptCredentials<MailboxInput>(admission.current.credentialEnvelope as Envelope,identity.tenant,identity.mailbox,this.config.credentialKeyring);
-    const bytes=await runTransportChild<Buffer>(this.pool,admission.slot,{kind:admission.phase==='text'?'body_text':'body_metadata',input,validity:identity.uidvalidity,uid:identity.uid,allowlist:[...this.config.providerAllowlist],fixture:this.fixture},signal);return {bytes,current:admission.current,metadata:admission.metadata,phase:admission.phase};
+    const bytes=await runTransportChild<Buffer>(this.pool,admission.slot,{kind:admission.phase==='text'?'body_text':'body_metadata',input,validity:identity.uidvalidity,uid:identity.uid,allowlist:[...this.config.providerAllowlist],fixture:this.fixture,deadline:admission.deadline},signal);return {bytes,current:admission.current,metadata:admission.metadata,phase:admission.phase};
    }catch(error){admission.metadata?.fill(0);throw error;}finally{await releaseUnusedTransportSlot(this.pool,admission.slot);}
   };
   const result=await stage();
   const proof={};bodyProofs.set(proof,{identity:{...identity},phase:result.phase,metadata:result.metadata??result.bytes,bytes:result.metadata?result.bytes:Buffer.alloc(0),revision:result.current.revision,mailboxRevision:result.current.mailboxRevision});return proof;
  }
- async captureBody(identity:BodyIdentity,signal?:AbortSignal):Promise<object>{
-  identity=Object.freeze({...identity});
-  if(this.config.pollMode!=='live_provider'||identity.source!=='imap_headers')throw new HttpError(503,'transport_denied');
-  const stage=async(kind:'body_metadata'|'body_text')=>{
-   const admission=await eligibilityTransaction(this.pool,async c=>{
-    const current=await authorizeTransport(c,this.config,identity.tenant,identity.mailbox,'imap_body');
-    const valid=await c.query(`SELECT n.recipient_envelope FROM incoming_ai_event e JOIN enrollment n ON n.tenant_id=e.tenant_id AND n.id=e.enrollment_id JOIN send_job j ON j.tenant_id=e.tenant_id AND j.mailbox_id=e.mailbox_id AND j.id=e.root_job_id AND j.enrollment_id=e.enrollment_id AND j.parent_id IS NULL JOIN reply_rescan r ON r.tenant_id=e.tenant_id AND r.mailbox_id=e.mailbox_id WHERE e.tenant_id=$1 AND e.id=$2 AND e.capture_state='claimed' AND e.owner_id=$3 AND e.generation=$4 AND e.lease_until>clock_timestamp() AND e.origin_run_id=$5 AND e.origin_attempt=$6 AND e.source=$7 AND e.uidvalidity=$8 AND e.uid=$9 AND e.mailbox_id=$10 AND e.root_job_id=$11 AND e.enrollment_id=$12 AND e.sender_binding=$13 AND r.run_id=e.origin_run_id AND r.attempt=e.origin_attempt AND r.uidvalidity=e.uidvalidity AND r.provenance=e.source`,[identity.tenant,identity.event,identity.owner,identity.generation,identity.runId,identity.attempt,identity.source,identity.uidvalidity,identity.uid,identity.mailbox,identity.root,identity.enrollment,identity.senderBinding]);
-    if(!valid.rowCount)throw new HttpError(409,'stale_body_claim');
-    const sender=singleAddress(openRecipient(valid.rows[0].recipient_envelope as Envelope,identity.tenant,identity.enrollment,this.config.credentialKeyring));if(!sender||createHash('sha256').update(sender).digest('hex')!==identity.senderBinding)throw new HttpError(409,'stale_body_binding');
-    const slot=await acquireTransportSlotInTransaction(c,'imap',identity.tenant,identity.mailbox,'body');return {current,slot};
-   });
-   try{const input=decryptCredentials<MailboxInput>(admission.current.credentialEnvelope as Envelope,identity.tenant,identity.mailbox,this.config.credentialKeyring);
-    const bytes=await runTransportChild<Buffer>(this.pool,admission.slot,{kind,input,validity:identity.uidvalidity,uid:identity.uid,allowlist:[...this.config.providerAllowlist],fixture:this.fixture},signal);return {bytes,current:admission.current};
-   }finally{await releaseUnusedTransportSlot(this.pool,admission.slot);}
-  };
-  const metadata=await stage('body_metadata');
-  // Yield and reserve anew: header work can take priority before text I/O.
-  await new Promise<void>(resolve=>setImmediate(resolve));const supported=parsePlainBody(metadata.bytes,Buffer.alloc(0));const automatic=classifyCapturedInbound(metadata.bytes,'');const text=supported.kind==='hold'||automatic.kind==='hold'&&automatic.reason==='automatic'?{bytes:Buffer.alloc(0),current:metadata.current}:await stage('body_text');
-  if(metadata.current.revision!==text.current.revision||metadata.current.mailboxRevision!==text.current.mailboxRevision)throw new HttpError(409,'stale_body_authority');
-  const proof={};bodyProofs.set(proof,{identity:{...identity},metadata:metadata.bytes,bytes:text.bytes,revision:text.current.revision,mailboxRevision:text.current.mailboxRevision});return proof;
- }
+ // Legacy two-stage inline capture is closed: each phase requires a distinct runtime quantum.
+ async captureBody(_identity:BodyIdentity,_signal?:AbortSignal):Promise<object>{throw new HttpError(503,'transport_denied');}
  snapshot(tenant:string,mailbox:string,signal?:AbortSignal){return this.operation<Snapshot>(tenant,mailbox,{kind:'snapshot'},signal);}
  async read(tenant:string,mailbox:string,validity:string,cursor:number,horizon:number,signal?:AbortSignal){return validateReadResult(await this.operation<ReadResult>(tenant,mailbox,{kind:'read',validity,cursor,horizon},signal),validity,'imap_headers');}
 }
