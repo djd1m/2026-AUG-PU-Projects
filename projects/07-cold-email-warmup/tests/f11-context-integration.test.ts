@@ -188,7 +188,13 @@ export async function runF11ContextIntegration(t:TestContext){
     const noBody=(await pool.query("SELECT due_at,next_check_at FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[mailbox])).rows[0];assert.deepEqual(noBody.due_at,noBody.next_check_at);assert.ok(noBody.due_at<=new Date());
     const adapter=new LiveReplyAdapter(pool,live,f.fixture),before=f.commands.length;assert.equal(await context.quantum(adapter,live,new AbortController().signal),false);assert.equal(f.commands.length,before);
     // Incremental completion omits UID1, so old pending UID requires actual native revalidation.
-    await publishTransportGrant(pool,live,token,tenant,mailbox,'1',{...grant,capabilities:['imap_headers','imap_body']});await complete();
+    await publishTransportGrant(pool,live,token,tenant,mailbox,'1',{...grant,capabilities:['imap_headers','imap_body']});
+    const invalidated=(await pool.query('SELECT p.scan_complete,r.state,r.run_id FROM mailbox_poll p JOIN reply_rescan r ON r.mailbox_id=p.mailbox_id WHERE p.mailbox_id=$1',[mailbox])).rows[0];assert.equal(invalidated.scan_complete,false);assert.equal(invalidated.state,'complete');
+    const fallbackStart=outcomes.length;await complete();
+    const fallback=outcomes.slice(fallbackStart) as {boundary?:string;outcome?:{state:string}}[];
+    assert.equal(fallback.find(x=>x.outcome)?.outcome?.state,'scanning','invalidated complete prefix must take finite native capture');
+    assert.equal(fallback.some(x=>x.boundary==='empty_tail_commit'),false,'incomplete durable prefix never selects either shortcut');
+    assert.ok(fallback.some(x=>x.boundary==='native_read'),'ordinary fallback reauthenticates old UID and reads native tail');
     const opened=(await pool.query('SELECT * FROM incoming_ai_event')).rows[0];assert.notEqual(opened.authenticated_run_id,pending.authenticated_run_id);assert.equal(opened.origin_run_id,pending.origin_run_id);assert.equal(opened.window_end.getTime()-opened.window_start.getTime(),12000);assert.equal(opened.attempt_deadline.getTime()-opened.queue_eligible_at.getTime(),450000);assert.deepEqual(opened.queue_eligible_at,pending.queue_eligible_at);assert.deepEqual(opened.attempt_deadline,pending.attempt_deadline);
     assert.ok(f.commands.filter(c=>c==='a4 UID FETCH 1:1 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])').length>=2);
     const pollBefore=(await pool.query('SELECT cursor_uid,completed_at FROM mailbox_poll WHERE mailbox_id=$1',[mailbox])).rows[0];

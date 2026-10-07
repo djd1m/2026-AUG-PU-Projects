@@ -68,7 +68,11 @@ export class PollWorker {
   const guard:TransactionGuard=async c=>{await runtimeGuard(c);await source(c);await transport?.(c);};
   try{
    if(signal.aborted)throw new Error('aborted');
-   if(run?.state==='complete'&&run.provenance==='imap_headers'&&this.mode==='live_provider'&&this.adapter instanceof LiveReplyAdapter&&this.adapter.config.pollMode==='live_provider'){
+   // Optimistic shortcut admission only; the final transaction still fences current proof.
+   const completePrefix=run?.state==='complete'&&run.provenance==='imap_headers'&&run.cursor>=run.highWater&&run.tailHighWater===run.cursor;
+   const durablePrefix=completePrefix?(await this.pool.query('SELECT scan_complete,uidvalidity,cursor_uid FROM mailbox_poll WHERE mailbox_id=$1',[mailbox])).rows[0]:undefined;
+   const shortcutEligible=completePrefix&&durablePrefix?.scan_complete===true&&durablePrefix.uidvalidity===run!.uidvalidity&&Number(durablePrefix.cursor_uid)===run!.cursor;
+   if(shortcutEligible&&run&&this.mode==='live_provider'&&this.adapter instanceof LiveReplyAdapter&&this.adapter.config.pollMode==='live_provider'){
     const pending=(await this.pool.query(`SELECT uid FROM incoming_ai_event WHERE tenant_id=$1 AND mailbox_id=$2 AND source='imap_headers' AND capture_state='pending' AND window_start IS NULL AND expires_at>clock_timestamp() AND attempt_deadline>clock_timestamp() AND uidvalidity=$3 AND uid<=$4 ORDER BY created_at,id LIMIT 1`,[tenant,mailbox,run.uidvalidity,run.cursor])).rows[0];
     if(pending){const adapter=this.adapter,config=adapter.config;
      let authority:Awaited<ReturnType<typeof authorizeTransport>>|undefined;
@@ -83,7 +87,7 @@ export class PollWorker {
      }
     }
    }
-   if(run?.state==='complete'&&run.provenance==='imap_headers'&&this.mode==='live_provider'&&this.adapter instanceof LiveReplyAdapter&&this.adapter.config.pollMode==='live_provider'){
+   if(shortcutEligible&&run&&this.mode==='live_provider'&&this.adapter instanceof LiveReplyAdapter&&this.adapter.config.pollMode==='live_provider'){
     const read=validateReadResult(await this.adapter.read(tenant,mailbox,run.uidvalidity,run.cursor,run.cursor,signal),run.uidvalidity,'imap_headers');
     if(read.kind==='uidvalidity_changed'){run=await this.store.capture(tenant,mailbox,read.snapshot,guard,identity(run));return {state:run.state};}
     if(!read.snapshot)return {state:'paused'};

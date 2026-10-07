@@ -5,7 +5,10 @@ process.once('message',(value:unknown)=>{const fixture=value as ChildRequest['fi
  const {loadConfig}=await import(new URL('../dist/config.js',import.meta.url).href),{createPool}=await import(new URL('../dist/db.js',import.meta.url).href);
  const config={...loadConfig(),dispatchMode:'live_provider' as const,pollMode:'live_provider' as const},pool=createPool(config.databaseUrl),abort=new AbortController();
  await installCaptureObserver(pool,config);
- process.once('SIGTERM',()=>abort.abort());process.once('SIGINT',()=>abort.abort());
+ const planned=process.env.F10_PLANNED_DRAIN==='1';
+ const lifetime=planned?await import(new URL('../dist/mailboxes/transport-lifetime.js',import.meta.url).href):undefined;
+ const stop=()=>{if(lifetime)abort.abort(lifetime.createProcessDrainReason());else abort.abort();};
+ process.once('SIGTERM',stop);process.once('SIGINT',stop);
  try{const built=await import(new URL('../dist/runtime/worker.js',import.meta.url).href);process.send?.({started:true,execArgv:process.execArgv});await built.runWorker(pool,config,abort.signal,process.env.F10_FAIR_ONCE==='1',fixture);const {readFile}=await import('node:fs/promises');process.send?.({drained:true,stat:await readFile('/proc/self/stat','utf8')});}
  catch(error){
   const e=error as {name?:unknown;code?:unknown;message?:unknown;stack?:unknown},root=new URL('../',import.meta.url).pathname;
@@ -97,6 +100,12 @@ export async function seedBodyPressureCohort(){
  await migrate(pool);
  await pool.query("INSERT INTO transport_operation(protocol,slot) VALUES('smtp',1),('smtp',2),('imap',1),('imap',2),('imap',3),('imap',4) ON CONFLICT DO NOTHING");
  if(Number((await pool.query("SELECT count(*) AS n FROM transport_operation WHERE operation IS NOT NULL")).rows[0].n)||Number((await pool.query("SELECT count(*) AS n FROM capacity_lease WHERE state='active'")).rows[0].n))throw Error('cohort_requires_empty_owned_capacity');
+ // Recreate the migration's initial reservation only in a proved empty test cohort.
+ const {eligibilityTransaction}=await import('../src/consent/transaction.js');await eligibilityTransaction(pool,async client=>{
+  if((await client.query('SELECT 1 FROM transport_operation WHERE operation IS NOT NULL')).rowCount)throw Error('cohort_requires_empty_owned_capacity');
+  const reserved=(await client.query("SELECT slot FROM transport_operation WHERE protocol='imap' AND header_reserved FOR UPDATE")).rows;if(reserved.length===0)await client.query("UPDATE transport_operation SET header_reserved=true WHERE protocol='imap' AND slot=4");
+  if((await client.query("SELECT slot FROM transport_operation WHERE protocol='imap'")).rowCount!==4||(await client.query("SELECT slot FROM transport_operation WHERE protocol='imap' AND header_reserved")).rowCount!==1)throw Error('cohort_header_reservation_invalid');
+ });
  const app=await application(config,pool,{resolver:async()=>[{address:'8.8.8.8',family:4}]}),token=(await readFile(process.env.OPERATOR_TOKEN_FILE!,'utf8')).trim();
  const actors:{tenant_id:string;account_id:string}[]=[],connected:string[]=[],participants:{tenant:string;mailbox:string;root:string;enrollment:string;recipient:string}[]=[],mailboxes=new Map<string,{headers:Buffer}>();
  for(let i=0;i<3;i++){const actor={tenant_id:randomUUID(),account_id:randomUUID()};actors.push(actor);await pool.query('INSERT INTO tenant(id) VALUES($1)',[actor.tenant_id]);await pool.query("INSERT INTO account(id,tenant_id,email,password_hash) VALUES($1,$2,$3,'fixture')",[actor.account_id,actor.tenant_id,actor.account_id+'@example.test']);await seedTestEntitlement(pool,actor.tenant_id);}
