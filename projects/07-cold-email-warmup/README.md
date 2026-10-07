@@ -68,7 +68,7 @@
 | Phase 2 — Validation | ✅ рой 3 валидатора, 4 major + 13/14 minor разобраны; вердикт PASS (docs/validation-report.md) |
 | Phase 3 — Toolkit | ✅ общий тулкит — корневой `.claude/` (политика репо: не дублировать по проектам); проектный CLAUDE.md сгенерирован |
 | Phase 4 — Finalize | ✅ README/статусы/телеметрия закрыты |
-| Реализация | ⬜ следующий шаг: реализация Must-ядра по Specification §8 + перенос доноров (Architecture §Reuse) |
+| Реализация | ✅ Must-ядро (api+web+workers, демо-стек на PGlite/in-process queue, unit 29/29, typecheck чист, smoke 12/12) |
 
 Телеметрия прогона: `docs/telemetry/p-replicator/20261007T165155Z-replicate-07-cold-email-warmup-00b7/`.
 

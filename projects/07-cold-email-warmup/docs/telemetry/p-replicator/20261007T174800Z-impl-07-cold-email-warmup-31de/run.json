@@ -6,18 +6,49 @@
   "feature": "Реализация Must-ядра MVP «Грелка» по Specification §8 (аккаунты/домены/ящики/пул/прогрев/кампании/антиспам-контур/health/тарифы/партнёрский код); доноры 01-06",
   "pipeline": "координатор",
   "tier": "M",
-  "risk_flags": ["code-first", "no-docker-local", "smtp-imap-external"],
+  "risk_flags": [
+    "code-first",
+    "no-docker-local",
+    "smtp-imap-external"
+  ],
   "profile": "compact-quality-first-v2",
-  "profile_overrides": ["модель хоста z-ai/glm-5.3-flash (Sol недоступна)", "unit-гейт на node:test (без_Testcontainers в среде)"],
+  "profile_overrides": [
+    "модель хоста z-ai/glm-5.3-flash (Sol недоступна)",
+    "unit-гейт на node:test (без_Testcontainers в среде)"
+  ],
   "baseline_revision": "ff2b55ac",
-  "final_revision": null,
+  "final_revision": "e9893c1c",
   "host": "kilo",
   "started_at": "2026-10-07T17:48:00Z",
-  "ended_at": null,
-  "status": "running",
-  "acceptance_evidence": {"guard": "npm test (unit) зелёный; npm run typecheck; стража фаз не менялись", "review": "самопроверка по AC списку + отчёт"},
-  "quality": {"required_gates_passed": null, "ac_met": null, "ac_total": null, "followup_status": "pending"},
-  "metrics": {},
-  "telemetry_status": "partial",
-  "missing_data": ["usage токенов недоступны", "integration/E2E не прогонялись (нет Docker в среде)"]
+  "ended_at": "2026-10-07T19:00:30Z",
+  "status": "completed",
+  "acceptance_evidence": {
+    "guard": "npm test (unit) зелёный; npm run typecheck; стража фаз не менялись",
+    "review": "самопроверка по AC списку + отчёт"
+  },
+  "quality": {
+    "required_gates_passed": 2,
+    "ac_met": 29,
+    "ac_total": 29,
+    "followup_status": "unit_green_smoke_12_12",
+    "confirmed_findings_by_severity": {
+      "major": 2,
+      "minor": 1
+    },
+    "false_positive_findings": 0,
+    "known_defects_missed": 0,
+    "regressions": 0
+  },
+  "metrics": {
+    "smoke_steps": 12,
+    "smoke_passed": 12,
+    "unit_tests": 29,
+    "unit_passed": 29,
+    "typecheck_errors": 0
+  },
+  "telemetry_status": "closed_with_limitations",
+  "missing_data": [
+    "usage токенов недоступны хосту",
+    "интеграционные testcontainers и E2E Playwright не прогонялись (нет Docker/браузера)"
+  ]
 }
