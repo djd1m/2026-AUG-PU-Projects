@@ -1,0 +1,67 @@
+{
+  "work_unit_id": "f11-admission-repair-author-a21",
+  "status": "completed",
+  "verdict": "candidate_ready_for_fresh_HIGH_verification_not_F11_acceptance",
+  "ack_utc": "2026-10-07T03:13:48Z",
+  "ended_utc": "2026-10-07T03:20:06.198010+00:00",
+  "source_cutoff_utc": "2026-10-07T03:30:48Z",
+  "terminal_deadline_utc": "2026-10-07T03:33:48Z",
+  "source_revision": "5c707737fdcb2be4c579eac4cbd71a9a026b8820",
+  "baseline": "8c00eb55cda2be0f8d8dec827d8fbd995665e74d",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "measurement_gap": "Host actual model/effort/billing counters unavailable",
+  "approved_plan_sha256": "ca48029d438e6e8a64690137f85cdd6898cf914468ce7f3a2ca6022ad0d2b02e",
+  "allowed_files": [
+    "src/mailboxes/transport-slots.ts",
+    "src/db.ts",
+    "db/017-transport-purpose.sql",
+    "tests/f10-runtime-protocol.test.ts",
+    "tests/f10-runtime-process-fixture.ts"
+  ],
+  "boundary_dependency": "db.ts fifth file separately explicitly authorized because migrate and ready hard-code versions; only017 wiring",
+  "route": {
+    "mechanical": "L",
+    "substantive": "inherited XL consequential runtime safety",
+    "ordering_gap": "First mechanical route pre-edit attempt failed missing worktree script; successful canonical script ran after first edits; preserved route.txt and route-retry.txt"
+  },
+  "checks": {
+    "lint-sealed-exit.txt": 0,
+    "focused-exit.txt": 1,
+    "build-exit.txt": 0,
+    "migrate-exit.txt": 0,
+    "typecheck-sealed-exit.txt": 0,
+    "terminal-db-exit.txt": 0,
+    "schema-final-setup-exit.txt": 0,
+    "focused-retry-exit.txt": 0,
+    "focused-final-exit.txt": 0,
+    "lint-exit.txt": 0,
+    "typecheck-final-exit.txt": 0,
+    "schema-setup-exit.txt": 0
+  },
+  "mutation_results": "mutation-results.json",
+  "public_full_counts_digests": "unchanged before/after terminal-db-readonly.json",
+  "schemas": {
+    "n7_a21_checks_261007032200": "retained: one synthetic never-bound body operation admitted by ignore_unknown mutant; returned owner object discarded by then-current rejects assertion, no remaining unforgeable close proof; never reclaimed",
+    "n7_a21_checks_261007032201": "restored candidate actual exit0, zero physical and body claims; one explicitly synthetic runtime_due claimed row used to prove claimed denial retained; no native worker ran"
+  },
+  "test_delta": "After mutations tightened test to retain unexpected returned slot in exact owner cleanup before asserting reject; final positive and types/lint ran on committed final test",
+  "source_build_inventory": "source-build-inventory.json",
+  "process_receipts": "native-process-receipts.json",
+  "joins": "All exec sessions6008,53700,88572,61217,93894,87255,70106 returned terminal nativeexit; each guarded node receipt contains process exit timestamp. No process running claimed. Mutation child PIDs/actualwait exits in mutation-results.json.",
+  "gaps": [
+    "Full mandatory project suites not run in author stage",
+    "Actual complete-proof/window admission, no-body scheduling and FIRST observer mutation remain verifier gates beyond allocator-focused witness",
+    "Two actual full300s fleet readiness/header/fairness mandatory witnesses remain",
+    "NEW fresh independent HIGH source review remains",
+    "Failed first focused attempt42P01 preserved",
+    "Mechanical pre-edit successful-route ordering not achieved"
+  ],
+  "source_ownership_released": true,
+  "database_ownership_released": true,
+  "main_project_and_ledger_written": false
+}

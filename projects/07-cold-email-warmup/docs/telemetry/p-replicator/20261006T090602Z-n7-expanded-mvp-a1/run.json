@@ -59,13 +59,13 @@
     "followup_status": "F07/F08/F09/F10 locally accepted and F10 integrated3566; expanded AC001–004 met, AC005–009 pending. Whole required_gates_passed remains false. F11 code remains unaccepted candidate."
   },
   "metrics": {
-    "elapsed_wall_ms": 65342752,
+    "elapsed_wall_ms": 65724984,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-07T03:15:05.630388+00:00"
+    "elapsed_as_of": "2026-10-07T03:21:27.862266+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 A20 compatible admission repair sealed; A21 fresh MEDIUM exact five-file implementation active",
+  "current_stage": "F11 A21 five-file admission candidate scopedchecks0/1/0 sealed; A22 freshMEDIUM sameDB migrationfixture and compactraw active",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -138,28 +138,22 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_admission_repair_author_a21",
-    "attempt": "f11-admission-repair-author-a21",
+    "executor": "/root/n7_sol_coordinator/f11_pg_fixture_author_a22",
+    "attempt": "f11-pg-fixture-author-a22",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T03:13:48Z",
+    "actual_ACK_at": "2026-10-07T03:20:55Z",
     "requested_model": "gpt-6.1-sol",
     "requested_effort": "medium",
     "actual_model": null,
     "fork_turns": "none",
-    "source_revision": "8c00eb55cda2be0f8d8dec827d8fbd995665e74d",
-    "freeze_at": "2026-10-07T03:30:48Z",
-    "deadline": "2026-10-07T03:33:48Z",
-    "planner_plan": "/tmp/n7-f11-admission-repair-plan-a20/repair_plan.md",
-    "planner_sha256": "ca48029d438e6e8a64690137f85cdd6898cf914468ce7f3a2ca6022ad0d2b02e",
+    "source_revision": "5c707737fdcb2be4c579eac4cbd71a9a026b8820",
+    "freeze_at": "2026-10-07T03:26:55Z",
+    "deadline": "2026-10-07T03:28:55Z",
     "allowed_files": [
-      "src/mailboxes/transport-slots.ts",
-      "db/017-new-additive-migration",
-      "tests/f10-runtime-protocol.test.ts",
-      "tests/f10-runtime-process-fixture.ts",
-      "src/db.ts"
+      "tests/capacity-integration.test.ts",
+      "tests/f10-runtime-protocol.test.ts"
     ],
-    "scope_amendment_reason": "Existing genuine migrate()/ready() hard-code016; fifth file solely017 loader and ready17",
-    "next": "Focused real purpose/reservation/unknown/rotation/rollback/closed CAS counterproof; immutable candidate then actual HIGH full300 healthy+fault/current unit/PG/material/privacy; NEW clean HIGH final review"
+    "next": "Genuine schema11→017 migration preservation in SAME ownedDB new schema, compact SAME fleet JSON fields for real disk margin; then actual HIGH frozen two300 and remaining suites/mutations/privacy; NEW clean HIGH finalsource review"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -206,10 +200,10 @@
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true,
     "latest_checkpoint": {
-      "at": "2026-10-07T03:15:05.630388+00:00",
-      "disk_available_bytes": 2247872512,
-      "executor": "/root/n7_sol_coordinator/f11_admission_repair_author_a21",
-      "remaining_AC": "Focused real purpose/reservation/unknown/rotation/rollback/closed CAS counterproof; immutable candidate then actual HIGH full300 healthy+fault/current unit/PG/material/privacy; NEW clean HIGH final review"
+      "at": "2026-10-07T03:21:27.862266+00:00",
+      "disk_available_bytes": 2232295424,
+      "executor": "/root/n7_sol_coordinator/f11_pg_fixture_author_a22",
+      "remaining_AC": "Genuine schema11→017 migration preservation in SAME ownedDB new schema, compact SAME fleet JSON fields for real disk margin; then actual HIGH frozen two300 and remaining suites/mutations/privacy; NEW clean HIGH finalsource review"
     }
   },
   "f07_runtime_candidate": {
