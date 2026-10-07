@@ -61,6 +61,7 @@ export async function applyInboundEffect(
       return { address: cls.senderAddress, kind: cls.kind, stoplistQueued: true, recipientFrozen: true };
     }
     case 'reply': {
+      if (await stores.isCampaignRecipient(cls.senderAddress)) await stores.freezeRecipient(cls.senderAddress);
       return { address: cls.senderAddress, kind: cls.kind, stoplistQueued: false, recipientFrozen: true };
     }
     case 'bounce': {
