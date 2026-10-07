@@ -1,0 +1,70 @@
+{
+  "work_unit_id": "n7-live-mail-operator-review-a2",
+  "status": "completed",
+  "verdict": "accept",
+  "trace_path": "/tmp/n7-live-mail-operator-review-a2-20261007/report.md",
+  "findings_path": "/tmp/n7-live-mail-operator-review-a2-20261007/findings.json",
+  "source_root": "/tmp/n7-live-mail-operator-source-a1-20261007",
+  "source_revision": "d469734a0d180479da819781408220ddaecd7039",
+  "baseline": "7acee11e69c5d7745d73aac603d5a85dbe63a63a",
+  "prior_candidate": "017a33b1bb2e0fc0796ed6186b419d9b6d907643",
+  "prior_independent_report": "/tmp/n7-live-mail-operator-review-a1-20261007/report.md",
+  "prior_report_sha256": "fe98c53408bd71b43b28fea3f309510eabda2addebc5bfda0bd54a5c1419a7f5",
+  "source_sha256": {
+    "projects/07-cold-email-warmup/docker-compose.live-mail.yml": "07c1faadd80d9a373bfcf65b2dff352fc323d48c42dbbd93ea4485afc5dc1ad7",
+    "projects/07-cold-email-warmup/docs/plans/live-mail-runtime-operator-20261007.md": "719cf1bb4da4556952af080caf35b4e07ca2eb54aa12e5b37325de9e715f9a4e",
+    "projects/07-cold-email-warmup/src/mailboxes/transport-operator.ts": "e8945701112f92db66dfa2d48e4318029fe71707415bbac9ce9b9867c7509b36",
+    "projects/07-cold-email-warmup/tests/transport-operator-integration.test.ts": "9760830a4fe207ab445f18db10153057451694007fd143b67c539587cd51414b",
+    "projects/07-cold-email-warmup/tests/transport-operator-unit.test.ts": "569cff366b898ad0c8fec1b4a4790fa160be92fb5d4b0bc84e60b946b5fc2954"
+  },
+  "source_unchanged": true,
+  "corrective_files": [
+    "projects/07-cold-email-warmup/src/mailboxes/transport-operator.ts",
+    "projects/07-cold-email-warmup/tests/transport-operator-unit.test.ts"
+  ],
+  "launch_sha256": "edbbaa9f0820cb10f755dff50e4fbccbc20e38283004961bf6cd1aa1a51c680c",
+  "objective_sha256": "d7ace097b7ef1781c3f9053b4e5d796520fd28ddbf54f9dd48439f54d1bd2fa1",
+  "planner_path": "/tmp/n7-live-mail-rollout-plan-a8-20261007/plan.md",
+  "planner_sha256": "8bab0dc3a359e38ecc1e2492fb688d6f7839b17dfa4b51ab0fc0b69ec56260fd",
+  "validated_plan_report": "/tmp/n7-live-mail-rollout-validation-a8-20261007/report.md",
+  "validated_plan_sha256": "7c1fcd1e7f2a111529fa3e5cc43f8024f4cebbd5dfbdcaffac5133cc5737dc08",
+  "checks_path": "/tmp/n7-live-mail-operator-fix-a3-20261007/checks.json",
+  "checks_json_sha256": "1c8243dba592e13348c9a557e5548c81e081aa73b3bf2cfc1084c5e139da68e9",
+  "build_revision": "5b9c7401a9c03a39aa1d6e48c1465b9725f3272c461246e58bdaee130b163c76",
+  "build_files_verified": true,
+  "raw_logs_verified": true,
+  "probe_sha256": "3131fc597a53c75d3fca94d7e0085e3f43cfd1933e11c0299b3a0886286df900",
+  "probe_script_sha256": "b418de4d9718bfe480019d6b8d40dc9e385c242722a4c849f61581c34de27e6c",
+  "probe_elapsed_seconds": 0.16587112890556455,
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning": "high",
+  "actual_model": null,
+  "actual_reasoning": null,
+  "usage": null,
+  "cost": null,
+  "missing_measurements": [
+    "Actual model, reasoning, usage and cost require unavailable host evidence."
+  ],
+  "started_at": "2026-10-07T21:37:15.649240+00:00",
+  "finished_at": "2026-10-07T21:38:57.060223+00:00",
+  "elapsed_seconds": 101.410983,
+  "budget_seconds": 480,
+  "findings_count": 0,
+  "resolved_findings": [
+    "N7-OP-001"
+  ],
+  "unrelated_green_tests_rerun": false,
+  "independent_fifo_reproduction_pass": true,
+  "db_network_external_actions_executed": false,
+  "e2e_preflight": {
+    "status": "not_applicable",
+    "reason": "Source review and fake-only file probe; no E2E/DB/provider operation."
+  },
+  "remaining_coordinator_owned_gates": [
+    "General and required F09/F10/suppression/security regressions",
+    "Source/image-bound and separately authorized production rollout/live-mail acceptance"
+  ],
+  "report_sha256": "c955cca23d3bd5eb2875d1587a0c9bb39345b141d9a6ad9f0b13d8945388b79f",
+  "findings_sha256": "49754c0b2686a5d3251cd2264cb87e0810be3d1a45d35473206e0b8e42efa36b"
+}

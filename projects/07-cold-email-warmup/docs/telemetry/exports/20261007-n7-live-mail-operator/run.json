@@ -1,0 +1,49 @@
+{
+  "status": "accepted_code_preparation_rollout_blocked_external_inputs",
+  "started_at": "2026-10-07T21:18:43.451948+00:00",
+  "accepted_at": "2026-10-07T21:40:48.003290+00:00",
+  "elapsed_wall_seconds": 1324.551342,
+  "profile": "model-routing-econom",
+  "routing": {
+    "planning_and_review": "gpt-6.1-sol high",
+    "implementation": "gpt-6.1-sol medium"
+  },
+  "actual_model": null,
+  "actual_reasoning": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gaps": [
+    "Host model/effort and token/cost counters unavailable; requested routing is not proof of actual model.",
+    "Root integration/recording wall time after this snapshot is not included."
+  ],
+  "frozen_candidate_revision": "d469734a0d180479da819781408220ddaecd7039",
+  "integrated_revision": "4f78391eb70418622640e61467eb7e1c2fdb969e",
+  "source_tree_binding": {
+    "4f78391eb70418622640e61467eb7e1c2fdb969e": "965f71cf0ba79080b34cee9a93843e0749779f97",
+    "d469734a0d180479da819781408220ddaecd7039": "965f71cf0ba79080b34cee9a93843e0749779f97"
+  },
+  "checks": {
+    "all_units_before_final_output_and_FIFO_changes": "86/86; then affected final focused units5/5",
+    "focused_operator_integration": "1/1 final own RAM namespace",
+    "general_integration": "170/170 native exit0,92.075seconds;2 hardcoded live files reused unchanged accepted A3 evidence; operator own-namespace integration separate",
+    "typecheck_lint_build": "native exit0 final candidate",
+    "independent_review": "initial mustfix FIFO; corrected candidate accept,101.411seconds",
+    "mutations": "auth/early-throw revoke/FIFO NONBLOCK bypasses fail; exact restore passes",
+    "git_diff_check": "exit0",
+    "known_secret_private_identity_scan": "5 files,0 matches"
+  },
+  "external_actions": false,
+  "production_database_mutated": false,
+  "publication_scope": "N7 earlier owner-authorized code delivery only; all SVG changes excluded",
+  "external_inputs_pending": [
+    "Owner save exact agreed Gmail sender through cabinet and provide working app settings privately.",
+    "Approved encrypted off-host backup destination/config path before production migration.",
+    "Merchant keys for billing activation separately; not required by mail-only worker."
+  ],
+  "honesty_notes": [
+    "Baseline operator CLI already existed; planner called it new. Preserved positional arguments and JSON revision success output.",
+    "Initial auto-review rejected write due to SVG-only scope interpretation; one retry with direct prior user authorization evidence accepted. No bypass.",
+    "Initial ineffective raw-null mutation retained in private evidence and not counted as failed guard.",
+    "Full unit suite was not repeated after focused output/FIFO corrections; changed focused tests/type/lint/build were run."
+  ]
+}

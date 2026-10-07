@@ -1,0 +1,37 @@
+{
+  "work_unit_id": "n7-live-mail-operator-review-a1",
+  "verdict": "mustfix",
+  "source_revision": "017a33b1bb2e0fc0796ed6186b419d9b6d907643",
+  "baseline": "7acee11e69c5d7745d73aac603d5a85dbe63a63a",
+  "source_sha256": {
+    "projects/07-cold-email-warmup/docker-compose.live-mail.yml": "07c1faadd80d9a373bfcf65b2dff352fc323d48c42dbbd93ea4485afc5dc1ad7",
+    "projects/07-cold-email-warmup/docs/plans/live-mail-runtime-operator-20261007.md": "719cf1bb4da4556952af080caf35b4e07ca2eb54aa12e5b37325de9e715f9a4e",
+    "projects/07-cold-email-warmup/src/mailboxes/transport-operator.ts": "46cf1f08150083ac498b529a2bd5badd0d31c7aa6da6bd8206ef53616a84a8ea",
+    "projects/07-cold-email-warmup/tests/transport-operator-integration.test.ts": "9760830a4fe207ab445f18db10153057451694007fd143b67c539587cd51414b",
+    "projects/07-cold-email-warmup/tests/transport-operator-unit.test.ts": "77f32817f1b524c80ba2a4984a8c3d5dffc645742fda78428ea8346080dffa0d"
+  },
+  "findings": [
+    {
+      "id": "N7-OP-001",
+      "severity": "high",
+      "priority": "P1",
+      "status": "mustfix",
+      "file": "projects/07-cold-email-warmup/src/mailboxes/transport-operator.ts",
+      "line": 11,
+      "end_line": 13,
+      "title": "Non-regular FIFO grant input blocks before committed revocation",
+      "description": "readPrivateFile calls open(file, 'r') before handle.stat(). On Linux a read-only open of a FIFO blocks until a writer connects, so isFile is never evaluated. After valid arguments/auth/readiness, publishing a FIFO grant file hangs indefinitely: invalid raw never reaches publishTransportGrant, the prior active grant remains active, typed failure never emits, and the opened pool never reaches finally cleanup. This regresses baseline stat-before-read rejection and violates the agreed regular-file and invalid-input-revoke contract.",
+      "reproduction": {
+        "kind": "fake-only CLI subprocess",
+        "script": "/tmp/n7-live-mail-operator-review-a1-20261007/fifo-probe.mjs",
+        "evidence": "/tmp/n7-live-mail-operator-review-a1-20261007/fifo-probe.raw.json",
+        "timeout_seconds": 2,
+        "result": "Timed out with empty stdout/stderr; fake publisher and fake pool cleanup were not reached. Parent killed and joined child; FIFO removed. No DB or provider access."
+      },
+      "requested_change": "Open using O_RDONLY | O_NONBLOCK, then reject non-regular files using fstat on the opened descriptor and always close it. Preserve regular-file byte cap and send rejected publish input as invalid raw through existing publisher. Add bounded FIFO regression proving invalid raw reaches publisher, typed failure occurs and pool cleanup runs; no config/publisher changes required.",
+      "acceptance": "FIFO with no writer promptly fails reader, CLI invokes publisher with invalid raw and cleans up; existing unit/integration/output compatibility checks remain green."
+    }
+  ],
+  "observed_at": "2026-10-07T21:34:20.042851+00:00",
+  "elapsed_seconds": 180.711175
+}

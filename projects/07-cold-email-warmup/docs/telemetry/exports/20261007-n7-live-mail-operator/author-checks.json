@@ -1,0 +1,192 @@
+{
+  "source_revision": "017a33b1bb2e0fc0796ed6186b419d9b6d907643",
+  "source_sha256": {
+    "docker-compose.live-mail.yml": "07c1faadd80d9a373bfcf65b2dff352fc323d48c42dbbd93ea4485afc5dc1ad7",
+    "src/mailboxes/transport-operator.ts": "46cf1f08150083ac498b529a2bd5badd0d31c7aa6da6bd8206ef53616a84a8ea",
+    "tests/transport-operator-unit.test.ts": "77f32817f1b524c80ba2a4984a8c3d5dffc645742fda78428ea8346080dffa0d",
+    "tests/transport-operator-integration.test.ts": "9760830a4fe207ab445f18db10153057451694007fd143b67c539587cd51414b",
+    "docs/plans/live-mail-runtime-operator-20261007.md": "719cf1bb4da4556952af080caf35b4e07ca2eb54aa12e5b37325de9e715f9a4e"
+  },
+  "build_revision": "3991a1949a01823321dadb988a3b363d53c0250f06b419932fc3f9f5b4e0935b",
+  "build_files": {
+    "dist/auth/password.js": "3decbfaf152c313910d9375d1e8f559df4aa2b40389b1c63561261d5147b594e",
+    "dist/auth/service.js": "5537019db7c50c93d8a61fd00194330558eb01898726ed5017c4d3bf47b1dd2e",
+    "dist/auth/session.js": "a84490dbbd8589da6ae79cecbf7bf9a04c76a9676d3ca948cc8fb811d1a5ffce",
+    "dist/auth/store.js": "0f6a4de099ec4570e9a2a73f03c2364c92fc01af42e228950844a01f0d6f8605",
+    "dist/billing/live.js": "df50e5df198d502fde399b7856b4bf431d1be5eef0c33a02b6295d01df946954",
+    "dist/billing/plans.js": "df15f18085e1da667d6e547e1a88bb7f024212610ac770968e7a20d8e2ea6656",
+    "dist/billing/provider.js": "71d9e588b41ffb0e302ad626ad0d2f719c84d84ba58fbc783276d6ee65b166db",
+    "dist/billing/service.js": "b3e48322114013fef0aa892c1c309e8ba4157e42c8cfc2823121ef4ccadc5fa9",
+    "dist/billing/transaction.js": "32cadf1259627dba17799639216cfdb4d115d6393193462983f01e779186148a",
+    "dist/billing/yookassa.js": "35d5e8a71f9ada9708e203cfdda182a01601f7b9cec41d8431e8d06392e6d175",
+    "dist/campaigns/input.js": "158771b68468eb317e469a2d10c301235f8258a8a75d6236dfe5bf96c8c8314b",
+    "dist/campaigns/store.js": "f4d16110f4154bc87c67bd0bfb829f2704cc3273badea91b770a2b408875dd4f",
+    "dist/config.js": "3ff773a2f13891288d8a129d5c569da99270f779f47d8a9074f81ed875fc0bcf",
+    "dist/consent/store.js": "16978d51391388740ba91e20e8074eae2d0563078cfea7250b3300c9ed38d36e",
+    "dist/consent/transaction.js": "73a1c140d4c26fce559ea9c1f401362c743a0374dc5c177aa668df018a5cf6b9",
+    "dist/db.js": "d72b8fad41b39bc8d3acf5e1272ed6f45e47d3918eb077d8f738cdb9e637121e",
+    "dist/dispatch/adapter.js": "256b32a9deca1bb16f6cab4a4b9678be6f6af7ceb5788a15489668a432272594",
+    "dist/dispatch/eligibility.js": "4676adc3f763dc35fa79908901801fa04c0382a01ab51fc867e7af3d0f7a4f60",
+    "dist/dispatch/message.js": "c29e77cd69751dcf5ac05ca03be83acf66ee89501c84f11b2c05ffcd69faf1e4",
+    "dist/dispatch/seams.js": "589665ddba8d9d953e0cd4ed6f92c2af5b6496be441d39f3f312f8e81694e8c1",
+    "dist/dispatch/smtp.js": "d13d7995601b9792c6ad42af1af05efb2f8817784e625136d0e88a79cbf0594a",
+    "dist/dispatch/store.js": "5c67b41b0ecdeec33d5d37e5f93dd57367b2be9d86ea37b4f2f09114e8bd5d6a",
+    "dist/dispatch/submission.js": "08a0f8e5126b1983d5943cb1dee53a974d73e8aca327701231f97688c4d4d03e",
+    "dist/dispatch/worker.js": "0745c2b4d3da424a71aa14d6d1d3c7fb7f6428137f265e40196ffd93ccd242bf",
+    "dist/errors.js": "960a11b1d06cc22ca03989ba183dfd16d1322b19cf9b8744874a9cd624fe9c4b",
+    "dist/evidence/compare.js": "4c6bf10142d92183948ef28f8b091a452439c131598a1f434c9170fa521a1401",
+    "dist/evidence/input.js": "20c881038c36d1cfac6054cd5b54e6110856c9da6c69de49cb8e0a792904a171",
+    "dist/evidence/store.js": "0ecf18bfc6d034fe97a64a13f0b2661480345d564376aeb97d0e06b166652f6a",
+    "dist/growth/attribution.js": "77a5436123d647a265f2ee8cd8e9fb7be915ff1d73f1fca3188517a26e170496",
+    "dist/growth/partner.js": "6de3407bcafcd93c82abc7bf33558fad6237e3e5eec131dbec468c32029e1d71",
+    "dist/growth/reports.js": "fd37396f0f4330bc0f6277efebe4b501c7c590935864c4176f515fce978596de",
+    "dist/mailboxes/capacity.js": "f22c61a5984208f108f20dfa3352a25e480b589fc0571aff78fcd7848a212782",
+    "dist/mailboxes/crypto.js": "57da121f012021b88d6433abf7a90a6b823275586cd9739834011edb9b794a00",
+    "dist/mailboxes/diagnostic-authority.js": "3bda6073ab940b13884fc7d69f3a04043122b9cf969f177e5054b43bbcd1b90f",
+    "dist/mailboxes/diagnostic-channel.js": "3223405e2bfcbc75b46caeff6a442d0dab553749e678b212d1dd9efd163a172c",
+    "dist/mailboxes/diagnostic-operator.js": "97c98f166e0932b9f20eb933d204e75e98e210d578bd72c855a4a3728da1726d",
+    "dist/mailboxes/diagnostic-store.js": "b2707928e559ace601bd53471d04ff5770a0b8bf922a21611de95c7ea023c666",
+    "dist/mailboxes/diagnostics.js": "7d7bc0fa4469f62bf3e80d5a1a6fa6f33333611f429c23fd0f85c04f6d908d71",
+    "dist/mailboxes/input.js": "c98480d2c225225cff7f3ff95e0a47cfc254e9812ea70a9e7bbc372a81e69349",
+    "dist/mailboxes/network.js": "a488dfb27971125116877f3a474286443cbe53dff45513296e7830c221ccaba4",
+    "dist/mailboxes/provider.js": "39dc8b289b8adbd05a5787430ac5f81906f65a1ce0e0328ff504bd7646ce4120",
+    "dist/mailboxes/store.js": "2e2ebe0278cd4b78b152167c765b0f24a286a11b6edb247d0b4751ea88c99ced",
+    "dist/mailboxes/transport-authority.js": "d54c55676ea6b8418a0cbc326ae5a9517a2f08bf8cef63639f509105174d6a3e",
+    "dist/mailboxes/transport-channel.js": "76871828ee777d4616a89e98d6b1e12e4887322c9c89ce2f1ecf417554b415d6",
+    "dist/mailboxes/transport-child.js": "33e62333d39a9052938839b1d1c50f058b82643c773a8d8fea82f99dfa13c3a5",
+    "dist/mailboxes/transport-lifetime.js": "fdbbd9602f04637167cf2bacba89d118a4d33f786e8ce829cee8e7df6d461a22",
+    "dist/mailboxes/transport-operator.js": "b92b36f9c3511bf8f891438c98eaa784b7367c0e52582e5771bd75b622955f5c",
+    "dist/mailboxes/transport-slots.js": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701",
+    "dist/main.js": "f87eff8a29e75435ed40957521d348c520b3d0b0feae2fd66ca48460665ce39e",
+    "dist/migrate.js": "4e1d6e130120b08b91404a01325e3a6877f2730ec27f6b49c14e4855e84b4c04",
+    "dist/pool/store.js": "cc48dad8892b9b3fc2f3100b2973170e2c0c5b555268a3888c2229338953c75a",
+    "dist/replies/adapter.js": "716bb9f42f62cda10d7f8ad189b064f783fc63a058bc09722a635fb7aa41a38f",
+    "dist/replies/fixture.js": "0ad1425e24bfb1086817483b13b48c0c1cc81fdec89e324f5ef203f55e7a243a",
+    "dist/replies/headers.js": "5ac87781bb9ea2cfc3c92b730e19407b75aecf6588eb7eef1b8fe23f0a65ac36",
+    "dist/replies/imap.js": "6fe481db6a4bed95f3108d4ba8a00955ffbdb54a0ed8d97eecd4091efba5bbc1",
+    "dist/replies/input.js": "f3555237ed6a4a5d6f9afe9e76457bdef8d131012105a8e603873f97a2dcf666",
+    "dist/replies/operator.js": "2efe8f825d753be0b6c411fb1453fbec57cb60e32b79a837499d5ef82aa190b5",
+    "dist/replies/store.js": "656f1d9cc163efb49ef80b3ee1846bab6b0841d27d1896d90484bd5cb2852d13",
+    "dist/replies/worker.js": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d",
+    "dist/runtime/loop.js": "5e0bc6a7ea96730b6f15da12c2d814eccc6b23dfd64486ae9a9173f028af2cac",
+    "dist/runtime/store.js": "f579feda5be195e46e021cc73a81012eb940b9ca5360f6ca055ea188a079dd6c",
+    "dist/runtime/worker.js": "b92e33a226964bea25f8df3923d4ac4c81898ef1f5ceba58d3974c3fb2ec9aee",
+    "dist/server.js": "f72a6672e5318ecd508ec8a8958ca21a0796c52040e05823ec8485f270ff048b",
+    "dist/suppression/http.js": "6456d9d41cb1b974a69027cd484ba8853dcfcd905e7e92c90f8800b615bb85fd",
+    "dist/suppression/store.js": "7f4b52491cfc211edbd9b5237269854198a2c87e19c8e2721a74a64b487186f7",
+    "dist/web/app.js": "df4edb6a4175d893b8b7c05aefeff45a0870ff7848ce82fd73abb7e3b3e09733",
+    "dist/web/billing.js": "252dd1723466cbcb47d8777987dd44a528c3d795b50e36a0fe48465c31fd1b00",
+    "dist/web/cabinet.js": "b34d4cad4b67c6a9cc3724bf9d426490a876db75b2a5f4f9d5a98442afc7633e",
+    "dist/web/campaigns.js": "824876b8c982afbab8cbb8a6261ce49ccaf942f8017e1b521071b4df44c50aa7",
+    "dist/web/client.js": "f7607bfa74c72188503b74fd478201a65178caaec538243979bacc7df45df634",
+    "dist/web/dom.js": "56bcb0f26340e34e7f665ada006812025249fdce3f8b8fa6e423bb1cfd31d4d2",
+    "dist/web/evidence.js": "631c2016d1b0a5b457968a59e62a2f9985cb4f685915656422fae205c85a0227",
+    "dist/web/mailboxes.js": "b806e065a82ec199fa861f4ae320ebf52695e07b2b1ff0d3a7b9cc07cc65ed9e",
+    "dist/web/models.js": "73cb0d8ed1c488989544e19dbc2c8178ac70e92530cfaf591d57bb4706c5153f",
+    "dist/web/page.js": "bef7627af341fd831552d010612bedf6120542cd0cda5e13c25621b3034963c5"
+  },
+  "launch_sha256": "fca3b19cff08a432a58db22c7e8953707a3969181e7f8141f6c3e313fc0530a3",
+  "native_logs_sha256": {
+    "all-units.raw.log": "77d30c5a33939a28e7d8a102fada926c960a2859964c1cd219787b94d76d6b81",
+    "auth-final-mutation.raw.log": "6e937b9398d7b768fe1fa4dda237113f9e4909ec11c9078bd455f9981483ecae",
+    "auth-mutation.raw.log": "4347e35fd3207380a17f0a829dea7778b572dfc6cbd3a5e23ad1e7d3417cf294",
+    "build.raw.log": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323",
+    "compose.raw.json": "9a6e9e4fbd7a3e65b9672195f5c36019bb4a117864c015cb0894af161e9ceaef",
+    "compose.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final-build.raw.log": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323",
+    "final-integration.raw.log": "61a59dd814a3b4846e510e12da11f9af82b880dc17b46769ba03643b3b130c5d",
+    "final-lint.raw.log": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e",
+    "final-typecheck.raw.log": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393",
+    "focused.raw.log": "2a749a7862f2c9d67674946b7247d1b598c3e026a3ffe0e5fa5b3d2da22b3159",
+    "invalid-revoke-final-mutation.raw.log": "15f6514230a2ea62c0ae221955959c0d3a407464370aff24b0126533d9b708c9",
+    "invalid-revoke-mutation.raw.log": "cecb0d9a582df7ed919399d11b61a47162a6c140ddd26a3fcc261f2422d5bec5",
+    "lint.raw.log": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e",
+    "mutation-restored.raw.log": "f72209498d6be6102100b5c29bc479742040d8f745665be8088db62883f1d90a",
+    "sealed-lint.raw.log": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e",
+    "sealed-typecheck.raw.log": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393",
+    "typecheck.raw.log": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393"
+  },
+  "typecheck_lint": [
+    {
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 9.349437557859346
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 6.055438121082261
+    }
+  ],
+  "build": {
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "exit_code": 0,
+    "native_log": "final-build.raw.log",
+    "elapsed_seconds": null
+  },
+  "focused_integration": {
+    "exit_code": 0,
+    "native_log": "final-integration.raw.log",
+    "tests": 1
+  },
+  "focused_units_final": {
+    "exit_code": 0,
+    "native_log": "mutation-restored.raw.log",
+    "tests": 4
+  },
+  "all_units_before_output_compatibility_and_cleanup_guard": {
+    "exit_code": 0,
+    "tests": 86,
+    "native_log": "all-units.raw.log",
+    "native_duration_ms": 85222.665543
+  },
+  "mutation": [
+    {
+      "name": "initial-raw-null-mutation",
+      "guard_failed": false,
+      "reason": "Separate null normalization still guarantees invalid raw; ineffective mutation retained in invalid-revoke-mutation.raw.log"
+    },
+    {
+      "name": "auth-final",
+      "exit_code": 1,
+      "guard_failed": true
+    },
+    {
+      "name": "invalid-revoke-final",
+      "exit_code": 1,
+      "guard_failed": true
+    },
+    {
+      "name": "byte-exact-restored",
+      "sha256": "46cf1f08150083ac498b529a2bd5badd0d31c7aa6da6bd8206ef53616a84a8ea",
+      "exit_code": 0
+    }
+  ],
+  "static_compose": {
+    "exit_code": 0,
+    "static_config_only": true,
+    "worker_billing_disabled_web_live": true,
+    "legacy_poll_excluded_by_default": true,
+    "initial_assertion_failure": "inactive profile service absent as desired; assertion corrected"
+  },
+  "existing_baseline_operator": true,
+  "tracked_worktree_clean": true,
+  "untracked_excluded": [
+    "node_modules (pre-existing read-only dependency symlink)"
+  ],
+  "actual_model": null,
+  "usage": null,
+  "cost": null
+}
