@@ -1,0 +1,59 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "attempt": "A50",
+  "status": "completed",
+  "verdict": "OPERATIONAL_PARTIAL",
+  "full_f11": "unaccepted",
+  "ack_utc": "2026-10-07T10:37:08Z",
+  "finished_at": "2026-10-07T10:57:03.691731+00:00",
+  "elapsed_wall_ms": 1195691,
+  "new_launch_cutoff": "2026-10-07T10:54:08Z",
+  "final_deadline": "2026-10-07T10:57:08Z",
+  "source_revision": "7dee9b9a33b87359feeae4fb82b88331ca50d5de",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "active_wall_ms": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "host model/usage unavailable",
+    "active/wait interval attribution unavailable"
+  ],
+  "all_432_exact_pid_ticks_joined": true,
+  "public_old_full_digests_unchanged": true,
+  "own_claims": {
+    "n7_a50_checks_261007103708": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    },
+    "n7_a50_context_261007103708": {
+      "physical": 1,
+      "runtime_claims": 0,
+      "body_claims": 1
+    }
+  },
+  "source_build_205_unchanged": true,
+  "source_mutations": false,
+  "context_exit": 124,
+  "no_identical_rerun": true,
+  "next_executor": "root",
+  "next_command": "guarded node --test --test-concurrency=1 '--test-skip-pattern=current authority mutations deny preIO and real native result commit' tests/f11-context-integration.test.ts",
+  "objective_packet_sha256": "61fb465e896a280f0cb07c4bd5b0ae07c8c7bb0bcf575e85da0df135bea726f8",
+  "report_sha256": "27982af66ddd8d1b41297810d91f3fc649013f5916ecab7904f72be9577f11d7",
+  "inventory_sha256": "64ea1518ce3116c59399b04f2ebe529dccbe28bc4f6260bbfab0611877a622f0",
+  "missing_gates": [
+    "PG C1/expiry/semantic-stop tail and full context completion",
+    "compiled generic/planned SIGTERM",
+    "logical/physical unstarted disposal",
+    "F10 native empty-tail regressions/runtime reason distinction",
+    "all npm integration suite",
+    "expanded/F09/F10 remaining mandatory regression sets",
+    "A43 missing material attempt_expired/operation_mismatch and other remaining controls",
+    "fault then healthy full300",
+    "legacy20page native19 RED obligation"
+  ]
+}

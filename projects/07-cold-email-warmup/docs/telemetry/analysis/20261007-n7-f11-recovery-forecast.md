@@ -23,3 +23,13 @@ Uncalibrated expert estimate from the root recovery at 10:04:35: **60–90 minut
 Full F11 completion and whole-N7 completion: **insufficient_data; timestamp unknown**. Mandatory remaining material cases, full fault and healthy fleet, legacy20-page obligation, source review and regressions are not established. F12–F14 remain separate uncompleted scope; F15 requires external authorization and a seven-day window.
 
 Root owns continuation; status updates include actual actor, exact source, gates, blockers, disk and revised forecast. Available tools do not provide a chat-notification scheduler; local status files do not guarantee chat wakeup every ten minutes.
+
+## Boundary update — 2026-10-07 10:55 UTC
+
+The local source correction is complete at isolated revision `7dee9b9a33b87359feeae4fb82b88331ca50d5de`; fresh independent A49 review accepts only that delta. Source is backed up in `work/n7-f11-restart-post-ready-a40`, without MAIN integration or deployment. Review documents are published at MAIN checkpoint `f730793f44a18521dfccfdbe805a369e68ace27a`.
+
+A50 fresh exact-preflight execution has passed 23 targeted controls, all 69 unit tests and all five native BODY protocol tests. Full PostgreSQL context execution reached the 240-second process bound with exit124: its 54-case current-authority subtest passed in 222.258 seconds, while remaining subtests were interrupted. This is an incomplete mandatory regression gate, not a passed full suite and not an observed product assertion failure. The complete required coverage will be partitioned into bounded serial groups; identical successful source-bound tests need not be repeated without a new reason.
+
+The earlier 60–90-minute local-correction forecast is no longer a reliable acceptance deadline because regression execution remains incomplete. **Next concrete evidence boundary: A50 sealed receipt by 10:57:08 UTC and A51 missing-control plan by 10:59:09 UTC.** These are bounded-attempt checkpoints, not delivery promises. Further accepted-result ETA remains `insufficient_data` until the partitioned mandatory coverage and two missing material controls are resolved. Full F11 and whole-N7 timestamps remain unknown.
+
+Root owns the actual continuation. A50 is executing/read-only; A51 is planning/read-only; no source writer is active at this boundary. Requested profile remains model-routing-econom HIGH planning/review, MEDIUM coding; actual host model/effort and token/cost measurements remain unavailable. Disk measurement at 10:51:10 UTC: 3,488,600,064 bytes free; no new installation or image pull is planned.
