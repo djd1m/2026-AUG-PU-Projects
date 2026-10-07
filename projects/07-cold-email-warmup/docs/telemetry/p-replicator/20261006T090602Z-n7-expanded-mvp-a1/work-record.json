@@ -507,6 +507,18 @@
     {
       "id": "f10-uid-material-verify-a36",
       "status": "active; actual ACK verified"
+    },
+    {
+      "id": "f11-context-author-a2",
+      "status": "completed coherent partial; full F11 acceptance pending",
+      "receipt_sha256": "e6615f1d2cccfcf7b11e48055f5edf51cf380768105e01ac9a52831bd6b2cff1",
+      "finished_at": "2026-10-06T23:58:46.741297+00:00",
+      "revision": "e10419a60a032bb39fd6e29afaca5a9b9585b9db"
+    },
+    {
+      "id": "f11-context-author-a3",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T00:02:53Z"
     }
   ],
   "work_units": [
@@ -549,26 +561,31 @@
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true,
     "latest_checkpoint": {
-      "at": "2026-10-06T22:18:57.299351+00:00",
-      "disk_available_bytes": 2911567872,
-      "remaining_AC": "F10 full330/PG/unit/affectedphysical/fences/materialmutants/canary/freshsource review; F11–14 pending",
-      "executor": "/root/n7_sol_coordinator/f10_atomic_admission_verifier_a32"
+      "at": "2026-10-07T00:04:03.059290+00:00",
+      "disk_available_bytes": 2713001984,
+      "remaining_AC": [
+        "C1 runtime body kind/admission/fair progression inside existing finite IMAP lane; competing workers/all participants literal30s complete-poll and60s due-selection under body pressure; no runtime automatic body launch exists",
+        "Capture candidate classifier/rule SHA and body stop/suppression atomic seams need production integration; current native capture stores bounded encrypted text only, no AI/send authority",
+        "Complete current source/run/root/recipient/config race matrix and copy deadline/restart physical retention witnesses; stale pending intents need fresh authenticated origin continuation rather than staleproof reuse",
+        "Full integration/full protocol/traceability/scenario/criterion/review gates and fresh independent HIGH fork-none implementation acceptance remain coordinator-owned"
+      ],
+      "executor": "/root/n7_sol_coordinator/f11_runtime_author_a3"
     }
   },
-  "current_stage": "F11 second fresh MEDIUM body/proof implementation; full runtime fairness pending",
+  "current_stage": "F11 third fresh MEDIUM runtime body quantum and classifier implementation; full F11 acceptance pending",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_body_author_a2",
-    "attempt": "f11-context-author-a2",
+    "executor": "/root/n7_sol_coordinator/f11_runtime_author_a3",
+    "attempt": "f11-context-author-a3",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-06T23:43:29Z",
+    "actual_ACK_at": "2026-10-07T00:02:53Z",
     "requested_model": "gpt-6.1-sol",
     "requested_effort": "medium",
     "actual_model": null,
-    "source_revision": "3b78670faad673711fd38b784c576243149b17f9",
-    "freeze_at": "2026-10-07T00:00:29Z",
-    "deadline": "2026-10-07T00:03:29Z",
-    "launch_sha256": "7d87134efbacacee1e94b795b265364a087acc85306f013ec58666c57460ea2d",
-    "next": "Seal coherent second body/proof revision and exact remaining C1/retention AC; actual bounded MEDIUM runtime continuation if incomplete; fresh independent HIGH review only after all mandatory F11 checks."
+    "source_revision": "e10419a60a032bb39fd6e29afaca5a9b9585b9db",
+    "freeze_at": "2026-10-07T00:19:53Z",
+    "deadline": "2026-10-07T00:22:53Z",
+    "launch_sha256": "58f0a4940d8366f28f3bd381dfc3a6805229b53782662fe5ce06fbd52e74ab85",
+    "next": "Bounded existing-runtime body quantum/classifier/C1-C2 completion; actual next executor for any remaining AC; fresh independent HIGH planner-only source review after mandatory checks."
   }
 }

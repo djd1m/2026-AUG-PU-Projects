@@ -1,0 +1,110 @@
+{
+  "nodes": 132,
+  "socket_denied": 203,
+  "dns_denied": 1,
+  "unknown_new_a2_socket_denials": 4,
+  "unknown_prior_a1_socket_denials": 22,
+  "old_destinations": "UNAVAILABLE; not reconstructed or relabeled",
+  "roles": {
+    "ordinary_final_binding": {
+      "nodes": 9,
+      "socketDenied": 6,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "ipcDenied": 0,
+      "categories": {
+        "unix": 6,
+        "defaultHost": 0,
+        "numeric": 0,
+        "other": 0
+      }
+    },
+    "native_transport_child": {
+      "nodes": 48,
+      "socketDenied": 96,
+      "dnsDenied": 0,
+      "ipcValidated": 44,
+      "ipcDenied": 4,
+      "categories": {
+        "unix": 96,
+        "defaultHost": 0,
+        "numeric": 0,
+        "other": 0
+      }
+    },
+    "ordinary_final_suite": {
+      "nodes": 23,
+      "socketDenied": 22,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "ipcDenied": 0,
+      "categories": {
+        "unix": 22,
+        "defaultHost": 0,
+        "numeric": 0,
+        "other": 0
+      }
+    },
+    "ordinary_final_check": {
+      "nodes": 33,
+      "socketDenied": 54,
+      "dnsDenied": 0,
+      "ipcValidated": 22,
+      "ipcDenied": 0,
+      "categories": {
+        "unix": 54,
+        "defaultHost": 0,
+        "numeric": 0,
+        "other": 0
+      }
+    },
+    "ordinary_pg_proof": {
+      "nodes": 7,
+      "socketDenied": 14,
+      "dnsDenied": 0,
+      "ipcValidated": 3,
+      "ipcDenied": 0,
+      "categories": {
+        "unix": 14,
+        "defaultHost": 0,
+        "numeric": 0,
+        "other": 0
+      }
+    },
+    "initial_uncategorized": {
+      "nodes": 8,
+      "socketDenied": 4,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "ipcDenied": 0,
+      "categories": {}
+    },
+    "ordinary_affected_regression": {
+      "nodes": 3,
+      "socketDenied": 6,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "ipcDenied": 0,
+      "categories": {
+        "unix": 6,
+        "defaultHost": 0,
+        "numeric": 0,
+        "other": 0
+      }
+    },
+    "negative_guard_probe": {
+      "nodes": 1,
+      "socketDenied": 1,
+      "dnsDenied": 1,
+      "ipcValidated": 0,
+      "ipcDenied": 1,
+      "categories": {
+        "unix": 0,
+        "defaultHost": 0,
+        "numeric": 1,
+        "other": 0
+      }
+    }
+  },
+  "matching_live_guarded_nodes": []
+}
