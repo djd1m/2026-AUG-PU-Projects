@@ -21,8 +21,12 @@ export interface Driver {
   native: 'pg' | 'pglite';
 }
 
+type AnyClient2 = {
+  query<T>(sql: string, args?: unknown[]): Promise<{ rows: T[] }>;
+};
+
 const q2 = <T>(client: AnyClient, sql: string, args?: unknown[]) =>
-  client.query<T>(sql, args && args.length > 0 ? args : undefined);
+  (client as unknown as AnyClient2).query<T>(sql, args && args.length > 0 ? args : undefined);
 
 function clientDb(client: AnyClient, inTx = false): Db {
   return {
