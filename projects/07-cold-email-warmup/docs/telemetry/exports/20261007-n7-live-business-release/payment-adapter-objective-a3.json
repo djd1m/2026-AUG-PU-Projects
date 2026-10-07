@@ -1,0 +1,108 @@
+{
+  "work_unit_id": "n7-live-payment-adapter-fix-a3",
+  "baseline_head": "132346a000d489dfcb1b54e08e7f38a6ab629560",
+  "source_head": "1fb00e49189279159a95e537266cc627ca7ad1d2",
+  "launch_sha256": "7ab34066c622286f8ca6b7d73b5068e2d0f4b7ba329b54e321b51b2e041e0506",
+  "files": [
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/live.ts",
+      "sha256": "3139d77d0ec626a56fc3ff5c939d255ed4619f21fc26ae6ca313c6baf511ea78"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/provider.ts",
+      "sha256": "070624e81b7c18b566741c3af0bc22a2c20e7e4187c2dac762dc3c7496bdce4f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/yookassa.ts",
+      "sha256": "282e5db6cb34c2d9d474601c5c09759f43a3eb15109e4ee054a5dc1710b17420"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/live-billing-integration.test.ts",
+      "sha256": "bbe08a7b19b9a2fbbf194f51d1b0107d6fab134011630c01d30425cf019957e5"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/yookassa-unit.test.ts",
+      "sha256": "989030240b246fa5de02b05a16a1b2c3d23ae96c384cfcd85b19b9971ecc3645"
+    }
+  ],
+  "build_artifacts": [
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/billing/live.js",
+      "sha256": "3d6718b2bd02dbc3f2a74dab753716140a3fefd71edfbcd71a36c8cbcf0475f9"
+    },
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/billing/provider.js",
+      "sha256": "71d9e588b41ffb0e302ad626ad0d2f719c84d84ba58fbc783276d6ee65b166db"
+    },
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/billing/yookassa.js",
+      "sha256": "9d595c8734b1f3c86828ee7ca2d0c18a71b593e1e208eb203387a33d44c01165"
+    }
+  ],
+  "independent_witness": {
+    "path": "/tmp/n7-live-payment-adapter-review-a2-20261007/deadline-witness.mjs",
+    "sha256": "725d43180b52d1fb874fb58688acebe0dc878f00ca3deb9bcc4956dbe7f6ead0"
+  },
+  "checks": [
+    {
+      "name": "mutation",
+      "command": "node --import tsx --test --test-concurrency=1 tests/yookassa-unit.test.ts tests/live-billing-integration.test.ts [POST deadline guard disabled]",
+      "native_exit": 1,
+      "expected_exit": 1,
+      "raw_log": "/tmp/n7-live-payment-adapter-fix-a3-20261007/mutation.log",
+      "sha256": "8059ee6125f2766b9b2e8fca62e60aa03d0432c377d5fe342e469191d86db1be"
+    },
+    {
+      "name": "focused",
+      "command": "node --import tsx --test --test-concurrency=1 tests/yookassa-unit.test.ts tests/live-billing-unit.test.ts tests/live-billing-integration.test.ts",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_log": "/tmp/n7-live-payment-adapter-fix-a3-20261007/focused.log",
+      "sha256": "81d1cc73dfee38aa2e73395cb05ca7a5252ae36efa60466fcc42d30c51c8e77b"
+    },
+    {
+      "name": "typecheck",
+      "command": "npm run typecheck",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_log": "/tmp/n7-live-payment-adapter-fix-a3-20261007/typecheck.log",
+      "sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393"
+    },
+    {
+      "name": "lint",
+      "command": "npm run lint",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_log": "/tmp/n7-live-payment-adapter-fix-a3-20261007/lint.log",
+      "sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e"
+    },
+    {
+      "name": "build",
+      "command": "npm run build",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_log": "/tmp/n7-live-payment-adapter-fix-a3-20261007/build.log",
+      "sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323"
+    }
+  ],
+  "focused_counts": {
+    "tests": 19,
+    "pass": 19,
+    "fail": 0
+  },
+  "mutation_restore": {
+    "source_sha256": "282e5db6cb34c2d9d474601c5c09759f43a3eb15109e4ee054a5dc1710b17420",
+    "saved_sha256": "282e5db6cb34c2d9d474601c5c09759f43a3eb15109e4ee054a5dc1710b17420"
+  },
+  "database": "n7billing_20261007_a1",
+  "external_provider_calls_executed": false,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "elapsed_seconds": 223.367922,
+  "finished_at": "2026-10-07T18:56:11.450260+00:00",
+  "unmet_bounded_ac": [],
+  "status": "completed"
+}

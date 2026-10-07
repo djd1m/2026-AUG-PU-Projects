@@ -1,6 +1,6 @@
 {
   "started_at": "2026-10-07T17:36:32.187188+00:00",
-  "status": "canonical_slice_accepted_integrated; yookassa_adapter_implementation_running",
+  "status": "yookassa_adapter_accepted_integrated; application_integration_pending",
   "owner_request": "Real business effect: real email sending and ability to pay, beyond TEST preview",
   "authorization_scope": "Prepare and implement requested live-capable release; no unspecified charges or external pilot executed",
   "source_revision": "a0896402",
@@ -24,13 +24,13 @@
     "BillingService reconcile and entitlement are coupled to local_provider_payment; provider injection alone insufficient",
     "Real Team tariff amount is not agreed; TEST100minorunits must not become real price by accident"
   ],
-  "next": "Complete adapter A2, fresh independent review; A3 config/API/UI integration planning running",
+  "next": "Implement approved backend/config/API/live-entitlement integration with refund context seam, then independent review/UI/Docker E2E",
   "elapsed": null,
-  "updated_at": "2026-10-07T18:40:53.177124+00:00",
+  "updated_at": "2026-10-07T19:04:26.288578+00:00",
   "plan": "docs/plans/live-business-release-20261007.md",
   "planner_result": "bounded plan completed; nativehostusage unknown",
   "owner_plan_checkpoint": "Latest owner response: давай делай",
-  "integrated_revision": "755f51a230d1e96be82aa28eb055de294345c961",
+  "integrated_revision": "ba458df897304e8c6d51e1a2d678743069c36ee1",
   "source_composition": [
     {
       "path": "projects/07-cold-email-warmup/db/016-live-billing.sql",
@@ -78,5 +78,12 @@
   "receipt_provenance_gap": "Corrective review launch manifest allocated by reviewer rather than root before checks; timing/provenance disclosed in review; no retroactive parent-prelaunch claim",
   "payment_adapter_launch": "/tmp/n7-live-payment-adapter-author-a2-20261007/launch.json",
   "application_plan_launch": "/tmp/n7-live-app-integration-plan-a3-20261007/launch.json",
-  "available_disk_bytes": 2305306624
+  "available_disk_bytes": 2305306624,
+  "adapter_review": "ACCEPT_BOUNDED_ADAPTER",
+  "application_plan": "docs/plans/live-app-integration-20261007.md",
+  "refund_plan": "docs/plans/live-refund-seam-20261007.md",
+  "source_files_byte_equal": 92,
+  "local_restore": "composite passed; all failed attempts preserved; offhost destination pending",
+  "dz_store_lesson": "teach:471eec1eed22220d",
+  "additional_provenance_gap": "Refund-seam clarification launch root allocated immediately after dispatch; recorded honestly, not prelaunch."
 }

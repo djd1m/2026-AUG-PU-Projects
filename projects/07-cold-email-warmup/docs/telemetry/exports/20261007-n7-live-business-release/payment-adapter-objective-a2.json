@@ -1,0 +1,149 @@
+{
+  "work_unit_id": "n7-live-payment-adapter-a2",
+  "baseline_head": "0d1d9323daa1ed0d5425b7685a35b424b4d49b1c",
+  "source_head": "132346a000d489dfcb1b54e08e7f38a6ab629560",
+  "launch_sha256": "8f3f1fc262c81ac829aeb6ba14c23df13c46c6ebb2ac2e37edec48811c201443",
+  "plan_sha256": "977e96d5cff2a6d8ef965f67c83d2213720a191fbc4efd2701ba55e8a46895bc",
+  "validation_packet_sha256": "1ee8c1b43a69a57f47251d3ea4ecc26cfd6cd23d602df1dd218ef2feefe76da0",
+  "files": [
+    {
+      "path": "projects/07-cold-email-warmup/db/017-live-checkout.sql",
+      "sha256": "01e672fc7fa2bab249aedf0b7adddc23b344fe4b1b8572f332ac405c9c216650"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/live.ts",
+      "sha256": "321f90ed8c1039b354247531f04564978854d86f006abb857001e528413d6c0a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/provider.ts",
+      "sha256": "4318debff0a66ba11cdf225f88adada437753f33b97348184bcd2d67fe36df54"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/yookassa.ts",
+      "sha256": "5a174f8762a39b1bf6aebe335a301f99cc6e64c9d98415e98c164667115c70fb"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/db.ts",
+      "sha256": "4494dd992428159bbd7a18b97a5849dd025ecc65cf1dc429e3597016fc3d87ab"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/diagnostics-integration.test.ts",
+      "sha256": "4aa87dff90d39dff793214da7b6bb933ef8299380a90235c1214db8aa8b0aeda"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/live-billing-integration.test.ts",
+      "sha256": "243c7eccaa94477d862e69f6391b75ac84b5c89b86e8d56615d15d78e2b8269a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/yookassa-unit.test.ts",
+      "sha256": "4258afd6c7b5a6e27a43bb3b7dc73f4a5baf10d28ed7395a8f76ead61a69f666"
+    }
+  ],
+  "donor_sources": [
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/03-affiliate-rewardful/shared/payments/yookassa.mjs",
+      "sha256": "4bf17f1be41dbb7d9ad235a94a36ca96aa9bd128492b14fccf0af2dd2cc21ccd"
+    },
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/projects/06-rag-sales-chatbase/apps/web/src/server/payments/yookassa.ts",
+      "sha256": "301a9a7acb1130efee2474c0f410d0fd034b1385a92040424961eda2ea48edba"
+    }
+  ],
+  "build_artifacts": [
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/billing/yookassa.js",
+      "sha256": "292ca50fe35f7bba269ad1f4635add006064ac9a0aca71ecaea689b524ab6565"
+    },
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/billing/live.js",
+      "sha256": "c87b127685e8a4250f2ed1ae532f46d48fcf4f8aa6f13552fc2a129c0f3ce4d7"
+    },
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/billing/provider.js",
+      "sha256": "71d9e588b41ffb0e302ad626ad0d2f719c84d84ba58fbc783276d6ee65b166db"
+    },
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/db.js",
+      "sha256": "d72b8fad41b39bc8d3acf5e1272ed6f45e47d3918eb077d8f738cdb9e637121e"
+    }
+  ],
+  "checks": [
+    {
+      "name": "deadline-mutation",
+      "command": "node --import tsx --test tests/live-billing-integration.test.ts [deadline guard removed]",
+      "native_exit": 1,
+      "expected_exit": 1,
+      "raw_receipt": "/tmp/n7-live-payment-adapter-author-a2-20261007/deadline-mutation.log",
+      "sha256": "3988233d21c1ba225f4a288c49652e58485270805a92de628483fa9d635dc20e"
+    },
+    {
+      "name": "focused",
+      "command": "node --import tsx --test --test-concurrency=1 tests/live-billing-unit.test.ts tests/live-billing-integration.test.ts tests/yookassa-unit.test.ts tests/diagnostics-integration.test.ts",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_receipt": "/tmp/n7-live-payment-adapter-author-a2-20261007/focused.log",
+      "sha256": "93a3ae4820757226d86ce9805478b94959e6aa261a8500c41b93e754349d9d99"
+    },
+    {
+      "name": "typecheck",
+      "command": "npm run typecheck",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_receipt": "/tmp/n7-live-payment-adapter-author-a2-20261007/typecheck.log",
+      "sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393"
+    },
+    {
+      "name": "lint",
+      "command": "npm run lint",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_receipt": "/tmp/n7-live-payment-adapter-author-a2-20261007/lint.log",
+      "sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e"
+    },
+    {
+      "name": "build",
+      "command": "npm run build",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_receipt": "/tmp/n7-live-payment-adapter-author-a2-20261007/build.log",
+      "sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323"
+    },
+    {
+      "name": "unit",
+      "command": "npm test",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_receipt": "/tmp/n7-live-payment-adapter-author-a2-20261007/unit.log",
+      "sha256": "bab4776812c29edb14e3b75fb37aef7bfccb20caf8c03495190517fcb2cab024"
+    }
+  ],
+  "test_counts": {
+    "all_units": {
+      "tests": 75,
+      "pass": 75,
+      "fail": 0
+    },
+    "focused": {
+      "tests": 24,
+      "pass": 24,
+      "fail": 0
+    }
+  },
+  "mutation_byte_restore": {
+    "source": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/src/billing/live.ts",
+    "restored_sha256": "321f90ed8c1039b354247531f04564978854d86f006abb857001e528413d6c0a",
+    "saved_sha256": "321f90ed8c1039b354247531f04564978854d86f006abb857001e528413d6c0a"
+  },
+  "database": "n7billing_20261007_a1",
+  "external_calls_authorized": false,
+  "external_provider_calls_executed": false,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "elapsed_seconds": 982.144509,
+  "finished_at": "2026-10-07T18:44:58.877201+00:00",
+  "unmet_bounded_ac": [],
+  "status": "completed"
+}
