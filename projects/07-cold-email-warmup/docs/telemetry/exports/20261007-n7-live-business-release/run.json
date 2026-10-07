@@ -1,6 +1,6 @@
 {
   "started_at": "2026-10-07T17:36:32.187188+00:00",
-  "status": "backend_accepted_integrated; UI_writer_running",
+  "status": "UI independently accepted; Docker E2E corrections in progress",
   "owner_request": "Real business effect: real email sending and ability to pay, beyond TEST preview",
   "authorization_scope": "Prepare and implement requested live-capable release; no unspecified charges or external pilot executed",
   "source_revision": "a0896402",
@@ -24,9 +24,9 @@
     "BillingService reconcile and entitlement are coupled to local_provider_payment; provider injection alone insufficient",
     "Real Team tariff amount is not agreed; TEST100minorunits must not become real price by accident"
   ],
-  "next": "Implement payment/mail UI then independent review and Docker Playwright local fixture",
+  "next": "Complete corrected source-bound Docker E2E; real merchant credentials and controlled mailbox setup pending",
   "elapsed": null,
-  "updated_at": "2026-10-07T19:49:34.827584+00:00",
+  "updated_at": "2026-10-07T20:27:20.340525+00:00",
   "plan": "docs/plans/live-business-release-20261007.md",
   "planner_result": "bounded plan completed; nativehostusage unknown",
   "owner_plan_checkpoint": "Latest owner response: давай делай",
@@ -78,7 +78,7 @@
   "receipt_provenance_gap": "Corrective review launch manifest allocated by reviewer rather than root before checks; timing/provenance disclosed in review; no retroactive parent-prelaunch claim",
   "payment_adapter_launch": "/tmp/n7-live-payment-adapter-author-a2-20261007/launch.json",
   "application_plan_launch": "/tmp/n7-live-app-integration-plan-a3-20261007/launch.json",
-  "available_disk_bytes": 2305306624,
+  "available_disk_bytes": 2221006848,
   "adapter_review": "ACCEPT_BOUNDED_ADAPTER",
   "application_plan": "docs/plans/live-app-integration-20261007.md",
   "refund_plan": "docs/plans/live-refund-seam-20261007.md",
@@ -106,5 +106,35 @@
   "backend_integrated_revision": "4c7441a8",
   "ui_launch": "/tmp/n7-live-ui-author-a4-20261007/launch.json",
   "backend_review_finished_at": "2026-10-07T19:27:00.457568+00:00",
-  "continuation_gap": "UI continuation was not started immediately after review; observed idle at19:45 and new writer launched with ACK at19:47. Not reported as active work during gap."
+  "continuation_gap": "UI continuation was not started immediately after review; observed idle at19:45 and new writer launched with ACK at19:47. Not reported as active work during gap.",
+  "ui_review": {
+    "verdict": "ACCEPT_UI_SLICE",
+    "source_revision": "9d6a1d1ec7ba476c95cdf0ad3983550ce4d9ac0a",
+    "report": "ui-review-a4.md",
+    "units": 82,
+    "focused_ui": 15,
+    "native_exit": 0,
+    "actual_model": null
+  },
+  "general_regression": {
+    "source_revision": "4564ed662e7dc63d9b32512dabd1d77c848da4e1",
+    "tests": 170,
+    "native_exit": 0,
+    "excluded_live_files": "2 hardcoded namespace files covered separately by accepted source-bound A3 evidence",
+    "elapsed_seconds": 104.3968
+  },
+  "e2e_attempts": [
+    {
+      "evidence": "/tmp/n7-live-ui-e2e-a4-20261007",
+      "native_exit": 1,
+      "cause": "root omitted migration of owned fresh RAM database; fixed namespace schema17 before next attempt"
+    },
+    {
+      "evidence": "/tmp/n7-live-ui-e2e-a5-20261007",
+      "native_exit": 1,
+      "checks": 1,
+      "cause": "harness expected raw disabled instead of accepted localized отключено; specific correction running"
+    }
+  ],
+  "validation_deviation": "UI legacy web integration TRUNCATE tenant/auth_bucket on assigned disposable fake n7billing DB contrary namespace-only instruction; no production DB operations"
 }
