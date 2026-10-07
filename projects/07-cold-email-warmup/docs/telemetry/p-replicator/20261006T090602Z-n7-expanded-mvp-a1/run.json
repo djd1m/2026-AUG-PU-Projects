@@ -59,13 +59,13 @@
     "followup_status": "F07/F08/F09/F10 locally accepted and F10 integrated3566; expanded AC001–004 met, AC005–009 pending. Whole required_gates_passed remains false. F11 code remains unaccepted candidate."
   },
   "metrics": {
-    "elapsed_wall_ms": 66890368,
+    "elapsed_wall_ms": 68378820,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-07T03:40:53.246894+00:00"
+    "elapsed_as_of": "2026-10-07T04:05:41.698438+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 A23 fault30-denominator/header30 gates FAILED; A24 fresh clean HIGH compatible restart/window/authority strategy active",
+  "current_stage": "F11 unaccepted; A25 observer scoped checks complete; A26 fresh HIGH directed fullfault causal diagnostic actually running",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -138,22 +138,28 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_restart_window_strategy_planner_a24",
-    "attempt": "f11-restart-window-strategy-planner-a24",
+    "executor": "/root/n7_sol_coordinator/f11_continuation_fleet_diagnostic_a26",
+    "attempt": "f11-continuation-fleet-diagnostic-a26",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T03:39:40Z",
+    "actual_ACK_at": "2026-10-07T03:59:49.371396Z",
     "requested_model": "gpt-6.1-sol",
     "requested_effort": "high",
     "actual_model": null,
     "fork_turns": "none",
-    "source_revision": "fb6fff054701663104ab24607915c2ab52b5baae",
+    "source_revision": "b6b82cb83cdf7cb1d646784ad169af826e6c6852",
     "production_revision": "5c707737fdcb2be4c579eac4cbd71a9a026b8820",
-    "freeze_at": "2026-10-07T03:45:40Z",
-    "deadline": "2026-10-07T03:47:40Z",
-    "context_manifest": "/tmp/n7-f11-current-fleet-verify-a23/clean-next-planner-input-manifest.json",
-    "context_sha256": "603d4e05c75e45da473c92af899adcde0ac5f1201f7745d6de289a22d90c6174",
-    "context_files": 248,
-    "next": "Precise compatible authority/restart/continuation/window/header repair or BLOCKED concretecounterexample, no cap/time/denominator relaxation; freshMEDIUM onlyafterHIGHseal; two actualfull300/currentunitPGmaterialprivacy/freshcleanHIGHfinalreview remain"
+    "freeze_at": "2026-10-07T04:16:49.371396Z",
+    "deadline": "2026-10-07T04:19:49.371396Z",
+    "context_manifest": "/tmp/n7-f11-continuation-diagnostic-next-pack-a26.json",
+    "context_sha256": "20c27e2d8c05515aee66e6a7adee071475f48cddcd4fb088ab2b368c586dc256",
+    "context_files": 259,
+    "actual_launcher_at": "2026-10-07T04:01:26.862576Z",
+    "native_spawned_at": "2026-10-07T04:01:28.090479Z",
+    "native_pid": 682933,
+    "native_start_ticks": 126869808,
+    "measurement_begun_at": null,
+    "own_schema": "n7_a26_fault_261007040055",
+    "next": "One unchanged fullfault diagnostic with NEW continuation SQL observer; exact cause and minimal compatible repair/amendment only. No second fleet run, cap/window/SLO relaxation, source writes, build, or checkout."
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -200,10 +206,10 @@
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true,
     "latest_checkpoint": {
-      "at": "2026-10-07T03:40:53.246894+00:00",
-      "disk_available_bytes": 2157699072,
-      "executor": "/root/n7_sol_coordinator/f11_restart_window_strategy_planner_a24",
-      "remaining_AC": "Precise compatible authority/restart/continuation/window/header repair or BLOCKED concretecounterexample, no cap/time/denominator relaxation; freshMEDIUM onlyafterHIGHseal; two actualfull300/currentunitPGmaterialprivacy/freshcleanHIGHfinalreview remain"
+      "at": "2026-10-07T03:48:40.120279+00:00",
+      "disk_available_bytes": 2148302848,
+      "executor": "/root/n7_sol_coordinator/f11_continuation_observer_author_a25",
+      "remaining_AC": "Genuine continuation FIRST SQL/rowCounts/urgency/ownership and shortnative diagnostic; production unchanged; exactnarrow compatible HIGHrepair/amendment adjudication afterraw; nofullfleetblindrepeat or time/cap relaxation"
     }
   },
   "f07_runtime_candidate": {

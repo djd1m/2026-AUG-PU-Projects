@@ -1,0 +1,30 @@
+{
+  "actualRawBaselinePassed": true,
+  "assertions": "extracted unchanged from actual test source; offline corruption of real SQL records only",
+  "results": [
+    {
+      "name": "missing_rowCount",
+      "rejected": true
+    },
+    {
+      "name": "wrong_sourceHash",
+      "rejected": true
+    },
+    {
+      "name": "wrong_queryHash",
+      "rejected": true
+    },
+    {
+      "name": "wrong_astHash",
+      "rejected": true
+    },
+    {
+      "name": "actual_query_absent",
+      "rejected": true
+    },
+    {
+      "name": "invalid_observer_log",
+      "rejected": true
+    }
+  ]
+}

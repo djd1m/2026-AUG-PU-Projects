@@ -1,0 +1,37 @@
+{
+  "utc": "2026-10-07T03:54:55.633420+00:00",
+  "actualNativeExit": 0,
+  "queryRowCounts": {
+    "0": 292,
+    "1": 3
+  },
+  "selectedPhases": {
+    "None": 292,
+    "text": 3
+  },
+  "sameClientEntries": 295,
+  "urgentHeaderCounts": {
+    "0": 295
+  },
+  "statesBeforeStop": {
+    "claimed": 2,
+    "ready": 1,
+    "pending": 27
+  },
+  "joins": [
+    {
+      "code": 0,
+      "signal": null
+    },
+    {
+      "code": 0,
+      "signal": null
+    }
+  ],
+  "physicalAfterJoin": [],
+  "observerGaps": [],
+  "ownedAlivePidTicks": [],
+  "sourceFrozenMismatches": [],
+  "zeroRowCause": "actual zero is SELECT result, not unique cause. Claimed-unexpired leases and physical BODY occupation visible in some snapshots; urgent_headers absent in all this short run. NonSQL sender/authority/root/AEAD outcomes and read-committed snapshot/query predicate intersection remain gaps. Old 6s delay/header32553ms cause UNKNOWN.",
+  "plannedRestart": "non-aborting planned restart outside current norm; no behavioral change or positive substitute for original active SIGTERM test."
+}

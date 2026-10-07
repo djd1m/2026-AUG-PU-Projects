@@ -1,0 +1,25 @@
+{
+  "attempt": "a24",
+  "stage": "PLAN",
+  "started_at": "2026-10-07T03:39:40Z",
+  "status": "completed",
+  "profile": "model-routing-econom",
+  "riskTier": "XL",
+  "sourceRevision": "fb6fff054701663104ab24607915c2ab52b5baae",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host actual model, effort and exclusive usage unavailable",
+    "Local scratch telemetry persisted during analysis, not before first read; parent owns authoritative project ledger"
+  ],
+  "mechanical_route": "not_executed_readonly_no_diff_tests_prohibited",
+  "companion_preflight": "not_applicable_no_E2E",
+  "verdict": "BLOCKED_product_repair",
+  "ended_at": "2026-10-07T03:45:23.371928+00:00",
+  "elapsed_wall_ms": 343371,
+  "telemetry_status": "partial"
+}

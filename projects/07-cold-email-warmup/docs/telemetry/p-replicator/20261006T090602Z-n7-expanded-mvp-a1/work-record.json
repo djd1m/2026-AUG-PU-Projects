@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "F11 A19 exact admission bottleneck confirmed; A20 fresh clean HIGH bounded repair strategy active",
+  "stage": "F11 unaccepted; A25 observer scoped checks complete; A26 fresh HIGH directed fullfault causal diagnostic actually running",
   "roots": {
     "project": "."
   },
@@ -674,30 +674,36 @@
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true,
     "latest_checkpoint": {
-      "at": "2026-10-07T03:40:53.246894+00:00",
-      "disk_available_bytes": 2157699072,
-      "executor": "/root/n7_sol_coordinator/f11_restart_window_strategy_planner_a24",
-      "remaining_AC": "Precise compatible authority/restart/continuation/window/header repair or BLOCKED concretecounterexample, no cap/time/denominator relaxation; freshMEDIUM onlyafterHIGHseal; two actualfull300/currentunitPGmaterialprivacy/freshcleanHIGHfinalreview remain"
+      "at": "2026-10-07T03:48:40.120279+00:00",
+      "disk_available_bytes": 2148302848,
+      "executor": "/root/n7_sol_coordinator/f11_continuation_observer_author_a25",
+      "remaining_AC": "Genuine continuation FIRST SQL/rowCounts/urgency/ownership and shortnative diagnostic; production unchanged; exactnarrow compatible HIGHrepair/amendment adjudication afterraw; nofullfleetblindrepeat or time/cap relaxation"
     }
   },
-  "current_stage": "F11 A23 fault30-denominator/header30 gates FAILED; A24 fresh clean HIGH compatible restart/window/authority strategy active",
+  "current_stage": "F11 unaccepted; A25 observer scoped checks complete; A26 fresh HIGH directed fullfault causal diagnostic actually running",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_restart_window_strategy_planner_a24",
-    "attempt": "f11-restart-window-strategy-planner-a24",
+    "executor": "/root/n7_sol_coordinator/f11_continuation_fleet_diagnostic_a26",
+    "attempt": "f11-continuation-fleet-diagnostic-a26",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T03:39:40Z",
+    "actual_ACK_at": "2026-10-07T03:59:49.371396Z",
     "requested_model": "gpt-6.1-sol",
     "requested_effort": "high",
     "actual_model": null,
     "fork_turns": "none",
-    "source_revision": "fb6fff054701663104ab24607915c2ab52b5baae",
+    "source_revision": "b6b82cb83cdf7cb1d646784ad169af826e6c6852",
     "production_revision": "5c707737fdcb2be4c579eac4cbd71a9a026b8820",
-    "freeze_at": "2026-10-07T03:45:40Z",
-    "deadline": "2026-10-07T03:47:40Z",
-    "context_manifest": "/tmp/n7-f11-current-fleet-verify-a23/clean-next-planner-input-manifest.json",
-    "context_sha256": "603d4e05c75e45da473c92af899adcde0ac5f1201f7745d6de289a22d90c6174",
-    "context_files": 248,
-    "next": "Precise compatible authority/restart/continuation/window/header repair or BLOCKED concretecounterexample, no cap/time/denominator relaxation; freshMEDIUM onlyafterHIGHseal; two actualfull300/currentunitPGmaterialprivacy/freshcleanHIGHfinalreview remain"
+    "freeze_at": "2026-10-07T04:16:49.371396Z",
+    "deadline": "2026-10-07T04:19:49.371396Z",
+    "context_manifest": "/tmp/n7-f11-continuation-diagnostic-next-pack-a26.json",
+    "context_sha256": "20c27e2d8c05515aee66e6a7adee071475f48cddcd4fb088ab2b368c586dc256",
+    "context_files": 259,
+    "actual_launcher_at": "2026-10-07T04:01:26.862576Z",
+    "native_spawned_at": "2026-10-07T04:01:28.090479Z",
+    "native_pid": 682933,
+    "native_start_ticks": 126869808,
+    "measurement_begun_at": null,
+    "own_schema": "n7_a26_fault_261007040055",
+    "next": "One unchanged fullfault diagnostic with NEW continuation SQL observer; exact cause and minimal compatible repair/amendment only. No second fleet run, cap/window/SLO relaxation, source writes, build, or checkout."
   }
 }

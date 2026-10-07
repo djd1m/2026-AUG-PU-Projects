@@ -1,0 +1,210 @@
+{
+  "rawSha256": "6237bec4acdad1ef6c97d9b5ab9ad8a0085a47073a6033f759639f5b8dc805ea",
+  "rawElapsedMs": 240412,
+  "rawReady": 18,
+  "rawParticipants": 30,
+  "queryTemplates": 72,
+  "queriesChecked": 2591,
+  "queryBindingMismatches": [],
+  "all12": [
+    {
+      "mailbox": "eb3d7d2a-93ed-4587-997d-c9c88b05ec5a",
+      "lastEventIndex": 8754,
+      "captureState": "pending",
+      "reason": "body_authority_required",
+      "originRun": "05401ca7-cc4f-44a7-85e1-c22f66bbe423",
+      "authenticatedRun": "2b974dc8-643c-44ee-b3c6-8815ee5df34a",
+      "authenticationUpdates": 10,
+      "windowStart": null,
+      "windowEnd": null,
+      "phase": "metadata",
+      "branches": {
+        "eligible_frontier": 6,
+        "pending_continuation": 2,
+        "live_windows": 1
+      }
+    },
+    {
+      "mailbox": "e0faa686-7e95-473a-8952-9290f1612e7c",
+      "lastEventIndex": 8892,
+      "captureState": "pending",
+      "reason": "body_authority_required",
+      "originRun": "f4105e12-f900-4506-a505-6ddbdcf71389",
+      "authenticatedRun": "540d0d99-9b78-4e13-9258-cb964865d9ff",
+      "authenticationUpdates": 10,
+      "windowStart": null,
+      "windowEnd": null,
+      "phase": "metadata",
+      "branches": {
+        "eligible_frontier": 8,
+        "pending_continuation": 1
+      }
+    },
+    {
+      "mailbox": "c106b784-95b2-4fc6-ab6d-c4a8753e85be",
+      "lastEventIndex": 8696,
+      "captureState": "pending",
+      "reason": "body_authority_required",
+      "originRun": "aea4c89d-a557-4a30-8dfa-81f18e9466d0",
+      "authenticatedRun": "fa19d4f8-7dbd-4e03-a6d8-21678e466b86",
+      "authenticationUpdates": 10,
+      "windowStart": null,
+      "windowEnd": null,
+      "phase": "metadata",
+      "branches": {
+        "eligible_frontier": 6,
+        "live_windows": 1,
+        "pending_continuation": 2
+      }
+    },
+    {
+      "mailbox": "d1fa9792-8b3a-44f7-91f3-f00b92859fcb",
+      "lastEventIndex": 8731,
+      "captureState": "pending",
+      "reason": "body_authority_required",
+      "originRun": "f91a001f-9c79-4801-aeb9-73e6c4082590",
+      "authenticatedRun": "ca4efafe-1376-4f80-894d-4bcb5fe4a2a0",
+      "authenticationUpdates": 10,
+      "windowStart": null,
+      "windowEnd": null,
+      "phase": "metadata",
+      "branches": {
+        "eligible_frontier": 6,
+        "pending_continuation": 2,
+        "live_windows": 1
+      }
+    },
+    {
+      "mailbox": "574b6d22-de3a-4afb-b939-ec6135152b0c",
+      "lastEventIndex": 5607,
+      "captureState": "held",
+      "reason": "capture_cancelled",
+      "originRun": "7774c47a-8d43-4b3c-b1f0-c4ec19ee1224",
+      "authenticatedRun": "7c21fe78-9438-470d-b44a-44ed0b856aaa",
+      "authenticationUpdates": 10,
+      "windowStart": "2026-10-07T03:30:42.743+00:00",
+      "windowEnd": "2026-10-07T03:30:54.743+00:00",
+      "phase": "text",
+      "branches": {
+        "eligible_frontier": 6,
+        "live_windows": 2,
+        "pending_continuation": 1
+      }
+    },
+    {
+      "mailbox": "493bc161-71d8-4aca-aaed-3a7f47235289",
+      "lastEventIndex": 5604,
+      "captureState": "held",
+      "reason": "capture_cancelled",
+      "originRun": "0c720331-e7be-4036-b30e-4f2381e792eb",
+      "authenticatedRun": "f90f14f9-22ff-427c-8aad-de15b5d05b9e",
+      "authenticationUpdates": 10,
+      "windowStart": "2026-10-07T03:30:42.815+00:00",
+      "windowEnd": "2026-10-07T03:30:54.815+00:00",
+      "phase": "text",
+      "branches": {
+        "eligible_frontier": 6,
+        "pending_continuation": 2,
+        "live_windows": 1
+      }
+    },
+    {
+      "mailbox": "f4725dc0-1255-4dc8-b79e-e8e941b8c680",
+      "lastEventIndex": 8906,
+      "captureState": "pending",
+      "reason": "body_authority_required",
+      "originRun": "df184d86-45f1-454d-ae33-dd280f63d62b",
+      "authenticatedRun": "2c1a6cec-7660-41c3-9ab4-4bcb117f08f8",
+      "authenticationUpdates": 10,
+      "windowStart": null,
+      "windowEnd": null,
+      "phase": "metadata",
+      "branches": {
+        "eligible_frontier": 8,
+        "pending_continuation": 1
+      }
+    },
+    {
+      "mailbox": "d9619e85-00bf-4c5b-8f22-d71330b1a1cf",
+      "lastEventIndex": 8189,
+      "captureState": "pending",
+      "reason": "body_authority_required",
+      "originRun": "67933c99-ae7d-40b9-9fac-632b516afdcb",
+      "authenticatedRun": "8e157ae8-1cbc-4d9f-b15d-1a30f4d8cc55",
+      "authenticationUpdates": 9,
+      "windowStart": null,
+      "windowEnd": null,
+      "phase": "metadata",
+      "branches": {
+        "eligible_frontier": 9
+      }
+    },
+    {
+      "mailbox": "ce6d1a12-d601-4867-a0c0-3e84eda72c97",
+      "lastEventIndex": 8720,
+      "captureState": "pending",
+      "reason": "body_authority_required",
+      "originRun": "152c6e84-a735-4ed9-8d57-df7c7a648786",
+      "authenticatedRun": "f20d4125-fdff-4c47-ac21-682df31b7e34",
+      "authenticationUpdates": 10,
+      "windowStart": null,
+      "windowEnd": null,
+      "phase": "metadata",
+      "branches": {
+        "eligible_frontier": 6,
+        "pending_continuation": 1,
+        "live_windows": 2
+      }
+    },
+    {
+      "mailbox": "ab28d22e-6709-47d4-841c-cca671459b1c",
+      "lastEventIndex": 8732,
+      "captureState": "pending",
+      "reason": "body_authority_required",
+      "originRun": "c29288c3-5be6-44b0-82ee-c79176919564",
+      "authenticatedRun": "7b2efeac-da8a-4699-a7bf-bebbe940a2ea",
+      "authenticationUpdates": 10,
+      "windowStart": null,
+      "windowEnd": null,
+      "phase": "metadata",
+      "branches": {
+        "eligible_frontier": 6,
+        "pending_continuation": 2,
+        "live_windows": 1
+      }
+    },
+    {
+      "mailbox": "bb1aedac-9f8f-40fe-a6f7-722071035b9d",
+      "lastEventIndex": 8869,
+      "captureState": "pending",
+      "reason": "body_authority_required",
+      "originRun": "29bbea57-ac60-492c-b96c-869f2c58861e",
+      "authenticatedRun": "4b69b067-d7aa-45bb-bfe4-9868f0df7c08",
+      "authenticationUpdates": 10,
+      "windowStart": null,
+      "windowEnd": null,
+      "phase": "metadata",
+      "branches": {
+        "eligible_frontier": 8,
+        "pending_continuation": 1
+      }
+    },
+    {
+      "mailbox": "b9cdc5a9-3203-433d-af52-c6ab89a5f68e",
+      "lastEventIndex": 5941,
+      "captureState": "held",
+      "reason": "capture_window_expired",
+      "originRun": "65bbd65e-1302-46fc-bab5-447827ff8830",
+      "authenticatedRun": "ec546af1-b1c7-4a0a-a23b-382b5c679117",
+      "authenticationUpdates": 10,
+      "windowStart": "2026-10-07T03:30:46.016+00:00",
+      "windowEnd": "2026-10-07T03:30:58.016+00:00",
+      "phase": "text",
+      "branches": {
+        "eligible_frontier": 6,
+        "pending_continuation": 2,
+        "live_windows": 1
+      }
+    }
+  ]
+}
