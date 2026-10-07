@@ -44,6 +44,30 @@
     "Baseline operator CLI already existed; planner called it new. Preserved positional arguments and JSON revision success output.",
     "Initial auto-review rejected write due to SVG-only scope interpretation; one retry with direct prior user authorization evidence accepted. No bypass.",
     "Initial ineffective raw-null mutation retained in private evidence and not counted as failed guard.",
-    "Full unit suite was not repeated after focused output/FIFO corrections; changed focused tests/type/lint/build were run."
-  ]
+    "Full unit suite was not repeated after focused output/FIFO corrections; changed focused tests/type/lint/build were run.",
+    "First offline build failed: local image ID was interpreted as docker.io registry tag; metadata resolution attempted, no pull/provider action. Corrected local-tag classic build succeeded; both receipts retained."
+  ],
+  "prepared_image": {
+    "native_exit": 0,
+    "elapsed_seconds": 27.251109858043492,
+    "source_revision": "d469734a0d180479da819781408220ddaecd7039",
+    "pull": false,
+    "network": "none",
+    "runtime_started": false,
+    "database_mutated": false,
+    "external_actions": false,
+    "parent_image": "sha256:3791cac50f5b6c2c87dd5cd3975f8141a1dd846b405361ca7456623121ec0b37",
+    "parent_checked_after": "sha256:3791cac50f5b6c2c87dd5cd3975f8141a1dd846b405361ca7456623121ec0b37",
+    "image_id": "sha256:dc59abdec230519befd55cbcd48150d49944fc7f5cae04d5f4986e9131444a6d",
+    "user": "node",
+    "command": [
+      "node",
+      "dist/main.js"
+    ],
+    "image_size": 446072288,
+    "added_image_bytes": 786660
+  },
+  "image_verification": "92 compiled/migration files match source manifest; CLI/runtime imports succeeded with network none, read-only; application not started.",
+  "dz_store_lesson": "teach:8a2712639b269fe4",
+  "image_preparation_finished_at": "2026-10-07T21:47:38.151463+00:00"
 }
