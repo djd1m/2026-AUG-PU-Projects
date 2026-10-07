@@ -8,7 +8,7 @@ export async function runtimeFixture(count=5){
  await assertOwnedFixtureDatabase(pool);
 
  await migrate(pool);await pool.query('TRUNCATE tenant CASCADE');await pool.query('UPDATE runtime_reconcile SET after_created_at=NULL,after_mailbox=NULL WHERE id=1');
- await pool.query("INSERT INTO transport_operation(protocol,slot) VALUES('smtp',1),('smtp',2),('imap',1),('imap',2),('imap',3),('imap',4) ON CONFLICT DO NOTHING");
+ await pool.query("INSERT INTO transport_operation(protocol,slot,header_reserved) VALUES('smtp',1,false),('smtp',2,false),('imap',1,false),('imap',2,false),('imap',3,false),('imap',4,true) ON CONFLICT DO NOTHING");
  const tenant=randomUUID(),boxes:string[]=[];await pool.query('INSERT INTO tenant(id) VALUES($1)',[tenant]);
  for(let i=0;i<count;i++){
   const id=randomUUID();boxes.push(id);

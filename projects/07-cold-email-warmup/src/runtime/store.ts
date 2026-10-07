@@ -111,7 +111,7 @@ export class RuntimeStore {
    // The considered sender consumes its turn even if fresh quota/authority defers it.
    if(row.state!=='ready'||row.next_check_at>now)return null;
   }
-  const claim=(await c.query(`UPDATE runtime_due SET state='claimed',owner_id=$3,generation=generation+1,lease_until=$4::timestamptz+interval '120 seconds',last_served_at=$4 WHERE mailbox_id=$1 AND kind=$2 RETURNING *`,[row.mailbox_id,kind,randomUUID(),now])).rows[0] as RuntimeClaim;
+  const claim=(await c.query(`UPDATE runtime_due SET state='claimed',owner_id=$3,generation=generation+1,lease_until=$4::timestamptz+interval '120 seconds',last_served_at=$4 WHERE mailbox_id=$1 AND kind=$2 RETURNING *`,[row.mailbox_id,kind,admission?.slot?.operation??randomUUID(),now])).rows[0] as RuntimeClaim;
   if(admission)this.admissions.set(claim,admission);return claim;
  });}
  guard(claim:RuntimeClaim,signal?:AbortSignal){return async(c:PoolClient)=>{

@@ -81,7 +81,12 @@ export class ContextStore {
     AND NOT EXISTS(SELECT 1 FROM runtime_due d WHERE d.mailbox_id=e.mailbox_id AND d.kind='poll' AND (d.state='claimed' OR d.due_at<=clock_timestamp()))
     AND EXISTS(SELECT 1 FROM mailbox_poll p WHERE p.mailbox_id=e.mailbox_id AND p.scan_complete AND p.completed_at=e.window_completed_at)
     AND NOT EXISTS(SELECT 1 FROM suppression s WHERE s.tenant_id=e.tenant_id AND s.recipient_hash=e.authenticated_recipient_hash)
-    AND NOT EXISTS(SELECT 1 FROM runtime_due urgent JOIN mailbox_poll hp ON hp.mailbox_id=urgent.mailbox_id WHERE urgent.kind='poll' AND urgent.state='ready' AND urgent.next_check_at<=clock_timestamp() AND hp.completed_at+interval '30 seconds'<=clock_timestamp()+interval '5 seconds')
+    AND (NOT EXISTS(SELECT 1 FROM runtime_due urgent JOIN mailbox_poll hp ON hp.mailbox_id=urgent.mailbox_id WHERE urgent.kind='poll' AND urgent.state='ready' AND urgent.next_check_at<=clock_timestamp() AND hp.completed_at+interval '30 seconds'<=clock_timestamp()+interval '5 seconds')
+     OR ((SELECT count(*) FROM transport_operation WHERE protocol='imap' AND header_reserved)=1
+      AND EXISTS(SELECT 1 FROM transport_operation t JOIN runtime_due d ON d.tenant_id=t.tenant_id AND d.mailbox_id=t.mailbox_id AND d.kind='poll'
+       WHERE t.protocol='imap' AND t.header_reserved AND t.operation IS NOT NULL AND t.operation_purpose='header' AND t.owner_process IS NOT NULL AND t.owner_host IS NOT NULL
+       AND d.state='claimed' AND d.owner_id=t.operation AND d.lease_until>clock_timestamp() AND d.reason NOT IN ('cleanup_blocked','rescan_incomplete'))
+      AND EXISTS(SELECT 1 FROM transport_operation WHERE protocol='imap' AND NOT header_reserved AND operation IS NULL)))
     AND NOT EXISTS(SELECT 1 FROM transport_operation t WHERE t.protocol='imap' AND t.mailbox_id=e.mailbox_id AND t.operation IS NOT NULL)
     ORDER BY e.window_end,e.capture_service_seq,e.id FOR UPDATE OF e SKIP LOCKED LIMIT 1`)).rows[0];
    if(!row)return null;

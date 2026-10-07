@@ -37,7 +37,7 @@ export async function runF11ContextIntegration(t:TestContext){
   await assertResetOwnership();
   assert.equal((await pool.query('SELECT count(*) AS n FROM transport_operation WHERE operation IS NOT NULL')).rows[0].n,'0');assert.equal((await pool.query("SELECT count(*) AS n FROM runtime_due WHERE state='claimed'")).rows[0].n,'0');
   await pool.query('TRUNCATE tenant,auth_bucket CASCADE');
-  await pool.query("INSERT INTO transport_operation(protocol,slot) VALUES('smtp',1),('smtp',2),('imap',1),('imap',2),('imap',3),('imap',4) ON CONFLICT DO NOTHING");
+  await pool.query("INSERT INTO transport_operation(protocol,slot,header_reserved) VALUES('smtp',1,false),('smtp',2,false),('imap',1,false),('imap',2,false),('imap',3,false),('imap',4,true) ON CONFLICT DO NOTHING");
   await pool.query('INSERT INTO tenant(id) VALUES($1),($2)',[tenant,foreign]);await pool.query('INSERT INTO account(id,tenant_id,email,password_hash) VALUES($1,$2,$3,$4)',[account,tenant,'f11@example.test','fixture']);
   mailbox=(await app.mailboxes.save(tenant,{label:'F11',senderAddress:'sender@example.test',smtpHost:'smtp.gmail.com',smtpPort:587,imapHost:'imap.gmail.com',imapPort:993,requiredTLS:true,smtpUsername:'synthetic',smtpPassword:'synthetic',imapUsername:'synthetic',imapPassword:'synthetic'})).id;
   await pool.query("UPDATE mailbox SET state='verified_test'");await seedCapacity(pool,new Date());
@@ -197,6 +197,41 @@ export async function runF11ContextIntegration(t:TestContext){
     assert.equal(bodySelectedWhilePeerDue,true,'existing IMAP lane selects legal body even while another mailbox is due');assert.ok(peerTurns>0);
     const metadataFinished=Date.now(),middle=(await pool.query('SELECT * FROM incoming_ai_event')).rows[0];assert.equal(middle.capture_phase,'text');assert.ok(middle.phase_metadata);assert.equal(f.commands.filter(c=>c.includes('BODY.PEEK[TEXT]')).length,0);
     assert.equal((await pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');
+    // Exercise the actual production continuation SELECT against real PG, with
+    // every counterexample rolled back to the same authenticated pending text.
+    const foreignBox=randomUUID();await pool.query("INSERT INTO mailbox(id,tenant_id,label,state,credential_envelope) VALUES($1,$2,'Foreign HEADER counterproof','verified_test','{}')",[foreignBox,foreign]);
+    const bodyBoxes=[randomUUID(),randomUUID(),randomUUID()];for(const id of bodyBoxes)await pool.query("INSERT INTO mailbox(id,tenant_id,label,state,credential_envelope) VALUES($1,$2,'Occupied BODY counterproof','verified_test','{}')",[id,tenant]);
+    const urgent=randomUUID();await pool.query("INSERT INTO mailbox(id,tenant_id,label,state,credential_envelope) VALUES($1,$2,'Urgent counterproof','verified_test','{}')",[urgent,tenant]);
+    await pool.query("INSERT INTO mailbox_poll(mailbox_id,scan_complete,completed_at) VALUES($1,true,clock_timestamp()-interval '30 seconds')",[urgent]);
+    await pool.query("INSERT INTO runtime_due(tenant_id,mailbox_id,kind,due_at,next_check_at) VALUES($1,$2,'poll',clock_timestamp(),clock_timestamp())",[tenant,urgent]);
+    await publishTransportGrant(pool,live,token,tenant,peer,'0',{...grant,mailbox:peer});
+    await pool.query("UPDATE runtime_due SET next_check_at=clock_timestamp() WHERE mailbox_id=$1 AND kind='poll'",[peer]);
+    await pool.query("UPDATE runtime_due SET next_check_at=clock_timestamp()+interval '1 minute' WHERE mailbox_id=$1 AND kind='poll'",[urgent]);
+    const header=await runtime.claim('poll');assert.ok(header);assert.equal(header.mailbox_id,peer);const headerSlot=runtime.pollAdmission(header)!.slot!;assert.equal(header.owner_id,headerSlot.operation);
+    await pool.query("UPDATE runtime_due SET next_check_at=clock_timestamp() WHERE mailbox_id=$1 AND kind='poll'",[urgent]);
+    const text=await readFile(new URL('../src/replies/context-store.ts',import.meta.url),'utf8'),sql=/`(SELECT e\.\* FROM incoming_ai_event e JOIN reply_rescan r[\s\S]*?LIMIT 1)`/.exec(text)![1]!;
+    const client=await pool.connect();try{await client.query('BEGIN');assert.equal((await client.query(sql)).rows[0]?.id,middle.id,'current known reserved header plus free BODY allows original text');
+     for(const [name,mutation,args] of [
+      ['legacy owner',"UPDATE runtime_due SET owner_id=gen_random_uuid() WHERE mailbox_id=$1 AND kind='poll'",[peer]],
+      ['expired lease',"UPDATE runtime_due SET lease_until=clock_timestamp()-interval '1 second' WHERE mailbox_id=$1 AND kind='poll'",[peer]],
+      ['blocked claim',"UPDATE runtime_due SET state='blocked',owner_id=NULL,lease_until=NULL WHERE mailbox_id=$1 AND kind='poll'",[peer]],
+      ['cleanup',"UPDATE runtime_due SET reason='cleanup_blocked' WHERE mailbox_id=$1 AND kind='poll'",[peer]],
+      ['incomplete',"UPDATE runtime_due SET reason='rescan_incomplete' WHERE mailbox_id=$1 AND kind='poll'",[peer]],
+      ['foreign tenant',"UPDATE transport_operation SET tenant_id=$1,mailbox_id=$2 WHERE header_reserved",[foreign,foreignBox]],
+      ['foreign mailbox',"UPDATE transport_operation SET mailbox_id=$1 WHERE header_reserved",[urgent]],
+      ['UNKNOWN',"UPDATE transport_operation SET operation_purpose=NULL WHERE header_reserved",[]],
+      ['nonheader',"UPDATE transport_operation SET operation_purpose='body' WHERE header_reserved",[]],
+      ['reserved free',"UPDATE transport_operation SET operation=NULL,tenant_id=NULL,mailbox_id=NULL,owner_process=NULL,owner_host=NULL,expires_at=NULL,operation_purpose=NULL WHERE header_reserved",[]],
+      ['no BODY slot',"UPDATE transport_operation SET operation=gen_random_uuid(),tenant_id=$1,mailbox_id=($2::uuid[])[slot],owner_process=gen_random_uuid(),owner_host='fixture',expires_at=clock_timestamp()+interval '1 minute',operation_purpose='body' WHERE protocol='imap' AND NOT header_reserved",[tenant,bodyBoxes]],
+      ['local due',"UPDATE runtime_due SET due_at=clock_timestamp() WHERE mailbox_id=$1 AND kind='poll'",[mailbox]],
+      ['local claimed',"UPDATE runtime_due SET state='claimed',owner_id=gen_random_uuid(),lease_until=clock_timestamp()+interval '1 minute' WHERE mailbox_id=$1 AND kind='poll'",[mailbox]],
+      ['local incomplete',"UPDATE mailbox_poll SET scan_complete=false WHERE mailbox_id=$1",[mailbox]],
+     ] as [string,string,unknown[]][]){await client.query('SAVEPOINT counterproof');await client.query(mutation,args);assert.equal((await client.query(sql)).rowCount,0,name);
+      const mutant=name==='legacy owner'?sql.replace('AND d.owner_id=t.operation ',''):name==='UNKNOWN'||name==='nonheader'?sql.replace("AND t.operation_purpose='header' ",''):name==='local due'||name==='local claimed'?sql.replace("AND NOT EXISTS(SELECT 1 FROM runtime_due d WHERE d.mailbox_id=e.mailbox_id AND d.kind='poll' AND (d.state='claimed' OR d.due_at<=clock_timestamp()))",''):null;
+      if(mutant){assert.notEqual(mutant,sql);assert.equal((await client.query(mutant)).rowCount,1,'material mutant exposes '+name);console.info(JSON.stringify({materialMutant:name,rejectedByCounterproof:true}));}
+      await client.query('ROLLBACK TO SAVEPOINT counterproof');}
+    await client.query('SAVEPOINT unknown_owner');await assert.rejects(client.query("UPDATE transport_operation SET owner_process=NULL WHERE header_reserved"),/transport_operation_check1/);await client.query('ROLLBACK TO SAVEPOINT unknown_owner');
+    }finally{await client.query('ROLLBACK');client.release();await runtime.cancel(header);await pool.query("UPDATE runtime_due SET next_check_at=clock_timestamp()+interval '1 minute' WHERE mailbox_id=ANY($1::uuid[]) AND kind='poll'",[[urgent,peer]]);}
     // Restart resumes this exact nonrenewable window from fresh encrypted server metadata.
     assert.equal(await new ContextStore(pool,config.credentialKeyring).quantum(new LiveReplyAdapter(pool,live,f.fixture),live,new AbortController().signal),true);
     const final=(await pool.query('SELECT * FROM incoming_ai_event')).rows[0];assert.equal(final.capture_state,'ready');assert.equal(final.phase_metadata,null);assert.deepEqual(final.window_end,opened.window_end);assert.deepEqual(await context.readContext(tenant,final.id),['What does the product do?']);assert.equal(f.commands.filter(c=>c.includes('BODY.PEEK[TEXT]')).length,1);assert.deepEqual((await pool.query('SELECT cursor_uid,completed_at FROM mailbox_poll WHERE mailbox_id=$1',[mailbox])).rows[0],pollBefore);

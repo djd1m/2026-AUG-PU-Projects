@@ -274,18 +274,29 @@ test('reset capture fences expected identity provenance tenant holds and transac
 
 test('native poll claim reserves physical admission atomically across competing processes',async()=>{
  const {pool,boxes}=await runtimeFixture();const {consumePreadmittedSlot,releaseUnusedTransportSlot}=await import('../src/mailboxes/transport-slots.js');
+ const reservations:{store:RuntimeStore;claim:import('../src/runtime/store.js').RuntimeClaim}[]=[];
  try{
   const authority=async()=>{};const stores=Array.from({length:5},()=>new RuntimeStore(pool,authority));await stores[0]!.maintenance();
   await pool.query("UPDATE runtime_due SET due_at=clock_timestamp()-CASE WHEN mailbox_id=$1 THEN interval '1 minute' ELSE interval '2 minutes' END WHERE kind='poll'",[boxes[4]]);
   const before=(await pool.query("SELECT mailbox_id,due_at FROM runtime_due WHERE kind='poll' ORDER BY mailbox_id")).rows;
-  const first=await Promise.all(stores.slice(0,4).map(s=>s.claim('poll')));assert.ok(first.every(Boolean));assert.equal(new Set(first.map(c=>c!.mailbox_id)).size,4);assert.ok(first.every(c=>c!.mailbox_id!==boxes[4]));
+  const first=await Promise.all(stores.slice(0,4).map(s=>s.claim('poll')));for(let i=0;i<first.length;i++)if(first[i])reservations.push({store:stores[i]!,claim:first[i]!});assert.ok(first.every(Boolean));assert.equal(new Set(first.map(c=>c!.mailbox_id)).size,4);assert.ok(first.every(c=>c!.mailbox_id!==boxes[4]));
   assert.equal((await pool.query("SELECT count(*) FROM transport_operation WHERE protocol='imap' AND operation IS NOT NULL")).rows[0].count,'4');
+  for(let i=0;i<4;i++)assert.equal(first[i]!.owner_id,stores[i]!.pollAdmission(first[i]!)!.slot!.operation,'fresh native reservation binds logical owner atomically');
   const ranks=(await pool.query("SELECT mailbox_id,service_seq,owner_id FROM runtime_due WHERE kind='poll' ORDER BY mailbox_id")).rows;assert.equal(await stores[4]!.claim('poll'),null);assert.deepEqual((await pool.query("SELECT mailbox_id,service_seq,owner_id FROM runtime_due WHERE kind='poll' ORDER BY mailbox_id")).rows,ranks,'full physical capacity commits no turn or claim');
   const released=first[2]!;await stores[2]!.cancel(released);const restart=new RuntimeStore(pool,authority),e=await restart.claim('poll');assert.ok(e);assert.equal(e.mailbox_id,boxes[4],'later due E receives released slot before any old second selection');const slot=restart.pollAdmission(e)!.slot!;assert.equal(slot.mailbox,e.mailbox_id);consumePreadmittedSlot(slot,e.tenant_id,e.mailbox_id);assert.throws(()=>consumePreadmittedSlot(slot,e.tenant_id,e.mailbox_id));await restart.cancel(e);
   for(let i=0;i<4;i++)if(i!==2)await stores[i]!.cancel(first[i]!);
   assert.equal((await pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');
   assert.deepEqual((await pool.query("SELECT mailbox_id,due_at FROM runtime_due WHERE kind='poll' ORDER BY mailbox_id")).rows,before,'unsatisfied original due survives cleanup and restart');
-  const denied=new RuntimeStore(pool,async()=>{throw new (await import('../src/errors.js')).HttpError(503,'transport_denied');});const claim=await denied.claim('poll');assert.ok(claim);assert.equal(denied.pollAdmission(claim)!.reason,'authority_denied');await denied.finish(claim,'authority_denied');assert.equal((await pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');
+  const denied=new RuntimeStore(pool,async()=>{throw new (await import('../src/errors.js')).HttpError(503,'transport_denied');});const claim=await denied.claim('poll');assert.ok(claim);assert.equal(denied.pollAdmission(claim)!.reason,'authority_denied');assert.ok(first.every((c,i)=>claim.owner_id!==stores[i]!.pollAdmission(c!)!.slot!.operation),'denied admission never copies a native operation');await denied.finish(claim,'authority_denied');assert.equal((await pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');
+  // A stale physical operation cannot become the owner of a transport-busy replacement.
+  await pool.query("UPDATE runtime_due SET next_check_at=clock_timestamp() WHERE kind='poll'");
+  const occupied=new RuntimeStore(pool,authority),old=await occupied.claim('poll');assert.ok(old);reservations.push({store:occupied,claim:old});const oldSlot=occupied.pollAdmission(old)!.slot!;
+  await pool.query("UPDATE runtime_due SET lease_until=clock_timestamp()-interval '1 second' WHERE mailbox_id=$1 AND kind='poll'",[old.mailbox_id]);
+  await pool.query("UPDATE runtime_due SET next_check_at=clock_timestamp()+interval '1 minute' WHERE kind='poll' AND mailbox_id<>$1",[old.mailbox_id]);
+  const replacementStore=new RuntimeStore(pool,authority),replacement=await replacementStore.claim('poll');assert.ok(replacement);reservations.push({store:replacementStore,claim:replacement});assert.equal(replacementStore.pollAdmission(replacement)!.reason,'transport_busy');assert.notEqual(replacement.owner_id,oldSlot.operation);assert.notEqual(replacement.generation,old.generation);
+  assert.equal(await occupied.finish(old),0);assert.equal(await occupied.cancel(old),0);await replacementStore.finish(replacement,'transport_busy');
+  const localStore=new RuntimeStore(pool),local=await localStore.claim('pool');assert.ok(local);assert.notEqual(local.owner_id,oldSlot.operation);await localStore.finish(local);
+  await pool.query("UPDATE runtime_due SET next_check_at=clock_timestamp() WHERE kind='poll'");const localPoll=await localStore.claim('poll');assert.ok(localPoll);assert.equal(localStore.pollAdmission(localPoll),undefined);await localStore.cancel(localPoll);
   // Force a real SQL transaction to fail AFTER its physical reservation update.
   const wrapped={async connect(){const c=await pool.connect();return {query:async(sql:string,args?:unknown[])=>{if(sql.startsWith("UPDATE runtime_due SET state='claimed'"))throw new Error('injected claim failure');return c.query(sql,args);},release:()=>c.release()};}} as unknown as import('pg').Pool;
   const rollbackRanks=(await pool.query("SELECT mailbox_id,service_seq,owner_id FROM runtime_due WHERE kind='poll' ORDER BY mailbox_id")).rows;
@@ -295,5 +306,5 @@ test('native poll claim reserves physical admission atomically across competing 
   const abort=new AbortController();const committed=new RuntimeStore(pool,authority);let operations=0;const claimMethod=committed.claim.bind(committed);
   committed.claim=async kind=>{const next=await claimMethod(kind);if(next)abort.abort();return next;};
   const operation=async()=>{operations++;return {};};await runRuntime(committed,{poll:operation,pool:operation,dispatch:operation},abort.signal,true);assert.equal(operations,0);assert.equal((await pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');
- }finally{await pool.end();}
+ }finally{for(const owned of reservations.reverse())await owned.store.cancel(owned.claim);await pool.end();}
 });
