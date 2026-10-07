@@ -32,7 +32,29 @@ async function routeContext(context){
  const outHeaders={};for(const [k,v] of Object.entries(response.headers))if(v!==undefined&&!['transfer-encoding','connection','content-length'].includes(k))outHeaders[k]=Array.isArray(v)?v.join('\n'):String(v);
  await route.fulfill({...response,headers:outHeaders});
 });}
-async function register(browser,width){const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce',serviceWorkers:'block'});contexts.add(context);await routeContext(context);const page=await context.newPage();page.setDefaultTimeout(10000);page.on('pageerror',()=>report.failures.push({kind:'pageerror'}));await page.goto(origin+'/signin');const email='n7-live-ui-'+randomBytes(8).toString('hex')+'@example.test',password=randomBytes(24).toString('base64url');await page.getByLabel('Электронная почта',{exact:true}).fill(email);await page.getByLabel('Пароль',{exact:true}).fill(password);await page.getByRole('button',{name:'Создать аккаунт',exact:true}).press('Enter');await page.waitForURL('**/app');await idle(page);return {context,page,email,password};}
+async function register(browser,width){
+ const diagnostic={viewport:width,step:'context_requested',http:[]};(report.auth_diagnostics??=[]).push(diagnostic);
+ let page;
+ try{
+  const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce',serviceWorkers:'block'});contexts.add(context);diagnostic.step='context_created';
+  await routeContext(context);diagnostic.step='network_guard_ready';page=await context.newPage();page.setDefaultTimeout(10000);
+  page.on('pageerror',()=>report.failures.push({kind:'pageerror'}));
+  page.on('response',response=>{const u=new URL(response.url());if(u.origin===origin&&['/api/auth/register','/api/auth/login','/api/auth/me'].includes(u.pathname)&&diagnostic.http.length<12)diagnostic.http.push({path:u.pathname,method:response.request().method(),status:response.status()});});
+  diagnostic.step='signin_requested';const signin=await page.goto(origin+'/signin');diagnostic.signin_status=signin?.status()??null;diagnostic.step='signin_loaded';
+  const email='n7-live-ui-'+randomBytes(8).toString('hex')+'@example.test',password=randomBytes(24).toString('base64url');
+  await page.getByLabel('Электронная почта',{exact:true}).fill(email);await page.getByLabel('Пароль',{exact:true}).fill(password);diagnostic.step='fields_filled';
+  await page.getByRole('button',{name:'Создать аккаунт',exact:true}).press('Enter');diagnostic.step='register_submitted';
+  await page.waitForURL('**/app');diagnostic.step='app_transition_complete';await idle(page);diagnostic.step='cabinet_ready';return {context,page,email,password};
+ }catch(error){
+  diagnostic.error_kind=error.name;
+  if(page){
+   diagnostic.page_state=['/signin','/app'].includes(new URL(page.url()).pathname)?new URL(page.url()).pathname:'other';
+   const messages=new Map([['Подождите…','waiting'],['Проверьте почту и длину пароля.','invalid_input'],['Неверная почта или пароль.','invalid_credentials'],['Слишком много попыток. Попробуйте позже.','rate_limited'],['Сервис занят. Попробуйте через секунду.','kdf_busy'],['Если аккаунт уже существует, используйте вход.','session_not_confirmed'],['Не удалось выполнить запрос. Попробуйте снова.','request_failed'],['Нет соединения. Попробуйте снова.','connection_failed']]);
+   const message=await page.locator('#message').textContent({timeout:1000}).catch(()=>null);diagnostic.message_code=message===null?'absent':message===''?'empty':messages.get(message)??'unrecognized';
+  }
+  throw error;
+ }
+}
 async function screenshot(page,name){check('password fields cleared',await page.locator('input[type=password]').evaluateAll(es=>es.every(e=>!e.value)));const file=current+'-'+name+'.png';await page.screenshot({path:dir+'/'+file,fullPage:true});report.screenshots.push(file);check('no horizontal overflow',await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth&&document.body.scrollWidth<=innerWidth));}
 try{
  for(const width of [1440,390]){
