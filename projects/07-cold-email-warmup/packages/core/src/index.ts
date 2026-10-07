@@ -8,3 +8,5 @@ export * from './billing.ts';
 export * from './campaign.ts';
 export * from './dispatch.ts';
 export * from './inbound.ts';
+export * from './billing_yookassa.ts';
+export * from './billing_stripe.ts';
