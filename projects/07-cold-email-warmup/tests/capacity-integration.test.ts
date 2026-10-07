@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import type { PoolClient } from 'pg';
 import { randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { application } from '../src/server.js';
@@ -113,11 +114,17 @@ test('F07 real PostgreSQL capacity boundaries and atomic safety',{timeout:90000}
    const parent=process.env.N7_TEST_SCHEMA!;assert.match(parent,/^n7_[a-z0-9_]{1,59}$/);
    const digest=async()=>{const snapshot:Record<string,unknown>={};for(const namespace of ['public',parent])for(const {tablename}of(await pool.query('SELECT tablename FROM pg_tables WHERE schemaname=$1 ORDER BY tablename',[namespace])).rows){assert.match(tablename,/^[a-z_][a-z0-9_]*$/);snapshot[namespace+'.'+tablename]=(await pool.query(`SELECT count(*)::int n,md5(COALESCE(string_agg(to_jsonb(e)::text,E'\\n' ORDER BY to_jsonb(e)::text),'')) digest FROM "${namespace}"."${tablename}" e`)).rows[0];}return snapshot;};
    const before=await digest(),owner=await pool.connect();
+   const guarded=globalThis as typeof globalThis & {__fixtureNetworkGuard?:unknown;__n7CapacityChild?:{prepare:(client:PoolClient,schema:string)=>Promise<object>;commit:(client:PoolClient,schema:string,token:object)=>Promise<void>}};
+   const registration=guarded.__n7CapacityChild;
+   if(guarded.__fixtureNetworkGuard){assert.equal(typeof registration?.prepare,'function');assert.equal(typeof registration?.commit,'function');}
+   let registrationToken:object|undefined;
    try{await owner.query('BEGIN');await owner.query('SELECT pg_advisory_xact_lock(7,1)');
     const identity=(await owner.query("SELECT current_database() db,current_user role,current_schema() schema,(SELECT pg_get_userbyid(datdba) FROM pg_database WHERE datname=current_database()) owner")).rows[0];
     assert.equal(identity.db,'n7f11_a8');assert.equal(identity.db,lease.database);assert.equal(identity.role,'n7');assert.equal(identity.role,lease.owner_role);assert.equal(identity.owner,'n7');assert.equal(identity.schema,parent);
     assert.equal((await owner.query('SELECT count(*)::int n FROM pg_namespace WHERE nspname=$1',[schema])).rows[0].n,0);
+    if(registration)registrationToken=await registration.prepare(owner,schema);
     await owner.query(`CREATE SCHEMA "${schema}" AUTHORIZATION n7`);await owner.query('COMMIT');
+    if(registration){assert.ok(registrationToken);await registration.commit(owner,schema,registrationToken);}
    }catch(error){await owner.query('ROLLBACK');throw error;}finally{owner.release();}
    const url=new URL(config.databaseUrl);url.searchParams.set('options','-c search_path='+schema);const upgrade=createPool(url.toString());
    try {
