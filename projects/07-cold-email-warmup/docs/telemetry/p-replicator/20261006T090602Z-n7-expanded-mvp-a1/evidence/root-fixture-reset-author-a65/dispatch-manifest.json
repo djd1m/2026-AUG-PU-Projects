@@ -1,0 +1,20 @@
+{
+  "runId": "20261006T090602Z-n7-expanded-mvp-a1",
+  "launchMs": 1791378106296.8938,
+  "units": [
+    {
+      "workUnitId": "f11_a65_fixture_reset_diagnostics_author",
+      "tracePath": "/tmp/n7-f11-fixture-reset-author-a65-20261007/receipt.md"
+    }
+  ],
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "source_revision": "bf8a5373a409181a42d5dc06be06a2c6aca611e6",
+  "owned_source_path": "tests/f10-runtime-fixture.ts",
+  "planner_sha256": "dc116f87d5c6bc760c2bb78a54eefffcfa5d3189fa7fc4f4ee5ea291cae374e5",
+  "trace_absent_before_dispatch": true,
+  "dispatch_status": "ready for actualMEDIUM source/static stage; runtime lease NOTyetgranted",
+  "runtime_db_lease": false,
+  "source_root": "/tmp/n7-fixture-reset-diagnostics-a65-20261007/projects/07-cold-email-warmup"
+}
