@@ -1,0 +1,217 @@
+{
+  "source_revision": "e9ec591e714932cfdd17339f5017b460f8476b16",
+  "planned_registration_count": 9,
+  "logical_count": 6,
+  "physical_count": 3,
+  "default_unfiltered": "Exactly all9 native top-level registrations, no legacy aggregate duplication",
+  "scenarios": [
+    {
+      "mode": "finish_stop",
+      "family": "logical",
+      "exact_title": "F11 A42 unstarted admission cancellation closes only exact logical owner / finish_stop",
+      "timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "singleton_callback": "unstartedCancellationWitness([mode])",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 A42 unstarted admission cancellation closes only exact logical owner / finish_stop$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "scenario_output": "a42-unstarted-finish_stop.json",
+      "checkpoints": "a42-unstarted-finish_stop.jsonl",
+      "expected_terminal_counters": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 0
+      },
+      "intentional_logical_claim_retained": false
+    },
+    {
+      "mode": "already_aborted",
+      "family": "logical",
+      "exact_title": "F11 A42 unstarted admission cancellation closes only exact logical owner / already_aborted",
+      "timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "singleton_callback": "unstartedCancellationWitness([mode])",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 A42 unstarted admission cancellation closes only exact logical owner / already_aborted$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "scenario_output": "a42-unstarted-already_aborted.json",
+      "checkpoints": "a42-unstarted-already_aborted.jsonl",
+      "expected_terminal_counters": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 0
+      },
+      "intentional_logical_claim_retained": false
+    },
+    {
+      "mode": "body_failure",
+      "family": "logical",
+      "exact_title": "F11 A42 unstarted admission cancellation closes only exact logical owner / body_failure",
+      "timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "singleton_callback": "unstartedCancellationWitness([mode])",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 A42 unstarted admission cancellation closes only exact logical owner / body_failure$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "scenario_output": "a42-unstarted-body_failure.json",
+      "checkpoints": "a42-unstarted-body_failure.jsonl",
+      "expected_terminal_counters": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 0
+      },
+      "intentional_logical_claim_retained": false
+    },
+    {
+      "mode": "generation",
+      "family": "logical",
+      "exact_title": "F11 A42 unstarted admission cancellation closes only exact logical owner / generation",
+      "timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "singleton_callback": "unstartedCancellationWitness([mode])",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 A42 unstarted admission cancellation closes only exact logical owner / generation$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "scenario_output": "a42-unstarted-generation.json",
+      "checkpoints": "a42-unstarted-generation.jsonl",
+      "expected_terminal_counters": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 1
+      },
+      "intentional_logical_claim_retained": true
+    },
+    {
+      "mode": "owner",
+      "family": "logical",
+      "exact_title": "F11 A42 unstarted admission cancellation closes only exact logical owner / owner",
+      "timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "singleton_callback": "unstartedCancellationWitness([mode])",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 A42 unstarted admission cancellation closes only exact logical owner / owner$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "scenario_output": "a42-unstarted-owner.json",
+      "checkpoints": "a42-unstarted-owner.jsonl",
+      "expected_terminal_counters": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 1
+      },
+      "intentional_logical_claim_retained": true
+    },
+    {
+      "mode": "started",
+      "family": "logical",
+      "exact_title": "F11 A42 unstarted admission cancellation closes only exact logical owner / started",
+      "timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "singleton_callback": "unstartedCancellationWitness([mode])",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 A42 unstarted admission cancellation closes only exact logical owner / started$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "scenario_output": "a42-unstarted-started.json",
+      "checkpoints": "a42-unstarted-started.jsonl",
+      "expected_terminal_counters": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 1
+      },
+      "intentional_logical_claim_retained": true
+    },
+    {
+      "mode": "physical_operation",
+      "family": "physical",
+      "exact_title": "F11 unstarted disposal preserves replacement physical operation owner_process owner_host / physical_operation",
+      "timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "singleton_callback": "unstartedCancellationWitness([mode])",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 unstarted disposal preserves replacement physical operation owner_process owner_host / physical_operation$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "scenario_output": "a42-unstarted-physical_operation.json",
+      "checkpoints": "a42-unstarted-physical_operation.jsonl",
+      "expected_terminal_counters": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 1
+      },
+      "intentional_logical_claim_retained": true
+    },
+    {
+      "mode": "physical_owner_process",
+      "family": "physical",
+      "exact_title": "F11 unstarted disposal preserves replacement physical operation owner_process owner_host / physical_owner_process",
+      "timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "singleton_callback": "unstartedCancellationWitness([mode])",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 unstarted disposal preserves replacement physical operation owner_process owner_host / physical_owner_process$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "scenario_output": "a42-unstarted-physical_owner_process.json",
+      "checkpoints": "a42-unstarted-physical_owner_process.jsonl",
+      "expected_terminal_counters": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 1
+      },
+      "intentional_logical_claim_retained": true
+    },
+    {
+      "mode": "physical_owner_host",
+      "family": "physical",
+      "exact_title": "F11 unstarted disposal preserves replacement physical operation owner_process owner_host / physical_owner_host",
+      "timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "singleton_callback": "unstartedCancellationWitness([mode])",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 unstarted disposal preserves replacement physical operation owner_process owner_host / physical_owner_host$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "scenario_output": "a42-unstarted-physical_owner_host.json",
+      "checkpoints": "a42-unstarted-physical_owner_host.jsonl",
+      "expected_terminal_counters": {
+        "physical": 0,
+        "runtime": 0,
+        "body": 1
+      },
+      "intentional_logical_claim_retained": true
+    }
+  ],
+  "not_execution": "All command strings inert; current file still has old2 aggregate registrations"
+}

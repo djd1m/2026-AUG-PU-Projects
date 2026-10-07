@@ -1,0 +1,136 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "attempt": "A55",
+  "source_revision": "e9ec591e714932cfdd17339f5017b460f8476b16",
+  "source_freeze_sha256": "ad86b17826e6807236442fa398a5575f9470dfe7ce5c0d9daf91ace9b5c82157",
+  "results": {
+    "context": {
+      "exit": 0,
+      "status": "pass",
+      "native_tap_duration_ms": 63099.663675,
+      "raw": "context.raw",
+      "launch": "context-launch.json",
+      "joins": "context-joins.json"
+    },
+    "short": {
+      "exit": 0,
+      "status": "pass",
+      "native_tap_duration_ms": 34395.368328,
+      "raw": "short.raw",
+      "launch": "short-launch.json",
+      "joins": "short-joins.json"
+    },
+    "metadata": {
+      "exit": 0,
+      "status": "pass",
+      "native_tap_duration_ms": 20234.631073,
+      "raw": "metadata.raw",
+      "launch": "metadata-launch.json",
+      "joins": "metadata-joins.json"
+    },
+    "text": {
+      "exit": 0,
+      "status": "pass",
+      "native_tap_duration_ms": 23273.536128,
+      "raw": "text.raw",
+      "launch": "text-launch.json",
+      "joins": "text-joins.json"
+    },
+    "logical": {
+      "exit": 124,
+      "status": "interrupted",
+      "native_tap_duration_ms": null,
+      "raw": "logical.raw",
+      "launch": "logical-launch.json",
+      "joins": "logical-joins.json"
+    }
+  },
+  "context_actual_nested_titles": [
+    "stop and intent rollback together, replay creates no second physical intent",
+    "wrong sender receives no intent; UID generation remains separate from semantic identity",
+    "tenant reads deny; ready nonterminal; expiry denies before idempotent concurrent purge",
+    "fresh full SQL install through v16 in transaction-isolated schema",
+    "schema rejects NULL/oversize content and cross tenant root; migration rollback preserves rows",
+    "ambiguous authenticated own roots preserve stops and hold without content authority",
+    "normal and startup maintenance physically purge encrypted copies without renewing retention",
+    "C1 actual native complete proof opens one window; two separate physical phases ready and no-body finish immediate",
+    "fixed expired window holds phase bytes and establishes earliest terminal clock without renewal",
+    "durable native semantic replay, stop, complaint and failed stop transaction retain source-current coverage"
+  ],
+  "context_omitted_titles": [
+    "current authority mutations deny preIO and real native result commit"
+  ],
+  "context_tap_skipped_counter": 0,
+  "context_coverage_union": "A55 remaining10+parent PASS plus source-equivalent A50 matrix54+finitefault1 PASS; unfiltered fullcallback not rerun",
+  "reused_evidence": {
+    "a50_unit69": "unchanged required input projection",
+    "a50_nativebody5": "unchanged required input projection",
+    "a50_matrix55": "unchanged product/dist/migration/fixture/context inputs"
+  },
+  "protected_prior_schema_count": 12,
+  "public_and_prior_protected_full_table_digests_unchanged": true,
+  "all_197_pid_ticks_joined": true,
+  "other_pg_sessions": 0,
+  "new_claims": {
+    "n7_a55_compiled_261007112820": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    },
+    "n7_a55_context_261007112820": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    },
+    "n7_a55_logical_261007112820": {
+      "physical": 1,
+      "runtime_claims": 1,
+      "body_claims": 0
+    }
+  },
+  "next_protected_schema": "n7_a55_logical_261007112820",
+  "retained_claim_rows_path": "db-observed.json",
+  "new_protection_measurement_gap": "Exact retained logical full claim rows and counters measured; full ALL-table digest for this newly interrupted schema must be measured before next operational preflight; prior12 full tables already measured",
+  "unrun": [
+    "completion of logical unstarted-owner callback after fresh HIGH diagnosis",
+    "physical unstarted replacement callback",
+    "authentic/negative native empty-tail and runtime reason distinction",
+    "closure_crosses_window/restart_crosses_window",
+    "ordinary HEADER normal+9material modes including new_uid_semantic_stop",
+    "remaining17 npm integration files:15 ready plus diagnostics/capacity NOTREADY",
+    "diagnostics expected15=>17 fixture followup",
+    "capacity exact child CONNECT registration followup",
+    "remaining mandatory expanded/F09/F10 protocol gates",
+    "fault full300 original150 SIGTERM then healthy full300",
+    "legacy20-page real5s/native19 RED obligation"
+  ],
+  "physical_run_not_started_reason": "Root authorization arrived nearcut; freshsetup+required45s+joins could not fit11:45:20; no reduced bound or blind retry",
+  "root_next_action": "Fresh independent HIGH read-only diagnosis of existing logical callback and runRuntime from source/raw; then root allocates authorized bounded correction/operational step, preserving retained schema; independent new schema for physical/emptytail/material/ordinary/regression groups",
+  "integration_file_inventory": {
+    "total": 18,
+    "logically_covered": [
+      "f11-context-integration.test.ts"
+    ],
+    "remaining_ready": [
+      "auth-integration.test.ts",
+      "billing-integration.test.ts",
+      "diagnostics-disconnect-integration.test.ts",
+      "diagnostics-final-cancel-integration.test.ts",
+      "diagnostics-ordered-integration.test.ts",
+      "dispatch-integration.test.ts",
+      "evidence-integration.test.ts",
+      "f09-transport-integration.test.ts",
+      "f10-runtime-integration.test.ts",
+      "mailboxes-integration.test.ts",
+      "replies-integration.test.ts",
+      "submission-integration.test.ts",
+      "suppression-integration.test.ts",
+      "suppression-owner-integration.test.ts",
+      "web-integration.test.ts"
+    ],
+    "remaining_not_ready": [
+      "diagnostics-integration.test.ts",
+      "capacity-integration.test.ts"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "runId": "20261006T090602Z-n7-expanded-mvp-a1",
+  "launchMs": 1791373509663.678,
+  "units": [
+    {
+      "workUnitId": "f11_a56_unstarted_granularity_plan",
+      "tracePath": "/tmp/n7-f11-unstarted-granularity-plan-a56-20261007/receipt.md"
+    }
+  ],
+  "source_revision": "e9ec591e714932cfdd17339f5017b460f8476b16",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "allocated_at": "2026-10-07T11:45:09.663726+00:00",
+  "trace_absent_before_dispatch": true,
+  "scope": "read-only exact unstarted logicaltimeout granularity diagnosis/plan, no runtimeDBsourcewrites"
+}

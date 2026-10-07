@@ -8,7 +8,7 @@
   "identity": {
     "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
     "work_unit_id": "expanded-mvp",
-    "current_attempt_id": "f11_a55_remaining_regression"
+    "current_attempt_id": "f11_a58_integration_readiness_author"
   },
   "telemetry": {
     "run": {
@@ -22,7 +22,7 @@
   },
   "source": {
     "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
-    "current_revision": "7dee9b9a33b87359feeae4fb82b88331ca50d5de",
+    "current_revision": "a36767f921f8e9ff425728e5b80d0c38340b4475",
     "build_revision": "535251adf8392f4e4c0258ccaec86abefd0810d5",
     "requirements": [
       {
@@ -48,9 +48,11 @@
       "last_sealed_candidate": "a382228814af1751df3f7176b2e7aec617d9e769",
       "production_dist_152_unchanged": true,
       "build_note": "A45 static --noEmit/type/lint only, no emitted build claim",
-      "current_workspace_status": "immutable isolated7dee candidate; MAIN product stays acceptedF10; no fullF11 integration/deployment",
-      "root_observed_candidate": "7dee9b9a33b87359feeae4fb82b88331ca50d5de",
-      "main_checkpoint": "f730793f44a18521dfccfdbe805a369e68ace27a"
+      "current_workspace_status": "A57 committed/pushed, independent A59 review pending; separate A58 fixture edits active, MAIN F10 unchanged",
+      "root_observed_candidate": "e9ec591e714932cfdd17339f5017b460f8476b16",
+      "main_checkpoint": "f1ffb870a36797025a2ab52634a4b91bc1513fa6",
+      "current_source_build_projection_sha256": "ad86b17826e6807236442fa398a5575f9470dfe7ce5c0d9daf91ace9b5c82157",
+      "source_projection_note": "A55 measured204/205 A50 paths unchanged; only nativeprotocoltest changed; current222source/build paths hashbound"
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
     "integration_note": "F10 accepted main3566 baseline retained. Current F11 candidate406 isolated only; library experiment530 separately delivered negative assessment; no production migration."
@@ -737,6 +739,11 @@
       "id": "f11_a55_remaining_regression",
       "status": "active actual HIGH operationalACK",
       "actual_ACK_at": "2026-10-07T11:28:20Z"
+    },
+    {
+      "id": "f11_a57_unstarted_granularity_author",
+      "status": "actualMEDIUMauthor ACKverified, initialexecblockedbeforeactions",
+      "actual_ACK_at": "2026-10-07T11:57:21Z"
     }
   ],
   "work_units": [
@@ -811,17 +818,17 @@
     },
     "chat_notification_scheduler_available": false
   },
-  "current_stage": "F11 local patch accepted only; mandatory regression incomplete, source candidate isolated",
+  "current_stage": "A58 integration readiness + A59 independent review",
   "continuation": {
-    "responsible": "/root",
-    "executor": "/root/n7_a49_local_recovery_review",
-    "attempt": "f11_a55_remaining_regression",
-    "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T11:28:20Z",
-    "deadline": "2026-10-07T11:48:20Z",
-    "source_revision": "e9ec591e714932cfdd17339f5017b460f8476b16",
-    "native_checker_manifest_allocated_before_dispatch": true,
-    "next": "root actualnextbounded verified remaininggates or concretecorrective MEDIUM stage aftersealedoutcome; no fullfeaturePASSinferred"
+    "updated_at": "2026-10-07T12:15:17.246831+00:00",
+    "responsible": "root coordinator",
+    "actual_active_agents": [
+      "/root/n7_a58_integration_readiness_author",
+      "/root/n7_a59_unstarted_granularity_review"
+    ],
+    "next": "accept or correct exact findings; remaining material controls/full integration then original full fleet/legacy gates",
+    "full_F11_accepted": false,
+    "forecast": "insufficient_data; attempt cuts are not delivery estimates"
   },
   "root_reconciliations": [
     {
