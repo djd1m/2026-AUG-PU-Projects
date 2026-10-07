@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 A48 local correction actual MEDIUM execution",
+  "current_stage": "F11 A50 actual HIGH operational current regression",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -881,5 +881,90 @@
       "tests/f10-runtime-protocol.test.ts"
     ],
     "mandatory_remaining": "targeted/guard-removal/current-regressions/freshHIGH; fullF11material/fleet/legacy remains unaccepted"
+  },
+  "f11_root_author_a48_terminal": {
+    "event": "attempt_finished",
+    "at": "2026-10-07T10:31:41.395948+00:00",
+    "attempt_id": "f11_a48_local_recovery",
+    "stage": "IMPLEMENT",
+    "finished_at": "2026-10-07T10:27:20.026432Z",
+    "elapsed_wall_ms": 658026,
+    "revision": "7dee9b9a33b87359feeae4fb82b88331ca50d5de",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "medium",
+    "actual_model": null,
+    "usage": null,
+    "cost": null,
+    "targeted_foreign_exit": 0,
+    "related_tests_passed": 23,
+    "related_batch_exit": 0,
+    "mutation_counterproof_exit": 1,
+    "mutation_expected_named_failure": true,
+    "candidate_restored": true,
+    "static_exits": {
+      "typecheck": 0,
+      "lint": 0,
+      "build": 0
+    },
+    "source_ownership_released": true,
+    "full_f11_accepted": false,
+    "objective_packet_sha256": "593ed2cca0ad6d7e7d4713061fd33c067897e29ace8e93dbe50f00c1623e2e9c"
+  },
+  "f11_root_review_a49": {
+    "event": "attempt_started",
+    "at": "2026-10-07T10:31:41.395948+00:00",
+    "attempt_id": "f11_a49_local_recovery_review",
+    "stage": "REVIEW",
+    "actor": "/root/n7_a49_local_recovery_review",
+    "started_at": "2026-10-07T10:28:34Z",
+    "work_cut_at": "2026-10-07T10:34:34Z",
+    "seal_cut_at": "2026-10-07T10:36:34Z",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "actual_model": null,
+    "usage": null,
+    "cost": null,
+    "fork_turns": "none",
+    "review_inputs": "approved A47/A43/A38 planner + frozen source + objective raw only; author receipt/chat excluded",
+    "current_revision": "7dee9b9a33b87359feeae4fb82b88331ca50d5de"
+  },
+  "f11_root_review_a49_terminal": {
+    "event": "attempt_finished",
+    "at": "2026-10-07T10:38:44.283875+00:00",
+    "attempt_id": "f11_a49_local_recovery_review",
+    "finished_at": "2026-10-07T10:34:18.612Z",
+    "elapsed_wall_ms": 344612,
+    "verdict": "LOCAL_PATCH_ACCEPT",
+    "full_f11_accepted": false,
+    "source": "7dee9b9a33b87359feeae4fb82b88331ca50d5de",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "actual_model": null,
+    "usage": null,
+    "cost": null,
+    "preflight_evidence_finding": "A49-E1: affected23 control commands mismatch; historical record preserved, newexactlaunch required",
+    "artifact_sha256": {
+      "review.md": "521bf0816719b0bad4fa48e0c1372f9ef38e1f3d61d419f7981b91519ea9b4d5",
+      "receipt.json": "5db2a02e7474a8ca261e8f5fab31a871fd9fbe425a43f22ec0b0de9ec38f9527",
+      "hash-verification.json": "ea9f022fb6122f374fc122d238885af69befbea7c402b9a38c3928163776f3da"
+    }
+  },
+  "f11_root_regression_a50": {
+    "event": "attempt_started",
+    "at": "2026-10-07T10:38:44.283875+00:00",
+    "attempt_id": "f11_a50_current_regression",
+    "stage": "VERIFY",
+    "actor": "/root/n7_a49_local_recovery_review",
+    "started_at": "2026-10-07T10:37:08Z",
+    "new_launch_cut_at": "2026-10-07T10:54:08Z",
+    "seal_cut_at": "2026-10-07T10:57:08Z",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "actual_model": null,
+    "usage": null,
+    "cost": null,
+    "current_source": "7dee9b9a33b87359feeae4fb82b88331ca50d5de",
+    "disk_free_bytes": 3508191232,
+    "scope": "fresh exactpreflight current targeted/relevant/fullavailable existing regressions; source readonly; no fullfleet/legacy until material prerequisites"
   }
 }

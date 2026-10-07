@@ -1,0 +1,29 @@
+{
+  "scope": "Local A48 correction only versus immutable A46 snapshots; inherited A46 test delta/fullF11 not accepted",
+  "local_source_revision": "7dee9b9a33b87359feeae4fb82b88331ca50d5de",
+  "artifacts": [
+    {
+      "path": "docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/root-recovery-a49/review.md",
+      "sha256": "521bf0816719b0bad4fa48e0c1372f9ef38e1f3d61d419f7981b91519ea9b4d5",
+      "bytes": 10907
+    },
+    {
+      "path": "docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/root-recovery-a49/receipt.json",
+      "sha256": "5db2a02e7474a8ca261e8f5fab31a871fd9fbe425a43f22ec0b0de9ec38f9527",
+      "bytes": 1517
+    },
+    {
+      "path": "docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/root-recovery-a49/hash-verification.json",
+      "sha256": "ea9f022fb6122f374fc122d238885af69befbea7c402b9a38c3928163776f3da",
+      "bytes": 191029
+    },
+    {
+      "path": "docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/root-recovery-a49/local-correction-vs-a46.patch",
+      "sha256": "39e9995eb2e36962d44cbf831a00aeb71f8c83bf990065ffc323af78e6dad76a",
+      "bytes": 3865
+    }
+  ],
+  "broader_gates": "A50 actually running; fullF11 pending",
+  "publication": "prepared not yet committed",
+  "diff_format": "Exact zero-context unified diff against preserved A46 source/test snapshots"
+}
