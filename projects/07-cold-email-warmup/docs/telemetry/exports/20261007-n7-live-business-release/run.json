@@ -26,7 +26,7 @@
   ],
   "next": "Operator supplies merchant credentials, controlled mailbox role and off-host encrypted backup destination; then source-bound rollout and separately controlled real pilot",
   "elapsed": null,
-  "updated_at": "2026-10-07T20:50:26.482076+00:00",
+  "updated_at": "2026-10-07T20:52:31.823412+00:00",
   "plan": "docs/plans/live-business-release-20261007.md",
   "planner_result": "bounded plan completed; nativehostusage unknown",
   "owner_plan_checkpoint": "Latest owner response: давай делай",
@@ -181,5 +181,14 @@
     "off-host encrypted backup destination required before production migration"
   ],
   "source_composition_a7_byte_equal_files": 233,
-  "e2e_evidence_review": "ACCEPT_LOCAL_E2E_EVIDENCE"
+  "e2e_evidence_review": "ACCEPT_LOCAL_E2E_EVIDENCE",
+  "elapsed_seconds_to_local_handoff": 11759.636224,
+  "dz_memory": {
+    "id": "teach:7aba4aa59aa52f05",
+    "project_store_only": true,
+    "no_mirror": true,
+    "native_exit": 0
+  },
+  "next_owner": "/root",
+  "background_work_claim": false
 }

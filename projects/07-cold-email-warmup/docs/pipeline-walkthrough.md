@@ -151,3 +151,14 @@ Root проверил 2026-10-06 10:28–10:30 UTC: dz CLI0.8.44 и harness-core
 для этого проекта. Подключение: `tmux attach -t dz-knowledge`. На момент проверки
 3 active patterns и 0 quarantined; неизвестные host recall/phase не считаются нулём.
 Панель не меняет hooks/config/models и не доказывает исполнение продуктовой задачи.
+
+
+## LIVE-capable оплата: локальный срез от 2026-10-07
+
+Backend и кабинет оплаты приняты независимыми проверяющими. Team настроен на 990 рублей / 30 суток (99000 minor units); отдельные TEST-намерения не дают LIVE-доступ. YooKassa checkout привязан к tenant, merchant и immutable intent; подтверждённый возврат отзывает доступ без повторного продления.
+
+Профиль `model-routing-econom`: Sol6.1/medium для кода, Sol6.1/high для планирования и независимого ревью. Проверяющий получает пакет планировщика и замороженный код без истории автора. Фактическая модель, tokens и стоимость недоступны.
+
+Проверки: 82/82 unit, 170/170 общих интеграционных, 14/14 коротких почтовых protocol/recovery; отдельные LIVE integration evidence привязаны к принятым source slices. Docker Playwright на точной объединённой ревизии выполнил 52/52 проверки за 216.229 секунды на 1440 и 390 px. Подтверждены checkout, canonical success, фиксированные 30 суток, reload/history, outage, refund, cancel, чужой/поддельный return и late-response logout. Независимое ревью приняло четыре скриншота и локальные доказательства. Неуспешные попытки сохранены; product rate limits не ослаблялись.
+
+[Телеметрия и доказательства](telemetry/exports/20261007-n7-live-business-release/run.json). Это локальная проверка с фиктивным провайдером и synthetic HTTPS routing, не production TLS/payment/mail proof. Публичная версия остаётся прежним TEST preview. До миграции/rollout нужны off-host encrypted backup destination, реальные merchant credentials и контролируемые mailbox/consent inputs. F11–F15 расширенного MVP этим срезом не объявляются завершёнными.
