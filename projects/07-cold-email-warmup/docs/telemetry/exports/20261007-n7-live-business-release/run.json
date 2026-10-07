@@ -1,6 +1,6 @@
 {
   "started_at": "2026-10-07T17:36:32.187188+00:00",
-  "status": "yookassa_adapter_accepted_integrated; application_integration_pending",
+  "status": "payment_backend_independent_review_running; compose_accepted_integrated",
   "owner_request": "Real business effect: real email sending and ability to pay, beyond TEST preview",
   "authorization_scope": "Prepare and implement requested live-capable release; no unspecified charges or external pilot executed",
   "source_revision": "a0896402",
@@ -24,9 +24,9 @@
     "BillingService reconcile and entitlement are coupled to local_provider_payment; provider injection alone insufficient",
     "Real Team tariff amount is not agreed; TEST100minorunits must not become real price by accident"
   ],
-  "next": "Implement approved backend/config/API/live-entitlement integration with refund context seam, then independent review/UI/Docker E2E",
+  "next": "Accept backend or fix independent findings, implement payment/mail UI, Docker browser E2E then release gates",
   "elapsed": null,
-  "updated_at": "2026-10-07T19:04:26.288578+00:00",
+  "updated_at": "2026-10-07T19:22:13.507361+00:00",
   "plan": "docs/plans/live-business-release-20261007.md",
   "planner_result": "bounded plan completed; nativehostusage unknown",
   "owner_plan_checkpoint": "Latest owner response: давай делай",
@@ -85,5 +85,16 @@
   "source_files_byte_equal": 92,
   "local_restore": "composite passed; all failed attempts preserved; offhost destination pending",
   "dz_store_lesson": "teach:471eec1eed22220d",
-  "additional_provenance_gap": "Refund-seam clarification launch root allocated immediately after dispatch; recorded honestly, not prelaunch."
+  "additional_provenance_gap": "Refund-seam clarification launch root allocated immediately after dispatch; recorded honestly, not prelaunch.",
+  "elapsed_wall_seconds": 6341.320173,
+  "compose_revision": "6b8dde67",
+  "backend_candidate_revision": "4e4f0359fac7a22701f350adbb20447ade5de741",
+  "backend_author_checks": "77/77 unit,52/52 affectedintegration,type/lint/build0; source-bound mutations red/restoregreen",
+  "backend_review_launch": "/tmp/n7-live-app-backend-review-a3-20261007/launch.json",
+  "mandatory_external_inputs_pending": [
+    "owner Team price",
+    "merchant file paths/live merchant configuration",
+    "controlled mail pilot identities/recipients",
+    "offhost encrypted backup destination"
+  ]
 }

@@ -1,0 +1,12 @@
+{
+  "status": "passed_owned_restore_canary",
+  "schema_before": 13,
+  "schema_after": 17,
+  "existing_tables": 32,
+  "original_column_data_equal": true,
+  "repeat_migration_idempotent": true,
+  "ready": true,
+  "source_database_mutated": false,
+  "provider_calls": false,
+  "elapsed_ms": 255
+}
