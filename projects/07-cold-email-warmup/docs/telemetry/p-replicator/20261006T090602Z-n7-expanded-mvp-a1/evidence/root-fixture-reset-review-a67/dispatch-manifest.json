@@ -1,0 +1,20 @@
+{
+  "runId": "20261006T090602Z-n7-expanded-mvp-a1",
+  "launchMs": 1791378989360.8848,
+  "units": [
+    {
+      "workUnitId": "f11_a67_fixture_reset_diagnostics_review",
+      "tracePath": "/tmp/n7-f11-fixture-reset-review-a67-20261007/receipt.md"
+    }
+  ],
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "source_revision": "4089840e479e3e453037c75195b2d774b51b7019",
+  "planner_sha256": "dc116f87d5c6bc760c2bb78a54eefffcfa5d3189fa7fc4f4ee5ea291cae374e5",
+  "objective_sha256": "ab97c28c884d41bd532e7d063b7206e007b4a96c26ee93a77049bc2c4ac7048f",
+  "trace_absent_before_dispatch": true,
+  "runtime_db_lease": false,
+  "dispatch_status": "ready actual independentreviewfollowup",
+  "context_policy": "planner+objective only noA65coderconversation"
+}

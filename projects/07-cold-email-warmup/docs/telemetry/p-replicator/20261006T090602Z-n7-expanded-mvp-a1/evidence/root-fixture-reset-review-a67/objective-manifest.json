@@ -1,0 +1,381 @@
+{
+  "approved_planner": {
+    "path": "/tmp/n7-f11-fixture-reset-plan-a64-20261007/plan.md",
+    "sha256": "dc116f87d5c6bc760c2bb78a54eefffcfa5d3189fa7fc4f4ee5ea291cae374e5"
+  },
+  "clean_objective": {
+    "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/objective-packet.json",
+    "sha256": "ab97c28c884d41bd532e7d063b7206e007b4a96c26ee93a77049bc2c4ac7048f"
+  },
+  "source_revision": "4089840e479e3e453037c75195b2d774b51b7019",
+  "owned_source": {
+    "path": "/tmp/n7-fixture-reset-diagnostics-a65-20261007/projects/07-cold-email-warmup/tests/f10-runtime-fixture.ts",
+    "sha256": "68b8d0d4d469a38eb1fc34e876e69b6beade5e73fd4fea9082c4aa3506f542bd"
+  },
+  "reviewed_artifacts": {
+    "build.raw": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/build.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate-config-bindings.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/candidate-config-bindings.json",
+      "sha256": "2c150a6370fb4b48e26dff914f4fd492fc5d33efef97734831e233afb46da1ca"
+    },
+    "db-post_genuine_empty_tail.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/db-post_genuine_empty_tail.json",
+      "sha256": "cb579ec5e1a872a22e794b806c18e73334e3a8a0ff0d54ba6b320e5bea2d3e7e"
+    },
+    "db-pre_genuine_empty_tail.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/db-pre_genuine_empty_tail.json",
+      "sha256": "d11d963737f041bc112bcec2459ef3f4d95f3575bb7ba403e0146c77443a1dd3"
+    },
+    "db-pre_setup.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/db-pre_setup.json",
+      "sha256": "3e7c8b981cbe49582d4ede69a66db87f4d23ae54b7d72754b88774747be69972"
+    },
+    "db-protected.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/db-protected.json",
+      "sha256": "ece792ce9a3c9478adbb5391483ff130b17fd2072bcee8e351c474ea74e8840b"
+    },
+    "diffcheck.raw": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/diffcheck.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "donor-origin/guard-a60.mjs": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/donor-origin/guard-a60.mjs",
+      "sha256": "ec814ad47b7802468ffd8adb9ea564c7622fd007a8e879665759d38fb2463af1"
+    },
+    "donor-origin/joins.py": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/donor-origin/joins.py",
+      "sha256": "30d23c1b8faac848672a8917e75d9ca146942915c99bcc421f3c5a78ac3af64b"
+    },
+    "donor-origin/launch.py": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/donor-origin/launch.py",
+      "sha256": "e3aff2dccf242048fa53c8629e74a8d19dddec13a6c8cd42a0e25fdbb6a79664"
+    },
+    "donor-origin/run-a60.sh": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/donor-origin/run-a60.sh",
+      "sha256": "834920a3cdd52028893bcce3f16cfa56714a4d96f35c1888ca348bc05d1284ef"
+    },
+    "donor-origin/schema-setup-a60.mjs": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/donor-origin/schema-setup-a60.mjs",
+      "sha256": "e714859de5aab7a95020ff8cf5d858a3ac3487a2feffb02b288c938b21bf258d"
+    },
+    "donor-origin/snapshot-a60.mjs": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/donor-origin/snapshot-a60.mjs",
+      "sha256": "8f57acdc0bf6a32242ac712d6f62816736fee99faa0be5e4c03848da815fbfb5"
+    },
+    "genuine_empty_tail/native-empty-tail-proof.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/genuine_empty_tail/native-empty-tail-proof.json",
+      "sha256": "76850f54aae26cd2e03677f5f009fc53b40a5fbff6ca26d5f6f0e56e0a2f83f8"
+    },
+    "genuine_empty_tail/runtime-fixture-reset.jsonl": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/genuine_empty_tail/runtime-fixture-reset.jsonl",
+      "sha256": "3a9fd0f49a61a8c3ae273c1978a32d813781ae4769bb1297848509fd8496a26f"
+    },
+    "genuine_empty_tail-exit.txt": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/genuine_empty_tail-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "genuine_empty_tail-joins.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/genuine_empty_tail-joins.json",
+      "sha256": "e5ffe9f7ece89681178298c3edfa8812d849928895095f438117a70508dfc523"
+    },
+    "genuine_empty_tail-launch.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/genuine_empty_tail-launch.json",
+      "sha256": "a58f14d41ee629bf32f03260273d4d65149babb4a30190c54cc5417c589b3915"
+    },
+    "genuine_empty_tail.raw": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/genuine_empty_tail.raw",
+      "sha256": "70df6f79ee7f2e5f900a3591f1ad4762056fbbec540d13d75a575f4aa0d325e9"
+    },
+    "guard-582207-1791378903583.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/guard-582207-1791378903583.json",
+      "sha256": "14de82564c52799f782f20a8d1b8e40db796032cb9383d59d35dbdd0ba2e637f"
+    },
+    "guard-583075-1791378906846.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/guard-583075-1791378906846.json",
+      "sha256": "c7cbe9622c93bd486e1912efd6ac7e94219638f7c95f54dad26758e9e6e10e33"
+    },
+    "guard-583881-1791378909772.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/guard-583881-1791378909772.json",
+      "sha256": "844d985a8a82ce189c3bc0e4bb9a1b6e413882c3f89d42e9c57c3f0bb307dadd"
+    },
+    "guard-594593-1791378946494.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/guard-594593-1791378946494.json",
+      "sha256": "393a9d813186eb553889b9de7649f2f01950bc6396ef99516902fc30eee8cd96"
+    },
+    "guard-595609-1791378952289.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/guard-595609-1791378952289.json",
+      "sha256": "e3d7a4f054c4bc4017973d9f8840922f88e977c540c85cb694e36dbd06d1c795"
+    },
+    "guard-595757-1791378952879.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/guard-595757-1791378952879.json",
+      "sha256": "9848dc75db7672a7aa402b8f809650d703e62615b3835df0985b00a89d749b7b"
+    },
+    "guard-595868-1791378953443.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/guard-595868-1791378953443.json",
+      "sha256": "fe564753eaa10ae3bc953c0a630cbd7d046293b3fc13538d8c770ab66298ffcb"
+    },
+    "guard-596035-1791378953952.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/guard-596035-1791378953952.json",
+      "sha256": "63ef216d09014efff035ea1620848341d5c12a86bf5c12eba2ef61d38f2ec94b"
+    },
+    "guard-596073-1791378954421.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/guard-596073-1791378954421.json",
+      "sha256": "39c2b022105ccc908abc3cfe1236d5fb100198d948f8a1b20f2853b9b2391f4f"
+    },
+    "guard-596160-1791378955014.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/guard-596160-1791378955014.json",
+      "sha256": "79cc1fe5905b75b6e3c8bd715f120fce0463c67b337b7a20ad9ba98e3b0b3a5e"
+    },
+    "guard-596772-1791378958379.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/guard-596772-1791378958379.json",
+      "sha256": "ded6ea4b39c2ae6470e44150912c5be24867ee9d3d77c7462ceaa6fdbb92b724"
+    },
+    "guard-597516-1791378962400.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/guard-597516-1791378962400.json",
+      "sha256": "df9902b106f505413de741c374100123e668cab34c6d68db594bc7ffdf342f7d"
+    },
+    "guard-a65.mjs": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/guard-a65.mjs",
+      "sha256": "c46ea86486dd70eb39794955d8178bb68c6019ed2c8753dbfe554281c178fdc3"
+    },
+    "initial-runtime-preflight-binding.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/initial-runtime-preflight-binding.json",
+      "sha256": "2e5caa934c918d50b1f96e4dae8d670aed556fa113ff5d0a65d17748580812c5"
+    },
+    "joins.py": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/joins.py",
+      "sha256": "a16cb8aad964674bec1c139ae291665f6b3e56d9cd54543e158c5c32ef05327d"
+    },
+    "journal-interpretation.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/journal-interpretation.json",
+      "sha256": "d81cef49c110c97560ee3ad509ee44dc7ca999564eedb54cdabcd265d0fd1f08"
+    },
+    "journal-omission-copy.jsonl": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/journal-omission-copy.jsonl",
+      "sha256": "27647b97f888d9e9366bbc3312563a5c743760a30c8150c3684cea3c9d926dee"
+    },
+    "launch.py": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/launch.py",
+      "sha256": "cc1a64449eef56b5ba150299030015c0450a8efbc84c5deee14090d629d6eb0b"
+    },
+    "lint.raw": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/lint.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "post_genuine_empty_tail-exit.txt": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/post_genuine_empty_tail-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "post_genuine_empty_tail-joins.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/post_genuine_empty_tail-joins.json",
+      "sha256": "01d3cc1b969a23790f14424c7c7f12597c8e452d0faf968e26903e46150c3fe8"
+    },
+    "post_genuine_empty_tail-launch.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/post_genuine_empty_tail-launch.json",
+      "sha256": "75c12c4e41a2ec2116a18ce4c930f316d2167b6f18f34321195f01777b3fe7d5"
+    },
+    "post_genuine_empty_tail.raw": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/post_genuine_empty_tail.raw",
+      "sha256": "cb662ed72f94dc4864c9b2385b5d05ec531b4e9028568d24f613ae2656982515"
+    },
+    "pre_genuine_empty_tail-exit.txt": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/pre_genuine_empty_tail-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "pre_genuine_empty_tail-joins.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/pre_genuine_empty_tail-joins.json",
+      "sha256": "06d135d9d01bdbaf760a2898d1c4272157fff444c503ba7ab6c10b51d4ff6414"
+    },
+    "pre_genuine_empty_tail-launch.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/pre_genuine_empty_tail-launch.json",
+      "sha256": "2fd8fc626b5b466288a39c03263b94c5dac975387f146ab9ebe9501003149e58"
+    },
+    "pre_genuine_empty_tail.raw": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/pre_genuine_empty_tail.raw",
+      "sha256": "e6e869143d19df8cd0ea8407d3f22b890c5ac65f867c5b8013622b30bb5b0480"
+    },
+    "pre_setup-exit.txt": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/pre_setup-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "pre_setup-joins.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/pre_setup-joins.json",
+      "sha256": "2cc8afd046ebc6de6377c5f75af2f6ee08401e1842ea25f1ae41c15e4530a36d"
+    },
+    "pre_setup-launch.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/pre_setup-launch.json",
+      "sha256": "865b85b34fc3915b6561a59aa32b1bdcfa2ed513fb6de833f80b65fb4870d71f"
+    },
+    "pre_setup.raw": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/pre_setup.raw",
+      "sha256": "de753e3fee832ced619b223835ab961f6bfe0b77a540a3d84b7d087967e1c878"
+    },
+    "process-start-582207-1791378903583.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/process-start-582207-1791378903583.json",
+      "sha256": "6539c64edee5b673d082adeafc3a8ac836c224674630f280d9dee0ab581ebade"
+    },
+    "process-start-583075-1791378906846.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/process-start-583075-1791378906846.json",
+      "sha256": "e55eb22943342e67765fcd737138969c742d66629b51d36f3ea5c435c428c19a"
+    },
+    "process-start-583881-1791378909772.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/process-start-583881-1791378909772.json",
+      "sha256": "7795c35e90fd248c312e82676ad257d1dbf58cdbf361681da90ef1293077dd31"
+    },
+    "process-start-594593-1791378946494.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/process-start-594593-1791378946494.json",
+      "sha256": "fb3f873884fcee965a1fa05070991b5f8a6cdc2361c4a0d1408c32c4be877858"
+    },
+    "process-start-595609-1791378952289.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/process-start-595609-1791378952289.json",
+      "sha256": "7f56bdd83cfdd7388dc49df54b9eb7001867af5755cfcbe77253ae5b4369d522"
+    },
+    "process-start-595757-1791378952879.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/process-start-595757-1791378952879.json",
+      "sha256": "1c2de7abcc0e0d5aa5532d8a9a2daa092d6e3439d60459a0b3aa4e429adc9aae"
+    },
+    "process-start-595868-1791378953443.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/process-start-595868-1791378953443.json",
+      "sha256": "ea205bb3f949e8efe8740f786ae61a5f49b2fa87b5b68035c91d3294f44251c5"
+    },
+    "process-start-596035-1791378953952.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/process-start-596035-1791378953952.json",
+      "sha256": "1e10e25d041986cafb7a927f383d88d203a7d4f11cfbccb7902a6e8170b01eb8"
+    },
+    "process-start-596073-1791378954421.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/process-start-596073-1791378954421.json",
+      "sha256": "78934c8db515c2dce08ede8d535068ce4ca8f0a741b6b46646fb73b0b3a1d7f3"
+    },
+    "process-start-596160-1791378955014.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/process-start-596160-1791378955014.json",
+      "sha256": "35b2d49b296f4726585768be60ca9dc7bd2d2cb6db8c8de81d927d8d14b00955"
+    },
+    "process-start-596772-1791378958379.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/process-start-596772-1791378958379.json",
+      "sha256": "3e6fcc18a1cf09787b360a66b211c2961965d4e72022f56c276d04e5195673ef"
+    },
+    "process-start-597516-1791378962400.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/process-start-597516-1791378962400.json",
+      "sha256": "a168e928ca68712d4c5d38277dc44a884547d0c761892e38ba0cee3b3794958f"
+    },
+    "public-before.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/public-before.json",
+      "sha256": "f9b6e85cf2ac2ed457e13d6cab4ba461da56457056d7445495fcd740a36e131b"
+    },
+    "root-helper-staging.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/root-helper-staging.json",
+      "sha256": "17c723857f34051fee514b2f354ded27556e626b6bacb9e3e198334d0c4aed20"
+    },
+    "root-source-preparation.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/root-source-preparation.json",
+      "sha256": "e60c276ab5b374aca09b71b5d98701f161537c7112361fc6ff9bc08359eab622"
+    },
+    "root-source-reconciliation.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/root-source-reconciliation.json",
+      "sha256": "078458fd5da65da5381f283cacab290c31c67cb7167b2ef910566769c8533770"
+    },
+    "root-staging-contract-correction.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/root-staging-contract-correction.json",
+      "sha256": "a008c023151ea72ff6193ac9b035199ea914dca4a8de124b0fd46a1a26ffa159"
+    },
+    "route.raw": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/route.raw",
+      "sha256": "218ee9bc2f381d9f00b635d46dfe653044b1d61a8b93d087f1232c162e7aaab2"
+    },
+    "run-a65.sh": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/run-a65.sh",
+      "sha256": "94e57a7a4172ead63c16138a63866f77fc2b6ade319fc1129956154f45895436"
+    },
+    "runtime-lease.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/runtime-lease.json",
+      "sha256": "b502731a7b0e496c1b6f8aa8eb3461f23b89c3e4aa4ab3fb79275c6028f1bc0d"
+    },
+    "scenario-inventory.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/scenario-inventory.json",
+      "sha256": "710b5710eaf5ab432e24f813896cc63fe44c0fb917474b395940cd9e9e1ca991"
+    },
+    "schema-genuine_empty_tail-setup.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/schema-genuine_empty_tail-setup.json",
+      "sha256": "544448d6ad95b8992bee0e3fcd8020a47749a008eef96f79411cd7aa9c9c559b"
+    },
+    "schema-session-583075-1014885.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/schema-session-583075-1014885.json",
+      "sha256": "4cf151e597cbf876a6acf7477d4461aa6c8c637a9754387ea0bc614a0aee213c"
+    },
+    "schema-session-594593-1014992.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/schema-session-594593-1014992.json",
+      "sha256": "13f0e50121ec254460b8a61a7c41849642d02a76868c5b674eff6dac9fd5e55f"
+    },
+    "schema-session-594593-1014993.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/schema-session-594593-1014993.json",
+      "sha256": "45c6bc6c39ac9557a0a86436a1fa78b8126557f184aa3363b888fbfa055c0635"
+    },
+    "schema-setup-a65.mjs": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/schema-setup-a65.mjs",
+      "sha256": "ad9c308b6ce6a364905796e2e2d7df028c052eed2629e21e3a7bdffa0ff60a5e"
+    },
+    "setup_genuine_empty_tail-exit.txt": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/setup_genuine_empty_tail-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "setup_genuine_empty_tail-joins.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/setup_genuine_empty_tail-joins.json",
+      "sha256": "054c2f432e501bd75b96a9332e34ba713a9c684b4a165572d750957cb4de30ac"
+    },
+    "setup_genuine_empty_tail-launch.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/setup_genuine_empty_tail-launch.json",
+      "sha256": "2edbf6411391bb6952c9e40a5bf533bf3a864a89abee39d726303424a973792d"
+    },
+    "setup_genuine_empty_tail.raw": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/setup_genuine_empty_tail.raw",
+      "sha256": "ce0ca2b0403c4ffe018fc00ba64717c4b2b4907b2c1f51ff12b9884e378faffb"
+    },
+    "snapshot-a65.mjs": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/snapshot-a65.mjs",
+      "sha256": "a5bb9e4750f8a347bddda2a46561e1c1d13409a3e5797e5714e94659326fe17c"
+    },
+    "source-binding.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/source-binding.json",
+      "sha256": "00a5606ddaf1ea78dbf20ba615b354e296a653bca2083fc1929bd65f93fc3022"
+    },
+    "source-freeze.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/source-freeze.json",
+      "sha256": "6e52b691923328a68196b4b86c854637f45de689a6bc5e07bcc68fcacc9e62f8"
+    },
+    "source-invariants.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/source-invariants.json",
+      "sha256": "04682d63453d910dda0178f56b14491f4716856534a5d833ea00814831a9bb2a"
+    },
+    "source-revision.txt": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/source-revision.txt",
+      "sha256": "e94d2344d919d74af80a90d19c50373bfb609e5363587b59674dfcdc312fec26"
+    },
+    "source.patch": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/source.patch",
+      "sha256": "362c5e3acfc00599ddc1588600fc98e9389dd8ed055c65992b79cb28b52044d2"
+    },
+    "static-checks.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/static-checks.json",
+      "sha256": "efa991c255bf3d212d454c356a3d2e75510725aa964141c88eb8696f4034e0fe"
+    },
+    "terminal-bindings.json": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/terminal-bindings.json",
+      "sha256": "8b1202af389a1251f93ecb48cec219398b4267a3dbf5c82243abd131a70c6ee4"
+    },
+    "typecheck.raw": {
+      "path": "/tmp/n7-f11-fixture-reset-author-a65-20261007/typecheck.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "review_outputs": {
+    "review.md": "34958aee067017c2417ba66b8a12e1641b48d5b18da40882f29f4fb792c36115",
+    "checks.json": "876571919e9379c0bf6eddfd8d2eb4abbaee7b6ce444664884e30c93e790a9e2",
+    "raw-checks.json": "43397eef45c6f4269cdc53c97d1a7837494463c2a469c3d8e45a185545aea1de",
+    "source-checks.json": "0c256e95ea77a654ce265535c83481a24b2cd71967a7684c9ae8d875a630191c"
+  },
+  "read_scope": "approved planner + clean objective bound source/raw; no author narrative",
+  "sealed_at": "2026-10-07T13:27:59.095591+00:00"
+}

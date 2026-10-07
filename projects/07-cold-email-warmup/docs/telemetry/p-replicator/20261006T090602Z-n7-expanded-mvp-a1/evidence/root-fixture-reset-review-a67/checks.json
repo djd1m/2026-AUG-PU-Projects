@@ -1,0 +1,27 @@
+{
+  "verdict": "LOCAL_DIAGNOSTIC_INSTRUMENTATION_ACCEPT",
+  "sealed_at": "2026-10-07T13:27:59.095591+00:00",
+  "blocking_findings": [],
+  "raw_checks_sha256": "43397eef45c6f4269cdc53c97d1a7837494463c2a469c3d8e45a185545aea1de",
+  "source_checks_sha256": "0c256e95ea77a654ce265535c83481a24b2cd71967a7684c9ae8d875a630191c",
+  "all_artifact_hashes_match": true,
+  "all_source_hashes_match": true,
+  "protected_all_rows_match": true,
+  "all12_fresh_pidticks_absent": true,
+  "original_journal_complete": true,
+  "omission_copy_rejected": true,
+  "native_exact_one_callback_PASS": true,
+  "native_exit": 0,
+  "observed_native_phase_ms": [
+    2801.5057799999995,
+    2800.4773700000005
+  ],
+  "past57014_cause": "unknown/nonreproduced",
+  "full_F11_acceptance": false,
+  "review_runtime_db_executed": false,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_usage": null,
+  "fresh_fork": false
+}
