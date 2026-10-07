@@ -49,6 +49,20 @@ test('offline live ledger canonical identity, recovery, concurrency and sticky r
    Object.assign(provider.payments.get(i.payment_id!)!,{status:'pending',paid:false,paidAt:null});assert.equal((await service.reconcile(tenant,i.id)).state,'succeeded');
    await assert.rejects(pool.query('UPDATE live_billing_intent SET amount_minor=1 WHERE id=$1',[i.id]),/immutable/);
   });
+  await t.test('first verified expired window survives newer paidAt replay and service restart',async()=>{
+   const i=await service.checkout(other,randomUUID());provider.success(i.payment_id!);
+   const firstPaidAt=new Date(Date.now()-20*86400000).toISOString();provider.payments.get(i.payment_id!)!.paidAt=firstPaidAt;
+   await service.reconcile(other,i.id);
+   const first=(await pool.query('SELECT paid_at,expires_at FROM live_billing_entitlement WHERE intent_id=$1',[i.id])).rows[0];
+   assert.ok(first,'expired canonical success must persist its original window');
+   assert.equal(first.paid_at.getTime(),Date.parse(firstPaidAt));assert.equal(first.expires_at.getTime(),Date.parse(firstPaidAt)+17*86400000);
+   assert.equal((await currentEntitlement(pool,other)).plan,'free');
+   provider.payments.get(i.payment_id!)!.paidAt=new Date(Date.now()-1000).toISOString();
+   const restarted=new LiveBillingService(pool,provider,price);
+   await Promise.all(Array.from({length:4},()=>restarted.reconcile(other,i.id)));
+   assert.equal(await grants(i.id),1);assert.deepEqual((await pool.query('SELECT paid_at,expires_at FROM live_billing_entitlement WHERE intent_id=$1',[i.id])).rows[0],first);
+   assert.equal((await currentEntitlement(pool,other)).plan,'free','expired success replay cannot unlock the paid plan');
+  });
   await t.test('all mismatches, TEST success, unpaid/invalid time and outage grant zero',async()=>{
    const patches:Record<string,unknown>[]=[{tenant:other},{intent:randomUUID()},{id:'wrong'},{provider:'wrong'},{merchant:'wrong'},{mode:'local_test'},{plan:'free'},{durationDays:30},{amountMinor:100},{currency:'USD'},{paid:false},{paidAt:null},{paidAt:'invalid'},{paidAt:new Date(Date.now()+86400000).toISOString()}];
    for(const patch of patches){const i=await checkout();provider.success(i.payment_id!);Object.assign(provider.payments.get(i.payment_id!)!,patch);await assert.rejects(service.reconcile(tenant,i.id));assert.equal(await grants(i.id),0,JSON.stringify(patch));}

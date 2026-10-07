@@ -72,7 +72,8 @@ export class LiveBillingService {
    if(terminal(state)) await c.query('UPDATE live_billing_entitlement SET revoked_at=COALESCE(revoked_at,$2) WHERE intent_id=$1',[id,now]);
    else if(state==='succeeded' && paidAt) {
     const expiry=new Date(paidAt.getTime()+i.duration_days*86400000);
-    if(expiry>now) await c.query('INSERT INTO live_billing_entitlement(intent_id,tenant_id,paid_at,expires_at) VALUES($1,$2,$3,$4) ON CONFLICT(intent_id) DO NOTHING',[id,tenant,paidAt,expiry]);
+    // Persist the first verified window even when expired: replay cannot renew it.
+    await c.query('INSERT INTO live_billing_entitlement(intent_id,tenant_id,paid_at,expires_at) VALUES($1,$2,$3,$4) ON CONFLICT(intent_id) DO NOTHING',[id,tenant,paidAt,expiry]);
    }
    await c.query('UPDATE live_billing_intent SET state=$2 WHERE id=$1',[id,state]);return {state,label:'LIVE'};
   });
