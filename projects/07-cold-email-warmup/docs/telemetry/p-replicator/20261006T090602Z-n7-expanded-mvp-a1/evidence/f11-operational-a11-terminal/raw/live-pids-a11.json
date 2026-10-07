@@ -1,0 +1,66 @@
+{
+  "utc": "2026-10-07T01:33:42.832420+00:00",
+  "processes": [
+    {
+      "pid": 2567612,
+      "ppid": 124366,
+      "state": "S",
+      "startTicks": "125982114",
+      "cmdline": "bash /tmp/n7-f11-context-verify-a11/load-a11.sh "
+    },
+    {
+      "pid": 2567758,
+      "ppid": 2567612,
+      "state": "S",
+      "startTicks": "125982165",
+      "cmdline": "timeout --signal=TERM --kill-after=20s 390s node --import ./node_modules/tsx/dist/loader.mjs --test --test-concurrency=1 --test-name-pattern=^F11 ALL30 both2800ms phases preserve complete headers and existing fleet lanes full300s$ tests/f10-runtime-protocol.test.ts "
+    },
+    {
+      "pid": 2567759,
+      "ppid": 2567758,
+      "state": "S",
+      "startTicks": "125982165",
+      "cmdline": "node --import ./node_modules/tsx/dist/loader.mjs --test --test-concurrency=1 --test-name-pattern=^F11 ALL30 both2800ms phases preserve complete headers and existing fleet lanes full300s$ tests/f10-runtime-protocol.test.ts "
+    },
+    {
+      "pid": 2567767,
+      "ppid": 2567759,
+      "state": "S",
+      "startTicks": "125982172",
+      "cmdline": "/tmp/n7-expanded-runtime-20261006/bin/node --import ./node_modules/tsx/dist/loader.mjs --test-concurrency=1 --test-name-pattern=^F11 ALL30 both2800ms phases preserve complete headers and existing fleet lanes full300s$ tests/f10-runtime-protocol.test.ts "
+    },
+    {
+      "pid": 2568334,
+      "ppid": 2567767,
+      "state": "R",
+      "startTicks": "125982498",
+      "cmdline": "/tmp/n7-expanded-runtime-20261006/bin/node /tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts "
+    },
+    {
+      "pid": 2568356,
+      "ppid": 2567767,
+      "state": "R",
+      "startTicks": "125982519",
+      "cmdline": "/tmp/n7-expanded-runtime-20261006/bin/node /tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts "
+    },
+    {
+      "pid": 2570318,
+      "ppid": 124366,
+      "state": "S",
+      "startTicks": "125983271",
+      "cmdline": "/bin/bash -c python3 - <<'PY'\nimport pathlib,json,datetime\ns=pathlib.Path('/tmp/n7-f11-context-verify-a11'); rows=[]\nfor p in pathlib.Path('/proc').iterdir():\n if not p.name.isdigit():continue\n try:\n  cmd=(p/'cmdline').read_bytes().replace(b'\\0',b' ').decode();stat=(p/'stat').read_text();f=stat.split(') ')[1].split()\n  if 'n7-f11-context-verify-a11/load-a11.sh' in cmd or ('f10-runtime-protocol.test.ts' in cmd and 'node' in cmd) or ('f10-runtime-process-fixture.ts' in cmd and 'node' in cmd) or ('transport-child.js' in cmd and 'node' in cmd):rows.append({'pid':int(p.name),'ppid':int(f[1]),'state"
+    }
+  ],
+  "worker_starts": [
+    {
+      "pid": 2568356,
+      "startedAt": 1791336815247,
+      "fixtureValidatedAt": 1791336815322
+    },
+    {
+      "pid": 2568334,
+      "startedAt": 1791336815048,
+      "fixtureValidatedAt": 1791336815124
+    }
+  ]
+}

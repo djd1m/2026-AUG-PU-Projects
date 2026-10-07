@@ -1,0 +1,79 @@
+{
+  "at": "2026-10-07T01:38:24.199213+00:00",
+  "files": [
+    {
+      "file": "tests/f11-context-unit.test.ts",
+      "sha256": "7346a12177f1a564a6a21a630ecd8c83754842d03e80c5953de4cde719796370",
+      "titles": [
+        "F11 literal body/MIME/aggregate boundaries and malformed encoding hold",
+        "F11 finite RU/EN candidates and negative precedence never grants send authority",
+        "F11 tenant/mailbox/event/binding/key AEAD, content bounds and no plaintext envelope",
+        "F11 production frozen classifier uses authenticated metadata negatives before FAQ",
+        "F11 body quanta share exactly four finite IMAP lanes and join cancellation"
+      ],
+      "has_TRUNCATE": false,
+      "has_DROP": false
+    },
+    {
+      "file": "tests/f11-body-protocol.test.ts",
+      "sha256": "14e96994f709f67d8be12919d785f66ba303570a96d40d00c2159d9f69c4bcb6",
+      "titles": [
+        "F11 native body read-only UID sentinel and unforgeable proof",
+        "F11 body native cancellation closes physical socket",
+        "F11 fixed native deadline denies zero sockets and truncates a slow phase without renewing",
+        "F11 two slow native phases cannot both fit a single absolute five-second window",
+        "F11 admitted twelve-second window completes both legal 2800ms native phases"
+      ],
+      "has_TRUNCATE": false,
+      "has_DROP": false
+    },
+    {
+      "file": "tests/f11-context-integration.test.ts",
+      "sha256": "a572b14fb8a6e87316c70be060d359e7d522a9d1436a014e8d99690a9a7ef45c",
+      "titles": [
+        "stop and intent rollback together, replay creates no second physical intent",
+        "wrong sender receives no intent; UID generation remains separate from semantic identity",
+        "tenant reads deny; ready nonterminal; expiry denies before idempotent concurrent purge",
+        "fresh full SQL install through v16 in transaction-isolated schema",
+        "schema rejects NULL/oversize content and cross tenant root; migration rollback preserves rows",
+        "ambiguous authenticated own roots preserve stops and hold without content authority",
+        "C1 actual native complete proof opens one window; two separate physical phases ready and no-body finish immediate",
+        "fixed expired window holds phase bytes and establishes earliest terminal clock without renewal",
+        "durable native semantic replay, stop, complaint and failed stop transaction retain source-current coverage",
+        "F11 real PG additive migration, stop-first authenticated intent and retention"
+      ],
+      "has_TRUNCATE": true,
+      "has_DROP": true
+    },
+    {
+      "file": "tests/expanded-mvp-05.test.ts",
+      "sha256": "612f6d564b1fb335f6c0603992cbf526183aa5284666e6dcc19c8e22b6da5db9",
+      "titles": [
+        "inbound context is bounded tenant scoped and expires"
+      ],
+      "has_TRUNCATE": false,
+      "has_DROP": false
+    },
+    {
+      "file": "tests/f10-runtime-protocol.test.ts",
+      "sha256": "5dababdabab5355c76644da8fbe73ed0dc0109666b3b47ec2903b34a75ef7b52",
+      "titles": [
+        "owned fairness instrumentation removes forced stale triggers idempotently",
+        "suspended transport owners retain physical slots across runtime restart",
+        "native ambiguous submission and UID recovery compose with runtime transport guards",
+        "compiled healthy polling completes twice without a TypeScript loader",
+        "explicit retry captures changed native UID proof in one quantum without old FETCH or freshness",
+        "native five-second rescans yield fairly to later healthy E across competing worker restart",
+        "F11 ALL30 both2800ms phases preserve complete headers and existing fleet lanes full300s"
+      ],
+      "has_TRUNCATE": false,
+      "has_DROP": true
+    }
+  ],
+  "missing_witness": [
+    "dedicated ALL30 fault phase",
+    "full current-grant revocation/config/source/UID/root/recipient/generation mutation matrix",
+    "normal/restart physical purge composition and deadline canary",
+    "full current PG/unit/protocol regression not executed in A11"
+  ]
+}

@@ -1,0 +1,199 @@
+{
+  "utc": "2026-10-07T01:39:11.632164+00:00",
+  "source20_matches": true,
+  "compiled76_matches": true,
+  "runner_guard_matches": true,
+  "source": {
+    "projects/07-cold-email-warmup/db/016-inbound-context.sql": true,
+    "projects/07-cold-email-warmup/src/runtime/store.ts": true,
+    "projects/07-cold-email-warmup/src/runtime/loop.ts": true,
+    "projects/07-cold-email-warmup/src/runtime/worker.ts": true,
+    "projects/07-cold-email-warmup/src/replies/context-store.ts": true,
+    "projects/07-cold-email-warmup/src/replies/adapter.ts": true,
+    "projects/07-cold-email-warmup/src/replies/worker.ts": true,
+    "projects/07-cold-email-warmup/src/replies/store.ts": true,
+    "projects/07-cold-email-warmup/src/mailboxes/transport-slots.ts": true,
+    "projects/07-cold-email-warmup/src/mailboxes/transport-lifetime.ts": true,
+    "projects/07-cold-email-warmup/src/mailboxes/transport-child.ts": true,
+    "projects/07-cold-email-warmup/src/mailboxes/transport-channel.ts": true,
+    "projects/07-cold-email-warmup/tests/f11-body-fixture.ts": true,
+    "projects/07-cold-email-warmup/tests/f11-body-protocol.test.ts": true,
+    "projects/07-cold-email-warmup/tests/f11-context-integration.test.ts": true,
+    "projects/07-cold-email-warmup/tests/expanded-mvp-05.test.ts": true,
+    "projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts": true,
+    "projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts": true,
+    "projects/07-cold-email-warmup/tests/f10-runtime-fixture.ts": true,
+    "projects/07-cold-email-warmup/tests/f09-transport-fixture.ts": true
+  },
+  "compiled": {
+    "projects/07-cold-email-warmup/dist/auth/password.js": true,
+    "projects/07-cold-email-warmup/dist/auth/service.js": true,
+    "projects/07-cold-email-warmup/dist/auth/session.js": true,
+    "projects/07-cold-email-warmup/dist/auth/store.js": true,
+    "projects/07-cold-email-warmup/dist/billing/plans.js": true,
+    "projects/07-cold-email-warmup/dist/billing/provider.js": true,
+    "projects/07-cold-email-warmup/dist/billing/service.js": true,
+    "projects/07-cold-email-warmup/dist/billing/transaction.js": true,
+    "projects/07-cold-email-warmup/dist/campaigns/input.js": true,
+    "projects/07-cold-email-warmup/dist/campaigns/store.js": true,
+    "projects/07-cold-email-warmup/dist/config.js": true,
+    "projects/07-cold-email-warmup/dist/consent/store.js": true,
+    "projects/07-cold-email-warmup/dist/consent/transaction.js": true,
+    "projects/07-cold-email-warmup/dist/db.js": true,
+    "projects/07-cold-email-warmup/dist/dispatch/adapter.js": true,
+    "projects/07-cold-email-warmup/dist/dispatch/eligibility.js": true,
+    "projects/07-cold-email-warmup/dist/dispatch/message.js": true,
+    "projects/07-cold-email-warmup/dist/dispatch/seams.js": true,
+    "projects/07-cold-email-warmup/dist/dispatch/smtp.js": true,
+    "projects/07-cold-email-warmup/dist/dispatch/store.js": true,
+    "projects/07-cold-email-warmup/dist/dispatch/submission.js": true,
+    "projects/07-cold-email-warmup/dist/dispatch/worker.js": true,
+    "projects/07-cold-email-warmup/dist/errors.js": true,
+    "projects/07-cold-email-warmup/dist/evidence/compare.js": true,
+    "projects/07-cold-email-warmup/dist/evidence/input.js": true,
+    "projects/07-cold-email-warmup/dist/evidence/store.js": true,
+    "projects/07-cold-email-warmup/dist/growth/attribution.js": true,
+    "projects/07-cold-email-warmup/dist/growth/partner.js": true,
+    "projects/07-cold-email-warmup/dist/growth/reports.js": true,
+    "projects/07-cold-email-warmup/dist/mailboxes/capacity.js": true,
+    "projects/07-cold-email-warmup/dist/mailboxes/crypto.js": true,
+    "projects/07-cold-email-warmup/dist/mailboxes/diagnostic-authority.js": true,
+    "projects/07-cold-email-warmup/dist/mailboxes/diagnostic-channel.js": true,
+    "projects/07-cold-email-warmup/dist/mailboxes/diagnostic-operator.js": true,
+    "projects/07-cold-email-warmup/dist/mailboxes/diagnostic-store.js": true,
+    "projects/07-cold-email-warmup/dist/mailboxes/diagnostics.js": true,
+    "projects/07-cold-email-warmup/dist/mailboxes/input.js": true,
+    "projects/07-cold-email-warmup/dist/mailboxes/network.js": true,
+    "projects/07-cold-email-warmup/dist/mailboxes/provider.js": true,
+    "projects/07-cold-email-warmup/dist/mailboxes/store.js": true,
+    "projects/07-cold-email-warmup/dist/mailboxes/transport-authority.js": true,
+    "projects/07-cold-email-warmup/dist/mailboxes/transport-channel.js": true,
+    "projects/07-cold-email-warmup/dist/mailboxes/transport-child.js": true,
+    "projects/07-cold-email-warmup/dist/mailboxes/transport-lifetime.js": true,
+    "projects/07-cold-email-warmup/dist/mailboxes/transport-operator.js": true,
+    "projects/07-cold-email-warmup/dist/mailboxes/transport-slots.js": true,
+    "projects/07-cold-email-warmup/dist/main.js": true,
+    "projects/07-cold-email-warmup/dist/migrate.js": true,
+    "projects/07-cold-email-warmup/dist/pool/store.js": true,
+    "projects/07-cold-email-warmup/dist/replies/adapter.js": true,
+    "projects/07-cold-email-warmup/dist/replies/body.js": true,
+    "projects/07-cold-email-warmup/dist/replies/context-store.js": true,
+    "projects/07-cold-email-warmup/dist/replies/crypto.js": true,
+    "projects/07-cold-email-warmup/dist/replies/fixture.js": true,
+    "projects/07-cold-email-warmup/dist/replies/headers.js": true,
+    "projects/07-cold-email-warmup/dist/replies/imap.js": true,
+    "projects/07-cold-email-warmup/dist/replies/input.js": true,
+    "projects/07-cold-email-warmup/dist/replies/operator.js": true,
+    "projects/07-cold-email-warmup/dist/replies/store.js": true,
+    "projects/07-cold-email-warmup/dist/replies/worker.js": true,
+    "projects/07-cold-email-warmup/dist/runtime/loop.js": true,
+    "projects/07-cold-email-warmup/dist/runtime/store.js": true,
+    "projects/07-cold-email-warmup/dist/runtime/worker.js": true,
+    "projects/07-cold-email-warmup/dist/server.js": true,
+    "projects/07-cold-email-warmup/dist/suppression/http.js": true,
+    "projects/07-cold-email-warmup/dist/suppression/store.js": true,
+    "projects/07-cold-email-warmup/dist/web/app.js": true,
+    "projects/07-cold-email-warmup/dist/web/billing.js": true,
+    "projects/07-cold-email-warmup/dist/web/cabinet.js": true,
+    "projects/07-cold-email-warmup/dist/web/campaigns.js": true,
+    "projects/07-cold-email-warmup/dist/web/client.js": true,
+    "projects/07-cold-email-warmup/dist/web/dom.js": true,
+    "projects/07-cold-email-warmup/dist/web/evidence.js": true,
+    "projects/07-cold-email-warmup/dist/web/mailboxes.js": true,
+    "projects/07-cold-email-warmup/dist/web/models.js": true,
+    "projects/07-cold-email-warmup/dist/web/page.js": true
+  },
+  "runner": {
+    "guard-a11.mjs": true,
+    "preflight-a11.mjs": true,
+    "load-a11.sh": true,
+    "post-load-a11.mjs": true,
+    "positive-load-inventory.json": true
+  },
+  "owned_pid_identity_checks": [
+    {
+      "pid": 2567612,
+      "expectedStartTicks": "125982114",
+      "currentStartTicks": null,
+      "sameOwnedProcessAlive": false
+    },
+    {
+      "pid": 2567758,
+      "expectedStartTicks": "125982165",
+      "currentStartTicks": null,
+      "sameOwnedProcessAlive": false
+    },
+    {
+      "pid": 2567759,
+      "expectedStartTicks": "125982165",
+      "currentStartTicks": null,
+      "sameOwnedProcessAlive": false
+    },
+    {
+      "pid": 2567767,
+      "expectedStartTicks": "125982172",
+      "currentStartTicks": null,
+      "sameOwnedProcessAlive": false
+    },
+    {
+      "pid": 2568334,
+      "expectedStartTicks": "125982498",
+      "currentStartTicks": null,
+      "sameOwnedProcessAlive": false
+    },
+    {
+      "pid": 2568356,
+      "expectedStartTicks": "125982519",
+      "currentStartTicks": null,
+      "sameOwnedProcessAlive": false
+    },
+    {
+      "pid": 2568356,
+      "expectedStartTicks": "125982519",
+      "currentStartTicks": null,
+      "sameOwnedProcessAlive": false
+    },
+    {
+      "pid": 2615429,
+      "expectedStartTicks": "125997500",
+      "currentStartTicks": null,
+      "sameOwnedProcessAlive": false
+    },
+    {
+      "pid": 2567767,
+      "expectedStartTicks": "125982172",
+      "currentStartTicks": null,
+      "sameOwnedProcessAlive": false
+    },
+    {
+      "pid": 2641128,
+      "expectedStartTicks": "126005150",
+      "currentStartTicks": null,
+      "sameOwnedProcessAlive": false
+    },
+    {
+      "pid": 2567612,
+      "expectedStartTicks": "125982114",
+      "currentStartTicks": null,
+      "sameOwnedProcessAlive": false
+    },
+    {
+      "pid": 2641102,
+      "expectedStartTicks": "126005146",
+      "currentStartTicks": null,
+      "sameOwnedProcessAlive": false
+    },
+    {
+      "pid": 2567758,
+      "expectedStartTicks": "125982165",
+      "currentStartTicks": null,
+      "sameOwnedProcessAlive": false
+    },
+    {
+      "pid": 2567759,
+      "expectedStartTicks": "125982165",
+      "currentStartTicks": null,
+      "sameOwnedProcessAlive": false
+    }
+  ]
+}

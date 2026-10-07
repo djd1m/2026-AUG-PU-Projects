@@ -1,0 +1,118 @@
+{
+  "phase_start": "2026-10-07T01:33:43Z",
+  "manifest_sha256": "d9bc04a35306bbcf6787ee18f57ea6a2a90551cd5a6e3f84af04ec7580e159b1",
+  "normative": [
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/01_specification.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/01_specification.md",
+      "sha256": "dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+      "bytes": 8592,
+      "role": "approved normative artifact",
+      "verified_sha256": "dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/02_pseudocode.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/02_pseudocode.md",
+      "sha256": "1deb0b3d98038350f2284e9af0313df8d3792c0b0b1c8be869b8da750b5a1752",
+      "bytes": 12226,
+      "role": "approved normative artifact",
+      "verified_sha256": "1deb0b3d98038350f2284e9af0313df8d3792c0b0b1c8be869b8da750b5a1752"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/03_architecture.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/03_architecture.md",
+      "sha256": "307b5f5fc82e483f3d880b108c6abac25c44ba43e01ec6eaa001864179850dfe",
+      "bytes": 6923,
+      "role": "approved normative artifact",
+      "verified_sha256": "307b5f5fc82e483f3d880b108c6abac25c44ba43e01ec6eaa001864179850dfe"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/04_refinement.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/04_refinement.md",
+      "sha256": "ca4f3cb774b0a3cad91cb4e3cbab21f0e951c9fc9e9fd52b2308794c441fa8de",
+      "bytes": 4699,
+      "role": "approved normative artifact",
+      "verified_sha256": "ca4f3cb774b0a3cad91cb4e3cbab21f0e951c9fc9e9fd52b2308794c441fa8de"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/05_completion.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/05_completion.md",
+      "sha256": "5bb05f10bbcc155b96d0f0d0b8594305fb1ee1cebfdf1fef1aac28e1303da6f2",
+      "bytes": 7125,
+      "role": "approved normative artifact",
+      "verified_sha256": "5bb05f10bbcc155b96d0f0d0b8594305fb1ee1cebfdf1fef1aac28e1303da6f2"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/decisions-owner.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/decisions-owner.md",
+      "sha256": "cf47d55af1d5ad4cd5f34c7531f1d2004dfdc98076e7459c76af8b93f3e709d8",
+      "bytes": 8783,
+      "role": "approved normative artifact",
+      "verified_sha256": "cf47d55af1d5ad4cd5f34c7531f1d2004dfdc98076e7459c76af8b93f3e709d8"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/ai-policy-v1.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/ai-policy-v1.md",
+      "sha256": "d3d7c9d4614134f1dca9078ed797e3f8ee94a7bc613856bb54f2f2628b566512",
+      "bytes": 13041,
+      "role": "approved normative artifact",
+      "verified_sha256": "d3d7c9d4614134f1dca9078ed797e3f8ee94a7bc613856bb54f2f2628b566512"
+    }
+  ],
+  "historical_raw_interfaces_read": false,
+  "current_interface_revision": "b2bbbf533a74485f46986bb8c6520a63fc8c45a1",
+  "excluded": [
+    "author reports/receipts/reasoning/chat",
+    "provider calls",
+    "source/test/build mutation"
+  ],
+  "actual_model": null,
+  "planner_artifacts": {
+    "candidate_plan": {
+      "path": "/tmp/n7-f11-context-verify-a9/f12-plan.md",
+      "sha256": "6f125040982f7a9edfc51dccad049519aedac7d7b702d21bb334cc916a94afe0"
+    },
+    "candidate_provenance": {
+      "path": "/tmp/n7-f11-context-verify-a9/f12-context-provenance.json",
+      "sha256": "de3a42fcdf1f9c47648c82a07cb3e17f40ad3a2dd9d05f815fb122bb6bd54fc3"
+    },
+    "official_contract": {
+      "path": "/tmp/n7-f12-drafts-plan-p1-native/official-api-contract-preflight.md",
+      "sha256": "014333e3bc5bfdf6c95c93bb9495797d76c62335dc7c4f75894eda9203319c08"
+    },
+    "approved_architecture": {
+      "path": "/tmp/n7-f11-c1-feasibility-a7-native/report.md",
+      "sha256": "5933553b035e0e73ee8027ef90daef1608612b6bcee15ecdcaacf3af0e60b0b7"
+    }
+  },
+  "current_legitimate_source": [
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/context-store.ts",
+      "sha256": "20468643697d8e3a5adc35527cabf82e539c202d3860a702f32704f55fbd725d"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/db/016-inbound-context.sql",
+      "sha256": "ce3140059e9dfc51132745291fc391345f55488022508575479fbd4b12a3f636"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/runtime/worker.ts",
+      "sha256": "b5e895155d67e6e749f82b761ec2715858f49ab09dbeef14155bd646997691a2"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/runtime/loop.ts",
+      "sha256": "be60a80cd9e6ddeb8c0c37ac98a3338798b020b1e1c67ee7a4bc75ee517fda26"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/runtime/store.ts",
+      "sha256": "e35949216a285ceecac9d8320627689dff640a627a3a642e1a96c860674f8a49"
+    }
+  ],
+  "phase_observed_at": "2026-10-07T01:34:59.092853+00:00",
+  "validation_finished_at": "2026-10-07T01:36:45.185088+00:00",
+  "findings": [
+    "F12-V01",
+    "F12-V02",
+    "F12-V03"
+  ],
+  "validation_sha256": "1f91cf95466eed61fa013c717aefd8767398f51841968b9dd39cb92cdbdd1023"
+}
