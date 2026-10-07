@@ -1,0 +1,47 @@
+{
+  "started_at": "2026-10-07T23:29:49.804349+00:00",
+  "owner_authorized": true,
+  "offhost_backup_requirement_waived_by_owner": true,
+  "local_encrypted_backup_preserved": true,
+  "image": "sha256:dc59abdec230519befd55cbcd48150d49944fc7f5cae04d5f4986e9131444a6d",
+  "billing": "disabled",
+  "poll": "live_provider",
+  "dispatch": "live_provider",
+  "status": "deployed_live_mail_billing_disabled",
+  "provider_acceptance": "not_tested",
+  "frozen_backup_sha256": "09fb45140238ea2a31049fa78324140c8d6d76c10f88c4d29098a4392ee0f5cf",
+  "schema_before": 13,
+  "schema_after": 17,
+  "existing_tables_preserved": 32,
+  "original_column_fingerprints_equal": true,
+  "web_ready": true,
+  "active_transport_grants": 0,
+  "worker_joined_sigterm_seconds": 0.37,
+  "worker_running": true,
+  "worker_restart_count": 0,
+  "rollback_container": "n7-web-before-live-20261007",
+  "db_restore_not_needed": true,
+  "ended_at": "2026-10-07T23:30:11.701588+00:00",
+  "free_bytes": 2166677504,
+  "browser_verification": {
+    "status": "not_passed",
+    "attempts": [
+      {
+        "method": "shared existing Chromium",
+        "result": "page.goto timeout 30000ms"
+      },
+      {
+        "method": "owned Chromium with hostname pinned to public IP",
+        "result": "page.goto timeout 30000ms"
+      }
+    ],
+    "authenticated_ui_tested": false,
+    "network_diagnostic": "Node HTTPS from existing browser container to public IP with valid servername returns303; cause of Chromium navigation timeout not established"
+  },
+  "external_https": {
+    "app": 200,
+    "healthz": 200,
+    "readyz": 200,
+    "certificate_verification": true
+  }
+}
