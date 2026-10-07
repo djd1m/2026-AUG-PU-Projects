@@ -18,7 +18,12 @@ async function api(page,path){return page.evaluate(async path=>{const r=await fe
 async function idle(page){await page.waitForFunction(()=>!document.querySelector('#content')?.hasAttribute('aria-busy'));}
 async function nav(page){await page.locator('nav').getByRole('button',{name:'Тариф',exact:true}).click();await idle(page);}
 async function refresh(page){await page.getByRole('button',{name:'Обновить статус этого intent',exact:true}).click();await idle(page);}
-async function routeContext(context){await context.route('**/*',async route=>{
+async function routeContext(context){
+ await context.routeWebSocket('**/*',socket=>{
+  const u=new URL(socket.url());report.failures.push({kind:'blocked_websocket',url:u.origin+u.pathname});
+  socket.close();
+ });
+ await context.route('**/*',async route=>{
  const req=route.request(),u=new URL(req.url());
  if(u.origin==='https://yoomoney.ru'){report.provider_navigations_intercepted++;return route.fulfill({status:200,contentType:'text/html',body:'<!doctype html><title>Private provider navigation fixture</title><p>Local intercepted navigation only.</p>'});}
  if(u.origin!==origin){report.failures.push({kind:'blocked_external_origin'});return route.abort('blockedbyclient');}
