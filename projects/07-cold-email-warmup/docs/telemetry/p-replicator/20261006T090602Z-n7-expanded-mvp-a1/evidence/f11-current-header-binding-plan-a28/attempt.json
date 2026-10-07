@@ -1,0 +1,32 @@
+{
+  "started_at": "2026-10-07T04:18:02.495781+00:00",
+  "monotonic_start_ns": 1269692495213557,
+  "work_cutoff": "2026-10-07T04:23:59Z",
+  "seal_cutoff": "2026-10-07T04:25:59Z",
+  "stage": "PLAN",
+  "risk": "HIGH/inherited XL",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "scope": "read-only exact existing owner/physical operation binding hypothesis",
+  "source": "b6b82cb83cdf7cb1d646784ad169af826e6c6852",
+  "status": "completed",
+  "missing_data": [
+    "Host actual model and exclusive usage unavailable",
+    "Work-end monotonic sample unavailable; exact UTC work-end file timestamp recorded"
+  ],
+  "authoritative_ack": "2026-10-07T04:17:59Z",
+  "work_ended_at": "2026-10-07T04:21:29.341350+00:00",
+  "work_ended_monotonic_ns": null,
+  "decision": "no-schema lineage candidate source-compatible; native liveness not inferred",
+  "mechanical_route": "inherited A26 mechanical lower-bound S; A28 read-only no implementation diff",
+  "ended_at": "2026-10-07T04:22:01.607140+00:00",
+  "elapsed_authoritative_ack_wall_ms": 242607.13999999998,
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "read-only PLAN; no DB/native/E2E launch"
+  }
+}

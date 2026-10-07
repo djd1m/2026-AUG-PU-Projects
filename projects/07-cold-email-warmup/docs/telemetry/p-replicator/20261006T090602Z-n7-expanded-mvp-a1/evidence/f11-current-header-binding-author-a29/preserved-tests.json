@@ -1,0 +1,13 @@
+{
+  "exactThreeNativeTestCallASTUnchanged": true,
+  "baseline": {
+    "F11 ALL30 both2800ms phases preserve complete headers and existing fleet lanes full300s": "becf2f89e3b284c43ed2eab6cec6a4de8c10098d9cd5b97f43039781cf5af033",
+    "F11 ALL30 finite native BODY fault recovers both2800ms phases full300s": "50c94867e7239fef50e4c0e561d6227819f605b88f12a4eaefd1b46e0ca8436a",
+    "F11 short compiled worker SIGTERM while native BODY physically claimed": "f2bf7c36e66dd18fe61cbd776a3583a7806d3e8dc06fc648dd3295527563987b"
+  },
+  "current": {
+    "F11 ALL30 both2800ms phases preserve complete headers and existing fleet lanes full300s": "becf2f89e3b284c43ed2eab6cec6a4de8c10098d9cd5b97f43039781cf5af033",
+    "F11 ALL30 finite native BODY fault recovers both2800ms phases full300s": "50c94867e7239fef50e4c0e561d6227819f605b88f12a4eaefd1b46e0ca8436a",
+    "F11 short compiled worker SIGTERM while native BODY physically claimed": "f2bf7c36e66dd18fe61cbd776a3583a7806d3e8dc06fc648dd3295527563987b"
+  }
+}
