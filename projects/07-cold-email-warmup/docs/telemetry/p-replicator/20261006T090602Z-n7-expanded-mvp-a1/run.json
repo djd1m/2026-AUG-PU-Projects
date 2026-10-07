@@ -59,13 +59,13 @@
     "followup_status": "F07/F08/F09 locally accepted, expanded AC001–003 met; AC004–009 pending. Whole required_gates_passed remains false."
   },
   "metrics": {
-    "elapsed_wall_ms": 55662677,
+    "elapsed_wall_ms": 56962890,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-07T00:33:45.555429+00:00"
+    "elapsed_as_of": "2026-10-07T00:55:25.769106+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 fresh MEDIUM conditional body window and authenticated revalidation implementation; feasibility pending",
+  "current_stage": "F11 independent HIGH feasibility refinement after legal two-phase5s-window counterexample; actual A7 running",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -138,19 +138,18 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_window_author_a6",
-    "attempt": "f11-context-author-a6",
+    "executor": "/root/n7_sol_coordinator/f11_c1_normative_planner_a5",
+    "attempt": "f11-c1-feasibility-a7-native",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T00:32:37Z",
+    "actual_ACK_at": "2026-10-07T00:51:07Z",
     "requested_model": "gpt-6.1-sol",
-    "requested_effort": "medium",
+    "requested_effort": "high",
     "actual_model": null,
-    "source_revision": "d606b704f8dbc739ea3df5dd7253032217001a0e",
-    "product_code_base": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
-    "freeze_at": "2026-10-07T00:49:37Z",
-    "deadline": "2026-10-07T00:52:37Z",
-    "launch_sha256": "972941763d465158af9897789ad5fdd349831c165d25301c0349b997d9bb75f7",
-    "next": "Implement exact independently adjudicated conditional one5swindow; actual ALL30 BOTHphase body liveness and header30/due60 feasibility gates; explicit remainingC2privacy; source-frozen HIGH checks/review before F11 acceptance."
+    "source_revision": "b731e362155710ec1014d9b26625d155c15f81e9",
+    "freeze_at": "2026-10-07T00:57:07Z",
+    "deadline": "2026-10-07T00:59:07Z",
+    "launch_sha256": "00e937759fbc0c351a98f2f7e3473210a2d1c11de79a7be8f42e46152f05f796",
+    "next": "Seal compatible nonrenewable strategy for legal2x2800ms; fresh MEDIUM real authority-gated production entry + ALL30 source witness; restore durable C2 coverage; frozen HIGH operational checks and NEW clean independent source review. No full F11 acceptance."
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -453,12 +452,12 @@
     "whole_runtime_accepted": false
   },
   "branch_push": {
-    "revision": "0c2143507f98402e5deb639413033323a76faa77",
+    "revision": "681be4eb89678daecb01e838856350d77210983d",
     "actual_published_at": null,
-    "confirmation_clock": "2026-10-07T00:25:37Z root clock_tool postpush",
-    "parent_remote": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
+    "confirmation_clock": "2026-10-07T00:34:14Z root clock_tool postpush",
+    "parent_remote": "0c2143507f98402e5deb639413033323a76faa77",
     "trusted_executor": "root",
-    "scope": "F11 phasepartial receipts/planner launch docs; F11 productunaccepted"
+    "scope": "F11 conditional amendment and A6 launch docs; F11 unaccepted"
   },
   "model_policy_boundary": {
     "owner_decision": "OWN-N7-006",
@@ -616,5 +615,77 @@
       "DNS": 0,
       "not_classified_retrospectively": true
     }
+  },
+  "f11_window_author_a6": {
+    "status": "coherent_partial_body_liveness_acceptance_BLOCKED",
+    "accepted": false,
+    "revision": "b731e362155710ec1014d9b26625d155c15f81e9",
+    "receipt_sha256": "1fc6a9ec3e872675af87d43d5d6e92dccde9f9c388e4a1b3de86139fb56a85c0",
+    "finished_at": "2026-10-07T00:48:39.201727+00:00",
+    "elapsed_wall_ms": 962201,
+    "checks": [
+      {
+        "log": "typecheck-final.log",
+        "native_exit": 0,
+        "passed": null,
+        "sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393"
+      },
+      {
+        "log": "lint-final.log",
+        "native_exit": 0,
+        "passed": null,
+        "sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e"
+      },
+      {
+        "log": "build-final.log",
+        "native_exit": 0,
+        "passed": null,
+        "sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323"
+      },
+      {
+        "log": "focused-final.log",
+        "native_exit": 0,
+        "passed": 13,
+        "sha256": "f327f6eddbd2370c165500bd5ccecf13532c5213fed749c4e0bed0819042cb08"
+      },
+      {
+        "log": "runtime-pg-final.log",
+        "native_exit": 0,
+        "passed": 23,
+        "sha256": "2de5e471e149b521b68b6c065e5ba9042112bf5ed4c185e97978ebe21beb921f"
+      },
+      {
+        "log": "parent-final.log",
+        "native_exit": 0,
+        "passed": 22,
+        "sha256": "8d7f574fae0ed699f2f760b7f9d0a0fd3310792055267190d0c71c83a0b89261"
+      },
+      {
+        "log": "unit-final.log",
+        "native_exit": 0,
+        "passed": 69,
+        "sha256": "9ce19ca78ea5ab24b283ba4feb35a6059a86e20e03d980db37bb0b3b3ccd7f5e"
+      },
+      {
+        "log": "quiescence-seal-a1.log",
+        "native_exit": 0,
+        "passed": null,
+        "sha256": "68377a3f5b249b943e2261d7f3d5816ecf4c5cbe0581baa4b9247e12f08e902b"
+      }
+    ],
+    "remaining_ac": [
+      "Acceptance BLOCKED: actual two native 2800ms phases each fit the original five-second per-stage ceiling, but cannot both finish within the one absolute five-second window. Safety timeout is NOT body-liveness acceptance or a restriction of legal inputs; fresh independent HIGH feasibility/strategy adjudication required before any fast-only ALL30 fixture.",
+      "ALL30 frozen source fixture entry is absent. After adjudication, next separate MEDIUM slice must implement nondestructive 100-connected/30-active/>=3-tenant competing-process load with independent physical socket/phase observer, ALL30 legal captures BOTH phases ready, completion<=30s, original due selection<=60s, ongoing SMTP/pool/maintenance and full300s evidence. No cap, average, omitted participant or safe timeout substitution.",
+      "Complete C2 source/config/grant/root/recipient/UIDVALIDITY/generation/stop/restart/orphan closure race matrix and all new phase/copy 24h-terminal/absolute7d boundaries/physical deletion/idempotency/outage lag remain mandatory. Current narrow native old UID revalidation and expired phase purge do not prove the full matrix.",
+      "Legacy inline capture/direct claim APIs now fail closed. Their prior broad native positive semantic replay/stop rollback/complaint scenario subtest was replaced by actual legal durable-phase/window tests; equivalent durable-quantum full behavioral coverage must be restored in the next bounded test slice before acceptance. Existing parser/classification unit tests passed; no legacy full scenario coverage is claimed.",
+      "Normal production CLI body remains hardcoded OFF; only explicit trusted local fixture supplies captureConfig/body callback and executes the SAME core authority-gated RuntimeStore/PollWorker/ContextStore path. After actual mandatory proof, coordinator must reconcile the current production entry/authority gate with closed defaults then obtain fresh source-current HIGH review before any separately authorized real enablement.",
+      "Full required integration/E2E/coordinator gates and fresh independent HIGH source review remain; author does not accept F11."
+    ],
+    "counter_measurement_gaps": [
+      "specific second phase error code and per-phase UTC/monotonic not captured; no inferred exact timings"
+    ],
+    "source_DB_released": true,
+    "actual_model": null,
+    "usage": null
   }
 }

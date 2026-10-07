@@ -1,0 +1,110 @@
+{
+  "status": "completed",
+  "verdict": "coherent_partial_body_liveness_acceptance_BLOCKED",
+  "accepted": false,
+  "runtime_body_enabled": false,
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-window-author-a6",
+  "started_at": "2026-10-07T00:32:37+00:00",
+  "finished_at": "2026-10-07T00:48:39.201727+00:00",
+  "elapsed_wall_ms": 962201,
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "source_revision": "d606b704f8dbc739ea3df5dd7253032217001a0e",
+  "final_revision": "b731e362155710ec1014d9b26625d155c15f81e9",
+  "launch_sha256": "972941763d465158af9897789ad5fdd349831c165d25301c0349b997d9bb75f7",
+  "source_manifest_sha256": "f6a18d7d9eafc5872c7db65806cddce4caa49de9793925f21c47b8f02239794b",
+  "build_manifest_sha256": "b2d154dc05908be05bcd2b2cb437f2f574c0e1c5259122f0f7681ac2ff0c974e",
+  "raw_manifest_sha256": "0cb78250929623928f9d92657901110e11480712c52c588c2aaf01e6ec2d0778",
+  "report_sha256": "1232b97d2f69acc8c6420014deddc38458a4870966a6b066638acdd7f61c8fc0",
+  "quiescence_sha256": "b2893cd16d0593056a2f662a59585c7fad6a4b393178ed12e439e1976c06f0d4",
+  "guard_summary_sha256": "da05bb0ef63db157f1f450f6832dbf64ec2ad98a946866b229ae65107f3dd316",
+  "checks": [
+    {
+      "log": "typecheck-final.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393"
+    },
+    {
+      "log": "lint-final.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e"
+    },
+    {
+      "log": "build-final.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323"
+    },
+    {
+      "log": "focused-final.log",
+      "native_exit": 0,
+      "passed": 13,
+      "sha256": "f327f6eddbd2370c165500bd5ccecf13532c5213fed749c4e0bed0819042cb08"
+    },
+    {
+      "log": "runtime-pg-final.log",
+      "native_exit": 0,
+      "passed": 23,
+      "sha256": "2de5e471e149b521b68b6c065e5ba9042112bf5ed4c185e97978ebe21beb921f"
+    },
+    {
+      "log": "parent-final.log",
+      "native_exit": 0,
+      "passed": 22,
+      "sha256": "8d7f574fae0ed699f2f760b7f9d0a0fd3310792055267190d0c71c83a0b89261"
+    },
+    {
+      "log": "unit-final.log",
+      "native_exit": 0,
+      "passed": 69,
+      "sha256": "9ce19ca78ea5ab24b283ba4feb35a6059a86e20e03d980db37bb0b3b3ccd7f5e"
+    },
+    {
+      "log": "quiescence-seal-a1.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "68377a3f5b249b943e2261d7f3d5816ecf4c5cbe0581baa4b9247e12f08e902b"
+    }
+  ],
+  "remaining_ac": [
+    "Acceptance BLOCKED: actual two native 2800ms phases each fit the original five-second per-stage ceiling, but cannot both finish within the one absolute five-second window. Safety timeout is NOT body-liveness acceptance or a restriction of legal inputs; fresh independent HIGH feasibility/strategy adjudication required before any fast-only ALL30 fixture.",
+    "ALL30 frozen source fixture entry is absent. After adjudication, next separate MEDIUM slice must implement nondestructive 100-connected/30-active/>=3-tenant competing-process load with independent physical socket/phase observer, ALL30 legal captures BOTH phases ready, completion<=30s, original due selection<=60s, ongoing SMTP/pool/maintenance and full300s evidence. No cap, average, omitted participant or safe timeout substitution.",
+    "Complete C2 source/config/grant/root/recipient/UIDVALIDITY/generation/stop/restart/orphan closure race matrix and all new phase/copy 24h-terminal/absolute7d boundaries/physical deletion/idempotency/outage lag remain mandatory. Current narrow native old UID revalidation and expired phase purge do not prove the full matrix.",
+    "Legacy inline capture/direct claim APIs now fail closed. Their prior broad native positive semantic replay/stop rollback/complaint scenario subtest was replaced by actual legal durable-phase/window tests; equivalent durable-quantum full behavioral coverage must be restored in the next bounded test slice before acceptance. Existing parser/classification unit tests passed; no legacy full scenario coverage is claimed.",
+    "Normal production CLI body remains hardcoded OFF; only explicit trusted local fixture supplies captureConfig/body callback and executes the SAME core authority-gated RuntimeStore/PollWorker/ContextStore path. After actual mandatory proof, coordinator must reconcile the current production entry/authority gate with closed defaults then obtain fresh source-current HIGH review before any separately authorized real enablement.",
+    "Full required integration/E2E/coordinator gates and fresh independent HIGH source review remain; author does not accept F11."
+  ],
+  "owned_changed_paths": [
+    "projects/07-cold-email-warmup/db/016-inbound-context.sql",
+    "projects/07-cold-email-warmup/src/mailboxes/transport-channel.ts",
+    "projects/07-cold-email-warmup/src/mailboxes/transport-child.ts",
+    "projects/07-cold-email-warmup/src/mailboxes/transport-lifetime.ts",
+    "projects/07-cold-email-warmup/src/replies/adapter.ts",
+    "projects/07-cold-email-warmup/src/replies/context-store.ts",
+    "projects/07-cold-email-warmup/src/replies/store.ts",
+    "projects/07-cold-email-warmup/src/replies/worker.ts",
+    "projects/07-cold-email-warmup/src/runtime/loop.ts",
+    "projects/07-cold-email-warmup/src/runtime/store.ts",
+    "projects/07-cold-email-warmup/src/runtime/worker.ts",
+    "projects/07-cold-email-warmup/tests/f11-body-fixture.ts",
+    "projects/07-cold-email-warmup/tests/f11-body-protocol.test.ts",
+    "projects/07-cold-email-warmup/tests/f11-context-integration.test.ts"
+  ],
+  "next_responsible_executor": "/root/n7_sol_coordinator",
+  "missing_data": [
+    "actual host model/effort/usage/cost",
+    "initial build-a1 host session and native exit",
+    "ALL30 fixture source entry/full native cohort evidence",
+    "full C2 native race and retention copy boundary matrix",
+    "mechanical router absent inherited sparse checkout",
+    "author does not certify source/strategy acceptance"
+  ]
+}

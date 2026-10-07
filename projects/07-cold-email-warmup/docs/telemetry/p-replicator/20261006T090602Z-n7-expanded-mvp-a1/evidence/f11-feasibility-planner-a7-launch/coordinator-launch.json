@@ -1,0 +1,16 @@
+{
+  "prepared_at": "2026-10-07T00:50:35.827236+00:00",
+  "source_revision": "b731e362155710ec1014d9b26625d155c15f81e9",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "model_policy": "same fixed independent A5 HIGH planner, distinct bounded refinement; not final source review",
+  "profile": "model-routing-econom",
+  "substantive_seconds": 360,
+  "bound_seconds": 480,
+  "seal_reserve_seconds": 120,
+  "context_manifest_sha256": "87ba6634c9b2a3424d26625ed3cc113b3709d727085d70f3f225bdb2290c9af2",
+  "objective_inputs_sha256": "ce967616ab2e991a1bd907fe39b0cacef7f5a6e5fd2920b1a3cf743301b1a32b",
+  "available_bytes": 2704568320,
+  "no_product_writes_tests_DB_network": true,
+  "receipt_absent_before_launch": true
+}

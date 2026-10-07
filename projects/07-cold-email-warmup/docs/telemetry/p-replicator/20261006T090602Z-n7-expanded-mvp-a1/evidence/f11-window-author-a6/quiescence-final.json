@@ -1,0 +1,94 @@
+{
+  "db": {
+    "db": "n7f10_a2",
+    "otherSessions": 0,
+    "occupied": 0,
+    "claims": 0,
+    "choice": "read-only readiness and exact quiescence"
+  },
+  "owned_guard_processes": 131,
+  "live_owned_processes": [],
+  "missing_exit_records": [],
+  "wrappers": [
+    {
+      "record": "owned-checks-final.json",
+      "pid": 1822290,
+      "startticks": "125686724",
+      "started_at": "2026-10-07T00:44:17.372720+00:00",
+      "sameProcessLive": false
+    },
+    {
+      "record": "owned-build-final.json",
+      "pid": 1809602,
+      "startticks": "125682671",
+      "started_at": "2026-10-07T00:43:36.870842+00:00",
+      "sameProcessLive": false
+    },
+    {
+      "record": "owned-build-a4.json",
+      "pid": 1764447,
+      "startticks": "125663064",
+      "started_at": "2026-10-07T00:40:20.844083+00:00",
+      "sameProcessLive": false
+    },
+    {
+      "record": "owned-build-a1.json",
+      "pid": 1685482,
+      "startticks": "125632718",
+      "started_at": "2026-10-07T00:35:17.360543+00:00",
+      "sameProcessLive": false
+    },
+    {
+      "record": "owned-seal-a1.json",
+      "pid": 1871091,
+      "startticks": "125706008",
+      "started_at": "2026-10-07T00:47:30.192714+00:00",
+      "sameProcessLive": false
+    },
+    {
+      "record": "owned-build-a6.json",
+      "pid": 1800894,
+      "startticks": "125677848",
+      "started_at": "2026-10-07T00:42:48.614532+00:00",
+      "sameProcessLive": false
+    },
+    {
+      "record": "owned-checks-a1.json",
+      "pid": 1735886,
+      "startticks": "125652286",
+      "started_at": "2026-10-07T00:38:32.973469+00:00",
+      "sameProcessLive": false
+    },
+    {
+      "record": "owned-build-a3.json",
+      "pid": 1725230,
+      "startticks": "125648014",
+      "started_at": "2026-10-07T00:37:50.287607+00:00",
+      "sameProcessLive": false
+    },
+    {
+      "record": "owned-checks-a2.json",
+      "pid": 1774311,
+      "startticks": "125668429",
+      "started_at": "2026-10-07T00:41:14.453285+00:00",
+      "sameProcessLive": false
+    },
+    {
+      "record": "owned-build-a2.json",
+      "pid": 1707517,
+      "startticks": "125641884",
+      "started_at": "2026-10-07T00:36:48.999183+00:00",
+      "sameProcessLive": false
+    }
+  ],
+  "host_joined_sessions": [
+    51289,
+    70082,
+    85858,
+    63866,
+    7544,
+    30688,
+    48827,
+    45570
+  ]
+}
