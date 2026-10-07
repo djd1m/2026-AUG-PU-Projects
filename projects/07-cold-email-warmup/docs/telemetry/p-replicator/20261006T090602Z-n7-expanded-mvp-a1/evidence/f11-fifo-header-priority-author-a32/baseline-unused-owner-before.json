@@ -1,0 +1,19 @@
+{
+  "sourceBoundLaunch": "baseline-red",
+  "joinedPid": 1673442,
+  "reason": "test fails immediately after logical claim before any native adapter/child; in-process never-consumed reservation",
+  "row": {
+    "protocol": "imap",
+    "slot": 4,
+    "operation": "76d9089f-2d17-4bbc-bb10-5746c9fb316e",
+    "tenant_id": "9a22ea01-e1bf-4fab-8c5e-792eb0511adb",
+    "mailbox_id": "5978172d-20f5-4f42-862d-b2bb02b4fd6a",
+    "owner_process": "6bda1f3e-2ae4-4287-b54b-e16e798c8197",
+    "owner_host": "test-apps-server.com",
+    "expires_at": "2026-10-07T05:08:02.695Z",
+    "operation_purpose": "header",
+    "header_reserved": true,
+    "owner_id": "76d9089f-2d17-4bbc-bb10-5746c9fb316e",
+    "generation": "1"
+  }
+}

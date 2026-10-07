@@ -1,0 +1,26 @@
+
+test('F11 preferred HEADER finish recomputes UID root config grant owner and generation fences',{timeout:45000},async()=>{
+ const {seedBodyPressureCohort}=await import('./f10-runtime-process-fixture.js'),{bodyFixture}=await import('./f11-body-fixture.js'),{RuntimeStore}=await import('../src/runtime/store.js'),{authorizeTransport}=await import('../src/mailboxes/transport-authority.js'),{PollWorker}=await import('../src/replies/worker.js'),{LiveReplyAdapter}=await import('../src/replies/adapter.js'),{enqueueCaptureClient}=await import('../src/replies/context-store.js'),{eligibilityTransaction}=await import('../src/consent/transaction.js'),{randomUUID}=await import('node:crypto');
+ const c=await seedBodyPressureCohort(),target=c.participants[0]!,body=await bodyFixture({mailboxes:c.mailboxes,phaseDelayMs:0}),signal=new AbortController().signal;
+ const captureConfig={...c.config,providerAllowlist:new Map(c.config.providerAllowlist)},runtime=new RuntimeStore(c.pool,(client,t,m)=>authorizeTransport(client,c.config,t,m,'imap_headers'),captureConfig);
+ try{
+  await runtime.maintenance();await c.pool.query("UPDATE runtime_due SET next_check_at=clock_timestamp()+interval '1 minute' WHERE kind='poll' AND mailbox_id<>$1",[target.mailbox]);
+  await eligibilityTransaction(c.pool,client=>enqueueCaptureClient(client,{tenant:target.tenant,mailbox:target.mailbox,uidvalidity:'1',uid:1,runId:randomUUID(),attempt:1,source:'imap_headers',observedAt:new Date(),enrollment:target.enrollment,root:target.root,sender:target.recipient}));
+  for(const mutation of ['UID','root','config','grant','owner','generation']){
+   let completed:import('../src/runtime/store.js').RuntimeClaim|undefined;
+   for(let n=0;n<6;n++){const claim=await runtime.claim('poll');assert.ok(claim);assert.equal(claim.mailbox_id,target.mailbox);const outcome=await new PollWorker(c.pool,c.config.credentialKeyring,'live_provider',new LiveReplyAdapter(c.pool,c.config,body.fixture,runtime.pollAdmission(claim)!.slot)).quantum(target.tenant,target.mailbox,runtime.guard(claim),signal);if(outcome.state==='complete'){completed=claim;break;}await runtime.finish(claim);}
+   assert.ok(completed);const event=(await c.pool.query('SELECT * FROM incoming_ai_event')).rows[0],grant=(await c.pool.query('SELECT * FROM transport_grant WHERE mailbox_id=$1',[target.mailbox])).rows[0];
+   if(mutation==='UID')await c.pool.query('UPDATE incoming_ai_event SET uidvalidity=$1',['2']);
+   if(mutation==='root')await c.pool.query("UPDATE incoming_ai_event SET authenticated_root_message_id='<changed@example.test>'");
+   if(mutation==='config')captureConfig.providerAllowlist.clear();
+   if(mutation==='grant')await c.pool.query("UPDATE transport_grant SET state='revoked' WHERE mailbox_id=$1",[target.mailbox]);
+   if(mutation==='owner')await c.pool.query("UPDATE runtime_due SET owner_id=gen_random_uuid() WHERE mailbox_id=$1 AND kind='poll'",[target.mailbox]);
+   if(mutation==='generation')await c.pool.query("UPDATE runtime_due SET generation=generation+1 WHERE mailbox_id=$1 AND kind='poll'",[target.mailbox]);
+   await runtime.finish(completed,'ready',true);assert.equal(runtime.takeCaptureAdmission(completed),undefined,mutation);
+   const after=(await c.pool.query('SELECT * FROM incoming_ai_event')).rows[0],due=(await c.pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[target.mailbox])).rows[0];assert.equal(after.window_end,null,mutation);assert.ok(due.due_at<=new Date(),mutation+' must remain due NOW');assert.equal((await c.pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');
+   if(due.state==='claimed')await runtime.cancel(due);
+   await c.pool.query('UPDATE incoming_ai_event SET uidvalidity=$1,authenticated_root_message_id=$2 WHERE id=$3',[event.uidvalidity,event.authenticated_root_message_id,event.id]);await c.pool.query('UPDATE transport_grant SET state=$1,scope=$2 WHERE mailbox_id=$3',[grant.state,grant.scope,target.mailbox]);for(const [host,port] of c.config.providerAllowlist)captureConfig.providerAllowlist.set(host,port);
+   console.info(JSON.stringify({finishCounterproof:mutation,window:null,dueNow:true,occupied:0}));
+  }
+ }finally{const claims=(await c.pool.query("SELECT * FROM runtime_due WHERE state='claimed'")).rows;for(const claim of claims)await runtime.cancel(claim);await body.close();await c.pool.query('TRUNCATE tenant CASCADE');await c.pool.end();}
+});
