@@ -55,12 +55,19 @@ async function register(browser,width){
   throw error;
  }
 }
+async function mailDisabled(page){
+ await page.waitForFunction(()=>document.querySelector('#modes')?.textContent?.startsWith('Режимы сервера:'));
+ const text=await page.locator('#modes').innerText();
+ check('mail egress remains disabled',text.includes('отправка отключено')&&text.includes('опрос отключено'));
+ const modes=(await api(page,'/api/app')).body.data.modes;
+ check('server mail modes independently disabled',modes.dispatch==='disabled'&&modes.poll==='disabled');
+}
 async function screenshot(page,name){check('password fields cleared',await page.locator('input[type=password]').evaluateAll(es=>es.every(e=>!e.value)));const file=current+'-'+name+'.png';await page.screenshot({path:dir+'/'+file,fullPage:true});report.screenshots.push(file);check('no horizontal overflow',await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth&&document.body.scrollWidth<=innerWidth));}
 try{
  for(const width of [1440,390]){
   if(width===390){for(const ms of [31000,30000]){process.stdout.write(JSON.stringify({progress:'local billing rate window',wait_ms:ms})+'\n');await new Promise(r=>setTimeout(r,ms));}}
   current=String(width);const browser=await engines.chromium.connect('ws://127.0.0.1:9320/',{timeout:10000});clients.add(browser);
-  const user=await register(browser,width),{page}=user;check('mail egress remains disabled',(await page.locator('#modes').innerText()).includes('отправка disabled')&&(await page.locator('#modes').innerText()).includes('опрос disabled'));await nav(page);
+  const user=await register(browser,width),{page}=user;await mailDisabled(page);await nav(page);
   check('configured LIVE Team price',/990/.test(await page.locator('#content').innerText())&&/LIVE/.test(await page.locator('#content').innerText()));
   const checkout=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/billing/checkout'&&r.request().method()==='POST');
   await page.getByRole('button',{name:'Создать LIVE checkout',exact:true}).press('Enter');const created=(await (await checkout).json()).data;check('pending checkout never grants',created.state==='pending'&&created.entitlement.plan==='free');const intent=created.id;await idle(page);
