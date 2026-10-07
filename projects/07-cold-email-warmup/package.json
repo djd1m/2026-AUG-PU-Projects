@@ -1,0 +1,43 @@
+{
+  "name": "grelka",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "node --test --import tsx --test-reporter=spec packages/shared/test/*.test.ts packages/secrets/test/*.test.ts packages/core/test/*.test.ts packages/db/test/*.test.ts 2>/dev/null",
+    "dev:api": "tsx watch apps/api/src/server.ts",
+    "dev:web": "npm run dev -w apps/web",
+    "worker:warmup": "tsx apps/worker-warmup/src/index.ts",
+    "worker:campaign": "tsx apps/worker-campaign/src/index.ts",
+    "worker:imap": "tsx apps/worker-imap/src/index.ts",
+    "migrate": "tsx apps/api/src/migrate.ts"
+  },
+  "dependencies": {
+    "bullmq": "^5.28.0",
+    "fastify": "^4.28.1",
+    "hash-wasm": "^4.11.0",
+    "ioredis": "^5.4.1",
+    "imapflow": "^1.0.170",
+    "nodemailer": "^6.9.14",
+    "pg": "^8.12.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.4",
+    "@types/nodemailer": "^6.4.15",
+    "@types/pg": "^8.11.6",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.6"
+  }
+}

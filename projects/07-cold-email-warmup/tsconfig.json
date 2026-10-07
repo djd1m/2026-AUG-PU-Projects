@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022", "DOM"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@grelka/shared": ["packages/shared/src/index.ts"],
+      "@grelka/secrets": ["packages/secrets/src/index.ts"],
+      "@grelka/db": ["packages/db/src/index.ts"],
+      "@grelka/queue": ["packages/queue/src/index.ts"],
+      "@grelka/core": ["packages/core/src/index.ts"]
+    }
+  },
+  "include": [
+    "packages/shared/src/**/*.ts",
+    "packages/shared/test/**/*.ts",
+    "packages/secrets/src/**/*.ts",
+    "packages/secrets/test/**/*.ts",
+    "packages/db/src/**/*.ts",
+    "packages/db/test/**/*.ts",
+    "packages/queue/src/**/*.ts",
+    "packages/core/src/**/*.ts",
+    "packages/core/test/**/*.ts",
+    "apps/api/src/**/*.ts",
+    "apps/worker-*/src/**/*.ts",
+    "apps/web/src/**/*.tsx"
+  ],
+  "exclude": ["node_modules", "apps/web/dist"]
+}
