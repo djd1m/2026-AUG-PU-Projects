@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "sealed_at": "2026-10-07T12:49:49.067457+00:00",
+  "source_root": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup",
+  "source_revision": "bf8a5373a409181a42d5dc06be06a2c6aca611e6",
+  "planner_sha256": "d77b774bc3cbfd0ec843520fa999d5f5472059d53251224d5c0f70a788632876",
+  "prepared_not_executed": true,
+  "runtime_db_lease": false,
+  "artifacts": {
+    "activation-requirements.json": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/activation-requirements.json",
+      "sha256": "a2334152b40a8d7b7eb12fe041d4a0cb5c4d9dc4f6d80e342dd4916ce3c24db0"
+    },
+    "copy-provenance.json": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/copy-provenance.json",
+      "sha256": "9dcd5fc3a2814093b014ff5d8bea2c4409f9036123f21b4f1caf750c8395ba22"
+    },
+    "dependency-bindings.json": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/dependency-bindings.json",
+      "sha256": "32206efe9dbc32799ca91df02c474c839ae14bf40b0ca63bf0e6aaeec502da81"
+    },
+    "guard-a63.mjs": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/guard-a63.mjs",
+      "sha256": "8b13e37888a415b7c72ab51c59e1acd950bfe20841ee5384f4b9a4b9b8c1e173"
+    },
+    "helper-bindings.json": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/helper-bindings.json",
+      "sha256": "249de4b2ea36a0f9ff7c3c3229d1b0d5a7e8c63c808562d8803ddf34578b9f27"
+    },
+    "integration-inventory.json": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/integration-inventory.json",
+      "sha256": "dfb8733ebe0653cfeb6a0897bb4a6c774a29b871e98f6fa7b189cce4c494d1e8"
+    },
+    "joins.py": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/joins.py",
+      "sha256": "1998a8b2686e05d3091a2041c9e83055b8362ea261af91b1dab7273a7790ec3d"
+    },
+    "launch.py": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/launch.py",
+      "sha256": "4452e5647b60c21478f7f84618cb2551efa4f3d7036e0e1726def0706ad2adb0"
+    },
+    "preparation-source-state.json": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/preparation-source-state.json",
+      "sha256": "10d6c77d8c2f7a87b9587be4afa46bf91c73f02e09ccbd2ff690fe887912b488"
+    },
+    "prepare.py": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/prepare.py",
+      "sha256": "6a566ec50aab032f93ddeffd76e29046c8c748dc9fd168471f59259a44849b1f"
+    },
+    "protocol-test-reference-search.raw": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/protocol-test-reference-search.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reuse-projection.json": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/reuse-projection.json",
+      "sha256": "6cd97077467efc830688234ce84d540ead80f3b143c668a13e584d67f449c88f"
+    },
+    "run-a63.sh": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/run-a63.sh",
+      "sha256": "368991bccbe452b7099ffde327b16cd3569bf284d00ca9b05f75d770b00da6e4"
+    },
+    "schema-setup-a63.mjs": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/schema-setup-a63.mjs",
+      "sha256": "cbf4634391d5a6a5f601669b9c710c851fe9af8a495f826073fdf5b3e9492ff4"
+    },
+    "snapshot-a63.mjs": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/snapshot-a63.mjs",
+      "sha256": "e530cc5382e29810c246dfd2409fc82db073a41c31b2dfd197d3eb879e89fc9a"
+    },
+    "source-binding.json": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/source-binding.json",
+      "sha256": "6b3e49e14c87cbd6dda4c0e1957c2e30e75c292c4a2dd0433028d50f0540e3cb"
+    },
+    "source-freeze.json": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/source-freeze.json",
+      "sha256": "1259694c434e50e19d1e2a5a35e88b23a5dfe411ede00c7c3745d03831fc9d7a"
+    },
+    "syntax-checks.json": {
+      "path": "/tmp/n7-f11-integration-runner-prep-a63-20261007/syntax-checks.json",
+      "sha256": "15cd3bd16396d212b49ec73a68594ace492befb230adc5e45afc9cb67a06b51f"
+    }
+  },
+  "future_activation_required": [
+    "root designated HIGH actual runtime executor",
+    "A62 joined final ALL namespaces/fulltable snapshot",
+    "exact fresh runtimelease file+deadline and current source/helper/dependency bindings",
+    "root explicit input continuity projection reuse judgment"
+  ],
+  "source_freeze_paths": 227,
+  "unchanged_A58_projection_paths": 226,
+  "default_remaining_whole_files": 15,
+  "optional_diagnostics_capacity_files": 2
+}

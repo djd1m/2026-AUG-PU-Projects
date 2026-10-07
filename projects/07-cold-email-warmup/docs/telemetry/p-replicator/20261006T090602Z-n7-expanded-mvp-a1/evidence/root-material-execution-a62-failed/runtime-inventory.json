@@ -1,0 +1,719 @@
+{
+  "source_revision": "bf8a5373a409181a42d5dc06be06a2c6aca611e6",
+  "source_sha256": "bcfedf23511d32f8b41f38a8d83ee6d655887461b9023b4d58ac03885560b658",
+  "planned_registration_count": 15,
+  "runtime_authorized": true,
+  "source_only_preparation": false,
+  "scenarios": [
+    {
+      "mode": "genuine_empty_tail",
+      "exact_title": "F11 native complete empty-tail refresh composes one settled old UID read and original BODY window",
+      "source_line": 378,
+      "source_test_timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "required_actual_callbacks": 1,
+      "schema": "n7_a60_genuine_empty_tail_261007122036",
+      "evidence_directory": "/tmp/n7-f11-material-regression-prep-a60-20261007/genuine_empty_tail",
+      "expected_evidence_file": "native-empty-tail-proof.json",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 native complete empty-tail refresh composes one settled old UID read and original BODY window$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_launch_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "genuine_empty_tail",
+        "45",
+        "genuine_empty_tail",
+        "genuine_empty_tail",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 native complete empty-tail refresh composes one settled old UID read and original BODY window$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_setup_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "setup_genuine_empty_tail",
+        "30",
+        "setup",
+        "genuine_empty_tail"
+      ],
+      "future_join_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/joins.py",
+        "genuine_empty_tail"
+      ],
+      "status": "setup_interrupted",
+      "result": {
+        "mode": "genuine_empty_tail",
+        "source_revision": "bf8a5373a409181a42d5dc06be06a2c6aca611e6",
+        "native_exit": 1,
+        "actual_callback_passes": 0,
+        "exact_name_match": false,
+        "all_joined": true,
+        "own_terminal": {
+          "physical": 0,
+          "runtime_claims": 0,
+          "body_claims": 0
+        },
+        "protected_whole_tables_unchanged": true,
+        "verdict": "FAILED",
+        "finished_utc": "2026-10-07T12:45:47.938770+00:00",
+        "classification": "SETUP_INTERRUPTION",
+        "source_assertion_failure_established": false,
+        "actual_callback_attempts": 1
+      }
+    },
+    {
+      "mode": "negative_empty_tail",
+      "exact_title": "F11 native empty-tail counterproofs retain old proof and restored genuine result completes",
+      "source_line": 398,
+      "source_test_timeout_ms": 60000,
+      "outer_bound_seconds": 60,
+      "required_actual_callbacks": 1,
+      "schema": "n7_a60_negative_empty_tail_261007122036",
+      "evidence_directory": "/tmp/n7-f11-material-regression-prep-a60-20261007/negative_empty_tail",
+      "expected_evidence_file": "native-empty-tail-counterproofs.json",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 native empty-tail counterproofs retain old proof and restored genuine result completes$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_launch_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "negative_empty_tail",
+        "60",
+        "negative_empty_tail",
+        "negative_empty_tail",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 native empty-tail counterproofs retain old proof and restored genuine result completes$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_setup_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "setup_negative_empty_tail",
+        "30",
+        "setup",
+        "negative_empty_tail"
+      ],
+      "future_join_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/joins.py",
+        "negative_empty_tail"
+      ],
+      "status": "pending_shared_reset_diagnosis",
+      "actual_callback_attempts": 0
+    },
+    {
+      "mode": "runtime_external",
+      "exact_title": "F11 A40 runtime external reason and internal failure stay distinct",
+      "source_line": 558,
+      "source_test_timeout_ms": null,
+      "outer_bound_seconds": 45,
+      "required_actual_callbacks": 1,
+      "schema": "n7_a60_runtime_external_261007122036",
+      "evidence_directory": "/tmp/n7-f11-material-regression-prep-a60-20261007/runtime_external",
+      "expected_evidence_file": null,
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 A40 runtime external reason and internal failure stay distinct$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_launch_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "runtime_external",
+        "45",
+        "runtime_external",
+        "runtime_external",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 A40 runtime external reason and internal failure stay distinct$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_setup_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "setup_runtime_external",
+        "30",
+        "setup",
+        "runtime_external"
+      ],
+      "future_join_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/joins.py",
+        "runtime_external"
+      ],
+      "status": "pass",
+      "result": {
+        "mode": "runtime_external",
+        "source_revision": "bf8a5373a409181a42d5dc06be06a2c6aca611e6",
+        "native_exit": 0,
+        "actual_callback_passes": 1,
+        "exact_name_match": true,
+        "all_joined": true,
+        "own_terminal": {
+          "physical": 0,
+          "runtime_claims": 0,
+          "body_claims": 0
+        },
+        "protected_whole_tables_unchanged": true,
+        "verdict": "PASS",
+        "finished_utc": "2026-10-07T12:47:36.408983+00:00",
+        "actual_callback_attempts": 1
+      }
+    },
+    {
+      "mode": "closure_crosses_window",
+      "exact_title": "F11 A40 process drain closure_crosses_window original window",
+      "source_line": 440,
+      "source_test_timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "required_actual_callbacks": 1,
+      "schema": "n7_a60_closure_crosses_window_261007122036",
+      "evidence_directory": "/tmp/n7-f11-material-regression-prep-a60-20261007/closure_crosses_window",
+      "expected_evidence_file": "a40-drain-closure_crosses_window.json",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 A40 process drain closure_crosses_window original window$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_launch_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "closure_crosses_window",
+        "45",
+        "closure_crosses_window",
+        "closure_crosses_window",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 A40 process drain closure_crosses_window original window$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_setup_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "setup_closure_crosses_window",
+        "30",
+        "setup",
+        "closure_crosses_window"
+      ],
+      "future_join_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/joins.py",
+        "closure_crosses_window"
+      ],
+      "status": "pending_shared_reset_diagnosis",
+      "actual_callback_attempts": 0
+    },
+    {
+      "mode": "restart_crosses_window",
+      "exact_title": "F11 A40 process drain restart_crosses_window original window",
+      "source_line": 440,
+      "source_test_timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "required_actual_callbacks": 1,
+      "schema": "n7_a60_restart_crosses_window_261007122036",
+      "evidence_directory": "/tmp/n7-f11-material-regression-prep-a60-20261007/restart_crosses_window",
+      "expected_evidence_file": "a40-drain-restart_crosses_window.json",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 A40 process drain restart_crosses_window original window$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_launch_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "restart_crosses_window",
+        "45",
+        "restart_crosses_window",
+        "restart_crosses_window",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 A40 process drain restart_crosses_window original window$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_setup_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "setup_restart_crosses_window",
+        "30",
+        "setup",
+        "restart_crosses_window"
+      ],
+      "future_join_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/joins.py",
+        "restart_crosses_window"
+      ],
+      "status": "pending_shared_reset_diagnosis",
+      "actual_callback_attempts": 0
+    },
+    {
+      "mode": "header_normal",
+      "exact_title": "F11 A40 ordinary HEADER-only READY empty tail needs no pending capture",
+      "source_line": 515,
+      "source_test_timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "required_actual_callbacks": 1,
+      "schema": "n7_a60_header_normal_261007122036",
+      "evidence_directory": "/tmp/n7-f11-material-regression-prep-a60-20261007/header_normal",
+      "expected_evidence_file": "a40-header-only-normal.json",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 A40 ordinary HEADER-only READY empty tail needs no pending capture$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_launch_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "header_normal",
+        "45",
+        "header_normal",
+        "header_normal",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 A40 ordinary HEADER-only READY empty tail needs no pending capture$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_setup_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "setup_header_normal",
+        "30",
+        "setup",
+        "header_normal"
+      ],
+      "future_join_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/joins.py",
+        "header_normal"
+      ],
+      "status": "pending_shared_reset_diagnosis",
+      "actual_callback_attempts": 0
+    },
+    {
+      "mode": "native_decreased_uidnext",
+      "exact_title": "F11 ordinary HEADER material native_decreased_uidnext",
+      "source_line": 515,
+      "source_test_timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "required_actual_callbacks": 1,
+      "schema": "n7_a60_native_decreased_uidnext_261007122036",
+      "evidence_directory": "/tmp/n7-f11-material-regression-prep-a60-20261007/native_decreased_uidnext",
+      "expected_evidence_file": "a40-header-only-native_decreased_uidnext.json",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material native_decreased_uidnext$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_launch_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "native_decreased_uidnext",
+        "45",
+        "native_decreased_uidnext",
+        "native_decreased_uidnext",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material native_decreased_uidnext$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_setup_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "setup_native_decreased_uidnext",
+        "30",
+        "setup",
+        "native_decreased_uidnext"
+      ],
+      "future_join_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/joins.py",
+        "native_decreased_uidnext"
+      ],
+      "status": "pending_shared_reset_diagnosis",
+      "actual_callback_attempts": 0
+    },
+    {
+      "mode": "native_uidvalidity_reset",
+      "exact_title": "F11 ordinary HEADER material native_uidvalidity_reset",
+      "source_line": 515,
+      "source_test_timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "required_actual_callbacks": 1,
+      "schema": "n7_a60_native_uidvalidity_reset_261007122036",
+      "evidence_directory": "/tmp/n7-f11-material-regression-prep-a60-20261007/native_uidvalidity_reset",
+      "expected_evidence_file": "a40-header-only-native_uidvalidity_reset.json",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material native_uidvalidity_reset$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_launch_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "native_uidvalidity_reset",
+        "45",
+        "native_uidvalidity_reset",
+        "native_uidvalidity_reset",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material native_uidvalidity_reset$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_setup_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "setup_native_uidvalidity_reset",
+        "30",
+        "setup",
+        "native_uidvalidity_reset"
+      ],
+      "future_join_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/joins.py",
+        "native_uidvalidity_reset"
+      ],
+      "status": "pending_shared_reset_diagnosis",
+      "actual_callback_attempts": 0
+    },
+    {
+      "mode": "native_missing_snapshot",
+      "exact_title": "F11 ordinary HEADER material native_missing_snapshot",
+      "source_line": 515,
+      "source_test_timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "required_actual_callbacks": 1,
+      "schema": "n7_a60_native_missing_snapshot_261007122036",
+      "evidence_directory": "/tmp/n7-f11-material-regression-prep-a60-20261007/native_missing_snapshot",
+      "expected_evidence_file": "a40-header-only-native_missing_snapshot.json",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material native_missing_snapshot$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_launch_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "native_missing_snapshot",
+        "45",
+        "native_missing_snapshot",
+        "native_missing_snapshot",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material native_missing_snapshot$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_setup_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "setup_native_missing_snapshot",
+        "30",
+        "setup",
+        "native_missing_snapshot"
+      ],
+      "future_join_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/joins.py",
+        "native_missing_snapshot"
+      ],
+      "status": "pending_shared_reset_diagnosis",
+      "actual_callback_attempts": 0
+    },
+    {
+      "mode": "partial_prefix",
+      "exact_title": "F11 ordinary HEADER material partial_prefix",
+      "source_line": 515,
+      "source_test_timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "required_actual_callbacks": 1,
+      "schema": "n7_a60_partial_prefix_261007122036",
+      "evidence_directory": "/tmp/n7-f11-material-regression-prep-a60-20261007/partial_prefix",
+      "expected_evidence_file": "a40-header-only-partial_prefix.json",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material partial_prefix$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_launch_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "partial_prefix",
+        "45",
+        "partial_prefix",
+        "partial_prefix",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material partial_prefix$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_setup_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "setup_partial_prefix",
+        "30",
+        "setup",
+        "partial_prefix"
+      ],
+      "future_join_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/joins.py",
+        "partial_prefix"
+      ],
+      "status": "pending_shared_reset_diagnosis",
+      "actual_callback_attempts": 0
+    },
+    {
+      "mode": "poll_incomplete",
+      "exact_title": "F11 ordinary HEADER material poll_incomplete",
+      "source_line": 515,
+      "source_test_timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "required_actual_callbacks": 1,
+      "schema": "n7_a60_poll_incomplete_261007122036",
+      "evidence_directory": "/tmp/n7-f11-material-regression-prep-a60-20261007/poll_incomplete",
+      "expected_evidence_file": "a40-header-only-poll_incomplete.json",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material poll_incomplete$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_launch_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "poll_incomplete",
+        "45",
+        "poll_incomplete",
+        "poll_incomplete",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material poll_incomplete$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_setup_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "setup_poll_incomplete",
+        "30",
+        "setup",
+        "poll_incomplete"
+      ],
+      "future_join_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/joins.py",
+        "poll_incomplete"
+      ],
+      "status": "pending_shared_reset_diagnosis",
+      "actual_callback_attempts": 0
+    },
+    {
+      "mode": "stale_header_grant",
+      "exact_title": "F11 ordinary HEADER material stale_header_grant",
+      "source_line": 515,
+      "source_test_timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "required_actual_callbacks": 1,
+      "schema": "n7_a60_stale_header_grant_261007122036",
+      "evidence_directory": "/tmp/n7-f11-material-regression-prep-a60-20261007/stale_header_grant",
+      "expected_evidence_file": "a40-header-only-stale_header_grant.json",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material stale_header_grant$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_launch_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "stale_header_grant",
+        "45",
+        "stale_header_grant",
+        "stale_header_grant",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material stale_header_grant$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_setup_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "setup_stale_header_grant",
+        "30",
+        "setup",
+        "stale_header_grant"
+      ],
+      "future_join_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/joins.py",
+        "stale_header_grant"
+      ],
+      "status": "pending_shared_reset_diagnosis",
+      "actual_callback_attempts": 0
+    },
+    {
+      "mode": "stale_header_config",
+      "exact_title": "F11 ordinary HEADER material stale_header_config",
+      "source_line": 515,
+      "source_test_timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "required_actual_callbacks": 1,
+      "schema": "n7_a60_stale_header_config_261007122036",
+      "evidence_directory": "/tmp/n7-f11-material-regression-prep-a60-20261007/stale_header_config",
+      "expected_evidence_file": "a40-header-only-stale_header_config.json",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material stale_header_config$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_launch_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "stale_header_config",
+        "45",
+        "stale_header_config",
+        "stale_header_config",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material stale_header_config$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_setup_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "setup_stale_header_config",
+        "30",
+        "setup",
+        "stale_header_config"
+      ],
+      "future_join_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/joins.py",
+        "stale_header_config"
+      ],
+      "status": "pending_shared_reset_diagnosis",
+      "actual_callback_attempts": 0
+    },
+    {
+      "mode": "stale_header_source_mailbox",
+      "exact_title": "F11 ordinary HEADER material stale_header_source_mailbox",
+      "source_line": 515,
+      "source_test_timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "required_actual_callbacks": 1,
+      "schema": "n7_a60_stale_header_source_mailbox_261007122036",
+      "evidence_directory": "/tmp/n7-f11-material-regression-prep-a60-20261007/stale_header_source_mailbox",
+      "expected_evidence_file": "a40-header-only-stale_header_source_mailbox.json",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material stale_header_source_mailbox$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_launch_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "stale_header_source_mailbox",
+        "45",
+        "stale_header_source_mailbox",
+        "stale_header_source_mailbox",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material stale_header_source_mailbox$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_setup_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "setup_stale_header_source_mailbox",
+        "30",
+        "setup",
+        "stale_header_source_mailbox"
+      ],
+      "future_join_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/joins.py",
+        "stale_header_source_mailbox"
+      ],
+      "status": "pending_shared_reset_diagnosis",
+      "actual_callback_attempts": 0
+    },
+    {
+      "mode": "new_uid_semantic_stop",
+      "exact_title": "F11 ordinary HEADER material new_uid_semantic_stop",
+      "source_line": 515,
+      "source_test_timeout_ms": 45000,
+      "outer_bound_seconds": 45,
+      "required_actual_callbacks": 1,
+      "schema": "n7_a60_new_uid_semantic_stop_261007122036",
+      "evidence_directory": "/tmp/n7-f11-material-regression-prep-a60-20261007/new_uid_semantic_stop",
+      "expected_evidence_file": "a40-header-only-new_uid_semantic_stop.json",
+      "command_argv": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material new_uid_semantic_stop$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_launch_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "new_uid_semantic_stop",
+        "45",
+        "new_uid_semantic_stop",
+        "new_uid_semantic_stop",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material new_uid_semantic_stop$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "future_setup_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/launch.py",
+        "setup_new_uid_semantic_stop",
+        "30",
+        "setup",
+        "new_uid_semantic_stop"
+      ],
+      "future_join_argv": [
+        "python3",
+        "/tmp/n7-f11-material-regression-prep-a60-20261007/joins.py",
+        "new_uid_semantic_stop"
+      ],
+      "status": "pending_shared_reset_diagnosis",
+      "actual_callback_attempts": 0
+    }
+  ],
+  "attempt": "A62"
+}
