@@ -1,0 +1,28 @@
+{
+  "utc": "2026-10-07T13:44:27.973056+00:00",
+  "classification": "PREFLIGHT_SESSION_INTERRUPTION_NOT_PRODUCT_FAILURE",
+  "actual_product_callbacks_started": 10,
+  "actual_product_callbacks_passed": 10,
+  "failed_preflight": "pre_stale_header_config",
+  "failure": "ERR_ASSERTION expected other_sessions0, observed1",
+  "preflight_launched_at": "2026-10-07T13:42:47.150594+00:00",
+  "preflight_native_exit": 1,
+  "preflight_raw_sha256": "5cd4bb7b71fb1ba05f0f7c225dec0a203925fa9c3574e9e323c42e1623e781fa",
+  "fresh_setup_completed": "stale_header_config",
+  "new_schema": "n7_a68_stale_header_config_261007133225",
+  "setup_created": true,
+  "PIDticks_all_joined_count": 136,
+  "product_callback_stale_header_config_launched": false,
+  "pending_product_modes": [
+    "stale_header_config",
+    "stale_header_source_mailbox",
+    "new_uid_semantic_stop",
+    "runtime_external"
+  ],
+  "last_complete_full_snapshot": "db-post_stale_header_grant.json",
+  "last_complete_full_snapshot_sha256": "4860b8a0c2f238dfc4e8f8d44b87e6801e55dbe5fdf2ef8c19b16df1ca51bef3",
+  "source_helper_lease_unchanged": true,
+  "root_notified": "actual message after failure",
+  "DB_queries_after_failed_preflight": 0,
+  "full_F11_acceptance": false
+}
