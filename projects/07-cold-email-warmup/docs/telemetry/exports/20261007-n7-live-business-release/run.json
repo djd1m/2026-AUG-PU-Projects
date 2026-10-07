@@ -24,9 +24,9 @@
     "BillingService reconcile and entitlement are coupled to local_provider_payment; provider injection alone insufficient",
     "Real Team tariff amount is not agreed; TEST100minorunits must not become real price by accident"
   ],
-  "next": "Operator supplies merchant credentials, controlled mailbox role and off-host encrypted backup destination; then source-bound rollout and separately controlled real pilot",
+  "next": "Verify controlled mailbox credential availability; complete required off-host backup, then source-bound mail-worker rollout and controlled send/reply pilot. Billing credentials remain a separate activation input.",
   "elapsed": null,
-  "updated_at": "2026-10-07T20:52:31.823412+00:00",
+  "updated_at": "2026-10-07T21:00:49.197370+00:00",
   "plan": "docs/plans/live-business-release-20261007.md",
   "planner_result": "bounded plan completed; nativehostusage unknown",
   "owner_plan_checkpoint": "Latest owner response: давай делай",
@@ -107,7 +107,7 @@
   "owner_team_price_minor": 99000,
   "owner_team_duration_days": 30,
   "merchant_credentials": "owner will add later; activation pending",
-  "mail_pilot_confirmed_address": "corrected gmail domain confirmed; sender/recipient role pending",
+  "mail_pilot_confirmed_address": "owner confirmed Gmail sender and second Yandex recipient/reply sender; exact addresses retained privately outside Git",
   "backend_review": "ACCEPT_BACKEND_SLICE",
   "backend_integrated_revision": "4c7441a8",
   "ui_launch": "/tmp/n7-live-ui-author-a4-20261007/launch.json",
@@ -177,7 +177,6 @@
   "published_head": "eae568f341841e165422c9d71c1030dcb4643480",
   "external_blockers": [
     "real merchant credentials owner will supply later",
-    "controlled sender/receiver mailbox role unresolved",
     "off-host encrypted backup destination required before production migration"
   ],
   "source_composition_a7_byte_equal_files": 233,
@@ -190,5 +189,12 @@
     "native_exit": 0
   },
   "next_owner": "/root",
-  "background_work_claim": false
+  "background_work_claim": false,
+  "mail_pilot_inputs": {
+    "roles_confirmed": true,
+    "exact_addresses_in_git": false,
+    "mailbox_credentials_availability": "not yet verified",
+    "flow": "sender Gmail -> receiver Yandex -> normal reply -> sequence stop witness",
+    "sent": false
+  }
 }
