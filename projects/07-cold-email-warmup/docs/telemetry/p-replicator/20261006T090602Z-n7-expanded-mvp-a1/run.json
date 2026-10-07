@@ -1016,5 +1016,96 @@
     "actual_model": null,
     "usage": null,
     "cost": null
-  }
+  },
+  "f11_root_remaining_controls_plan_a51_terminal": {
+    "event": "attempt_completed",
+    "at": "2026-10-07T11:00:41.907728+00:00",
+    "attempt_id": "f11_a51_remaining_controls_plan",
+    "actor": "/root/n7_a51_remaining_controls_plan",
+    "source_revision": "7dee9b9a33b87359feeae4fb82b88331ca50d5de",
+    "plan_sha256": "3405f012e9f64fcd4da4b8bec346c772d27e6595ac22325d5d0ba58aab7e9063",
+    "elapsed_ms": 473140,
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "actual_model": null,
+    "usage": null,
+    "cost": null,
+    "verdict": "PLAN_ONLY",
+    "next_author": "/root/n7_a52_remaining_controls_author",
+    "delivered_scope": "tests/f10-runtime-protocol.test.ts only"
+  },
+  "f11_a52_implementation_route": {
+    "recorded_at": "2026-10-07T11:00:41.907728+00:00",
+    "substantive_tier": "XL inherited approvedF11",
+    "mechanical_tier": "L",
+    "mechanical_exit_code": 1,
+    "mechanical_input": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+    "scope": "onlytwo defensive local fixture controls; no deliveredproduct/invariant change",
+    "preflight": "not_applicable before author implementation; requiredexactfresh immediatelybefore actualE2E",
+    "approved_plan_sha256": "3405f012e9f64fcd4da4b8bec346c772d27e6595ac22325d5d0ba58aab7e9063"
+  },
+  "f11_root_remaining_controls_author_a52": {
+    "event": "attempt_started",
+    "at": "2026-10-07T11:01:47.943197+00:00",
+    "attempt_id": "f11_a52_remaining_controls_author",
+    "stage": "IMPLEMENT",
+    "actor": "/root/n7_a52_remaining_controls_author",
+    "started_at": "2026-10-07T11:00:17Z",
+    "source_cut_at": "2026-10-07T11:17:17Z",
+    "seal_cut_at": "2026-10-07T11:20:17Z",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "medium",
+    "actual_model": null,
+    "usage": null,
+    "cost": null,
+    "source_revision": "7dee9b9a33b87359feeae4fb82b88331ca50d5de",
+    "approved_plan_sha256": "3405f012e9f64fcd4da4b8bec346c772d27e6595ac22325d5d0ba58aab7e9063",
+    "scope": "ONLY tests/f10-runtime-protocol.test.ts, two local negativefixturecontrols; temporary exact removalcounterproofs restoredbyteidentically",
+    "ack_verified": true
+  },
+  "f11_root_integration_readiness_plan_a53": {
+    "event": "attempt_started",
+    "at": "2026-10-07T11:04:07.424904+00:00",
+    "attempt_id": "f11_a53_integration_readiness_plan",
+    "stage": "PLAN",
+    "actor": "/root/n7_a51_remaining_controls_plan",
+    "started_at": "2026-10-07T11:01:26Z",
+    "source_cut_at": "2026-10-07T11:07:26Z",
+    "seal_cut_at": "2026-10-07T11:09:26Z",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "actual_model": null,
+    "usage": null,
+    "cost": null,
+    "scope": "read-only unchanged integration fixtures and guard, no A52 changingtest/source/runtime/DB actions",
+    "full_f11_accepted": false
+  },
+  "f11_root_integration_readiness_plan_a53_terminal": {
+    "event": "attempt_completed",
+    "at": "2026-10-07T11:11:07.207042+00:00",
+    "attempt_id": "f11_a53_integration_readiness_plan",
+    "actor": "/root/n7_a51_remaining_controls_plan",
+    "elapsed_ms": 484120,
+    "budget_overrun_ms": 4120,
+    "verdict": "READ_ONLY_PLAN",
+    "plan_sha256": "d77b774bc3cbfd0ec843520fa999d5f5472059d53251224d5c0f70a788632876",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "actual_model": null,
+    "usage": null,
+    "cost": null,
+    "source_writer": false,
+    "correction": "F11transactionchildallowance and testpartitionrewrite unnecessary; native skip suffices",
+    "native_checker_predispatch_manifest": "not_available; no checkerPASSclaimed",
+    "full_f11_accepted": false
+  },
+  "root_evidence_gaps": [
+    {
+      "at": "2026-10-07T11:11:07.207042+00:00",
+      "scope": "rootA47-A53 dispatches",
+      "gap": "native check-swarm-receipts predispatch manifest was not allocated; some terminal markers occurred at report start",
+      "actual_evidence": "UTCACK/fresh paths/hash/proc checks measured separately; no native checkerPASS",
+      "next": "allocate native checker-manifest and fresh terminaltrace BEFORE next dispatch; no retrospective prelaunch claim"
+    }
+  ]
 }

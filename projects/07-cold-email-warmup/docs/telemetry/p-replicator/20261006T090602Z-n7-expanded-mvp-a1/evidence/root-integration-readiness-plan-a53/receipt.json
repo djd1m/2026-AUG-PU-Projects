@@ -1,0 +1,56 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "n7_a53_integration_readiness_plan",
+  "attempt_id": "A53",
+  "status": "completed",
+  "verdict": "PLAN_COMPLETE_ONLY",
+  "source_revision": "7dee9b9a33b87359feeae4fb82b88331ca50d5de",
+  "acknowledged_at": "2026-10-07T11:01:26Z",
+  "finished_at": "2026-10-07T11:09:30.119589+00:00",
+  "elapsed_wall_ms": 484120,
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "fallback": null,
+  "usage": {
+    "input_tokens": null,
+    "cached_tokens": null,
+    "output_tokens": null,
+    "reasoning_tokens": null,
+    "cost": null
+  },
+  "measurement_gaps": "Host actual model/effort/usage/cost unavailable; active time unknown; local launch truthful late creation after parent stage assignment and initial read; no predispatched checker-manifest pass claimed.",
+  "launch_sha256": "b6f2a508df46f96d4ef69d375b27da7120f725c8eac2a3b85a5b1e3d0ecd0888",
+  "plan_sha256": "d77b774bc3cbfd0ec843520fa999d5f5472059d53251224d5c0f70a788632876",
+  "context_manifest_sha256": "1f94dcb66facf1d2c35478863fb3d597e91dfc937c2b1c28ed061e8b095419d5",
+  "inventory_sha256": "126084eaeceeb1335f58c31366c55b77fc5bdaa8d29ce0d6a1d5c2e3512efec2",
+  "hash_verification_sha256": "9ce6ea891e42a01861a2def4103bcc34f0908a32a150602862c618db690296b8",
+  "source_or_helper_mutation": false,
+  "active_A52_fixture_read_or_hashed": false,
+  "tests_runtime_db_network_actions": false,
+  "ownership": "released throughout",
+  "route_exit_code": 1,
+  "route_tier": "L mechanical, XL inherited full F11",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Read-only planning only"
+  },
+  "concrete_next_scope": {
+    "diagnostics": "Separate MEDIUM tests/diagnostics-integration.test.ts expected15=>17 single line",
+    "capacity": "Separate MEDIUM tests/capacity-integration.test.ts + root-preallocated isolated copy of existing guard; exact measured own-child registration only",
+    "remaining_context": "No source rewrite; native unique skip matrix executes other10 under fresh root preflight"
+  },
+  "pending": [
+    "Implement/review exact optional prereqs",
+    "Fresh source/build/runner/PG readiness preflight",
+    "Execute remaining10 context callbacks",
+    "All18 integration coverage with current immutable matrix evidence reconciliation",
+    "Remaining expanded/F09/F10/native/material/load/legacy obligations"
+  ],
+  "protected_claims": "A44/A45 and interrupted A50context physical1/body1 retained, no cleanup",
+  "context_count": 41,
+  "objective_digest_checks": 12,
+  "unchanged_integration_files": 18
+}

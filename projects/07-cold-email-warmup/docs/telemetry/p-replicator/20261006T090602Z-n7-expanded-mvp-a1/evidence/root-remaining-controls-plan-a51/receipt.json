@@ -1,0 +1,51 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "n7_a51_remaining_controls_plan",
+  "attempt_id": "A51",
+  "status": "completed",
+  "verdict": "PLAN_COMPLETE_ONLY",
+  "source_revision": "7dee9b9a33b87359feeae4fb82b88331ca50d5de",
+  "acknowledged_at": "2026-10-07T10:51:09Z",
+  "finished_at": "2026-10-07T10:59:02.140090+00:00",
+  "elapsed_wall_ms": 473140,
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "fallback": null,
+  "usage": {
+    "input_tokens": null,
+    "cached_tokens": null,
+    "output_tokens": null,
+    "reasoning_tokens": null,
+    "cost": null
+  },
+  "measurement_gaps": "Host model/effort/usage/cost evidence unavailable; active time unavailable; planning only, no execution gate claimed. Local launch created after inspection with truthful creation timestamp.",
+  "launch_sha256": "fb8518fd95d3c47f57e1ba0afd61c906fc88ae34fd5ad292fcca1ee5cdabf290",
+  "plan_sha256": "3405f012e9f64fcd4da4b8bec346c772d27e6595ac22325d5d0ba58aab7e9063",
+  "context_manifest_sha256": "899d43bdbe2cc5b5a096ebe71e08cd193c138d36286e71ad5f161afcee4bd99d",
+  "hash_verification_sha256": "56f57a2df1bd80e895d951d420a26a8445132a8c4523ed8ee34bd1cb087897fe",
+  "source_mutated": false,
+  "tests_executed": false,
+  "db_or_runtime_actions": false,
+  "source_ownership": "released throughout",
+  "primary_author_scope": [
+    "tests/f10-runtime-protocol.test.ts"
+  ],
+  "next_executor": "Root launches separate MEDIUM author; fresh HIGH reviewer planner-only. Optional diagnostics and child namespace/context partition followups separate.",
+  "remaining_ac": [
+    "Implement and run missing2 controls",
+    "Execute removal-only counterproofs and restore bytes/build",
+    "Fresh HIGH review",
+    "All mandatory regressions",
+    "Original fault/healthy full300 and legacy native19 obligation"
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Read-only planning only; no E2E"
+  },
+  "route_exit_code": 1,
+  "route_tier": "L mechanical; XL inherited substantive",
+  "all_context_hashes_match": true
+}
