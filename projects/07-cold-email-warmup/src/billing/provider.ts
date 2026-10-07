@@ -58,7 +58,7 @@ export interface VerifiedRefund {
 }
 export interface CanonicalProvider {
  // Every replay uses binding.intent as the remote idempotency key.
- create(binding:Readonly<LiveBinding>,request?:Readonly<CreateRequest>|null):Promise<VerifiedPayment>;
+ create(binding:Readonly<LiveBinding>,request?:Readonly<CreateRequest>|null,createExpiresAt?:number):Promise<VerifiedPayment>;
  fetch(paymentId:string,expected?:Readonly<LiveBinding>):Promise<VerifiedPayment>;
  fetchRefund(refundId:string,expected?:Readonly<LiveBinding>,paymentId?:string):Promise<VerifiedRefund>;
 }

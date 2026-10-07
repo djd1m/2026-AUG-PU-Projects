@@ -41,9 +41,13 @@ export class YooKassaProvider implements CanonicalProvider {
   verify(b && b.provider==='yookassa' && b.merchant===this.shopId && b.mode==='live' && b.currency==='RUB' && b.plan==='team');
   id(b.intent);formatMinor(b.amountMinor);return b;
  }
- private async request(path:string,body?:Readonly<CreateRequest>,key?:string) {
+ private async request(path:string,body?:Readonly<CreateRequest>,key?:string,createExpiresAt?:number) {
   let response:Response;
-  try {response=await this.fetchImpl(API+path,{method:body?'POST':'GET',headers:{accept:'application/json',authorization:this.authorization,...(body?{'content-type':'application/json','idempotence-key':key!}:{})},...(body?{body:JSON.stringify(body)}:{}),redirect:'error',signal:AbortSignal.timeout(5000)});}
+  const init:RequestInit={method:body?'POST':'GET',headers:{accept:'application/json',authorization:this.authorization,...(body?{'content-type':'application/json','idempotence-key':key!}:{})},...(body?{body:JSON.stringify(body)}:{}),redirect:'error',signal:AbortSignal.timeout(5000)};
+  // After synchronous body/header preparation, guard the actual POST invocation.
+  // No await is allowed between this persisted deadline check and fetch.
+  if(body && (!Number.isFinite(createExpiresAt) || Date.now()>=createExpiresAt!)) throw new HttpError(409,'checkout_reconciliation_required');
+  try {response=await this.fetchImpl(API+path,init);}
   catch {throw new HttpError(503,'provider_unavailable');}
   if(!response || response.redirected || !response.ok){await response?.body?.cancel();throw new HttpError(503,'provider_unavailable');}
   return readBoundedJson(response);
@@ -58,13 +62,13 @@ export class YooKassaProvider implements CanonicalProvider {
   const confirmationUrl=confirmation?.confirmation_url===undefined?null:validateConfirmationUrl(confirmation.confirmation_url);
   return Object.freeze({...b,id:paymentId,status:raw.status==='waiting_for_capture'?'pending':raw.status as VerifiedPayment['status'],paid:raw.paid,paidAt:paidAt as string|null,confirmationUrl});
  }
- async create(expected:Readonly<LiveBinding>,request?:Readonly<CreateRequest>|null) {
+ async create(expected:Readonly<LiveBinding>,request?:Readonly<CreateRequest>|null,createExpiresAt?:number) {
   const b=this.expected(expected);
   verify(request && record(request.amount) && request.amount.value===formatMinor(b.amountMinor) && request.amount.currency==='RUB' && request.capture===true && record(request.metadata) && request.metadata.order_id===b.intent && record(request.confirmation) && request.confirmation.type==='redirect');
   const url=request.confirmation.return_url;let parsed:URL;try {parsed=new URL(url);} catch {throw new HttpError(409,'payment_mismatch');}
   verify(typeof url==='string' && url.length<=2048 && !/[\u0000-\u0020\u007f]/.test(url) && parsed.protocol==='https:' && !parsed.username && !parsed.password && typeof request.description==='string' && Array.from(request.description).length>0 && Array.from(request.description).length<=128 && !/[\u0000-\u001f\u007f]/.test(request.description));
   verify(Object.keys(request).length===5 && Object.keys(request.amount).length===2 && Object.keys(request.confirmation).length===2 && Object.keys(request.metadata).length===1);
-  const payment=this.payment(await this.request('/payments',request,b.intent),b);
+  const payment=this.payment(await this.request('/payments',request,b.intent,createExpiresAt),b);
   if(payment.status==='pending')verify(payment.confirmationUrl!==null);return payment;
  }
  async fetch(paymentId:string,expected?:Readonly<LiveBinding>) {

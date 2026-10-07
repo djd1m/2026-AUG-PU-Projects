@@ -96,6 +96,23 @@ test('offline live ledger canonical identity, recovery, concurrency and sticky r
    }
    const id=randomUUID(),key=randomUUID();await pool.query(`INSERT INTO live_billing_intent(id,tenant_id,client_key,provider,merchant,mode,plan,amount_minor,currency,duration_days,first_create_attempt_at) VALUES($1,$2,$3,'double','shop','live','team',25000,'RUB',17,clock_timestamp()-interval '23 hours')`,[id,other,key]);assert.equal((await service.checkout(other,key)).id,id);
   });
+  await t.test('commit completion crossing saved 24h deadline makes zero provider POSTs',async()=>{
+   const id=randomUUID(),key=randomUUID();const body={amount:{value:'250.00',currency:'RUB'},capture:true,confirmation:{type:'redirect',return_url:'https://cabinet.example/app?billingIntent='+id},description:'Deadline crossing',metadata:{order_id:id}};
+   const row=(await pool.query(`INSERT INTO live_billing_intent(id,tenant_id,client_key,provider,merchant,mode,plan,amount_minor,currency,duration_days,create_request,first_create_attempt_at) VALUES($1,$2,$3,'yookassa','123','live','team',25000,'RUB',30,$4,clock_timestamp()-interval '24 hours'+interval '500 milliseconds') RETURNING first_create_attempt_at`,[id,other,key,body])).rows[0];
+   let delay=true,posts=0;
+   const wrapped=new Proxy(pool,{get(target,property){
+    if(property==='query')return target.query.bind(target);
+    if(property==='connect')return async()=>{const c=await target.connect();return new Proxy(c,{get(client,name){
+     if(name==='release')return ()=>client.release();
+     if(name==='query')return async(text:string,values?:unknown[])=>{const result=await client.query(text,values);if(text==='COMMIT' && delay){delay=false;await new Promise(r=>setTimeout(r,1000));}return result;};
+     return Reflect.get(client,name);
+    }});};return Reflect.get(target,property);
+   }});
+   const adapter=new YooKassaProvider({shopId:'123',secretKey:'offline',async fetchImpl(){posts++;return new Response(JSON.stringify({id:randomUUID(),status:'pending',paid:false,test:false,amount:body.amount,metadata:body.metadata,recipient:{account_id:'123'},confirmation:{confirmation_url:'https://yoomoney.ru/pay'}}),{headers:{'content-type':'application/json'}});}});
+   const delayed=new LiveBillingService(wrapped,adapter,{...price,provider:'yookassa',merchant:'123',durationDays:30});
+   await assert.rejects(delayed.checkout(other,key),{code:'checkout_reconciliation_required'});assert.equal(posts,0);assert.equal(delay,false,'transaction preflight passed before delayed commit');
+   const saved=await service.status(other,id);assert.equal(saved.payment_id,null);assert.deepEqual(saved.first_create_attempt_at,row.first_create_attempt_at);assert.equal(await grants(id),0);
+  });
   await t.test('all mismatches, TEST success, unpaid/invalid time and outage grant zero',async()=>{
    const patches:Record<string,unknown>[]=[{tenant:other},{intent:randomUUID()},{id:'wrong'},{provider:'wrong'},{merchant:'wrong'},{mode:'local_test'},{plan:'free'},{durationDays:30},{amountMinor:100},{currency:'USD'},{paid:false},{paidAt:null},{paidAt:'invalid'},{paidAt:'2025-02-29T00:00:00Z'},{paidAt:'2026-04-31T00:00:00Z'},{paidAt:new Date(Date.now()+86400000).toISOString()}];
    for(const patch of patches){const i=await checkout();provider.success(i.payment_id!);Object.assign(provider.payments.get(i.payment_id!)!,patch);await assert.rejects(service.reconcile(tenant,i.id));assert.equal(await grants(i.id),0,JSON.stringify(patch));}

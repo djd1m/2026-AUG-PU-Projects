@@ -45,7 +45,7 @@ export class LiveBillingService {
    return intent;
   });
   // Ambiguous create persists the intent and always replays its immutable remote key.
-  const p=i.payment_id?await this.provider.fetch(i.payment_id,Object.freeze(binding(i))):await this.provider.create(Object.freeze(binding(i)),i.create_request);
+  const p=i.payment_id?await this.provider.fetch(i.payment_id,Object.freeze(binding(i))):await this.provider.create(Object.freeze(binding(i)),i.create_request,i.first_create_attempt_at!.getTime()+86400000);
   await billingTransaction(this.pool,async c=>{
    const current=(await c.query<Intent>('SELECT * FROM live_billing_intent WHERE id=$1 FOR UPDATE',[i.id])).rows[0]!;
    if(!matchesLivePayment(binding(current),p,current.payment_id)) throw new HttpError(409,'provider_binding_conflict');

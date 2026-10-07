@@ -12,13 +12,18 @@ const provider=(fetchImpl:typeof fetch)=>new YooKassaProvider({shopId:'123',secr
 test('YooKassa fixed origin, auth, intent key and exact persisted POST/GET context',async()=>{
  const calls:Array<{url:string;init:RequestInit}>=[];
  const p=provider(async(url,init)=>{calls.push({url:String(url),init:init!});return response(raw());});
- const first=await p.create(b,body);assert.equal(first.intent,b.intent);assert.equal(first.tenant,b.tenant);assert.equal(first.amountMinor,25001);
+ const first=await p.create(b,body,Date.now()+60000);assert.equal(first.intent,b.intent);assert.equal(first.tenant,b.tenant);assert.equal(first.amountMinor,25001);
  assert.equal(calls[0]!.url,'https://api.yookassa.ru/v3/payments');assert.equal(calls[0]!.init.method,'POST');assert.equal(calls[0]!.init.redirect,'error');assert.ok(calls[0]!.init.signal);
  const headers=new Headers(calls[0]!.init.headers);assert.equal(headers.get('authorization'),'Basic '+Buffer.from('123:offline-canary').toString('base64'));assert.equal(headers.get('idempotence-key'),b.intent);assert.deepEqual(JSON.parse(String(calls[0]!.init.body)),body);
- await p.create(b,body);assert.equal(calls[1]!.init.body,calls[0]!.init.body);
+ await p.create(b,body,Date.now()+60000);assert.equal(calls[1]!.init.body,calls[0]!.init.body);
  await p.fetch(paymentId,b);assert.equal(calls[2]!.url,'https://api.yookassa.ru/v3/payments/'+paymentId);assert.equal(calls[2]!.init.method,'GET');
  const before=calls.length;await assert.rejects(p.fetch(paymentId));await assert.rejects(p.create(b));await assert.rejects(p.create(b,{...body,metadata:{order_id:randomUUID()}}));assert.equal(calls.length,before);
  assert.equal(formatMinor(1),'0.01');assert.equal(formatMinor(2147483647),'21474836.47');
+});
+test('actual POST boundary requires an unexpired persisted create deadline',async()=>{
+ let posts=0;const p=provider(async()=>{posts++;return response(raw());});
+ for(const expires of [undefined,NaN,Date.now()-1,Date.now()]) await assert.rejects(p.create(b,body,expires),{code:'checkout_reconciliation_required'});
+ assert.equal(posts,0);await p.create(b,body,Date.now()+60000);assert.equal(posts,1);
 });
 test('raw provider identity/context is verified before local field enrichment',async()=>{
  for(const patch of [{id:randomUUID()},{recipient:{account_id:'999'}},{test:true},{metadata:{order_id:randomUUID()}},{amount:{value:'250.00',currency:'RUB'}},{amount:{value:'250.01',currency:'USD'}},{amount:{value:'0250.01',currency:'RUB'}},{status:'unexpected'}]) await assert.rejects(provider(async()=>response({...raw(),...patch})).fetch(paymentId,b));
