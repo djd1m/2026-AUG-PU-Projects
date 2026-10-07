@@ -566,6 +566,17 @@
       "id": "f11-c1-feasibility-a7-native",
       "status": "active actual ACK verified",
       "actual_ACK_at": "2026-10-07T00:51:07Z"
+    },
+    {
+      "id": "f11-c1-feasibility-a7-native",
+      "status": "completed early; strategy ready/acceptance BLOCKED",
+      "finished_at": "2026-10-07T00:56:47.172969+00:00",
+      "report_sha256": "5933553b035e0e73ee8027ef90daef1608612b6bcee15ecdcaacf3af0e60b0b7"
+    },
+    {
+      "id": "f11-context-author-a8",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T00:58:19Z"
     }
   ],
   "work_units": [
@@ -608,26 +619,27 @@
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true,
     "latest_checkpoint": {
-      "at": "2026-10-07T00:55:25.769106+00:00",
-      "disk_available_bytes": 2700890112,
-      "remaining_AC": "Seal compatible nonrenewable strategy for legal2x2800ms; fresh MEDIUM real authority-gated production entry + ALL30 source witness; restore durable C2 coverage; frozen HIGH operational checks and NEW clean independent source review. No full F11 acceptance.",
-      "executor": "/root/n7_sol_coordinator/f11_c1_normative_planner_a5"
+      "at": "2026-10-07T00:59:21.371562+00:00",
+      "disk_available_bytes": 2695135232,
+      "remaining_AC": "Implement sealedA7 capacity-admitted nonrenewable12s strategy with eachstage5s, normal current-authority-gated entry and existing-harness ALL30 sourcefixture legal2x2800 bothready240/header30/due60/full300; single native discriminators first, source frozen HIGH checks next; restore durableC2coverage and NEW clean finalreview. F11 acceptance remains pending.",
+      "executor": "/root/n7_sol_coordinator/f11_capacity_window_author_a8"
     }
   },
-  "current_stage": "F11 independent HIGH feasibility refinement after legal two-phase5s-window counterexample; actual A7 running",
+  "current_stage": "F11 fresh MEDIUM capacity-admitted window + current-authority entry + ALL30 fixture implementation",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_c1_normative_planner_a5",
-    "attempt": "f11-c1-feasibility-a7-native",
+    "executor": "/root/n7_sol_coordinator/f11_capacity_window_author_a8",
+    "attempt": "f11-context-author-a8",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T00:51:07Z",
+    "actual_ACK_at": "2026-10-07T00:58:19Z",
     "requested_model": "gpt-6.1-sol",
-    "requested_effort": "high",
+    "requested_effort": "medium",
     "actual_model": null,
-    "source_revision": "b731e362155710ec1014d9b26625d155c15f81e9",
-    "freeze_at": "2026-10-07T00:57:07Z",
-    "deadline": "2026-10-07T00:59:07Z",
-    "launch_sha256": "00e937759fbc0c351a98f2f7e3473210a2d1c11de79a7be8f42e46152f05f796",
-    "next": "Seal compatible nonrenewable strategy for legal2x2800ms; fresh MEDIUM real authority-gated production entry + ALL30 source witness; restore durable C2 coverage; frozen HIGH operational checks and NEW clean independent source review. No full F11 acceptance."
+    "source_revision": "6a63de504df498a08906e13e73e4528f0a7e494c",
+    "product_code_base": "b731e362155710ec1014d9b26625d155c15f81e9",
+    "freeze_at": "2026-10-07T01:15:19Z",
+    "deadline": "2026-10-07T01:18:19Z",
+    "launch_sha256": "5bb3406d837f4350c45fef8e2098f4055c99de4a4ea049c26a4d4b537c53f3b7",
+    "next": "Implement sealedA7 capacity-admitted nonrenewable12s strategy with eachstage5s, normal current-authority-gated entry and existing-harness ALL30 sourcefixture legal2x2800 bothready240/header30/due60/full300; single native discriminators first, source frozen HIGH checks next; restore durableC2coverage and NEW clean finalreview. F11 acceptance remains pending."
   }
 }
