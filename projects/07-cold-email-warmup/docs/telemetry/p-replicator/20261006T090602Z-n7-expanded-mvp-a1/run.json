@@ -59,13 +59,13 @@
     "followup_status": "F07/F08/F09/F10 locally accepted and F10 integrated3566; expanded AC001–004 met, AC005–009 pending. Whole required_gates_passed remains false. F11 code remains unaccepted candidate."
   },
   "metrics": {
-    "elapsed_wall_ms": 78682132,
+    "elapsed_wall_ms": 79462941,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-07T06:57:25.010250+00:00"
+    "elapsed_as_of": "2026-10-07T07:10:25.819723+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 unaccepted b6e8; A37 actual native fullfault child spawned06:58:04.153575Z, awaiting real300 results; root library prototype serialized next slot",
+  "current_stage": "F11 b6e8 unaccepted: A37 FAILED sealed07:07:02/alljoins; root prototypeMEDIUM actualACK07:07:48, then prototypeHIGH review; coor clean boundedF11 normpacket prepared, no nativeactor claim",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -464,12 +464,10 @@
     "whole_runtime_accepted": false
   },
   "branch_push": {
-    "revision": "a9b8e953d46c02189f37ec4758dd6c9c212d3ab5",
-    "actual_published_at": null,
-    "confirmation_clock": "2026-10-07T01:30:18Z root clock_tool postpush",
-    "parent_remote": "d8c15a85a400b272830b43d3ca52d5f64afe0564",
-    "trusted_executor": "root",
-    "scope": "A9failedseed/F12plancandidate/A10actualMEDIUMlaunch docs"
+    "revision": "16f4cf5e3658685e1ef0c710b66a763b53ba8820",
+    "confirmation_at": "2026-10-07T07:04:33Z",
+    "push_process_at": null,
+    "status": "trusted root native0"
   },
   "model_policy_boundary": {
     "owner_decision": "OWN-N7-006",

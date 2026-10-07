@@ -651,6 +651,25 @@
       "revision": "b6e8ae16e8feb6c67888eb2f006cfbb299b40197",
       "elapsed_wall_ms": 1170000,
       "receipt_sha256": "141e6142348d23293435e58a0c9aae703d1ff5c91da28ffc594722f16bc41b41"
+    },
+    {
+      "id": "f11-native-empty-tail-fleet-verify-a37",
+      "status": "failed scoped attempt; F11 unaccepted",
+      "revision": "b6e8ae16e8feb6c67888eb2f006cfbb299b40197",
+      "receipt_sha256": "c242c3d145cb6d2ded000cf5c16aa0e8915298a7f4b78940d9f1894052c12abe",
+      "sealed_at": "2026-10-07T07:07:02.087875Z",
+      "native_exit": 1,
+      "ready": 28,
+      "denominator": 30,
+      "remaining": [
+        "fault ALL30/header30 and300",
+        "healthy300",
+        "legal activeBODY cancellation compatibility",
+        "legacy20page gate19RED",
+        "current grant/config material races",
+        "units16/PG18/bodyprotocol5/privacyAEAD",
+        "fresh independent final HIGH review"
+      ]
     }
   ],
   "work_units": [
@@ -699,7 +718,7 @@
       "remaining_AC": "Genuine continuation FIRST SQL/rowCounts/urgency/ownership and shortnative diagnostic; production unchanged; exactnarrow compatible HIGHrepair/amendment adjudication afterraw; nofullfleetblindrepeat or time/cap relaxation"
     }
   },
-  "current_stage": "F11 unaccepted b6e8; A37 actual native fullfault child spawned06:58:04.153575Z, awaiting real300 results; root library prototype serialized next slot",
+  "current_stage": "F11 b6e8 unaccepted: A37 FAILED sealed07:07:02/alljoins; root prototypeMEDIUM actualACK07:07:48, then prototypeHIGH review; coor clean boundedF11 normpacket prepared, no nativeactor claim",
   "continuation": {
     "responsible": "n7_sol_coordinator",
     "executor": "/root/n7_sol_coordinator/f11_continuation_fleet_diagnostic_a26",
