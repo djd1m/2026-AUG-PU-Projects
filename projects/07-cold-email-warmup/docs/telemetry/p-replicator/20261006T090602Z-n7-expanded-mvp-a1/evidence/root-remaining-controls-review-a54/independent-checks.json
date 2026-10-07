@@ -1,0 +1,87 @@
+{
+  "utc": "2026-10-07T11:25:09.432231+00:00",
+  "source_commit": "e9ec591e714932cfdd17339f5017b460f8476b16",
+  "baseline": "7dee9b9a33b87359feeae4fb82b88331ca50d5de",
+  "source_sha256": "ad86b17826e6807236442fa398a5575f9470dfe7ce5c0d9daf91ace9b5c82157",
+  "test_sha256": "948dff75bc4433720525397703505dbcedf775c0c365f9cfb050ac1bf71f28a6",
+  "objective_files_verified": 591,
+  "final_source_build_files_verified": 222,
+  "candidate_final_projection_equal": true,
+  "scope_exact_one_file": true,
+  "process_receipts_verified": 185,
+  "native_children": 171,
+  "live_pid_start_ticks": [],
+  "checks": {
+    "greenfinal": {
+      "exit_code": 0,
+      "launch_sha256": "56dc69d4744b41ba9445c00e35aecc810d69ef01bd3fbff1d81fe697d531c55a",
+      "raw_sha256": "b452fb702941f8e188cb6c3ba8b3e63f0d0962425b43c765f6c8f1d224a9cf49",
+      "join_utc": "2026-10-07T11:09:33.259282+00:00",
+      "source_changes": [],
+      "test_unchanged": true,
+      "preflight_exact": true
+    },
+    "controls": {
+      "exit_code": 0,
+      "launch_sha256": "47e8e6a66c8ffde0e9ccb9eeff3b5a8b0887d96df5fa985eefa2b4e3a5f89807",
+      "raw_sha256": "a2f9ddfd384958fcc1ad51a8c769681b4e3a95279cf7812e3f34cdd65d6a59c4",
+      "join_utc": "2026-10-07T11:17:00.374535+00:00",
+      "source_changes": [],
+      "test_unchanged": true,
+      "preflight_exact": true
+    },
+    "operationcounterretry": {
+      "exit_code": 1,
+      "launch_sha256": "801907d530df5aaa557ec982b75d9f1e82b382c6fabe578a1db85251bc024884",
+      "raw_sha256": "fea1b7b928760d74f813b785a725f8526222b4d926388fb549f7ce5e3c7d90c9",
+      "join_utc": "2026-10-07T11:10:51.717903+00:00",
+      "source_changes": [
+        "src/mailboxes/transport-slots.ts",
+        "dist/mailboxes/transport-slots.js"
+      ],
+      "test_unchanged": true,
+      "preflight_exact": true
+    },
+    "attemptcounter": {
+      "exit_code": 1,
+      "launch_sha256": "483cabee3b94c1412c3bc0f2044e78f7e86c581126b9aa198db635c7c0712bd8",
+      "raw_sha256": "06e626611dbbbd03258e4a2c19e0c811cfb8e914096e925b11537a14caec1342",
+      "join_utc": "2026-10-07T11:13:24.564423+00:00",
+      "source_changes": [
+        "src/replies/context-store.ts",
+        "dist/replies/context-store.js"
+      ],
+      "test_unchanged": true,
+      "preflight_exact": true
+    }
+  },
+  "source_ownership": "released",
+  "public_and_protected_snapshot_equality": true,
+  "own_terminal_claims": {
+    "n7_a52_attempt_261007110600": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    },
+    "n7_a52_controls_261007110600": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    },
+    "n7_a52_green_261007110600": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    },
+    "n7_a52_operation_261007110600": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    },
+    "n7_a52_operationretry_261007110900": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    }
+  }
+}
