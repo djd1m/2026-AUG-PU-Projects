@@ -59,13 +59,13 @@
     "followup_status": "F07/F08/F09/F10 locally accepted and F10 integrated3566; expanded AC001–004 met, AC005–009 pending. Whole required_gates_passed remains false. F11 code remains unaccepted candidate."
   },
   "metrics": {
-    "elapsed_wall_ms": 62477441,
+    "elapsed_wall_ms": 62738858,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-07T02:27:20.319455+00:00"
+    "elapsed_as_of": "2026-10-07T02:31:41.736482+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 A13 faultshutdown RED; A15 exact SQL23514 retention cause proven; A16 fresh MEDIUM actual targeted correction",
+  "current_stage": "F11 A16 timestamp fix frozen; A17 HIGH actual safe isolated native shutdown→fault verification",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -138,17 +138,17 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_shutdown_timestamp_author_a16",
-    "attempt": "f11-shutdown-timestamp-author-a16",
+    "executor": "/root/n7_sol_coordinator/f11_operational_verifier_a11",
+    "attempt": "f11-operational-verify-a17",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T02:25:37Z",
+    "actual_ACK_at": "2026-10-07T02:30:21Z",
     "requested_model": "gpt-6.1-sol",
-    "requested_effort": "medium",
+    "requested_effort": "high",
     "actual_model": null,
-    "source_revision": "8352feb9f6b970d5d42218b12e63bfbaecb180cc",
-    "freeze_at": "2026-10-07T02:31:37Z",
-    "deadline": "2026-10-07T02:33:37Z",
-    "next": "Exact2file stable cancellation timestamp+compiled short actualSIGTERM native0; current fault300/fullunit/fullPG/material; NEW clean HIGH finalreview; F12accepted-interface reconciliation"
+    "source_revision": "c67eb5aa13d0917a817581bd4bf548beb6a4a1d8",
+    "freeze_at": "2026-10-07T02:47:21Z",
+    "deadline": "2026-10-07T02:50:21Z",
+    "next": "NEW own schema within existing n7f11_a8/public unchanged: inherited PGOPTIONS search_path genuine compiled short native0 first, then separate own schema fullFAULT300; current PG capacity fixture safe schema correction pending; NEW clean HIGH finalreview"
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -193,7 +193,13 @@
     ],
     "last_reported_at": "2026-10-06T18:24:25.832246+00:00",
     "responsible": "n7_sol_coordinator sends root; root reports owner",
-    "no_background_claim_without_actual_worker": true
+    "no_background_claim_without_actual_worker": true,
+    "latest_checkpoint": {
+      "at": "2026-10-07T02:33:12.550279+00:00",
+      "disk_available_bytes": 2402750464,
+      "remaining_AC": "A17 real shortshutdown native0 first; current fault300 all30/header30/fair60/body240/perphase5; fullcurrentunit/PG own-schema migrationfixture correction/material/privacy; NEW clean HIGH review. F12–14 not accepted. Root reserved delivery unconfirmed since722.",
+      "executor": "/root/n7_sol_coordinator/f11_operational_verifier_a11"
+    }
   },
   "f07_runtime_candidate": {
     "source_revision": "10c8e946ca7f9e7e6d30f386c9e5069acb0097f2",
