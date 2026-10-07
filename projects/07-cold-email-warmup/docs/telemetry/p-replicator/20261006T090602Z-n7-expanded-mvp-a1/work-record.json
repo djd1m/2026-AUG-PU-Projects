@@ -589,6 +589,23 @@
       "id": "f11-operational-verifier-a9",
       "status": "active actual ACK verified",
       "actual_ACK_at": "2026-10-07T01:18:44Z"
+    },
+    {
+      "id": "f11-operational-verifier-a9",
+      "status": "completed early fixtureblocked/full300unexecuted",
+      "ended_at": "2026-10-07T01:25:35.402501Z",
+      "receipt_sha256": "074d720c429e883b3a5af1c78d9b3c3bb351fa12dc01718715779a998882cf19"
+    },
+    {
+      "id": "f12-planning-within-f11-a9",
+      "status": "completed early candidate, independentvalidation pending",
+      "ended_at": "2026-10-07T01:24:03.011838+00:00",
+      "plan_sha256": "6f125040982f7a9edfc51dccad049519aedac7d7b702d21bb334cc916a94afe0"
+    },
+    {
+      "id": "f11-fleet-seed-author-a10",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T01:27:20Z"
     }
   ],
   "work_units": [
@@ -631,26 +648,26 @@
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true,
     "latest_checkpoint": {
-      "at": "2026-10-07T01:20:38.033856+00:00",
-      "disk_available_bytes": 2665979904,
-      "remaining_AC": "Exact authored ALL30 full300 actuallaunch/nativeexit/allparticipant proof; distinct F12 clean planning6+2 duringchildwait; current regressions/remaining fleetfault/currentgrant/privacy/material gaps; finalF11review NEWfreshHIGH. No F11 acceptance.",
-      "executor": "/root/n7_sol_coordinator/f11_operational_verifier_a9"
+      "at": "2026-10-07T01:29:27.909721+00:00",
+      "disk_available_bytes": 2658365440,
+      "remaining_AC": "ONE fixture genuineexistingTESTteam entitlement/helper correction +short100connected30active3tenant/10campaigns each proof BEFOREfull300; thenfreshHIGH frozenload with distinct F12 independentplanvalidation duringwait; finalF11reviewNEWcleanHIGH. No gateweakening.",
+      "executor": "/root/n7_sol_coordinator/f11_fleet_seed_author_a10"
     }
   },
-  "current_stage": "F11 fresh HIGH immutable operational checks; distinct bounded clean F12 planning only after actual full300 child launch",
+  "current_stage": "F11 fresh MEDIUM one-fixture TEST-entitlement seed correction and short cohort proof; full300 unexecuted",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_operational_verifier_a9",
-    "attempt": "f11-operational-verifier-a9",
+    "executor": "/root/n7_sol_coordinator/f11_fleet_seed_author_a10",
+    "attempt": "f11-fleet-seed-author-a10",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T01:18:44Z",
+    "actual_ACK_at": "2026-10-07T01:27:20Z",
     "requested_model": "gpt-6.1-sol",
-    "requested_effort": "high",
+    "requested_effort": "medium",
     "actual_model": null,
     "source_revision": "feb0aae996c80c6e591ebfba5585ec7d5ca27c62",
-    "freeze_at": "2026-10-07T01:35:44Z",
-    "deadline": "2026-10-07T01:38:44Z",
-    "launch_sha256": "8d98eaf9d2f1bd5e50da66a1d6e784395295075b889d3a5a70fe2f2c326b6c8e",
-    "next": "Exact authored ALL30 full300 actuallaunch/nativeexit/allparticipant proof; distinct F12 clean planning6+2 duringchildwait; current regressions/remaining fleetfault/currentgrant/privacy/material gaps; finalF11review NEWfreshHIGH. No F11 acceptance."
+    "freeze_at": "2026-10-07T01:33:20Z",
+    "deadline": "2026-10-07T01:35:20Z",
+    "launch_sha256": "1d688e65826c703818b04a9a6e491a79284218fef09508efa3904fedc2ba26dd",
+    "next": "ONE fixture genuineexistingTESTteam entitlement/helper correction +short100connected30active3tenant/10campaigns each proof BEFOREfull300; thenfreshHIGH frozenload with distinct F12 independentplanvalidation duringwait; finalF11reviewNEWcleanHIGH. No gateweakening."
   }
 }

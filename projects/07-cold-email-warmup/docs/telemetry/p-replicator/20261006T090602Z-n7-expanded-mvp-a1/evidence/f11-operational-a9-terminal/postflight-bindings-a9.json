@@ -1,0 +1,104 @@
+{
+  "utc": "2026-10-07T01:24:39.133688+00:00",
+  "disk_available_bytes": 2662432768,
+  "source": {
+    "count": 20,
+    "mismatches": []
+  },
+  "build": {
+    "count": 76,
+    "mismatches": []
+  },
+  "runner": {
+    "count": 4,
+    "mismatches": []
+  },
+  "guard_owned_pids": [
+    {
+      "pid": 2365092,
+      "recorded_startTicks": "125901149",
+      "endedAt": 1791336012825,
+      "current_pid_exists": false,
+      "ipcValidated": 0,
+      "socketAllowed": 1,
+      "socketDenied": 2,
+      "dnsDenied": 0,
+      "path": "/tmp/n7-f11-context-verify-a9/guard-2365092-1791336001535.json"
+    },
+    {
+      "pid": 2365078,
+      "recorded_startTicks": "125901139",
+      "endedAt": 1791336001434,
+      "current_pid_exists": false,
+      "ipcValidated": 0,
+      "socketAllowed": 0,
+      "socketDenied": 0,
+      "dnsDenied": 0,
+      "path": "/tmp/n7-f11-context-verify-a9/guard-2365078-1791336001433.json"
+    },
+    {
+      "pid": 2433618,
+      "recorded_startTicks": "125928486",
+      "endedAt": 1791336275231,
+      "current_pid_exists": false,
+      "ipcValidated": 0,
+      "socketAllowed": 1,
+      "socketDenied": 2,
+      "dnsDenied": 0,
+      "path": "/tmp/n7-f11-context-verify-a9/guard-2433618-1791336274910.json"
+    },
+    {
+      "pid": 2367360,
+      "recorded_startTicks": "125902286",
+      "endedAt": 1791336012907,
+      "current_pid_exists": false,
+      "ipcValidated": 0,
+      "socketAllowed": 0,
+      "socketDenied": 0,
+      "dnsDenied": 0,
+      "path": "/tmp/n7-f11-context-verify-a9/guard-2367360-1791336012906.json"
+    },
+    {
+      "pid": 2364997,
+      "recorded_startTicks": "125901098",
+      "endedAt": 1791336001377,
+      "current_pid_exists": false,
+      "ipcValidated": 0,
+      "socketAllowed": 1,
+      "socketDenied": 2,
+      "dnsDenied": 0,
+      "path": "/tmp/n7-f11-context-verify-a9/guard-2364997-1791336001026.json"
+    },
+    {
+      "pid": 2380927,
+      "recorded_startTicks": "125908671",
+      "endedAt": 1791336077086,
+      "current_pid_exists": false,
+      "ipcValidated": 0,
+      "socketAllowed": 1,
+      "socketDenied": 2,
+      "dnsDenied": 0,
+      "path": "/tmp/n7-f11-context-verify-a9/guard-2380927-1791336076770.json"
+    }
+  ],
+  "launch_pid_absence": [
+    {
+      "pid": 2364990,
+      "exists": false,
+      "startTicks": null,
+      "startTicks_gap": "not measured for launcher/timeout; no inference after exit"
+    },
+    {
+      "pid": 2365085,
+      "exists": false,
+      "startTicks": null,
+      "startTicks_gap": "not measured for launcher/timeout; no inference after exit"
+    },
+    {
+      "pid": 2365086,
+      "exists": false,
+      "startTicks": null,
+      "startTicks_gap": "not measured for launcher/timeout; no inference after exit"
+    }
+  ]
+}
