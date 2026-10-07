@@ -1,0 +1,203 @@
+{
+  "utc": "2026-10-07T04:58:25.417982+00:00",
+  "bindings": [
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/02_pseudocode.md",
+      "sha256": "7fadd49d2597788fbd942d3ccfad7e82c384b773e90a5ae26c8021c94e81d817",
+      "lines": [
+        {
+          "line": 36,
+          "text": "3. FIRST lock; filter eligible unclaimed rows by due_at<=post-lock now and next_check_at<=now; select tenant with minimum RuntimeTenantTurn.service_seq, then its mailbox ordered by RuntimeDue.service_seq ASC, due_at ASC, mailbox_id ASC using FOR UPDATE SKIP LOCKED LIMIT1. New rows initialize service_seq=0 only on INSERT. In the SAME claim transaction persist fresh PG nextval sequence for BOTH selected tenant and mailbox before any I/O, together with owner/generation120s and claimPoll owner. Every selected committed quantum consumes this turn, including later busy/failure; rollback starts no operation. Cross-check capacity and transport authority before leaving TX. Existing eligible but unserved mailbox therefore precedes any already-served continuation regardless of older continuation due_at."
+        },
+        {
+          "line": 37,
+          "text": "4. Execute one protocol snapshot or one read/page outside TX. Preserve ReplyStore.capture/page/failTail semantics; persist page/stop/cursor atomically with combined due owner, poll owner and grant fence. A tail snapshot requires fixed horizon; checkpoint between operations by existing Rescan fields, not process-local horizon. Successful page quantum requeues continuation retaining its advanced mailbox sequence, original due_at and original rescan attempt budget, so unserved eligible mailboxes of the SAME tenant as well as other tenants run first. A concurrent lane cannot select a claimed mailbox; on yield the persisted order remains, including after process restart."
+        },
+        {
+          "line": 38,
+          "text": "5. Only a successfully committed complete poll proof, matched to the current runtime owner/generation, starts the next poll opportunity: its FIRST-lock finish transaction sets due_at=next_check_at=post-lock DB now and retains the advanced tenant/mailbox service_seq. There is no added successful-poll sleep; the mailbox rejoins fair selection rather than running inline or overtaking unserved eligible peers.30s is the maximum ACTUAL gap between durable completed_at observations, not a start interval or an extra wait. Neither reply_rescan.attempt_started_at, per-quantum last_served_at nor original due_at is used as a poll-round clock; no new cadence timestamp/schema is required. Unsatisfied quanta retain original due_at; failure/authority/busy backoff and incomplete/cleanup holds take precedence and are never converted to successful readiness. Each lane joins operation and exact cleanup, yields asynchronously to the event loop, then makes another bounded claim; idle/no-data still sleeps cancellably<=1s. Restart preserves ready order and unresolved work; a crash after page completion but before finish may safely cause a fresh read, never synthetic freshness or erased overdue history. Measured completion gaps still fail if the fixed cohort/resources cannot meet30s; readiness itself is not acceptance. Reset/incomplete enters explicit retry path with current run identity: ReplyStore.retry resets only attempt/page budget, not cursor or scan_complete. Each attempt\u226420pages/120s; backoff between failed attempts. A restart of scanning resumes persisted cursor within original attempt budget or marks incomplete before retry."
+        },
+        {
+          "line": 124,
+          "text": "> Body executes only as an alternative quantum in the existing four IMAP jobs, with two SMTP jobs and existing pool/maintenance unchanged. There are at most three concurrently admitted capture windows globally and at most three physical body operations; at least one physical IMAP slot remains unavailable to body and all four remain usable by normal header polling. Pending captures wait in durable age/service order; newer arrivals and second phases cannot overtake older unserved capture turns. Pending queue age never resets. A capture window opens exactly once, only when an existing IMAP job has settled its header operation and exact cleanup, and a current owner/generation-fenced complete poll proof, authentic current native UID/header/root/recipient observation, current activity/authority/config and an available physical first-phase slot permit the same FIRST(7,1) transaction to finish header scheduling, claim the capture and acquire that slot. In that transaction header state becomes ready and due_at=next_check_at=T+12s, window_start=T, window_end=T+12s; selected tenant/mailbox service_seq remains unchanged. If those conditions are absent, successful finish remains due_at=next_check_at=T immediately. Unadmitted pending captures never receive a speculative12s header delay or a short expiring window while waiting for capacity."
+        },
+        {
+          "line": 126,
+          "text": "> Metadata and text are separate quanta. Each has its own native operation budget at most5s, shortened by remaining absolute window and inherited content deadline. Metadata must settle exact native closure before commit/yield; text reacquires its claim and physical slot under the same FIRST lock on a later existing-job turn. Active text/metadata continuations are selected by fixed window end then original capture service order, ahead of opening further windows; urgent actual header deadlines retain priority. Both phase commits must occur before the original window_end, and all current identity/stop/grant/config/source/run/UID/root/recipient/generation checks remain valid. No body admission occurs while that mailbox has actually due, claimed or incomplete header work. At end header becomes due independently of callbacks; no renewal, transfer, phase/retry/restart/replay extension or caller bypass is allowed. Native abort propagates; unconfirmed exact closure stays physically occupied/cleanup_blocked, and missed deadlines remain visible."
+        },
+        {
+          "line": 131,
+          "text": "A capture receives one absolute attempt deadline min(inherited content expiry, first durable authenticated queue eligibility+450s), never a window-start/restart/replay clock. The finite thirty-capture queue estimate is conditional; the mandatory positive native witness must make ALL30 both phases ready<=240s including two2800ms stages each, and continue full300s load evidence. Window/attempt expiry never renews same capture. This is not a relaxation of the later arrival-to-SMTP300s SLO. Unknown closure stays occupied. Current genuine source/UID/root/decrypted-recipient/grant/config/generation/stop fences, copy terminal24h/absolute7d and physical purge remain mandatory. Production entry may be implemented under current transport authority and disabled defaults, but candidate deployment/provider enablement and F11 acceptance remain closed until the mandatory witnesses and NEW independent source review pass."
+        }
+      ]
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/03_architecture.md",
+      "sha256": "52b8aefc648e52455ec53048d4d27ce64e404e056ff3085af89015c41472f3c0",
+      "lines": [
+        {
+          "line": 45,
+          "text": "Index eligible-mailbox service ordering by(kind,tenant_id,service_seq,due_at,mailbox_id), with due_at<=now/next_check_at<=now and claim state as eligibility filters; retain a separate(kind,next_check_at) index for bounded wakeup lookup. Index tenant rotation by(kind,service_seq,tenant_id), and mailbox metadata by tenant/mailbox. RuntimeDue.service_seq starts0 only on INSERT; the same FIRST-lock selection transaction assigns fresh PG sequence values to tenant and selected mailbox before I/O, including turns later returning busy/failure. Completion and reconciliation preserve those values, so an older continuation cannot precede an unserved eligible mailbox solely by due_at. Bounded due SELECT uses SKIP LOCKED, but all eligibility mutations still acquire global(7,1) FIRST; SKIP LOCKED never replaces this serialization. Sequence gaps from rollbacks are harmless ordering tokens, not counts of delivered messages. Restart keeps original due_at and persisted service order; a heartbeat cannot reset starvation age."
+        },
+        {
+          "line": 69,
+          "text": "Successful complete poll proofs use existing runtime_due fields only: the owner/generation-fenced finish sets due_at and next_check_at to post-lock DB now, preserving service_seq. This is immediate eligibility for fair selection, not same-mailbox chaining or extra concurrency. Unfinished work retains original due age; failed/busy/held work follows unchanged backoff/hold rules. No poll-round timestamp or reply_rescan clock reuse is needed because cadence scheduling no longer uses a round-start+30 anchor. Awaited quantum/cleanup and an asynchronous event-loop yield precede the next claim; record CPU/RAM, operation counts and other lane progress under repeated successful empty polls. Existing durable completed_at remains the evidence of actual full proof, independent of scheduling timestamps."
+        },
+        {
+          "line": 101,
+          "text": "> Body executes only as an alternative quantum in the existing four IMAP jobs, with two SMTP jobs and existing pool/maintenance unchanged. There are at most three concurrently admitted capture windows globally and at most three physical body operations; at least one physical IMAP slot remains unavailable to body and all four remain usable by normal header polling. Pending captures wait in durable age/service order; newer arrivals and second phases cannot overtake older unserved capture turns. Pending queue age never resets. A capture window opens exactly once, only when an existing IMAP job has settled its header operation and exact cleanup, and a current owner/generation-fenced complete poll proof, authentic current native UID/header/root/recipient observation, current activity/authority/config and an available physical first-phase slot permit the same FIRST(7,1) transaction to finish header scheduling, claim the capture and acquire that slot. In that transaction header state becomes ready and due_at=next_check_at=T+12s, window_start=T, window_end=T+12s; selected tenant/mailbox service_seq remains unchanged. If those conditions are absent, successful finish remains due_at=next_check_at=T immediately. Unadmitted pending captures never receive a speculative12s header delay or a short expiring window while waiting for capacity."
+        },
+        {
+          "line": 103,
+          "text": "> Metadata and text are separate quanta. Each has its own native operation budget at most5s, shortened by remaining absolute window and inherited content deadline. Metadata must settle exact native closure before commit/yield; text reacquires its claim and physical slot under the same FIRST lock on a later existing-job turn. Active text/metadata continuations are selected by fixed window end then original capture service order, ahead of opening further windows; urgent actual header deadlines retain priority. Both phase commits must occur before the original window_end, and all current identity/stop/grant/config/source/run/UID/root/recipient/generation checks remain valid. No body admission occurs while that mailbox has actually due, claimed or incomplete header work. At end header becomes due independently of callbacks; no renewal, transfer, phase/retry/restart/replay extension or caller bypass is allowed. Native abort propagates; unconfirmed exact closure stays physically occupied/cleanup_blocked, and missed deadlines remain visible."
+        },
+        {
+          "line": 108,
+          "text": "A capture receives one absolute attempt deadline min(inherited content expiry, first durable authenticated queue eligibility+450s), never a window-start/restart/replay clock. The finite thirty-capture queue estimate is conditional; the mandatory positive native witness must make ALL30 both phases ready<=240s including two2800ms stages each, and continue full300s load evidence. Window/attempt expiry never renews same capture. This is not a relaxation of the later arrival-to-SMTP300s SLO. Unknown closure stays occupied. Current genuine source/UID/root/decrypted-recipient/grant/config/generation/stop fences, copy terminal24h/absolute7d and physical purge remain mandatory. Production entry may be implemented under current transport authority and disabled defaults, but candidate deployment/provider enablement and F11 acceptance remain closed until the mandatory witnesses and NEW independent source review pass."
+        }
+      ]
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/runtime/store.ts",
+      "sha256": "2fb9c5a26dc0e3d790843a69c33c4c2b49a9154af7d06631f12436697c23d4bb",
+      "lines": [
+        {
+          "line": 89,
+          "text": "  // Reclaim only the logical scheduler lease; physical transport rows are untouched."
+        },
+        {
+          "line": 92,
+          "text": "  let row=(await c.query(`SELECT d.* FROM runtime_due d JOIN runtime_tenant_turn t ON t.tenant_id=d.tenant_id AND t.kind=d.kind"
+        },
+        {
+          "line": 95,
+          "text": "   ORDER BY t.service_seq,d.service_seq,d.due_at,d.mailbox_id FOR UPDATE OF d SKIP LOCKED LIMIT 1`,[kind,now])).rows[0];"
+        },
+        {
+          "line": 96,
+          "text": "  if(!row)return null;"
+        },
+        {
+          "line": 114,
+          "text": "  const claim=(await c.query(`UPDATE runtime_due SET state='claimed',owner_id=$3,generation=generation+1,lease_until=$4::timestamptz+interval '120 seconds',last_served_at=$4 WHERE mailbox_id=$1 AND kind=$2 RETURNING *`,[row.mailbox_id,kind,admission?.slot?.operation??randomUUID(),now])).rows[0] as RuntimeClaim;"
+        },
+        {
+          "line": 144,
+          "text": "   // Only settled complete proof reaches this branch. Header finish and real first"
+        },
+        {
+          "line": 149,
+          "text": "   if(capture)this.captures.set(claim,capture);"
+        },
+        {
+          "line": 151,
+          "text": "   return 1;"
+        },
+        {
+          "line": 152,
+          "text": "  }"
+        },
+        {
+          "line": 154,
+          "text": "  const next=\"CASE WHEN $9 AND kind='poll' THEN $10::timestamptz ELSE clock_timestamp()+$8*interval '1 second' END\";"
+        },
+        {
+          "line": 158,
+          "text": " });}"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/context-store.ts",
+      "sha256": "d452b1e3784cd5a50e0020fa87245f3fd987b9aabd8814cf996976ab0f5c5984",
+      "lines": [
+        {
+          "line": 76,
+          "text": "   const row=(await c.query(`SELECT e.* FROM incoming_ai_event e JOIN reply_rescan r ON r.tenant_id=e.tenant_id AND r.mailbox_id=e.mailbox_id"
+        },
+        {
+          "line": 84,
+          "text": "    AND (NOT EXISTS(SELECT 1 FROM runtime_due urgent JOIN mailbox_poll hp ON hp.mailbox_id=urgent.mailbox_id WHERE urgent.kind='poll' AND urgent.state='ready' AND urgent.next_check_at<=clock_timestamp() AND hp.completed_at+interval '30 seconds'<=clock_timestamp()+interval '5 seconds')"
+        },
+        {
+          "line": 85,
+          "text": "     OR ((SELECT count(*) FROM transport_operation WHERE protocol='imap' AND header_reserved)=1"
+        },
+        {
+          "line": 86,
+          "text": "      AND EXISTS(SELECT 1 FROM transport_operation t JOIN runtime_due d ON d.tenant_id=t.tenant_id AND d.mailbox_id=t.mailbox_id AND d.kind='poll'"
+        },
+        {
+          "line": 87,
+          "text": "       WHERE t.protocol='imap' AND t.header_reserved AND t.operation IS NOT NULL AND t.operation_purpose='header' AND t.owner_process IS NOT NULL AND t.owner_host IS NOT NULL"
+        },
+        {
+          "line": 88,
+          "text": "       AND d.state='claimed' AND d.owner_id=t.operation AND d.lease_until>clock_timestamp() AND d.reason NOT IN ('cleanup_blocked','rescan_incomplete'))"
+        },
+        {
+          "line": 89,
+          "text": "      AND EXISTS(SELECT 1 FROM transport_operation WHERE protocol='imap' AND NOT header_reserved AND operation IS NULL)))"
+        },
+        {
+          "line": 91,
+          "text": "    ORDER BY e.window_end,e.capture_service_seq,e.id FOR UPDATE OF e SKIP LOCKED LIMIT 1`)).rows[0];"
+        },
+        {
+          "line": 145,
+          "text": "}"
+        },
+        {
+          "line": 148,
+          "text": " if((await c.query(\"SELECT 1 FROM incoming_ai_event WHERE window_end>clock_timestamp() AND capture_state='pending' AND next_attempt_at<=clock_timestamp() LIMIT 1\")).rowCount)return null;"
+        },
+        {
+          "line": 149,
+          "text": " if(Number((await c.query(\"SELECT count(*) AS n FROM incoming_ai_event WHERE window_end>clock_timestamp() AND capture_state IN ('pending','claimed')\")).rows[0].n)>=3)return null;"
+        },
+        {
+          "line": 151,
+          "text": " const row=(await c.query(`SELECT e.*,p.completed_at,n.recipient_envelope,n.recipient_hash FROM incoming_ai_event e JOIN reply_rescan r ON r.tenant_id=e.tenant_id AND r.mailbox_id=e.mailbox_id JOIN mailbox_poll p ON p.mailbox_id=e.mailbox_id JOIN enrollment n ON n.tenant_id=e.tenant_id AND n.id=e.enrollment_id JOIN send_job j ON j.tenant_id=e.tenant_id AND j.mailbox_id=e.mailbox_id AND j.id=e.root_job_id AND j.enrollment_id=e.enrollment_id AND j.parent_id IS NULL WHERE e.tenant_id=$1 AND e.mailbox_id=$2 AND e.capture_state='pending' AND e.window_start IS NULL AND EXISTS(SELECT 1 FROM capacity_lease l WHERE l.mailbox_id=e.mailbox_id AND l.state='active' AND l.expires_at>clock_timestamp()) AND NOT EXISTS(SELECT 1 FROM suppression s WHERE s.tenant_id=e.tenant_id AND s.recipient_hash=e.authenticated_recipient_hash) AND e.expires_at>$3 AND e.attempt_deadline>$3 AND e.id IN (SELECT id FROM incoming_ai_event WHERE capture_state='pending' AND window_start IS NULL AND source='imap_headers' AND attempt_deadline>clock_timestamp() ORDER BY capture_service_seq,id LIMIT 3) AND e.source='imap_headers' AND r.state='complete' AND p.scan_complete AND p.uidvalidity=e.uidvalidity AND r.uidvalidity=e.uidvalidity AND r.provenance=e.source AND e.authenticated_run_id=r.run_id AND e.authenticated_attempt=r.attempt AND e.authenticated_root_message_id=j.message_id AND e.authenticated_recipient_hash=n.recipient_hash AND p.completed_at+interval '30 seconds'>$3::timestamptz+interval '17 seconds' ORDER BY e.capture_service_seq,e.id FOR UPDATE OF e SKIP LOCKED LIMIT 1`,[tenant,mailbox,now])).rows[0];"
+        },
+        {
+          "line": 154,
+          "text": " const end=new Date(Math.min(now.getTime()+12000,row.attempt_deadline.getTime(),row.expires_at.getTime()));"
+        },
+        {
+          "line": 156,
+          "text": " if(end.getTime()!==now.getTime()+12000)return null;"
+        },
+        {
+          "line": 158,
+          "text": " const owner=randomUUID(),claimed=(await c.query(`UPDATE incoming_ai_event SET capture_state='claimed',owner_id=$7,generation=generation+1,lease_until=$3,window_start=$2,window_end=$3,window_completed_at=$4,window_revision=$5,window_mailbox_revision=$6,next_attempt_at=$2 WHERE id=$1 AND window_start IS NULL RETURNING generation`,[row.id,now,end,row.completed_at,authority.revision,authority.mailboxRevision,owner])).rows[0];"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/runtime/loop.ts",
+      "sha256": "6c21b6a9d8b659e28bb3f4380f837a3da61fd986df51b0b35162c40a29a38cb6",
+      "lines": [
+        {
+          "line": 14,
+          "text": "  const claim=await store.claim(kind);if(!claim){if(kind==='poll'&&operations.body&&await operations.body(signal)){if(once)return;try{await yieldTurn(undefined,{signal});}catch{return;}continue;}if(once)return;try{await delay(1000,undefined,{signal});}catch{return;}continue;}"
+        },
+        {
+          "line": 19,
+          "text": "  await store.finish(claim,result.reason,result.satisfied);"
+        },
+        {
+          "line": 20,
+          "text": "  const capture=store.takeCaptureAdmission(claim);"
+        },
+        {
+          "line": 21,
+          "text": "  try{await yieldTurn(undefined,{signal});}catch{if(capture)await store.disposeCaptureAdmission(capture);return;}"
+        },
+        {
+          "line": 22,
+          "text": "  if(capture){if(operations.body)await operations.body(signal,capture);else await store.disposeCaptureAdmission(capture);}"
+        }
+      ]
+    }
+  ]
+}

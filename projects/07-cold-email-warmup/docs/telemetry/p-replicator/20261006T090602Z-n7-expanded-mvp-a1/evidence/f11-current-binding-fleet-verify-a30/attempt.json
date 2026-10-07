@@ -1,0 +1,43 @@
+{
+  "started_at": "2026-10-07T04:41:53.812835+00:00",
+  "monotonic_start_ns": 1271123812250832,
+  "stage": "VALIDATE",
+  "risk": "HIGH/inherited XL",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "source": "a1d1521fe1ad9beeb2598ec3f8d625bf97a087e7",
+  "scope": "original fullfault first; healthy only if fault passes and bounded resources permit",
+  "status": "RED_sealed",
+  "missing_data": [
+    "Host actual model/usage/cost unavailable"
+  ],
+  "authoritative_ack": "2026-10-07T04:41:50Z",
+  "source_runner_cutoff": "2026-10-07T04:58:50Z",
+  "final_seal_cutoff": "2026-10-07T05:01:50Z",
+  "phase_boundaries": {
+    "native_join": {
+      "utc": "2026-10-07T04:46:47.976394+00:00",
+      "monotonic_ns": 1271417975808781
+    },
+    "cause_plan_start": "2026-10-07T04:47:21.214512+00:00",
+    "cause_plan_work_seconds": 360,
+    "cause_plan_seal_seconds": 120,
+    "cause_work_end_actual": null,
+    "cause_work_last_recorded_computation": "2026-10-07T04:51:19.412575Z",
+    "work_cutoff": "2026-10-07T04:53:21.214512Z",
+    "seal_cutoff": "2026-10-07T04:55:21.214512Z"
+  },
+  "remaining_ac": [
+    "ALL30 READY<=240",
+    "original fault full300",
+    "healthy full300",
+    "HEADER<=30",
+    "wider mandatory checks/material counterproof"
+  ],
+  "next_executor": "coordinator/fresh bounded HIGH initial-admission scheduling planning",
+  "sealed_at": "2026-10-07T04:54:38.157921+00:00"
+}
