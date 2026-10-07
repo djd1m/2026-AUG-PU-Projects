@@ -59,13 +59,13 @@
     "followup_status": "F07/F08/F09/F10 locally accepted and F10 integrated3566; expanded AC001–004 met, AC005–009 pending. Whole required_gates_passed remains false. F11 code remains unaccepted candidate."
   },
   "metrics": {
-    "elapsed_wall_ms": 68378820,
+    "elapsed_wall_ms": 69176566,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-07T04:05:41.698438+00:00"
+    "elapsed_as_of": "2026-10-07T04:18:59.444810+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 unaccepted; A25 observer scoped checks complete; A26 fresh HIGH directed fullfault causal diagnostic actually running",
+  "current_stage": "F11 unaccepted; A27 no-edit exact owner association block; A28 bounded HIGH existing-field binding strategy actually active",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -139,27 +139,23 @@
   "continuation": {
     "responsible": "n7_sol_coordinator",
     "executor": "/root/n7_sol_coordinator/f11_continuation_fleet_diagnostic_a26",
-    "attempt": "f11-continuation-fleet-diagnostic-a26",
+    "attempt": "f11-current-header-binding-plan-a28",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T03:59:49.371396Z",
+    "actual_ACK_at": "2026-10-07T04:17:59Z",
     "requested_model": "gpt-6.1-sol",
     "requested_effort": "high",
     "actual_model": null,
-    "fork_turns": "none",
+    "fork_turns": "none at original actor launch; distinct bounded followup same fixed HIGH",
     "source_revision": "b6b82cb83cdf7cb1d646784ad169af826e6c6852",
     "production_revision": "5c707737fdcb2be4c579eac4cbd71a9a026b8820",
-    "freeze_at": "2026-10-07T04:16:49.371396Z",
-    "deadline": "2026-10-07T04:19:49.371396Z",
-    "context_manifest": "/tmp/n7-f11-continuation-diagnostic-next-pack-a26.json",
-    "context_sha256": "20c27e2d8c05515aee66e6a7adee071475f48cddcd4fb088ab2b368c586dc256",
-    "context_files": 259,
-    "actual_launcher_at": "2026-10-07T04:01:26.862576Z",
-    "native_spawned_at": "2026-10-07T04:01:28.090479Z",
-    "native_pid": 682933,
-    "native_start_ticks": 126869808,
-    "measurement_begun_at": null,
-    "own_schema": "n7_a26_fault_261007040055",
-    "next": "One unchanged fullfault diagnostic with NEW continuation SQL observer; exact cause and minimal compatible repair/amendment only. No second fleet run, cap/window/SLO relaxation, source writes, build, or checkout."
+    "freeze_at": "2026-10-07T04:23:59Z",
+    "deadline": "2026-10-07T04:25:59Z",
+    "source_immutable": true,
+    "allowed_source_writes": false,
+    "scratch": "/tmp/n7-f11-current-header-binding-plan-a28",
+    "context_manifest": "/tmp/n7-f11-continuation-fleet-diagnostic-a26/clean-next-planner-input-manifest.json",
+    "context_sha256": "1d85d9a597dd30adcea84c44fddd6cd01284594c28795411809cd771a604d7ff",
+    "next": "Exact no-new-schema owner_id=NEW admitted physical.operation lifecycle validation; sealed compatible candidate then actual fresh MEDIUM coding; all mandatory current fleet/header/privacy/safety/review gates retained."
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",

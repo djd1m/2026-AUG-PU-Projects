@@ -1,0 +1,34 @@
+{
+  "workUnit": "f11_concurrent_continuation_author_a27",
+  "startedAt": "2026-10-07T04:14:47Z",
+  "recordedAt": "2026-10-07T04:16:22.131711+00:00",
+  "profile": "model-routing-econom",
+  "requestedModel": "gpt-6.1-sol",
+  "requestedEffort": "medium",
+  "actualModel": null,
+  "usage": null,
+  "cost": null,
+  "missingData": [
+    "host model/usage unavailable",
+    "scratch attempt persisted after initial mandatory reads; canonical launch owned by coordinator"
+  ],
+  "tier": "XL",
+  "mechanicalRoute": {
+    "tier": "S",
+    "exit": 0,
+    "overriddenBy": "physical/current-owner invariant"
+  },
+  "stage": "IMPLEMENT",
+  "status": "interface_blocked",
+  "sourceRevision": "b6b82cb83cdf7cb1d646784ad169af826e6c6852",
+  "e2ePreflight": {
+    "status": "not_applicable",
+    "reason": "No source candidate or E2E launch; exact durable operation-to-current-claim association missing in allowed interface"
+  },
+  "remainingAC": [
+    "Exact current physical HEADER owner binding",
+    "Narrow continuation source/test repair",
+    "Scoped PG/native oldRED to candidateGREEN and mutations"
+  ],
+  "nextStep": "Coordinator adjudicates exact association gap under sealed A26 no-scope-widening rule; do not create schema/runtime-loop changes in this attempt"
+}

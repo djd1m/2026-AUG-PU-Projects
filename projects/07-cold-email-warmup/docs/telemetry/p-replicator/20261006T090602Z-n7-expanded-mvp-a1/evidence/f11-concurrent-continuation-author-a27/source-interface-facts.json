@@ -1,0 +1,91 @@
+{
+  "sourceRevision": "b6b82cb83cdf7cb1d646784ad169af826e6c6852",
+  "files": [
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/context-store.ts",
+      "sha256": "09aafd96228ea0b7767bbcc1a85c914ec5cdb8ba608c8d74eff96744f8a54010",
+      "bytes": 24928
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f11-context-integration.test.ts",
+      "sha256": "dc32919275be95a9165e9ea2e764b9aaa2aa0e1dd89784101d002c4bee7406a8",
+      "bytes": 39002
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+      "sha256": "3bee747f5d348a99bc328653aeb752cf7f480582fe4cdf8b3cfcae0ace804451",
+      "bytes": 56753
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/runtime/store.ts",
+      "sha256": "e35949216a285ceecac9d8320627689dff640a627a3a642e1a96c860674f8a49",
+      "bytes": 15470
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/mailboxes/transport-slots.ts",
+      "sha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903",
+      "bytes": 5969
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/db/014-live-transport.sql",
+      "sha256": "dd9e55eb7edc38a57c38df9fb3054b38b800e9e5c45a81cffa10b65c265bfec8",
+      "bytes": 2069
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/db/015-durable-runtime.sql",
+      "sha256": "70bd0248636e06577f56d867e3b983f44e82dbe38877067749122ee34b297581",
+      "bytes": 2069
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/db/017-transport-purpose.sql",
+      "sha256": "09bf04ae69e9b967762b6a68508e3a879281998df075010a6059891b1c6217e8",
+      "bytes": 657
+    }
+  ],
+  "relationFacts": [
+    {
+      "path": "src/mailboxes/transport-slots.ts",
+      "line": 33,
+      "fact": "operation and ownerProcess are independently allocated randomUUID identities; ownerHost is hostname; no runtime claim owner or generation argument is accepted"
+    },
+    {
+      "path": "src/runtime/store.ts",
+      "line": 114,
+      "fact": "runtime_due owner_id is allocated by separate randomUUID after slot allocation"
+    },
+    {
+      "path": "src/runtime/store.ts",
+      "line": 31,
+      "fact": "admissions is private WeakMap<RuntimeClaim,{slot?:TransportSlot;reason?:RuntimeReason}>; relates claim object to slot only in owning RuntimeStore process"
+    },
+    {
+      "path": "src/runtime/store.ts",
+      "line": 33,
+      "fact": "pollAdmission requires exact RuntimeClaim object; does not discover arbitrary current durable claim or validate retained physical operation association"
+    }
+  ],
+  "databaseTouched": false,
+  "nativeChildrenStarted": false,
+  "sourceModified": false,
+  "reachableCounterexample": {
+    "steps": [
+      {
+        "source": "src/runtime/store.ts:90",
+        "fact": "Expired runtime poll lease becomes ready; physical row remains occupied"
+      },
+      {
+        "source": "src/runtime/store.ts:91",
+        "fact": "Another free IMAP slot satisfies availability guard"
+      },
+      {
+        "source": "src/runtime/store.ts:101",
+        "fact": "Occupied selected mailbox yields admission.reason=transport_busy in in-process admission only"
+      },
+      {
+        "source": "src/runtime/store.ts:114",
+        "fact": "Fresh owner_id and nonexpired 120s runtime claim still assigned; durable reason is not changed to transport_busy"
+      }
+    ],
+    "result": "Old known reserved HEADER physical operation and fresh unrelated current logical poll claim can coexist; tenant/mailbox/nonexpired/reason=ready join does not bind operation to claim"
+  }
+}
