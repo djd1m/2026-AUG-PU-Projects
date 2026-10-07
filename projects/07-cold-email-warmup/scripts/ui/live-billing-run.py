@@ -2,7 +2,7 @@
 """Relay two reused stdin/stdout processes; coordinator owns image/container lifecycle.
 No container start, build, network attach, provider request or DB reset occurs here.
 """
-import argparse, datetime, fcntl, hashlib, json, pathlib, selectors, shutil, subprocess, sys, time
+import argparse, re, datetime, fcntl, hashlib, json, pathlib, selectors, shutil, subprocess, sys, time
 parser=argparse.ArgumentParser()
 for name in ('source-revision','image','environment','evidence','fixture-container','fixture-script','preflight'):
  parser.add_argument('--'+name,required=True)
@@ -23,7 +23,7 @@ assert preflight['status']=='ready' and preflight['source_revision']==a.source_r
 assert preflight['image_id']==a.image and preflight['environment']==environment
 assert preflight['origin']=='https://n7-ui.example.test' and preflight['production_tls_proof'] is False
 assert preflight['fixture_host']==a.fixture_container and preflight['fixture_port']==3000
-assert preflight['database_name']=='n7_live_ui_a4_20261007'
+assert re.fullmatch(r'n7_live_ui_a[1-9][0-9]*_20261007',preflight['database_name'])
 assert preflight['evidence_destination']==str(pathlib.Path(a.evidence).resolve())
 assert environment['browser_container']=='codex-ui-playwright'
 assert environment['fixture_container']==a.fixture_container

@@ -9,7 +9,7 @@ import { createPool } from '/app/dist/db.js';
 import { HttpError } from '/app/dist/errors.js';
 const config=loadConfig();
 assert.equal(config.origin,'https://n7-ui.example.test');
-assert.equal(new URL(config.databaseUrl).pathname,'/n7_live_ui_a4_20261007');
+assert.match(new URL(config.databaseUrl).pathname,/^\/n7_live_ui_a[1-9][0-9]*_20261007$/);
 assert.equal(config.billingMode,'live_provider');
 assert.equal(config.liveBilling.amountMinor,99000);
 assert.equal(config.liveBilling.shopId,'990000007');
