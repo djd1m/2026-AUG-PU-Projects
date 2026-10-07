@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { fork,spawn } from 'node:child_process';
-import { randomUUID } from 'node:crypto';
+import { createHash,randomUUID } from 'node:crypto';
 import { readFile,writeFile } from 'node:fs/promises';
 import { acquireTransportSlot,acquireTransportSlotInTransaction,releaseUnusedTransportSlot,bindTransportChild,closedOwnerProof,releaseTransportSlot,type TransportSlot } from '../src/mailboxes/transport-slots.js';
 import { cadenceFixture,runtimeFixture } from './f10-runtime-fixture.js';
@@ -224,6 +224,40 @@ test('F11 short compiled worker SIGTERM while native BODY physically claimed',{t
   assert.equal((outcome as {code:number|null}).code,0,'actual compiled worker exits successfully');assert.equal((outcome as {signal:NodeJS.Signals|null}).signal,null);assert.ok(messages.some(m=>(m as {drained?:boolean}).drained),'actual worker reports drain');
   assert.equal(physical.length,0,'native ownership released after actual join');assert.equal(logical.length,0,'logical BODY ownership released');assert.equal(closedBodyOwners,true,'native BODY sockets closed before fixture teardown');
   assert.ok(claimedIds.length>0);assert.equal(terminal.length,claimedIds.length,'each physically claimed BODY has a terminal cancellation row');for(const row of terminal){assert.equal(row.capture_state,'held');assert.equal(row.state,'held');assert.equal(row.owner_id,null);assert.equal(row.lease_until,null);assert.equal(row.phase_metadata,null);assert.equal(row.phase_revision,null);assert.equal(row.phase_mailbox_revision,null);assert.notEqual(row.terminal_at,null);assert.equal(row.retention_valid,true,'exact earliest terminal+24h and created+7d retention bounds');}
+ }
+});
+
+// Natural competition observes the production SELECT; it never manufactures BODY permission.
+test('F11 short native competing continuation observer binds actual query and original window',{timeout:60000},async()=>{
+ const {seedBodyPressureCohort}=await import('./f10-runtime-process-fixture.js'),{bodyFixture}=await import('./f11-body-fixture.js');
+ const c=await seedBodyPressureCohort(),smtp=await transportFixture({uidNext:1,headers:[]}),imap=await bodyFixture({mailboxes:c.mailboxes,phaseDelayMs:2800});
+ const records:unknown[]=[],gaps:unknown[]=[],children:{child:ReturnType<typeof fork>;exit:Promise<{code:number|null;signal:NodeJS.Signals|null}>;startTicks:string}[]=[],signals:unknown[]=[];
+ let states:Record<string,unknown>[]=[];
+ try{
+  await assertFairDatabase(c.pool);await installFairInstrumentation(c.pool);
+  for(let i=0;i<2;i++){
+   const child=fork(new URL('./f10-runtime-process-fixture.ts',import.meta.url),[],{execArgv:[],stdio:['ignore','pipe','pipe','ipc'],serialization:'advanced'}),exit=new Promise<{code:number|null;signal:NodeJS.Signals|null}>(r=>child.once('exit',(code,signal)=>r({code,signal}))),startTicks=(await readFile(`/proc/${child.pid}/stat`,'utf8')).split(') ')[1]!.split(' ')[19]!;
+   children.push({child,exit,startTicks});child.on('message',captureReceiver(records,gaps));
+   const started=new Promise<void>((r,j)=>{child.once('message',m=>(m as {started?:boolean}).started?r():j(Error('worker_start_failed')));child.once('error',j);});child.send({...smtp.options!,ca:smtp.options!.ca+'\n'+imap.fixture.ca,imap993:imap.fixture.imap993});await started;
+  }
+  const until=Date.now()+35000;
+  while(Date.now()<until){states=(await c.pool.query("SELECT id,mailbox_id,owner_id,generation,capture_state,capture_phase,reason,queue_eligible_at,attempt_deadline,window_start,window_end,captured_at FROM incoming_ai_event ORDER BY capture_service_seq,id")).rows;if(states.some(r=>r.capture_state==='ready')&&records.some(r=>(r as {stage?:string}).stage==='continuation_select'&&(r as {rowCount?:number}).rowCount===1))break;await new Promise(r=>setTimeout(r,40));}
+ }finally{
+  for(const e of children)if(e.child.exitCode===null&&e.child.signalCode===null)signals.push({pid:e.child.pid,startTicks:e.startTicks,sent:e.child.kill('SIGTERM'),...diagnosticStamp()});
+  const joins=await Promise.all(children.map(e=>e.exit)),physical=(await c.pool.query('SELECT protocol,slot,operation,owner_process,mailbox_id FROM transport_operation WHERE operation IS NOT NULL')).rows;
+  const lifecycle=(await c.pool.query('SELECT event_id,at,kind,mailbox,body FROM n7_fair_events ORDER BY event_id')).rows;
+  await writeFile(`${process.env.F10_EVIDENCE_DIR}/short-continuation.json`,JSON.stringify({records,gaps,states,signals,joins,physical,lifecycle,wire:imap.wire,limits:{phaseDelayMs:2800,windowMs:12000,queueMs:450000},interpretation:'natural competition; old six-second delay and header-gap cause remain unknown unless actual observations expose them; active SIGTERM retains cancellation; planned non-aborting restart is not authorized by current clauses'},null,2)+'\n');
+  await cleanupFairInstrumentation(c.pool);await imap.close();await smtp.close();await c.pool.end();
+  assert.ok(children.length===2);for(const joined of joins){assert.equal(joined.code,0);assert.equal(joined.signal,null);}assert.equal(physical.length,0);assert.deepEqual(gaps,[]);
+  const sourceText=await readFile(new URL('../src/replies/context-store.ts',import.meta.url),'utf8'),sourceSha=createHash('sha256').update(sourceText).digest('hex'),ts=await import('typescript'),tree=ts.createSourceFile('context-store.ts',sourceText,ts.ScriptTarget.Latest,true);
+  let continuationSql='',continuationAst='';const visit=(node:import('typescript').Node)=>{if(ts.isNoSubstitutionTemplateLiteral(node)&&node.text.startsWith('SELECT e.* FROM incoming_ai_event e JOIN reply_rescan r')){continuationSql=node.text;continuationAst=node.getText(tree);}ts.forEachChild(node,visit);};visit(tree);assert.ok(continuationSql);
+  const querySha=createHash('sha256').update(continuationSql).digest('hex'),astSha=createHash('sha256').update(continuationAst).digest('hex');
+  const actual=records.filter(r=>(r as {stage?:string}).stage==='continuation_select') as Record<string,unknown>[];
+  assert.ok(actual.length>0,'actual continuation SQL observation must exist');
+  for(const row of actual){assert.equal(row.source,'replies/context-store');assert.equal(row.sourceSha256,sourceSha);assert.equal(row.querySha256,querySha);assert.equal(row.sourceAstSha256,astSha);assert.ok(row.rowCount===0||row.rowCount===1,'actual SELECT rowCount required');assert.match(String(row.startTicks),/^[0-9]+$/);if(row.rowCount===1){assert.match(String(row.selectedEvent),/^[a-f0-9-]{36}$/);assert.match(String(row.selectedGeneration),/^[0-9]+$/);}}
+  assert.ok(actual.some(row=>row.rowCount===1&&row.selectedPhase==='text'),'actual native metadata yielded to production text continuation');
+  assert.ok(states.some(row=>row.capture_state==='ready'),'both genuine 2800ms phases complete inside original window');
+  for(const row of states.filter(r=>r.window_start)){assert.equal(Number(new Date(row.window_end as string))-Number(new Date(row.window_start as string)),12000);assert.equal(Number(new Date(row.attempt_deadline as string))-Number(new Date(row.queue_eligible_at as string)),450000);}
  }
 });
 

@@ -22,11 +22,14 @@ process.once('message',(value:unknown)=>{const fixture=value as ChildRequest['fi
 // Instrument the existing compiled worker's checked-out client, never its decisions.
 async function installCaptureObserver(pool:import('pg').Pool,config:import('../src/config.js').Config){
  const {readFile}=await import('node:fs/promises');
+ const startTicks=(await readFile('/proc/self/stat','utf8')).split(') ')[1]!.split(' ')[19]!;
+ const ts=await import('typescript');
  const {transportFingerprint}=await import(new URL('../dist/mailboxes/transport-authority.js',import.meta.url).href);
  const expectedConfigFingerprint=transportFingerprint(config.providerAllowlist);
  const sources=await Promise.all(['replies/context-store','runtime/store','mailboxes/transport-authority','mailboxes/transport-slots'].map(async name=>({name,sql:await readFile(new URL('../src/'+name+'.ts',import.meta.url),'utf8')})));
+ const astBindings=sources.flatMap(source=>{const tree=ts.createSourceFile(source.name,source.sql,ts.ScriptTarget.Latest,true),bindings:{sql:string;astSha256:string}[]=[];const visit=(node:import('typescript').Node)=>{if(ts.isNoSubstitutionTemplateLiteral(node)||ts.isStringLiteral(node))bindings.push({sql:node.text,astSha256:createHash('sha256').update(node.getText(tree)).digest('hex')});ts.forEachChild(node,visit);};visit(tree);return bindings;});
  const hash=(v:string)=>createHash('sha256').update(v).digest('hex');let emitted=0,sequence=0;
- const emit=(record:Record<string,unknown>)=>{if(emitted++<16000)process.send?.({captureObservation:{...record,pid:process.pid,sequence:++sequence,utc:new Date().toISOString(),monotonicNs:process.hrtime.bigint().toString()}});else if(emitted===16001)process.send?.({captureObservationGap:'record_limit'});};
+ const emit=(record:Record<string,unknown>)=>{if(emitted++<16000)process.send?.({captureObservation:{...record,pid:process.pid,startTicks,sequence:++sequence,utc:new Date().toISOString(),monotonicNs:process.hrtime.bigint().toString()}});else if(emitted===16001)process.send?.({captureObservationGap:'record_limit'});};
  pool.on('connect',client=>{
   const original=client.query.bind(client);
   const query=original as unknown as (sql:string,values?:unknown[])=>Promise<import('pg').QueryResult>;
@@ -35,6 +38,16 @@ async function installCaptureObserver(pool:import('pg').Pool,config:import('../s
   client.query=(async(sql:string,values?:unknown[],callback?:unknown)=>{
    if(typeof callback==='function'||typeof values==='function')return (original as unknown as (...args:unknown[])=>unknown)(sql,values,callback);
    if(typeof sql!=='string')throw Error('observer_query_shape_gap');
+   const continuation=sql.startsWith('SELECT e.* FROM incoming_ai_event e JOIN reply_rescan r');
+   if(continuation){
+    if(!locked)throw Error('observer_first_lock_missing');
+    context={mode:'continuation'};last=null;branch=null;
+    const snapshot=(await query(`SELECT txid_current()::text transaction_id,pg_backend_pid() backend_pid,clock_timestamp() database_utc,
+     (SELECT jsonb_agg(x) FROM (SELECT e.id,e.tenant_id,e.mailbox_id,e.owner_id,e.generation,e.capture_state,e.capture_phase,e.capture_service_seq,e.window_start,e.window_end,e.window_completed_at,e.next_attempt_at,e.lease_until,e.attempt_deadline,e.expires_at,e.source,e.uid,e.uidvalidity,e.authenticated_run_id,e.authenticated_attempt,r.run_id,r.attempt,r.state scan_state,r.uidvalidity scan_uidvalidity,r.provenance,p.scan_complete,p.completed_at,d.state due_state,d.due_at,d.next_check_at,d.owner_id poll_owner,d.generation poll_generation,EXISTS(SELECT 1 FROM capacity_lease l WHERE l.mailbox_id=e.mailbox_id AND l.state='active' AND l.expires_at>clock_timestamp()) capacity_active,EXISTS(SELECT 1 FROM suppression s WHERE s.tenant_id=e.tenant_id AND s.recipient_hash=e.authenticated_recipient_hash) suppressed FROM incoming_ai_event e LEFT JOIN reply_rescan r ON r.tenant_id=e.tenant_id AND r.mailbox_id=e.mailbox_id LEFT JOIN mailbox_poll p ON p.mailbox_id=e.mailbox_id LEFT JOIN runtime_due d ON d.mailbox_id=e.mailbox_id AND d.kind='poll' WHERE e.window_start IS NOT NULL AND e.capture_state IN ('pending','claimed') ORDER BY e.window_end,e.capture_service_seq,e.id LIMIT 4) x) events,
+     (SELECT jsonb_agg(x) FROM (SELECT urgent.mailbox_id,urgent.state,urgent.next_check_at,hp.completed_at FROM runtime_due urgent JOIN mailbox_poll hp ON hp.mailbox_id=urgent.mailbox_id WHERE urgent.kind='poll' AND urgent.state='ready' AND urgent.next_check_at<=clock_timestamp() AND hp.completed_at+interval '30 seconds'<=clock_timestamp()+interval '5 seconds' ORDER BY hp.completed_at,urgent.mailbox_id LIMIT 30) x) urgent_headers,
+     (SELECT jsonb_agg(jsonb_build_object('slot',slot,'operation',operation,'owner_process',owner_process,'owner_host',owner_host,'mailbox',mailbox_id,'purpose',operation_purpose,'header_reserved',header_reserved,'free',operation IS NULL) ORDER BY slot) FROM transport_operation WHERE protocol='imap') slots`)).rows[0];
+    emit({kind:'entry',...context,snapshot,gaps:['sender_decryption_binding_not_observed','authority_binding_observed_by_actual_following_queries','read_committed_snapshot_not_query_predicate_reexecution'],sourceBindings:sources.map(s=>({name:s.name,sha256:hash(s.sql)}))});
+   }
    const finish=sql.startsWith("UPDATE runtime_due SET state='ready',owner_id=NULL,lease_until=NULL,reason='ready',failure_count=0,due_at=$5");
    const denied=sql.startsWith('UPDATE runtime_due SET due_at=$2,next_check_at=$2');
    if(context&&sql.startsWith('SELECT 1 FROM incoming_ai_event WHERE window_end>')){
@@ -55,16 +68,17 @@ async function installCaptureObserver(pool:import('pg').Pool,config:import('../s
    if(/SELECT pg_advisory_xact_lock\(7,\s*1\)/.test(sql))locked=true;
    if(finish&&result.rowCount){context={mailbox:values?.[0],claimOwner:values?.[2],claimGeneration:values?.[3],inheritedNow:values?.[4]};last=null;branch=null;emit({kind:'query',...context,stage:'settled_header_finish',querySha256:hash(sql),source:'runtime/store',sourceSha256:hash(sources.find(s=>s.name==='runtime/store')!.sql),rowCount:result.rowCount});}
    else if(context){
-    if(denied){emit({kind:'result',...context,outcome:'null',branch:branch??'non_sql_branch_gap',lastQuerySha256:last,rowCount:result.rowCount,gap:'non_sql_sender_or_deadline_branch_if_last_eligibility_select_returned_row'});context=null;}
+    if(continuation){const source=sources.find(s=>s.sql.includes(sql));emit({kind:'query',...context,stage:'continuation_select',querySha256:hash(sql),source:source?.name??null,sourceSha256:source?hash(source.sql):null,sourceAstSha256:astBindings.find(b=>b.sql===sql)?.astSha256??null,rowCount:result.rowCount,selectedEvent:result.rows[0]?.id??null,selectedOwner:result.rows[0]?.owner_id??null,selectedGeneration:result.rows[0]?.generation??null,selectedPhase:result.rows[0]?.capture_phase??null});context={...context,event:result.rows[0]?.id??null,mailbox:result.rows[0]?.mailbox_id??null};}
+    else if(denied){emit({kind:'result',...context,outcome:'null',branch:branch??'non_sql_branch_gap',lastQuerySha256:last,rowCount:result.rowCount,gap:'non_sql_sender_or_deadline_branch_if_last_eligibility_select_returned_row'});context=null;}
     else if(sql.startsWith("UPDATE incoming_ai_event SET capture_state='claimed',owner_id=$7")){emit({kind:'result',...context,outcome:'opened',event:values?.[0],owner:values?.[6],generation:result.rows[0]?.generation,windowStart:values?.[1],windowEnd:values?.[2],rowCount:result.rowCount,querySha256:hash(sql)});context=null;}
     else if(!['COMMIT','ROLLBACK'].includes(sql)){
      last=hash(sql);const source=sources.find(s=>s.sql.includes(sql)),label=stage(sql);
      if((label==='pending_continuation'&&result.rowCount)||(label==='live_windows'&&Number(result.rows[0]?.n)>=3)||(label==='eligible_frontier'&&!result.rowCount)||(label==='body_header_due'&&result.rowCount)||(label==='potential_body_occupancy'&&Number(result.rows[0]?.n)>=3)||(label==='mailbox_occupied'&&result.rowCount)||(label==='free_slot'&&!result.rowCount))branch=label;
      if(label==='transport_authority')branch='transport_authority_denial';if(label==='eligible_frontier'&&result.rowCount)branch=null;
-     emit({kind:'query',...context,stage:label,querySha256:last,source:source?.name??null,sourceSha256:source?hash(source.sql):null,rowCount:result.rowCount,count:sql.startsWith('SELECT count(*) AS n')?result.rows[0]?.n:null,selectedEvent:sql.startsWith('SELECT e.*,p.completed_at')?result.rows[0]?.id:null});
+     emit({kind:'query',...context,stage:label,querySha256:last,source:source?.name??null,sourceSha256:source?hash(source.sql):null,sourceAstSha256:astBindings.find(b=>b.sql===sql)?.astSha256??null,rowCount:result.rowCount,count:sql.startsWith('SELECT count(*) AS n')?result.rows[0]?.n:null,selectedEvent:sql.startsWith('SELECT e.*,p.completed_at')?result.rows[0]?.id:null});
     }
    }
-   if(sql==='COMMIT'||sql==='ROLLBACK'){context=null;locked=false;}
+   if(sql==='COMMIT'||sql==='ROLLBACK'){if(context?.mode==='continuation')emit({kind:'result',...context,outcome:'transaction_end',lastQuerySha256:last,gap:'non_sql_authority_sender_revision_or_deadline_result_not_inferred'});context=null;locked=false;}
    return result;
   }) as typeof client.query;
  });
