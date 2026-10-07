@@ -29,6 +29,13 @@ export async function enqueueCaptureClient(c:PoolClient,b:IntentBinding) {
  AND (incoming_ai_event.authenticated_run_id IS DISTINCT FROM EXCLUDED.authenticated_run_id OR incoming_ai_event.authenticated_attempt<>EXCLUDED.authenticated_attempt)`,[randomUUID(),randomUUID(),b.tenant,b.mailbox,b.uidvalidity,b.uid,b.runId,b.attempt,b.source,b.observedAt,b.enrollment,b.root,owned?'pending':'held',owned?'body_authority_required':'ambiguous_binding',owned?'pending':'held',owned,b.sender?createHash('sha256').update(b.sender).digest('hex'):null]);
 }
 export interface CaptureAdmission {row:{window_end:Date};identity:BodyIdentity;slot:TransportSlot}
+// A successful unused-slot release proves this registered owner never bound a child.
+// Started/unknown operations cannot use this logical cancellation path.
+export async function disposeUnstartedCapture(pool:Pool,admission:CaptureAdmission){
+ if(!await releaseUnusedTransportSlot(pool,admission.slot))return false;
+ const b=admission.identity;
+ return eligibilityTransaction(pool,async c=>(await c.query(`UPDATE incoming_ai_event SET capture_state='held',state='held',reason='capture_cancelled',phase_metadata=NULL,phase_revision=NULL,phase_mailbox_revision=NULL,owner_id=NULL,lease_until=NULL,terminal_at=LEAST(COALESCE(terminal_at,statement_timestamp()),statement_timestamp()),expires_at=LEAST(expires_at,statement_timestamp()+interval '24 hours') WHERE tenant_id=$1 AND mailbox_id=$2 AND id=$3 AND owner_id=$4 AND generation=$5 AND capture_state='claimed'`,[b.tenant,b.mailbox,b.event,b.owner,b.generation])).rowCount===1);
+}
 export class ContextStore {
  constructor(readonly pool:Pool,readonly ring:Keyring){}
  // Direct logical claims cannot authorize body IO; runtime quantum claims event and slot together.
@@ -71,7 +78,7 @@ export class ContextStore {
  }
  // One protocol stage per durable claim; the next stage is selected by a later IMAP lane turn.
  async quantum(adapter:LiveReplyAdapter,config:Config,signal:AbortSignal,preadmitted?:CaptureAdmission):Promise<boolean>{
-  if(signal.aborted)return false;
+  if(signal.aborted){if(preadmitted)await disposeUnstartedCapture(this.pool,preadmitted);return false;}
   const admission=preadmitted??await eligibilityTransaction(this.pool,async c=>{
    await expireCaptureWindowsClient(c);
    const row=(await c.query(`SELECT e.* FROM incoming_ai_event e JOIN reply_rescan r ON r.tenant_id=e.tenant_id AND r.mailbox_id=e.mailbox_id

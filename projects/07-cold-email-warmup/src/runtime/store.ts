@@ -4,7 +4,7 @@ import { eligibilityTransaction } from '../consent/transaction.js';
 import { dispatchProjection } from '../dispatch/store.js';
 import { acquireTransportSlotInTransaction,releaseUnusedTransportSlot,type TransportSlot } from '../mailboxes/transport-slots.js';
 import type { Config } from '../config.js';
-import { openCaptureWindowClient,captureHeaderFrontierClient,captureHeaderContextClient,type CaptureAdmission } from '../replies/context-store.js';
+import { disposeUnstartedCapture,openCaptureWindowClient,captureHeaderFrontierClient,captureHeaderContextClient,type CaptureAdmission } from '../replies/context-store.js';
 import { HttpError } from '../errors.js';
 export type RuntimeKind='poll'|'pool'|'dispatch';
 export type RuntimeReason='ready'|'waiting_peer'|'waiting_budget'|'waiting_capacity'|'waiting_pacing'|'transport_busy'|'provider_backoff'|'authority_denied'|'rescan_incomplete'|'cleanup_blocked'|'db_unavailable';
@@ -26,7 +26,7 @@ export function runtimeFailure(error:unknown):RuntimeReason|null{
 }
 export class RuntimeStore {
  private readonly captures=new WeakMap<RuntimeClaim,CaptureAdmission>();
- async disposeCaptureAdmission(capture:CaptureAdmission){await releaseUnusedTransportSlot(this.pool,capture.slot);}
+ async disposeCaptureAdmission(capture:CaptureAdmission){await disposeUnstartedCapture(this.pool,capture);}
  takeCaptureAdmission(claim:RuntimeClaim){const capture=this.captures.get(claim);this.captures.delete(claim);return capture;}
  private readonly admissions=new WeakMap<RuntimeClaim,{slot?:TransportSlot;reason?:RuntimeReason}>();
  constructor(readonly pool:Pool,readonly nativePollAuthority?:(c:PoolClient,tenant:string,mailbox:string)=>Promise<unknown>,readonly captureConfig?:Config){}

@@ -8,7 +8,7 @@ import { runRuntime } from '../src/runtime/loop.js';
 import { RuntimeStore } from '../src/runtime/store.js';
 import { PollWorker } from '../src/replies/worker.js';
 import { bodyFixture } from './f11-body-fixture.js';
-import { readFile } from 'node:fs/promises';
+import { readFile,writeFile } from 'node:fs/promises';
 import { loadConfig } from '../src/config.js';
 import { createPool,migrate,ready } from '../src/db.js';
 import { application } from '../src/server.js';
@@ -168,11 +168,15 @@ export async function runF11ContextIntegration(t:TestContext){
    const live={...config,pollMode:'live_provider' as const},f=await bodyFixture({phaseDelayMs:2800,headers:Buffer.from(`From: reply@example.test\r\nMessage-ID: <owned@example.test>\r\nReferences: ${message}\r\n\r\n`)}),token=(await readFile(process.env.OPERATOR_TOKEN_FILE!,'utf8')).trim();
    const grant={scope:'transport',tenant,mailbox,capabilities:['imap_headers'],smtpHost:'smtp.gmail.com',smtpPort:587,imapHost:'imap.gmail.com',imapPort:993,mailboxTransportRevision:'0',configFingerprint:transportFingerprint(config.providerAllowlist),expiresAt:new Date(Date.now()+600000).toISOString()};
    const runtime=new RuntimeStore(pool,(c,t,m)=>authorizeTransport(c,live,t,m,'imap_headers'),live);
-   let firstCapture:import('../src/replies/context-store.js').CaptureAdmission|undefined;
+   let firstCapture:import('../src/replies/context-store.js').CaptureAdmission|undefined;const outcomes:unknown[]=[];
    const complete=async()=>{for(let n=0;n<8;n++){
     const claim=await runtime.claim('poll');assert.ok(claim);const admission=runtime.pollAdmission(claim);assert.ok(admission?.slot);
-    const worker=new PollWorker(pool,config.credentialKeyring,'live_provider',new LiveReplyAdapter(pool,live,f.fixture,admission.slot));
+    const native=new LiveReplyAdapter(pool,live,f.fixture,admission.slot),read=native.read.bind(native);
+    native.read=async(...args)=>{try{const value=await read(...args);outcomes.push({boundary:'native_read',kind:value.kind,snapshot:value.snapshot,page:value.kind==='page'?{coveredThrough:value.page.coveredThrough,uids:value.page.headers.map(h=>h.uid)}:null});return value;}catch(error){outcomes.push({boundary:'native_read',errorName:error instanceof Error?error.name:'unknown',code:error instanceof Object&&'code' in error?error.code:null});throw error;}};
+    const worker=new PollWorker(pool,config.credentialKeyring,'live_provider',native),empty=worker.store.completeNativeEmptyTail.bind(worker.store);
+    worker.store.completeNativeEmptyTail=async(...args)=>{try{return await empty(...args);}catch(error){outcomes.push({boundary:'empty_tail_commit',errorName:error instanceof Error?error.name:'unknown',code:error instanceof Object&&'code' in error?error.code:null});throw error;}};
     const outcome=await worker.quantum(tenant,mailbox,runtime.guard(claim),new AbortController().signal);
+    outcomes.push({utc:new Date().toISOString(),iteration:n,outcome,owner:claim.owner_id,generation:claim.generation,commands:f.commands.length});
     const turn=(await pool.query("SELECT service_seq FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[mailbox])).rows[0].service_seq;
     await runtime.finish(claim,'ready',outcome.state==='complete');firstCapture=runtime.takeCaptureAdmission(claim)??firstCapture;
     assert.equal((await pool.query("SELECT service_seq FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[mailbox])).rows[0].service_seq,turn);
@@ -239,7 +243,16 @@ export async function runF11ContextIntegration(t:TestContext){
     assert.ok(Date.now()<opened.window_end.getTime());assert.ok(f.peak<=1);assert.equal(f.sockets.size,0);
     await new Promise(r=>setTimeout(r,Math.max(0,opened.window_end.getTime()-Date.now()+10)));
     await complete();const immediate=(await pool.query("SELECT due_at,next_check_at FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[mailbox])).rows[0];assert.deepEqual(immediate.due_at,immediate.next_check_at);assert.ok(immediate.due_at<=new Date());assert.deepEqual((await pool.query('SELECT window_end FROM incoming_ai_event')).rows[0].window_end,opened.window_end);
-   }finally{await f.close();}
+   }finally{
+    if(process.env.F10_EVIDENCE_DIR){
+     const poll=(await pool.query('SELECT mailbox_id,uidvalidity,cursor_uid,scan_complete,completed_at,poll_owner FROM mailbox_poll WHERE mailbox_id=$1',[mailbox])).rows;
+     const rescan=(await pool.query('SELECT mailbox_id,run_id,attempt,state,uidvalidity,cursor_uid,high_water,tail_high_water,provenance FROM reply_rescan WHERE mailbox_id=$1',[mailbox])).rows;
+     const events=(await pool.query('SELECT id,capture_state,capture_phase,reason,owner_id,generation,source,uidvalidity,uid,authenticated_run_id,authenticated_attempt,window_start,window_end,window_revision,window_mailbox_revision,queue_eligible_at,attempt_deadline,terminal_at,expires_at FROM incoming_ai_event WHERE mailbox_id=$1',[mailbox])).rows;
+     const grants=(await pool.query("SELECT mailbox_id,revision,state,scope->'capabilities' capabilities,scope->>'mailboxTransportRevision' mailbox_revision,scope->>'configFingerprint' fingerprint FROM transport_grant WHERE mailbox_id=$1",[mailbox])).rows;
+     await writeFile(`${process.env.F10_EVIDENCE_DIR}/c1-native-diagnostic.json`,JSON.stringify({utc:new Date().toISOString(),outcomes,commands:f.commands,wire:f.wire,poll,rescan,events,grants,config:{pollMode:live.pollMode,fingerprint:transportFingerprint(live.providerAllowlist)},physical:(await pool.query('SELECT protocol,slot,operation,owner_process,mailbox_id FROM transport_operation WHERE operation IS NOT NULL')).rows},null,2)+'\n');
+    }
+    if(firstCapture)await runtime.disposeCaptureAdmission(firstCapture);await f.close();
+   }
   });
   await t.test('fixed expired window holds phase bytes and establishes earliest terminal clock without renewal',async()=>{
    const e=(await pool.query('SELECT * FROM incoming_ai_event LIMIT 1')).rows[0];const phase=encryptContent([Buffer.from('PRIVATE_PHASE_CANARY').toString('base64')],{tenant,mailbox,event:e.id,bindingVersion:1},config.credentialKeyring);

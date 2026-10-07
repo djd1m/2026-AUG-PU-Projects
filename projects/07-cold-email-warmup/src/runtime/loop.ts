@@ -16,10 +16,13 @@ export async function runRuntime(store:RuntimeStore,operations:Record<RuntimeKin
   let result:RuntimeOutcome;
   try{result=await operations[kind](claim,signal);}catch(error){const reason=runtimeFailure(error);if(reason===null){internal.abort();throw error;}result={reason};}
   if(signal.aborted){await store.cancel(claim,result.reason);return;}
-  await store.finish(claim,result.reason,result.satisfied);
-  const capture=store.takeCaptureAdmission(claim);
-  try{await yieldTurn(undefined,{signal});}catch{if(capture)await store.disposeCaptureAdmission(capture);return;}
-  if(capture){if(operations.body)await operations.body(signal,capture);else await store.disposeCaptureAdmission(capture);}
+  let capture:CaptureAdmission|undefined;
+  try{
+   await store.finish(claim,result.reason,result.satisfied);
+   capture=store.takeCaptureAdmission(claim);
+   try{await yieldTurn(undefined,{signal});}catch{return;}
+   if(capture&&operations.body)await operations.body(signal,capture);
+  }finally{capture??=store.takeCaptureAdmission(claim);if(capture)await store.disposeCaptureAdmission(capture);}
  }while(!once&&!signal.aborted);};
  const maintenance=async()=>{if(once)return;do{try{await delay(5000,undefined,{signal});}catch{return;}if(signal.aborted)return;await store.maintenance();await operations.maintenance?.();}while(!signal.aborted);};
  try{await store.maintenance();await operations.maintenance?.();}catch(error){external.removeEventListener('abort',stop);throw error;}

@@ -481,3 +481,39 @@ test('F11 A40 ordinary HEADER-only READY empty tail needs no pending capture',{t
 test('F11 A40 runtime external reason and internal failure stay distinct',async()=>{
  const {runRuntime}=await import('../src/runtime/loop.js'),{createProcessDrainReason}=await import('../src/mailboxes/transport-lifetime.js');for(const mode of ['already','drain','internal'] as const){const abort=new AbortController(),reason=mode==='drain'?createProcessDrainReason():new Error('user_stop'),seen:unknown[]=[];if(mode==='already')abort.abort(reason);const store={maintenance:async()=>{},claim:async()=>null};const ops={poll:async()=>({}),dispatch:async()=>({}),pool:async()=>({}),body:async(signal:AbortSignal)=>{seen.push(signal);if(mode==='internal')throw Error('internal_failure');abort.abort(reason);assert.equal(signal.reason,reason);return false;}};if(mode==='internal')await assert.rejects(runRuntime(store as unknown as import('../src/runtime/store.js').RuntimeStore,ops,abort.signal,true),/internal_failure/);else await runRuntime(store as unknown as import('../src/runtime/store.js').RuntimeStore,ops,abort.signal,true);if(mode==='already')assert.equal(seen.length,0);if(mode==='internal')assert.ok(seen.every(s=>(s as AbortSignal).aborted&&(s as AbortSignal).reason!==reason));}
 });
+
+
+test('F11 A42 unstarted admission cancellation closes only exact logical owner',{timeout:45000},async()=>{
+ const {seedBodyPressureCohort}=await import('./f10-runtime-process-fixture.js'),{bodyFixture}=await import('./f11-body-fixture.js'),{RuntimeStore}=await import('../src/runtime/store.js'),{authorizeTransport}=await import('../src/mailboxes/transport-authority.js'),{PollWorker}=await import('../src/replies/worker.js'),{LiveReplyAdapter}=await import('../src/replies/adapter.js'),{ContextStore}=await import('../src/replies/context-store.js'),{runRuntime}=await import('../src/runtime/loop.js');
+ const records:unknown[]=[];
+ for(const mode of ['finish_stop','already_aborted','body_failure','generation','owner','started'] as const){
+  const empty=await runtimeFixture(0);await empty.pool.end();const c=await seedBodyPressureCohort(),target=c.participants[0]!,body=await bodyFixture({mailboxes:c.mailboxes}),runtime=new RuntimeStore(c.pool,(client,t,m)=>authorizeTransport(client,c.config,t,m,'imap_headers'),c.config),abort=new AbortController();let capture:import('../src/replies/context-store.js').CaptureAdmission|undefined,child:ReturnType<typeof spawn>|undefined,childExit:Promise<void>|undefined;
+  try{
+   await runtime.maintenance();await c.pool.query("UPDATE runtime_due SET next_check_at=clock_timestamp()+interval '1 minute' WHERE kind='poll' AND mailbox_id<>$1",[target.mailbox]);
+   for(let n=0;n<6&&!capture;n++){
+    const claim=await runtime.claim('poll');assert.ok(claim);const result=await new PollWorker(c.pool,c.config.credentialKeyring,'live_provider',new LiveReplyAdapter(c.pool,c.config,body.fixture,runtime.pollAdmission(claim)!.slot)).quantum(target.tenant,target.mailbox,runtime.guard(claim),abort.signal);
+    if(result.state==='complete'&&(mode==='finish_stop'||mode==='body_failure')){
+     const finish=runtime.finish.bind(runtime);const laneStore={maintenance:async()=>{},claim:async(kind:string)=>kind==='poll'?claim:null,finish:async()=>{if(mode==='finish_stop')abort.abort();await finish(claim,'ready',true);},takeCaptureAdmission:(current:typeof claim)=>runtime.takeCaptureAdmission(current),disposeCaptureAdmission:(current:import('../src/replies/context-store.js').CaptureAdmission)=>runtime.disposeCaptureAdmission(current),cancel:async()=>{}};
+     let bodyCalls=0;const ops={poll:async()=>({satisfied:true}),dispatch:async()=>({}),pool:async()=>({}),body:async(_signal:AbortSignal,admission?:import('../src/replies/context-store.js').CaptureAdmission)=>{if(admission){bodyCalls++;throw Error('unstarted_body_failure');}return false;}};
+     // Four lanes share this fixture; only the first claim receives the settled HEADER.
+     let selected=false;laneStore.claim=async(kind:string)=>{if(kind!=='poll'||selected)return null;selected=true;return claim;};
+     if(mode==='body_failure')await assert.rejects(runRuntime(laneStore as unknown as import('../src/runtime/store.js').RuntimeStore,ops,abort.signal,true),/unstarted_body_failure/);else await runRuntime(laneStore as unknown as import('../src/runtime/store.js').RuntimeStore,ops,abort.signal,true);
+     assert.equal(bodyCalls,mode==='body_failure'?1:0);break;
+    }
+    await runtime.finish(claim,'ready',result.state==='complete');capture=runtime.takeCaptureAdmission(claim);
+   }
+   const before=(await c.pool.query('SELECT id,capture_state,owner_id,generation,terminal_at,expires_at,metadata_expires_at,window_start,window_end,attempt_deadline,queue_eligible_at FROM incoming_ai_event WHERE mailbox_id=$1',[target.mailbox])).rows[0];assert.ok(before);
+   if(mode!=='finish_stop'&&mode!=='body_failure'){
+    assert.ok(capture);
+    if(mode==='generation')await c.pool.query('UPDATE incoming_ai_event SET generation=generation+1 WHERE id=$1',[before.id]);
+    if(mode==='owner')await c.pool.query('UPDATE incoming_ai_event SET owner_id=$2 WHERE id=$1',[before.id,randomUUID()]);
+    if(mode==='started'){child=spawn(process.execPath,['-e','setTimeout(()=>{},10000)'],{stdio:'ignore'});childExit=new Promise<void>(r=>child!.once('exit',()=>r()));bindTransportChild(capture.slot,child);}
+    if(mode==='already_aborted'){abort.abort();assert.equal(await new ContextStore(c.pool,c.config.credentialKeyring).quantum(new LiveReplyAdapter(c.pool,c.config,body.fixture),c.config,abort.signal,capture),false);}else await runtime.disposeCaptureAdmission(capture);
+   }
+   const after=(await c.pool.query('SELECT id,capture_state,state,reason,owner_id,generation,terminal_at,expires_at,metadata_expires_at,phase_metadata,window_start,window_end,attempt_deadline,queue_eligible_at FROM incoming_ai_event WHERE mailbox_id=$1',[target.mailbox])).rows[0],physical=Number((await c.pool.query('SELECT count(*) n FROM transport_operation WHERE operation IS NOT NULL')).rows[0].n);
+   if(['generation','owner','started'].includes(mode)){assert.equal(after.capture_state,'claimed');assert.ok(after.owner_id);assert.equal(physical,mode==='started'?1:0);}else{assert.equal(after.capture_state,'held');assert.equal(after.state,'held');assert.equal(after.reason,'capture_cancelled');assert.equal(after.owner_id,null);assert.equal(after.phase_metadata,null);assert.ok(after.terminal_at);assert.ok(after.expires_at<=new Date(after.terminal_at.getTime()+86400000));assert.equal(physical,0);}
+   assert.equal(body.wire.filter(e=>e.phase==='phase_start').length,0);assert.equal(body.sockets.size,0);records.push({mode,before,after,physical,wire:body.wire});
+  }finally{if(child){child.kill('SIGTERM');await childExit;assert.ok(capture);await releaseTransportSlot(c.pool,closedOwnerProof(capture.slot));}await body.close();await c.pool.end();}
+ }
+ await writeFile(`${process.env.F10_EVIDENCE_DIR}/a42-unstarted-cancellation.json`,JSON.stringify({records},null,2)+'\n');
+});
