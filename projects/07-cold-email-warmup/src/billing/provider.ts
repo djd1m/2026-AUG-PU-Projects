@@ -42,3 +42,23 @@ export class LocalProvider implements Provider {
   });
  }
 }
+
+// An adapter returns these only after independent authenticated canonical GETs.
+// They carry identity, not a synthetic provider chronology/version.
+export interface LiveBinding {
+ provider:string; merchant:string; mode:'live'; tenant:string; intent:string;
+ plan:'team'; amountMinor:number; currency:string; durationDays:number;
+}
+export interface VerifiedPayment extends LiveBinding {
+ id:string; status:'pending'|'succeeded'|'canceled'|'declined'; paid:boolean; paidAt:string|null;
+}
+export interface VerifiedRefund {
+ id:string; paymentId:string; provider:string; merchant:string; mode:'live';
+ status:'pending'|'succeeded'|'canceled'; amountMinor:number; currency:string;
+}
+export interface CanonicalProvider {
+ // Every replay uses binding.intent as the remote idempotency key.
+ create(binding:Readonly<LiveBinding>):Promise<VerifiedPayment>;
+ fetch(paymentId:string):Promise<VerifiedPayment>;
+ fetchRefund(refundId:string):Promise<VerifiedRefund>;
+}
