@@ -543,6 +543,18 @@
       "id": "f11-c1-adjudication-a5-native",
       "status": "active actual ACK verified",
       "actual_ACK_at": "2026-10-07T00:23:22Z"
+    },
+    {
+      "id": "f11-c1-adjudication-a5-native",
+      "status": "completed early; explicit conditional amendment feasibility-gated",
+      "finished_at": "2026-10-07T00:28:55.922873Z",
+      "elapsed_wall_ms": 333923,
+      "receipt_sha256": "62bd29192e3a82ddd4e2a3f3fc43b3adc3830dcc163c3257a6e369dcca4b76de"
+    },
+    {
+      "id": "f11-context-author-a6",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T00:32:37Z"
     }
   ],
   "work_units": [
@@ -585,33 +597,27 @@
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true,
     "latest_checkpoint": {
-      "at": "2026-10-07T00:25:01.133804+00:00",
-      "disk_available_bytes": 2689863680,
-      "remaining_AC": [
-        "C1 scheduling adjudication: F10 successful polling remains immediately due; body admission denies actual due/claimed/incomplete headers. Runtime worker body wiring OFF. Optional four-lane callback seam exists only; no new body lane or RuntimeKind.",
-        "C1 mandatory independent native socket/ownership/phase observer with real competing process body/header workers and ALL30 participants/failure denominator healthy completed-poll<=30s and due-selection<=60s under body pressure is absent. No cap/tolerance waiver. Slow-body exact-child-exit/restart physical-release matrix still required.",
-        "C2 normal incremental new poll run does not reobserve old pending UID; safe fresh authenticated continuation/recovery for stale pending origins remains absent. New phase resets only on actual accepted pending header reobservation, preserving original expiry and semantic identity.",
-        "C2 new phase_metadata encrypted copy is expiry-gated in quantum, cleared by expiry purge and current terminal capture/reobservation paths; explicit new-column terminal24h/absolute7d/restart/copy physical-deletion boundary witnesses are mandatory remaining. Full source/run/root/recipient/config/grant race matrix remains.",
-        "C3 explicit native own-loop provenance and full production variant matrix remain from A3.",
-        "Coordinator full gates and independent fresh HIGH review required. This author does not accept F11. Legacy captureBody convenience still combines metadata/text; only new ContextStore.quantum/adapter phase path provides durable scheduling."
-      ],
-      "executor": "/root/n7_sol_coordinator/f11_c1_normative_planner_a5"
+      "at": "2026-10-07T00:33:45.555429+00:00",
+      "disk_available_bytes": 2715676672,
+      "remaining_AC": "Implement exact independently adjudicated conditional one5swindow; actual ALL30 BOTHphase body liveness and header30/due60 feasibility gates; explicit remainingC2privacy; source-frozen HIGH checks/review before F11 acceptance.",
+      "executor": "/root/n7_sol_coordinator/f11_window_author_a6"
     }
   },
-  "current_stage": "F11 fresh HIGH narrow normative scheduler adjudication; durable phase source partial, runtime body OFF",
+  "current_stage": "F11 fresh MEDIUM conditional body window and authenticated revalidation implementation; feasibility pending",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_c1_normative_planner_a5",
-    "attempt": "f11-c1-adjudication-a5-native",
+    "executor": "/root/n7_sol_coordinator/f11_window_author_a6",
+    "attempt": "f11-context-author-a6",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T00:23:22Z",
+    "actual_ACK_at": "2026-10-07T00:32:37Z",
     "requested_model": "gpt-6.1-sol",
-    "requested_effort": "high",
+    "requested_effort": "medium",
     "actual_model": null,
-    "source_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
-    "freeze_at": "2026-10-07T00:29:22Z",
-    "deadline": "2026-10-07T00:31:22Z",
-    "launch_sha256": "07991b093645002851040f4085998f8e2b077cbfbcd77709609d456cb8de32a7",
-    "next": "Independent narrow C1/F10 scheduling adjudication then actual distinct bounded MEDIUM implementation; runtimebodyOFF until mandatory all30 witnesses; fresh independent HIGH finalsource review."
+    "source_revision": "d606b704f8dbc739ea3df5dd7253032217001a0e",
+    "product_code_base": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+    "freeze_at": "2026-10-07T00:49:37Z",
+    "deadline": "2026-10-07T00:52:37Z",
+    "launch_sha256": "972941763d465158af9897789ad5fdd349831c165d25301c0349b997d9bb75f7",
+    "next": "Implement exact independently adjudicated conditional one5swindow; actual ALL30 BOTHphase body liveness and header30/due60 feasibility gates; explicit remainingC2privacy; source-frozen HIGH checks/review before F11 acceptance."
   }
 }

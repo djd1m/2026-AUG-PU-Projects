@@ -59,13 +59,13 @@
     "followup_status": "F07/F08/F09 locally accepted, expanded AC001–003 met; AC004–009 pending. Whole required_gates_passed remains false."
   },
   "metrics": {
-    "elapsed_wall_ms": 55138255,
+    "elapsed_wall_ms": 55662677,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-07T00:25:01.133804+00:00"
+    "elapsed_as_of": "2026-10-07T00:33:45.555429+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 fresh HIGH narrow normative scheduler adjudication; durable phase source partial, runtime body OFF",
+  "current_stage": "F11 fresh MEDIUM conditional body window and authenticated revalidation implementation; feasibility pending",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -138,18 +138,19 @@
   "intermediate_revision": "298960ce9587cf3124501bd16348f318f764eba5",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_c1_normative_planner_a5",
-    "attempt": "f11-c1-adjudication-a5-native",
+    "executor": "/root/n7_sol_coordinator/f11_window_author_a6",
+    "attempt": "f11-context-author-a6",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T00:23:22Z",
+    "actual_ACK_at": "2026-10-07T00:32:37Z",
     "requested_model": "gpt-6.1-sol",
-    "requested_effort": "high",
+    "requested_effort": "medium",
     "actual_model": null,
-    "source_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
-    "freeze_at": "2026-10-07T00:29:22Z",
-    "deadline": "2026-10-07T00:31:22Z",
-    "launch_sha256": "07991b093645002851040f4085998f8e2b077cbfbcd77709609d456cb8de32a7",
-    "next": "Independent narrow C1/F10 scheduling adjudication then actual distinct bounded MEDIUM implementation; runtimebodyOFF until mandatory all30 witnesses; fresh independent HIGH finalsource review."
+    "source_revision": "d606b704f8dbc739ea3df5dd7253032217001a0e",
+    "product_code_base": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+    "freeze_at": "2026-10-07T00:49:37Z",
+    "deadline": "2026-10-07T00:52:37Z",
+    "launch_sha256": "972941763d465158af9897789ad5fdd349831c165d25301c0349b997d9bb75f7",
+    "next": "Implement exact independently adjudicated conditional one5swindow; actual ALL30 BOTHphase body liveness and header30/due60 feasibility gates; explicit remainingC2privacy; source-frozen HIGH checks/review before F11 acceptance."
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -452,12 +453,12 @@
     "whole_runtime_accepted": false
   },
   "branch_push": {
-    "revision": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
+    "revision": "0c2143507f98402e5deb639413033323a76faa77",
     "actual_published_at": null,
-    "confirmation_clock": "2026-10-07T00:13:37Z root clock_tool postpush",
-    "parent_remote": "51c28474fcc598f5a8c7d8844d071a141ce0320e",
+    "confirmation_clock": "2026-10-07T00:25:37Z root clock_tool postpush",
+    "parent_remote": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
     "trusted_executor": "root",
-    "scope": "F11 partial classifier receipts and C1 actual executor docs only; F11 production unaccepted"
+    "scope": "F11 phasepartial receipts/planner launch docs; F11 productunaccepted"
   },
   "model_policy_boundary": {
     "owner_decision": "OWN-N7-006",
