@@ -206,8 +206,21 @@ STEPS:
 1. Для каждого адресата и активного шага — целевой слот (offset_days + время).
 2. Ротация: выбирает ящик с max остатком дневной квоты; при исчерпании всех — слот на следующий день, шаг не теряется (recipients не теряют шаг).
 3. Снять недоступные ящики (paused) из ротации; если пусто → кампания → paused с ошибкой.
-4. Выдать job в очередь с idempotency_key (campaign_id, recipient, step, slot_date); дубликаты job календарь игнорирует.
+4. Выдать job в очередь с idempotency_key (campaign_id, recipient, step, slot_date); дубликат job игнорируется.
 COMPLEXITY: O(recipients × steps)
+
+### Algorithm: Dispatch campaign email
+REALISES: SC-US-008-2
+REQUIREMENT: `FR-CAMP-005`, `FR-WARMUP-002`, `FR-SEC-001`
+INPUT: job отправки кампании (campaign, recipient, step, слот)
+OUTPUT: send_log запись; без дублей
+STEPS:
+1. Проверить стоп-лист адресата, живость подписки и остатки лимитов (fail-closed).
+2. Распределённый lock по idempotency_key; если send_log уже содержит ключ → RETURN (повтор игнорируется).
+3. SMTP-отправка через выбранный ящик с заголовками отписки (List-Unsubscribe / List-Unsubscribe-Post, RFC 8058).
+4. Записать send_log (ключ, ящик, слот, статус, error_code); остаток квоты ящика уменьшить на 1.
+5. Сетевой сбой → повтор в пределах лимита попыток; жалоба — путь Auto-pause on complaints.
+COMPLEXITY: O(1)
 
 ### Algorithm: Launch campaign with preflight
 REALISES: SC-US-008-1
