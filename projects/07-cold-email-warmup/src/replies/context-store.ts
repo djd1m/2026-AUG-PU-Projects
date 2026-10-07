@@ -2,6 +2,7 @@ import { randomUUID,createHash,createHmac } from 'node:crypto';
 import type { Pool,PoolClient } from 'pg';
 import type { Envelope,Keyring } from '../mailboxes/crypto.js';
 import { acquireTransportSlotInTransaction,releaseUnusedTransportSlot,type TransportSlot } from '../mailboxes/transport-slots.js';
+import { consumeInterruptedBody } from '../mailboxes/transport-lifetime.js';
 import { authorizeTransport } from '../mailboxes/transport-authority.js';
 import type { Config } from '../config.js';
 import { consumeNativeBodyProof,LiveReplyAdapter,type BodyIdentity } from './adapter.js';
@@ -109,9 +110,26 @@ export class ContextStore {
    const proof=await adapter.captureBodyPhase(admission.identity,signal,admission.slot);
    await this.commitNative(proof,config);return true;
   }catch(error){
+   const interrupted=consumeInterruptedBody(error,admission.slot),b=admission.identity;
    await eligibilityTransaction(this.pool,async c=>{
     await expireCaptureWindowsClient(c);
-    if(signal.aborted)await c.query(`UPDATE incoming_ai_event SET capture_state='held',state='held',reason='capture_cancelled',phase_metadata=NULL,phase_revision=NULL,phase_mailbox_revision=NULL,owner_id=NULL,lease_until=NULL,terminal_at=LEAST(COALESCE(terminal_at,statement_timestamp()),statement_timestamp()),expires_at=LEAST(expires_at,statement_timestamp()+interval '24 hours') WHERE id=$1 AND owner_id=$2 AND generation=$3`,[admission.identity.event,admission.identity.owner,admission.identity.generation]);
+    let resumable=false;
+    if(signal.aborted&&interrupted&&interrupted.validity===b.uidvalidity&&interrupted.uid===b.uid&&config.pollMode==='live_provider'){
+     let authority;try{authority=await authorizeTransport(c,config,b.tenant,b.mailbox,'imap_body');await authorizeTransport(c,config,b.tenant,b.mailbox,'imap_headers');}catch(error){if(!(error instanceof HttpError&&error.code==='transport_denied'))throw error;}
+     if(authority){
+      const row=(await c.query(`SELECT e.*,n.recipient_envelope,n.recipient_hash FROM incoming_ai_event e JOIN enrollment n ON n.tenant_id=e.tenant_id AND n.id=e.enrollment_id JOIN send_job j ON j.tenant_id=e.tenant_id AND j.mailbox_id=e.mailbox_id AND j.enrollment_id=e.enrollment_id AND j.id=e.root_job_id AND j.parent_id IS NULL JOIN reply_rescan r ON r.tenant_id=e.tenant_id AND r.mailbox_id=e.mailbox_id WHERE e.tenant_id=$1 AND e.mailbox_id=$2 AND e.id=$3 AND e.owner_id=$4 AND e.generation=$5 AND e.capture_state='claimed' AND e.terminal_at IS NULL AND e.window_end>clock_timestamp() AND e.attempt_deadline>clock_timestamp() AND e.expires_at>clock_timestamp() AND e.authenticated_run_id=$6 AND e.authenticated_attempt=$7 AND e.source=$8 AND e.uidvalidity=$9 AND e.uid=$10 AND e.root_job_id=$11 AND e.enrollment_id=$12 AND e.sender_binding=$13 AND r.state='complete' AND r.run_id=e.authenticated_run_id AND r.attempt=e.authenticated_attempt AND r.uidvalidity=e.uidvalidity AND r.provenance=e.source AND j.message_id=e.authenticated_root_message_id AND n.recipient_hash=e.authenticated_recipient_hash AND EXISTS(SELECT 1 FROM capacity_lease l WHERE l.mailbox_id=e.mailbox_id AND l.state='active' AND l.expires_at>clock_timestamp()) AND NOT EXISTS(SELECT 1 FROM suppression s WHERE s.tenant_id=e.tenant_id AND s.recipient_hash=e.authenticated_recipient_hash) AND EXISTS(SELECT 1 FROM mailbox_poll p WHERE p.mailbox_id=e.mailbox_id AND p.scan_complete AND p.uidvalidity=e.uidvalidity AND p.cursor_uid>=e.uid AND p.completed_at=e.window_completed_at) AND NOT EXISTS(SELECT 1 FROM transport_operation t WHERE t.mailbox_id=e.mailbox_id AND t.operation IS NOT NULL) FOR UPDATE OF e`,[b.tenant,b.mailbox,b.event,b.owner,b.generation,b.runId,b.attempt,b.source,b.uidvalidity,b.uid,b.root,b.enrollment,b.senderBinding])).rows[0];
+      if(row&&row.capture_phase===(interrupted.kind==='body_text'?'text':'metadata')&&row.window_revision===authority.revision&&row.window_mailbox_revision===authority.mailboxRevision){
+       const sender=singleAddress(openRecipient(row.recipient_envelope as Envelope,b.tenant,b.enrollment,this.ring));
+       resumable=Boolean(sender&&createHash('sha256').update(sender).digest('hex')===b.senderBinding);
+       if(resumable&&row.capture_phase==='text'){
+        resumable=row.phase_revision===authority.revision&&row.phase_mailbox_revision===authority.mailboxRevision;
+        if(resumable)try{const metadata=decryptContent(row.phase_metadata as Envelope,{tenant:b.tenant,mailbox:b.mailbox,event:b.event,bindingVersion:row.binding_version},this.ring);resumable=metadata.length===1;}catch{resumable=false;}
+       }
+      }
+     }
+    }
+    if(resumable)await c.query(`UPDATE incoming_ai_event SET capture_state='pending',owner_id=NULL,lease_until=NULL,next_attempt_at=clock_timestamp() WHERE id=$1 AND owner_id=$2 AND generation=$3 AND capture_state='claimed' AND terminal_at IS NULL AND window_end>clock_timestamp() AND attempt_deadline>clock_timestamp()`,[b.event,b.owner,b.generation]);
+    else if(signal.aborted)await c.query(`UPDATE incoming_ai_event SET capture_state='held',state='held',reason='capture_cancelled',phase_metadata=NULL,phase_revision=NULL,phase_mailbox_revision=NULL,owner_id=NULL,lease_until=NULL,terminal_at=LEAST(COALESCE(terminal_at,statement_timestamp()),statement_timestamp()),expires_at=LEAST(expires_at,statement_timestamp()+interval '24 hours') WHERE id=$1 AND owner_id=$2 AND generation=$3`,[admission.identity.event,admission.identity.owner,admission.identity.generation]);
     else await c.query(`UPDATE incoming_ai_event e SET capture_state='pending',owner_id=NULL,lease_until=NULL,next_attempt_at=LEAST(e.window_end,clock_timestamp()+interval '1 second') WHERE e.window_end>clock_timestamp() AND e.attempt_deadline>clock_timestamp() AND e.id=$1 AND e.owner_id=$2 AND e.generation=$3`,[admission.identity.event,admission.identity.owner,admission.identity.generation]);
    });
    if(error instanceof HttpError&&['transport_busy','transport_denied','stale_body_claim','stale_body_binding','stale_body_authority'].includes(error.code)||error instanceof Error&&['transport_cancelled','transport_timeout','transport_child_failed','cleanup_blocked','capture_window_expired'].includes(error.message))return true;

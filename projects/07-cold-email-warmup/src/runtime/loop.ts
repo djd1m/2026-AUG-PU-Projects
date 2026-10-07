@@ -6,8 +6,8 @@ export interface RuntimeOutcome {reason?:RuntimeReason;satisfied?:boolean}
 export type RuntimeOperation=(claim:RuntimeClaim,signal:AbortSignal)=>Promise<RuntimeOutcome>;
 // Each finite lane owns and joins exactly one operation before acquiring another.
 export async function runRuntime(store:RuntimeStore,operations:Record<RuntimeKind,RuntimeOperation>&{maintenance?:()=>Promise<unknown>;body?:(signal:AbortSignal,admission?:CaptureAdmission)=>Promise<boolean>},signal:AbortSignal,once=false){
- const internal=new AbortController();const stop=()=>internal.abort();signal.addEventListener('abort',stop,{once:true});if(signal.aborted)stop();
- const external=signal;signal=internal.signal;
+ const external=signal,internal=new AbortController();const stop=()=>internal.abort(external.reason);external.addEventListener('abort',stop,{once:true});if(external.aborted)stop();
+ signal=internal.signal;
  const lane=async(kind:RuntimeKind)=>{do {
   if(signal.aborted)return;
   if(kind==='poll'&&operations.body&&await operations.body(signal)){if(once)return;try{await yieldTurn(undefined,{signal});}catch{return;}continue;}

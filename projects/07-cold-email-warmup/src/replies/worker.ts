@@ -83,6 +83,13 @@ export class PollWorker {
      }
     }
    }
+   if(run?.state==='complete'&&run.provenance==='imap_headers'&&this.mode==='live_provider'&&this.adapter instanceof LiveReplyAdapter&&this.adapter.config.pollMode==='live_provider'){
+    const read=validateReadResult(await this.adapter.read(tenant,mailbox,run.uidvalidity,run.cursor,run.cursor,signal),run.uidvalidity,'imap_headers');
+    if(read.kind==='uidvalidity_changed'){run=await this.store.capture(tenant,mailbox,read.snapshot,guard,identity(run));return {state:run.state};}
+    if(!read.snapshot)return {state:'paused'};
+    if(read.snapshot.uidNext-1===run.cursor){const currentGuard:TransactionGuard=async c=>{if(signal.aborted)throw new HttpError(503,'transport_cancelled');await guard(c);};return await this.store.completeNativeEmptyTail(tenant,mailbox,identity(run),read,run.cursor,currentGuard,true);}
+    run=await this.store.capture(tenant,mailbox,read.snapshot,guard,identity(run));return {state:run.state};
+   }
    if(!run||run.state==='complete'){
     const snapshot=await this.adapter.snapshot(tenant,mailbox,signal);run=await this.store.capture(tenant,mailbox,snapshot,guard,run?identity(run):undefined);return {state:run.state};
    }

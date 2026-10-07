@@ -10,7 +10,7 @@ import { DispatchStore } from '../dispatch/store.js';
 import { SubmissionStore } from '../dispatch/submission.js';
 import { PoolStore } from '../pool/store.js';
 import { authorizeTransport } from '../mailboxes/transport-authority.js';
-import { retryClosedSlots } from '../mailboxes/transport-lifetime.js';
+import { createProcessDrainReason,retryClosedSlots } from '../mailboxes/transport-lifetime.js';
 import { ContextStore } from '../replies/context-store.js';
 import { RuntimeStore } from './store.js';
 import { runRuntime } from './loop.js';
@@ -30,7 +30,7 @@ export async function runWorker(pool:Pool,config:Config,signal:AbortSignal,once=
 }
 export async function main(){
  const config=loadConfig(),pool=createPool(config.databaseUrl),abort=new AbortController();
- const stop=()=>abort.abort();process.once('SIGTERM',stop);process.once('SIGINT',stop);
+ const stop=()=>abort.abort(createProcessDrainReason());process.once('SIGTERM',stop);process.once('SIGINT',stop);
  try{
   if(!await ready(pool))throw new Error('database_not_ready');
   await runWorker(pool,config,abort.signal,process.argv[2]!=='loop');
