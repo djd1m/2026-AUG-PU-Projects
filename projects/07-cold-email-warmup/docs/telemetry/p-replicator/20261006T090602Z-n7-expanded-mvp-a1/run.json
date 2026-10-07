@@ -59,13 +59,13 @@
     "followup_status": "F07/F08/F09/F10 locally accepted and F10 integrated3566; expanded AC001–004 met, AC005–009 pending. Whole required_gates_passed remains false. F11 code remains unaccepted candidate."
   },
   "metrics": {
-    "elapsed_wall_ms": 83147920,
+    "elapsed_wall_ms": 83901876,
     "active_wall_ms": null,
     "input_tokens_total": null,
     "output_tokens_total": null,
     "cost": null,
     "cost_basis": "unavailable",
-    "elapsed_as_of": "2026-10-07T08:11:50.799164+00:00"
+    "elapsed_as_of": "2026-10-07T08:24:24.755146+00:00"
   },
   "telemetry_status": "partial",
   "missing_data": [
@@ -76,7 +76,7 @@
     "Preparation work-record initially failed due to relative --root and missing explicit preflight authority fields; corrected before final structural pass. No product failure inferred.",
     "F10 implement a1 first focused PG4/5 raw log overwritten by rerun; relation transport_slot does not exist was reported in actual tool output, original raw bytes unavailable. Current7/7 is distinct later evolving-source result; no reconstruction."
   ],
-  "current_stage": "F11 unaccepted: A40 sealed PARTIAL4064997; fresh independent HIGH A41 actualACK08:10:23 preflight/targeted checks",
+  "current_stage": "F11 failed independent gates; fresh MEDIUM A42 actualACK08:22:09 confirmed stop/admission race fix +instrumented C1 diagnosis",
   "cli_update": {
     "package": "@dzhechkov/harness-cli",
     "before": "0.8.35",
@@ -138,22 +138,29 @@
   "intermediate_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_post_ready_operational_verify_a41",
-    "attempt": "f11-post-ready-operational-verify-a41",
+    "executor": "/root/n7_sol_coordinator/f11_unstarted_admission_cancel_author_a42",
+    "attempt": "f11-unstarted-admission-cancel-author-a42",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T08:10:23Z",
-    "freeze_at": "2026-10-07T08:27:23Z",
-    "deadline": "2026-10-07T08:30:23Z",
+    "actual_ACK_at": "2026-10-07T08:22:09Z",
+    "freeze_at": "2026-10-07T08:39:09Z",
+    "deadline": "2026-10-07T08:42:09Z",
     "requested_model": "gpt-6.1-sol",
-    "requested_effort": "high",
+    "requested_effort": "medium",
     "actual_model": null,
     "usage": null,
-    "source_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
-    "context_manifest": "/tmp/n7-f11-restart-post-ready-author-a40/clean-next-high-input-manifest.json",
-    "context_sha256": "145cb94d0577e430d0ff74d1f91706d7646e201c90d539796da491694b7daa96",
-    "context_provenance": "approved A38 planner normatives, approved ninthpath clause, frozen source/build/helpers and raw objective facts; excludes author chat/receipt/reasoning",
-    "status": "actual independent actor running preflight; no native fleet start inferred",
-    "next": "Fresh EMPTY SHORT and realPG/context plus exact material dependency coverage first; original fullfault only after these gates. Source immutable; final source review separate fresh HIGH. If material fixture missing, seal gap and allocate MEDIUM."
+    "baseline_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
+    "allowed_paths": [
+      "src/runtime/store.ts",
+      "src/replies/context-store.ts",
+      "src/runtime/loop.ts",
+      "tests/f10-runtime-protocol.test.ts",
+      "tests/f11-context-integration.test.ts"
+    ],
+    "scope_sha256": "4a2f57b0078b508bdb6446fe01fe29a2abf24bb3d5249a3d62fa1bffef72ab82",
+    "context_manifest": "/tmp/n7-f11-post-ready-operational-verify-a41/clean-next-fix-manifest.json",
+    "context_sha256": "86cc24a16ad8ed374f83889e07cee8f338c30556cc236f9faeeafb162b589466",
+    "status": "actual fresh MEDIUM author active in sole reused isolated source tree; no current candidate acceptance or background native fleet claim",
+    "next": "Confirmed unstarted disposal race fix +deterministic baseline/corrected proof; preserve generic stop assertions. Minimal C1 failure-finally instrumentation and concrete diagnosis; sourcefix only inside exact scope if supported. After actual candidate seal/joins, launch HIGH frozen targeted verification; fullfleet gated."
   },
   "blockers": [
     "Later applicable live pilot/provider/OpenAI spending/deployment authorization",
@@ -196,7 +203,7 @@
       "stage_change",
       "blocker"
     ],
-    "last_reported_at": "2026-10-07T08:11:50.799164+00:00",
+    "last_reported_at": "2026-10-07T08:24:24.755146+00:00",
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true,
     "latest_checkpoint": {

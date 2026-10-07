@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "record_kind": "project-work-companion/work-record",
-  "stage": "F11 unaccepted: A40 sealed PARTIAL4064997; fresh independent HIGH A41 actualACK08:10:23 preflight/targeted checks",
+  "stage": "F11 failed independent gates; fresh MEDIUM A42 actualACK08:22:09 confirmed stop/admission race fix +instrumented C1 diagnosis",
   "roots": {
     "project": "."
   },
   "identity": {
     "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
     "work_unit_id": "expanded-mvp",
-    "current_attempt_id": "f11-post-ready-operational-verify-a41"
+    "current_attempt_id": "f11-unstarted-admission-cancel-author-a42"
   },
   "telemetry": {
     "run": {
@@ -45,9 +45,10 @@
       }
     ],
     "continuity": {
-      "expected_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
-      "observed_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
-      "reconciliation": "A40 exact nine-file frozen candidate; dist-inventory SHA in frozen packet. F11 unaccepted/not integrated into main; A41 independently verifies source/build."
+      "baseline_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
+      "last_verified_at": "2026-10-07T08:20:59.737949+00:00",
+      "last_verified_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
+      "current_workspace_status": "A42 sole author may edit bounded source; no current unchanged-workspace or accepted-candidate claim"
     },
     "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
     "integration_note": "F10 accepted main3566 baseline retained. Current F11 candidate406 isolated only; library experiment530 separately delivered negative assessment; no production migration."
@@ -718,24 +719,31 @@
       "remaining_AC": "Genuine continuation FIRST SQL/rowCounts/urgency/ownership and shortnative diagnostic; production unchanged; exactnarrow compatible HIGHrepair/amendment adjudication afterraw; nofullfleetblindrepeat or time/cap relaxation"
     }
   },
-  "current_stage": "F11 unaccepted: A40 sealed PARTIAL4064997; fresh independent HIGH A41 actualACK08:10:23 preflight/targeted checks",
+  "current_stage": "F11 failed independent gates; fresh MEDIUM A42 actualACK08:22:09 confirmed stop/admission race fix +instrumented C1 diagnosis",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_post_ready_operational_verify_a41",
-    "attempt": "f11-post-ready-operational-verify-a41",
+    "executor": "/root/n7_sol_coordinator/f11_unstarted_admission_cancel_author_a42",
+    "attempt": "f11-unstarted-admission-cancel-author-a42",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T08:10:23Z",
-    "freeze_at": "2026-10-07T08:27:23Z",
-    "deadline": "2026-10-07T08:30:23Z",
+    "actual_ACK_at": "2026-10-07T08:22:09Z",
+    "freeze_at": "2026-10-07T08:39:09Z",
+    "deadline": "2026-10-07T08:42:09Z",
     "requested_model": "gpt-6.1-sol",
-    "requested_effort": "high",
+    "requested_effort": "medium",
     "actual_model": null,
     "usage": null,
-    "source_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
-    "context_manifest": "/tmp/n7-f11-restart-post-ready-author-a40/clean-next-high-input-manifest.json",
-    "context_sha256": "145cb94d0577e430d0ff74d1f91706d7646e201c90d539796da491694b7daa96",
-    "context_provenance": "approved A38 planner normatives, approved ninthpath clause, frozen source/build/helpers and raw objective facts; excludes author chat/receipt/reasoning",
-    "status": "actual independent actor running preflight; no native fleet start inferred",
-    "next": "Fresh EMPTY SHORT and realPG/context plus exact material dependency coverage first; original fullfault only after these gates. Source immutable; final source review separate fresh HIGH. If material fixture missing, seal gap and allocate MEDIUM."
+    "baseline_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
+    "allowed_paths": [
+      "src/runtime/store.ts",
+      "src/replies/context-store.ts",
+      "src/runtime/loop.ts",
+      "tests/f10-runtime-protocol.test.ts",
+      "tests/f11-context-integration.test.ts"
+    ],
+    "scope_sha256": "4a2f57b0078b508bdb6446fe01fe29a2abf24bb3d5249a3d62fa1bffef72ab82",
+    "context_manifest": "/tmp/n7-f11-post-ready-operational-verify-a41/clean-next-fix-manifest.json",
+    "context_sha256": "86cc24a16ad8ed374f83889e07cee8f338c30556cc236f9faeeafb162b589466",
+    "status": "actual fresh MEDIUM author active in sole reused isolated source tree; no current candidate acceptance or background native fleet claim",
+    "next": "Confirmed unstarted disposal race fix +deterministic baseline/corrected proof; preserve generic stop assertions. Minimal C1 failure-finally instrumentation and concrete diagnosis; sourcefix only inside exact scope if supported. After actual candidate seal/joins, launch HIGH frozen targeted verification; fullfleet gated."
   }
 }

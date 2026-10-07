@@ -1,0 +1,64 @@
+{
+  "utc": "2026-10-07T08:15:06.368565+00:00",
+  "source_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
+  "historical_raw": [
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material-v2.raw",
+      "sha256": "b81fcd24eb81c49b37640b63260b148474027c13bdd2a5ce5fdd2478408cb095",
+      "TAP_pass_lines": 15,
+      "TAP_fail_lines": 1,
+      "source_binding_limit": "clean packet binds current source and raw file hashes; raw TAP alone carries no full per-execution source/build/helper launch digest; no blanket current-revision PASS"
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/revoke-fixed.raw",
+      "sha256": "df9a9d7406e5cea3dd0140e35618796411a8ed71b71814125839eb740e05922f",
+      "TAP_pass_lines": 1,
+      "TAP_fail_lines": 0,
+      "source_binding_limit": "clean packet binds current source and raw file hashes; raw TAP alone carries no full per-execution source/build/helper launch digest; no blanket current-revision PASS"
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/positives-pure.raw",
+      "sha256": "ab4345c674db6666e19b0f26dcadd1c546dfa70ca70a989681627a4f82afde33",
+      "TAP_pass_lines": 10,
+      "TAP_fail_lines": 0,
+      "source_binding_limit": "clean packet binds current source and raw file hashes; raw TAP alone carries no full per-execution source/build/helper launch digest; no blanket current-revision PASS"
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/positives-db.raw",
+      "sha256": "b1cbdabb62a3a529eb280e7735b8a547c100bc11efc6a1753167c4fa9f4c133a",
+      "TAP_pass_lines": 1,
+      "TAP_fail_lines": 1,
+      "source_binding_limit": "clean packet binds current source and raw file hashes; raw TAP alone carries no full per-execution source/build/helper launch digest; no blanket current-revision PASS"
+    }
+  ],
+  "missing_material": [
+    {
+      "branch": "process-drain recovery",
+      "missing": [
+        "mailbox transport revision at interrupted recovery fence",
+        "foreign tenant/root/sender/recipient binding at interrupted recovery fence",
+        "same-window expiry and original 450s attempt-deadline expiry at interrupted recovery fence",
+        "UIDVALIDITY reset / incomplete current poll-prefix at interrupted recovery fence",
+        "delayed exact native closure or restart crossing original window end",
+        "generation/operation mismatch and substituted encrypted phase binding at interrupted recovery fence"
+      ],
+      "why": "A40 process-drain mode list does not execute these; generic context preIO/result/text commit controls are distinct branches"
+    },
+    {
+      "branch": "ordinary zero-header HEADER-only empty-tail",
+      "missing": [
+        "genuine decreased UIDNEXT horizon",
+        "genuine UIDVALIDITY reset",
+        "missing native snapshot",
+        "partial/incomplete prefix",
+        "stale HEADER grant/config and source/mailbox fence",
+        "new UID semantic stop effects after zero-pending READY"
+      ],
+      "why": "A40 ordinary test executes forged/replay/poll disagreement/stale guard/new UID coverage only; native18 mutations call intent mode with actual old UID and BODY+HEADER guards"
+    }
+  ],
+  "short_gate": "FAIL logical unstarted preadmission survives SIGTERM; exact raw retained",
+  "fault_full300": "NOT_RUN blocked by short mandatory failure and missing material controls",
+  "healthy_full300": "NOT_RUN fault has not passed",
+  "legacy_20pages_real5s_native19": "RED historical separate obligation, not waived"
+}

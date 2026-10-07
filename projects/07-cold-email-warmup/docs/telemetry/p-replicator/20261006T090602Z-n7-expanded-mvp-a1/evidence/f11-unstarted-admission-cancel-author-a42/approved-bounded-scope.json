@@ -1,0 +1,40 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "feature": "F11",
+  "profile": "model-routing-econom",
+  "planner": "n7_sol_coordinator requested Sol6.1 HIGH; actual host model null",
+  "scope_kind": "confirmed existing immediate cancellation defect; no contract amendment",
+  "baseline_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
+  "approved_plan": "/tmp/n7-f11-restart-post-ready-planner-a38/plan.md",
+  "approved_plan_sha256": "bbbbcd847f0abf82bb58eca1a58e8b1b6b4c91425d295d6f82498ce63d62fb48",
+  "normative_basis": "A38 plan clauses preserve immediate all-operation cancellation, exact old event owner/generation CAS under FIRST, native planned-drain capability excludes unstarted operation. Original short compiled SIGTERM witness remains mandatory. No terminal reopening/window renewal or unknown-outcome retry.",
+  "allowed_paths": [
+    "src/runtime/store.ts",
+    "src/replies/context-store.ts",
+    "src/runtime/loop.ts",
+    "tests/f10-runtime-protocol.test.ts",
+    "tests/f11-context-integration.test.ts"
+  ],
+  "required_result": [
+    "Dispose a genuinely unstarted preadmitted capture's logical owner/generation and unused physical reservation on every stop/failure/early-aborted entry, using exact current owner/generation CAS and FIRST(7,1). Keep original safe cancellation state and retention fields; no native capability or planned-drain recovery for an unstarted operation.",
+    "No newer logical/physical owner's lease may be released by stale disposal; missing real closure proof for a started or unknown operation remains occupied/fail closed.",
+    "Preserve A38 interrupted-started native reversible READ recovery after actual closure/join/successful old physical-owner release and current authority, original12s window/450s origin/phase5s bounds.",
+    "Deterministic existing test fixture stops during finish/claim admission before BODY entry; entry already aborted and stale-generation/wrong-owner counterproofs must expose the baseline defect and pass corrected source. This addresses actual observation, not a threshold change.",
+    "Original compiled short SIGTERM fixture emits generic abort, so retain all original terminal capture_cancelled/held/ownerNULL/metadataNULL/earliest retention assertions unchanged, plus physical0/logicalclaimed0/native closure and worker join. Actual interrupted native event already held correctly; new residual unstarted event must not survive logically claimed. Separate typed planned-drain native positives remain distinct and preserve A38 qualified pending semantics, never relabel generic abort as planned.",
+    "No full fleet author run or healthy suite replay. Frozen targeted native positives/material counterproofs and type/lint/build/diff appropriate to changed dependencies. Record gaps and exact current-source binding.",
+    "Preserve exact C1 second-complete failure with bounded sanitized native outcomes/command chronology/current polling frontier, source UID/run/attempt/window/currentgrant-config facts in existing integration fixture finally BEFORE later setup clears rows. No secret/body bytes. One concrete instrumented C1 diagnostic is justified; no blind whole-suite retries. Following expirycase failure depends on C1 prior setup/window wait and is not a proven expiry product defect. Only fix C1 product seam if newly recorded concrete cause is within allowed paths; otherwise seal precise additional scope required, no silent expansion."
+  ],
+  "objective_baseline": {
+    "raw": "/tmp/n7-f11-post-ready-operational-verify-a41/short.raw",
+    "native_observer": "/tmp/n7-f11-post-ready-operational-verify-a41/short/short-body-shutdown.json",
+    "observation": "native1 logical BODY claimed1, physical0, compiled worker0/drained. A different event admitted after SIGTERM had no BODY phase_start; baseline raw retained. Exact A41 sealed manifest/provenance must be attached before launch.",
+    "generic_vs_planned": "Independent A41 confirms tests/f10-runtime-process-fixture.ts SIGTERM handler abort.abort() is generic; production runtime/worker.ts uses internal createProcessDrainReason. Actual generic interrupted event8c638ed7 held correctly, residual a685174c no native start remains claimed.",
+    "pg_failure": "A41 actual realPG12tests9pass3fail(2subtests+umbrella),247.330s. C1 initialHEADERonly completion passed, secondcomplete after BODYgrantrev1 returns noncomplete eight times but existingfixture destroys raw on failure; unique causeUNKNOWN. Following expiredwindowtest has no setup and assumes C1 opened window+wait, so pending!=held is dependentfallout."
+  },
+  "attempt_bound": "20min total,17min source work plus3min seal; finish early; fresh Sol6.1 MEDIUM fork-none; actual ACK and measured UTC bounds mandatory",
+  "preconditions": "A41 owned children joined, source immutable406 and public/own DB state proven before transferring isolated source writes. Reuse minimal /tmp/n7-f11-context-20261006-a1 only. No main/index/push writes.",
+  "guards": "Inherited socket/DNS/IPC guard every descendant; exact n7f11_a8 owned fresh schemas; preserve public/old schemas/claimed savedBODY; no provider calls/production/deploy/spend; no unsafe approval bypass; freeze helpers before child and never edit before all joins.",
+  "full_F11_accepted": false,
+  "remaining_full_F11": "Independent corrected compiled/PG/material gates then justified original ALL30 fault+healthy exact bounds, separate legacy20x5s obligation, applicable regression/privacy/canary/currentauthority and new fresh planner-only HIGH final product review. No blanket PASS.",
+  "approved_scope_at": "2026-10-07T08:19:54.940872+00:00"
+}

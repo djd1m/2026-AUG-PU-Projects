@@ -1,0 +1,1381 @@
+[
+  {
+    "kind": "entry",
+    "mode": "continuation",
+    "snapshot": {
+      "transaction_id": "503689",
+      "backend_pid": 965754,
+      "database_utc": "2026-10-07T08:12:38.881Z",
+      "events": null,
+      "urgent_headers": null,
+      "slots": [
+        {
+          "free": false,
+          "slot": 1,
+          "mailbox": "1269fade-a9df-428c-93c3-5acd691fb9e3",
+          "purpose": "header",
+          "operation": "aa1a430f-5fb2-423a-bbea-6d99aefe350f",
+          "owner_host": "test-apps-server.com",
+          "owner_process": "1b92c21e-4e46-4637-91de-b01582d40c09",
+          "header_reserved": false
+        },
+        {
+          "free": false,
+          "slot": 2,
+          "mailbox": "1391f942-5bd1-4a78-8986-4b953d71361d",
+          "purpose": "header",
+          "operation": "878a977b-c4e0-4073-8d9e-00f616ba2e3e",
+          "owner_host": "test-apps-server.com",
+          "owner_process": "5cd8dfc6-0d28-4de6-8417-40888d35ad32",
+          "header_reserved": false
+        },
+        {
+          "free": false,
+          "slot": 3,
+          "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+          "purpose": "header",
+          "operation": "4b9ddb1a-a989-42c8-89f1-639f849ba746",
+          "owner_host": "test-apps-server.com",
+          "owner_process": "a593d8f9-c510-4475-baa8-955deedaf266",
+          "header_reserved": false
+        },
+        {
+          "free": true,
+          "slot": 4,
+          "mailbox": null,
+          "purpose": null,
+          "operation": null,
+          "owner_host": null,
+          "owner_process": null,
+          "header_reserved": true
+        }
+      ]
+    },
+    "gaps": [
+      "sender_decryption_binding_not_observed",
+      "authority_binding_observed_by_actual_following_queries",
+      "read_committed_snapshot_not_query_predicate_reexecution"
+    ],
+    "sourceBindings": [
+      {
+        "name": "replies/context-store",
+        "sha256": "0024911718a501dde619df373fe830642386ae4ce30f19abc39ddea6f0c67756"
+      },
+      {
+        "name": "runtime/store",
+        "sha256": "4f41e66dc1b9bd42c54f1079fd3126e9ce0d2e872be13c2c1254ffeb2a2d4efb"
+      },
+      {
+        "name": "mailboxes/transport-authority",
+        "sha256": "0143e31bb23808b59a64f5dbfa4724ad849ecd3418fe84820c141c4aac291153"
+      },
+      {
+        "name": "mailboxes/transport-slots",
+        "sha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903"
+      }
+    ],
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 100,
+    "utc": "2026-10-07T08:12:38.882Z",
+    "monotonicNs": "1283768882134506"
+  },
+  {
+    "kind": "entry",
+    "mode": "continuation",
+    "snapshot": {
+      "transaction_id": "503696",
+      "backend_pid": 965751,
+      "database_utc": "2026-10-07T08:12:38.931Z",
+      "events": null,
+      "urgent_headers": null,
+      "slots": [
+        {
+          "free": true,
+          "slot": 1,
+          "mailbox": null,
+          "purpose": null,
+          "operation": null,
+          "owner_host": null,
+          "owner_process": null,
+          "header_reserved": false
+        },
+        {
+          "free": true,
+          "slot": 2,
+          "mailbox": null,
+          "purpose": null,
+          "operation": null,
+          "owner_host": null,
+          "owner_process": null,
+          "header_reserved": false
+        },
+        {
+          "free": false,
+          "slot": 3,
+          "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+          "purpose": "header",
+          "operation": "4b9ddb1a-a989-42c8-89f1-639f849ba746",
+          "owner_host": "test-apps-server.com",
+          "owner_process": "a593d8f9-c510-4475-baa8-955deedaf266",
+          "header_reserved": false
+        },
+        {
+          "free": false,
+          "slot": 4,
+          "mailbox": "1bb8e89d-f433-4c82-80e1-557ab0ad5fe2",
+          "purpose": "header",
+          "operation": "2acc047c-7d90-403c-8baf-258bc0ba7d1b",
+          "owner_host": "test-apps-server.com",
+          "owner_process": "2eb73961-4856-4037-955e-fc00bd3a9933",
+          "header_reserved": true
+        }
+      ]
+    },
+    "gaps": [
+      "sender_decryption_binding_not_observed",
+      "authority_binding_observed_by_actual_following_queries",
+      "read_committed_snapshot_not_query_predicate_reexecution"
+    ],
+    "sourceBindings": [
+      {
+        "name": "replies/context-store",
+        "sha256": "0024911718a501dde619df373fe830642386ae4ce30f19abc39ddea6f0c67756"
+      },
+      {
+        "name": "runtime/store",
+        "sha256": "4f41e66dc1b9bd42c54f1079fd3126e9ce0d2e872be13c2c1254ffeb2a2d4efb"
+      },
+      {
+        "name": "mailboxes/transport-authority",
+        "sha256": "0143e31bb23808b59a64f5dbfa4724ad849ecd3418fe84820c141c4aac291153"
+      },
+      {
+        "name": "mailboxes/transport-slots",
+        "sha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903"
+      }
+    ],
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 103,
+    "utc": "2026-10-07T08:12:38.932Z",
+    "monotonicNs": "1283768931469874"
+  },
+  {
+    "kind": "entry",
+    "mode": "continuation",
+    "snapshot": {
+      "transaction_id": "503958",
+      "backend_pid": 965751,
+      "database_utc": "2026-10-07T08:12:44.640Z",
+      "events": null,
+      "urgent_headers": null,
+      "slots": [
+        {
+          "free": false,
+          "slot": 1,
+          "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+          "purpose": "header",
+          "operation": "22e1c116-491a-4058-a6cc-89ed0e71d04f",
+          "owner_host": "test-apps-server.com",
+          "owner_process": "2713b450-f1d5-4588-bb5e-13555d10cefa",
+          "header_reserved": false
+        },
+        {
+          "free": false,
+          "slot": 2,
+          "mailbox": "1bb8e89d-f433-4c82-80e1-557ab0ad5fe2",
+          "purpose": "header",
+          "operation": "bb7ba722-2bdb-4560-96a7-ba5e8b879a17",
+          "owner_host": "test-apps-server.com",
+          "owner_process": "1c50de7e-06f6-4eb1-a28f-5723cb788c4c",
+          "header_reserved": false
+        },
+        {
+          "free": true,
+          "slot": 3,
+          "mailbox": null,
+          "purpose": null,
+          "operation": null,
+          "owner_host": null,
+          "owner_process": null,
+          "header_reserved": false
+        },
+        {
+          "free": false,
+          "slot": 4,
+          "mailbox": "1391f942-5bd1-4a78-8986-4b953d71361d",
+          "purpose": "header",
+          "operation": "ce83a164-afd6-4c9b-b611-ffb64bb96605",
+          "owner_host": "test-apps-server.com",
+          "owner_process": "7680236d-e238-4def-807b-a04c41e5cc7d",
+          "header_reserved": true
+        }
+      ]
+    },
+    "gaps": [
+      "sender_decryption_binding_not_observed",
+      "authority_binding_observed_by_actual_following_queries",
+      "read_committed_snapshot_not_query_predicate_reexecution"
+    ],
+    "sourceBindings": [
+      {
+        "name": "replies/context-store",
+        "sha256": "0024911718a501dde619df373fe830642386ae4ce30f19abc39ddea6f0c67756"
+      },
+      {
+        "name": "runtime/store",
+        "sha256": "4f41e66dc1b9bd42c54f1079fd3126e9ce0d2e872be13c2c1254ffeb2a2d4efb"
+      },
+      {
+        "name": "mailboxes/transport-authority",
+        "sha256": "0143e31bb23808b59a64f5dbfa4724ad849ecd3418fe84820c141c4aac291153"
+      },
+      {
+        "name": "mailboxes/transport-slots",
+        "sha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903"
+      }
+    ],
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 193,
+    "utc": "2026-10-07T08:12:44.641Z",
+    "monotonicNs": "1283774640938852"
+  },
+  {
+    "kind": "entry",
+    "mode": "continuation",
+    "snapshot": {
+      "transaction_id": "503967",
+      "backend_pid": 965751,
+      "database_utc": "2026-10-07T08:12:44.895Z",
+      "events": null,
+      "urgent_headers": null,
+      "slots": [
+        {
+          "free": false,
+          "slot": 1,
+          "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+          "purpose": "header",
+          "operation": "22e1c116-491a-4058-a6cc-89ed0e71d04f",
+          "owner_host": "test-apps-server.com",
+          "owner_process": "2713b450-f1d5-4588-bb5e-13555d10cefa",
+          "header_reserved": false
+        },
+        {
+          "free": false,
+          "slot": 2,
+          "mailbox": "1bb8e89d-f433-4c82-80e1-557ab0ad5fe2",
+          "purpose": "header",
+          "operation": "bb7ba722-2bdb-4560-96a7-ba5e8b879a17",
+          "owner_host": "test-apps-server.com",
+          "owner_process": "1c50de7e-06f6-4eb1-a28f-5723cb788c4c",
+          "header_reserved": false
+        },
+        {
+          "free": false,
+          "slot": 3,
+          "mailbox": "2c71a504-680f-4075-b402-f007428fb1d9",
+          "purpose": "header",
+          "operation": "2c5a57d6-ca17-4d7f-8a58-86a47648c6d6",
+          "owner_host": "test-apps-server.com",
+          "owner_process": "b05b8671-2f98-427d-953a-5c817f9745f1",
+          "header_reserved": false
+        },
+        {
+          "free": true,
+          "slot": 4,
+          "mailbox": null,
+          "purpose": null,
+          "operation": null,
+          "owner_host": null,
+          "owner_process": null,
+          "header_reserved": true
+        }
+      ]
+    },
+    "gaps": [
+      "sender_decryption_binding_not_observed",
+      "authority_binding_observed_by_actual_following_queries",
+      "read_committed_snapshot_not_query_predicate_reexecution"
+    ],
+    "sourceBindings": [
+      {
+        "name": "replies/context-store",
+        "sha256": "0024911718a501dde619df373fe830642386ae4ce30f19abc39ddea6f0c67756"
+      },
+      {
+        "name": "runtime/store",
+        "sha256": "4f41e66dc1b9bd42c54f1079fd3126e9ce0d2e872be13c2c1254ffeb2a2d4efb"
+      },
+      {
+        "name": "mailboxes/transport-authority",
+        "sha256": "0143e31bb23808b59a64f5dbfa4724ad849ecd3418fe84820c141c4aac291153"
+      },
+      {
+        "name": "mailboxes/transport-slots",
+        "sha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903"
+      }
+    ],
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 196,
+    "utc": "2026-10-07T08:12:44.896Z",
+    "monotonicNs": "1283774895669413"
+  },
+  {
+    "kind": "entry",
+    "mailbox": "1391f942-5bd1-4a78-8986-4b953d71361d",
+    "claimOwner": "2d1bd110-fb16-4de1-b12b-3eb074203c30",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.044Z",
+    "snapshot": {
+      "transaction_id": "504201",
+      "backend_pid": 965754,
+      "database_utc": "2026-10-07T08:12:49.049Z",
+      "frontier": [
+        {
+          "id": "75ac1a41-d3d9-4be6-a299-c1c74aabf132",
+          "uid": 1,
+          "source": "imap_headers",
+          "owner_id": null,
+          "expires_at": "2026-10-14T08:12:38.89067+00:00",
+          "generation": 0,
+          "mailbox_id": "1269fade-a9df-428c-93c3-5acd691fb9e3",
+          "window_end": null,
+          "uidvalidity": "1",
+          "window_start": null,
+          "capture_state": "pending",
+          "next_attempt_at": "2026-10-07T08:12:38.89067+00:00",
+          "attempt_deadline": "2026-10-07T08:20:08.916359+00:00",
+          "capture_service_seq": 1,
+          "authenticated_run_id": "9e2bda82-7ed7-4784-82da-6a52da2eaf78",
+          "authenticated_attempt": 1
+        },
+        {
+          "id": "8c638ed7-13a2-431f-af97-e0988e83c46a",
+          "uid": 1,
+          "source": "imap_headers",
+          "owner_id": null,
+          "expires_at": "2026-10-14T08:12:38.929398+00:00",
+          "generation": 0,
+          "mailbox_id": "1391f942-5bd1-4a78-8986-4b953d71361d",
+          "window_end": null,
+          "uidvalidity": "1",
+          "window_start": null,
+          "capture_state": "pending",
+          "next_attempt_at": "2026-10-07T08:12:38.929398+00:00",
+          "attempt_deadline": "2026-10-07T08:20:08.947215+00:00",
+          "capture_service_seq": 2,
+          "authenticated_run_id": "2a962b9d-be0c-41ce-8107-4a3b140fffe3",
+          "authenticated_attempt": 1
+        },
+        {
+          "id": "a685174c-bf02-41a5-8587-84946e7318aa",
+          "uid": 1,
+          "source": "imap_headers",
+          "owner_id": null,
+          "expires_at": "2026-10-14T08:12:38.953577+00:00",
+          "generation": 0,
+          "mailbox_id": "35ad397d-5151-409b-b746-c7b215683911",
+          "window_end": null,
+          "uidvalidity": "1",
+          "window_start": null,
+          "capture_state": "pending",
+          "next_attempt_at": "2026-10-07T08:12:38.953577+00:00",
+          "attempt_deadline": "2026-10-07T08:20:08.999848+00:00",
+          "capture_service_seq": 3,
+          "authenticated_run_id": "f578d408-f2f0-40df-a66b-5bbb139bc29b",
+          "authenticated_attempt": 1
+        }
+      ],
+      "events": [
+        {
+          "id": "8c638ed7-13a2-431f-af97-e0988e83c46a",
+          "uid": 1,
+          "run_id": "2a962b9d-be0c-41ce-8107-4a3b140fffe3",
+          "source": "imap_headers",
+          "attempt": 1,
+          "owner_id": null,
+          "expires_at": "2026-10-14T08:12:38.929398+00:00",
+          "generation": 0,
+          "mailbox_id": "1391f942-5bd1-4a78-8986-4b953d71361d",
+          "provenance": "imap_headers",
+          "scan_state": "complete",
+          "suppressed": false,
+          "window_end": null,
+          "uidvalidity": "1",
+          "completed_at": "2026-10-07T08:12:49.03+00:00",
+          "root_binding": true,
+          "window_start": null,
+          "capture_state": "pending",
+          "scan_complete": true,
+          "capacity_active": true,
+          "next_attempt_at": "2026-10-07T08:12:38.929398+00:00",
+          "attempt_deadline": "2026-10-07T08:20:08.947215+00:00",
+          "poll_uidvalidity": "1",
+          "scan_uidvalidity": "1",
+          "recipient_binding": true,
+          "capture_service_seq": 2,
+          "authenticated_run_id": "2a962b9d-be0c-41ce-8107-4a3b140fffe3",
+          "authenticated_attempt": 1
+        }
+      ],
+      "slots": [
+        {
+          "free": true,
+          "slot": 1,
+          "mailbox": null,
+          "purpose": null,
+          "operation": null,
+          "owner_process": null,
+          "header_reserved": false
+        },
+        {
+          "free": true,
+          "slot": 2,
+          "mailbox": null,
+          "purpose": null,
+          "operation": null,
+          "owner_process": null,
+          "header_reserved": false
+        },
+        {
+          "free": false,
+          "slot": 3,
+          "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+          "purpose": "header",
+          "operation": "d4a6a585-67e8-4680-9290-a702925bad3e",
+          "owner_process": "3fbf3f25-e878-4160-a451-b1d14bb6a4d6",
+          "header_reserved": false
+        },
+        {
+          "free": true,
+          "slot": 4,
+          "mailbox": null,
+          "purpose": null,
+          "operation": null,
+          "owner_process": null,
+          "header_reserved": true
+        }
+      ],
+      "authority": {
+        "scope_kind": "transport",
+        "grant_state": "active",
+        "capabilities": [
+          "smtp_submit",
+          "imap_headers",
+          "imap_body"
+        ],
+        "mailbox_state": "verified_test",
+        "grant_revision": 1,
+        "tenant_binding": true,
+        "mailbox_binding": true,
+        "grant_expires_at": "2026-10-07T08:32:28.394Z",
+        "imap_host_binding": true,
+        "imap_port_binding": true,
+        "smtp_host_binding": true,
+        "smtp_port_binding": true,
+        "config_fingerprint": "ccc014f1394bfbf88cd205805e3b5c6788e7273710d540b3d42d991352029083",
+        "transport_revision": 0,
+        "credentials_present": true,
+        "grant_mailbox_revision": "0"
+      }
+    },
+    "expectedConfigFingerprint": "ccc014f1394bfbf88cd205805e3b5c6788e7273710d540b3d42d991352029083",
+    "gaps": [
+      "sender_decryption_binding_not_observed",
+      "read_committed_snapshot_not_query_predicate_reexecution"
+    ],
+    "sourceBindings": [
+      {
+        "name": "replies/context-store",
+        "sha256": "0024911718a501dde619df373fe830642386ae4ce30f19abc39ddea6f0c67756"
+      },
+      {
+        "name": "runtime/store",
+        "sha256": "4f41e66dc1b9bd42c54f1079fd3126e9ce0d2e872be13c2c1254ffeb2a2d4efb"
+      },
+      {
+        "name": "mailboxes/transport-authority",
+        "sha256": "0143e31bb23808b59a64f5dbfa4724ad849ecd3418fe84820c141c4aac291153"
+      },
+      {
+        "name": "mailboxes/transport-slots",
+        "sha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903"
+      }
+    ],
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 282,
+    "utc": "2026-10-07T08:12:49.050Z",
+    "monotonicNs": "1283779049787726"
+  },
+  {
+    "kind": "entry",
+    "mailbox": "1269fade-a9df-428c-93c3-5acd691fb9e3",
+    "claimOwner": "7d3ad5c4-bb49-4bf3-becd-b6f014238581",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.069Z",
+    "snapshot": {
+      "transaction_id": "504202",
+      "backend_pid": 965755,
+      "database_utc": "2026-10-07T08:12:49.073Z",
+      "frontier": [
+        {
+          "id": "75ac1a41-d3d9-4be6-a299-c1c74aabf132",
+          "uid": 1,
+          "source": "imap_headers",
+          "owner_id": null,
+          "expires_at": "2026-10-14T08:12:38.89067+00:00",
+          "generation": 0,
+          "mailbox_id": "1269fade-a9df-428c-93c3-5acd691fb9e3",
+          "window_end": null,
+          "uidvalidity": "1",
+          "window_start": null,
+          "capture_state": "pending",
+          "next_attempt_at": "2026-10-07T08:12:38.89067+00:00",
+          "attempt_deadline": "2026-10-07T08:20:08.916359+00:00",
+          "capture_service_seq": 1,
+          "authenticated_run_id": "9e2bda82-7ed7-4784-82da-6a52da2eaf78",
+          "authenticated_attempt": 1
+        },
+        {
+          "id": "a685174c-bf02-41a5-8587-84946e7318aa",
+          "uid": 1,
+          "source": "imap_headers",
+          "owner_id": null,
+          "expires_at": "2026-10-14T08:12:38.953577+00:00",
+          "generation": 0,
+          "mailbox_id": "35ad397d-5151-409b-b746-c7b215683911",
+          "window_end": null,
+          "uidvalidity": "1",
+          "window_start": null,
+          "capture_state": "pending",
+          "next_attempt_at": "2026-10-07T08:12:38.953577+00:00",
+          "attempt_deadline": "2026-10-07T08:20:08.999848+00:00",
+          "capture_service_seq": 3,
+          "authenticated_run_id": "f578d408-f2f0-40df-a66b-5bbb139bc29b",
+          "authenticated_attempt": 1
+        },
+        {
+          "id": "2e0c7bd6-d1a8-4f85-b9f6-837101c579fd",
+          "uid": 1,
+          "source": "imap_headers",
+          "owner_id": null,
+          "expires_at": "2026-10-14T08:12:39.565664+00:00",
+          "generation": 0,
+          "mailbox_id": "1bb8e89d-f433-4c82-80e1-557ab0ad5fe2",
+          "window_end": null,
+          "uidvalidity": "1",
+          "window_start": null,
+          "capture_state": "pending",
+          "next_attempt_at": "2026-10-07T08:12:39.565664+00:00",
+          "attempt_deadline": "2026-10-07T08:20:09.588339+00:00",
+          "capture_service_seq": 4,
+          "authenticated_run_id": "d510c83a-7a2b-4f47-876c-194c8bf851a3",
+          "authenticated_attempt": 1
+        }
+      ],
+      "events": [
+        {
+          "id": "75ac1a41-d3d9-4be6-a299-c1c74aabf132",
+          "uid": 1,
+          "run_id": "9e2bda82-7ed7-4784-82da-6a52da2eaf78",
+          "source": "imap_headers",
+          "attempt": 1,
+          "owner_id": null,
+          "expires_at": "2026-10-14T08:12:38.89067+00:00",
+          "generation": 0,
+          "mailbox_id": "1269fade-a9df-428c-93c3-5acd691fb9e3",
+          "provenance": "imap_headers",
+          "scan_state": "complete",
+          "suppressed": false,
+          "window_end": null,
+          "uidvalidity": "1",
+          "completed_at": "2026-10-07T08:12:49.035+00:00",
+          "root_binding": true,
+          "window_start": null,
+          "capture_state": "pending",
+          "scan_complete": true,
+          "capacity_active": true,
+          "next_attempt_at": "2026-10-07T08:12:38.89067+00:00",
+          "attempt_deadline": "2026-10-07T08:20:08.916359+00:00",
+          "poll_uidvalidity": "1",
+          "scan_uidvalidity": "1",
+          "recipient_binding": true,
+          "capture_service_seq": 1,
+          "authenticated_run_id": "9e2bda82-7ed7-4784-82da-6a52da2eaf78",
+          "authenticated_attempt": 1
+        }
+      ],
+      "slots": [
+        {
+          "free": false,
+          "slot": 1,
+          "mailbox": "1391f942-5bd1-4a78-8986-4b953d71361d",
+          "purpose": "body",
+          "operation": "0ded9d38-c729-40fd-b6cb-ed7833db740f",
+          "owner_process": "5ac4d7ef-8659-4a9f-8dc8-9e9b7eadecaa",
+          "header_reserved": false
+        },
+        {
+          "free": true,
+          "slot": 2,
+          "mailbox": null,
+          "purpose": null,
+          "operation": null,
+          "owner_process": null,
+          "header_reserved": false
+        },
+        {
+          "free": false,
+          "slot": 3,
+          "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+          "purpose": "header",
+          "operation": "d4a6a585-67e8-4680-9290-a702925bad3e",
+          "owner_process": "3fbf3f25-e878-4160-a451-b1d14bb6a4d6",
+          "header_reserved": false
+        },
+        {
+          "free": true,
+          "slot": 4,
+          "mailbox": null,
+          "purpose": null,
+          "operation": null,
+          "owner_process": null,
+          "header_reserved": true
+        }
+      ],
+      "authority": {
+        "scope_kind": "transport",
+        "grant_state": "active",
+        "capabilities": [
+          "smtp_submit",
+          "imap_headers",
+          "imap_body"
+        ],
+        "mailbox_state": "verified_test",
+        "grant_revision": 1,
+        "tenant_binding": true,
+        "mailbox_binding": true,
+        "grant_expires_at": "2026-10-07T08:32:29.512Z",
+        "imap_host_binding": true,
+        "imap_port_binding": true,
+        "smtp_host_binding": true,
+        "smtp_port_binding": true,
+        "config_fingerprint": "ccc014f1394bfbf88cd205805e3b5c6788e7273710d540b3d42d991352029083",
+        "transport_revision": 0,
+        "credentials_present": true,
+        "grant_mailbox_revision": "0"
+      }
+    },
+    "expectedConfigFingerprint": "ccc014f1394bfbf88cd205805e3b5c6788e7273710d540b3d42d991352029083",
+    "gaps": [
+      "sender_decryption_binding_not_observed",
+      "read_committed_snapshot_not_query_predicate_reexecution"
+    ],
+    "sourceBindings": [
+      {
+        "name": "replies/context-store",
+        "sha256": "0024911718a501dde619df373fe830642386ae4ce30f19abc39ddea6f0c67756"
+      },
+      {
+        "name": "runtime/store",
+        "sha256": "4f41e66dc1b9bd42c54f1079fd3126e9ce0d2e872be13c2c1254ffeb2a2d4efb"
+      },
+      {
+        "name": "mailboxes/transport-authority",
+        "sha256": "0143e31bb23808b59a64f5dbfa4724ad849ecd3418fe84820c141c4aac291153"
+      },
+      {
+        "name": "mailboxes/transport-slots",
+        "sha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903"
+      }
+    ],
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 300,
+    "utc": "2026-10-07T08:12:49.074Z",
+    "monotonicNs": "1283779073728414"
+  },
+  {
+    "kind": "entry",
+    "mode": "continuation",
+    "snapshot": {
+      "transaction_id": "504204",
+      "backend_pid": 965752,
+      "database_utc": "2026-10-07T08:12:49.099Z",
+      "events": [
+        {
+          "id": "8c638ed7-13a2-431f-af97-e0988e83c46a",
+          "uid": 1,
+          "due_at": "2026-10-07T08:13:01.044+00:00",
+          "run_id": "2a962b9d-be0c-41ce-8107-4a3b140fffe3",
+          "source": "imap_headers",
+          "attempt": 1,
+          "owner_id": "a6c95861-398e-40cb-9992-e4ebf3b66ad8",
+          "due_state": "ready",
+          "tenant_id": "107da3ab-dcc6-4b41-8361-fe71b503bdfe",
+          "expires_at": "2026-10-14T08:12:38.929398+00:00",
+          "generation": 1,
+          "mailbox_id": "1391f942-5bd1-4a78-8986-4b953d71361d",
+          "poll_owner": null,
+          "provenance": "imap_headers",
+          "scan_state": "complete",
+          "suppressed": false,
+          "window_end": "2026-10-07T08:13:01.044+00:00",
+          "lease_until": "2026-10-07T08:13:01.044+00:00",
+          "uidvalidity": "1",
+          "completed_at": "2026-10-07T08:12:49.03+00:00",
+          "window_start": "2026-10-07T08:12:49.044+00:00",
+          "capture_phase": "metadata",
+          "capture_state": "claimed",
+          "next_check_at": "2026-10-07T08:13:01.044+00:00",
+          "scan_complete": true,
+          "capacity_active": true,
+          "next_attempt_at": "2026-10-07T08:12:49.044+00:00",
+          "poll_generation": 4,
+          "attempt_deadline": "2026-10-07T08:20:08.947215+00:00",
+          "scan_uidvalidity": "1",
+          "capture_service_seq": 2,
+          "window_completed_at": "2026-10-07T08:12:49.03+00:00",
+          "authenticated_run_id": "2a962b9d-be0c-41ce-8107-4a3b140fffe3",
+          "authenticated_attempt": 1
+        },
+        {
+          "id": "75ac1a41-d3d9-4be6-a299-c1c74aabf132",
+          "uid": 1,
+          "due_at": "2026-10-07T08:13:01.069+00:00",
+          "run_id": "9e2bda82-7ed7-4784-82da-6a52da2eaf78",
+          "source": "imap_headers",
+          "attempt": 1,
+          "owner_id": "a402dbf9-3728-47f9-98c9-8a256c39bb47",
+          "due_state": "ready",
+          "tenant_id": "04755858-c30a-400c-b8c9-57406ff34bcd",
+          "expires_at": "2026-10-14T08:12:38.89067+00:00",
+          "generation": 1,
+          "mailbox_id": "1269fade-a9df-428c-93c3-5acd691fb9e3",
+          "poll_owner": null,
+          "provenance": "imap_headers",
+          "scan_state": "complete",
+          "suppressed": false,
+          "window_end": "2026-10-07T08:13:01.069+00:00",
+          "lease_until": "2026-10-07T08:13:01.069+00:00",
+          "uidvalidity": "1",
+          "completed_at": "2026-10-07T08:12:49.035+00:00",
+          "window_start": "2026-10-07T08:12:49.069+00:00",
+          "capture_phase": "metadata",
+          "capture_state": "claimed",
+          "next_check_at": "2026-10-07T08:13:01.069+00:00",
+          "scan_complete": true,
+          "capacity_active": true,
+          "next_attempt_at": "2026-10-07T08:12:49.069+00:00",
+          "poll_generation": 4,
+          "attempt_deadline": "2026-10-07T08:20:08.916359+00:00",
+          "scan_uidvalidity": "1",
+          "capture_service_seq": 1,
+          "window_completed_at": "2026-10-07T08:12:49.035+00:00",
+          "authenticated_run_id": "9e2bda82-7ed7-4784-82da-6a52da2eaf78",
+          "authenticated_attempt": 1
+        }
+      ],
+      "urgent_headers": null,
+      "slots": [
+        {
+          "free": false,
+          "slot": 1,
+          "mailbox": "1391f942-5bd1-4a78-8986-4b953d71361d",
+          "purpose": "body",
+          "operation": "0ded9d38-c729-40fd-b6cb-ed7833db740f",
+          "owner_host": "test-apps-server.com",
+          "owner_process": "5ac4d7ef-8659-4a9f-8dc8-9e9b7eadecaa",
+          "header_reserved": false
+        },
+        {
+          "free": false,
+          "slot": 2,
+          "mailbox": "1269fade-a9df-428c-93c3-5acd691fb9e3",
+          "purpose": "body",
+          "operation": "be6f9e59-e050-425b-831c-57d3e26f8f00",
+          "owner_host": "test-apps-server.com",
+          "owner_process": "e0b73e5d-033f-40c4-8560-22192bb5050c",
+          "header_reserved": false
+        },
+        {
+          "free": false,
+          "slot": 3,
+          "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+          "purpose": "header",
+          "operation": "d4a6a585-67e8-4680-9290-a702925bad3e",
+          "owner_host": "test-apps-server.com",
+          "owner_process": "3fbf3f25-e878-4160-a451-b1d14bb6a4d6",
+          "header_reserved": false
+        },
+        {
+          "free": true,
+          "slot": 4,
+          "mailbox": null,
+          "purpose": null,
+          "operation": null,
+          "owner_host": null,
+          "owner_process": null,
+          "header_reserved": true
+        }
+      ]
+    },
+    "gaps": [
+      "sender_decryption_binding_not_observed",
+      "authority_binding_observed_by_actual_following_queries",
+      "read_committed_snapshot_not_query_predicate_reexecution"
+    ],
+    "sourceBindings": [
+      {
+        "name": "replies/context-store",
+        "sha256": "0024911718a501dde619df373fe830642386ae4ce30f19abc39ddea6f0c67756"
+      },
+      {
+        "name": "runtime/store",
+        "sha256": "4f41e66dc1b9bd42c54f1079fd3126e9ce0d2e872be13c2c1254ffeb2a2d4efb"
+      },
+      {
+        "name": "mailboxes/transport-authority",
+        "sha256": "0143e31bb23808b59a64f5dbfa4724ad849ecd3418fe84820c141c4aac291153"
+      },
+      {
+        "name": "mailboxes/transport-slots",
+        "sha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903"
+      }
+    ],
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 316,
+    "utc": "2026-10-07T08:12:49.100Z",
+    "monotonicNs": "1283779099851164"
+  },
+  {
+    "kind": "query",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "stage": "settled_header_finish",
+    "querySha256": "fb576760e629837bfd9b6aa83957545250fad5b27f5cee343334903ed65b7ee0",
+    "source": "runtime/store",
+    "sourceSha256": "4f41e66dc1b9bd42c54f1079fd3126e9ce0d2e872be13c2c1254ffeb2a2d4efb",
+    "rowCount": 1,
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 319,
+    "utc": "2026-10-07T08:12:49.540Z",
+    "monotonicNs": "1283779539766791"
+  },
+  {
+    "kind": "query",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "stage": null,
+    "querySha256": "c1c044206a742d17890e5f1bce9a42b5f8ea2b99da8d7a89c27de04ea7ad3cc7",
+    "source": "replies/context-store",
+    "sourceSha256": "0024911718a501dde619df373fe830642386ae4ce30f19abc39ddea6f0c67756",
+    "sourceAstSha256": "2a3d47364ba991b8dd489029e1f0835dded6d3b4a5c1d2195e85cac195e6f254",
+    "rowCount": 0,
+    "count": null,
+    "selectedEvent": null,
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 320,
+    "utc": "2026-10-07T08:12:49.541Z",
+    "monotonicNs": "1283779540478111"
+  },
+  {
+    "kind": "entry",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "snapshot": {
+      "transaction_id": "504213",
+      "backend_pid": 965752,
+      "database_utc": "2026-10-07T08:12:49.544Z",
+      "frontier": [
+        {
+          "id": "a685174c-bf02-41a5-8587-84946e7318aa",
+          "uid": 1,
+          "source": "imap_headers",
+          "owner_id": null,
+          "expires_at": "2026-10-14T08:12:38.953577+00:00",
+          "generation": 0,
+          "mailbox_id": "35ad397d-5151-409b-b746-c7b215683911",
+          "window_end": null,
+          "uidvalidity": "1",
+          "window_start": null,
+          "capture_state": "pending",
+          "next_attempt_at": "2026-10-07T08:12:38.953577+00:00",
+          "attempt_deadline": "2026-10-07T08:20:08.999848+00:00",
+          "capture_service_seq": 3,
+          "authenticated_run_id": "f578d408-f2f0-40df-a66b-5bbb139bc29b",
+          "authenticated_attempt": 1
+        },
+        {
+          "id": "2e0c7bd6-d1a8-4f85-b9f6-837101c579fd",
+          "uid": 1,
+          "source": "imap_headers",
+          "owner_id": null,
+          "expires_at": "2026-10-14T08:12:39.565664+00:00",
+          "generation": 0,
+          "mailbox_id": "1bb8e89d-f433-4c82-80e1-557ab0ad5fe2",
+          "window_end": null,
+          "uidvalidity": "1",
+          "window_start": null,
+          "capture_state": "pending",
+          "next_attempt_at": "2026-10-07T08:12:39.565664+00:00",
+          "attempt_deadline": "2026-10-07T08:20:09.588339+00:00",
+          "capture_service_seq": 4,
+          "authenticated_run_id": "d510c83a-7a2b-4f47-876c-194c8bf851a3",
+          "authenticated_attempt": 1
+        },
+        {
+          "id": "fd5d75cb-6866-4e20-813a-75f3b90d27f4",
+          "uid": 1,
+          "source": "imap_headers",
+          "owner_id": null,
+          "expires_at": "2026-10-14T08:12:39.79395+00:00",
+          "generation": 0,
+          "mailbox_id": "2c71a504-680f-4075-b402-f007428fb1d9",
+          "window_end": null,
+          "uidvalidity": "1",
+          "window_start": null,
+          "capture_state": "pending",
+          "next_attempt_at": "2026-10-07T08:12:39.79395+00:00",
+          "attempt_deadline": "2026-10-07T08:20:09.817826+00:00",
+          "capture_service_seq": 5,
+          "authenticated_run_id": "3de56d71-a571-408f-a1dc-639d3d540535",
+          "authenticated_attempt": 1
+        }
+      ],
+      "events": [
+        {
+          "id": "a685174c-bf02-41a5-8587-84946e7318aa",
+          "uid": 1,
+          "run_id": "f578d408-f2f0-40df-a66b-5bbb139bc29b",
+          "source": "imap_headers",
+          "attempt": 1,
+          "owner_id": null,
+          "expires_at": "2026-10-14T08:12:38.953577+00:00",
+          "generation": 0,
+          "mailbox_id": "35ad397d-5151-409b-b746-c7b215683911",
+          "provenance": "imap_headers",
+          "scan_state": "complete",
+          "suppressed": false,
+          "window_end": null,
+          "uidvalidity": "1",
+          "completed_at": "2026-10-07T08:12:49.532+00:00",
+          "root_binding": true,
+          "window_start": null,
+          "capture_state": "pending",
+          "scan_complete": true,
+          "capacity_active": true,
+          "next_attempt_at": "2026-10-07T08:12:38.953577+00:00",
+          "attempt_deadline": "2026-10-07T08:20:08.999848+00:00",
+          "poll_uidvalidity": "1",
+          "scan_uidvalidity": "1",
+          "recipient_binding": true,
+          "capture_service_seq": 3,
+          "authenticated_run_id": "f578d408-f2f0-40df-a66b-5bbb139bc29b",
+          "authenticated_attempt": 1
+        }
+      ],
+      "slots": [
+        {
+          "free": false,
+          "slot": 1,
+          "mailbox": "1391f942-5bd1-4a78-8986-4b953d71361d",
+          "purpose": "body",
+          "operation": "0ded9d38-c729-40fd-b6cb-ed7833db740f",
+          "owner_process": "5ac4d7ef-8659-4a9f-8dc8-9e9b7eadecaa",
+          "header_reserved": false
+        },
+        {
+          "free": false,
+          "slot": 2,
+          "mailbox": "1269fade-a9df-428c-93c3-5acd691fb9e3",
+          "purpose": "body",
+          "operation": "be6f9e59-e050-425b-831c-57d3e26f8f00",
+          "owner_process": "e0b73e5d-033f-40c4-8560-22192bb5050c",
+          "header_reserved": false
+        },
+        {
+          "free": true,
+          "slot": 3,
+          "mailbox": null,
+          "purpose": null,
+          "operation": null,
+          "owner_process": null,
+          "header_reserved": false
+        },
+        {
+          "free": false,
+          "slot": 4,
+          "mailbox": "1bb8e89d-f433-4c82-80e1-557ab0ad5fe2",
+          "purpose": "header",
+          "operation": "4f672613-6cef-4829-952b-cf3add1e83be",
+          "owner_process": "e2a96916-04b7-44da-8fe7-caf530725c28",
+          "header_reserved": true
+        }
+      ],
+      "authority": {
+        "scope_kind": "transport",
+        "grant_state": "active",
+        "capabilities": [
+          "smtp_submit",
+          "imap_headers",
+          "imap_body"
+        ],
+        "mailbox_state": "verified_test",
+        "grant_revision": 1,
+        "tenant_binding": true,
+        "mailbox_binding": true,
+        "grant_expires_at": "2026-10-07T08:32:28.745Z",
+        "imap_host_binding": true,
+        "imap_port_binding": true,
+        "smtp_host_binding": true,
+        "smtp_port_binding": true,
+        "config_fingerprint": "ccc014f1394bfbf88cd205805e3b5c6788e7273710d540b3d42d991352029083",
+        "transport_revision": 0,
+        "credentials_present": true,
+        "grant_mailbox_revision": "0"
+      }
+    },
+    "expectedConfigFingerprint": "ccc014f1394bfbf88cd205805e3b5c6788e7273710d540b3d42d991352029083",
+    "gaps": [
+      "sender_decryption_binding_not_observed",
+      "read_committed_snapshot_not_query_predicate_reexecution"
+    ],
+    "sourceBindings": [
+      {
+        "name": "replies/context-store",
+        "sha256": "0024911718a501dde619df373fe830642386ae4ce30f19abc39ddea6f0c67756"
+      },
+      {
+        "name": "runtime/store",
+        "sha256": "4f41e66dc1b9bd42c54f1079fd3126e9ce0d2e872be13c2c1254ffeb2a2d4efb"
+      },
+      {
+        "name": "mailboxes/transport-authority",
+        "sha256": "0143e31bb23808b59a64f5dbfa4724ad849ecd3418fe84820c141c4aac291153"
+      },
+      {
+        "name": "mailboxes/transport-slots",
+        "sha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903"
+      }
+    ],
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 321,
+    "utc": "2026-10-07T08:12:49.545Z",
+    "monotonicNs": "1283779544527263"
+  },
+  {
+    "kind": "query",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "stage": "pending_continuation",
+    "querySha256": "6a72b03fe64d408d3e586a8f832fcbe30f6270453bb0605dab3716a0b1f9de15",
+    "source": "replies/context-store",
+    "sourceSha256": "0024911718a501dde619df373fe830642386ae4ce30f19abc39ddea6f0c67756",
+    "sourceAstSha256": "1b5edbcd10e286eae3463b784ef7fbea86b8e088e752110a9f0db028d20d38b9",
+    "rowCount": 0,
+    "count": null,
+    "selectedEvent": null,
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 322,
+    "utc": "2026-10-07T08:12:49.545Z",
+    "monotonicNs": "1283779545206033"
+  },
+  {
+    "kind": "query",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "stage": "live_windows",
+    "querySha256": "6a12515cf8a98fd064cb40f2b29c9cd32489c33045a265509dcb735b87019ddb",
+    "source": "replies/context-store",
+    "sourceSha256": "0024911718a501dde619df373fe830642386ae4ce30f19abc39ddea6f0c67756",
+    "sourceAstSha256": "5ae9866d0282992f33014d158466429093a6707ea9b7a1c5c4f8540853a624b4",
+    "rowCount": 1,
+    "count": "2",
+    "selectedEvent": null,
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 323,
+    "utc": "2026-10-07T08:12:49.546Z",
+    "monotonicNs": "1283779545710933"
+  },
+  {
+    "kind": "query",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "stage": "transport_authority",
+    "querySha256": "c0c2066d84bbc278f2f81bdf33ea336ab02fbe89145d2562c6f2c6cc4a866d27",
+    "source": "mailboxes/transport-authority",
+    "sourceSha256": "0143e31bb23808b59a64f5dbfa4724ad849ecd3418fe84820c141c4aac291153",
+    "sourceAstSha256": "66ec8eb0c771fe1bdb21e3031e343fe5550301dc03e7103c4f84d7b144fa44d0",
+    "rowCount": 1,
+    "count": null,
+    "selectedEvent": null,
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 324,
+    "utc": "2026-10-07T08:12:49.546Z",
+    "monotonicNs": "1283779546369593"
+  },
+  {
+    "kind": "query",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "stage": null,
+    "querySha256": "71d500622c1da3687cc9a297e4116c26fc371b79346a3d5212d3ec8ddc4ede68",
+    "source": "runtime/store",
+    "sourceSha256": "4f41e66dc1b9bd42c54f1079fd3126e9ce0d2e872be13c2c1254ffeb2a2d4efb",
+    "sourceAstSha256": "3d84970732b1f07ba8d093b8b14d524ff807eafa589fdac620416bb8d8c11fa4",
+    "rowCount": 1,
+    "count": null,
+    "selectedEvent": null,
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 325,
+    "utc": "2026-10-07T08:12:49.547Z",
+    "monotonicNs": "1283779546876503"
+  },
+  {
+    "kind": "query",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "stage": "transport_authority",
+    "querySha256": "c0c2066d84bbc278f2f81bdf33ea336ab02fbe89145d2562c6f2c6cc4a866d27",
+    "source": "mailboxes/transport-authority",
+    "sourceSha256": "0143e31bb23808b59a64f5dbfa4724ad849ecd3418fe84820c141c4aac291153",
+    "sourceAstSha256": "66ec8eb0c771fe1bdb21e3031e343fe5550301dc03e7103c4f84d7b144fa44d0",
+    "rowCount": 1,
+    "count": null,
+    "selectedEvent": null,
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 326,
+    "utc": "2026-10-07T08:12:49.548Z",
+    "monotonicNs": "1283779547528364"
+  },
+  {
+    "kind": "query",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "stage": null,
+    "querySha256": "71d500622c1da3687cc9a297e4116c26fc371b79346a3d5212d3ec8ddc4ede68",
+    "source": "runtime/store",
+    "sourceSha256": "4f41e66dc1b9bd42c54f1079fd3126e9ce0d2e872be13c2c1254ffeb2a2d4efb",
+    "sourceAstSha256": "3d84970732b1f07ba8d093b8b14d524ff807eafa589fdac620416bb8d8c11fa4",
+    "rowCount": 1,
+    "count": null,
+    "selectedEvent": null,
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 327,
+    "utc": "2026-10-07T08:12:49.548Z",
+    "monotonicNs": "1283779547841094"
+  },
+  {
+    "kind": "query",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "stage": "eligible_frontier",
+    "querySha256": "3aa48704ad77cc6af40b577264d0ff9f1d59563b3b46286ea671daebc0ae4e7b",
+    "source": "replies/context-store",
+    "sourceSha256": "0024911718a501dde619df373fe830642386ae4ce30f19abc39ddea6f0c67756",
+    "sourceAstSha256": "99ce2720b623c7d75f14a803989eb8d9a73e5dd253450600d6747db2905e37c3",
+    "rowCount": 1,
+    "count": null,
+    "selectedEvent": "a685174c-bf02-41a5-8587-84946e7318aa",
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 328,
+    "utc": "2026-10-07T08:12:49.556Z",
+    "monotonicNs": "1283779556172817"
+  },
+  {
+    "kind": "query",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "stage": "body_header_due",
+    "querySha256": "cb31bdb2a8774bf5afb87baaadc7877973a7f43843b2177803c63b0551c7253b",
+    "source": "mailboxes/transport-slots",
+    "sourceSha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903",
+    "sourceAstSha256": "fbc0a5fbbf8e7ed585034e20f63da249b8b2e11afe3a4be730f65bc333624231",
+    "rowCount": 0,
+    "count": null,
+    "selectedEvent": null,
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 329,
+    "utc": "2026-10-07T08:12:49.557Z",
+    "monotonicNs": "1283779557334797"
+  },
+  {
+    "kind": "query",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "stage": "potential_body_occupancy",
+    "querySha256": "d54a594d0c182165687e6503546d4d89b9ecea4187ed6ddba06329e10e3918c4",
+    "source": "mailboxes/transport-slots",
+    "sourceSha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903",
+    "sourceAstSha256": "ae3b5290b59cb55caaeddb9a205799f27a93fe6cc3a6d994eafee64f31e8e819",
+    "rowCount": 1,
+    "count": "2",
+    "selectedEvent": null,
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 330,
+    "utc": "2026-10-07T08:12:49.558Z",
+    "monotonicNs": "1283779558062727"
+  },
+  {
+    "kind": "query",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "stage": "mailbox_occupied",
+    "querySha256": "02719ee75f73d1a3408c5ddff0a98ecc269fcc4e9bf3a6ae7aa31fdd2f377063",
+    "source": "mailboxes/transport-slots",
+    "sourceSha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903",
+    "sourceAstSha256": "7674f035a2cbd0ef1a621e30a6f1b7127576ac7837e58b4d6cd31718603d4896",
+    "rowCount": 0,
+    "count": null,
+    "selectedEvent": null,
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 331,
+    "utc": "2026-10-07T08:12:49.559Z",
+    "monotonicNs": "1283779558845338"
+  },
+  {
+    "kind": "query",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "stage": null,
+    "querySha256": "b5f5a9d7b8421da85551af643cb4152b2e4800d405f2b0e48441b5c849306d18",
+    "source": "mailboxes/transport-slots",
+    "sourceSha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903",
+    "sourceAstSha256": "e11a5b5380cb9f989ea60084a1bac3676c77913f11684bde11891d04a4413496",
+    "rowCount": 1,
+    "count": null,
+    "selectedEvent": null,
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 332,
+    "utc": "2026-10-07T08:12:49.560Z",
+    "monotonicNs": "1283779560222388"
+  },
+  {
+    "kind": "query",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "stage": null,
+    "querySha256": "b6807ebfbdc74c71e657c0e599bb6ebbf1a927181c9e7035d41205a6306bd542",
+    "source": "mailboxes/transport-slots",
+    "sourceSha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903",
+    "sourceAstSha256": "dc6852d0a383728fcf4d0ed380b11814db1a366378fe81d6dfe61a600e2cf3fd",
+    "rowCount": 1,
+    "count": null,
+    "selectedEvent": null,
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 333,
+    "utc": "2026-10-07T08:12:49.563Z",
+    "monotonicNs": "1283779563310779"
+  },
+  {
+    "kind": "query",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "stage": "free_slot",
+    "querySha256": "105faf8f6ef85bcddb00f986b81cb92f132dee15e0f033635f1aef58880ac01f",
+    "source": "mailboxes/transport-slots",
+    "sourceSha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903",
+    "sourceAstSha256": "161b585a21e007e6a5a6a9785adbc4a260457bc642aab9cd807ff04dd088715f",
+    "rowCount": 1,
+    "count": null,
+    "selectedEvent": null,
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 334,
+    "utc": "2026-10-07T08:12:49.564Z",
+    "monotonicNs": "1283779563867029"
+  },
+  {
+    "kind": "query",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "stage": null,
+    "querySha256": "7a2efdd84fc553a537b19f2a2f6b66decf9273fe71d1b09f6e15bd0769b8e435",
+    "source": "mailboxes/transport-slots",
+    "sourceSha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903",
+    "sourceAstSha256": "e0b987bae366d39080184f51609dbce263ef05613fbe2f9c9bbe97fce8facada",
+    "rowCount": 1,
+    "count": null,
+    "selectedEvent": null,
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 335,
+    "utc": "2026-10-07T08:12:49.565Z",
+    "monotonicNs": "1283779564632120"
+  },
+  {
+    "kind": "result",
+    "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+    "claimOwner": "d4a6a585-67e8-4680-9290-a702925bad3e",
+    "claimGeneration": "4",
+    "inheritedNow": "2026-10-07T08:12:49.538Z",
+    "outcome": "opened",
+    "event": "a685174c-bf02-41a5-8587-84946e7318aa",
+    "owner": "85e9f6b2-86b1-44ed-a296-25b58a67c1f2",
+    "generation": "1",
+    "windowStart": "2026-10-07T08:12:49.538Z",
+    "windowEnd": "2026-10-07T08:13:01.538Z",
+    "rowCount": 1,
+    "querySha256": "fa177769173b65f6c88b9c4beae0efa0ef0b10d77abd529a2fd41c48defa3346",
+    "pid": 300309,
+    "startTicks": "128376060",
+    "sequence": 336,
+    "utc": "2026-10-07T08:12:49.566Z",
+    "monotonicNs": "1283779565808470"
+  }
+]

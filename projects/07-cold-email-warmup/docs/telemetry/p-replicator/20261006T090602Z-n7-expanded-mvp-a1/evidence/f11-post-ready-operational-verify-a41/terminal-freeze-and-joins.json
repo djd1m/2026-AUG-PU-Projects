@@ -1,0 +1,3555 @@
+{
+  "utc": "2026-10-07T08:19:49.175512+00:00",
+  "source_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
+  "source_build_helper_checks": [
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/02_pseudocode.md",
+      "sha256": "26aab59387c62fe2256bbcf34980fd0cf606622c6d88fa56bce05c17db6c6f8d",
+      "expected": "26aab59387c62fe2256bbcf34980fd0cf606622c6d88fa56bce05c17db6c6f8d",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/03_architecture.md",
+      "sha256": "30e63317588a1c46c7f3ae7a387204f0be8d0f40baf86d60433fcf3e1ad3ec07",
+      "expected": "30e63317588a1c46c7f3ae7a387204f0be8d0f40baf86d60433fcf3e1ad3ec07",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/runtime/worker.ts",
+      "sha256": "222c79b1c750e27aa25cd8b04778e2590dda3e39fc1604f1758be104c995b303",
+      "expected": "222c79b1c750e27aa25cd8b04778e2590dda3e39fc1604f1758be104c995b303",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/runtime/loop.ts",
+      "sha256": "56fa2795bf3a8d3fb0ae8756d3a2d9fdb3281880a1dcb3a96b7103157026af17",
+      "expected": "56fa2795bf3a8d3fb0ae8756d3a2d9fdb3281880a1dcb3a96b7103157026af17",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/mailboxes/transport-lifetime.ts",
+      "sha256": "be57cd516949baf7ca91b302105ceadd82cf7dbb39c82472e06affabee4ded06",
+      "expected": "be57cd516949baf7ca91b302105ceadd82cf7dbb39c82472e06affabee4ded06",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/context-store.ts",
+      "sha256": "0024911718a501dde619df373fe830642386ae4ce30f19abc39ddea6f0c67756",
+      "expected": "0024911718a501dde619df373fe830642386ae4ce30f19abc39ddea6f0c67756",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/worker.ts",
+      "sha256": "4b99be4ceb9ae5e95b55cc884330e6092af86947595ceaa4755757345a104fa3",
+      "expected": "4b99be4ceb9ae5e95b55cc884330e6092af86947595ceaa4755757345a104fa3",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/store.ts",
+      "sha256": "7f0418c6af8aa36092f80352eb910fa4ee8b5fcfaddb67f285d0782c9804a0d0",
+      "expected": "7f0418c6af8aa36092f80352eb910fa4ee8b5fcfaddb67f285d0782c9804a0d0",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+      "sha256": "6e36e33dba7cd5d14dce460f8d56bfa1198cca6b51c65b74c7137388905f80e4",
+      "expected": "6e36e33dba7cd5d14dce460f8d56bfa1198cca6b51c65b74c7137388905f80e4",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/auth/password.js",
+      "sha256": "3decbfaf152c313910d9375d1e8f559df4aa2b40389b1c63561261d5147b594e",
+      "expected": "3decbfaf152c313910d9375d1e8f559df4aa2b40389b1c63561261d5147b594e",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/auth/service.js",
+      "sha256": "5537019db7c50c93d8a61fd00194330558eb01898726ed5017c4d3bf47b1dd2e",
+      "expected": "5537019db7c50c93d8a61fd00194330558eb01898726ed5017c4d3bf47b1dd2e",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/auth/session.js",
+      "sha256": "a84490dbbd8589da6ae79cecbf7bf9a04c76a9676d3ca948cc8fb811d1a5ffce",
+      "expected": "a84490dbbd8589da6ae79cecbf7bf9a04c76a9676d3ca948cc8fb811d1a5ffce",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/auth/store.js",
+      "sha256": "0f6a4de099ec4570e9a2a73f03c2364c92fc01af42e228950844a01f0d6f8605",
+      "expected": "0f6a4de099ec4570e9a2a73f03c2364c92fc01af42e228950844a01f0d6f8605",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/billing/plans.js",
+      "sha256": "46b563cd56f6e03b5258eb458f593ea090d3c65945a520a11f761d291da916eb",
+      "expected": "46b563cd56f6e03b5258eb458f593ea090d3c65945a520a11f761d291da916eb",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/billing/provider.js",
+      "sha256": "c0010017201707d13c2810741ef90b991dffa91d3792c570ea0fa5954880f6d1",
+      "expected": "c0010017201707d13c2810741ef90b991dffa91d3792c570ea0fa5954880f6d1",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/billing/service.js",
+      "sha256": "53ecc4f98112c38ffdc947ba4eba782844a16a5074bb2f73cba4d1895b7228f5",
+      "expected": "53ecc4f98112c38ffdc947ba4eba782844a16a5074bb2f73cba4d1895b7228f5",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/billing/transaction.js",
+      "sha256": "32cadf1259627dba17799639216cfdb4d115d6393193462983f01e779186148a",
+      "expected": "32cadf1259627dba17799639216cfdb4d115d6393193462983f01e779186148a",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/campaigns/input.js",
+      "sha256": "158771b68468eb317e469a2d10c301235f8258a8a75d6236dfe5bf96c8c8314b",
+      "expected": "158771b68468eb317e469a2d10c301235f8258a8a75d6236dfe5bf96c8c8314b",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/campaigns/store.js",
+      "sha256": "ea08589081cda4ae0a6109fa969da951bba6cf35e45fbf5199a4ed3819ee9a8d",
+      "expected": "ea08589081cda4ae0a6109fa969da951bba6cf35e45fbf5199a4ed3819ee9a8d",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/config.js",
+      "sha256": "80432665f0a0b00f01f105d83fd057c7b24ab8f823de7876aa1e48bed17c5e32",
+      "expected": "80432665f0a0b00f01f105d83fd057c7b24ab8f823de7876aa1e48bed17c5e32",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/consent/store.js",
+      "sha256": "16978d51391388740ba91e20e8074eae2d0563078cfea7250b3300c9ed38d36e",
+      "expected": "16978d51391388740ba91e20e8074eae2d0563078cfea7250b3300c9ed38d36e",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/consent/transaction.js",
+      "sha256": "73a1c140d4c26fce559ea9c1f401362c743a0374dc5c177aa668df018a5cf6b9",
+      "expected": "73a1c140d4c26fce559ea9c1f401362c743a0374dc5c177aa668df018a5cf6b9",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/db.js",
+      "sha256": "6642e84f3dfa60c021593666fa520868f1f06e57772147560e9fb5181951faef",
+      "expected": "6642e84f3dfa60c021593666fa520868f1f06e57772147560e9fb5181951faef",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/dispatch/adapter.js",
+      "sha256": "256b32a9deca1bb16f6cab4a4b9678be6f6af7ceb5788a15489668a432272594",
+      "expected": "256b32a9deca1bb16f6cab4a4b9678be6f6af7ceb5788a15489668a432272594",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/dispatch/eligibility.js",
+      "sha256": "4676adc3f763dc35fa79908901801fa04c0382a01ab51fc867e7af3d0f7a4f60",
+      "expected": "4676adc3f763dc35fa79908901801fa04c0382a01ab51fc867e7af3d0f7a4f60",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/dispatch/message.js",
+      "sha256": "c29e77cd69751dcf5ac05ca03be83acf66ee89501c84f11b2c05ffcd69faf1e4",
+      "expected": "c29e77cd69751dcf5ac05ca03be83acf66ee89501c84f11b2c05ffcd69faf1e4",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/dispatch/seams.js",
+      "sha256": "589665ddba8d9d953e0cd4ed6f92c2af5b6496be441d39f3f312f8e81694e8c1",
+      "expected": "589665ddba8d9d953e0cd4ed6f92c2af5b6496be441d39f3f312f8e81694e8c1",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/dispatch/smtp.js",
+      "sha256": "d13d7995601b9792c6ad42af1af05efb2f8817784e625136d0e88a79cbf0594a",
+      "expected": "d13d7995601b9792c6ad42af1af05efb2f8817784e625136d0e88a79cbf0594a",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/dispatch/store.js",
+      "sha256": "5c67b41b0ecdeec33d5d37e5f93dd57367b2be9d86ea37b4f2f09114e8bd5d6a",
+      "expected": "5c67b41b0ecdeec33d5d37e5f93dd57367b2be9d86ea37b4f2f09114e8bd5d6a",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/dispatch/submission.js",
+      "sha256": "08a0f8e5126b1983d5943cb1dee53a974d73e8aca327701231f97688c4d4d03e",
+      "expected": "08a0f8e5126b1983d5943cb1dee53a974d73e8aca327701231f97688c4d4d03e",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/dispatch/worker.js",
+      "sha256": "0745c2b4d3da424a71aa14d6d1d3c7fb7f6428137f265e40196ffd93ccd242bf",
+      "expected": "0745c2b4d3da424a71aa14d6d1d3c7fb7f6428137f265e40196ffd93ccd242bf",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/errors.js",
+      "sha256": "960a11b1d06cc22ca03989ba183dfd16d1322b19cf9b8744874a9cd624fe9c4b",
+      "expected": "960a11b1d06cc22ca03989ba183dfd16d1322b19cf9b8744874a9cd624fe9c4b",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/evidence/compare.js",
+      "sha256": "4c6bf10142d92183948ef28f8b091a452439c131598a1f434c9170fa521a1401",
+      "expected": "4c6bf10142d92183948ef28f8b091a452439c131598a1f434c9170fa521a1401",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/evidence/input.js",
+      "sha256": "20c881038c36d1cfac6054cd5b54e6110856c9da6c69de49cb8e0a792904a171",
+      "expected": "20c881038c36d1cfac6054cd5b54e6110856c9da6c69de49cb8e0a792904a171",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/evidence/store.js",
+      "sha256": "0ecf18bfc6d034fe97a64a13f0b2661480345d564376aeb97d0e06b166652f6a",
+      "expected": "0ecf18bfc6d034fe97a64a13f0b2661480345d564376aeb97d0e06b166652f6a",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/growth/attribution.js",
+      "sha256": "77a5436123d647a265f2ee8cd8e9fb7be915ff1d73f1fca3188517a26e170496",
+      "expected": "77a5436123d647a265f2ee8cd8e9fb7be915ff1d73f1fca3188517a26e170496",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/growth/partner.js",
+      "sha256": "6de3407bcafcd93c82abc7bf33558fad6237e3e5eec131dbec468c32029e1d71",
+      "expected": "6de3407bcafcd93c82abc7bf33558fad6237e3e5eec131dbec468c32029e1d71",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/growth/reports.js",
+      "sha256": "0e91de893154c4f9aca978fd83bcf484c52dc7fdd9f314c323abe7a45354a02f",
+      "expected": "0e91de893154c4f9aca978fd83bcf484c52dc7fdd9f314c323abe7a45354a02f",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/capacity.js",
+      "sha256": "f22c61a5984208f108f20dfa3352a25e480b589fc0571aff78fcd7848a212782",
+      "expected": "f22c61a5984208f108f20dfa3352a25e480b589fc0571aff78fcd7848a212782",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/crypto.js",
+      "sha256": "57da121f012021b88d6433abf7a90a6b823275586cd9739834011edb9b794a00",
+      "expected": "57da121f012021b88d6433abf7a90a6b823275586cd9739834011edb9b794a00",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/diagnostic-authority.js",
+      "sha256": "3bda6073ab940b13884fc7d69f3a04043122b9cf969f177e5054b43bbcd1b90f",
+      "expected": "3bda6073ab940b13884fc7d69f3a04043122b9cf969f177e5054b43bbcd1b90f",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/diagnostic-channel.js",
+      "sha256": "3223405e2bfcbc75b46caeff6a442d0dab553749e678b212d1dd9efd163a172c",
+      "expected": "3223405e2bfcbc75b46caeff6a442d0dab553749e678b212d1dd9efd163a172c",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/diagnostic-operator.js",
+      "sha256": "97c98f166e0932b9f20eb933d204e75e98e210d578bd72c855a4a3728da1726d",
+      "expected": "97c98f166e0932b9f20eb933d204e75e98e210d578bd72c855a4a3728da1726d",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/diagnostic-store.js",
+      "sha256": "b2707928e559ace601bd53471d04ff5770a0b8bf922a21611de95c7ea023c666",
+      "expected": "b2707928e559ace601bd53471d04ff5770a0b8bf922a21611de95c7ea023c666",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/diagnostics.js",
+      "sha256": "7d7bc0fa4469f62bf3e80d5a1a6fa6f33333611f429c23fd0f85c04f6d908d71",
+      "expected": "7d7bc0fa4469f62bf3e80d5a1a6fa6f33333611f429c23fd0f85c04f6d908d71",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/input.js",
+      "sha256": "c98480d2c225225cff7f3ff95e0a47cfc254e9812ea70a9e7bbc372a81e69349",
+      "expected": "c98480d2c225225cff7f3ff95e0a47cfc254e9812ea70a9e7bbc372a81e69349",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/network.js",
+      "sha256": "a488dfb27971125116877f3a474286443cbe53dff45513296e7830c221ccaba4",
+      "expected": "a488dfb27971125116877f3a474286443cbe53dff45513296e7830c221ccaba4",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/provider.js",
+      "sha256": "39dc8b289b8adbd05a5787430ac5f81906f65a1ce0e0328ff504bd7646ce4120",
+      "expected": "39dc8b289b8adbd05a5787430ac5f81906f65a1ce0e0328ff504bd7646ce4120",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/store.js",
+      "sha256": "2e2ebe0278cd4b78b152167c765b0f24a286a11b6edb247d0b4751ea88c99ced",
+      "expected": "2e2ebe0278cd4b78b152167c765b0f24a286a11b6edb247d0b4751ea88c99ced",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/transport-authority.js",
+      "sha256": "05e5a03760dc244505d769cb93b3aa0a012fae7cba8107850d6301a3c12943cd",
+      "expected": "05e5a03760dc244505d769cb93b3aa0a012fae7cba8107850d6301a3c12943cd",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/transport-channel.js",
+      "sha256": "548becaccff70c44697572036e69db7586f4734eb1e2318895d4673a8abeacaf",
+      "expected": "548becaccff70c44697572036e69db7586f4734eb1e2318895d4673a8abeacaf",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/transport-child.js",
+      "sha256": "b274cdcae6cd1171a621d53bd644adf370840fb92c3b42622e608041978200e0",
+      "expected": "b274cdcae6cd1171a621d53bd644adf370840fb92c3b42622e608041978200e0",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/transport-lifetime.js",
+      "sha256": "1a97457e38e2ff0ced5eb7534942b09dae5cc469bce24b3c170c43ed2ebf8126",
+      "expected": "1a97457e38e2ff0ced5eb7534942b09dae5cc469bce24b3c170c43ed2ebf8126",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/transport-operator.js",
+      "sha256": "b8128e77cfaea849cb1169b74bd87d4dedb3a6439a19e73b8e32ce2e8f32709b",
+      "expected": "b8128e77cfaea849cb1169b74bd87d4dedb3a6439a19e73b8e32ce2e8f32709b",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/transport-slots.js",
+      "sha256": "7cdf57b9f1b9b9f9e0c931dcdc3bd377ca6d1cdbdd0163ef4772cf3d0772d925",
+      "expected": "7cdf57b9f1b9b9f9e0c931dcdc3bd377ca6d1cdbdd0163ef4772cf3d0772d925",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/main.js",
+      "sha256": "f87eff8a29e75435ed40957521d348c520b3d0b0feae2fd66ca48460665ce39e",
+      "expected": "f87eff8a29e75435ed40957521d348c520b3d0b0feae2fd66ca48460665ce39e",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/migrate.js",
+      "sha256": "4e1d6e130120b08b91404a01325e3a6877f2730ec27f6b49c14e4855e84b4c04",
+      "expected": "4e1d6e130120b08b91404a01325e3a6877f2730ec27f6b49c14e4855e84b4c04",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/pool/store.js",
+      "sha256": "cc48dad8892b9b3fc2f3100b2973170e2c0c5b555268a3888c2229338953c75a",
+      "expected": "cc48dad8892b9b3fc2f3100b2973170e2c0c5b555268a3888c2229338953c75a",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/adapter.js",
+      "sha256": "5a39df5022d6e723a5c0ff9daacada5fd784015ee5127ebdca12c5425b51b68c",
+      "expected": "5a39df5022d6e723a5c0ff9daacada5fd784015ee5127ebdca12c5425b51b68c",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/body.js",
+      "sha256": "29048eda5cd25db674dbf899649c2ae36e0266923668a335d6b19d922152d65f",
+      "expected": "29048eda5cd25db674dbf899649c2ae36e0266923668a335d6b19d922152d65f",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/context-store.js",
+      "sha256": "4245334f14a5c97c54989451545d4b3a815c570413edbb0738b93adf6ae650d3",
+      "expected": "4245334f14a5c97c54989451545d4b3a815c570413edbb0738b93adf6ae650d3",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/crypto.js",
+      "sha256": "b72513e59229115c8c7c1d304533e66804c136b91abd7f8de5dc93aeca7e0a1b",
+      "expected": "b72513e59229115c8c7c1d304533e66804c136b91abd7f8de5dc93aeca7e0a1b",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/fixture.js",
+      "sha256": "0ad1425e24bfb1086817483b13b48c0c1cc81fdec89e324f5ef203f55e7a243a",
+      "expected": "0ad1425e24bfb1086817483b13b48c0c1cc81fdec89e324f5ef203f55e7a243a",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/headers.js",
+      "sha256": "5ac87781bb9ea2cfc3c92b730e19407b75aecf6588eb7eef1b8fe23f0a65ac36",
+      "expected": "5ac87781bb9ea2cfc3c92b730e19407b75aecf6588eb7eef1b8fe23f0a65ac36",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/imap.js",
+      "sha256": "6fd21701f0747acc939a3a311d7caefbfcf38e57fcd24fa78b15ce256444a84b",
+      "expected": "6fd21701f0747acc939a3a311d7caefbfcf38e57fcd24fa78b15ce256444a84b",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/input.js",
+      "sha256": "f3555237ed6a4a5d6f9afe9e76457bdef8d131012105a8e603873f97a2dcf666",
+      "expected": "f3555237ed6a4a5d6f9afe9e76457bdef8d131012105a8e603873f97a2dcf666",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/operator.js",
+      "sha256": "2efe8f825d753be0b6c411fb1453fbec57cb60e32b79a837499d5ef82aa190b5",
+      "expected": "2efe8f825d753be0b6c411fb1453fbec57cb60e32b79a837499d5ef82aa190b5",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/store.js",
+      "sha256": "8ef18fd99a8c8e1dde2b1ecf4f86aedbc9db255fee4d8eb48b7162940ec65ea1",
+      "expected": "8ef18fd99a8c8e1dde2b1ecf4f86aedbc9db255fee4d8eb48b7162940ec65ea1",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/worker.js",
+      "sha256": "048fdfa1a57ab99c2cf4dfa2e82b5931aee2ab184fba42b8f57d54c481a5c461",
+      "expected": "048fdfa1a57ab99c2cf4dfa2e82b5931aee2ab184fba42b8f57d54c481a5c461",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/runtime/loop.js",
+      "sha256": "15f97ba41089775be3ccfcb9317fcf46f3301e87e56110a33607817664ce7e55",
+      "expected": "15f97ba41089775be3ccfcb9317fcf46f3301e87e56110a33607817664ce7e55",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/runtime/store.js",
+      "sha256": "23b0fe5fd77b39ca990b66e5b415b3b038430cce61d80819a3752ba98934db5b",
+      "expected": "23b0fe5fd77b39ca990b66e5b415b3b038430cce61d80819a3752ba98934db5b",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/runtime/worker.js",
+      "sha256": "8086d757abd8cad9ba3eb12787735c84d341463cc290edeccbfbf8d5f878ed5c",
+      "expected": "8086d757abd8cad9ba3eb12787735c84d341463cc290edeccbfbf8d5f878ed5c",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/server.js",
+      "sha256": "91a358e574b9fe29ff29e72267d5e1080bb8dec55d41befbd8bca96a64304c62",
+      "expected": "91a358e574b9fe29ff29e72267d5e1080bb8dec55d41befbd8bca96a64304c62",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/suppression/http.js",
+      "sha256": "6456d9d41cb1b974a69027cd484ba8853dcfcd905e7e92c90f8800b615bb85fd",
+      "expected": "6456d9d41cb1b974a69027cd484ba8853dcfcd905e7e92c90f8800b615bb85fd",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/suppression/store.js",
+      "sha256": "7f4b52491cfc211edbd9b5237269854198a2c87e19c8e2721a74a64b487186f7",
+      "expected": "7f4b52491cfc211edbd9b5237269854198a2c87e19c8e2721a74a64b487186f7",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/app.js",
+      "sha256": "5e2d7d63adb7bc2bcc5db143366572cf17816de9d2a0b4df6fa224b1e9f670f3",
+      "expected": "5e2d7d63adb7bc2bcc5db143366572cf17816de9d2a0b4df6fa224b1e9f670f3",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/billing.js",
+      "sha256": "c86169ef537a6c1ed55f7002d3e51ea8e331245942b1b16ae236fa7c8a9c7f34",
+      "expected": "c86169ef537a6c1ed55f7002d3e51ea8e331245942b1b16ae236fa7c8a9c7f34",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/cabinet.js",
+      "sha256": "b34d4cad4b67c6a9cc3724bf9d426490a876db75b2a5f4f9d5a98442afc7633e",
+      "expected": "b34d4cad4b67c6a9cc3724bf9d426490a876db75b2a5f4f9d5a98442afc7633e",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/campaigns.js",
+      "sha256": "fbca081bc8baa63bcd4e0d3b1b4cc751521c2fc677591bd23c18ba0e718f5028",
+      "expected": "fbca081bc8baa63bcd4e0d3b1b4cc751521c2fc677591bd23c18ba0e718f5028",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/client.js",
+      "sha256": "d2dc27ba3f1e8810e24b0d274d583536f7c137c0edd48f80036f7e4a5ff08f2a",
+      "expected": "d2dc27ba3f1e8810e24b0d274d583536f7c137c0edd48f80036f7e4a5ff08f2a",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/dom.js",
+      "sha256": "56bcb0f26340e34e7f665ada006812025249fdce3f8b8fa6e423bb1cfd31d4d2",
+      "expected": "56bcb0f26340e34e7f665ada006812025249fdce3f8b8fa6e423bb1cfd31d4d2",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/evidence.js",
+      "sha256": "631c2016d1b0a5b457968a59e62a2f9985cb4f685915656422fae205c85a0227",
+      "expected": "631c2016d1b0a5b457968a59e62a2f9985cb4f685915656422fae205c85a0227",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/mailboxes.js",
+      "sha256": "1961eb62ec469d1b198702435f92da61ea321b6608869783a55e695ff1a35eea",
+      "expected": "1961eb62ec469d1b198702435f92da61ea321b6608869783a55e695ff1a35eea",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/models.js",
+      "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
+      "expected": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/page.js",
+      "sha256": "bef7627af341fd831552d010612bedf6120542cd0cda5e13c25621b3034963c5",
+      "expected": "bef7627af341fd831552d010612bedf6120542cd0cda5e13c25621b3034963c5",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/schema-setup.mjs",
+      "sha256": "6656c6a4348d93c3e5b85633bbe8044393ab67dcc66673f5630891463f019ee3",
+      "expected": "6656c6a4348d93c3e5b85633bbe8044393ab67dcc66673f5630891463f019ee3",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/targeted.sh",
+      "sha256": "42a5a9b7a58bedd7bee0193944b540f4a8b2b43a426897cbb2a8ac55b11a203a",
+      "expected": "42a5a9b7a58bedd7bee0193944b540f4a8b2b43a426897cbb2a8ac55b11a203a",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/positives.sh",
+      "sha256": "d21b05cd9805f966c220e80d57df5e419391102e33c0b19be52cdbea9328de77",
+      "expected": "d21b05cd9805f966c220e80d57df5e419391102e33c0b19be52cdbea9328de77",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/baseline.py",
+      "sha256": "eb0b3ba5efe5c6a092b38f01081343b1df6abe63ec613b3b62eba8c9bce15fc9",
+      "expected": "eb0b3ba5efe5c6a092b38f01081343b1df6abe63ec613b3b62eba8c9bce15fc9",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/reset-own.mjs",
+      "sha256": "45c72fbd315a9a4569a766a95e93f6dbb636451b17de9bcc3dc98dd01af52eae",
+      "expected": "45c72fbd315a9a4569a766a95e93f6dbb636451b17de9bcc3dc98dd01af52eae",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/terminal-db-readonly.mjs",
+      "sha256": "e2e394b99a20b78472bb38601b7c85900926148a95e2638a98be0b347aa53ba2",
+      "expected": "e2e394b99a20b78472bb38601b7c85900926148a95e2638a98be0b347aa53ba2",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/guard-a40.mjs",
+      "sha256": "9c73dbd3049a22569a44269933077769645f6094fe3a88e1950cc60102851cf9",
+      "expected": "9c73dbd3049a22569a44269933077769645f6094fe3a88e1950cc60102851cf9",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-post-ready-operational-verify-a41/guard-a41.mjs",
+      "sha256": "55e269475e282f833afb5719533617ae9649c76a22ea33dca2a2d1017264c9bc",
+      "expected": "55e269475e282f833afb5719533617ae9649c76a22ea33dca2a2d1017264c9bc",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-post-ready-operational-verify-a41/schema-setup-a41.mjs",
+      "sha256": "de1725215a8ceb941674b6206ac7d999d0ecad2e9c45a3c3a4ed591bb4aed4a4",
+      "expected": "de1725215a8ceb941674b6206ac7d999d0ecad2e9c45a3c3a4ed591bb4aed4a4",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-post-ready-operational-verify-a41/terminal-db-a41.mjs",
+      "sha256": "df7c8f0235c44278086a685c54baed94a876aaa4b4e599988b033c4085fa1ffd",
+      "expected": "df7c8f0235c44278086a685c54baed94a876aaa4b4e599988b033c4085fa1ffd",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-post-ready-operational-verify-a41/run-a41.sh",
+      "sha256": "047aebab016e8a6ed65b573929723633971a5b9b5bfdc0a0233a1a69a177a6c4",
+      "expected": "047aebab016e8a6ed65b573929723633971a5b9b5bfdc0a0233a1a69a177a6c4",
+      "ok": true
+    }
+  ],
+  "owned_joins": [
+    {
+      "pid": 345451,
+      "expectedTicks": "128393395",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301867,
+      "expectedTicks": "128376757",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 367016,
+      "expectedTicks": "128400446",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 374423,
+      "expectedTicks": "128404447",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 302127,
+      "expectedTicks": "128376917",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 327078,
+      "expectedTicks": "128385267",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 300890,
+      "expectedTicks": "128376388",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301500,
+      "expectedTicks": "128376624",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 353763,
+      "expectedTicks": "128396031",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 331638,
+      "expectedTicks": "128387110",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 341565,
+      "expectedTicks": "128392167",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 334665,
+      "expectedTicks": "128388613",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 321044,
+      "expectedTicks": "128383348",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 343842,
+      "expectedTicks": "128392921",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 339034,
+      "expectedTicks": "128390819",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 342165,
+      "expectedTicks": "128392386",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303089,
+      "expectedTicks": "128377247",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304481,
+      "expectedTicks": "128377856",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 371250,
+      "expectedTicks": "128402688",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 332661,
+      "expectedTicks": "128387571",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301501,
+      "expectedTicks": "128376625",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301282,
+      "expectedTicks": "128376539",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 373736,
+      "expectedTicks": "128404027",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 366711,
+      "expectedTicks": "128400289",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 366816,
+      "expectedTicks": "128400347",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303427,
+      "expectedTicks": "128377442",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 319414,
+      "expectedTicks": "128382850",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 323042,
+      "expectedTicks": "128383999",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 364669,
+      "expectedTicks": "128399569",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 364173,
+      "expectedTicks": "128399444",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 355022,
+      "expectedTicks": "128396437",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 302059,
+      "expectedTicks": "128376898",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 345895,
+      "expectedTicks": "128393555",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 363153,
+      "expectedTicks": "128399102",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 373800,
+      "expectedTicks": "128404080",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 375305,
+      "expectedTicks": "128404863",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 300884,
+      "expectedTicks": "128376386",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 334014,
+      "expectedTicks": "128388288",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 349826,
+      "expectedTicks": "128394839",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 367701,
+      "expectedTicks": "128400807",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 375457,
+      "expectedTicks": "128404967",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 335323,
+      "expectedTicks": "128388960",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 335417,
+      "expectedTicks": "128389007",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 338282,
+      "expectedTicks": "128390460",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303006,
+      "expectedTicks": "128377196",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 353478,
+      "expectedTicks": "128395974",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304471,
+      "expectedTicks": "128377854",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 328048,
+      "expectedTicks": "128385582",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 356225,
+      "expectedTicks": "128396840",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303590,
+      "expectedTicks": "128377505",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 331208,
+      "expectedTicks": "128386848",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303391,
+      "expectedTicks": "128377421",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 361465,
+      "expectedTicks": "128398538",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 345242,
+      "expectedTicks": "128393342",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 337732,
+      "expectedTicks": "128390174",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 337036,
+      "expectedTicks": "128389860",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 316576,
+      "expectedTicks": "128381950",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 333245,
+      "expectedTicks": "128387867",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303550,
+      "expectedTicks": "128377473",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 326512,
+      "expectedTicks": "128385099",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 325049,
+      "expectedTicks": "128384619",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 335218,
+      "expectedTicks": "128388905",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304140,
+      "expectedTicks": "128377695",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 361092,
+      "expectedTicks": "128398421",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 376219,
+      "expectedTicks": "128405357",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 302657,
+      "expectedTicks": "128377096",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 325530,
+      "expectedTicks": "128384788",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 327960,
+      "expectedTicks": "128385537",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 355415,
+      "expectedTicks": "128396557",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 369761,
+      "expectedTicks": "128401929",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 317085,
+      "expectedTicks": "128382104",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301861,
+      "expectedTicks": "128376755",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 357963,
+      "expectedTicks": "128397379",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 364749,
+      "expectedTicks": "128399620",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301963,
+      "expectedTicks": "128376837",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 337580,
+      "expectedTicks": "128390119",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 302501,
+      "expectedTicks": "128377041",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301678,
+      "expectedTicks": "128376688",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 329880,
+      "expectedTicks": "128386189",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 344928,
+      "expectedTicks": "128393288",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 321621,
+      "expectedTicks": "128383545",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 319931,
+      "expectedTicks": "128383017",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 339423,
+      "expectedTicks": "128391006",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 329238,
+      "expectedTicks": "128385948",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303334,
+      "expectedTicks": "128377381",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303158,
+      "expectedTicks": "128377283",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 334614,
+      "expectedTicks": "128388556",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 350175,
+      "expectedTicks": "128394944",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 335597,
+      "expectedTicks": "128389120",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 321508,
+      "expectedTicks": "128383496",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 363281,
+      "expectedTicks": "128399156",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 336469,
+      "expectedTicks": "128389502",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 363964,
+      "expectedTicks": "128399377",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 327313,
+      "expectedTicks": "128385325",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 341003,
+      "expectedTicks": "128391815",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 337195,
+      "expectedTicks": "128389909",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301962,
+      "expectedTicks": "128376836",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 343329,
+      "expectedTicks": "128392758",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 324657,
+      "expectedTicks": "128384518",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 318419,
+      "expectedTicks": "128382542",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 348585,
+      "expectedTicks": "128394426",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 338936,
+      "expectedTicks": "128390771",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 370340,
+      "expectedTicks": "128402218",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 346432,
+      "expectedTicks": "128393730",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 302367,
+      "expectedTicks": "128376972",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 327613,
+      "expectedTicks": "128385419",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 354624,
+      "expectedTicks": "128396328",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 334114,
+      "expectedTicks": "128388335",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 331806,
+      "expectedTicks": "128387156",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 361276,
+      "expectedTicks": "128398477",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303356,
+      "expectedTicks": "128377385",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 331300,
+      "expectedTicks": "128386891",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 302976,
+      "expectedTicks": "128377187",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 369986,
+      "expectedTicks": "128402030",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 329020,
+      "expectedTicks": "128385888",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301103,
+      "expectedTicks": "128376465",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 368238,
+      "expectedTicks": "128401057",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304107,
+      "expectedTicks": "128377683",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 299387,
+      "expectedTicks": "128375534",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "ordinary"
+    },
+    {
+      "pid": 359148,
+      "expectedTicks": "128397780",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 330978,
+      "expectedTicks": "128386750",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 322611,
+      "expectedTicks": "128383889",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 371493,
+      "expectedTicks": "128402773",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 330668,
+      "expectedTicks": "128386540",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 336063,
+      "expectedTicks": "128389320",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 366048,
+      "expectedTicks": "128400022",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 368745,
+      "expectedTicks": "128401395",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304033,
+      "expectedTicks": "128377652",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 318886,
+      "expectedTicks": "128382707",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 326263,
+      "expectedTicks": "128385006",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303577,
+      "expectedTicks": "128377492",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 324058,
+      "expectedTicks": "128384327",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 362643,
+      "expectedTicks": "128398945",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 338786,
+      "expectedTicks": "128390723",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 322908,
+      "expectedTicks": "128383951",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 365260,
+      "expectedTicks": "128399791",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 324584,
+      "expectedTicks": "128384469",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 318674,
+      "expectedTicks": "128382600",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301095,
+      "expectedTicks": "128376460",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 367660,
+      "expectedTicks": "128400758",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 340695,
+      "expectedTicks": "128391639",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 346111,
+      "expectedTicks": "128393607",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 302600,
+      "expectedTicks": "128377070",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 375374,
+      "expectedTicks": "128404919",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 354685,
+      "expectedTicks": "128396373",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304611,
+      "expectedTicks": "128377911",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 338670,
+      "expectedTicks": "128390613",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 346623,
+      "expectedTicks": "128393783",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 302416,
+      "expectedTicks": "128377006",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 357375,
+      "expectedTicks": "128397182",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303849,
+      "expectedTicks": "128377592",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 302404,
+      "expectedTicks": "128376999",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 340539,
+      "expectedTicks": "128391591",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 329441,
+      "expectedTicks": "128386058",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 332814,
+      "expectedTicks": "128387660",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 334958,
+      "expectedTicks": "128388802",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 337343,
+      "expectedTicks": "128389960",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 370217,
+      "expectedTicks": "128402156",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 342868,
+      "expectedTicks": "128392614",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 336963,
+      "expectedTicks": "128389809",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 364456,
+      "expectedTicks": "128399510",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 371397,
+      "expectedTicks": "128402733",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 327418,
+      "expectedTicks": "128385372",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 341434,
+      "expectedTicks": "128392063",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301980,
+      "expectedTicks": "128376839",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 346223,
+      "expectedTicks": "128393670",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301684,
+      "expectedTicks": "128376689",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 335048,
+      "expectedTicks": "128388848",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 337935,
+      "expectedTicks": "128390276",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 367111,
+      "expectedTicks": "128400493",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 333412,
+      "expectedTicks": "128387968",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 370646,
+      "expectedTicks": "128402385",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 324812,
+      "expectedTicks": "128384572",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 353315,
+      "expectedTicks": "128395929",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303624,
+      "expectedTicks": "128377538",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301830,
+      "expectedTicks": "128376742",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301465,
+      "expectedTicks": "128376607",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 318788,
+      "expectedTicks": "128382655",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 351683,
+      "expectedTicks": "128395422",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301494,
+      "expectedTicks": "128376622",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 360411,
+      "expectedTicks": "128398210",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303670,
+      "expectedTicks": "128377550",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304317,
+      "expectedTicks": "128377771",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 361948,
+      "expectedTicks": "128398686",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 339085,
+      "expectedTicks": "128390857",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 350922,
+      "expectedTicks": "128395194",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 343915,
+      "expectedTicks": "128392968",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 302093,
+      "expectedTicks": "128376914",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 335967,
+      "expectedTicks": "128389272",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 342449,
+      "expectedTicks": "128392441",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 354008,
+      "expectedTicks": "128396133",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 375527,
+      "expectedTicks": "128405012",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 370399,
+      "expectedTicks": "128402273",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 334852,
+      "expectedTicks": "128388701",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 334800,
+      "expectedTicks": "128388658",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 330052,
+      "expectedTicks": "128386242",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 347063,
+      "expectedTicks": "128393952",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 339479,
+      "expectedTicks": "128391046",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304450,
+      "expectedTicks": "128377828",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 338545,
+      "expectedTicks": "128390564",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304055,
+      "expectedTicks": "128377669",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304618,
+      "expectedTicks": "128377912",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 376296,
+      "expectedTicks": "128405402",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 371031,
+      "expectedTicks": "128402577",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 360473,
+      "expectedTicks": "128398259",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 317919,
+      "expectedTicks": "128382341",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 355217,
+      "expectedTicks": "128396504",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 375244,
+      "expectedTicks": "128404811",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 317700,
+      "expectedTicks": "128382274",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 331984,
+      "expectedTicks": "128387255",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 365857,
+      "expectedTicks": "128399957",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303701,
+      "expectedTicks": "128377558",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 357152,
+      "expectedTicks": "128397130",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 349656,
+      "expectedTicks": "128394783",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 359770,
+      "expectedTicks": "128398002",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 328294,
+      "expectedTicks": "128385639",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 302920,
+      "expectedTicks": "128377174",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 339921,
+      "expectedTicks": "128391294",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301757,
+      "expectedTicks": "128376711",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 320397,
+      "expectedTicks": "128383175",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303029,
+      "expectedTicks": "128377221",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 320671,
+      "expectedTicks": "128383232",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 341509,
+      "expectedTicks": "128392119",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303100,
+      "expectedTicks": "128377258",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 348933,
+      "expectedTicks": "128394543",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 352465,
+      "expectedTicks": "128395657",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304379,
+      "expectedTicks": "128377792",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 317443,
+      "expectedTicks": "128382222",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303108,
+      "expectedTicks": "128377264",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 374983,
+      "expectedTicks": "128404676",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 302730,
+      "expectedTicks": "128377118",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 367912,
+      "expectedTicks": "128400901",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 339137,
+      "expectedTicks": "128390896",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 397042,
+      "expectedTicks": "128412555",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "ordinary"
+    },
+    {
+      "pid": 336345,
+      "expectedTicks": "128389449",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 332203,
+      "expectedTicks": "128387350",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 371219,
+      "expectedTicks": "128402637",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 319698,
+      "expectedTicks": "128382961",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 341248,
+      "expectedTicks": "128392003",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303780,
+      "expectedTicks": "128377580",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 330719,
+      "expectedTicks": "128386591",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 362515,
+      "expectedTicks": "128398893",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301290,
+      "expectedTicks": "128376541",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 352859,
+      "expectedTicks": "128395763",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303916,
+      "expectedTicks": "128377605",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 300309,
+      "expectedTicks": "128376060",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "ordinary"
+    },
+    {
+      "pid": 347857,
+      "expectedTicks": "128394199",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 325833,
+      "expectedTicks": "128384844",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 356084,
+      "expectedTicks": "128396784",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 344769,
+      "expectedTicks": "128393193",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 369849,
+      "expectedTicks": "128401977",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301667,
+      "expectedTicks": "128376684",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 347583,
+      "expectedTicks": "128394097",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 343626,
+      "expectedTicks": "128392865",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 323712,
+      "expectedTicks": "128384213",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 348362,
+      "expectedTicks": "128394368",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301276,
+      "expectedTicks": "128376537",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303302,
+      "expectedTicks": "128377365",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 325339,
+      "expectedTicks": "128384743",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 335805,
+      "expectedTicks": "128389221",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 340746,
+      "expectedTicks": "128391691",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 300892,
+      "expectedTicks": "128376389",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 333953,
+      "expectedTicks": "128388236",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 331607,
+      "expectedTicks": "128387066",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 300923,
+      "expectedTicks": "128376392",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 333509,
+      "expectedTicks": "128388010",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 318116,
+      "expectedTicks": "128382401",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 374804,
+      "expectedTicks": "128404614",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303970,
+      "expectedTicks": "128377625",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 352238,
+      "expectedTicks": "128395564",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 300760,
+      "expectedTicks": "128376314",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 340363,
+      "expectedTicks": "128391487",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 374545,
+      "expectedTicks": "128404504",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 356646,
+      "expectedTicks": "128396943",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 332402,
+      "expectedTicks": "128387442",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 352453,
+      "expectedTicks": "128395613",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 347291,
+      "expectedTicks": "128393999",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301895,
+      "expectedTicks": "128376770",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 302651,
+      "expectedTicks": "128377094",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 332056,
+      "expectedTicks": "128387299",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301969,
+      "expectedTicks": "128376838",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 332996,
+      "expectedTicks": "128387744",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 316961,
+      "expectedTicks": "128382056",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 330322,
+      "expectedTicks": "128386353",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 328463,
+      "expectedTicks": "128385690",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 369539,
+      "expectedTicks": "128401820",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 336951,
+      "expectedTicks": "128389764",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 363831,
+      "expectedTicks": "128399327",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 300766,
+      "expectedTicks": "128376316",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 336546,
+      "expectedTicks": "128389553",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 376176,
+      "expectedTicks": "128405313",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304177,
+      "expectedTicks": "128377715",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 360313,
+      "expectedTicks": "128398162",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 373987,
+      "expectedTicks": "128404182",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 363089,
+      "expectedTicks": "128399056",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 300769,
+      "expectedTicks": "128376317",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 360133,
+      "expectedTicks": "128398112",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 365602,
+      "expectedTicks": "128399894",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 375740,
+      "expectedTicks": "128405070",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303584,
+      "expectedTicks": "128377504",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 330562,
+      "expectedTicks": "128386491",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 359916,
+      "expectedTicks": "128398052",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303215,
+      "expectedTicks": "128377310",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 370583,
+      "expectedTicks": "128402329",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304605,
+      "expectedTicks": "128377909",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 357737,
+      "expectedTicks": "128397328",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 358851,
+      "expectedTicks": "128397647",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 374067,
+      "expectedTicks": "128404235",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 374318,
+      "expectedTicks": "128404398",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 339735,
+      "expectedTicks": "128391179",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301233,
+      "expectedTicks": "128376531",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 358998,
+      "expectedTicks": "128397709",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 337466,
+      "expectedTicks": "128390067",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 313649,
+      "expectedTicks": "128380983",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "ordinary"
+    },
+    {
+      "pid": 356774,
+      "expectedTicks": "128396993",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 332740,
+      "expectedTicks": "128387611",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 334212,
+      "expectedTicks": "128388375",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 339980,
+      "expectedTicks": "128391340",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 333607,
+      "expectedTicks": "128388052",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303609,
+      "expectedTicks": "128377524",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 358698,
+      "expectedTicks": "128397595",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304390,
+      "expectedTicks": "128377797",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301109,
+      "expectedTicks": "128376467",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303358,
+      "expectedTicks": "128377387",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 344866,
+      "expectedTicks": "128393245",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 347468,
+      "expectedTicks": "128394048",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304188,
+      "expectedTicks": "128377728",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 359416,
+      "expectedTicks": "128397845",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 302832,
+      "expectedTicks": "128377150",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 331548,
+      "expectedTicks": "128387025",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 339589,
+      "expectedTicks": "128391138",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304286,
+      "expectedTicks": "128377759",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 330132,
+      "expectedTicks": "128386298",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 337789,
+      "expectedTicks": "128390225",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 367496,
+      "expectedTicks": "128400653",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 333799,
+      "expectedTicks": "128388188",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 336654,
+      "expectedTicks": "128389599",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 369667,
+      "expectedTicks": "128401876",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 366650,
+      "expectedTicks": "128400236",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 320976,
+      "expectedTicks": "128383297",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 365368,
+      "expectedTicks": "128399838",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 353110,
+      "expectedTicks": "128395816",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 366965,
+      "expectedTicks": "128400402",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 375948,
+      "expectedTicks": "128405209",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 370144,
+      "expectedTicks": "128402097",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 333355,
+      "expectedTicks": "128387916",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 355886,
+      "expectedTicks": "128396731",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 338418,
+      "expectedTicks": "128390517",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 342625,
+      "expectedTicks": "128392502",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 361632,
+      "expectedTicks": "128398588",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 367815,
+      "expectedTicks": "128400853",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301116,
+      "expectedTicks": "128376469",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 342730,
+      "expectedTicks": "128392552",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 302076,
+      "expectedTicks": "128376911",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 326383,
+      "expectedTicks": "128385049",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 343411,
+      "expectedTicks": "128392807",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 334490,
+      "expectedTicks": "128388498",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 376701,
+      "expectedTicks": "128405612",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 321882,
+      "expectedTicks": "128383647",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 376064,
+      "expectedTicks": "128405259",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 346857,
+      "expectedTicks": "128393839",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 357596,
+      "expectedTicks": "128397280",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 331050,
+      "expectedTicks": "128386794",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 344562,
+      "expectedTicks": "128393142",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 361819,
+      "expectedTicks": "128398639",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 302415,
+      "expectedTicks": "128377005",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 358375,
+      "expectedTicks": "128397515",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 323487,
+      "expectedTicks": "128384157",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 321744,
+      "expectedTicks": "128383598",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 355521,
+      "expectedTicks": "128396613",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 325900,
+      "expectedTicks": "128384890",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 332901,
+      "expectedTicks": "128387700",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 340818,
+      "expectedTicks": "128391749",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 338227,
+      "expectedTicks": "128390413",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 330810,
+      "expectedTicks": "128386641",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 335691,
+      "expectedTicks": "128389169",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 374648,
+      "expectedTicks": "128404559",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303478,
+      "expectedTicks": "128377450",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 350042,
+      "expectedTicks": "128394889",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 356424,
+      "expectedTicks": "128396891",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 349588,
+      "expectedTicks": "128394738",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 301561,
+      "expectedTicks": "128376653",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304224,
+      "expectedTicks": "128377743",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 349157,
+      "expectedTicks": "128394605",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 340148,
+      "expectedTicks": "128391393",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 373548,
+      "expectedTicks": "128403979",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 341700,
+      "expectedTicks": "128392220",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 339531,
+      "expectedTicks": "128391094",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 354240,
+      "expectedTicks": "128396190",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 322440,
+      "expectedTicks": "128383833",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 371547,
+      "expectedTicks": "128402821",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 373861,
+      "expectedTicks": "128404130",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 347700,
+      "expectedTicks": "128394146",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 329292,
+      "expectedTicks": "128386005",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 350785,
+      "expectedTicks": "128395140",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 299608,
+      "expectedTicks": "128375660",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "ordinary"
+    },
+    {
+      "pid": 351532,
+      "expectedTicks": "128395362",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 370771,
+      "expectedTicks": "128402441",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304443,
+      "expectedTicks": "128377817",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 313096,
+      "expectedTicks": "128380824",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "ordinary"
+    },
+    {
+      "pid": 323891,
+      "expectedTicks": "128384272",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 348206,
+      "expectedTicks": "128394316",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 353813,
+      "expectedTicks": "128396077",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304626,
+      "expectedTicks": "128377917",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 351305,
+      "expectedTicks": "128395303",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 376464,
+      "expectedTicks": "128405457",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 351073,
+      "expectedTicks": "128395250",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 362867,
+      "expectedTicks": "128399001",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 303475,
+      "expectedTicks": "128377449",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 336712,
+      "expectedTicks": "128389641",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 357506,
+      "expectedTicks": "128397232",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 340269,
+      "expectedTicks": "128391441",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 352619,
+      "expectedTicks": "128395707",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 319541,
+      "expectedTicks": "128382902",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 316686,
+      "expectedTicks": "128381998",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 332381,
+      "expectedTicks": "128387399",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 366110,
+      "expectedTicks": "128400074",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 350263,
+      "expectedTicks": "128395006",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 304011,
+      "expectedTicks": "128377637",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 348845,
+      "expectedTicks": "128394491",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 300754,
+      "expectedTicks": "128376312",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    },
+    {
+      "pid": 326604,
+      "expectedTicks": "128385143",
+      "observedTicks": null,
+      "sameOwnedAlive": false,
+      "role": "native_transport_child"
+    }
+  ],
+  "all_owned_joined": true,
+  "guardStarted": 422,
+  "guardExited": 422,
+  "guardsByRole": {
+    "native_transport_child": 416,
+    "ordinary": 6
+  },
+  "deniedCategories": {
+    "unix": 844,
+    "numeric": 0,
+    "defaultHost": 0,
+    "other": 0
+  },
+  "dnsDenied": 0,
+  "ipcDenied": 0,
+  "disk_free_bytes": 3656069120,
+  "unixAttribution": "Exact inherited guard only records category/count, not path/stack. Frozen tsx client-BQVF1NaW.mjs calls node:net.createConnection(g(process.ppid)), get-pipe-path yields tmpdir parent-PID socket path. Two Unix denials per guarded Node process are consistent with loader main/thread IPC attempts; attribution is an inference, not an observed per-call path or designed guardprobe."
+}
