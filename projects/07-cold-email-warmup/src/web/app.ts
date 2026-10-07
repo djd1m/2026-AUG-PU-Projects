@@ -2,7 +2,8 @@ import { button, card, node, note, rows, stableKey, Ui } from './dom.js';
 import { mailboxPage } from './mailboxes.js';
 import { campaignPage } from './campaigns.js';
 import { evidencePage } from './evidence.js';
-import { billingPage, partnerPage } from './billing.js';
+import { billingPage, billingReturnId, partnerPage } from './billing.js';
+import { modeLabel } from './models.js';
 import type { Campaign, MailboxPage, Metadata } from './models.js';
 const content = document.getElementById('content')!, feedback = document.getElementById('feedback')!, title = document.getElementById('title')!, modes = document.getElementById('modes')!;
 const ui = new Ui(content, feedback);
@@ -25,7 +26,7 @@ async function overview() {
         return;
     content.replaceChildren(card('Подготовьте безопасную переписку', note('Подключите ящик, дайте отдельное разрешение на нужный контекст и проверьте состояние. Сохранение и регистрация не разрешают отправку.'), rows([`Ваши ящики: ${boxes.total}`, `Ваши кампании: ${campaigns.length}`, `Пригодные участники пула: ${pool.count} · ${pool.status}`, `Репутация: неизвестна; нужны проверяемые наблюдения`]), button('Перейти к ящикам', () => void go('mailboxes'), true)), card('Как продолжить', node('p', 'Пул ждёт минимум двух разных пригодных участников. Локальная TEST-проверка и счётчик пула не доказывают рост доставляемости. Кампании и наблюдения доступны отдельными шагами.')));
 }
-async function go(page: string) {
+async function go(page: string, returnId?: string) {
     await ui.run(async () => {
         const epoch = ui.api.current();
         const data = await ui.api.request<Metadata>('/api/app');
@@ -34,7 +35,7 @@ async function go(page: string) {
         meta = data;
         title.textContent = labels[page] ?? labels.overview!;
         title.focus();
-        modes.textContent = `Режимы сервера: отправка ${data.modes.dispatch}; опрос ${data.modes.poll}; оплата ${data.modes.billing}. Live не активирован.`;
+        modes.textContent = `Режимы сервера: отправка ${modeLabel(data.modes.dispatch)}; опрос ${modeLabel(data.modes.poll)}; оплата ${modeLabel(data.modes.billing)}. Режим не подтверждает разрешение ящика, соединение, доставку или оплату.`;
         document.querySelectorAll<HTMLButtonElement>('[data-page]').forEach(b => { if (b.dataset.page === page)
             b.setAttribute('aria-current', 'page');
         else
@@ -42,11 +43,11 @@ async function go(page: string) {
         if (page === 'mailboxes')
             await mailboxPage(ui, meta);
         else if (page === 'campaigns')
-            await campaignPage(ui);
+            await campaignPage(ui, meta);
         else if (page === 'evidence')
             await evidencePage(ui);
         else if (page === 'billing')
-            await billingPage(ui, meta, checkoutKey);
+            await billingPage(ui, meta, checkoutKey, returnId ? {id:returnId,mode:meta.modes.billing} : undefined);
         else if (page === 'partner')
             await partnerPage(ui);
         else
@@ -62,4 +63,5 @@ document.getElementById('logout')!.addEventListener('click', () => {
     channel?.postMessage('logout');
     void request.catch(() => { }).finally(() => { clearTimeout(timer); location.replace('/signin'); });
 });
-void go('overview');
+const returnId = location.search ? billingReturnId(location.search) : null;
+void go(returnId ? 'billing' : 'overview', returnId ?? undefined);

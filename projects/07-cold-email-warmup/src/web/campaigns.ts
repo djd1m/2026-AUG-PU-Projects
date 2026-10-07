@@ -1,7 +1,8 @@
 import { button, card, check, checked, details, field, node, note, options, rows, select, submit, Ui, value } from './dom.js';
 import { ApiError } from './client.js';
-import type { Campaign, Consent, Mailbox, MailboxPage, Poll, Step } from './models.js';
-export async function campaignPage(ui: Ui) {
+import { modeLabel, pollFresh, pollGuidance } from './models.js';
+import type { Campaign, Consent, Mailbox, MailboxPage, Poll, Step, Metadata } from './models.js';
+export async function campaignPage(ui: Ui, meta: Metadata) {
     const epoch = ui.api.current();
     const [campaigns, boxPage] = await Promise.all([ui.api.request<Campaign[]>('/api/campaigns'), ui.api.request<MailboxPage>('/api/mailboxes')]);
     if (!ui.api.alive(epoch))
@@ -9,7 +10,7 @@ export async function campaignPage(ui: Ui) {
     ui.content.replaceChildren();
     const chooser = node('form'), area = node('div');
     chooser.append(select('Ваша кампания', 'campaign', options(campaigns.map(c => ({ id: c.id, label: `${c.steps[0]?.subject} · ${c.state} · v${c.content_version}` })))));
-    ui.content.append(card('Кампании', note('Цепочки используют общий суточный бюджет ящика. Ответ, отписка и жалоба блокируют последующие сообщения; ссылка отписки добавляется сервером.'), chooser, rows(campaigns.map(c => `${c.steps[0]?.subject} · ${c.recipients.length} получателей · ${c.steps.length} шагов · ${c.state}`), 'Создайте первую цепочку.')), button('Создать кампанию', () => edit(), true), area);
+    ui.content.append(card('Кампании', note(`Отправка: ${modeLabel(meta.modes.dispatch)}. Режим LIVE не подтверждает разрешение transport для выбранного ящика.`), note('Цепочки используют общий суточный бюджет ящика. Ответ, отписка и жалоба блокируют последующие сообщения; ссылка отписки добавляется сервером.'), chooser, rows(campaigns.map(c => `${c.steps[0]?.subject} · ${c.recipients.length} получателей · ${c.steps.length} шагов · ${c.state}`), 'Создайте первую цепочку.')), button('Создать кампанию', () => edit(), true), area);
     const edit = (campaign?: Campaign) => {
         area.replaceChildren();
         const form = node('form'), steps = node('div');
@@ -23,13 +24,14 @@ export async function campaignPage(ui: Ui) {
                 throw new ApiError('invalid_campaign'); return { address, fields: Object.fromEntries(['firstName', 'lastName', 'company'].flatMap((k, i) => fields[i] ? [[k, fields[i]!]] : [])) }; });
             const payload = { recipients, steps: [...steps.children].map(row => ({ subject: row.querySelector<HTMLInputElement>('[name=subject]')!.value, body: row.querySelector<HTMLTextAreaElement>('[name=body]')!.value, delayHours: Number(row.querySelector<HTMLInputElement>('[name=delay]')!.value) })) };
             await ui.api.request('/api/campaigns' + (campaign ? '/' + campaign.id : ''), campaign ? 'PUT' : 'POST', payload);
-            await campaignPage(ui);
+            if (ui.api.alive(epoch)) await campaignPage(ui, meta);
         }, ui);
         area.append(card(campaign ? 'Изменить цепочку' : 'Новая цепочка', form));
     };
     const inspect = async (id: string) => {
+        if (!ui.api.alive(epoch) || value(chooser, 'campaign') !== id) return;
         const campaign = await ui.api.request<Campaign>('/api/campaigns/' + id);
-        if (!ui.api.alive(epoch))
+        if (!ui.api.alive(epoch) || value(chooser, 'campaign') !== id)
             return;
         area.replaceChildren();
         const preview = node('div'), control = node('form');
@@ -48,9 +50,12 @@ export async function campaignPage(ui: Ui) {
         const grant = button('Подтвердить отдельное согласие', () => void ui.run(async () => { const mailbox = value(control, 'mailbox'); if (!mailbox || !checked(control, 'affirmative'))
             throw new ApiError('consent_required'); await ui.api.request(`/api/mailboxes/${mailbox}/consents`, 'POST', { scope: 'campaign', action: 'grant', campaignId: id, affirmative: true, scopeVersion: campaign.content_version, recipientFingerprint: campaign.recipient_fingerprint }); await refresh(); }));
         const start = button('Запустить цепочку', () => void ui.run(async () => { if (start.disabled)
-            throw new ApiError('consent_required'); await ui.api.request(`/api/campaigns/${id}/start`, 'POST', { mailboxIds: [selected] }); await inspect(id); }), true);
+            throw new ApiError('consent_required'); await ui.api.request(`/api/campaigns/${id}/start`, 'POST', { mailboxIds: [selected] }); if (ui.api.alive(epoch)) await inspect(id); }), true);
         start.disabled = true;
+        let readinessRevision = 0;
         const refresh = async () => {
+            if (!ui.api.alive(epoch)) return;
+            const revision = ++readinessRevision;
             const mailbox = value(control, 'mailbox');
             selected = mailbox;
             start.disabled = true;
@@ -61,12 +66,12 @@ export async function campaignPage(ui: Ui) {
                 return;
             }
             const data = await Promise.all([ui.api.request<Consent[]>(`/api/mailboxes/${mailbox}/consents`), ui.api.request<Poll>(`/api/mailboxes/${mailbox}/reply-status`), ui.api.request<Mailbox>(`/api/mailboxes/${mailbox}`)]);
-            if (!ui.api.alive(epoch))
+            if (!ui.api.alive(epoch) || revision !== readinessRevision || value(control, 'mailbox') !== mailbox)
                 return;
             [consent, poll] = data;
             const box = data[2], current = consent.some(c => c.scope === 'campaign' && c.campaign_id === id && !c.revoked_at && c.scope_version === campaign.content_version && c.recipient_fingerprint === campaign.recipient_fingerprint);
-            const fresh = poll.scanComplete && poll.lastComplete !== null && Date.now() - Date.parse(poll.lastComplete) >= 0 && Date.now() - Date.parse(poll.lastComplete) < 60000;
-            const blockers = [!current ? 'нужно отдельное согласие на эту версию' : '', box?.state !== 'verified_test' ? 'нужна локальная TEST-проверка ящика' : '', !fresh ? 'нет полного опроса младше 60 секунд: оператор должен выполнить TEST-опрос' : ''].filter(Boolean);
+            const fresh = pollFresh(poll);
+            const blockers = [!current ? 'нужно отдельное согласие на эту версию' : '', box?.state !== 'verified_test' ? 'нужна отдельная локальная отметка готовности TEST; она не подтверждает реальный AUTH' : '', !fresh ? pollGuidance(meta.modes.poll) : ''].filter(Boolean);
             readiness.replaceChildren(note(blockers.length ? 'Запуск заблокирован: ' + blockers.join('; ') : 'Условия по последнему чтению выполнены. Сервер проверяет согласие, квоту и стоп-лист снова.'));
             start.disabled = !!blockers.length;
         };
@@ -79,7 +84,7 @@ export async function campaignPage(ui: Ui) {
                 body: string;
             }[];
         }[]>(`/api/campaigns/${id}/preview`); if (!ui.api.alive(epoch))
-            return; preview.replaceChildren(...data.map(r => details(r.address, ...r.steps.map(s => card(s.subject, node('pre', s.body)))))); })), preview, button('Изменить цепочку', () => edit(campaign))), card('Запуск и остановка', control, button('Приостановить кампанию', () => void ui.run(async () => { await ui.api.request(`/api/campaigns/${id}/pause`, 'POST', {}); await inspect(id); })), note('Пауза отменяет будущие задания. Возможна максимум одна уже начатая отправка после submitting; отозвать её нельзя.')));
+            return; preview.replaceChildren(...data.map(r => details(r.address, ...r.steps.map(s => card(s.subject, node('pre', s.body)))))); })), preview, button('Изменить цепочку', () => edit(campaign))), card('Запуск и остановка', control, button('Приостановить кампанию', () => void ui.run(async () => { await ui.api.request(`/api/campaigns/${id}/pause`, 'POST', {}); if (ui.api.alive(epoch)) await inspect(id); })), note('Пауза отменяет будущие задания. Возможна максимум одна уже начатая отправка после submitting; отозвать её нельзя.')));
     };
     chooser.addEventListener('change', () => { const id = value(chooser, 'campaign'); if (id)
         void ui.run(() => inspect(id));

@@ -1,3 +1,4 @@
+export type RuntimeMode = 'disabled' | 'local_test' | 'live_provider';
 export interface MailboxPage {items: Mailbox[]; total:number; limit:number; nextCursor:string|null;}
 export interface Mailbox {
     diagnostics:{state:'disabled'|'never_run'|'pending'|'stale'|'current';result:null|{evidenceMode:string;checkedAt:string;smtp:{tls:string;auth:string;phase:string;code:string|null};imap:{tls:string;auth:string;phase:string;code:string|null}}};
@@ -37,7 +38,7 @@ export interface Consent {
     granted_at: string;
 }
 export interface Poll {
-    mode: string;
+    mode: RuntimeMode;
     scan: {
         state: string;
         provenance: string;
@@ -77,31 +78,39 @@ export interface Event {
     kind: string;
     created_at: string;
 }
-export interface Billing {
+export interface Entitlement {
     plan: string;
-    limits: {
-        mailboxes: number | null;
-        activeCampaigns: number;
-    };
+    limits: { mailboxes: number | null; activeCampaigns: number };
     expiresAt: string | null;
-    mode: string;
-    checkoutAvailable: boolean;
     hardMailQuota: number;
-    testPlan: {
-        amountMinor: number;
-        currency: string;
-        durationDays: number;
-    };
 }
-export interface Intent {
-    id: string;
-    state: string;
-    canonicalStatus: string | null;
-    attribution_reason: string;
-    mode: string;
-    entitlement: {
-        plan: string;
-    };
+export interface Price { plan: 'team'; amountMinor: number; currency: 'RUB'; durationDays: 30; label: 'TEST' | 'LIVE' }
+export type Billing = Entitlement & (
+    { mode: 'disabled'; checkoutAvailable: false; label: null } |
+    { mode: 'local_test'; checkoutAvailable: true; label: 'TEST'; testPlan: Price } |
+    { mode: 'live_provider'; checkoutAvailable: true; label: 'LIVE'; price: Price; availability: string }
+);
+interface IntentBase { id: string; plan: string; state: string; created_at: string; checkoutUrl: string | null }
+export type Intent = IntentBase & (
+    { mode: 'live_provider'; label: 'LIVE'; price: Price; availability: string; entitlement: Entitlement } |
+    { mode: 'local_test' | 'disabled'; label: 'TEST'; price: Price; canonicalStatus: string | null; attribution_reason?: string; entitlement?: Entitlement }
+);
+export type IntentHistory = { id: string; state: string; created_at: string } & (
+    {mode: 'local_test'; label: 'TEST'} | {mode: 'live_provider'; label: 'LIVE'}
+);
+export function modeLabel(mode: RuntimeMode) { return mode === 'live_provider' ? 'LIVE' : mode === 'local_test' ? 'TEST' : 'отключено'; }
+export function pollFresh(poll: Poll, now = Date.now()) {
+    const age = poll.lastComplete === null ? NaN : now - Date.parse(poll.lastComplete);
+    return poll.scanComplete && age >= 0 && age < 60000;
+}
+export function pollGuidance(mode: RuntimeMode) {
+    return mode === 'live_provider'
+        ? 'Ответы проверяет IMAP worker после отдельного разрешения оператора; эта кнопка только читает статус. Нет полного IMAP-опроса младше 60 секунд — оператор должен разрешить transport, и live worker должен завершить опрос.'
+        : mode === 'local_test' ? 'Оператор/worker выполняет TEST-опрос; эта кнопка только читает статус.'
+        : 'Опрос отключён оператором; свежего полного опроса нет.';
+}
+export function diagnosticEvidence(mode: string | undefined) {
+    return mode === 'live_provider' ? 'реальное соединение SMTP/IMAP' : mode === 'protocol_fixture' ? 'локальный протокольный fixture' : 'нет доказательств реального соединения';
 }
 export interface Partner {
     code: string;
@@ -120,9 +129,9 @@ export interface Metadata {
         tenant_id: string;
     };
     modes: {
-        dispatch: string;
-        poll: string;
-        billing: string;
+        dispatch: RuntimeMode;
+        poll: RuntimeMode;
+        billing: RuntimeMode;
     };
     poolDisclosure: {
         version: number;
@@ -139,11 +148,7 @@ export interface Metadata {
             activeCampaigns: number;
         };
     };
-    intents: {
-        id: string;
-        state: string;
-        created_at: string;
-    }[];
+    intents: IntentHistory[];
     referralCookiePresent: boolean;
     providers: {
         host: string;
