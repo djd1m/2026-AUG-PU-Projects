@@ -519,6 +519,18 @@
       "id": "f11-context-author-a3",
       "status": "active actual ACK verified",
       "actual_ACK_at": "2026-10-07T00:02:53Z"
+    },
+    {
+      "id": "f11-context-author-a3",
+      "status": "completed coherent partial early",
+      "finished_at": "2026-10-07T00:10:00.831653+00:00",
+      "revision": "a0f29eaee46b6639ad8d473caca8cc9dbbf5a89a",
+      "receipt_sha256": "a499ef25ed88545e957326d003d708735a5d95ab3b86b0df6918f539a29187c6"
+    },
+    {
+      "id": "f11-context-author-a4",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T00:11:43.110842969Z"
     }
   ],
   "work_units": [
@@ -561,31 +573,34 @@
     "responsible": "n7_sol_coordinator sends root; root reports owner",
     "no_background_claim_without_actual_worker": true,
     "latest_checkpoint": {
-      "at": "2026-10-07T00:04:03.059290+00:00",
-      "disk_available_bytes": 2713001984,
+      "at": "2026-10-07T00:13:01.050976+00:00",
+      "disk_available_bytes": 2704982016,
       "remaining_AC": [
-        "C1 runtime body kind/admission/fair progression inside existing finite IMAP lane; competing workers/all participants literal30s complete-poll and60s due-selection under body pressure; no runtime automatic body launch exists",
-        "Capture candidate classifier/rule SHA and body stop/suppression atomic seams need production integration; current native capture stores bounded encrypted text only, no AI/send authority",
-        "Complete current source/run/root/recipient/config race matrix and copy deadline/restart physical retention witnesses; stale pending intents need fresh authenticated origin continuation rather than staleproof reuse",
-        "Full integration/full protocol/traceability/scenario/criterion/review gates and fresh independent HIGH fork-none implementation acceptance remain coordinator-owned"
+        "C1 RuntimeKind remains poll|pool|dispatch; loop exactly4 poll+2 dispatch+pool lanes. body must use these4 IMAP workers with atomic logical claim+physical admission under SAME FIRST(7,1), real durable metadata/text scheduler quanta, <=3 body physical slots, >=1 headers, mailbox due/claimed/incomplete header precedence, originaldue/serviceorder preserved and boundedretry. No body runtime launch was enabled.",
+        "C1 adapter.captureBody still runs metadata then setImmediate then text in one promise. Existing native5s budget/closedchild release and unknowncleanup occupancy remain. Next writer must split stages through existing context-store/adapter and runtime claim paths; existing bodyProof WeakMap is whole-operation proof, not durable phase scheduling.",
+        "C1 mandatory competing-worker/body-pressure witnesses ALL30 exactdenominator healthycompletion<=30s/dueselection<=60s; all ownership and phaseyield witnesses absent; no threshold waiver.",
+        "C2 authenticated pending UPSERT only refreshes same physicalUID under a newly authenticated header page and unchanged source/root/enrollment/sender, pending+unexpired; activeclaims and clocks untouched. Normal incremental newpollrun does not automatically reobserve oldpendingUID. Safe fresh observation/recovery still required before later runtime capture; never relabel oldproof.",
+        "C2 complete source/run/root/recipient/config/authority race matrix and copy earliest-deadline/restart physical deletion retention witnesses remain. No copy API introduced.",
+        "C3 supportedFAQ candidates/rules SHA, unsubscribe/complaint atomic production effects, nativeautomatic metadata noTEXT now covered. Pure classifier ownLoop negative covered; explicit native own-loop provenance variant and complete production variant matrix remain.",
+        "Full integration/full protocol/traceability/scenario/criterion/review gates and fresh independent HIGH F11 acceptance remain coordinator-owned."
       ],
-      "executor": "/root/n7_sol_coordinator/f11_runtime_author_a3"
+      "executor": "/root/n7_sol_coordinator/f11_runtime_author_a4"
     }
   },
-  "current_stage": "F11 third fresh MEDIUM runtime body quantum and classifier implementation; full F11 acceptance pending",
+  "current_stage": "F11 fourth fresh MEDIUM finite body runtime quantum and C1 pressure implementation",
   "continuation": {
     "responsible": "n7_sol_coordinator",
-    "executor": "/root/n7_sol_coordinator/f11_runtime_author_a3",
-    "attempt": "f11-context-author-a3",
+    "executor": "/root/n7_sol_coordinator/f11_runtime_author_a4",
+    "attempt": "f11-context-author-a4",
     "actual_ACK_received": true,
-    "actual_ACK_at": "2026-10-07T00:02:53Z",
+    "actual_ACK_at": "2026-10-07T00:11:43.110842969Z",
     "requested_model": "gpt-6.1-sol",
     "requested_effort": "medium",
     "actual_model": null,
-    "source_revision": "e10419a60a032bb39fd6e29afaca5a9b9585b9db",
-    "freeze_at": "2026-10-07T00:19:53Z",
-    "deadline": "2026-10-07T00:22:53Z",
-    "launch_sha256": "58f0a4940d8366f28f3bd381dfc3a6805229b53782662fe5ce06fbd52e74ab85",
-    "next": "Bounded existing-runtime body quantum/classifier/C1-C2 completion; actual next executor for any remaining AC; fresh independent HIGH planner-only source review after mandatory checks."
+    "source_revision": "a0f29eaee46b6639ad8d473caca8cc9dbbf5a89a",
+    "freeze_at": "2026-10-07T00:28:43.110842969Z",
+    "deadline": "2026-10-07T00:31:43.110842969Z",
+    "launch_sha256": "30f5cabab05c49cbe5020adf63b77d810a97c3ee53be8ef04ed63dd1f9d1d367",
+    "next": "Finite existing four-IMAP durable metadata/text quanta and all30 pressure C1; explicit C2/C3 remaining witnesses; fresh independent HIGH source review only after mandatory checks."
   }
 }

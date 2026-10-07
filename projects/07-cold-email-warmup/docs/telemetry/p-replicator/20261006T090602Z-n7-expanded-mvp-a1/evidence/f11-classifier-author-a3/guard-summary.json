@@ -1,0 +1,60 @@
+{
+  "nodes": 107,
+  "socket_denied": 170,
+  "dns_denied": 0,
+  "roles": {
+    "ordinary_a3_check": {
+      "nodes": 27,
+      "socket_denied": 22,
+      "dns_denied": 0,
+      "ipc_validated": 0,
+      "ipc_denied": 0,
+      "denied_categories": {
+        "unix": 22,
+        "defaultHost": 0,
+        "numeric": 0,
+        "other": 0
+      }
+    },
+    "native_transport_child": {
+      "nodes": 70,
+      "socket_denied": 140,
+      "dns_denied": 0,
+      "ipc_validated": 66,
+      "ipc_denied": 4,
+      "denied_categories": {
+        "unix": 140,
+        "defaultHost": 0,
+        "numeric": 0,
+        "other": 0
+      }
+    },
+    "ordinary_a3_focused": {
+      "nodes": 10,
+      "socket_denied": 8,
+      "dns_denied": 0,
+      "ipc_validated": 0,
+      "ipc_denied": 0,
+      "denied_categories": {
+        "unix": 8,
+        "defaultHost": 0,
+        "numeric": 0,
+        "other": 0
+      }
+    }
+  },
+  "matching_live_guarded_nodes": [],
+  "runner_join_identity_checks": [
+    {
+      "pid": 1232804,
+      "startticks": "125453095",
+      "same_process_live": false
+    },
+    {
+      "pid": 1270401,
+      "startticks": "125468363",
+      "same_process_live": false
+    }
+  ],
+  "previous_A2_203_socket_denials_and_A1_22_unknown_not_relabelled": true
+}

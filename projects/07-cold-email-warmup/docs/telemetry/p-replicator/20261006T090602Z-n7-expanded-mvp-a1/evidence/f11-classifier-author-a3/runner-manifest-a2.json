@@ -1,0 +1,21 @@
+{
+  "recorded_at": "2026-10-07T00:08:17.344659+00:00",
+  "runner_sha256": "d8478fc904b7be8b9557eaa9b05d6e7ba977ae26bca4b0d2c612db33d40976e3",
+  "guard_sha256": "b07ba137f2a3ad6290d8bf84c3a8af35135c28be53b8b5e279736d7aef6b8b0f",
+  "processes": [
+    {
+      "pid": 1270401,
+      "startticks": "125468363"
+    }
+  ],
+  "host_session": 70881,
+  "source": {
+    "projects/07-cold-email-warmup/src/mailboxes/transport-channel.ts": "f4a54315ac5c547b2cf40c59fbcbd5e99ef228ae02b2a62b0796ebbcf84ad36f",
+    "projects/07-cold-email-warmup/src/replies/adapter.ts": "400fbbd8d23b29cb15474d67546b0a8b5d1276971367ee8bda6f77adec49b8f7",
+    "projects/07-cold-email-warmup/src/replies/body.ts": "e70c4f6501b980bd48e1f003bdd420af61000062e6d9db711195ffd22a53552f",
+    "projects/07-cold-email-warmup/src/replies/context-store.ts": "d08e3fd185d516b339c74fd8a1b5c3bb6f388af65cf525c8ac606365cb45e8e2",
+    "projects/07-cold-email-warmup/tests/f11-body-fixture.ts": "a06d7f5db71485587be716b2df4a54f12578aa91c1c39af7ca677d3c67819a72",
+    "projects/07-cold-email-warmup/tests/f11-context-integration.test.ts": "8b09104fe68bdc046134fbc55a8fbe1a53beaee45703d7aafade5b39f690941c",
+    "projects/07-cold-email-warmup/tests/f11-context-unit.test.ts": "ba3333829ad35bc436dd765652d0b9be8225d1034447550b999223948c0216e2"
+  }
+}
