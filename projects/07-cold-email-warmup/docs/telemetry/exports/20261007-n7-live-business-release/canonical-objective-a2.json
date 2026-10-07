@@ -1,0 +1,74 @@
+{
+  "work_unit_id": "n7-live-billing-canonical-fix-a2",
+  "baseline_head": "4be8bd4d30e7f1da594986e2f259203a63c78bfa",
+  "source_head": "0d1d9323daa1ed0d5425b7685a35b424b4d49b1c",
+  "files": [
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/live.ts",
+      "sha256": "cad5d3572e2756af4d04d7a1a763702e2f9eec56d0e09155b177529a7ae780a0"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/live-billing-integration.test.ts",
+      "sha256": "63362fe406c15f9bb499d1d733d43a7569517c3dc39ecc6d8fc4dc2c74bd7150"
+    }
+  ],
+  "build_artifacts": [
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/billing/live.js",
+      "sha256": "ac2b71454766ae3ae2d218ef874f7df3a678b5bcc5ac17b42e04c2f7be759f2b"
+    }
+  ],
+  "checks": [
+    {
+      "name": "witness-original",
+      "native_exit": 1,
+      "expected_exit": 1,
+      "raw_log": "/tmp/n7-live-billing-canonical-fix-a2-20261007/witness-original.log",
+      "sha256": "d84701d2bf58de6c0c903bcaf304dbda3f95291ab5d556a52dbfbb6c972955d8"
+    },
+    {
+      "name": "witness-fixed",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_log": "/tmp/n7-live-billing-canonical-fix-a2-20261007/witness-fixed.log",
+      "sha256": "d9440095b04b57d608405438c33589e338a5b671ccd825e6e0cb599452798a10"
+    },
+    {
+      "name": "canonical",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_log": "/tmp/n7-live-billing-canonical-fix-a2-20261007/canonical.log",
+      "sha256": "c126353d8bf7f08f38431e9d1ff526727660ead0bbf1856ceb9c3c5a5d3cf20b"
+    },
+    {
+      "name": "typecheck",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_log": "/tmp/n7-live-billing-canonical-fix-a2-20261007/typecheck.log",
+      "sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393"
+    },
+    {
+      "name": "lint",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_log": "/tmp/n7-live-billing-canonical-fix-a2-20261007/lint.log",
+      "sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e"
+    },
+    {
+      "name": "build",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_log": "/tmp/n7-live-billing-canonical-fix-a2-20261007/build.log",
+      "sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323"
+    }
+  ],
+  "canonical_counts": {
+    "tests": 10,
+    "pass": 10,
+    "fail": 0
+  },
+  "original_witness_sha256": "2c83ed0524099bd65aaa35488a511c954cde182e668f59199d514212df9aba3f",
+  "database": "n7billing_20261007_a1",
+  "status": "completed",
+  "unmet_ac": []
+}

@@ -1,0 +1,138 @@
+{
+  "source_head": "4be8bd4d30e7f1da594986e2f259203a63c78bfa",
+  "baseline_head": "1476046477ac5be73ed4bbf24b21274a0d75826c",
+  "files": [
+    {
+      "path": "projects/07-cold-email-warmup/db/016-live-billing.sql",
+      "sha256": "cd3881588cca91b4216295773df44f8d0aea6e50d356b42624d70c9b51386d68"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/live.ts",
+      "sha256": "e63bfbb735e42bc9c34a89690f9952205594513f222688bdb496305bd4dd13e0"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/plans.ts",
+      "sha256": "831d89b96932c866bc2d85448f6ad3df5fb290e442f36b722ed0de8587be57fa"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/provider.ts",
+      "sha256": "b22af3e160a1cba45e630e1b91730b34723a6a922f1adea28b4fb7238dfa0460"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/db.ts",
+      "sha256": "1bf59d788a6a8be77b7061e239a81963a55ce366ead8151775bb6799223cab53"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/diagnostics-integration.test.ts",
+      "sha256": "ffafbe7c2c223d0654df944f14e910fde89635ebc63633a1d0bf401fe845e00f"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/live-billing-integration.test.ts",
+      "sha256": "d13552fa726e30858e25f56f5d9df7e190cd8a085d4043545cde1dcd44657332"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/live-billing-unit.test.ts",
+      "sha256": "6f4f0a009db19f1ae19ae66cec77b94b81390e95751f40e8de79cca61047e841"
+    }
+  ],
+  "build_artifacts": [
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/billing/live.js",
+      "sha256": "09840fb8e030a5f4b2ba293ff8ffcb644e4c0068749626b496deae2e6db0a9e0"
+    },
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/billing/provider.js",
+      "sha256": "c0010017201707d13c2810741ef90b991dffa91d3792c570ea0fa5954880f6d1"
+    },
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/billing/plans.js",
+      "sha256": "9992a7cdbe0e807c56aaae720a48a00aa04c31f5185fe6bb8982508a47ebd72b"
+    },
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/db.js",
+      "sha256": "5052cd78ef28b9806bb81ca71f359ccd00a29968a21a95caa87e52ad7aed9c42"
+    }
+  ],
+  "checks": [
+    {
+      "name": "typecheck",
+      "command": "npm run typecheck",
+      "native_exit": 0,
+      "raw_receipt": "/tmp/n7-live-billing-canonical-author-a1-20261007/typecheck.log",
+      "receipt_sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393"
+    },
+    {
+      "name": "lint",
+      "command": "npm run lint",
+      "native_exit": 0,
+      "raw_receipt": "/tmp/n7-live-billing-canonical-author-a1-20261007/lint.log",
+      "receipt_sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e"
+    },
+    {
+      "name": "build",
+      "command": "npm run build",
+      "native_exit": 0,
+      "raw_receipt": "/tmp/n7-live-billing-canonical-author-a1-20261007/build.log",
+      "receipt_sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323"
+    },
+    {
+      "name": "unit",
+      "command": "npm test",
+      "native_exit": 0,
+      "raw_receipt": "/tmp/n7-live-billing-canonical-author-a1-20261007/unit.log",
+      "receipt_sha256": "0b13c2255f265518da5ae28c0ffd66842e453ecd9068e38e697a7adefcb5fa82"
+    },
+    {
+      "name": "integration-retry",
+      "command": "node --import tsx --import db-guard.mjs --test --test-concurrency=1 tests/*-integration.test.ts",
+      "native_exit": 1,
+      "raw_receipt": "/tmp/n7-live-billing-canonical-author-a1-20261007/integration-retry.log",
+      "receipt_sha256": "ec6982345ce5e66398cf5ab904e5bb54bfa5cafb6b9506c89cfd67e82b092d45"
+    },
+    {
+      "name": "affected-integration",
+      "command": "node --import tsx --import db-guard.mjs --test --test-concurrency=1 tests/diagnostics-integration.test.ts tests/live-billing-integration.test.ts",
+      "native_exit": 0,
+      "raw_receipt": "/tmp/n7-live-billing-canonical-author-a1-20261007/affected-integration.log",
+      "receipt_sha256": "cdde3c6d86fa21ca800b963b62ac8258c2b4d141e901ef8d1b4e4a1fd5c79fe0"
+    },
+    {
+      "name": "mutation",
+      "command": "node --import tsx --test tests/live-billing-unit.test.ts [amount binding removed]",
+      "native_exit": 1,
+      "raw_receipt": "/tmp/n7-live-billing-canonical-author-a1-20261007/mutation.log",
+      "receipt_sha256": "2d7e143f3bf67a90a29efd5b7204f1d0cdc4d190a00e008ec127473ce7c8e2f0"
+    },
+    {
+      "name": "mutation-restored",
+      "command": "node --import tsx --test tests/live-billing-unit.test.ts [byte-identical restored source]",
+      "native_exit": 0,
+      "raw_receipt": "/tmp/n7-live-billing-canonical-author-a1-20261007/mutation-restored.log",
+      "receipt_sha256": "ce141cf3a13b848b3a6690fb1a95dc23f023b98a8e7caaaf873900568923fb93"
+    }
+  ],
+  "test_summary": {
+    "unit": {
+      "tests": 70,
+      "pass": 70,
+      "fail": 0
+    },
+    "all_integration_before_literal_correction": {
+      "tests": 158,
+      "pass": 132,
+      "fail": 26
+    },
+    "corrected_diagnostic_and_live_affected": {
+      "tests": 14,
+      "pass": 14,
+      "fail": 0
+    },
+    "mutation": {
+      "expected_fail_exit": 1,
+      "restored_exit": 0,
+      "restore_byte_equal": true
+    }
+  },
+  "root_legacy_verification_result": "/tmp/n7-live-business-legacy-pg-20261007/result.json",
+  "author_conversation_and_narrative_included": false
+}
