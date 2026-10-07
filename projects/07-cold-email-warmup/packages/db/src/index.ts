@@ -1,26 +1,38 @@
-import { Pool, type PoolClient } from 'pg';
+import { Pool } from 'pg';
 import { PGlite } from '@electric-sql/pglite';
-import type { Db } from './migrations.ts';
 import { MIGRATIONS } from './migrations.ts';
 
 type AnyClient = {
   query<T>(sql: string, args: unknown[]): Promise<{ rows: T[] }>;
 };
 
+export interface Db {
+  rows<T>(sql: string, args?: unknown[]): Promise<T[]>;
+  one<T>(sql: string, args?: unknown[]): Promise<T | null>;
+  exec(sql: string, args?: unknown[]): Promise<void>;
+  transaction<T>(fn: (tx: Db) => Promise<T>): Promise<T>;
+}
+
+export interface Driver {
+  db: Db;
+  close(): Promise<void>;
+  native: 'pg' | 'pglite';
+}
+
 const q2 = <T>(client: AnyClient, sql: string, args?: unknown[]) =>
   client.query<T>(sql, args ?? []);
 
 function clientDb(client: AnyClient, inTx = false): Db {
   return {
-    async rows<T>(sql: string, args: unknown[]) {
+    async rows<T>(sql: string, args?: unknown[]) {
       const r = await q2<T>(client, sql, args);
       return r.rows;
     },
-    async one<T>(sql: string, args: unknown[]) {
+    async one<T>(sql: string, args?: unknown[]) {
       const r = await q2<T>(client, sql, args);
       return r.rows[0] ?? null;
     },
-    async exec(sql: string, args: unknown[]) {
+    async exec(sql: string, args?: unknown[]) {
       await q2(client, sql, args);
     },
     async transaction<T>(fn: (tx: Db) => Promise<T>): Promise<T> {
@@ -37,8 +49,6 @@ function clientDb(client: AnyClient, inTx = false): Db {
     },
   };
 }
-
-export type Driver = { db: Db; close(): Promise<void>; native: 'pg' | 'pglite' };
 
 export async function openDb(env: NodeJS.ProcessEnv = process.env): Promise<Driver> {
   if (env.DATABASE_URL) {
