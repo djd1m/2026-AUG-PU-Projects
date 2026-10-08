@@ -1,0 +1,91 @@
+{
+  "status": "completed",
+  "started_at": "2026-10-08T05:47:24.343003+00:00",
+  "ended_at": "2026-10-08T05:48:13.423226+00:00",
+  "source": "bb52e17d",
+  "image": "sha256:dc59abdec230519befd55cbcd48150d49944fc7f5cae04d5f4986e9131444a6d",
+  "scope": "read_only_network_audit",
+  "requested_model": "Sol6.1HIGH",
+  "actual_model": null,
+  "actual_model_reason": "execution metadata unavailable",
+  "usage": null,
+  "tests": [
+    {
+      "namespace": "host",
+      "ip": "77.88.21.125",
+      "port": 993,
+      "probe": "tcp_connect_only_no_application_data",
+      "exit": 0,
+      "result": "{\"status\": \"TimeoutError\", \"elapsed_seconds\": 4.005}",
+      "stderr": ""
+    },
+    {
+      "namespace": "worker",
+      "ip": "77.88.21.125",
+      "port": 993,
+      "probe": "tcp_connect_only_no_application_data",
+      "exit": 0,
+      "result": "{\"status\": \"TimeoutError\", \"elapsed_seconds\": 4.001}",
+      "stderr": ""
+    },
+    {
+      "namespace": "host",
+      "ip": "77.88.21.158",
+      "port": 465,
+      "probe": "tcp_connect_only_no_application_data",
+      "exit": 0,
+      "result": "{\"status\": \"TimeoutError\", \"elapsed_seconds\": 4.004}",
+      "stderr": ""
+    },
+    {
+      "namespace": "web",
+      "ip": "77.88.21.158",
+      "port": 465,
+      "probe": "tcp_connect_only_no_application_data",
+      "exit": 0,
+      "result": "{\"status\": \"TimeoutError\", \"elapsed_seconds\": 4.004}",
+      "stderr": ""
+    },
+    {
+      "namespace": "host",
+      "ip": "77.88.21.158",
+      "port": 443,
+      "probe": "tcp_connect_only_no_application_data",
+      "exit": 0,
+      "result": "{\"status\": \"TimeoutError\", \"elapsed_seconds\": 4.004}",
+      "stderr": ""
+    }
+  ],
+  "control_tests": [
+    {
+      "namespace": "host",
+      "host": "yandex.ru",
+      "ip": "77.88.44.55",
+      "port": 443,
+      "probe": "tcp_connect_only_no_application_data",
+      "exit": 0,
+      "result": "{\"status\": \"connected\", \"elapsed_seconds\": 0.052}",
+      "stderr": ""
+    },
+    {
+      "namespace": "worker",
+      "host": "yandex.ru",
+      "ip": "77.88.44.55",
+      "port": 443,
+      "probe": "tcp_connect_only_no_application_data",
+      "exit": 0,
+      "result": "{\"status\": \"connected\", \"elapsed_seconds\": 0.059}",
+      "stderr": ""
+    },
+    {
+      "namespace": "web",
+      "host": "yandex.ru",
+      "ip": "77.88.44.55",
+      "port": 443,
+      "probe": "tcp_connect_only_no_application_data",
+      "exit": 0,
+      "result": "{\"status\": \"connected\", \"elapsed_seconds\": 0.043}",
+      "stderr": ""
+    }
+  ]
+}
