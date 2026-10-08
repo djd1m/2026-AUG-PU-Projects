@@ -1,0 +1,260 @@
+{
+  "task": "N7 cloud provider SMTP/IMAP research",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning": "high",
+  "actual_model": null,
+  "tokens": null,
+  "cost": null,
+  "start_time_utc": null,
+  "elapsed_seconds": null,
+  "measurement_gaps": [
+    "Actual model/token/cost metadata unavailable to child agent",
+    "No initial clock measurement; parent may supply actual task wall clock"
+  ],
+  "live_provider_tests_performed": false,
+  "shortlist": [
+    "Vultr Compute",
+    "Google Compute Engine"
+  ],
+  "sources": [
+    {
+      "id": "gcp_smtp",
+      "url": "https://docs.cloud.google.com/compute/docs/tutorials/sending-mail",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "External TCP 465 and 587 unrestricted except customer egress denies",
+        "External TCP 25 blocked by default"
+      ]
+    },
+    {
+      "id": "gcp_platform",
+      "url": "https://docs.cloud.google.com/firewall/docs/firewalls",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "25 auto-exemption by project risk assessment",
+        "465 and 587 excluded from block"
+      ]
+    },
+    {
+      "id": "gcp_egress",
+      "url": "https://docs.cloud.google.com/vpc/docs/vpc",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "Implied egress allow",
+        "Internet route and external IP/NAT prerequisites"
+      ]
+    },
+    {
+      "id": "aws_smtp",
+      "url": "https://docs.aws.amazon.com/ses/latest/dg/smtp-connect.html",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "EC2 port 25 throttle",
+        "Use alternative port",
+        "SES 587 STARTTLS and 465 TLS wrapper"
+      ]
+    },
+    {
+      "id": "aws_ec2",
+      "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-resource-limits.html",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "25 to public IPv4 and IPv6 blocked",
+        "private IPv4 permitted",
+        "Removal request available"
+      ]
+    },
+    {
+      "id": "aws_external_smtp",
+      "url": "https://repost.aws/knowledge-center/ec2-windows-email-server-issues",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "External SMTP requires egress 25/587/465 SG/NACL rules and internet connectivity",
+        "Only port 25 identified as default platform block"
+      ]
+    },
+    {
+      "id": "aws_exception",
+      "url": "https://repost.aws/knowledge-center/ec2-port-25-throttle",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "Request needs Region, use case and unwanted-email prevention plan",
+        "Approval not guaranteed"
+      ]
+    },
+    {
+      "id": "aws_egress",
+      "url": "https://docs.aws.amazon.com/vpc/latest/userguide/security-group-rules.html",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "New security groups permit all outbound by default"
+      ]
+    },
+    {
+      "id": "azure_smtp",
+      "url": "https://learn.microsoft.com/en-us/troubleshoot/azure/virtual-network/troubleshoot-outbound-smtp-connectivity",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "587 unrestricted irrespective of subscription",
+        "25 differentiated by EA/MCA-E/Enterprise DevTest/other",
+        "Qualified DevTest exemption scope and restart requirements"
+      ]
+    },
+    {
+      "id": "azure_nsg",
+      "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "Default AllowInternetOutBound allows any destination ports",
+        "Custom higher priority rules can override"
+      ]
+    },
+    {
+      "id": "azure_outbound",
+      "url": "https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/default-outbound-access",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "Private subnets need explicit egress",
+        "New API after March 31 2026 and portal default private subnets; earlier APIs and existing VNets differ"
+      ]
+    },
+    {
+      "id": "vultr_smtp",
+      "url": "https://docs.vultr.com/support/products/compute/why-is-smtp-blocked",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "New Compute Instances block 25",
+        "465/587 permitted for external authenticated SMTP",
+        "Support exception use case, antispam, volume and case-by-case approval"
+      ]
+    },
+    {
+      "id": "vultr_blocks",
+      "url": "https://docs.vultr.com/what-ports-are-blocked",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "Explicit default and permanent blocked port lists; 993 absent from list (inference with egress source, not standalone guarantee)"
+      ]
+    },
+    {
+      "id": "vultr_egress",
+      "url": "https://docs.vultr.com/support/products/network/does-vultr-firewall-filter-outgoing-traffic-from-my-instance",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "Vultr Firewall filters incoming traffic only",
+        "Guest OS manages outbound traffic"
+      ]
+    },
+    {
+      "id": "hetzner_smtp",
+      "url": "https://docs.hetzner.com/cloud/servers/faq/",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "25/465 default blocked on all cloud servers",
+        "587 permitted without limit request",
+        "Unblock requires one month and first paid invoice, valid use case, case-by-case",
+        "Account-level enforcement"
+      ]
+    },
+    {
+      "id": "hetzner_egress",
+      "url": "https://docs.hetzner.com/cloud/firewalls/faq/",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "Without custom outbound rules outgoing new traffic permitted",
+        "With outbound rules unmatched traffic denied"
+      ]
+    },
+    {
+      "id": "ovh_smtp",
+      "url": "https://support.us.ovhcloud.com/hc/en-us/articles/48817968371091-OVHcloud-VPS-FAQ",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "Regular VPS default 25 block and use 587 recommendation",
+        "Support request can seek 25 removal",
+        "Local Zones cannot contact any SMTP server and cannot be unblocked"
+      ]
+    },
+    {
+      "id": "gcp_ru",
+      "url": "https://docs.cloud.google.com/billing/docs/resources/currency",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "Current billing country table states new Russia user account signups paused since March 10 2022"
+      ]
+    },
+    {
+      "id": "aws_ru",
+      "url": "https://www.aboutamazon.com/news/aws/updates-to-amazons-retail-entertainment-and-aws-businesses-in-russia-and-belarus",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "March 8 2022 announcement: no new Russia/Belarus-based AWS signups"
+      ]
+    },
+    {
+      "id": "microsoft_ru",
+      "url": "https://blogs.microsoft.com/on-the-issues/2022/03/04/microsoft-suspends-russia-sales-ukraine-conflict/",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "March 2022 announcement: new product/service sales in Russia suspended"
+      ]
+    },
+    {
+      "id": "vultr_payments",
+      "url": "https://docs.vultr.com/platform/billing/make-account-payments",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "Listed payment methods; no Russia eligibility guarantee"
+      ]
+    },
+    {
+      "id": "hetzner_identity",
+      "url": "https://docs.hetzner.com/general/security-and-identify/fraud-prevention-faq/",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "Accurate identity and possible verification required; no specific Russia acceptance claim"
+      ]
+    },
+    {
+      "id": "gmail_endpoints",
+      "url": "https://developers.google.com/workspace/gmail/imap/imap-smtp",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "Official Gmail protocol endpoint source"
+      ]
+    },
+    {
+      "id": "yandex_endpoints",
+      "url": "https://yandex.ru/support/yandex-360/customers/mail/ru/mail-clients/others",
+      "primary_official": true,
+      "retrieved_date": "2026-10-08",
+      "claims": [
+        "Official Yandex consumer IMAP 993, SMTP 465 SSL or 587 when starting plaintext",
+        "imap.ya.ru proposed for connections outside Russia"
+      ]
+    }
+  ]
+}
