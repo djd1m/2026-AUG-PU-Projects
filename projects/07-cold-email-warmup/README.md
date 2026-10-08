@@ -24,6 +24,7 @@ tenant isolation, остановка гонок, idempotency и отписка. 
 ## Документы
 
 - [Как проходит работа: pipeline walkthrough](docs/pipeline-walkthrough.md)
+- [Исследование почтовых сервисов и облачных провайдеров: контекст, ограничения SMTP/IMAP и варианты для N7](docs/research/external-mail-infrastructure-20261008/README.md)
 - [12 критериев и доказательства](docs/acceptance-traceability.md)
 - [PRD](docs/PRD.md), [Specification](docs/Specification.md), [Architecture](docs/Architecture.md), [ADR](docs/ADR.md)
 - [Разрешения владельца](docs/decisions-owner.md), [план deployment](docs/deployment-checkpoint.md)
