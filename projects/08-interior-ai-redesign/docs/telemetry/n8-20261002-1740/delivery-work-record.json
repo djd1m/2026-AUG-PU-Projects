@@ -1,0 +1,349 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "implement",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "n8-20261002-1740",
+    "work_unit_id": "n8-delivery-handoff-1",
+    "current_attempt_id": "n8-delivery-handoff-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/n8-20261002-1740/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/n8-20261002-1740/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "3b84e9ef",
+    "current_revision": "02f850f4d67ed2a09ea84efc6ac982f5030b4042",
+    "build_revision": "19ea9d39d31aab8b2a7ce005b79e091fadce203d1272c0c44bf1396aa228c00a",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "fe2572a7636537c9610ab3e044a91b2e24832499",
+      "observed_revision": "02f850f4d67ed2a09ea84efc6ac982f5030b4042",
+      "reconciliation": {
+        "status": "completed",
+        "impact": "After reviewed7docs source, added boundedacceptance/telemetry and canonicalblockedGPU record only. Product92candidate files unchanged; no new runtime changes.",
+        "decision": "Reviewable branch pushed; draftPR API403, accepted-scope GPU/fullMVP remainblocked; no delivered-stage claim.",
+        "affected_checks": [
+          "laterdoc local links and status evidence",
+          "92productfile continuity",
+          "repository scope"
+        ],
+        "rerun": [
+          "laterdoc local links and status evidence",
+          "92productfile continuity",
+          "repository scope"
+        ],
+        "pending": [
+          "realGPU geometry/performance acceptance",
+          "realprovider and deploymentrelease gates",
+          "draftPR creation requires repository API permission"
+        ]
+      }
+    }
+  },
+  "prepare": {
+    "scope_revision": "7bb2807721a448dc30ded7bebc9114fe2501da39a401edf545640232dba4f8b1",
+    "scope": [
+      "Approved RoomKind fullMVP; localF01\u2013F04 software andF06a docs accepted; accepted-scope realGPU and fullF06 remain pending"
+    ],
+    "exclusions": [
+      "furniture catalog",
+      "3D",
+      "partner payouts"
+    ],
+    "action_limits": [
+      "new external spend 0",
+      "no live charges/rental/deploy"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AUTH-01",
+        "required": true
+      },
+      {
+        "id": "AUTH-02",
+        "required": true
+      },
+      {
+        "id": "AUTH-03",
+        "required": true
+      },
+      {
+        "id": "AUTH-04",
+        "required": true
+      },
+      {
+        "id": "UPLOAD-01",
+        "required": true
+      },
+      {
+        "id": "UPLOAD-02",
+        "required": true
+      },
+      {
+        "id": "JOB-01",
+        "required": true
+      },
+      {
+        "id": "JOB-02",
+        "required": true
+      },
+      {
+        "id": "JOB-03",
+        "required": true
+      },
+      {
+        "id": "JOB-04",
+        "required": true
+      },
+      {
+        "id": "JOB-05",
+        "required": true
+      },
+      {
+        "id": "GEOM-01",
+        "required": true
+      },
+      {
+        "id": "GEOM-02",
+        "required": true
+      },
+      {
+        "id": "GEOM-03",
+        "required": true
+      },
+      {
+        "id": "GALLERY-01",
+        "required": true
+      },
+      {
+        "id": "GALLERY-02",
+        "required": true
+      },
+      {
+        "id": "GALLERY-03",
+        "required": true
+      },
+      {
+        "id": "PAY-01",
+        "required": true
+      },
+      {
+        "id": "PAY-02",
+        "required": true
+      },
+      {
+        "id": "PAY-03",
+        "required": true
+      },
+      {
+        "id": "PAY-04",
+        "required": true
+      },
+      {
+        "id": "PAY-05",
+        "required": true
+      },
+      {
+        "id": "SHARE-01",
+        "required": true
+      },
+      {
+        "id": "SHARE-02",
+        "required": true
+      },
+      {
+        "id": "SHARE-03",
+        "required": true
+      },
+      {
+        "id": "ATTR-01",
+        "required": true
+      },
+      {
+        "id": "ATTR-02",
+        "required": true
+      },
+      {
+        "id": "ATTR-03",
+        "required": true
+      },
+      {
+        "id": "BADGE-01",
+        "required": true
+      },
+      {
+        "id": "BADGE-02",
+        "required": true
+      },
+      {
+        "id": "PARTNER-01",
+        "required": true
+      },
+      {
+        "id": "PARTNER-02",
+        "required": true
+      },
+      {
+        "id": "PUBLIC-01",
+        "required": true
+      },
+      {
+        "id": "PUBLIC-02",
+        "required": true
+      },
+      {
+        "id": "PUBLIC-03",
+        "required": true
+      },
+      {
+        "id": "SEC-01",
+        "required": true
+      },
+      {
+        "id": "SEC-02",
+        "required": true
+      },
+      {
+        "id": "SEC-03",
+        "required": true
+      },
+      {
+        "id": "PERF-01",
+        "required": true
+      },
+      {
+        "id": "PERF-02",
+        "required": true
+      },
+      {
+        "id": "PERF-03",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "docs/reuse-inventory.md"
+          }
+        },
+        "provenance": "donor files pinned at3b84e9ef with SHA256 in inventory",
+        "useful_fragment": "N5 auth/provider; N6 queue fencing/cleanup",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Generation-credit product requires different schema and transport"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No comparable source-bound N8 GPU runs; no forecast claimed",
+      "scope_revision": "7bb2807721a448dc30ded7bebc9114fe2501da39a401edf545640232dba4f8b1",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [
+        "GPU rental waiting",
+        "external deployment"
+      ],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "7bb2807721a448dc30ded7bebc9114fe2501da39a401edf545640232dba4f8b1",
+      "tier": "XL",
+      "rationale": "Payment/credit invariants, private image upload, public sharing, separate worker",
+      "script": {
+        "input": "explicit src/billing/webhook.ts, db/migrations/001-initial.sql, src/app/share/route.ts",
+        "exit_code": 1
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "7bb2807721a448dc30ded7bebc9114fe2501da39a401edf545640232dba4f8b1",
+      "tier": "XL",
+      "rationale": "F01 auth/private uploads plus new trial-ledger financial invariant; priorapprovedfullautonomyscope. MechanicalS is lower bound, not downgrade.",
+      "script": {
+        "input": "explicit web/auth.js web/uploads.js db/001-foundation.sql",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "required",
+    "reason": "XL local rule; owner explicitly authorized autonomy for N7+N8 after published v1",
+    "evidence": {
+      "id": "owner-autonomy-20261002",
+      "plan_revision": "7bb2807721a448dc30ded7bebc9114fe2501da39a401edf545640232dba4f8b1",
+      "covers": [
+        "plan",
+        "team",
+        "roles",
+        "models",
+        "skills"
+      ],
+      "path": {
+        "root": "project",
+        "path": "docs/decisions-owner.md"
+      },
+      "sha256": "cf3af4655ac02a81664d592ad690d2f3be776041aca762e6d91487e7e20a459c"
+    }
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Current step is documentary handoff/draft publication, not new E2E. Actual UI6/disabled source-bound preflights and results are separate immutable records; future realGPU preflight remains blocked. Full delivery not claimed.",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "n8-delivery-handoff-1",
+      "status": "failed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "n8-delivery-handoff-1",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/draft-pr.md"
+        },
+        {
+          "root": "project",
+          "path": "docs/gpu-acceptance.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [],
+  "receipts": [],
+  "delivery": null
+}

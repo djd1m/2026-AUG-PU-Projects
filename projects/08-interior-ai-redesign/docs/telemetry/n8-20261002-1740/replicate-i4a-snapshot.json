@@ -1,0 +1,173 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i4a",
+  "attempt_id": "replicate-i4a-1",
+  "source_revision": "64d640622444fe944ac61468ba9820a31f3907ac",
+  "launch_sha256": "6f414f363eefdc2f3030316a12ad1ed3223f59eecac57a95b0b883a2ce3cf244",
+  "frozen_at": "2026-10-03T09:50:41.423858+00:00",
+  "product_test_files": [
+    {
+      "path": "web/jobs.js",
+      "sha256": "c41ec0e2eacafd0368debac2c9b15daee6ac33129d756f21d85c0d4a5a64363a",
+      "lines": 357
+    },
+    {
+      "path": "web/provider-submissions.js",
+      "sha256": "97891ac65a5ff2b967ddef26c92129f4773fdccb1a68b19f7a8f01ca792fb548",
+      "lines": 243
+    },
+    {
+      "path": "tests/replicate-lifecycle.integration.test.js",
+      "sha256": "5b8e3a06e0c7f18d573200b28c6bcbed1949d91d122b2be72c14145d5559b2c5",
+      "lines": 301
+    },
+    {
+      "path": "tests/replicate.integration.test.js",
+      "sha256": "a8aa1d829c53fd0bb4b00d9909bf4c62468e15fd42fda7afe9df93c13df9c796",
+      "lines": 344
+    }
+  ],
+  "snapshot_sha256": "370b1cf3f98d66ae49e0e23ee462b803eb4146f198dd336ad9238aad01c73afe",
+  "tracked_diff_sha256": "0b2ba279264a7640a483baeb409fc9dd0ee3e3ca63137235acd84a78afe70806",
+  "accepted_contract_digests": [
+    {
+      "path": "docs/features/f07-replicate/01_specification.md",
+      "sha256": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad"
+    },
+    {
+      "path": "docs/features/f07-replicate/02_pseudocode.md",
+      "sha256": "19a86156135d7751e7414e9a406070c990686d6ec8c095448549be012a10572d"
+    },
+    {
+      "path": "docs/features/f07-replicate/03_architecture.md",
+      "sha256": "c14c88440c537afcb1c09fe4d843c253c3e0ed4e0c904105fc3297e6fe9803b9"
+    },
+    {
+      "path": "docs/features/f07-replicate/04_refinement.md",
+      "sha256": "43fcc7495be1b92be9537f4c9d9e57fe57b574e7e8e9522c5428af21aff9e02e"
+    },
+    {
+      "path": "docs/features/f07-replicate/05_completion.md",
+      "sha256": "91541235061c856f42882e64b047882f8f6fb83b44fcc11708edd510598e491b"
+    },
+    {
+      "path": "docs/features/f07-replicate/i4-slice-boundaries.md",
+      "sha256": "aecda5658c2c152a1eb9dfe815e39dfed7db4387c25df571bc7ec4812beaade3"
+    },
+    {
+      "path": "docs/features/f07-replicate/i1-implementation.md",
+      "sha256": "c864c879f20adb2021e8f7466db6be0972414e99dc0c4e3eea8a259be8afaf8d"
+    },
+    {
+      "path": "docs/features/f07-replicate/i2-implementation.md",
+      "sha256": "5ae9a4513a41206b93855e9fdc8add0a1f8ffdf76751c4fbb7f371778748f3dc"
+    },
+    {
+      "path": "docs/features/f07-replicate/i3-implementation.md",
+      "sha256": "e83f00a08a2537aca9541616a5e3911473b07f30b94a7efe649aea3f891c5033"
+    },
+    {
+      "path": "docs/features/f07-replicate/validation-v01-closure.md",
+      "sha256": "35c3b7234b10d161233390e103fe21465394be93c7b843074da1895116c55353"
+    },
+    {
+      "path": "docs/features/f07-replicate/i1-r01-closure.md",
+      "sha256": "ed2df24d782aaa6e1a0ac3fba51f6d0907df201689a408a7cb6406d664bcebae"
+    },
+    {
+      "path": "docs/features/f07-replicate/i2-review.md",
+      "sha256": "30b055bc3a19e2f6cee551c95d5c5e2061e9b2179c72c478a06cde883d887671"
+    },
+    {
+      "path": "docs/features/f07-replicate/i3-r01-closure.md",
+      "sha256": "9d5dd9cbbe12cf9d1ff4f8b9e18205c294836b54c10a783f62746dc0e3950313"
+    },
+    {
+      "path": "docs/Pseudocode.md",
+      "sha256": "35f27f384252009934a81f9c872a5468c2c4d728d349a60ae9d4daf7006810ee"
+    }
+  ],
+  "protected_i1_i3_and_out_of_scope": [
+    {
+      "path": "db/007-replicate.sql",
+      "sha256": "3bce94bab8d6fd8ef9b45e810e1e26ccda8648a213665f64403501ab80b5a05f",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "scripts/migrate.js",
+      "sha256": "57ded58e0ac6baf60f5a2b797d1566faafb566946ff72e4cf780a2dc6d8beb86",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "web/replicate.js",
+      "sha256": "be4bd7f92fb6dc354b11326ea6d8d519bbc35285756a6531defb4f91d59b649c",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "web/replicate-media.js",
+      "sha256": "55baa1f5a8686fc2256106888a4e9e82724745497f38aa741045812e2d781e94",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "tests/provider-submissions.test.js",
+      "sha256": "a2f44276eb51ef08dbf06a1b48ae933d701ff45d0465b2993377d8faf2e5d954",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "tests/replicate.test.js",
+      "sha256": "f0efc8f4114cc59dd10c14576356c5db96a996f2c65d7aa76fef05e87cbd46cd",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "tests/replicate-media.test.js",
+      "sha256": "a071ea896aa1bffb75c22c0b12d921b1e4b255366eb109494bfe521321d356dd",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "tests/jobs.integration.test.js",
+      "sha256": "aa4dcdd6ee4e13f92a4d0e85df2bb2a2809173e7f332c500d50be1fe9bd07558",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "web/generation.js",
+      "sha256": "3927d146c0ae84b8f6def135101caaa38e989c88f2f5794ebaf1c5c4b075f7ba",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "web/config.js",
+      "sha256": "451599f6fa194ea4345e9f23f537549f4e8aeff3d4ecc2482f3f1982c73fafad",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "web/quality.js",
+      "sha256": "1c3829ff2bafc140cd33eb0a2196ef2640081fb651fe71f1271e202dd70baa30",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "scripts/worker.js",
+      "sha256": "ab05f88b8ddf1a8b254e75b958d93264c93b7f68e23d75aa229dda7b9c7ecd56",
+      "unchanged_from_source": true
+    },
+    {
+      "path": "scripts/maintenance.js",
+      "sha256": "84fd25bf2b151cdeb0a51424f06d335a06b9498f40fd40f389d6ac79db72279e",
+      "unchanged_from_source": true
+    }
+  ],
+  "protected_i1_existing_authority_logic": {
+    "sha256": "7afadfe4f9cab76d655bcd9de7718d734beeef0d63cc290144d6e19546b87709",
+    "unchanged_from_source": true,
+    "method": "Remove only new worker context/finalAuthorize definitions; compare every remaining byte"
+  },
+  "protected_i1_post_legacy_cases": {
+    "sha256": "3259c0a5f381e94b661b74ffe492e19ac090cefad8c31d7b86e5dc8926646da1",
+    "unchanged_from_source": true,
+    "method": "Compare exact bytes from legacy before/after assertions through end of suite"
+  },
+  "handback": {
+    "path": "docs/features/f07-replicate/i4a-implementation.md",
+    "sha256": "1394400938ea3f27871a59e6c29759df775c0d4f947e6065d40ebe11d1de158e"
+  },
+  "untracked_dependency": "Pre-existing read-only node_modules symlink remains untracked; never staged or copied",
+  "scope_guard_exit_code": 0
+}

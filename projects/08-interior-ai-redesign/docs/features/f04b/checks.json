@@ -1,0 +1,116 @@
+[
+  {
+    "command": "npm run build",
+    "exit_code": 0,
+    "log": "docs/features/f04b/build.log",
+    "sha256": "a531d40304097a26de3f50306e4409351d492bfe2ac42c84a53971ca51cad8ee",
+    "started_at": "2026-10-03T00:56:08.459840+00:00",
+    "candidate_snapshot_sha256": "7de7c86955d13d18e2652798b9d44faa1ac5fa40262143bb00cd33269e9479d4",
+    "binding_note": "Final handoff candidate association; individual execution-start snapshot not captured. Tested product modules unchanged for final focused passes; subsequent browser harness assertion syntax checked."
+  },
+  {
+    "command": "node tests/ui-http.test.js",
+    "exit_code": 0,
+    "log": "docs/features/f04b/ui-http.log",
+    "sha256": "ccd8afc35a9fcf898b4dc1d0e13e32c0ca80840d2e4f86a9761569f993f96d0e",
+    "started_at": "2026-10-03T00:56:12.044268+00:00",
+    "candidate_snapshot_sha256": "7de7c86955d13d18e2652798b9d44faa1ac5fa40262143bb00cd33269e9479d4",
+    "binding_note": "Final handoff candidate association; individual execution-start snapshot not captured. Tested product modules unchanged for final focused passes; subsequent browser harness assertion syntax checked."
+  },
+  {
+    "command": "node tests/attribution-http.test.js",
+    "exit_code": 0,
+    "log": "docs/features/f04b/post-state.log",
+    "sha256": "a5cb379f174c49cf031080897186240d8931232065cea08ce5ae7b37a2330697",
+    "started_at": "2026-10-03T00:56:12.364196+00:00",
+    "candidate_snapshot_sha256": "7de7c86955d13d18e2652798b9d44faa1ac5fa40262143bb00cd33269e9479d4",
+    "binding_note": "Final handoff candidate association; individual execution-start snapshot not captured. Tested product modules unchanged for final focused passes; subsequent browser harness assertion syntax checked."
+  },
+  {
+    "command": "npm test",
+    "exit_code": 0,
+    "log": "docs/features/f04b/baseline.log",
+    "sha256": "4ffbcf989f2d30e171a33ba737da8272afb7abd8a8cbcfd6b17cae9f8ef89c70",
+    "started_at": "2026-10-03T00:56:12.749222+00:00",
+    "candidate_snapshot_sha256": "7de7c86955d13d18e2652798b9d44faa1ac5fa40262143bb00cd33269e9479d4",
+    "binding_note": "Final handoff candidate association; individual execution-start snapshot not captured. Tested product modules unchanged for final focused passes; subsequent browser harness assertion syntax checked."
+  },
+  {
+    "command": "npm run build",
+    "exit_code": 0,
+    "log": "docs/features/f04b/build-final.log",
+    "sha256": "a531d40304097a26de3f50306e4409351d492bfe2ac42c84a53971ca51cad8ee",
+    "started_at": "2026-10-03T00:59:24.642033+00:00",
+    "candidate_snapshot_sha256": "7de7c86955d13d18e2652798b9d44faa1ac5fa40262143bb00cd33269e9479d4",
+    "binding_note": "Final handoff candidate association; individual execution-start snapshot not captured. Tested product modules unchanged for final focused passes; subsequent browser harness assertion syntax checked."
+  },
+  {
+    "command": "node tests/ui-http.test.js",
+    "exit_code": 0,
+    "log": "docs/features/f04b/ui-http-final.log",
+    "sha256": "21c142068478baef9c764e74dd5c4dd55a3ea5aa0fec49e8af1b94900849fb4e",
+    "started_at": "2026-10-03T00:59:28.237577+00:00",
+    "candidate_snapshot_sha256": "7de7c86955d13d18e2652798b9d44faa1ac5fa40262143bb00cd33269e9479d4",
+    "binding_note": "Final handoff candidate association; individual execution-start snapshot not captured. Tested product modules unchanged for final focused passes; subsequent browser harness assertion syntax checked."
+  },
+  {
+    "command": "node tests/ui-state.test.js",
+    "exit_code": 0,
+    "log": "docs/features/f04b/ui-state-final.log",
+    "sha256": "e209148d91948c46d9257173b789b4d4d5b0a954d9cddef9e9625bd8d17b0bb5",
+    "started_at": "2026-10-03T00:59:28.550534+00:00",
+    "candidate_snapshot_sha256": "7de7c86955d13d18e2652798b9d44faa1ac5fa40262143bb00cd33269e9479d4",
+    "binding_note": "Final handoff candidate association; individual execution-start snapshot not captured. Tested product modules unchanged for final focused passes; subsequent browser harness assertion syntax checked."
+  },
+  {
+    "command": "node tests/attribution-http.test.js",
+    "exit_code": 0,
+    "log": "docs/features/f04b/attribution-http-final.log",
+    "sha256": "7c08728a8b9d6373040d3070f0cc0823c6678e1d197c71f3ff7e2a2051865f22",
+    "started_at": "2026-10-03T00:59:28.657543+00:00",
+    "candidate_snapshot_sha256": "7de7c86955d13d18e2652798b9d44faa1ac5fa40262143bb00cd33269e9479d4",
+    "binding_note": "Final handoff candidate association; individual execution-start snapshot not captured. Tested product modules unchanged for final focused passes; subsequent browser harness assertion syntax checked."
+  },
+  {
+    "command": "node --test tests/attribution.test.js tests/sharing.http.test.js tests/sharing.test.js tests/jobs.test.js tests/payments.test.js tests/partners.test.js tests/quality.test.js",
+    "exit_code": 0,
+    "log": "docs/features/f04b/regressions.log",
+    "sha256": "8948a5fc10ea07ed63f35cd54ccd124b5c0111dfbaf71fa8416d0ed2f1260bd0",
+    "started_at": "2026-10-03T00:59:28.982576+00:00",
+    "candidate_snapshot_sha256": "7de7c86955d13d18e2652798b9d44faa1ac5fa40262143bb00cd33269e9479d4",
+    "binding_note": "Final handoff candidate association; individual execution-start snapshot not captured. Tested product modules unchanged for final focused passes; subsequent browser harness assertion syntax checked."
+  },
+  {
+    "command": "node --check scripts/ui/browser.js",
+    "exit_code": 0,
+    "reason": "final authored gallery assertion; no browser launched",
+    "candidate_snapshot_sha256": "7de7c86955d13d18e2652798b9d44faa1ac5fa40262143bb00cd33269e9479d4",
+    "binding_note": "Final handoff candidate association; individual execution-start snapshot not captured. Tested product modules unchanged for final focused passes; subsequent browser harness assertion syntax checked."
+  },
+  {
+    "command": "node --test tests/ui-state.test.js tests/attribution-http.test.js tests/attribution.test.js tests/sharing.http.test.js tests/sharing.test.js tests/jobs.test.js tests/payments.test.js",
+    "exit_code": 1,
+    "log": "docs/features/f04b/focused.log",
+    "sha256": "cb9ed8d9bbe8842687b9887379019ff42a42c9088168e6d33146d666b1321284",
+    "historical": true,
+    "candidate_snapshot_sha256": "7de7c86955d13d18e2652798b9d44faa1ac5fa40262143bb00cd33269e9479d4",
+    "binding_note": "Final handoff candidate association; individual execution-start snapshot not captured. Tested product modules unchanged for final focused passes; subsequent browser harness assertion syntax checked."
+  },
+  {
+    "command": "node tests/ui-state.test.js",
+    "exit_code": 0,
+    "log": "docs/features/f04b/ui-state.log",
+    "sha256": "9769c897ac7f8bacb1a678cb36a835c74b7f4f86f16e1ef7cc64633de95c4ab9",
+    "historical": true,
+    "candidate_snapshot_sha256": "7de7c86955d13d18e2652798b9d44faa1ac5fa40262143bb00cd33269e9479d4",
+    "binding_note": "Final handoff candidate association; individual execution-start snapshot not captured. Tested product modules unchanged for final focused passes; subsequent browser harness assertion syntax checked."
+  },
+  {
+    "command": "npm run build",
+    "exit_code": 0,
+    "log": "docs/features/f04b/build-frozen.log",
+    "sha256": "a531d40304097a26de3f50306e4409351d492bfe2ac42c84a53971ca51cad8ee",
+    "execution_snapshot_sha256": "7de7c86955d13d18e2652798b9d44faa1ac5fa40262143bb00cd33269e9479d4",
+    "node": "v22.22.3"
+  }
+]

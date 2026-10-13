@@ -1,0 +1,106 @@
+{
+  "identity": {
+    "run_id": "n8-20261002-1740",
+    "work_unit_id": "n8-replicate-i5a",
+    "attempt_id": "replicate-i5a-1"
+  },
+  "source_revision": "2ad12e0e1cf98e0aacff28472f29b9a3bcdbf374",
+  "spec_sha256": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+  "launch_sha256": "5bf6aeb199bff6c17fbc82bfb03e33a060a4925d9330adcaef8473fa0d164cb6",
+  "frozen_at": "2026-10-03T10:59:55.722069+00:00",
+  "product_snapshot_sha256": "0d48ab6cb4243bb51389d55e62d5cd3e01a6e7ee421d19b6d937b9b23411ad04",
+  "profile": "compact-quality-first-v2",
+  "risk_tier": "XL",
+  "requested_model": "gpt-6.1-sol",
+  "effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "node": "22.20.0",
+  "sharp_concurrency": 1,
+  "checks": [
+    {
+      "name": "focused_local",
+      "command": "/tmp/n8-node22 --test --test-concurrency=1 tests/replicate-evidence.test.js tests/jobs.test.js tests/provider-submissions.test.js tests/generation.test.js tests/quality.test.js",
+      "exit_code": 0,
+      "pass": 33,
+      "fail": 0,
+      "skip": 0,
+      "cancelled": 0,
+      "duration_ms": 2812.380064,
+      "log": "replicate-i5a-local-tests.log",
+      "source_binding": "frozen product bytes; PG test was amended afterward, other covered source/test files unchanged"
+    },
+    {
+      "name": "static_build",
+      "command": "/tmp/n8-node22 scripts/check.js",
+      "exit_code": 0,
+      "log": "replicate-i5a-syntax.log"
+    },
+    {
+      "name": "final_changed_syntax_scope",
+      "exit_code": 0,
+      "log": "replicate-i5a-final-syntax-scope.log",
+      "protected_files": 91
+    },
+    {
+      "name": "vendor_scalar_guard_mutation",
+      "exit_code": 0,
+      "baseline": 0,
+      "mutant": 1,
+      "restored": 0,
+      "oracle": "unchanged provider scalar claims assertion fails: Missing expected exception",
+      "evidence": "replicate-i5a-mutation.json"
+    },
+    {
+      "name": "new_pg16_runtime",
+      "status": "pending_parent",
+      "exit_code": null,
+      "command": "node --test --test-concurrency=1 tests/replicate-evidence.integration.test.js",
+      "reason": "Author explicitly prohibited from PG/Docker execution; syntax only is green"
+    },
+    {
+      "name": "existing_pg_regressions",
+      "status": "pending_parent",
+      "exit_code": null,
+      "commands": [
+        "node --test --test-concurrency=1 tests/replicate.integration.test.js tests/replicate-lifecycle.integration.test.js",
+        "node --test --test-concurrency=1 tests/jobs.integration.test.js tests/quality.integration.test.js"
+      ]
+    }
+  ],
+  "failures": [
+    {
+      "stage": "initial authoring/test wrapper",
+      "exit_code": 1,
+      "reason": "cwd/path mismatch; zero intended writes; corrected",
+      "log": "replicate-i5a-command-failure.log"
+    },
+    {
+      "stage": "expected mutant",
+      "exit_code": 1,
+      "reason": "vendor scalar rejection assertion failed as intended",
+      "log": "replicate-i5a-mutation-mutant.log"
+    }
+  ],
+  "pending_gates": [
+    "Parent exact-source PG16 tests",
+    "Fresh independent review",
+    "I5b hosted quality/public predicates",
+    "I4b verified worker/request reconstruction and cleanup",
+    "I6 mandatory send-CAS mutation",
+    "I7 source-bound full suite and reconciliation",
+    "I8 actual browser E2E",
+    "Separately authorized provider/pilot/real quality/performance"
+  ],
+  "measurement_gaps": [
+    "Actual resolved host model/usage/cost unavailable; no inferred counters",
+    "No PostgreSQL execution or SQL runtime acceptance in writer environment"
+  ],
+  "e2e_preflight": {
+    "status": "not_applicable",
+    "reason": "No actual E2E in this authorized slice"
+  },
+  "duration_seconds": 1255.722069,
+  "launch_to_freeze_seconds": 1270.881684
+}

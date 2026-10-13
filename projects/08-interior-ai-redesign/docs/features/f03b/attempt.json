@@ -1,0 +1,78 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f03b",
+  "attempt_id": "n8-f03b-1",
+  "source_revision": "6e8d4219adef24efdafc0c79c72aebcc36663184",
+  "launch_sha256": "9d91c50ed628c78b1c6ef53b74f22a6f7db6f3ccc8be8f8039a33d1b060ad0b1",
+  "started_at": "2026-10-02T23:20:52Z",
+  "record_created_at": "2026-10-02T23:22:29.934891+00:00",
+  "status": "completed",
+  "stage": "IMPLEMENT",
+  "profile": "compact-quality-first-v2",
+  "risk_tier": "XL",
+  "mechanical_route": {
+    "exit_code": 0,
+    "tier": "S",
+    "reason": "explicit future files; payment, consent and private-data risk preserves XL"
+  },
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Provider-resolved model, effort and billing counters unavailable",
+    "Preparation record created after brief/rules reading; launch start timestamp preserves total duration"
+  ],
+  "delegation": false,
+  "approval": "Existing autonomous authorization and approved F03 plan; no repeated checkpoint",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Author sandbox prohibits PostgreSQL/listen/Docker; coordinator owns runtime and E2E"
+  },
+  "required_checks": [
+    "syntax/static build",
+    "affected unit regression",
+    "consent and owner-bound mutations",
+    "dedicated PostgreSQL attribution/partner/payment/auth regression (coordinator)",
+    "fresh independent Astra review (coordinator)"
+  ],
+  "finished_at": "2026-10-02T23:35:57.924525+00:00",
+  "elapsed_seconds": 905.924525,
+  "build_revision": "6c8951f3cd81b270fef020eff3eb38dd744c4af8f96a11e79410cc6688e6418f",
+  "verdict": "author implementation complete; acceptance pending PostgreSQL and fresh independent review",
+  "checks": "docs/features/f03b/checks.json",
+  "measurement_scope": "Launch through author receipt; coordinator acceptance duration remains unknown",
+  "failures": [
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "--test",
+        "tests/attribution.test.js",
+        "tests/partners.test.js"
+      ],
+      "exit_code": 1,
+      "reason": "First invocation had repository-root cwd instead of project cwd; corrected"
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "--test",
+        "tests/attribution.test.js",
+        "tests/partners.test.js"
+      ],
+      "exit_code": 1,
+      "reason": "Attribution fixture omitted required job budget config; corrected within this implementation pass"
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/attribution.test.js"
+      ],
+      "exit_code": 1,
+      "reason": "Diagnostic confirmed same fixture budget configuration failure; no production failure; final8/8 passed"
+    }
+  ],
+  "source_diff_sha256": "4eec4ed4c3c93bd8f62895039b524eff03f0a08d0eb95ff52ecb1d9ee06ad669"
+}

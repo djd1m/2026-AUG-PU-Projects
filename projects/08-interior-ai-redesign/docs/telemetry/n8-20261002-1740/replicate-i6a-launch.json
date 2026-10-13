@@ -1,0 +1,27 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i6a",
+  "attempt_id": "replicate-i6a-1",
+  "created_at": "2026-10-03T14:14:36.811964+00:00",
+  "source_revision": "714901f6c59f0e6e51d5d0033eed8943020ccc4c",
+  "trace_path": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i6a-receipt.md",
+  "requested_model": "gpt-6.1-sol",
+  "effort": "high",
+  "budget_seconds": 1200,
+  "owned_paths": [
+    "scripts/mutation.js new replicate-send-cas kind only",
+    "tests/replicate-send-cas.integration.test.js",
+    "tests/mutation.test.js narrow runner additions ifneeded",
+    "docs/features/f07-replicate/i6a-*",
+    "docs/telemetry/n8-20261002-1740/replicate-i6a-*"
+  ],
+  "route": {
+    "mechanical_log": "replicate-i6a-route.log",
+    "substantive_tier": "XL",
+    "approved_plan": "F07 accepted preserved"
+  },
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "no_delegation": true
+}

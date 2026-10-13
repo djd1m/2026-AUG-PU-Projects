@@ -1,0 +1,63 @@
+TAP version 13
+# Subtest: F03b isolated real PostgreSQL consent, partner registry and verified first-conversion aggregates
+    # Subtest: PARTNER-01 duplicate409 existing owner immutable binding, missing owner, inactive and self
+    ok 1 - PARTNER-01 duplicate409 existing owner immutable binding, missing owner, inactive and self
+      ---
+      duration_ms: 158.292616
+      type: 'test'
+      ...
+    # Subtest: ATTR-01 cookie consent proof, denied/blocked/tampered/cross-account, expiry and manual
+    ok 2 - ATTR-01 cookie consent proof, denied/blocked/tampered/cross-account, expiry and manual
+      ---
+      duration_ms: 281.74428
+      type: 'test'
+      ...
+    # Subtest: ATTR-02 manual override invalid input effects0 immutable snapshot and simultaneous create/deny
+    ok 3 - ATTR-02 manual override invalid input effects0 immutable snapshot and simultaneous create/deny
+      ---
+      duration_ms: 288.444463
+      type: 'test'
+      ...
+    # Subtest: PARTNER-02 two partner totals exclude replay repeat hold review refunds and inactive rows
+    ok 4 - PARTNER-02 two partner totals exclude replay repeat hold review refunds and inactive rows
+      ---
+      duration_ms: 601.856934
+      type: 'test'
+      ...
+    # Subtest: ATTR-03 differently attributed concurrent successes select exactly one permanent winner
+    ok 5 - ATTR-03 differently attributed concurrent successes select exactly one permanent winner
+      ---
+      duration_ms: 135.169098
+      type: 'test'
+      ...
+    # Subtest: HTTP exact Origin/authenticated bounded attribution; no public mint/edit/aggregate and essential session intact
+    ok 6 - HTTP exact Origin/authenticated bounded attribution; no public mint/edit/aggregate and essential session intact
+      ---
+      duration_ms: 385.271888
+      type: 'test'
+      ...
+    1..6
+ok 1 - F03b isolated real PostgreSQL consent, partner registry and verified first-conversion aggregates
+  ---
+  duration_ms: 2349.152089
+  type: 'test'
+  ...
+1..1
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2369.051715
+ Volume n8-f03b-candidate_media Creating 
+ Volume n8-f03b-candidate_media Creating 
+ Network n8-f03b-candidate_frontend Creating 
+ Network n8-f03b-candidate_frontend Creating 
+ Volume n8-f03b-candidate_media Created 
+ Volume n8-f03b-candidate_media Created 
+ Network n8-f03b-candidate_frontend Created 
+ Network n8-f03b-candidate_frontend Created 
+ Container n8-f03b-candidate-web-run-7bbfee36f110 Creating 
+ Container n8-f03b-candidate-web-run-7bbfee36f110 Created 

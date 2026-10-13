@@ -1,0 +1,28 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f04a",
+  "attempt_id": "n8-f04a-1",
+  "source_revision": "a983354127af10f228b329a4ec3fa48d33bd279f",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "budget_seconds": 1500,
+  "created_at": "2026-10-03T00:06:13.069289+00:00",
+  "trace_path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f04a/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/n8-f04a-receipt.md",
+  "owned_paths": [
+    "db/006-sharing.sql",
+    "web/sharing.js",
+    "web/composite.js",
+    "web/public-pages.js if needed",
+    "web/app.js",
+    "web/jobs.js/quality.js/media.js (minimal revoke/authorization integration only)",
+    "scripts/migrate.js",
+    "scripts/mutation.js",
+    "tests/sharing*",
+    "tests/composite*",
+    "tests/mutation.test.js (needed harness compatibility only)",
+    "docs/features/f04a/**"
+  ]
+}

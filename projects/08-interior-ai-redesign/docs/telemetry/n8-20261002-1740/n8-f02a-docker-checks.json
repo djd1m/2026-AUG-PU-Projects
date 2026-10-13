@@ -1,0 +1,134 @@
+{
+  "source_revision": "4a59fb1c3bd79b634486252487a8b5b8c036eb36",
+  "snapshot_sha256": "4ac13c0d0b854f2cb5423bd1eede26dd595dac265524c97bcdab104a5cc2c75a",
+  "started_at": "2026-10-02T21:08:00.630428+00:00",
+  "checks": [
+    {
+      "name": "compose-config",
+      "exit_code": 0,
+      "duration_ms": 187,
+      "log": "/tmp/n8-f02a-runtime-3/compose-config.log"
+    },
+    {
+      "name": "image-build",
+      "exit_code": 0,
+      "duration_ms": 3876,
+      "log": "/tmp/n8-f02a-runtime-3/image-build.log"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "duration_ms": 6707,
+      "log": "/tmp/n8-f02a-runtime-3/db-start.log"
+    },
+    {
+      "name": "build",
+      "exit_code": 0,
+      "duration_ms": 4708,
+      "log": "/tmp/n8-f02a-runtime-3/build.log"
+    },
+    {
+      "name": "unit",
+      "exit_code": 0,
+      "duration_ms": 20776,
+      "log": "/tmp/n8-f02a-runtime-3/unit.log"
+    },
+    {
+      "name": "origin-mutation",
+      "exit_code": 0,
+      "duration_ms": 2969,
+      "log": "/tmp/n8-f02a-runtime-3/origin-mutation.log"
+    },
+    {
+      "name": "pg-integration",
+      "exit_code": 0,
+      "duration_ms": 17139,
+      "log": "/tmp/n8-f02a-runtime-3/pg-integration.log"
+    },
+    {
+      "name": "owner-mutation",
+      "exit_code": 0,
+      "duration_ms": 32104,
+      "log": "/tmp/n8-f02a-runtime-3/owner-mutation.log"
+    },
+    {
+      "name": "jobs-pg",
+      "exit_code": 1,
+      "duration_ms": 7392,
+      "log": "/tmp/n8-f02a-runtime-3/jobs-pg.log"
+    },
+    {
+      "name": "budget-mutation",
+      "exit_code": 1,
+      "duration_ms": 7715,
+      "log": "/tmp/n8-f02a-runtime-3/budget-mutation.log"
+    },
+    {
+      "name": "runtime-versions",
+      "exit_code": 0,
+      "duration_ms": 1589,
+      "log": "/tmp/n8-f02a-runtime-3/runtime-versions.log"
+    },
+    {
+      "name": "web-maintenance-start",
+      "exit_code": 0,
+      "duration_ms": 13448,
+      "log": "/tmp/n8-f02a-runtime-3/web-maintenance-start.log"
+    },
+    {
+      "name": "host-http",
+      "exit_code": 0,
+      "duration_ms": 133,
+      "log": "/tmp/n8-f02a-runtime-3/host-http.log"
+    },
+    {
+      "name": "service-image-ids",
+      "exit_code": 0,
+      "duration_ms": 56,
+      "log": "/tmp/n8-f02a-runtime-3/service-image-ids.log"
+    },
+    {
+      "name": "maintenance-once",
+      "exit_code": 0,
+      "duration_ms": 2875,
+      "log": "/tmp/n8-f02a-runtime-3/maintenance-once.log"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "duration_ms": 11117,
+      "log": "/tmp/n8-f02a-runtime-3/cleanup.log"
+    }
+  ],
+  "finished_at": "2026-10-02T21:10:13.433878+00:00",
+  "duration_ms": 132803,
+  "source_check": {
+    "observed_at": "2026-10-02T21:08:50.299013+00:00",
+    "observed_repository_head": "ab12eeb35d4853cabedb385b988c27624dfd332f",
+    "reference_source_revision": "4a59fb1c3bd79b634486252487a8b5b8c036eb36",
+    "snapshot_sha256": "4ac13c0d0b854f2cb5423bd1eede26dd595dac265524c97bcdab104a5cc2c75a",
+    "verified_product_files": 32,
+    "reference_to_observed_product_diff_exit": 0
+  },
+  "status": "completed",
+  "verdict": "FAIL jobs PG and budget mutation baseline; other recorded checks pass",
+  "logs": {
+    "compose-config": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "image-build": "323ae9d1675694b1cffe37c743330b285678bdd98256c0e10d21775065b86d72",
+    "db-start": "66b65166e99144ba6b46323e22d9bd6f14aa48d4fb05a2f525a35eccd108233e",
+    "build": "5b08ab7bc8fa56f3e3d62aebf1a075574d2aa751f6872e750ef50fca0d44ea81",
+    "unit": "1d56992c4f08b0617e238ecaf0410fe858fc7983f8313cf29f17a4da948ee391",
+    "origin-mutation": "2fd71472309abf6fa22389ec781dbc806baa7557ca4ad8e2d81b2e9a20b80692",
+    "pg-integration": "817345452354653aa546a66cd084de7c7e886392ca0d4f147c07dd2ab95cfc2a",
+    "owner-mutation": "a94398daa82f927edab2ddc34fa6f4e1d04d047fb4cbb555c0b06df525593977",
+    "jobs-pg": "c2a14a3d8c331a921bedbde91b12d39c4a61dfa51603bbfa027adedd1ca65773",
+    "budget-mutation": "dfddc71940c23618081b9c77022b6e7da4760a9554c48a86b778e631f5bdc6c7",
+    "runtime-versions": "83d809f6311387e94d8386d4a53e933898aa95d5bb540cb125cfdb54f63bc3ff",
+    "web-maintenance-start": "939a4bcb699010b8c7e5512e644c0bc135772a0b3e7631fd63b5fa05f5b925da",
+    "host-http": "27badc983df1780b60c2b3fa9d3a19a00e46aac798451f0febdca52920faaddf",
+    "service-image-ids": "667464b3354cb74c415b6ac5456024ea477cd8d0e5c3e064361d5dbe4de504a7",
+    "maintenance-once": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cleanup": "ead26cb65e7387db63382e27cab20176286faec28e688b3e08f591da1595d91f"
+  },
+  "usage": null
+}

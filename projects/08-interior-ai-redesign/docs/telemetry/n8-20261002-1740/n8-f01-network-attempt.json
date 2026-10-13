@@ -1,0 +1,78 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f01-network",
+  "attempt_id": "n8-f01-network-attempt-1",
+  "source_revision": "1686846b010aa71daef69db193812b9a9df0c6f0",
+  "launch_sha256": "e781cc73b0cdf1aa94dec1a300ed60deeebe227c2bc81e4b22f4a0a01b4a06d7",
+  "started_at": "2026-10-02T20:23:39.867395+00:00",
+  "implementation_started_at": "2026-10-02T20:24:36.867693+00:00",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "model_evidence": null,
+  "fallback_reason": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Provider-resolved model, effort and usage are not exposed by this execution host; requested model is not proof of actual model.",
+    "Preparation start before launch is unknown.",
+    "Active wall time not separately instrumented; elapsed measured from coordinator launch includes preparation."
+  ],
+  "route": {
+    "tier": "T",
+    "mechanical_exit_code": 0,
+    "rationale": "Bounded Compose configuration correction; no application code, database exposure, new external call or cross-service code changes. Keeps private DB and loopback publication.",
+    "plan": "Accepted correction in brief and docs/features/f01/network-fix.md; no new planning scope.",
+    "implementation": "Same scope reconfirmed immediately before edit."
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No startup/build/E2E authorized in this worker; coordinator owns runtime mutex and subsequent runtime checks."
+  },
+  "status": "completed",
+  "events": [
+    {
+      "type": "attempt_started",
+      "stage": "IMPLEMENT",
+      "timestamp": "2026-10-02T20:24:36.867727+00:00"
+    },
+    {
+      "type": "attempt_finished",
+      "stage": "IMPLEMENT",
+      "timestamp": "2026-10-02T20:26:00.424951+00:00",
+      "status": "completed"
+    }
+  ],
+  "finished_at": "2026-10-02T20:26:00.424951+00:00",
+  "elapsed_wall_ms": 140558,
+  "active_wall_ms": null,
+  "build_revision": null,
+  "tracked_diff_sha256": "e0fcc9a7b4b43cfdcd4cca0fe16dc6cc619c0c31a0656b831191b52854bdfa11",
+  "compose_diff_sha256": "fdb9ff3cb95d5528fe52b6432c9fd34534b99515e827edbf519763206ded38c8",
+  "checks": [
+    {
+      "name": "Docker Compose config --quiet",
+      "command": "env -i PATH=<inherited PATH> DB_PASSWORD=<nonsecret placeholder> SESSION_SECRET=<nonsecret placeholder> docker compose --env-file /dev/null -f projects/08-interior-ai-redesign/compose.yaml config --quiet",
+      "exit_code": 0
+    },
+    {
+      "name": "Exact Compose delta vs source revision",
+      "exit_code": 0,
+      "result": "Only web private+frontend attachment and frontend driver: bridge; all remaining bytes preserved."
+    },
+    {
+      "name": "git diff --check",
+      "exit_code": 0
+    },
+    {
+      "name": "Source continuity and changed/untracked allowlist",
+      "exit_code": 0
+    }
+  ],
+  "pending": [
+    "Coordinator runtime: actual published port inspection, host HTTP smoke and DB isolation.",
+    "Fresh Astra bounded Compose review."
+  ]
+}

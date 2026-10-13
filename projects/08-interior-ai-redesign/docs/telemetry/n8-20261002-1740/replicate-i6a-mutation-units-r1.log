@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: F04 mutation oracles refuse unrelated assertion, spawn failure and timeout
+ok 1 - F04 mutation oracles refuse unrelated assertion, spawn failure and timeout
+  ---
+  duration_ms: 231.898743
+  type: 'test'
+  ...
+# Subtest: SEC-03 mutation oracle accepts only exact tagged owner assertion and rejects unrelated failures
+ok 2 - SEC-03 mutation oracle accepts only exact tagged owner assertion and rejects unrelated failures
+  ---
+  duration_ms: 539.837243
+  type: 'test'
+  ...
+# Subtest: SEC-03 baseline must pass before source changes; no-op and unexpected guards fail closed
+ok 3 - SEC-03 baseline must pass before source changes; no-op and unexpected guards fail closed
+  ---
+  duration_ms: 193.788729
+  type: 'test'
+  ...
+# Subtest: SEC-03 budget oracle requires exact assertion: expected one admission, actual two
+ok 4 - SEC-03 budget oracle requires exact assertion: expected one admission, actual two
+  ---
+  duration_ms: 397.911812
+  type: 'test'
+  ...
+# Subtest: PAY-02 payment mutation oracle targets only the exact merchant-binding assertion
+ok 5 - PAY-02 payment mutation oracle targets only the exact merchant-binding assertion
+  ---
+  duration_ms: 132.508368
+  type: 'test'
+  ...
+# Subtest: F07 send CAS mutation changes only two exact guards and refuses source drift
+ok 6 - F07 send CAS mutation changes only two exact guards and refuses source drift
+  ---
+  duration_ms: 7.772723
+  type: 'test'
+  ...
+# Subtest: F07 send CAS recognizer accepts only named 1 versus 2 assertion, including nested TAP
+ok 7 - F07 send CAS recognizer accepts only named 1 versus 2 assertion, including nested TAP
+  ---
+  duration_ms: 887.100676
+  type: 'test'
+  ...
+# Subtest: F07 send CAS inconclusive runner restores bytes and preserves three raw logs and hashes
+ok 8 - F07 send CAS inconclusive runner restores bytes and preserves three raw logs and hashes
+  ---
+  duration_ms: 740.217935
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3288.350093

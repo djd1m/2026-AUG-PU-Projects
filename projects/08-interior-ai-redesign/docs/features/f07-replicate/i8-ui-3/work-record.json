@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "preflight",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "n8-20261002-1740",
+    "work_unit_id": "n8-replicate-i8-3",
+    "current_attempt_id": "n8-replicate-i8-3"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/n8-20261002-1740/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/n8-20261002-1740/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "3b84e9ef",
+    "current_revision": "98d5111277b788be875b9cb6ded7424e05a994a7",
+    "build_revision": "6c1815291d3cac0562f7fcbe1443218b7c32aa9a7fe61877ac7ebd02c8c0c52f",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/features/f07-replicate/01_specification.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/features/f07-replicate/03_architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "98d5111277b788be875b9cb6ded7424e05a994a7",
+      "observed_revision": "98d5111277b788be875b9cb6ded7424e05a994a7",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+    "scope": [
+      "Actual F07 software browser52main+2disabled at1440/390 and hostedrowrestore within approved zero-spend scope"
+    ],
+    "exclusions": [
+      "Real GPU geometry/latency acceptance remains separate pending accepted work",
+      "External providers/spend/deploy/publicsharing excluded from this local test"
+    ],
+    "action_limits": [
+      "Owned schema/private media/remote browsercontexts only; CPU2; bounded20minute browser command; no provider key or live HTTP"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-f07-replicate-11",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "scripts/ui/compose.e2e.yml"
+          }
+        },
+        "provenance": "Existing project owned compose source SHA256 f2b5564b43b43b67d015ab9d67ffc936b1df5d59020b66cc4a6f7df2973f1ea5",
+        "useful_fragment": "Isolated Caddy internal TLS and remote shared Playwright connection",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Preserve actual Origin/Secure cookies without secret env or mounts in shared browser"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No calibrated comparable full browser matrix;900s is attempt limit, not forecast",
+      "scope_revision": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+      "tier": "XL",
+      "rationale": "Hosted private media, budget, publication retain approved XL; actualI8 readiness only",
+      "script": {
+        "input": "Inherited F07 approved XL implementation/source review; exact I8 scope in 04_refinement and launch.json",
+        "exit_code": 1
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+      "tier": "XL",
+      "rationale": "Hosted private media, budget, publication retain approved XL; actualI8 readiness only",
+      "script": {
+        "input": "Inherited F07 approved XL implementation/source review; exact I8 scope in 04_refinement and launch.json",
+        "exit_code": 1
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "required",
+    "reason": "Owner full autonomy for both projects within published zero-spend plan; current test is in scope",
+    "evidence": {
+      "id": "owner-replicate-autonomy-20261003",
+      "plan_revision": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+      "covers": [
+        "plan",
+        "team",
+        "roles",
+        "models",
+        "skills"
+      ],
+      "path": {
+        "root": "project",
+        "path": "docs/decisions-owner.md"
+      },
+      "sha256": "61b014960f59f8744e76ce95e6509517451055b0496f796a4cf710e85eabc0d6"
+    }
+  },
+  "preflight": {
+    "status": "ready",
+    "reason": "Fresh 122 host/120 container/176 client hashes verified; HTTPS200, eight migrations, Astra source CONDITIONAL ACCEPT; actual52+2 pending.",
+    "at": "2026-10-03T17:59:49.352192+00:00",
+    "source_revision": "98d5111277b788be875b9cb6ded7424e05a994a7",
+    "build_revision": "6c1815291d3cac0562f7fcbe1443218b7c32aa9a7fe61877ac7ebd02c8c0c52f",
+    "environment": "Owned n8-ui-e2e private PG16.10/eight migrations/test fixture; Node22; image sha256:2c193a4a369f9a28905cbf3100a20c4a2b10d74fedf276e5e27022bc9e9b2119; internalHTTPS https://n8-ui.test; total2CPU; shared Playwright1.63 remote temporarynetwork only. No provider token in app.",
+    "environment_available": true,
+    "test_command": "docker exec n8-ui-e2e-web-1 timeout 1200 node scripts/ui/browser.js",
+    "inputs": [
+      {
+        "name": "Exact current source/image and reviewed F07 contracts",
+        "available": true
+      },
+      {
+        "name": "Owned marked PG16 schema with eight migrations, synthetic upload and mocked bounded hosted transport",
+        "available": true
+      },
+      {
+        "name": "Private runtime env available; fixture mode, worker disabled, cleanup false, no live provider key; secret values excluded",
+        "available": true
+      },
+      {
+        "name": "Existing Playwright1.63 packages hashbound to shared container and copied client 5603cf6748901d089ef1249a92c95dbd7d63d747d22f09f566ea3af5d7e03b82",
+        "available": true
+      }
+    ],
+    "expected_effects": [
+      "Create owned synthetic accounts/media/ledger/payment/jobs/evidence within unchanged limits",
+      "Drive actual I1/I2/I3/I5 paths with injected in-process bounded hosted API/DNS/output transport, no external calls",
+      "Exercise52DOM/API checks1440/390, then actualdisabled-payment server2checks",
+      "Record screenshots/results; preserve own DB/media for representative restore, then remove own resources",
+      "No real charges/provider/GPU/email/deploy/publicposting"
+    ],
+    "evidence_root": {
+      "root": "project",
+      "path": "docs/features/f07-replicate/i8-ui-3"
+    },
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "n8-replicate-i8-3",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "n8-replicate-i8-3",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/features/f07-replicate/i8-ui-3/preflight.json"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [],
+  "receipts": [],
+  "delivery": null,
+  "runtime_result": {
+    "main": 52,
+    "disabled": 2,
+    "db_restore": "pass",
+    "media_restore": "pass",
+    "cleanup": "pass",
+    "source_revision": "98d5111277b788be875b9cb6ded7424e05a994a7"
+  }
+}

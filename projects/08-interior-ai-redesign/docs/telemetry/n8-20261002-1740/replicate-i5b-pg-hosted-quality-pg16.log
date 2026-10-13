@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: I5b hosted operator quality and publication on actual dedicated PostgreSQL16
+    # Subtest: I1 authority and I5a completion -> privileged review -> private export -> explicit public/list/read
+    ok 1 - I1 authority and I5a completion -> privileged review -> private export -> explicit public/list/read
+      ---
+      duration_ms: 2063.391896
+      type: 'test'
+      ...
+    # Subtest: changed actual input/output/depth/config and missing report have zero review effects
+    ok 2 - changed actual input/output/depth/config and missing report have zero review effects
+      ---
+      duration_ms: 1369.971909
+      type: 'test'
+      ...
+    # Subtest: fixture excluded and controlnet report path remains separate
+    ok 3 - fixture excluded and controlnet report path remains separate
+      ---
+      duration_ms: 1357.659025
+      type: 'test'
+      ...
+    # Subtest: concurrent accept/reject and accept/accept preserve once-only release and no reaccept
+    ok 4 - concurrent accept/reject and accept/accept preserve once-only release and no reaccept
+      ---
+      duration_ms: 1174.567259
+      type: 'test'
+      ...
+    # Subtest: operator final account/job reread denies hold/delete/style changes after actual byte verification
+    ok 5 - operator final account/job reread denies hold/delete/style changes after actual byte verification
+      ---
+      duration_ms: 690.481487
+      type: 'test'
+      ...
+    # Subtest: actual afterPrepare barriers deny stale public/cache/list on hold/delete/revoke/reject/version/owner
+    ok 6 - actual afterPrepare barriers deny stale public/cache/list on hold/delete/revoke/reject/version/owner
+      ---
+      duration_ms: 8923.757305
+      type: 'test'
+      ...
+    1..6
+ok 1 - I5b hosted operator quality and publication on actual dedicated PostgreSQL16
+  ---
+  duration_ms: 16092.351745
+  type: 'test'
+  ...
+1..1
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 16413.566469
+ Container n8f07i5b-tests-run-7356949b2990 Creating 
+ Container n8f07i5b-tests-run-7356949b2990 Created 

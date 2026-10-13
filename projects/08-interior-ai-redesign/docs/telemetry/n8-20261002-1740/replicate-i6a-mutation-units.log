@@ -1,0 +1,74 @@
+TAP version 13
+# Subtest: F04 mutation oracles refuse unrelated assertion, spawn failure and timeout
+ok 1 - F04 mutation oracles refuse unrelated assertion, spawn failure and timeout
+  ---
+  duration_ms: 229.553632
+  type: 'test'
+  ...
+# Subtest: SEC-03 mutation oracle accepts only exact tagged owner assertion and rejects unrelated failures
+ok 2 - SEC-03 mutation oracle accepts only exact tagged owner assertion and rejects unrelated failures
+  ---
+  duration_ms: 524.707827
+  type: 'test'
+  ...
+# Subtest: SEC-03 baseline must pass before source changes; no-op and unexpected guards fail closed
+ok 3 - SEC-03 baseline must pass before source changes; no-op and unexpected guards fail closed
+  ---
+  duration_ms: 153.129935
+  type: 'test'
+  ...
+# Subtest: SEC-03 budget oracle requires exact assertion: expected one admission, actual two
+ok 4 - SEC-03 budget oracle requires exact assertion: expected one admission, actual two
+  ---
+  duration_ms: 274.083667
+  type: 'test'
+  ...
+# Subtest: PAY-02 payment mutation oracle targets only the exact merchant-binding assertion
+ok 5 - PAY-02 payment mutation oracle targets only the exact merchant-binding assertion
+  ---
+  duration_ms: 113.928691
+  type: 'test'
+  ...
+# Subtest: F07 send CAS mutation changes only two exact guards and refuses source drift
+ok 6 - F07 send CAS mutation changes only two exact guards and refuses source drift
+  ---
+  duration_ms: 3.113141
+  type: 'test'
+  ...
+# Subtest: F07 send CAS recognizer accepts only named 1 versus 2 assertion, including nested TAP
+not ok 7 - F07 send CAS recognizer accepts only named 1 versus 2 assertion, including nested TAP
+  ---
+  duration_ms: 177.113563
+  type: 'test'
+  location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/mutation.test.js:120:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/mutation.test.js:128:42)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: F07 send CAS inconclusive runner restores bytes and preserves three raw logs and hashes
+ok 8 - F07 send CAS inconclusive runner restores bytes and preserves three raw logs and hashes
+  ---
+  duration_ms: 735.303433
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 7
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2357.441232

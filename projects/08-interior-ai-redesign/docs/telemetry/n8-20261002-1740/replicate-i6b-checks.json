@@ -1,0 +1,103 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i6b",
+  "attempt_id": "replicate-i6b-1",
+  "source_revision": "1182b04232294275d7d7adb2eb0ed81bb7b53d10",
+  "started_at": "2026-10-03T14:47:31Z",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gap": "Host receipt required; no counters inferred",
+  "stage": "handoff",
+  "route": {
+    "mechanical_exit": 1,
+    "mechanical_tier": "L",
+    "substantive_tier": "XL",
+    "reason": "Inherited owner-approved F07 private media/spend scope; I6b bounded integration only"
+  },
+  "approval": "Existing owner approval and explicit sole-writer instruction; no delegation",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Author forbidden Docker/PG/browser; parent executes after frozen independent review"
+  },
+  "checks": [
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i6b-focused-1.log",
+      "exit_code": 1,
+      "result": "Initial UI test harness failures retained;39pass/3fail",
+      "sha256": "a26d6ced23351aa067b774b91a258097da5de5838ad0c0c362c7f5c2080d2c7b"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i6b-focused-2.log",
+      "exit_code": 0,
+      "result": "Corrected units42pass/0fail/0skip",
+      "sha256": "c3b002e5ae041ba275cab87fe38f1a28abbd75f11d943c20c837a321c0878f0b"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i6b-focused-final.log",
+      "exit_code": 0,
+      "result": "Final affected units43pass/0fail/0skip",
+      "sha256": "7a35594161f142d06d15821e33233e92e23f0993123c09ddfd35b587a835d541"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i6b-static.log",
+      "exit_code": 0,
+      "result": "Earlier scripts/check.js",
+      "sha256": "0aec2d6d64684e49007fa69ee2856c2ced7b6631bda52ca8bda26e011b3a9d81"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i6b-static-final.log",
+      "exit_code": 0,
+      "result": "Final scripts/check.js ESM static build",
+      "sha256": "0aec2d6d64684e49007fa69ee2856c2ced7b6631bda52ca8bda26e011b3a9d81"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i6b-ui-mutant.log",
+      "exit_code": 1,
+      "result": "Expected unchanged HOSTED-UNVERIFIED consent oracle failure",
+      "sha256": "a275460defef73f54155561817f3e8e15aa738a8b9630ebf27900dfab8c5bcef"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i6b-ui-restored.log",
+      "exit_code": 0,
+      "result": "Production UI semantic tests3pass; unchanged production bytes",
+      "sha256": "efb9c148c1c6cc58213f2f2be139aea0c4f664eda55a4911df637adbd8c913ed"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i6b-compose-static.json",
+      "exit_code": 0,
+      "result": "PyYAML static profile/secrets/defaultCPU/noDBports guards; Compose engine pending",
+      "sha256": "0e3648ec5fdb208c922ccfc6d44933e6deba0295dc3922c2795974f5b8b5530c"
+    },
+    {
+      "path": "docs/telemetry/n8-20261002-1740/replicate-i6b-scope-guard.log",
+      "exit_code": 0,
+      "result": "Protected hashes/source/spec/launch/allowlist/line limit/diff guards",
+      "sha256": "cd3248fe2751ceddf638854e48ec0c60f83eb4fc26d0f4646decd005024a33b8"
+    }
+  ],
+  "finished_at": "2026-10-03T15:06:16.780779+00:00",
+  "duration_seconds": 1125.780779,
+  "external_spend": 0,
+  "active_time_ms": null,
+  "build_revision": null,
+  "pending": [
+    "Parent independent Astra review",
+    "I7 full mandatory suite/canonical docs",
+    "I8 actual Compose/PG16/browser runtime, legacy42 + hosted10, disabled-payment followup"
+  ],
+  "command_path_errors": [
+    {
+      "exit": 1,
+      "reason": "Root-relative edit path used with project cwd; no edit performed; focused-1 still ran and is retained"
+    },
+    {
+      "exit": 1,
+      "reason": "Project-relative log redirection used with root cwd; focused-2 not started in that command; subsequent correct invocation passed"
+    }
+  ],
+  "protected_count": 131
+}

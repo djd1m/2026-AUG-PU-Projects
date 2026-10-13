@@ -1,0 +1,40 @@
+diff --git a/projects/08-interior-ai-redesign/tests/payments.integration.test.js b/projects/08-interior-ai-redesign/tests/payments.integration.test.js
+index aaace588..603378d9 100644
+--- a/projects/08-interior-ai-redesign/tests/payments.integration.test.js
++++ b/projects/08-interior-ai-redesign/tests/payments.integration.test.js
+@@ -113,13 +113,21 @@ test('F03a real PostgreSQL verified payments, refunds, replay and billing serial
+       assert.equal(await count('SELECT count(*)::int AS n FROM provider_event'),1);
+       const p2=await intent(o);await state(p2);await success(p2);assert.equal(await balance(o.id),41);assert.equal((await row('account',o.id)).first_paid_payment_id,p.id);
+     });
+-    await t.test('PAY-03 canceled→success allowed; success→cancel forbidden; review monotonic',async()=>{
++    await t.test('PAY-03 canceled→success allowed; duplicate cancel harmless; review monotonic',async()=>{
+       await reset();const o=await owner(),p=await intent(o);await state(p,'canceled');await cancel(p);assert.equal((await row('payment_intent',p.id)).status,'canceled');
+       await state(p);await success(p);await state(p,'canceled');await cancel(p);assert.equal((await row('payment_intent',p.id)).status,'succeeded');
+       await state(p);const r=await refund(p);await r.send();await success(p);assert.equal((await row('payment_intent',p.id)).status,'review');
+       await assert.rejects(pool.query("UPDATE payment_intent SET status='succeeded' WHERE id=$1",[p.id]));
+       await assert.rejects(pool.query('UPDATE account SET billing_hold=false WHERE id=$1',[o.id]));
+     });
++    await t.test('PAY-03 fresh success→first cancellation handled without downgrading or duplicate purchase',async()=>{
++      await reset();const o=await owner(),p=await intent(o);await state(p);await success(p);
++      assert.equal((await row('payment_intent',p.id)).status,'succeeded');assert.equal(await purchases(o.id),1);
++      assert.equal(await count("SELECT count(*)::int AS n FROM provider_event WHERE provider_object_id=$1 AND event_type='payment.canceled'",[p.provider_id]),0);
++      await state(p,'canceled');assert.deepEqual(await cancel(p),{ok:true});
++      assert.equal(await count("SELECT count(*)::int AS n FROM provider_event WHERE provider_object_id=$1 AND event_type='payment.canceled'",[p.provider_id]),1);
++      assert.equal((await row('payment_intent',p.id)).status,'succeeded');assert.equal(await purchases(o.id),1);
++    });
+     await t.test('PAY-04 refund binding matrix effects0; verified partial/full permanent hold without reversal',async()=>{
+       await reset();const o=await owner(),p=await intent(o);await state(p);await success(p);
+       for(const patch of [{id:randomUUID()},{payment_id:randomUUID()},{status:'pending'},
+@@ -194,7 +202,11 @@ test('F03a real PostgreSQL verified payments, refunds, replay and billing serial
+       assert.equal((await send('/api/payments',{package:'ROOM20',idempotency_key:'x'},{Origin:'http://evil.test'})).status,403);
+       assert.equal((await send('/api/payments',{package:'ROOM20',idempotency_key:'x'},{Cookie:''})).status,401);
+       assert.equal((await send('/api/payments',{package:'ROOM20',idempotency_key:'x',price:1})).status,400);
+-      assert.equal((await send('/api/payments',{package:'ROOM20',idempotency_key:'x'})).status,202);
++      const created=await send('/api/payments',{package:'ROOM20',idempotency_key:'x'});assert.equal(created.status,202);
++      const httpIntent=(await created.json()).payment;assert.equal(httpIntent.status,'created');
++      const queued=await row('payment_intent',httpIntent.payment_id);assert.equal(queued.account_id,o.id);assert.equal(queued.status,'created');assert.equal(queued.provider_id,null);
++      assert.equal(await payments.runOne(),true);
++      const attached=await row('payment_intent',httpIntent.payment_id);assert.ok(attached.provider_id);assert.equal(attached.status,'pending');
+       const p=await intent(other);assert.equal((await fetch(base+'/api/payments/'+p.id,{headers:{Cookie:cookie}})).status,404);
+       const before=await balance(o.id);assert.equal((await fetch(base+'/')).status,200);assert.equal(await balance(o.id),before);
+       assert.equal((await send('/api/payments/webhook',{event:'unknown',object:{id:p.provider_id}},{Origin:''})).status,400);

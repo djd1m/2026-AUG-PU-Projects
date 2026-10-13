@@ -1,0 +1,25 @@
+{
+  "name": "roomkind-f01",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22 <23"
+  },
+  "scripts": {
+    "start": "node web/server.js",
+    "migrate": "node scripts/migrate.js",
+    "sweep": "node scripts/sweep.js",
+    "lint": "node scripts/check.js",
+    "build": "node scripts/check.js",
+    "test": "node tests/boundaries.test.js && node tests/media.test.js",
+    "test:integration": "node tests/integration.test.js",
+    "test:boundaries": "node tests/boundaries.test.js",
+    "test:mutation": "node scripts/mutation.js"
+  },
+  "dependencies": {
+    "bcrypt": "6.0.0",
+    "pg": "8.23.0",
+    "sharp": "0.35.4"
+  }
+}

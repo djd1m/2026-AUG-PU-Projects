@@ -1,0 +1,62 @@
+{
+  "name": "n8f07i1r01",
+  "services": {
+    "db": {
+      "image": "postgres:16.10-bookworm",
+      "environment": {
+        "POSTGRES_USER": "roomkind",
+        "POSTGRES_DB": "roomkind"
+      },
+      "env_file": [
+        "/tmp/n8-f07-i1-r01-runtime/runtime.env"
+      ],
+      "command": [
+        "postgres",
+        "-c",
+        "log_min_messages=fatal",
+        "-c",
+        "log_min_error_statement=panic"
+      ],
+      "networks": [
+        "private"
+      ],
+      "cpus": 0.5,
+      "mem_limit": "512m",
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "pg_isready -U roomkind -d roomkind"
+        ],
+        "interval": "2s",
+        "timeout": "2s",
+        "retries": 30
+      }
+    },
+    "tests": {
+      "image": "n8-ui-e2e-6:8030270f",
+      "entrypoint": [],
+      "working_dir": "/app",
+      "env_file": [
+        "/tmp/n8-f07-i1-r01-runtime/runtime.env"
+      ],
+      "networks": [
+        "private"
+      ],
+      "cpus": 1.5,
+      "mem_limit": "1g",
+      "volumes": [
+        "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/projects/08-interior-ai-redesign/web:/app/web:ro",
+        "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/projects/08-interior-ai-redesign/db:/app/db:ro",
+        "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/projects/08-interior-ai-redesign/scripts:/app/scripts:ro",
+        "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/projects/08-interior-ai-redesign/tests:/app/tests:ro",
+        "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/projects/08-interior-ai-redesign/package.json:/app/package.json:ro",
+        "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/projects/08-interior-ai-redesign/package-lock.json:/app/package-lock.json:ro"
+      ]
+    }
+  },
+  "networks": {
+    "private": {
+      "internal": true
+    }
+  }
+}

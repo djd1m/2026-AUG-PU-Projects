@@ -1,0 +1,115 @@
+TAP version 13
+# Subtest: F07 I4c cleanup on owned internal PostgreSQL16
+    # Subtest: two real PG owners produce one cancel while the other sees live claim
+    ok 1 - two real PG owners produce one cancel while the other sees live claim
+      ---
+      duration_ms: 686.615185
+      type: 'test'
+      ...
+    # Subtest: first cancel then GET one action each; only canceled confirms
+    ok 2 - first cancel then GET one action each; only canceled confirms
+      ---
+      duration_ms: 1132.384344
+      type: 'test'
+      ...
+    # Subtest: expired lease/reclaim: late old observation and reconciliation make zero changes
+    ok 3 - expired lease/reclaim: late old observation and reconciliation make zero changes
+      ---
+      duration_ms: 682.179213
+      type: 'test'
+      ...
+    # Subtest: observation waits on real account lock past lease: no provider observation or finalization
+    ok 4 - observation waits on real account lock past lease: no provider observation or finalization
+      ---
+      duration_ms: 562.82256
+      type: 'test'
+      ...
+    # Subtest: request recorded before invocation then budget exhaustion: GET later, never assert cancel sent
+    ok 5 - request recorded before invocation then budget exhaustion: GET later, never assert cancel sent
+      ---
+      duration_ms: 785.9061
+      type: 'test'
+      ...
+    # Subtest: post-lock clock at retention boundary resolves without HTTP
+    ok 6 - post-lock clock at retention boundary resolves without HTTP
+      ---
+      duration_ms: 560.11642
+      type: 'test'
+      ...
+    # Subtest: expired original deadline, hold, revoked spend and deleted upload still permit cleanup
+    ok 7 - expired original deadline, hold, revoked spend and deleted upload still permit cleanup
+      ---
+      duration_ms: 2469.029091
+      type: 'test'
+      ...
+    # Subtest: success racing cancellation cannot attach output or refund reservations; terminal cannot regress
+    ok 8 - success racing cancellation cannot attach output or refund reservations; terminal cannot regress
+      ---
+      duration_ms: 509.352822
+      type: 'test'
+      ...
+    # Subtest: recorded terminal statuses done without network; no fabricated erasure confirmation
+    ok 9 - recorded terminal statuses done without network; no fabricated erasure confirmation
+      ---
+      duration_ms: 2208.002748
+      type: 'test'
+      ...
+    # Subtest: unknown identity, quarantine and retention remain unresolved with zero HTTP
+    ok 10 - unknown identity, quarantine and retention remain unresolved with zero HTTP
+      ---
+      duration_ms: 1406.363452
+      type: 'test'
+      ...
+    # Subtest: transport errors/429/404/timeout leave needed; later passes GET only; no confirmation
+    ok 11 - transport errors/429/404/timeout leave needed; later passes GET only; no confirmation
+      ---
+      duration_ms: 2564.995445
+      type: 'test'
+      ...
+    # Subtest: default disabled and invalid opt-in deny without outbound calls or row changes
+    not ok 12 - default disabled and invalid opt-in deny without outbound calls or row changes
+      ---
+      duration_ms: 565.069502
+      type: 'test'
+      location: '/app/tests/replicate-cleanup.integration.test.js:223:13'
+      failureType: 'testCodeFailure'
+      error: 'Missing expected exception.'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      operator: 'throws'
+      stack: |-
+        TestContext.<anonymous> (file:///app/tests/replicate-cleanup.integration.test.js:226:57)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///app/tests/replicate-cleanup.integration.test.js:223:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: scan at most100 once; sequential per-row actions and absolute pass exhaustion
+    ok 13 - scan at most100 once; sequential per-row actions and absolute pass exhaustion
+      ---
+      duration_ms: 13707.699363
+      type: 'test'
+      ...
+    1..13
+not ok 1 - F07 I4c cleanup on owned internal PostgreSQL16
+  ---
+  duration_ms: 28520.539551
+  type: 'test'
+  location: '/app/tests/replicate-cleanup.integration.test.js:22:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 14
+# suites 0
+# pass 12
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 28874.981988
+ Container n8f07i4c-tests-run-501a48dd436d Creating 
+ Container n8f07i4c-tests-run-501a48dd436d Created 
+

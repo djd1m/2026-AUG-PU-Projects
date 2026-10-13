@@ -1,0 +1,320 @@
+{
+  "source_revision": "6e8d4219adef24efdafc0c79c72aebcc36663184",
+  "build_revision": "6c8951f3cd81b270fef020eff3eb38dd744c4af8f96a11e79410cc6688e6418f",
+  "checks": [
+    {
+      "name": "build",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "scripts/check.js"
+      ],
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f03b/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T23:30:51.554307+00:00",
+      "finished_at": "2026-10-02T23:30:53.887312+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f03b/evidence/build.log",
+      "log_sha256": "0aec2d6d64684e49007fa69ee2856c2ced7b6631bda52ca8bda26e011b3a9d81",
+      "test_counts": {},
+      "source_revision": "6e8d4219adef24efdafc0c79c72aebcc36663184",
+      "build_revision": "6c8951f3cd81b270fef020eff3eb38dd744c4af8f96a11e79410cc6688e6418f"
+    },
+    {
+      "name": "attribution",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/attribution.test.js"
+      ],
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f03b/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T23:30:53.887839+00:00",
+      "finished_at": "2026-10-02T23:30:54.208807+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f03b/evidence/attribution.log",
+      "log_sha256": "0f93a418033580e1910865c3fb5330ac4caaed2f1a4d121e30ce15ed720d6a8a",
+      "test_counts": {
+        "tests": 8,
+        "pass": 8,
+        "fail": 0
+      },
+      "source_revision": "6e8d4219adef24efdafc0c79c72aebcc36663184",
+      "build_revision": "6c8951f3cd81b270fef020eff3eb38dd744c4af8f96a11e79410cc6688e6418f"
+    },
+    {
+      "name": "partners",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/partners.test.js"
+      ],
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f03b/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T23:30:54.209205+00:00",
+      "finished_at": "2026-10-02T23:30:54.375354+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f03b/evidence/partners.log",
+      "log_sha256": "8560acd0e4496820409230df1f3140be5dc846b7cdc2a7152a160ede8a57c315",
+      "test_counts": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0
+      },
+      "source_revision": "6e8d4219adef24efdafc0c79c72aebcc36663184",
+      "build_revision": "6c8951f3cd81b270fef020eff3eb38dd744c4af8f96a11e79410cc6688e6418f"
+    },
+    {
+      "name": "boundaries",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/boundaries.test.js"
+      ],
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f03b/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T23:30:54.375840+00:00",
+      "finished_at": "2026-10-02T23:30:54.493429+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f03b/evidence/boundaries.log",
+      "log_sha256": "91eb8807c028bd529d19c1dbce64726235d3f6ce7722153558802229552fba3e",
+      "test_counts": {
+        "tests": 7,
+        "pass": 7,
+        "fail": 0
+      },
+      "source_revision": "6e8d4219adef24efdafc0c79c72aebcc36663184",
+      "build_revision": "6c8951f3cd81b270fef020eff3eb38dd744c4af8f96a11e79410cc6688e6418f"
+    },
+    {
+      "name": "media",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/media.test.js"
+      ],
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f03b/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T23:30:54.493826+00:00",
+      "finished_at": "2026-10-02T23:31:03.659679+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f03b/evidence/media.log",
+      "log_sha256": "21cb2a3fd4484b3947cdcdfa921987822e53b9284b88e6c8d49a027d3e698c72",
+      "test_counts": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0
+      },
+      "source_revision": "6e8d4219adef24efdafc0c79c72aebcc36663184",
+      "build_revision": "6c8951f3cd81b270fef020eff3eb38dd744c4af8f96a11e79410cc6688e6418f"
+    },
+    {
+      "name": "jobs",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/jobs.test.js"
+      ],
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f03b/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T23:31:03.660113+00:00",
+      "finished_at": "2026-10-02T23:31:03.927435+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f03b/evidence/jobs.log",
+      "log_sha256": "7e07e0de3acba7a408c78e1fb2225b0c390a41ed4dd4366c91122cfc48c0ea68",
+      "test_counts": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0
+      },
+      "source_revision": "6e8d4219adef24efdafc0c79c72aebcc36663184",
+      "build_revision": "6c8951f3cd81b270fef020eff3eb38dd744c4af8f96a11e79410cc6688e6418f"
+    },
+    {
+      "name": "quality",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/quality.test.js"
+      ],
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f03b/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T23:31:03.927861+00:00",
+      "finished_at": "2026-10-02T23:31:04.447059+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f03b/evidence/quality.log",
+      "log_sha256": "ce6dd783b23be7e6e1cf5299886bf5499ea7730675b48313952a7402ef250f83",
+      "test_counts": {
+        "tests": 7,
+        "pass": 7,
+        "fail": 0
+      },
+      "source_revision": "6e8d4219adef24efdafc0c79c72aebcc36663184",
+      "build_revision": "6c8951f3cd81b270fef020eff3eb38dd744c4af8f96a11e79410cc6688e6418f"
+    },
+    {
+      "name": "payments",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/payments.test.js"
+      ],
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f03b/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T23:31:04.447508+00:00",
+      "finished_at": "2026-10-02T23:31:14.780378+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f03b/evidence/payments.log",
+      "log_sha256": "10e5242936cce459157508a0bd21cc2e7648501e7360f2622f4bf148c0bf8df8",
+      "test_counts": {
+        "tests": 8,
+        "pass": 8,
+        "fail": 0
+      },
+      "source_revision": "6e8d4219adef24efdafc0c79c72aebcc36663184",
+      "build_revision": "6c8951f3cd81b270fef020eff3eb38dd744c4af8f96a11e79410cc6688e6418f"
+    },
+    {
+      "name": "mutation-harness",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/mutation.test.js"
+      ],
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f03b/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T23:31:14.780789+00:00",
+      "finished_at": "2026-10-02T23:31:16.058042+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f03b/evidence/mutation-harness.log",
+      "log_sha256": "275eb8556f676549d71856790732f2049642695fa52adef8eb113d1c93628391",
+      "test_counts": {
+        "tests": 4,
+        "pass": 4,
+        "fail": 0
+      },
+      "source_revision": "6e8d4219adef24efdafc0c79c72aebcc36663184",
+      "build_revision": "6c8951f3cd81b270fef020eff3eb38dd744c4af8f96a11e79410cc6688e6418f"
+    },
+    {
+      "name": "consent-mutation",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "scripts/mutation.js",
+        "consent"
+      ],
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f03b/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T23:31:16.058400+00:00",
+      "finished_at": "2026-10-02T23:31:16.778868+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f03b/evidence/consent-mutation.log",
+      "log_sha256": "e110b11fdcfb164add8968a274f2221c7709a62c41682a15fa7eac39f44e1d57",
+      "test_counts": {},
+      "source_revision": "6e8d4219adef24efdafc0c79c72aebcc36663184",
+      "build_revision": "6c8951f3cd81b270fef020eff3eb38dd744c4af8f96a11e79410cc6688e6418f"
+    },
+    {
+      "name": "partner-mutation",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "scripts/mutation.js",
+        "partner"
+      ],
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f03b/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T23:31:16.779376+00:00",
+      "finished_at": "2026-10-02T23:31:17.650596+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f03b/evidence/partner-mutation.log",
+      "log_sha256": "2ed3ddf33128ae27f61ac5463b5ab1bbded61fd76f6a0917e49521d3e3a5f2d3",
+      "test_counts": {},
+      "source_revision": "6e8d4219adef24efdafc0c79c72aebcc36663184",
+      "build_revision": "6c8951f3cd81b270fef020eff3eb38dd744c4af8f96a11e79410cc6688e6418f"
+    },
+    {
+      "name": "final-build",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "scripts/check.js"
+      ],
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f03b/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T23:33:30.260796+00:00",
+      "finished_at": "2026-10-02T23:33:32.894053+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f03b/evidence/final-build.log",
+      "log_sha256": "0aec2d6d64684e49007fa69ee2856c2ced7b6631bda52ca8bda26e011b3a9d81",
+      "test_counts": {},
+      "source_revision": "6e8d4219adef24efdafc0c79c72aebcc36663184",
+      "build_revision": "6c8951f3cd81b270fef020eff3eb38dd744c4af8f96a11e79410cc6688e6418f"
+    },
+    {
+      "name": "attribution-http",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/attribution-http.test.js"
+      ],
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f03b/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T23:33:32.895000+00:00",
+      "finished_at": "2026-10-02T23:33:33.211611+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f03b/evidence/attribution-http.log",
+      "log_sha256": "d998519caf4a1a373b7c7bf0d588947fe0f928f7df6818e24916ed97abb17317",
+      "test_counts": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0
+      },
+      "source_revision": "6e8d4219adef24efdafc0c79c72aebcc36663184",
+      "build_revision": "6c8951f3cd81b270fef020eff3eb38dd744c4af8f96a11e79410cc6688e6418f"
+    },
+    {
+      "name": "diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f03b/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-02T23:33:33.212018+00:00",
+      "finished_at": "2026-10-02T23:33:33.245350+00:00",
+      "exit_code": 0,
+      "log": "docs/features/f03b/evidence/diff-check.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_counts": {},
+      "source_revision": "6e8d4219adef24efdafc0c79c72aebcc36663184",
+      "build_revision": "6c8951f3cd81b270fef020eff3eb38dd744c4af8f96a11e79410cc6688e6418f"
+    }
+  ],
+  "pending": [
+    {
+      "command": [
+        "node",
+        "tests/attribution.integration.test.js"
+      ],
+      "ownership": "n8-f03b",
+      "status": "pending",
+      "reason": "Author sandbox prohibits database/listen runtime; coordinator execution required"
+    },
+    {
+      "command": [
+        "node",
+        "tests/integration.test.js"
+      ],
+      "ownership": "n8-f01",
+      "status": "pending"
+    },
+    {
+      "command": [
+        "node",
+        "tests/payments.integration.test.js"
+      ],
+      "ownership": "n8-f03a",
+      "status": "pending"
+    },
+    {
+      "command": [
+        "node",
+        "tests/payments.http.test.js"
+      ],
+      "status": "pending",
+      "reason": "Local HTTP listen prohibited in author sandbox"
+    },
+    {
+      "command": [
+        "node",
+        "tests/jobs.integration.test.js"
+      ],
+      "ownership": "n8-f02a",
+      "status": "pending"
+    },
+    {
+      "command": [
+        "node",
+        "tests/quality.integration.test.js"
+      ],
+      "ownership": "n8-f02b",
+      "status": "pending"
+    }
+  ]
+}

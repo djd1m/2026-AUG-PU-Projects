@@ -1,0 +1,35 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i2",
+  "attempt_id": "replicate-i2-1",
+  "source_revision": "ef6758b0b42f61ed5e2e54c7cf1d82c5e7e72461",
+  "started_at": "2026-10-03T08:03:28.259515Z",
+  "stage": "delivered",
+  "profile": "compact-quality-first-v2",
+  "substantive_tier": "XL",
+  "reason": "Substantive receipt installed1424.683s after serialized launch; missed1400s milestone",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host model/effort and billing counters unavailable"
+  ],
+  "scope": [
+    "web/replicate.js",
+    "tests/replicate.test.js"
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Pure injected unit tests only; no E2E/network/provider"
+  },
+  "remaining": [],
+  "next_executor": "Parent coordinator: fresh independent I2 review, then accepted subsequent slices",
+  "finished_at": "2026-10-03T08:27:12.942132+00:00",
+  "elapsed_wall_seconds": 1424.683,
+  "status": "failed",
+  "implementation_status": "complete",
+  "elapsed_to_receipt_seconds": 1424.683
+}

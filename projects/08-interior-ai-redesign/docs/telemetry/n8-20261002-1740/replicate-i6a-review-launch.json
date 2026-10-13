@@ -1,0 +1,17 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i6a-review",
+  "source_revision": "adf29bba66f2b27e0f633901aa254aa7320b7158",
+  "spec_sha256": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+  "requested_model": "gpt-6-astra",
+  "effort": "high",
+  "budget_seconds": 480,
+  "launched_at": "2026-10-03T14:38:17.576325+00:00",
+  "trace_path": "/tmp/n8-replicate-plan/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i6a-review-receipt.md",
+  "scope": [
+    "scripts/mutation.js",
+    "tests/mutation.test.js",
+    "tests/replicate-send-cas.integration.test.js"
+  ],
+  "mode": "read-only independent review; outputs only"
+}

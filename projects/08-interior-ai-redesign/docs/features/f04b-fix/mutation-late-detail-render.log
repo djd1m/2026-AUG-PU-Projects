@@ -1,0 +1,50 @@
+TAP version 13
+# Subtest: actual app: delayed A, B selection/submission, no overlap/stale render or mismatched intent
+ok 1 - actual app: delayed A, B selection/submission, no overlap/stale render or mismatched intent
+  ---
+  duration_ms: 23.294008
+  type: 'test'
+  ...
+# Subtest: actual app: old authentication_required after logout/new login keeps new account visible
+ok 2 - actual app: old authentication_required after logout/new login keeps new account visible
+  ---
+  duration_ms: 9.010063
+  type: 'test'
+  ...
+# Subtest: actual app: delayed logout blocks login until cookie-clearing response settles
+ok 3 - actual app: delayed logout blocks login until cookie-clearing response settles
+  ---
+  duration_ms: 10.836924
+  type: 'test'
+  ...
+# Subtest: actual app: selection changes while reservation detail loads cannot render former selection
+not ok 4 - actual app: selection changes while reservation detail loads cannot render former selection
+  ---
+  duration_ms: 8.530433
+  type: 'test'
+  location: '/tmp/n8-f04b-mutant-cqovicl_/tests/ui-app-races.test.js:78:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/n8-f04b-mutant-cqovicl_/tests/ui-app-races.test.js:86:12)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 3
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 60.556261

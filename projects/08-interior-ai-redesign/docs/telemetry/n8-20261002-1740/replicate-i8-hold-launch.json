@@ -1,0 +1,19 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i8-hold",
+  "source_revision": "c0bd24c84e96049f29e64539972eb31cd25f64a2",
+  "started_at": "2026-10-03T17:03:30.316581+00:00",
+  "budget_seconds": 900,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "trace_path": "/tmp/n8-replicate-i8-hold/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-hold-receipt.md",
+  "scope": "Concrete I8 fixture monotonic billing hold correction; no production/DB changes",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "author source/local tests; parent owns actual runtime"
+  },
+  "external_spend_authorized_usd": 0
+}

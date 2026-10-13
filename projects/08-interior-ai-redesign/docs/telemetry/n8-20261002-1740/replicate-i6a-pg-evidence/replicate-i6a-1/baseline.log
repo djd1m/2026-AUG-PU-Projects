@@ -1,0 +1,29 @@
+TAP version 13
+# Subtest: F07 I6a actual send CAS and ambiguous replay on owned PostgreSQL16
+    # Subtest: same durable submitting identity allows exactly one actual POST
+    ok 1 - same durable submitting identity allows exactly one actual POST
+      ---
+      duration_ms: 959.184573
+      type: 'test'
+      ...
+    # Subtest: failed first response is ambiguous and second create emits no POST
+    ok 2 - failed first response is ambiguous and second create emits no POST
+      ---
+      duration_ms: 875.077603
+      type: 'test'
+      ...
+    1..2
+ok 1 - F07 I6a actual send CAS and ambiguous replay on owned PostgreSQL16
+  ---
+  duration_ms: 2503.948163
+  type: 'test'
+  ...
+1..1
+# tests 3
+# suites 0
+# pass 3
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2842.603785

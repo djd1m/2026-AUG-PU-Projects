@@ -1,0 +1,150 @@
+TAP version 13
+# Subtest: new create poll import: real files, closed evidence, durable queue and null metrics
+ok 1 - new create poll import: real files, closed evidence, durable queue and null metrics
+  ---
+  duration_ms: 173.090482
+  type: 'test'
+  ...
+# Subtest: known identity recovery reconstructs request and uses GET only
+ok 2 - known identity recovery reconstructs request and uses GET only
+  ---
+  duration_ms: 138.24804
+  type: 'test'
+  ...
+# Subtest: changed recovery seed or request binding makes ZERO GET/POST
+    # Subtest: seed
+    ok 1 - seed
+      ---
+      duration_ms: 88.808262
+      type: 'test'
+      ...
+    # Subtest: request
+    ok 2 - request
+      ---
+      duration_ms: 75.281047
+      type: 'test'
+      ...
+    # Subtest: transmitted
+    ok 3 - transmitted
+      ---
+      duration_ms: 76.274817
+      type: 'test'
+      ...
+    # Subtest: transform
+    ok 4 - transform
+      ---
+      duration_ms: 89.251282
+      type: 'test'
+      ...
+    # Subtest: settings
+    ok 5 - settings
+      ---
+      duration_ms: 89.962283
+      type: 'test'
+      ...
+    1..5
+ok 3 - changed recovery seed or request binding makes ZERO GET/POST
+  ---
+  duration_ms: 422.243181
+  type: 'test'
+  ...
+# Subtest: changed actual private bytes fail before any recovery GET
+ok 4 - changed actual private bytes fail before any recovery GET
+  ---
+  duration_ms: 52.755949
+  type: 'test'
+  ...
+# Subtest: no-ID submitting and ambiguous never replay or authorize
+ok 5 - no-ID submitting and ambiguous never replay or authorize
+  ---
+  duration_ms: 116.159851
+  type: 'test'
+  ...
+# Subtest: original consumed timestamp refreshed after authorization UTC replacement
+ok 6 - original consumed timestamp refreshed after authorization UTC replacement
+  ---
+  duration_ms: 108.454669
+  type: 'test'
+  ...
+# Subtest: false or throw completion preserves referenced winner and never fails it
+    # Subtest: false
+    ok 1 - false
+      ---
+      duration_ms: 78.144328
+      type: 'test'
+      ...
+    # Subtest: throw
+    ok 2 - throw
+      ---
+      duration_ms: 103.317797
+      type: 'test'
+      ...
+    1..2
+ok 7 - false or throw completion preserves referenced winner and never fails it
+  ---
+  duration_ms: 182.429865
+  type: 'test'
+  ...
+# Subtest: unavailable DB after uncertain completion preserves files
+ok 8 - unavailable DB after uncertain completion preserves files
+  ---
+  duration_ms: 115.991972
+  type: 'test'
+  ...
+# Subtest: definitely unreferenced rejection guards cleanup and fenced fail
+ok 9 - definitely unreferenced rejection guards cleanup and fenced fail
+  ---
+  duration_ms: 93.912253
+  type: 'test'
+  ...
+# Subtest: serialized lost heartbeat aborts provider and prevents attachment
+ok 10 - serialized lost heartbeat aborts provider and prevents attachment
+  ---
+  duration_ms: 42.314485
+  type: 'test'
+  ...
+# Subtest: external abort and unknown errors expose safe fixed codes only
+ok 11 - external abort and unknown errors expose safe fixed codes only
+  ---
+  duration_ms: 22.610248
+  type: 'test'
+  ...
+# Subtest: invalid original DB remaining budget never sends or creates a replacement
+ok 12 - invalid original DB remaining budget never sends or creates a replacement
+  ---
+  duration_ms: 75.050997
+  type: 'test'
+  ...
+# Subtest: one monotonic original budget expires during GET with no import or new create
+ok 13 - one monotonic original budget expires during GET with no import or new create
+  ---
+  duration_ms: 72.393526
+  type: 'test'
+  ...
+# Subtest: hosted config exact pins, fixed styles and nonenumerable private token
+ok 14 - hosted config exact pins, fixed styles and nonenumerable private token
+  ---
+  duration_ms: 5.728492
+  type: 'test'
+  ...
+# Subtest: missing/invalid pins, token, accepts, envelope, seed or source deny
+ok 15 - missing/invalid pins, token, accepts, envelope, seed or source deny
+  ---
+  duration_ms: 4.241762
+  type: 'test'
+  ...
+# Subtest: fixture retains wider seed and existing common validation
+ok 16 - fixture retains wider seed and existing common validation
+  ---
+  duration_ms: 1.39959
+  type: 'test'
+  ...
+1..16
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2238.565659

@@ -1,0 +1,76 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f04a",
+  "attempt_id": "n8-f04a-1",
+  "source_revision": "a983354127af10f228b329a4ec3fa48d33bd279f",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "budget_seconds": 1500,
+  "created_at": "2026-10-03T00:06:13.069289+00:00",
+  "trace_path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f04a/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/n8-f04a-receipt.md",
+  "owned_paths": [
+    "db/006-sharing.sql",
+    "web/sharing.js",
+    "web/composite.js",
+    "web/public-pages.js if needed",
+    "web/app.js",
+    "web/jobs.js/quality.js/media.js (minimal revoke/authorization integration only)",
+    "scripts/migrate.js",
+    "scripts/mutation.js",
+    "tests/sharing*",
+    "tests/composite*",
+    "tests/mutation.test.js (needed harness compatibility only)",
+    "docs/features/f04a/**"
+  ],
+  "profile": "compact-quality-first-v2",
+  "stage": "handoff",
+  "started_at": "2026-10-03T00:06:13.069289+00:00",
+  "plan": "docs/plans/f04-product-ui.md",
+  "route": {
+    "mechanical_exit": 0,
+    "mechanical_tier": "M",
+    "substantive_tier": "XL",
+    "reason": "Private photos, public consent tokens and paid entitlement final delivery serialization"
+  },
+  "approval": "Existing owner autonomous N7+N8 authority, decisions-owner.md; no repeated permission",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No E2E/PG/listen permitted in coder brief"
+  },
+  "forecast": {
+    "status": "insufficient_data",
+    "budget_seconds": 1500,
+    "estimate": null
+  },
+  "delegation": false,
+  "measurement_gaps": [
+    "Provider-resolved actual model, usage and cost unavailable"
+  ],
+  "events": [
+    {
+      "stage": "implement",
+      "at": "2026-10-03T00:07:50.400005+00:00",
+      "note": "Plan/canonical requirements and architecture cross-read; scoped one author pass"
+    },
+    {
+      "stage": "checks",
+      "at": "2026-10-03T00:21:14.273894+00:00",
+      "note": "Unit + injected HTTP + exact owner/hold mutations pass; PG test added but execution prohibited; fresh review coordinator-owned"
+    },
+    {
+      "stage": "handoff",
+      "at": "2026-10-03T00:27:16.724481+00:00",
+      "note": "Final focused checks/mutations pass; 75-file runtime snapshot verified; failed old HTTP listen preserved; PG/review runtime pending coordinator"
+    }
+  ],
+  "telemetry_started_late_reason": "Attempt identity and launch timestamp existed before task; this local metadata file was created after required instruction/context reads. No unknown interval or usage fabricated.",
+  "finished_at": "2026-10-03T00:27:16.724481+00:00",
+  "elapsed_seconds": 1263.655192,
+  "build_revision": "784cfc4dc94f222e7bda88474e32f69b7c8c941014030b60870f2cd85883d775",
+  "result": "implementation_ready_pending_coordinator_acceptance",
+  "active_seconds": null,
+  "fallback": null
+}

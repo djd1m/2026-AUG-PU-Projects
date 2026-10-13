@@ -1,0 +1,171 @@
+{
+  "source_revision": "2bec973b8b8a877da4ef3ccfead8ff10e2c5c120",
+  "snapshot_sha256": "784cfc4dc94f222e7bda88474e32f69b7c8c941014030b60870f2cd85883d775",
+  "started_at": "2026-10-03T00:33:04.336696+00:00",
+  "checks": [
+    {
+      "name": "compose-config",
+      "exit_code": 0,
+      "duration_ms": 143,
+      "log": "/tmp/n8-f04a-runtime/compose-config.log"
+    },
+    {
+      "name": "image-build",
+      "exit_code": 0,
+      "duration_ms": 4348,
+      "log": "/tmp/n8-f04a-runtime/image-build.log"
+    },
+    {
+      "name": "db-start",
+      "exit_code": 0,
+      "duration_ms": 6418,
+      "log": "/tmp/n8-f04a-runtime/db-start.log"
+    },
+    {
+      "name": "build",
+      "exit_code": 1,
+      "duration_ms": 205,
+      "log": "/tmp/n8-f04a-runtime/build.log"
+    },
+    {
+      "name": "unit",
+      "exit_code": 1,
+      "duration_ms": 197,
+      "log": "/tmp/n8-f04a-runtime/unit.log"
+    },
+    {
+      "name": "origin-mutation",
+      "exit_code": 1,
+      "duration_ms": 176,
+      "log": "/tmp/n8-f04a-runtime/origin-mutation.log"
+    },
+    {
+      "name": "pg-integration",
+      "exit_code": 1,
+      "duration_ms": 197,
+      "log": "/tmp/n8-f04a-runtime/pg-integration.log"
+    },
+    {
+      "name": "owner-mutation",
+      "exit_code": 1,
+      "duration_ms": 206,
+      "log": "/tmp/n8-f04a-runtime/owner-mutation.log"
+    },
+    {
+      "name": "jobs-pg",
+      "exit_code": 1,
+      "duration_ms": 221,
+      "log": "/tmp/n8-f04a-runtime/jobs-pg.log"
+    },
+    {
+      "name": "quality-pg",
+      "exit_code": 1,
+      "duration_ms": 222,
+      "log": "/tmp/n8-f04a-runtime/quality-pg.log"
+    },
+    {
+      "name": "payments-pg",
+      "exit_code": 1,
+      "duration_ms": 239,
+      "log": "/tmp/n8-f04a-runtime/payments-pg.log"
+    },
+    {
+      "name": "attribution-pg",
+      "exit_code": 1,
+      "duration_ms": 214,
+      "log": "/tmp/n8-f04a-runtime/attribution-pg.log"
+    },
+    {
+      "name": "sharing-pg",
+      "exit_code": 1,
+      "duration_ms": 188,
+      "log": "/tmp/n8-f04a-runtime/sharing-pg.log"
+    },
+    {
+      "name": "payments-http",
+      "exit_code": 1,
+      "duration_ms": 169,
+      "log": "/tmp/n8-f04a-runtime/payments-http.log"
+    },
+    {
+      "name": "share-owner-mutation",
+      "exit_code": 1,
+      "duration_ms": 207,
+      "log": "/tmp/n8-f04a-runtime/share-owner-mutation.log"
+    },
+    {
+      "name": "share-hold-mutation",
+      "exit_code": 1,
+      "duration_ms": 197,
+      "log": "/tmp/n8-f04a-runtime/share-hold-mutation.log"
+    },
+    {
+      "name": "consent-mutation",
+      "exit_code": 1,
+      "duration_ms": 239,
+      "log": "/tmp/n8-f04a-runtime/consent-mutation.log"
+    },
+    {
+      "name": "partner-mutation",
+      "exit_code": 1,
+      "duration_ms": 206,
+      "log": "/tmp/n8-f04a-runtime/partner-mutation.log"
+    },
+    {
+      "name": "payment-mutation",
+      "exit_code": 1,
+      "duration_ms": 238,
+      "log": "/tmp/n8-f04a-runtime/payment-mutation.log"
+    },
+    {
+      "name": "fixture-mutation",
+      "exit_code": 1,
+      "duration_ms": 231,
+      "log": "/tmp/n8-f04a-runtime/fixture-mutation.log"
+    },
+    {
+      "name": "budget-mutation",
+      "exit_code": 1,
+      "duration_ms": 195,
+      "log": "/tmp/n8-f04a-runtime/budget-mutation.log"
+    },
+    {
+      "name": "runtime-versions",
+      "exit_code": 1,
+      "duration_ms": 224,
+      "log": "/tmp/n8-f04a-runtime/runtime-versions.log"
+    },
+    {
+      "name": "web-maintenance-start",
+      "exit_code": 1,
+      "duration_ms": 332,
+      "log": "/tmp/n8-f04a-runtime/web-maintenance-start.log"
+    },
+    {
+      "name": "host-http",
+      "exit_code": 7,
+      "duration_ms": 13,
+      "log": "/tmp/n8-f04a-runtime/host-http.log"
+    },
+    {
+      "name": "service-image-ids",
+      "exit_code": 1,
+      "duration_ms": 102,
+      "log": "/tmp/n8-f04a-runtime/service-image-ids.log"
+    },
+    {
+      "name": "maintenance-once",
+      "exit_code": 1,
+      "duration_ms": 39,
+      "log": "/tmp/n8-f04a-runtime/maintenance-once.log"
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "duration_ms": 630,
+      "log": "/tmp/n8-f04a-runtime/cleanup.log"
+    }
+  ],
+  "finished_at": "2026-10-03T00:33:20.351373+00:00",
+  "duration_ms": 16015
+}

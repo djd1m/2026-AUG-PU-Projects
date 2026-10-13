@@ -1,0 +1,324 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i7-docs",
+  "source_revision": "be450153910208e2c043de24f7efab540b052c82",
+  "spec_sha256": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+  "launch_sha256": "5a223342d2897cbadaf89753b341fa7171124b817a02938fa1adb1ece250cda3",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host-resolved model/effort and usage/cost pending parent enrichment."
+  ],
+  "forecast": "insufficient_data",
+  "external_spend_authorized_usd": 0,
+  "delegation": false,
+  "fallback": null,
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Docs-only; no runtime/E2E executed."
+  },
+  "route": {
+    "plan": {
+      "mechanical_exit": 0,
+      "mechanical_tier": "T",
+      "substantive_tier": "XL"
+    },
+    "implement": {
+      "mechanical_exit": 0,
+      "mechanical_tier": "T",
+      "substantive_tier": "XL"
+    },
+    "reason": "Accepted F07 private media, spend, ledger and publication invariants retained; sole docs author override."
+  },
+  "stages": [
+    {
+      "stage": "prepare",
+      "at": "2026-10-03T16:02:12.150019+00:00",
+      "result": "source/launch/spec bound; initial trace absent"
+    },
+    {
+      "stage": "document",
+      "at": "2026-10-03T16:02:12.150056+00:00",
+      "result": "started"
+    },
+    {
+      "stage": "document",
+      "at": "2026-10-03T16:16:15.905331+00:00",
+      "result": "all16 Markdown deliverables written; verification started"
+    },
+    {
+      "stage": "verify",
+      "at": "2026-10-03T16:19:20.330131+00:00",
+      "result": "docs AC/protection/links/secret/diff checks pass; scoped F07 structural gates0, actual full-project/review gates2 retained pending"
+    },
+    {
+      "stage": "handoff",
+      "at": "2026-10-03T16:20:48.464239+00:00",
+      "result": "bounded docs deliverables complete; no whole-feature acceptance/runtime claim"
+    }
+  ],
+  "checks": [
+    {
+      "name": "vendor_help_probe",
+      "command": "bash <installed-vendor>/scripts/check-pipeline-gaps.sh --help",
+      "exit_code": 2,
+      "diagnostic": "NOT-ESTABLISHED project-root=--help missing or a symlink",
+      "interpretation": "Unsupported help position; no gate executed."
+    },
+    {
+      "name": "edit2_initial",
+      "exit_code": 1,
+      "diagnostic": "NameError: Path was not defined; exit1 before edits.",
+      "interpretation": "Historical edit-script failure, corrected; not a product/runtime failure."
+    },
+    {
+      "name": "edit2_exact_text",
+      "exit_code": 1,
+      "diagnostic": "ValueError: operations exact text absent; exit1 after Completion/model updates. Corrected exact text and resumed remaining paths; no protected source edit.",
+      "interpretation": "Historical edit-script failure, corrected; not a product/runtime failure."
+    },
+    {
+      "name": "vendor_project_traceability",
+      "command": [
+        "bash",
+        "/root/.npm/_npx/21ec3c42ee749a67/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+        "/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign",
+        "--traceability",
+        "--role-map-source",
+        "/tmp/n8-replicate-i7-docs/.claude/commands/feature.md",
+        "--project-role-map-source",
+        "/tmp/n8-replicate-i7-docs/.claude/skills/sparc-prd-mini/SKILL.md"
+      ],
+      "exit_code": 2,
+      "evidence": "docs/telemetry/n8-20261002-1740/i7-docs-vendor_project_traceability.log",
+      "sha256": "93f6eb10df714ff9dd584278b8496341ed679b1b3a140df9d34851166815dfd1",
+      "scope": "actual project, inherited root toolkit explicitly supplied"
+    },
+    {
+      "name": "vendor_project_report_revision",
+      "command": [
+        "bash",
+        "/root/.npm/_npx/21ec3c42ee749a67/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+        "/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign",
+        "--report-revision",
+        "--role-map-source",
+        "/tmp/n8-replicate-i7-docs/.claude/commands/feature.md",
+        "--project-role-map-source",
+        "/tmp/n8-replicate-i7-docs/.claude/skills/sparc-prd-mini/SKILL.md"
+      ],
+      "exit_code": 2,
+      "evidence": "docs/telemetry/n8-20261002-1740/i7-docs-vendor_project_report_revision.log",
+      "sha256": "6942697ecd2c62f48c8bca40c3b4a610ff575f1d8def9b7536b501fa92ae88db",
+      "scope": "actual project, inherited root toolkit explicitly supplied"
+    },
+    {
+      "name": "vendor_project_criterion_scenarios",
+      "command": [
+        "bash",
+        "/root/.npm/_npx/21ec3c42ee749a67/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+        "/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign",
+        "--criterion-scenarios",
+        "--role-map-source",
+        "/tmp/n8-replicate-i7-docs/.claude/commands/feature.md",
+        "--project-role-map-source",
+        "/tmp/n8-replicate-i7-docs/.claude/skills/sparc-prd-mini/SKILL.md"
+      ],
+      "exit_code": 2,
+      "evidence": "docs/telemetry/n8-20261002-1740/i7-docs-vendor_project_criterion_scenarios.log",
+      "sha256": "f2627ca72a09920f5b8bb64fe85ec43b3edc4f72af53c8aa5d0dda9919671f28",
+      "scope": "actual project, inherited root toolkit explicitly supplied"
+    },
+    {
+      "name": "vendor_project_completion",
+      "command": [
+        "bash",
+        "/root/.npm/_npx/21ec3c42ee749a67/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+        "/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign",
+        "--completion",
+        "--role-map-source",
+        "/tmp/n8-replicate-i7-docs/.claude/commands/feature.md",
+        "--project-role-map-source",
+        "/tmp/n8-replicate-i7-docs/.claude/skills/sparc-prd-mini/SKILL.md"
+      ],
+      "exit_code": 2,
+      "evidence": "docs/telemetry/n8-20261002-1740/i7-docs-vendor_project_completion.log",
+      "sha256": "5cd61f506b0ce7217cff97aa606ef44dd69454a7da36b530ad004eb78660b196",
+      "scope": "actual project, inherited root toolkit explicitly supplied"
+    },
+    {
+      "name": "vendor_f07_review_contract",
+      "command": [
+        "node",
+        "/root/.npm/_npx/21ec3c42ee749a67/node_modules/@dzhechkov/p-replicator/templates/.claude/hooks/check-review-contract.cjs",
+        "/tmp/n8-replicate-i7-docs/projects/08-interior-ai-redesign",
+        "f07-replicate"
+      ],
+      "exit_code": 2,
+      "evidence": "docs/telemetry/n8-20261002-1740/i7-docs-vendor_f07_review_contract.log",
+      "sha256": "107cf0e9ba4f57febbda44a7c63a2c4a975652daf54da7eb2a9b8af0784846e7",
+      "scope": "actual project, inherited root toolkit explicitly supplied"
+    },
+    {
+      "name": "vendor_f07_traceability",
+      "command": [
+        "bash",
+        "/root/.npm/_npx/21ec3c42ee749a67/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+        "/tmp/n8-i7-docs-vendor-contour",
+        "--traceability",
+        "--role-map-source",
+        "/tmp/n8-replicate-i7-docs/.claude/commands/feature.md",
+        "--project-role-map-source",
+        "/tmp/n8-replicate-i7-docs/.claude/skills/sparc-prd-mini/SKILL.md"
+      ],
+      "exit_code": 0,
+      "evidence": "docs/telemetry/n8-20261002-1740/i7-docs-vendor_f07_traceability.log",
+      "sha256": "c5ccc3a7f27e197ece2e8123dcb860a753ff810ba3c1b66e5a928a6459db2368",
+      "scope": "exact F07 regular-file projection; structure only"
+    },
+    {
+      "name": "vendor_f07_report_revision",
+      "command": [
+        "bash",
+        "/root/.npm/_npx/21ec3c42ee749a67/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+        "/tmp/n8-i7-docs-vendor-contour",
+        "--report-revision",
+        "--role-map-source",
+        "/tmp/n8-replicate-i7-docs/.claude/commands/feature.md",
+        "--project-role-map-source",
+        "/tmp/n8-replicate-i7-docs/.claude/skills/sparc-prd-mini/SKILL.md"
+      ],
+      "exit_code": 0,
+      "evidence": "docs/telemetry/n8-20261002-1740/i7-docs-vendor_f07_report_revision.log",
+      "sha256": "398d863e0b1da621d3652a2f4fdae34505da122070259b2d57044c4c9a328aa1",
+      "scope": "exact F07 regular-file projection; structure only"
+    },
+    {
+      "name": "vendor_f07_criterion_scenarios",
+      "command": [
+        "bash",
+        "/root/.npm/_npx/21ec3c42ee749a67/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+        "/tmp/n8-i7-docs-vendor-contour",
+        "--criterion-scenarios",
+        "--role-map-source",
+        "/tmp/n8-replicate-i7-docs/.claude/commands/feature.md",
+        "--project-role-map-source",
+        "/tmp/n8-replicate-i7-docs/.claude/skills/sparc-prd-mini/SKILL.md"
+      ],
+      "exit_code": 0,
+      "evidence": "docs/telemetry/n8-20261002-1740/i7-docs-vendor_f07_criterion_scenarios.log",
+      "sha256": "f4469a6989d4b92166a2f2a88edd9b4d515afabefc31a413375378a4390c7a98",
+      "scope": "exact F07 regular-file projection; structure only"
+    },
+    {
+      "name": "vendor_f07_completion",
+      "command": [
+        "bash",
+        "/root/.npm/_npx/21ec3c42ee749a67/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+        "/tmp/n8-i7-docs-vendor-contour",
+        "--completion",
+        "--role-map-source",
+        "/tmp/n8-replicate-i7-docs/.claude/commands/feature.md",
+        "--project-role-map-source",
+        "/tmp/n8-replicate-i7-docs/.claude/skills/sparc-prd-mini/SKILL.md"
+      ],
+      "exit_code": 0,
+      "evidence": "docs/telemetry/n8-20261002-1740/i7-docs-vendor_f07_completion.log",
+      "sha256": "ca65e556b34d3cd5394715616742235040d1c6c37cb91405b8e2872b7629fcc1",
+      "scope": "exact F07 regular-file projection; structure only"
+    },
+    {
+      "name": "scope_and_protected_hashes",
+      "exit_code": 0,
+      "tracked_protected_files": 2059,
+      "violations": [],
+      "all_production_tests_package_lock_db_toolkit_history_unchanged": true
+    },
+    {
+      "name": "markdown_local_links",
+      "exit_code": 0,
+      "files": 16,
+      "local_targets": 320,
+      "anchors": 6,
+      "broken": []
+    },
+    {
+      "name": "exact_actual_criterion_and_bdd",
+      "exit_code": 0,
+      "ac_rows": 11,
+      "literal_test_declarations_verified": 11,
+      "all_bdd_labels": [
+        "SC-US-001-1",
+        "SC-US-001-2",
+        "SC-US-002-1",
+        "SC-US-002-2",
+        "SC-US-002-3",
+        "SC-US-001-3",
+        "SC-US-001-4",
+        "SC-US-001-5",
+        "SC-US-002-4",
+        "SC-US-002-5",
+        "SC-US-002-6"
+      ],
+      "stable_canonical_ac_rows": 41
+    },
+    {
+      "name": "final_markdown_links_scope_hashes_and_secret_scan",
+      "exit_code": 0,
+      "changed_md": 16,
+      "local_targets": 320,
+      "protected_files": 2059,
+      "secret_material_findings": [],
+      "line_limit": 500,
+      "reason": "Repeated only after concrete GEOM02/CLAUDE contract corrections."
+    },
+    {
+      "name": "git_diff_check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "pending": [
+    "I7 runtime on parent-owned worktree/source8890e0b7; mutable logs not read",
+    "fresh whole-feature Astra review",
+    "I8 actual52main+2disabled browser",
+    "I8 representative hosted-row restore",
+    "PR attempt/draft; known external403, no PR exists",
+    "real provider/privacy/license/safety/corpus/billing/performance/pilot/release"
+  ],
+  "vendor_projection": {
+    "path": "/tmp/n8-i7-docs-vendor-contour",
+    "source_revision": "be450153910208e2c043de24f7efab540b052c82",
+    "reason": "Isolate exact F07 contour without mutating project layout; no full-project gate waiver",
+    "regular_files": 51,
+    "all_files_sorted_path_digest_sha256": "1b397e75a9edf08ad1332dfebdc692b05f8051cc0d37582ebde7dd1cb93efb71",
+    "role_docs_sha256": {
+      "docs/features/f07-replicate/01_specification.md": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+      "docs/features/f07-replicate/02_pseudocode.md": "19a86156135d7751e7414e9a406070c990686d6ec8c095448549be012a10572d",
+      "docs/features/f07-replicate/03_architecture.md": "c14c88440c537afcb1c09fe4d843c253c3e0ed4e0c904105fc3297e6fe9803b9",
+      "docs/features/f07-replicate/04_refinement.md": "43fcc7495be1b92be9537f4c9d9e57fe57b574e7e8e9522c5428af21aff9e02e",
+      "docs/features/f07-replicate/05_completion.md": "efc546f8462c312262259cf157c6a9de5bc57931278e6d02f7ddffc3b5c68fca",
+      "docs/features/f07-replicate/validation-report.md": "69bb791ed3ee076331430d7481568e7bb63e0b767a42dd1381a8603304a40ca3"
+    }
+  },
+  "vendor_version": "1.13.2",
+  "docs_snapshot": {
+    "path": "docs/telemetry/n8-20261002-1740/i7-docs-snapshot.json",
+    "sha256": "f8d4470dfb176896ce671c16c587cbc3e6ec8c8bb9ab1baed7a8ba87d96a041e"
+  },
+  "status": "completed_docs_only",
+  "whole_feature_verdict": "pending",
+  "host_enrichment_owner": "parent coordinator",
+  "finished_at": "2026-10-03T16:20:48.464239+00:00",
+  "elapsed_seconds_from_launch": 1359.647646
+}

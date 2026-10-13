@@ -1,0 +1,388 @@
+{
+  "started_at": "2026-10-03T18:09:34.863610+00:00",
+  "source_revision": "98d5111277b788be875b9cb6ded7424e05a994a7",
+  "checks": [
+    "ownership_quiescence_schema8_verified",
+    "pg_dump_custom_success",
+    "pg_restore_distinct_database_success",
+    "all_table_counts_and_row_digests_equal",
+    "constraints_equal",
+    "source_unchanged"
+  ],
+  "representative_hosted_rows": {
+    "submissions": 6,
+    "budgets": 2,
+    "hosted_evidence": 4,
+    "linked_success": 4
+  },
+  "before": {
+    "tables": [
+      {
+        "table": "account",
+        "rows": 7,
+        "aggregate_md5": "44d66b2a5fc832cf792fb6c4d4916472"
+      },
+      {
+        "table": "attempt_budget",
+        "rows": 5,
+        "aggregate_md5": "bf625f3c8b17cec63a1b4e303a3a3bb8"
+      },
+      {
+        "table": "attempt_ticket",
+        "rows": 66,
+        "aggregate_md5": "0e39dd29d4185b792a5694695c8e1f87"
+      },
+      {
+        "table": "attribution",
+        "rows": 0,
+        "aggregate_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "table": "credit_ledger",
+        "rows": 141,
+        "aggregate_md5": "05b00bdbd5e9f1888e2c149a5978b7d3"
+      },
+      {
+        "table": "event",
+        "rows": 28,
+        "aggregate_md5": "2727cf5994c6f59d7c9bc91b9fb736be"
+      },
+      {
+        "table": "first_conversion",
+        "rows": 0,
+        "aggregate_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "table": "generation_evidence",
+        "rows": 10,
+        "aggregate_md5": "545e08af6599e6ed007327ff6d4c1454"
+      },
+      {
+        "table": "job",
+        "rows": 168,
+        "aggregate_md5": "36f59834aeb4d98381d11fc73b1fd113"
+      },
+      {
+        "table": "partner",
+        "rows": 1,
+        "aggregate_md5": "0ff603f598f83fa3246b83b50d6df92e"
+      },
+      {
+        "table": "payment_fixture_object",
+        "rows": 8,
+        "aggregate_md5": "15a47c8b21214d26d3ab4f90ab1a0339"
+      },
+      {
+        "table": "payment_intent",
+        "rows": 6,
+        "aggregate_md5": "097e6c3a4c9e3eaf8abd935f2d5149c3"
+      },
+      {
+        "table": "provider_event",
+        "rows": 8,
+        "aggregate_md5": "a8454d8cdddbfed93099aadb70d5ac2b"
+      },
+      {
+        "table": "provider_spend_budget",
+        "rows": 2,
+        "aggregate_md5": "ac9fadd136e235c8abfdc89932d2c3e3"
+      },
+      {
+        "table": "provider_submission",
+        "rows": 6,
+        "aggregate_md5": "ae9e31ff6ef0395af930accf5025b90b"
+      },
+      {
+        "table": "quality_review",
+        "rows": 2,
+        "aggregate_md5": "821a8367ac6717cc9143f0be33fe63d4"
+      },
+      {
+        "table": "schema_migration",
+        "rows": 8,
+        "aggregate_md5": "ad0b3aa3fbd356051f37ab39b4c392df"
+      },
+      {
+        "table": "session",
+        "rows": 13,
+        "aggregate_md5": "9798100868ca69066124058f2862b7d6"
+      },
+      {
+        "table": "share",
+        "rows": 2,
+        "aggregate_md5": "fdc6ca78535bb9aacf5cc339359dbfd1"
+      },
+      {
+        "table": "share_action",
+        "rows": 18,
+        "aggregate_md5": "4996fb036691c81d43fc802dbc9b26a0"
+      },
+      {
+        "table": "tracking_consent",
+        "rows": 2,
+        "aggregate_md5": "5fd3a0b688b84094cf5ed8dbda3809f1"
+      },
+      {
+        "table": "upload",
+        "rows": 18,
+        "aggregate_md5": "27930acf0f9e3b78571d63eb013010e2"
+      },
+      {
+        "table": "verified_refund",
+        "rows": 2,
+        "aggregate_md5": "966df3146b7b70fa41972ce572c980db"
+      }
+    ],
+    "constraints_md5": "63d7c29724b48ea207876232561dbf5a",
+    "triggers_md5": "0f70c2062462ae3eae41e8f71cc85c05"
+  },
+  "dump_bytes": 128610,
+  "dump_sha256": "505e469883c5a48ddfb54da27529b5c67734cdee74eac73d5215755712941cf0",
+  "source_after": {
+    "tables": [
+      {
+        "table": "account",
+        "rows": 7,
+        "aggregate_md5": "44d66b2a5fc832cf792fb6c4d4916472"
+      },
+      {
+        "table": "attempt_budget",
+        "rows": 5,
+        "aggregate_md5": "bf625f3c8b17cec63a1b4e303a3a3bb8"
+      },
+      {
+        "table": "attempt_ticket",
+        "rows": 66,
+        "aggregate_md5": "0e39dd29d4185b792a5694695c8e1f87"
+      },
+      {
+        "table": "attribution",
+        "rows": 0,
+        "aggregate_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "table": "credit_ledger",
+        "rows": 141,
+        "aggregate_md5": "05b00bdbd5e9f1888e2c149a5978b7d3"
+      },
+      {
+        "table": "event",
+        "rows": 28,
+        "aggregate_md5": "2727cf5994c6f59d7c9bc91b9fb736be"
+      },
+      {
+        "table": "first_conversion",
+        "rows": 0,
+        "aggregate_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "table": "generation_evidence",
+        "rows": 10,
+        "aggregate_md5": "545e08af6599e6ed007327ff6d4c1454"
+      },
+      {
+        "table": "job",
+        "rows": 168,
+        "aggregate_md5": "36f59834aeb4d98381d11fc73b1fd113"
+      },
+      {
+        "table": "partner",
+        "rows": 1,
+        "aggregate_md5": "0ff603f598f83fa3246b83b50d6df92e"
+      },
+      {
+        "table": "payment_fixture_object",
+        "rows": 8,
+        "aggregate_md5": "15a47c8b21214d26d3ab4f90ab1a0339"
+      },
+      {
+        "table": "payment_intent",
+        "rows": 6,
+        "aggregate_md5": "097e6c3a4c9e3eaf8abd935f2d5149c3"
+      },
+      {
+        "table": "provider_event",
+        "rows": 8,
+        "aggregate_md5": "a8454d8cdddbfed93099aadb70d5ac2b"
+      },
+      {
+        "table": "provider_spend_budget",
+        "rows": 2,
+        "aggregate_md5": "ac9fadd136e235c8abfdc89932d2c3e3"
+      },
+      {
+        "table": "provider_submission",
+        "rows": 6,
+        "aggregate_md5": "ae9e31ff6ef0395af930accf5025b90b"
+      },
+      {
+        "table": "quality_review",
+        "rows": 2,
+        "aggregate_md5": "821a8367ac6717cc9143f0be33fe63d4"
+      },
+      {
+        "table": "schema_migration",
+        "rows": 8,
+        "aggregate_md5": "ad0b3aa3fbd356051f37ab39b4c392df"
+      },
+      {
+        "table": "session",
+        "rows": 13,
+        "aggregate_md5": "9798100868ca69066124058f2862b7d6"
+      },
+      {
+        "table": "share",
+        "rows": 2,
+        "aggregate_md5": "fdc6ca78535bb9aacf5cc339359dbfd1"
+      },
+      {
+        "table": "share_action",
+        "rows": 18,
+        "aggregate_md5": "4996fb036691c81d43fc802dbc9b26a0"
+      },
+      {
+        "table": "tracking_consent",
+        "rows": 2,
+        "aggregate_md5": "5fd3a0b688b84094cf5ed8dbda3809f1"
+      },
+      {
+        "table": "upload",
+        "rows": 18,
+        "aggregate_md5": "27930acf0f9e3b78571d63eb013010e2"
+      },
+      {
+        "table": "verified_refund",
+        "rows": 2,
+        "aggregate_md5": "966df3146b7b70fa41972ce572c980db"
+      }
+    ],
+    "constraints_md5": "63d7c29724b48ea207876232561dbf5a",
+    "triggers_md5": "0f70c2062462ae3eae41e8f71cc85c05"
+  },
+  "restored": {
+    "tables": [
+      {
+        "table": "account",
+        "rows": 7,
+        "aggregate_md5": "44d66b2a5fc832cf792fb6c4d4916472"
+      },
+      {
+        "table": "attempt_budget",
+        "rows": 5,
+        "aggregate_md5": "bf625f3c8b17cec63a1b4e303a3a3bb8"
+      },
+      {
+        "table": "attempt_ticket",
+        "rows": 66,
+        "aggregate_md5": "0e39dd29d4185b792a5694695c8e1f87"
+      },
+      {
+        "table": "attribution",
+        "rows": 0,
+        "aggregate_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "table": "credit_ledger",
+        "rows": 141,
+        "aggregate_md5": "05b00bdbd5e9f1888e2c149a5978b7d3"
+      },
+      {
+        "table": "event",
+        "rows": 28,
+        "aggregate_md5": "2727cf5994c6f59d7c9bc91b9fb736be"
+      },
+      {
+        "table": "first_conversion",
+        "rows": 0,
+        "aggregate_md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "table": "generation_evidence",
+        "rows": 10,
+        "aggregate_md5": "545e08af6599e6ed007327ff6d4c1454"
+      },
+      {
+        "table": "job",
+        "rows": 168,
+        "aggregate_md5": "36f59834aeb4d98381d11fc73b1fd113"
+      },
+      {
+        "table": "partner",
+        "rows": 1,
+        "aggregate_md5": "0ff603f598f83fa3246b83b50d6df92e"
+      },
+      {
+        "table": "payment_fixture_object",
+        "rows": 8,
+        "aggregate_md5": "15a47c8b21214d26d3ab4f90ab1a0339"
+      },
+      {
+        "table": "payment_intent",
+        "rows": 6,
+        "aggregate_md5": "097e6c3a4c9e3eaf8abd935f2d5149c3"
+      },
+      {
+        "table": "provider_event",
+        "rows": 8,
+        "aggregate_md5": "a8454d8cdddbfed93099aadb70d5ac2b"
+      },
+      {
+        "table": "provider_spend_budget",
+        "rows": 2,
+        "aggregate_md5": "ac9fadd136e235c8abfdc89932d2c3e3"
+      },
+      {
+        "table": "provider_submission",
+        "rows": 6,
+        "aggregate_md5": "ae9e31ff6ef0395af930accf5025b90b"
+      },
+      {
+        "table": "quality_review",
+        "rows": 2,
+        "aggregate_md5": "821a8367ac6717cc9143f0be33fe63d4"
+      },
+      {
+        "table": "schema_migration",
+        "rows": 8,
+        "aggregate_md5": "ad0b3aa3fbd356051f37ab39b4c392df"
+      },
+      {
+        "table": "session",
+        "rows": 13,
+        "aggregate_md5": "9798100868ca69066124058f2862b7d6"
+      },
+      {
+        "table": "share",
+        "rows": 2,
+        "aggregate_md5": "fdc6ca78535bb9aacf5cc339359dbfd1"
+      },
+      {
+        "table": "share_action",
+        "rows": 18,
+        "aggregate_md5": "4996fb036691c81d43fc802dbc9b26a0"
+      },
+      {
+        "table": "tracking_consent",
+        "rows": 2,
+        "aggregate_md5": "5fd3a0b688b84094cf5ed8dbda3809f1"
+      },
+      {
+        "table": "upload",
+        "rows": 18,
+        "aggregate_md5": "27930acf0f9e3b78571d63eb013010e2"
+      },
+      {
+        "table": "verified_refund",
+        "rows": 2,
+        "aggregate_md5": "966df3146b7b70fa41972ce572c980db"
+      }
+    ],
+    "constraints_md5": "63d7c29724b48ea207876232561dbf5a",
+    "triggers_md5": "0f70c2062462ae3eae41e8f71cc85c05"
+  },
+  "status": "pass",
+  "target_cleanup": "removed_only_created_owned_target",
+  "raw_dump_cleanup": "removed",
+  "finished_at": "2026-10-03T18:09:57.705685+00:00",
+  "duration_ms": 22842
+}

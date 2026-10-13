@@ -1,0 +1,453 @@
+{
+  "view": "/tmp/n8-final-toolkit-view",
+  "exit_code": 0,
+  "direct_project_verify_exit": 1,
+  "bindings": [
+    {
+      "path": ".p-replicator.json",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.p-replicator.json",
+      "source": "inherited_root",
+      "sha256": "440427a1469ff64440d22bfb8fd6773296f006a9651aa0ae0c5e1b9177b26dd4"
+    },
+    {
+      "path": "CLAUDE.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/projects/08-interior-ai-redesign/CLAUDE.md",
+      "source": "project_override",
+      "sha256": "648cb4f48215794504708800d1266e7b61cb9e74be222859798cab8b4d267ae8"
+    },
+    {
+      "path": ".claude/skills/explore/SKILL.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/skills/explore/SKILL.md",
+      "source": "inherited_root",
+      "sha256": "2473e7961845db0d64566cd42627b374d1830664b9e302058a1b1aa466bc7361"
+    },
+    {
+      "path": ".claude/skills/sparc-prd-mini/SKILL.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/skills/sparc-prd-mini/SKILL.md",
+      "source": "inherited_root",
+      "sha256": "b663793d1e1d1de028f91f2e266a191811bb610f97a12be7f95d62327589d53a"
+    },
+    {
+      "path": ".claude/skills/goap-research-ed25519/SKILL.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/skills/goap-research-ed25519/SKILL.md",
+      "source": "inherited_root",
+      "sha256": "c6503749a8bd8222d63542831c2003e16f1bc0239dd903d59a934cd2ff40d1c9"
+    },
+    {
+      "path": ".claude/skills/problem-solver-enhanced/SKILL.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/skills/problem-solver-enhanced/SKILL.md",
+      "source": "inherited_root",
+      "sha256": "031378aa2e10c98928e35de07d454135e73550cd0c49f0cd886d53e4208d6b9f"
+    },
+    {
+      "path": ".claude/skills/requirements-validator/SKILL.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/skills/requirements-validator/SKILL.md",
+      "source": "inherited_root",
+      "sha256": "b4b394adf08feee552f39c83331398f119e0d4abf21e683fe4706da438b4a426"
+    },
+    {
+      "path": ".claude/skills/brutal-honesty-review/SKILL.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/skills/brutal-honesty-review/SKILL.md",
+      "source": "inherited_root",
+      "sha256": "f49957f8bac6b55ab49bb953867b1aa3d6d658f4a1d24eddec5b05a71a07da54"
+    },
+    {
+      "path": ".claude/skills/cc-toolkit-generator-enhanced/SKILL.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/skills/cc-toolkit-generator-enhanced/SKILL.md",
+      "source": "inherited_root",
+      "sha256": "ef4f8901f49f7fbb7db0c2994973c42840e3e909f1585c70a4f7442752b41265"
+    },
+    {
+      "path": ".claude/skills/reverse-engineering-unicorn/SKILL.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/skills/reverse-engineering-unicorn/SKILL.md",
+      "source": "inherited_root",
+      "sha256": "20d6b667971f9749d091c1d47e2f75df957f259647cbb861ac54174280096c71"
+    },
+    {
+      "path": ".claude/skills/pipeline-forge/SKILL.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/skills/pipeline-forge/SKILL.md",
+      "source": "inherited_root",
+      "sha256": "66a135c30ed384b4db8088571735c8333b2bc8f06e736fda6075f8e17e59291c"
+    },
+    {
+      "path": ".claude/skills/knowledge-extractor/SKILL.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/skills/knowledge-extractor/SKILL.md",
+      "source": "inherited_root",
+      "sha256": "3ac6d9832dd263eba21ccadb091e845dc2cfcb656c4cda447f744e16f96870c7"
+    },
+    {
+      "path": ".claude/commands/replicate.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/commands/replicate.md",
+      "source": "inherited_root",
+      "sha256": "165d7b3c0606be6817893b53cbfc5ca55c7b81cbe35cbdd0dccf8679d702e81a"
+    },
+    {
+      "path": ".claude/commands/harvest.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/commands/harvest.md",
+      "source": "inherited_root",
+      "sha256": "ed6355c102af0f2c62bf6714fce63157e0cb1c1ee85bc32c96f137b8b0c0e1ba"
+    },
+    {
+      "path": ".claude/commands/start.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/commands/start.md",
+      "source": "inherited_root",
+      "sha256": "fb8a7762f4073b9e8689dec3830680907efb9ec68bb2faa39b8a547793d9a078"
+    },
+    {
+      "path": ".claude/commands/plan.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/commands/plan.md",
+      "source": "inherited_root",
+      "sha256": "6fef889f51168981bf4a98b8392a0d595e3d199e1cfaa8e08c0a181ec6c440e4"
+    },
+    {
+      "path": ".claude/commands/feature.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/commands/feature.md",
+      "source": "inherited_root",
+      "sha256": "6908fa6c8ba770f829378a021d5f7e9a9bc79a15bdd67b278d8c6a765968b291"
+    },
+    {
+      "path": ".claude/commands/go.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/commands/go.md",
+      "source": "inherited_root",
+      "sha256": "e7337012dccaab09e0cf27a696ebff14bea4626fb5167538af7da2f5cc7b597a"
+    },
+    {
+      "path": ".claude/commands/run.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/commands/run.md",
+      "source": "inherited_root",
+      "sha256": "87144dfe8c56c15ba7c117daa544d8a08b84d7205f21dafcc48d27c6c3995059"
+    },
+    {
+      "path": ".claude/commands/next.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/commands/next.md",
+      "source": "inherited_root",
+      "sha256": "1e4984306c3aa80dfc8734dc1c975dfe5fdf2cf6396ddd759e4c7635646107b8"
+    },
+    {
+      "path": ".claude/commands/docs.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/commands/docs.md",
+      "source": "inherited_root",
+      "sha256": "be03592cb3f1d61b60dc96d3e26d71281ad4eb2d4626012c080ce609a32c96e4"
+    },
+    {
+      "path": ".claude/commands/deploy.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/commands/deploy.md",
+      "source": "inherited_root",
+      "sha256": "27f5424ee217163c55e5e6b9322a1f0858159407bd24ebd6d6588d6c22a5f890"
+    },
+    {
+      "path": ".claude/commands/myinsights.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/commands/myinsights.md",
+      "source": "inherited_root",
+      "sha256": "f31c5e133b5027197359e4179cbba1ab535f990634a69ea7c5c73bd2bc329d68"
+    },
+    {
+      "path": ".claude/agents/replicate-coordinator.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/agents/replicate-coordinator.md",
+      "source": "inherited_root",
+      "sha256": "bbfe18a7642954f357db08e849349fee02681e2f0ffa036539c45d98dbaba960"
+    },
+    {
+      "path": ".claude/agents/product-discoverer.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/agents/product-discoverer.md",
+      "source": "inherited_root",
+      "sha256": "be7d707a5fc1ee2eb18dda9e904ffbdc0be21c874b3a721349fd9e840bf77bc8"
+    },
+    {
+      "path": ".claude/agents/doc-validator.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/agents/doc-validator.md",
+      "source": "inherited_root",
+      "sha256": "e57950758cd4764b2cb54b3f1905567e9dbc1ed20ac6ecd30998614894689f4f"
+    },
+    {
+      "path": ".claude/agents/harvest-coordinator.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/agents/harvest-coordinator.md",
+      "source": "inherited_root",
+      "sha256": "71e524e8379df46bbf457dbc1d4480634e05c99b7d3a4f59a356b8d71a0a4166"
+    },
+    {
+      "path": ".claude/rules/cost-of-detection-ladder.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/rules/cost-of-detection-ladder.md",
+      "source": "inherited_root",
+      "sha256": "f15309ee8f1494478ff7678380dbe8fc8eecd154be36d57c9090cd17126a07da"
+    },
+    {
+      "path": ".claude/rules/replicate-pipeline.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/rules/replicate-pipeline.md",
+      "source": "inherited_root",
+      "sha256": "13bf073273820addeb87167402495b2f683cefac70a9f6cb07b6e054b1851e0f"
+    },
+    {
+      "path": ".claude/rules/skill-interface-protocol.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/rules/skill-interface-protocol.md",
+      "source": "inherited_root",
+      "sha256": "c3f624d0a8a4c7e0f5744e529eb4486cc0589fdb732b9799bccc75091a6d63ca"
+    },
+    {
+      "path": ".claude/rules/git-workflow.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/rules/git-workflow.md",
+      "source": "inherited_root",
+      "sha256": "7d8d2ded47fcc0fb95da3dc226efa6cb3c80d6adf7296977588c181dfce20192"
+    },
+    {
+      "path": ".claude/rules/insights-capture.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/rules/insights-capture.md",
+      "source": "inherited_root",
+      "sha256": "d529e6be79178636ca362d83366b1dd7a843371e8ba4f2b09d65c009fab52dc4"
+    },
+    {
+      "path": ".claude/rules/feature-lifecycle.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/rules/feature-lifecycle.md",
+      "source": "inherited_root",
+      "sha256": "4e926f84f244feb6824114a0624733738669c93e0508693fa2afa4e9a35c2aa3"
+    },
+    {
+      "path": ".claude/rules/docker-ports.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/rules/docker-ports.md",
+      "source": "inherited_root",
+      "sha256": "59eb430f29dd762e8b76ad6d1177fe8b5b250de007856c743387cb88ee157942"
+    },
+    {
+      "path": ".claude/rules/swarm-file-evidence.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/rules/swarm-file-evidence.md",
+      "source": "inherited_root",
+      "sha256": "c71a216dbc3fd633c30949823ceac354f8439b96279a1a8dd606afb1b3ef5c45"
+    },
+    {
+      "path": ".claude/rules/honest-configuration.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/rules/honest-configuration.md",
+      "source": "inherited_root",
+      "sha256": "851bc28e9e2baf1043bc09b982f3df3431bc7af1e076f8ff9df3d6729835bad5"
+    },
+    {
+      "path": ".claude/rules/embeddable-widget.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/rules/embeddable-widget.md",
+      "source": "inherited_root",
+      "sha256": "0159224f8e9599b67a860738bb42e3e40adf598176c48ea6c86a01c891f0f18c"
+    },
+    {
+      "path": ".claude/rules/incoming-webhooks.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/rules/incoming-webhooks.md",
+      "source": "inherited_root",
+      "sha256": "92f3de02814ed0610df644acf554f4b41b2bae2f9d281695e2e217a1d6558e84"
+    },
+    {
+      "path": ".claude/rules/long-running-job.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/rules/long-running-job.md",
+      "source": "inherited_root",
+      "sha256": "e6bd0efff89338998d34440a94dc9288cf7bcf790b27bcaa51b83d43f57942ed"
+    },
+    {
+      "path": ".claude/rules/model-call-cost.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/rules/model-call-cost.md",
+      "source": "inherited_root",
+      "sha256": "26c3b20ac3ed7f9cf6deb5e94302ade87f9e3e51fffca7ac2377ff31bc144f34"
+    },
+    {
+      "path": ".claude/settings.json",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/settings.json",
+      "source": "inherited_root",
+      "sha256": "deadeac93823c6bc29b1cee3ba40f99e672d4e036b5bda460936ce1361bb096b"
+    },
+    {
+      "path": ".claude/hooks/session-insights.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/session-insights.cjs",
+      "source": "inherited_root",
+      "sha256": "31fbe90d81b01dfb56557ed5d68dbde2211a14d5469c5d3761f45fb63c07c3a7"
+    },
+    {
+      "path": ".claude/hooks/autocommit-roadmap.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/autocommit-roadmap.cjs",
+      "source": "inherited_root",
+      "sha256": "f4dcc9ffd9a3aed91dd56e011e699fcf8af903cc81594e4ab1ef61e5432a36ad"
+    },
+    {
+      "path": ".claude/hooks/autocommit-insights.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/autocommit-insights.cjs",
+      "source": "inherited_root",
+      "sha256": "5e7cef87b24d457f25315d79fe15f0dfaf94d9269495d638817f0faee2593c6f"
+    },
+    {
+      "path": ".claude/hooks/autocommit-plans.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/autocommit-plans.cjs",
+      "source": "inherited_root",
+      "sha256": "9bb404b7f4fda5de03e6c2f16bf8939a79ec1944538767b04bcccc6cf50cc03d"
+    },
+    {
+      "path": ".claude/hooks/statusline.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/statusline.cjs",
+      "source": "inherited_root",
+      "sha256": "50c08decec3e80ed325f50d7b062fbe0add47e8594002fcc165248492242ab56"
+    },
+    {
+      "path": ".claude/hooks/state-update.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/state-update.cjs",
+      "source": "inherited_root",
+      "sha256": "47146a76b768ac2273abe8f2f017856a0e28b45afaf90048148da417dd19604e"
+    },
+    {
+      "path": ".claude/hooks/write-insight.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/write-insight.cjs",
+      "source": "inherited_root",
+      "sha256": "743f2d85b037cf522dfaf4775947b0cd331e52f2f304e88360c160e0e8e9a589"
+    },
+    {
+      "path": ".claude/hooks/check-ports.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/check-ports.cjs",
+      "source": "inherited_root",
+      "sha256": "2b458cf78367ec7752174f08aa40109b3b6217e405f99a46e18e75e4b69bc87e"
+    },
+    {
+      "path": ".claude/hooks/check-growth-trace.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/check-growth-trace.cjs",
+      "source": "inherited_root",
+      "sha256": "91994fc109c8440306c9dd3d5eea176c533eb0818fcdb09bac2b309397d9908a"
+    },
+    {
+      "path": ".claude/hooks/check-look-trace.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/check-look-trace.cjs",
+      "source": "inherited_root",
+      "sha256": "2952d8547feff344ec18289e1eaf5d067ada2af6e13541e25e73a8dfd7caf2bc"
+    },
+    {
+      "path": ".claude/hooks/check-look-origin.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/check-look-origin.cjs",
+      "source": "inherited_root",
+      "sha256": "ebde0d8287601aecd8024edb0647f20eeaf8130f3ef920bb6a47b15aef297213"
+    },
+    {
+      "path": ".claude/hooks/check-review-contract.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/check-review-contract.cjs",
+      "source": "inherited_root",
+      "sha256": "44e32ea31a4a71ceb6eccb0956006519de270eab787a79ab4884978bc04385ab"
+    },
+    {
+      "path": ".claude/hooks/capture-source-path.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/capture-source-path.cjs",
+      "source": "inherited_root",
+      "sha256": "bed92548c3313d69110b6cc06e6b2b858d9d548b8c18c82750ae90d514212bf2"
+    },
+    {
+      "path": ".claude/hooks/check-docs-complete.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/check-docs-complete.cjs",
+      "source": "inherited_root",
+      "sha256": "27c05c2adcedc806e395b30b455243193a4fbd0968ce96e415679e1f78db951a"
+    },
+    {
+      "path": ".claude/hooks/check-swarm-receipts.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/check-swarm-receipts.cjs",
+      "source": "inherited_root",
+      "sha256": "9fa83d78b085d8eea28958b4722999ba44a7bd47c98fe5a96127fc5b5230b40c"
+    },
+    {
+      "path": ".claude/hooks/check-embed-contract.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/check-embed-contract.cjs",
+      "source": "inherited_root",
+      "sha256": "9e963a07c12350b760264133021e75fb699439b1f060332e1ccdd962b645b4a0"
+    },
+    {
+      "path": ".claude/hooks/check-webhook-contract.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/check-webhook-contract.cjs",
+      "source": "inherited_root",
+      "sha256": "dfa27bd24cee8868fd60be5d24749c206f303fe4afcc1e72024d526324562a39"
+    },
+    {
+      "path": ".claude/hooks/check-job-contract.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/check-job-contract.cjs",
+      "source": "inherited_root",
+      "sha256": "48676c52eba3d0dd01e8c9764a2becfdcc8112423dc9711db7c18a8c2a5870a7"
+    },
+    {
+      "path": ".claude/hooks/check-model-cost.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/check-model-cost.cjs",
+      "source": "inherited_root",
+      "sha256": "425bda547661e0b31f313d6bb371db4d303cc83a43189fb4dc981e1fb43fac06"
+    },
+    {
+      "path": ".claude/hooks/check-canon.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/check-canon.cjs",
+      "source": "inherited_root",
+      "sha256": "99e6bff9b0078eb2ec23f7df98b7ac06c894f9018eba4a8c358e8f92e5ec7b06"
+    },
+    {
+      "path": ".claude/hooks/check-file-ownership.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/check-file-ownership.cjs",
+      "source": "inherited_root",
+      "sha256": "c6273e7b0817d15e375586131924a08095722aff7d0e6a6a04c857a480788e1f"
+    },
+    {
+      "path": ".claude/hooks/check-source-version.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/check-source-version.cjs",
+      "source": "inherited_root",
+      "sha256": "b9dc2eee7403119481ea2c49a94581613f2c134685448736c2734948a638a010"
+    },
+    {
+      "path": ".claude/hooks/check-handoff-manifest.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/check-handoff-manifest.cjs",
+      "source": "inherited_root",
+      "sha256": "768cd0befc0da3adcddcded86ed6d1bd1ac4f25afb563ae578002060a54968cf"
+    },
+    {
+      "path": ".claude/hooks/check-external-deps.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/check-external-deps.cjs",
+      "source": "inherited_root",
+      "sha256": "7bce49a744170a3193edf4b2238bcc5a6f1b0efa29333760a52e4fd145739d18"
+    },
+    {
+      "path": ".claude/hooks/check-metric-source.cjs",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/hooks/check-metric-source.cjs",
+      "source": "inherited_root",
+      "sha256": "315deda6354f91737165786bdb22b799517bd80530e5b4584593c4f4df84c56e"
+    },
+    {
+      "path": ".claude/agents/planner.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/projects/08-interior-ai-redesign/.claude/agents/planner.md",
+      "source": "project_override",
+      "sha256": "71b5510b71fd5ee41572d3d7460c4111358f90d1416485a6db2855309ee27fba"
+    },
+    {
+      "path": ".claude/agents/code-reviewer.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/projects/08-interior-ai-redesign/.claude/agents/code-reviewer.md",
+      "source": "project_override",
+      "sha256": "19c58cff5de8037922facdf39225c26d2069d7fcce0c31e8acd23d9045949917"
+    },
+    {
+      "path": ".claude/agents/architect.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/projects/08-interior-ai-redesign/.claude/agents/architect.md",
+      "source": "project_override",
+      "sha256": "e7f247c08e8b5763b8de6b95547cdd2c7e50ce03a6fef5f464b8e63fe1e7a17a"
+    },
+    {
+      "path": ".claude/rules/security.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/projects/08-interior-ai-redesign/.claude/rules/security.md",
+      "source": "project_override",
+      "sha256": "874252510b38dd858b1f198887276cd652f3364ceba57265f617008fbb982c6d"
+    },
+    {
+      "path": ".claude/rules/coding-style.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/projects/08-interior-ai-redesign/.claude/rules/coding-style.md",
+      "source": "project_override",
+      "sha256": "6fce3dd98b0928575586c814613bf55602fafddf79d1ee2e6d19225634ebf295"
+    },
+    {
+      "path": ".claude/rules/testing.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/projects/08-interior-ai-redesign/.claude/rules/testing.md",
+      "source": "project_override",
+      "sha256": "972bf5a4fdf0527628233b8898def6312f642f3417257cb3ee37cbdc541b84fe"
+    },
+    {
+      "path": ".claude/feature-roadmap.json",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/projects/08-interior-ai-redesign/.claude/feature-roadmap.json",
+      "source": "project_override",
+      "sha256": "f72262f8cbc7b4bc2bc99f9f3d832b8ca049e03f7bbe77d52af486bc6d879263"
+    },
+    {
+      "path": ".claude/insights/index.md",
+      "resolved": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/insights/index.md",
+      "source": "inherited_root",
+      "sha256": "175a49f85f05eb7355b3514594bb6478079650e200be8e40d8b71c0911062e4b"
+    }
+  ],
+  "settings_or_hooks_activated": false,
+  "standalone_checkout_supported": false
+}

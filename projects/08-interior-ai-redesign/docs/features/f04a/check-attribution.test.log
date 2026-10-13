@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: ATTR-01 default absent/false and forged consent/cookies cannot establish attribution
+ok 1 - ATTR-01 default absent/false and forged consent/cookies cannot establish attribution
+  ---
+  duration_ms: 10.021693
+  type: 'test'
+  ...
+# Subtest: ATTR-01 accepted cookie policy, first preference and fixed30d expiry; session unchanged
+ok 2 - ATTR-01 accepted cookie policy, first preference and fixed30d expiry; session unchanged
+  ---
+  duration_ms: 4.275681
+  type: 'test'
+  ...
+# Subtest: ATTR-01 denied tracking deletes preference, resets opt-in; manual then works without cookie
+ok 3 - ATTR-01 denied tracking deletes preference, resets opt-in; manual then works without cookie
+  ---
+  duration_ms: 6.095312
+  type: 'test'
+  ...
+# Subtest: ATTR-01 missing/blocked/tampered/repeated and other-account cookies never use cookie server preference
+ok 4 - ATTR-01 missing/blocked/tampered/repeated and other-account cookies never use cookie server preference
+  ---
+  duration_ms: 5.296942
+  type: 'test'
+  ...
+# Subtest: ATTR-01 consent guard: stored preference plus genuine token but no server opt-in is rejected
+ok 5 - ATTR-01 consent guard: stored preference plus genuine token but no server opt-in is rejected
+  ---
+  duration_ms: 1.247191
+  type: 'test'
+  ...
+# Subtest: ATTR-02 manual override before each new intent, old snapshot/idempotency stays immutable
+ok 6 - ATTR-02 manual override before each new intent, old snapshot/idempotency stays immutable
+  ---
+  duration_ms: 2.06138
+  type: 'test'
+  ...
+# Subtest: ATTR-02 invalid/self/inactive/ownerless codes have no preference or consent effects
+ok 7 - ATTR-02 invalid/self/inactive/ownerless codes have no preference or consent effects
+  ---
+  duration_ms: 2.42133
+  type: 'test'
+  ...
+# Subtest: ATTR-01 expiry checked during payment use; clear and malformed tokens do not retain attribution
+ok 8 - ATTR-01 expiry checked during payment use; clear and malformed tokens do not retain attribution
+  ---
+  duration_ms: 1.446351
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 64.858673

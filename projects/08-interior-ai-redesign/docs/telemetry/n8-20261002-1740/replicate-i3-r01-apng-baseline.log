@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: CRC-correct APNG is denied by shared input preparation
+not ok 1 - CRC-correct APNG is denied by shared input preparation
+  ---
+  duration_ms: 107.029808
+  type: 'test'
+  location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-media.test.js:118:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  stack: |-
+    async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-media.test.js:124:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: CRC-correct APNG depth is denied before second download and leaves zero artifacts
+not ok 2 - CRC-correct APNG depth is denied before second download and leaves zero artifacts
+  ---
+  duration_ms: 212.495436
+  type: 'test'
+  location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-media.test.js:127:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  stack: |-
+    async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-media.test.js:130:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 666.508748

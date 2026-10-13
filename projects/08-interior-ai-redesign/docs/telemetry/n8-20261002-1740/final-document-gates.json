@@ -1,0 +1,72 @@
+{
+  "at": "2026-10-03T18:16:07.667202+00:00",
+  "scope": "exact F07 regular-file contour; full-project historical missing-role-map exit2 is not waived",
+  "checks": [
+    {
+      "name": "vendor_f07_traceability",
+      "command": [
+        "bash",
+        "/root/.npm/_npx/21ec3c42ee749a67/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+        "/tmp/n8-final-vendor-contour",
+        "--traceability",
+        "--role-map-source",
+        "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/commands/feature.md",
+        "--project-role-map-source",
+        "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/skills/sparc-prd-mini/SKILL.md"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "vendor_f07_report_revision",
+      "command": [
+        "bash",
+        "/root/.npm/_npx/21ec3c42ee749a67/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+        "/tmp/n8-final-vendor-contour",
+        "--report-revision",
+        "--role-map-source",
+        "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/commands/feature.md",
+        "--project-role-map-source",
+        "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/skills/sparc-prd-mini/SKILL.md"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "vendor_f07_criterion_scenarios",
+      "command": [
+        "bash",
+        "/root/.npm/_npx/21ec3c42ee749a67/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+        "/tmp/n8-final-vendor-contour",
+        "--criterion-scenarios",
+        "--role-map-source",
+        "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/commands/feature.md",
+        "--project-role-map-source",
+        "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/skills/sparc-prd-mini/SKILL.md"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "vendor_f07_completion",
+      "command": [
+        "bash",
+        "/root/.npm/_npx/21ec3c42ee749a67/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+        "/tmp/n8-final-vendor-contour",
+        "--completion",
+        "--role-map-source",
+        "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/commands/feature.md",
+        "--project-role-map-source",
+        "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/skills/sparc-prd-mini/SKILL.md"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "review_contract",
+      "exit_code": 0,
+      "command": [
+        "/tmp/n8-node22",
+        "/root/.npm/_npx/21ec3c42ee749a67/node_modules/@dzhechkov/p-replicator/templates/.claude/hooks/check-review-contract.cjs",
+        "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/projects/08-interior-ai-redesign",
+        "f07-replicate"
+      ]
+    }
+  ]
+}

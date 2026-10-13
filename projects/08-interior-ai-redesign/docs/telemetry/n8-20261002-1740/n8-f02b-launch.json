@@ -1,0 +1,33 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f02b",
+  "attempt_id": "n8-f02b-attempt-1",
+  "created_at": "2026-10-02T21:37:10.267783+00:00",
+  "source_revision": "c345ec1ef57517acfca731b27254be5249aabd52",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "budget_seconds": 1500,
+  "trace_path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f02b/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/n8-f02b-receipt.md",
+  "plan": "docs/plans/f02b-inference-quality.md",
+  "route": "F02 existing M mechanical/full regression, substantive XL preserved; no new financial invariant",
+  "owned_files": [
+    "worker/**",
+    "web/generation.js",
+    "web/quality.js",
+    "web/jobs.js",
+    "web/app.js",
+    "web/config.js",
+    "web/server.js",
+    "web/media.js",
+    "db/003-quality.sql",
+    "scripts/** (feature-related only)",
+    "tests/** (feature-related only)",
+    "docs/features/f02b/**",
+    "compose.worker.yaml",
+    "Dockerfile.worker",
+    ".env.example"
+  ]
+}

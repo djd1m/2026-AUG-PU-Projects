@@ -1,0 +1,76 @@
+
+> roomkind-f01@0.1.0 test:integration
+> node tests/integration.test.js
+
+TAP version 13
+# Subtest: F01 real PostgreSQL16 transactions, sessions, abuse and media ownership
+    # Subtest: AUTH-01 concurrent canonical registration gives one account/trial/session atomically
+    ok 1 - AUTH-01 concurrent canonical registration gives one account/trial/session atomically
+      ---
+      duration_ms: 338.39776
+      type: 'test'
+      ...
+    # Subtest: AUTH-01 11/129 reject, 12 valid, long Unicode suffix cannot bypass
+    ok 2 - AUTH-01 11/129 reject, 12 valid, long Unicode suffix cannot bypass
+      ---
+      duration_ms: 637.313128
+      type: 'test'
+      ...
+    # Subtest: AUTH-02 dummy hash, generic wrong/unknown denial, logout and exact expiry
+    ok 3 - AUTH-02 dummy hash, generic wrong/unknown denial, logout and exact expiry
+      ---
+      duration_ms: 572.245474
+      type: 'test'
+      ...
+    # Subtest: AUTH-03/SEC-02 write Origin and 16KiB limits; spoofed forwarding does not bypass
+    ok 4 - AUTH-03/SEC-02 write Origin and 16KiB limits; spoofed forwarding does not bypass
+      ---
+      duration_ms: 563.310821
+      type: 'test'
+      ...
+    # Subtest: UPLOAD-01/02 two-account decode/read/list/delete and traversal
+    ok 5 - UPLOAD-01/02 two-account decode/read/list/delete and traversal
+      ---
+      duration_ms: 135.787079
+      type: 'test'
+      ...
+    # Subtest: UPLOAD-02 real DB insert failure removes temp/final; sweep retains live/recent/non-UUID/symlink
+    ok 6 - UPLOAD-02 real DB insert failure removes temp/final; sweep retains live/recent/non-UUID/symlink
+      ---
+      duration_ms: 108.608109
+      type: 'test'
+      ...
+    # Subtest: UPLOAD-02 bounded sweep advances past live prefix across separate processes and reaches tmp independently
+    ok 7 - UPLOAD-02 bounded sweep advances past live prefix across separate processes and reaches tmp independently
+      ---
+      duration_ms: 5270.526151
+      type: 'test'
+      ...
+    # Subtest: AUTH-03 exact registration/IP and login/IP limits; SEC-02 121st API request
+    ok 8 - AUTH-03 exact registration/IP and login/IP limits; SEC-02 121st API request
+      ---
+      duration_ms: 6206.158445
+      type: 'test'
+      ...
+    1..8
+ok 1 - F01 real PostgreSQL16 transactions, sessions, abuse and media ownership
+  ---
+  duration_ms: 14376.009082
+  type: 'test'
+  ...
+1..1
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 14386.191276
+ Container n8-f04b-candidate-web-run-ac4132d794a0 Creating 
+ Container n8-f04b-candidate-web-run-ac4132d794a0 Created 
+npm notice
+npm notice New major version of npm available! 10.9.3 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

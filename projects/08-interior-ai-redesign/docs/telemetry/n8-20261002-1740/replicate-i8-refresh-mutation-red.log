@@ -1,0 +1,115 @@
+TAP version 13
+# Subtest: actual legacy deletion waits delayed generate gallery and resume promise, preserving DELETE200/three GET200/404 oracle
+not ok 1 - actual legacy deletion waits delayed generate gallery and resume promise, preserving DELETE200/three GET200/404 oracle
+  ---
+  duration_ms: 32.075462
+  type: 'test'
+  location: '/tmp/n8-replicate-i8-refresh/projects/08-interior-ai-redesign/tests/ui-delete-refresh-order.test.js:100:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + AssertionError [ERR_ASSERTION]: all delete refreshes must succeed
+    + + actual - expected
+    + 
+    +   [
+    +     [
+    + +     '/api/jobs?limit=50',
+    + +     200
+    + +   ],
+    + +   [
+    +       '/api/uploads',
+    +       200
+    +     ],
+    +     [
+    +       '/api/me',
+    + 
+    +     at evalmachine.<anonymous>:16:14
+    +     at runNextTicks (node:internal/process/task_queues:65:5)
+    +     at process.processImmediate (node:internal/timers:453:9)
+    +     at async runCase (file:///tmp/n8-replicate-i8-refresh/projects/08-interior-ai-redesign/tests/ui-delete-refresh-order.test.js:94:8)
+    +     at async TestContext.<anonymous> (file:///tmp/n8-replicate-i8-refresh/projects/08-interior-ai-redesign/tests/ui-delete-refresh-order.test.js:101:16)
+    +     at async Test.run (node:internal/test_runner/test:1054:7)
+    +     at async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3) {
+    +   actual: [
+    +     [
+    +       '/api/jobs?limit=50',
+    +       200
+    +     ],
+    +     [
+    +       '/api/uploads',
+    +       200
+    +     ],
+    +     [
+    +       '/api/me',
+    +       200
+    +     ],
+    +     [
+    +       '/api/jobs?limit=50',
+    +       200
+    +     ]
+    +   ],
+    +   code: 'ERR_ASSERTION',
+    +   diff: 'simple',
+    +   expected: [
+    +     [
+    +       '/api/uploads',
+    +       200
+    +     ],
+    +     [
+    +       '/api/me',
+    +       200
+    +     ],
+    +     [
+    +       '/api/jobs?limit=50',
+    +       200
+    +     ]
+    +   ],
+    +   generatedMessage: false,
+    +   operator: 'deepStrictEqual'
+    + }
+    - undefined
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  actual:
+  error: |-
+    all delete refreshes must succeed
+    + actual - expected
+    
+      [
+        [
+    +     '/api/jobs?limit=50',
+    +     200
+    +   ],
+    +   [
+          '/api/uploads',
+          200
+        ],
+        [
+          '/api/me',
+    
+  stack: |-
+    evalmachine.<anonymous>:16:14
+    runNextTicks (node:internal/process/task_queues:65:5)
+    process.processImmediate (node:internal/timers:453:9)
+    async runCase (file:///tmp/n8-replicate-i8-refresh/projects/08-interior-ai-redesign/tests/ui-delete-refresh-order.test.js:94:8)
+    async TestContext.<anonymous> (file:///tmp/n8-replicate-i8-refresh/projects/08-interior-ai-redesign/tests/ui-delete-refresh-order.test.js:101:16)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/n8-replicate-i8-refresh/projects/08-interior-ai-redesign/tests/ui-delete-refresh-order.test.js:101:39)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 380.863046

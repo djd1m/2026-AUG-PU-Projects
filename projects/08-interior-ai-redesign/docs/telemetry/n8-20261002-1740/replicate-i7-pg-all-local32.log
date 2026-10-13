@@ -1,0 +1,2917 @@
+TAP version 13
+# Subtest: ATTR/PARTNER API authentication Origin body bounds and absence of registry writes
+ok 1 - ATTR/PARTNER API authentication Origin body bounds and absence of registry writes
+  ---
+  duration_ms: 54.44709
+  type: 'test'
+  ...
+# Subtest: ATTR-01 default absent/false and forged consent/cookies cannot establish attribution
+ok 2 - ATTR-01 default absent/false and forged consent/cookies cannot establish attribution
+  ---
+  duration_ms: 11.310954
+  type: 'test'
+  ...
+# Subtest: ATTR-01 accepted cookie policy, first preference and fixed30d expiry; session unchanged
+ok 3 - ATTR-01 accepted cookie policy, first preference and fixed30d expiry; session unchanged
+  ---
+  duration_ms: 4.195911
+  type: 'test'
+  ...
+# Subtest: ATTR-01 denied tracking deletes preference, resets opt-in; manual then works without cookie
+ok 4 - ATTR-01 denied tracking deletes preference, resets opt-in; manual then works without cookie
+  ---
+  duration_ms: 1.601291
+  type: 'test'
+  ...
+# Subtest: ATTR-01 missing/blocked/tampered/repeated and other-account cookies never use cookie server preference
+ok 5 - ATTR-01 missing/blocked/tampered/repeated and other-account cookies never use cookie server preference
+  ---
+  duration_ms: 5.306682
+  type: 'test'
+  ...
+# Subtest: ATTR-01 consent guard: stored preference plus genuine token but no server opt-in is rejected
+ok 6 - ATTR-01 consent guard: stored preference plus genuine token but no server opt-in is rejected
+  ---
+  duration_ms: 1.48983
+  type: 'test'
+  ...
+# Subtest: ATTR-02 manual override before each new intent, old snapshot/idempotency stays immutable
+ok 7 - ATTR-02 manual override before each new intent, old snapshot/idempotency stays immutable
+  ---
+  duration_ms: 4.984782
+  type: 'test'
+  ...
+# Subtest: ATTR-02 invalid/self/inactive/ownerless codes have no preference or consent effects
+ok 8 - ATTR-02 invalid/self/inactive/ownerless codes have no preference or consent effects
+  ---
+  duration_ms: 3.299771
+  type: 'test'
+  ...
+# Subtest: ATTR-01 expiry checked during payment use; clear and malformed tokens do not retain attribution
+ok 9 - ATTR-01 expiry checked during payment use; clear and malformed tokens do not retain attribution
+  ---
+  duration_ms: 3.684161
+  type: 'test'
+  ...
+# Subtest: AUTH-01 canonical email and all password edges, including Unicode
+ok 10 - AUTH-01 canonical email and all password edges, including Unicode
+  ---
+  duration_ms: 2.609431
+  type: 'test'
+  ...
+# Subtest: AUTH-03 exact Origin denies missing, null, foreign, prefixes
+ok 11 - AUTH-03 exact Origin denies missing, null, foreign, prefixes
+  ---
+  duration_ms: 0.61265
+  type: 'test'
+  ...
+# Subtest: SEC-02 UUID path traversal/URL/malformed boundaries
+ok 12 - SEC-02 UUID path traversal/URL/malformed boundaries
+  ---
+  duration_ms: 1.02862
+  type: 'test'
+  ...
+# Subtest: AUTH-03 JSON 16KiB and streamed body boundaries
+ok 13 - AUTH-03 JSON 16KiB and streamed body boundaries
+  ---
+  duration_ms: 12.397575
+  type: 'test'
+  ...
+# Subtest: AUTH-03/SEC-02 exact rate edges, expiry and distinct NAT account keys
+ok 14 - AUTH-03/SEC-02 exact rate edges, expiry and distinct NAT account keys
+  ---
+  duration_ms: 0.87984
+  type: 'test'
+  ...
+# Subtest: capacity rejects parallel overflow without holding a DB connection or queuing
+ok 15 - capacity rejects parallel overflow without holding a DB connection or queuing
+  ---
+  duration_ms: 0.46534
+  type: 'test'
+  ...
+# Subtest: SEC-01 missing and unsafe config fails closed; local/nonlocal cookie policy
+ok 16 - SEC-01 missing and unsafe config fails closed; local/nonlocal cookie policy
+  ---
+  duration_ms: 3.099491
+  type: 'test'
+  ...
+# Subtest: bounded real composite pixels: before/after, permanent AI, effective badge and mandatory DEMO
+ok 17 - bounded real composite pixels: before/after, permanent AI, effective badge and mandatory DEMO
+  ---
+  duration_ms: 2584.320992
+  type: 'test'
+  ...
+# Subtest: F02b real subprocess bounds, cancellation, lease and cleanup
+    # Subtest: one persistent subprocess survives two requests; fixture has actual independent hashes
+    ok 1 - one persistent subprocess survives two requests; fixture has actual independent hashes
+      ---
+      duration_ms: 101.267266
+      type: 'test'
+      ...
+    # Subtest: actual bytes/hash mismatch refuses completion and removes all orphan artifacts
+    ok 2 - actual bytes/hash mismatch refuses completion and removes all orphan artifacts
+      ---
+      duration_ms: 81.557859
+      type: 'test'
+      ...
+    # Subtest: deadline kills actual subprocess; partial artifacts removed
+    ok 3 - deadline kills actual subprocess; partial artifacts removed
+      ---
+      duration_ms: 133.207378
+      type: 'test'
+      ...
+    # Subtest: lost heartbeat cancels child and fences attach
+    ok 4 - lost heartbeat cancels child and fences attach
+      ---
+      duration_ms: 35.176362
+      type: 'test'
+      ...
+    # Subtest: external cancellation kills subprocess
+    ok 5 - external cancellation kills subprocess
+      ---
+      duration_ms: 46.073797
+      type: 'test'
+      ...
+    # Subtest: invalid and oversized stdout or stderr fail bounded protocol
+    ok 6 - invalid and oversized stdout or stderr fail bounded protocol
+      ---
+      duration_ms: 185.195826
+      type: 'test'
+      ...
+    # Subtest: malformed response then awaited stop terminates failed child before healthy restart
+    ok 7 - malformed response then awaited stop terminates failed child before healthy restart
+      ---
+      duration_ms: 115.329091
+      type: 'test'
+      ...
+    # Subtest: obsolete child exit cannot reject an immediate replacement request
+    ok 8 - obsolete child exit cannot reject an immediate replacement request
+      ---
+      duration_ms: 132.673478
+      type: 'test'
+      ...
+    # Subtest: concurrent requests still refuse engine_busy without disturbing active request
+    ok 9 - concurrent requests still refuse engine_busy without disturbing active request
+      ---
+      duration_ms: 67.038304
+      type: 'test'
+      ...
+    # Subtest: stale fence cleans otherwise valid result
+    ok 10 - stale fence cleans otherwise valid result
+      ---
+      duration_ms: 93.210244
+      type: 'test'
+      ...
+    # Subtest: symlinks and unbounded artifact bytes denied
+    ok 11 - symlinks and unbounded artifact bytes denied
+      ---
+      duration_ms: 6.521602
+      type: 'test'
+      ...
+    # Subtest: private reads enforce owner/rejection twice and exact immutable bytes
+    ok 12 - private reads enforce owner/rejection twice and exact immutable bytes
+      ---
+      duration_ms: 25.501389
+      type: 'test'
+      ...
+    1..12
+ok 18 - F02b real subprocess bounds, cancellation, lease and cleanup
+  ---
+  duration_ms: 1060.006739
+  type: 'test'
+  ...
+# Subtest: JOB-01 style/key/UUID boundaries and canonical body hash
+ok 19 - JOB-01 style/key/UUID boundaries and canonical body hash
+  ---
+  duration_ms: 4.089361
+  type: 'test'
+  ...
+# Subtest: PERF-01/SEC-01 required positive integer lower-only budget config
+ok 20 - PERF-01/SEC-01 required positive integer lower-only budget config
+  ---
+  duration_ms: 3.682342
+  type: 'test'
+  ...
+# Subtest: Output contract requires complete evidence and refuses production fixture
+ok 21 - Output contract requires complete evidence and refuses production fixture
+  ---
+  duration_ms: 1.45838
+  type: 'test'
+  ...
+# Subtest: Trusted clock injection is restricted to explicit test runtime
+ok 22 - Trusted clock injection is restricted to explicit test runtime
+  ---
+  duration_ms: 1.080871
+  type: 'test'
+  ...
+# Subtest: Provenance rejects unsupported shapes and serializes a detached canonical revision object
+ok 23 - Provenance rejects unsupported shapes and serializes a detached canonical revision object
+  ---
+  duration_ms: 4.832031
+  type: 'test'
+  ...
+# Subtest: AUTH-02 random 32-byte token, HMAC-only record and cookie flags
+ok 24 - AUTH-02 random 32-byte token, HMAC-only record and cookie flags
+  ---
+  duration_ms: 3.018051
+  type: 'test'
+  ...
+# Subtest: AUTH-01 all 128 Unicode characters affect bcrypt; dummy hash uses cost 10
+ok 25 - AUTH-01 all 128 Unicode characters affect bcrypt; dummy hash uses cost 10
+  ---
+  duration_ms: 238.949386
+  type: 'test'
+  ...
+# Subtest: UPLOAD-01 JPEG/PNG/WebP real decode, matching magic and invalid/truncated data
+ok 26 - UPLOAD-01 JPEG/PNG/WebP real decode, matching magic and invalid/truncated data
+  ---
+  duration_ms: 98.527635
+  type: 'test'
+  ...
+# Subtest: UPLOAD-01 exact byte limit and orientation normalization strips EXIF
+ok 27 - UPLOAD-01 exact byte limit and orientation normalization strips EXIF
+  ---
+  duration_ms: 57.16106
+  type: 'test'
+  ...
+# Subtest: UPLOAD-01 exact 20MP and one-row beyond for each allowed format
+ok 28 - UPLOAD-01 exact 20MP and one-row beyond for each allowed format
+  ---
+  duration_ms: 11048.362054
+  type: 'test'
+  ...
+# Subtest: F04 mutation oracles refuse unrelated assertion, spawn failure and timeout
+ok 29 - F04 mutation oracles refuse unrelated assertion, spawn failure and timeout
+  ---
+  duration_ms: 251.894589
+  type: 'test'
+  ...
+# Subtest: SEC-03 mutation oracle accepts only exact tagged owner assertion and rejects unrelated failures
+ok 30 - SEC-03 mutation oracle accepts only exact tagged owner assertion and rejects unrelated failures
+  ---
+  duration_ms: 540.679223
+  type: 'test'
+  ...
+# Subtest: SEC-03 baseline must pass before source changes; no-op and unexpected guards fail closed
+ok 31 - SEC-03 baseline must pass before source changes; no-op and unexpected guards fail closed
+  ---
+  duration_ms: 163.294039
+  type: 'test'
+  ...
+# Subtest: SEC-03 budget oracle requires exact assertion: expected one admission, actual two
+ok 32 - SEC-03 budget oracle requires exact assertion: expected one admission, actual two
+  ---
+  duration_ms: 307.811009
+  type: 'test'
+  ...
+# Subtest: PAY-02 payment mutation oracle targets only the exact merchant-binding assertion
+ok 33 - PAY-02 payment mutation oracle targets only the exact merchant-binding assertion
+  ---
+  duration_ms: 129.931526
+  type: 'test'
+  ...
+# Subtest: F07 send CAS mutation changes only two exact guards and refuses source drift
+ok 34 - F07 send CAS mutation changes only two exact guards and refuses source drift
+  ---
+  duration_ms: 6.966333
+  type: 'test'
+  ...
+# Subtest: F07 send CAS recognizer accepts only named 1 versus 2 assertion, including nested TAP
+ok 35 - F07 send CAS recognizer accepts only named 1 versus 2 assertion, including nested TAP
+  ---
+  duration_ms: 721.113037
+  type: 'test'
+  ...
+# Subtest: F07 send CAS inconclusive runner restores bytes and preserves three raw logs and hashes
+ok 36 - F07 send CAS inconclusive runner restores bytes and preserves three raw logs and hashes
+  ---
+  duration_ms: 728.51616
+  type: 'test'
+  ...
+# Subtest: PARTNER-01 operator creates opaque active codes with specified existing owner; duplicate409 and missing owner404
+ok 37 - PARTNER-01 operator creates opaque active codes with specified existing owner; duplicate409 and missing owner404
+  ---
+  duration_ms: 4.092452
+  type: 'test'
+  ...
+# Subtest: PARTNER-01 activation input validated and operator aggregate shape exposes no private metadata
+ok 38 - PARTNER-01 activation input validated and operator aggregate shape exposes no private metadata
+  ---
+  duration_ms: 2.124611
+  type: 'test'
+  ...
+# Subtest: PAY-02 local HTTP cap, no redirect, malformed, slow headers and slow body timeout
+ok 39 - PAY-02 local HTTP cap, no redirect, malformed, slow headers and slow body timeout
+  ---
+  duration_ms: 11118.260829
+  type: 'test'
+  ...
+# Subtest: PAY-01 price/input/key and notification signals are bounded
+ok 40 - PAY-01 price/input/key and notification signals are bounded
+  ---
+  duration_ms: 6.943462
+  type: 'test'
+  ...
+# Subtest: PAY-02 provider binding guard rejects the wrong merchant
+ok 41 - PAY-02 provider binding guard rejects the wrong merchant
+  ---
+  duration_ms: 0.626261
+  type: 'test'
+  ...
+# Subtest: PAY-02 every verified payment binding field rejects independently
+ok 42 - PAY-02 every verified payment binding field rejects independently
+  ---
+  duration_ms: 1.14877
+  type: 'test'
+  ...
+# Subtest: PAY-04 exact positive minor RUB and refund bindings
+ok 43 - PAY-04 exact positive minor RUB and refund bindings
+  ---
+  duration_ms: 0.76055
+  type: 'test'
+  ...
+# Subtest: SEC-01 disabled/missing live keys refuse; fixture explicit and production forbidden
+ok 44 - SEC-01 disabled/missing live keys refuse; fixture explicit and production forbidden
+  ---
+  duration_ms: 7.180163
+  type: 'test'
+  ...
+# Subtest: PAY-01 hosted confirmation permits HTTPS credentials-free, fixture local exception only
+ok 45 - PAY-01 hosted confirmation permits HTTPS credentials-free, fixture local exception only
+  ---
+  duration_ms: 0.57113
+  type: 'test'
+  ...
+# Subtest: PAY-02 adapter fixed endpoint, auth, immutable body/key and capped/invalid injected responses
+ok 46 - PAY-02 adapter fixed endpoint, auth, immutable body/key and capped/invalid injected responses
+  ---
+  duration_ms: 34.202612
+  type: 'test'
+  ...
+# Subtest: PAY-02 timeout bounds injected slow headers and streaming body to5s
+ok 47 - PAY-02 timeout bounds injected slow headers and streaming body to5s
+  ---
+  duration_ms: 10006.578513
+  type: 'test'
+  ...
+# Subtest: prepared binding accepts only hashes and closed numeric image transform
+ok 48 - prepared binding accepts only hashes and closed numeric image transform
+  ---
+  duration_ms: 6.053402
+  type: 'test'
+  ...
+# Subtest: authority rejects absent/invalid limits and non-test trusted clock before SQL
+ok 49 - authority rejects absent/invalid limits and non-test trusted clock before SQL
+  ---
+  duration_ms: 1.13386
+  type: 'test'
+  ...
+# Subtest: F02b operator quality software validation, synthetic real-branch data
+    # Subtest: normalized upload is actual WebP with bound hashes; output and depth stay PNG
+    ok 1 - normalized upload is actual WebP with bound hashes; output and depth stay PNG
+      ---
+      duration_ms: 37.040443
+      type: 'test'
+      ...
+    # Subtest: otherwise valid synthetic real branch accepts, evidence is canonical, final locks are account then job
+    ok 2 - otherwise valid synthetic real branch accepts, evidence is canonical, final locks are account then job
+      ---
+      duration_ms: 42.797845
+      type: 'test'
+      ...
+    # Subtest: GEOM-03 fixture-quality exclusion targeted assertion, otherwise-valid byte/report provenance
+    ok 3 - GEOM-03 fixture-quality exclusion targeted assertion, otherwise-valid byte/report provenance
+      ---
+      duration_ms: 21.599278
+      type: 'test'
+      ...
+    # Subtest: ordinary actor, absent report, mismatched report, changed bytes and modified immutable evidence refuse
+    ok 4 - ordinary actor, absent report, mismatched report, changed bytes and modified immutable evidence refuse
+      ---
+      duration_ms: 45.897076
+      type: 'test'
+      ...
+    # Subtest: measured corpus thresholds, coverage, source, config, report hashes and synthetic flag
+    ok 5 - measured corpus thresholds, coverage, source, config, report hashes and synthetic flag
+      ---
+      duration_ms: 40.912905
+      type: 'test'
+      ...
+    # Subtest: 12 aliases of one complete input plus 11 single-style inputs cannot satisfy distinct 12x3 coverage
+    ok 6 - 12 aliases of one complete input plus 11 single-style inputs cannot satisfy distinct 12x3 coverage
+      ---
+      duration_ms: 26.03643
+      type: 'test'
+      ...
+    1..6
+ok 50 - F02b operator quality software validation, synthetic real-branch data
+  ---
+  duration_ms: 243.985277
+  type: 'test'
+  ...
+# Subtest: standalone cleanup opt-in exact pins/private token; absent/false disabled; no create settings
+ok 51 - standalone cleanup opt-in exact pins/private token; absent/false disabled; no create settings
+  ---
+  duration_ms: 6.085302
+  type: 'test'
+  ...
+# Subtest: cancel request persisted before sole first action; next pass GET; canceled confirmation only
+ok 52 - cancel request persisted before sole first action; next pass GET; canceled confirmation only
+  ---
+  duration_ms: 17.892067
+  type: 'test'
+  ...
+# Subtest: stale cleanup fence observation and finalization write nothing (mutation oracle)
+ok 53 - stale cleanup fence observation and finalization write nothing (mutation oracle)
+  ---
+  duration_ms: 3.380951
+  type: 'test'
+  ...
+# Subtest: expired lease observes nothing; reclaim gets fresh fence and GET after persisted cancel
+ok 54 - expired lease observes nothing; reclaim gets fresh fence and GET after persisted cancel
+  ---
+  duration_ms: 4.468072
+  type: 'test'
+  ...
+# Subtest: cancel request durable but exhausted before invocation: next pass GET without claiming cancellation sent
+ok 55 - cancel request durable but exhausted before invocation: next pass GET without claiming cancellation sent
+  ---
+  duration_ms: 3.725191
+  type: 'test'
+  ...
+# Subtest: unknown, quarantine, missing/future timestamp and retention boundary unresolved zero HTTP
+ok 56 - unknown, quarantine, missing/future timestamp and retention boundary unresolved zero HTTP
+  ---
+  duration_ms: 3.733111
+  type: 'test'
+  ...
+# Subtest: recorded terminal done without network; success race exposes counts only and no cancellation confirmation
+ok 57 - recorded terminal done without network; success race exposes counts only and no cancellation confirmation
+  ---
+  duration_ms: 5.279562
+  type: 'test'
+  ...
+# Subtest: errors/404/429/malformed never done; cancel requested retained and GET next pass
+ok 58 - errors/404/429/malformed never done; cancel requested retained and GET next pass
+  ---
+  duration_ms: 35.128783
+  type: 'test'
+  ...
+# Subtest: real I2 timeout is capped by remaining pass time and returns needed without retry
+ok 59 - real I2 timeout is capped by remaining pass time and returns needed without retry
+  ---
+  duration_ms: 28.29637
+  type: 'test'
+  ...
+# Subtest: one scan, max100 sequential actions, original expired attempt identity, pass budget exhaustion
+ok 60 - one scan, max100 sequential actions, original expired attempt identity, pass budget exhaustion
+  ---
+  duration_ms: 97.192705
+  type: 'test'
+  ...
+# Subtest: hosted v1 truthfully validates synthetic software evidence and preserves I3 safe config
+ok 61 - hosted v1 truthfully validates synthetic software evidence and preserves I3 safe config
+  ---
+  duration_ms: 6.131382
+  type: 'test'
+  ...
+# Subtest: every hosted field is required; unknown, mixed local and sensitive payloads are closed
+ok 62 - every hosted field is required; unknown, mixed local and sensitive payloads are closed
+  ---
+  duration_ms: 15.154996
+  type: 'test'
+  ...
+# Subtest: provider scalar claims and fake metric sources are rejected, including zero/false substitutes
+ok 63 - provider scalar claims and fake metric sources are rejected, including zero/false substitutes
+  ---
+  duration_ms: 17.429566
+  type: 'test'
+  ...
+# Subtest: hashes, pin, identities, truthful timestamp ordering and exact I3 transform fail closed
+ok 64 - hashes, pin, identities, truthful timestamp ordering and exact I3 transform fail closed
+  ---
+  duration_ms: 9.156083
+  type: 'test'
+  ...
+# Subtest: descriptors/prototypes/symbols never execute caller accessors or serializers
+ok 65 - descriptors/prototypes/symbols never execute caller accessors or serializers
+  ---
+  duration_ms: 3.231361
+  type: 'test'
+  ...
+# Subtest: independent server settings and complete immutable DB conjunction reject every mismatch
+ok 66 - independent server settings and complete immutable DB conjunction reject every mismatch
+  ---
+  duration_ms: 3.136751
+  type: 'test'
+  ...
+# Subtest: new create poll import: real files, closed evidence, durable queue and null metrics
+ok 67 - new create poll import: real files, closed evidence, durable queue and null metrics
+  ---
+  duration_ms: 149.266773
+  type: 'test'
+  ...
+# Subtest: known identity recovery reconstructs request and uses GET only
+ok 68 - known identity recovery reconstructs request and uses GET only
+  ---
+  duration_ms: 195.19909
+  type: 'test'
+  ...
+# Subtest: changed recovery seed or request binding makes ZERO GET/POST
+    # Subtest: seed
+    ok 1 - seed
+      ---
+      duration_ms: 105.825998
+      type: 'test'
+      ...
+    # Subtest: request
+    ok 2 - request
+      ---
+      duration_ms: 90.886513
+      type: 'test'
+      ...
+    # Subtest: transmitted
+    ok 3 - transmitted
+      ---
+      duration_ms: 84.88395
+      type: 'test'
+      ...
+    # Subtest: transform
+    ok 4 - transform
+      ---
+      duration_ms: 99.816256
+      type: 'test'
+      ...
+    # Subtest: settings
+    ok 5 - settings
+      ---
+      duration_ms: 62.184532
+      type: 'test'
+      ...
+    1..5
+ok 69 - changed recovery seed or request binding makes ZERO GET/POST
+  ---
+  duration_ms: 445.552839
+  type: 'test'
+  ...
+# Subtest: changed actual private bytes fail before any recovery GET
+ok 70 - changed actual private bytes fail before any recovery GET
+  ---
+  duration_ms: 50.988439
+  type: 'test'
+  ...
+# Subtest: no-ID submitting and ambiguous never replay or authorize
+ok 71 - no-ID submitting and ambiguous never replay or authorize
+  ---
+  duration_ms: 102.736096
+  type: 'test'
+  ...
+# Subtest: original consumed timestamp refreshed after authorization UTC replacement
+ok 72 - original consumed timestamp refreshed after authorization UTC replacement
+  ---
+  duration_ms: 101.731907
+  type: 'test'
+  ...
+# Subtest: false or throw completion preserves referenced winner and never fails it
+    # Subtest: false
+    ok 1 - false
+      ---
+      duration_ms: 89.681312
+      type: 'test'
+      ...
+    # Subtest: throw
+    ok 2 - throw
+      ---
+      duration_ms: 93.472393
+      type: 'test'
+      ...
+    1..2
+ok 73 - false or throw completion preserves referenced winner and never fails it
+  ---
+  duration_ms: 184.015835
+  type: 'test'
+  ...
+# Subtest: unavailable DB after uncertain completion preserves files
+ok 74 - unavailable DB after uncertain completion preserves files
+  ---
+  duration_ms: 93.913054
+  type: 'test'
+  ...
+# Subtest: definitely unreferenced rejection guards cleanup and fenced fail
+ok 75 - definitely unreferenced rejection guards cleanup and fenced fail
+  ---
+  duration_ms: 101.430886
+  type: 'test'
+  ...
+# Subtest: serialized lost heartbeat aborts provider and prevents attachment
+ok 76 - serialized lost heartbeat aborts provider and prevents attachment
+  ---
+  duration_ms: 45.451546
+  type: 'test'
+  ...
+# Subtest: external abort and unknown errors expose safe fixed codes only
+ok 77 - external abort and unknown errors expose safe fixed codes only
+  ---
+  duration_ms: 34.285543
+  type: 'test'
+  ...
+# Subtest: invalid original DB remaining budget never sends or creates a replacement
+ok 78 - invalid original DB remaining budget never sends or creates a replacement
+  ---
+  duration_ms: 95.933714
+  type: 'test'
+  ...
+# Subtest: one monotonic original budget expires during GET with no import or new create
+ok 79 - one monotonic original budget expires during GET with no import or new create
+  ---
+  duration_ms: 76.316207
+  type: 'test'
+  ...
+# Subtest: initial context transaction time reduces original budget
+ok 80 - initial context transaction time reduces original budget
+  ---
+  duration_ms: 40.510755
+  type: 'test'
+  ...
+# Subtest: CRC-correct APNG is denied by shared input preparation
+ok 81 - CRC-correct APNG is denied by shared input preparation
+  ---
+  duration_ms: 59.081371
+  type: 'test'
+  ...
+# Subtest: CRC-correct APNG depth is denied before second download and leaves zero artifacts
+ok 82 - CRC-correct APNG depth is denied before second download and leaves zero artifacts
+  ---
+  duration_ms: 137.314079
+  type: 'test'
+  ...
+# Subtest: PNG chunk bounds and stray animation chunks fail closed in input and depth
+    # Subtest: one-frame APNG
+    ok 1 - one-frame APNG
+      ---
+      duration_ms: 17.118326
+      type: 'test'
+      ...
+    # Subtest: stray fcTL
+    ok 2 - stray fcTL
+      ---
+      duration_ms: 6.140273
+      type: 'test'
+      ...
+    # Subtest: stray fdAT
+    ok 3 - stray fdAT
+      ---
+      duration_ms: 5.802672
+      type: 'test'
+      ...
+    # Subtest: short acTL
+    ok 4 - short acTL
+      ---
+      duration_ms: 10.164853
+      type: 'test'
+      ...
+    # Subtest: late acTL
+    ok 5 - late acTL
+      ---
+      duration_ms: 3.836341
+      type: 'test'
+      ...
+    # Subtest: truncated header
+    ok 6 - truncated header
+      ---
+      duration_ms: 5.022642
+      type: 'test'
+      ...
+    # Subtest: missing CRC
+    ok 7 - missing CRC
+      ---
+      duration_ms: 4.451332
+      type: 'test'
+      ...
+    # Subtest: oversized length
+    ok 8 - oversized length
+      ---
+      duration_ms: 6.328962
+      type: 'test'
+      ...
+    # Subtest: missing IEND
+    ok 9 - missing IEND
+      ---
+      duration_ms: 5.047072
+      type: 'test'
+      ...
+    # Subtest: nonempty IEND
+    ok 10 - nonempty IEND
+      ---
+      duration_ms: 8.923633
+      type: 'test'
+      ...
+    1..10
+ok 83 - PNG chunk bounds and stray animation chunks fail closed in input and depth
+  ---
+  duration_ms: 192.226159
+  type: 'test'
+  ...
+# Subtest: static PNG accepts animation names inside compressed pixels without substring scanning
+ok 84 - static PNG accepts animation names inside compressed pixels without substring scanning
+  ---
+  duration_ms: 194.410049
+  type: 'test'
+  ...
+# Subtest: real sanitized JPEG preserves dimensions, deterministic aspect, hashes and removes EXIF
+    # Subtest: 128x64
+    ok 1 - 128x64
+      ---
+      duration_ms: 104.393958
+      type: 'test'
+      ...
+    # Subtest: 64x128
+    ok 2 - 64x128
+      ---
+      duration_ms: 116.596911
+      type: 'test'
+      ...
+    # Subtest: 79x79
+    ok 3 - 79x79
+      ---
+      duration_ms: 98.682095
+      type: 'test'
+      ...
+    # Subtest: 1x1000
+    ok 4 - 1x1000
+      ---
+      duration_ms: 76.583087
+      type: 'test'
+      ...
+    1..4
+ok 85 - real sanitized JPEG preserves dimensions, deterministic aspect, hashes and removes EXIF
+  ---
+  duration_ms: 398.280452
+  type: 'test'
+  ...
+# Subtest: owned upload key, hash, MIME and filesystem boundaries fail closed
+    # Subtest: owner
+    ok 1 - owner
+      ---
+      duration_ms: 0.51185
+      type: 'test'
+      ...
+    # Subtest: deleted
+    ok 2 - deleted
+      ---
+      duration_ms: 0.270831
+      type: 'test'
+      ...
+    # Subtest: traversal
+    ok 3 - traversal
+      ---
+      duration_ms: 0.18533
+      type: 'test'
+      ...
+    # Subtest: absolute
+    ok 4 - absolute
+      ---
+      duration_ms: 0.25226
+      type: 'test'
+      ...
+    # Subtest: newline key
+    ok 5 - newline key
+      ---
+      duration_ms: 0.20297
+      type: 'test'
+      ...
+    # Subtest: forged hash
+    ok 6 - forged hash
+      ---
+      duration_ms: 11.636734
+      type: 'test'
+      ...
+    # Subtest: MIME mismatch
+    ok 7 - MIME mismatch
+      ---
+      duration_ms: 5.002602
+      type: 'test'
+      ...
+    # Subtest: dims mismatch
+    ok 8 - dims mismatch
+      ---
+      duration_ms: 5.224922
+      type: 'test'
+      ...
+    1..8
+ok 86 - owned upload key, hash, MIME and filesystem boundaries fail closed
+  ---
+  duration_ms: 83.71643
+  type: 'test'
+  ...
+# Subtest: malformed, truncated, animated and over-20MP uploads are rejected by real sharp
+ok 87 - malformed, truncated, animated and over-20MP uploads are rejected by real sharp
+  ---
+  duration_ms: 376.946605
+  type: 'test'
+  ...
+# Subtest: JPEG fallback uses only 85, 80, 75 and literal 262144-byte bound
+ok 88 - JPEG fallback uses only 85, 80, 75 and literal 262144-byte bound
+  ---
+  duration_ms: 94.912044
+  type: 'test'
+  ...
+# Subtest: hostile delivery URLs and image bombs never publish
+    # Subtest: http://replicate.delivery/x
+    ok 1 - http://replicate.delivery/x
+      ---
+      duration_ms: 0.36124
+      type: 'test'
+      ...
+    # Subtest: https://evilreplicate.delivery/x
+    ok 2 - https://evilreplicate.delivery/x
+      ---
+      duration_ms: 0.15373
+      type: 'test'
+      ...
+    # Subtest: https://replicate.delivery.evil/x
+    ok 3 - https://replicate.delivery.evil/x
+      ---
+      duration_ms: 0.11423
+      type: 'test'
+      ...
+    # Subtest: https://replicate.delivery:444/x
+    ok 4 - https://replicate.delivery:444/x
+      ---
+      duration_ms: 0.10067
+      type: 'test'
+      ...
+    # Subtest: https://u:p@replicate.delivery/x
+    ok 5 - https://u:p@replicate.delivery/x
+      ---
+      duration_ms: 0.12149
+      type: 'test'
+      ...
+    # Subtest: https://@replicate.delivery/x
+    ok 6 - https://@replicate.delivery/x
+      ---
+      duration_ms: 0.1512
+      type: 'test'
+      ...
+    # Subtest: https://replicate.delivery/x\#fragment
+    ok 7 - https://replicate.delivery/x\#fragment
+      ---
+      duration_ms: 0.15547
+      type: 'test'
+      ...
+    # Subtest: https://replicate.delivery/x\#
+    ok 8 - https://replicate.delivery/x\#
+      ---
+      duration_ms: 0.07714
+      type: 'test'
+      ...
+    # Subtest: https://127.0.0.1/x
+    ok 9 - https://127.0.0.1/x
+      ---
+      duration_ms: 0.07178
+      type: 'test'
+      ...
+    # Subtest: https://[::1]/x
+    ok 10 - https://[::1]/x
+      ---
+      duration_ms: 0.07183
+      type: 'test'
+      ...
+    # Subtest: https://2130706433/x
+    ok 11 - https://2130706433/x
+      ---
+      duration_ms: 0.09381
+      type: 'test'
+      ...
+    # Subtest: https://0x7f000001/x
+    ok 12 - https://0x7f000001/x
+      ---
+      duration_ms: 0.09285
+      type: 'test'
+      ...
+    # Subtest: https://replicate.delivery./x
+    ok 13 - https://replicate.delivery./x
+      ---
+      duration_ms: 0.07306
+      type: 'test'
+      ...
+    # Subtest: https://.replicate.delivery/x
+    ok 14 - https://.replicate.delivery/x
+      ---
+      duration_ms: 0.07357
+      type: 'test'
+      ...
+    # Subtest: https://bad..replicate.delivery/x
+    ok 15 - https://bad..replicate.delivery/x
+      ---
+      duration_ms: 0.08432
+      type: 'test'
+      ...
+    # Subtest: https://%72eplicate.delivery/x
+    ok 16 - https://%72eplicate.delivery/x
+      ---
+      duration_ms: 0.07499
+      type: 'test'
+      ...
+    # Subtest: https://replicate.delivery\\@evil/x
+    ok 17 - https://replicate.delivery\\@evil/x
+      ---
+      duration_ms: 0.07784
+      type: 'test'
+      ...
+    # Subtest:  https://replicate.delivery/x
+    ok 18 -  https://replicate.delivery/x
+      ---
+      duration_ms: 0.07422
+      type: 'test'
+      ...
+    # Subtest: https://replicate.delivery/x\\n
+    ok 19 - https://replicate.delivery/x\\n
+      ---
+      duration_ms: 0.05483
+      type: 'test'
+      ...
+    # Subtest: https://replicate.delivery/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    ok 20 - https://replicate.delivery/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      ---
+      duration_ms: 0.05788
+      type: 'test'
+      ...
+    1..20
+ok 89 - hostile delivery URLs and image bombs never publish
+  ---
+  duration_ms: 4.009091
+  type: 'test'
+  ...
+# Subtest: global address policy excludes IPv4 and IPv6 special-purpose ranges
+    # Subtest: 0.0.0.0
+    ok 1 - 0.0.0.0
+      ---
+      duration_ms: 0.246261
+      type: 'test'
+      ...
+    # Subtest: 0.255.255.255
+    ok 2 - 0.255.255.255
+      ---
+      duration_ms: 0.08624
+      type: 'test'
+      ...
+    # Subtest: 10.1.2.3
+    ok 3 - 10.1.2.3
+      ---
+      duration_ms: 0.1632
+      type: 'test'
+      ...
+    # Subtest: 100.64.0.1
+    ok 4 - 100.64.0.1
+      ---
+      duration_ms: 0.09587
+      type: 'test'
+      ...
+    # Subtest: 100.127.255.254
+    ok 5 - 100.127.255.254
+      ---
+      duration_ms: 0.08033
+      type: 'test'
+      ...
+    # Subtest: 127.0.0.1
+    ok 6 - 127.0.0.1
+      ---
+      duration_ms: 0.06949
+      type: 'test'
+      ...
+    # Subtest: 169.254.3.4
+    ok 7 - 169.254.3.4
+      ---
+      duration_ms: 0.07107
+      type: 'test'
+      ...
+    # Subtest: 172.16.0.0
+    ok 8 - 172.16.0.0
+      ---
+      duration_ms: 0.09179
+      type: 'test'
+      ...
+    # Subtest: 172.31.255.255
+    ok 9 - 172.31.255.255
+      ---
+      duration_ms: 0.0748
+      type: 'test'
+      ...
+    # Subtest: 192.0.0.8
+    ok 10 - 192.0.0.8
+      ---
+      duration_ms: 0.09062
+      type: 'test'
+      ...
+    # Subtest: 192.0.0.9
+    ok 11 - 192.0.0.9
+      ---
+      duration_ms: 0.07072
+      type: 'test'
+      ...
+    # Subtest: 192.0.2.1
+    ok 12 - 192.0.2.1
+      ---
+      duration_ms: 0.0883
+      type: 'test'
+      ...
+    # Subtest: 192.31.196.1
+    ok 13 - 192.31.196.1
+      ---
+      duration_ms: 0.07511
+      type: 'test'
+      ...
+    # Subtest: 192.52.193.1
+    ok 14 - 192.52.193.1
+      ---
+      duration_ms: 0.07194
+      type: 'test'
+      ...
+    # Subtest: 192.175.48.1
+    ok 15 - 192.175.48.1
+      ---
+      duration_ms: 0.08146
+      type: 'test'
+      ...
+    # Subtest: 192.88.99.1
+    ok 16 - 192.88.99.1
+      ---
+      duration_ms: 0.0783
+      type: 'test'
+      ...
+    # Subtest: 192.168.1.2
+    ok 17 - 192.168.1.2
+      ---
+      duration_ms: 0.06887
+      type: 'test'
+      ...
+    # Subtest: 198.18.0.1
+    ok 18 - 198.18.0.1
+      ---
+      duration_ms: 0.123161
+      type: 'test'
+      ...
+    # Subtest: 198.19.255.255
+    ok 19 - 198.19.255.255
+      ---
+      duration_ms: 0.09672
+      type: 'test'
+      ...
+    # Subtest: 198.51.100.2
+    ok 20 - 198.51.100.2
+      ---
+      duration_ms: 0.08799
+      type: 'test'
+      ...
+    # Subtest: 203.0.113.3
+    ok 21 - 203.0.113.3
+      ---
+      duration_ms: 0.07222
+      type: 'test'
+      ...
+    # Subtest: 224.1.2.3
+    ok 22 - 224.1.2.3
+      ---
+      duration_ms: 0.07085
+      type: 'test'
+      ...
+    # Subtest: 239.255.255.255
+    ok 23 - 239.255.255.255
+      ---
+      duration_ms: 0.07329
+      type: 'test'
+      ...
+    # Subtest: 240.0.0.1
+    ok 24 - 240.0.0.1
+      ---
+      duration_ms: 0.11115
+      type: 'test'
+      ...
+    # Subtest: 255.255.255.255
+    ok 25 - 255.255.255.255
+      ---
+      duration_ms: 0.1108
+      type: 'test'
+      ...
+    # Subtest: ::
+    ok 26 - ::
+      ---
+      duration_ms: 0.25254
+      type: 'test'
+      ...
+    # Subtest: ::1
+    ok 27 - ::1
+      ---
+      duration_ms: 0.13881
+      type: 'test'
+      ...
+    # Subtest: ::ffff:8.8.8.8
+    ok 28 - ::ffff:8.8.8.8
+      ---
+      duration_ms: 0.09278
+      type: 'test'
+      ...
+    # Subtest: ::ffff:808:808
+    ok 29 - ::ffff:808:808
+      ---
+      duration_ms: 0.20068
+      type: 'test'
+      ...
+    # Subtest: ::8.8.8.8
+    ok 30 - ::8.8.8.8
+      ---
+      duration_ms: 0.08864
+      type: 'test'
+      ...
+    # Subtest: ::808:808
+    ok 31 - ::808:808
+      ---
+      duration_ms: 0.104011
+      type: 'test'
+      ...
+    # Subtest: 64:ff9b::808:808
+    ok 32 - 64:ff9b::808:808
+      ---
+      duration_ms: 0.15231
+      type: 'test'
+      ...
+    # Subtest: 64:ff9b:1::1
+    ok 33 - 64:ff9b:1::1
+      ---
+      duration_ms: 0.08397
+      type: 'test'
+      ...
+    # Subtest: 100::1
+    ok 34 - 100::1
+      ---
+      duration_ms: 0.06491
+      type: 'test'
+      ...
+    # Subtest: 2001::1
+    ok 35 - 2001::1
+      ---
+      duration_ms: 0.20043
+      type: 'test'
+      ...
+    # Subtest: 2001:2::1
+    ok 36 - 2001:2::1
+      ---
+      duration_ms: 0.11602
+      type: 'test'
+      ...
+    # Subtest: 2001:20::1
+    ok 37 - 2001:20::1
+      ---
+      duration_ms: 0.12923
+      type: 'test'
+      ...
+    # Subtest: 2001:db8::1
+    ok 38 - 2001:db8::1
+      ---
+      duration_ms: 0.07724
+      type: 'test'
+      ...
+    # Subtest: 2002:0808:0808::1
+    ok 39 - 2002:0808:0808::1
+      ---
+      duration_ms: 0.07566
+      type: 'test'
+      ...
+    # Subtest: 3fff::1
+    ok 40 - 3fff::1
+      ---
+      duration_ms: 0.07443
+      type: 'test'
+      ...
+    # Subtest: fc00::1
+    ok 41 - fc00::1
+      ---
+      duration_ms: 0.07159
+      type: 'test'
+      ...
+    # Subtest: fdff::1
+    ok 42 - fdff::1
+      ---
+      duration_ms: 0.0881
+      type: 'test'
+      ...
+    # Subtest: fe80::1
+    ok 43 - fe80::1
+      ---
+      duration_ms: 0.10848
+      type: 'test'
+      ...
+    # Subtest: fec0::1
+    ok 44 - fec0::1
+      ---
+      duration_ms: 0.1197
+      type: 'test'
+      ...
+    # Subtest: ff02::1
+    ok 45 - ff02::1
+      ---
+      duration_ms: 0.12019
+      type: 'test'
+      ...
+    # Subtest: 2606:4700::1%eth0
+    ok 46 - 2606:4700::1%eth0
+      ---
+      duration_ms: 0.09997
+      type: 'test'
+      ...
+    # Subtest: 2620:4f:8000::1
+    ok 47 - 2620:4f:8000::1
+      ---
+      duration_ms: 0.09089
+      type: 'test'
+      ...
+    # Subtest: bad
+    ok 48 - bad
+      ---
+      duration_ms: 0.06984
+      type: 'test'
+      ...
+    1..48
+ok 90 - global address policy excludes IPv4 and IPv6 special-purpose ranges
+  ---
+  duration_ms: 9.453324
+  type: 'test'
+  ...
+# Subtest: DNS validates all answers, pins lookup and original TLS hostname, never sends auth
+ok 91 - DNS validates all answers, pins lookup and original TLS hostname, never sends auth
+  ---
+  duration_ms: 182.234755
+  type: 'test'
+  ...
+# Subtest: DNS stalls, abort and per-request timers stay within original budget
+ok 92 - DNS stalls, abort and per-request timers stay within original budget
+  ---
+  duration_ms: 118.546562
+  type: 'test'
+  ...
+# Subtest: streams reject redirect, declared and actual overflow, encoding, magic, decode and canvas attacks
+    # Subtest: redirect
+    ok 1 - redirect
+      ---
+      duration_ms: 4.270821
+      type: 'test'
+      ...
+    # Subtest: declared overflow
+    ok 2 - declared overflow
+      ---
+      duration_ms: 5.035721
+      type: 'test'
+      ...
+    # Subtest: absent overflow
+    ok 3 - absent overflow
+      ---
+      duration_ms: 38.332964
+      type: 'test'
+      ...
+    # Subtest: lying length
+    ok 4 - lying length
+      ---
+      duration_ms: 16.559495
+      type: 'test'
+      ...
+    # Subtest: length mismatch
+    ok 5 - length mismatch
+      ---
+      duration_ms: 2.24865
+      type: 'test'
+      ...
+    # Subtest: bad length
+    ok 6 - bad length
+      ---
+      duration_ms: 10.378954
+      type: 'test'
+      ...
+    # Subtest: gzip
+    ok 7 - gzip
+      ---
+      duration_ms: 2.896771
+      type: 'test'
+      ...
+    # Subtest: br
+    ok 8 - br
+      ---
+      duration_ms: 1.874311
+      type: 'test'
+      ...
+    # Subtest: mime
+    ok 9 - mime
+      ---
+      duration_ms: 3.454161
+      type: 'test'
+      ...
+    # Subtest: magic
+    ok 10 - magic
+      ---
+      duration_ms: 7.358023
+      type: 'test'
+      ...
+    # Subtest: truncated
+    ok 11 - truncated
+      ---
+      duration_ms: 3.028781
+      type: 'test'
+      ...
+    # Subtest: wrong canvas
+    ok 12 - wrong canvas
+      ---
+      duration_ms: 6.096923
+      type: 'test'
+      ...
+    # Subtest: pixels
+    ok 13 - pixels
+      ---
+      duration_ms: 8.506343
+      type: 'test'
+      ...
+    # Subtest: animated
+    ok 14 - animated
+      ---
+      duration_ms: 20.320177
+      type: 'test'
+      ...
+    # Subtest: empty
+    ok 15 - empty
+      ---
+      duration_ms: 2.779111
+      type: 'test'
+      ...
+    # Subtest: reset
+    ok 16 - reset
+      ---
+      duration_ms: 2.881291
+      type: 'test'
+      ...
+    # Subtest: network
+    ok 17 - network
+      ---
+      duration_ms: 3.292952
+      type: 'test'
+      ...
+    1..17
+ok 93 - streams reject redirect, declared and actual overflow, encoding, magic, decode and canvas attacks
+  ---
+  duration_ms: 405.286625
+  type: 'test'
+  ...
+# Subtest: exact crop and original-size PNG pixels, distinct hashes, safe config and 0600 files
+    # Subtest: 128x64
+    ok 1 - 128x64
+      ---
+      duration_ms: 76.531557
+      type: 'test'
+      ...
+    # Subtest: 64x128
+    ok 2 - 64x128
+      ---
+      duration_ms: 77.042398
+      type: 'test'
+      ...
+    # Subtest: 79x79
+    ok 3 - 79x79
+      ---
+      duration_ms: 123.127124
+      type: 'test'
+      ...
+    1..3
+ok 94 - exact crop and original-size PNG pixels, distinct hashes, safe config and 0600 files
+  ---
+  duration_ms: 277.879409
+  type: 'test'
+  ...
+# Subtest: binding and observation forgery or partial output makes zero delivery requests
+    # Subtest: cloned observation
+    ok 1 - cloned observation
+      ---
+      duration_ms: 1.144361
+      type: 'test'
+      ...
+    # Subtest: browser URL
+    ok 2 - browser URL
+      ---
+      duration_ms: 1.22123
+      type: 'test'
+      ...
+    # Subtest: cloned prepared
+    ok 3 - cloned prepared
+      ---
+      duration_ms: 1.164371
+      type: 'test'
+      ...
+    # Subtest: source
+    ok 4 - source
+      ---
+      duration_ms: 6.577772
+      type: 'test'
+      ...
+    # Subtest: transmitted
+    ok 5 - transmitted
+      ---
+      duration_ms: 2.337921
+      type: 'test'
+      ...
+    # Subtest: request
+    ok 6 - request
+      ---
+      duration_ms: 3.212911
+      type: 'test'
+      ...
+    # Subtest: transform
+    ok 7 - transform
+      ---
+      duration_ms: 1.472741
+      type: 'test'
+      ...
+    # Subtest: version
+    ok 8 - version
+      ---
+      duration_ms: 1.98749
+      type: 'test'
+      ...
+    # Subtest: contract
+    ok 9 - contract
+      ---
+      duration_ms: 1.702
+      type: 'test'
+      ...
+    # Subtest: status
+    ok 10 - status
+      ---
+      duration_ms: 0.968771
+      type: 'test'
+      ...
+    # Subtest: quarantined
+    ok 11 - quarantined
+      ---
+      duration_ms: 1.33145
+      type: 'test'
+      ...
+    # Subtest: prediction
+    ok 12 - prediction
+      ---
+      duration_ms: 1.159231
+      type: 'test'
+      ...
+    # Subtest: submission id
+    ok 13 - submission id
+      ---
+      duration_ms: 1.21178
+      type: 'test'
+      ...
+    # Subtest: deadline
+    ok 14 - deadline
+      ---
+      duration_ms: 1.10097
+      type: 'test'
+      ...
+    # Subtest: renewed budget
+    ok 15 - renewed budget
+      ---
+      duration_ms: 2.851281
+      type: 'test'
+      ...
+    1..15
+ok 95 - binding and observation forgery or partial output makes zero delivery requests
+  ---
+  duration_ms: 83.81006
+  type: 'test'
+  ...
+# Subtest: abort/deadline before and after DNS, streaming, and real output decode prevents writes
+    # Subtest: DNS
+    ok 1 - DNS
+      ---
+      duration_ms: 95.506484
+      type: 'test'
+      ...
+    # Subtest: stream
+    ok 2 - stream
+      ---
+      duration_ms: 63.897943
+      type: 'test'
+      ...
+    # Subtest: decode
+    ok 3 - decode
+      ---
+      duration_ms: 59.691961
+      type: 'test'
+      ...
+    1..3
+ok 96 - abort/deadline before and after DNS, streaming, and real output decode prevents writes
+  ---
+  duration_ms: 350.067345
+  type: 'test'
+  ...
+# Subtest: exclusive writes, symlink directories and partial failure never remove preexisting winner files
+ok 97 - exclusive writes, symlink directories and partial failure never remove preexisting winner files
+  ---
+  duration_ms: 134.095448
+  type: 'test'
+  ...
+# Subtest: exclusive collision after first write preserves preexisting depth winner and removes only own output
+ok 98 - exclusive collision after first write preserves preexisting depth winner and removes only own output
+  ---
+  duration_ms: 79.894109
+  type: 'test'
+  ...
+# Subtest: deadline at opened file and after first write cleans partial artifacts
+    # Subtest: before write
+    ok 1 - before write
+      ---
+      duration_ms: 82.183429
+      type: 'test'
+      ...
+    # Subtest: after write
+    ok 2 - after write
+      ---
+      duration_ms: 84.78568
+      type: 'test'
+      ...
+    1..2
+ok 99 - deadline at opened file and after first write cleans partial artifacts
+  ---
+  duration_ms: 167.745659
+  type: 'test'
+  ...
+# Subtest: valid JPEG and WebP canvases strip provider metadata and final PNG overflow fails before files
+ok 100 - valid JPEG and WebP canvases strip provider metadata and final PNG overflow fails before files
+  ---
+  duration_ms: 239.069556
+  type: 'test'
+  ...
+# Subtest: I5b labelled hosted software branch: strict row/config/corpus and actual bytes
+    # Subtest: valid software shape with 12 inputs x 3 styles, distinct per-pair config/request
+    ok 1 - valid software shape with 12 inputs x 3 styles, distinct per-pair config/request
+      ---
+      duration_ms: 78.185107
+      type: 'test'
+      ...
+    # Subtest: guard oracle: synthetic hosted corpus cannot be accepted
+    ok 2 - guard oracle: synthetic hosted corpus cannot be accepted
+      ---
+      duration_ms: 41.769645
+      type: 'test'
+      ...
+    # Subtest: closed canonical row, all shared columns, style and SQL null metrics
+    ok 3 - closed canonical row, all shared columns, style and SQL null metrics
+      ---
+      duration_ms: 49.684608
+      type: 'test'
+      ...
+    # Subtest: corpus refuses source/attestation, mixed pins, aliases, substitution and geometry
+    ok 4 - corpus refuses source/attestation, mixed pins, aliases, substitution and geometry
+      ---
+      duration_ms: 445.915389
+      type: 'test'
+      ...
+    # Subtest: server-only review software acceptance, eligibility and once-only rejection
+    ok 5 - server-only review software acceptance, eligibility and once-only rejection
+      ---
+      duration_ms: 73.272126
+      type: 'test'
+      ...
+    # Subtest: missing/changed input, output, depth and config deny review and eligibility
+    ok 6 - missing/changed input, output, depth and config deny review and eligibility
+      ---
+      duration_ms: 351.511106
+      type: 'test'
+      ...
+    # Subtest: final eligibility rechecks deleted/quality/evidence authority after byte reads
+    ok 7 - final eligibility rechecks deleted/quality/evidence authority after byte reads
+      ---
+      duration_ms: 229.934162
+      type: 'test'
+      ...
+    # Subtest: private hosted unverified composite has existing UNVERIFIED pixels
+    ok 8 - private hosted unverified composite has existing UNVERIFIED pixels
+      ---
+      duration_ms: 423.510561
+      type: 'test'
+      ...
+    1..8
+ok 101 - I5b labelled hosted software branch: strict row/config/corpus and actual bytes
+  ---
+  duration_ms: 1732.239688
+  type: 'test'
+  ...
+# Subtest: I5b hosted sharing mode alone grants no public authority; private and final cache guards
+ok 102 - I5b hosted sharing mode alone grants no public authority; private and final cache guards
+  ---
+  duration_ms: 1836.234575
+  type: 'test'
+  ...
+# Subtest: hosted config exact pins, fixed styles and nonenumerable private token
+ok 103 - hosted config exact pins, fixed styles and nonenumerable private token
+  ---
+  duration_ms: 7.060323
+  type: 'test'
+  ...
+# Subtest: missing/invalid pins, token, accepts, envelope, seed or source deny
+ok 104 - missing/invalid pins, token, accepts, envelope, seed or source deny
+  ---
+  duration_ms: 4.651092
+  type: 'test'
+  ...
+# Subtest: fixture retains wider seed and existing common validation
+ok 105 - fixture retains wider seed and existing common validation
+  ---
+  duration_ms: 1.34355
+  type: 'test'
+  ...
+# Subtest: missing hosted authorization makes zero creates
+    # Subtest: absent
+    ok 1 - absent
+      ---
+      duration_ms: 3.022391
+      type: 'test'
+      ...
+    # Subtest: empty
+    ok 2 - empty
+      ---
+      duration_ms: 0.344221
+      type: 'test'
+      ...
+    # Subtest: model
+    ok 3 - model
+      ---
+      duration_ms: 0.50492
+      type: 'test'
+      ...
+    # Subtest: version
+    ok 4 - version
+      ---
+      duration_ms: 0.29752
+      type: 'test'
+      ...
+    # Subtest: digest
+    ok 5 - digest
+      ---
+      duration_ms: 0.3104
+      type: 'test'
+      ...
+    # Subtest: missing token
+    ok 6 - missing token
+      ---
+      duration_ms: 0.23209
+      type: 'test'
+      ...
+    # Subtest: empty token
+    ok 7 - empty token
+      ---
+      duration_ms: 0.396781
+      type: 'test'
+      ...
+    # Subtest: whitespace token
+    ok 8 - whitespace token
+      ---
+      duration_ms: 0.4866
+      type: 'test'
+      ...
+    # Subtest: newline token
+    ok 9 - newline token
+      ---
+      duration_ms: 0.7895
+      type: 'test'
+      ...
+    # Subtest: token too long
+    ok 10 - token too long
+      ---
+      duration_ms: 0.635031
+      type: 'test'
+      ...
+    # Subtest: origin override
+    ok 11 - origin override
+      ---
+      duration_ms: 0.29458
+      type: 'test'
+      ...
+    # Subtest: TLS override
+    ok 12 - TLS override
+      ---
+      duration_ms: 0.21496
+      type: 'test'
+      ...
+    # Subtest: response limit override
+    ok 13 - response limit override
+      ---
+      duration_ms: 0.23882
+      type: 'test'
+      ...
+    1..13
+ok 106 - missing hosted authorization makes zero creates
+  ---
+  duration_ms: 13.021874
+  type: 'test'
+  ...
+# Subtest: prepared request is closed, bounded, pinned and cryptographically bound
+    # Subtest: version
+    ok 1 - version
+      ---
+      duration_ms: 4.312001
+      type: 'test'
+      ...
+    # Subtest: extra top field
+    ok 2 - extra top field
+      ---
+      duration_ms: 1.667651
+      type: 'test'
+      ...
+    # Subtest: unknown input
+    ok 3 - unknown input
+      ---
+      duration_ms: 0.84459
+      type: 'test'
+      ...
+    # Subtest: URL image
+    ok 4 - URL image
+      ---
+      duration_ms: 1.023301
+      type: 'test'
+      ...
+    # Subtest: PNG not prepared JPEG
+    ok 5 - PNG not prepared JPEG
+      ---
+      duration_ms: 1.59471
+      type: 'test'
+      ...
+    # Subtest: noncanonical base64
+    ok 6 - noncanonical base64
+      ---
+      duration_ms: 0.797201
+      type: 'test'
+      ...
+    # Subtest: empty image
+    ok 7 - empty image
+      ---
+      duration_ms: 0.45482
+      type: 'test'
+      ...
+    # Subtest: oversize image
+    ok 8 - oversize image
+      ---
+      duration_ms: 3.905941
+      type: 'test'
+      ...
+    # Subtest: oversize JSON
+    ok 9 - oversize JSON
+      ---
+      duration_ms: 2.527611
+      type: 'test'
+      ...
+    # Subtest: prompt bytes
+    ok 10 - prompt bytes
+      ---
+      duration_ms: 2.642421
+      type: 'test'
+      ...
+    # Subtest: empty prompt
+    ok 11 - empty prompt
+      ---
+      duration_ms: 0.478721
+      type: 'test'
+      ...
+    # Subtest: samples
+    ok 12 - samples
+      ---
+      duration_ms: 0.25477
+      type: 'test'
+      ...
+    # Subtest: resolution
+    ok 13 - resolution
+      ---
+      duration_ms: 0.24108
+      type: 'test'
+      ...
+    # Subtest: detect
+    ok 14 - detect
+      ---
+      duration_ms: 0.24457
+      type: 'test'
+      ...
+    # Subtest: steps
+    ok 15 - steps
+      ---
+      duration_ms: 0.27236
+      type: 'test'
+      ...
+    # Subtest: scale
+    ok 16 - scale
+      ---
+      duration_ms: 0.23956
+      type: 'test'
+      ...
+    # Subtest: eta
+    ok 17 - eta
+      ---
+      duration_ms: 0.27834
+      type: 'test'
+      ...
+    # Subtest: random seed
+    ok 18 - random seed
+      ---
+      duration_ms: 0.27197
+      type: 'test'
+      ...
+    # Subtest: seed fraction
+    ok 19 - seed fraction
+      ---
+      duration_ms: 0.32108
+      type: 'test'
+      ...
+    # Subtest: large seed
+    ok 20 - large seed
+      ---
+      duration_ms: 0.36735
+      type: 'test'
+      ...
+    # Subtest: getter
+    ok 21 - getter
+      ---
+      duration_ms: 0.41974
+      type: 'test'
+      ...
+    # Subtest: bad request_sha
+    ok 22 - bad request_sha
+      ---
+      duration_ms: 0.92317
+      type: 'test'
+      ...
+    # Subtest: bad transmitted_input_sha
+    ok 23 - bad transmitted_input_sha
+      ---
+      duration_ms: 0.43681
+      type: 'test'
+      ...
+    # Subtest: bad contract_sha
+    ok 24 - bad contract_sha
+      ---
+      duration_ms: 0.434141
+      type: 'test'
+      ...
+    # Subtest: bad version
+    ok 25 - bad version
+      ---
+      duration_ms: 0.47061
+      type: 'test'
+      ...
+    # Subtest: bad source_input_sha
+    ok 26 - bad source_input_sha
+      ---
+      duration_ms: 0.44812
+      type: 'test'
+      ...
+    1..26
+ok 107 - prepared request is closed, bounded, pinned and cryptographically bound
+  ---
+  duration_ms: 50.272928
+  type: 'test'
+  ...
+# Subtest: async create/get/cancel use exact fixed paths, TLS and header flags
+ok 108 - async create/get/cancel use exact fixed paths, TLS and header flags
+  ---
+  duration_ms: 14.167885
+  type: 'test'
+  ...
+# Subtest: durable authority denial and throw cause zero POST
+    # Subtest: false
+    ok 1 - false
+      ---
+      duration_ms: 0.97878
+      type: 'test'
+      ...
+    # Subtest: throw
+    ok 2 - throw
+      ---
+      duration_ms: 1.02706
+      type: 'test'
+      ...
+    # Subtest: truthy
+    ok 3 - truthy
+      ---
+      duration_ms: 0.549691
+      type: 'test'
+      ...
+    # Subtest: missing final callback
+    ok 4 - missing final callback
+      ---
+      duration_ms: 0.59849
+      type: 'test'
+      ...
+    # Subtest: throwing final callback
+    ok 5 - throwing final callback
+      ---
+      duration_ms: 0.69996
+      type: 'test'
+      ...
+    1..5
+ok 109 - durable authority denial and throw cause zero POST
+  ---
+  duration_ms: 4.658172
+  type: 'test'
+  ...
+# Subtest: lost create response never creates twice
+ok 110 - lost create response never creates twice
+  ---
+  duration_ms: 1.296891
+  type: 'test'
+  ...
+# Subtest: crash after committed submitting before invocation remains no-replay to another caller
+ok 111 - crash after committed submitting before invocation remains no-replay to another caller
+  ---
+  duration_ms: 1.31021
+  type: 'test'
+  ...
+# Subtest: every bad POST class is one-shot and keeps conservative reservation
+    # Subtest: HTTP 400
+    ok 1 - HTTP 400
+      ---
+      duration_ms: 2.452111
+      type: 'test'
+      ...
+    # Subtest: HTTP 401
+    ok 2 - HTTP 401
+      ---
+      duration_ms: 1.90795
+      type: 'test'
+      ...
+    # Subtest: HTTP 403
+    ok 3 - HTTP 403
+      ---
+      duration_ms: 1.378361
+      type: 'test'
+      ...
+    # Subtest: HTTP 404
+    ok 4 - HTTP 404
+      ---
+      duration_ms: 1.41388
+      type: 'test'
+      ...
+    # Subtest: HTTP 422
+    ok 5 - HTTP 422
+      ---
+      duration_ms: 1.736071
+      type: 'test'
+      ...
+    # Subtest: HTTP 429
+    ok 6 - HTTP 429
+      ---
+      duration_ms: 1.309461
+      type: 'test'
+      ...
+    # Subtest: HTTP 500
+    ok 7 - HTTP 500
+      ---
+      duration_ms: 0.78692
+      type: 'test'
+      ...
+    # Subtest: HTTP 502
+    ok 8 - HTTP 502
+      ---
+      duration_ms: 1.15447
+      type: 'test'
+      ...
+    # Subtest: HTTP 503
+    ok 9 - HTTP 503
+      ---
+      duration_ms: 1.438241
+      type: 'test'
+      ...
+    # Subtest: reset
+    ok 10 - reset
+      ---
+      duration_ms: 1.27125
+      type: 'test'
+      ...
+    # Subtest: timeout
+    ok 11 - timeout
+      ---
+      duration_ms: 0.924761
+      type: 'test'
+      ...
+    # Subtest: socket error
+    ok 12 - socket error
+      ---
+      duration_ms: 0.84587
+      type: 'test'
+      ...
+    # Subtest: malformed
+    ok 13 - malformed
+      ---
+      duration_ms: 2.714111
+      type: 'test'
+      ...
+    # Subtest: lost ID
+    ok 14 - lost ID
+      ---
+      duration_ms: 3.206471
+      type: 'test'
+      ...
+    # Subtest: invalid ID
+    ok 15 - invalid ID
+      ---
+      duration_ms: 2.159401
+      type: 'test'
+      ...
+    # Subtest: oversized ID
+    ok 16 - oversized ID
+      ---
+      duration_ms: 1.828761
+      type: 'test'
+      ...
+    # Subtest: unicode ID
+    ok 17 - unicode ID
+      ---
+      duration_ms: 1.676981
+      type: 'test'
+      ...
+    # Subtest: wrong model
+    ok 18 - wrong model
+      ---
+      duration_ms: 2.01513
+      type: 'test'
+      ...
+    # Subtest: wrong version
+    ok 19 - wrong version
+      ---
+      duration_ms: 6.989993
+      type: 'test'
+      ...
+    # Subtest: unknown status
+    ok 20 - unknown status
+      ---
+      duration_ms: 1.733041
+      type: 'test'
+      ...
+    # Subtest: redirect
+    ok 21 - redirect
+      ---
+      duration_ms: 0.95662
+      type: 'test'
+      ...
+    # Subtest: header oversize
+    ok 22 - header oversize
+      ---
+      duration_ms: 0.81581
+      type: 'test'
+      ...
+    # Subtest: stream oversize
+    ok 23 - stream oversize
+      ---
+      duration_ms: 1.409921
+      type: 'test'
+      ...
+    # Subtest: encoded response
+    ok 24 - encoded response
+      ---
+      duration_ms: 1.11697
+      type: 'test'
+      ...
+    # Subtest: wrong MIME
+    ok 25 - wrong MIME
+      ---
+      duration_ms: 4.040742
+      type: 'test'
+      ...
+    # Subtest: length mismatch
+    ok 26 - length mismatch
+      ---
+      duration_ms: 1.27571
+      type: 'test'
+      ...
+    # Subtest: wrong output count
+    ok 27 - wrong output count
+      ---
+      duration_ms: 1.448561
+      type: 'test'
+      ...
+    # Subtest: wrong output slots
+    ok 28 - wrong output slots
+      ---
+      duration_ms: 0.94584
+      type: 'test'
+      ...
+    1..28
+ok 112 - every bad POST class is one-shot and keeps conservative reservation
+  ---
+  duration_ms: 55.84506
+  type: 'test'
+  ...
+# Subtest: returned authorization must match immutable request, version, claim and prepared binding
+    # Subtest: request
+    ok 1 - request
+      ---
+      duration_ms: 0.666001
+      type: 'test'
+      ...
+    # Subtest: version
+    ok 2 - version
+      ---
+      duration_ms: 0.42445
+      type: 'test'
+      ...
+    # Subtest: contract
+    ok 3 - contract
+      ---
+      duration_ms: 0.48944
+      type: 'test'
+      ...
+    # Subtest: model
+    ok 4 - model
+      ---
+      duration_ms: 0.58594
+      type: 'test'
+      ...
+    # Subtest: transform
+    ok 5 - transform
+      ---
+      duration_ms: 0.61858
+      type: 'test'
+      ...
+    # Subtest: job
+    ok 6 - job
+      ---
+      duration_ms: 0.475
+      type: 'test'
+      ...
+    # Subtest: attempt
+    ok 7 - attempt
+      ---
+      duration_ms: 0.75341
+      type: 'test'
+      ...
+    # Subtest: fence
+    ok 8 - fence
+      ---
+      duration_ms: 0.61488
+      type: 'test'
+      ...
+    # Subtest: deadline
+    ok 9 - deadline
+      ---
+      duration_ms: 0.39897
+      type: 'test'
+      ...
+    # Subtest: state
+    ok 10 - state
+      ---
+      duration_ms: 0.688641
+      type: 'test'
+      ...
+    # Subtest: identity already known
+    ok 11 - identity already known
+      ---
+      duration_ms: 0.47115
+      type: 'test'
+      ...
+    # Subtest: quarantine
+    ok 12 - quarantine
+      ---
+      duration_ms: 0.39436
+      type: 'test'
+      ...
+    # Subtest: bad submission ID
+    ok 13 - bad submission ID
+      ---
+      duration_ms: 0.75165
+      type: 'test'
+      ...
+    # Subtest: bad ticket
+    ok 14 - bad ticket
+      ---
+      duration_ms: 0.544921
+      type: 'test'
+      ...
+    # Subtest: acceptance
+    ok 15 - acceptance
+      ---
+      duration_ms: 0.4867
+      type: 'test'
+      ...
+    1..15
+ok 113 - returned authorization must match immutable request, version, claim and prepared binding
+  ---
+  duration_ms: 10.162244
+  type: 'test'
+  ...
+# Subtest: final abort, deadline and revocation prevent invocation after committed authorization
+    # Subtest: abort
+    ok 1 - abort
+      ---
+      duration_ms: 0.90559
+      type: 'test'
+      ...
+    # Subtest: deadline
+    ok 2 - deadline
+      ---
+      duration_ms: 0.707601
+      type: 'test'
+      ...
+    # Subtest: revoked
+    ok 3 - revoked
+      ---
+      duration_ms: 0.63835
+      type: 'test'
+      ...
+    # Subtest: final clock throw
+    ok 4 - final clock throw
+      ---
+      duration_ms: 0.68724
+      type: 'test'
+      ...
+    # Subtest: final binding mutation
+    ok 5 - final binding mutation
+      ---
+      duration_ms: 0.60766
+      type: 'test'
+      ...
+    # Subtest: claim mutation
+    ok 6 - claim mutation
+      ---
+      duration_ms: 0.666851
+      type: 'test'
+      ...
+    1..6
+ok 114 - final abort, deadline and revocation prevent invocation after committed authorization
+  ---
+  duration_ms: 6.878082
+  type: 'test'
+  ...
+# Subtest: late valid ID is bound for cleanup after abort/deadline and never grants output
+    # Subtest: abort
+    ok 1 - abort
+      ---
+      duration_ms: 3.444891
+      type: 'test'
+      ...
+    # Subtest: deadline
+    ok 2 - deadline
+      ---
+      duration_ms: 1.74781
+      type: 'test'
+      ...
+    # Subtest: lease expired
+    ok 3 - lease expired
+      ---
+      duration_ms: 1.56181
+      type: 'test'
+      ...
+    1..3
+ok 115 - late valid ID is bound for cleanup after abort/deadline and never grants output
+  ---
+  duration_ms: 7.564803
+  type: 'test'
+  ...
+# Subtest: lost ID commit and identity conflict never replay or overwrite/publish
+    # Subtest: lost ID commit
+    ok 1 - lost ID commit
+      ---
+      duration_ms: 1.702221
+      type: 'test'
+      ...
+    # Subtest: durably bound but commit acknowledgement lost
+    ok 2 - durably bound but commit acknowledgement lost
+      ---
+      duration_ms: 2.693661
+      type: 'test'
+      ...
+    # Subtest: identity conflict quarantined
+    ok 3 - identity conflict quarantined
+      ---
+      duration_ms: 2.141231
+      type: 'test'
+      ...
+    1..3
+ok 116 - lost ID commit and identity conflict never replay or overwrite/publish
+  ---
+  duration_ms: 7.419933
+  type: 'test'
+  ...
+# Subtest: provider bodies and unknown metrics cannot leak or become measurements
+ok 117 - provider bodies and unknown metrics cannot leak or become measurements
+  ---
+  duration_ms: 2.175351
+  type: 'test'
+  ...
+# Subtest: GET validates identity and status, rejects redirects and bounds streamed responses
+    # Subtest: identity
+    ok 1 - identity
+      ---
+      duration_ms: 3.128821
+      type: 'test'
+      ...
+    # Subtest: status
+    ok 2 - status
+      ---
+      duration_ms: 1.537881
+      type: 'test'
+      ...
+    # Subtest: model
+    ok 3 - model
+      ---
+      duration_ms: 1.43685
+      type: 'test'
+      ...
+    # Subtest: version
+    ok 4 - version
+      ---
+      duration_ms: 3.773282
+      type: 'test'
+      ...
+    # Subtest: redirect
+    ok 5 - redirect
+      ---
+      duration_ms: 1.39663
+      type: 'test'
+      ...
+    # Subtest: body oversize
+    ok 6 - body oversize
+      ---
+      duration_ms: 2.159911
+      type: 'test'
+      ...
+    # Subtest: header oversize
+    ok 7 - header oversize
+      ---
+      duration_ms: 1.00042
+      type: 'test'
+      ...
+    # Subtest: succeeded missing depth
+    ok 8 - succeeded missing depth
+      ---
+      duration_ms: 1.603961
+      type: 'test'
+      ...
+    # Subtest: succeeded extra output
+    ok 9 - succeeded extra output
+      ---
+      duration_ms: 1.695041
+      type: 'test'
+      ...
+    # Subtest: succeeded raw invalid URI
+    ok 10 - succeeded raw invalid URI
+      ---
+      duration_ms: 1.51844
+      type: 'test'
+      ...
+    # Subtest: succeeded HTTP URI
+    ok 11 - succeeded HTTP URI
+      ---
+      duration_ms: 3.533871
+      type: 'test'
+      ...
+    # Subtest: succeeded long URI
+    ok 12 - succeeded long URI
+      ---
+      duration_ms: 1.73703
+      type: 'test'
+      ...
+    1..12
+ok 118 - GET validates identity and status, rejects redirects and bounds streamed responses
+  ---
+  duration_ms: 29.70447
+  type: 'test'
+  ...
+# Subtest: bounded GET retries handle 429, faults, fixed deadline and abort
+    # Subtest: 429 Retry-After is at most five seconds
+    ok 1 - 429 Retry-After is at most five seconds
+      ---
+      duration_ms: 3.630122
+      type: 'test'
+      ...
+    # Subtest: 429 fractional Retry-After
+    ok 2 - 429 fractional Retry-After
+      ---
+      duration_ms: 3.066731
+      type: 'test'
+      ...
+    # Subtest: transient faults stop at three consecutive failures
+    ok 3 - transient faults stop at three consecutive failures
+      ---
+      duration_ms: 4.181001
+      type: 'test'
+      ...
+    # Subtest: success resets consecutive fault count; ordinary interval is two seconds
+    ok 4 - success resets consecutive fault count; ordinary interval is two seconds
+      ---
+      duration_ms: 2.777901
+      type: 'test'
+      ...
+    # Subtest: wait is capped at original remaining deadline
+    ok 5 - wait is capped at original remaining deadline
+      ---
+      duration_ms: 1.8436
+      type: 'test'
+      ...
+    # Subtest: abort during retry wait prevents another GET
+    ok 6 - abort during retry wait prevents another GET
+      ---
+      duration_ms: 1.745011
+      type: 'test'
+      ...
+    # Subtest: total HTTP timer caps a stalled injected stream
+    ok 7 - total HTTP timer caps a stalled injected stream
+      ---
+      duration_ms: 56.48386
+      type: 'test'
+      ...
+    1..7
+ok 119 - bounded GET retries handle 429, faults, fixed deadline and abort
+  ---
+  duration_ms: 75.112627
+  type: 'test'
+  ...
+# Subtest: budgets cannot reset, increase, run backwards or hide invalid trusted values
+ok 120 - budgets cannot reset, increase, run backwards or hide invalid trusted values
+  ---
+  duration_ms: 4.917062
+  type: 'test'
+  ...
+# Subtest: cancellation is safe observation without replay, completion or refund authority
+ok 121 - cancellation is safe observation without replay, completion or refund authority
+  ---
+  duration_ms: 1.893361
+  type: 'test'
+  ...
+# Subtest: hosted mode remains disabled without activation evidence
+ok 122 - hosted mode remains disabled without activation evidence
+  ---
+  duration_ms: 0.65698
+  type: 'test'
+  ...
+# Subtest: maximum prepared JPEG and prompts stay below literal request limit; response limit is inclusive
+ok 123 - maximum prepared JPEG and prompts stay below literal request limit; response limit is inclusive
+  ---
+  duration_ms: 22.627658
+  type: 'test'
+  ...
+# Subtest: trailing newline token and IDs fail closed before transport or identity binding
+ok 124 - trailing newline token and IDs fail closed before transport or identity binding
+  ---
+  duration_ms: 1.567771
+  type: 'test'
+  ...
+# Subtest: all provider terminal statuses are observations without local job completion
+    # Subtest: starting
+    ok 1 - starting
+      ---
+      duration_ms: 0.80935
+      type: 'test'
+      ...
+    # Subtest: processing
+    ok 2 - processing
+      ---
+      duration_ms: 0.79641
+      type: 'test'
+      ...
+    # Subtest: succeeded
+    ok 3 - succeeded
+      ---
+      duration_ms: 0.834001
+      type: 'test'
+      ...
+    # Subtest: failed
+    ok 4 - failed
+      ---
+      duration_ms: 0.79718
+      type: 'test'
+      ...
+    # Subtest: canceled
+    ok 5 - canceled
+      ---
+      duration_ms: 0.684
+      type: 'test'
+      ...
+    # Subtest: aborted
+    ok 6 - aborted
+      ---
+      duration_ms: 0.66691
+      type: 'test'
+      ...
+    1..6
+ok 125 - all provider terminal statuses are observations without local job completion
+  ---
+  duration_ms: 5.388181
+  type: 'test'
+  ...
+# Subtest: abort in flight is ambiguous, attempts no retry and exposes no raw error
+ok 126 - abort in flight is ambiguous, attempts no retry and exposes no raw error
+  ---
+  duration_ms: 21.115388
+  type: 'test'
+  ...
+# Subtest: invalid UTF8 response fails closed and does not bind an ID
+ok 127 - invalid UTF8 response fails closed and does not bind an ID
+  ---
+  duration_ms: 1.10808
+  type: 'test'
+  ...
+# Subtest: injected sleepers remain abortable and capped at the original deadline
+ok 128 - injected sleepers remain abortable and capped at the original deadline
+  ---
+  duration_ms: 22.122598
+  type: 'test'
+  ...
+# Subtest: observation crossing the deadline cannot make private output eligible
+ok 129 - observation crossing the deadline cannot make private output eligible
+  ---
+  duration_ms: 2.431071
+  type: 'test'
+  ...
+# Subtest: I3 remaining-budget accessor shares the fixed cap and abort signal
+ok 130 - I3 remaining-budget accessor shares the fixed cap and abort signal
+  ---
+  duration_ms: 0.60221
+  type: 'test'
+  ...
+# Subtest: F04 actual handler owner/raw guards, public pages/media/list, origin/body/rate and response events
+ok 131 - F04 actual handler owner/raw guards, public pages/media/list, origin/body/rate and response events
+  ---
+  duration_ms: 1005.132069
+  type: 'test'
+  ...
+# Subtest: PUBLIC-01 exact Unicode context/description, consent and style boundaries
+ok 132 - PUBLIC-01 exact Unicode context/description, consent and style boundaries
+  ---
+  duration_ms: 6.397933
+  type: 'test'
+  ...
+# Subtest: owner boundary, strict public gate, byte bindings, explicit publication and revocation
+    # Subtest: SHARE-03 targeted cross-owner guard
+    ok 1 - SHARE-03 targeted cross-owner guard
+      ---
+      duration_ms: 1.776251
+      type: 'test'
+      ...
+    # Subtest: prepare ignores removeBadge and wrong owner cannot read artifact
+    ok 2 - prepare ignores removeBadge and wrong owner cannot read artifact
+      ---
+      duration_ms: 342.808443
+      type: 'test'
+      ...
+    # Subtest: accepted record XSS is escaped and public metadata has no private fields
+    ok 3 - accepted record XSS is escaped and public metadata has no private fields
+      ---
+      duration_ms: 344.329313
+      type: 'test'
+      ...
+    # Subtest: unverified or missing privileged evidence cannot publish; private unverified stays unverified
+    ok 4 - unverified or missing privileged evidence cannot publish; private unverified stays unverified
+      ---
+      duration_ms: 350.366005
+      type: 'test'
+      ...
+    1..4
+ok 133 - owner boundary, strict public gate, byte bindings, explicit publication and revocation
+  ---
+  duration_ms: 1082.510366
+  type: 'test'
+  ...
+# Subtest: fixture is privately labelled and always denied publication
+ok 134 - fixture is privately labelled and always denied publication
+  ---
+  duration_ms: 375.673144
+  type: 'test'
+  ...
+# Subtest: PAY-05 targeted final hold guard on cached paid bytes and public reads
+ok 135 - PAY-05 targeted final hold guard on cached paid bytes and public reads
+  ---
+  duration_ms: 664.669717
+  type: 'test'
+  ...
+# Subtest: share attempts/outcomes/download events are distinct, replay safe and native resolve is browser reported
+ok 136 - share attempts/outcomes/download events are distinct, replay safe and native resolve is browser reported
+  ---
+  duration_ms: 401.122033
+  type: 'test'
+  ...
+# Subtest: bounded parallel preparation holds no SQL locks; public list repeats final consent check
+ok 137 - bounded parallel preparation holds no SQL locks; public list repeats final consent check
+  ---
+  duration_ms: 1023.746925
+  type: 'test'
+  ...
+# Subtest: actual app: delayed A, B selection/submission, no overlap/stale render or mismatched intent
+ok 138 - actual app: delayed A, B selection/submission, no overlap/stale render or mismatched intent
+  ---
+  duration_ms: 32.031601
+  type: 'test'
+  ...
+# Subtest: actual app: old authentication_required after logout/new login keeps new account visible
+ok 139 - actual app: old authentication_required after logout/new login keeps new account visible
+  ---
+  duration_ms: 8.355343
+  type: 'test'
+  ...
+# Subtest: actual app: delayed logout blocks login until cookie-clearing response settles
+ok 140 - actual app: delayed logout blocks login until cookie-clearing response settles
+  ---
+  duration_ms: 11.241304
+  type: 'test'
+  ...
+# Subtest: actual app: earlier login completion keeps auth controls disabled until pending logout settles
+ok 141 - actual app: earlier login completion keeps auth controls disabled until pending logout settles
+  ---
+  duration_ms: 14.602476
+  type: 'test'
+  ...
+# Subtest: actual app: selection changes while reservation detail loads cannot render former selection
+ok 142 - actual app: selection changes while reservation detail loads cannot render former selection
+  ---
+  duration_ms: 8.746393
+  type: 'test'
+  ...
+# Subtest: real click barrier waits beyond hidden result through DELETE and every refresh; failures propagate and handler is restored
+ok 143 - real click barrier waits beyond hidden result through DELETE and every refresh; failures propagate and handler is restored
+  ---
+  duration_ms: 7.990322
+  type: 'test'
+  ...
+# Subtest: actual static handler allowlists modules and denies private/source traversal
+ok 144 - actual static handler allowlists modules and denies private/source traversal
+  ---
+  duration_ms: 25.38193
+  type: 'test'
+  ...
+# Subtest: fixture driver refuses shared/user DB and storage before any connection
+ok 145 - fixture driver refuses shared/user DB and storage before any connection
+  ---
+  duration_ms: 2.146561
+  type: 'test'
+  ...
+# Subtest: owned HTTPS fixture matches normal server secure-cookie validation
+ok 146 - owned HTTPS fixture matches normal server secure-cookie validation
+  ---
+  duration_ms: 1.99793
+  type: 'test'
+  ...
+# Subtest: schema SQL identifier and same-schema URL option are guarded before connection
+ok 147 - schema SQL identifier and same-schema URL option are guarded before connection
+  ---
+  duration_ms: 0.965811
+  type: 'test'
+  ...
+# Subtest: preceding intent readiness cannot settle target; temporary target lease waits for its own provider
+ok 148 - preceding intent readiness cannot settle target; temporary target lease waits for its own provider
+  ---
+  duration_ms: 5.644592
+  type: 'test'
+  ...
+# Subtest: unleased target becomes ready after preceding queue item, with no unnecessary sleep
+ok 149 - unleased target becomes ready after preceding queue item, with no unnecessary sleep
+  ---
+  duration_ms: 0.910261
+  type: 'test'
+  ...
+# Subtest: already-ready target is signaled without running an unrelated queue candidate
+ok 150 - already-ready target is signaled without running an unrelated queue candidate
+  ---
+  duration_ms: 0.47566
+  type: 'test'
+  ...
+# Subtest: missing, terminal and wrong fixture binding fail before queue or settlement
+ok 151 - missing, terminal and wrong fixture binding fail before queue or settlement
+  ---
+  duration_ms: 2.827271
+  type: 'test'
+  ...
+# Subtest: terminal transition during worker pass fails without a success signal
+ok 152 - terminal transition during worker pass fails without a success signal
+  ---
+  duration_ms: 0.87908
+  type: 'test'
+  ...
+# Subtest: not-ready target exhausts finite tries even when injected clock never advances
+ok 153 - not-ready target exhausts finite tries even when injected clock never advances
+  ---
+  duration_ms: 12.123955
+  type: 'test'
+  ...
+# Subtest: deadline stops retries and prevents signaling readiness attached too late
+ok 154 - deadline stops retries and prevents signaling readiness attached too late
+  ---
+  duration_ms: 1.01771
+  type: 'test'
+  ...
+# Subtest: deadline reached during a readiness read prevents a late success signal
+ok 155 - deadline reached during a readiness read prevents a late success signal
+  ---
+  duration_ms: 0.50601
+  type: 'test'
+  ...
+# Subtest: runtime/mode/UUID and existing dedicated ownership guards remain strict
+ok 156 - runtime/mode/UUID and existing dedicated ownership guards remain strict
+  ---
+  duration_ms: 1.678451
+  type: 'test'
+  ...
+# Subtest: query and worker failures propagate instead of reporting fixture success
+ok 157 - query and worker failures propagate instead of reporting fixture success
+  ---
+  duration_ms: 1.625751
+  type: 'test'
+  ...
+# Subtest: private receipt reports canonical stored digest despite JSONB key order; corrupt digest rejects
+ok 158 - private receipt reports canonical stored digest despite JSONB key order; corrupt digest rejects
+  ---
+  duration_ms: 9.242103
+  type: 'test'
+  ...
+# Subtest: digest oracle detects the previous JSON.stringify receipt implementation
+ok 159 - digest oracle detects the previous JSON.stringify receipt implementation
+  ---
+  duration_ms: 2.934801
+  type: 'test'
+  ...
+# Subtest: held response is released only after matching 200, handler completion and owner 404
+ok 160 - held response is released only after matching 200, handler completion and owner 404
+  ---
+  duration_ms: 12.369215
+  type: 'test'
+  ...
+# Subtest: failed DELETE or accessible job fails the case while finally releases/cancels/joins
+ok 161 - failed DELETE or accessible job fails the case while finally releases/cancels/joins
+  ---
+  duration_ms: 4.527141
+  type: 'test'
+  ...
+# Subtest: ordering oracle detects premature release before handler completion
+ok 162 - ordering oracle detects premature release before handler completion
+  ---
+  duration_ms: 3.689732
+  type: 'test'
+  ...
+# Subtest: hosted fixture requires exact test runtime/origin/storage/caps and owned pool before SQL
+ok 163 - hosted fixture requires exact test runtime/origin/storage/caps and owned pool before SQL
+  ---
+  duration_ms: 2.570491
+  type: 'test'
+  ...
+# Subtest: mock boundaries always supply API and delivery transports, unique identities, safe counts only
+ok 164 - mock boundaries always supply API and delivery transports, unique identities, safe counts only
+  ---
+  duration_ms: 10.764734
+  type: 'test'
+  ...
+# Subtest: response gate proves send observation before release, and rejects a bounded expiry
+ok 165 - response gate proves send observation before release, and rejects a bounded expiry
+  ---
+  duration_ms: 7.441273
+  type: 'test'
+  ...
+# Subtest: actual worker config missing/disabled rejects before every mock HTTP and delivery call
+ok 166 - actual worker config missing/disabled rejects before every mock HTTP and delivery call
+  ---
+  duration_ms: 2.738461
+  type: 'test'
+  ...
+# Subtest: mock API failure is propagated with no delivery calls or alternative transport
+ok 167 - mock API failure is propagated with no delivery calls or alternative transport
+  ---
+  duration_ms: 0.72638
+  type: 'test'
+  ...
+# Subtest: accepted controlnet and replicate each require separate consent before actual publication action
+ok 168 - accepted controlnet and replicate each require separate consent before actual publication action
+  ---
+  duration_ms: 6.878423
+  type: 'test'
+  ...
+# Subtest: unverified hosted result must never enable publication even with forged checked consent
+ok 169 - unverified hosted result must never enable publication even with forged checked consent
+  ---
+  duration_ms: 0.67238
+  type: 'test'
+  ...
+# Subtest: fixture, unknown mode/quality, rejected and held accepted results preserve publication guards
+ok 170 - fixture, unknown mode/quality, rejected and held accepted results preserve publication guards
+  ---
+  duration_ms: 1.785661
+  type: 'test'
+  ...
+# Subtest: fresh hosted context logs in as existing viewport owner before fixture purchase
+ok 171 - fresh hosted context logs in as existing viewport owner before fixture purchase
+  ---
+  duration_ms: 5.451152
+  type: 'test'
+  ...
+# Subtest: wrong owner ID or email rejects before purchase and closes fresh context
+ok 172 - wrong owner ID or email rejects before purchase and closes fresh context
+  ---
+  duration_ms: 4.899371
+  type: 'test'
+  ...
+# Subtest: source budget is five registrations and eight unique legacy plus five hosted reservations per owner
+ok 173 - source budget is five registrations and eight unique legacy plus five hosted reservations per owner
+  ---
+  duration_ms: 0.638421
+  type: 'test'
+  ...
+# Subtest: uncertain response survives reload with same body/key; selection and account isolate
+ok 174 - uncertain response survives reload with same body/key; selection and account isolate
+  ---
+  duration_ms: 2.364451
+  type: 'test'
+  ...
+# Subtest: account switch aborts and rejects late former-owner image even if transport ignores abort
+ok 175 - account switch aborts and rejects late former-owner image even if transport ignores abort
+  ---
+  duration_ms: 1.198501
+  type: 'test'
+  ...
+# Subtest: native outcomes depend on promise; invocation starts immediately in user gesture
+ok 176 - native outcomes depend on promise; invocation starts immediately in user gesture
+  ---
+  duration_ms: 2.560031
+  type: 'test'
+  ...
+# Subtest: checkout rejects executable/insecure/credential URLs; fixture stays local
+ok 177 - checkout rejects executable/insecure/credential URLs; fixture stays local
+  ---
+  duration_ms: 0.53024
+  type: 'test'
+  ...
+# Subtest: late A resolution cannot bind A job to the submitted B body/key
+ok 178 - late A resolution cannot bind A job to the submitted B body/key
+  ---
+  duration_ms: 3.162511
+  type: 'test'
+  ...
+# Subtest: late authentication rejection across logout/login cannot escape to new account
+ok 179 - late authentication rejection across logout/login cannot escape to new account
+  ---
+  duration_ms: 0.61868
+  type: 'test'
+  ...
+# Subtest: evicted CDP body is never read; fresh DOM UUID binds to authenticated owner metadata
+ok 180 - evicted CDP body is never read; fresh DOM UUID binds to authenticated owner metadata
+  ---
+  duration_ms: 13.270005
+  type: 'test'
+  ...
+# Subtest: stale selected upload cannot satisfy a new successful POST
+ok 181 - stale selected upload cannot satisfy a new successful POST
+  ---
+  duration_ms: 6.391482
+  type: 'test'
+  ...
+# Subtest: existing owner UUID absent from DOM still cannot count as fresh
+ok 182 - existing owner UUID absent from DOM still cannot count as fresh
+  ---
+  duration_ms: 3.106011
+  type: 'test'
+  ...
+# Subtest: previous DOM UUID absent from owner list still cannot count as fresh
+ok 183 - previous DOM UUID absent from owner list still cannot count as fresh
+  ---
+  duration_ms: 5.949613
+  type: 'test'
+  ...
+# Subtest: non-UUID selection is rejected
+ok 184 - non-UUID selection is rejected
+  ---
+  duration_ms: 4.179891
+  type: 'test'
+  ...
+# Subtest: failed POST is rejected before DOM or metadata can imply success
+ok 185 - failed POST is rejected before DOM or metadata can imply success
+  ---
+  duration_ms: 6.404333
+  type: 'test'
+  ...
+# Subtest: new DOM UUID must match the single new owner entry
+ok 186 - new DOM UUID must match the single new owner entry
+  ---
+  duration_ms: 5.422161
+  type: 'test'
+  ...
+# Subtest: missing or ambiguous new owner metadata fails
+ok 187 - missing or ambiguous new owner metadata fails
+  ---
+  duration_ms: 8.457893
+  type: 'test'
+  ...
+# Subtest: missing dimensions, MIME or creation time fails
+ok 188 - missing dimensions, MIME or creation time fails
+  ---
+  duration_ms: 22.524228
+  type: 'test'
+  ...
+# Subtest: unauthenticated owner response and missing owner list fail closed
+ok 189 - unauthenticated owner response and missing owner list fail closed
+  ---
+  duration_ms: 19.214997
+  type: 'test'
+  ...
+1..189
+# tests 480
+# suites 0
+# pass 480
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 61846.071267

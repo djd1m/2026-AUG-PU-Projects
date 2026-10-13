@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: I5b hosted operator quality and publication on actual dedicated PostgreSQL16
+    # Subtest: I1 authority and I5a completion -> privileged review -> private export -> explicit public/list/read
+    ok 1 - I1 authority and I5a completion -> privileged review -> private export -> explicit public/list/read
+      ---
+      duration_ms: 2529.834243
+      type: 'test'
+      ...
+    # Subtest: changed actual input/output/depth/config and missing report have zero review effects
+    ok 2 - changed actual input/output/depth/config and missing report have zero review effects
+      ---
+      duration_ms: 1344.08525
+      type: 'test'
+      ...
+    # Subtest: fixture excluded and controlnet report path remains separate
+    ok 3 - fixture excluded and controlnet report path remains separate
+      ---
+      duration_ms: 1463.149873
+      type: 'test'
+      ...
+    # Subtest: concurrent accept/reject and accept/accept preserve once-only release and no reaccept
+    ok 4 - concurrent accept/reject and accept/accept preserve once-only release and no reaccept
+      ---
+      duration_ms: 1287.641719
+      type: 'test'
+      ...
+    # Subtest: operator final account/job reread denies hold/delete/style changes after actual byte verification
+    ok 5 - operator final account/job reread denies hold/delete/style changes after actual byte verification
+      ---
+      duration_ms: 1333.971477
+      type: 'test'
+      ...
+    # Subtest: actual afterPrepare barriers deny stale public/cache/list on hold/delete/revoke/reject/version/owner
+    ok 6 - actual afterPrepare barriers deny stale public/cache/list on hold/delete/revoke/reject/version/owner
+      ---
+      duration_ms: 10681.577913
+      type: 'test'
+      ...
+    1..6
+ok 1 - I5b hosted operator quality and publication on actual dedicated PostgreSQL16
+  ---
+  duration_ms: 19411.040439
+  type: 'test'
+  ...
+1..1
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 19733.149004
+ Container n8f07i7-tests-run-ea4cd9ffea52 Creating 
+ Container n8f07i7-tests-run-ea4cd9ffea52 Created 

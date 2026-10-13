@@ -1,0 +1,37 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i4c-r1",
+  "attempt_id": "replicate-i4c-r1-1",
+  "checks": [
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--check",
+        "tests/replicate-cleanup.integration.test.js"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-03T14:04:06.171184+00:00",
+      "finished_at": "2026-10-03T14:04:06.220139+00:00",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-03T14:04:06.220270+00:00",
+      "finished_at": "2026-10-03T14:04:06.239962+00:00",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "one_line_only": true,
+  "five_protected_files_unchanged": true,
+  "production_edits": false,
+  "postgresql": "pending_parent_actual_cleanup_pg_then_fresh_independent_closure"
+}

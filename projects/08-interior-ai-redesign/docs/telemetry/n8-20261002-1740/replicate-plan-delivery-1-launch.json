@@ -1,0 +1,22 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-plan-delivery-1",
+  "attempt_id": "replicate-plan-delivery-1",
+  "source_revision": "e2dded9898d8b00f2fa5613e5f5d3fb63281715b",
+  "build_revision": null,
+  "created_at": "2026-10-03T06:42:46.752555+00:00",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "trace_path": "/tmp/n8-replicate-plan/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-plan-delivery-1-receipt.md",
+  "trace_prelaunch_state": "absent",
+  "budget_seconds": 180,
+  "scope": "Delivery only; original plan900s timeout, all sixdocs and traceability0 already exist",
+  "plan_files": {
+    "03_architecture.md": "c14c88440c537afcb1c09fe4d843c253c3e0ed4e0c904105fc3297e6fe9803b9",
+    "05_completion.md": "90a91240404d9edf7c8bbf042cb5a867dc9e0302691bd15aebcbf931c52a79e4",
+    "01_specification.md": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+    "04_refinement.md": "43fcc7495be1b92be9537f4c9d9e57fe57b574e7e8e9522c5428af21aff9e02e",
+    "02_pseudocode.md": "19a86156135d7751e7414e9a406070c990686d6ec8c095448549be012a10572d",
+    "replicate-research.md": "a3246fd4d5e0184b62b8bada1ab162e9f6785c228e895d244df8989d758e4a2d"
+  }
+}

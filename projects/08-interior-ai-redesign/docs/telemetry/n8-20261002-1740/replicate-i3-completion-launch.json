@@ -1,0 +1,17 @@
+{
+  "created_at": "2026-10-03T08:57:13.056892+00:00",
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i3-completion",
+  "attempt_id": "replicate-i3-completion-2",
+  "source_revision": "b37b43d8",
+  "budget_seconds": 480,
+  "prior_exit": 1,
+  "reason": "service model atcapacity aftercode+136tests+DNSmutation, terminaldocsabsent",
+  "trace_path": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i3-completion-receipt.md",
+  "product_sha256": {
+    "web/replicate-media.js": "6678a59501ee42ece6b10686400965323448c85b77e89454e30fdc5757ca54fc",
+    "tests/replicate-media.test.js": "ecdc1c77a39e199f814a3173e603d8e6595ae94646a56030791d9f376c1f96bc"
+  },
+  "requested_model": "gpt-6.1-sol",
+  "effort": "high"
+}

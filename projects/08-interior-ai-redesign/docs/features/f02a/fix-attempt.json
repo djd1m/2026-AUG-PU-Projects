@@ -1,0 +1,69 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f02a-fix",
+  "attempt_id": "n8-f02a-fix-attempt-1",
+  "source_revision": "d3b202404886d56ca3d46f0d8deb423d4858ed06",
+  "launch_sha256": "c3ef97af87e04e73d12c980362f9f336618f2aa0b858198215e524ffc7e62b93",
+  "launch_started_at": "2026-10-02T21:17:09.117136+00:00",
+  "recorded_at": "2026-10-02T21:18:30.037311+00:00",
+  "profile": "compact-quality-first-v2",
+  "risk_tier": "XL",
+  "reason": "Existing credit release invariant retained; bounded reviewed corrections, prior owner autonomy authorizes implementation. No new financial invariant.",
+  "stage": "HANDOFF",
+  "status": "completed",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "model_evidence": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host/provider resolved model, effort, usage and billing metadata unavailable to executor."
+  ],
+  "owned_files": [
+    "web/jobs.js",
+    "tests/jobs.test.js",
+    "tests/jobs.integration.test.js",
+    "docs/features/f02a/fix-*"
+  ],
+  "acceptance": [
+    "Reset clears isolated attempt_budget",
+    "Clock injection only runtime=test",
+    "Canonical revisions persist all sd/controlnet/depth fields; unsupported forms reject",
+    "Real PG no-reserve release coverage added; exactly once coverage retained",
+    "Build and all lightweight tests pass; PG/mutations deferred to coordinator"
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Internal correction, no browser E2E in this work unit; Docker forbidden by brief."
+  },
+  "delegation": "none; explicitly prohibited",
+  "budget_seconds": 1200,
+  "route": {
+    "plan": {
+      "mechanical_tier": "S",
+      "exit_code": 0,
+      "substantive_tier": "XL",
+      "reason": "Existing credit release invariant retained; bounded reviewed corrections, prior owner autonomy authorizes implementation. No new financial invariant."
+    },
+    "implement": {
+      "mechanical_tier": "S",
+      "exit_code": 0,
+      "substantive_tier": "XL",
+      "reason": "Scope unchanged: only confirmed three corrections and JOB-04 missing regression. Existing reserve/release semantics retained."
+    }
+  },
+  "ended_at": "2026-10-02T21:24:12.081574+00:00",
+  "elapsed_wall_ms": 422964,
+  "active_wall_ms": null,
+  "build_revision": "215646b5d9541299408119dd357d84d3df8ac96d6490daf2a20d674a2768daaa",
+  "product_acceptance": "pending coordinator PostgreSQL/mutation regression and independent finding review",
+  "source_scope": "only three owned product files differ from prior32 snapshot",
+  "fallback_reason": null,
+  "model_switches": 0,
+  "delegations": 0,
+  "checks": "docs/features/f02a/fix-checks.json",
+  "guard_checks": "docs/features/f02a/fix-guard-checks.json",
+  "receipt_payload": "docs/features/f02a/fix-receipt.md"
+}

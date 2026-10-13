@@ -1,0 +1,18 @@
+TAP version 13
+# Subtest: PAY-02 local HTTP cap, no redirect, malformed, slow headers and slow body timeout
+ok 1 - PAY-02 local HTTP cap, no redirect, malformed, slow headers and slow body timeout
+  ---
+  duration_ms: 11101.557543
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 11114.823928
+ Container n8-f04a-candidate-web-run-b7cc7e90d7ce Creating 
+ Container n8-f04a-candidate-web-run-b7cc7e90d7ce Created 

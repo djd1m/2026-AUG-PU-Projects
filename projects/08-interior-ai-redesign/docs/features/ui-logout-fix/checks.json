@@ -1,0 +1,171 @@
+[
+  {
+    "check": "old-logic-mutation",
+    "command": [
+      "node",
+      "--test",
+      "--test-name-pattern=earlier login completion",
+      "tests/ui-app-races.test.js"
+    ],
+    "exit_code": 1,
+    "started_at": "2026-10-03T03:02:40.071681+00:00",
+    "elapsed_ms": 266,
+    "log": "docs/features/ui-logout-fix/old-logic-mutation.log",
+    "log_sha256": "d52d41a0ecc225062ffa69fde938c7b9e11b4593527b4794a6ad405ac5328bb6",
+    "app_sha256": "b85fc42e9d0772f914c53d881d824ad329eefa58cef547299fb71d75fbf6cccc",
+    "test_sha256": "9c10ba5cdbb4ad63f09cc1521c7dfe52497cf7a43b1b4e1a3723f47eecb2ef0a",
+    "candidate_snapshot_sha256": "8a1a6ac5a88da37b3febc6bc81a1a1934eefeff8b575f960345a7f0da78a1d27",
+    "verdict": "inconclusive: --test runner reported only file-level failure, no required assertion evidence"
+  },
+  {
+    "check": "old-logic-mutation-direct",
+    "command": [
+      "node",
+      "tests/ui-app-races.test.js"
+    ],
+    "exit_code": 1,
+    "started_at": "2026-10-03T03:03:27.720595+00:00",
+    "elapsed_ms": 175,
+    "log": "docs/features/ui-logout-fix/old-logic-mutation-direct.log",
+    "log_sha256": "31f6ba523d536c36c442d338bfc80e10b88300ba4a43ccd435929d3868198670",
+    "app_sha256": "b85fc42e9d0772f914c53d881d824ad329eefa58cef547299fb71d75fbf6cccc",
+    "test_sha256": "9c10ba5cdbb4ad63f09cc1521c7dfe52497cf7a43b1b4e1a3723f47eecb2ef0a",
+    "candidate_snapshot_sha256": "8a1a6ac5a88da37b3febc6bc81a1a1934eefeff8b575f960345a7f0da78a1d27"
+  },
+  {
+    "check": "actual-app-races-direct",
+    "command": [
+      "node",
+      "tests/ui-app-races.test.js"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-03T03:03:27.897647+00:00",
+    "elapsed_ms": 166,
+    "log": "docs/features/ui-logout-fix/actual-app-races-direct.log",
+    "log_sha256": "3b6007e94c1da07fe2311a7d47753f302ee14d5817c4936a5b4af2c6f0cdb625",
+    "app_sha256": "15a8dd97b39e0a2fb9d307ce26ddcf5ac857d01e15e2de1cbca09102b86ebbe3",
+    "test_sha256": "9c10ba5cdbb4ad63f09cc1521c7dfe52497cf7a43b1b4e1a3723f47eecb2ef0a",
+    "candidate_snapshot_sha256": "8a1a6ac5a88da37b3febc6bc81a1a1934eefeff8b575f960345a7f0da78a1d27"
+  },
+  {
+    "check": "ui-state",
+    "command": [
+      "node",
+      "tests/ui-state.test.js"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-03T03:03:28.065131+00:00",
+    "elapsed_ms": 116,
+    "log": "docs/features/ui-logout-fix/ui-state.log",
+    "log_sha256": "2db587a0d28da14a6f988257ac13f0ddc847c5dbf8fd5d0496839684f3c45e75",
+    "app_sha256": "15a8dd97b39e0a2fb9d307ce26ddcf5ac857d01e15e2de1cbca09102b86ebbe3",
+    "test_sha256": "9c10ba5cdbb4ad63f09cc1521c7dfe52497cf7a43b1b4e1a3723f47eecb2ef0a",
+    "candidate_snapshot_sha256": "8a1a6ac5a88da37b3febc6bc81a1a1934eefeff8b575f960345a7f0da78a1d27"
+  },
+  {
+    "check": "ui-upload",
+    "command": [
+      "node",
+      "tests/ui-upload.test.js"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-03T03:03:28.182092+00:00",
+    "elapsed_ms": 369,
+    "log": "docs/features/ui-logout-fix/ui-upload.log",
+    "log_sha256": "d74eaa606b53fd4f9c397a12792b6fa500484f2a2ec76af7e591e7d237872109",
+    "app_sha256": "15a8dd97b39e0a2fb9d307ce26ddcf5ac857d01e15e2de1cbca09102b86ebbe3",
+    "test_sha256": "9c10ba5cdbb4ad63f09cc1521c7dfe52497cf7a43b1b4e1a3723f47eecb2ef0a",
+    "candidate_snapshot_sha256": "8a1a6ac5a88da37b3febc6bc81a1a1934eefeff8b575f960345a7f0da78a1d27"
+  },
+  {
+    "check": "ui-auth-order",
+    "command": [
+      "node",
+      "tests/ui-auth-order.test.js"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-03T03:03:28.552259+00:00",
+    "elapsed_ms": 266,
+    "log": "docs/features/ui-logout-fix/ui-auth-order.log",
+    "log_sha256": "85b585de26880735eb15a98771ac7c4755c2cc5a6d2c1cd96f1c1294b010abe8",
+    "app_sha256": "15a8dd97b39e0a2fb9d307ce26ddcf5ac857d01e15e2de1cbca09102b86ebbe3",
+    "test_sha256": "9c10ba5cdbb4ad63f09cc1521c7dfe52497cf7a43b1b4e1a3723f47eecb2ef0a",
+    "candidate_snapshot_sha256": "8a1a6ac5a88da37b3febc6bc81a1a1934eefeff8b575f960345a7f0da78a1d27"
+  },
+  {
+    "check": "ui-payment-fixture",
+    "command": [
+      "node",
+      "tests/ui-payment-fixture.test.js"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-03T03:03:28.819459+00:00",
+    "elapsed_ms": 321,
+    "log": "docs/features/ui-logout-fix/ui-payment-fixture.log",
+    "log_sha256": "57e48b4ec298272fd4258a40ce144606412020b052f4c9ec3368c264b6ea5dff",
+    "app_sha256": "15a8dd97b39e0a2fb9d307ce26ddcf5ac857d01e15e2de1cbca09102b86ebbe3",
+    "test_sha256": "9c10ba5cdbb4ad63f09cc1521c7dfe52497cf7a43b1b4e1a3723f47eecb2ef0a",
+    "candidate_snapshot_sha256": "8a1a6ac5a88da37b3febc6bc81a1a1934eefeff8b575f960345a7f0da78a1d27"
+  },
+  {
+    "check": "boundaries",
+    "command": [
+      "node",
+      "tests/boundaries.test.js"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-03T03:03:29.141520+00:00",
+    "elapsed_ms": 168,
+    "log": "docs/features/ui-logout-fix/boundaries.log",
+    "log_sha256": "bcc80bbd73a2ca5bbec3b87f3bf1029fd07b75c425f7c92d9d75065221e56403",
+    "app_sha256": "15a8dd97b39e0a2fb9d307ce26ddcf5ac857d01e15e2de1cbca09102b86ebbe3",
+    "test_sha256": "9c10ba5cdbb4ad63f09cc1521c7dfe52497cf7a43b1b4e1a3723f47eecb2ef0a",
+    "candidate_snapshot_sha256": "8a1a6ac5a88da37b3febc6bc81a1a1934eefeff8b575f960345a7f0da78a1d27"
+  },
+  {
+    "check": "media",
+    "command": [
+      "node",
+      "tests/media.test.js"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-03T03:03:29.310245+00:00",
+    "elapsed_ms": 9999,
+    "log": "docs/features/ui-logout-fix/media.log",
+    "log_sha256": "2eb52fb4f0ae4bb74868c1fddc33fced16f6fcd5b60dd5963669e042ffb990ad",
+    "app_sha256": "15a8dd97b39e0a2fb9d307ce26ddcf5ac857d01e15e2de1cbca09102b86ebbe3",
+    "test_sha256": "9c10ba5cdbb4ad63f09cc1521c7dfe52497cf7a43b1b4e1a3723f47eecb2ef0a",
+    "candidate_snapshot_sha256": "8a1a6ac5a88da37b3febc6bc81a1a1934eefeff8b575f960345a7f0da78a1d27"
+  },
+  {
+    "check": "ui-http",
+    "command": [
+      "node",
+      "tests/ui-http.test.js"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-03T03:03:39.310102+00:00",
+    "elapsed_ms": 368,
+    "log": "docs/features/ui-logout-fix/ui-http.log",
+    "log_sha256": "bbb6906b61d908e39b5f84dba36ce9984039e0ac9c587445faebd872727113bf",
+    "app_sha256": "15a8dd97b39e0a2fb9d307ce26ddcf5ac857d01e15e2de1cbca09102b86ebbe3",
+    "test_sha256": "9c10ba5cdbb4ad63f09cc1521c7dfe52497cf7a43b1b4e1a3723f47eecb2ef0a",
+    "candidate_snapshot_sha256": "8a1a6ac5a88da37b3febc6bc81a1a1934eefeff8b575f960345a7f0da78a1d27"
+  },
+  {
+    "check": "build",
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-03T03:03:39.680539+00:00",
+    "elapsed_ms": 3962,
+    "log": "docs/features/ui-logout-fix/build.log",
+    "log_sha256": "a531d40304097a26de3f50306e4409351d492bfe2ac42c84a53971ca51cad8ee",
+    "app_sha256": "15a8dd97b39e0a2fb9d307ce26ddcf5ac857d01e15e2de1cbca09102b86ebbe3",
+    "test_sha256": "9c10ba5cdbb4ad63f09cc1521c7dfe52497cf7a43b1b4e1a3723f47eecb2ef0a",
+    "candidate_snapshot_sha256": "8a1a6ac5a88da37b3febc6bc81a1a1934eefeff8b575f960345a7f0da78a1d27"
+  }
+]

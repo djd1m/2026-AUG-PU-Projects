@@ -1,0 +1,17 @@
+{
+  "work_unit_id": "n8-replicate-i8-hold-review",
+  "stage": "delivery_only_same_thread",
+  "pid": 2539095,
+  "started_at": "2026-10-03T17:23:38.411344+00:00",
+  "recorded_at": "2026-10-03T17:24:08.966018+00:00",
+  "recorded_after_launch": true,
+  "source_revision": "400bd3dd576b9dd31c917e5683823ec494f6d8d3",
+  "original_exit_code": 124,
+  "original_elapsed_seconds": 240.00822949700523,
+  "budget_seconds": 180,
+  "same_thread": "01a102c6-980f-73d1-95c2-dee5c3779ab7",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "reason": "Analysis terminalACCEPT communicated, report/receipt not saved; same review delivery only; prelaunch host wrapper created but run/events entry late disclosed"
+}

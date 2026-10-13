@@ -1,0 +1,113 @@
+{
+  "kind": "immutable-dirty-product-source-snapshot",
+  "source_revision": "2be5edf066b44cdfe1f424608fd1c4cb5f8c394e",
+  "snapshot_sha256": "1ce74fa5197e2dfb2ee4e0d74500bdc4d480ad2113ce9749c40acf1db49c2118",
+  "built_image": null,
+  "files": [
+    {
+      "path": ".dockerignore",
+      "sha256": "1636d5e67867fdd03a4e67d81ec076e5a2bf1db5e1cf258bad73ec8bc3d1e0ad"
+    },
+    {
+      "path": ".env.example",
+      "sha256": "244c7fd8382c48802c0a0729ad33a5142bde3bfb06520a6db0027d41a28e44bc"
+    },
+    {
+      "path": "Dockerfile",
+      "sha256": "57e45f29e4c116bf7a7d729a8825d4c7f786634da503b011b018a43cd971b8c6"
+    },
+    {
+      "path": "compose.yaml",
+      "sha256": "61bdd89e87c72e20dc9187cb9b88fb331e3dffb29ee00268a2a8db37f0784657"
+    },
+    {
+      "path": "db/001-foundation.sql",
+      "sha256": "0976a3aa1742d2cd5724b6f761e6b85747d1cf097100713290dfb8c16abf59cc"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "bee9eceb097e8218c1b12772e690be9d486a856c7f5fd65278e3e4741126ebd3"
+    },
+    {
+      "path": "package.json",
+      "sha256": "c8fbc375bad4d45d73ccc3e83054ae01c7ee5955071aaace55c841bc115bb186"
+    },
+    {
+      "path": "scripts/check.js",
+      "sha256": "df39e9efb54e2f5b58731c6eb7646ea840eaeada9a21b8c2f01801a2c11de58f"
+    },
+    {
+      "path": "scripts/migrate.js",
+      "sha256": "82054bece59940c97609785bab7c65a3b289a2d92530396aff1e74be7729b989"
+    },
+    {
+      "path": "scripts/mutation.js",
+      "sha256": "6958b32cdf086f400d4493c7c4773b5f02eafa81b7891fd8f66bc4cb8e4c65c6"
+    },
+    {
+      "path": "scripts/sweep.js",
+      "sha256": "caf4d8fd85ef8ffcb171642ee9efd7cb21ee31e7ba06fb0a5b206ae74fb90d7e"
+    },
+    {
+      "path": "tests/boundaries.test.js",
+      "sha256": "e36104f6473bcdbe4efdc3bf19480e771f6aa29cae69cc01393f526dff8143c4"
+    },
+    {
+      "path": "tests/integration.test.js",
+      "sha256": "68faa229df74d7bb3e4e2f3fada59a6c96d58762b7bab9a711552a34db360ead"
+    },
+    {
+      "path": "tests/media.test.js",
+      "sha256": "23dda1a6e38c01b8e5bfd71e85625d4ed028908c646e74ed799fc5a623e7d73c"
+    },
+    {
+      "path": "tests/mutation.test.js",
+      "sha256": "dac32a65a242ebcb69b3be57fa259c3999151ea7b17b8b9efb71678d20237322"
+    },
+    {
+      "path": "tests/sweep-pass.js",
+      "sha256": "cccb79f13e5a29d1f13dc57662624f6c1cb17e551bc2913b31e48035b9e63a0e"
+    },
+    {
+      "path": "web/app.js",
+      "sha256": "94b614455f97a8931d1d4068483036d2860964ad7c15f620a3c74a0be17370a6"
+    },
+    {
+      "path": "web/auth.js",
+      "sha256": "85070f69d53add6a074ab9b81fd90d43d5707289a383332c531548a299b6b0d3"
+    },
+    {
+      "path": "web/boundaries.js",
+      "sha256": "10f37fba266cde1ce2aae17d9bd57a0a21c61b952cf409781517f00501cc7c55"
+    },
+    {
+      "path": "web/config.js",
+      "sha256": "a9987ff663279692deac73353bcc950d8dc631e3f617d582f42833db2b20690c"
+    },
+    {
+      "path": "web/db.js",
+      "sha256": "b7313dbd768e51b426db8457ece9b6c2055a48145edbc826ba3fc54f47b1b842"
+    },
+    {
+      "path": "web/media.js",
+      "sha256": "0f1d276d6e09d1c8f53874c482699284953b40fc4eb7ae291d2ea42532061bcb"
+    },
+    {
+      "path": "web/public/app.js",
+      "sha256": "f0b874f50aee8c33e2d3eaf030960f1e500ce22b8c7d01dc274abb322a7ce2ac"
+    },
+    {
+      "path": "web/public/index.html",
+      "sha256": "0cce01d888494c98531f657cc70707dcc0e3e33c508fbe23ded46a76dd4bc2f5"
+    },
+    {
+      "path": "web/public/style.css",
+      "sha256": "3882757f55ea02cf000e205357d8870368afd8e3ac12cfb6db0822151cd42abe"
+    },
+    {
+      "path": "web/server.js",
+      "sha256": "318db02dfd593fd04406e0886800a430304dbc80ee6ca2c64121e7a0e3d9d026"
+    }
+  ],
+  "note": "Bounded F01 correction; source snapshot, not a built image. Initial snapshot preserved."
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "name": "mutation-one-pass-final",
+    "command": [
+      "node",
+      "tests/ui-payment-fixture.test.js"
+    ],
+    "exit_code": 1,
+    "started_at": "2026-10-03T02:05:35.147108+00:00",
+    "finished_at": "2026-10-03T02:05:35.408844+00:00",
+    "log_sha256": "ab637f6f8005b011be91849be59ad63a1a95608f18d49707fe289de466c70a80",
+    "raw_log": "/tmp/n8-ui-payment-fix/mutation-one-pass-final.log",
+    "expected_exit": "nonzero",
+    "mutant_sha256": "5f75899bae51f4f2dc961f22296d1f023ca236442745525c0fd737e8ef881fd2",
+    "meaningful_failure": "Success requires target readiness, not another intent",
+    "source_revision": "b2423353b53fc7986ce7c3df2902a76439dddb2a",
+    "build_revision": "22c0f81bf478890755ca641a2881d2135b268796219697bad659f8541238dd2e",
+    "source_state": "deliberately mutated helper; mutant SHA recorded"
+  },
+  {
+    "name": "focused-restored-final",
+    "command": [
+      "node",
+      "tests/ui-payment-fixture.test.js"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-03T02:05:35.409361+00:00",
+    "finished_at": "2026-10-03T02:05:35.670146+00:00",
+    "log_sha256": "1d7c0424ba938aa3b0e8be2d5b9ca11260907c112bf8afb5d76a366ab33b23d6",
+    "raw_log": "/tmp/n8-ui-payment-fix/focused-restored-final.log",
+    "restored_helper_sha256": "cfc3191f83a5ef340c6ce41716f014d88635e89bb319605b9a3ee58775deba84",
+    "source_revision": "b2423353b53fc7986ce7c3df2902a76439dddb2a",
+    "build_revision": "22c0f81bf478890755ca641a2881d2135b268796219697bad659f8541238dd2e",
+    "source_state": "restored final snapshot"
+  },
+  {
+    "name": "build",
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-03T02:05:35.670551+00:00",
+    "finished_at": "2026-10-03T02:05:39.164085+00:00",
+    "log_sha256": "a531d40304097a26de3f50306e4409351d492bfe2ac42c84a53971ca51cad8ee",
+    "raw_log": "/tmp/n8-ui-payment-fix/build.log",
+    "source_revision": "b2423353b53fc7986ce7c3df2902a76439dddb2a",
+    "build_revision": "22c0f81bf478890755ca641a2881d2135b268796219697bad659f8541238dd2e",
+    "source_state": "restored final snapshot"
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-03T02:05:39.164472+00:00",
+    "finished_at": "2026-10-03T02:05:39.181097+00:00",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "raw_log": "/tmp/n8-ui-payment-fix/diff-check.log",
+    "source_revision": "b2423353b53fc7986ce7c3df2902a76439dddb2a",
+    "build_revision": "22c0f81bf478890755ca641a2881d2135b268796219697bad659f8541238dd2e",
+    "source_state": "restored final snapshot"
+  }
+]

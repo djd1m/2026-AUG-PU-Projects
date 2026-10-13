@@ -1,0 +1,148 @@
+TAP version 13
+# Subtest: private receipt reports canonical stored digest despite JSONB key order; corrupt digest rejects
+ok 1 - private receipt reports canonical stored digest despite JSONB key order; corrupt digest rejects
+  ---
+  duration_ms: 15.697896
+  type: 'test'
+  ...
+# Subtest: digest oracle detects the previous JSON.stringify receipt implementation
+ok 2 - digest oracle detects the previous JSON.stringify receipt implementation
+  ---
+  duration_ms: 2.979131
+  type: 'test'
+  ...
+# Subtest: held response is released only after matching 200, handler completion and owner 404
+ok 3 - held response is released only after matching 200, handler completion and owner 404
+  ---
+  duration_ms: 16.223356
+  type: 'test'
+  ...
+# Subtest: failed DELETE or accessible job fails the case while finally releases/cancels/joins
+ok 4 - failed DELETE or accessible job fails the case while finally releases/cancels/joins
+  ---
+  duration_ms: 11.327334
+  type: 'test'
+  ...
+# Subtest: ordering oracle detects premature release before handler completion
+ok 5 - ordering oracle detects premature release before handler completion
+  ---
+  duration_ms: 5.785432
+  type: 'test'
+  ...
+# Subtest: hosted fixture requires exact test runtime/origin/storage/caps and owned pool before SQL
+ok 6 - hosted fixture requires exact test runtime/origin/storage/caps and owned pool before SQL
+  ---
+  duration_ms: 3.453472
+  type: 'test'
+  ...
+# Subtest: mock boundaries always supply API and delivery transports, unique identities, safe counts only
+ok 7 - mock boundaries always supply API and delivery transports, unique identities, safe counts only
+  ---
+  duration_ms: 23.926778
+  type: 'test'
+  ...
+# Subtest: response gate proves send observation before release, and rejects a bounded expiry
+ok 8 - response gate proves send observation before release, and rejects a bounded expiry
+  ---
+  duration_ms: 11.275024
+  type: 'test'
+  ...
+# Subtest: actual worker config missing/disabled rejects before every mock HTTP and delivery call
+ok 9 - actual worker config missing/disabled rejects before every mock HTTP and delivery call
+  ---
+  duration_ms: 3.790701
+  type: 'test'
+  ...
+# Subtest: mock API failure is propagated with no delivery calls or alternative transport
+ok 10 - mock API failure is propagated with no delivery calls or alternative transport
+  ---
+  duration_ms: 3.264011
+  type: 'test'
+  ...
+# Subtest: actual heldPair scheduling at 1440: authorization precedes permanent hold; zero/one create and release once
+ok 11 - actual heldPair scheduling at 1440: authorization precedes permanent hold; zero/one create and release once
+  ---
+  duration_ms: 20.240918
+  type: 'test'
+  ...
+# Subtest: actual heldPair scheduling at 390: authorization precedes permanent hold; zero/one create and release once
+ok 12 - actual heldPair scheduling at 390: authorization precedes permanent hold; zero/one create and release once
+  ---
+  duration_ms: 9.896954
+  type: 'test'
+  ...
+# Subtest: reservation/check/worker failure and missing gate entry release, cancel and join every flight
+ok 13 - reservation/check/worker failure and missing gate entry release, cancel and join every flight
+  ---
+  duration_ms: 219.557498
+  type: 'test'
+  ...
+# Subtest: monotonic oracle rejects a reintroduced false assignment in the actual helper
+ok 14 - monotonic oracle rejects a reintroduced false assignment in the actual helper
+  ---
+  duration_ms: 6.177972
+  type: 'test'
+  ...
+# Subtest: authorization ordering oracle rejects hold moved before the authorized flight
+ok 15 - authorization ordering oracle rejects hold moved before the authorized flight
+  ---
+  duration_ms: 3.839202
+  type: 'test'
+  ...
+# Subtest: original scoped finally reproduces immutable hold rejection; original runtime evidence remains
+ok 16 - original scoped finally reproduces immutable hold rejection; original runtime evidence remains
+  ---
+  duration_ms: 10.601284
+  type: 'test'
+  ...
+# Subtest: all named hosted checks and reservation budget remain; unheld deletion precedes final hold
+ok 17 - all named hosted checks and reservation budget remain; unheld deletion precedes final hold
+  ---
+  duration_ms: 0.58338
+  type: 'test'
+  ...
+# Subtest: accepted controlnet and replicate each require separate consent before actual publication action
+ok 18 - accepted controlnet and replicate each require separate consent before actual publication action
+  ---
+  duration_ms: 10.278264
+  type: 'test'
+  ...
+# Subtest: unverified hosted result must never enable publication even with forged checked consent
+ok 19 - unverified hosted result must never enable publication even with forged checked consent
+  ---
+  duration_ms: 1.001221
+  type: 'test'
+  ...
+# Subtest: fixture, unknown mode/quality, rejected and held accepted results preserve publication guards
+ok 20 - fixture, unknown mode/quality, rejected and held accepted results preserve publication guards
+  ---
+  duration_ms: 3.311441
+  type: 'test'
+  ...
+# Subtest: fresh hosted context logs in as existing viewport owner before fixture purchase
+ok 21 - fresh hosted context logs in as existing viewport owner before fixture purchase
+  ---
+  duration_ms: 17.898987
+  type: 'test'
+  ...
+# Subtest: wrong owner ID or email rejects before purchase and closes fresh context
+ok 22 - wrong owner ID or email rejects before purchase and closes fresh context
+  ---
+  duration_ms: 11.332634
+  type: 'test'
+  ...
+# Subtest: source budget is five registrations and eight unique legacy plus five hosted reservations per owner
+ok 23 - source budget is five registrations and eight unique legacy plus five hosted reservations per owner
+  ---
+  duration_ms: 1.04639
+  type: 'test'
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1055.003207

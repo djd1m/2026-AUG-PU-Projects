@@ -1,0 +1,36 @@
+TAP version 13
+# Subtest: F04 PG16 composite/publication authorization, atomic revoke, events and hold serialization
+not ok 1 - F04 PG16 composite/publication authorization, atomic revoke, events and hold serialization
+  ---
+  duration_ms: 793.623053
+  type: 'test'
+  location: '/app/tests/sharing.integration.test.js:19:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    8 !== 6
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 6
+  actual: 8
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///app/tests/sharing.integration.test.js:29:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1087.682398
+ Container n8f07i5b-tests-run-f899e9258dd7 Creating 
+ Container n8f07i5b-tests-run-f899e9258dd7 Created 
+

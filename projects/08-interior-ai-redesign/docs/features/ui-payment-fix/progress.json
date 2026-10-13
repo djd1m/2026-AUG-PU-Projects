@@ -1,0 +1,80 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-ui-payment-fix",
+  "attempt_id": "n8-ui-payment-fix-1",
+  "source_revision": "b2423353b53fc7986ce7c3df2902a76439dddb2a",
+  "launch_sha256": "de1a1844d2870f7d33c8469a5d3b3b98cb34dabead82bbca9288a1af215b61bb",
+  "started_at": "2026-10-03T02:00:14Z",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_model_reason": "Provider-resolved model metadata unavailable; launch is requested routing only.",
+  "usage": null,
+  "cost": null,
+  "scope": "Local UI payment fixture readiness only; no production payment/web/provider/ledger changes",
+  "route": {
+    "tier": "S (bounded confirmed fixture correction)",
+    "mechanical_exit_code": 0,
+    "rationale": "Local fixture orchestration only; no money handling, external calls or production contracts changed; user limits verification to focused regression and build."
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Actual browser E2E belongs to parent later; local helper simulation only."
+  },
+  "events": [
+    {
+      "stage": "prepare",
+      "at": "2026-10-03T02:01:53.497166+00:00",
+      "result": "Baseline matches launch source; trace absent; confirmed AC and budget 600 seconds."
+    },
+    {
+      "stage": "implement",
+      "at": "2026-10-03T02:01:53.497208+00:00",
+      "result": "Same bounded scope; adapt F03b target-ID reread but tolerate active leases using bounded delays."
+    },
+    {
+      "stage": "verify",
+      "at": "2026-10-03T02:04:27.368905+00:00",
+      "result": "Readiness helper implemented; initial local unit simulation passed. Before final verification: reuse one runner and recheck deadline after target reads."
+    },
+    {
+      "stage": "verify",
+      "at": "2026-10-03T02:05:09.381130+00:00",
+      "result": "One-pass mutation failed meaningful target-readiness assertion. Restored test then failed because local simulation config omitted existing job-budget limits after runner singleton setup. Added real fixture budget config; no production code changed.",
+      "exit_code": 1,
+      "raw_log": "/tmp/n8-ui-payment-fix/focused-restored.log",
+      "log_sha256": "762f327b0779a69daac349f6af41e26c94a4574136fc3f6cc9d51e34e1bc22c9"
+    },
+    {
+      "stage": "handoff",
+      "at": "2026-10-03T02:07:07.241678+00:00",
+      "result": "Final 10 tests/build/diff check passed; one-pass mutant failed readiness assertion; source scope verified; parent browser E2E pending."
+    },
+    {
+      "stage": "complete",
+      "at": "2026-10-03T02:08:04.410369+00:00",
+      "result": "Bounded correction and required checks completed; terminal receipt atomically installed; coordinator owns commit/review/browser rerun."
+    }
+  ],
+  "build_revision": "22c0f81bf478890755ca641a2881d2135b268796219697bad659f8541238dd2e",
+  "pending": [
+    {
+      "item": "Actual browser E2E and independent review",
+      "scope": "out_of_scope",
+      "reason": "Parent later; brief prohibits delegation/external execution here."
+    }
+  ],
+  "status": "completed",
+  "finished_at": "2026-10-03T02:08:04.410369+00:00",
+  "elapsed_seconds": 470.410369,
+  "active_seconds": null,
+  "cost_basis": "unavailable",
+  "measurement_gaps": [
+    "Provider-resolved model/effort metadata unavailable",
+    "Token usage, billing/cost and active time unavailable"
+  ],
+  "fallback": null,
+  "delegation_count": 0,
+  "receipt_path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/n8-ui-payment-fix-receipt.md"
+}

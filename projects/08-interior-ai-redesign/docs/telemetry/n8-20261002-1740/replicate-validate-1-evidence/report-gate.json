@@ -1,0 +1,20 @@
+{
+  "command": [
+    "bash",
+    "/root/.npm/_npx/21ec3c42ee749a67/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+    "/tmp/n8-replicate-plan/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-validate-1-evidence/composed",
+    "--report-revision",
+    "--criterion-scenarios",
+    "--role-map-source",
+    "/tmp/n8-replicate-plan/.claude/commands/feature.md",
+    "--project-role-map-source",
+    "/tmp/n8-replicate-plan/.claude/skills/sparc-prd-mini/SKILL.md"
+  ],
+  "cwd": "/tmp/n8-replicate-plan/projects/08-interior-ai-redesign",
+  "exit_code": 0,
+  "checker_sha256": "06e3dae22c533a81732b9870ae42d6b80b6e8419b3c90e11e1910e2a46888be8",
+  "installed_version": "1.13.2",
+  "scope": "Own composed view only; byte-identical five role docs and new report. No force flags or warnings downgraded.",
+  "report_sha256": "25e82dfd642c4cf09f8fa1f3ed568da5784de4a91beed1550015fcf0fd4e091f",
+  "final_report_copied_exactly": true
+}

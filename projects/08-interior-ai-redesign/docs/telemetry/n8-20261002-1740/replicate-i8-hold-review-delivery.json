@@ -1,0 +1,21 @@
+{
+  "work_unit_id": "n8-replicate-i8-hold-review",
+  "source_revision": "400bd3dd576b9dd31c917e5683823ec494f6d8d3",
+  "launch_sha256": "dd02330f9d6dd22354b6915c4afcc2467c7817dfd7dbac434a818734099e8f13",
+  "original_wrapper": {
+    "budget_seconds": 240,
+    "exit_code": 124,
+    "source": "parent delivery-only continuation instruction"
+  },
+  "continuation": "delivery only; no renewed analysis/checks",
+  "verdict": "ACCEPT",
+  "status": "completed",
+  "finished_at": "2026-10-03T17:26:03.146724+00:00",
+  "elapsed_launch_to_delivery_seconds": 431.636704,
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "report_sha256": "17fd8426497759d88134b243726dc8bd75ce1b53aae2a246a09ccab96c179586",
+  "receipt_sha256": "579be767c47719bed7cbb1e97826fec190495619fc86aa2837da2bfc515e59f9"
+}

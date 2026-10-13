@@ -1,0 +1,18 @@
+[
+  {
+    "mutation": "stable-key",
+    "exit_code": 1,
+    "detected": true,
+    "bytes_changed": true,
+    "log": "docs/features/f04b/mutation-stable-key.log",
+    "sha256": "6df6f8c826485200f4f1aa46f0c1c94cce31a9ad6155814f843800a36d972ebe"
+  },
+  {
+    "mutation": "account-guard",
+    "exit_code": 1,
+    "detected": true,
+    "bytes_changed": true,
+    "log": "docs/features/f04b/mutation-account-guard.log",
+    "sha256": "a4424902eb9a9ba32bc23b546b944246086952f28862f34ed1c531df45429e6f"
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "name": "ui-state",
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "tests/ui-state.test.js"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-03T01:32:30.515519+00:00",
+    "ended_at": "2026-10-03T01:32:30.609463+00:00",
+    "elapsed_ms": 94,
+    "log": "ui-state.log",
+    "log_sha256": "50183da2ddd9e15d0db9562a72ce18ff2fd13bac79864964de538d0638609370",
+    "source_revision": "7dd37e81fbe24be8d1300d6884a82ed303c53373",
+    "build_revision": "ac8b9e5390194cd12e0bc6bc648149e2ea274e4a953d30eeda4a8e698c30c56d"
+  },
+  {
+    "name": "app-races",
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "tests/ui-app-races.test.js"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-03T01:32:30.610004+00:00",
+    "ended_at": "2026-10-03T01:32:30.761756+00:00",
+    "elapsed_ms": 152,
+    "log": "app-races.log",
+    "log_sha256": "4716006264428e1c9254460cd8200abcd52862c547cf623b2b12c3612a2586f0",
+    "source_revision": "7dd37e81fbe24be8d1300d6884a82ed303c53373",
+    "build_revision": "ac8b9e5390194cd12e0bc6bc648149e2ea274e4a953d30eeda4a8e698c30c56d"
+  },
+  {
+    "name": "ui-http",
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "tests/ui-http.test.js"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-03T01:32:30.762225+00:00",
+    "ended_at": "2026-10-03T01:32:31.049932+00:00",
+    "elapsed_ms": 288,
+    "log": "ui-http.log",
+    "log_sha256": "54e564d5b92d0e3e07685299ce9956ef13580b4a5ae646047aef76861771ff21",
+    "source_revision": "7dd37e81fbe24be8d1300d6884a82ed303c53373",
+    "build_revision": "ac8b9e5390194cd12e0bc6bc648149e2ea274e4a953d30eeda4a8e698c30c56d"
+  },
+  {
+    "name": "build-frozen",
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "scripts/check.js"
+    ],
+    "exit_code": 0,
+    "started_at": null,
+    "ended_at": "2026-10-03T01:34:06.324000+00:00",
+    "elapsed_ms": 3397,
+    "log": "build-frozen.log",
+    "log_sha256": "0aec2d6d64684e49007fa69ee2856c2ced7b6631bda52ca8bda26e011b3a9d81",
+    "source_revision": "7dd37e81fbe24be8d1300d6884a82ed303c53373",
+    "build_revision": "ac8b9e5390194cd12e0bc6bc648149e2ea274e4a953d30eeda4a8e698c30c56d",
+    "timing_source": "Final exec tool wall_time_seconds; start UTC not collected."
+  },
+  {
+    "name": "init-shell",
+    "command": [
+      "sh",
+      "-n",
+      "scripts/ui/init-owned-db.sh"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-03T01:32:34.256760+00:00",
+    "ended_at": "2026-10-03T01:32:34.258795+00:00",
+    "elapsed_ms": 2,
+    "log": "init-shell.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_revision": "7dd37e81fbe24be8d1300d6884a82ed303c53373",
+    "build_revision": "ac8b9e5390194cd12e0bc6bc648149e2ea274e4a953d30eeda4a8e698c30c56d"
+  },
+  {
+    "name": "compose-local-structure",
+    "command": "PyYAML safe_load; internal network/no ports/CPU<=2 assertions",
+    "exit_code": 0,
+    "source_revision": "7dd37e81fbe24be8d1300d6884a82ed303c53373",
+    "build_revision": "ac8b9e5390194cd12e0bc6bc648149e2ea274e4a953d30eeda4a8e698c30c56d"
+  }
+]

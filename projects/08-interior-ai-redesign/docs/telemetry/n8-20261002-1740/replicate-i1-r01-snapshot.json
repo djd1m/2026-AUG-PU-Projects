@@ -1,0 +1,69 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i1-r01",
+  "attempt_id": "replicate-i1-r01-1",
+  "source_revision": "e5a37bf12d2024502e093a5feb738ea868a1d948",
+  "launch_sha256": "61b5e264690758b4999edc7d1e220898037ce087cb1db08a71ce6e778a855502",
+  "frozen_at": "2026-10-03T07:49:19.603482+00:00",
+  "profile": "bounded-test-only",
+  "hard_budget_seconds": 600,
+  "target_receipt_seconds": 540,
+  "changed_test_sha256": {
+    "tests/replicate.integration.test.js": "46a81a01707373d248b784bacf8edabdc978bcb5e41aed5f023f3c07adacb004"
+  },
+  "unchanged_protected_files_sha256": {
+    "db/007-replicate.sql": "3bce94bab8d6fd8ef9b45e810e1e26ccda8648a213665f64403501ab80b5a05f",
+    "web/provider-submissions.js": "7afadfe4f9cab76d655bcd9de7718d734beeef0d63cc290144d6e19546b87709",
+    "scripts/migrate.js": "57ded58e0ac6baf60f5a2b797d1566faafb566946ff72e4cf780a2dc6d8beb86",
+    "tests/provider-submissions.test.js": "a2f44276eb51ef08dbf06a1b48ae933d701ff45d0465b2993377d8faf2e5d954"
+  },
+  "protected_files_match_original_i1_snapshot": true,
+  "protected_files_match_source_revision": true,
+  "prior_cases_byte_identical": true,
+  "spec_path": "docs/features/f07-replicate/01_specification.md",
+  "spec_sha256": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+  "original_snapshot_path": "docs/telemetry/n8-20261002-1740/replicate-i1-snapshot.json",
+  "correction_path": "docs/features/f07-replicate/i1-r01-correction.md",
+  "correction_sha256": "16ecca1c30c7b2f24456fb58c12a79822a0fca8705bb05a75e2d22afa608c6cc",
+  "checks": [
+    {
+      "command": "/tmp/n8-node22 --version",
+      "exit_code": 0,
+      "output": "v22.20.0"
+    },
+    {
+      "command": "/tmp/n8-node22 --check tests/replicate.integration.test.js",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    },
+    {
+      "command": "Python launch/source/snapshot/prior-cases/spec verification",
+      "exit_code": 0
+    }
+  ],
+  "runtime_acceptance": {
+    "new_postgresql_case": "pending_unexecuted",
+    "fresh_independent_review": "pending"
+  },
+  "pending_pg_command": "N8_TEST_DB_OWNERSHIP=n8-f07-replicate /tmp/n8-node22 --test tests/replicate.integration.test.js",
+  "pending_pg_cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+  "pending_pg_requires": "Coordinator-provided TEST_DATABASE_URL for dedicated owned PostgreSQL 16",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "fallback": null,
+  "usage": null,
+  "cost": null,
+  "elapsed_launch_to_artifact_seconds": 187.229,
+  "measurement_gaps": [
+    "Host-confirmed actual model/effort",
+    "Token usage",
+    "Monetary cost",
+    "New PostgreSQL case execution",
+    "Fresh independent review"
+  ]
+}

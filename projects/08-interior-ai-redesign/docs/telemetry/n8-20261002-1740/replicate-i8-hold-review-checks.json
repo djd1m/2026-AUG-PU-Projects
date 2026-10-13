@@ -1,0 +1,181 @@
+{
+  "changed_sha256": {
+    "scripts/ui/replicate-cases.js": {
+      "actual": "c183d5b3190aa4a3aec29c1c140d509fbc9b23ad918dc60c609bb398d3b92bee",
+      "expected": "c183d5b3190aa4a3aec29c1c140d509fbc9b23ad918dc60c609bb398d3b92bee",
+      "match": true
+    },
+    "tests/ui-replicate-corrections.test.js": {
+      "actual": "5599f52be39df92baeacfe65de366cc85528b026649cc038fc910732a0c7f095",
+      "expected": "5599f52be39df92baeacfe65de366cc85528b026649cc038fc910732a0c7f095",
+      "match": true
+    },
+    "tests/ui-replicate-hold.test.js": {
+      "actual": "b3f660f9221a4e5d58f8cad463bf28951246304da26d03d739f7944c42b63ef1",
+      "expected": "b3f660f9221a4e5d58f8cad463bf28951246304da26d03d739f7944c42b63ef1",
+      "match": true
+    },
+    "docs/features/f07-replicate/i8-hold-correction.md": {
+      "actual": "6adf2936a9f8bca8aa75c28357b4965bd4e3011fca6b4f562ebe9eb68b367145",
+      "expected": "6adf2936a9f8bca8aa75c28357b4965bd4e3011fca6b4f562ebe9eb68b367145",
+      "match": true
+    }
+  },
+  "input_sha256": {
+    "docs/features/f07-replicate/01_specification.md": {
+      "actual": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+      "expected": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+      "match": true
+    },
+    "docs/features/f07-replicate/03_architecture.md": {
+      "actual": "c14c88440c537afcb1c09fe4d843c253c3e0ed4e0c904105fc3297e6fe9803b9",
+      "expected": "c14c88440c537afcb1c09fe4d843c253c3e0ed4e0c904105fc3297e6fe9803b9",
+      "match": true
+    },
+    "docs/features/f07-replicate/i6b-implementation.md": {
+      "actual": "d61b652ccc04e4c559a9d1d8ea27828d8d73be65cee94ceb32c577dbc9719be9",
+      "expected": "d61b652ccc04e4c559a9d1d8ea27828d8d73be65cee94ceb32c577dbc9719be9",
+      "match": true
+    },
+    "docs/features/f07-replicate/i8-ui-1/browser.log": {
+      "actual": "fb8cec502a8e69e44a7b24bde615247e6760fe0bef25313af926d6decd786ed4",
+      "expected": "fb8cec502a8e69e44a7b24bde615247e6760fe0bef25313af926d6decd786ed4",
+      "match": true
+    },
+    "scripts/ui/browser.js": {
+      "actual": "d9607aee32dd8d37cf8743f707dee31fb0073ed506dd72013a4cdcd80af1eb21",
+      "expected": "d9607aee32dd8d37cf8743f707dee31fb0073ed506dd72013a4cdcd80af1eb21",
+      "match": true
+    },
+    "scripts/ui/browser-disabled.js": {
+      "actual": "6015dc427458f45ca052f98f180713683465bdef244a81a5625447bf9d01dc55",
+      "expected": "6015dc427458f45ca052f98f180713683465bdef244a81a5625447bf9d01dc55",
+      "match": true
+    },
+    "scripts/ui/replicate-fixture.js": {
+      "actual": "4f88b1bef6bf32cbdb6170a4ef0fed363a0333e0470ef2b392b35bc1ed45384e",
+      "expected": "4f88b1bef6bf32cbdb6170a4ef0fed363a0333e0470ef2b392b35bc1ed45384e",
+      "match": true
+    },
+    "tests/ui-replicate-registration.test.js": {
+      "actual": "2234b041c3c454a0e8a22661950b488e656b62ecf652357a694770f0e2d6892d",
+      "expected": "2234b041c3c454a0e8a22661950b488e656b62ecf652357a694770f0e2d6892d",
+      "match": true
+    }
+  },
+  "evidence_sha256": {
+    "replicate-i8-hold-launch.json": {
+      "actual": "b0b48a4816665c881b6a9ed1eac6f1da6a0cbd1d7a146eab2447ceb860ad3ea6",
+      "expected": "b0b48a4816665c881b6a9ed1eac6f1da6a0cbd1d7a146eab2447ceb860ad3ea6",
+      "match": true
+    },
+    "replicate-i8-hold-protected-before.json": {
+      "actual": "94da04d078251e388ba9b90df278bebca3b8ba197b8578850d10fa91bb7f1b34",
+      "expected": "94da04d078251e388ba9b90df278bebca3b8ba197b8578850d10fa91bb7f1b34",
+      "match": true
+    },
+    "replicate-i8-hold-mutation-red.log": {
+      "actual": "a7d0c6cc13a69d73b5d0d37c8ed219a6ce3291ae4e12c7256efa927599b03160",
+      "expected": "a7d0c6cc13a69d73b5d0d37c8ed219a6ce3291ae4e12c7256efa927599b03160",
+      "match": true
+    },
+    "replicate-i8-hold-original-cases.js": {
+      "actual": "7c9ce79ced16c8b58b904942f8bccf9156c2384f4df336016b92efe775b6765c",
+      "expected": "7c9ce79ced16c8b58b904942f8bccf9156c2384f4df336016b92efe775b6765c",
+      "match": true
+    },
+    "replicate-i8-hold-protected-after.json": {
+      "actual": "94da04d078251e388ba9b90df278bebca3b8ba197b8578850d10fa91bb7f1b34",
+      "expected": "94da04d078251e388ba9b90df278bebca3b8ba197b8578850d10fa91bb7f1b34",
+      "match": true
+    },
+    "replicate-i8-hold-mutation.json": {
+      "actual": "a2b4aae5d87a98f8c262f91c0101ab92a34a28fcfb25eb8adce332249818f631",
+      "expected": "a2b4aae5d87a98f8c262f91c0101ab92a34a28fcfb25eb8adce332249818f631",
+      "match": true
+    },
+    "replicate-i8-hold-tests.log": {
+      "actual": "5afe179f1cbd08b7969e27cd5d6aa0ba7720ccf114c478c36e309dc7fb774e25",
+      "expected": "5afe179f1cbd08b7969e27cd5d6aa0ba7720ccf114c478c36e309dc7fb774e25",
+      "match": true
+    },
+    "replicate-i8-hold-candidate-cases.js": {
+      "actual": "c183d5b3190aa4a3aec29c1c140d509fbc9b23ad918dc60c609bb398d3b92bee",
+      "expected": "c183d5b3190aa4a3aec29c1c140d509fbc9b23ad918dc60c609bb398d3b92bee",
+      "match": true
+    },
+    "replicate-i8-hold-build.log": {
+      "actual": "0aec2d6d64684e49007fa69ee2856c2ced7b6631bda52ca8bda26e011b3a9d81",
+      "expected": "0aec2d6d64684e49007fa69ee2856c2ced7b6631bda52ca8bda26e011b3a9d81",
+      "match": true
+    },
+    "replicate-i8-hold-tests-restored-green.log": {
+      "actual": "5652c4632457732868757777da4860bc1dde5c3310735c05c94998b4404663a5",
+      "expected": "5652c4632457732868757777da4860bc1dde5c3310735c05c94998b4404663a5",
+      "match": true
+    },
+    "replicate-i8-hold-source.patch": {
+      "actual": "7e5bd1ca1c22fe5738e24f7debb466268f17ad8b3694ab4f38b4ab2fc153f1a6",
+      "expected": "7e5bd1ca1c22fe5738e24f7debb466268f17ad8b3694ab4f38b4ab2fc153f1a6",
+      "match": true
+    }
+  },
+  "protected_snapshots_equal": true,
+  "changed_paths": [
+    "projects/08-interior-ai-redesign/docs/features/f07-replicate/i8-hold-correction.md",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/events.jsonl",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-hold-build.log",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-hold-candidate-cases.js",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-hold-checks.json",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-hold-launch.json",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-hold-mutation-red.log",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-hold-mutation.json",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-hold-original-cases.js",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-hold-protected-after.json",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-hold-protected-before.json",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-hold-receipt.md",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-hold-runtime.json",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-hold-source.patch",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-hold-tests-restored-green.log",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-hold-tests.log",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-hold-work.json",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/run.json",
+    "projects/08-interior-ai-redesign/scripts/ui/replicate-cases.js",
+    "projects/08-interior-ai-redesign/tests/ui-replicate-corrections.test.js",
+    "projects/08-interior-ai-redesign/tests/ui-replicate-hold.test.js"
+  ],
+  "git_diff_check": 2,
+  "checked_at": "2026-10-03T17:21:00.570605+00:00",
+  "source": "400bd3dd576b9dd31c917e5683823ec494f6d8d3",
+  "source_diff_sha256": "23bee9be56ff9c936df227f85501b511b81f1503164ab42c1e698faae39cf396",
+  "protected_count": 2189,
+  "protected_current_drift": [
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/events.jsonl",
+    "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/run.json"
+  ],
+  "git_diff_check_output": "projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-hold-source.patch:104: trailing whitespace.\n+ \n",
+  "code_diff_check": {
+    "exit_code": 0,
+    "output": ""
+  },
+  "hosted_names_equal": true,
+  "hosted_names": [
+    "${width}: hosted deletion during held remote response fences completion/cleanup",
+    "${width}: hosted hold after committed authorization still completes privately",
+    "${width}: hosted hold before send zero HTTP/one release",
+    "${width}: hosted missing/disabled configuration zero HTTP and no DOM result",
+    "${width}: hosted mock actual worker/private comparison/gallery/unverified refusal"
+  ],
+  "hosted_reservation_sites": 5,
+  "original_snapshot_matches_baseline": true,
+  "route": {
+    "exit_code": 0,
+    "mechanical_tier": "S",
+    "substantive_tier": "XL inherited; narrow review-only correction",
+    "input_paths": [
+      "projects/08-interior-ai-redesign/scripts/ui/replicate-cases.js",
+      "projects/08-interior-ai-redesign/tests/ui-replicate-corrections.test.js",
+      "projects/08-interior-ai-redesign/tests/ui-replicate-hold.test.js"
+    ]
+  }
+}

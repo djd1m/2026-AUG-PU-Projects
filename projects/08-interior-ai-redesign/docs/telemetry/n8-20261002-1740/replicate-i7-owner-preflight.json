@@ -1,0 +1,27 @@
+{
+  "status": "ready",
+  "at": "2026-10-03T16:03:30.055148+00:00",
+  "source_revision": "8890e0b784abcf27f0db085e3d92134909a39219",
+  "build_revision": "sha256:0579a52816d8a012b68a02628b8ba9a9fc1c1686ba3329ea3fa28d3adfe53d18",
+  "environment": "Node22.20/ownedPG16 CPU2 internal noports cachedimage readonlyfullsource; localPython host stdlib; separateprivategeneratedenv exists valuesexcluded",
+  "environment_available": true,
+  "inputs": [
+    {
+      "name": "exact existing owner mutation and readonlysourcehashes",
+      "available": true
+    },
+    {
+      "name": "existingNode22anddependencies; ownedPGprivateenv",
+      "available": true
+    }
+  ],
+  "test_command": "python3 /tmp/n8-f07-i7-owner-runtime.py; exact commandmatrix replicated in telemetry",
+  "expected_effects": [
+    "owned temporary schemas/testfiles/HTTPloopback only",
+    "no externalprovider calls/spend",
+    "remove own stack and privateenv finally"
+  ],
+  "evidence_root": "docs/telemetry/n8-20261002-1740/replicate-i7-owner-*",
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

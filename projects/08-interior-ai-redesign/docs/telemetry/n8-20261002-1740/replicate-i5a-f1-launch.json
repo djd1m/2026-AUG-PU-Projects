@@ -1,0 +1,19 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i5a-f1",
+  "attempt_id": "replicate-i5a-f1-1",
+  "created_at": "2026-10-03T11:14:12.575772+00:00",
+  "source_revision": "4958570113bf7aeb70caaa6040fc228050d3d0d3",
+  "trace_path": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i5a-f1-receipt.md",
+  "requested_model": "gpt-6.1-sol",
+  "effort": "high",
+  "budget_seconds": 600,
+  "finding": "I5a F1 HIGH deadline terminal regression",
+  "owned_paths": [
+    "web/jobs.js completiononly",
+    "tests/replicate-evidence.integration.test.js affecteddeadline/terminaloraclesonly",
+    "docs/features/f07-replicate/i5a-implementation.md accuratecontractcorrection",
+    "docs/features/f07-replicate/i5a-f1-*",
+    "docs/telemetry/n8-20261002-1740/replicate-i5a-f1-*"
+  ]
+}

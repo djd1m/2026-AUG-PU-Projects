@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "preflight",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "n8-20261002-1740",
+    "work_unit_id": "n8-ui-e2e-4",
+    "current_attempt_id": "n8-ui-e2e-4"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/n8-20261002-1740/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/n8-20261002-1740/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "3b84e9ef",
+    "current_revision": "d05b458d56ec1752e405f1c6646e52f24a76536a",
+    "build_revision": "0aaeeb56fd9cc1995cabc3c9547fc1bbc2bff48f0c2dd26c224e494fd1a259f0",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "d05b458d56ec1752e405f1c6646e52f24a76536a",
+      "observed_revision": "d05b458d56ec1752e405f1c6646e52f24a76536a",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "7bb2807721a448dc30ded7bebc9114fe2501da39a401edf545640232dba4f8b1",
+    "scope": [
+      "Actual RoomKind F04 UI1440/390 and named regression matrix within approved N8 implementation plan"
+    ],
+    "exclusions": [
+      "Real GPU geometry/latency acceptance remains separate pending accepted work",
+      "External providers/spend/deploy/publicsharing excluded from this local test"
+    ],
+    "action_limits": [
+      "Owned synthetic schema/media and browsercontexts only; secrets stay owncontainer; mutex900s"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "UI-FLOW",
+        "required": true
+      },
+      {
+        "id": "UI-REGRESSIONS",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "scripts/ui/compose.e2e.yml"
+          }
+        },
+        "provenance": "N6 TLS transport adapted; current own compose SHA256 f2b5564b43b43b67d015ab9d67ffc936b1df5d59020b66cc4a6f7df2973f1ea5",
+        "useful_fragment": "Isolated Caddy internal TLS and remote shared Playwright connection",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Preserve actual Origin/Secure cookies without secret env or mounts in shared browser"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No calibrated comparable full browser matrix;900s is attempt limit, not forecast",
+      "scope_revision": "7bb2807721a448dc30ded7bebc9114fe2501da39a401edf545640232dba4f8b1",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "7bb2807721a448dc30ded7bebc9114fe2501da39a401edf545640232dba4f8b1",
+      "tier": "XL",
+      "rationale": "Private media, payment attribution, publication and async session boundaries retain approved substantive XL",
+      "script": {
+        "input": "Targeted F04b-fix scope in docs/features/f04b-fix/route-plan.log",
+        "exit_code": 1
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "7bb2807721a448dc30ded7bebc9114fe2501da39a401edf545640232dba4f8b1",
+      "tier": "XL",
+      "rationale": "Private media, payment attribution, publication and async session boundaries retain approved substantive XL",
+      "script": {
+        "input": "Targeted F04b-fix scope in docs/features/f04b-fix/route-implement.log",
+        "exit_code": 1
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "required",
+    "reason": "Owner full autonomy for both projects within published zero-spend plan; current test is in scope",
+    "evidence": {
+      "id": "owner-autonomy-20261002",
+      "plan_revision": "7bb2807721a448dc30ded7bebc9114fe2501da39a401edf545640232dba4f8b1",
+      "covers": [
+        "plan",
+        "team",
+        "roles",
+        "models",
+        "skills"
+      ],
+      "path": {
+        "root": "project",
+        "path": "docs/decisions-owner.md"
+      },
+      "sha256": "cf3af4655ac02a81664d592ad690d2f3be776041aca762e6d91487e7e20a459c"
+    }
+  },
+  "preflight": {
+    "status": "ready",
+    "reason": "Fresh91 host/82container/176client hashes checked, HTTPS200/schema6, fresh Astra upload observer ACCEPT. Actual browser pending.",
+    "at": "2026-10-03T02:33:00.155243+00:00",
+    "source_revision": "d05b458d56ec1752e405f1c6646e52f24a76536a",
+    "build_revision": "0aaeeb56fd9cc1995cabc3c9547fc1bbc2bff48f0c2dd26c224e494fd1a259f0",
+    "environment": "Owned n8-ui-e2e internal network; app image sha256:4e7a89e41ff89625264c5e2f5216630da1bba31d84ac41bd8f3d68a31b933e36; Node22.20.0/PG16.10; exact HTTPS origin https://n8-ui.test; fixture provider; CPUtotal2; sharedbrowser remote9320 only temporarynetworkattachment, no sharedbrowsermount/secretenv.",
+    "environment_available": true,
+    "test_command": "docker exec n8-ui-e2e-web-1 timeout 600 node scripts/ui/browser.js",
+    "inputs": [
+      {
+        "name": "91 committed source files and82 matching runtime/container files",
+        "available": true
+      },
+      {
+        "name": "Owned PG16 DB marker/schema with6 migrations and synthetic upload fixture",
+        "available": true
+      },
+      {
+        "name": "HTTPS200, server test/fixture env exists with random secrets (values excluded)",
+        "available": true
+      },
+      {
+        "name": "Existing Playwright1.63 client packages tree 6751980766486b8c09a9158160008a10c0ca38f05e17fca64f45925d4d8b0e6a",
+        "available": true
+      },
+      {
+        "name": "Fresh independent Astra upload observer ACCEPT; prior payment/four product findings closed",
+        "available": true
+      }
+    ],
+    "expected_effects": [
+      "Create synthetic local accounts, media, fenced jobs and verified fixture payments in owned schema only",
+      "Trusted owned SQL seeds for history/expiry/error-state UI tests, visibly software-only",
+      "Forward/delay/drop actual responses and inject native-share promises only for named failure tests",
+      "Write screenshots/results; close owncontexts; later detach browser and remove own stack",
+      "No GPU, external provider, mail, rental, deployment, live charges or public posting"
+    ],
+    "evidence_root": {
+      "root": "project",
+      "path": "docs/features/f04b-fix/ui-e2e-4"
+    },
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "n8-ui-e2e-4",
+      "status": "active"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "n8-ui-e2e-4",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/features/f04b-fix/ui-e2e-4/preflight.json"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [],
+  "receipts": [],
+  "delivery": null
+}

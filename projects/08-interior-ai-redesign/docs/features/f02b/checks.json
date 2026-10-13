@@ -1,0 +1,94 @@
+{
+  "source_revision": "c345ec1ef57517acfca731b27254be5249aabd52",
+  "source_snapshot_sha256": "362e3cedb6b2b31b09d80606d51fc11d958ad14ed3c0876ecbc0ec4d2ab29413",
+  "checks": [
+    {
+      "name": "final-unit",
+      "command": "/tmp/n6b-f06-node22/bin/node --test --test-concurrency=2 tests/boundaries.test.js tests/media.test.js tests/jobs.test.js tests/mutation.test.js tests/generation.test.js tests/quality.test.js",
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f02b/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "result": "6 suite files passed; includes 10 F02b generation/subprocess and 5 quality checks",
+      "log_path": "/tmp/n8-f02b/final-unit.log",
+      "log_sha256": "d07efb17687e0d21771f092d15b3584db1e72047e5b43cd49139f96d92359c83"
+    },
+    {
+      "name": "final-jobs-unit",
+      "command": "/tmp/n6b-f06-node22/bin/node tests/jobs.test.js",
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f02b/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "result": "Affected jobs unit rerun after moving evidence hashing outside SQL locks",
+      "log_path": "/tmp/n8-f02b/final-jobs-unit.log",
+      "log_sha256": "ad68d3c0ea32100450e543b74be747d20a6d0cf6044b57c379a324d4dddb3cc8"
+    },
+    {
+      "name": "final-quality-unit",
+      "command": "/tmp/n6b-f06-node22/bin/node tests/quality.test.js",
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f02b/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "result": "5 synthetic software quality checks passed",
+      "log_path": "/tmp/n8-f02b/final-quality-unit.log",
+      "log_sha256": "6908e23b4ce26f29dc95107fc540a55304e044cdbf51fcbf818cb004d2451c0a"
+    },
+    {
+      "name": "final-python",
+      "command": "python3 -m unittest discover -s worker -p 'test_*.py'",
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f02b/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "result": "5 stdlib/software tests; actual subprocess real-mode failed explicitly because GPU dependencies missing",
+      "log_path": "/tmp/n8-f02b/final-python.log",
+      "log_sha256": "2c20997ed551ad72ff9ed28feb157d03da452bd33c3844e3c9fe9a97d0043d6f"
+    },
+    {
+      "name": "final-build",
+      "command": "/tmp/n6b-f06-node22/bin/node scripts/check.js",
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f02b/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "result": "ESM/static syntax build; not a Docker image or GPU build",
+      "log_path": "/tmp/n8-f02b/final-build.log",
+      "log_sha256": "0aec2d6d64684e49007fa69ee2856c2ced7b6631bda52ca8bda26e011b3a9d81"
+    },
+    {
+      "name": "final-fixture-mutation",
+      "command": "/tmp/n6b-f06-node22/bin/node scripts/mutation.js fixture",
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f02b/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "result": "green baseline exit0; mutated targeted assertion exit1, expected true actual false",
+      "log_path": "/tmp/n8-f02b/final-fixture-mutation.log",
+      "log_sha256": "6dc5f612741c2ddea6e1712cb592fef1067c0ec553029d1a572dae69892cc1d9"
+    },
+    {
+      "name": "origin-mutation",
+      "command": "/tmp/n6b-f06-node22/bin/node scripts/mutation.js origin",
+      "cwd": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-f02b/projects/08-interior-ai-redesign",
+      "exit_code": 0,
+      "result": "green baseline exit0; mutated targeted assertion exit1",
+      "log_path": "/tmp/n8-f02b/origin-mutation.log",
+      "log_sha256": "28a6880ccb70819ce03bc0b6b732a8e8418c89e9af4bfae4820f1afb614aab0e"
+    },
+    {
+      "name": "diff-check",
+      "command": "git diff --check",
+      "exit_code": 0,
+      "log_path": null,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": "No whitespace errors"
+    },
+    {
+      "name": "incorrect-cwd-invocation",
+      "command": "/tmp/n6b-f06-node22/bin/node tests/quality.test.js (repository root cwd)",
+      "exit_code": 1,
+      "log_path": null,
+      "log_sha256": null,
+      "result": "Wrong cwd module path invocation, corrected to project cwd; original error log overwritten, unavailable. Not a product test failure."
+    }
+  ],
+  "pending": [
+    "Dedicated PostgreSQL16 F02b quality suite and full F01/F02a regression plus owner/budget mutations",
+    "Coordinator web Docker image build after N7 heavy mutex release",
+    "Fresh independent Astra source review",
+    "Python and integrated dependency security/compatibility audit",
+    "Actual CUDA + safe pinned SD1.5/ControlNet/DPT model provisioning/loading",
+    "GEOM-02 real licensed 12x3 corpus",
+    "PERF-03 at least30 actual warm GPU jobs/p95<=25s"
+  ]
+}

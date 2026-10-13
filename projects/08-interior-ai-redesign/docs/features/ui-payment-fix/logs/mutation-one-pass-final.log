@@ -1,0 +1,352 @@
+TAP version 13
+# Subtest: preceding intent readiness cannot settle target; temporary target lease waits for its own provider
+not ok 1 - preceding intent readiness cannot settle target; temporary target lease waits for its own provider
+  ---
+  duration_ms: 3.952912
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:26:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Success requires target readiness, not another intent
+    + actual - expected
+    
+    + 'created'
+    - 'pending'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'pending'
+  actual: 'created'
+  operator: 'strictEqual'
+  stack: |-
+    signal (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:19:14)
+    driveFixturePayment (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/scripts/ui/payment-ready.js:3:24)
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:39:20)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: unleased target becomes ready after preceding queue item, with no unnecessary sleep
+not ok 2 - unleased target becomes ready after preceding queue item, with no unnecessary sleep
+  ---
+  duration_ms: 0.73086
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:47:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Success requires target readiness, not another intent
+    + actual - expected
+    
+    + 'created'
+    - 'pending'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'pending'
+  actual: 'created'
+  operator: 'strictEqual'
+  stack: |-
+    signal (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:19:14)
+    driveFixturePayment (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/scripts/ui/payment-ready.js:3:24)
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:52:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: already-ready target is signaled without running an unrelated queue candidate
+not ok 3 - already-ready target is signaled without running an unrelated queue candidate
+  ---
+  duration_ms: 0.535481
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:56:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:58:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: missing, terminal and wrong fixture binding fail before queue or settlement
+not ok 4 - missing, terminal and wrong fixture binding fail before queue or settlement
+  ---
+  duration_ms: 1.37184
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:61:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /fixture_payment_missing/. Input:
+    
+    'AssertionError [ERR_ASSERTION]: Success requires target readiness, not another intent\n' +
+      '+ actual - expected\n' +
+      '\n' +
+      "+ 'created'\n" +
+      "- 'pending'\n"
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    generatedMessage: false
+    actual: 'created'
+    expected: 'pending'
+    operator: 'strictEqual'
+    diff: 'simple'
+  error: |-
+    Success requires target readiness, not another intent
+    + actual - expected
+    
+    + 'created'
+    - 'pending'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'pending'
+  actual: 'created'
+  operator: 'strictEqual'
+  stack: |-
+    signal (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:19:14)
+    driveFixturePayment (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/scripts/ui/payment-ready.js:3:24)
+    async waitForActual (node:assert:644:5)
+    async Function.rejects (node:assert:767:25)
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:62:45)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:62:45)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: terminal transition during worker pass fails without a success signal
+not ok 5 - terminal transition during worker pass fails without a success signal
+  ---
+  duration_ms: 0.74054
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:71:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /fixture_payment_terminal:review/. Input:
+    
+    'AssertionError [ERR_ASSERTION]: Success requires target readiness, not another intent\n' +
+      '+ actual - expected\n' +
+      '\n' +
+      "+ 'review'\n" +
+      "- 'pending'\n"
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    generatedMessage: false
+    actual: 'review'
+    expected: 'pending'
+    operator: 'strictEqual'
+    diff: 'simple'
+  error: |-
+    Success requires target readiness, not another intent
+    + actual - expected
+    
+    + 'review'
+    - 'pending'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'pending'
+  actual: 'review'
+  operator: 'strictEqual'
+  stack: |-
+    signal (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:19:14)
+    driveFixturePayment (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/scripts/ui/payment-ready.js:3:24)
+    async waitForActual (node:assert:644:5)
+    async Function.rejects (node:assert:767:25)
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:73:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:73:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: not-ready target exhausts finite tries even when injected clock never advances
+not ok 6 - not-ready target exhausts finite tries even when injected clock never advances
+  ---
+  duration_ms: 3.249222
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:76:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /fixture_payment_readiness_exhausted/. Input:
+    
+    'AssertionError [ERR_ASSERTION]: Success requires target readiness, not another intent\n' +
+      '+ actual - expected\n' +
+      '\n' +
+      "+ 'created'\n" +
+      "- 'pending'\n"
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    generatedMessage: false
+    actual: 'created'
+    expected: 'pending'
+    operator: 'strictEqual'
+    diff: 'simple'
+  error: |-
+    Success requires target readiness, not another intent
+    + actual - expected
+    
+    + 'created'
+    - 'pending'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'pending'
+  actual: 'created'
+  operator: 'strictEqual'
+  stack: |-
+    signal (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:19:14)
+    driveFixturePayment (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/scripts/ui/payment-ready.js:3:24)
+    async waitForActual (node:assert:644:5)
+    async Function.rejects (node:assert:767:25)
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:79:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:79:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: deadline stops retries and prevents signaling readiness attached too late
+not ok 7 - deadline stops retries and prevents signaling readiness attached too late
+  ---
+  duration_ms: 0.77998
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:84:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:88:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: deadline reached during a readiness read prevents a late success signal
+not ok 8 - deadline reached during a readiness read prevents a late success signal
+  ---
+  duration_ms: 0.66348
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:92:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:95:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: runtime/mode/UUID and existing dedicated ownership guards remain strict
+not ok 9 - runtime/mode/UUID and existing dedicated ownership guards remain strict
+  ---
+  duration_ms: 1.579031
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:99:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /Explicit nonproduction fixture required/. Input:
+    
+    'AssertionError [ERR_ASSERTION]: Success requires target readiness, not another intent\n' +
+      '+ actual - expected\n' +
+      '\n' +
+      "+ 'created'\n" +
+      "- 'pending'\n"
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    generatedMessage: false
+    actual: 'created'
+    expected: 'pending'
+    operator: 'strictEqual'
+    diff: 'simple'
+  error: |-
+    Success requires target readiness, not another intent
+    + actual - expected
+    
+    + 'created'
+    - 'pending'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'pending'
+  actual: 'created'
+  operator: 'strictEqual'
+  stack: |-
+    signal (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:19:14)
+    driveFixturePayment (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/scripts/ui/payment-ready.js:3:24)
+    async waitForActual (node:assert:644:5)
+    async Function.rejects (node:assert:767:25)
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:102:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:102:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: query and worker failures propagate instead of reporting fixture success
+not ok 10 - query and worker failures propagate instead of reporting fixture success
+  ---
+  duration_ms: 2.852361
+  type: 'test'
+  location: '/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:108:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /read_failure/. Input:
+    
+    'Error: worker_failure'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'worker_failure'
+  stack: |-
+    f.options.runOne (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:109:54)
+    driveFixturePayment (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/scripts/ui/payment-ready.js:3:9)
+    Object.run (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:23:58)
+    TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:112:26)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n8-replicate/.claude/worktrees/n8-ui-payment-fix/projects/08-interior-ai-redesign/tests/ui-payment-fixture.test.js:112:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 0
+# fail 10
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 36.350133

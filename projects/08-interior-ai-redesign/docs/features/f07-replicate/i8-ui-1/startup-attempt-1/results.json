@@ -1,0 +1,24 @@
+{
+  "source_revision": "05d154a4f5b0a5b186b93ab11feaa289a451d7f3",
+  "snapshot_sha256": "f4d840c1ff3350e4bb4a4bbcdf8d12e246df887563ea2d5b4fa343940916d8de",
+  "started_at": "2026-10-03T16:52:53.669595+00:00",
+  "checks": [
+    {
+      "name": "compose-config",
+      "exit_code": 0,
+      "duration_ms": 224,
+      "log": "/tmp/n8-replicate-i8-1/compose-config.log"
+    },
+    {
+      "name": "build",
+      "exit_code": 1,
+      "duration_ms": 1796,
+      "log": "/tmp/n8-replicate-i8-1/build.log"
+    }
+  ],
+  "status": "failed",
+  "stop_reason": "build failed",
+  "cleanup_exit": 0,
+  "finished_at": "2026-10-03T16:52:55.957115+00:00",
+  "duration_ms": 2288
+}

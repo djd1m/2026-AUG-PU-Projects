@@ -1,0 +1,920 @@
+TAP version 13
+# Subtest: CRC-correct APNG is denied by shared input preparation
+ok 1 - CRC-correct APNG is denied by shared input preparation
+  ---
+  duration_ms: 65.417783
+  type: 'test'
+  ...
+# Subtest: CRC-correct APNG depth is denied before second download and leaves zero artifacts
+ok 2 - CRC-correct APNG depth is denied before second download and leaves zero artifacts
+  ---
+  duration_ms: 123.271644
+  type: 'test'
+  ...
+# Subtest: PNG chunk bounds and stray animation chunks fail closed in input and depth
+    # Subtest: one-frame APNG
+    ok 1 - one-frame APNG
+      ---
+      duration_ms: 6.975883
+      type: 'test'
+      ...
+    # Subtest: stray fcTL
+    ok 2 - stray fcTL
+      ---
+      duration_ms: 4.782551
+      type: 'test'
+      ...
+    # Subtest: stray fdAT
+    ok 3 - stray fdAT
+      ---
+      duration_ms: 7.519933
+      type: 'test'
+      ...
+    # Subtest: short acTL
+    ok 4 - short acTL
+      ---
+      duration_ms: 5.701122
+      type: 'test'
+      ...
+    # Subtest: late acTL
+    ok 5 - late acTL
+      ---
+      duration_ms: 5.344362
+      type: 'test'
+      ...
+    # Subtest: truncated header
+    ok 6 - truncated header
+      ---
+      duration_ms: 5.841703
+      type: 'test'
+      ...
+    # Subtest: missing CRC
+    ok 7 - missing CRC
+      ---
+      duration_ms: 7.219382
+      type: 'test'
+      ...
+    # Subtest: oversized length
+    ok 8 - oversized length
+      ---
+      duration_ms: 6.860653
+      type: 'test'
+      ...
+    # Subtest: missing IEND
+    ok 9 - missing IEND
+      ---
+      duration_ms: 4.156901
+      type: 'test'
+      ...
+    # Subtest: nonempty IEND
+    ok 10 - nonempty IEND
+      ---
+      duration_ms: 5.310431
+      type: 'test'
+      ...
+    1..10
+ok 3 - PNG chunk bounds and stray animation chunks fail closed in input and depth
+  ---
+  duration_ms: 131.938068
+  type: 'test'
+  ...
+# Subtest: static PNG accepts animation names inside compressed pixels without substring scanning
+ok 4 - static PNG accepts animation names inside compressed pixels without substring scanning
+  ---
+  duration_ms: 193.290359
+  type: 'test'
+  ...
+# Subtest: real sanitized JPEG preserves dimensions, deterministic aspect, hashes and removes EXIF
+    # Subtest: 128x64
+    ok 1 - 128x64
+      ---
+      duration_ms: 99.601885
+      type: 'test'
+      ...
+    # Subtest: 64x128
+    ok 2 - 64x128
+      ---
+      duration_ms: 115.267141
+      type: 'test'
+      ...
+    # Subtest: 79x79
+    ok 3 - 79x79
+      ---
+      duration_ms: 99.909126
+      type: 'test'
+      ...
+    # Subtest: 1x1000
+    ok 4 - 1x1000
+      ---
+      duration_ms: 78.270968
+      type: 'test'
+      ...
+    1..4
+ok 5 - real sanitized JPEG preserves dimensions, deterministic aspect, hashes and removes EXIF
+  ---
+  duration_ms: 395.563561
+  type: 'test'
+  ...
+# Subtest: owned upload key, hash, MIME and filesystem boundaries fail closed
+    # Subtest: owner
+    ok 1 - owner
+      ---
+      duration_ms: 0.51916
+      type: 'test'
+      ...
+    # Subtest: deleted
+    ok 2 - deleted
+      ---
+      duration_ms: 0.284771
+      type: 'test'
+      ...
+    # Subtest: traversal
+    ok 3 - traversal
+      ---
+      duration_ms: 0.16866
+      type: 'test'
+      ...
+    # Subtest: absolute
+    ok 4 - absolute
+      ---
+      duration_ms: 0.17179
+      type: 'test'
+      ...
+    # Subtest: newline key
+    ok 5 - newline key
+      ---
+      duration_ms: 0.23645
+      type: 'test'
+      ...
+    # Subtest: forged hash
+    ok 6 - forged hash
+      ---
+      duration_ms: 14.205175
+      type: 'test'
+      ...
+    # Subtest: MIME mismatch
+    ok 7 - MIME mismatch
+      ---
+      duration_ms: 3.031901
+      type: 'test'
+      ...
+    # Subtest: dims mismatch
+    ok 8 - dims mismatch
+      ---
+      duration_ms: 7.948043
+      type: 'test'
+      ...
+    1..8
+ok 6 - owned upload key, hash, MIME and filesystem boundaries fail closed
+  ---
+  duration_ms: 83.72391
+  type: 'test'
+  ...
+# Subtest: malformed, truncated, animated and over-20MP uploads are rejected by real sharp
+ok 7 - malformed, truncated, animated and over-20MP uploads are rejected by real sharp
+  ---
+  duration_ms: 361.696899
+  type: 'test'
+  ...
+# Subtest: JPEG fallback uses only 85, 80, 75 and literal 262144-byte bound
+ok 8 - JPEG fallback uses only 85, 80, 75 and literal 262144-byte bound
+  ---
+  duration_ms: 79.928699
+  type: 'test'
+  ...
+# Subtest: hostile delivery URLs and image bombs never publish
+    # Subtest: http://replicate.delivery/x
+    ok 1 - http://replicate.delivery/x
+      ---
+      duration_ms: 0.56053
+      type: 'test'
+      ...
+    # Subtest: https://evilreplicate.delivery/x
+    ok 2 - https://evilreplicate.delivery/x
+      ---
+      duration_ms: 0.104
+      type: 'test'
+      ...
+    # Subtest: https://replicate.delivery.evil/x
+    ok 3 - https://replicate.delivery.evil/x
+      ---
+      duration_ms: 0.07069
+      type: 'test'
+      ...
+    # Subtest: https://replicate.delivery:444/x
+    ok 4 - https://replicate.delivery:444/x
+      ---
+      duration_ms: 0.08864
+      type: 'test'
+      ...
+    # Subtest: https://u:p@replicate.delivery/x
+    ok 5 - https://u:p@replicate.delivery/x
+      ---
+      duration_ms: 0.24858
+      type: 'test'
+      ...
+    # Subtest: https://@replicate.delivery/x
+    ok 6 - https://@replicate.delivery/x
+      ---
+      duration_ms: 0.13602
+      type: 'test'
+      ...
+    # Subtest: https://replicate.delivery/x\#fragment
+    ok 7 - https://replicate.delivery/x\#fragment
+      ---
+      duration_ms: 0.120341
+      type: 'test'
+      ...
+    # Subtest: https://replicate.delivery/x\#
+    ok 8 - https://replicate.delivery/x\#
+      ---
+      duration_ms: 0.09264
+      type: 'test'
+      ...
+    # Subtest: https://127.0.0.1/x
+    ok 9 - https://127.0.0.1/x
+      ---
+      duration_ms: 0.10824
+      type: 'test'
+      ...
+    # Subtest: https://[::1]/x
+    ok 10 - https://[::1]/x
+      ---
+      duration_ms: 0.17011
+      type: 'test'
+      ...
+    # Subtest: https://2130706433/x
+    ok 11 - https://2130706433/x
+      ---
+      duration_ms: 0.08154
+      type: 'test'
+      ...
+    # Subtest: https://0x7f000001/x
+    ok 12 - https://0x7f000001/x
+      ---
+      duration_ms: 0.10668
+      type: 'test'
+      ...
+    # Subtest: https://replicate.delivery./x
+    ok 13 - https://replicate.delivery./x
+      ---
+      duration_ms: 0.12065
+      type: 'test'
+      ...
+    # Subtest: https://.replicate.delivery/x
+    ok 14 - https://.replicate.delivery/x
+      ---
+      duration_ms: 0.10929
+      type: 'test'
+      ...
+    # Subtest: https://bad..replicate.delivery/x
+    ok 15 - https://bad..replicate.delivery/x
+      ---
+      duration_ms: 0.10164
+      type: 'test'
+      ...
+    # Subtest: https://%72eplicate.delivery/x
+    ok 16 - https://%72eplicate.delivery/x
+      ---
+      duration_ms: 0.14638
+      type: 'test'
+      ...
+    # Subtest: https://replicate.delivery\\@evil/x
+    ok 17 - https://replicate.delivery\\@evil/x
+      ---
+      duration_ms: 0.11068
+      type: 'test'
+      ...
+    # Subtest:  https://replicate.delivery/x
+    ok 18 -  https://replicate.delivery/x
+      ---
+      duration_ms: 0.08844
+      type: 'test'
+      ...
+    # Subtest: https://replicate.delivery/x\\n
+    ok 19 - https://replicate.delivery/x\\n
+      ---
+      duration_ms: 0.06375
+      type: 'test'
+      ...
+    # Subtest: https://replicate.delivery/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    ok 20 - https://replicate.delivery/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      ---
+      duration_ms: 0.0959
+      type: 'test'
+      ...
+    1..20
+ok 9 - hostile delivery URLs and image bombs never publish
+  ---
+  duration_ms: 4.617011
+  type: 'test'
+  ...
+# Subtest: global address policy excludes IPv4 and IPv6 special-purpose ranges
+    # Subtest: 0.0.0.0
+    ok 1 - 0.0.0.0
+      ---
+      duration_ms: 0.24751
+      type: 'test'
+      ...
+    # Subtest: 0.255.255.255
+    ok 2 - 0.255.255.255
+      ---
+      duration_ms: 0.06509
+      type: 'test'
+      ...
+    # Subtest: 10.1.2.3
+    ok 3 - 10.1.2.3
+      ---
+      duration_ms: 0.1542
+      type: 'test'
+      ...
+    # Subtest: 100.64.0.1
+    ok 4 - 100.64.0.1
+      ---
+      duration_ms: 0.09545
+      type: 'test'
+      ...
+    # Subtest: 100.127.255.254
+    ok 5 - 100.127.255.254
+      ---
+      duration_ms: 0.0536
+      type: 'test'
+      ...
+    # Subtest: 127.0.0.1
+    ok 6 - 127.0.0.1
+      ---
+      duration_ms: 0.06199
+      type: 'test'
+      ...
+    # Subtest: 169.254.3.4
+    ok 7 - 169.254.3.4
+      ---
+      duration_ms: 0.04938
+      type: 'test'
+      ...
+    # Subtest: 172.16.0.0
+    ok 8 - 172.16.0.0
+      ---
+      duration_ms: 0.04889
+      type: 'test'
+      ...
+    # Subtest: 172.31.255.255
+    ok 9 - 172.31.255.255
+      ---
+      duration_ms: 0.04863
+      type: 'test'
+      ...
+    # Subtest: 192.0.0.8
+    ok 10 - 192.0.0.8
+      ---
+      duration_ms: 0.07308
+      type: 'test'
+      ...
+    # Subtest: 192.0.0.9
+    ok 11 - 192.0.0.9
+      ---
+      duration_ms: 0.06094
+      type: 'test'
+      ...
+    # Subtest: 192.0.2.1
+    ok 12 - 192.0.2.1
+      ---
+      duration_ms: 0.05281
+      type: 'test'
+      ...
+    # Subtest: 192.31.196.1
+    ok 13 - 192.31.196.1
+      ---
+      duration_ms: 0.07483
+      type: 'test'
+      ...
+    # Subtest: 192.52.193.1
+    ok 14 - 192.52.193.1
+      ---
+      duration_ms: 0.04943
+      type: 'test'
+      ...
+    # Subtest: 192.175.48.1
+    ok 15 - 192.175.48.1
+      ---
+      duration_ms: 0.04922
+      type: 'test'
+      ...
+    # Subtest: 192.88.99.1
+    ok 16 - 192.88.99.1
+      ---
+      duration_ms: 0.04714
+      type: 'test'
+      ...
+    # Subtest: 192.168.1.2
+    ok 17 - 192.168.1.2
+      ---
+      duration_ms: 0.04599
+      type: 'test'
+      ...
+    # Subtest: 198.18.0.1
+    ok 18 - 198.18.0.1
+      ---
+      duration_ms: 0.04939
+      type: 'test'
+      ...
+    # Subtest: 198.19.255.255
+    ok 19 - 198.19.255.255
+      ---
+      duration_ms: 0.04658
+      type: 'test'
+      ...
+    # Subtest: 198.51.100.2
+    ok 20 - 198.51.100.2
+      ---
+      duration_ms: 0.04805
+      type: 'test'
+      ...
+    # Subtest: 203.0.113.3
+    ok 21 - 203.0.113.3
+      ---
+      duration_ms: 0.05326
+      type: 'test'
+      ...
+    # Subtest: 224.1.2.3
+    ok 22 - 224.1.2.3
+      ---
+      duration_ms: 0.08252
+      type: 'test'
+      ...
+    # Subtest: 239.255.255.255
+    ok 23 - 239.255.255.255
+      ---
+      duration_ms: 0.107021
+      type: 'test'
+      ...
+    # Subtest: 240.0.0.1
+    ok 24 - 240.0.0.1
+      ---
+      duration_ms: 0.11018
+      type: 'test'
+      ...
+    # Subtest: 255.255.255.255
+    ok 25 - 255.255.255.255
+      ---
+      duration_ms: 0.09868
+      type: 'test'
+      ...
+    # Subtest: ::
+    ok 26 - ::
+      ---
+      duration_ms: 0.2254
+      type: 'test'
+      ...
+    # Subtest: ::1
+    ok 27 - ::1
+      ---
+      duration_ms: 0.18916
+      type: 'test'
+      ...
+    # Subtest: ::ffff:8.8.8.8
+    ok 28 - ::ffff:8.8.8.8
+      ---
+      duration_ms: 0.0945
+      type: 'test'
+      ...
+    # Subtest: ::ffff:808:808
+    ok 29 - ::ffff:808:808
+      ---
+      duration_ms: 0.07956
+      type: 'test'
+      ...
+    # Subtest: ::8.8.8.8
+    ok 30 - ::8.8.8.8
+      ---
+      duration_ms: 0.05564
+      type: 'test'
+      ...
+    # Subtest: ::808:808
+    ok 31 - ::808:808
+      ---
+      duration_ms: 0.07198
+      type: 'test'
+      ...
+    # Subtest: 64:ff9b::808:808
+    ok 32 - 64:ff9b::808:808
+      ---
+      duration_ms: 0.15327
+      type: 'test'
+      ...
+    # Subtest: 64:ff9b:1::1
+    ok 33 - 64:ff9b:1::1
+      ---
+      duration_ms: 0.08247
+      type: 'test'
+      ...
+    # Subtest: 100::1
+    ok 34 - 100::1
+      ---
+      duration_ms: 0.1163
+      type: 'test'
+      ...
+    # Subtest: 2001::1
+    ok 35 - 2001::1
+      ---
+      duration_ms: 0.13033
+      type: 'test'
+      ...
+    # Subtest: 2001:2::1
+    ok 36 - 2001:2::1
+      ---
+      duration_ms: 0.07951
+      type: 'test'
+      ...
+    # Subtest: 2001:20::1
+    ok 37 - 2001:20::1
+      ---
+      duration_ms: 0.076111
+      type: 'test'
+      ...
+    # Subtest: 2001:db8::1
+    ok 38 - 2001:db8::1
+      ---
+      duration_ms: 0.07473
+      type: 'test'
+      ...
+    # Subtest: 2002:0808:0808::1
+    ok 39 - 2002:0808:0808::1
+      ---
+      duration_ms: 0.07372
+      type: 'test'
+      ...
+    # Subtest: 3fff::1
+    ok 40 - 3fff::1
+      ---
+      duration_ms: 0.06712
+      type: 'test'
+      ...
+    # Subtest: fc00::1
+    ok 41 - fc00::1
+      ---
+      duration_ms: 0.10049
+      type: 'test'
+      ...
+    # Subtest: fdff::1
+    ok 42 - fdff::1
+      ---
+      duration_ms: 0.20973
+      type: 'test'
+      ...
+    # Subtest: fe80::1
+    ok 43 - fe80::1
+      ---
+      duration_ms: 0.17756
+      type: 'test'
+      ...
+    # Subtest: fec0::1
+    ok 44 - fec0::1
+      ---
+      duration_ms: 0.08423
+      type: 'test'
+      ...
+    # Subtest: ff02::1
+    ok 45 - ff02::1
+      ---
+      duration_ms: 0.06674
+      type: 'test'
+      ...
+    # Subtest: 2606:4700::1%eth0
+    ok 46 - 2606:4700::1%eth0
+      ---
+      duration_ms: 0.09889
+      type: 'test'
+      ...
+    # Subtest: 2620:4f:8000::1
+    ok 47 - 2620:4f:8000::1
+      ---
+      duration_ms: 0.09254
+      type: 'test'
+      ...
+    # Subtest: bad
+    ok 48 - bad
+      ---
+      duration_ms: 0.25978
+      type: 'test'
+      ...
+    1..48
+ok 10 - global address policy excludes IPv4 and IPv6 special-purpose ranges
+  ---
+  duration_ms: 8.315453
+  type: 'test'
+  ...
+# Subtest: DNS validates all answers, pins lookup and original TLS hostname, never sends auth
+ok 11 - DNS validates all answers, pins lookup and original TLS hostname, never sends auth
+  ---
+  duration_ms: 189.147108
+  type: 'test'
+  ...
+# Subtest: DNS stalls, abort and per-request timers stay within original budget
+ok 12 - DNS stalls, abort and per-request timers stay within original budget
+  ---
+  duration_ms: 124.716745
+  type: 'test'
+  ...
+# Subtest: streams reject redirect, declared and actual overflow, encoding, magic, decode and canvas attacks
+    # Subtest: redirect
+    ok 1 - redirect
+      ---
+      duration_ms: 3.228221
+      type: 'test'
+      ...
+    # Subtest: declared overflow
+    ok 2 - declared overflow
+      ---
+      duration_ms: 5.113192
+      type: 'test'
+      ...
+    # Subtest: absent overflow
+    ok 3 - absent overflow
+      ---
+      duration_ms: 39.649914
+      type: 'test'
+      ...
+    # Subtest: lying length
+    ok 4 - lying length
+      ---
+      duration_ms: 16.187475
+      type: 'test'
+      ...
+    # Subtest: length mismatch
+    ok 5 - length mismatch
+      ---
+      duration_ms: 6.955543
+      type: 'test'
+      ...
+    # Subtest: bad length
+    ok 6 - bad length
+      ---
+      duration_ms: 7.520333
+      type: 'test'
+      ...
+    # Subtest: gzip
+    ok 7 - gzip
+      ---
+      duration_ms: 6.170262
+      type: 'test'
+      ...
+    # Subtest: br
+    ok 8 - br
+      ---
+      duration_ms: 1.888401
+      type: 'test'
+      ...
+    # Subtest: mime
+    ok 9 - mime
+      ---
+      duration_ms: 1.74425
+      type: 'test'
+      ...
+    # Subtest: magic
+    ok 10 - magic
+      ---
+      duration_ms: 1.7365
+      type: 'test'
+      ...
+    # Subtest: truncated
+    ok 11 - truncated
+      ---
+      duration_ms: 3.256361
+      type: 'test'
+      ...
+    # Subtest: wrong canvas
+    ok 12 - wrong canvas
+      ---
+      duration_ms: 7.549342
+      type: 'test'
+      ...
+    # Subtest: pixels
+    ok 13 - pixels
+      ---
+      duration_ms: 5.709672
+      type: 'test'
+      ...
+    # Subtest: animated
+    ok 14 - animated
+      ---
+      duration_ms: 6.974053
+      type: 'test'
+      ...
+    # Subtest: empty
+    ok 15 - empty
+      ---
+      duration_ms: 4.511632
+      type: 'test'
+      ...
+    # Subtest: reset
+    ok 16 - reset
+      ---
+      duration_ms: 2.525391
+      type: 'test'
+      ...
+    # Subtest: network
+    ok 17 - network
+      ---
+      duration_ms: 1.63001
+      type: 'test'
+      ...
+    1..17
+ok 13 - streams reject redirect, declared and actual overflow, encoding, magic, decode and canvas attacks
+  ---
+  duration_ms: 385.198617
+  type: 'test'
+  ...
+# Subtest: exact crop and original-size PNG pixels, distinct hashes, safe config and 0600 files
+    # Subtest: 128x64
+    ok 1 - 128x64
+      ---
+      duration_ms: 87.189191
+      type: 'test'
+      ...
+    # Subtest: 64x128
+    ok 2 - 64x128
+      ---
+      duration_ms: 96.532285
+      type: 'test'
+      ...
+    # Subtest: 79x79
+    ok 3 - 79x79
+      ---
+      duration_ms: 115.177951
+      type: 'test'
+      ...
+    1..3
+ok 14 - exact crop and original-size PNG pixels, distinct hashes, safe config and 0600 files
+  ---
+  duration_ms: 300.307747
+  type: 'test'
+  ...
+# Subtest: binding and observation forgery or partial output makes zero delivery requests
+    # Subtest: cloned observation
+    ok 1 - cloned observation
+      ---
+      duration_ms: 2.949141
+      type: 'test'
+      ...
+    # Subtest: browser URL
+    ok 2 - browser URL
+      ---
+      duration_ms: 1.591201
+      type: 'test'
+      ...
+    # Subtest: cloned prepared
+    ok 3 - cloned prepared
+      ---
+      duration_ms: 1.11398
+      type: 'test'
+      ...
+    # Subtest: source
+    ok 4 - source
+      ---
+      duration_ms: 1.407881
+      type: 'test'
+      ...
+    # Subtest: transmitted
+    ok 5 - transmitted
+      ---
+      duration_ms: 1.0521
+      type: 'test'
+      ...
+    # Subtest: request
+    ok 6 - request
+      ---
+      duration_ms: 1.278881
+      type: 'test'
+      ...
+    # Subtest: transform
+    ok 7 - transform
+      ---
+      duration_ms: 1.18338
+      type: 'test'
+      ...
+    # Subtest: version
+    ok 8 - version
+      ---
+      duration_ms: 1.653791
+      type: 'test'
+      ...
+    # Subtest: contract
+    ok 9 - contract
+      ---
+      duration_ms: 3.052331
+      type: 'test'
+      ...
+    # Subtest: status
+    ok 10 - status
+      ---
+      duration_ms: 1.19457
+      type: 'test'
+      ...
+    # Subtest: quarantined
+    ok 11 - quarantined
+      ---
+      duration_ms: 2.50351
+      type: 'test'
+      ...
+    # Subtest: prediction
+    ok 12 - prediction
+      ---
+      duration_ms: 1.611801
+      type: 'test'
+      ...
+    # Subtest: submission id
+    ok 13 - submission id
+      ---
+      duration_ms: 8.766063
+      type: 'test'
+      ...
+    # Subtest: deadline
+    ok 14 - deadline
+      ---
+      duration_ms: 1.604081
+      type: 'test'
+      ...
+    # Subtest: renewed budget
+    ok 15 - renewed budget
+      ---
+      duration_ms: 4.995612
+      type: 'test'
+      ...
+    1..15
+ok 15 - binding and observation forgery or partial output makes zero delivery requests
+  ---
+  duration_ms: 101.405667
+  type: 'test'
+  ...
+# Subtest: abort/deadline before and after DNS, streaming, and real output decode prevents writes
+    # Subtest: DNS
+    ok 1 - DNS
+      ---
+      duration_ms: 70.148525
+      type: 'test'
+      ...
+    # Subtest: stream
+    ok 2 - stream
+      ---
+      duration_ms: 50.360328
+      type: 'test'
+      ...
+    # Subtest: decode
+    ok 3 - decode
+      ---
+      duration_ms: 67.308104
+      type: 'test'
+      ...
+    1..3
+ok 16 - abort/deadline before and after DNS, streaming, and real output decode prevents writes
+  ---
+  duration_ms: 352.860036
+  type: 'test'
+  ...
+# Subtest: exclusive writes, symlink directories and partial failure never remove preexisting winner files
+ok 17 - exclusive writes, symlink directories and partial failure never remove preexisting winner files
+  ---
+  duration_ms: 100.340685
+  type: 'test'
+  ...
+# Subtest: exclusive collision after first write preserves preexisting depth winner and removes only own output
+ok 18 - exclusive collision after first write preserves preexisting depth winner and removes only own output
+  ---
+  duration_ms: 76.371218
+  type: 'test'
+  ...
+# Subtest: deadline at opened file and after first write cleans partial artifacts
+    # Subtest: before write
+    ok 1 - before write
+      ---
+      duration_ms: 85.03834
+      type: 'test'
+      ...
+    # Subtest: after write
+    ok 2 - after write
+      ---
+      duration_ms: 90.001752
+      type: 'test'
+      ...
+    1..2
+ok 19 - deadline at opened file and after first write cleans partial artifacts
+  ---
+  duration_ms: 176.053813
+  type: 'test'
+  ...
+# Subtest: valid JPEG and WebP canvases strip provider metadata and final PNG overflow fails before files
+ok 20 - valid JPEG and WebP canvases strip provider metadata and final PNG overflow fails before files
+  ---
+  duration_ms: 234.595343
+  type: 'test'
+  ...
+1..20
+# tests 150
+# suites 0
+# pass 150
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3838.03954

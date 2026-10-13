@@ -1,0 +1,86 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i4c-r1",
+  "attempt_id": "replicate-i4c-r1-1",
+  "source": "19d5d2f4dfed96eaf5fe7f1727a7f0b7076e62e6",
+  "profile": "compact-quality-first-v2",
+  "approved_risk": "XL",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning_effort": "high",
+  "actual_model": null,
+  "actual_reasoning_effort": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gaps": [
+    "Actual model, reasoning effort, usage and cost await host metadata."
+  ],
+  "started_at": "2026-10-03T14:02:13+00:00",
+  "started_at_basis": "First observed tool clock; excludes unmeasured pre-tool interval.",
+  "launch_sha256": "57b4a9ce07a31b88f19390c5a0e41d514fc6a072bc2f88c6be6ac1d42198bf10",
+  "spec_sha256_supplied": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+  "before_sha256": "a2ba622fecbb99bf98a3e5cdcfd3235629499e624c395a51f32432db2683c472",
+  "protected_files": [
+    {
+      "path": "projects/08-interior-ai-redesign/scripts/maintenance.js",
+      "sha256": "3b07ba42131cbf62c921c40bc22f01cc87549ee05b068bbc2bd06e2c07ac0124"
+    },
+    {
+      "path": "projects/08-interior-ai-redesign/tests/replicate-cleanup-fixtures.js",
+      "sha256": "0e047bbe0142ce90ad8376802a6fd1e7ff6c958b3c658ff678fe2debbdc1c5cd"
+    },
+    {
+      "path": "projects/08-interior-ai-redesign/tests/replicate-cleanup.test.js",
+      "sha256": "7d18c65c67d0ee1667335431026857133a8f8919f6cbad65ad8862d33b30be60"
+    },
+    {
+      "path": "projects/08-interior-ai-redesign/web/replicate-cleanup.js",
+      "sha256": "41a233accd3fadecfff44fecb8692af0e47455b088c733e547509ef83f55ce6a"
+    },
+    {
+      "path": "projects/08-interior-ai-redesign/web/replicate-worker-config.js",
+      "sha256": "58be28125d8ca7907545a2cdf6c0874b806559f60a418218918cc43d2b84ce9f"
+    }
+  ],
+  "postgresql": "pending_parent_actual_cleanup_pg_then_fresh_independent_closure",
+  "review": "I4c-R1 correction applied; fresh independent closure pending parent",
+  "status": "completed",
+  "changed_at": "2026-10-03T14:03:21.475049+00:00",
+  "product_test_files": [
+    {
+      "path": "projects/08-interior-ai-redesign/tests/replicate-cleanup.integration.test.js",
+      "sha256": "85ca960f72291687ce2125f7b62212650fcf7df5b0609dd4a9fcf606fcf88cda"
+    }
+  ],
+  "other_bytes_preserved": true,
+  "checks": [
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--check",
+        "tests/replicate-cleanup.integration.test.js"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-03T14:04:06.171184+00:00",
+      "finished_at": "2026-10-03T14:04:06.220139+00:00",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign",
+      "started_at": "2026-10-03T14:04:06.220270+00:00",
+      "finished_at": "2026-10-03T14:04:06.239962+00:00",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "finished_at": "2026-10-03T14:04:06.275928+00:00",
+  "elapsed_seconds": 113.275928,
+  "tracked_change_scope_verified": true
+}

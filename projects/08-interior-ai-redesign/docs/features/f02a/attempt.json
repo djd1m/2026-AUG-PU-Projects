@@ -1,0 +1,71 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f02a",
+  "attempt_id": "n8-f02a-attempt-1",
+  "source_revision": "67d2e251d145c11a68d9f05a9e9be59094716138",
+  "launch_sha256": "bc32e05429da699bcf172afee4e633456b4323798b3274cf73fbf1bab7b247ce",
+  "started_at": "2026-10-02T20:34:34Z",
+  "recorded_at": "2026-10-02T20:36:09.643877+00:00",
+  "stage": "candidate_handoff",
+  "status": "completed",
+  "profile": "compact-quality-first-v2",
+  "tier": "XL",
+  "mechanical_route": {
+    "tier": "M",
+    "exit_code": 0,
+    "files": 5
+  },
+  "route_reason": "Durable shared budget, credit reservation, hold and fencing invariants; accepted F02a plan and owner autonomy retained. No delegation; fresh review coordinator-owned.",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "fallback": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host-resolved actual model/effort, token usage and cost unavailable; requested model is not actual execution proof.",
+    "Active wall time and exact final host termination clock unavailable; measured elapsed ends at candidate handoff observation."
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No E2E or heavy runtime run authorized in this sandbox attempt; coordinator owns lease, mutex and real Docker validation."
+  },
+  "finished_observation_at": "2026-10-02T20:52:53.708892+00:00",
+  "elapsed_wall_ms": 1099708,
+  "active_wall_ms": null,
+  "source_snapshot_sha256": "4ac13c0d0b854f2cb5423bd1eede26dd595dac265524c97bcdab104a5cc2c75a",
+  "delegation_count": 0,
+  "build_image": null,
+  "verdict": "Substantive bounded candidate; required PostgreSQL/Docker acceptance and fresh independent review pending.",
+  "work_companion": {
+    "record_kind": "bounded source-bound implementation handoff",
+    "stage": "implement",
+    "requirements": "docs/Specification.md JOB-01\u201304/PERF-01\u201302/GALLERY-01/03 and applicable AUTH-04/SEC-01\u201303",
+    "architecture": "docs/Architecture.md; docs/Pseudocode.md",
+    "plan": "docs/plans/f02-generation.md F02a accepted scope",
+    "approval": "Existing owner bounded zero-spend autonomy in brief; no new permission requested",
+    "checks": "docs/features/f02a/checks.json",
+    "events": "docs/features/f02a/events.jsonl",
+    "launch": "docs/telemetry/n8-20261002-1740/n8-f02a-launch.json",
+    "receipt": "docs/telemetry/n8-20261002-1740/n8-f02a-receipt.md (launcher atomically installs final response)",
+    "delivery_gate": "Accepted-scope runtime and independent-review checks pending; not a delivered-stage acceptance record"
+  },
+  "ac_coverage": {
+    "JOB-01": "Implemented; style/key/UUID/hash boundaries pass. Real same-key/changed-key/cross-owner/API checks authored, pending.",
+    "JOB-02": "Atomic reserve/job/ticket and both budgets implemented. Real last-credit/platform/account races and hold ordering pending.",
+    "JOB-03": "Queue60/attempt180/hard360/lease30/heartbeat10/max2 starts implemented; fixed-deadline, queue and concurrent-claim PG tests pending.",
+    "JOB-04": "Fenced retry/new ticket, exactly-once release/deletion/stale attach and immutable evidence contract implemented; real assertions pending.",
+    "PERF-01": "Fail-closed lower-only config unit checks pass; real conservative counter matrix and budget mutation pending.",
+    "PERF-02": "Rollover replacement/retained counters and queue expiry implemented; real available/exhausted rollover checks pending.",
+    "GALLERY-01": "Owner paginated API max50/private-no-store/noindex/state/actions implemented; actual HTTP pagination/privacy pending. Full comparison/unknown-fetch UI is outside F02a.",
+    "GALLERY-03": "Upload/job tombstone/fence/release and bounded periodic cleanup/retry implemented; real delete race and one-hour healthy service runtime pending. Shares absent/outside unit.",
+    "AUTH-04": "Owner SQL on jobs/media integrated; full F01 real regression plus F02a job two-owner routes pending.",
+    "SEC-01": "Budget config and production fixture output boundaries pass; Compose startup/migration/config checks pending.",
+    "SEC-02": "Existing lightweight Origin/body/rate/UUID/real decode regression pass; parameterized SQL/maxpool10 retained; actual new HTTP/runtime limits pending.",
+    "SEC-03": "Origin mutation and exact budget-oracle unit probes pass; actual PostgreSQL owner and budget negative controls pending. Fixture-quality/payment controls belong to later units."
+  },
+  "commit": "Not attempted; parent sole integration owner, common git index outside writable root. Project candidate remains uncommitted."
+}

@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/tmp/n8-node22",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "tests/mutation.test.js"
+  ],
+  "exit_code": 0,
+  "finished_at": "2026-10-03T16:27:42.091110+00:00",
+  "log_sha256": "226a6d7a013404caf0093b22784cf90d51ae82e5144daae36cf5292ff23595ea"
+}

@@ -1,0 +1,63 @@
+{
+  "name": "n8f07i6a",
+  "services": {
+    "db": {
+      "image": "postgres:16.10-bookworm",
+      "environment": {
+        "POSTGRES_USER": "roomkind",
+        "POSTGRES_DB": "roomkind"
+      },
+      "env_file": [
+        "/tmp/n8-f07-i6a-runtime/runtime.env"
+      ],
+      "command": [
+        "postgres",
+        "-c",
+        "log_min_messages=fatal",
+        "-c",
+        "log_min_error_statement=panic"
+      ],
+      "networks": [
+        "private"
+      ],
+      "cpus": 0.5,
+      "mem_limit": "512m",
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "pg_isready -U roomkind -d roomkind"
+        ],
+        "interval": "2s",
+        "timeout": "2s",
+        "retries": 30
+      }
+    },
+    "tests": {
+      "image": "n8-ui-e2e-6:8030270f",
+      "entrypoint": [],
+      "working_dir": "/app",
+      "env_file": [
+        "/tmp/n8-f07-i6a-runtime/runtime.env"
+      ],
+      "networks": [
+        "private"
+      ],
+      "cpus": 1.5,
+      "mem_limit": "1g",
+      "volumes": [
+        "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/web:/app/web:ro",
+        "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/db:/app/db:ro",
+        "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/scripts:/app/scripts:ro",
+        "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests:/app/tests:ro",
+        "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/package.json:/app/package.json:ro",
+        "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/package-lock.json:/app/package-lock.json:ro",
+        "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i6a-pg-evidence:/evidence:rw"
+      ]
+    }
+  },
+  "networks": {
+    "private": {
+      "internal": true
+    }
+  }
+}

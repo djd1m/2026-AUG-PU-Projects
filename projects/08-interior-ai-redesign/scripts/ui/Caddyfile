@@ -1,0 +1,7 @@
+{
+  auto_https disable_redirects
+}
+https://n8-ui.test {
+  tls internal
+  reverse_proxy web:8080
+}

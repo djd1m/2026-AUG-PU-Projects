@@ -1,0 +1,103 @@
+TAP version 13
+# Subtest: F07 I1 real PostgreSQL immutable one-shot submission and spend authority
+    # Subtest: two CAS contenders produce literal one authorization and one spend reservation
+    ok 1 - two CAS contenders produce literal one authorization and one spend reservation
+      ---
+      duration_ms: 603.986655
+      type: 'test'
+      ...
+    # Subtest: last envelope reservation races across accounts; loser has zero authorization
+    ok 2 - last envelope reservation races across accounts; loser has zero authorization
+      ---
+      duration_ms: 780.186798
+      type: 'test'
+      ...
+    # Subtest: missing zero revoked expired and mismatched authorizations fail closed atomically
+    ok 3 - missing zero revoked expired and mismatched authorizations fail closed atomically
+      ---
+      duration_ms: 3684.783906
+      type: 'test'
+      ...
+    # Subtest: expired revoked deleted held wrong input and missing consumed ticket deny before authorization
+    ok 4 - expired revoked deleted held wrong input and missing consumed ticket deny before authorization
+      ---
+      duration_ms: 4497.263315
+      type: 'test'
+      ...
+    # Subtest: hold commits at account barrier and blocks both contenders with zero reservations
+    ok 5 - hold commits at account barrier and blocks both contenders with zero reservations
+      ---
+      duration_ms: 415.123239
+      type: 'test'
+      ...
+    # Subtest: lease expiry while waiting on envelope denies both contenders before CAS
+    ok 6 - lease expiry while waiting on envelope denies both contenders before CAS
+      ---
+      duration_ms: 278.974309
+      type: 'test'
+      ...
+    # Subtest: CAS-stage SQL failure rolls back reservation identity and midnight ticket changes
+    ok 7 - CAS-stage SQL failure rolls back reservation identity and midnight ticket changes
+      ---
+      duration_ms: 600.583845
+      type: 'test'
+      ...
+    # Subtest: midnight submission replaces consumed ticket once without moving attempt or deadline
+    ok 8 - midnight submission replaces consumed ticket once without moving attempt or deadline
+      ---
+      duration_ms: 424.753532
+      type: 'test'
+      ...
+    # Subtest: midnight ticket exhaustion and failed envelope admission leave original ticket intact
+    ok 9 - midnight ticket exhaustion and failed envelope admission leave original ticket intact
+      ---
+      duration_ms: 959.960622
+      type: 'test'
+      ...
+    # Subtest: immutable binding mismatch and direct SQL changes reject; spend never refunds
+    ok 10 - immutable binding mismatch and direct SQL changes reject; spend never refunds
+      ---
+      duration_ms: 1829.137433
+      type: 'test'
+      ...
+    # Subtest: prediction unique conflict is quarantined and known ID cannot be overwritten
+    ok 11 - prediction unique conflict is quarantined and known ID cannot be overwritten
+      ---
+      duration_ms: 651.655542
+      type: 'test'
+      ...
+    # Subtest: late known ID records cleanup identity after expiry deletion or failure without job revival
+    ok 12 - late known ID records cleanup identity after expiry deletion or failure without job revival
+      ---
+      duration_ms: 1703.874019
+      type: 'test'
+      ...
+    # Subtest: ambiguous observation is nonreplayable; known statuses are monotonic and never revive job
+    ok 13 - ambiguous observation is nonreplayable; known statuses are monotonic and never revive job
+      ---
+      duration_ms: 660.232345
+      type: 'test'
+      ...
+    # Subtest: strictly local preflight failure can retry without a false immutable binding
+    ok 14 - strictly local preflight failure can retry without a false immutable binding
+      ---
+      duration_ms: 397.016181
+      type: 'test'
+      ...
+    1..14
+ok 1 - F07 I1 real PostgreSQL immutable one-shot submission and spend authority
+  ---
+  duration_ms: 18859.798072
+  type: 'test'
+  ...
+1..1
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 18872.058377
+ Container n8f07i1-tests-run-d3b55ec25841 Creating 
+ Container n8f07i1-tests-run-d3b55ec25841 Created 

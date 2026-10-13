@@ -1,0 +1,318 @@
+{
+  "source_revision": "2879672d8b79ce78711366986084f888b0ab1c61",
+  "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+  "checks": [
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "scripts/check.js"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-10-02T22:51:01.553185+00:00",
+      "finished_at": "2026-10-02T22:51:03.532429+00:00",
+      "evidence_path": "docs/features/f03a/evidence/final-check.log",
+      "log_sha256": "0aec2d6d64684e49007fa69ee2856c2ced7b6631bda52ca8bda26e011b3a9d81",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+      "test_counts": {},
+      "status": "pass"
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/boundaries.test.js"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-10-02T22:51:03.532579+00:00",
+      "finished_at": "2026-10-02T22:51:03.647693+00:00",
+      "evidence_path": "docs/features/f03a/evidence/final-boundaries.test.log",
+      "log_sha256": "285f190d8dd8b3a98d67bf9abbdd09d4ffd7178a558018eb4ba11416bf01d1c1",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+      "test_counts": {
+        "tests": 7,
+        "pass": 7,
+        "fail": 0
+      },
+      "status": "pass"
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/media.test.js"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-10-02T22:51:03.647808+00:00",
+      "finished_at": "2026-10-02T22:51:13.733736+00:00",
+      "evidence_path": "docs/features/f03a/evidence/final-media.test.log",
+      "log_sha256": "52680d155b027350df9df785bf859307347a0cb8f2877a0cdf53db7f016a5875",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+      "test_counts": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0
+      },
+      "status": "pass"
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/jobs.test.js"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-10-02T22:51:13.733875+00:00",
+      "finished_at": "2026-10-02T22:51:14.051970+00:00",
+      "evidence_path": "docs/features/f03a/evidence/final-jobs.test.log",
+      "log_sha256": "d1967437cc05c364d266682c1609d06a910070999f742a3a9a0542d2a138e1f3",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+      "test_counts": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0
+      },
+      "status": "pass"
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/generation.test.js"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-10-02T22:51:14.052090+00:00",
+      "finished_at": "2026-10-02T22:51:15.274393+00:00",
+      "evidence_path": "docs/features/f03a/evidence/final-generation.test.log",
+      "log_sha256": "c31dbf51473006e0a2a5756bac5feb784783c0a2628aaac7654159311d74ebe5",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+      "test_counts": {
+        "tests": 13,
+        "pass": 13,
+        "fail": 0
+      },
+      "status": "pass"
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/quality.test.js"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-10-02T22:51:15.274527+00:00",
+      "finished_at": "2026-10-02T22:51:15.696877+00:00",
+      "evidence_path": "docs/features/f03a/evidence/final-quality.test.log",
+      "log_sha256": "593e3f604848c7f2e643daae9359742d91cf76f2e59c83f392f1a4248fff27fa",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+      "test_counts": {
+        "tests": 7,
+        "pass": 7,
+        "fail": 0
+      },
+      "status": "pass"
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/mutation.test.js"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-10-02T22:51:15.697005+00:00",
+      "finished_at": "2026-10-02T22:51:16.766082+00:00",
+      "evidence_path": "docs/features/f03a/evidence/final-mutation.test.log",
+      "log_sha256": "c20358f1aa3bec43cdc817932e399d63037a4eba06d6815ec365e149f9568dd4",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+      "test_counts": {
+        "tests": 4,
+        "pass": 4,
+        "fail": 0
+      },
+      "status": "pass"
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/payments.test.js"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-10-02T22:51:16.766243+00:00",
+      "finished_at": "2026-10-02T22:51:27.086802+00:00",
+      "evidence_path": "docs/features/f03a/evidence/final-payments.test.log",
+      "log_sha256": "395d539832b499edc07bbbd6c298c792f537e5995a24dd4f39a37277c3265a57",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+      "test_counts": {
+        "tests": 8,
+        "pass": 8,
+        "fail": 0
+      },
+      "status": "pass"
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/integration.test.js"
+      ],
+      "ownership_marker_required": "n8-f01",
+      "exit_code": 1,
+      "status": "blocked",
+      "evidence_path": "docs/features/f03a/evidence/required-integration.test.js.log",
+      "log_sha256": "f2dbfe7ffac8bf7b2d72c1327869eb32651cdc588b542d8c1e04668a4d0df41c",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+      "test_counts": {
+        "tests": 1,
+        "pass": 0,
+        "fail": 1
+      },
+      "started_at": null,
+      "finished_at": null
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/jobs.integration.test.js"
+      ],
+      "ownership_marker_required": "n8-f02a",
+      "exit_code": 1,
+      "status": "blocked",
+      "evidence_path": "docs/features/f03a/evidence/required-jobs.integration.test.js.log",
+      "log_sha256": "cae4224b309edcf239ffd9794d8332c4a9951fa1560c2647f9cf76a01c70e46c",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+      "test_counts": {
+        "tests": 1,
+        "pass": 0,
+        "fail": 1
+      },
+      "started_at": null,
+      "finished_at": null
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/quality.integration.test.js"
+      ],
+      "ownership_marker_required": "n8-f02b",
+      "exit_code": 1,
+      "status": "blocked",
+      "evidence_path": "docs/features/f03a/evidence/required-quality.integration.test.js.log",
+      "log_sha256": "008b8c8377443f113d29380bed5acd10eca42f0220ee0cffd8e7e94a6836bc4c",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+      "test_counts": {
+        "tests": 1,
+        "pass": 0,
+        "fail": 1
+      },
+      "started_at": null,
+      "finished_at": null
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/payments.integration.test.js"
+      ],
+      "ownership_marker_required": "n8-f03a",
+      "exit_code": 1,
+      "status": "blocked",
+      "evidence_path": "docs/features/f03a/evidence/required-payments.integration.test.js.log",
+      "log_sha256": "17517f82bb85d5c8491f21ac5b70dfe0e557a4443de6dd3024e5b0d0f2831cfa",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+      "test_counts": {
+        "tests": 1,
+        "pass": 0,
+        "fail": 1
+      },
+      "started_at": null,
+      "finished_at": null
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "tests/payments.http.test.js"
+      ],
+      "ownership_marker_required": null,
+      "exit_code": 1,
+      "status": "blocked",
+      "evidence_path": "docs/features/f03a/evidence/required-payments.http.test.js.log",
+      "log_sha256": "c4d96e4c59046e8a76ff8850d098854a7f0ed8abaaa435c1e8edc95fd4b22e37",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+      "test_counts": {
+        "tests": 1,
+        "pass": 0,
+        "fail": 1
+      },
+      "started_at": null,
+      "finished_at": null
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "worker",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "evidence_path": "docs/features/f03a/evidence/python-unit.log",
+      "log_sha256": "4fc6396c7f0d1fd67aa3c295328ffbe715c3f326198fe90a200ba2b472e736f8",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+      "test_counts": {},
+      "started_at": null,
+      "finished_at": null,
+      "status": "pass"
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "scripts/mutation.js",
+        "payment"
+      ],
+      "exit_code": 0,
+      "evidence_path": "docs/features/f03a/evidence/payment-mutation-final.log",
+      "log_sha256": "e7e5018b67f2f3629c5e7b4c9644dff0f8eaf81d9e4a35217d5fdab01a5068b1",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+      "test_counts": {},
+      "started_at": null,
+      "finished_at": null,
+      "status": "pass"
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "scripts/mutation.js",
+        "origin"
+      ],
+      "exit_code": 0,
+      "evidence_path": "docs/features/f03a/evidence/origin-final.log",
+      "log_sha256": "28a6880ccb70819ce03bc0b6b732a8e8418c89e9af4bfae4820f1afb614aab0e",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+      "test_counts": {},
+      "started_at": null,
+      "finished_at": null,
+      "status": "pass"
+    },
+    {
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "scripts/mutation.js",
+        "fixture"
+      ],
+      "exit_code": 0,
+      "evidence_path": "docs/features/f03a/evidence/fixture-final.log",
+      "log_sha256": "6dc5f612741c2ddea6e1712cb592fef1067c0ec553029d1a572dae69892cc1d9",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+      "test_counts": {},
+      "started_at": null,
+      "finished_at": null,
+      "status": "pass"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "status": "pass",
+      "evidence_path": "docs/features/f03a/evidence/diff-check.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2"
+    }
+  ]
+}

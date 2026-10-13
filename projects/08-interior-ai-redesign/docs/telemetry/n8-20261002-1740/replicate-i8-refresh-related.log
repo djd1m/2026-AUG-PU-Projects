@@ -1,0 +1,112 @@
+TAP version 13
+# Subtest: actual app: delayed A, B selection/submission, no overlap/stale render or mismatched intent
+ok 1 - actual app: delayed A, B selection/submission, no overlap/stale render or mismatched intent
+  ---
+  duration_ms: 49.828208
+  type: 'test'
+  ...
+# Subtest: actual app: old authentication_required after logout/new login keeps new account visible
+ok 2 - actual app: old authentication_required after logout/new login keeps new account visible
+  ---
+  duration_ms: 12.895215
+  type: 'test'
+  ...
+# Subtest: actual app: delayed logout blocks login until cookie-clearing response settles
+ok 3 - actual app: delayed logout blocks login until cookie-clearing response settles
+  ---
+  duration_ms: 12.682314
+  type: 'test'
+  ...
+# Subtest: actual app: earlier login completion keeps auth controls disabled until pending logout settles
+ok 4 - actual app: earlier login completion keeps auth controls disabled until pending logout settles
+  ---
+  duration_ms: 10.171614
+  type: 'test'
+  ...
+# Subtest: actual app: selection changes while reservation detail loads cannot render former selection
+ok 5 - actual app: selection changes while reservation detail loads cannot render former selection
+  ---
+  duration_ms: 13.061655
+  type: 'test'
+  ...
+# Subtest: real click barrier waits beyond hidden result through DELETE and every refresh; failures propagate and handler is restored
+ok 6 - real click barrier waits beyond hidden result through DELETE and every refresh; failures propagate and handler is restored
+  ---
+  duration_ms: 11.123734
+  type: 'test'
+  ...
+# Subtest: private receipt reports canonical stored digest despite JSONB key order; corrupt digest rejects
+ok 7 - private receipt reports canonical stored digest despite JSONB key order; corrupt digest rejects
+  ---
+  duration_ms: 12.083075
+  type: 'test'
+  ...
+# Subtest: digest oracle detects the previous JSON.stringify receipt implementation
+ok 8 - digest oracle detects the previous JSON.stringify receipt implementation
+  ---
+  duration_ms: 3.670421
+  type: 'test'
+  ...
+# Subtest: held response is released only after matching 200, handler completion and owner 404
+ok 9 - held response is released only after matching 200, handler completion and owner 404
+  ---
+  duration_ms: 25.35191
+  type: 'test'
+  ...
+# Subtest: failed DELETE or accessible job fails the case while finally releases/cancels/joins
+ok 10 - failed DELETE or accessible job fails the case while finally releases/cancels/joins
+  ---
+  duration_ms: 6.798092
+  type: 'test'
+  ...
+# Subtest: ordering oracle detects premature release before handler completion
+ok 11 - ordering oracle detects premature release before handler completion
+  ---
+  duration_ms: 6.087602
+  type: 'test'
+  ...
+# Subtest: uncertain response survives reload with same body/key; selection and account isolate
+ok 12 - uncertain response survives reload with same body/key; selection and account isolate
+  ---
+  duration_ms: 3.704151
+  type: 'test'
+  ...
+# Subtest: account switch aborts and rejects late former-owner image even if transport ignores abort
+ok 13 - account switch aborts and rejects late former-owner image even if transport ignores abort
+  ---
+  duration_ms: 3.868092
+  type: 'test'
+  ...
+# Subtest: native outcomes depend on promise; invocation starts immediately in user gesture
+ok 14 - native outcomes depend on promise; invocation starts immediately in user gesture
+  ---
+  duration_ms: 7.763742
+  type: 'test'
+  ...
+# Subtest: checkout rejects executable/insecure/credential URLs; fixture stays local
+ok 15 - checkout rejects executable/insecure/credential URLs; fixture stays local
+  ---
+  duration_ms: 0.620061
+  type: 'test'
+  ...
+# Subtest: late A resolution cannot bind A job to the submitted B body/key
+ok 16 - late A resolution cannot bind A job to the submitted B body/key
+  ---
+  duration_ms: 3.973641
+  type: 'test'
+  ...
+# Subtest: late authentication rejection across logout/login cannot escape to new account
+ok 17 - late authentication rejection across logout/login cannot escape to new account
+  ---
+  duration_ms: 1.833291
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 711.495814

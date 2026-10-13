@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: PAY-01 price/input/key and notification signals are bounded
+ok 1 - PAY-01 price/input/key and notification signals are bounded
+  ---
+  duration_ms: 4.423542
+  type: 'test'
+  ...
+# Subtest: PAY-02 provider binding guard rejects the wrong merchant
+ok 2 - PAY-02 provider binding guard rejects the wrong merchant
+  ---
+  duration_ms: 0.67662
+  type: 'test'
+  ...
+# Subtest: PAY-02 every verified payment binding field rejects independently
+ok 3 - PAY-02 every verified payment binding field rejects independently
+  ---
+  duration_ms: 1.14454
+  type: 'test'
+  ...
+# Subtest: PAY-04 exact positive minor RUB and refund bindings
+ok 4 - PAY-04 exact positive minor RUB and refund bindings
+  ---
+  duration_ms: 0.776731
+  type: 'test'
+  ...
+# Subtest: SEC-01 disabled/missing live keys refuse; fixture explicit and production forbidden
+ok 5 - SEC-01 disabled/missing live keys refuse; fixture explicit and production forbidden
+  ---
+  duration_ms: 4.343211
+  type: 'test'
+  ...
+# Subtest: PAY-01 hosted confirmation permits HTTPS credentials-free, fixture local exception only
+ok 6 - PAY-01 hosted confirmation permits HTTPS credentials-free, fixture local exception only
+  ---
+  duration_ms: 1.236851
+  type: 'test'
+  ...
+# Subtest: PAY-02 adapter fixed endpoint, auth, immutable body/key and capped/invalid injected responses
+ok 7 - PAY-02 adapter fixed endpoint, auth, immutable body/key and capped/invalid injected responses
+  ---
+  duration_ms: 40.599574
+  type: 'test'
+  ...
+# Subtest: PAY-02 timeout bounds injected slow headers and streaming body to5s
+ok 8 - PAY-02 timeout bounds injected slow headers and streaming body to5s
+  ---
+  duration_ms: 10003.650161
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10072.405836

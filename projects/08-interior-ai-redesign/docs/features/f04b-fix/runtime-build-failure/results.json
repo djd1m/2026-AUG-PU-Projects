@@ -1,0 +1,23 @@
+{
+  "source_revision": "ee74677afcbfa870a866321067671a331fb643f7",
+  "snapshot_sha256": "ac8b9e5390194cd12e0bc6bc648149e2ea274e4a953d30eeda4a8e698c30c56d",
+  "started_at": "2026-10-03T01:40:47.590983+00:00",
+  "checks": [
+    {
+      "name": "compose-config",
+      "exit_code": 0,
+      "duration_ms": 159,
+      "log": "/tmp/n8-f04b-ui-runtime/compose-config.log"
+    },
+    {
+      "name": "build",
+      "exit_code": 1,
+      "duration_ms": 72176,
+      "log": "/tmp/n8-f04b-ui-runtime/build.log"
+    }
+  ],
+  "status": "failed",
+  "stop_reason": "build failed",
+  "finished_at": "2026-10-03T01:41:59.927083+00:00",
+  "duration_ms": 72336
+}

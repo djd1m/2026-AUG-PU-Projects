@@ -1,0 +1,69 @@
+{
+  "baseline": "fix-checks.json jobs-unit exit 0, same product bytes",
+  "initial_invocation": "--test child mode yielded wrapper-only ERR_TEST_FAILURE; inconclusive, retained in fix-guard-initial-checks.json; re-invoked in direct mode used by repository scripts",
+  "checks": [
+    {
+      "name": "clock-runtime",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "--test-name-pattern=Trusted clock",
+        "tests/jobs.test.js"
+      ],
+      "cwd": "temporary isolated copy of source",
+      "started_at": "2026-10-02T21:22:13.404580+00:00",
+      "ended_at": "2026-10-02T21:22:13.617118+00:00",
+      "exit_code": 1,
+      "detected": true,
+      "mutation": {
+        "from": "config.runtime!=='test'",
+        "to": "config.runtime==='production'"
+      },
+      "source_sha256": "25396b1a26da3f5229a4e06e0e14a97d6c3a23ae6dc1e5777778141fe45f005d",
+      "mutant_sha256": "29012c1aa7826c9def604a87eff113771132068503668648efe37195e921ed0f",
+      "log": "docs/features/f02a/fix-guard-clock-runtime.log",
+      "scope": "Unit guard sensitivity only, not PostgreSQL persistence evidence"
+    },
+    {
+      "name": "provenance-shape",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "--test-name-pattern=Provenance rejects",
+        "tests/jobs.test.js"
+      ],
+      "cwd": "temporary isolated copy of source",
+      "started_at": "2026-10-02T21:22:13.617482+00:00",
+      "ended_at": "2026-10-02T21:22:13.819560+00:00",
+      "exit_code": 1,
+      "detected": true,
+      "mutation": {
+        "from": "if (!revisions || (Object.getPrototypeOf(revisions)!==Object.prototype && Object.getPrototypeOf(revisions)!==null))",
+        "to": "if (!revisions)"
+      },
+      "source_sha256": "25396b1a26da3f5229a4e06e0e14a97d6c3a23ae6dc1e5777778141fe45f005d",
+      "mutant_sha256": "3906b7442c50844e6adcd11aa777b1b93684adfa751563282cb4d5815c9dbc59",
+      "log": "docs/features/f02a/fix-guard-provenance-shape.log",
+      "scope": "Unit guard sensitivity only, not PostgreSQL persistence evidence"
+    },
+    {
+      "name": "provenance-copy",
+      "command": [
+        "/tmp/n6b-f06-node22/bin/node",
+        "--test-name-pattern=Provenance rejects",
+        "tests/jobs.test.js"
+      ],
+      "cwd": "temporary isolated copy of source",
+      "started_at": "2026-10-02T21:22:13.821374+00:00",
+      "ended_at": "2026-10-02T21:22:14.026847+00:00",
+      "exit_code": 1,
+      "detected": true,
+      "mutation": {
+        "from": "return modelRevisions;",
+        "to": "return revisions;"
+      },
+      "source_sha256": "25396b1a26da3f5229a4e06e0e14a97d6c3a23ae6dc1e5777778141fe45f005d",
+      "mutant_sha256": "d05207b2d531d17a60785305c16bb37ab3add5c8c8ee84beb193917556c1679f",
+      "log": "docs/features/f02a/fix-guard-provenance-copy.log",
+      "scope": "Unit guard sensitivity only, not PostgreSQL persistence evidence"
+    }
+  ]
+}

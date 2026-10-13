@@ -1,0 +1,56 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f04b-fix",
+  "attempt_id": "n8-f04b-fix-2",
+  "profile": "compact-quality-first-v2",
+  "tier": "XL",
+  "source_revision": "7dd37e81fbe24be8d1300d6884a82ed303c53373",
+  "launch_sha256": "dd00206ff6dfca1fb908237bc41813a6c799233f2321fc04a9ee71a8dd91a8ea",
+  "started_at": "2026-10-03T01:15:13Z",
+  "status": "completed",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Provider-resolved model/effort and host usage/cost unavailable. Active time unknown.",
+    "Copied browser client/image/environment runtime digests unavailable before coordinator execution.",
+    "Intermediate stage UTC boundary timestamps were not collected; final check clocks and overall wall time available."
+  ],
+  "prior_attempt": "preparation failed before Codex launch with NameError; no product work",
+  "scope": "R1/R4 UI races; R2 owned HTTPS remote browser; R3 existing migrator; required browser matrix",
+  "exclusions": "backend production invariants, dependencies, manifests, runtime/browser/network/install/spend/delegation",
+  "route": {
+    "plan": {
+      "tier": "XL",
+      "reason": "reservation idempotency, session races and owned DB/browser boundary"
+    },
+    "implementation": {
+      "tier": "XL",
+      "reason": "same approved correction scope; no new product/backend scope"
+    }
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Runtime and browser execution reserved to coordinator; local authoring/checks only."
+  },
+  "final_revision": "7dd37e81fbe24be8d1300d6884a82ed303c53373",
+  "build_revision": "ac8b9e5390194cd12e0bc6bc648149e2ea274e4a953d30eeda4a8e698c30c56d",
+  "scope_guard": "pass; only brief allowlist changed",
+  "checks": "14 focused tests, syntax build, shell syntax, local YAML/ports/CPU structure passed;6 old-logic mutants detected",
+  "quality": {
+    "writer_scope_completed": true,
+    "product_acceptance": "pending coordinator fresh review/runtime/browser",
+    "required_runtime_gates_passed": null,
+    "gpu_acceptance": null
+  },
+  "fallback": null,
+  "delegation": false,
+  "ended_at": "2026-10-03T01:36:01.001722+00:00",
+  "elapsed_wall_ms": 1248002,
+  "active_wall_ms": null,
+  "product_acceptance": "pending coordinator runtime/browser and fresh independent review",
+  "receipt_path": "docs/features/f04b-fix/receipt.md"
+}

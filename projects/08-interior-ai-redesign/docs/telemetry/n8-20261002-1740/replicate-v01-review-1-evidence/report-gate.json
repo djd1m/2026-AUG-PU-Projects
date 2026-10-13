@@ -1,0 +1,32 @@
+{
+  "command": [
+    "bash",
+    "/root/.npm/_npx/21ec3c42ee749a67/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+    "/tmp/n8-replicate-plan/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-v01-review-1-evidence/composed",
+    "--report-revision",
+    "--criterion-scenarios",
+    "--role-map-source",
+    "/tmp/n8-replicate-plan/.claude/commands/feature.md",
+    "--project-role-map-source",
+    "/tmp/n8-replicate-plan/.claude/skills/sparc-prd-mini/SKILL.md"
+  ],
+  "cwd": "/tmp/n8-replicate-plan/projects/08-interior-ai-redesign",
+  "exit_code": 0,
+  "started_at": "2026-10-03T06:59:49.541487+00:00",
+  "finished_at": "2026-10-03T06:59:49.636210+00:00",
+  "checker_sha256": "06e3dae22c533a81732b9870ae42d6b80b6e8419b3c90e11e1910e2a46888be8",
+  "installed_version": "1.13.2",
+  "scope": "Own unique per-unit composed view; byte-exact current five role documents plus report. Original flags unchanged.",
+  "report_sha256": "69bb791ed3ee076331430d7481568e7bb63e0b767a42dd1381a8603304a40ca3",
+  "final_report_copied_exactly": true,
+  "composed_files_sha256": {
+    "01_specification.md": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+    "02_pseudocode.md": "19a86156135d7751e7414e9a406070c990686d6ec8c095448549be012a10572d",
+    "03_architecture.md": "c14c88440c537afcb1c09fe4d843c253c3e0ed4e0c904105fc3297e6fe9803b9",
+    "04_refinement.md": "43fcc7495be1b92be9537f4c9d9e57fe57b574e7e8e9522c5428af21aff9e02e",
+    "05_completion.md": "91541235061c856f42882e64b047882f8f6fb83b44fcc11708edd510598e491b",
+    "validation-report.md": "69bb791ed3ee076331430d7481568e7bb63e0b767a42dd1381a8603304a40ca3"
+  },
+  "original_report_preserved_exactly": true,
+  "report_edit_reconstruction_pass": true
+}

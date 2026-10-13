@@ -1,0 +1,69 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f03b-fix",
+  "attempt_id": "n8-f03b-fix-1",
+  "source_revision": "5ab0f306172b4556c17a5e1f79f6d20f77d16e2a",
+  "launch_sha256": "e6e2b9a2a714ad756b41c22ddbabe0861f707e53b421215995790d0fc51f5d5d",
+  "profile": "compact-quality-first-v2",
+  "tier": "XL",
+  "mechanical_route": {
+    "tier": "M",
+    "exit_code": 0
+  },
+  "scope": "Only confirmed attribution integration intent() queue helper correction",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": "gpt-6.1-sol",
+  "actual_effort": "high",
+  "model_evidence": "/tmp/n8-f03b-fix/runtime.log host banner: model gpt-6.1-sol; reasoning effort high; OpenAI Codex v0.160.0",
+  "fallback_reason": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Provider-resolved model metadata beyond host banner unavailable",
+    "Token usage, cost and active-time counters unavailable",
+    "Initial reading preceded worker progress record; host started_at covers full elapsed time"
+  ],
+  "first_observed_at": "2026-10-02T23:49:07Z",
+  "record_started_at": "2026-10-02T23:50:14.312249+00:00",
+  "stage": "HANDOFF",
+  "status": "completed",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Actual PostgreSQL/E2E prohibited in correction worker; coordinator owns affected runtime rerun"
+  },
+  "authorization": "Brief confirms existing owner autonomous authorization covers one-finding correction",
+  "forecast": {
+    "status": "insufficient_data",
+    "duration_seconds": null
+  },
+  "events": [
+    {
+      "stage": "ROUTE",
+      "at": "2026-10-02T23:50:14.312249+00:00",
+      "result": "XL preserved; approved correction only, mechanical M exit0"
+    },
+    {
+      "stage": "IMPLEMENT",
+      "at": "2026-10-02T23:50:14.312249+00:00",
+      "result": "Same scope, no new production or shared-resource changes"
+    },
+    {
+      "stage": "VERIFY",
+      "at": "2026-10-02T23:51:10.141266+00:00",
+      "result": "Node22 syntax, product diff and exact scope checks pass; PG pending coordinator"
+    },
+    {
+      "stage": "HANDOFF",
+      "at": "2026-10-02T23:51:44.464827+00:00",
+      "result": "One confirmed helper correction complete; exact host model and start timestamp obtained from existing launcher metadata; no fallback, no delegation; PG remains pending"
+    }
+  ],
+  "build_revision": "d215096ebcc5d1a1c17bb27df348e5d5aa4148f6ebceb7023b562531e27b82bd",
+  "product_diff_sha256": "de8223e724a3eb2da53264b1ec1374bd36d2dac7551fd39a1a8d87935ae833ba",
+  "started_at": "2026-10-02T23:48:47+00:00",
+  "finished_at": "2026-10-02T23:51:44.464827+00:00",
+  "elapsed_wall_seconds": 177.464827,
+  "active_wall_seconds": null,
+  "feature_acceptance": "pending coordinator PostgreSQL rerun"
+}

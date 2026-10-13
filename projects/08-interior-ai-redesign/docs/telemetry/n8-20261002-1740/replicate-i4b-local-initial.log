@@ -1,0 +1,255 @@
+TAP version 13
+# Subtest: new create poll import: real files, closed evidence, durable queue and null metrics
+not ok 1 - new create poll import: real files, closed evidence, durable queue and null metrics
+  ---
+  duration_ms: 112.53411
+  type: 'test'
+  location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:47:1'
+  failureType: 'testCodeFailure'
+  error: 'provider_output_denied'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    safe (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/web/replicate-generation.js:19:30)
+    runReplicateClaim (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/web/replicate-generation.js:120:45)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:48:41)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: known identity recovery reconstructs request and uses GET only
+not ok 2 - known identity recovery reconstructs request and uses GET only
+  ---
+  duration_ms: 121.601063
+  type: 'test'
+  location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:56:1'
+  failureType: 'testCodeFailure'
+  error: 'provider_output_denied'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    safe (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/web/replicate-generation.js:19:30)
+    runReplicateClaim (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/web/replicate-generation.js:120:45)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:58:16)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: changed recovery seed or request binding makes ZERO GET/POST
+    # Subtest: seed
+    ok 1 - seed
+      ---
+      duration_ms: 89.731302
+      type: 'test'
+      ...
+    # Subtest: request
+    ok 2 - request
+      ---
+      duration_ms: 86.042161
+      type: 'test'
+      ...
+    # Subtest: transmitted
+    ok 3 - transmitted
+      ---
+      duration_ms: 87.367401
+      type: 'test'
+      ...
+    # Subtest: transform
+    ok 4 - transform
+      ---
+      duration_ms: 91.321503
+      type: 'test'
+      ...
+    # Subtest: settings
+    ok 5 - settings
+      ---
+      duration_ms: 82.911879
+      type: 'test'
+      ...
+    1..5
+ok 3 - changed recovery seed or request binding makes ZERO GET/POST
+  ---
+  duration_ms: 441.302038
+  type: 'test'
+  ...
+# Subtest: changed actual private bytes fail before any recovery GET
+ok 4 - changed actual private bytes fail before any recovery GET
+  ---
+  duration_ms: 53.222649
+  type: 'test'
+  ...
+# Subtest: no-ID submitting and ambiguous never replay or authorize
+ok 5 - no-ID submitting and ambiguous never replay or authorize
+  ---
+  duration_ms: 93.503003
+  type: 'test'
+  ...
+# Subtest: original consumed timestamp refreshed after authorization UTC replacement
+not ok 6 - original consumed timestamp refreshed after authorization UTC replacement
+  ---
+  duration_ms: 44.330506
+  type: 'test'
+  location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:80:1'
+  failureType: 'testCodeFailure'
+  error: 'provider_output_denied'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    safe (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/web/replicate-generation.js:19:30)
+    runReplicateClaim (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/web/replicate-generation.js:120:45)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:83:16)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: false or throw completion preserves referenced winner and never fails it
+    # Subtest: false
+    not ok 1 - false
+      ---
+      duration_ms: 46.237597
+      type: 'test'
+      location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:87:47'
+      failureType: 'testCodeFailure'
+      error: 'provider_output_denied'
+      code: 'ERR_TEST_FAILURE'
+      stack: |-
+        safe (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/web/replicate-generation.js:19:30)
+        runReplicateClaim (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/web/replicate-generation.js:120:45)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:89:18)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:87:39)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: throw
+    not ok 2 - throw
+      ---
+      duration_ms: 51.996318
+      type: 'test'
+      location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:87:47'
+      failureType: 'testCodeFailure'
+      error: 'provider_output_denied'
+      code: 'ERR_TEST_FAILURE'
+      stack: |-
+        safe (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/web/replicate-generation.js:19:30)
+        runReplicateClaim (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/web/replicate-generation.js:120:45)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:89:18)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:87:39)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..2
+not ok 7 - false or throw completion preserves referenced winner and never fails it
+  ---
+  duration_ms: 99.554116
+  type: 'test'
+  location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:86:1'
+  failureType: 'subtestsFailed'
+  error: '2 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: unavailable DB after uncertain completion preserves files
+not ok 8 - unavailable DB after uncertain completion preserves files
+  ---
+  duration_ms: 56.09275
+  type: 'test'
+  location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:91:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /replicate_completion_uncertain/. Input:
+    
+    'Error: provider_output_denied'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'provider_output_denied'
+  stack: |-
+    safe (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/web/replicate-generation.js:19:30)
+    runReplicateClaim (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/web/replicate-generation.js:120:45)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async waitForActual (node:assert:644:5)
+    async Function.rejects (node:assert:767:25)
+    async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:93:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  operator: 'rejects'
+  stack: |-
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:93:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: definitely unreferenced rejection guards cleanup and fenced fail
+not ok 9 - definitely unreferenced rejection guards cleanup and fenced fail
+  ---
+  duration_ms: 43.356125
+  type: 'test'
+  location: '/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:95:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /replicate_completion_denied/. Input:
+    
+    'Error: provider_output_denied'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'provider_output_denied'
+  stack: |-
+    safe (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/web/replicate-generation.js:19:30)
+    runReplicateClaim (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/web/replicate-generation.js:120:45)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async waitForActual (node:assert:644:5)
+    async Function.rejects (node:assert:767:25)
+    async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:97:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  operator: 'rejects'
+  stack: |-
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async TestContext.<anonymous> (file:///tmp/n8-replicate-i1/projects/08-interior-ai-redesign/tests/replicate-generation.test.js:97:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: serialized lost heartbeat aborts provider and prevents attachment
+ok 10 - serialized lost heartbeat aborts provider and prevents attachment
+  ---
+  duration_ms: 48.849878
+  type: 'test'
+  ...
+# Subtest: external abort and unknown errors expose safe fixed codes only
+ok 11 - external abort and unknown errors expose safe fixed codes only
+  ---
+  duration_ms: 29.945781
+  type: 'test'
+  ...
+# Subtest: hosted config exact pins, fixed styles and nonenumerable private token
+ok 12 - hosted config exact pins, fixed styles and nonenumerable private token
+  ---
+  duration_ms: 5.842652
+  type: 'test'
+  ...
+# Subtest: missing/invalid pins, token, accepts, envelope, seed or source deny
+ok 13 - missing/invalid pins, token, accepts, envelope, seed or source deny
+  ---
+  duration_ms: 5.081332
+  type: 'test'
+  ...
+# Subtest: fixture retains wider seed and existing common validation
+ok 14 - fixture retains wider seed and existing common validation
+  ---
+  duration_ms: 1.29529
+  type: 'test'
+  ...
+1..14
+# tests 21
+# suites 0
+# pass 13
+# fail 8
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1686.529462

@@ -1,0 +1,28 @@
+{
+  "process": {
+    "exit_code": 0,
+    "pid": 532357,
+    "started_at": "2026-10-03T15:10:57.925382+00:00",
+    "finished_at": "2026-10-03T15:17:16.075803+00:00",
+    "elapsed_seconds": 378.15042408998124
+  },
+  "thread_id": "01a10251-807d-77a3-abd9-00b3f91ded45",
+  "host_files": [
+    "/root/.codex/sessions/2026/10/03/rollout-2026-10-03T15-10-58-01a10251-807d-77a3-abd9-00b3f91ded45.jsonl"
+  ],
+  "actual_contexts": [
+    {
+      "model": "gpt-6-astra",
+      "effort": "high"
+    }
+  ],
+  "raw_usage": {
+    "input_tokens": 1328667,
+    "cached_input_tokens": 1219712,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 8148,
+    "reasoning_output_tokens": 1646,
+    "total_tokens": 1336815
+  },
+  "cost": null
+}

@@ -1,0 +1,31 @@
+/app/node_modules/pg-pool/index.js:45
+    Error.captureStackTrace(err)
+          ^
+
+error: monotonic billing state
+    at /app/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///app/scripts/ui/replicate-cases.js:98:18
+    at async check (file:///app/scripts/ui/browser.js:23:34)
+    at async hostedCases (file:///app/scripts/ui/replicate-cases.js:88:5)
+    at async file:///app/scripts/ui/browser.js:132:28 {
+  length: 144,
+  severity: 'ERROR',
+  code: 'P0001',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: 'PL/pgSQL function protect_billing_state() line 5 at RAISE',
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'pl_exec.c',
+  line: '3911',
+  routine: 'exec_stmt_raise'
+}
+
+Node.js v22.20.0

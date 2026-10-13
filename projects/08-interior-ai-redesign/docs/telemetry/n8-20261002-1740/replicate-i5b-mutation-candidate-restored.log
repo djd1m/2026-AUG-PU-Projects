@@ -1,0 +1,71 @@
+TAP version 13
+# Subtest: I5b labelled hosted software branch: strict row/config/corpus and actual bytes
+    # Subtest: valid software shape with 12 inputs x 3 styles, distinct per-pair config/request
+    ok 1 - valid software shape with 12 inputs x 3 styles, distinct per-pair config/request
+      ---
+      duration_ms: 63.564383
+      type: 'test'
+      ...
+    # Subtest: guard oracle: synthetic hosted corpus cannot be accepted
+    ok 2 - guard oracle: synthetic hosted corpus cannot be accepted
+      ---
+      duration_ms: 36.278083
+      type: 'test'
+      ...
+    # Subtest: closed canonical row, all shared columns, style and SQL null metrics
+    ok 3 - closed canonical row, all shared columns, style and SQL null metrics
+      ---
+      duration_ms: 47.298127
+      type: 'test'
+      ...
+    # Subtest: corpus refuses source/attestation, mixed pins, aliases, substitution and geometry
+    ok 4 - corpus refuses source/attestation, mixed pins, aliases, substitution and geometry
+      ---
+      duration_ms: 438.945877
+      type: 'test'
+      ...
+    # Subtest: server-only review software acceptance, eligibility and once-only rejection
+    ok 5 - server-only review software acceptance, eligibility and once-only rejection
+      ---
+      duration_ms: 61.045282
+      type: 'test'
+      ...
+    # Subtest: missing/changed input, output, depth and config deny review and eligibility
+    ok 6 - missing/changed input, output, depth and config deny review and eligibility
+      ---
+      duration_ms: 301.054948
+      type: 'test'
+      ...
+    # Subtest: final eligibility rechecks deleted/quality/evidence authority after byte reads
+    ok 7 - final eligibility rechecks deleted/quality/evidence authority after byte reads
+      ---
+      duration_ms: 272.179217
+      type: 'test'
+      ...
+    # Subtest: private hosted unverified composite has existing UNVERIFIED pixels
+    ok 8 - private hosted unverified composite has existing UNVERIFIED pixels
+      ---
+      duration_ms: 388.623439
+      type: 'test'
+      ...
+    1..8
+ok 1 - I5b labelled hosted software branch: strict row/config/corpus and actual bytes
+  ---
+  duration_ms: 1631.453732
+  type: 'test'
+  ...
+# Subtest: I5b hosted sharing mode alone grants no public authority; private and final cache guards
+ok 2 - I5b hosted sharing mode alone grants no public authority; private and final cache guards
+  ---
+  duration_ms: 1591.508308
+  type: 'test'
+  ...
+1..2
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3528.84642

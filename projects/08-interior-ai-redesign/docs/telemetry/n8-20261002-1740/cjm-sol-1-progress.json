@@ -1,0 +1,60 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "cjm-sol-1",
+  "attempt_id": "cjm-sol-1-attempt-1",
+  "started_at": "2026-10-02T17:50:10Z",
+  "stage": "DELIVERED",
+  "source_revision": "a05cfca76614346f46d0904c8d3a9692429b0a68",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "actual_model": null,
+  "model_evidence": "Parent launch metadata must supply actual; self-report is not proof",
+  "usage": null,
+  "route": {
+    "mechanical": "S",
+    "exit_code": 0,
+    "substantive": "S: static demos; no remote upload, public production route, money or reward engine. Parent N8 remains XL."
+  },
+  "scope": [
+    "docs/cjm/**",
+    "docs/telemetry/n8-20261002-1740/cjm-sol-1-*"
+  ],
+  "limits": [
+    "no dependencies/CDN/network requests",
+    "no external payments/GPU/rewards",
+    "18 minutes"
+  ],
+  "requirements": "docs/CJM_Variants.md",
+  "architecture": "docs/implementation-plan-v1.md",
+  "build": "not_applicable: standalone HTML",
+  "static_guard": "pass",
+  "mutation": "2 injected defects rejected",
+  "mechanical_implementation_route": {
+    "tier": "L",
+    "exit_code": 1,
+    "reason": "GRANT/role substring in UI consent state/ARIA; no DB or remote paths",
+    "substantive": "S static demo within approved parent XL scope"
+  },
+  "browser_wait_started_at": "2026-10-02T17:58:18Z",
+  "earlier_browser_request_interval": "not measured; not reconstructed",
+  "browser_wait_finished_at": "2026-10-02T18:00:59.088058+00:00",
+  "finished_at": "2026-10-02T18:05:49.244048+00:00",
+  "elapsed_wall_ms": 939244,
+  "active_wall_ms": null,
+  "e2e_status": "pass",
+  "e2e_attempts": 5,
+  "retry_count": 4,
+  "source_snapshot": "sha256:f0d3e13d3b98a4e37cde1d7ee4028161e6fa4ed8daf08c43bbdd40909d938044",
+  "missing_data": [
+    "No worker-scoped usage, billing, provider actual-model/effort metadata",
+    "Active time unavailable: earlier coordination/tool intervals not fully instrumented"
+  ],
+  "findings": [
+    {
+      "id": "CJM-MOBILE-OVERFLOW",
+      "severity": "medium",
+      "status": "fixed",
+      "evidence": "e2e-attempt-4 a/390/landing width418; decorative ::before lost containing block; position:relative added; attempt5 all42 screens pass"
+    }
+  ]
+}

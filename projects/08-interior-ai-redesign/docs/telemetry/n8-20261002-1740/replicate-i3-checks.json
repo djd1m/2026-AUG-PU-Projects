@@ -1,0 +1,195 @@
+{
+  "checks": [
+    {
+      "command": "/tmp/n8-node22 --test --test-concurrency=1 tests/replicate-media.test.js",
+      "exit_code": 1,
+      "started_at": "2026-10-03T08:49:19.702386+00:00",
+      "ended_at": "2026-10-03T08:49:22.512349+00:00",
+      "evidence": "replicate-i3-tests-1.log",
+      "counts": {
+        "tests": 127,
+        "pass": 125,
+        "fail": 2,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "log_sha256": "3792f557ca5bfbe114dfb478182afc994d0a0ca97dbc08a46ae49fe0a03473ec"
+    },
+    {
+      "command": "/tmp/n8-node22 --test --test-concurrency=1 tests/replicate-media.test.js",
+      "exit_code": 0,
+      "started_at": "2026-10-03T08:51:10.302018+00:00",
+      "ended_at": "2026-10-03T08:51:13.840555+00:00",
+      "evidence": "replicate-i3-tests-2.log",
+      "counts": {
+        "tests": 127,
+        "pass": 127,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "log_sha256": "11fb4033d36723202753814a73be55a927bb1515539610b0f5ffff859cbf6978"
+    },
+    {
+      "command": "/tmp/n8-node22 --test --test-concurrency=1 tests/replicate-media.test.js",
+      "exit_code": 0,
+      "started_at": "2026-10-03T08:54:16.051324+00:00",
+      "ended_at": "2026-10-03T08:54:20.562333+00:00",
+      "evidence": "replicate-i3-tests-3.log",
+      "counts": {
+        "tests": 136,
+        "pass": 136,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "log_sha256": "9ef1a7905fd1b19e48bc648a87d8f313242e57717c92b00d4f7059a1a42d9454"
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--experimental-default-type=module",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=DNS validates all answers",
+        "tests/replicate-media.test.js"
+      ],
+      "cwd": "unique disposable /tmp/n8-i3-mutation-*",
+      "exit_code": 0,
+      "started_at": "2026-10-03T08:56:01.114570+00:00",
+      "ended_at": "2026-10-03T08:56:01.800600+00:00",
+      "evidence": "replicate-i3-mutation-baseline.log",
+      "stage": "baseline",
+      "counts": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "log_sha256": "67fda82a26fe459249c2498ca39582789c1fdb8d5557de53568e6a6b9f4105b8"
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--experimental-default-type=module",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=DNS validates all answers",
+        "tests/replicate-media.test.js"
+      ],
+      "cwd": "unique disposable /tmp/n8-i3-mutation-*",
+      "exit_code": 1,
+      "started_at": "2026-10-03T08:56:01.801015+00:00",
+      "ended_at": "2026-10-03T08:56:02.408182+00:00",
+      "evidence": "replicate-i3-mutation-mutant.log",
+      "stage": "mutant",
+      "counts": {
+        "tests": 1,
+        "pass": 0,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "log_sha256": "e78991d2145fe26d14171589a9c498812fb3c87cf284552160037b9863eea82b"
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--experimental-default-type=module",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=DNS validates all answers",
+        "tests/replicate-media.test.js"
+      ],
+      "cwd": "unique disposable /tmp/n8-i3-mutation-*",
+      "exit_code": 0,
+      "started_at": "2026-10-03T08:56:02.408512+00:00",
+      "ended_at": "2026-10-03T08:56:03.086371+00:00",
+      "evidence": "replicate-i3-mutation-restored.log",
+      "stage": "restored",
+      "counts": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "log_sha256": "50d4b6f0bec29f9cbc608651fa2e1bcf04f4944e44e0a5a611e37e5d5b84a4e6"
+    },
+    {
+      "command": "/tmp/n8-node22 --version",
+      "exit_code": 0,
+      "evidence": "replicate-i3-completion-node.log",
+      "note": "Executed once in completion wrapper before its later scope-comparator error; assertions confirmed each exit0. Individual duration not captured."
+    },
+    {
+      "command": "/tmp/n8-node22 --check web/replicate-media.js",
+      "exit_code": 0,
+      "evidence": "replicate-i3-completion-module-syntax.log",
+      "note": "Executed once in completion wrapper before its later scope-comparator error; assertions confirmed each exit0. Individual duration not captured."
+    },
+    {
+      "command": "/tmp/n8-node22 --check tests/replicate-media.test.js",
+      "exit_code": 0,
+      "evidence": "replicate-i3-completion-test-syntax.log",
+      "note": "Executed once in completion wrapper before its later scope-comparator error; assertions confirmed each exit0. Individual duration not captured."
+    },
+    {
+      "command": "Python literal whitespace/conflict marker / <500 lines, both untracked product files",
+      "exit_code": 0,
+      "evidence": "replicate-i3-completion-whitespace.log",
+      "note": "Executed once in completion wrapper before its later scope-comparator error; assertions confirmed each exit0. Individual duration not captured."
+    },
+    {
+      "command": "completion wrapper scope assertion using project-relative allowlist against git root-relative output",
+      "exit_code": 1,
+      "evidence": "replicate-i3-completion-scope.log",
+      "result": "comparator path-basis error; all listed paths are in N8 scope; corrected below, no product/test changes"
+    },
+    {
+      "command": "normalize repository-root git status paths to project root, then compare exact I3 ownership + preexisting readonly launch/node_modules exclusions",
+      "exit_code": 0,
+      "evidence": "replicate-i3-completion-scope.log"
+    },
+    {
+      "command": "SHA256 and pinned git blob comparisons: accepted five contracts, I1/I2 protected files/handback/review, media/generation/manifests, readonly launch and current two product files",
+      "exit_code": 0
+    }
+  ],
+  "mutation": {
+    "target": "production all-DNS-answer validation",
+    "original": "addresses.length > 64 || addresses.some(a=>",
+    "mutant": "addresses.length > 64 || false && addresses.some(a=>",
+    "intended_oracle": "nonglobal DNS must prevent every HTTPS connection",
+    "restored_sha256": "6678a59501ee42ece6b10686400965323448c85b77e89454e30fdc5757ca54fc",
+    "production_source_unchanged": true
+  },
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i3-completion",
+  "attempt_id": "replicate-i3-completion-2",
+  "source_revision": "b37b43d88356d7ca53b478c129469e9e0b77d259",
+  "prior_capacity_interruption": {
+    "attempt_id": "replicate-i3-1",
+    "process_exit": 1,
+    "process_elapsed_seconds": 973.375,
+    "reason": "Selected model is at capacity; product and green tests/mutation delivered before interruption; terminal docs absent",
+    "actual_model": "gpt-6.1-sol",
+    "actual_effort": "high",
+    "model_evidence": "owner supplied host confirmation in completion instruction"
+  },
+  "product_sha256": {
+    "web/replicate-media.js": "6678a59501ee42ece6b10686400965323448c85b77e89454e30fdc5757ca54fc",
+    "tests/replicate-media.test.js": "ecdc1c77a39e199f814a3173e603d8e6595ae94646a56030791d9f376c1f96bc"
+  },
+  "proof_limits": [
+    "136/136 full-suite pass precedes only strengthening of the DNS negative-effect oracle; current DNS baseline/restored green covers that delta. Historical per-run test-file SHA not captured; final snapshot binds current exact product and logs.",
+    "No fresh review, full regression, real provider/TLS/DB/E2E or full F07 AC claim."
+  ]
+}

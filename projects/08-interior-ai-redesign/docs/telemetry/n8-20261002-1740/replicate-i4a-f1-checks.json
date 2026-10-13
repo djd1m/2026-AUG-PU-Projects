@@ -1,0 +1,90 @@
+{
+  "source_revision": "38d870e6bb4089d92f1fa6c84e7893a326bf2cab",
+  "checked_at": "2026-10-03T10:09:11.440320+00:00",
+  "checks": [
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "v22.20.0\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--check",
+        "web/jobs.js"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--check",
+        "web/provider-submissions.js"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--check",
+        "tests/replicate-lifecycle.integration.test.js"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--test",
+        "tests/jobs.test.js"
+      ],
+      "exit_code": 0,
+      "stdout": "TAP version 13\n# Subtest: JOB-01 style/key/UUID boundaries and canonical body hash\nok 1 - JOB-01 style/key/UUID boundaries and canonical body hash\n  ---\n  duration_ms: 4.423772\n  type: 'test'\n  ...\n# Subtest: PERF-01/SEC-01 required positive integer lower-only budget config\nok 2 - PERF-01/SEC-01 required positive integer lower-only budget config\n  ---\n  duration_ms: 7.309202\n  type: 'test'\n  ...\n# Subtest: Output contract requires complete evidence and refuses production fixture\nok 3 - Output contract requires complete evidence and refuses production fixture\n  ---\n  duration_ms: 2.144671\n  type: 'test'\n  ...\n# Subtest: Trusted clock injection is restricted to explicit test runtime\nok 4 - Trusted clock injection is restricted to explicit test runtime\n  ---\n  duration_ms: 1.667201\n  type: 'test'\n  ...\n# Subtest: Provenance rejects unsupported shapes and serializes a detached canonical revision object\nok 5 - Provenance rejects unsupported shapes and serializes a detached canonical revision object\n  ---\n  duration_ms: 2.519311\n  type: 'test'\n  ...\n1..5\n# tests 5\n# suites 0\n# pass 5\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 319.895774\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/n8-node22",
+        "--test",
+        "tests/provider-submissions.test.js"
+      ],
+      "exit_code": 0,
+      "stdout": "TAP version 13\n# Subtest: prepared binding accepts only hashes and closed numeric image transform\nok 1 - prepared binding accepts only hashes and closed numeric image transform\n  ---\n  duration_ms: 6.858392\n  type: 'test'\n  ...\n# Subtest: authority rejects absent/invalid limits and non-test trusted clock before SQL\nok 2 - authority rejects absent/invalid limits and non-test trusted clock before SQL\n  ---\n  duration_ms: 0.84668\n  type: 'test'\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 198.698401\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "postgresql": "not_executed; coordinator fresh PG16 after freeze",
+  "new_marker_unit": "syntax_checked_only per writer scope",
+  "generation": "unchanged; not rerun",
+  "source_and_scope_checks": {
+    "exit_code": 0,
+    "protected_files": 7,
+    "i1_authority_unchanged": true,
+    "old_lifecycle_oracles_unchanged": true,
+    "changed_paths": [
+      "projects/08-interior-ai-redesign/tests/replicate-lifecycle.integration.test.js",
+      "projects/08-interior-ai-redesign/web/jobs.js",
+      "projects/08-interior-ai-redesign/web/provider-submissions.js"
+    ],
+    "snapshot_sha256": "76f6c59a79c7db2d06da208eb62d45052c23a543d272e8ccb2f1a1f2f17ccb8b"
+  }
+}

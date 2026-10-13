@@ -1,0 +1,65 @@
+TAP version 13
+# Subtest: PUBLIC-01 exact Unicode context/description, consent and style boundaries
+ok 1 - PUBLIC-01 exact Unicode context/description, consent and style boundaries
+  ---
+  duration_ms: 2.389391
+  type: 'test'
+  ...
+# Subtest: owner boundary, strict public gate, byte bindings, explicit publication and revocation
+    # Subtest: SHARE-03 targeted cross-owner guard
+    ok 1 - SHARE-03 targeted cross-owner guard
+      ---
+      duration_ms: 2.019931
+      type: 'test'
+      ...
+    # Subtest: prepare ignores removeBadge and wrong owner cannot read artifact
+    ok 2 - prepare ignores removeBadge and wrong owner cannot read artifact
+      ---
+      duration_ms: 326.148866
+      type: 'test'
+      ...
+    # Subtest: accepted record XSS is escaped and public metadata has no private fields
+    ok 3 - accepted record XSS is escaped and public metadata has no private fields
+      ---
+      duration_ms: 336.20905
+      type: 'test'
+      ...
+    # Subtest: unverified or missing privileged evidence cannot publish; private unverified stays unverified
+    ok 4 - unverified or missing privileged evidence cannot publish; private unverified stays unverified
+      ---
+      duration_ms: 307.70376
+      type: 'test'
+      ...
+    1..4
+ok 2 - owner boundary, strict public gate, byte bindings, explicit publication and revocation
+  ---
+  duration_ms: 1010.474551
+  type: 'test'
+  ...
+# Subtest: fixture is privately labelled and always denied publication
+ok 3 - fixture is privately labelled and always denied publication
+  ---
+  duration_ms: 344.167163
+  type: 'test'
+  ...
+# Subtest: PAY-05 targeted final hold guard on cached paid bytes and public reads
+ok 4 - PAY-05 targeted final hold guard on cached paid bytes and public reads
+  ---
+  duration_ms: 603.623005
+  type: 'test'
+  ...
+# Subtest: share attempts/outcomes/download events are distinct, replay safe and native resolve is browser reported
+ok 5 - share attempts/outcomes/download events are distinct, replay safe and native resolve is browser reported
+  ---
+  duration_ms: 329.505268
+  type: 'test'
+  ...
+1..5
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2299.676091

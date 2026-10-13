@@ -1,0 +1,66 @@
+{
+  "source_revision": "187a14a5af986c3115ae7cbddbc3b67ff0a3937e",
+  "compose_sha256": "0d9a9f3b7833b9adda00fa567a9af76221e8838a47b69e3765b0fbb90ee9d48d",
+  "image": "sha256:ed3320e7460b27368fe6a603ae94cbf8eb49a7aeb85ae4ceb3a7a30e39b4dd14",
+  "image_note": "Same accepted corrected-code image; only Compose network changed, no rebuild needed",
+  "started_at": "2026-10-02T20:28:41.657184+00:00",
+  "finished_at": "2026-10-02T20:29:01.288884+00:00",
+  "checks": [
+    {
+      "name": "up",
+      "exit_code": 0
+    },
+    {
+      "name": "ports",
+      "exit_code": 0
+    },
+    {
+      "name": "requested-bind",
+      "exit_code": 0
+    },
+    {
+      "name": "network-options",
+      "exit_code": 0
+    },
+    {
+      "name": "db-ports",
+      "exit_code": 0
+    },
+    {
+      "name": "db-networks",
+      "exit_code": 0
+    },
+    {
+      "name": "web-networks",
+      "exit_code": 0
+    },
+    {
+      "name": "host-curl",
+      "exit_code": 0
+    },
+    {
+      "name": "internal-fetch",
+      "exit_code": 0
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0
+    }
+  ],
+  "assertions": {
+    "actual_web_loopback_binding": true,
+    "database_ports_unpublished": true,
+    "database_private_network_only": true,
+    "web_private_plus_frontend": true,
+    "host_http_body_exact_index_bytes": true,
+    "internal_http_status": 200,
+    "cleanup_complete": true
+  },
+  "raw_probe_sha256": "5d83c890aef9b9dee8feb04d37162e1a671b6c3fd413ff2fbb9a01a5ff6fb519",
+  "raw_probe_outside_git": "/tmp/n8-f01-network-runtime/results.json",
+  "previous_failures_preserved": "n8-f01-fix-docker-checks.json",
+  "e2e_claim": null,
+  "binding_note": "Coordinator launched probe after source187a14a5 integration and rechecked same HEAD after cleanup. Probe script reads canonical project compose path. No product edits during run. Built image retained from db5fa90d; all25 non-Compose snapshot hashes still match. Reviewer raw JSON lacked identities; this separate source-bound supplement supplies coordinator observations without rewriting original report.",
+  "non_compose_source_files_verified": 25,
+  "probe_script_sha256": "6aa3600b72bd23abd47dacdc4179b051fc5f56fc6e6b209ed489410cf8a03910"
+}

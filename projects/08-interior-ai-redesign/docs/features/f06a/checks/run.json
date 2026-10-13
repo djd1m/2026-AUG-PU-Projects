@@ -1,0 +1,61 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f06-delivery",
+  "attempt_id": "n8-f06-delivery-1",
+  "profile": "compact-quality-first-v2",
+  "source_revision": "6d04b91e545822b723bedd49f794f6aa228d4a69",
+  "launch_sha256": "a4ecc8e9717c5892dcaf65e6128365857a49b0cc02ded62260b4678a3ef4c936",
+  "trace_prelaunch_state": "absent",
+  "started_at": "2026-10-03T02:54:00Z",
+  "requested_model": "gpt-6.1-sol",
+  "actual_model": "gpt-6.1-sol",
+  "actual_model_evidence": "/tmp/n8-f06-delivery/runtime.log: model: gpt-6.1-sol (CLI v0.160.0, provider openai)",
+  "requested_effort": "high",
+  "actual_effort": "high",
+  "actual_effort_evidence": "CLI banner reasoning effort: high",
+  "provider_resolved_model": null,
+  "usage": null,
+  "cost": null,
+  "active_wall_ms": null,
+  "missing_data": [
+    "Provider-resolved model and billing counters unavailable; CLI banner confirms host model selection only.",
+    "No measured waiting intervals; active time unknown.",
+    "Parent owns aggregate telemetry and independent integration/review."
+  ],
+  "scope": "Documentation-only bounded F06a preparation, inert restore procedure; no product/runtime changes",
+  "exclusions": [
+    "actual browser",
+    "GPU",
+    "live provider",
+    "restore execution",
+    "deployment",
+    "roadmap",
+    "delegation"
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Documentation only; no actual E2E or runtime commands authorized."
+  },
+  "stages": [
+    {
+      "stage": "ROUTE",
+      "at": "2026-10-03T02:55:28.567938+00:00",
+      "mechanical_exit": 0,
+      "mechanical_tier": "T",
+      "substantive_tier": "T documentation delta; inherited product XL gates retained",
+      "reason": "All owned changes are prose/evidence metadata; no financial or private-data behavior changes."
+    },
+    {
+      "stage": "PLAN",
+      "at": "2026-10-03T02:56:35.458588+00:00",
+      "result": "Canonical F06 plan and brief adopted; minimum seven Markdown files and evidence metadata; parent integration/review separate; numeric forecast insufficient_data."
+    },
+    {
+      "stage": "IMPLEMENT",
+      "at": "2026-10-03T02:56:35.486171+00:00",
+      "mechanical_exit": 0,
+      "substantive_tier": "T docs delta; aggregate XL gates unchanged",
+      "result": "Same authorized documentation scope; restore commands remain inert."
+    }
+  ]
+}

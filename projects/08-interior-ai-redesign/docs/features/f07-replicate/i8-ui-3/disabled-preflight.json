@@ -1,0 +1,25 @@
+{
+  "status": "ready",
+  "reason": "Actual web recreated with disabled payment provider; same source/image/privateDB, client copy verified; source-bound main preflight preserved",
+  "at": "2026-10-03T18:08:53.313665+00:00",
+  "source_revision": "98d5111277b788be875b9cb6ded7424e05a994a7",
+  "build_revision": "6c1815291d3cac0562f7fcbe1443218b7c32aa9a7fe61877ac7ebd02c8c0c52f",
+  "environment": "Owned n8-ui-e2e private PG16.10/eight migrations/test disabled payment server; Node22; image sha256:2c193a4a369f9a28905cbf3100a20c4a2b10d74fedf276e5e27022bc9e9b2119; internalHTTPS https://n8-ui.test; total2CPU; shared Playwright1.63 remote temporarynetwork only. No provider token in app.",
+  "environment_available": true,
+  "test_command": "docker exec n8-ui-e2e-web-1 timeout 120 node scripts/ui/browser-disabled.js",
+  "inputs": [
+    {
+      "name": "Actual disabled server readiness/source/image/client verification",
+      "available": true
+    }
+  ],
+  "expected_effects": [
+    "Two actual disabled-server DOM/config/POST503 checks at1440/390 with two owned local accounts; no charges or provider HTTP"
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "docs/features/f07-replicate/i8-ui-3"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: prepared binding accepts only hashes and closed numeric image transform
+ok 1 - prepared binding accepts only hashes and closed numeric image transform
+  ---
+  duration_ms: 10.437014
+  type: 'test'
+  ...
+# Subtest: authority rejects absent/invalid limits and non-test trusted clock before SQL
+ok 2 - authority rejects absent/invalid limits and non-test trusted clock before SQL
+  ---
+  duration_ms: 0.990841
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 208.088674

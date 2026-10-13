@@ -1,0 +1,152 @@
+{
+  "status": "pass",
+  "environment": "existing codex-ui-playwright / Playwright 1.63.0 / native Playwright WS",
+  "results": [
+    {
+      "variant": "a",
+      "width": 1440,
+      "status": "pass",
+      "screens": [
+        "landing",
+        "upload",
+        "style",
+        "queue",
+        "result",
+        "gallery",
+        "paywall"
+      ],
+      "keyboard": true,
+      "localPreviewXssSafe": true,
+      "compare": true,
+      "shareSeparate": true,
+      "uncheckedOptIn": true,
+      "revoke": true,
+      "qualityError": true,
+      "paymentFixture": true,
+      "pageErrors": [],
+      "remoteRequests": []
+    },
+    {
+      "variant": "b",
+      "width": 1440,
+      "status": "pass",
+      "screens": [
+        "landing",
+        "upload",
+        "style",
+        "queue",
+        "result",
+        "gallery",
+        "paywall"
+      ],
+      "keyboard": true,
+      "localPreviewXssSafe": true,
+      "compare": true,
+      "shareSeparate": true,
+      "uncheckedOptIn": true,
+      "revoke": true,
+      "qualityError": true,
+      "paymentFixture": true,
+      "pageErrors": [],
+      "remoteRequests": []
+    },
+    {
+      "variant": "c",
+      "width": 1440,
+      "status": "pass",
+      "screens": [
+        "landing",
+        "upload",
+        "style",
+        "queue",
+        "result",
+        "gallery",
+        "paywall"
+      ],
+      "keyboard": true,
+      "localPreviewXssSafe": true,
+      "compare": true,
+      "shareSeparate": true,
+      "uncheckedOptIn": true,
+      "revoke": true,
+      "qualityError": true,
+      "paymentFixture": true,
+      "pageErrors": [],
+      "remoteRequests": []
+    },
+    {
+      "variant": "a",
+      "width": 390,
+      "status": "pass",
+      "screens": [
+        "landing",
+        "upload",
+        "style",
+        "queue",
+        "result",
+        "gallery",
+        "paywall"
+      ],
+      "keyboard": true,
+      "localPreviewXssSafe": true,
+      "compare": true,
+      "shareSeparate": true,
+      "uncheckedOptIn": true,
+      "revoke": true,
+      "qualityError": true,
+      "paymentFixture": true,
+      "pageErrors": [],
+      "remoteRequests": []
+    },
+    {
+      "variant": "b",
+      "width": 390,
+      "status": "pass",
+      "screens": [
+        "landing",
+        "upload",
+        "style",
+        "queue",
+        "result",
+        "gallery",
+        "paywall"
+      ],
+      "keyboard": true,
+      "localPreviewXssSafe": true,
+      "compare": true,
+      "shareSeparate": true,
+      "uncheckedOptIn": true,
+      "revoke": true,
+      "qualityError": true,
+      "paymentFixture": true,
+      "pageErrors": [],
+      "remoteRequests": []
+    },
+    {
+      "variant": "c",
+      "width": 390,
+      "status": "pass",
+      "screens": [
+        "landing",
+        "upload",
+        "style",
+        "queue",
+        "result",
+        "gallery",
+        "paywall"
+      ],
+      "keyboard": true,
+      "localPreviewXssSafe": true,
+      "compare": true,
+      "shareSeparate": true,
+      "uncheckedOptIn": true,
+      "revoke": true,
+      "qualityError": true,
+      "paymentFixture": true,
+      "pageErrors": [],
+      "remoteRequests": []
+    }
+  ],
+  "index": "3 local links; mobile no overflow",
+  "limitations": "Static UI fixture only; no GPU, geometry, production uploads, public links, attribution, real share or payment."
+}

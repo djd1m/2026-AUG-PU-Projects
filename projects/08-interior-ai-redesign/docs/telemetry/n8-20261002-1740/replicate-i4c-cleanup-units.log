@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: standalone cleanup opt-in exact pins/private token; absent/false disabled; no create settings
+ok 1 - standalone cleanup opt-in exact pins/private token; absent/false disabled; no create settings
+  ---
+  duration_ms: 8.140263
+  type: 'test'
+  ...
+# Subtest: cancel request persisted before sole first action; next pass GET; canceled confirmation only
+ok 2 - cancel request persisted before sole first action; next pass GET; canceled confirmation only
+  ---
+  duration_ms: 17.110066
+  type: 'test'
+  ...
+# Subtest: stale cleanup fence observation and finalization write nothing (mutation oracle)
+ok 3 - stale cleanup fence observation and finalization write nothing (mutation oracle)
+  ---
+  duration_ms: 2.652481
+  type: 'test'
+  ...
+# Subtest: expired lease observes nothing; reclaim gets fresh fence and GET after persisted cancel
+ok 4 - expired lease observes nothing; reclaim gets fresh fence and GET after persisted cancel
+  ---
+  duration_ms: 5.807372
+  type: 'test'
+  ...
+# Subtest: cancel request durable but exhausted before invocation: next pass GET without claiming cancellation sent
+ok 5 - cancel request durable but exhausted before invocation: next pass GET without claiming cancellation sent
+  ---
+  duration_ms: 3.397792
+  type: 'test'
+  ...
+# Subtest: unknown, quarantine, missing/future timestamp and retention boundary unresolved zero HTTP
+ok 6 - unknown, quarantine, missing/future timestamp and retention boundary unresolved zero HTTP
+  ---
+  duration_ms: 5.251931
+  type: 'test'
+  ...
+# Subtest: recorded terminal done without network; success race exposes counts only and no cancellation confirmation
+ok 7 - recorded terminal done without network; success race exposes counts only and no cancellation confirmation
+  ---
+  duration_ms: 7.279482
+  type: 'test'
+  ...
+# Subtest: errors/404/429/malformed never done; cancel requested retained and GET next pass
+ok 8 - errors/404/429/malformed never done; cancel requested retained and GET next pass
+  ---
+  duration_ms: 20.809948
+  type: 'test'
+  ...
+# Subtest: real I2 timeout is capped by remaining pass time and returns needed without retry
+ok 9 - real I2 timeout is capped by remaining pass time and returns needed without retry
+  ---
+  duration_ms: 23.189778
+  type: 'test'
+  ...
+# Subtest: one scan, max100 sequential actions, original expired attempt identity, pass budget exhaustion
+ok 10 - one scan, max100 sequential actions, original expired attempt identity, pass budget exhaustion
+  ---
+  duration_ms: 84.8988
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 483.030333

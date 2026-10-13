@@ -1,0 +1,108 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i4b-r1",
+  "attempt_id": "replicate-i4b-r1-1",
+  "source_revision": "d70d2474f9bcff0d4f15bc86475a662e952f7aac",
+  "started_at": "2026-10-03T12:59:21+00:00",
+  "status": "completed",
+  "profile": "compact-quality-first-v2",
+  "tier": "XL inherited approved scope",
+  "route": {
+    "mechanical_tier": "M",
+    "exit_code": 0,
+    "substantive": "One confirmed P2 correction to completion reference lookup; preserve customer credit and immutable evidence guards. No API, schema, invariant or authorization changes. Explicit sole gpt-6.1-sol/high override; parent owns real PG and independent closure."
+  },
+  "companion_e2e": "not_applicable: offline correction and handoff only",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "checks": [
+    {
+      "name": "affected_worker_config_units",
+      "command": "/tmp/n8-node22 --import ./tests/replicate-generation-fixtures.js --test --test-concurrency=1 tests/replicate-generation.test.js tests/replicate-worker-config.test.js",
+      "exit_code": 0,
+      "pass": 24,
+      "fail": 0,
+      "skip": 0,
+      "log": "replicate-i4b-r1-units.log"
+    },
+    {
+      "name": "final_static",
+      "command": "/tmp/n8-node22 scripts/check.js",
+      "exit_code": 0,
+      "log": "replicate-i4b-r1-static-final.log"
+    },
+    {
+      "name": "final_PG_test_syntax",
+      "command": "/tmp/n8-node22 --check tests/replicate-generation.integration.test.js",
+      "exit_code": 0,
+      "log": "replicate-i4b-r1-pg-syntax.log"
+    },
+    {
+      "name": "scope_preservation",
+      "exit_code": 0,
+      "log": "replicate-i4b-r1-scope.log",
+      "protected_hashes_matched": 103,
+      "other_current_I4b_files_matched": 6,
+      "original_integration_bytes_preserved": true
+    },
+    {
+      "name": "whitespace",
+      "command": "git diff --check",
+      "exit_code": 0,
+      "log": "replicate-i4b-r1-whitespace.log"
+    },
+    {
+      "name": "mechanical_route",
+      "exit_code": 0,
+      "tier": "M",
+      "log": "replicate-i4b-r1-route.log"
+    },
+    {
+      "name": "real_PG",
+      "exit_code": null,
+      "status": "pending_parent",
+      "command": "node --test --test-concurrency=1 tests/replicate-generation.integration.test.js"
+    }
+  ],
+  "missing_data": [
+    "Host model/effort/usage/cost pending host capture",
+    "Actual PostgreSQL forbidden for this author; parent verification pending"
+  ],
+  "launch_created_at": "2026-10-03T12:59:07.978339+00:00",
+  "finished_at": "2026-10-03T13:08:07.446381+00:00",
+  "verdict": "delivered_fix; real_PG_and_independent_closure_pending",
+  "launch_sha256": "dd484fcfe52b14e47e37c1ca397f73d2f6c6a4dbbfd3addc9512773f16055f03",
+  "spec_sha256": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+  "frozen_product_test_files": [
+    {
+      "path": "web/replicate-generation.js",
+      "sha256": "0211a672d57c02d7915745a70eef3ec80fa764c6226d0e7528c2797ec322df44"
+    },
+    {
+      "path": "tests/replicate-generation.integration.test.js",
+      "sha256": "1752e806fa279a901a66cfe0421a1f717289c6715288dadba8c08738f594fced"
+    }
+  ],
+  "elapsed_wall_ms": 526446,
+  "launch_to_freeze_ms": 539468,
+  "active_wall_ms": null,
+  "active_wall_missing_reason": "No separately instrumented activity/wait intervals",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "fallback_reason": null,
+  "failures": {
+    "local_tests": [],
+    "inspection": [
+      "One relative companion reference lookup used project cwd and failed; required references were then read from repo root. No source write or gate failure."
+    ],
+    "historical_PG": "I4b worker false/throw failed before correction; old failing logs unchanged"
+  },
+  "pending": [
+    "Parent exact-source worker PG16 suite including new scenarios",
+    "Fresh parent Astra narrow closure",
+    "Naturally occurring evidence-only orphan lifecycle not proven; explicit read-only query projection used"
+  ],
+  "mutation": "not_run: original real-PG old-SQL failure already recorded; no author PG permitted"
+}

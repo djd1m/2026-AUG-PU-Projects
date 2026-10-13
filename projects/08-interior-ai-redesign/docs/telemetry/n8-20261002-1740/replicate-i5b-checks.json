@@ -1,0 +1,72 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i5b",
+  "attempt_id": "replicate-i5b-1",
+  "source_revision": "5f6eb7be0f54967275204ffd8469165d6ea10523",
+  "candidate_product_manifest_sha256": "b92e62f2c194db55582d634aff684ebab089d920c0b443c36a210d020e8437bd",
+  "frozen_at": "2026-10-03T11:59:11.304923+00:00",
+  "node_version": "v22.20.0",
+  "sharp_concurrency": 1,
+  "test_concurrency": 1,
+  "checks": [
+    {
+      "name": "focused candidate unit/regression",
+      "command": "/tmp/n8-node22 --test --test-concurrency=1 tests/replicate-quality.test.js tests/quality.test.js tests/sharing.test.js tests/composite.test.js",
+      "exit_code": 0,
+      "tests": 28,
+      "passed": 28,
+      "failed": 0,
+      "skipped": 0,
+      "log": "replicate-i5b-local-tests-candidate.log"
+    },
+    {
+      "name": "static syntax/build",
+      "command": "/tmp/n8-node22 scripts/check.js",
+      "exit_code": 0,
+      "log": "replicate-i5b-static-candidate.log"
+    },
+    {
+      "name": "meaningful synthetic-acceptance guard mutation",
+      "baseline_exit": 0,
+      "mutant_exit": 1,
+      "restored_exit": 0,
+      "log": "replicate-i5b-mutation-candidate.json"
+    },
+    {
+      "name": "protected source/scope",
+      "exit_code": 0,
+      "protected_files": 1189,
+      "owned_product_test_files": 7
+    },
+    {
+      "name": "whitespace",
+      "exit_code": 0,
+      "log": "replicate-i5b-whitespace.log"
+    }
+  ],
+  "pg_runtime": null,
+  "browser_runtime": null,
+  "full_suite": null,
+  "independent_review": null,
+  "pending": [
+    "parent real-PG candidate + old quality/sharing PG suites",
+    "fresh independent review",
+    "I7 full regression",
+    "I8 actual shared-Docker browser",
+    "actual licensed measured corpus and provider/paid activation"
+  ],
+  "failures": [
+    {
+      "stage": "initial fixture write",
+      "reason": "Root-relative heredocs in project cwd; no fixture files written;18 existing tests ran, not new coverage"
+    },
+    {
+      "stage": "initial new local suite",
+      "tests": 27,
+      "pass_count": 25,
+      "fail_count": 2,
+      "reason": "Final SQL-double quality mutation exposed missing explicit final accepted predicate; corrected",
+      "log": "replicate-i5b-local-tests-initial.log"
+    }
+  ]
+}

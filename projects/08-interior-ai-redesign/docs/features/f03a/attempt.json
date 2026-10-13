@@ -1,0 +1,42 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f03a",
+  "attempt_id": "n8-f03a-1",
+  "source_revision": "2879672d8b79ce78711366986084f888b0ab1c61",
+  "launch_sha256": "e0534b9a9c9f6fe6cd66e21ea40eabd8d58a9cf9c0e191b685cd01f7b3af922a",
+  "started_at": "2026-10-02T22:35:08Z",
+  "profile": "compact-quality-first-v2",
+  "tier": "XL",
+  "mechanical_tier": "S (accepted plan)",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host did not expose resolved model, effort or usage/cost counters"
+  ],
+  "scope": "F03a accepted plan; no delegation, no external provider calls, no Docker",
+  "stage": "HANDOFF",
+  "status": "failed",
+  "preflight": "not_applicable: no browser/E2E run; injected/local HTTP and isolated PG checks only",
+  "ended_at": "2026-10-02T22:54:37.544838+00:00",
+  "implementation_status": "complete",
+  "verdict": "acceptance blocked: mandatory PostgreSQL, local HTTP transport and fresh independent review pending",
+  "build_revision": "787c84b893ccbfb0f70c20ffbd14f93314250360a5e563fe903de85de98734f2",
+  "elapsed_wall_ms": 1169544,
+  "pending": [
+    "Four real PostgreSQL suites with corresponding isolated ownership markers",
+    "Local HTTP transport suite in environment permitting loopback listeners",
+    "Owner/budget PostgreSQL mutations after green DB baseline",
+    "Fresh independent reviewer assigned by coordinator; no delegation permitted in coder brief"
+  ],
+  "external_effects": {
+    "live_payment_calls": 0,
+    "money_movement": 0,
+    "deployment": 0,
+    "messages_sent": 0,
+    "secret_files_read": 0
+  },
+  "checks": "docs/features/f03a/checks.json"
+}

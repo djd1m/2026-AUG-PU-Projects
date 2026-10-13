@@ -1,0 +1,36 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i8-hold-review",
+  "stage": "prepare",
+  "started_at": "2026-10-03T17:18:51.510020+00:00",
+  "observed_at": "2026-10-03T17:20:27.481107+00:00",
+  "source_revision": "400bd3dd576b9dd31c917e5683823ec494f6d8d3",
+  "baseline_revision": "c0bd24c84e96049f29e64539972eb31cd25f64a2",
+  "launch_sha256": "dd02330f9d6dd22354b6915c4afcc2467c7817dfd7dbac434a818734099e8f13",
+  "trace_absent_observed": true,
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "profile": "compact-quality-first-v2",
+  "scope": "Independent narrow hold correction review; no implementation/runtime execution",
+  "risk": "Inherited XL financial/private invariants; review-only bounded slice",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Read-only source/evidence review; no E2E authorized"
+  },
+  "forecast": {
+    "status": "insufficient_data",
+    "seconds": null
+  },
+  "pending_out_of_scope": [
+    "I8 actual browser 52+2",
+    "hosted-row restore"
+  ],
+  "missing_data": [
+    "Reviewer actual model/effort/usage/cost await parent host metadata"
+  ],
+  "donor": "Existing correction source and logs only; evidence rechecked against current hashes"
+}

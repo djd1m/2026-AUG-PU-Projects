@@ -1,0 +1,84 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i8-refresh-review",
+  "attempt_id": "independent-review-1",
+  "source_revision": "79286f519c0bb4b2f146f0718e109041a443236e",
+  "baseline_revision": "1f226f0e74cb147a610e8a32e46cbc38592ae1d9",
+  "build_revision": null,
+  "profile": "compact-quality-first-v2",
+  "stage": "REVIEW",
+  "route": {
+    "tier": "M",
+    "reason": "Inherited asynchronous fixture-order correction; independent source/evidence review only",
+    "mechanical_exit_code": null,
+    "mechanical_reason": "No implementation or new routing run in this caller-bounded review"
+  },
+  "started_at": "2026-10-03T17:51:56.480431+00:00",
+  "finished_at": "2026-10-03T17:55:37.593278+00:00",
+  "elapsed_wall_seconds": 221.112847,
+  "active_wall_seconds": null,
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Reviewer actual model/effort and usage are host-owned; no billing counters available",
+    "Active time not separately measured",
+    "No runtime build or E2E executed"
+  ],
+  "launch_sha256": "fad7325bc8d8277c6b761e43654dac66a53611e60b92a5f9c7bd5900bbad1c59",
+  "spec_sha256": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+  "candidate_sha256": "f3450c2cc1d2181df6f53b25bad15797ec40f207a72110a4201bc8b8f463b420",
+  "oracle_sha256": "92812de4fe6c3adf593495aa5d3c011af36871d65df2c7712f49db13f9f28c0d",
+  "source_continuity": "HEAD matches requested source; code/oracle hashes match checks.json and delivery evidence",
+  "evidence_hashes_checked": {
+    "scripts/ui/browser-cases.js": "f3450c2cc1d2181df6f53b25bad15797ec40f207a72110a4201bc8b8f463b420",
+    "tests/ui-delete-refresh-order.test.js": "92812de4fe6c3adf593495aa5d3c011af36871d65df2c7712f49db13f9f28c0d",
+    "docs/telemetry/n8-20261002-1740/replicate-i8-refresh-launch.json": "cf685673c2ac730d98d587cee62cb2826c5f3283ca835a811f649358923626db",
+    "docs/telemetry/n8-20261002-1740/replicate-i8-refresh-checks.json": "d2a41122dbae5a4acc937c676ef19f240b9872732700fdf39354f145bd23f17b",
+    "docs/features/f07-replicate/01_specification.md": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad",
+    "docs/features/f07-replicate/i8-ui-2/browser.log": "742049d2e1ad1d62d46f5a40a9ea747f137cbc2cd8eda6932ae37ad2d6fa1afc",
+    "docs/telemetry/n8-20261002-1740/replicate-i8-refresh-baseline.log": "30c36a03109d00891c1064653709ff66c4dd1def7341a45cf6596612dc7f3ae0",
+    "docs/telemetry/n8-20261002-1740/replicate-i8-refresh-related.log": "d7e112d6868d9a471b9920ee015fc29af0378c1d5888369b4bc24080e0ed8053",
+    "docs/telemetry/n8-20261002-1740/replicate-i8-refresh-build.log": "0aec2d6d64684e49007fa69ee2856c2ced7b6631bda52ca8bda26e011b3a9d81",
+    "docs/telemetry/n8-20261002-1740/replicate-i8-refresh-mutation-red.log": "b9060bc830b7ed46378dee706d157f2f93aa92b91fbd2bbad195875f149d68d6",
+    "docs/telemetry/n8-20261002-1740/replicate-i8-refresh-restored.log": "0f3852f54d8e54a4a2799afa4422ecd21fc88f24ad057f4858f899b0e784470a"
+  },
+  "evidence_hashes_all_match": true,
+  "spec_unchanged_from_baseline": true,
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Read-only review; no E2E or external actions"
+  },
+  "checks_rerun": false,
+  "saved_check_exits": {
+    "focused": 0,
+    "related": 0,
+    "static": 0,
+    "mutation": 1,
+    "restored": 0
+  },
+  "scope_check": "Only browser-cases.js and new ui-delete-refresh-order.test.js outside docs differ from baseline; no full9022-path recomputation",
+  "author_delivery": {
+    "elapsed_seconds": 122.4738229099894,
+    "exit_code": 0,
+    "usage_semantics": "runtime-final raw_usage is cumulative and replaces runtime-initial; never sum snapshots"
+  },
+  "trace_absent_observed_before_write": true,
+  "receipt_prelaunch_absence": "Host launch JSON does not encode prelaunch state; reviewer observed absence before writing, not a retrospective prelaunch attestation",
+  "pending": [
+    {
+      "item": "Actual52 main +2 disabled browser cases and representative hosted-row restore",
+      "scope": "out_of_scope",
+      "owner": "parent",
+      "reason": "Caller explicitly limits this work unit to narrow source/evidence review"
+    }
+  ],
+  "verdict": "ACCEPT",
+  "finalStatus": "completed",
+  "report_path": "/tmp/n8-replicate-i8-refresh-review/projects/08-interior-ai-redesign/docs/features/f07-replicate/i8-refresh-closure.md",
+  "trace_path": "/tmp/n8-replicate-i8-refresh-review/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i8-refresh-review-receipt.md",
+  "report_sha256": "5c21c84d6eeeaf4cab2e04c7034debaafaa11303a25d07cfd565c46558a74fc1"
+}

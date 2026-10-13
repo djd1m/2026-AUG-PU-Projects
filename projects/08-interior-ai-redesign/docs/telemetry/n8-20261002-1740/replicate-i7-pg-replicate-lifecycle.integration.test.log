@@ -1,0 +1,121 @@
+TAP version 13
+# Subtest: cleanup-only includes every non-none durable marker
+ok 1 - cleanup-only includes every non-none durable marker
+  ---
+  duration_ms: 1.337351
+  type: 'test'
+  ...
+# Subtest: F07 I4a durable hosted lifecycle on dedicated PostgreSQL16
+    # Subtest: two reclaimers have one winner, same consumed ticket/attempt/deadline and only new job fence
+    ok 1 - two reclaimers have one winner, same consumed ticket/attempt/deadline and only new job fence
+      ---
+      duration_ms: 882.219135
+      type: 'test'
+      ...
+    # Subtest: maintenance leaves known recovery in original attempt; succeeded also needs remaining private import time
+    ok 2 - maintenance leaves known recovery in original attempt; succeeded also needs remaining private import time
+      ---
+      duration_ms: 1389.526436
+      type: 'test'
+      ...
+    # Subtest: late identity after lease loss stays cleanup-only before claim, with or without maintenance
+    ok 3 - late identity after lease loss stays cleanup-only before claim, with or without maintenance
+      ---
+      duration_ms: 2103.139381
+      type: 'test'
+      ...
+    # Subtest: attempt deadline after expired lease terminalizes on maintenance/get/fail/claim and releases exactly once
+    ok 4 - attempt deadline after expired lease terminalizes on maintenance/get/fail/claim and releases exactly once
+      ---
+      duration_ms: 1920.573756
+      type: 'test'
+      ...
+    # Subtest: hard deadline is enforced after lease expiry without assigning a new 180s budget
+    ok 5 - hard deadline is enforced after lease expiry without assigning a new 180s budget
+      ---
+      duration_ms: 548.557526
+      type: 'test'
+      ...
+    # Subtest: submitting without ID after crash and explicitly ambiguous work never retry or create ticket2
+    ok 6 - submitting without ID after crash and explicitly ambiguous work never retry or create ticket2
+      ---
+      duration_ms: 2400.570677
+      type: 'test'
+      ...
+    # Subtest: known provider failed/canceled/aborted and quarantine fail closed before lease expires
+    ok 7 - known provider failed/canceled/aborted and quarantine fail closed before lease expires
+      ---
+      duration_ms: 6489.820897
+      type: 'test'
+      ...
+    # Subtest: current worker failure after submitting always terminalizes even with retryable=true
+    ok 8 - current worker failure after submitting always terminalizes even with retryable=true
+      ---
+      duration_ms: 558.021939
+      type: 'test'
+      ...
+    # Subtest: hold before CAS denies; hold after CAS preserves final check, heartbeat and private recovery
+    ok 9 - hold before CAS denies; hold after CAS preserves final check, heartbeat and private recovery
+      ---
+      duration_ms: 1032.460619
+      type: 'test'
+      ...
+    # Subtest: delete tombstones input/job, returns owner404 and releases once; late ID persists cleanup without revival
+    ok 10 - delete tombstones input/job, returns owner404 and releases once; late ID persists cleanup without revival
+      ---
+      duration_ms: 1772.947493
+      type: 'test'
+      ...
+    # Subtest: finalAuthorize samples clock after account/envelope waits and denies deadline or revoked authorization
+    ok 11 - finalAuthorize samples clock after account/envelope waits and denies deadline or revoked authorization
+      ---
+      duration_ms: 2580.073011
+      type: 'test'
+      ...
+    # Subtest: post-lock clock also fences a reclaim that waits past original deadline at UTC midnight
+    ok 12 - post-lock clock also fences a reclaim that waits past original deadline at UTC midnight
+      ---
+      duration_ms: 463.645996
+      type: 'test'
+      ...
+    # Subtest: final send check rejects wrong identity/fence/deletion and unavailable authority with literal false
+    ok 13 - final send check rejects wrong identity/fence/deletion and unavailable authority with literal false
+      ---
+      duration_ms: 804.355397
+      type: 'test'
+      ...
+    # Subtest: submission row prevents fixture/controlnet evidence attachment regardless caller mode
+    ok 14 - submission row prevents fixture/controlnet evidence attachment regardless caller mode
+      ---
+      duration_ms: 542.956734
+      type: 'test'
+      ...
+    # Subtest: no-submission fixture/controlnet local retry remains two tickets/two attempts and valid completion
+    ok 15 - no-submission fixture/controlnet local retry remains two tickets/two attempts and valid completion
+      ---
+      duration_ms: 977.783889
+      type: 'test'
+      ...
+    # Subtest: existing caller-owned terminal hold transaction uses same release and honors hosted recovery
+    ok 16 - existing caller-owned terminal hold transaction uses same release and honors hosted recovery
+      ---
+      duration_ms: 367.865441
+      type: 'test'
+      ...
+    1..16
+ok 2 - F07 I4a durable hosted lifecycle on dedicated PostgreSQL16
+  ---
+  duration_ms: 25980.229564
+  type: 'test'
+  ...
+1..2
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 26268.865527
+ Container n8f07i7-tests-run-d0ea26da561a Creating 
+ Container n8f07i7-tests-run-d0ea26da561a Created 

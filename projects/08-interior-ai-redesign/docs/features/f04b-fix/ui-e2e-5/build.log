@@ -1,0 +1,55 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 381B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22.20.0-bookworm-slim
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 101B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 DONE 0.0s
+
+#5 [1/8] FROM docker.io/library/node:22.20.0-bookworm-slim@sha256:b21fe589dfbe5cc39365d0544b9be3f1f33f55f3c86c87a76ff65a02f8f5848e
+#5 resolve docker.io/library/node:22.20.0-bookworm-slim@sha256:b21fe589dfbe5cc39365d0544b9be3f1f33f55f3c86c87a76ff65a02f8f5848e 0.0s done
+#5 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 20.10kB done
+#4 DONE 0.0s
+
+#6 [5/8] COPY web ./web
+#6 CACHED
+
+#7 [2/8] WORKDIR /app
+#7 CACHED
+
+#8 [3/8] COPY package.json package-lock.json ./
+#8 CACHED
+
+#9 [4/8] RUN npm ci --omit=dev --include=optional && npm cache clean --force
+#9 CACHED
+
+#10 [6/8] COPY db ./db
+#10 CACHED
+
+#11 [7/8] COPY scripts ./scripts
+#11 DONE 0.1s
+
+#12 [8/8] RUN mkdir -p /private && chown node:node /private
+#12 DONE 0.4s
+
+#13 exporting to image
+#13 exporting layers 0.1s done
+#13 exporting manifest sha256:0fd2b2c127778f44f4785fb9825b76497ddcecbf31d8c6850989a69c6de2d5ee 0.0s done
+#13 exporting config sha256:deed5a7df76812e314bc68eaa49a87c4df49c5fb5aba50772046fb27c0654fb9 0.0s done
+#13 exporting attestation manifest sha256:3a16993bb65af67c34c8f8c7a88466e2f146cbcb13db2f66f07087d13d7fba71 0.0s done
+#13 exporting manifest list sha256:b2598431260c376d0c3bd14908b1d7779a50189577828a158c104021483516e5 0.0s done
+#13 naming to docker.io/library/n8-ui-e2e-5:6d04b91e
+#13 naming to docker.io/library/n8-ui-e2e-5:6d04b91e done
+#13 unpacking to docker.io/library/n8-ui-e2e-5:6d04b91e 0.1s done
+#13 DONE 0.5s

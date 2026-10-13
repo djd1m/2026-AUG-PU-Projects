@@ -1,0 +1,9 @@
+{
+  "status": "failed",
+  "source_revision": "05d154a4f5b0a5b186b93ab11feaa289a451d7f3",
+  "reason": "fixture attempts billing_hold true -> false; actual immutable DB trigger rejects correctly",
+  "location": "scripts/ui/replicate-cases.js:98 and equivalent:109",
+  "next": "Sol bounded fixture scheduling correction without DB/production/rate-limit relaxation",
+  "cleanup_exit": 0,
+  "ui_released_at": "2026-10-03T17:01:00.824136+00:00"
+}

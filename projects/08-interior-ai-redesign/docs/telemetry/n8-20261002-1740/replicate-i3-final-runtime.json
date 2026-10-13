@@ -1,0 +1,28 @@
+{
+  "process": {
+    "exit_code": 0,
+    "pid": 3186750,
+    "started_at": "2026-10-03T08:57:13.130108+00:00",
+    "finished_at": "2026-10-03T09:02:13.749957+00:00",
+    "elapsed_seconds": 300.6198373840889
+  },
+  "thread_id": "01a100eb-97c0-7b30-a02c-627787035286",
+  "host_files": [
+    "/root/.codex/sessions/2026/10/03/rollout-2026-10-03T08-40-02-01a100eb-97c0-7b30-a02c-627787035286.jsonl"
+  ],
+  "actual_contexts": [
+    {
+      "model": "gpt-6.1-sol",
+      "effort": "high"
+    }
+  ],
+  "raw_usage": {
+    "input_tokens": 2322107,
+    "cached_input_tokens": 2153984,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 35325,
+    "reasoning_output_tokens": 7064,
+    "total_tokens": 2357432
+  },
+  "cost": null
+}

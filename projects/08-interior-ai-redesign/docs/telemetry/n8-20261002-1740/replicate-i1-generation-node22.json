@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-03T07:34:39.711009+00:00",
+  "reason": "Cached production web image intentionally lacks Python; copy its exact Node22 binary from stopped ownedcontainer and run unchanged actual subprocess tests with host Python/dependencies",
+  "node_version": "v22.20.0",
+  "node_sha256": "b1cbec894e45a5814b6ab756e1e14f8a76516273197e67e0412b57c1e10d0d9f",
+  "source_image": "n8-ui-e2e-6:8030270f",
+  "source_image_id": "sha256:0579a52816d8a012b68a02628b8ba9a9fc1c1686ba3329ea3fa28d3adfe53d18",
+  "test": "node tests/generation.test.js",
+  "exit_code": 0,
+  "source": "2b88ff16",
+  "product_changed": false,
+  "pg15_pass_not_repeated": true,
+  "container_removed": true
+}

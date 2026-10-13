@@ -1,0 +1,147 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-f01-fix",
+  "attempt_id": "n8-f01-fix-attempt-1",
+  "source_revision": "2be5edf066b44cdfe1f424608fd1c4cb5f8c394e",
+  "launch_sha256": "d1678e14bfdd42e23f16248ff882aad866a299e0f2750931a3a1874615946180",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Provider-resolved model/effort and usage unavailable inside worker",
+    "Active time unavailable"
+  ],
+  "budget_seconds": 1200,
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Bounded corrections and lightweight checks; PostgreSQL and E2E delegated to coordinator by brief, no Docker here"
+  },
+  "events": [
+    {
+      "stage": "ROUTE",
+      "timestamp": "2026-10-02T20:05:51.658085+00:00",
+      "mechanical_exit": 0,
+      "mechanical_tier": "S",
+      "substantive_tier": "M",
+      "parent_tier": "XL retained",
+      "reason": "Existing cleanup behavior changes; owner-guard mutation verification, no auth/DB/API contract changes. Confirmed findings only; scope authorized in brief, no delegation."
+    },
+    {
+      "stage": "IMPLEMENT",
+      "timestamp": "2026-10-02T20:06:50.890302+00:00",
+      "substantive_tier": "M",
+      "mechanical_exit": 0,
+      "reason": "Reconfirmed exact two findings and owned files; approval carried by brief. Parent XL and pending runtime gates retained; no delegation."
+    },
+    {
+      "stage": "REVIEW",
+      "timestamp": "2026-10-02T20:12:35.728176+00:00",
+      "result": "Writer inspected bounded diff; independent reviewer remains pending",
+      "checks": "Build, 14 unit/harness tests, Origin mutant, missing-PG negative control"
+    },
+    {
+      "stage": "INTEGRATE",
+      "timestamp": "2026-10-02T20:13:54.170222+00:00",
+      "result": "Bounded candidate handed to coordinator; no commit, Docker, delegation, installation or deployment",
+      "pending": "Real PG integration, actual owner mutant, independent review"
+    }
+  ],
+  "build_revision": "1ce74fa5197e2dfb2ee4e0d74500bdc4d480ad2113ce9749c40acf1db49c2118",
+  "source_snapshot": "docs/features/f01/corrective-build-snapshot.json",
+  "requirements": "docs/Specification.md#UPLOAD-02 and #SEC-03",
+  "architecture": "docs/Architecture.md#Data Architecture and Security Architecture",
+  "approval": {
+    "requirement": "not_required",
+    "reason": "Brief expressly authorizes two bounded corrective fixes within existing plan; no delegation or extra effects."
+  },
+  "scope": [
+    "web/media.js",
+    "scripts/mutation.js",
+    "tests/integration.test.js",
+    "tests/mutation.test.js",
+    "tests/sweep-pass.js",
+    "docs/features/f01/review-fixes.md",
+    "docs/features/f01/corrective-build-snapshot.json",
+    "unique attempt/receipt telemetry"
+  ],
+  "exclusions": [
+    "Manifests/lock/compose/DB/API/auth",
+    "Shared toolkit/other projects",
+    "Docker/installation/secrets/deployment/spend",
+    "Scheduler F02"
+  ],
+  "checks": [
+    {
+      "command": "node scripts/check.js",
+      "exit_code": 0,
+      "runtime": "Node22.22.3",
+      "result": "ESM/static build passed; repeated once after concurrency regression edit"
+    },
+    {
+      "command": "node --test-reporter=tap tests/boundaries.test.js",
+      "exit_code": 0,
+      "passed": 7
+    },
+    {
+      "command": "node --test-reporter=tap tests/media.test.js",
+      "exit_code": 0,
+      "passed": 5,
+      "reported_duration_ms": 11022.981165
+    },
+    {
+      "command": "node --test-reporter=tap tests/mutation.test.js",
+      "exit_code": 0,
+      "passed": 2,
+      "reported_duration_ms": 864.530519
+    },
+    {
+      "command": "node scripts/mutation.js origin",
+      "exit_code": 0,
+      "baseline_exit": 0,
+      "mutant_exit": 1
+    },
+    {
+      "command": "env -u TEST_DATABASE_URL -u N8_TEST_DB_OWNERSHIP node scripts/mutation.js owner",
+      "exit_code": 1,
+      "result": "Expected negative control: mutation_baseline_failed; not an actual PG owner mutation"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    },
+    {
+      "command": "Python verification of source manifest, immutable artifacts and git status allowlist",
+      "exit_code": 0,
+      "verified_files": 26
+    }
+  ],
+  "pending": [
+    {
+      "item": "node tests/integration.test.js against isolated real PostgreSQL16",
+      "reason": "Brief reserves Docker/runtime checks for coordinator; no fake DB substitute",
+      "exit_code": null
+    },
+    {
+      "item": "node scripts/mutation.js owner with isolated real PostgreSQL16",
+      "reason": "Same runtime handoff; actual mutant not executed",
+      "exit_code": null
+    },
+    {
+      "item": "Independent review of two corrections",
+      "reason": "Coordinator-owned following this candidate handoff",
+      "exit_code": null
+    }
+  ],
+  "status": "completed",
+  "verdict": "Corrective candidate delivered; runtime acceptance pending",
+  "finished_at": "2026-10-02T20:13:54.170222+00:00",
+  "elapsed_launch_to_receipt_seconds": 583.440883,
+  "active_wall_ms": null,
+  "fallback_reason": null,
+  "receipt_path": "docs/telemetry/n8-20261002-1740/n8-f01-fix-receipt.md",
+  "receipt_sha256": "e553df6f9af2dfe96d2ea04aa3c04c4f223e618b4ecb4e272e968483cf25d7ed"
+}

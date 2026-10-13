@@ -1,0 +1,28 @@
+{
+  "run_id": "n8-20261002-1740",
+  "work_unit_id": "n8-replicate-i3",
+  "attempt_id": "replicate-i3-1",
+  "source_revision": "b37b43d88356d7ca53b478c129469e9e0b77d259",
+  "created_at": "2026-10-03T08:40:01.796456+00:00",
+  "trace_path": "/tmp/n8-replicate-i1/projects/08-interior-ai-redesign/docs/telemetry/n8-20261002-1740/replicate-i3-receipt.md",
+  "trace_prelaunch_state": "absent",
+  "requested_model": "gpt-6.1-sol",
+  "effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "budget_seconds": 1500,
+  "owned_paths": [
+    "web/replicate-media.js",
+    "tests/replicate-media.test.js",
+    "docs/features/f07-replicate/i3-*",
+    "docs/telemetry/n8-20261002-1740/replicate-i3-*"
+  ],
+  "route": {
+    "mechanical_exit": 0,
+    "mechanical_tier": "S",
+    "substantive_tier": "XL",
+    "reason": "private externalmedia SSRF, originalhash/geometry and publicationboundary; acceptedfullplanapplies"
+  },
+  "spec_sha256": "2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad"
+}
