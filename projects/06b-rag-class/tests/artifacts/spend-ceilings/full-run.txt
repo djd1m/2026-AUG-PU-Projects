@@ -1,0 +1,37 @@
+# Полный прогон DEVELOPMENT_GUIDE.md §5, ревизия fa43a9b0, compose -p n6b-f02, пароли openssl rand -hex 24 (не печатались)
+published/host_ip в config: 0
+> n6b-rag-class@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json && npm run typecheck --workspace @n6b/web
+> @n6b/web@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+> n6b-rag-class@0.1.0 pretest
+> npm run build --workspace @n6b/db
+> @n6b/db@0.1.0 build
+> tsc -p tsconfig.build.json
+> n6b-rag-class@0.1.0 test
+> vitest run --config vitest.config.ts
+ ✓ apps/web/tests/unit/auth-handler.test.ts (17 tests)
+ ✓ apps/web/tests/unit/config.test.ts (69 tests)
+ ✓ packages/rag/tests/unit/guards.test.ts (11 tests)
+ ✓ packages/rag/tests/unit/keys-and-refusal.test.ts (22 tests)
+ ✓ packages/rag/tests/unit/provider.test.ts (16 tests)
+ ✓ apps/web/tests/unit/config-wiring.test.ts (18 tests)
+ ✓ apps/web/tests/unit/auth-client.test.ts (8 tests)
+ ✓ services/worker/tests/unit/boot.test.ts (4 tests)
+ ✓ apps/web/tests/unit/ip.test.ts (10 tests)
+ ✓ packages/db/tests/unit/enums-vs-migrations.test.ts (14 tests)
+ Test Files  10 passed (10)
+      Tests  189 passed (189)
+> n6b-rag-class@0.1.0 test:int
+> vitest run --config vitest.int.config.ts
+ ✓ packages/rag/tests/int/paid-call.test.ts (15 tests)
+ ✓ packages/db/tests/int/rls.test.ts (17 tests)
+ ✓ apps/web/tests/int/auth.int.test.ts (9 tests)
+ ✓ packages/db/tests/int/spend-ops.test.ts (12 tests)
+ ✓ packages/db/tests/int/rls-catalog.test.ts (8 tests)
+ ✓ packages/db/tests/int/tenant-fk.test.ts (17 tests)
+ ✓ packages/db/tests/int/roles.test.ts (9 tests)
+ ✓ packages/db/tests/int/quota.test.ts (5 tests)
+ Test Files  8 passed (8)
+      Tests  92 passed (92)
+exit=0

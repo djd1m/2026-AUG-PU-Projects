@@ -1,0 +1,29 @@
+{
+  "started_at": "2026-10-03T17:07:00.111034+00:00",
+  "finished_at": "2026-10-03T17:10:36.467116+00:00",
+  "role": "execution",
+  "requested_model": "gpt-6.1-sol",
+  "actual_model": "gpt-6.1-sol",
+  "actual_effort": "high",
+  "model_evidence": "/root/.codex/sessions/2026/10/03/rollout-2026-10-03T17-07-00-01a102bb-bcbe-75b2-a1da-172fbc80d650.jsonl",
+  "usage": {
+    "input_tokens": 156842,
+    "cached_input_tokens": 126848,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1784,
+    "reasoning_output_tokens": 537,
+    "total_tokens": 158626
+  },
+  "cost": null,
+  "exit_code": 0,
+  "verdict": "PASS",
+  "thread_id": "01a102bb-bcbe-75b2-a1da-172fbc80d650",
+  "raw_log": "/tmp/codex-disk-pass2-closure/execution.jsonl",
+  "plan_sha256": "3c9b70ed6022e744f6772c9c0425b9251c37f6d4ddad018f96d1e15152ced50b",
+  "candidate_sha256": "8264d4e01999b0e69b0e5fac2946dd07ea6b8d4b5bb175ebc13bdc135a1512f8",
+  "inventory_sha256": "2f028160964b0192541827046840970b606153e91d94a1ef7012027f464ea0e8",
+  "delivery_started_at": "2026-10-03T17:10:13.946882+00:00",
+  "delivery_raw_log": "/tmp/codex-disk-pass2-closure/execution-delivery.jsonl",
+  "prior_attempt_exit_code": -15,
+  "usage_note": "Cumulative same-thread tokens; do not sum timeout usage again."
+}

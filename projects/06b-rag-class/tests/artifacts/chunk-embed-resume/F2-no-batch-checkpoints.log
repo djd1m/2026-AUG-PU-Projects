@@ -1,0 +1,56 @@
+
+ RUN  v3.2.7 /app
+
+ ❯ services/worker/tests/int/chunk-embed.int.test.ts (15 tests | 2 failed | 13 skipped) 1345ms
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > первый прогон: части ≤ 500 токенов записаны с vector(1536), резерв = точная оценка, батчи по размеру
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > резерв = точная оценка js-tiktoken, а не ⌈длина/4⌉: русский текст не проходит под заниженным n
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > SC-US-017-2: переобход без изменений → 0 новых эмбеддингов и 0 списаний, задача «готово»
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > SC-US-017-2: изменённый абзац → эмбеддятся только новые части, устаревшие удаляются
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > FR-n6b-16: embed:account исчерпан → отказ ДО вызова, задача failed с причиной; завтра повтор продолжает
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > частичный прогон: второй батч упёрся в предел — первый сохранён; повтор платит только за остаток
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > FR-n6b-16: embed:global исчерпан → отказ до вызова даже при нетронутом пределе аккаунта
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > конкурентно: два батча одного аккаунта на остатке одного → ровно один вызов, предел не превышен
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > провайдер недоступен → failed «сервис эмбеддингов недоступен», попытка засчитана, частей нет
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > fence: аренду забрали во время вызова модели → ни одной строки chunk, JobLeaseLost
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-1: worker уступает таймеру и проверяет аренду внутри одного большого документа
+   × chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-2: JobCeilingExceeded после первого платного батча: следующей оплаты нет 1110ms
+     → promise resolved "{ documents: 1, parts: 6, …(3) }" instead of rejecting
+   × chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-2: JobLeaseLost после первого платного батча: следующей оплаты нет 230ms
+     → promise resolved "{ documents: 1, parts: 6, …(3) }" instead of rejecting
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-4: failed между model call и write без смены fence: JobLeaseLost, частей нет
+   ↓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > извлечение для типа источника не подключено → честный отказ, эмбеддинги не зовутся
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  services/worker/tests/int/chunk-embed.int.test.ts > chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-2: JobCeilingExceeded после первого платного батча: следующей оплаты нет
+ FAIL  services/worker/tests/int/chunk-embed.int.test.ts > chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-2: JobLeaseLost после первого платного батча: следующей оплаты нет
+AssertionError: promise resolved "{ documents: 1, parts: 6, …(3) }" instead of rejecting
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Error {[39m
+[32m-   "message": "rejected promise",[39m
+[31m+ {[39m
+[31m+   "calls": 6,[39m
+[31m+   "documents": 1,[39m
+[31m+   "embedded": 6,[39m
+[31m+   "parts": 6,[39m
+[31m+   "removed": 0,[39m
+[2m  }[22m
+
+ ❯ services/worker/tests/int/chunk-embed.int.test.ts:292:95
+    290|       const ctx = { job, signal: new AbortController().signal, progres…
+    291|         checkpoint: async () => { if (env.provider.calls.embed >= 1) t…
+    292|       await expect(chunkAndEmbedSource(ctx, { pool: app, gateway: env.…
+       |                                                                                               ^
+    293|         .rejects.toBeInstanceOf(ErrorType);
+    294|       expect(env.provider.calls.embed).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 13 skipped (15)
+   Start at  20:01:23
+   Duration  3.23s (transform 728ms, setup 0ms, collect 846ms, tests 1.34s, environment 0ms, prepare 173ms)

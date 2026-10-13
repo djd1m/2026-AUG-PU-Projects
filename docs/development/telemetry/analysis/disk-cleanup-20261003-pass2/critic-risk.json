@@ -1,0 +1,25 @@
+{
+  "started_at": "2026-10-03T16:59:17.887422+00:00",
+  "finished_at": "2026-10-03T17:00:52.545163+00:00",
+  "role": "risk",
+  "requested_model": "gpt-6-astra",
+  "actual_model": "gpt-6-astra",
+  "actual_effort": "high",
+  "model_evidence": "/root/.codex/sessions/2026/10/03/rollout-2026-10-03T16-59-18-01a102b4-aef2-7f40-8149-6ff9d68d3ea6.jsonl",
+  "usage": {
+    "input_tokens": 192497,
+    "cached_input_tokens": 164352,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1859,
+    "reasoning_output_tokens": 506,
+    "total_tokens": 194356
+  },
+  "cost": null,
+  "exit_code": 0,
+  "verdict": "REQUEST_CHANGES",
+  "thread_id": "01a102b4-aef2-7f40-8149-6ff9d68d3ea6",
+  "raw_log": "/tmp/codex-disk-pass2-review/risk.jsonl",
+  "plan_sha256": "18fbff50e1579085be2f13e1437b1bbd59f6b030d8755b218a5dcc3abfc45b88",
+  "candidate_sha256": "8264d4e01999b0e69b0e5fac2946dd07ea6b8d4b5bb175ebc13bdc135a1512f8",
+  "inventory_sha256": "e97688b234771eb430fb5d12babebc541aec6f7124975ce7e4ea88c4494e3d33"
+}

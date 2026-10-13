@@ -1,0 +1,88 @@
+# Полный прогон ВСЕХ наборов командой DEVELOPMENT_GUIDE.md §5 на чистом дереве (архив коммита 69804972: без dist,
+# node_modules, .env): typecheck + unit (pretest собирает @n6b/db) + integration в compose.test.yml.
+# Пароли — openssl rand -hex 24 во временном env-файле, не печатались. Строка check-port-conflicts ниже читает
+# docker-compose.yml без .env и честно пишет «НЕ выполнена»; в итоговой редакции §5 её заменила проверка config | grep
+# (0 публикаций; на копии с ports: — 1).
+dist есть? 0 · node_modules есть? 0
+== БД и хранилища не смотрят в интернет ==
+  ❌ не удалось прочитать конфиг (projects/06b-rag-class/docker-compose.yml) — проверка на публикацию БД НЕ выполнена
+     Причина обычно в незаданной переменной; посмотреть: docker compose -f projects/06b-rag-class/docker-compose.yml config
+== За reverse-proxy приложение не публикуется ==
+  ❌ конфиг не прочитан — проверка «только прокси наружу» НЕ выполнена
+== Конфликты портов с уже занятым на этой машине ==
+  ✅ порт 3106 свободен
+Как чинить (в порядке предпочтения):
+  1. Вынести хостовые порты в .env  ->  ports: ["${WEB_PORT:-3000}:3000"]
+     и задать свободные значения в .env конкретной машины. Compose остаётся общим.
+  2. Если 80/443 заняты чужим reverse-proxy — не публиковать их из этого проекта,
+     а подключить сервис к сети существующего прокси.
+  3. Менять номер ВНУТРИ контейнера не нужно: конфликтует только хостовая часть.
+ Network n6b-test_test Creating 
+ Network n6b-test_test Creating 
+ Network n6b-test_test Created 
+ Network n6b-test_test Created 
+ Container n6b-test-db-1 Creating 
+ Container n6b-test-db-1 Created 
+ Container n6b-test-db-1 Starting 
+ Container n6b-test-db-1 Started 
+ Image n6b-test-runner:local Building 
+ Image n6b-test-runner:local Built 
+ Container n6b-test-db-1 Waiting 
+ Container n6b-test-db-1 Healthy 
+ Container n6b-test-tests-run-af9fb9dea9ff Creating 
+ Container n6b-test-tests-run-af9fb9dea9ff Created 
+> n6b-rag-class@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json && npm run typecheck --workspace @n6b/web
+> @n6b/web@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+> n6b-rag-class@0.1.0 pretest
+> npm run build --workspace @n6b/db
+> @n6b/db@0.1.0 build
+> tsc -p tsconfig.build.json
+> n6b-rag-class@0.1.0 test
+> vitest run --config vitest.config.ts
+ RUN  v3.2.7 /app
+ ✓ apps/web/tests/unit/auth-handler.test.ts (14 tests) 369ms
+ ✓ apps/web/tests/unit/config.test.ts (66 tests) 27ms
+ ✓ apps/web/tests/unit/config-wiring.test.ts (18 tests) 32ms
+ ✓ apps/web/tests/unit/auth-client.test.ts (8 tests) 23ms
+ ✓ services/worker/tests/unit/boot.test.ts (4 tests) 1411ms
+   ✓ worker: отказ старта без конфигурации > SC-US-016-2: пустое окружение → exit 1 и имя переменной  312ms
+   ✓ worker: отказ старта без конфигурации > SC-US-016-2: пустая строка предела → exit 1 с именем, значение не печатается  373ms
+   ✓ worker: отказ старта без конфигурации > персональный предел больше общего → exit 1  375ms
+   ✓ worker: отказ старта без конфигурации > F-3: воркер со строкой подключения кабинета (n6b_app_tenant) → exit 1, пароль не печатается  348ms
+ ✓ apps/web/tests/unit/ip.test.ts (10 tests) 20ms
+ ✓ packages/db/tests/unit/enums-vs-migrations.test.ts (14 tests) 13ms
+ Test Files  7 passed (7)
+      Tests  134 passed (134)
+   Start at  22:35:49
+   Duration  4.81s (transform 356ms, setup 0ms, collect 627ms, tests 1.89s, environment 2ms, prepare 732ms)
+> n6b-rag-class@0.1.0 test:int
+> vitest run --config vitest.int.config.ts
+ RUN  v3.2.7 /app
+ ✓ packages/db/tests/int/rls.test.ts (17 tests) 488ms
+ ✓ apps/web/tests/int/auth.int.test.ts (9 tests) 10165ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-1: аккаунт плана free и сессия; в БД — HMAC токена, не токен; срок 7 дней  423ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-2: неверный пароль и чужой e-mail — одинаковый ответ; для чужого сверяется фиктивный хэш  921ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-3: kind=studio → аккаунт studio; неизвестный kind → owner  577ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > повтор e-mail в другом регистре → 409, второй аккаунт и сессия не созданы  595ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-4: 11-я попытка с адреса за час → 429, bcrypt не вызван, аккаунт не создан  1826ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-4: IPv6 — разные адреса одной /64 делят счётчик, соседняя /64 — нет  3402ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > конкурентно: 20 одновременных попыток с одного адреса при пределе 10 → ровно 10 дошли до bcrypt  1788ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > IP не хранится: ключ счётчика — HMAC адреса  320ms
+ ✓ packages/db/tests/int/rls-catalog.test.ts (8 tests) 456ms
+ ✓ packages/db/tests/int/tenant-fk.test.ts (17 tests) 294ms
+ ✓ packages/db/tests/int/roles.test.ts (9 tests) 287ms
+ ✓ packages/db/tests/int/quota.test.ts (5 tests) 209ms
+ Test Files  6 passed (6)
+      Tests  65 passed (65)
+   Start at  22:35:55
+   Duration  15.40s (transform 412ms, setup 0ms, collect 852ms, tests 11.90s, environment 3ms, prepare 771ms)
+exit=0
+ Container n6b-test-db-1 Stopping 
+ Container n6b-test-db-1 Stopped 
+ Container n6b-test-db-1 Removing 
+ Container n6b-test-db-1 Removed 
+ Network n6b-test_test Removing 
+ Network n6b-test_test Removed 
+осталось контейнеров n6b-test: 0

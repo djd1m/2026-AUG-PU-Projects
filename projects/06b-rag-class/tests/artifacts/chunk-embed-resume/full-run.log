@@ -1,0 +1,190 @@
+
+> n6b-rag-class@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json && npm run typecheck --workspace @n6b/web
+
+
+> @n6b/web@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> n6b-rag-class@0.1.0 pretest
+> npm run build --workspace @n6b/db && npm run build --workspace @n6b/rag
+
+
+> @n6b/db@0.1.0 build
+> tsc -p tsconfig.build.json
+
+
+> @n6b/rag@0.1.0 build
+> tsc -p tsconfig.build.json
+
+
+> n6b-rag-class@0.1.0 test
+> vitest run --config vitest.config.ts
+
+
+ RUN  v3.2.7 /app
+
+ ✓ packages/rag/tests/unit/guards.test.ts (16 tests) 51ms
+ ✓ packages/rag/tests/unit/keys-and-refusal.test.ts (39 tests) 151ms
+ ✓ apps/web/tests/unit/config.test.ts (78 tests) 55ms
+stderr | apps/web/tests/unit/auth-handler.test.ts > регистрация и вход — порядок проверок (Pseudocode «Register and login») > нет X-Forwarded-For → 503 и ни одной попытки bcrypt
+auth: адрес клиента недоступен — запрос не через прокси; вход отклонён
+
+stderr | apps/web/tests/unit/auth-handler.test.ts > GET /api/health (NFR-n6b-5) > 200 только при ответившей БД; иначе 503 без текста ошибки
+health: проверка не прошла: Error
+
+ ✓ apps/web/tests/unit/auth-handler.test.ts (17 tests) 507ms
+   ✓ регистрация и вход — порядок проверок (Pseudocode «Register and login») > фиктивный хэш — настоящий bcrypt той же стоимости 12, что и регистрация  381ms
+ ✓ packages/rag/tests/unit/chunk.test.ts (12 tests) 16542ms
+   ✓ countTokens (js-tiktoken cl100k_base) > считает токены, а не символы: пустая строка — 0, русский текст дороже английского той же длины  796ms
+   ✓ splitIntoChunks > русский: каждая часть ≤ 500 токенов, tokens и sha256 точные, весь текст покрыт  869ms
+   ✓ splitIntoChunks > перекрытие: следующая часть начинается с хвоста предыдущей, хвост 1…80 токенов  450ms
+   ✓ splitIntoChunks > абзац без переносов режется по предложениям; сплошная строка 20 000 символов — окнами, быстро  2789ms
+   ✓ splitIntoChunks > повторяющиеся абзацы внутри документа схлопываются: хэши уникальны (unique(document_id, text_sha256))  312ms
+   ✓ splitIntoChunks > F-1: один большой документ уступает таймеру внутри абзаца; async = sync, Unicode и cap  11081ms
+ ✓ apps/web/tests/unit/jobs-handler.test.ts (11 tests) 39ms
+ ✓ packages/rag/tests/unit/provider.test.ts (16 tests) 71ms
+ ✓ services/worker/tests/unit/job-guards.test.ts (9 tests) 24ms
+ ✓ packages/rag/tests/unit/live-factory.test.ts (6 tests) 612ms
+ ✓ packages/rag/tests/unit/guards-index.test.ts (5 tests) 19ms
+ ✓ apps/web/tests/unit/config-wiring.test.ts (18 tests) 68ms
+ ✓ services/worker/tests/unit/boot.test.ts (7 tests) 7024ms
+   ✓ worker: отказ старта без конфигурации > SC-US-016-2: пустое окружение → exit 1 и имя переменной  641ms
+   ✓ worker: отказ старта без конфигурации > SC-US-016-2: пустая строка предела → exit 1 с именем, значение не печатается  637ms
+   ✓ worker: отказ старта без конфигурации > персональный предел больше общего → exit 1  624ms
+   ✓ worker: отказ старта без конфигурации > F-3 (08_review.md): предел больше int4 → exit 1 с именем при старте  685ms
+   ✓ worker: отказ старта без конфигурации > F-3: воркер со строкой подключения кабинета (n6b_app_tenant) → exit 1, пароль не печатается  708ms
+   ✓ worker: отказ старта без конфигурации > chunk-embed: без любого из пределов двери (не эмбеддингов) воркер не стартует — exit 1 с именем  3118ms
+   ✓ worker: отказ старта без конфигурации > chunk-embed: пределы двери с персональным больше общего → exit 1 при старте, а не на первой задаче  604ms
+ ✓ apps/web/tests/unit/auth-client.test.ts (8 tests) 22ms
+ ✓ apps/web/tests/unit/ip.test.ts (10 tests) 26ms
+ ✓ packages/db/tests/unit/enums-vs-migrations.test.ts (14 tests) 14ms
+
+ Test Files  15 passed (15)
+      Tests  266 passed (266)
+   Start at  20:02:07
+   Duration  34.21s (transform 1.04s, setup 0ms, collect 2.39s, tests 25.23s, environment 7ms, prepare 2.14s)
+
+
+> n6b-rag-class@0.1.0 test:int
+> vitest run --config vitest.int.config.ts
+
+
+ RUN  v3.2.7 /app
+
+ ✓ services/worker/tests/int/chunk-embed.int.test.ts (15 tests) 4987ms
+   ✓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > первый прогон: части ≤ 500 токенов записаны с vector(1536), резерв = точная оценка, батчи по размеру  2145ms
+   ✓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > резерв = точная оценка js-tiktoken, а не ⌈длина/4⌉: русский текст не проходит под заниженным n  780ms
+   ✓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-1: worker уступает таймеру и проверяет аренду внутри одного большого документа  890ms
+ ✓ packages/rag/tests/int/paid-call.test.ts (19 tests) 6660ms
+   ✓ счёт по попыткам (SC-US-016-3, SC-US-005-4, T-8) > T-9: крах процесса между COMMIT резерва и исходом → строка started и списанный резерв  640ms
+   ✓ конкурентность на настоящем Postgres (ADR-010, shared-resource-verification) > SC-US-016-4 (T-5b): общий потолок песочницы остаток 5, 20 аккаунтов → 5 вызовов; у 15 отказавших личный не увеличен  301ms
+   ✓ конкурентность на настоящем Postgres (ADR-010, shared-resource-verification) > T-5d: 50 прогонов × 30 параллельных попыток на пересекающихся ключах — ни одного deadlock  3504ms
+   ✓ конкурентность на настоящем Postgres (ADR-010, shared-resource-verification) > T-6: 200 параллельных при пуле 10 — соединений ≤ 10, вызовы провайдера идут БЕЗ удержания соединения  1239ms
+ ✓ services/worker/tests/int/lease.int.test.ts (17 tests) 1058ms
+   ✓ захват: SKIP LOCKED и не более трёх захватов > SC-US-004-1 конкурентно: два воркера × 30 попыток на 10 задач — каждая захвачена ровно один раз  387ms
+stdout | apps/web/tests/int/jobs.int.test.ts > три состояния по job_id — квитанция для docs/long-job-contract.md > выполняется → готово; выполняется → ошибка + «Повторить» → выполняется
+КВИТАНЦИЯ выполняется: GET /api/jobs/58fa81aa-4402-44b5-8855-0134cce9db72 → {"job_id":"58fa81aa-4402-44b5-8855-0134cce9db72","source_id":"4b62f3bb-0198-4e86-9ebc-80f9e25708eb","state":"running","progress_done":0,"progress_total":null,"fragments":0,"error":null,"note":null}, job_id=58fa81aa-4402-44b5-8855-0134cce9db72, 2026-10-02T17:02:59.556Z
+
+stdout | apps/web/tests/int/jobs.int.test.ts > три состояния по job_id — квитанция для docs/long-job-contract.md > выполняется → готово; выполняется → ошибка + «Повторить» → выполняется
+КВИТАНЦИЯ выполняется (прогресс): GET /api/jobs/58fa81aa-4402-44b5-8855-0134cce9db72 → {"job_id":"58fa81aa-4402-44b5-8855-0134cce9db72","source_id":"4b62f3bb-0198-4e86-9ebc-80f9e25708eb","state":"running","progress_done":1,"progress_total":2,"fragments":0,"error":null,"note":null}, job_id=58fa81aa-4402-44b5-8855-0134cce9db72, 2026-10-02T17:02:59.603Z
+
+stdout | apps/web/tests/int/jobs.int.test.ts > три состояния по job_id — квитанция для docs/long-job-contract.md > выполняется → готово; выполняется → ошибка + «Повторить» → выполняется
+КВИТАНЦИЯ успех: GET /api/jobs/58fa81aa-4402-44b5-8855-0134cce9db72 → {"job_id":"58fa81aa-4402-44b5-8855-0134cce9db72","source_id":"4b62f3bb-0198-4e86-9ebc-80f9e25708eb","state":"succeeded","progress_done":2,"progress_total":2,"fragments":0,"error":null,"note":"обойдено 2 из 2"}, job_id=58fa81aa-4402-44b5-8855-0134cce9db72, 2026-10-02T17:02:59.624Z
+
+stdout | apps/web/tests/int/jobs.int.test.ts > три состояния по job_id — квитанция для docs/long-job-contract.md > выполняется → готово; выполняется → ошибка + «Повторить» → выполняется
+КВИТАНЦИЯ отказ: GET /api/jobs/b3151d51-34dd-4de1-bbee-a80217ea6f8b → {"job_id":"b3151d51-34dd-4de1-bbee-a80217ea6f8b","source_id":"7c4ad217-fc71-44e4-b385-4d915ef72e58","state":"failed","progress_done":0,"progress_total":null,"fragments":0,"error":"Индексация источников ещё не подключена: задача не выполнялась. Нажмите «Повторить», когда обработка станет доступна.","note":null}, job_id=b3151d51-34dd-4de1-bbee-a80217ea6f8b, 2026-10-02T17:02:59.664Z
+
+stdout | apps/web/tests/int/jobs.int.test.ts > три состояния по job_id — квитанция для docs/long-job-contract.md > выполняется → готово; выполняется → ошибка + «Повторить» → выполняется
+КВИТАНЦИЯ отказ → Повторить → выполняется: GET /api/jobs/b3151d51-34dd-4de1-bbee-a80217ea6f8b → {"job_id":"b3151d51-34dd-4de1-bbee-a80217ea6f8b","source_id":"7c4ad217-fc71-44e4-b385-4d915ef72e58","state":"running","progress_done":0,"progress_total":null,"fragments":0,"error":null,"note":null}, job_id=b3151d51-34dd-4de1-bbee-a80217ea6f8b, 2026-10-02T17:02:59.673Z
+
+ ✓ apps/web/tests/int/jobs.int.test.ts (8 tests) 934ms
+   ✓ POST источника → 202 {job_id} до работы (SC-US-002-1, SC-US-004-4) > конкурентно: 20 одновременных POST одного источника (с разными #фрагментами) → один источник, одна задача, один job_id  425ms
+ ✓ packages/db/tests/int/rls-catalog.test.ts (9 tests) 412ms
+ ✓ packages/db/tests/int/rls.test.ts (17 tests) 671ms
+ ✓ packages/db/tests/int/spend-ops.test.ts (13 tests) 409ms
+ ✓ apps/web/tests/int/auth.int.test.ts (9 tests) 10920ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-1: аккаунт плана free и сессия; в БД — HMAC токена, не токен; срок 7 дней  482ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-2: неверный пароль и чужой e-mail — одинаковый ответ; для чужого сверяется фиктивный хэш  943ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-3: kind=studio → аккаунт studio; неизвестный kind → owner  684ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > повтор e-mail в другом регистре → 409, второй аккаунт и сессия не созданы  632ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-4: 11-я попытка с адреса за час → 429, bcrypt не вызван, аккаунт не создан  2152ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > SC-US-001-4: IPv6 — разные адреса одной /64 делят счётчик, соседняя /64 — нет  3432ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > конкурентно: 20 одновременных попыток с одного адреса при пределе 10 → ровно 10 дошли до bcrypt  1905ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > IP не хранится: ключ счётчика — HMAC адреса  343ms
+   ✓ регистрация и вход на Postgres (FR-n6b-1) > выход удаляет сессию из БД  338ms
+ ✓ packages/db/tests/int/tenant-fk.test.ts (17 tests) 338ms
+ ✓ packages/rag/tests/int/search.test.ts (5 tests) 134815ms
+ ✓ packages/db/tests/int/index-job-grants.test.ts (5 tests) 335ms
+ ✓ packages/db/tests/int/roles.test.ts (9 tests) 244ms
+ ✓ packages/db/tests/int/quota.test.ts (5 tests) 342ms
+
+ Test Files  13 passed (13)
+      Tests  148 passed (148)
+   Start at  20:02:42
+   Duration  170.07s (transform 959ms, setup 0ms, collect 2.32s, tests 162.13s, environment 7ms, prepare 1.71s)
+
+
+> n6b-rag-class@0.1.0 build
+> npm run build --workspace @n6b/db && npm run build --workspace @n6b/rag && npm run build --workspace @n6b/worker && npm run build --workspace @n6b/web
+
+
+> @n6b/db@0.1.0 build
+> tsc -p tsconfig.build.json
+
+
+> @n6b/rag@0.1.0 build
+> tsc -p tsconfig.build.json
+
+
+> @n6b/worker@0.1.0 build
+> tsc -p tsconfig.build.json
+
+
+> @n6b/web@0.1.0 build
+> next build
+
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+   ▲ Next.js 15.5.27
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 13.5s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/6) ...
+   Generating static pages (1/6)
+   Generating static pages (2/6)
+   Generating static pages (4/6)
+ ✓ Generating static pages (6/6)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                      161 B         106 kB
+├ ○ /_not-found                            988 B         104 kB
+├ ƒ /api/auth/login                        140 B         103 kB
+├ ƒ /api/auth/logout                       140 B         103 kB
+├ ƒ /api/auth/register                     140 B         103 kB
+├ ƒ /api/bots/[id]/sources                 140 B         103 kB
+├ ƒ /api/health                            140 B         103 kB
+├ ƒ /api/jobs/[id]                         140 B         103 kB
+├ ƒ /api/jobs/[id]/retry                   140 B         103 kB
+├ ƒ /cabinet                             2.13 kB         105 kB
+├ ○ /login                               1.36 kB         107 kB
+└ ○ /register                            1.36 kB         107 kB
++ First Load JS shared by all             103 kB
+  ├ chunks/18-25b11e3a132b87ef.js        46.5 kB
+  ├ chunks/87c73c54-24122e7b92478d00.js  54.2 kB
+  └ other shared chunks (total)          1.92 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+full-run exit=0

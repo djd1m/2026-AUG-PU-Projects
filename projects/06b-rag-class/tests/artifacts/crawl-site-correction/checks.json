@@ -1,0 +1,63 @@
+[
+  {
+    "command": "bash scripts/complexity-router.sh <robots.ts html.ts site.ts>",
+    "cwd": "repository",
+    "exit": 0,
+    "result": "M lower bound; substantive M retains lease/SSRF semantics and mandatory full suite"
+  },
+  {
+    "command": "docker version",
+    "exit": 1,
+    "result": "permission denied connecting to /var/run/docker.sock; no containers started"
+  },
+  {
+    "command": "node node_modules/vitest/vitest.mjs run --config vitest.config.ts services/worker/tests/unit/crawl-rules.test.ts services/worker/tests/unit/crawl-site-correction.test.ts",
+    "exit": 1,
+    "result": "MODULE_NOT_FOUND; run initially in wrong cwd, retry in project also failed because dependencies absent"
+  },
+  {
+    "command": "node node_modules/typescript/bin/tsc --noEmit -p tsconfig.json",
+    "exit": 1,
+    "result": "MODULE_NOT_FOUND; not a semantic typecheck"
+  },
+  {
+    "command": "npm ci --offline --ignore-scripts --cache /tmp/n6b-crawl-correction-cache --no-audit --no-fund",
+    "exit": 1,
+    "result": "ENOTCACHED undici-7.30.0; no online dependency request or manifest change"
+  },
+  {
+    "command": "npm exec --offline --cache /tmp/n6b-crawl-correction-cache --package typescript@5.9.3 -- tsc <robots.ts> --target ES2022 --module ESNext --skipLibCheck --outDir /tmp/n6b-crawl-correction-compiled",
+    "exit": 1,
+    "result": "ENOTCACHED TypeScript metadata; cached tarball subsequently extracted read-only into /tmp"
+  },
+  {
+    "command": "node /tmp/n6b-crawl-correction-typescript/package/bin/tsc services/worker/src/crawl/robots.ts --target ES2022 --module ESNext --skipLibCheck --outDir /tmp/n6b-crawl-correction-compiled",
+    "exit": 0,
+    "result": "standalone robots compilation only"
+  },
+  {
+    "command": "node tests/artifacts/crawl-site-correction/robots-red-green.mjs /tmp/n6b-crawl-correction-typescript/package",
+    "exit": 1,
+    "result": "setup attempts retained; final expected-red ETIMEDOUT after match marker, combined green spawnSync returned EPERM; combined runner NOT PASS"
+  },
+  {
+    "command": "timeout 5s node tests/artifacts/crawl-site-correction/robots-green.mjs /tmp/n6b-crawl-correction-typescript/package",
+    "exit": 0,
+    "result": "standalone corrected source assertions + 15 heartbeat ticks / 1026 matches / ceiling after 33.471722ms; Node20 supplemental"
+  },
+  {
+    "command": "node tests/artifacts/crawl-site-correction/syntax-only.mjs /tmp/n6b-crawl-correction-typescript/package",
+    "exit": 0,
+    "result": "6 files, zero syntax diagnostics; no semantic typecheck claim"
+  },
+  {
+    "command": "git diff --check",
+    "exit": 0,
+    "result": "clean"
+  },
+  {
+    "command": "Node22 isolated n6b-f05-crawl-correction: npm run typecheck && npm test && npm run test:int && npm run build",
+    "exit": null,
+    "result": "PENDING Docker sandbox access; new source-bound image needed; tests/compose/Dockerfile and compose.test.yml unchanged; at most2CPU, no database ports, random private env and port-conflict check before startup"
+  }
+]

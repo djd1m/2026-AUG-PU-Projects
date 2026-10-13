@@ -1,0 +1,15 @@
+== 1) migrate
+apply 001_init.sql
+apply 002_rls.sql
+миграции: применено 2, всего 2; роль n6b_app обновлена
+migrate exit=0
+== 2) web без конфигурации
+Проверка конфигурации: OPENROUTER_API_KEY не задан: ответы и эмбеддинги вопросов невозможны. Сервис не стартует.
+web-empty exit=1
+== 3) web с конфигурацией → /api/health
+health: 200 {"data":{"status":"ok","db":"ok"}}
+== 3b) регистрация через HTTP в контейнере
+201 n6b_session=<token>; Path=/; HttpOnly; SameSite=Lax; Max-Age=604800; Secure
+== 4) worker без конфигурации
+Проверка конфигурации: DATABASE_URL не задан: воркер не может брать задачи из БД. Сервис не стартует.
+worker-empty exit=1

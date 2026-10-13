@@ -1,0 +1,46 @@
+index-jobs — полный прогон DEVELOPMENT_GUIDE.md §5 (typecheck + unit + integration) одной командой в раннере.
+Ревизия: bad53bcc (дерево прогона = этот коммит; код фичи 1464ae5f, тесты bad53bcc). Дата: 2026-09-30.
+Стек: docker compose -p n6b-f03 -f compose.test.yml + override (image n6b-f03-runner:local); пароли — env-файл вне
+репозитория; cpus: 2 у db и tests (compose.test.yml); сеть internal, портов не публикуется. Модель не вызывалась.
+Итог: exit=0; unit 242/242 (13 файлов); integration 120/120 (10 файлов; после spend-ceilings было 97: +15 lease.int, +8 jobs.int).
+npm run build (db, rag, worker, web — Next.js) в том же раннере на 1464ae5f: exit 0, маршруты /api/bots/[id]/sources,
+/api/jobs/[id], /api/jobs/[id]/retry собраны.
+
+> n6b-rag-class@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json && npm run typecheck --workspace @n6b/web
+> @n6b/web@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+> tsc -p tsconfig.build.json
+ ✓ packages/rag/tests/unit/guards.test.ts (16 tests) 21ms
+ ✓ packages/rag/tests/unit/keys-and-refusal.test.ts (39 tests) 65ms
+ ✓ apps/web/tests/unit/config.test.ts (78 tests) 37ms
+ ✓ apps/web/tests/unit/auth-handler.test.ts (17 tests) 401ms
+ ✓ packages/rag/tests/unit/provider.test.ts (16 tests) 41ms
+ ✓ services/worker/tests/unit/job-guards.test.ts (9 tests) 18ms
+ ✓ apps/web/tests/unit/jobs-handler.test.ts (8 tests) 21ms
+ ✓ apps/web/tests/unit/config-wiring.test.ts (18 tests) 49ms
+ ✓ apps/web/tests/unit/auth-client.test.ts (8 tests) 21ms
+ ✓ packages/rag/tests/unit/live-factory.test.ts (4 tests) 6ms
+ ✓ services/worker/tests/unit/boot.test.ts (5 tests) 2030ms
+ ✓ apps/web/tests/unit/ip.test.ts (10 tests) 20ms
+ ✓ packages/db/tests/unit/enums-vs-migrations.test.ts (14 tests) 10ms
+ Test Files  13 passed (13)
+      Tests  242 passed (242)
+ ✓ packages/rag/tests/int/paid-call.test.ts (19 tests) 4133ms
+ ✓ services/worker/tests/int/lease.int.test.ts (15 tests) 608ms
+КВИТАНЦИЯ выполняется: GET /api/jobs/b7e8cc36-5ce7-4495-b0c0-0111626b3334 → {"job_id":"b7e8cc36-5ce7-4495-b0c0-0111626b3334","source_id":"7d524dd9-6783-4083-bd88-b18366db120c","state":"running","progress_done":0,"progress_total":null,"fragments":0,"error":null,"note":null}, job_id=b7e8cc36-5ce7-4495-b0c0-0111626b3334, 2026-09-30T21:25:57.463Z
+КВИТАНЦИЯ выполняется (прогресс): GET /api/jobs/b7e8cc36-5ce7-4495-b0c0-0111626b3334 → {"job_id":"b7e8cc36-5ce7-4495-b0c0-0111626b3334","source_id":"7d524dd9-6783-4083-bd88-b18366db120c","state":"running","progress_done":1,"progress_total":2,"fragments":0,"error":null,"note":null}, job_id=b7e8cc36-5ce7-4495-b0c0-0111626b3334, 2026-09-30T21:25:57.485Z
+КВИТАНЦИЯ успех: GET /api/jobs/b7e8cc36-5ce7-4495-b0c0-0111626b3334 → {"job_id":"b7e8cc36-5ce7-4495-b0c0-0111626b3334","source_id":"7d524dd9-6783-4083-bd88-b18366db120c","state":"succeeded","progress_done":2,"progress_total":2,"fragments":0,"error":null,"note":"обойдено 2 из 2"}, job_id=b7e8cc36-5ce7-4495-b0c0-0111626b3334, 2026-09-30T21:25:57.496Z
+КВИТАНЦИЯ отказ: GET /api/jobs/6352e251-0589-4091-8f9a-7f802fd1fd52 → {"job_id":"6352e251-0589-4091-8f9a-7f802fd1fd52","source_id":"bfcaa0ab-93d8-4ed0-92b9-b4d98decf74f","state":"failed","progress_done":0,"progress_total":null,"fragments":0,"error":"Индексация источников ещё не подключена: задача не выполнялась. Нажмите «Повторить», когда обработка станет доступна.","note":null}, job_id=6352e251-0589-4091-8f9a-7f802fd1fd52, 2026-09-30T21:25:57.510Z
+КВИТАНЦИЯ отказ → Повторить → выполняется: GET /api/jobs/6352e251-0589-4091-8f9a-7f802fd1fd52 → {"job_id":"6352e251-0589-4091-8f9a-7f802fd1fd52","source_id":"bfcaa0ab-93d8-4ed0-92b9-b4d98decf74f","state":"running","progress_done":0,"progress_total":null,"fragments":0,"error":null,"note":null}, job_id=6352e251-0589-4091-8f9a-7f802fd1fd52, 2026-09-30T21:25:57.517Z
+ ✓ apps/web/tests/int/jobs.int.test.ts (8 tests) 537ms
+ ✓ packages/db/tests/int/rls.test.ts (17 tests) 360ms
+ ✓ packages/db/tests/int/spend-ops.test.ts (13 tests) 194ms
+ ✓ apps/web/tests/int/auth.int.test.ts (9 tests) 9259ms
+ ✓ packages/db/tests/int/rls-catalog.test.ts (8 tests) 293ms
+ ✓ packages/db/tests/int/tenant-fk.test.ts (17 tests) 197ms
+ ✓ packages/db/tests/int/roles.test.ts (9 tests) 166ms
+ ✓ packages/db/tests/int/quota.test.ts (5 tests) 251ms
+ Test Files  10 passed (10)
+      Tests  120 passed (120)
+exit=0

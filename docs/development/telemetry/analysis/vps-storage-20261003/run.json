@@ -1,0 +1,52 @@
+{
+  "run_id": "vps-storage-20261003",
+  "started_at": "2026-10-03T16:53:49Z",
+  "status": "completed_review_accepted",
+  "task": "AdminVPS+100GiB vs DigitalOcean8vCPU>=12GiB RAM >=200GiB storage",
+  "budget_seconds": 1200,
+  "profile": "bounded-research-M",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gaps": [
+    "Current API model/usage unavailable",
+    "Current AdminVPS base plan/invoice unknown; owner addon quote2000RUB period/tax unknown",
+    "NL public disk capacities omitted",
+    "DO exact SKU availability in AMS3/account requires confirmation",
+    "Billing tax country unknown"
+  ],
+  "read_only": true,
+  "mutations": [
+    "Only this analysis directory"
+  ],
+  "review": "Fresh independent CLI ACCEPT, exit0, source hash matched",
+  "report_sha256": "d7e3ba9966e80e64ec3a5f49ede0ea37e1ec8af5686316c8a313ce1b8501d8b0",
+  "owner_configuration": {
+    "location": "Amsterdam",
+    "host": "test-apps-server.com",
+    "cpu": 8,
+    "ram_mb": 12288,
+    "nominal_disk": "NVMe 100 GB"
+  },
+  "updated_at": "2026-10-03T17:08:13.815843+00:00",
+  "initial_draft_completed_at": "2026-10-03T17:00:23.269777+00:00",
+  "research_completed_at": "2026-10-03T17:08:13.815843+00:00",
+  "research_elapsed_seconds": 864.816,
+  "checks": [
+    "Read-only hardware metadata recorded",
+    "NL owner configuration incorporated; RU capacity assumptions removed",
+    "NL official public HTML parsed with source SHA256",
+    "USD monthly/yearly conditional tax arithmetic checked",
+    "No paid actions or VPS configuration changes",
+    "Independent review not executed; assigned by root when capacity is available"
+  ],
+  "owner_quote": {
+    "amount_rub": 2000,
+    "capacity": "100 GB",
+    "period": null,
+    "vat_included": null
+  },
+  "review_receipt": "review-receipt.json",
+  "completed_at": "2026-10-03T17:17:03.191593+00:00",
+  "total_elapsed_seconds": 1394.192
+}

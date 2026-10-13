@@ -1,0 +1,34 @@
+{
+  "url": "https://adminvps.ru/vps/vps_holland.php",
+  "fetched_at": "2026-10-03T17:07:33.093293+00:00",
+  "html_sha256": "f106572b95e2a26122da4826d838bd6a2b7a9c9681b2682478d97f8b29f12042",
+  "method": "Unauthenticated urllib HTTPS public HTML; no account/session",
+  "interpretation": "Disk capacity cells are literal hyphens; no NL200 capacity established. Monthly price is the first monthly figure in each row.",
+  "backup_boundary": "Public page says weekly backup up to200GB; tooltip says200GB and above needs separate backup storage. Confirm exact200GiB with support.",
+  "parsed_facts": [
+    {
+      "plan": "Standart",
+      "vcpu": 8,
+      "ram_gb": 12,
+      "disk_cell": "-",
+      "advertised_port_gbps": 10,
+      "monthly_rub": 2149
+    },
+    {
+      "plan": "Pro",
+      "vcpu": 8,
+      "ram_gb": 16,
+      "disk_cell": "-",
+      "advertised_port_gbps": 10,
+      "monthly_rub": 3379
+    },
+    {
+      "plan": "Vip",
+      "vcpu": 12,
+      "ram_gb": 16,
+      "disk_cell": "-",
+      "advertised_port_gbps": 10,
+      "monthly_rub": 5349
+    }
+  ]
+}

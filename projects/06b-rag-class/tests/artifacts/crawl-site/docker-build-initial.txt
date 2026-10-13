@@ -1,0 +1,85 @@
+ Image n6b-f05-crawl-runner:20261002 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 724B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.44kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:22.22-bookworm-slim
+#3 DONE 0.7s
+
+#4 [ 1/11] FROM docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752
+#4 resolve docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752 0.1s done
+#4 DONE 0.1s
+
+#5 [internal] load build context
+#5 transferring context: 864.77kB 0.1s
+#5 transferring context: 883.85kB 0.1s done
+#5 DONE 0.1s
+
+#6 [ 2/11] WORKDIR /app
+#6 CACHED
+
+#7 [ 3/11] RUN chown node:node /app
+#7 CACHED
+
+#8 [ 4/11] COPY --chown=node:node package.json package-lock.json ./
+#8 DONE 0.2s
+
+#9 [ 5/11] COPY --chown=node:node apps/web/package.json ./apps/web/
+#9 DONE 0.2s
+
+#10 [ 6/11] COPY --chown=node:node apps/widget/package.json ./apps/widget/
+#10 DONE 0.1s
+
+#11 [ 7/11] COPY --chown=node:node services/worker/package.json ./services/worker/
+#11 DONE 0.1s
+
+#12 [ 8/11] COPY --chown=node:node packages/db/package.json ./packages/db/
+#12 DONE 0.6s
+
+#13 [ 9/11] COPY --chown=node:node packages/rag/package.json ./packages/rag/
+#13 DONE 0.2s
+
+#14 [10/11] RUN npm ci
+#14 6.028 npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+#14 42.28 
+#14 42.28 added 132 packages, and audited 138 packages in 41s
+#14 42.28 
+#14 42.28 41 packages are looking for funding
+#14 42.28   run `npm fund` for details
+#14 42.37 
+#14 42.37 4 vulnerabilities (3 moderate, 1 high)
+#14 42.37 
+#14 42.37 To address all issues (including breaking changes), run:
+#14 42.37   npm audit fix --force
+#14 42.37 
+#14 42.37 Run `npm audit` for details.
+#14 42.37 npm notice
+#14 42.37 npm notice New major version of npm available! 10.9.8 -> 12.2.0
+#14 42.37 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+#14 42.37 npm notice To update run: npm install -g npm@12.2.0
+#14 42.37 npm notice
+#14 DONE 43.9s
+
+#15 [11/11] COPY --chown=node:node . .
+#15 DONE 0.5s
+
+#16 exporting to image
+#16 exporting layers
+#16 exporting layers 54.2s done
+#16 exporting manifest sha256:3fdf095e741a0a6ebd06014f9efad653540e51d93886df6bdeb36b87ecfda8a8 0.0s done
+#16 exporting config sha256:f6e95fbab23598d2bcec1ecb2667c978b62e4f50bddbd32f8aa3d686b4ca93c4 0.0s done
+#16 exporting attestation manifest sha256:ad3c9d657312e7cc5dcd5fda94d223c73465a659a093eba4b7ff8a2b1222eb39 0.0s done
+#16 exporting manifest list sha256:5031da5c0176bb4df37ffeffb99464b78103279014336bb7bf101c77f64016e8 0.0s done
+#16 naming to docker.io/library/n6b-f05-crawl-runner:20261002
+#16 naming to docker.io/library/n6b-f05-crawl-runner:20261002 done
+#16 unpacking to docker.io/library/n6b-f05-crawl-runner:20261002
+#16 unpacking to docker.io/library/n6b-f05-crawl-runner:20261002 13.3s done
+#16 DONE 67.7s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image n6b-f05-crawl-runner:20261002 Built 

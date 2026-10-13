@@ -1,0 +1,86 @@
+{
+  "baseline": "eec2b434",
+  "input_revision": "2e5afaa0",
+  "files": [
+    {
+      "path": "apps/web/src/app/api/bots/route.ts",
+      "sha256": "58506693c43668da7224ca00732af056b614c9d33bf4cb870691578362a52eff"
+    },
+    {
+      "path": "apps/web/src/app/cabinet/create-bot.tsx",
+      "sha256": "27b04cc9737063e7b155534e410517a9348abf7cffef2d645b1a119a116aebb7"
+    },
+    {
+      "path": "apps/web/src/app/cabinet/page.tsx",
+      "sha256": "7efa6da942857c252d9059202d74ad396ece530542db7e00cec049ecb995fd70"
+    },
+    {
+      "path": "apps/web/src/server/bots-handler.ts",
+      "sha256": "019c268792cffd988d8944569caed0b1283932fbb398cb3a573c4583c0bcd280"
+    },
+    {
+      "path": "apps/web/src/server/jobs-handler.ts",
+      "sha256": "7efd58e1d6aab81751796bf4d32513843830811edfae276224057f4dc481c931"
+    },
+    {
+      "path": "apps/web/tests/int/crawl-bots.int.test.ts",
+      "sha256": "d0cff582ddfcf7e26e891fe1b34d76fccf7b722535b39f75c2cc2571ce8d94df"
+    },
+    {
+      "path": "apps/web/tests/int/jobs.int.test.ts",
+      "sha256": "01705f3aed6d08b744979399cce4736dc5467889c53fa6eb9646de9c9d25b32b"
+    },
+    {
+      "path": "apps/web/tests/unit/bots-handler.test.ts",
+      "sha256": "79dde02be58ec3d9b7df26c0e46c0f132ad81144a5b70078088d0ce3b81fa2f8"
+    },
+    {
+      "path": "apps/web/tests/unit/create-bot-ui.test.ts",
+      "sha256": "493a5635ef7fa2598dd7e6496fc8de444ebe34515c56ec6a69eef69bff1a72af"
+    },
+    {
+      "path": "packages/rag/src/index.ts",
+      "sha256": "81995c4c86ccf59d0b7a6f06d2307173cc413fd5ea8aedc0b26bbffe76177491"
+    },
+    {
+      "path": "packages/rag/src/safe-http.ts",
+      "sha256": "596c695d4027ca436153dc79a470776cab111d0145cc5bb6d033ccb0ff1e9d12"
+    },
+    {
+      "path": "packages/rag/src/site-safety.ts",
+      "sha256": "694907b982f19739db9e6cd666d96d3f0016073880bacdfad25d6710eeb7f5a6"
+    },
+    {
+      "path": "packages/rag/tests/unit/site-safety.test.ts",
+      "sha256": "593ec0cecc424f6699a289738f6f12588dc8c2f76d06b5703e6f2dd96784ad42"
+    },
+    {
+      "path": "services/worker/src/crawl/html.ts",
+      "sha256": "40caec2e226008e622c4d82c16fd4f5ccd829c66b3f337901353105472c58264"
+    },
+    {
+      "path": "services/worker/src/crawl/robots.ts",
+      "sha256": "3010a0563c7d02a0f7269fa45c0d141caa58768aa4b6f0a84f8f39d9d358f84d"
+    },
+    {
+      "path": "services/worker/src/crawl/site.ts",
+      "sha256": "e828117574bd92ba0ad71468bcd222e7020a88e9186eb79142bc0eb6a9d38299"
+    },
+    {
+      "path": "services/worker/src/crawl/store.ts",
+      "sha256": "da65b640d8e47ffb8002f49666a0b8b1b01b5b97c3471a22da554e0891945779"
+    },
+    {
+      "path": "services/worker/src/main.ts",
+      "sha256": "019dfa846aa8e6a5956a5ec237dcb2c583ebbb723ed92d963a60f6e6beb4fba3"
+    },
+    {
+      "path": "services/worker/tests/int/crawl.int.test.ts",
+      "sha256": "5acd81767668eb8e43c56f6aeb3bb52ac5c976b7f4b4ac0795e6e323a3eb77a2"
+    },
+    {
+      "path": "services/worker/tests/unit/crawl-rules.test.ts",
+      "sha256": "cd0a159494122fe99b9c1093ba5075ed279de52b9f27400dc2059f1c9b4666b2"
+    }
+  ]
+}

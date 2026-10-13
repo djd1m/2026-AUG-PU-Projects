@@ -1,0 +1,30 @@
+{
+  "status": "completed",
+  "verdict": "ACCEPT",
+  "exit_code": 0,
+  "source_sha256": "d7e3ba9966e80e64ec3a5f49ede0ea37e1ec8af5686316c8a313ce1b8501d8b0",
+  "review_sha256": "755d8711154932b225447d3a09c98d72f53a0ab45e88dc1b5a1f351f7610c140",
+  "requested_model": "gpt-6-astra",
+  "actual_model": "gpt-6-astra",
+  "actual_effort": "high",
+  "actual_model_evidence": "Host rollout turn_context /root/.codex/sessions/2026/10/03/rollout-2026-10-03T17-14-03-01a102c2-31c2-7903-9ecc-8c10dba5499c.jsonl",
+  "model_evidence_note": "Reviewer itself lacked exposed model metadata; coordinator independently read host turn_context. Native researcher model remains unknown.",
+  "usage": {
+    "input_tokens": 367307,
+    "cached_input_tokens": 303616,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 2549,
+    "reasoning_output_tokens": 257
+  },
+  "cost": null,
+  "finished_observed_at": "2026-10-03T17:17:03.191593+00:00",
+  "bounded_seconds": 180,
+  "review_findings": [],
+  "limitations": [
+    "Critic could not independently refetch AdminVPS NL page due network errors; coordinator public-HTML parsed evidence available",
+    "Owner quote2000RUB period/tax unknown",
+    "Current base monthly invoice unknown",
+    "Exact DO AMS3 SKU/account capacity unverified"
+  ],
+  "changes_after_review": false
+}

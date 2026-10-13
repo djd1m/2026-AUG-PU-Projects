@@ -1,0 +1,21 @@
+# зависимости и сборка
+node_modules/
+.next/
+dist/
+out/
+*.tsbuildinfo
+
+# тесты
+coverage/
+test-results/
+playwright-report/
+
+# секреты: коммитится только .env.example
+.env
+.env.*
+!.env.example
+
+# дампы БД и локальные артефакты
+*.dump
+*.log
+.DS_Store

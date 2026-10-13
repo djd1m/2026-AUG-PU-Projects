@@ -1,0 +1,795 @@
+[
+  {
+    "CreatedAt": "2026-09-30 19:27:17.497807795 +0000 UTC",
+    "Description": "[ 2/11] WORKDIR /app",
+    "ID": "79fh8lofoe1a5g9077d65lp5e",
+    "LastUsedAt": "3 days ago",
+    "Mutable": false,
+    "Parents": [
+      "382ilqq6w4qn8h5wh2mre2rzi"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "8.285kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-02 19:31:34.041416656 +0000 UTC",
+    "Description": "[2/9] WORKDIR /app",
+    "ID": "unim6nbqg4oyylhz09ty5ciw9",
+    "LastUsedAt": "24 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "la6d9rpsu4erozerpan8fric7"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "8.285kB",
+    "Type": "regular",
+    "UsageCount": 5
+  },
+  {
+    "CreatedAt": "2026-09-30 19:27:17.870055538 +0000 UTC",
+    "Description": "mount / from exec /bin/sh -c chown node:node /app",
+    "ID": "v7aiu6bbmvfdk42f6zhcfs80m",
+    "LastUsedAt": "45 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "79fh8lofoe1a5g9077d65lp5e"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "12.38kB",
+    "Type": "regular",
+    "UsageCount": 6
+  },
+  {
+    "CreatedAt": "2026-10-03 03:13:46.973356892 +0000 UTC",
+    "Description": "mount / from exec /bin/sh -c mkdir -p /private && chown node:node /private",
+    "ID": "sl7j08zgs590l9c8q8p1ld6gk",
+    "LastUsedAt": "24 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "q8svvuthnrttkb0v2o2l4hvzp"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "12.39kB",
+    "Type": "regular",
+    "UsageCount": 2
+  },
+  {
+    "CreatedAt": "2026-10-02 19:52:34.406779185 +0000 UTC",
+    "Description": "[web 4/8] COPY --from=build /app/package.json ./package.json",
+    "ID": "yk0bpzcoauwdpkmm78elwc1am",
+    "LastUsedAt": "34 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "k05piryrxru8bcmk1psov1c7y"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "12.85kB",
+    "Type": "regular",
+    "UsageCount": 23
+  },
+  {
+    "CreatedAt": "2026-10-02 19:42:40.673858167 +0000 UTC",
+    "Description": "[ 5/11] COPY --chown=node:node apps/web/package.json ./apps/web/",
+    "ID": "cqkdz3y2ud2yhsb46krm1r155",
+    "LastUsedAt": "45 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "s2zpnbhwdxgkshr6b07rqeqn4"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "20.89kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-09-30 19:27:10.225205949 +0000 UTC",
+    "Description": "pulled from docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752",
+    "ID": "382ilqq6w4qn8h5wh2mre2rzi",
+    "LastUsedAt": "3 days ago",
+    "Mutable": false,
+    "Parents": [
+      "1kuu5mrs79s2i0mp8cv311nyi"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "20.93kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-02 19:42:41.051726172 +0000 UTC",
+    "Description": "[ 8/11] COPY --chown=node:node packages/db/package.json ./packages/db/",
+    "ID": "itpz7sm5c9kanbc1yzwmn98yw",
+    "LastUsedAt": "45 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "19wl70745bu11e4jhcgq2vapd"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "20.98kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 05:42:26.407121764 +0000 UTC",
+    "Description": "[5/9] COPY tsconfig*.json eslint.config.js ./",
+    "ID": "llt6tqs0xx7pt9ubtyvtlj78j",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "p2appntt0uu5usaozv4yvmdvn"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "20.99kB",
+    "Type": "regular",
+    "UsageCount": 2
+  },
+  {
+    "CreatedAt": "2026-10-02 19:42:40.912282542 +0000 UTC",
+    "Description": "[ 7/11] COPY --chown=node:node services/worker/package.json ./services/worker/",
+    "ID": "19wl70745bu11e4jhcgq2vapd",
+    "LastUsedAt": "45 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "2nb5sis0pznes953rwfrqqzux"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "21.01kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-02 19:42:40.789467368 +0000 UTC",
+    "Description": "[ 6/11] COPY --chown=node:node apps/widget/package.json ./apps/widget/",
+    "ID": "2nb5sis0pznes953rwfrqqzux",
+    "LastUsedAt": "45 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "cqkdz3y2ud2yhsb46krm1r155"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "24.97kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-02 19:42:41.487653878 +0000 UTC",
+    "Description": "[ 9/11] COPY --chown=node:node packages/rag/package.json ./packages/rag/",
+    "ID": "wj0gtoleg0fgrfhambdadolbz",
+    "LastUsedAt": "45 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "itpz7sm5c9kanbc1yzwmn98yw"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "25.18kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 06:36:25.13256847 +0000 UTC",
+    "Description": "[web 7/8] COPY --from=build /app/apps/web/package.json ./apps/web/package.json",
+    "ID": "0sgn8a4jyot26h05xhferpfyf",
+    "LastUsedAt": "34 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "wpm9yimyvhb158vijcitpa5ky"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "29.08kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 05:14:15.783681292 +0000 UTC",
+    "Description": "[web 7/8] COPY --from=build /app/apps/web/package.json ./apps/web/package.json",
+    "ID": "9cfnlrb3nzkulld066gsr81kl",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "hvwdx4z5hfp0xgfv0sydsnd20"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "29.08kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 03:13:46.337301034 +0000 UTC",
+    "Description": "[6/8] COPY db ./db",
+    "ID": "tvlos7yad6uw1vc4qqbtu7hfw",
+    "LastUsedAt": "24 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "ub3zrz9rzod1jiiad002cxuzr"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "44.68kB",
+    "Type": "regular",
+    "UsageCount": 2
+  },
+  {
+    "CreatedAt": "2026-10-02 20:00:10.952045871 +0000 UTC",
+    "Description": "[3/8] COPY package.json package-lock.json ./",
+    "ID": "nd60rzatfbe030qlt3px36hfd",
+    "LastUsedAt": "24 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "unim6nbqg4oyylhz09ty5ciw9"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "46.89kB",
+    "Type": "regular",
+    "UsageCount": 3
+  },
+  {
+    "CreatedAt": "2026-10-03 05:14:15.692110789 +0000 UTC",
+    "Description": "[web 6/8] COPY --from=build /app/apps/web/public ./apps/web/public",
+    "ID": "hvwdx4z5hfp0xgfv0sydsnd20",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "iwpkopb79i3335sdsyv32fv6p"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "49.07kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 06:36:24.988409099 +0000 UTC",
+    "Description": "[web 6/8] COPY --from=build /app/apps/web/public ./apps/web/public",
+    "ID": "wpm9yimyvhb158vijcitpa5ky",
+    "LastUsedAt": "34 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "u2ikp0kc37l372ly17zn5t0ew"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "49.08kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 05:42:26.634918275 +0000 UTC",
+    "Description": "[7/9] COPY db ./db",
+    "ID": "pg5zhf47uj73j1tdsd8i8qgpp",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "kay4alwkj35j69wbfx2mgufjc"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "61.77kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 05:48:26.631604895 +0000 UTC",
+    "Description": "[7/9] COPY db ./db",
+    "ID": "jbyvzfj8jnlkuke0vwf1u14bx",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "kto8t7y7yxka6nei843vl8oo6"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "61.78kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 16:53:31.676843061 +0000 UTC",
+    "Description": "[3/4] COPY db /app/db",
+    "ID": "aecqg8os4wskha50k0jh9xnsf",
+    "LastUsedAt": "23 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "pvf22vukccl4gl6oba6tiy2wu"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "69.44kB",
+    "Type": "regular",
+    "UsageCount": 3
+  },
+  {
+    "CreatedAt": "2026-09-30 19:27:09.784891241 +0000 UTC",
+    "Description": "pulled from docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752",
+    "ID": "q59fnt5hokot2oqnky2k83z4n",
+    "LastUsedAt": "3 days ago",
+    "Mutable": false,
+    "Parents": [
+      "z2x72vhamb4j7zcl9qgesxa0y"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "72.94kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 05:42:17.969424652 +0000 UTC",
+    "Description": "[3/9] COPY package.json package-lock.json ./",
+    "ID": "vgda6tzzasft96yjs5tuevtmb",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "unim6nbqg4oyylhz09ty5ciw9"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "128.3kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 03:13:46.417772113 +0000 UTC",
+    "Description": "[7/8] COPY scripts ./scripts",
+    "ID": "q8svvuthnrttkb0v2o2l4hvzp",
+    "LastUsedAt": "24 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "tvlos7yad6uw1vc4qqbtu7hfw"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "151.5kB",
+    "Type": "regular",
+    "UsageCount": 2
+  },
+  {
+    "CreatedAt": "2026-10-02 19:42:40.540081009 +0000 UTC",
+    "Description": "[ 4/11] COPY --chown=node:node package.json package-lock.json ./",
+    "ID": "s2zpnbhwdxgkshr6b07rqeqn4",
+    "LastUsedAt": "45 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "v7aiu6bbmvfdk42f6zhcfs80m"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "151.9kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 16:53:31.807722078 +0000 UTC",
+    "Description": "[4/4] COPY scripts /app/scripts",
+    "ID": "u5dcm8mw5fmcokvrd5wmmiepc",
+    "LastUsedAt": "24 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "aecqg8os4wskha50k0jh9xnsf"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "196.9kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 17:28:19.670380134 +0000 UTC",
+    "Description": "[4/4] COPY scripts /app/scripts",
+    "ID": "frp9f57ys61m54uvh5078083w",
+    "LastUsedAt": "23 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "aecqg8os4wskha50k0jh9xnsf"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "201.5kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 17:59:10.471479606 +0000 UTC",
+    "Description": "[4/4] COPY scripts /app/scripts",
+    "ID": "wevpdqqgdrrl4i1pmhr23ej9i",
+    "LastUsedAt": "23 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "aecqg8os4wskha50k0jh9xnsf"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "201.5kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 03:13:46.277228723 +0000 UTC",
+    "Description": "[5/8] COPY web ./web",
+    "ID": "ub3zrz9rzod1jiiad002cxuzr",
+    "LastUsedAt": "24 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "xa274i7lj8x85ss1vbmqg7mdd"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "257.1kB",
+    "Type": "regular",
+    "UsageCount": 2
+  },
+  {
+    "CreatedAt": "2026-10-03 05:42:26.751155566 +0000 UTC",
+    "Description": "[8/9] COPY tests ./tests",
+    "ID": "tx9kbcfea33irvg2o2tnvwlh2",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "pg5zhf47uj73j1tdsd8i8qgpp"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "298.6kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 05:48:26.720118897 +0000 UTC",
+    "Description": "[8/9] COPY tests ./tests",
+    "ID": "050tfyvudyxlovx0bfj3ue5t4",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "jbyvzfj8jnlkuke0vwf1u14bx"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "298.6kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 16:53:31.528514418 +0000 UTC",
+    "Description": "[2/4] COPY web /app/web",
+    "ID": "pvf22vukccl4gl6oba6tiy2wu",
+    "LastUsedAt": "24 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "sl7j08zgs590l9c8q8p1ld6gk"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "369.9kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 05:42:26.5374142 +0000 UTC",
+    "Description": "[6/9] COPY src ./src",
+    "ID": "kay4alwkj35j69wbfx2mgufjc",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "llt6tqs0xx7pt9ubtyvtlj78j"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "476.1kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 05:48:26.53409991 +0000 UTC",
+    "Description": "[6/9] COPY src ./src",
+    "ID": "kto8t7y7yxka6nei843vl8oo6",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "llt6tqs0xx7pt9ubtyvtlj78j"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "476.1kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 05:14:24.896210595 +0000 UTC",
+    "Description": "[migrate 5/5] COPY --from=build /app/packages/db ./packages/db",
+    "ID": "0fz79e03afmsiyn443mrxwmyh",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "yk0bpzcoauwdpkmm78elwc1am"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "539.4kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 06:36:35.855203408 +0000 UTC",
+    "Description": "[migrate 5/5] COPY --from=build /app/packages/db ./packages/db",
+    "ID": "02xcsdcpfjzqq5y8bv3boec47",
+    "LastUsedAt": "34 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "yk0bpzcoauwdpkmm78elwc1am"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "580.1kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 05:14:15.891881511 +0000 UTC",
+    "Description": "[web 8/8] COPY --from=build /app/packages ./packages",
+    "ID": "lrmxjsesybds6zcrrd9palka6",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "9cfnlrb3nzkulld066gsr81kl"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "945.5kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 06:36:25.2710495 +0000 UTC",
+    "Description": "[web 8/8] COPY --from=build /app/packages ./packages",
+    "ID": "tjl2wmzlkew76bcb4i1vlzxja",
+    "LastUsedAt": "34 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "0sgn8a4jyot26h05xhferpfyf"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "986.3kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 05:42:31.621506395 +0000 UTC",
+    "Description": "mount / from exec /bin/sh -c npm run build",
+    "ID": "u8xcoc3rmgj3e7p5l8j66l7ce",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "tx9kbcfea33irvg2o2tnvwlh2"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "2.333MB",
+    "Type": "regular",
+    "UsageCount": 2
+  },
+  {
+    "CreatedAt": "2026-10-03 05:48:32.345870545 +0000 UTC",
+    "Description": "mount / from exec /bin/sh -c npm run build",
+    "ID": "la80azgm23wkexahpsmi1hkyy",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "050tfyvudyxlovx0bfj3ue5t4"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "2.333MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-09-30 19:27:10.189680376 +0000 UTC",
+    "Description": "pulled from docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752",
+    "ID": "1kuu5mrs79s2i0mp8cv311nyi",
+    "LastUsedAt": "3 days ago",
+    "Mutable": false,
+    "Parents": [
+      "0u11nu661fmfhzhko2fhr4u79"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "9.032MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 04:57:54.866975978 +0000 UTC",
+    "Description": "[11/11] COPY --chown=node:node . .",
+    "ID": "45xl5l5fgj8lsti0nctf31md8",
+    "LastUsedAt": "36 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "nzcsalmdc8etohj66d20ix7ku"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "20.19MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 05:12:06.803927079 +0000 UTC",
+    "Description": "[11/11] COPY --chown=node:node . .",
+    "ID": "yf8eku18yxu440m7qcsdd6jkm",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "nzcsalmdc8etohj66d20ix7ku"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "20.33MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 06:03:33.42974843 +0000 UTC",
+    "Description": "[11/11] COPY --chown=node:node . .",
+    "ID": "6vqfjkjmcsxse2wybij68yt5v",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "nzcsalmdc8etohj66d20ix7ku"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "22.45MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 06:25:18.415375768 +0000 UTC",
+    "Description": "[11/11] COPY --chown=node:node . .",
+    "ID": "ozt1dtow0gfhlyhk9h04lp09u",
+    "LastUsedAt": "34 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "nzcsalmdc8etohj66d20ix7ku"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "22.61MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-02 20:00:16.466097719 +0000 UTC",
+    "Description": "mount / from exec /bin/sh -c npm ci --omit=dev --include=optional && npm cache clean --force",
+    "ID": "xa274i7lj8x85ss1vbmqg7mdd",
+    "LastUsedAt": "24 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "nd60rzatfbe030qlt3px36hfd"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "77.56MB",
+    "Type": "regular",
+    "UsageCount": 13
+  },
+  {
+    "CreatedAt": "2026-09-30 19:27:09.745493387 +0000 UTC",
+    "Description": "pulled from docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752",
+    "ID": "z2x72vhamb4j7zcl9qgesxa0y",
+    "LastUsedAt": "3 days ago",
+    "Mutable": false,
+    "Parents": null,
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "113.5MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 05:42:26.205013702 +0000 UTC",
+    "Description": "mount / from exec /bin/sh -c npm ci --no-audit --no-fund",
+    "ID": "p2appntt0uu5usaozv4yvmdvn",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "vgda6tzzasft96yjs5tuevtmb"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "116.7MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 05:14:15.585678161 +0000 UTC",
+    "Description": "[web 5/8] COPY --from=build /app/apps/web/.next ./apps/web/.next",
+    "ID": "iwpkopb79i3335sdsyv32fv6p",
+    "LastUsedAt": "35 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "yk0bpzcoauwdpkmm78elwc1am"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "157MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-03 06:36:24.769026461 +0000 UTC",
+    "Description": "[web 5/8] COPY --from=build /app/apps/web/.next ./apps/web/.next",
+    "ID": "u2ikp0kc37l372ly17zn5t0ew",
+    "LastUsedAt": "34 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "yk0bpzcoauwdpkmm78elwc1am"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "158.8MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-09-30 19:27:10.156499874 +0000 UTC",
+    "Description": "pulled from docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752",
+    "ID": "0u11nu661fmfhzhko2fhr4u79",
+    "LastUsedAt": "3 days ago",
+    "Mutable": false,
+    "Parents": [
+      "q59fnt5hokot2oqnky2k83z4n"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "203.9MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-02 19:51:15.692006116 +0000 UTC",
+    "Description": "[web 3/8] COPY --from=prod-deps /app/node_modules ./node_modules",
+    "ID": "k05piryrxru8bcmk1psov1c7y",
+    "LastUsedAt": "45 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "5prhsbk0and5vbvgqlqana1yb"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "860.6MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-02 19:43:15.78289805 +0000 UTC",
+    "Description": "mount / from exec /bin/sh -c npm ci",
+    "ID": "nzcsalmdc8etohj66d20ix7ku",
+    "LastUsedAt": "34 hours ago",
+    "Mutable": false,
+    "Parents": [
+      "wj0gtoleg0fgrfhambdadolbz"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "1.395GB",
+    "Type": "regular",
+    "UsageCount": 18
+  }
+]

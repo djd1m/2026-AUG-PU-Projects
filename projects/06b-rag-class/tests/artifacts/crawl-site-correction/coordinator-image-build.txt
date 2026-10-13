@@ -1,0 +1,59 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.44kB 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22.22-bookworm-slim
+#2 DONE 0.7s
+
+#3 [ 1/11] FROM docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752
+#3 resolve docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752 0.1s done
+#3 DONE 0.1s
+
+#4 [internal] load build context
+#4 transferring context: 361.53kB 0.1s done
+#4 DONE 0.1s
+
+#5 [ 7/11] COPY --chown=node:node services/worker/package.json ./services/worker/
+#5 CACHED
+
+#6 [ 9/11] COPY --chown=node:node packages/rag/package.json ./packages/rag/
+#6 CACHED
+
+#7 [ 6/11] COPY --chown=node:node apps/widget/package.json ./apps/widget/
+#7 CACHED
+
+#8 [ 8/11] COPY --chown=node:node packages/db/package.json ./packages/db/
+#8 CACHED
+
+#9 [ 5/11] COPY --chown=node:node apps/web/package.json ./apps/web/
+#9 CACHED
+
+#10 [ 2/11] WORKDIR /app
+#10 CACHED
+
+#11 [ 3/11] RUN chown node:node /app
+#11 CACHED
+
+#12 [ 4/11] COPY --chown=node:node package.json package-lock.json ./
+#12 CACHED
+
+#13 [10/11] RUN npm ci
+#13 CACHED
+
+#14 [11/11] COPY --chown=node:node . .
+#14 DONE 0.4s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 0.3s done
+#15 exporting manifest sha256:b3755cbc99f26452fbf8539f05d4fdc7a2eda8339403d667af11ad6d9f5691dd
+#15 exporting manifest sha256:b3755cbc99f26452fbf8539f05d4fdc7a2eda8339403d667af11ad6d9f5691dd 0.1s done
+#15 exporting config sha256:ab68f1c05aa82e8f52f47f0d75452d8691e813590cf0de4d7c0604f9ae59d5b7 0.1s done
+#15 exporting attestation manifest sha256:69af4ef9b6578bfee9935b831023c422cd81fd982676dadecfa8d703c9e5356f 0.0s done
+#15 exporting manifest list sha256:250d300abd51ec1b1abca410cbb4d9a08426eea08ab5c13f918c4ef05f6ad73c 0.1s done
+#15 naming to docker.io/library/n6b-f05-crawl-correction:20261002
+#15 naming to docker.io/library/n6b-f05-crawl-correction:20261002 done
+#15 unpacking to docker.io/library/n6b-f05-crawl-correction:20261002 0.1s done
+#15 DONE 1.1s

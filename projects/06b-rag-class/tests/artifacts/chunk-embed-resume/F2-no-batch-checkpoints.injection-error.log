@@ -1,0 +1,17 @@
+
+ RUN  v3.2.7 /app
+
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  services/worker/tests/int/chunk-embed.int.test.ts [ services/worker/tests/int/chunk-embed.int.test.ts ]
+Error: EACCES: permission denied, open '/app/services/worker/src/embed.ts'
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/config.js:22709:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  20:00:42
+   Duration  1.37s (transform 495ms, setup 0ms, collect 0ms, tests 0ms, environment 1ms, prepare 145ms)

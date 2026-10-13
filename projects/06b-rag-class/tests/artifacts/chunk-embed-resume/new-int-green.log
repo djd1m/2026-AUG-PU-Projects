@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /app
+
+ ✓ services/worker/tests/int/chunk-embed.int.test.ts (15 tests | 11 skipped) 2153ms
+   ✓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > F-1: worker уступает таймеру и проверяет аренду внутри одного большого документа  1805ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed | 11 skipped (15)
+   Start at  20:00:31
+   Duration  3.78s (transform 596ms, setup 0ms, collect 766ms, tests 2.15s, environment 0ms, prepare 156ms)

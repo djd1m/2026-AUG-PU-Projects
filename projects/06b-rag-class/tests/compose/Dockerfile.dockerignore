@@ -1,0 +1,16 @@
+# Ignore-файл образа тестов: BuildKit берёт <Dockerfile>.dockerignore вместо корневого .dockerignore.
+node_modules
+**/node_modules
+.next
+**/.next
+dist
+**/dist
+coverage
+.env
+.env.*
+*.dump
+*.log
+.git
+docs
+.claude/*
+!.claude/feature-roadmap.json

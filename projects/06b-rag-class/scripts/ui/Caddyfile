@@ -1,0 +1,9 @@
+{
+  auto_https disable_redirects
+}
+https://n6b-ui.test {
+  tls internal
+  reverse_proxy web:3000 {
+    header_up X-Real-IP {remote_host}
+  }
+}

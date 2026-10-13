@@ -1,0 +1,22 @@
+ Container n6b-f05-crawl-db-1 Running 
+ Container n6b-f05-crawl-db-1 Waiting 
+ Container n6b-f05-crawl-db-1 Healthy 
+ Container n6b-f05-crawl-tests-run-e7ae165a0d83 Creating 
+ Container n6b-f05-crawl-tests-run-e7ae165a0d83 Created 
+
+> n6b-rag-class@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json && npm run typecheck --workspace @n6b/web
+
+
+> @n6b/web@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+error TS5033: Could not write file '/app/apps/web/tsconfig.tsbuildinfo': EACCES: permission denied, open '/app/apps/web/tsconfig.tsbuildinfo'.
+npm error Lifecycle script `typecheck` failed with error:
+npm error code 2
+npm error path /app/apps/web
+npm error workspace @n6b/web@0.1.0
+npm error location /app/apps/web
+npm error command failed
+npm error command sh -c tsc --noEmit -p tsconfig.json
+

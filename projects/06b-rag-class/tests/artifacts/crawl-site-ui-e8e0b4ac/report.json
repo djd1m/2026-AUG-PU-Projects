@@ -1,0 +1,32 @@
+{
+  "source_revision": "e8e0b4ac7a61e473835ac75d4463b22281f65062",
+  "build_image_id": "sha256:775633f60282d15da22a6c23fe14070604782ed7ff23c9af8936aae2909841e6",
+  "started_at": "2026-10-02T18:25:58.489Z",
+  "scope": "Local UI E2E; indexing completion and deployed full CJM excluded",
+  "endpoint": "Docker codex-ui-playwright",
+  "base": "https://n6b-ui.test",
+  "status": "pass",
+  "checks": [
+    {
+      "viewport": 1440,
+      "registration": "pass",
+      "private_url_422": "pass",
+      "create_bot_202": "pass",
+      "job_visible": "pass",
+      "logout_login": "pass",
+      "layout": "pass",
+      "javascript_errors": 0
+    },
+    {
+      "viewport": 390,
+      "registration": "pass",
+      "private_url_422": "pass",
+      "create_bot_202": "pass",
+      "job_visible": "pass",
+      "logout_login": "pass",
+      "layout": "pass",
+      "javascript_errors": 0
+    }
+  ],
+  "finished_at": "2026-10-02T18:26:04.856Z"
+}
