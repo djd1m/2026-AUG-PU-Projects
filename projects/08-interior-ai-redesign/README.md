@@ -1,5 +1,11 @@
 # 08. Редизайн комнаты по фото за 25 секунд
 
+**Сверка13.10.2026:** текущий [F07 Replicate software scope](docs/features/f07-replicate/local-acceptance.md) локально принят03.10
+(52+2 browser checks, DB/private-media restore). Hosted inference adapter реализован; для него локальныйGPU не требуется.
+Реальный provider pilot, качество/производительность, оплата и внешний выпуск не приняты; hosted режим по умолчанию выключен.
+Ниже сохранена исходная постановка, включая прежний GPU-вариант. [Текущая сводка main](../../docs/PROJECTS-STATUS.md).
+
+
 > **Неделя 08** · `генерация` · референс: **[Interior AI](https://interiorai.com/) Питера Левелса — $40–45K MRR, >99% маржа**
 
 ## Простыми словами

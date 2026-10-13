@@ -1,0 +1,57 @@
+{
+  "started_at": "2026-10-13T18:34:26.827113+00:00",
+  "scope": "Populate owner-created main with canonical latest accepted project source and dated status index",
+  "owner_authorization": "Create/populate main; user then created remote main; preserve remote history and push ordinary fast-forward",
+  "baseline": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+  "profile": "model-routing-econom",
+  "requested_review_model": "gpt-6.1-sol high",
+  "actual_models": null,
+  "usage": null,
+  "cost": null,
+  "exclusions": [
+    "private runtime data and credentials",
+    "uncommitted author candidates",
+    "noncanonical alternative implementations",
+    "unpublished SVG04–08",
+    "deployment and changing GitHub default branch"
+  ],
+  "status": "accepted_for_authorized_push",
+  "e2e": "not_run: repository integration only; no runtime deployment",
+  "donors": {
+    "base": "3b84e9ef",
+    "n6b_canonical": "732df4cc",
+    "n6b_release_gate": "6c08f034",
+    "n7": "c7bd1820",
+    "n8": "bf40df86",
+    "published_heroes_01_03": "445fc3d8",
+    "n3_demo_limit": "38bed68a"
+  },
+  "reconciliation": [
+    "N3 payment commits patch-equivalent inbase; no duplicate merge",
+    "N3 demo-limit source missing though deployment documented; cherry-pick combines accessConfig andmaxDemoRuns",
+    "N6b release-gate latestpublished15/16; integrate47missingcommits",
+    "kilocode N7 alternate listed separately; no rootapps/packages override"
+  ],
+  "donor_tree_equivalence": "N6b release/N7/N8 committedtrees equal donors before README updates",
+  "checks_file": "checks.json",
+  "measurements": {
+    "actual_model": null,
+    "token_usage": null,
+    "cost": null,
+    "reason": "Host execution metadata unavailable"
+  },
+  "route": {
+    "mechanical": "T for statusdocs, exit0",
+    "substantive": "repository integration + bounded N3 conflict resolution; no new product feature or external calls",
+    "risk": "preserve existing private-data/payment contracts; no deployment"
+  },
+  "review": {
+    "result": "pass",
+    "reviewer": "main_integration_review",
+    "requested_model": "gpt-6.1-sol high",
+    "context": "independent fork-none planner packet + frozen artifacts, no author history",
+    "material_blockers": 0
+  },
+  "completed_checks_at": "2026-10-13T18:44:21.396569+00:00",
+  "measured_seconds_since_record_creation": 594.569456
+}

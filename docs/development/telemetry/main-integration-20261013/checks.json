@@ -1,0 +1,94 @@
+{
+  "new_doc_local_links": "pass",
+  "source_equivalence": [
+    {
+      "source": "origin/feature/06b-release-gate",
+      "project": "projects/06b-rag-class",
+      "committed_tree_equivalence": "pass",
+      "uncommitted_doc_delta": "README.md only"
+    },
+    {
+      "source": "origin/feature/07-cold-email-warmup",
+      "project": "projects/07-cold-email-warmup",
+      "committed_tree_equivalence": "pass",
+      "uncommitted_doc_delta": "README.md only"
+    },
+    {
+      "source": "origin/feature/08-interior-ai",
+      "project": "projects/08-interior-ai-redesign",
+      "committed_tree_equivalence": "pass",
+      "uncommitted_doc_delta": "README.md only"
+    }
+  ],
+  "secret_pattern_paths": [
+    "projects/02-review-qr-reputation/docs/discovery/02a-market-sources.md",
+    "projects/04-calorie-vision-cal-ai/docs/prototypes/cjm/index.html",
+    "projects/04-calorie-vision-cal-ai/docs/prototypes/cjm/variant-a.html",
+    "projects/04-calorie-vision-cal-ai/docs/prototypes/cjm/variant-b.html",
+    "projects/04-calorie-vision-cal-ai/docs/prototypes/cjm/variant-c.html",
+    "projects/04-calorie-vision-cal-ai/docs/prototypes/cjm/variant-d.html",
+    "research/vps-sources/01-corp-infra.md"
+  ],
+  "tracked_dotenv": [],
+  "code_conflict_paths": [],
+  "runtime_checks": [
+    {
+      "check": "n3-build",
+      "exit_code": 0,
+      "runtime": "Node22.22.0 existing n3-api image",
+      "network": "none",
+      "source": "candidate main mounts read-only"
+    },
+    {
+      "check": "n3-demo-limit-test",
+      "exit_code": 0,
+      "runtime": "Node22.22.0 existing n3-api image",
+      "network": "none",
+      "source": "candidate main mounts read-only"
+    }
+  ],
+  "secret_pattern_review": [
+    {
+      "path": "projects/02-review-qr-reputation/docs/discovery/02a-market-sources.md",
+      "unchanged_from_owner_main": true,
+      "classification": "false_positive: URL slug, embedded raster bytes or explicitly documented dummy fixture"
+    },
+    {
+      "path": "projects/04-calorie-vision-cal-ai/docs/prototypes/cjm/index.html",
+      "unchanged_from_owner_main": true,
+      "classification": "false_positive: URL slug, embedded raster bytes or explicitly documented dummy fixture"
+    },
+    {
+      "path": "projects/04-calorie-vision-cal-ai/docs/prototypes/cjm/variant-a.html",
+      "unchanged_from_owner_main": true,
+      "classification": "false_positive: URL slug, embedded raster bytes or explicitly documented dummy fixture"
+    },
+    {
+      "path": "projects/04-calorie-vision-cal-ai/docs/prototypes/cjm/variant-b.html",
+      "unchanged_from_owner_main": true,
+      "classification": "false_positive: URL slug, embedded raster bytes or explicitly documented dummy fixture"
+    },
+    {
+      "path": "projects/04-calorie-vision-cal-ai/docs/prototypes/cjm/variant-c.html",
+      "unchanged_from_owner_main": true,
+      "classification": "false_positive: URL slug, embedded raster bytes or explicitly documented dummy fixture"
+    },
+    {
+      "path": "projects/04-calorie-vision-cal-ai/docs/prototypes/cjm/variant-d.html",
+      "unchanged_from_owner_main": true,
+      "classification": "false_positive: URL slug, embedded raster bytes or explicitly documented dummy fixture"
+    },
+    {
+      "path": "research/vps-sources/01-corp-infra.md",
+      "unchanged_from_owner_main": true,
+      "classification": "false_positive: URL slug, embedded raster bytes or explicitly documented dummy fixture"
+    }
+  ],
+  "secret_scan_result": "7 reviewed false positives; no matching real secret found; no tracked .env",
+  "whitespace": {
+    "new_manual_delta": "pass",
+    "full_delta_from_owner_main": "fail_inherited",
+    "diagnostic_lines": 10766,
+    "reason": "Existing vendor/telemetry files imported unchanged; historical hashes and source evidence preserved; no bulk reformatting"
+  }
+}
