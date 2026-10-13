@@ -1,0 +1,101 @@
+{
+  "run_id": "20261003T000534Z-badge-referral",
+  "work_unit_id": "badge-referral-implementation",
+  "attempt_id": "implementation-1",
+  "source_revision": "4a4f602cda39954900365d3ba7085db7c4d732b3",
+  "build_revision": null,
+  "launch_sha256": "82906a01abc6e5d03797de70c7b55c40f36cfb2f9cf8a5227e111f0d8c628a55",
+  "captured_at": "2026-10-03T00:25:12.050221+00:00",
+  "source_snapshot_sha256": "4f6cfc242b7863ba0f586b07a46b3cdbcd24cbb0d10360895c90679c11a94dff",
+  "node_version": "v22.22.3",
+  "path_prefix": "/tmp/n6b-f06-node22/bin",
+  "profile": "compact-quality-first-v2",
+  "risk_tier": "M (fresh full SPARC caveat for L public route)",
+  "route_before_implementation": {
+    "command": "bash ../../scripts/complexity-router.sh apps/web/src/middleware.ts apps/web/src/server/referral.ts packages/db/src/referral.ts",
+    "exit_code": 0,
+    "mechanical_tier": "S",
+    "substantive_tier": "M",
+    "reason": "New public route means L; 30 September canonical SPARC with FR and algorithm permits M with all mandatory gates retained."
+  },
+  "checks": [
+    {
+      "command": "npm run typecheck",
+      "exit_code": 0,
+      "evidence": "/tmp/n6b-f10-implementation-final-typecheck.log",
+      "scope": "final restored source and all authored PG tests typechecked"
+    },
+    {
+      "command": "./node_modules/.bin/vitest run --config vitest.config.ts apps/web/tests/unit/referral-cookie.test.ts apps/web/tests/unit/referral-handler.test.ts apps/web/tests/unit/auth-handler.test.ts apps/web/tests/unit/widget-handler.test.ts apps/web/tests/unit/ip.test.ts",
+      "exit_code": 0,
+      "files_passed": 5,
+      "tests_passed": 78,
+      "evidence": "native execution output at 00:20:03 UTC; no raw log committed"
+    },
+    {
+      "command": "./node_modules/.bin/vitest run --config vitest.config.ts apps/web/tests/unit/referral-cookie.test.ts",
+      "mutation_exit_code": 1,
+      "restored_exit_code": 0,
+      "red_tests_failed": 1,
+      "green_tests_passed": 10,
+      "evidence": "tests/artifacts/badge-referral/first-touch-mutation.json"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    },
+    {
+      "command": "changed source/test SHA256 and line-count check",
+      "exit_code": 0,
+      "file_count": 17,
+      "max_lines": 185
+    }
+  ],
+  "pending": [
+    {
+      "command": "./node_modules/.bin/vitest run --config vitest.int.config.ts apps/web/tests/int/referral.int.test.ts",
+      "exit_code": null,
+      "reason": "Real PG/Docker execution reserved to coordinator"
+    },
+    {
+      "command": "npm test; npm run test:int; npm run build",
+      "exit_code": null,
+      "reason": "Full frozen-source Docker/unit/PG/build coordinator gates"
+    },
+    {
+      "gate": "actual Docker browser UI 1440/390 with read-only E2E preflight",
+      "result": null
+    },
+    {
+      "gate": "independent Astra source review",
+      "result": null
+    },
+    {
+      "gate": "F13 reuse resolveReferralBot inside trusted studio child-creation transaction",
+      "result": null
+    }
+  ],
+  "measurements": {
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "actual_model": null,
+    "actual_effort": null,
+    "tokens": null,
+    "cost": null,
+    "cost_basis": "unavailable",
+    "reason": "No native model/usage metadata available to this executor; coordinator reconciles",
+    "elapsed_to_source_freeze_seconds": 605.205323,
+    "active_wall_seconds": null,
+    "accepted_feature_duration_seconds": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Local implementation/typecheck/unit only; no E2E execution authorized in this work unit"
+  },
+  "route_after_implementation": {
+    "command": "bash ../../scripts/complexity-router.sh apps/web/src/app/r/b/[public_id]/route.ts apps/web/src/app/api/account/badge-removal-intent/route.ts apps/web/src/middleware.ts packages/db/src/referral.ts apps/web/src/server/auth-store.ts",
+    "exit_code": 0,
+    "mechanical_tier": "M",
+    "substantive_tier": "M"
+  }
+}

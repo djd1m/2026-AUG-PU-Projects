@@ -1,0 +1,21 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-handover/projects/06b-rag-class
+
+ ✓ apps/web/tests/unit/studio-clients-ui.test.ts (2 tests) 27ms
+ ✓ apps/web/tests/unit/handover-ui.test.ts (3 tests) 29ms
+ ✓ apps/web/tests/unit/studio-handler.test.ts (8 tests) 92ms
+ ✓ apps/web/tests/unit/handover-handler.test.ts (9 tests) 124ms
+stderr | apps/web/tests/unit/auth-handler.test.ts > регистрация и вход — порядок проверок (Pseudocode «Register and login») > нет X-Forwarded-For → 503 и ни одной попытки bcrypt
+auth: адрес клиента недоступен — запрос не через прокси; вход отклонён
+
+stderr | apps/web/tests/unit/auth-handler.test.ts > GET /api/health (NFR-n6b-5) > 200 только при ответившей БД; иначе 503 без текста ошибки
+health: проверка не прошла: Error
+
+ ✓ apps/web/tests/unit/auth-handler.test.ts (17 tests) 503ms
+   ✓ регистрация и вход — порядок проверок (Pseudocode «Register and login») > фиктивный хэш — настоящий bcrypt той же стоимости 12, что и регистрация  404ms
+
+ Test Files  5 passed (5)
+      Tests  39 passed (39)
+   Start at  04:43:49
+   Duration  2.29s (transform 1.55s, setup 0ms, collect 4.20s, tests 775ms, environment 13ms, prepare 1.40s)
+

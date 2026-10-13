@@ -1,0 +1,137 @@
+ Network n6b-f16-pg-072824-1641792_test Creating 
+ Network n6b-f16-pg-072824-1641792_test Creating 
+ Network n6b-f16-pg-072824-1641792_test Created 
+ Network n6b-f16-pg-072824-1641792_test Created 
+ Container n6b-f16-pg-072824-1641792-db-1 Creating 
+ Container n6b-f16-pg-072824-1641792-db-1 Created 
+ Container n6b-f16-pg-072824-1641792-tests-1 Creating 
+ Container n6b-f16-pg-072824-1641792-tests-1 Created 
+Attaching to db-1, tests-1
+ Container n6b-f16-pg-072824-1641792-db-1 Starting 
+ Container n6b-f16-pg-072824-1641792-db-1 Started 
+ Container n6b-f16-pg-072824-1641792-db-1 Waiting 
+db-1  | The files belonging to this database system will be owned by user "postgres".
+db-1  | This user must also own the server process.
+db-1  | 
+db-1  | The database cluster will be initialized with locale "en_US.utf8".
+db-1  | The default database encoding has accordingly been set to "UTF8".
+db-1  | The default text search configuration will be set to "english".
+db-1  | 
+db-1  | Data page checksums are disabled.
+db-1  | 
+db-1  | fixing permissions on existing directory /var/lib/postgresql/data ... ok
+db-1  | creating subdirectories ... ok
+db-1  | selecting dynamic shared memory implementation ... posix
+db-1  | selecting default max_connections ... 100
+db-1  | selecting default shared_buffers ... 128MB
+db-1  | selecting default time zone ... Etc/UTC
+db-1  | creating configuration files ... ok
+db-1  | running bootstrap script ... ok
+db-1  | performing post-bootstrap initialization ... ok
+db-1  | initdb: warning: enabling "trust" authentication for local connections
+db-1  | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+db-1  | syncing data to disk ... ok
+db-1  | 
+db-1  | 
+db-1  | Success. You can now start the database server using:
+db-1  | 
+db-1  |     pg_ctl -D /var/lib/postgresql/data -l logfile start
+db-1  | 
+db-1  | waiting for server to start....2026-10-03 07:28:28.870 UTC [49] LOG:  starting PostgreSQL 16.15 (Debian 16.15-1.pgdg12+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+db-1  | 2026-10-03 07:28:28.875 UTC [49] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1  | 2026-10-03 07:28:28.882 UTC [52] LOG:  database system was shut down at 2026-10-03 07:28:28 UTC
+db-1  | 2026-10-03 07:28:28.893 UTC [49] LOG:  database system is ready to accept connections
+db-1  |  done
+db-1  | server started
+db-1  | CREATE DATABASE
+db-1  | 
+db-1  | 
+db-1  | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+db-1  | 
+db-1  | 2026-10-03 07:28:29.191 UTC [49] LOG:  received fast shutdown request
+db-1  | waiting for server to shut down...2026-10-03 07:28:29.192 UTC [49] LOG:  aborting any active transactions
+db-1  | .2026-10-03 07:28:29.198 UTC [49] LOG:  background worker "logical replication launcher" (PID 55) exited with exit code 1
+db-1  | 2026-10-03 07:28:29.209 UTC [50] LOG:  shutting down
+db-1  | 2026-10-03 07:28:29.210 UTC [50] LOG:  checkpoint starting: shutdown immediate
+db-1  | 2026-10-03 07:28:29.226 UTC [50] LOG:  checkpoint complete: wrote 922 buffers (5.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.015 s, sync=0.002 s, total=0.017 s; sync files=301, longest=0.001 s, average=0.001 s; distance=4255 kB, estimate=4255 kB; lsn=0/1912118, redo lsn=0/1912118
+db-1  | 2026-10-03 07:28:29.248 UTC [49] LOG:  database system is shut down
+db-1  |  done
+db-1  | server stopped
+db-1  | 
+db-1  | PostgreSQL init process complete; ready for start up.
+db-1  | 
+db-1  | 2026-10-03 07:28:29.350 UTC [1] LOG:  starting PostgreSQL 16.15 (Debian 16.15-1.pgdg12+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+db-1  | 2026-10-03 07:28:29.354 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+db-1  | 2026-10-03 07:28:29.354 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+db-1  | 2026-10-03 07:28:29.360 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1  | 2026-10-03 07:28:29.367 UTC [65] LOG:  database system was shut down at 2026-10-03 07:28:29 UTC
+db-1  | 2026-10-03 07:28:29.380 UTC [1] LOG:  database system is ready to accept connections
+ Container n6b-f16-pg-072824-1641792-db-1 Healthy 
+ Container n6b-f16-pg-072824-1641792-tests-1 Starting 
+ Container n6b-f16-pg-072824-1641792-tests-1 Started 
+tests-1  | Overlay SHA256 verified: 65 files; source e5672838a107c2cafc616600a4cb00de7d5895b8
+tests-1  | 
+tests-1  | > n6b-rag-class@0.1.0 pretest
+tests-1  | > npm run build --workspace @n6b/db && npm run build --workspace @n6b/rag
+tests-1  | 
+tests-1  | 
+tests-1  | > @n6b/db@0.1.0 build
+tests-1  | > tsc -p tsconfig.build.json
+tests-1  | 
+tests-1  | 
+tests-1  | > @n6b/rag@0.1.0 build
+tests-1  | > tsc -p tsconfig.build.json
+tests-1  | 
+tests-1  | 
+tests-1  | > n6b-rag-class@0.1.0 test:int
+tests-1  | > vitest run --config vitest.int.config.ts packages/rag/tests/int/release-gate.int.test.ts
+tests-1  | 
+tests-1  | 
+tests-1  |  RUN  v3.2.7 /app
+tests-1  | 
+db-1     | 2026-10-03 07:29:04.771 UTC [206] ERROR:  new row for relation "bot" violates check constraint "bot_public_id_format"
+db-1     | 2026-10-03 07:29:04.771 UTC [206] DETAIL:  Failing row contains (04b3ac2f-0974-4ad5-b839-5ad188fbb349, 59c5597c-0dc5-4f10-8ba0-57e2c6ce6a85, 0d09cc09-d3ce-4ad4-baab-b01c514e9fe1, sibling, null, f, f, null, {}, null, 2026-10-03 07:29:04.770829+00).
+db-1     | 2026-10-03 07:29:04.771 UTC [206] STATEMENT:  INSERT INTO bot (account_id, public_id, name)
+db-1     | 	      VALUES ($1, gen_random_uuid()::text, 'sibling') RETURNING id
+tests-1  |  ❯ packages/rag/tests/int/release-gate.int.test.ts (3 tests | 1 failed) 340ms
+tests-1  |    ✓ release gate live-store on real PostgreSQL, fake bounded gateway > service login creates a verified test account and stores ten exact documents/chunks 234ms
+tests-1  |    ✓ release gate live-store on real PostgreSQL, fake bounded gateway > real vector search excludes a foreign tenant with equally close vectors 87ms
+tests-1  |    × release gate live-store on real PostgreSQL, fake bounded gateway > evidence reads real populated ledgers, scoped by both account and bot; billing stays unknown 14ms
+tests-1  |      → new row for relation "bot" violates check constraint "bot_public_id_format"
+tests-1  | 
+tests-1  | ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+tests-1  | 
+tests-1  |  FAIL  packages/rag/tests/int/release-gate.int.test.ts > release gate live-store on real PostgreSQL, fake bounded gateway > evidence reads real populated ledgers, scoped by both account and bot; billing stays unknown
+tests-1  | error: new row for relation "bot" violates check constraint "bot_public_id_format"
+tests-1  |  ❯ node_modules/pg-pool/index.js:45:11
+tests-1  |  ❯ packages/rag/tests/int/release-gate.int.test.ts:72:22
+tests-1  |      70| 
+tests-1  |      71|   it('evidence reads real populated ledgers, scoped by both account an…
+tests-1  |      72|     const sibling = (await owner.query(`INSERT INTO bot (account_id, p…
+tests-1  |        |                      ^
+tests-1  |      73|       VALUES ($1, gen_random_uuid()::text, 'sibling') RETURNING id`, […
+tests-1  |      74|     const foreign = await createFixture(service);
+tests-1  | 
+tests-1  | ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+tests-1  | 
+tests-1  | 
+tests-1  |  Test Files  1 failed (1)
+tests-1  |       Tests  1 failed | 2 passed (3)
+tests-1  |    Start at  10:29:00
+tests-1  |    Duration  3.93s (transform 936ms, setup 0ms, collect 2.14s, tests 340ms, environment 0ms, prepare 282ms)
+tests-1  | 
+[Ktests-1 exited with code 1
+ Compose Stopping Aborting on container exit...
+ Container n6b-f16-pg-072824-1641792-tests-1 Stopping 
+ Container n6b-f16-pg-072824-1641792-tests-1 Stopped 
+ Container n6b-f16-pg-072824-1641792-db-1 Stopping 
+db-1     | 2026-10-03 07:29:05.772 UTC [1] LOG:  received fast shutdown request
+db-1     | 2026-10-03 07:29:05.772 UTC [1] LOG:  aborting any active transactions
+db-1     | 2026-10-03 07:29:05.785 UTC [1] LOG:  background worker "logical replication launcher" (PID 68) exited with exit code 1
+db-1     | 2026-10-03 07:29:05.786 UTC [63] LOG:  shutting down
+db-1     | 2026-10-03 07:29:05.786 UTC [63] LOG:  checkpoint starting: shutdown immediate
+db-1     | 2026-10-03 07:29:05.793 UTC [63] LOG:  checkpoint complete: wrote 392 buffers (2.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.006 s, sync=0.001 s, total=0.007 s; sync files=214, longest=0.001 s, average=0.001 s; distance=2065 kB, estimate=2065 kB; lsn=0/1B168E8, redo lsn=0/1B168E8
+db-1     | 2026-10-03 07:29:05.811 UTC [1] LOG:  database system is shut down
+ Container n6b-f16-pg-072824-1641792-db-1 Stopped 
+[Kdb-1 exited with code 0
+

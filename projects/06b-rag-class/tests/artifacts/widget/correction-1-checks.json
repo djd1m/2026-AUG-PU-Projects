@@ -1,0 +1,174 @@
+{
+  "run_id": "20261002T223848Z-widget",
+  "work_unit_id": "widget-r1-correction",
+  "attempt_id": "correction-1",
+  "source_revision": "39464ac3c4ac77afd43bf1c15859398b7dd42b12",
+  "build_revision": null,
+  "launch_sha256": "d52c372c7d59177b8d0c5f85da97fc1b47d3574ab01e43482f3a85097d3aeafb",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "started_at": "2026-10-02T23:09:17.512098+00:00",
+  "status": "completed",
+  "stage": "INTEGRATE",
+  "baseline_snapshot_sha256": "68c3f4a92f6f814a70a31b6b1839994c324ceece2637a08fcd402f633c97cb48",
+  "checks": [
+    {
+      "name": "ROUTE before implementation",
+      "command": "bash scripts/complexity-router.sh projects/06b-rag-class/apps/widget/src/index.ts",
+      "exit_code": 0,
+      "result": "M; existing F09 full acceptance gates preserved for coordinator"
+    },
+    {
+      "name": "Node22 typecheck",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH npm run typecheck",
+      "cwd": "projects/06b-rag-class",
+      "exit_code": 0,
+      "evidence": "tests/artifacts/widget/correction-1-typecheck.txt"
+    },
+    {
+      "name": "actual widget production build",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH node --input-type=module -e 'const {default:config}=await import(\"./apps/web/next.config.mjs\"); await config(\"phase-production-build\");' ",
+      "cwd": "projects/06b-rag-class",
+      "exit_code": 0,
+      "evidence": "tests/artifacts/widget/correction-1-widget-build.txt"
+    },
+    {
+      "name": "whitespace",
+      "command": "git diff --check",
+      "exit_code": 0
+    },
+    {
+      "name": "source continuity",
+      "exit_code": 0,
+      "result": "All 19 baseline hashes verified before edit; only widget source changed afterwards; correction-only diff reconstructs exact original source hash."
+    }
+  ],
+  "events": [
+    {
+      "stage": "ROUTE",
+      "timestamp": "2026-10-02T23:10:52.984438+00:00",
+      "result": "mechanical M exit 0; bounded F09-R1 correction under existing approved F09 scope; required full gates reserved for coordinator"
+    },
+    {
+      "stage": "IMPLEMENT",
+      "timestamp": "2026-10-02T23:11:33.591649+00:00",
+      "route": "Repeated mechanical M exit 0; scope unchanged; root authorization in narrow correction brief; no children.",
+      "ac": [
+        "Required badge sibling of panel visible after config and close",
+        "Restore badge/root in either panel state without forcing panel open",
+        "Page-wide one impression per bot/load; paid removal absence",
+        "Typecheck and actual widget build/gzip; preserve history; explicit pending foreign UI cases"
+      ]
+    },
+    {
+      "stage": "REVIEW",
+      "timestamp": "2026-10-02T23:13:58.783163+00:00",
+      "result": "Self-review only: badge root sibling, computed-style restoration independent of panel.hidden, actual badge ancestors restored; panel hidden/open-close/focus logic and CSS unchanged; page-wide impression Set retained; required stays server-derived. No DOM/independent review pass claimed."
+    },
+    {
+      "stage": "INTEGRATE",
+      "timestamp": "2026-10-02T23:15:00.152569+00:00",
+      "result": "Correction completion appendix added, historical content retained; explicit actual UI cases pending; snapshot/build source-bound."
+    },
+    {
+      "stage": "INTEGRATE",
+      "timestamp": "2026-10-02T23:15:31.897571+00:00",
+      "result": "All 19 frozen hashes verified; original evidence/review/coordinator files unchanged; completion append only; whitespace exit 0; bounded handoff complete, full feature gates pending."
+    }
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No actual E2E allowed in this bounded correction; no Docker/network/ports."
+  },
+  "missing_data": [
+    "Native actual model/effort/usage/billing unavailable to worker; coordinator reconciles.",
+    "Active wall time unavailable.",
+    "No local DOM/browser harness; UI acceptance pending."
+  ],
+  "history_hashes_before": {
+    "tests/artifacts/widget/mutation-origin-red.txt": "09502ee3aa838f68e99a83332015804255827cb1d377ca459f07693ab594f9b5",
+    "tests/artifacts/widget/node-version.txt": "28d5d468fcfe77594f84d719d1550610e3ff0904f1601e7d0e93325244965451",
+    "tests/artifacts/widget/deny-typescript-loader.mjs": "0e151b87c46bba85839136b3cd5a1144b4fe2e173d0a38928e500dd810bce50f",
+    "tests/artifacts/widget/mutation-badge-green.txt": "8a7d6ca6a18ee02efa82d2c07f7f54d1bf5bb12ea5a0362ee05589ff7f630e60",
+    "tests/artifacts/widget/mutations.json": "6df84e43255cd02d353f5af1783cc05adcab41163c91f2ba06f199c11c8d7cb5",
+    "tests/artifacts/widget/widget-cap-rejection.txt": "2da147b5c73d0aa6d27ab96889685d35e5d84594dd726ae8425a17b5619c3a32",
+    "tests/artifacts/widget/mutation-badge-red.txt": "f676fc0d3f855d1686f343639ae59e6619e4594be61e4aa1008f5e998aa72846",
+    "tests/artifacts/widget/production-runtime-config.txt": "bcd7ab3b41ce7f17609ec22c62e2d21146cc1551f8353848d57f83a8d56ec794",
+    "tests/artifacts/widget/implementation-checks.json": "8191618bd3d76856b4db8072d3ea5acac8f580bbd73d97718b7827e6ceef834e",
+    "tests/artifacts/widget/widget-cap-rejection.json": "8df4ed3a55776add52b75ceaa15656b40a1c9de7e1da14d7faec41724d04d73d",
+    "tests/artifacts/widget/diff-check.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/artifacts/widget/typecheck.txt": "6c430cc6921daec9b23eabc76a5bfd546a1fb9db991bc8186c0cf609fee431ab",
+    "tests/artifacts/widget/implementation-source-hashes.json": "7e9193ecb9fb73cdd999ef32fd8572551a05eb759e576d7b13ffb3e1ff4cf299",
+    "tests/artifacts/widget/focused-unit.txt": "cf0263c19f84f2f738fbbdbed5bde2e6bbf8c54eb39b630a5da202785c01eda0",
+    "tests/artifacts/widget/mutation-origin-green.txt": "5f8f586705b644a0de7d971630af138bb7df63de6146d40132e0f830d4e00c44",
+    "tests/artifacts/widget/route.txt": "6836b23144b43ff03c60a5e2af38e24451ab1438bc59ba8329c46c76deb6abc4",
+    "tests/artifacts/widget/freeze-verification.json": "c036f809c15a8e519b04641a7deeca15911397715f3d44a8825b21951fc6f34c",
+    "tests/artifacts/widget/widget-build-proof.json": "edd6dac8083bcd7f4b60416065577ad4d1bab42d3a891dfbee63071184b1e48f",
+    "tests/artifacts/widget/widget-build.txt": "f97e01909e02695bd6f37181a7b85e598b8e09c96914765fdebb7f73aab2c0c0",
+    "docs/features/widget/05_completion.md": "7ddfc87e2ec891e2447117a2850e8879b6656b7730e43a301def7bf5c622dad3",
+    "docs/features/widget/08_review.md": "8dd971d50124ae165f6500885fd50d762558ebe586dc73400b8cee4f6385b2b9",
+    "docs/features/widget/02_validation.md": "58fd0cf42249aa964316207e96579b56be2dc744b8ccbb3cb328a822c06a7272",
+    "docs/features/widget/01_plan.md": "17c45fb890982ab044aa2c8548bb85868eadf39a04e88cb39156bdfb3b4f8e37",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/work-record.json": "4a1efc9a4f42f7d73e2071e76ca1cdb8d4698d630192183bf30abaa999c8b710",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/events.jsonl": "a81c7a5214bc90a2ac918b7d42510c120947212a7d51b93a4fded5e620874590",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/run.json": "b903f272ff5a09e5d52698ca76d3785db14ca9bebc78f5565c413eeeff9dcbdb",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/route-plan.txt": "a04d0fe0f27732180a3952793ea0e4c4feaab519ebccd58a8db4b0214709beb9",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/review-1-launch.json": "62df545c7025d00ba78142ea32d3c988fc64daf71a408fa4b1b00b97d954b4eb",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/review-1-receipt.md": "dfe7b70b719870db763882c867e8ee94ec27851c0a53f4f2de94e901a7e812c3",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/route-implementation.txt": "a04d0fe0f27732180a3952793ea0e4c4feaab519ebccd58a8db4b0214709beb9",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/review-1-native-usage.json": "12fb894dd04abba9cc350efd9c0f05106ca619bbe850ad4682bfd3a9d2d79886",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/implementation-1-launch.json": "687230da0f5fdfd4290a4a76bda1eb78d6606ef3053de2ae8db14bd3caa148a3",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/dependency-reuse.json": "55ee9ca6b3e78766f4638f43a054c37d1319b3e3816f7efcc58b64941255eba1",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/implementation-1-receipt.md": "27db7681d5ddf45f33a674a7ace431991a813b3197c7d33404db428d6b8454d3",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/implementation-1-native-usage.json": "30012393a4639e50d888ace54cc9d44212aca504c98265d4434a402e6734ce26",
+    "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/correction-1-launch.json": "d52c372c7d59177b8d0c5f85da97fc1b47d3574ab01e43482f3a85097d3aeafb"
+  },
+  "coordinator_telemetry_modified_by_worker": false,
+  "correction_diff": "--- before/apps/widget/src/index.ts\n+++ after/apps/widget/src/index.ts\n@@ -65,22 +65,21 @@\n       signal: AbortSignal.timeout(10000) }).catch(() => undefined);\n   };\n   const showImpression = () => {\n-    if (!panel.hidden && required && !pageImpressions.has(publicId)) { pageImpressions.add(publicId); event('impression'); }\n+    if (required && badge?.isConnected && !pageImpressions.has(publicId)) { pageImpressions.add(publicId); event('impression'); }\n   };\n   const newBadge = () => {\n     badge = node('a', '\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u043d\u0430 N6b'); badge.className = 'badge'; badge.href = badgeUrl;\n-    badge.target = '_blank'; badge.rel = 'noopener noreferrer'; panel.append(badge);\n+    badge.target = '_blank'; badge.rel = 'noopener noreferrer'; root.append(badge);\n   };\n   const restoreBadge = () => {\n     if (!required) return;\n     const style = badge?.isConnected ? getComputedStyle(badge) : null;\n-    const broken = !badge || badge.parentNode !== panel || badge.textContent !== '\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u043d\u0430 N6b'\n+    const broken = !badge || badge.parentNode !== root || badge.textContent !== '\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u043d\u0430 N6b'\n       || badge.getAttribute('href') !== badgeUrl || badge.className !== 'badge' || badge.hasAttribute('style')\n       || badge.hidden || badge.rel !== 'noopener noreferrer' || badge.target !== '_blank'\n-      || (!panel.hidden && (style?.display === 'none' || style?.visibility !== 'visible' || Number(style?.opacity) === 0));\n-    const ancestorsBroken = [root, panel].some((element) => element.hasAttribute('style'))\n-      || root.className !== 'root' || panel.className !== 'panel' || root.hidden\n-      || root.parentNode !== shadow || panel.parentNode !== root\n+      || style?.display === 'none' || style?.visibility !== 'visible' || Number(style?.opacity) === 0;\n+    const ancestorsBroken = root.hasAttribute('style') || root.className !== 'root' || root.hidden\n+      || root.parentNode !== shadow\n       || shadow.adoptedStyleSheets.length !== 1 || shadow.adoptedStyleSheets[0] !== sheet;\n     const stylesChanged = shadow.querySelector('style,link[rel=\"stylesheet\"]') !== null\n       || Array.from(sheet.cssRules, (rule) => rule.cssText).join('\\n') !== originalRules;\n@@ -88,9 +87,7 @@\n       shadow.querySelectorAll('style,link[rel=\"stylesheet\"]').forEach((element) => element.remove());\n       sheet.replaceSync(originalRules);\n       root.removeAttribute('style'); root.hidden = false; root.className = 'root';\n-      panel.removeAttribute('style'); panel.className = 'panel';\n       if (root.parentNode !== shadow) shadow.append(root);\n-      if (panel.parentNode !== root) root.prepend(panel);\n       shadow.adoptedStyleSheets = [sheet];\n       badge?.remove(); newBadge(); event('tamper');\n     }\n@@ -120,7 +117,7 @@\n       privacy.textContent = config.privacy_notice;\n       title.textContent = typeof config.name === 'string' ? config.name : '\u0427\u0430\u0442 \u043f\u043e \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u0430\u043c \u0441\u0430\u0439\u0442\u0430';\n       required = config.badge_required; badgeUrl = url.href;\n-      if (required) { newBadge(); showImpression(); }\n+      if (required) { newBadge(); restoreBadge(); }\n       ready = true; status.textContent = '\u0417\u0430\u0434\u0430\u0439\u0442\u0435 \u0432\u043e\u043f\u0440\u043e\u0441 \u043f\u043e \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u0430\u043c \u0441\u0430\u0439\u0442\u0430';\n     } catch {\n       status.textContent = '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438 \u0447\u0430\u0442\u0430. \u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0443'; retry.hidden = false;\n",
+  "build": {
+    "generated_path": "apps/web/public/w.js",
+    "bytes": 11932,
+    "gzip_bytes": 3756,
+    "sha256": "6aed4d4c21c49bc1c2ae733ce8ab2283a7961ed6a68c46752ae7468e40235090",
+    "gzip_limit_bytes": 30720,
+    "source_snapshot_sha256": "00f9a5a25dc0506e7df3f2bad58457c407474f0206e777f90b8912456c2f3954",
+    "build_hook_exit": 0,
+    "node_version": "v22.22.3",
+    "gzip_measurement": "Node22 gzipSync, matching unchanged build helper"
+  },
+  "source_snapshot_sha256": "00f9a5a25dc0506e7df3f2bad58457c407474f0206e777f90b8912456c2f3954",
+  "pending": [
+    "Actual foreign-origin UI under restrictive CSP and hostile CSS at 390/1440, including correction acceptance cases in completion appendix",
+    "Full all-unit/all-real-PG/full production build and immutable image source receipt",
+    "Coordinator acceptance/review of corrected source"
+  ],
+  "focused_tests": "Not rerun: no test changed and existing unit suite covers server policy rather than DOM. No installed jsdom/happy-dom/Playwright harness; brief permits explicit UI cases instead. Existing unchanged Origin/badge server mutations preserved, not rerun.",
+  "evidence_preparation_correction": "Initial metadata script stopped after creating immutable snapshot because Python default gzip level differs from build helper. Snapshot preserved; size remeasured with Node22 gzipSync at helper defaults, exit 0, 3756 bytes. Product build/typecheck had already passed; no source or tests changed for this correction.",
+  "completion_original_bytes": 8010,
+  "completion_original_sha256": "7ddfc87e2ec891e2447117a2850e8879b6656b7730e43a301def7bf5c622dad3",
+  "finished_at": "2026-10-02T23:15:31.897571+00:00",
+  "elapsed_wall_seconds": 374.385473,
+  "verdict": "corrected source handoff",
+  "history_verification": {
+    "exit_code": 0,
+    "unchanged_historical_files": 36,
+    "completion_original_prefix_preserved": true,
+    "coordinator_telemetry_unchanged": true
+  },
+  "changed_files_by_attempt": [
+    "apps/widget/src/index.ts",
+    "docs/features/widget/05_completion.md",
+    "tests/artifacts/widget/correction-1-checks.json",
+    "tests/artifacts/widget/correction-1-source-hashes.json",
+    "tests/artifacts/widget/correction-1-typecheck.txt",
+    "tests/artifacts/widget/correction-1-widget-build.txt"
+  ],
+  "generated_files_by_attempt": [
+    "apps/web/public/w.js"
+  ]
+}

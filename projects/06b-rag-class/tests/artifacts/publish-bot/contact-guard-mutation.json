@@ -1,0 +1,25 @@
+{
+  "started_at": "2026-10-02T21:48:13.190110+00:00",
+  "finished_at": "2026-10-02T21:48:17.841472+00:00",
+  "source": "apps/web/src/server/publish-handler.ts",
+  "fixed_test": "apps/web/tests/unit/publication-guard.test.ts",
+  "command": [
+    "./node_modules/.bin/vitest",
+    "run",
+    "--config",
+    "vitest.config.ts",
+    "apps/web/tests/unit/publication-guard.test.ts"
+  ],
+  "original_sha256": "864d4903514eccb8fa776c02c432c1925d668d7705cdd6b2d941fd7f238a89a3",
+  "mutant_sha256": "82c435b952ab1e48e91ad78962288a9d3a9fd989e9479e55685380e237cb899d",
+  "restored_sha256": "864d4903514eccb8fa776c02c432c1925d668d7705cdd6b2d941fd7f238a89a3",
+  "test_sha256_before": "d575a38f65a0aea7b10bf9485f2824c7da1fc93e2113e636262b5f9d5d5419c0",
+  "test_sha256_after": "d575a38f65a0aea7b10bf9485f2824c7da1fc93e2113e636262b5f9d5d5419c0",
+  "mutation": "Temporarily disable mandatory-contact branch: if (!contact) -> if (false && !contact).",
+  "red_exit": 1,
+  "restored_green_exit": 0,
+  "meaningful_red_assertion": "expected 200 to be 422",
+  "exact_restore": true,
+  "fixed_test_unchanged": true,
+  "repeated_reason": "Final source changed to use objectOnly JSON mode; bind the same fixed guard to final restored handler."
+}

@@ -1,0 +1,17 @@
+{
+  "status": "passed_composite",
+  "source_revision": "0c6fb48efacb7ae59ba970c0b8774083405c1ed2",
+  "initial_passed": 676,
+  "initial_failed": 7,
+  "root_cause": "Coordinator omitted canonical npm pretest; worker boot could not load workspace dist exports",
+  "repair": "npm run pretest then only failed boot suite",
+  "repaired_passed": 7,
+  "total_unique_passed": 683,
+  "typecheck_exit": 0,
+  "full_monolithic_green": false,
+  "evidence": [
+    "offline-full-unit.txt",
+    "offline-boot.txt"
+  ],
+  "review_V1": "Closed by focused repaired-runtime rerun; preserve initial failure. Do not repeat unchanged 676 passing tests."
+}

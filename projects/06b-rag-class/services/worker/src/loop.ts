@@ -6,6 +6,7 @@
 import { JOB_RENEW_EVERY_MS, type Pool } from '@n6b/db';
 import { acquireLease, checkpointLease, finishJob, type JobOutcome, type LeasedJob, reportProgress } from './lease.js';
 import { type JobContext, JobCeilingExceeded, JobLeaseLost, type JobRunner } from './runner.js';
+import { startRetention } from './retention.js';
 import { SWEEP_EVERY_MS, sweepStuckJobs, TEXT_CEILING } from './sweeper.js';
 
 export const IDLE_SLEEP_MS = 2_000;
@@ -76,6 +77,7 @@ export async function runOnce(deps: WorkerDeps): Promise<RunOnceResult> {
 }
 
 const sleep = (ms: number, signal: AbortSignal) => new Promise<void>((resolve) => {
+  if (signal.aborted) { resolve(); return; }
   const t = setTimeout(resolve, ms);
   signal.addEventListener('abort', () => { clearTimeout(t); resolve(); }, { once: true });
 });
@@ -84,6 +86,7 @@ const sleep = (ms: number, signal: AbortSignal) => new Promise<void>((resolve) =
 export function startWorker(deps: WorkerDeps): { stop: () => Promise<void> } {
   const log = deps.log ?? ((line: string) => console.log(line));
   const stopping = new AbortController();
+  const retention = startRetention(deps.pool, log);
   const sweep = () => sweepStuckJobs(deps.pool).then((ids) => { if (ids.length) log(`worker: уборщик закрыл ${ids.length}`); },
     (e: unknown) => log(`worker: уборщик не прошёл: ${(e as Error).name}`));
   const sweeper = setInterval(() => void sweep(), SWEEP_EVERY_MS);
@@ -95,7 +98,7 @@ export function startWorker(deps: WorkerDeps): { stop: () => Promise<void> } {
       if (idle) await sleep(IDLE_SLEEP_MS, stopping.signal);
     }
   })();
-  return { stop: async () => { stopping.abort(); clearInterval(sweeper); await done; } };
+  return { stop: async () => { stopping.abort(); clearInterval(sweeper); await Promise.all([done, retention.stop()]); } };
 }
 
 export type { LeasedJob };

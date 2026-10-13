@@ -12,7 +12,7 @@
     "docs/discovery/reuse-inventory.md"
   ],
   "notes": {
-    "state": "Выполнены5/16 фич: foundation, spend-ceilings, index-jobs, chunk-embed, crawl-site. Продолжение: pdf-source; остальные release gates сохраняются.",
+    "state": "Выполнены15/16 фич до source-management включительно. Следующий release-gate: реальная калибровка и разрешённый стенд.",
     "sc_coverage": "Все 59 SC-US-nnn-k из Specification распределены по фичам ровно по одному разу (проверено при генерации). SC-US-006-4 и SC-US-008-2 не покрыты REALISES в Pseudocode намеренно (ворота выпуска и браузерная проверка) — они в release-gate и widget.",
     "tier": "Поле tier — по таблице .claude/rules/complexity-router.md корня (T/S/M/L/XL); complexity — закрытый набор схемы /next. Оговорка правила: SPARC моложе недели с FR и алгоритмом опускает L до M; XL не опускается никогда (spend-ceilings — деньги, handover — граница владения). Фактический тир решает bash ../../scripts/complexity-router.sh по реальному диффу.",
     "reuse": "Поле reuse — строки docs/discovery/reuse-inventory.md (N<проект>#<строка> и путь). Код projects/06-rag-sales-chatbase НЕ используется (правило владельца №4).",
@@ -239,7 +239,7 @@
       "name": "PDF-источник: загрузка ≤10 МБ в Postgres, извлечение текста постранично",
       "description": "Приём PDF (сигнатура %PDF, > 10 МБ → 413), source_file.bytes bytea, Extract PDF через pdfjs-dist постранично, скан без текста → задача failed с причиной; ссылка «файл, стр. N».",
       "priority": "mvp",
-      "status": "next",
+      "status": "done",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -267,7 +267,9 @@
       "expected_files": [
         "apps/web/src/app/api/bots/[id]/sources/pdf/route.ts",
         "services/worker/src/pdf/extract.ts"
-      ]
+      ],
+      "acceptance_revision": "795508ad15f8bbc0948dac4219c6d3dc0d4d1332",
+      "acceptance_evidence": "docs/features/pdf-source/05_completion.md"
     },
     {
       "id": "rag-answer-sandbox",
@@ -275,7 +277,7 @@
       "name": "RAG-ответ со ссылкой и «не знаю + контакт» в песочнице",
       "description": "Answer question: валидация ≤500 → пределы ДО платного вызова → эмбеддинг вопроса → top-5 → порог MIN_SIMILARITY (ниже — «не знаю» без генерации) → gpt-4.1-mini JSON {answer, cited_ids, unknown} → cited_ids ⊆ выдачи → ссылки только из БД, URL из текста вырезаются; CTA в момент первого ответа со ссылкой (FR-GROWTH-001).",
       "priority": "mvp",
-      "status": "next",
+      "status": "done",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -310,7 +312,9 @@
         "packages/rag/src/prompt.ts",
         "packages/rag/src/citations.ts",
         "apps/web/src/app/api/bots/[id]/ask/route.ts"
-      ]
+      ],
+      "acceptance_revision": "715a3edfccd3e8db4d5f25692617392ed98e2052",
+      "acceptance_evidence": "docs/features/rag-answer-sandbox/05_completion.md"
     },
     {
       "id": "publish-bot",
@@ -318,7 +322,7 @@
       "name": "Публикация бота: контакт, разрешённые origin, код вставки",
       "description": "Publish bot: контакт e-mail / E.164 / https обязателен (иначе 422), нормализация origin, пустой список = закрыто, по умолчанию предлагается origin сайта-источника; выдача <script src=PUBLIC_BASE_URL/w.js data-bot async>.",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "done",
       "complexity": "medium",
       "tier": "M",
       "depends_on": [
@@ -346,7 +350,9 @@
       "expected_files": [
         "apps/web/src/app/api/bots/[id]/publish/route.ts",
         "apps/web/src/server/origin.ts"
-      ]
+      ],
+      "acceptance_revision": "094a13c7b1653ecac853f73a8d2e20c34ab16b93",
+      "acceptance_evidence": "docs/features/publish-bot/05_completion.md"
     },
     {
       "id": "widget",
@@ -354,7 +360,7 @@
       "name": "Виджет w.js на чужом сайте: CORS по списку, Shadow DOM, уведомление 152-ФЗ, бейдж",
       "description": "Бандл ≤30 KB gzip без инлайновых script/style (adoptedStyleSheets); Widget ask gate (Origin из списка, иначе 403 без CORS; OPTIONS 204; ключ посетителя); Widget config (privacy_notice до первого вопроса, badge_required решает сервер, plan_of fail-closed), самовосстановление бейджа; docs/embed-contract.md — проверка на ЧУЖОМ origin под ограничительным CSP и враждебным CSS.",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "done",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -399,7 +405,9 @@
         "apps/web/src/app/api/widget/config/route.ts",
         "apps/web/src/server/plan.ts",
         "docs/embed-contract.md"
-      ]
+      ],
+      "acceptance_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+      "acceptance_evidence": "docs/features/widget/05_completion.md"
     },
     {
       "id": "badge-referral",
@@ -407,7 +415,7 @@
       "name": "Намерение снять бейдж, клик бейджа, лендинг и атрибуция регистрации",
       "description": "Кнопка «убрать бейдж» пишет growth_event(badge_removal_intent) раз в сутки, бейдж не меняется; GET /r/b/{public_id} → badge_event(click) уникально за сутки → 302 /?ref&utm_source=badge; cookie n6b_ref 30 дней первым касанием; referred_by_bot_id при регистрации, самореферал внутри семьи студии не засчитывается.",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "done",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -438,7 +446,9 @@
         "apps/web/src/app/r/b/[publicId]/route.ts",
         "apps/web/src/app/page.tsx",
         "apps/web/src/server/referral.ts"
-      ]
+      ],
+      "acceptance_revision": "c3d8cfcc3b3f1c61cc0998b378ecf2a677a7daff",
+      "acceptance_evidence": "docs/features/badge-referral/05_completion.md"
     },
     {
       "id": "weekly-metric",
@@ -446,7 +456,7 @@
       "name": "Метрика недели: внешние виджеты (бот × хост) и панель оператора",
       "description": "widget_install: config_seen_at при загрузке конфига, first_question_at только после вопроса с того же origin; metric_host() одна для origin и страницы (снимает www.); excluded() — наш хост, localhost, IP, частные, превью-домены (закрытый список, OWN-06B-005); /admin/metrics только для таблицы operator; перепроверка страницы оператором через SSRF-фильтр.",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "done",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -476,7 +486,9 @@
         "apps/web/src/server/metric-host.ts",
         "apps/web/src/app/admin/metrics/page.tsx",
         "apps/web/src/server/widget-install.ts"
-      ]
+      ],
+      "acceptance_revision": "dbd68a6862e17bb1a01e7659d0d3686b8cd4cf05",
+      "acceptance_evidence": "docs/features/weekly-metric/05_completion.md"
     },
     {
       "id": "demo-page",
@@ -484,7 +496,7 @@
       "name": "Публичная демо-страница сохранённого бота /b/{slug}",
       "description": "GET /b/{slug} только при published AND demo_enabled (иначе 404), X-Robots-Tag noindex, no-store, frame-ancestors 'none' + X-Frame-Options DENY; POST /api/demo/{slug}/ask только application/json и Origin = наш origin, иначе 403 до квоты; те же пределы посетителя, widget_install не пишется.",
       "priority": "high",
-      "status": "blocked",
+      "status": "done",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -513,7 +525,9 @@
       "expected_files": [
         "apps/web/src/app/b/[slug]/page.tsx",
         "apps/web/src/app/api/demo/[slug]/ask/route.ts"
-      ]
+      ],
+      "acceptance_revision": "05d05ca9fe3edd911f4d953ad8848f34505b36d8",
+      "acceptance_evidence": "docs/features/demo-page/05_completion.md"
     },
     {
       "id": "studio-subaccounts",
@@ -521,7 +535,7 @@
       "name": "Подаккаунты клиентов студии",
       "description": "Studio sub-account: до 5 подаккаунтов на студию (FOR NO KEY UPDATE строки студии), один уровень (триггер), studio_access=true у подаккаунта явно, RLS видит дочерние только при studio_access.",
       "priority": "high",
-      "status": "next",
+      "status": "done",
       "complexity": "complex",
       "tier": "L",
       "depends_on": [
@@ -548,7 +562,10 @@
       "expected_files": [
         "apps/web/src/app/api/studio/clients/route.ts",
         "packages/db/migrations/004_studio.sql"
-      ]
+      ],
+      "referral_integration_obligation": "Reuse resolveReferralBot in trusted creation transaction; settle and test family membership ordering vs concurrent handover, see badge-referral/08_review.md",
+      "acceptance_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "acceptance_evidence": "docs/features/studio-subaccounts/05_completion.md"
     },
     {
       "id": "handover",
@@ -556,7 +573,7 @@
       "name": "Передача аккаунта клиенту студии",
       "description": "Handover to client: одноразовый токен (хэш), приём задаёт e-mail и пароль, занятый e-mail → 409 без расхода токена, keep_studio_access решает клиент; боты, public_id и код вставки не меняются. Смена границы владения и RLS — тир XL, остановка на плане.",
       "priority": "high",
-      "status": "blocked",
+      "status": "done",
       "complexity": "complex",
       "tier": "XL",
       "depends_on": [
@@ -584,7 +601,10 @@
       "expected_files": [
         "apps/web/src/app/api/studio/clients/[id]/handover/route.ts",
         "apps/web/src/app/handover/[token]/page.tsx"
-      ]
+      ],
+      "referral_integration_obligation": "Reuse resolveReferralBot in trusted creation transaction; settle and test family membership ordering vs concurrent handover, see badge-referral/08_review.md",
+      "acceptance_revision": "edf7d770f021831d115d347e1532cea102e1c098",
+      "acceptance_evidence": "docs/features/handover/05_completion.md"
     },
     {
       "id": "source-management",
@@ -592,7 +612,7 @@
       "name": "Управление источниками и сроки хранения",
       "description": "Удаление источника каскадом (при живой задаче 409), уборщик question_log 30 дней и quota_counter, счётчик «не знаю» за 7 дней на экране бота — только числа.",
       "priority": "high",
-      "status": "blocked",
+      "status": "done",
       "complexity": "medium",
       "tier": "M",
       "depends_on": [
@@ -620,7 +640,9 @@
       "expected_files": [
         "apps/web/src/app/api/sources/[id]/route.ts",
         "services/worker/src/retention.ts"
-      ]
+      ],
+      "acceptance_revision": "b3df79f3c748c426d7eac16717008ccd121eb10e",
+      "acceptance_evidence": "docs/features/source-management/05_completion.md"
     },
     {
       "id": "release-gate",
@@ -628,7 +650,7 @@
       "name": "Ворота выпуска: калибровка «не знаю», сквозной CJM и виджет на чужом origin на стенде",
       "description": "Калибровка 30 вопросов на живой gpt-4.1-mini (10/10 «не знаю», ≥17/20 со ссылкой) → docs/calibration-report.md; scripts/check-cjm.sh по выданному адресу https://n6b.194.85.249.105.sslip.io; квитанции контрактов embed / long-job / model-cost; аккаунты проверок is_test. Подъём стенда — остановка у владельца.",
       "priority": "mvp",
-      "status": "blocked",
+      "status": "next",
       "complexity": "medium",
       "tier": "M",
       "depends_on": [
@@ -662,5 +684,5 @@
       ]
     }
   ],
-  "last_completed": "chunk-embed"
+  "last_completed": "source-management"
 }

@@ -8,6 +8,7 @@
 import { enqueueSiteSource, normalizeSiteUrl, type Pool, readJob, retryJob, withTenant } from '@n6b/db';
 import { type SiteResolver, UnsafeSite, validateSite } from '@n6b/rag';
 import { readJson, readSessionCookie } from './auth-handler';
+import { createPdfSourceHandler } from './pdf-handler';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -47,7 +48,7 @@ function guarded(deps: JobsDeps, what: string, needOrigin: boolean,
 
 /** POST /api/bots/{id}/sources {url} → 202 {job_id}; повтор, пока задача жива, — тот же job_id (SC-US-004-4). */
 export function createSourceHandler(deps: JobsDeps): Handler {
-  return guarded(deps, 'источник', true, async (accountId, request, botId) => {
+  const site = guarded(deps, 'источник', true, async (accountId, request, botId) => {
     const body = await readJson(request);
     if (body === 'too-large') return fail(413, 'body_too_large', 'Тело запроса слишком велико');
     const url = normalizeSiteUrl(body !== 'invalid' && typeof body === 'object' && body !== null
@@ -62,6 +63,9 @@ export function createSourceHandler(deps: JobsDeps): Handler {
     if (!job) return NOT_FOUND();
     return json(202, { data: { job_id: job.jobId } });
   });
+  const pdf = createPdfSourceHandler(deps);
+  return (request, id) => /^multipart\/form-data(?:\s*;|$)/i.test(request.headers.get('content-type') ?? '')
+    ? pdf(request, id) : site(request, id);
 }
 
 /** GET /api/jobs/{job_id} → три состояния (running | succeeded | failed) и прогресс. Чужая задача → 404. */

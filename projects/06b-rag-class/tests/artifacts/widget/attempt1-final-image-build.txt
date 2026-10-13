@@ -1,0 +1,60 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.44kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22.22-bookworm-slim
+#2 DONE 0.6s
+
+#3 [ 1/11] FROM docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752
+#3 resolve docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752 0.0s done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 1.54MB 0.1s
+#4 transferring context: 6.21MB 0.2s done
+#4 DONE 0.2s
+
+#5 [ 3/11] RUN chown node:node /app
+#5 CACHED
+
+#6 [ 6/11] COPY --chown=node:node apps/widget/package.json ./apps/widget/
+#6 CACHED
+
+#7 [ 9/11] COPY --chown=node:node packages/rag/package.json ./packages/rag/
+#7 CACHED
+
+#8 [ 2/11] WORKDIR /app
+#8 CACHED
+
+#9 [ 5/11] COPY --chown=node:node apps/web/package.json ./apps/web/
+#9 CACHED
+
+#10 [ 7/11] COPY --chown=node:node services/worker/package.json ./services/worker/
+#10 CACHED
+
+#11 [ 4/11] COPY --chown=node:node package.json package-lock.json ./
+#11 CACHED
+
+#12 [ 8/11] COPY --chown=node:node packages/db/package.json ./packages/db/
+#12 CACHED
+
+#13 [10/11] RUN npm ci
+#13 CACHED
+
+#14 [11/11] COPY --chown=node:node . .
+#14 DONE 1.0s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 0.6s done
+#15 exporting manifest sha256:993f3ba67c4f0d47968c5f18cf315de9711262eb6e79c7ea06c981f69b1f5d07 0.0s done
+#15 exporting config sha256:dcc937c7c16cf884a1a7159cc6adc99096fa37206e57774f224a54c518b4365c 0.0s done
+#15 exporting attestation manifest sha256:95f2dc2bc7411e9f80dce8c3c16ba814989bcb70c9337abf114e79ba16be3220
+#15 exporting attestation manifest sha256:95f2dc2bc7411e9f80dce8c3c16ba814989bcb70c9337abf114e79ba16be3220 0.0s done
+#15 exporting manifest list sha256:fdc18c57ba25a54004a53b012867785f8884d01dc680c67fbf229e3b14de1065 0.0s done
+#15 naming to docker.io/library/n6b-f09-widget-runner:final done
+#15 unpacking to docker.io/library/n6b-f09-widget-runner:final
+#15 unpacking to docker.io/library/n6b-f09-widget-runner:final 0.2s done
+#15 DONE 1.0s

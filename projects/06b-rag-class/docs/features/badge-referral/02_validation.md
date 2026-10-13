@@ -1,0 +1,3 @@
+# Валидация F10
+
+Canonical FR/алгоритмы/границы сопоставлены с REF-01..07. Схема уже содержит referred_by_bot_id, click partial unique и growth_event. Атомарность intent требует account lock; PostgreSQL ON CONFLICT click должен учитывать partial predicate. First-touch cookie нельзя писать во время Server Component render: узкий middleware на / допустим. Семейный resolver принимается как DB-контракт сейчас, reachable studio create wiring остаётся обязательством F13; SC-US-011-2 UI не заявляется пройденным. Нового тарифа/платежа нет. Implementation разрешена существующим поручением. Независимое source review и все runtime ворота ещё pending.

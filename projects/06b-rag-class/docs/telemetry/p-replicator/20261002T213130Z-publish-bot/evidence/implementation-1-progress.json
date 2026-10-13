@@ -1,0 +1,52 @@
+{
+  "run_id": "20261002T213130Z-publish-bot",
+  "work_unit_id": "publish-bot-implementation",
+  "attempt_id": "implementation-1",
+  "source_revision": "7b82dffc9d84a5e64b16d59a103a65e678a93bbb",
+  "launch_sha256": "e15ef0e239848fbe61fd75cdfe16043d7c538d79e1d593b6d4bccf2971f905ed",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "missing_data": [
+    "Native model/effort and usage not exposed to this executor; coordinator reconciles."
+  ],
+  "route": {
+    "mechanical_tier": "M",
+    "mechanical_exit": 0,
+    "substantive_tier": "M",
+    "reason": "Authenticated publication contract, origin allowlist, atomic shared bot update. Existing schema; no external calls.",
+    "approved_plan": "docs/features/publish-bot/01_plan.md"
+  },
+  "e2e_preflight": {
+    "status": "not_applicable",
+    "reason": "Local implementation only; actual Docker/UI gate is coordinator-owned."
+  },
+  "stage": "BOUNDED_HANDOFF",
+  "updated_at": "2026-10-02T21:50:38.663234+00:00",
+  "implementation_complete": true,
+  "checks": {
+    "typecheck_exit": 0,
+    "focused_exit": 0,
+    "focused_tests_passed": 124,
+    "focused_files_passed": 7,
+    "mutation_red_exit": 1,
+    "mutation_restored_green_exit": 0,
+    "diff_check_exit": 0,
+    "snapshot_verification_exit": 0
+  },
+  "necessary_extra_seam": "apps/web/src/server/auth-handler.ts: optional objectOnly readJson mode prevents JSON string too-large sentinel collision and requires exact JSON MIME; existing callers retain default behavior.",
+  "pending": [
+    "full unit suite",
+    "real PostgreSQL integration",
+    "full build",
+    "actual Docker/UI at 390 and 1440",
+    "independent Astra review"
+  ],
+  "status": "completed",
+  "finished_at": "2026-10-02T21:50:38.663234+00:00",
+  "duration_seconds": 896.812429,
+  "source_snapshot_sha256": "13a3a5f48e5725ec091c87eed22aa30b16bce18f940c26224a90103335993a21",
+  "feature_accepted": false
+}

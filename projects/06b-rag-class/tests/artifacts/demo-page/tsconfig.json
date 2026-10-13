@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": "/app",
+    "paths": {
+      "@n6b/db": [
+        "packages/db/src/index.ts"
+      ],
+      "@n6b/rag": [
+        "packages/rag/src/index.ts"
+      ],
+      "@/*": [
+        "apps/web/src/*"
+      ]
+    }
+  }
+}

@@ -52,6 +52,7 @@ describe('Boot config check web (FR-n6b-16, NFR-n6b-3)', () => {
     expect(config.LIMIT_AUTH_ADDR_HOUR).toBe(10);
     expect(config.PUBLIC_BASE_URL).toBe('https://n6b.example.test');
     expect(config.all.MIN_SIMILARITY).toBe(0.4);
+    expect(config.MIN_SIMILARITY).toBe(0.4);
   });
 
   it.each(PSEUDOCODE_13)('SC-US-016-2: %s отсутствует → отказ с именем и последствием', (name) => {

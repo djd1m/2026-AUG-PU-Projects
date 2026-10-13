@@ -1,0 +1,69 @@
+BASELINE exit=0
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-source-management/projects/06b-rag-class
+
+ ✓ apps/web/tests/unit/source-management-handler.test.ts > SRC-01/02/04 tenant source routes > rejects cross/missing Origin before session/effects; GET accepts missing Origin 12ms
+ ↓ apps/web/tests/unit/source-management-handler.test.ts > SRC-01/02/04 tenant source routes > all actions require valid session/id before DB effects
+ ↓ apps/web/tests/unit/source-management-handler.test.ts > SRC-01/02/04 tenant source routes > 204 has no body; conflict is exact; missing/foreign return 404
+ ↓ apps/web/tests/unit/source-management-handler.test.ts > SRC-01/02/04 tenant source routes > 202 returns only job handle before work; stats returns exactly two numbers
+ ↓ apps/web/tests/unit/source-management-handler.test.ts > SRC-01/02/04 tenant source routes > database error returns safe 503 and logs class only
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 4 skipped (5)
+   Start at  05:55:01
+   Duration  1.33s (transform 500ms, setup 0ms, collect 746ms, tests 15ms, environment 0ms, prepare 125ms)
+
+RED exit=1
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-source-management/projects/06b-rag-class
+
+ × apps/web/tests/unit/source-management-handler.test.ts > SRC-01/02/04 tenant source routes > rejects cross/missing Origin before session/effects; GET accepts missing Origin 20ms
+   → expected 404 to be 403 // Object.is equality
+ ↓ apps/web/tests/unit/source-management-handler.test.ts > SRC-01/02/04 tenant source routes > all actions require valid session/id before DB effects
+ ↓ apps/web/tests/unit/source-management-handler.test.ts > SRC-01/02/04 tenant source routes > 204 has no body; conflict is exact; missing/foreign return 404
+ ↓ apps/web/tests/unit/source-management-handler.test.ts > SRC-01/02/04 tenant source routes > 202 returns only job handle before work; stats returns exactly two numbers
+ ↓ apps/web/tests/unit/source-management-handler.test.ts > SRC-01/02/04 tenant source routes > database error returns safe 503 and logs class only
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 skipped (5)
+   Start at  05:55:03
+   Duration  1.49s (transform 564ms, setup 0ms, collect 771ms, tests 22ms, environment 0ms, prepare 147ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/tests/unit/source-management-handler.test.ts > SRC-01/02/04 tenant source routes > rejects cross/missing Origin before session/effects; GET accepts missing Origin
+AssertionError: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ apps/web/tests/unit/source-management-handler.test.ts:19:103
+     17|   it('rejects cross/missing Origin before session/effects; GET accepts…
+     18|     for (const action of ['delete', 'recrawl'] as const) for (const or…
+     19|       expect((await createSourceManagementHandler(action, deps)(reques…
+       |                                                                                                       ^
+     20|     }
+     21|     expect(auth).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+RESTORED SHA256=2a37b7b54482f6a8acd205836827fa6f13bea6aea53f1e827c928c748122e79a
+GREEN exit=0
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-source-management/projects/06b-rag-class
+
+ ✓ apps/web/tests/unit/source-management-handler.test.ts > SRC-01/02/04 tenant source routes > rejects cross/missing Origin before session/effects; GET accepts missing Origin 26ms
+ ↓ apps/web/tests/unit/source-management-handler.test.ts > SRC-01/02/04 tenant source routes > all actions require valid session/id before DB effects
+ ↓ apps/web/tests/unit/source-management-handler.test.ts > SRC-01/02/04 tenant source routes > 204 has no body; conflict is exact; missing/foreign return 404
+ ↓ apps/web/tests/unit/source-management-handler.test.ts > SRC-01/02/04 tenant source routes > 202 returns only job handle before work; stats returns exactly two numbers
+ ↓ apps/web/tests/unit/source-management-handler.test.ts > SRC-01/02/04 tenant source routes > database error returns safe 503 and logs class only
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 4 skipped (5)
+   Start at  05:55:06
+   Duration  1.92s (transform 776ms, setup 0ms, collect 1.12s, tests 29ms, environment 0ms, prepare 220ms)
+

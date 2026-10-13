@@ -1,0 +1,39 @@
+
+ RUN  v3.2.7 /app
+
+ ❯ apps/web/tests/int/studio-clients.int.test.ts (6 tests | 1 failed | 5 skipped) 241ms
+   × STU-01/02 real PostgreSQL studio creation > SC-US-013-1/2: eight concurrent creates produce exactly five clients with explicit safe defaults 237ms
+     → expected [ …(8) ] to have a length of 5 but got 8
+   ↓ STU-01/02 real PostgreSQL studio creation > SC-US-013-3: owner and child-studio sessions cannot create children or self-upgrade via body
+   ↓ STU-01/02 real PostgreSQL studio creation > STU-02: eligibility kind is rechecked after an actual lock wait
+   ↓ STU-01/02 real PostgreSQL studio creation > STU-02: eligibility parent is rechecked after an actual lock wait
+   ↓ STU-01/02 real PostgreSQL studio creation > STU-02: insertion failure rolls back; another studio is independent of a locked studio
+   ↓ STU-06 SC-US-011-2 actual child creation referral wiring > self/family sources excluded even without access; external attributed; body spoof and unknown ignored
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 skipped (6)
+   Start at  06:48:24
+   Duration  2.11s (transform 761ms, setup 0ms, collect 870ms, tests 241ms, environment 0ms, prepare 200ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/tests/int/studio-clients.int.test.ts > STU-01/02 real PostgreSQL studio creation > SC-US-013-1/2: eight concurrent creates produce exactly five clients with explicit safe defaults
+AssertionError: expected [ …(8) ] to have a length of 5 but got 8
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 5[39m
+[31m+ 8[39m
+
+ ❯ apps/web/tests/int/studio-clients.int.test.ts:24:69
+     22|     const responses = await Promise.all(Array.from({ length: 8 }, () =…
+     23|       { kind: 'studio', plan: 'studio', parent_account_id: 'spoof', st…
+     24|     expect(responses.filter((response) => response.status === 201)).to…
+       |                                                                     ^
+     25|     const caps = responses.filter((response) => response.status === 40…
+     26|     expect(caps).toHaveLength(3);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

@@ -1,0 +1,18 @@
+{
+  "run_id": "20261002T202425Z-rag-answer-sandbox",
+  "work_unit_id": "rag-answer-sandbox-ui",
+  "attempt_id": "ui-2",
+  "source_revision": "715a3edfccd3e8db4d5f25692617392ed98e2052",
+  "build_revision": "sha256:16141faf089c07dfd0603c0a4de24937060c9a8a3b9f9b030035369635d51818",
+  "launched_at": "2026-10-02T21:24:38.909458+00:00",
+  "budget_seconds": 300,
+  "trace": {
+    "root": "project",
+    "path": "docs/telemetry/p-replicator/20261002T202425Z-rag-answer-sandbox/evidence/ui-2-receipt.md"
+  },
+  "trace_prelaunch": {
+    "exists": false,
+    "sha256": null
+  },
+  "test_binding": "Create two temporary accounts and seeded site/PDF/unknown/error bots, forward only their ask endpoints to real handler with test authentication/provider, verify citations/refusal/recovery/CTA/pending/layout"
+}

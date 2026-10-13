@@ -10,11 +10,12 @@ import { z } from 'zod';
 import { accountKindOf, moscowHour, type QuotaDecision, type QuotaKey } from '@n6b/db';
 import { type AuthService, SESSION_TTL_SECONDS } from './auth';
 import { addrHash, ClientAddressUnavailable, clientIp } from './ip';
+import { readReferralCookie } from '../lib/referral-cookie';
 
 export const SESSION_COOKIE = 'n6b_session';
 const MAX_BODY_BYTES = 4096;
 
-const credentials = z.object({
+export const credentials = z.object({
   email: z.string().trim().toLowerCase().email().max(254),
   password: z.string().min(10).refine((v) => Buffer.byteLength(v, 'utf8') <= 72, 'пароль длиннее 72 байт'),
   kind: z.unknown().optional(),
@@ -56,8 +57,10 @@ export function authQuotaKey(visitorSecret: string, ip: string, limit: number, a
   return { scope: `auth:addr:${addrHash(visitorSecret, ip)}:${moscowHour(at)}`, limit };
 }
 
-export async function readJson(request: Request): Promise<unknown | 'too-large' | 'invalid'> {
-  if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) return 'invalid';
+export async function readJson(request: Request, options: { objectOnly?: boolean } = {}): Promise<unknown | 'too-large' | 'invalid'> {
+  const contentType = request.headers.get('content-type')?.toLowerCase();
+  if (options.objectOnly ? contentType?.split(';')[0]?.trim() !== 'application/json'
+    : !contentType?.startsWith('application/json')) return 'invalid';
   const reader = request.body?.getReader();
   if (!reader) return 'invalid';
   const chunks: Uint8Array[] = [];
@@ -69,7 +72,12 @@ export async function readJson(request: Request): Promise<unknown | 'too-large' 
     if (size > MAX_BODY_BYTES) { await reader.cancel(); return 'too-large'; }
     chunks.push(value);
   }
-  try { return JSON.parse(Buffer.concat(chunks).toString('utf8')) as unknown; } catch { return 'invalid'; }
+  try {
+    const parsed: unknown = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+    // Object-only callers cannot confuse a JSON string "too-large" with the byte-limit sentinel.
+    if (options.objectOnly && (!parsed || typeof parsed !== 'object' || Array.isArray(parsed))) return 'invalid';
+    return parsed;
+  } catch { return 'invalid'; }
 }
 
 export function createAuthHandler(action: 'register' | 'login' | 'logout', deps: AuthHandlerDeps) {
@@ -99,7 +107,7 @@ export function createAuthHandler(action: 'register' | 'login' | 'logout', deps:
       const { email, password, kind } = parsed.data;
 
       if (action === 'register') {
-        const result = await deps.auth.register(email, password, accountKindOf(kind));
+        const result = await deps.auth.register(email, password, accountKindOf(kind), readReferralCookie(request));
         if (!result.ok) return fail(409, 'email_taken', 'Аккаунт с этим e-mail уже есть — войдите');
         return json(201, { data: { ok: true } }, sessionCookie(result.token, deps.production));
       }

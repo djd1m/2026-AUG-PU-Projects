@@ -1,0 +1,32 @@
+{
+  "captured_at": "2026-10-03T02:54:44.323559+00:00",
+  "source_files": 25,
+  "changed_source_paths": [
+    "apps/web/tests/int/demo.int.test.ts"
+  ],
+  "other_24_unchanged": true,
+  "previous_map_preserved": true,
+  "canonical_digest_valid": true,
+  "whitespace_check": {
+    "command": "git diff --no-index --check correction-2-before-test.txt apps/web/tests/int/demo.int.test.ts",
+    "exit_code": 1,
+    "diagnostics": "",
+    "result": "passed: no whitespace errors; no-index exit 1 indicates differing files"
+  },
+  "workspace_scope": {
+    "result": "passed",
+    "changed_existing": [
+      "apps/web/tests/int/demo.int.test.ts",
+      "tests/artifacts/demo-page/final-source-hashes.json"
+    ],
+    "new_paths": [
+      "docs/features/demo-page/11_pg_correction.md",
+      "tests/artifacts/demo-page/correction-2-baseline.json",
+      "tests/artifacts/demo-page/correction-2-before-test.txt",
+      "tests/artifacts/demo-page/correction-2-diff-check.txt",
+      "tests/artifacts/demo-page/correction-2-fixture.diff",
+      "tests/artifacts/demo-page/correction-2-source-hashes.json"
+    ]
+  },
+  "runtime": "pending coordinator real-PG 7 tests and build; no new unit/PG/E2E pass claimed"
+}

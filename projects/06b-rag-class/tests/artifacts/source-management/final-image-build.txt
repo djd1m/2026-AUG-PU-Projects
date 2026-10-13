@@ -1,0 +1,59 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.44kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22.22-bookworm-slim
+#2 DONE 2.4s
+
+#3 [ 1/11] FROM docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752
+#3 resolve docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752 0.0s done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context:
+#4 transferring context: 11.24MB 0.5s done
+#4 DONE 0.9s
+
+#5 [ 7/11] COPY --chown=node:node services/worker/package.json ./services/worker/
+#5 CACHED
+
+#6 [ 5/11] COPY --chown=node:node apps/web/package.json ./apps/web/
+#6 CACHED
+
+#7 [ 8/11] COPY --chown=node:node packages/db/package.json ./packages/db/
+#7 CACHED
+
+#8 [ 9/11] COPY --chown=node:node packages/rag/package.json ./packages/rag/
+#8 CACHED
+
+#9 [ 3/11] RUN chown node:node /app
+#9 CACHED
+
+#10 [ 6/11] COPY --chown=node:node apps/widget/package.json ./apps/widget/
+#10 CACHED
+
+#11 [ 2/11] WORKDIR /app
+#11 CACHED
+
+#12 [ 4/11] COPY --chown=node:node package.json package-lock.json ./
+#12 CACHED
+
+#13 [10/11] RUN npm ci
+#13 CACHED
+
+#14 [11/11] COPY --chown=node:node . .
+#14 DONE 0.6s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 1.0s done
+#15 exporting manifest sha256:f6afbb44899796564a1792aea5f1a77d2f29b8b0d1b33eb1c9a22bb7fbfb27c4 0.0s done
+#15 exporting config sha256:5ddaac2c3468d9432b2d0500935f54fd3dff36e53b964855efa95418bd6d2e96 0.0s done
+#15 exporting attestation manifest sha256:c1fdae9f50038e0b61000b24cbcc797059820581a7b64e727568c5e2bcedf047 0.0s done
+#15 exporting manifest list sha256:e9dbf42a06c59cc85cbff9c3d58375f2722a7750310a8cee35c632a125fc322c 0.0s done
+#15 naming to docker.io/library/n6b-f15-source-management-runner:final done
+#15 unpacking to docker.io/library/n6b-f15-source-management-runner:final
+#15 unpacking to docker.io/library/n6b-f15-source-management-runner:final 0.5s done
+#15 DONE 1.7s

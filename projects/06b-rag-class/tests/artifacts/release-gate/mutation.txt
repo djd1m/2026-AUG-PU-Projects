@@ -1,0 +1,83 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-release-gate/projects/06b-rag-class
+
+ ❯ packages/rag/tests/unit/release-gate.test.ts (36 tests | 1 failed | 35 skipped) 41ms
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 frozen HTML contains every exact corpus paragraph; evidence is present
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 rejects dataset defect short
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 rejects dataset defect duplicate-id
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 rejects dataset defect duplicate-text
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 rejects dataset defect wrong-split
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 rejects dataset defect missing-evidence
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 rejects dataset defect bad-term
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 rejects dataset defect missing-detail
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 rejects dataset defect bad-url
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 exactly 17/20 known with all high-sim unknown passes; 16/20 fails
+   × F16 SC-US-006-4 frozen data and honest scorer > REL-03 one low-sim unknown cannot pass even with a refusal 37ms
+     → expected 10 to be 9 // Object.is equality
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 unknown outcome below_threshold cannot replace model_unknown
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 unknown outcome invalid_citation cannot replace model_unknown
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 unknown outcome answered cannot replace model_unknown
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 legal source with wrong facts fails; number prefixes are not values
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 rejects citation defect wrong-source
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 rejects citation defect unretrieved-id
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 rejects citation defect low-sim-cite
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 rejects citation defect empty-cite
+   ↓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 partial/duplicated observations and NaN similarity never pass
+   ↓ F16 REL-02 budget and paid boundary > missing live gate and fake mode refuse before runtime
+   ↓ F16 REL-02 budget and paid boundary > capture delegates the existing attempt once and does not embed twice
+   ↓ F16 REL-02 budget and paid boundary > REL-02 30 attempts sequential, no overlapping asks
+   ↓ F16 REL-02 budget and paid boundary > REL-02 provider error stops immediately and preserves result with no retries
+   ↓ F16 REL-02 budget and paid boundary > REL-02 thrown secret-bearing errors are not exposed and not retried
+   ↓ F16 REL-02 budget and paid boundary > REL-02 deadline and reused attempt refuse before another ask
+   ↓ F16 REL-02 budget and paid boundary > REL-02 oversized corpus cannot reserve a paid batch
+   ↓ F16 REL-04 CJM offline protocol boundary > missing prerequisites exit2 without requests
+   ↓ F16 REL-04 CJM offline protocol boundary > real protocol order marks test before bot, sends no visitor cookie, follows ref
+   ↓ F16 REL-04 CJM offline protocol boundary > REL-04 protocol defect wrong202 fails without retry
+   ↓ F16 REL-04 CJM offline protocol boundary > REL-04 protocol defect unknown-job fails without retry
+   ↓ F16 REL-04 CJM offline protocol boundary > REL-04 protocol defect failed-job fails without retry
+   ↓ F16 REL-04 CJM offline protocol boundary > REL-04 protocol defect uncited fails without retry
+   ↓ F16 REL-04 CJM offline protocol boundary > REL-04 protocol defect bad-cors fails without retry
+   ↓ F16 REL-04 CJM offline protocol boundary > REL-04 protocol defect wrong-ref fails without retry
+   ↓ F16 REL-04 CJM offline protocol boundary > REL-04 owner marking failure cannot reach queued indexing/paid answer
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  packages/rag/tests/unit/release-gate.test.ts > F16 SC-US-006-4 frozen data and honest scorer > REL-03 one low-sim unknown cannot pass even with a refusal
+AssertionError: expected 10 to be 9 // Object.is equality
+
+- Expected
++ Received
+
+- 9
++ 10
+
+ ❯ packages/rag/tests/unit/release-gate.test.ts:54:36
+     52|     const samples = good(); samples[20]!.hits[0] = { ...samples[20]!.h…
+     53|     const result = scoreRun(questions, corpus, samples, 0.7);
+     54|     expect(result.unknown_correct).toBe(9); expect(result.passed).toBe…
+       |                                    ^
+     55|   });
+     56|   it.each(['below_threshold', 'invalid_citation', 'answered'])('REL-03…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 35 skipped (36)
+   Start at  07:00:57
+   Duration  1.86s (transform 711ms, setup 0ms, collect 1.19s, tests 41ms, environment 0ms, prepare 143ms)
+
+
+MUTATION RED exit=1 (expected 1)
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-release-gate/projects/06b-rag-class
+
+ ✓ packages/rag/tests/unit/release-gate.test.ts (36 tests | 35 skipped) 15ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 35 skipped (36)
+   Start at  07:00:59
+   Duration  1.92s (transform 750ms, setup 0ms, collect 1.34s, tests 15ms, environment 0ms, prepare 159ms)
+
+
+RESTORED GREEN exit=0 (expected 0); exact bytes restored=True

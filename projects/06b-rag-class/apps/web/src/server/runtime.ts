@@ -1,3 +1,4 @@
+import { createSourceManagementHandler } from './source-management-handler';
 // Синглтоны процесса web: конфигурация, два пула, сервис входа. Создаются лениво при первом запросе (сборка Next.js
 // импортирует модули маршрутов без окружения); отказ конфигурации при старте делает instrumentation.ts.
 // Лимитер и пулы — синглтоны: экземпляр на запрос обходил бы защиту (coding-style.md → Known Gotchas).
@@ -8,13 +9,18 @@
 // По POOL_MAX соединений на пул: web держит до 2×10, воркер — 10 (Architecture → Scalability).
 
 import bcrypt from 'bcrypt';
+import { createIssueHandoverHandler, createAcceptHandoverHandler } from './handover-handler';
 import { createPool, type Pool, reserveQuotaNow } from '@n6b/db';
+import { createAskHandler } from './ask-handler';
 import { AuthService, type PasswordHasher } from './auth';
 import { createAuthHandler } from './auth-handler';
 import { PgAuthStore } from './auth-store';
 import { loadWebConfig, type WebConfig } from './config';
 import { createJobHandler, createRetryHandler, createSourceHandler } from './jobs-handler';
 import { createPaidRuntime, type PaidRuntime } from './paid';
+import { createPublishHandler } from './publish-handler';
+import { createWidgetHandler } from './widget-handler';
+import { createDemoHandler } from './demo-handler';
 
 const hasher: PasswordHasher = {
   hash: (password, cost) => bcrypt.hash(password, cost),
@@ -67,5 +73,53 @@ export function authRoute(action: 'register' | 'login' | 'logout') {
       production: config.production,
       reserve: (keys) => reserveQuotaNow(servicePool, keys),
     })(request);
+  };
+}
+
+export function askRoute(request: Request, context: { params: Promise<{ id: string }> }): Promise<Response> {
+  const { config, tenantPool, servicePool, auth, paid } = getRuntime();
+  return context.params.then(({ id }) => createAskHandler({ tenantPool, servicePool, gateway: paid.gateway,
+    authenticate: (token) => auth.authenticate(token), publicBaseUrl: config.PUBLIC_BASE_URL,
+    minSimilarity: config.MIN_SIMILARITY })(request, id));
+}
+
+export async function publishRoute(request: Request, context: { params: Promise<{ id: string }> }): Promise<Response> {
+  const { config, tenantPool, auth } = getRuntime();
+  return createPublishHandler({ tenantPool, authenticate: (token) => auth.authenticate(token),
+    publicBaseUrl: config.PUBLIC_BASE_URL })(request, (await context.params).id);
+}
+
+export function widgetRoute(kind: 'config' | 'ask' | 'event') {
+  return (request: Request): Promise<Response> => {
+    const { config, servicePool, paid } = getRuntime();
+    return createWidgetHandler(kind, { servicePool, gateway: paid.gateway, publicBaseUrl: config.PUBLIC_BASE_URL,
+      visitorSecret: config.VISITOR_SECRET, minSimilarity: config.MIN_SIMILARITY })(request);
+  };
+}
+
+export async function demoRoute(request: Request, context: { params: Promise<{ slug: string }> }): Promise<Response> {
+  const { config, servicePool, paid } = getRuntime();
+  return createDemoHandler({ servicePool, gateway: paid.gateway, publicBaseUrl: config.PUBLIC_BASE_URL,
+    visitorSecret: config.VISITOR_SECRET, minSimilarity: config.MIN_SIMILARITY })(request, (await context.params).slug);
+}
+
+export function handoverRoute(kind: 'issue' | 'accept') {
+  return async (request: Request, context: { params: Promise<{ id?: string; token?: string }> }): Promise<Response> => {
+    const { config, servicePool, auth } = getRuntime();
+    const params = await context.params;
+    const common = { servicePool, publicBaseUrl: config.PUBLIC_BASE_URL };
+    if (kind === 'issue') return createIssueHandoverHandler({ ...common,
+      authenticate: (token) => auth.authenticate(token) })(request, params.id ?? '');
+    return createAcceptHandoverHandler({ ...common, auth, hasher, visitorSecret: config.VISITOR_SECRET,
+      authLimitPerHour: config.LIMIT_AUTH_ADDR_HOUR, production: config.production,
+      reserve: (keys) => reserveQuotaNow(servicePool, keys) })(request, params.token ?? '');
+  };
+}
+
+export function sourceManagementRoute(kind: 'delete' | 'recrawl' | 'stats') {
+  return async (request: Request, context: { params: Promise<{ id: string }> }): Promise<Response> => {
+    const { config, tenantPool, auth } = getRuntime();
+    return createSourceManagementHandler(kind, { tenantPool, publicBaseUrl: config.PUBLIC_BASE_URL,
+      authenticate: (token) => auth.authenticate(token) })(request, (await context.params).id);
   };
 }

@@ -1,0 +1,61 @@
+{
+  "started_at": "2026-10-03T02:07:40.191Z",
+  "source_revision": "dbd68a6862e17bb1a01e7659d0d3686b8cd4cf05",
+  "source_snapshot_sha256": "64b0dfee0301396933be83924350d54ca9287f4a5e682f42c1a226198b066800",
+  "image": "sha256:7779a9cbce2394b93ddf162714277ec3311fb3e55fd85ae1ab9129232e03c015",
+  "binding": "Production web/auth/operator checks/SQL metrics/Next after and safeHTTP. Positive verified counts are seeded isolated DB fixtures, not live public-page acceptance. Pending source-verify.test resolves to private Docker IP and must remain unverified; no SSRF bypass or response mocks.",
+  "checks": [
+    {
+      "width": 1440,
+      "anonymous404": true,
+      "ordinary404": true,
+      "operator200": true,
+      "no_store": true,
+      "counts": {
+        "Перепроверенные внешние виджеты (цель 15)": "2 / 15",
+        "Без перепроверки (конфиг + вопрос)": "3",
+        "Показы бейджа": "10",
+        "Клики бейджа": "3",
+        "Регистрации с ref": "2",
+        "Конверсия клика в регистрацию": "66.67%"
+      },
+      "foreign403": true,
+      "accepted202": true,
+      "pending_fixture_count": 1,
+      "refresh": true,
+      "layout": true,
+      "javascript_errors": 0
+    },
+    {
+      "width": 390,
+      "anonymous404": true,
+      "ordinary404": true,
+      "operator200": true,
+      "no_store": true,
+      "counts": {
+        "Перепроверенные внешние виджеты (цель 15)": "2 / 15",
+        "Без перепроверки (конфиг + вопрос)": "3",
+        "Показы бейджа": "10",
+        "Клики бейджа": "3",
+        "Регистрации с ref": "2",
+        "Конверсия клика в регистрацию": "66.67%"
+      },
+      "foreign403": true,
+      "accepted202": true,
+      "pending_fixture_count": 1,
+      "refresh": true,
+      "layout": true,
+      "javascript_errors": 0
+    }
+  ],
+  "screenshots": [
+    "ordinary404-1440.png",
+    "metrics-1440.png",
+    "started-1440.png",
+    "ordinary404-390.png",
+    "metrics-390.png",
+    "started-390.png"
+  ],
+  "status": "pass",
+  "finished_at": "2026-10-03T02:07:45.910Z"
+}

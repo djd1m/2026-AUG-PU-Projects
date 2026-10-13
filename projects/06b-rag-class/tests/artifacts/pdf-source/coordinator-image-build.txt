@@ -1,0 +1,85 @@
+ Image n6b-f06-pdf-runner:20261002 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 720B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.44kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:22.22-bookworm-slim
+#3 DONE 0.6s
+
+#4 [internal] load build context
+#4 transferring context: 27B
+#4 transferring context: 1.44MB 0.1s done
+#4 DONE 0.1s
+
+#5 [ 1/11] FROM docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752
+#5 resolve docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752 0.1s done
+#5 DONE 0.1s
+
+#6 [ 2/11] WORKDIR /app
+#6 CACHED
+
+#7 [ 3/11] RUN chown node:node /app
+#7 CACHED
+
+#8 [ 4/11] COPY --chown=node:node package.json package-lock.json ./
+#8 DONE 0.1s
+
+#9 [ 5/11] COPY --chown=node:node apps/web/package.json ./apps/web/
+#9 DONE 0.1s
+
+#10 [ 6/11] COPY --chown=node:node apps/widget/package.json ./apps/widget/
+#10 DONE 0.1s
+
+#11 [ 7/11] COPY --chown=node:node services/worker/package.json ./services/worker/
+#11 DONE 0.1s
+
+#12 [ 8/11] COPY --chown=node:node packages/db/package.json ./packages/db/
+#12 DONE 0.1s
+
+#13 [ 9/11] COPY --chown=node:node packages/rag/package.json ./packages/rag/
+#13 DONE 0.4s
+
+#14 [10/11] RUN npm ci
+#14 4.660 npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+#14 32.93 
+#14 32.93 added 136 packages, and audited 142 packages in 32s
+#14 32.93 
+#14 32.93 44 packages are looking for funding
+#14 32.93   run `npm fund` for details
+#14 33.00 
+#14 33.00 4 vulnerabilities (3 moderate, 1 high)
+#14 33.00 
+#14 33.00 To address all issues (including breaking changes), run:
+#14 33.00   npm audit fix --force
+#14 33.00 
+#14 33.00 Run `npm audit` for details.
+#14 33.00 npm notice
+#14 33.00 npm notice New major version of npm available! 10.9.8 -> 12.2.0
+#14 33.00 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+#14 33.00 npm notice To update run: npm install -g npm@12.2.0
+#14 33.00 npm notice
+#14 DONE 34.3s
+
+#15 [11/11] COPY --chown=node:node . .
+#15 DONE 0.4s
+
+#16 exporting to image
+#16 exporting layers
+#16 exporting layers 64.5s done
+#16 exporting manifest sha256:66be9971b8bfd184bef5184e078504d838384afd8799c9675243a908754138b4 0.0s done
+#16 exporting config sha256:8f6cdcf2f5a7df4a40fd78ce061158df283f0d3eaf759fea1a44dc92ffb9661e 0.0s done
+#16 exporting attestation manifest sha256:af3fba2ca7e5db2f973ee88ffa6424cb3eb88fa655fa1d83794719c61c7a94b1 0.0s done
+#16 exporting manifest list sha256:596aad269deb9b1cacb2c717d8005be3811d08be53cef0f677afeddc42dea84a
+#16 exporting manifest list sha256:596aad269deb9b1cacb2c717d8005be3811d08be53cef0f677afeddc42dea84a 0.0s done
+#16 naming to docker.io/library/n6b-f06-pdf-runner:20261002 done
+#16 unpacking to docker.io/library/n6b-f06-pdf-runner:20261002
+#16 unpacking to docker.io/library/n6b-f06-pdf-runner:20261002 15.0s done
+#16 DONE 79.9s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.2s
+ Image n6b-f06-pdf-runner:20261002 Built 

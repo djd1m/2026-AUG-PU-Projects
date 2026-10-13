@@ -2,37 +2,47 @@
 // Сессия проверяется служебным пулом (таблица session кабинету не выдана), данные читаются пулом кабинета под RLS —
 // колонку password_hash роль кабинета не видит (foundation F-4). Создание бота — следующие фичи дорожной карты.
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { type CabinetSource, listCabinetSources, withTenant } from '@n6b/db';
+import { notFound, redirect } from 'next/navigation';
+import { readBotStats, listHandoverCandidates, listCabinetBots, listCabinetSources, planOf, readCabinetContext } from '@n6b/db';
 import { SESSION_COOKIE, sessionTokenOrNull } from '@/server/auth-handler';
 import { getRuntime } from '@/server/runtime';
+import { publicationOrigins } from '@/server/origin';
+import { publicationEmbedCode } from '@/server/publish-handler';
 import { CreateBot } from './create-bot';
 import { AddSource } from './add-source';
-import { JobStatus } from './job-status';
+import { AddPdf } from './add-pdf';
+import { SourceActions } from './source-actions';
+import { BotStats } from './bot-stats';
 import { LogoutButton } from './logout-button';
+import { BotInteractions } from './bot-interactions';
+import { BadgeRemoval } from './badge-removal';
+import { StudioClients } from './studio-clients';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Кабинет — RAG-бот для сайта' };
 
-function byBot(rows: CabinetSource[]): Array<{ id: string; name: string; sources: CabinetSource[] }> {
-  const bots = new Map<string, { id: string; name: string; sources: CabinetSource[] }>();
-  for (const row of rows) {
-    const bot = bots.get(row.bot_id) ?? { id: row.bot_id, name: row.bot_name, sources: [] };
-    if (row.source_id) bot.sources.push(row);
-    bots.set(row.bot_id, bot);
-  }
-  return [...bots.values()];
-}
-
-export default async function CabinetPage() {
+export default async function CabinetPage({ searchParams }: {
+  searchParams: Promise<{ account?: string | string[] }>;
+}) {
   const token = sessionTokenOrNull((await cookies()).get(SESSION_COOKIE)?.value);
-  const { auth, tenantPool } = getRuntime();
+  const { auth, tenantPool, servicePool, config } = getRuntime();
   const accountId = token ? await auth.authenticate(token) : null;
   if (!accountId) redirect('/login');
-  const account = await withTenant(tenantPool, accountId, async (c) => (await c.query<{ email: string | null; plan: string }>(
-    'SELECT email, plan FROM account WHERE id = $1', [accountId])).rows[0]);
-  if (!account) redirect('/login');
-  const bots = byBot(await listCabinetSources(tenantPool, accountId));
+  const selector = (await searchParams).account;
+  if (selector !== undefined && (typeof selector !== 'string'
+    || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(selector))) notFound();
+  const context = await readCabinetContext(tenantPool, accountId,
+    typeof selector === 'string' ? selector.toLowerCase() : accountId);
+  if (!context) notFound();
+  const { actor: account, selected, clients } = context;
+  const handoverCandidateIds = account.kind === 'studio' && account.parent_account_id === null
+    ? await listHandoverCandidates(servicePool, accountId) : [];
+  const [publicationBots, sources] = await Promise.all([
+    listCabinetBots(tenantPool, accountId, selected.id), listCabinetSources(tenantPool, accountId, selected.id),
+  ]);
+  const bots = await Promise.all(publicationBots.map(async (bot) => ({ ...bot,
+    stats: bot.published ? await readBotStats(tenantPool, accountId, bot.id) : null,
+    sources: sources.filter((source) => source.bot_id === bot.id && source.source_id) })));
 
   return (
     <main className="cabinet">
@@ -41,19 +51,28 @@ export default async function CabinetPage() {
         <LogoutButton />
       </header>
       <p>Вы вошли как <strong>{account.email ?? 'подаккаунт студии'}</strong>.</p>
-      <CreateBot />
+      {account.kind === 'studio' && account.parent_account_id === null &&
+        <StudioClients handoverCandidateIds={handoverCandidateIds} clients={clients} selectedId={selected.id} actorId={accountId} />}
+      {selected.id !== accountId && <p>Выбран клиент: {selected.email ?? `Клиент ${clients.findIndex((c) => c.id === selected.id) + 1}`}.</p>}
+      {selected.id === accountId && planOf(account.plan) === 'free' && <BadgeRemoval />}
+      <CreateBot accountId={selected.id} />
       {bots.length === 0 && <p>Ботов пока нет. Укажите имя и адрес сайта выше.</p>}
       {bots.map((bot) => (
         <section key={bot.id} className="bot-card">
           <h2>{bot.name}</h2>
+          {bot.published && bot.stats && <BotStats botId={bot.id} stats={bot.stats} />}
           {bot.sources.map((s) => (
-            <div key={s.source_id} className="source-row">
+            <div key={s.source_id} className="source-row" data-source-id={s.source_id}>
               <p className="source-locator">{s.locator}</p>
-              {s.job ? <JobStatus key={`${s.job.job_id}-${s.job.state}`} initial={s.job} />
-                : <p className="job-detail">Задач индексации ещё не было.</p>}
+              <SourceActions key={`${s.source_id}-${s.job?.job_id}-${s.job?.state}`} sourceId={s.source_id!}
+                botId={bot.id} initial={s.job} />
             </div>
           ))}
           <AddSource botId={bot.id} busy={bot.sources.some((s) => s.job?.state === 'running')} />
+          <AddPdf botId={bot.id} busy={bot.sources.some((s) => s.job?.state === 'running')}
+            observedJobIds={bot.sources.flatMap((s) => s.job ? [s.job.job_id] : [])} />
+          <BotInteractions initial={{ ...bot, embed_code: publicationEmbedCode(bot, config.PUBLIC_BASE_URL) }}
+            proposedOrigins={publicationOrigins(bot)} />
         </section>
       ))}
     </main>

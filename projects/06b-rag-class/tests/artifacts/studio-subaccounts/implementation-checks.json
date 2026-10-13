@@ -1,0 +1,82 @@
+{
+  "run_id": "20261003T031332Z-studio-subaccounts",
+  "attempt_id": "implementation-1",
+  "source_revision": "362e8f4f3d341023751b085e3b32c82b59acb053",
+  "snapshot_sha256": "38cca51076dc9b4bbfbd1b35209e47005233e228aa0766f5d6b14fa3f87eed8a",
+  "captured_at": "2026-10-03T03:33:02.292785+00:00",
+  "elapsed_from_launch_seconds": 954.349035,
+  "profile": "compact-quality-first-v2",
+  "substantive_tier": "M",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "model_measurement_gap": "Native host metadata not exposed to executor; coordinator reconciles.",
+  "input_tokens": null,
+  "output_tokens": null,
+  "cost": null,
+  "usage_measurement_gap": "Native usage/billing counters not exposed; no estimates substituted.",
+  "checks": [
+    {
+      "command": "npm run typecheck",
+      "exit_code": 0,
+      "evidence": "implementation-typecheck.txt"
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run --config vitest.config.ts apps/web/tests/unit/studio-handler.test.ts apps/web/tests/unit/studio-clients-ui.test.ts apps/web/tests/unit/bots-handler.test.ts apps/web/tests/unit/ask-handler.test.ts apps/web/tests/unit/create-bot-ui.test.ts apps/web/tests/unit/publish-handler.test.ts",
+      "exit_code": 0,
+      "tests_passed": 55,
+      "evidence": "implementation-focused-tests.txt"
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run --config vitest.config.ts apps/web/tests/unit/jobs-handler.test.ts apps/web/tests/unit/pdf-handler.test.ts apps/web/tests/unit/publication-guard.test.ts apps/web/tests/unit/referral-cookie.test.ts apps/web/tests/unit/referral-handler.test.ts apps/web/tests/unit/publish-bot-ui.test.ts",
+      "exit_code": 0,
+      "tests_passed": 39,
+      "evidence": "implementation-affected-seams-tests.txt"
+    },
+    {
+      "command": "new studio-handler suite with Origin guard disabled",
+      "exit_code": 1,
+      "tests_failed": 1,
+      "tests_passed": 4,
+      "evidence": "origin-guard-red.txt"
+    },
+    {
+      "command": "same studio-handler suite after exact-byte restore",
+      "exit_code": 0,
+      "tests_passed": 5,
+      "evidence": "origin-guard-restored-green.txt"
+    },
+    {
+      "command": "bash ../../scripts/complexity-router.sh <22 exact source/test paths>",
+      "exit_code": 0,
+      "evidence": "implementation-route.txt"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "evidence": "implementation-diff-check.txt"
+    },
+    {
+      "command": "node --check tests/artifacts/studio-subaccounts/cap-guard-mutation.mjs",
+      "exit_code": 0
+    },
+    {
+      "command": "changed production/test line count",
+      "exit_code": 0,
+      "files_checked": 22,
+      "maximum_lines": 161
+    }
+  ],
+  "pending": [
+    "14 authored real-PG cases, including cap race and controlled family attach/detach races",
+    "coordinator cap mutation script real-PG red/exact-restore/same-green",
+    "complete all-unit/all-PG/build after source freeze",
+    "fresh independent Astra review",
+    "companion E2E preflight, actual Docker UI 1440/390 with real studio fixture and cleanup"
+  ],
+  "e2e_preflight": {
+    "status": "not_applicable",
+    "reason": "Author stage only; actual E2E coordinator-owned and not started."
+  }
+}

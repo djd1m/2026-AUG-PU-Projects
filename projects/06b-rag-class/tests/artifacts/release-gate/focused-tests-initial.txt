@@ -1,0 +1,95 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-release-gate/projects/06b-rag-class
+
+stderr | packages/rag/tests/unit/release-gate.test.ts > F16 REL-02 budget and paid boundary > missing live gate and fake mode refuse before runtime
+NOT_EXECUTED: explicit live/seed gate or required configuration missing/invalid. No paid call.
+
+stderr | packages/rag/tests/unit/release-gate.test.ts > F16 REL-04 CJM offline protocol boundary > missing prerequisites exit2 without requests
+NOT_EXECUTED: explicit issued base, grant, foreign origin, fixed source/question/evidence, owner DB and fresh report required.
+
+ ❯ packages/rag/tests/unit/release-gate.test.ts (36 tests | 2 failed) 3200ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 frozen HTML contains every exact corpus paragraph; evidence is present  826ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 rejects dataset defect short 1ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 rejects dataset defect duplicate-id 1ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 rejects dataset defect duplicate-text 1ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 rejects dataset defect wrong-split 15ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 rejects dataset defect missing-evidence 1ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 rejects dataset defect bad-term 2ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 rejects dataset defect missing-detail 1ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-01 rejects dataset defect bad-url 1ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 exactly 17/20 known with all high-sim unknown passes; 16/20 fails 4ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 one low-sim unknown cannot pass even with a refusal 2ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 unknown outcome below_threshold cannot replace model_unknown 1ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 unknown outcome invalid_citation cannot replace model_unknown 1ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 unknown outcome answered cannot replace model_unknown 1ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 legal source with wrong facts fails; number prefixes are not values 1ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 rejects citation defect wrong-source 1ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 rejects citation defect unretrieved-id 1ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 rejects citation defect low-sim-cite 1ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 rejects citation defect empty-cite 1ms
+   ✓ F16 SC-US-006-4 frozen data and honest scorer > REL-03 partial/duplicated observations and NaN similarity never pass 14ms
+   ✓ F16 REL-02 budget and paid boundary > missing live gate and fake mode refuse before runtime 6ms
+   ✓ F16 REL-02 budget and paid boundary > capture delegates the existing attempt once and does not embed twice 5ms
+   ✓ F16 REL-02 budget and paid boundary > REL-02 30 attempts sequential, no overlapping asks 2ms
+   ✓ F16 REL-02 budget and paid boundary > REL-02 provider error stops immediately and preserves result with no retries 1ms
+   ✓ F16 REL-02 budget and paid boundary > REL-02 thrown secret-bearing errors are not exposed and not retried 0ms
+   ✓ F16 REL-02 budget and paid boundary > REL-02 deadline and reused attempt refuse before another ask 1ms
+   × F16 REL-02 budget and paid boundary > REL-02 oversized corpus cannot reserve a paid batch 2265ms
+     → expected [Function] to throw an error
+   ✓ F16 REL-04 CJM offline protocol boundary > missing prerequisites exit2 without requests 5ms
+   × F16 REL-04 CJM offline protocol boundary > real protocol order marks test before bot, sends no visitor cookie, follows ref 15ms
+     → expected 1 to be +0 // Object.is equality
+   ✓ F16 REL-04 CJM offline protocol boundary > REL-04 protocol defect wrong202 fails without retry 2ms
+   ✓ F16 REL-04 CJM offline protocol boundary > REL-04 protocol defect unknown-job fails without retry 2ms
+   ✓ F16 REL-04 CJM offline protocol boundary > REL-04 protocol defect failed-job fails without retry 2ms
+   ✓ F16 REL-04 CJM offline protocol boundary > REL-04 protocol defect uncited fails without retry 6ms
+   ✓ F16 REL-04 CJM offline protocol boundary > REL-04 protocol defect bad-cors fails without retry 3ms
+   ✓ F16 REL-04 CJM offline protocol boundary > REL-04 protocol defect wrong-ref fails without retry 2ms
+   ✓ F16 REL-04 CJM offline protocol boundary > REL-04 owner marking failure cannot reach queued indexing/paid answer 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  packages/rag/tests/unit/release-gate.test.ts > F16 REL-02 budget and paid boundary > REL-02 oversized corpus cannot reserve a paid batch
+AssertionError: expected [Function] to throw an error
+
+- Expected: 
+null
+
++ Received: 
+undefined
+
+ ❯ packages/rag/tests/unit/release-gate.test.ts:131:84
+    129|   });
+    130|   it('REL-02 oversized corpus cannot reserve a paid batch', () => {
+    131|     expect(() => prepareCorpus([{ ...corpus[0]!, text: 'word '.repeat(…
+       |                                                                                    ^
+    132|   });
+    133| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  packages/rag/tests/unit/release-gate.test.ts > F16 REL-04 CJM offline protocol boundary > real protocol order marks test before bot, sends no visitor cookie, follows ref
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ packages/rag/tests/unit/release-gate.test.ts:178:50
+    176|   it('real protocol order marks test before bot, sends no visitor cook…
+    177|     const { deps, seen } = protocol(); const report: CjmReport = { sta…
+    178|     expect(await runCjm(settings, deps, report)).toBe(0);
+       |                                                  ^
+    179|     expect(report.status).toBe('passed_api_protocol');
+    180|     expect(report.stages.map((s) => s.stage)).toContain('mark_is_test_…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 34 passed (36)
+   Start at  06:58:12
+   Duration  6.02s (transform 941ms, setup 0ms, collect 1.87s, tests 3.20s, environment 0ms, prepare 295ms)
+

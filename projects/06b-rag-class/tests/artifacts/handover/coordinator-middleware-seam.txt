@@ -1,0 +1,47 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-handover/projects/06b-rag-class
+
+ ❯ apps/web/tests/unit/referral-cookie.test.ts (11 tests | 1 failed) 36ms
+   × REF-02 SC-US-011-1: first touch on the actual landing response > valid first touch sets 30-day HttpOnly Secure Lax cookie and prevents public caching 22ms
+     → expected [ Array(3) ] to deeply equal [ '/', '/b/:path*' ]
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > demo page with a valid ref never sets a referral cookie and prevents public caching 2ms
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > fixed first-touch guard: repeated landing never overwrites or renews a cookie 1ms
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref null never sets a cookie 1ms
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref  never sets a cookie 1ms
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref short never sets a cookie 1ms
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref Abcdef_12345x never sets a cookie 0ms
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref ../evil.test never sets a cookie 0ms
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref https://evil never sets a cookie 1ms
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > invalid ref Abcdef_1234! never sets a cookie 1ms
+   ✓ REF-02 SC-US-011-1: first touch on the actual landing response > development omits Secure; cookie reader ignores body/query and rejects encoded garbage 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/tests/unit/referral-cookie.test.ts > REF-02 SC-US-011-1: first touch on the actual landing response > valid first touch sets 30-day HttpOnly Secure Lax cookie and prevents public caching
+AssertionError: expected [ Array(3) ] to deeply equal [ '/', '/b/:path*' ]
+
+- Expected
++ Received
+
+  [
+    "/",
+    "/b/:path*",
++   "/handover/:path*",
+  ]
+
+ ❯ apps/web/tests/unit/referral-cookie.test.ts:18:28
+     16|     expect(response.headers.get('set-cookie')).toContain('HttpOnly');
+     17|     expect(response.headers.get('cache-control')).toBe('private, no-st…
+     18|     expect(config.matcher).toEqual(['/', '/b/:path*']);
+       |                            ^
+     19|   });
+     20|   it('demo page with a valid ref never sets a referral cookie and prev…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 passed (11)
+   Start at  04:55:02
+   Duration  828ms (transform 129ms, setup 0ms, collect 202ms, tests 36ms, environment 1ms, prepare 124ms)
+

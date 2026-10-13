@@ -1,0 +1,19 @@
+{
+  "run_id": "20261003T064351Z-release-gate",
+  "work_unit_id": "release-gate-pg-validation",
+  "attempt_id": "pg-validation-1",
+  "source_revision": "e5672838a107c2cafc616600a4cb00de7d5895b8",
+  "build_revision": null,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "launched_at": "2026-10-03T07:23:25.459441+00:00",
+  "budget_seconds": 720,
+  "trace": {
+    "root": "project",
+    "path": "docs/telemetry/p-replicator/20261003T064351Z-release-gate/evidence/pg-validation-1-receipt.md"
+  },
+  "trace_prelaunch": {
+    "exists": false,
+    "sha256": null
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "source_snapshot_sha256": "a7ce1d5c28fa33d7d2de07a17a47cca86f68c9ff48de3f12fa8bd59c1de4de83",
+  "runner_image": "sha256:a26924470017255751b0bfcd3d5830fb261fcf5fdf4f3045f556cd9ec1948802",
+  "full_regression_exit": 0,
+  "test_summaries": [
+    "Tests  7 passed (7)"
+  ],
+  "all_required_passed": true,
+  "command": "npm run typecheck && npm run pretest && npm run test:int -- apps/web/tests/int/demo.int.test.ts && npm run build",
+  "coverage": "Composite: previous full run610unit/246PGpass + final affected7PG pass =247unique PG, finaltype/build0. OnlyPGtest changed; prior failures preserved, no monolithic finalfullsuite claim.",
+  "production_images": "[n6b-f12-demo-web:20261003] sha256:d61e3832e80ccc062eeefe4e1bb65dfc4a90d3f5ddc70d8241bf59f09c69d824\n[n6b-f12-demo-migrate:20261003] sha256:27595ecf4d46e437e8859a5c03db3abb180b4cd16aa59afefd64f29f6d662053\n",
+  "checked_at": "2026-10-03T03:03:08.306854+00:00",
+  "unit_total_passed": 610,
+  "pg_unique_total_passed": 247,
+  "prior_full_evidence": "full-regression-attempt2/final-full-regression.txt",
+  "final_affected_pg_passed": 7
+}

@@ -1,0 +1,29 @@
+{
+  "status": "pass",
+  "checked_at": "2026-10-03T01:08:22.032779+00:00",
+  "source_revision": "c3d8cfcc3b3f1c61cc0998b378ecf2a677a7daff",
+  "image": "sha256:9bf6944d0ab3506b27e6237083e7ebf03d6bc28fb39fa64a00d257951747a3df",
+  "accounts": [
+    {
+      "email": "referral-1440-1e400168-de3c-4ada-ae4b-53db4072d990@example.test",
+      "referred_by_bot_id": "29833744-3352-4f80-8729-11407427144a",
+      "plan": "free",
+      "badge_removal": "none",
+      "intents": 1
+    },
+    {
+      "email": "referral-390-7a4c1851-b487-442e-b40a-e21bd8573e5e@example.test",
+      "referred_by_bot_id": "29833744-3352-4f80-8729-11407427144a",
+      "plan": "free",
+      "badge_removal": "none",
+      "intents": 1
+    }
+  ],
+  "click_count": 1,
+  "click_hmac_length": 32,
+  "source_account": {
+    "plan": "free",
+    "badge_removal": "none"
+  },
+  "scope": "Persisted actual browser outcomes, first-touch source bot and once/account/day intent; source badge settings unchanged"
+}

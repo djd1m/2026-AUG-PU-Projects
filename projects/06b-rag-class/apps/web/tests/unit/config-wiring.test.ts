@@ -61,6 +61,11 @@ describe('CFG-I5: каждая переменная старта читаетс�
     expect(Object.keys(PENDING_DECISIONS).filter((n) => !names.has(n))).toEqual([]);
   });
 
+  it('MIN_SIMILARITY is fulfilled and consumed by a runtime decision', () => {
+    expect(PENDING_DECISIONS.MIN_SIMILARITY).toBeUndefined();
+    expect(readByDecision('MIN_SIMILARITY')).toBe(true);
+  });
+
   it('предел входа подключён: LIMIT_AUTH_ADDR_HOUR не в списке ожидания', () => {
     expect(PENDING_DECISIONS.LIMIT_AUTH_ADDR_HOUR).toBeUndefined();
   });

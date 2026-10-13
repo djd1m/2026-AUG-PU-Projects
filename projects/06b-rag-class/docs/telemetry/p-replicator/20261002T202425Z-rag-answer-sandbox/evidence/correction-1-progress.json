@@ -1,0 +1,137 @@
+{
+  "run_id": "20261002T202425Z-rag-answer-sandbox",
+  "work_unit_id": "rag-answer-sandbox-correction",
+  "attempt_id": "correction-1",
+  "source_revision": "8f088d8fbba3cf674cd62e7029d60d438df29c19",
+  "build_revision": null,
+  "launch_sha256": "07040c0daa124bae7e2503c03cf337b4c9fdd312030181549f3a18a6c497c4f4",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gap": "Native model/usage metadata unavailable; coordinator reconciles.",
+  "route": "S: existing sanitizer correction; no public contract, shared resource, schema or paid gateway changes. Existing ADR-003/Pseudocode step 11/ANS-02 preserved. Red on unchanged source establishes guard failure.",
+  "route_exit": 0,
+  "e2e_preflight": "not_applicable: no E2E in bounded correction; coordinator owns PostgreSQL/full-suite/build/UI gates.",
+  "started_at": "2026-10-02T20:59:13.004182+00:00",
+  "prior_snapshot_sha256": "6aa5b849d35a899dfcbd62b1a4da7ec16f4720fbb8de040e0adc05dbc19e8c6c",
+  "prior_matches": {
+    "apps/web/src/app/api/bots/[id]/ask/route.ts": true,
+    "apps/web/src/app/cabinet/job-status.tsx": true,
+    "apps/web/src/app/cabinet/page.tsx": true,
+    "apps/web/src/app/cabinet/sandbox.tsx": true,
+    "apps/web/src/app/globals.css": true,
+    "apps/web/src/server/ask-handler.ts": true,
+    "apps/web/src/server/config.ts": true,
+    "apps/web/src/server/runtime.ts": true,
+    "apps/web/tests/int/answer-fixture.ts": true,
+    "apps/web/tests/int/ask.int.test.ts": true,
+    "apps/web/tests/unit/ask-handler.test.ts": true,
+    "apps/web/tests/unit/config-wiring.test.ts": true,
+    "apps/web/tests/unit/config.test.ts": true,
+    "packages/db/src/answers.ts": true,
+    "packages/db/src/index.ts": true,
+    "packages/rag/src/answer.ts": true,
+    "packages/rag/src/citations.ts": true,
+    "packages/rag/src/index.ts": true,
+    "packages/rag/src/prompt.ts": true,
+    "packages/rag/tests/unit/answer-citations.test.ts": true,
+    "packages/rag/tests/unit/answer-flow.test.ts": true
+  },
+  "setup_error": "Initial artifact script used root-relative path from project cwd; failed before mutations. Initial test selected no F07-R1 cases, not valid red evidence. Corrected cwd; no model retry.",
+  "stages": [
+    {
+      "stage": "ROUTE",
+      "at": "2026-10-02T21:01:09.930428+00:00",
+      "status": "completed"
+    },
+    {
+      "stage": "regression_red",
+      "at": "2026-10-02T21:01:09.930470+00:00",
+      "status": "completed",
+      "exit": 1,
+      "result": "Two expected assertion failures; ordinary prose case passes; source sanitizer unchanged."
+    },
+    {
+      "stage": "IMPLEMENT",
+      "at": "2026-10-02T21:01:32.313422+00:00",
+      "status": "completed",
+      "route": "S unchanged; same bounded scope"
+    },
+    {
+      "stage": "focused_checks",
+      "status": "completed",
+      "at": "2026-10-02T21:03:38.888639+00:00"
+    },
+    {
+      "stage": "HANDOFF",
+      "status": "completed",
+      "at": "2026-10-02T21:03:38.888639+00:00"
+    }
+  ],
+  "red_source_hashes": {
+    "packages/rag/src/citations.ts": "624b5ccfa9a475f8591089ee08a39d476ca9b399a39d728b302da4ed776e15c1",
+    "packages/rag/tests/unit/answer-citations.test.ts": "7df93306c063215f72e1bd8069b23bb91bb095b4833dbe8bb0fed7ccb278c736"
+  },
+  "checks": [
+    {
+      "name": "regression_red",
+      "command": "node node_modules/vitest/vitest.mjs run --config vitest.config.ts packages/rag/tests/unit/answer-citations.test.ts -t F07-R1",
+      "exit": 1,
+      "result": "2 expected assertion failures, 1 prose-preservation pass; unchanged sanitizer",
+      "log": "correction-1-red.log"
+    },
+    {
+      "name": "regression_green",
+      "command": "node node_modules/vitest/vitest.mjs run --config vitest.config.ts packages/rag/tests/unit/answer-citations.test.ts -t F07-R1",
+      "exit": 0,
+      "result": "3 passed; 9 unselected",
+      "log": "correction-1-green.log"
+    },
+    {
+      "name": "focused",
+      "command": "node node_modules/vitest/vitest.mjs run --config vitest.config.ts packages/rag/tests/unit/answer-citations.test.ts packages/rag/tests/unit/answer-flow.test.ts apps/web/tests/unit/ask-handler.test.ts",
+      "exit": 0,
+      "result": "40 passed across 3 files; includes green regressions",
+      "log": "correction-1-focused.log"
+    },
+    {
+      "name": "typecheck",
+      "command": "npm run typecheck",
+      "exit": 0,
+      "result": "root TypeScript and web TypeScript checks pass on Node v22.22.3",
+      "log": "correction-1-typecheck.log"
+    },
+    {
+      "name": "whitespace",
+      "command": "git diff --check",
+      "exit": 0,
+      "result": "pass",
+      "log": null
+    }
+  ],
+  "finished_at": "2026-10-02T21:03:38.888639+00:00",
+  "elapsed_seconds": 265.884457,
+  "active_wall_ms": null,
+  "snapshot_sha256": "22d10ce93a822b96bfe58225045eb2ede772572897bf4bcddb9993a25de77b9f",
+  "delta": {
+    "packages/rag/src/citations.ts": {
+      "before_sha256": "624b5ccfa9a475f8591089ee08a39d476ca9b399a39d728b302da4ed776e15c1",
+      "after_sha256": "9d20823703092b0caaa85dc706b2237cc5cbc25b217fd077e957cf27a4e914d5"
+    },
+    "packages/rag/tests/unit/answer-citations.test.ts": {
+      "before_sha256": "90c2b0b25a79bf37d1ed8dbe7e56365d5c7021687b4a23a9146575fd8564e8af",
+      "after_sha256": "7df93306c063215f72e1bd8069b23bb91bb095b4833dbe8bb0fed7ccb278c736"
+    }
+  },
+  "status": "completed",
+  "pending_gates": [
+    "coordinator-owned PostgreSQL/integration",
+    "coordinator-owned full suite",
+    "coordinator-owned build",
+    "coordinator-owned browser/UI"
+  ],
+  "acceptance": "bounded F07-R1 correction delivered; overall F07 acceptance remains coordinator-owned"
+}

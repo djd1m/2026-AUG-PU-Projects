@@ -1,0 +1,9 @@
+file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-widget/projects/06b-rag-class/scripts/build-widget.mjs:24
+    await rm(output, { force: true }); throw new Error(`widget build rejected: ${gzipBytes} gzip bytes`);
+                                             ^
+
+Error: widget build rejected: 80594 gzip bytes
+    at buildWidget (file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-widget/projects/06b-rag-class/scripts/build-widget.mjs:24:46)
+    at async file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-widget/projects/06b-rag-class/scripts/build-widget.mjs:31:57
+
+Node.js v22.22.3

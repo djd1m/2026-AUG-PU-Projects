@@ -1,0 +1,13 @@
+{
+  "source_snapshot_sha256": "38cca51076dc9b4bbfbd1b35209e47005233e228aa0766f5d6b14fa3f87eed8a",
+  "runner_image": "sha256:d917b57856be03a07d069c1fbbc60985cc4a7407f16f6a037f3ce73acd54dab5",
+  "full_regression_exit": 0,
+  "test_summaries": [
+    "Tests  618 passed (618)",
+    "Tests  261 passed (261)"
+  ],
+  "all_required_passed": true,
+  "command": "npm run typecheck && npm test && npm run test:int && node tests/artifacts/studio-subaccounts/cap-guard-mutation.mjs && npm run build",
+  "production_images": "[n6b-f13-studio-web:20261003] sha256:878dd06f4a402a977df08b59e129f98466a0e23bb2f18ae82b31f549df4f815e\n[n6b-f13-studio-migrate:20261003] sha256:2720f27a645da91a144cc252ca1e0622dcb33ee94a2cb3dff3b3690bbaf01dd8\n",
+  "checked_at": "2026-10-03T03:52:48.990928+00:00"
+}

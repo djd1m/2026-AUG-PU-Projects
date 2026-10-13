@@ -1,0 +1,362 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "delivered",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261002T223848Z-widget",
+    "work_unit_id": "widget-feature",
+    "current_attempt_id": "delivery-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261002T223848Z-widget/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261002T223848Z-widget/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "fad30bfd7b280685d7afdaac3d2e8f2208bc966f",
+    "current_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+    "build_revision": "sha256:82460803f628576175aac1dc260f8df39d8938d4f6defff683034100d3ccecc2",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Pseudocode.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/ADR.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+      "observed_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "17c45fb890982ab044aa2c8548bb85868eadf39a04e88cb39156bdfb3b4f8e37",
+    "scope": [
+      "External widget /w.js, public Origin gates, privacy, server badge and shared install data"
+    ],
+    "exclusions": [
+      "F10 referral/click/removal-intent",
+      "F11 operator metrics UI",
+      "Schema/dependencies/global config",
+      "Paid calibration/public deployment",
+      "N6 donor"
+    ],
+    "action_limits": [
+      "Author25min/reviewer8min",
+      "CPU2 serializedDocker",
+      "NoDBpublishedports",
+      "Rootownsmanifest/integration"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "WID-01",
+        "required": true
+      },
+      {
+        "id": "WID-02",
+        "required": true
+      },
+      {
+        "id": "WID-03",
+        "required": true
+      },
+      {
+        "id": "WID-04",
+        "required": true
+      },
+      {
+        "id": "WID-05",
+        "required": true
+      },
+      {
+        "id": "WID-06",
+        "required": true
+      },
+      {
+        "id": "WID-07",
+        "required": true
+      },
+      {
+        "id": "WID-08",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "none"
+        },
+        "provenance": "Accepted N6b F07/F08 interfaces at fad30bfd7b280685d7afdaac3d2e8f2208bc966f",
+        "useful_fragment": "AnswerQuestion/PaidGateway/clientIp/visitorKey and existing tables",
+        "compatibility": "not_applicable",
+        "decision": "reject",
+        "reason": "N6 prohibited; external donor not needed"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No calibrated comparable external widget run; no numerical estimate",
+      "scope_revision": "17c45fb890982ab044aa2c8548bb85868eadf39a04e88cb39156bdfb3b4f8e37",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "scope_revision": "17c45fb890982ab044aa2c8548bb85868eadf39a04e88cb39156bdfb3b4f8e37",
+      "tier": "M",
+      "rationale": "New public paths imply L; existing full SPARC dated2026-09-30 has FR/algorithm/boundaries, explicit fresh-document exception reduces to M with all mandatory checks retained",
+      "phase": "plan",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/route-plan.txt"
+      },
+      "script": {
+        "input": "Four explicit widget/client/public API/DB module paths",
+        "exit_code": 0
+      }
+    },
+    {
+      "scope_revision": "17c45fb890982ab044aa2c8548bb85868eadf39a04e88cb39156bdfb3b4f8e37",
+      "tier": "M",
+      "rationale": "New public paths imply L; existing full SPARC dated2026-09-30 has FR/algorithm/boundaries, explicit fresh-document exception reduces to M with all mandatory checks retained",
+      "phase": "implementation",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/route-implementation.txt"
+      },
+      "script": {
+        "input": "Four explicit widget/client/public API/DB module paths",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "Owner/root authorized continuous ownroadmap MVP and nextbranchfromacceptedF06",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "ready",
+    "source_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+    "build_revision": "sha256:82460803f628576175aac1dc260f8df39d8938d4f6defff683034100d3ccecc2",
+    "environment": "Isolated n6b-f09-ui Docker network, no published ports; shared codex-ui-playwright own context; foreign TLS host, restrictive CSP and hostile CSS",
+    "test_command": "docker exec -w /opt/browser codex-ui-playwright node /opt/browser/n6b-f09-ui.mjs /opt/browser/n6b-f09-fixture.json /opt/browser/n6b-f09-output-2",
+    "inputs": [
+      {
+        "name": "Final19source hashes match runner;515unchangedunit pass and finalallPG/type/build0",
+        "available": true
+      },
+      {
+        "name": "FreshR1sourceACCEPT; deterministic test-only fixtureserver mapped onlyask path, realconfig/events/w.js; config delayed250ms by test-only network transport, no Playwright routing",
+        "available": true
+      },
+      {
+        "name": "Private fixture",
+        "available": true
+      }
+    ],
+    "environment_available": true,
+    "expected_effects": [
+      "Seed disposable published Free/paid/unknown/recovery bots and documentchunks in own PG; browser actualnetwork config/ask/OPTIONS/events with FakeProvider only behind realhandler/gateway; no paidcalls",
+      "Screenshots1440/390, initialcollapsed/closed/tamper/onceimpression, privacy/input gating/answers/refusal/recovery/CSP/CORS/CSS; cleanup own stack/contexts/networkattachments"
+    ],
+    "evidence_root": {
+      "root": "project",
+      "path": "tests/artifacts/widget/ui-output/report.json"
+    },
+    "external_actions_executed": false,
+    "e2e_claim": null,
+    "checked_at": "2026-10-02T23:54:55.643384+00:00"
+  },
+  "attempts": [
+    {
+      "id": "plan-1",
+      "status": "completed"
+    },
+    {
+      "id": "implementation-1",
+      "status": "completed"
+    },
+    {
+      "id": "review-1",
+      "status": "completed"
+    },
+    {
+      "id": "correction-1",
+      "status": "completed"
+    },
+    {
+      "id": "correction-review-1",
+      "status": "completed"
+    },
+    {
+      "id": "fixture-correction-1",
+      "status": "completed"
+    },
+    {
+      "id": "fixture-review-1",
+      "status": "completed"
+    },
+    {
+      "id": "ui-1",
+      "status": "failed"
+    },
+    {
+      "id": "ui-2",
+      "status": "completed"
+    },
+    {
+      "id": "delivery-1",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "widget-feature",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/features/widget/01_plan.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [
+    {
+      "ac_id": "WID-01",
+      "outcome": "pass",
+      "command": "Source-bound composite full regression/build, guard mutations, independent reviews and actual foreign-origin Docker UI; see final-checks-summary.json and ui-output/report.json",
+      "exit_code": 0,
+      "source_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "WID-02",
+      "outcome": "pass",
+      "command": "Source-bound composite full regression/build, guard mutations, independent reviews and actual foreign-origin Docker UI; see final-checks-summary.json and ui-output/report.json",
+      "exit_code": 0,
+      "source_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "WID-03",
+      "outcome": "pass",
+      "command": "Source-bound composite full regression/build, guard mutations, independent reviews and actual foreign-origin Docker UI; see final-checks-summary.json and ui-output/report.json",
+      "exit_code": 0,
+      "source_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "WID-04",
+      "outcome": "pass",
+      "command": "Source-bound composite full regression/build, guard mutations, independent reviews and actual foreign-origin Docker UI; see final-checks-summary.json and ui-output/report.json",
+      "exit_code": 0,
+      "source_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "WID-05",
+      "outcome": "pass",
+      "command": "Source-bound composite full regression/build, guard mutations, independent reviews and actual foreign-origin Docker UI; see final-checks-summary.json and ui-output/report.json",
+      "exit_code": 0,
+      "source_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "WID-06",
+      "outcome": "pass",
+      "command": "Source-bound composite full regression/build, guard mutations, independent reviews and actual foreign-origin Docker UI; see final-checks-summary.json and ui-output/report.json",
+      "exit_code": 0,
+      "source_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "WID-07",
+      "outcome": "pass",
+      "command": "Source-bound composite full regression/build, guard mutations, independent reviews and actual foreign-origin Docker UI; see final-checks-summary.json and ui-output/report.json",
+      "exit_code": 0,
+      "source_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "WID-08",
+      "outcome": "pass",
+      "command": "Source-bound composite full regression/build, guard mutations, independent reviews and actual foreign-origin Docker UI; see final-checks-summary.json and ui-output/report.json",
+      "exit_code": 0,
+      "source_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+      "receipt_id": "delivery-1"
+    }
+  ],
+  "receipts": [
+    {
+      "id": "delivery-1",
+      "work_id": "widget-feature",
+      "path": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/delivery-1-receipt.md"
+      },
+      "launch_path": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261002T223848Z-widget/evidence/delivery-1-launch.json"
+      },
+      "sha256": "08c74ef7624ceab99a6487d7f4df66cf015dbf2b2b5e6db419f0d5de621264e9",
+      "launch_sha256": "ca30769ffb38d774d19c5a936d459b02f61c5f2c704a81245703ea754f6510d6"
+    }
+  ],
+  "delivery": {
+    "uri": "urn:project-work-companion:20261002T223848Z-widget:widget-feature",
+    "scope": {
+      "included": [
+        "External widget and public Origin gates/privacy/serverbadge/install boundary; WID01..08"
+      ],
+      "excluded": [
+        "F10referral/click/removal intent",
+        "F11operator metrics surface",
+        "Publicdeployment/livecalibration/rootdependency disposition"
+      ]
+    },
+    "build": {
+      "source_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+      "build_revision": "sha256:82460803f628576175aac1dc260f8df39d8938d4f6defff683034100d3ccecc2"
+    },
+    "evidence": [
+      "delivery-1"
+    ],
+    "pending": [
+      {
+        "item": "RemainingMVP/F10/F11/publicrelease",
+        "scope": "out_of_scope",
+        "reason": "Separate roadmap features and release gates; F09 only accepted"
+      }
+    ],
+    "e2e_claim": "pass"
+  }
+}

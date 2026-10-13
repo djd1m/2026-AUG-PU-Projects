@@ -1,0 +1,45 @@
+{
+  "captured_at": "2026-10-02T21:49:14.934582+00:00",
+  "source_snapshot_sha256": "13a3a5f48e5725ec091c87eed22aa30b16bce18f940c26224a90103335993a21",
+  "node_version": "v22.22.3",
+  "cwd": "projects/06b-rag-class",
+  "path_prefix": "/tmp/n6b-f06-node22/bin",
+  "checks": [
+    {
+      "command": "npm run typecheck",
+      "exit_code": 0,
+      "evidence": "tests/artifacts/publish-bot/implementation-typecheck.txt"
+    },
+    {
+      "command": "./node_modules/.bin/vitest run --config vitest.config.ts apps/web/tests/unit/publication-validation.test.ts apps/web/tests/unit/publish-handler.test.ts apps/web/tests/unit/publication-guard.test.ts apps/web/tests/unit/publish-bot-ui.test.ts apps/web/tests/unit/ask-handler.test.ts apps/web/tests/unit/create-bot-ui.test.ts apps/web/tests/unit/auth-handler.test.ts",
+      "exit_code": 0,
+      "files_passed": 7,
+      "tests_passed": 124,
+      "evidence": "tests/artifacts/publish-bot/implementation-focused-tests.txt"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    },
+    {
+      "command": "./node_modules/.bin/vitest run --config vitest.config.ts apps/web/tests/unit/publication-guard.test.ts",
+      "mutation_exit_code": 1,
+      "restored_exit_code": 0,
+      "evidence": "tests/artifacts/publish-bot/contact-guard-mutation.json"
+    }
+  ],
+  "pending": [
+    "all unit suites",
+    "all real PostgreSQL integration tests including five new publish cases",
+    "full production build",
+    "actual Docker UI at 390/1440 with registration/session/PATCH/PostgreSQL",
+    "independent Astra review"
+  ],
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Native model/effort, usage and cost not exposed; coordinator reconciles."
+  ],
+  "extra_seam": "apps/web/src/server/auth-handler.ts optional objectOnly mode; needed to prevent too-large JSON sentinel collision and reject incorrect MIME for publication; defaults unchanged."
+}

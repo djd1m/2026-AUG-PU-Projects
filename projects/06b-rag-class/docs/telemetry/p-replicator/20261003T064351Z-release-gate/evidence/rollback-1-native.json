@@ -1,0 +1,17 @@
+{
+  "session_id": "01a100b7-5882-7db2-aa18-7ba5084edc8e",
+  "actual_model": "gpt-6.1-sol",
+  "actual_effort": "high",
+  "usage": {
+    "input_tokens": 1652844,
+    "cached_input_tokens": 1553536,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 19686,
+    "reasoning_output_tokens": 5680,
+    "total_tokens": 1672530
+  },
+  "cost": null,
+  "cli_exit": 0,
+  "task_receipt_status": "failed",
+  "reason": "Disk preflight blocked actual rollback before heavy build/runtime"
+}

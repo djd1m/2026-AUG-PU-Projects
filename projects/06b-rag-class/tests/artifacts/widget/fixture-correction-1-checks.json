@@ -1,0 +1,85 @@
+{
+  "run_id": "20261002T223848Z-widget",
+  "work_unit_id": "widget-fixture-correction",
+  "attempt_id": "fixture-correction-1",
+  "source_revision": "39464ac3c4ac77afd43bf1c15859398b7dd42b12",
+  "build_revision": null,
+  "launch_sha256": "94afe3c5ba9661faeac7e287179f815443a044a70fb640bacfd63433105e01cd",
+  "started_at": "2026-10-02T23:27:56.334005+00:00",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Native actual model/effort/usage/cost not exposed to worker; coordinator reconciles."
+  ],
+  "stages": [
+    {
+      "stage": "ROUTE",
+      "timestamp": "2026-10-02T23:29:01.003575+00:00",
+      "mechanical_tier": "S",
+      "exit_code": 0,
+      "substantive_tier": "S",
+      "scope": "Only published widget test fixture contact default; typecheck-only explicit brief overrides test/mutation requirements."
+    },
+    {
+      "stage": "IMPLEMENT",
+      "timestamp": "2026-10-02T23:29:22.982752+00:00",
+      "result": "Only widget fixture caller now supplies a valid default contact; explicit non-null contact retained; sandbox unchanged."
+    },
+    {
+      "stage": "INTEGRATE",
+      "timestamp": "2026-10-02T23:30:23.863140+00:00",
+      "result": "19 final source hashes verified; only widget fixture differs from baseline; sandbox bytes and completion history verified unchanged. Bounded correction complete; actual PG pending coordinator."
+    },
+    {
+      "stage": "VALIDATE",
+      "timestamp": "2026-10-02T23:30:55.418637+00:00",
+      "checks": [
+        {
+          "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH npm run typecheck",
+          "node_version": "v22.22.3",
+          "exit_code": 0,
+          "evidence_path": "tests/artifacts/widget/fixture-correction-1-typecheck.txt"
+        },
+        {
+          "command": "git diff --check",
+          "exit_code": 0
+        }
+      ],
+      "review": "Nullish fallback follows options spread; explicit non-null contacts retained before publication; assertions and DB constraint unchanged."
+    },
+    {
+      "stage": "INTEGRATE",
+      "timestamp": "2026-10-02T23:30:55.419193+00:00",
+      "result": "Completion appendix successfully appended and historical prefix verified; source frozen after typecheck; coordinator PG gate pending."
+    }
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Actual PG/UI E2E excluded from bounded correction."
+  },
+  "baseline_all_19_hashes_verified": true,
+  "completion_before_sha256": "f6fbc4e87be1ac56409d3989875cf3ba541133f7039f92a3c6dcf269bee99822",
+  "completion_before_bytes": 13844,
+  "sandbox_fixture_sha256": "e389b52f88387c9f884e111a15feaa09f13ec8e03f5b1694ac4174f5506978bd",
+  "source_snapshot_sha256": "1f8de8e69a48755557fc8279848fafaa90d2e0eca45ef21c8aeac491097fd199",
+  "other_18_source_entries_unchanged": true,
+  "finished_at": "2026-10-02T23:30:55.419193+00:00",
+  "elapsed_wall_seconds": 179.085188,
+  "verdict": "boundedfixturecorrection",
+  "status": "completed",
+  "coordinator_telemetry_modified_by_worker": false,
+  "changed_files_by_attempt": [
+    "apps/web/tests/int/widget-fixture.ts",
+    "docs/features/widget/05_completion.md",
+    "tests/artifacts/widget/fixture-correction-1-source-hashes.json",
+    "tests/artifacts/widget/fixture-correction-1-checks.json",
+    "tests/artifacts/widget/fixture-correction-1-typecheck.txt"
+  ],
+  "evidence_preparation_correction": "First completion append command had a Python string syntax error and made no writes; corrected immediately. Source and typecheck unchanged.",
+  "completion_original_prefix_preserved": true
+}

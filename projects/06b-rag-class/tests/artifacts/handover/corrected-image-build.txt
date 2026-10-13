@@ -1,0 +1,61 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.44kB 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22.22-bookworm-slim
+#2 DONE 0.7s
+
+#3 [ 1/11] FROM docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752
+#3 resolve docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752 0.0s done
+#3 DONE 0.1s
+
+#4 [internal] load build context
+#4 transferring context: 155.59kB 0.1s
+#4 transferring context: 155.59kB 0.1s done
+#4 DONE 0.1s
+
+#5 [ 3/11] RUN chown node:node /app
+#5 CACHED
+
+#6 [ 6/11] COPY --chown=node:node apps/widget/package.json ./apps/widget/
+#6 CACHED
+
+#7 [ 4/11] COPY --chown=node:node package.json package-lock.json ./
+#7 CACHED
+
+#8 [ 7/11] COPY --chown=node:node services/worker/package.json ./services/worker/
+#8 CACHED
+
+#9 [ 2/11] WORKDIR /app
+#9 CACHED
+
+#10 [ 5/11] COPY --chown=node:node apps/web/package.json ./apps/web/
+#10 CACHED
+
+#11 [ 8/11] COPY --chown=node:node packages/db/package.json ./packages/db/
+#11 CACHED
+
+#12 [ 9/11] COPY --chown=node:node packages/rag/package.json ./packages/rag/
+#12 CACHED
+
+#13 [10/11] RUN npm ci
+#13 CACHED
+
+#14 [11/11] COPY --chown=node:node . .
+#14 DONE 1.0s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 1.1s done
+#15 exporting manifest sha256:a74fe33bbd324b7cacb2090bd700ee6e01e4b1400483394b11e62220ac105809
+#15 exporting manifest sha256:a74fe33bbd324b7cacb2090bd700ee6e01e4b1400483394b11e62220ac105809 0.0s done
+#15 exporting config sha256:1a8fad41ae6412419128414d18fe46e720cf4cb988a04964085464ba3d6e39bd 0.0s done
+#15 exporting attestation manifest sha256:1fcd8c2b03b0d09526eeb1a02a7c06d90cd1d6b0bf57ba53b475697053026a91 0.0s done
+#15 exporting manifest list sha256:aa779a54db0e01d587d341e32ff77c639607dfe470d7ee23d606c592ac4d018e 0.0s done
+#15 naming to docker.io/library/n6b-f14-handover-runner:corrected
+#15 naming to docker.io/library/n6b-f14-handover-runner:corrected done
+#15 unpacking to docker.io/library/n6b-f14-handover-runner:corrected
+#15 unpacking to docker.io/library/n6b-f14-handover-runner:corrected 0.4s done
+#15 DONE 2.6s
