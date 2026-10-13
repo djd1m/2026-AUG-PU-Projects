@@ -1,0 +1,216 @@
+{
+  "run_id": "20261003T023900Z-f06",
+  "work_unit_id": "n7-f06a-sol-r1",
+  "attempt_id": "correct-a-r1",
+  "stage": "runtime_verification",
+  "at": "2026-10-03T03:26:47.604658+00:00",
+  "baseline": "b33563d76b81d12aa1f5639b89c8231d7b2eaff7",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host execution model, usage, cost pending"
+  ],
+  "scope": "R1 passive auth notification only; A2-A5 accepted",
+  "exclusions": [
+    "backend/schema/business consent/payment",
+    "browser B",
+    "agents",
+    "push/deploy"
+  ],
+  "ac": [
+    "passive valid identity zero notification",
+    "successful register/login exactly one notification",
+    "genuine notification invalidates and silent followup no echo",
+    "failed login/no identity zero",
+    "old passive broadcast mutation RED exact restore GREEN",
+    "type/lint/build/unit/fullPG source/image/canary"
+  ],
+  "approval": "Owner XL autonomy already approved, OWN-N7-002 retained",
+  "routes": [
+    {
+      "stage": "PLAN",
+      "tier": "XL",
+      "mechanical_tier": "S",
+      "exit": 0,
+      "rationale": "Auth/session UI invariant; narrow already approved R1 repair, central epoch/abort/401 preserved"
+    },
+    {
+      "stage": "IMPLEMENT",
+      "tier": "XL",
+      "mechanical_tier": "S",
+      "exit": 0,
+      "rationale": "Repeat substantive narrow auth UI route; passive only change, genuine transitions retained"
+    }
+  ],
+  "donor": {
+    "path": "scripts/check-f06a-heavy.sh",
+    "decision": "adapt",
+    "reason": "same owned n7f06a stack, distinct R1 evidence; Dockerfile build input outside image"
+  },
+  "forecast": {
+    "status": "insufficient_data",
+    "duration": null,
+    "cost": null
+  },
+  "preflight": {
+    "at": "2026-10-03T03:26:02.719871+00:00",
+    "status": "ready",
+    "source_revision": "3423e72201ac3ac7a8f943c3d4d42b9e99acee47",
+    "source_sha256": "932e7e0b5f8d3189ab8256f1858bd0b74389c91504775f4e2a8be704da67d1de",
+    "build_revision": "3423e72201ac3ac7a8f943c3d4d42b9e99acee47",
+    "build_sha256": "110c84753e81699007417bba0cd92e20288bbee938921657c58e33c183299ac6",
+    "image_id": "sha256:a65867e3f1af46b3f4d8a4894a002397ce4a84f890b22b6d0d10d44d1eaa2f7f",
+    "environment": "own n7f06a loopback18709 privatePG CPU2",
+    "environment_available": true,
+    "inputs": [
+      {
+        "name": "random external runtime key files",
+        "available": true
+      },
+      {
+        "name": "accepted TEST fixtures and realPG suite",
+        "available": true
+      }
+    ],
+    "test_command": "docker compose -p n7f06a exec -T web npm run test:integration",
+    "expected_effects": [
+      "own DB fixture tenant resets only",
+      "no external SMTP/IMAP/charge"
+    ],
+    "evidence_root": {
+      "root": "project",
+      "path": "docs/telemetry/features/20261003T023900Z-f06"
+    },
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "freeze": {
+    "at": "2026-10-03T03:22:59.629743+00:00",
+    "source_revision": "b33563d76b81d12aa1f5639b89c8231d7b2eaff7",
+    "source_sha256": "932e7e0b5f8d3189ab8256f1858bd0b74389c91504775f4e2a8be704da67d1de",
+    "files": {
+      "Dockerfile": "f8d6728ac4337c589cf55983654e2cf51ac437ef4711e20086f12d775cc997f5",
+      "db/001-init.sql": "6c6ca7cc74530a6bee78b2c60b5f08bbb1e6cb76b47ab35ffb4aac359a7948e7",
+      "db/002-mailboxes-consent.sql": "6f23a16557abfd8223de32e9c5e01442941ef2ff08bbdb89d9ae31c006680f5c",
+      "db/003-dispatch.sql": "13551a8e261d141c8d8b5bf32066ef136ac6c8cdac359746f22e898df1e54cd2",
+      "db/004-claim-order.sql": "9a97339cd7b036b6d0fa9d5228b508b20981704173f98d341f6163042e2f792e",
+      "db/005-submission.sql": "a8d25ee87438dfe5fda97ae736d2376e59f0825f73d4d1b0f4a6176cda23b8b3",
+      "db/006-replies.sql": "e0da744dacb1a1856b2d95d03ae37b3d5070b137b5a9f1faae6abb9873608171",
+      "db/007-reply-tail-horizon.sql": "002c8eba0a4e978ab4dfec371f0c82e52d12c9ce5be8ef7caad9dd9786522b6a",
+      "db/008-suppression-fixture.sql": "037a9da324ecd5666c398522e3c40effa73259122518c143a22b17fbcc4b23aa",
+      "db/009-poll-owner.sql": "e77a0c252adb49a99597c914e28a7192e2b56f4af55de1f19e790a60ecf85c39",
+      "db/010-billing.sql": "1e97188e9b0fda6a47308d56e33c8570e6477e0f3605762c5855e3b017cc9c04",
+      "db/011-evidence.sql": "c4ba8a7cb793a394a50f29684e217aba9e76cf87ab2eb828d095ec26a2a6016e",
+      "eslint.config.js": "613fe065d6896d4a08985ac678e967ec5c4aa7e95c30f4ca69159814de59e976",
+      "package-lock.json": "49b300c360c2c1471596b225ced88d8b509bb57fcc2787a83c0dd5190089eb1a",
+      "package.json": "09f91636a77dd95be8c324fe94cdf4e5eea044729d2c8ec3a161c77c4d408894",
+      "src/auth/password.ts": "f8b36c41d1022d2e21e6a080150f8c93f7485b2f98aa3f03771683d2a9748251",
+      "src/auth/service.ts": "eee97c44ef39becf6edce05dc0df1e3d764ee05a445cb9a3b3745005ea129628",
+      "src/auth/session.ts": "c5c6b26aff298e7f64b79648a72a61951a4399b3eff25a4a29b1893c1eea35a5",
+      "src/auth/store.ts": "d5be57fc9270cd8e12a95015b32ce115c2cd3687fc592e4e01cc226292f7d70d",
+      "src/billing/plans.ts": "e98031c2a717b1585f827c716c667efd3655bf356cc38ea1d3c4646a73ed5ff1",
+      "src/billing/provider.ts": "e24a9f5bf6ac8d1f35b8efe1edd87b846799aa5fc0f88cc631d98dd93297664e",
+      "src/billing/service.ts": "7692e0850b12843053a7838df9f1d3d913431ae2cdfca0c0c1289c1dc507fcde",
+      "src/billing/transaction.ts": "182c375531d2dbafbb3ca29591a628b3637ec86e60cf8d9ceb029a1a00e1d313",
+      "src/campaigns/input.ts": "13499a78e34b58472c336b4538dba7291374759c42f7d7661357135da261b3ef",
+      "src/campaigns/store.ts": "c9df14658c9bc7f0bd028c68a87135c942cad92286ed1cbc1b53b6e069b0f60d",
+      "src/config.ts": "f8a1e9bad73e8b0af6a251917b647d88b3e969cd4779adc8cfe106dd9262d8ce",
+      "src/consent/store.ts": "b6104faac42e56826247d3179d66dd7a136c11a62882d2181bc4417537f0dd82",
+      "src/consent/transaction.ts": "24e85675413e5391e75d1c3dfbc77717222439ff5870b53764f4f5aad25896b4",
+      "src/db.ts": "7f57bc247d10e7ddf02ec83576cae27575253f5ef310ebc281e547f7aeec67f9",
+      "src/dispatch/adapter.ts": "89dda916b4e0fdeaa90557f6a08276f30299cebc143b2b70312da03e39c39929",
+      "src/dispatch/eligibility.ts": "c13b263839a44233709efda639e9a3ac2792993db8c1c3a2f5bcfaa03cc3b10d",
+      "src/dispatch/message.ts": "08c4ff1d564a89efa3f6b4abb4ddd836dbcfa8790c42daa67581983eca8f1efe",
+      "src/dispatch/seams.ts": "c3038b12db1c223de870c7e707fb56d11836275227543068874c88aec7aa211e",
+      "src/dispatch/store.ts": "fa96d7944347401b4e1e0a3da603cf77f9bd62b746c4e27a60e7ebcd00298741",
+      "src/dispatch/submission.ts": "eb96188574f0660f254e3895e193097e6083618e12c765db227a85adde6449c7",
+      "src/dispatch/worker.ts": "27f6aa1963f7f599b323003737959e4ec1a6735b028a5522fdd0b91940d30a02",
+      "src/errors.ts": "b2c4f5fbc7536791c64e69430426550d97ed2138a55033cfef5e1cd311fc5cd0",
+      "src/evidence/compare.ts": "a2185780606417405d34a7b70901f1bef336a2f97622707a3485ee551f076bf5",
+      "src/evidence/input.ts": "2e0e6290219b06b15c7576024b00aab627612c1c7781eee4556758b3f914cacf",
+      "src/evidence/store.ts": "89f1164dd74b13546d2bf680e17f70ded0b39b58f25f93ed9b1ffecc7b5e08c9",
+      "src/growth/attribution.ts": "2c81a8f678266d7f63041186c64abfc063364d89a6f75e0c926c52a7f7e23c65",
+      "src/growth/partner.ts": "41317996b1938ecf0be1ca8a4f6e518e6c2eaaf031e8f9f8349e241fdfaa3a27",
+      "src/growth/reports.ts": "6deef64d75606401dfb145c277b0f42a92da19573a8b2f58366db1094cf9d4b9",
+      "src/mailboxes/crypto.ts": "cfcd13a73ccd7126825ef40ae7624ad7f945659a02a74a1d7cfcebcfa097f020",
+      "src/mailboxes/input.ts": "127f2e4787a0afe49e2c485ae752bed05077a48b18c4912cfc9a1c4a23de91b3",
+      "src/mailboxes/network.ts": "7d3346a620d53b6ca245b02b455604afc8dddd74ce0944a8e43d2d717e95abfb",
+      "src/mailboxes/provider.ts": "064c9aad2964ade6913e442e67cf1d7bbb607d20297fc63d0c0a2188b7de65ac",
+      "src/mailboxes/store.ts": "48f94bdf987d411c1504c457051d875bacf38b906ef2e16b9d4e6140c6ba65b7",
+      "src/main.ts": "ecfba84e123b44de26946d5bd21daff3f3636eb2a11030163132d6b11da1467a",
+      "src/migrate.ts": "35c855b6c506aa4bf67cdf2b14413dc7d33f35ca398f4f70e172d22b018f3abb",
+      "src/pool/store.ts": "a4f7b5bf5faec4df898e834f3e65225c28d106c0c1a8d617104edc7acef50f19",
+      "src/replies/adapter.ts": "344f22020555d53b0a9c4ce018392cb6cdba3faac96abb8853793e4a7e664c06",
+      "src/replies/fixture.ts": "738683ca7eec34d3d2a959593367035406d6c68d8909f751c90939911dabf0d7",
+      "src/replies/input.ts": "45f451e88364c37dcfcce9e2bda12c3d4aef04c10676377688a958593fb95476",
+      "src/replies/operator.ts": "60fbbdef1edeba5c275b863bce73ce780a13e839d3965e435b6a1f31b44a01e6",
+      "src/replies/store.ts": "76259ef3aa335eb82f2359925121dd22c6f48e59c4a34bf35cdd5d6e429cd0bd",
+      "src/replies/worker.ts": "5c04832d4f362daecc1a0cf79b660a494ede34031172d4bca9b7e901d9af6a14",
+      "src/server.ts": "4fa0e3fa5a95018fb8428d98587674687311ec38f1bc4fdbfc40bfe11fbd7d40",
+      "src/suppression/http.ts": "d447d901179a6d7cfb7d1dffa27ac85a42cf4b489e00c350dfa09e1dd33e301e",
+      "src/suppression/store.ts": "2e2274522cf5b150fcf1bd1561c8ba164a34da08aee1fb9b0fd1f1afb4bc1847",
+      "src/web/app.ts": "311a8eb1ebc74ae63f2bfaba8632ba72c53605af12fd889578652b40d8434fff",
+      "src/web/billing.ts": "3d82f2e3ae5a48db202c96cd27a81736f1bf02edf7f5014c4c3c4bd14b64b2b1",
+      "src/web/cabinet.ts": "b34d4cad4b67c6a9cc3724bf9d426490a876db75b2a5f4f9d5a98442afc7633e",
+      "src/web/campaigns.ts": "d265bc4a0dfdad6dccd2591e712781d0c85fba2c729642fb54c32cd55a5bce4a",
+      "src/web/client.ts": "bd05162f30fd1efa35a4e4e3f992cf1eed5902f72910612253e10841d05ed399",
+      "src/web/dom.ts": "11b7d784cd39c1e791caf575bbdb981a8ca6cba1144c50b34cd5c9907a3099d9",
+      "src/web/evidence.ts": "a4c537cf6f1f908519c7df7080fd95c83719cd87a9324f675783fb184ea2f5fa",
+      "src/web/mailboxes.ts": "53cbca527938cfc1a44b34698df4d5d54da89541c3548ba0820d67a9e12719f0",
+      "src/web/models.ts": "871afa4011946b88f368e6b1c6f86caf475cf055ca17ed38eb03e6d53beca6ae",
+      "src/web/page.ts": "bef7627af341fd831552d010612bedf6120542cd0cda5e13c25621b3034963c5",
+      "tests/auth-integration.test.ts": "cba20b7dfb4bdfc5c2a0dc37b6973db623d3b33ed32d5f53299a0638d2eb9efa",
+      "tests/auth-script-unit.test.ts": "1fd64f840001738b5f8515e2f7a5ae89e3f12c63fcea51400aa234a19cd87fb3",
+      "tests/auth-unit.test.ts": "8fbb186cc10cea7f9ca5e978f159715bef084b018a9b984d8378982bef299df8",
+      "tests/billing-fixture.ts": "57793f79d6c5b2f51d1daac35175663e98c0c25dc95d4e22bb5187cb7422f28d",
+      "tests/billing-integration.test.ts": "57e6dd89825e54c30fcf9ef7aeecbecf08458e94620fb241440071d9705bdc46",
+      "tests/billing-unit.test.ts": "523dab25739c3f73a2ea51882f22fb96bef51734cbdd4cd4bc023a64aec8f716",
+      "tests/dispatch-integration.test.ts": "f9937cdf7b520f890b656adad59d17c8a7fd1407006781ce0882b3d94d4b9c82",
+      "tests/dispatch-unit.test.ts": "ae4ead459e54086153e3d289c55660eb3700a22fe4906122ffdff24c1f0e98c8",
+      "tests/evidence-integration.test.ts": "e8d4e30a27e2022787e2a86b8072d9d0558ab124e436be8839e93d59beab651b",
+      "tests/evidence-unit.test.ts": "be3dbc5e838e8daa7889f33f434ff02d3c0b31f999072a23f25fe8efc7ffec0d",
+      "tests/mailboxes-integration.test.ts": "c072c3a693cfc63d9e5e5a768de3cdead03564b6b197822d052e0a7567068e3a",
+      "tests/mailboxes-unit.test.ts": "22d74a6341a2125d78b10f8a3627584df1625a63d422f1a702a5536df634386b",
+      "tests/replies-integration.test.ts": "aa0765005aca4bee224af865c959c838352d52a8c2b280cbf42fb13bd836af1c",
+      "tests/replies-unit.test.ts": "3c73f4d5030b7c505aba19abe334c155823ea22603f306e9269e94188235b420",
+      "tests/submission-integration.test.ts": "7c3c684cf25dbed936e809b5e7a8a8231f24e1db08dc1558ed41dd70ef5c95be",
+      "tests/submission-unit.test.ts": "a61eaae79d360933e4c462cd8e397ceb69465a7b0cd3c1ac15aedbefd6d18ba8",
+      "tests/suppression-integration.test.ts": "abf19088db6ecc814b0ff4e0957e83e63b880746c43d14937a844e89552aa3e1",
+      "tests/suppression-owner-integration.test.ts": "eb1fe102d46d46ab359342d41cc1b6230f5c3f0b8d0be1b332df3a02a95544d1",
+      "tests/suppression-unit.test.ts": "ac0765ebd53fc254562d99d25445f68d4258ddf8723d11b5d6d8579a2d5723b2",
+      "tests/web-integration.test.ts": "4ccfcad0e522a9ade5f5ff6d2b36676e79fb3e865924c80c2be42f4c0780d113",
+      "tests/web-unit.test.ts": "bbea3db619603b6151d4647bdbb24c0a9b93454a1f623fe1e2d111b559964140",
+      "tsconfig.build.json": "8604911ac658f73989bc22831fb4fe040b7285ea85575b3edefcc384674a6330",
+      "tsconfig.json": "0fe3705422763f10ffc11ebc6cb3712acc7159b70c51b76ee487ba5cc625de78"
+    }
+  },
+  "mutation": {
+    "red_exit": 1,
+    "green_exit": 0,
+    "at": "2026-10-03T03:22:59.541262+00:00",
+    "mutation": "old passive login broadcast restored in actual src/web/page.ts"
+  },
+  "checks_pending": [
+    "fullPG",
+    "image/canary"
+  ],
+  "current_source_revision": "3423e722",
+  "gates": {
+    "typecheck": {
+      "exit": 0
+    },
+    "lint": {
+      "exit": 0
+    },
+    "build": {
+      "exit": 0
+    },
+    "test": {
+      "exit": 0
+    }
+  }
+}

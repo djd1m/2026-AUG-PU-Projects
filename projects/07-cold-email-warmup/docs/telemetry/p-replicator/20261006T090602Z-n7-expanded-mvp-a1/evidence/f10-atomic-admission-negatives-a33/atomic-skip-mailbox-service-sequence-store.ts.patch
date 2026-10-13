@@ -1,0 +1,11 @@
+--- src/runtime/store.ts
++++ src/runtime/store.ts
+@@ -99,7 +99,7 @@
+    }
+   }
+   await c.query("UPDATE runtime_tenant_turn SET service_seq=nextval('runtime_service_seq') WHERE tenant_id=$1 AND kind=$2",[row.tenant_id,kind]);
+-  await c.query("UPDATE runtime_due SET service_seq=nextval('runtime_service_seq') WHERE mailbox_id=$1 AND kind=$2",[row.mailbox_id,kind]);
++  // mutant omits selected mailbox durable turn
+   if(kind==='dispatch'){
+    await this.projectDispatch(c,row.mailbox_id,now);
+    row=(await c.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='dispatch'",[row.mailbox_id])).rows[0];

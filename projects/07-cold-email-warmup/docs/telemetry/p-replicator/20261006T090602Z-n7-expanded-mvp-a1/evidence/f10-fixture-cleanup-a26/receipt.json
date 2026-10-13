@@ -1,0 +1,72 @@
+{
+  "attempt": "A26",
+  "status": "completed_bounded_correction",
+  "verdict": "BLOCKED_REQUIRED_NATIVE_GREEN",
+  "revision": "d2a03eb0ee91409b59b65dc66808159db7975d7e",
+  "baseline": "9ad64857e9b82303165934011f8ab4bf8a783409",
+  "finished_at": "2026-10-06T21:23:59.385858+00:00",
+  "elapsed_wall_ms": 383394.833,
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gap": "host model/usage billing metadata unavailable",
+  "scope": "only tests/f10-runtime-protocol.test.ts",
+  "short_native": {
+    "finished_at": "2026-10-06T21:19:49.338156+00:00",
+    "native_returncode": 0,
+    "timed_out": false,
+    "elapsed_ms": 820.9493628237396,
+    "started_at": "2026-10-06T21:19:48.517240+00:00",
+    "pid": 2886692,
+    "startticks": "124459851",
+    "runner_pid": 2886628
+  },
+  "original_native": {
+    "finished_at": "2026-10-06T21:22:11.387947+00:00",
+    "native_returncode": 1,
+    "timed_out": false,
+    "elapsed_ms": 114995.38996093906,
+    "started_at": "2026-10-06T21:20:16.392593+00:00",
+    "pid": 2891697,
+    "startticks": "124462639",
+    "runner_pid": 2891677
+  },
+  "typecheck": 0,
+  "scoped_lint": 0,
+  "mandatory_green": false,
+  "max_e_gap_ms": 69815.0,
+  "fixture_cleanup_finding": "F10-A25-001 correction proven; independent reconciliation pending",
+  "open_finding": "F10-A23-001 remains open; exact original cadence gap assertion failed",
+  "final_inventory": "120 source/73 build/15 SQL; only one protocol-test hash differs from A24; other119/build73/SQL15 unchanged",
+  "joins": "all3 scheduled worker exit0/null signal/drained; runner remaining_owned_nodes empty",
+  "PG": "n7f10_a2 quiescent; final triggers0/functionfalse/tablefalse/occupied0",
+  "mutex": "nonblocking reacquisition succeeded and released",
+  "source_DB_lease": "released to coordinator",
+  "next_executor": "/root/n7_sol_coordinator to launch fresh independent HIGH diagnosis/reconciliation",
+  "canary": {
+    "pass": true,
+    "files": 200,
+    "bytes": 1808047,
+    "hits": 0,
+    "secrets_available": 5,
+    "retry": "first audit-only helper failed Digest method not supported due overly broad path substitution; corrected unique helper exit0; no source/native input change"
+  },
+  "guard_counts": {
+    "socketAllowed": 224,
+    "socketDenied": 10,
+    "dnsDenied": 0,
+    "ipcValidated": 183,
+    "processes": 194
+  },
+  "guard_denials": "actual blocked attempts; endpoints uncaptured, no invented attribution",
+  "prior_negative_evidence": [
+    "/tmp/n7-f10-adversarial-fairness-a24/oldest-due-negative-v3-native-exit.json",
+    "/tmp/n7-f10-adversarial-fairness-a24/reset-yield-sequence-negative-v3-native-exit.json"
+  ],
+  "sensitivity": "current preserved original assertion body/function byte identity in assertion-preservation.json, unchanged compiled store SHA4f022e11...; no 0/1/0 chronology claim",
+  "actions_not_taken": "no runtime/threshold/dependency/global config/main writes; no repeated full native, RED, broad/fullPG/healthy330/physical runs"
+}

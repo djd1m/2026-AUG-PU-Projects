@@ -1,0 +1,161 @@
+{
+  "utc": "2026-10-07T02:12:26.089Z",
+  "identity": {
+    "db": "n7f11_a8",
+    "role": "n7",
+    "owner": "n7",
+    "sessions": 0
+  },
+  "counts": {
+    "foreign_rows": 0,
+    "physical": 0,
+    "claims": 0,
+    "body_claims": 1
+  },
+  "advisory": [
+    {
+      "pid": 906546,
+      "classid": 7,
+      "objid": 1
+    }
+  ],
+  "owned": [
+    "0d4b6cb1-c511-446b-a648-093c72fda701",
+    "998fd948-516a-461c-8aab-7ae08c79e483",
+    "cdc0ed2c-ed94-4daa-b4b3-7a92262a1920"
+  ],
+  "deleted": [
+    {
+      "table": "reply_effect",
+      "rows": 30
+    },
+    {
+      "table": "runtime_due",
+      "rows": 90
+    },
+    {
+      "table": "pool_member",
+      "rows": 30
+    },
+    {
+      "table": "transport_grant",
+      "rows": 30
+    },
+    {
+      "table": "complaint_event",
+      "rows": 0
+    },
+    {
+      "table": "reply_rescan",
+      "rows": 30
+    },
+    {
+      "table": "runtime_mailbox",
+      "rows": 30
+    },
+    {
+      "table": "reply_observation",
+      "rows": 30
+    },
+    {
+      "table": "billing_entitlement",
+      "rows": 3
+    },
+    {
+      "table": "unsubscribe_token",
+      "rows": 19
+    },
+    {
+      "table": "transport_operation",
+      "rows": 0
+    },
+    {
+      "table": "reply_message",
+      "rows": 30
+    },
+    {
+      "table": "session",
+      "rows": 0
+    },
+    {
+      "table": "local_reply_fixture",
+      "rows": 0
+    },
+    {
+      "table": "suppression",
+      "rows": 0
+    },
+    {
+      "table": "runtime_tenant_turn",
+      "rows": 9
+    },
+    {
+      "table": "capacity_lease",
+      "rows": 30
+    },
+    {
+      "table": "mailbox_poll",
+      "rows": 30
+    },
+    {
+      "table": "incoming_ai_event",
+      "rows": 30
+    },
+    {
+      "table": "local_test_message",
+      "rows": 0
+    },
+    {
+      "table": "transport_receipt",
+      "rows": 19
+    },
+    {
+      "table": "evidence_event",
+      "rows": 0
+    },
+    {
+      "table": "evidence_report",
+      "rows": 0
+    },
+    {
+      "table": "billing_intent",
+      "rows": 3
+    },
+    {
+      "table": "send_job",
+      "rows": 91
+    },
+    {
+      "table": "consent",
+      "rows": 60
+    },
+    {
+      "table": "enrollment",
+      "rows": 30
+    },
+    {
+      "table": "account",
+      "rows": 3
+    },
+    {
+      "table": "mailbox",
+      "rows": 100
+    },
+    {
+      "table": "evidence_observation",
+      "rows": 0
+    },
+    {
+      "table": "partner_code",
+      "rows": 0
+    },
+    {
+      "table": "campaign",
+      "rows": 30
+    },
+    {
+      "table": "tenant",
+      "rows": 3
+    }
+  ]
+}

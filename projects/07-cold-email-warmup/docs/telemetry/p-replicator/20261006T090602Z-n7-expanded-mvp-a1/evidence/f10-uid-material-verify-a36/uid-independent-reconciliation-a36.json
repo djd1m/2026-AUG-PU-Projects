@@ -1,0 +1,279 @@
+{
+  "utc": "2026-10-06T23:18:38.757918+00:00",
+  "finding": "F10-A35-001 / composite AC007",
+  "approved_UID_planner_sha256": "998aeeb0b4c89294d7f196650b759954f3a965f62dacfaf8313d1e5eaf749662",
+  "authorized_A35_finding_sha256": "dfaaf15d614ed108a77a2cfe2fac99d107b08b5ba76e9a3570c66d5373a806e0",
+  "source_head": "db50798a76a97fed75931544f24cd1181ff082d8",
+  "unique_approved_mechanisms": 6,
+  "source_compiled_mechanism_records": 12,
+  "additional_mechanism5_timestamp_records": 2,
+  "all_native_stages": "baseline0 / named ERR_ASSERTION negative1 / restored0; literal one-test counts, exact hashes and PIDs/ticks; cached baseline pointers independently reverified by TAP SHA",
+  "original_product_source_and_tests_unchanged": true,
+  "operational_test_copies": "existing full-poll and native30.1s retry title with numeric observer only; compiled copies direct ../dist imports; tiny literal PG tail/cursor observer extracted from existing R1 fixed-tail/retry seam and existing runtimeFixture",
+  "required6": [
+    "mismatch-as-error",
+    "accepting/relabeling old FETCH after generation change",
+    "second snapshot in one native quantum",
+    "explicit retry fixed-tail/cursor reset",
+    "false reset completion and false completed_at freshness",
+    "ordinary polling explicit-retry bypass"
+  ],
+  "negative_raw_assertions": [
+    {
+      "case": "uid-mismatch-as-error-source",
+      "native_exit": 1,
+      "failure_titles": [
+        "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+      ],
+      "tap": "uid-mismatch-as-error-source-negative.tap",
+      "tap_sha256": "315f3a93df30d2465337864cac1a6541f93ebe10dd0f26d3a84107e651283766",
+      "literal_numeric_observers": [
+        "# A36_UID_COUNTS {\"state\":\"paused\",\"snapshots\":1,\"fetches\":0}"
+      ],
+      "assertion_fields": [
+        "code: 'ERR_ASSERTION'",
+        "expected: 'scanning'",
+        "actual: 'paused'",
+        "operator: 'strictEqual'"
+      ]
+    },
+    {
+      "case": "uid-mismatch-as-error-compiled",
+      "native_exit": 1,
+      "failure_titles": [
+        "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+      ],
+      "tap": "uid-mismatch-as-error-compiled-negative.tap",
+      "tap_sha256": "1dcd1351d51b6831ba85899bbe30ac04eca733c7ae092f7eb075f09e26ee60a3",
+      "literal_numeric_observers": [
+        "# A36_UID_COUNTS {\"state\":\"paused\",\"snapshots\":1,\"fetches\":0}"
+      ],
+      "assertion_fields": [
+        "code: 'ERR_ASSERTION'",
+        "expected: 'scanning'",
+        "actual: 'paused'",
+        "operator: 'strictEqual'"
+      ]
+    },
+    {
+      "case": "uid-accept-old-fetch-relabel-source",
+      "native_exit": 1,
+      "failure_titles": [
+        "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+      ],
+      "tap": "uid-accept-old-fetch-relabel-source-negative.tap",
+      "tap_sha256": "33753056b53cc9245600ce64036aaf5ea0ccef4cd9529a5e9a7b180c1a479d47",
+      "literal_numeric_observers": [
+        "# A36_UID_COUNTS {\"state\":\"scanning\",\"snapshots\":2,\"fetches\":1}"
+      ],
+      "assertion_fields": [
+        "code: 'ERR_ASSERTION'",
+        "expected: 1",
+        "actual: 2",
+        "operator: 'strictEqual'"
+      ]
+    },
+    {
+      "case": "uid-accept-old-fetch-relabel-compiled",
+      "native_exit": 1,
+      "failure_titles": [
+        "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+      ],
+      "tap": "uid-accept-old-fetch-relabel-compiled-negative.tap",
+      "tap_sha256": "e15b2b82c011f8c08d9a4682f8368afc904a2484455092fbf70f2421924db79c",
+      "literal_numeric_observers": [
+        "# A36_UID_COUNTS {\"state\":\"scanning\",\"snapshots\":2,\"fetches\":1}"
+      ],
+      "assertion_fields": [
+        "code: 'ERR_ASSERTION'",
+        "expected: 1",
+        "actual: 2",
+        "operator: 'strictEqual'"
+      ]
+    },
+    {
+      "case": "uid-second-snapshot-source",
+      "native_exit": 1,
+      "failure_titles": [
+        "not ok 1 - explicit retry captures changed native UID proof in one quantum without old FETCH or freshness"
+      ],
+      "tap": "uid-second-snapshot-source-negative.tap",
+      "tap_sha256": "48f849bfbe976a99efc2cc79b0a6a03483c7735635b33923a30500532b3ca606",
+      "literal_numeric_observers": [],
+      "assertion_fields": [
+        "code: 'ERR_ASSERTION'",
+        "expected: 2",
+        "actual: 3",
+        "operator: 'strictEqual'"
+      ]
+    },
+    {
+      "case": "uid-second-snapshot-compiled",
+      "native_exit": 1,
+      "failure_titles": [
+        "not ok 1 - explicit retry captures changed native UID proof in one quantum without old FETCH or freshness"
+      ],
+      "tap": "uid-second-snapshot-compiled-negative.tap",
+      "tap_sha256": "0c3c6a7b9b9db215eeda0e81d865d1b38bb179b5185e50ec17ee46a3b9e24366",
+      "literal_numeric_observers": [],
+      "assertion_fields": [
+        "code: 'ERR_ASSERTION'",
+        "expected: 2",
+        "actual: 3",
+        "operator: 'strictEqual'"
+      ]
+    },
+    {
+      "case": "uid-retry-tail-cursor-reset-source",
+      "native_exit": 1,
+      "failure_titles": [
+        "not ok 1 - A36 explicit retry preserves fixed tail cursor horizon and run identity"
+      ],
+      "tap": "uid-retry-tail-cursor-reset-source-negative.tap",
+      "tap_sha256": "6a75505d37194ab691609036a6ba82c29fde96b4a3c0ce86c7e65601c875e5dc",
+      "literal_numeric_observers": [
+        "# A36_RETRY_COUNTS {\"tail\":null,\"cursor\":0,\"horizon\":10,\"attempt\":2,\"pages\":0,\"sameRun\":true}"
+      ],
+      "assertion_fields": [
+        "code: 'ERR_ASSERTION'",
+        "expected: 30",
+        "actual: ~",
+        "operator: 'strictEqual'"
+      ]
+    },
+    {
+      "case": "uid-retry-tail-cursor-reset-compiled",
+      "native_exit": 1,
+      "failure_titles": [
+        "not ok 1 - A36 explicit retry preserves fixed tail cursor horizon and run identity"
+      ],
+      "tap": "uid-retry-tail-cursor-reset-compiled-negative.tap",
+      "tap_sha256": "3f67c39899a8a9289231edb5bf056ee7102605659612d168bac3519e2ef772a7",
+      "literal_numeric_observers": [
+        "# A36_RETRY_COUNTS {\"tail\":null,\"cursor\":0,\"horizon\":10,\"attempt\":2,\"pages\":0,\"sameRun\":true}"
+      ],
+      "assertion_fields": [
+        "code: 'ERR_ASSERTION'",
+        "expected: 30",
+        "actual: ~",
+        "operator: 'strictEqual'"
+      ]
+    },
+    {
+      "case": "uid-false-freshness-reset-success-source",
+      "native_exit": 1,
+      "failure_titles": [
+        "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+      ],
+      "tap": "uid-false-freshness-reset-success-source-negative.tap",
+      "tap_sha256": "eb1190da7bc0624e2d708802406da2476d607fa3e6f2d7b8c80af72da746d420",
+      "literal_numeric_observers": [
+        "# A36_UID_COUNTS {\"state\":\"scanning\",\"snapshots\":1,\"fetches\":0}"
+      ],
+      "assertion_fields": [
+        "code: 'ERR_ASSERTION'",
+        "expected: false",
+        "actual: true",
+        "operator: 'strictEqual'"
+      ]
+    },
+    {
+      "case": "uid-false-freshness-reset-success-compiled",
+      "native_exit": 1,
+      "failure_titles": [
+        "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+      ],
+      "tap": "uid-false-freshness-reset-success-compiled-negative.tap",
+      "tap_sha256": "fd385f1c0224b03ed528536ad6c9eb205b4dbd6644754523289fa99791bc28ad",
+      "literal_numeric_observers": [
+        "# A36_UID_COUNTS {\"state\":\"scanning\",\"snapshots\":1,\"fetches\":0}"
+      ],
+      "assertion_fields": [
+        "code: 'ERR_ASSERTION'",
+        "expected: false",
+        "actual: true",
+        "operator: 'strictEqual'"
+      ]
+    },
+    {
+      "case": "uid-explicit-retry-bypass-source",
+      "native_exit": 1,
+      "failure_titles": [
+        "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+      ],
+      "tap": "uid-explicit-retry-bypass-source-negative.tap",
+      "tap_sha256": "cdb972bcbd5c71caf9172fbee27f4b67954c6b524ebc32549eecd2a3aa66d032",
+      "literal_numeric_observers": [
+        "# A36_UID_COUNTS {\"state\":\"scanning\",\"snapshots\":1,\"fetches\":0}",
+        "# A36_HELD_COUNTS {\"state\":\"complete\",\"additionalVerbs\":12}"
+      ],
+      "assertion_fields": [
+        "code: 'ERR_ASSERTION'",
+        "expected: 'rescan_incomplete'",
+        "actual: 'complete'",
+        "operator: 'strictEqual'"
+      ]
+    },
+    {
+      "case": "uid-explicit-retry-bypass-compiled",
+      "native_exit": 1,
+      "failure_titles": [
+        "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+      ],
+      "tap": "uid-explicit-retry-bypass-compiled-negative.tap",
+      "tap_sha256": "fbcedac30d133e05a01386b3775a23a0045ee3692dcd08385798cb50c8b5f8e6",
+      "literal_numeric_observers": [
+        "# A36_UID_COUNTS {\"state\":\"scanning\",\"snapshots\":1,\"fetches\":0}",
+        "# A36_HELD_COUNTS {\"state\":\"complete\",\"additionalVerbs\":12}"
+      ],
+      "assertion_fields": [
+        "code: 'ERR_ASSERTION'",
+        "expected: 'rescan_incomplete'",
+        "actual: 'complete'",
+        "operator: 'strictEqual'"
+      ]
+    },
+    {
+      "case": "uid-freshness-timestamp-source",
+      "native_exit": 1,
+      "failure_titles": [
+        "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+      ],
+      "tap": "uid-freshness-timestamp-source-negative.tap",
+      "tap_sha256": "995bb99bbf47e2e78a8adc39a52cbbd8a6f0f1ad749edd1a94be89154263a484",
+      "literal_numeric_observers": [
+        "# A36_FRESHNESS_COUNTS {\"changed\":true,\"deltaMs\":1423}"
+      ],
+      "assertion_fields": [
+        "code: 'ERR_ASSERTION'",
+        "expected: 1791328580116",
+        "actual: 1791328581539",
+        "operator: 'strictEqual'"
+      ]
+    },
+    {
+      "case": "uid-freshness-timestamp-compiled",
+      "native_exit": 1,
+      "failure_titles": [
+        "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+      ],
+      "tap": "uid-freshness-timestamp-compiled-negative.tap",
+      "tap_sha256": "0ada0386e62ed536e6a3c7348b24f49f51c1755862ae75cefb64c2520e39f934",
+      "literal_numeric_observers": [
+        "# A36_FRESHNESS_COUNTS {\"changed\":true,\"deltaMs\":1096}"
+      ],
+      "assertion_fields": [
+        "code: 'ERR_ASSERTION'",
+        "expected: 1791328593388",
+        "actual: 1791328594484",
+        "operator: 'strictEqual'"
+      ]
+    }
+  ],
+  "old_UID_mutation_evidence_reuse": false,
+  "previous_green_reuse": "all unchanged A32/A33/A34/A35 source-bound gates preserved; no fullPG/unit/canonical330/physical/fairness replay",
+  "confirmed_source_defect": null,
+  "durable_product_or_test_fix": null,
+  "next_executor": "same independent A35 finding-only raw reconciliation; coordinator must actually trigger it",
+  "product_acceptance": false
+}

@@ -1,0 +1,790 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "F11 unaccepted; A45 test-only candidate a382 sealed, A46 actual MEDIUM remaining12 material modes active",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+    "work_unit_id": "expanded-mvp",
+    "current_attempt_id": "f11-deferred-material-fixture-author-a46"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "98d4418c422fadce792e8f6630fa82ed185c4260",
+    "current_revision": "a382228814af1751df3f7176b2e7aec617d9e769",
+    "build_revision": "535251adf8392f4e4c0258ccaec86abefd0810d5",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/features/expanded-mvp/01_specification.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/features/expanded-mvp/03_architecture.md"
+      }
+    ],
+    "continuity": {
+      "last_sealed_candidate": "a382228814af1751df3f7176b2e7aec617d9e769",
+      "production_dist_152_unchanged": true,
+      "build_note": "A45 static --noEmit/type/lint only, no emitted build claim",
+      "current_workspace_status": "A46 isolated test authoring, production read-only; candidate not main integration or acceptance"
+    },
+    "dirty_scope_sha256": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+    "integration_note": "F10 accepted main3566 baseline retained. Current F11 candidate406 isolated only; library experiment530 separately delivered negative assessment; no production migration."
+  },
+  "prepare": {
+    "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+    "scope": [
+      "Unlimited connected mailbox entitlement with finite active admission",
+      "Real automatic warmup and persistent fair SMTP/IMAP workers",
+      "OpenAI drafts/HITL and separately consented autopilot, arrival-to-SMTP-accepted p95<300s"
+    ],
+    "exclusions": [
+      "CRM and domain purchase",
+      "Real billing",
+      "Automatic external live activation or deployment"
+    ],
+    "action_limits": [
+      "No real external mail, paid API calls or deployment without applicable permission",
+      "Preserve tenant, AEAD, stop fence, quotas and unknown_delivery safeguards"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-expanded-mvp-001",
+        "required": true
+      },
+      {
+        "id": "AC-expanded-mvp-002",
+        "required": true
+      },
+      {
+        "id": "AC-expanded-mvp-003",
+        "required": true
+      },
+      {
+        "id": "AC-expanded-mvp-004",
+        "required": true
+      },
+      {
+        "id": "AC-expanded-mvp-005",
+        "required": true
+      },
+      {
+        "id": "AC-expanded-mvp-006",
+        "required": true
+      },
+      {
+        "id": "AC-expanded-mvp-007",
+        "required": true
+      },
+      {
+        "id": "AC-expanded-mvp-008",
+        "required": true
+      },
+      {
+        "id": "AC-expanded-mvp-009",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "docs/research/instantly-donors-20261006/README.md"
+          }
+        },
+        "provenance": "donor00 02689350083fa6961df07d47aca8ea9079b1f527; donor01 fdf565827880813c97535c9aa68ea7fa08ee4339",
+        "useful_fragment": "Selective CSV and transport/UI reference; preserve N7 auth/crypto/queue",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Whole donor systems violate existing N7 safety boundaries; only independently tested compatible fragments"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No schedule/cost forecast attempted: no comparable accepted expanded/live run; exact seven-day pilot window is a proposed external test duration",
+      "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [
+        "Unmeasured implementation and external permission wait"
+      ],
+      "external_expectations": [
+        "Owner concrete XL plan checkpoint; later authorized seven-day pilot"
+      ],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+      "tier": "XL",
+      "rationale": "F10 durable fairness/shared claims/pool auto-enrollment, mechanical M lowerbound; authorized scope005",
+      "script": {
+        "input": "src/dispatch/worker.ts src/replies/worker.ts src/pool/store.ts",
+        "exit_code": 0
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+      "tier": "XL",
+      "rationale": "F10 corrected cadence independent READY; mechanical S0 uplift XL, physical fairness/currentquota/stop gates unchanged",
+      "script": {
+        "input": "src/runtime/store.ts src/runtime/loop.ts tests/f10-runtime-integration.test.ts tests/expanded-mvp-04.test.ts (explicit product paths)",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "required",
+    "reason": "OWN-N7-005 approved XL scope/team/skills; OWN-N7-006 overrides requested model/effort and clean reviewer context without new scope.",
+    "evidence": {
+      "id": "OWN-N7-005",
+      "plan_revision": "sha256:dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+      "covers": [
+        "plan",
+        "team",
+        "roles",
+        "models",
+        "skills"
+      ],
+      "path": {
+        "root": "project",
+        "path": "docs/decisions-owner.md"
+      },
+      "sha256": "c20b00148c16f0f94c83c96dbfba61551c67e6855109a29e309abcc7a4ff30f9"
+    }
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "No browser/deployed E2E claim in this frozen operational slice. Actual isolated native preflight is ready: source120/build73/SQL15 bound, DBn7f10_a2 quiescent/slots0/claims0, prior owned nodes joined, heavy mutex and inherited network guard; A33 remaining-f09-five-ready.json provides exact local proof. No live provider or deployment actions.",
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "plan-1",
+      "status": "completed"
+    },
+    {
+      "id": "validate-1",
+      "status": "completed"
+    },
+    {
+      "id": "plan-r2",
+      "status": "completed"
+    },
+    {
+      "id": "validate-r2",
+      "status": "completed"
+    },
+    {
+      "id": "contract-author-a1",
+      "status": "failed"
+    },
+    {
+      "id": "contract-author-a2",
+      "status": "completed"
+    },
+    {
+      "id": "f07-plan-a1",
+      "status": "completed"
+    },
+    {
+      "id": "f07-implement-a1",
+      "status": "completed"
+    },
+    {
+      "id": "contract-fix-a3",
+      "status": "completed"
+    },
+    {
+      "id": "f07-plan-r2",
+      "status": "completed"
+    },
+    {
+      "id": "f07-validate-a1",
+      "status": "completed"
+    },
+    {
+      "id": "f07-validate-r2",
+      "status": "completed"
+    },
+    {
+      "id": "legacy-review-a1",
+      "status": "completed"
+    },
+    {
+      "id": "legacy-r1-fix",
+      "status": "completed"
+    },
+    {
+      "id": "legacy-review-r2",
+      "status": "completed"
+    },
+    {
+      "id": "f07-review-a1",
+      "status": "completed"
+    },
+    {
+      "id": "f08-plan-a1",
+      "status": "completed"
+    },
+    {
+      "id": "f08-validate-a1",
+      "status": "completed"
+    },
+    {
+      "id": "f08-plan-r2",
+      "status": "completed"
+    },
+    {
+      "id": "f08-validate-r2",
+      "status": "completed"
+    },
+    {
+      "id": "f08-implement-a1",
+      "status": "failed"
+    },
+    {
+      "id": "f08-verify-a2",
+      "status": "completed"
+    },
+    {
+      "id": "f08-dependency-fix-a1",
+      "status": "completed"
+    },
+    {
+      "id": "f08-review-a1",
+      "status": "completed"
+    },
+    {
+      "id": "f08-review-fix-a3",
+      "status": "completed"
+    },
+    {
+      "id": "f08-review-r2",
+      "status": "completed"
+    },
+    {
+      "id": "f09-plan-a1",
+      "status": "failed"
+    },
+    {
+      "id": "f09-validate-a1",
+      "status": "completed"
+    },
+    {
+      "id": "f09-plan-r2",
+      "status": "completed"
+    },
+    {
+      "id": "f09-validate-r2",
+      "status": "completed"
+    },
+    {
+      "id": "f09-implement-a1",
+      "status": "failed"
+    },
+    {
+      "id": "f09-verify-a2",
+      "status": "failed"
+    },
+    {
+      "id": "f09-final-check-a3",
+      "status": "completed"
+    },
+    {
+      "id": "f09-review-a1",
+      "status": "failed"
+    },
+    {
+      "id": "f09-review-fix-a4",
+      "status": "completed"
+    },
+    {
+      "id": "f09-review-r2",
+      "status": "completed"
+    },
+    {
+      "id": "f10-plan-a1",
+      "status": "failed"
+    },
+    {
+      "id": "f10-plan-a2",
+      "status": "failed"
+    },
+    {
+      "id": "f10-validate-a1",
+      "status": "failed"
+    },
+    {
+      "id": "f10-plan-r3",
+      "status": "failed"
+    },
+    {
+      "id": "f10-validate-r2",
+      "status": "completed"
+    },
+    {
+      "id": "f10-implement-a1",
+      "status": "failed"
+    },
+    {
+      "id": "f10-implement-a2",
+      "status": "failed"
+    },
+    {
+      "id": "f10-projection-fix-a3",
+      "status": "failed"
+    },
+    {
+      "id": "f10-projection-fix-a4",
+      "status": "completed"
+    },
+    {
+      "id": "f10-native-verify-a5",
+      "status": "failed"
+    },
+    {
+      "id": "f10-cadence-fix-a6",
+      "status": "failed"
+    },
+    {
+      "id": "f10-cadence-contract-a1",
+      "status": "failed"
+    },
+    {
+      "id": "f10-cadence-plan-a1",
+      "status": "completed"
+    },
+    {
+      "id": "f10-cadence-validate-a1",
+      "status": "completed"
+    },
+    {
+      "id": "f10-cadence-implement-a7",
+      "status": "failed"
+    },
+    {
+      "id": "f10-native-profile-a8",
+      "status": "failed"
+    },
+    {
+      "id": "f10-safe-profile-a9",
+      "status": "completed"
+    },
+    {
+      "id": "f10-contention-fix-a10",
+      "status": "completed"
+    },
+    {
+      "id": "f10-frozen-verify-a11",
+      "status": "failed"
+    },
+    {
+      "id": "f10-graceful-claims-fix-a12",
+      "status": "failed"
+    },
+    {
+      "id": "f10-retry-diagnose-fixture-a13",
+      "status": "completed"
+    },
+    {
+      "id": "f10-uidreset-contract-plan-a14",
+      "status": "failed"
+    },
+    {
+      "id": "f10-uidreset-contract-plan-a14b-cli",
+      "status": "completed"
+    },
+    {
+      "id": "f10-uidreset-implement-a15",
+      "status": "completed"
+    },
+    {
+      "id": "f10-frozen-verify-a16",
+      "status": "failed"
+    },
+    {
+      "id": "f10-frozen-verify-a17",
+      "status": "failed"
+    },
+    {
+      "id": "f10-diagnostic-a18",
+      "status": "completed"
+    },
+    {
+      "id": "f10-capacity-fixture-fix-a19",
+      "status": "completed"
+    },
+    {
+      "id": "f10-frozen-verify-a20",
+      "status": "completed"
+    },
+    {
+      "id": "f10-remaining-verify-a21",
+      "status": "active"
+    },
+    {
+      "id": "f11-context-plan-a1",
+      "status": "failed"
+    },
+    {
+      "id": "f11-context-plan-a1b-cli",
+      "status": "failed"
+    },
+    {
+      "id": "f11-context-plan-a1c-cli",
+      "status": "active"
+    },
+    {
+      "id": "f10-fixture-cleanup-a26",
+      "status": "completed"
+    },
+    {
+      "id": "f10-egap-diagnosis-a27",
+      "status": "completed"
+    },
+    {
+      "id": "f11-context-plan-validation-a28-native",
+      "status": "completed"
+    },
+    {
+      "id": "f10-physical-admission-observer-a29",
+      "status": "completed diagnostic; native RED preserved"
+    },
+    {
+      "id": "f10-physical-admission-plan-a30",
+      "status": "completed; freeze overrun disclosed"
+    },
+    {
+      "id": "f10-atomic-admission-a31",
+      "status": "completed focused correction; full acceptance pending"
+    },
+    {
+      "id": "f10-atomic-admission-verify-a32",
+      "status": "completed executed scope; product acceptance pending mandatory negatives and fresh review"
+    },
+    {
+      "id": "f10-atomic-admission-negatives-a33",
+      "status": "completed scoped; cancellation timeout and two fence probes remain"
+    },
+    {
+      "id": "f10-cancel-diagnostic-a34",
+      "status": "completed all scoped source/compiled counterproofs; original timeout retained"
+    },
+    {
+      "id": "f10-final-source-review-a35",
+      "status": "BLOCKED solely six UID material witnesses; no source defect"
+    },
+    {
+      "id": "f10-uid-material-verify-a36",
+      "status": "active; actual ACK verified"
+    },
+    {
+      "id": "f11-context-author-a2",
+      "status": "completed coherent partial; full F11 acceptance pending",
+      "receipt_sha256": "e6615f1d2cccfcf7b11e48055f5edf51cf380768105e01ac9a52831bd6b2cff1",
+      "finished_at": "2026-10-06T23:58:46.741297+00:00",
+      "revision": "e10419a60a032bb39fd6e29afaca5a9b9585b9db"
+    },
+    {
+      "id": "f11-context-author-a3",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T00:02:53Z"
+    },
+    {
+      "id": "f11-context-author-a3",
+      "status": "completed coherent partial early",
+      "finished_at": "2026-10-07T00:10:00.831653+00:00",
+      "revision": "a0f29eaee46b6639ad8d473caca8cc9dbbf5a89a",
+      "receipt_sha256": "a499ef25ed88545e957326d003d708735a5d95ab3b86b0df6918f539a29187c6"
+    },
+    {
+      "id": "f11-context-author-a4",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T00:11:43.110842969Z"
+    },
+    {
+      "id": "f11-context-author-a4",
+      "status": "completed coherent partial early; runtimeOFF",
+      "finished_at": "2026-10-07T00:21:55.732233+00:00",
+      "revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+      "receipt_sha256": "284c8f82420bf591158d2f3cb16be8a6b4d2cb02d60ee9fcc172f16f4077edf7"
+    },
+    {
+      "id": "f11-c1-adjudication-a5-native",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T00:23:22Z"
+    },
+    {
+      "id": "f11-c1-adjudication-a5-native",
+      "status": "completed early; explicit conditional amendment feasibility-gated",
+      "finished_at": "2026-10-07T00:28:55.922873Z",
+      "elapsed_wall_ms": 333923,
+      "receipt_sha256": "62bd29192e3a82ddd4e2a3f3fc43b3adc3830dcc163c3257a6e369dcca4b76de"
+    },
+    {
+      "id": "f11-context-author-a6",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T00:32:37Z"
+    },
+    {
+      "id": "f11-context-author-a6",
+      "status": "completed coherent partial; liveness BLOCKED",
+      "revision": "b731e362155710ec1014d9b26625d155c15f81e9",
+      "finished_at": "2026-10-07T00:48:39.201727+00:00"
+    },
+    {
+      "id": "f11-c1-feasibility-a7-native",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T00:51:07Z"
+    },
+    {
+      "id": "f11-c1-feasibility-a7-native",
+      "status": "completed early; strategy ready/acceptance BLOCKED",
+      "finished_at": "2026-10-07T00:56:47.172969+00:00",
+      "report_sha256": "5933553b035e0e73ee8027ef90daef1608612b6bcee15ecdcaacf3af0e60b0b7"
+    },
+    {
+      "id": "f11-context-author-a8",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T00:58:19Z"
+    },
+    {
+      "id": "f11-context-author-a8",
+      "status": "completed early scoped candidate",
+      "revision": "feb0aae996c80c6e591ebfba5585ec7d5ca27c62",
+      "ended_at": "2026-10-07T01:15:24.124872+00:00",
+      "receipt_sha256": "0dbeb2fb963a7e73a55767ba670c2a2e397f85db15233b932de3710f84fa4835"
+    },
+    {
+      "id": "f11-operational-verifier-a9",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T01:18:44Z"
+    },
+    {
+      "id": "f11-operational-verifier-a9",
+      "status": "completed early fixtureblocked/full300unexecuted",
+      "ended_at": "2026-10-07T01:25:35.402501Z",
+      "receipt_sha256": "074d720c429e883b3a5af1c78d9b3c3bb351fa12dc01718715779a998882cf19"
+    },
+    {
+      "id": "f12-planning-within-f11-a9",
+      "status": "completed early candidate, independentvalidation pending",
+      "ended_at": "2026-10-07T01:24:03.011838+00:00",
+      "plan_sha256": "6f125040982f7a9edfc51dccad049519aedac7d7b702d21bb334cc916a94afe0"
+    },
+    {
+      "id": "f11-fleet-seed-author-a10",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T01:27:20Z"
+    },
+    {
+      "id": "f11-fleet-seed-author-a10",
+      "status": "completed earlyONEfixtureactualseed0",
+      "ended_at": "2026-10-07T01:30:03.530792Z",
+      "revision": "b2bbbf533a74485f46986bb8c6520a63fc8c45a1"
+    },
+    {
+      "id": "f11-operational-verifier-a11",
+      "status": "completed early scopedhealthy300 native0 productpending",
+      "actual_ACK_at": "2026-10-07T01:32:29Z",
+      "ended_at": "2026-10-07T01:43:03.851100Z"
+    },
+    {
+      "id": "f11-retention-fault-author-a12",
+      "status": "completed early5file54native+finitefault",
+      "actual_ACK_at": "2026-10-07T01:43:52Z",
+      "initial_spawn_failure": "native agent thread limit; noactor; retriedonlyafterA11completedslot",
+      "ended_at": "2026-10-07T01:57:12.446831Z",
+      "revision": "b369b016187641f678e424ccfc42c7db5df28274"
+    },
+    {
+      "id": "f11-operational-verify-a13",
+      "status": "active samefixedHIGH distinct operational attempt actualACK",
+      "actual_ACK_at": "2026-10-07T01:57:58Z",
+      "initial_resume_failure": "native threadlimit/noactor, retryafterA12finishedslot"
+    },
+    {
+      "id": "f11-header-urgency-author-a34",
+      "status": "completed bounded candidate; product unaccepted",
+      "finished_at": "2026-10-07T05:56:45.416862+00:00",
+      "revision": "1632d295d8eae3eb46f44cd48c96df3ff5abbdb8",
+      "receipt_sha256": "d8a2d660fd9b36b9a0ba5d84b9770d87eb1da894bc323c71bbb18677ca8fc584"
+    },
+    {
+      "id": "f11-native-empty-tail-author-a36",
+      "status": "active actualACK verified",
+      "actual_ACK_at": "2026-10-07T06:16:29Z"
+    },
+    {
+      "id": "f11-native-empty-tail-author-a36",
+      "status": "completed bounded candidate; full F11 unaccepted",
+      "revision": "b6e8ae16e8feb6c67888eb2f006cfbb299b40197",
+      "elapsed_wall_ms": 1170000,
+      "receipt_sha256": "141e6142348d23293435e58a0c9aae703d1ff5c91da28ffc594722f16bc41b41"
+    },
+    {
+      "id": "f11-native-empty-tail-fleet-verify-a37",
+      "status": "failed scoped attempt; F11 unaccepted",
+      "revision": "b6e8ae16e8feb6c67888eb2f006cfbb299b40197",
+      "receipt_sha256": "c242c3d145cb6d2ded000cf5c16aa0e8915298a7f4b78940d9f1894052c12abe",
+      "sealed_at": "2026-10-07T07:07:02.087875Z",
+      "native_exit": 1,
+      "ready": 28,
+      "denominator": 30,
+      "remaining": [
+        "fault ALL30/header30 and300",
+        "healthy300",
+        "legal activeBODY cancellation compatibility",
+        "legacy20page gate19RED",
+        "current grant/config material races",
+        "units16/PG18/bodyprotocol5/privacyAEAD",
+        "fresh independent final HIGH review"
+      ]
+    },
+    {
+      "id": "f11-c1-prefix-planned-fixture-author-a44",
+      "status": "completed coherent partial; strict planned-text timing failed",
+      "revision": "535251adf8392f4e4c0258ccaec86abefd0810d5",
+      "sealed_at": "2026-10-07T09:07:32.515053+00:00",
+      "receipt_sha256": "b5904b07ef3bf3414a6a893c13f21fe31b42531ef82d673e6d54df5a86eb6ffd"
+    },
+    {
+      "id": "f11-monotonic-material-fixture-author-a45",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T09:11:50Z"
+    },
+    {
+      "id": "f11-monotonic-material-fixture-author-a45",
+      "status": "completed coherent partial",
+      "revision": "a382228814af1751df3f7176b2e7aec617d9e769",
+      "sealed_at": "2026-10-07T09:27:39.865782+00:00",
+      "receipt_sha256": "b341cc35c3b0f09ac1c39df8bfdd0cb3023d8f89a23db1a9029516e744a142a7"
+    },
+    {
+      "id": "f11-deferred-material-fixture-author-a46",
+      "status": "active actual ACK verified",
+      "actual_ACK_at": "2026-10-07T09:28:57Z"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "expanded-mvp",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/plans/expanded-mvp-plan.md"
+        },
+        {
+          "root": "project",
+          "path": "docs/features/expanded-mvp/01_specification.md"
+        },
+        {
+          "root": "project",
+          "path": "docs/features/expanded-mvp/ai-policy-v1.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [],
+  "receipts": [],
+  "delivery": null,
+  "reporting": {
+    "required_by_owner": "2026-10-06 via root message",
+    "interval_minutes": 10,
+    "timestamp_timezone": "UTC",
+    "fields": [
+      "what is executing or waiting",
+      "actual worker/receipt/commit/gate status",
+      "next step and executor",
+      "conditional ETA, assumptions and accepted/failed/missing AC"
+    ],
+    "also_on": [
+      "stage_change",
+      "blocker"
+    ],
+    "last_reported_at": "2026-10-07T09:31:09.463093+00:00",
+    "responsible": "n7_sol_coordinator sends root; root reports owner",
+    "no_background_claim_without_actual_worker": true,
+    "latest_checkpoint": {
+      "at": "2026-10-07T09:31:09.463093+00:00",
+      "disk_available_bytes": 3560300544,
+      "executor": "/root/n7_sol_coordinator/f11_deferred_material_fixture_author_a46",
+      "remaining_AC": "12 material modes; normal HEADER positive; relevant full regressions/fault+healthy300/legacy20pages/fresh final independent review"
+    },
+    "forecast": {
+      "as_of": "2026-10-07T09:17:34.268854+00:00",
+      "local_coding_and_fresh_review_minutes": [
+        40,
+        60
+      ],
+      "confidence": "low conditional estimate, not calibrated guarantee",
+      "assumptions": [
+        "No newly confirmed production defect",
+        "Remaining material fixtures fit current or one additional bounded coding attempt",
+        "Fresh HIGH native slot available; validation and review pass without correction"
+      ],
+      "includes": "Coding, verification, coordination, sealing and independent review; does not promise the current attempt will finish all AC",
+      "F11_acceptance_ETA": null,
+      "F11_remaining": [
+        "Drain14/ordinary9 material obligations with exact source binding",
+        "Original six unstarted controls current binding",
+        "Fault and healthy fleet all30/header30/selection60",
+        "Relevant full unit/PG/AEAD/MIME/current-authority/retention/stop regression",
+        "Legacy20-page native obligation and fresh independent source review"
+      ],
+      "whole_N7_ETA": null,
+      "reason_unknown": "F12–14 not implemented and later real provider/pilot gates separate"
+    },
+    "chat_notification_scheduler_available": false
+  },
+  "current_stage": "F11 unaccepted; A45 test-only candidate a382 sealed, A46 actual MEDIUM remaining12 material modes active",
+  "continuation": {
+    "responsible": "n7_sol_coordinator",
+    "executor": "/root/n7_sol_coordinator/f11_deferred_material_fixture_author_a46",
+    "attempt": "f11-deferred-material-fixture-author-a46",
+    "actual_ACK_received": true,
+    "actual_ACK_at": "2026-10-07T09:28:57Z",
+    "freeze_at": "2026-10-07T09:45:57Z",
+    "deadline": "2026-10-07T09:48:57Z",
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "medium",
+    "actual_model": null,
+    "usage": null,
+    "baseline_revision": "a382228814af1751df3f7176b2e7aec617d9e769",
+    "approved_plan_sha256": "9e179fcecd5fecd13e45b12a359e4bd2ca3655e0c63ea13a1f4930128e1341a8",
+    "status": "actual fresh MEDIUM max3-test-file writer, production read-only; 11 drain material modes +1 new-UID semantic stop",
+    "next": "Seal exact source/joins/remaining AC then actual bounded HIGH frozen operational verification; final independent source reviewer NEW HIGH fork-none planner-only."
+  }
+}

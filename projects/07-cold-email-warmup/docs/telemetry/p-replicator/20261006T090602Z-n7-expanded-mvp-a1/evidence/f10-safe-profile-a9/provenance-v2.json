@@ -1,0 +1,22 @@
+{
+  "fixtureSource": "tests/diagnostics-fixture.ts",
+  "credentialFields": {
+    "smtpUsername": {
+      "literal": true,
+      "syntheticCanary": true
+    },
+    "smtpPassword": {
+      "literal": true,
+      "syntheticCanary": true
+    },
+    "imapUsername": {
+      "literal": true,
+      "syntheticCanary": true
+    },
+    "imapPassword": {
+      "literal": true,
+      "syntheticCanary": true
+    }
+  },
+  "plaintextValuesNeverExported": true
+}

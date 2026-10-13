@@ -1,0 +1,2 @@
+/n7f01-web-1 image=sha256:6a77e7410ef8d66f032f6cbbbf1afd2631b9c53d033ebbc403b075b016db465f health=healthy cpu_nano=2000000000 ports={"3000/tcp":[{"HostIp":"127.0.0.1","HostPort":"18701"}]}
+/n7f01-db-1 image=sha256:38471f330eb885e04de130b768d6db4e10469e2311879c7e5c699f6d2d8a1c74 health=healthy cpu_nano=2000000000 ports={"5432/tcp":null}

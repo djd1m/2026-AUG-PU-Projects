@@ -1,0 +1,197 @@
+{
+  "status": "completed",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning": "high",
+  "actual_model": null,
+  "actual_model_reason": "Host execution metadata not exposed",
+  "usage": null,
+  "usage_reason": "Counters not exposed",
+  "elapsed_seconds": null,
+  "elapsed_reason": "Start clock not captured; do not invent duration",
+  "checked_at_utc": "2026-10-08 06:30:16 UTC",
+  "n7_checkout_head": "cfc075948e1f0dfa12fbe600fe0b8539f3ddb959",
+  "sources": [
+    {
+      "id": "instantly-account",
+      "url": "https://developer.instantly.ai/api-reference/account/create-account",
+      "support": "Custom SMTP/IMAP onboarding schema",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "instantly-index",
+      "url": "https://developer.instantly.ai/llms.txt",
+      "support": "Warmup, account pause, campaign/email API index",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "instantly-reply",
+      "url": "https://developer.instantly.ai/api-reference/email/reply-to-an-email",
+      "support": "Reply-only send API",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "instantly-webhook",
+      "url": "https://help.instantly.ai/en/articles/6261906-webhooks",
+      "support": "Hypergrowth webhook gating and campaign events",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "instantly-api-access",
+      "url": "https://help.instantly.ai/en/articles/10432807-api-v2",
+      "support": "API all Outreach plans",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "instantly-plans",
+      "url": "https://help.instantly.ai/en/articles/10273259-instantly-plans-overview",
+      "support": "Plan volumes",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "instantly-pricing",
+      "url": "https://instantly.ai/pricing",
+      "support": "Public price/card versus comparison conflict",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "instantly-agency",
+      "url": "https://help.instantly.ai/en/articles/8678006-agency-white-labeling",
+      "support": "Workspace isolation/subscription requirement",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "instantly-terms",
+      "url": "https://instantly.ai/terms",
+      "support": "Competitive SaaS/resale restrictions, no ordinary performance guarantee",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "smartlead-api",
+      "url": "https://helpcenter.smartlead.ai/en/articles/125-full-api-documentation",
+      "support": "SMTP/IMAP, warmup, campaigns, message history and reply endpoints",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "smartlead-webhooks",
+      "url": "https://api.smartlead.ai/core/webhooks",
+      "support": "Reply events/client association",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "smartlead-latency",
+      "url": "https://helpcenter.smartlead.ai/en/articles/83-replies-by-leads-not-reflected-in-master-inbox",
+      "support": "30-60 minute inbox ingestion delay",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "smartlead-client-key",
+      "url": "https://helpcenter.smartlead.ai/en/articles/430-how-client-level-api-keys-work-in-smartlead",
+      "support": "Per-client keys/default 60 requests per minute",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "smartlead-pricing",
+      "url": "https://www.smartlead.ai/pricing",
+      "support": "Four current plans",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "smartlead-plan-guide",
+      "url": "https://helpcenter.smartlead.ai/en/articles/439-smartlead-pricing-plans",
+      "support": "Plan scope/client add-ons",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "smartlead-fup",
+      "url": "https://www.smartlead.ai/fair-use-policy",
+      "support": "Resale written consent;100/300/800 mailbox caps on older plan names",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "smartlead-terms",
+      "url": "https://www.smartlead.ai/new-terms-and-conditions",
+      "support": "Non-sublicensable license and resale restrictions",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "bison-onboard",
+      "url": "https://docs.emailbison.com/email-accounts/adding-accounts",
+      "support": "Custom provider API; path inconsistency",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "bison-dev",
+      "url": "https://emailbison.com/developers",
+      "support": "API keys, endpoints and webhook retry",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "bison-readback",
+      "url": "https://docs.emailbison.com/master-inbox/fetching-replies",
+      "support": "Reply/sent reads",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "bison-reply",
+      "url": "https://docs.emailbison.com/master-inbox/responding-to-messages",
+      "support": "Reply send endpoint",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "bison-warmup",
+      "url": "https://emailbison.com/features/email-warmup",
+      "support": "Warmup API and explicit embedded-product negotiation",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "bison-pricing",
+      "url": "https://emailbison.com/pricing",
+      "support": "599USD/500K sends/API",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "bison-product",
+      "url": "https://emailbison.com/",
+      "support": "Unlimited workspaces/team/leads",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "bison-workspace",
+      "url": "https://docs.emailbison.com/workspaces/overview",
+      "support": "Workspace isolation and sender uniqueness",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    },
+    {
+      "id": "bison-terms",
+      "url": "https://emailbison.com/emailbison-terms-of-service-v2.pdf",
+      "support": "Generic commercial/competitive/site restrictions and disclaimers",
+      "source_kind": "official",
+      "retrieved_date": "2026-10-08"
+    }
+  ]
+}

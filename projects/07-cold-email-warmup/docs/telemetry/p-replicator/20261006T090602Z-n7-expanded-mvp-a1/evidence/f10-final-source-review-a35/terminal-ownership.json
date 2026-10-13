@@ -1,0 +1,23 @@
+{
+  "utc": "2026-10-06T23:05:06.783275+00:00",
+  "source_head": "db50798a76a97fed75931544f24cd1181ff082d8",
+  "source120_build73_sql15_drift": [],
+  "own_test_or_runtime_children": [],
+  "own_persistent_processes": [],
+  "own_commands_joined": true,
+  "own_DB_connections_or_mutations": 0,
+  "own_mutex_acquired": false,
+  "DB_mutex_preflight": "not_applicable_no_tests_launched",
+  "borrowed_terminal_DB_proof": {
+    "path": "/tmp/n7-f10-cancel-diagnostic-a34/terminal-ownership-a34.json",
+    "sha256": "a767ebf74e7b60b4c7412b6be8affde39a886159b1d426947fb9aeab6dd13823",
+    "observation_utc": "2026-10-06T22:56:45Z",
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    }
+  },
+  "disk_available_bytes": 2792251392,
+  "no_live_provider_or_API_spend": true
+}

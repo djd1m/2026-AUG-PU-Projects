@@ -1,0 +1,152 @@
+{
+  "FR-n7-001": [
+    [
+      "SC-US-001-3",
+      "a fresh account registration creates a usable session and own mailbox",
+      "the owner logs out then logs in and logs out again",
+      "both logout cookies fail subsequent mutations with401; own reads had200"
+    ],
+    [
+      "SC-US-001-4",
+      "an authority from auth bypass Examples",
+      "it mutates a mailbox",
+      "401 for no/forged/revoked session or403 for bad Origin and zero commits"
+    ],
+    [
+      "SC-US-001-5",
+      "login attempts at the configured email/IP limits and KDF slots",
+      "the next attempt or an unrelated allowed key runs",
+      "boundary policy produces429/503 and an unrelated allowed key with a free slot can succeed"
+    ],
+    [
+      "SC-US-001-6",
+      "SQL syntax in requested mailbox id or oversized password",
+      "a request is submitted",
+      "400 and no SQL execution outside parameter binding or KDF call"
+    ]
+  ],
+  "FR-n7-002": [
+    [
+      "SC-US-002-3",
+      "the ciphertext failure Examples contain a credential canary",
+      "worker decrypts/connects",
+      "zero transport calls for AEAD/AAD failure and no canary in API/DB plaintext/log/error"
+    ],
+    [
+      "SC-US-002-4",
+      "an allowed transport returns a credential-bearing failure",
+      "error is reported",
+      "only typed scrubbed code appears; canary absent in response/log"
+    ]
+  ],
+  "FR-n7-003": [
+    [
+      "SC-US-003-3",
+      "only current pool consent is granted and campaign consent absent",
+      "one pool and one campaign job reach dispatch",
+      "pool may submit once, campaign calls0; changing campaign version invalidates only its consent"
+    ],
+    [
+      "SC-US-003-4",
+      "claimed job is paused before final serialized transition",
+      "each stop writer in Examples commits then dispatcher resumes",
+      "conditional transition affects0 rows and transport calls0"
+    ],
+    [
+      "SC-US-003-5",
+      "final submitting transition committed before the same stop writers",
+      "stop commits before socket call",
+      "at most that one in-flight attempt may send; every later job is canceled and UI explains boundary"
+    ]
+  ],
+  "FR-n7-004": [
+    [
+      "SC-US-004-3",
+      "two distinct opted-in tenants and disclosure consent",
+      "local SMTP exchange fixture renders a message and B reads it",
+      "B sees sender/header/test body as disclosed, but foreign dashboard/API/private campaign/credentials access returns404"
+    ],
+    [
+      "SC-US-004-4",
+      "a warmup thread already has its single reply or pair daily thread",
+      "scheduler replays either event",
+      "zero additional reply/thread jobs and total thread length<=2"
+    ]
+  ],
+  "FR-n7-005": [
+    [
+      "SC-US-005-4",
+      "each injection or missing-field Example",
+      "preview/start runs",
+      "invalid template/header yields400 and0 jobs; personalization renders as escaped text"
+    ],
+    [
+      "SC-US-005-5",
+      "quota at23:59 UTC and lower provider limit",
+      "final transition runs after00:00 with concurrent workers",
+      "current-day reservation obeys lower limit and no previous-day token bypasses it"
+    ],
+    [
+      "SC-US-005-6",
+      "proven pre-DATA failure versus ambiguous failure",
+      "retry clock reaches configured boundaries",
+      "max3 total attempts within120s for proven failure,0 retries for ambiguous"
+    ]
+  ],
+  "FR-n7-006": [
+    [
+      "SC-US-006-3",
+      "same reply returns under changed UIDVALIDITY/UID",
+      "bounded rescan commits then crashes/restarts after a page",
+      "semantic effect count remains1 and no dispatch until high-water and tail poll complete"
+    ],
+    [
+      "SC-US-006-4",
+      "wrong sender, foreign mailbox, unrelated References or missing Message-ID Example",
+      "reply ingestion runs",
+      "only matching own recipient+References produces one semantic stop; all foreign/unrelated cases stop0"
+    ],
+    [
+      "SC-US-006-5",
+      "poll age59.999s,60s or60.001s and incomplete rescan Example",
+      "final submitting guard runs",
+      "only age<60s with complete poll/rescan authorizes dispatch"
+    ]
+  ],
+  "FR-n7-007": [
+    [
+      "SC-US-007-4",
+      "valid unsubscribe GET, forged token, wrong-purpose token or unauthenticated complaint Example",
+      "public route is requested",
+      "GET changes0 rows; bad token denied; unauthenticated complaint401 and0 suppression rows"
+    ],
+    [
+      "SC-US-007-5",
+      "warmup initial, warmup reply or campaign step message",
+      "renderer runs",
+      "each includes visible unsubscribe body and both one-click headers"
+    ]
+  ],
+  "FR-n7-008": [
+    [
+      "SC-US-008-3",
+      "observation age7days or7days+1ms and mismatched/future window Example",
+      "share guard evaluates",
+      "exact7days comparable qualifies; stale/future/incomparable share is denied"
+    ]
+  ],
+  "FR-n7-009": [
+    [
+      "SC-US-009-3",
+      "local provider fixture is configured with team100 minor RUB and valid attribution",
+      "operator simulates payment success and server fetches fixture canonical state",
+      "exactly1 test entitlement and1 attributed test conversion follow verified matching snapshot"
+    ],
+    [
+      "SC-US-009-4",
+      "redirect-only, wrong amount/currency, duplicate or reordered event Example",
+      "billing adapter reconciles independent local provider state",
+      "redirect/mismatch grants0, duplicates grant<=1 and stale state cannot resurrect entitlement"
+    ]
+  ]
+}

@@ -1,0 +1,229 @@
+{
+  "status": "completed",
+  "verdict": "coherent_partial_not_F11_acceptance",
+  "accepted": false,
+  "runtime_body_enabled": false,
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-context-author-a4",
+  "started_at": "2026-10-07T00:11:43.110842969Z",
+  "finished_at": "2026-10-07T00:21:55.732233+00:00",
+  "elapsed_wall_ms": 612621,
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "source_revision": "a0f29eaee46b6639ad8d473caca8cc9dbbf5a89a",
+  "final_revision": "75cfe6ab394fd1c26d1a38e54a299b7f100f3b78",
+  "launch_sha256": "30f5cabab05c49cbe5020adf63b77d810a97c3ee53be8ef04ed63dd1f9d1d367",
+  "source_manifest_sha256": "5cd9a677b480e79cef908b800954cd577902861cdf8637dcae625cf49c29f695",
+  "build_manifest_sha256": "17c64dd9f67c1be172c85a4c6800bfbf8571660ea8d7884f38ae63e78033552d",
+  "raw_manifest_sha256": "dfda084d6680c5e1b76f82cd10e2691c5e9a7bdb33d0c0e3c79e01c141f81ff8",
+  "guard_summary_sha256": "907fa8ab40415b49a252cf95d4dce4aa0fe3154f197538d7fe858dbde77bc971",
+  "report_sha256": "b3b29e7836ab90d12b2762417d1754fc8bf953a262200a96561be45f19a60a75",
+  "checks": [
+    {
+      "log": "build-a1.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323"
+    },
+    {
+      "log": "build-a2.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323"
+    },
+    {
+      "log": "build-a3.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323"
+    },
+    {
+      "log": "lint-a1.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e"
+    },
+    {
+      "log": "lint-a2.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e"
+    },
+    {
+      "log": "lint-a3.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e"
+    },
+    {
+      "log": "parent-a1.log",
+      "native_exit": 0,
+      "passed": 20,
+      "sha256": "d58b92e1fef0ee6473c3e0d4db4a67b9aac7219dd7d4b39b8086bb023da78c04"
+    },
+    {
+      "log": "parent-a2.log",
+      "native_exit": 0,
+      "passed": 20,
+      "sha256": "7b10b2814314bbd641708622997ac550fd430da879706b4fc48c03dbe85c9dbd"
+    },
+    {
+      "log": "parent-a3.log",
+      "native_exit": 0,
+      "passed": 20,
+      "sha256": "fc7e91058d7646287047a6636ed051590e4c99556e746ca2e042811dd9cd170b"
+    },
+    {
+      "log": "preflight-a1.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "3d61ce15a13a47c5b8ad7a2bb3d70864ec44d0723d675656476197265bda4063"
+    },
+    {
+      "log": "preflight-a2.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "3d61ce15a13a47c5b8ad7a2bb3d70864ec44d0723d675656476197265bda4063"
+    },
+    {
+      "log": "preflight-a3.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "3d61ce15a13a47c5b8ad7a2bb3d70864ec44d0723d675656476197265bda4063"
+    },
+    {
+      "log": "quiescence-a1.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "3d61ce15a13a47c5b8ad7a2bb3d70864ec44d0723d675656476197265bda4063"
+    },
+    {
+      "log": "quiescence-a2.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "3d61ce15a13a47c5b8ad7a2bb3d70864ec44d0723d675656476197265bda4063"
+    },
+    {
+      "log": "quiescence-a3.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "3d61ce15a13a47c5b8ad7a2bb3d70864ec44d0723d675656476197265bda4063"
+    },
+    {
+      "log": "runtime-pg-a1.log",
+      "native_exit": 0,
+      "passed": 23,
+      "sha256": "8eae9d48b2ad29c92bbd1f499a328c3cef0f7b25a2b5f6919b7388b81b9f3b59"
+    },
+    {
+      "log": "seal-db-a2.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "bb67101f4cb45fc23d77ee620a51f44c6eea326c80876516f24feb1881543b97"
+    },
+    {
+      "log": "seal-db.log",
+      "native_exit": 1,
+      "passed": null,
+      "sha256": "f114dec8ebf63824c01d73807d211700803d63527cffe737da7dc8677b3df760"
+    },
+    {
+      "log": "typecheck-a1.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393"
+    },
+    {
+      "log": "typecheck-a2.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393"
+    },
+    {
+      "log": "typecheck-a3.log",
+      "native_exit": 0,
+      "passed": null,
+      "sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393"
+    },
+    {
+      "log": "unit-a1.log",
+      "native_exit": 0,
+      "passed": 12,
+      "sha256": "0bbf75b1f084f4d863c973d2a69669ee6abcb76962e04eecc59e96dc2e88d9b5"
+    },
+    {
+      "log": "unit-a2.log",
+      "native_exit": 0,
+      "passed": 5,
+      "sha256": "8bab1c26bd170d3eb108e615268010c3e92ef1b5c5dcf040c2a209148fb2a909"
+    },
+    {
+      "log": "unit-a3.log",
+      "native_exit": 0,
+      "passed": 5,
+      "sha256": "3b11a06cc114c039288317cefa7f1bdb7b93f4a0c774b82fc902b9d471bffbe0"
+    }
+  ],
+  "host_sessions": [
+    {
+      "id": 84170,
+      "native_exit": 0,
+      "joined": true
+    },
+    {
+      "id": 57976,
+      "native_exit": 0,
+      "joined": true
+    },
+    {
+      "id": 48445,
+      "native_exit": 0,
+      "joined": true
+    },
+    {
+      "id": 47991,
+      "native_exit": 0,
+      "joined": true
+    },
+    {
+      "id": 5492,
+      "native_exit": 0,
+      "joined": true
+    },
+    {
+      "id": 97876,
+      "native_exit": 0,
+      "joined": true
+    }
+  ],
+  "quiescence_sha256": "1910a0da7ca8b423311f88214801446e1c92ebffc6833f1a688ca67549c98624",
+  "remaining_ac": [
+    "C1 scheduling adjudication: F10 successful polling remains immediately due; body admission denies actual due/claimed/incomplete headers. Runtime worker body wiring OFF. Optional four-lane callback seam exists only; no new body lane or RuntimeKind.",
+    "C1 mandatory independent native socket/ownership/phase observer with real competing process body/header workers and ALL30 participants/failure denominator healthy completed-poll<=30s and due-selection<=60s under body pressure is absent. No cap/tolerance waiver. Slow-body exact-child-exit/restart physical-release matrix still required.",
+    "C2 normal incremental new poll run does not reobserve old pending UID; safe fresh authenticated continuation/recovery for stale pending origins remains absent. New phase resets only on actual accepted pending header reobservation, preserving original expiry and semantic identity.",
+    "C2 new phase_metadata encrypted copy is expiry-gated in quantum, cleared by expiry purge and current terminal capture/reobservation paths; explicit new-column terminal24h/absolute7d/restart/copy physical-deletion boundary witnesses are mandatory remaining. Full source/run/root/recipient/config/grant race matrix remains.",
+    "C3 explicit native own-loop provenance and full production variant matrix remain from A3.",
+    "Coordinator full gates and independent fresh HIGH review required. This author does not accept F11. Legacy captureBody convenience still combines metadata/text; only new ContextStore.quantum/adapter phase path provides durable scheduling."
+  ],
+  "next_responsible_executor": "/root/n7_sol_coordinator",
+  "owned_changed_paths": [
+    "projects/07-cold-email-warmup/db/016-inbound-context.sql",
+    "projects/07-cold-email-warmup/src/replies/adapter.ts",
+    "projects/07-cold-email-warmup/src/replies/context-store.ts",
+    "projects/07-cold-email-warmup/src/runtime/loop.ts",
+    "projects/07-cold-email-warmup/tests/f11-context-integration.test.ts",
+    "projects/07-cold-email-warmup/tests/f11-context-unit.test.ts"
+  ],
+  "missing_data": [
+    "host actual model/effort/usage/cost unavailable",
+    "first build shell PID/startticks unavailable; host session and all guarded children joined",
+    "per-command wall durations unavailable except TAP timings",
+    "mechanical router sparse/unavailable inherited; risk HIGH preserved",
+    "mandatory all30/multi-process bodypressure/native observer and complete new-phase retention race evidence not executed"
+  ]
+}

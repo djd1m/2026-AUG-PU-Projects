@@ -1,0 +1,169 @@
+{
+  "source_revision": "7dee9b9a33b87359feeae4fb82b88331ca50d5de",
+  "measured_at": "2026-10-07T10:55:30.566594+00:00",
+  "context_origin": "Approved planner A47, independent accepted review A49, frozen source and normative instructions only; no author narrative",
+  "inputs": [
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/CLAUDE.md",
+      "sha256": "c1669853c58eddd6994761d510f5f1a4d1b992b50e16f8ebedf18a10937144a2",
+      "bytes": 13438,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/CLAUDE.md",
+      "sha256": "3b548fa6dea02c7639aa7fbdfdc3fa1f7bbf90b6726c406501d89cc2b3fe3ba0",
+      "bytes": 7533,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/docs/development/model-routing-econom.md",
+      "sha256": "4622c96c879baa08d548f99b4f48ec19e7f59bb0eb91b2a58de46db4a079ee09",
+      "bytes": 5589,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/docs/development/model-routing.md",
+      "sha256": "0ea43b745e8a5cf29e5484e8a5354f372d85fdfbca1713b5d2b8cfe37b29c7b2",
+      "bytes": 18367,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/docs/development/model-routing-telemetry.md",
+      "sha256": "22ba852701d2c78b372cb07ed9b53f4227799ff6f8dc9c57849c09d0c35829cd",
+      "bytes": 22063,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/.claude/rules/complexity-router.md",
+      "sha256": "422a1d1952f7755c1ea772b33e9e41e1bd78a239af8a0a490f03bc48eb4e0c70",
+      "bytes": 10185,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/.claude/rules/model-routing-local.md",
+      "sha256": "11ce29df7bdb96f00ecd3c3204ac91cc3fa045865652563c617e61186085521d",
+      "bytes": 1379,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/.claude/rules/project-work-companion-local.md",
+      "sha256": "273c7cb0d069609ba2823786e98f914362bc1fb38d864e3e4f720d6f3ecddbc4",
+      "bytes": 799,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/.claude/skills/project-work-companion/SKILL.md",
+      "sha256": "7d27b2e123cfab42ddb5d8930ac1a6fce3aaaeb3ceb626f77a9f2cad56858403",
+      "bytes": 6121,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/.claude/skills/project-work-companion/references/contract.md",
+      "sha256": "90c93e0b0d2bad96c7c67ffb6e09ef520278524303e7e7f0ff4c189a5e0188e9",
+      "bytes": 5468,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+      "sha256": "1b516fa07a84ef3735532429b08f65a8371a60e90a53bb2f57a4fff3b64c8db5",
+      "bytes": 130102,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f11-body-fixture.ts",
+      "sha256": "390277c36fb91e8d87eec689a456f17fb52c955a4a0750a9b24f99cb361b8138",
+      "bytes": 4895,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts",
+      "sha256": "62a266f1e0020aca1971988271ed1061968adbb36ef925ff5fbed0e4e7229f63",
+      "bytes": 20927,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/context-store.ts",
+      "sha256": "d77afbdb071fb43a792fe9c52e7b1fb4653ab81bf1f0edbdba7a40b75f88e315",
+      "bytes": 34698,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/mailboxes/transport-lifetime.ts",
+      "sha256": "be57cd516949baf7ca91b302105ceadd82cf7dbb39c82472e06affabee4ded06",
+      "bytes": 4441,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/mailboxes/transport-slots.ts",
+      "sha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903",
+      "bytes": 5969,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/db.ts",
+      "sha256": "81141899c2f675759d7c79a0d97475dfdfe95f596bc2fd172a48c14a1a8902c0",
+      "bytes": 4720,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/db/016-inbound-context.sql",
+      "sha256": "ce3140059e9dfc51132745291fc391345f55488022508575479fbd4b12a3f636",
+      "bytes": 5242,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/db/017-transport-purpose.sql",
+      "sha256": "09bf04ae69e9b967762b6a68508e3a879281998df075010a6059891b1c6217e8",
+      "bytes": 657,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/diagnostics-integration.test.ts",
+      "sha256": "27ba7b2d3652779f6888ce362d90053019a01e3950e13bb115c699433a2c84ba",
+      "bytes": 11106,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/capacity-integration.test.ts",
+      "sha256": "b2ab38150bf0eafde9783d0b84036964c5b873999763745fefe69af0238f3a86",
+      "bytes": 17323,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f11-context-integration.test.ts",
+      "sha256": "4e65a0d76ede8e3e9c76232cb4e45ce6f284c9e568241557145a493aee03a6f7",
+      "bytes": 48078,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/docs/features/expanded-mvp/01_specification.md",
+      "sha256": "dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+      "bytes": 8592,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/docs/features/expanded-mvp/02_pseudocode.md",
+      "sha256": "1deb0b3d98038350f2284e9af0313df8d3792c0b0b1c8be869b8da750b5a1752",
+      "bytes": 12226,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/docs/features/expanded-mvp/03_architecture.md",
+      "sha256": "307b5f5fc82e483f3d880b108c6abac25c44ba43e01ec6eaa001864179850dfe",
+      "bytes": 6923,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-recovery-planner-a47-20261007/plan.md",
+      "sha256": "4f0250a386f9f067a2f8a8920a2f6f2f9f05100b3bb7b625309cf5d0126053ea",
+      "bytes": 11921,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-recovery-review-a49-20261007/review.md",
+      "sha256": "521bf0816719b0bad4fa48e0c1372f9ef38e1f3d61d419f7981b91519ea9b4d5",
+      "bytes": 10907,
+      "regular_non_symlink": true
+    }
+  ]
+}

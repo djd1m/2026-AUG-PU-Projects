@@ -1,0 +1,20 @@
+{
+  "stage": "PLAN",
+  "mechanical": {
+    "command": "bash scripts/complexity-router.sh /tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/context-store.ts /tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+    "exit_code": 1,
+    "tier": "L",
+    "reason": "explicit whole existing file scanning detects GRANT/revoke words; lower bound"
+  },
+  "substantive_tier": "XL inherited F11",
+  "scope": "defensive identity correction within already-approved norms, no invariant amendment",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "read-only planning; no application code, tests, E2E or DB mutation executed"
+  },
+  "forecast": {
+    "status": "insufficient_data",
+    "full_f11_eta": null,
+    "cost": null
+  }
+}

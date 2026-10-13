@@ -1,0 +1,4 @@
+{"at": "2026-10-03T05:21:19.988928+00:00", "input": {"action": "auth-seed"}, "exit": 0, "output": {"ok": true, "credentials": "suppressed"}}
+{"at": "2026-10-03T05:21:21.235224+00:00", "input": {"action": "expire", "tenant": "cb79af7f-4fbd-4f2b-ac87-34dc4d4614b0"}, "exit": 0, "output": {"ok": true, "result": {"expired": 2}}}
+{"at": "2026-10-03T05:21:23.890365+00:00", "input": {"action": "auth-seed"}, "exit": 0, "output": {"ok": true, "credentials": "suppressed"}}
+{"at": "2026-10-03T05:21:25.063026+00:00", "input": {"action": "expire", "tenant": "11a54d52-308b-443e-a54d-4f86b3144359"}, "exit": 0, "output": {"ok": true, "result": {"expired": 2}}}

@@ -1,0 +1,16 @@
+
+> n7-cold-email-warmup@0.1.0 typecheck
+> tsc --noEmit
+
+tests/f09-live-protocol.test.ts(10,486): error TS2339: Property 'coveredThrough' does not exist on type 'ReadResult'.
+  Property 'coveredThrough' does not exist on type '{ kind: "page"; page: HeaderPage; }'.
+tests/f09-live-protocol.test.ts(10,524): error TS2339: Property 'headers' does not exist on type 'ReadResult'.
+  Property 'headers' does not exist on type '{ kind: "page"; page: HeaderPage; }'.
+tests/f09-live-protocol.test.ts(14,324): error TS2339: Property 'headers' does not exist on type 'ReadResult'.
+  Property 'headers' does not exist on type '{ kind: "page"; page: HeaderPage; }'.
+tests/f09-live-protocol.test.ts(14,471): error TS2339: Property 'coveredThrough' does not exist on type 'ReadResult'.
+  Property 'coveredThrough' does not exist on type '{ kind: "page"; page: HeaderPage; }'.
+tests/f09-live-protocol.test.ts(14,507): error TS2339: Property 'headers' does not exist on type 'ReadResult'.
+  Property 'headers' does not exist on type '{ kind: "page"; page: HeaderPage; }'.
+tests/f09-live-protocol.test.ts(16,177): error TS2339: Property 'headers' does not exist on type 'ReadResult'.
+  Property 'headers' does not exist on type '{ kind: "page"; page: HeaderPage; }'.

@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-03T05:36:45.306299+00:00",
+  "reason": "904MB available before finalCSSimage; completedownedworktreesonly",
+  "rows": [
+    {
+      "path": "/tmp/n7-f06b-final",
+      "revision": "722cf19776324e6a87c2781769c40e5155a1abe1",
+      "process": {
+        "exit_code": 0,
+        "pid": 3037850,
+        "started_at": "2026-10-03T04:59:18.873003+00:00",
+        "finished_at": "2026-10-03T05:24:18.656265+00:00",
+        "elapsed_seconds": 1499.7832707159687
+      },
+      "preserved": "same absolute N7 subtree excluding reproducible dist/deps; allsource/docs/TRACE retained; active shareddeps n7-f03b-sol untouched"
+    },
+    {
+      "path": "/tmp/n7-f06b-review",
+      "revision": "acd5564e76643ee9f059cd45990622be153e06be",
+      "process": {
+        "exit_code": 0,
+        "pid": 3591999,
+        "started_at": "2026-10-03T05:27:06.038535+00:00",
+        "finished_at": "2026-10-03T05:34:28.438228+00:00",
+        "elapsed_seconds": 442.399694925989
+      },
+      "preserved": "same absolute N7 subtree excluding reproducible dist/deps; allsource/docs/TRACE retained; active shareddeps n7-f03b-sol untouched"
+    },
+    {
+      "path": "/tmp/n7-f01-sol",
+      "revision": "6ed68efd88b0305f795c0e5017f123a4e5568fcc",
+      "process": {
+        "exit_code": 0,
+        "duration_seconds_process": 1174.906,
+        "finished_at": "2026-10-02T19:42:36.828844+00:00"
+      },
+      "preserved": "same absolute N7 subtree excluding reproducible dist/deps; allsource/docs/TRACE retained; active shareddeps n7-f03b-sol untouched"
+    },
+    {
+      "path": "/tmp/n7-f02-sol",
+      "revision": "204b24d10eb7c10e1ed2970c08c485d6ac13d1af",
+      "process": {
+        "exit_code": 0,
+        "pid": 2156071,
+        "started_at": "2026-10-02T20:16:19.786127+00:00",
+        "finished_at": "2026-10-02T20:35:33.281751+00:00",
+        "elapsed_seconds": 1153.4956118200207
+      },
+      "preserved": "same absolute N7 subtree excluding reproducible dist/deps; allsource/docs/TRACE retained; active shareddeps n7-f03b-sol untouched"
+    }
+  ]
+}

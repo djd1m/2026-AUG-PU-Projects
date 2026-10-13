@@ -1,0 +1,96 @@
+{
+  "sealed_at": "2026-10-07T13:58:36.576404+00:00",
+  "approved_planner": {
+    "path": "/tmp/n7-f11-integration-readiness-plan-a53-20261007/plan.md",
+    "sha256": "d77b774bc3cbfd0ec843520fa999d5f5472059d53251224d5c0f70a788632876"
+  },
+  "clean_objective": {
+    "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/objective-packet.json",
+    "sha256": "8497b200135f7caa4d2b36e5f1e20b6397a6a9b9dd6a018e00cd641642f4e741"
+  },
+  "source_revision": "e7f03164549f011b0adef80f1e2d6df3d734487a",
+  "reviewed_artifacts": {
+    "activation-handoff.json": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/activation-handoff.json",
+      "sha256": "6d42359cdb5e016c1160967c66600be3f805876c88b4892b2d4243e84a5f0729"
+    },
+    "clock-bound-proof.json": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/clock-bound-proof.json",
+      "sha256": "ef193ad8aea16e65dc7ee1146836d5439556f86aa72e69a322ac14bd160e730a"
+    },
+    "copy-provenance.json": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/copy-provenance.json",
+      "sha256": "84ab3aadc1e1564ef22a514ee69155246b1771a08ef254f474b98ede14bc771b"
+    },
+    "db-protected-a65-placeholder.json": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/db-protected-a65-placeholder.json",
+      "sha256": "cb579ec5e1a872a22e794b806c18e73334e3a8a0ff0d54ba6b320e5bea2d3e7e"
+    },
+    "dependency-bindings.json": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/dependency-bindings.json",
+      "sha256": "32206efe9dbc32799ca91df02c474c839ae14bf40b0ca63bf0e6aaeec502da81"
+    },
+    "guard-a69.mjs": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/guard-a69.mjs",
+      "sha256": "b483f7b2375117667e12ed582d1400d0b97a62ccdc1763c76db2701ae46b2163"
+    },
+    "helper-bindings.json": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/helper-bindings.json",
+      "sha256": "65fa682ce01d93d320121dd0e6f4d2ffeaa890ae39e8a82f454a34b7b6ac5069"
+    },
+    "joins.py": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/joins.py",
+      "sha256": "d52668ca5198e93cc2a99ef23aba91b18e288ea6b875195401b6cfa26be03189"
+    },
+    "launch.py": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/launch.py",
+      "sha256": "6c3f2a2b727c4d75e11b399356c2e072525f083078b5be474ee607d8bbabb228"
+    },
+    "prepare.py": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/prepare.py",
+      "sha256": "62a04c7c26b4fba89d32c2122394101a033dd2285d6a61db1480f19b50bb40d0"
+    },
+    "public-before.json": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/public-before.json",
+      "sha256": "f9b6e85cf2ac2ed457e13d6cab4ba461da56457056d7445495fcd740a36e131b"
+    },
+    "root-source-preparation.json": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/root-source-preparation.json",
+      "sha256": "62ca2ff5c3d9b02d992771f5b81c3996935d7021066ebf0df318d9c0733c4e98"
+    },
+    "run-a69.sh": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/run-a69.sh",
+      "sha256": "460908632eaad01ebbcb9e37d167edb9c4e7bed08476cfcf63d5a5a3dd7752b1"
+    },
+    "scenario-inventory.json": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/scenario-inventory.json",
+      "sha256": "9fc49ab8db36538eb0f66208c82b74fb4f99dbb5ac6b30c5d29942c1da672ba2"
+    },
+    "schema-setup-a69.mjs": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/schema-setup-a69.mjs",
+      "sha256": "4c40e73e443808aaa330618e1aa8292b70aaf375db5d31b087dc9b0161dc03f6"
+    },
+    "snapshot-a69.mjs": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/snapshot-a69.mjs",
+      "sha256": "247c2c3dc91886b9c45909aeca0e02ab45861a6489bc932fe891c66ff62f99d4"
+    },
+    "source-binding.json": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/source-binding.json",
+      "sha256": "f13e83b54d5e299466eb4c1dec4d568bae8939672e85cdbc9b1b36539a3f9e4a"
+    },
+    "source-freeze.json": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/source-freeze.json",
+      "sha256": "db0a58a26cded08ce01100ace7fabfaf7020eae52cc387faa2b2f33f92964001"
+    },
+    "syntax-checks.json": {
+      "path": "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/syntax-checks.json",
+      "sha256": "59e4c4d39c1fd7d6f7f1b06667cd695b5e2c26fdc52dc62d480941678874dc28"
+    }
+  },
+  "review_outputs": {
+    "review.md": "d5e3226df6d3168b20fc848ff6e8754b29c3ba63c62b70f1a7cd2b5a51cb027c",
+    "checks.json": "e8d6722847f5b1f35e4b51e17b15fe846acc821e0d4cffe183c7f00be4bf9e4d"
+  },
+  "read_scope": "approved A53/current immutable protocol source + clean A69 objective-bound artifacts; no author narrative",
+  "runtime_executed": false
+}

@@ -1,0 +1,19 @@
+from pathlib import Path
+import json,hashlib,importlib.util,fcntl
+R=Path('/tmp/n7-f10-uid-material-verify-a36');S=R/'compact-shadow-a36';N='/tmp/n7-expanded-runtime-20261006/bin/node';sha=lambda f:hashlib.sha256(Path(f).read_bytes()).hexdigest();spec=importlib.util.spec_from_file_location('nr',R/'native-run-a36.py');nr=importlib.util.module_from_spec(spec);spec.loader.exec_module(nr);write=lambda n,x:(R/n).write_text(json.dumps(x,indent=2)+'\n');assert (R/'uid-material-terminal-a36.json').exists();assert not nr.nodes();title='full poll captures a reset between snapshot and read and incomplete entry performs no IO';old='ON CONFLICT(mailbox_id) DO UPDATE SET scan_complete=false,uidvalidity=$2,cursor_uid=$3';new='ON CONFLICT(mailbox_id) DO UPDATE SET scan_complete=false,completed_at=clock_timestamp(),uidvalidity=$2,cursor_uid=$3';paths=['src/replies/store.ts','dist/replies/store.js'];original={f:(S/f).read_bytes() for f in paths};assert all(b.decode().count(old)==1 for b in original.values())
+for mode in ['source','compiled']:
+ f=S/('tests/f09-live-transport-a36-'+mode+'.test.ts');s=f.read_text();needle='const a36Outcome=await worker.poll(tenant,mailbox);';assert s.count(needle)==1;s=s.replace(needle,"const a36BeforeFresh=(await c.pool.query('SELECT completed_at FROM mailbox_poll WHERE mailbox_id=$1',[mailbox])).rows[0].completed_at.getTime();"+needle+"const a36AfterFresh=(await c.pool.query('SELECT completed_at FROM mailbox_poll WHERE mailbox_id=$1',[mailbox])).rows[0].completed_at.getTime();console.log('A36_FRESHNESS_COUNTS '+JSON.stringify({changed:a36AfterFresh!==a36BeforeFresh,deltaMs:a36AfterFresh-a36BeforeFresh}));assert.equal(a36AfterFresh,a36BeforeFresh,'reset capture never supplies completed_at freshness');");(S/('tests/a36-freshness-'+mode+'.test.ts')).write_text(s)
+write('freshness-command-manifest-a36.json',{'utc':nr.now(),'runner_sha256':sha(__file__),'native_runner_sha256':sha(R/'native-run-a36.py'),'guard_sha256':sha(R/'guard-a36.mjs'),'preload_sha256':sha(R/'suite-output-a36.mjs'),'mechanism':'same mechanism5 false freshness/reset success, timestamp-only variant independent of scan_complete','original_sha256':{f:sha(S/f) for f in paths},'mutation_old':old,'mutation_new':new,'positive_tests':[{'file':'tests/a36-freshness-'+mode+'.test.ts','title':title,'sha256':sha(S/('tests/a36-freshness-'+mode+'.test.ts'))} for mode in ['source','compiled']],'budget_seconds_per_child':30})
+lock=open('/tmp/codex-heavy-build.lock','rb');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);results=[]
+try:
+ assert nr.status()['counts']=={'occupied_slots':0,'runtime_claims':0,'other_sessions':0};nr.candidate_check()
+ for mode in ['source','compiled']:
+  name='uid-freshness-timestamp-'+mode;cmd=[N,'node_modules/tsx/dist/cli.mjs','--test','--test-concurrency=1','--test-name-pattern=^'+title+'$','tests/a36-freshness-'+mode+'.test.ts'];e={'name':name,'baseline':nr.run(name+'-baseline',cmd,S,30)};assert e['baseline']['native_exit']==0
+  try:
+   for f,b in original.items():(S/f).write_text(b.decode().replace(old,new))
+   e['mutated_sha256']={f:sha(S/f) for f in paths};e['negative']=nr.run(name+'-negative',cmd,S,30)
+  finally:
+   for f,b in original.items():(S/f).write_bytes(b)
+  e['restored']=nr.run(name+'-restored',cmd,S,30);e['restored_sha256']={f:sha(S/f) for f in paths};q=e['negative'];e['status']='caught_material_assertion' if q['native_exit']!=0 and q['assertion_failure'] and q['failure_titles'] and e['restored']['native_exit']==0 else 'not_caught_material';results.append(e);write('freshness-results-a36.json',results);print(name+' '+e['status'],flush=True)
+finally:
+ write('freshness-terminal-a36.json',{'utc':nr.now(),'results':results,'candidate_drift':nr.candidate_check(),'nodes':nr.nodes(),'PG':nr.snapshot(),'DB':nr.status(),'mutex':'released after receipt'});fcntl.flock(lock,fcntl.LOCK_UN);lock.close()

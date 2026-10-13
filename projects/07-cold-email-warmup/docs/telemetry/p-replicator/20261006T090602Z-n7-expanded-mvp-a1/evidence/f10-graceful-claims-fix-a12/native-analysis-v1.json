@@ -1,0 +1,1929 @@
+{
+  "source": "985151204592ba75b29db4275dd59622269aba2e",
+  "native_exit": 1,
+  "canonical_sha256": "0e56e68ff0bcec639dc53d52c3d265fae028a4e0d0f6e34c640b28fbab7d5af7",
+  "phases": [
+    {
+      "phase": "fault",
+      "at": 1791309762122
+    },
+    {
+      "phase": "explicit_fixture_operator_retry",
+      "count": 30,
+      "at": 1791309792796
+    },
+    {
+      "phase": "fault_restored",
+      "at": 1791309792796
+    },
+    {
+      "phase": "explicit_fixture_operator_retry_after_drain",
+      "count": 26,
+      "at": 1791309822959
+    },
+    {
+      "phase": "restart",
+      "at": 1791309823230,
+      "drainMs": 103
+    }
+  ],
+  "drain": [
+    {
+      "at": 1791309822559,
+      "elapsedMs": 104,
+      "code": 0,
+      "signal": null,
+      "drained": true
+    },
+    {
+      "at": 1791310002263,
+      "elapsedMs": 98,
+      "code": 0,
+      "signal": null,
+      "drained": true
+    }
+  ],
+  "postrestartRows": [
+    {
+      "id": "cba47c92-9897-412f-b7d3-6b7456ce1109",
+      "postrestartCount": 92,
+      "firstDelayMs": 2536,
+      "maxGapMs": 5542,
+      "tailCensoredMs": 2747
+    },
+    {
+      "id": "c5b060bd-bb59-46bf-9d3d-134ef3a21517",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "e3ac74bd-532e-4a52-9bc1-2dfd60e10569",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "57f4b1e0-42f9-412e-a6ff-d21b4aab6538",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "f74d88ad-4605-4419-b416-4f18ee004d96",
+      "postrestartCount": 98,
+      "firstDelayMs": 2761,
+      "maxGapMs": 4978,
+      "tailCensoredMs": 1716
+    },
+    {
+      "id": "3aae2c17-c916-4a5a-a4f3-1d91b1d2b45e",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "b93a8bbe-23c2-4afb-a286-b5aa392a0924",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "7da489c8-93d8-4a61-815e-60d0a1702880",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "3b1174b3-6f77-4dcd-880f-661491198e03",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "65f810c7-39c1-47bd-946c-fbf9b6e25886",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "3d0155d7-17bf-4598-95c2-ec4872226877",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "e5e972e3-bcac-4881-a181-76b0312bb407",
+      "postrestartCount": 97,
+      "firstDelayMs": 2875,
+      "maxGapMs": 5331,
+      "tailCensoredMs": 1701
+    },
+    {
+      "id": "92c1a6c6-3b4b-474e-b360-dcd3beba4197",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "964ed16e-0448-44ec-9561-589c8c09a01f",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "7021f2c0-8edf-475d-897f-f9cda63cb5e5",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "d2a221d0-c607-4356-a136-e66ea6d9f4e6",
+      "postrestartCount": 97,
+      "firstDelayMs": 3062,
+      "maxGapMs": 5699,
+      "tailCensoredMs": 968
+    },
+    {
+      "id": "d23edb33-2685-4d44-be0d-39f200b608bb",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "53e31441-dc6c-49a9-9bbf-3e37b12d31d6",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "30c362ca-1ee5-4cea-9bdc-ee1249ecae7e",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "150ad895-ec11-43a7-9ddf-7d7c44d16d02",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "4a0564b8-8b28-482b-8412-7f60149d6a18",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "2ac6ddff-6a90-42f0-917b-1b13cb18eea0",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "ee33d1e5-7452-451b-9cdc-7fa680d99d66",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "2f2ea38a-1136-4372-b246-9f0d8f9d6332",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "97eee428-1cfb-47d7-9d9e-d562dfe77cd4",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "af461550-1dd6-4044-ad7d-7babba365558",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "b9b06b68-4689-4f74-a0da-d8706e5360c3",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "4865cbbf-6236-4e49-8f00-0fc8faf64870",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "b4d46cb6-7658-499e-b721-bfe305affa24",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    },
+    {
+      "id": "8832a247-e346-443c-b373-c0199fe896be",
+      "postrestartCount": 0,
+      "firstDelayMs": null,
+      "maxGapMs": null,
+      "tailCensoredMs": 179033
+    }
+  ],
+  "restartAdjacentReasons": [
+    {
+      "at": 1791309823754,
+      "reasons": {
+        "dispatch:authority_denied": 17,
+        "dispatch:waiting_peer": 13,
+        "pool:waiting_peer": 27,
+        "poll:provider_backoff": 26,
+        "poll:ready": 4,
+        "pool:ready": 3
+      },
+      "due": [
+        {
+          "id": "7021f2c0-8edf-475d-897f-f9cda63cb5e5",
+          "kind": "dispatch",
+          "ageMs": 87876,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "7da489c8-93d8-4a61-815e-60d0a1702880",
+          "kind": "dispatch",
+          "ageMs": 89507,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "8832a247-e346-443c-b373-c0199fe896be",
+          "kind": "dispatch",
+          "ageMs": 87065,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "97eee428-1cfb-47d7-9d9e-d562dfe77cd4",
+          "kind": "dispatch",
+          "ageMs": 87345,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "b4d46cb6-7658-499e-b721-bfe305affa24",
+          "kind": "dispatch",
+          "ageMs": 88310,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "b93a8bbe-23c2-4afb-a286-b5aa392a0924",
+          "kind": "dispatch",
+          "ageMs": 86605,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "e3ac74bd-532e-4a52-9bc1-2dfd60e10569",
+          "kind": "dispatch",
+          "ageMs": 85659,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "e5e972e3-bcac-4881-a181-76b0312bb407",
+          "kind": "dispatch",
+          "ageMs": 85262,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "2ac6ddff-6a90-42f0-917b-1b13cb18eea0",
+          "kind": "pool",
+          "ageMs": -30229,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "2f2ea38a-1136-4372-b246-9f0d8f9d6332",
+          "kind": "pool",
+          "ageMs": -30317,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "3d0155d7-17bf-4598-95c2-ec4872226877",
+          "kind": "pool",
+          "ageMs": -30391,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "30c362ca-1ee5-4cea-9bdc-ee1249ecae7e",
+          "kind": "pool",
+          "ageMs": -30429,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "7da489c8-93d8-4a61-815e-60d0a1702880",
+          "kind": "poll",
+          "ageMs": 75768,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "3aae2c17-c916-4a5a-a4f3-1d91b1d2b45e",
+          "kind": "pool",
+          "ageMs": -31493,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "57f4b1e0-42f9-412e-a6ff-d21b4aab6538",
+          "kind": "poll",
+          "ageMs": 75127,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "ee33d1e5-7452-451b-9cdc-7fa680d99d66",
+          "kind": "poll",
+          "ageMs": 71802,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "150ad895-ec11-43a7-9ddf-7d7c44d16d02",
+          "kind": "poll",
+          "ageMs": 76853,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "30c362ca-1ee5-4cea-9bdc-ee1249ecae7e",
+          "kind": "poll",
+          "ageMs": 76118,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "4865cbbf-6236-4e49-8f00-0fc8faf64870",
+          "kind": "poll",
+          "ageMs": 75879,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "65f810c7-39c1-47bd-946c-fbf9b6e25886",
+          "kind": "poll",
+          "ageMs": 74733,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "af461550-1dd6-4044-ad7d-7babba365558",
+          "kind": "poll",
+          "ageMs": 75192,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "53e31441-dc6c-49a9-9bbf-3e37b12d31d6",
+          "kind": "poll",
+          "ageMs": 74783,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "b93a8bbe-23c2-4afb-a286-b5aa392a0924",
+          "kind": "poll",
+          "ageMs": 72445,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "d23edb33-2685-4d44-be0d-39f200b608bb",
+          "kind": "poll",
+          "ageMs": 72628,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "b9b06b68-4689-4f74-a0da-d8706e5360c3",
+          "kind": "poll",
+          "ageMs": 72330,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "3d0155d7-17bf-4598-95c2-ec4872226877",
+          "kind": "dispatch",
+          "ageMs": 89756,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "92c1a6c6-3b4b-474e-b360-dcd3beba4197",
+          "kind": "dispatch",
+          "ageMs": 88160,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "af461550-1dd6-4044-ad7d-7babba365558",
+          "kind": "dispatch",
+          "ageMs": 88684,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "b9b06b68-4689-4f74-a0da-d8706e5360c3",
+          "kind": "dispatch",
+          "ageMs": 86475,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "c5b060bd-bb59-46bf-9d3d-134ef3a21517",
+          "kind": "dispatch",
+          "ageMs": 87502,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "cba47c92-9897-412f-b7d3-6b7456ce1109",
+          "kind": "dispatch",
+          "ageMs": 85905,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "d23edb33-2685-4d44-be0d-39f200b608bb",
+          "kind": "dispatch",
+          "ageMs": 86843,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "d2a221d0-c607-4356-a136-e66ea6d9f4e6",
+          "kind": "dispatch",
+          "ageMs": 85371,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "cba47c92-9897-412f-b7d3-6b7456ce1109",
+          "kind": "poll",
+          "ageMs": 2066,
+          "reason": "ready"
+        },
+        {
+          "id": "c5b060bd-bb59-46bf-9d3d-134ef3a21517",
+          "kind": "poll",
+          "ageMs": 73478,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "e3ac74bd-532e-4a52-9bc1-2dfd60e10569",
+          "kind": "poll",
+          "ageMs": 71140,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "f74d88ad-4605-4419-b416-4f18ee004d96",
+          "kind": "pool",
+          "ageMs": -35695,
+          "reason": "ready"
+        },
+        {
+          "id": "d2a221d0-c607-4356-a136-e66ea6d9f4e6",
+          "kind": "pool",
+          "ageMs": -35794,
+          "reason": "ready"
+        },
+        {
+          "id": "e5e972e3-bcac-4881-a181-76b0312bb407",
+          "kind": "pool",
+          "ageMs": -35940,
+          "reason": "ready"
+        },
+        {
+          "id": "d2a221d0-c607-4356-a136-e66ea6d9f4e6",
+          "kind": "poll",
+          "ageMs": 1561,
+          "reason": "ready"
+        },
+        {
+          "id": "f74d88ad-4605-4419-b416-4f18ee004d96",
+          "kind": "poll",
+          "ageMs": 1653,
+          "reason": "ready"
+        },
+        {
+          "id": "e5e972e3-bcac-4881-a181-76b0312bb407",
+          "kind": "poll",
+          "ageMs": 1371,
+          "reason": "ready"
+        },
+        {
+          "id": "150ad895-ec11-43a7-9ddf-7d7c44d16d02",
+          "kind": "dispatch",
+          "ageMs": 90174,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "964ed16e-0448-44ec-9561-589c8c09a01f",
+          "kind": "dispatch",
+          "ageMs": 89137,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "2ac6ddff-6a90-42f0-917b-1b13cb18eea0",
+          "kind": "dispatch",
+          "ageMs": 90033,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "30c362ca-1ee5-4cea-9bdc-ee1249ecae7e",
+          "kind": "dispatch",
+          "ageMs": 89688,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "964ed16e-0448-44ec-9561-589c8c09a01f",
+          "kind": "poll",
+          "ageMs": 75022,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "2f2ea38a-1136-4372-b246-9f0d8f9d6332",
+          "kind": "poll",
+          "ageMs": 76275,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "3d0155d7-17bf-4598-95c2-ec4872226877",
+          "kind": "poll",
+          "ageMs": 76439,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "2ac6ddff-6a90-42f0-917b-1b13cb18eea0",
+          "kind": "poll",
+          "ageMs": 76392,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "8832a247-e346-443c-b373-c0199fe896be",
+          "kind": "poll",
+          "ageMs": 72858,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "2f2ea38a-1136-4372-b246-9f0d8f9d6332",
+          "kind": "dispatch",
+          "ageMs": 89895,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "3aae2c17-c916-4a5a-a4f3-1d91b1d2b45e",
+          "kind": "dispatch",
+          "ageMs": 89597,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "3b1174b3-6f77-4dcd-880f-661491198e03",
+          "kind": "dispatch",
+          "ageMs": 89303,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "4a0564b8-8b28-482b-8412-7f60149d6a18",
+          "kind": "dispatch",
+          "ageMs": 88827,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "53e31441-dc6c-49a9-9bbf-3e37b12d31d6",
+          "kind": "dispatch",
+          "ageMs": 88423,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "57f4b1e0-42f9-412e-a6ff-d21b4aab6538",
+          "kind": "dispatch",
+          "ageMs": 88994,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "65f810c7-39c1-47bd-946c-fbf9b6e25886",
+          "kind": "dispatch",
+          "ageMs": 88559,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "3aae2c17-c916-4a5a-a4f3-1d91b1d2b45e",
+          "kind": "poll",
+          "ageMs": 75679,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "7021f2c0-8edf-475d-897f-f9cda63cb5e5",
+          "kind": "poll",
+          "ageMs": 73465,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "b4d46cb6-7658-499e-b721-bfe305affa24",
+          "kind": "poll",
+          "ageMs": 74414,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "97eee428-1cfb-47d7-9d9e-d562dfe77cd4",
+          "kind": "poll",
+          "ageMs": 73195,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "4865cbbf-6236-4e49-8f00-0fc8faf64870",
+          "kind": "dispatch",
+          "ageMs": 89413,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "150ad895-ec11-43a7-9ddf-7d7c44d16d02",
+          "kind": "pool",
+          "ageMs": -30156,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "3b1174b3-6f77-4dcd-880f-661491198e03",
+          "kind": "poll",
+          "ageMs": 75518,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "7da489c8-93d8-4a61-815e-60d0a1702880",
+          "kind": "pool",
+          "ageMs": -31521,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "4865cbbf-6236-4e49-8f00-0fc8faf64870",
+          "kind": "pool",
+          "ageMs": -31553,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "3b1174b3-6f77-4dcd-880f-661491198e03",
+          "kind": "pool",
+          "ageMs": -31601,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "964ed16e-0448-44ec-9561-589c8c09a01f",
+          "kind": "pool",
+          "ageMs": -31653,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "57f4b1e0-42f9-412e-a6ff-d21b4aab6538",
+          "kind": "pool",
+          "ageMs": -31688,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "4a0564b8-8b28-482b-8412-7f60149d6a18",
+          "kind": "pool",
+          "ageMs": -31737,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "af461550-1dd6-4044-ad7d-7babba365558",
+          "kind": "pool",
+          "ageMs": -31778,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "65f810c7-39c1-47bd-946c-fbf9b6e25886",
+          "kind": "pool",
+          "ageMs": -31827,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "4a0564b8-8b28-482b-8412-7f60149d6a18",
+          "kind": "poll",
+          "ageMs": 75299,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "53e31441-dc6c-49a9-9bbf-3e37b12d31d6",
+          "kind": "pool",
+          "ageMs": -31909,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "b4d46cb6-7658-499e-b721-bfe305affa24",
+          "kind": "pool",
+          "ageMs": -31947,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "92c1a6c6-3b4b-474e-b360-dcd3beba4197",
+          "kind": "pool",
+          "ageMs": -32020,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "7021f2c0-8edf-475d-897f-f9cda63cb5e5",
+          "kind": "pool",
+          "ageMs": -33072,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "c5b060bd-bb59-46bf-9d3d-134ef3a21517",
+          "kind": "pool",
+          "ageMs": -33096,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "97eee428-1cfb-47d7-9d9e-d562dfe77cd4",
+          "kind": "pool",
+          "ageMs": -33133,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "8832a247-e346-443c-b373-c0199fe896be",
+          "kind": "pool",
+          "ageMs": -33157,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "d23edb33-2685-4d44-be0d-39f200b608bb",
+          "kind": "pool",
+          "ageMs": -34296,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "b93a8bbe-23c2-4afb-a286-b5aa392a0924",
+          "kind": "pool",
+          "ageMs": -34357,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "b9b06b68-4689-4f74-a0da-d8706e5360c3",
+          "kind": "pool",
+          "ageMs": -34389,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "ee33d1e5-7452-451b-9cdc-7fa680d99d66",
+          "kind": "pool",
+          "ageMs": -34425,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "cba47c92-9897-412f-b7d3-6b7456ce1109",
+          "kind": "pool",
+          "ageMs": -34456,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "e3ac74bd-532e-4a52-9bc1-2dfd60e10569",
+          "kind": "pool",
+          "ageMs": -34476,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "ee33d1e5-7452-451b-9cdc-7fa680d99d66",
+          "kind": "dispatch",
+          "ageMs": 86212,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "f74d88ad-4605-4419-b416-4f18ee004d96",
+          "kind": "dispatch",
+          "ageMs": 85477,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "92c1a6c6-3b4b-474e-b360-dcd3beba4197",
+          "kind": "poll",
+          "ageMs": 74380,
+          "reason": "provider_backoff"
+        }
+      ]
+    },
+    {
+      "at": 1791309822439,
+      "reasons": {
+        "dispatch:authority_denied": 17,
+        "dispatch:waiting_peer": 13,
+        "pool:waiting_peer": 27,
+        "poll:provider_backoff": 26,
+        "poll:ready": 4,
+        "pool:ready": 3
+      },
+      "due": [
+        {
+          "id": "7021f2c0-8edf-475d-897f-f9cda63cb5e5",
+          "kind": "dispatch",
+          "ageMs": 86564,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "7da489c8-93d8-4a61-815e-60d0a1702880",
+          "kind": "dispatch",
+          "ageMs": 88195,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "8832a247-e346-443c-b373-c0199fe896be",
+          "kind": "dispatch",
+          "ageMs": 85753,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "97eee428-1cfb-47d7-9d9e-d562dfe77cd4",
+          "kind": "dispatch",
+          "ageMs": 86033,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "b4d46cb6-7658-499e-b721-bfe305affa24",
+          "kind": "dispatch",
+          "ageMs": 86998,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "b93a8bbe-23c2-4afb-a286-b5aa392a0924",
+          "kind": "dispatch",
+          "ageMs": 85293,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "e3ac74bd-532e-4a52-9bc1-2dfd60e10569",
+          "kind": "dispatch",
+          "ageMs": 84347,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "e5e972e3-bcac-4881-a181-76b0312bb407",
+          "kind": "dispatch",
+          "ageMs": 83950,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "2ac6ddff-6a90-42f0-917b-1b13cb18eea0",
+          "kind": "pool",
+          "ageMs": -31541,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "2f2ea38a-1136-4372-b246-9f0d8f9d6332",
+          "kind": "pool",
+          "ageMs": -31629,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "3d0155d7-17bf-4598-95c2-ec4872226877",
+          "kind": "pool",
+          "ageMs": -31703,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "30c362ca-1ee5-4cea-9bdc-ee1249ecae7e",
+          "kind": "pool",
+          "ageMs": -31741,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "7da489c8-93d8-4a61-815e-60d0a1702880",
+          "kind": "poll",
+          "ageMs": 74456,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "3aae2c17-c916-4a5a-a4f3-1d91b1d2b45e",
+          "kind": "pool",
+          "ageMs": -32805,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "57f4b1e0-42f9-412e-a6ff-d21b4aab6538",
+          "kind": "poll",
+          "ageMs": 73815,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "ee33d1e5-7452-451b-9cdc-7fa680d99d66",
+          "kind": "poll",
+          "ageMs": 70490,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "150ad895-ec11-43a7-9ddf-7d7c44d16d02",
+          "kind": "poll",
+          "ageMs": 75541,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "30c362ca-1ee5-4cea-9bdc-ee1249ecae7e",
+          "kind": "poll",
+          "ageMs": 74806,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "4865cbbf-6236-4e49-8f00-0fc8faf64870",
+          "kind": "poll",
+          "ageMs": 74567,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "65f810c7-39c1-47bd-946c-fbf9b6e25886",
+          "kind": "poll",
+          "ageMs": 73421,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "af461550-1dd6-4044-ad7d-7babba365558",
+          "kind": "poll",
+          "ageMs": 73880,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "53e31441-dc6c-49a9-9bbf-3e37b12d31d6",
+          "kind": "poll",
+          "ageMs": 73471,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "b93a8bbe-23c2-4afb-a286-b5aa392a0924",
+          "kind": "poll",
+          "ageMs": 71133,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "d23edb33-2685-4d44-be0d-39f200b608bb",
+          "kind": "poll",
+          "ageMs": 71316,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "b9b06b68-4689-4f74-a0da-d8706e5360c3",
+          "kind": "poll",
+          "ageMs": 71018,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "3d0155d7-17bf-4598-95c2-ec4872226877",
+          "kind": "dispatch",
+          "ageMs": 88444,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "92c1a6c6-3b4b-474e-b360-dcd3beba4197",
+          "kind": "dispatch",
+          "ageMs": 86848,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "af461550-1dd6-4044-ad7d-7babba365558",
+          "kind": "dispatch",
+          "ageMs": 87372,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "b9b06b68-4689-4f74-a0da-d8706e5360c3",
+          "kind": "dispatch",
+          "ageMs": 85163,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "c5b060bd-bb59-46bf-9d3d-134ef3a21517",
+          "kind": "dispatch",
+          "ageMs": 86190,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "cba47c92-9897-412f-b7d3-6b7456ce1109",
+          "kind": "dispatch",
+          "ageMs": 84593,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "d23edb33-2685-4d44-be0d-39f200b608bb",
+          "kind": "dispatch",
+          "ageMs": 85531,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "d2a221d0-c607-4356-a136-e66ea6d9f4e6",
+          "kind": "dispatch",
+          "ageMs": 84059,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "cba47c92-9897-412f-b7d3-6b7456ce1109",
+          "kind": "poll",
+          "ageMs": 754,
+          "reason": "ready"
+        },
+        {
+          "id": "c5b060bd-bb59-46bf-9d3d-134ef3a21517",
+          "kind": "poll",
+          "ageMs": 72166,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "e3ac74bd-532e-4a52-9bc1-2dfd60e10569",
+          "kind": "poll",
+          "ageMs": 69828,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "f74d88ad-4605-4419-b416-4f18ee004d96",
+          "kind": "pool",
+          "ageMs": -37007,
+          "reason": "ready"
+        },
+        {
+          "id": "d2a221d0-c607-4356-a136-e66ea6d9f4e6",
+          "kind": "pool",
+          "ageMs": -37106,
+          "reason": "ready"
+        },
+        {
+          "id": "e5e972e3-bcac-4881-a181-76b0312bb407",
+          "kind": "pool",
+          "ageMs": -37252,
+          "reason": "ready"
+        },
+        {
+          "id": "f74d88ad-4605-4419-b416-4f18ee004d96",
+          "kind": "poll",
+          "ageMs": 341,
+          "reason": "ready"
+        },
+        {
+          "id": "d2a221d0-c607-4356-a136-e66ea6d9f4e6",
+          "kind": "poll",
+          "ageMs": 249,
+          "reason": "ready"
+        },
+        {
+          "id": "e5e972e3-bcac-4881-a181-76b0312bb407",
+          "kind": "poll",
+          "ageMs": 59,
+          "reason": "ready"
+        },
+        {
+          "id": "150ad895-ec11-43a7-9ddf-7d7c44d16d02",
+          "kind": "dispatch",
+          "ageMs": 88862,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "964ed16e-0448-44ec-9561-589c8c09a01f",
+          "kind": "dispatch",
+          "ageMs": 87825,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "2ac6ddff-6a90-42f0-917b-1b13cb18eea0",
+          "kind": "dispatch",
+          "ageMs": 88721,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "30c362ca-1ee5-4cea-9bdc-ee1249ecae7e",
+          "kind": "dispatch",
+          "ageMs": 88376,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "964ed16e-0448-44ec-9561-589c8c09a01f",
+          "kind": "poll",
+          "ageMs": 73710,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "2f2ea38a-1136-4372-b246-9f0d8f9d6332",
+          "kind": "poll",
+          "ageMs": 74963,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "3d0155d7-17bf-4598-95c2-ec4872226877",
+          "kind": "poll",
+          "ageMs": 75127,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "2ac6ddff-6a90-42f0-917b-1b13cb18eea0",
+          "kind": "poll",
+          "ageMs": 75080,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "8832a247-e346-443c-b373-c0199fe896be",
+          "kind": "poll",
+          "ageMs": 71546,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "2f2ea38a-1136-4372-b246-9f0d8f9d6332",
+          "kind": "dispatch",
+          "ageMs": 88583,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "3aae2c17-c916-4a5a-a4f3-1d91b1d2b45e",
+          "kind": "dispatch",
+          "ageMs": 88285,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "3b1174b3-6f77-4dcd-880f-661491198e03",
+          "kind": "dispatch",
+          "ageMs": 87991,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "4a0564b8-8b28-482b-8412-7f60149d6a18",
+          "kind": "dispatch",
+          "ageMs": 87515,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "53e31441-dc6c-49a9-9bbf-3e37b12d31d6",
+          "kind": "dispatch",
+          "ageMs": 87111,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "57f4b1e0-42f9-412e-a6ff-d21b4aab6538",
+          "kind": "dispatch",
+          "ageMs": 87682,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "65f810c7-39c1-47bd-946c-fbf9b6e25886",
+          "kind": "dispatch",
+          "ageMs": 87247,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "3aae2c17-c916-4a5a-a4f3-1d91b1d2b45e",
+          "kind": "poll",
+          "ageMs": 74367,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "7021f2c0-8edf-475d-897f-f9cda63cb5e5",
+          "kind": "poll",
+          "ageMs": 72153,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "b4d46cb6-7658-499e-b721-bfe305affa24",
+          "kind": "poll",
+          "ageMs": 73102,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "97eee428-1cfb-47d7-9d9e-d562dfe77cd4",
+          "kind": "poll",
+          "ageMs": 71883,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "4865cbbf-6236-4e49-8f00-0fc8faf64870",
+          "kind": "dispatch",
+          "ageMs": 88101,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "150ad895-ec11-43a7-9ddf-7d7c44d16d02",
+          "kind": "pool",
+          "ageMs": -31468,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "3b1174b3-6f77-4dcd-880f-661491198e03",
+          "kind": "poll",
+          "ageMs": 74206,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "7da489c8-93d8-4a61-815e-60d0a1702880",
+          "kind": "pool",
+          "ageMs": -32833,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "4865cbbf-6236-4e49-8f00-0fc8faf64870",
+          "kind": "pool",
+          "ageMs": -32865,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "3b1174b3-6f77-4dcd-880f-661491198e03",
+          "kind": "pool",
+          "ageMs": -32913,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "964ed16e-0448-44ec-9561-589c8c09a01f",
+          "kind": "pool",
+          "ageMs": -32965,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "57f4b1e0-42f9-412e-a6ff-d21b4aab6538",
+          "kind": "pool",
+          "ageMs": -33000,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "4a0564b8-8b28-482b-8412-7f60149d6a18",
+          "kind": "pool",
+          "ageMs": -33049,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "af461550-1dd6-4044-ad7d-7babba365558",
+          "kind": "pool",
+          "ageMs": -33090,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "65f810c7-39c1-47bd-946c-fbf9b6e25886",
+          "kind": "pool",
+          "ageMs": -33139,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "4a0564b8-8b28-482b-8412-7f60149d6a18",
+          "kind": "poll",
+          "ageMs": 73987,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "53e31441-dc6c-49a9-9bbf-3e37b12d31d6",
+          "kind": "pool",
+          "ageMs": -33221,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "b4d46cb6-7658-499e-b721-bfe305affa24",
+          "kind": "pool",
+          "ageMs": -33259,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "92c1a6c6-3b4b-474e-b360-dcd3beba4197",
+          "kind": "pool",
+          "ageMs": -33332,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "7021f2c0-8edf-475d-897f-f9cda63cb5e5",
+          "kind": "pool",
+          "ageMs": -34384,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "c5b060bd-bb59-46bf-9d3d-134ef3a21517",
+          "kind": "pool",
+          "ageMs": -34408,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "97eee428-1cfb-47d7-9d9e-d562dfe77cd4",
+          "kind": "pool",
+          "ageMs": -34445,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "8832a247-e346-443c-b373-c0199fe896be",
+          "kind": "pool",
+          "ageMs": -34469,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "d23edb33-2685-4d44-be0d-39f200b608bb",
+          "kind": "pool",
+          "ageMs": -35608,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "b93a8bbe-23c2-4afb-a286-b5aa392a0924",
+          "kind": "pool",
+          "ageMs": -35669,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "b9b06b68-4689-4f74-a0da-d8706e5360c3",
+          "kind": "pool",
+          "ageMs": -35701,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "ee33d1e5-7452-451b-9cdc-7fa680d99d66",
+          "kind": "pool",
+          "ageMs": -35737,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "cba47c92-9897-412f-b7d3-6b7456ce1109",
+          "kind": "pool",
+          "ageMs": -35768,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "e3ac74bd-532e-4a52-9bc1-2dfd60e10569",
+          "kind": "pool",
+          "ageMs": -35788,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "ee33d1e5-7452-451b-9cdc-7fa680d99d66",
+          "kind": "dispatch",
+          "ageMs": 84900,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "f74d88ad-4605-4419-b416-4f18ee004d96",
+          "kind": "dispatch",
+          "ageMs": 84165,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "92c1a6c6-3b4b-474e-b360-dcd3beba4197",
+          "kind": "poll",
+          "ageMs": 73068,
+          "reason": "provider_backoff"
+        }
+      ]
+    },
+    {
+      "at": 1791309824286,
+      "reasons": {
+        "dispatch:authority_denied": 17,
+        "dispatch:waiting_peer": 13,
+        "pool:waiting_peer": 27,
+        "poll:provider_backoff": 26,
+        "poll:ready": 4,
+        "pool:ready": 3
+      },
+      "due": [
+        {
+          "id": "7021f2c0-8edf-475d-897f-f9cda63cb5e5",
+          "kind": "dispatch",
+          "ageMs": 88410,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "7da489c8-93d8-4a61-815e-60d0a1702880",
+          "kind": "dispatch",
+          "ageMs": 90041,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "8832a247-e346-443c-b373-c0199fe896be",
+          "kind": "dispatch",
+          "ageMs": 87599,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "97eee428-1cfb-47d7-9d9e-d562dfe77cd4",
+          "kind": "dispatch",
+          "ageMs": 87879,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "b4d46cb6-7658-499e-b721-bfe305affa24",
+          "kind": "dispatch",
+          "ageMs": 88844,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "b93a8bbe-23c2-4afb-a286-b5aa392a0924",
+          "kind": "dispatch",
+          "ageMs": 87139,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "e3ac74bd-532e-4a52-9bc1-2dfd60e10569",
+          "kind": "dispatch",
+          "ageMs": 86193,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "e5e972e3-bcac-4881-a181-76b0312bb407",
+          "kind": "dispatch",
+          "ageMs": 85796,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "2ac6ddff-6a90-42f0-917b-1b13cb18eea0",
+          "kind": "pool",
+          "ageMs": -29695,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "2f2ea38a-1136-4372-b246-9f0d8f9d6332",
+          "kind": "pool",
+          "ageMs": -29783,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "3d0155d7-17bf-4598-95c2-ec4872226877",
+          "kind": "pool",
+          "ageMs": -29857,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "30c362ca-1ee5-4cea-9bdc-ee1249ecae7e",
+          "kind": "pool",
+          "ageMs": -29895,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "7da489c8-93d8-4a61-815e-60d0a1702880",
+          "kind": "poll",
+          "ageMs": 76302,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "3aae2c17-c916-4a5a-a4f3-1d91b1d2b45e",
+          "kind": "pool",
+          "ageMs": -30959,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "57f4b1e0-42f9-412e-a6ff-d21b4aab6538",
+          "kind": "poll",
+          "ageMs": 75661,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "ee33d1e5-7452-451b-9cdc-7fa680d99d66",
+          "kind": "poll",
+          "ageMs": 72336,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "150ad895-ec11-43a7-9ddf-7d7c44d16d02",
+          "kind": "poll",
+          "ageMs": 77387,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "30c362ca-1ee5-4cea-9bdc-ee1249ecae7e",
+          "kind": "poll",
+          "ageMs": 76652,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "4865cbbf-6236-4e49-8f00-0fc8faf64870",
+          "kind": "poll",
+          "ageMs": 76413,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "65f810c7-39c1-47bd-946c-fbf9b6e25886",
+          "kind": "poll",
+          "ageMs": 75267,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "af461550-1dd6-4044-ad7d-7babba365558",
+          "kind": "poll",
+          "ageMs": 75726,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "53e31441-dc6c-49a9-9bbf-3e37b12d31d6",
+          "kind": "poll",
+          "ageMs": 75317,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "b93a8bbe-23c2-4afb-a286-b5aa392a0924",
+          "kind": "poll",
+          "ageMs": 72979,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "d23edb33-2685-4d44-be0d-39f200b608bb",
+          "kind": "poll",
+          "ageMs": 73162,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "b9b06b68-4689-4f74-a0da-d8706e5360c3",
+          "kind": "poll",
+          "ageMs": 72864,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "3d0155d7-17bf-4598-95c2-ec4872226877",
+          "kind": "dispatch",
+          "ageMs": 90290,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "92c1a6c6-3b4b-474e-b360-dcd3beba4197",
+          "kind": "dispatch",
+          "ageMs": 88694,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "af461550-1dd6-4044-ad7d-7babba365558",
+          "kind": "dispatch",
+          "ageMs": 89218,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "b9b06b68-4689-4f74-a0da-d8706e5360c3",
+          "kind": "dispatch",
+          "ageMs": 87009,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "c5b060bd-bb59-46bf-9d3d-134ef3a21517",
+          "kind": "dispatch",
+          "ageMs": 88036,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "cba47c92-9897-412f-b7d3-6b7456ce1109",
+          "kind": "dispatch",
+          "ageMs": 86439,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "d23edb33-2685-4d44-be0d-39f200b608bb",
+          "kind": "dispatch",
+          "ageMs": 87377,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "d2a221d0-c607-4356-a136-e66ea6d9f4e6",
+          "kind": "dispatch",
+          "ageMs": 85905,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "cba47c92-9897-412f-b7d3-6b7456ce1109",
+          "kind": "poll",
+          "ageMs": 2600,
+          "reason": "ready"
+        },
+        {
+          "id": "c5b060bd-bb59-46bf-9d3d-134ef3a21517",
+          "kind": "poll",
+          "ageMs": 74012,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "e3ac74bd-532e-4a52-9bc1-2dfd60e10569",
+          "kind": "poll",
+          "ageMs": 71674,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "f74d88ad-4605-4419-b416-4f18ee004d96",
+          "kind": "pool",
+          "ageMs": -35161,
+          "reason": "ready"
+        },
+        {
+          "id": "d2a221d0-c607-4356-a136-e66ea6d9f4e6",
+          "kind": "pool",
+          "ageMs": -35260,
+          "reason": "ready"
+        },
+        {
+          "id": "e5e972e3-bcac-4881-a181-76b0312bb407",
+          "kind": "pool",
+          "ageMs": -35406,
+          "reason": "ready"
+        },
+        {
+          "id": "f74d88ad-4605-4419-b416-4f18ee004d96",
+          "kind": "poll",
+          "ageMs": 2187,
+          "reason": "ready"
+        },
+        {
+          "id": "d2a221d0-c607-4356-a136-e66ea6d9f4e6",
+          "kind": "poll",
+          "ageMs": 2095,
+          "reason": "ready"
+        },
+        {
+          "id": "e5e972e3-bcac-4881-a181-76b0312bb407",
+          "kind": "poll",
+          "ageMs": 1905,
+          "reason": "ready"
+        },
+        {
+          "id": "150ad895-ec11-43a7-9ddf-7d7c44d16d02",
+          "kind": "dispatch",
+          "ageMs": 90708,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "964ed16e-0448-44ec-9561-589c8c09a01f",
+          "kind": "dispatch",
+          "ageMs": 89671,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "2ac6ddff-6a90-42f0-917b-1b13cb18eea0",
+          "kind": "dispatch",
+          "ageMs": 90567,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "30c362ca-1ee5-4cea-9bdc-ee1249ecae7e",
+          "kind": "dispatch",
+          "ageMs": 90222,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "964ed16e-0448-44ec-9561-589c8c09a01f",
+          "kind": "poll",
+          "ageMs": 75556,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "2f2ea38a-1136-4372-b246-9f0d8f9d6332",
+          "kind": "poll",
+          "ageMs": 76809,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "3d0155d7-17bf-4598-95c2-ec4872226877",
+          "kind": "poll",
+          "ageMs": 76973,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "2ac6ddff-6a90-42f0-917b-1b13cb18eea0",
+          "kind": "poll",
+          "ageMs": 76926,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "8832a247-e346-443c-b373-c0199fe896be",
+          "kind": "poll",
+          "ageMs": 73392,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "2f2ea38a-1136-4372-b246-9f0d8f9d6332",
+          "kind": "dispatch",
+          "ageMs": 90429,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "3aae2c17-c916-4a5a-a4f3-1d91b1d2b45e",
+          "kind": "dispatch",
+          "ageMs": 90131,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "3b1174b3-6f77-4dcd-880f-661491198e03",
+          "kind": "dispatch",
+          "ageMs": 89837,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "4a0564b8-8b28-482b-8412-7f60149d6a18",
+          "kind": "dispatch",
+          "ageMs": 89361,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "53e31441-dc6c-49a9-9bbf-3e37b12d31d6",
+          "kind": "dispatch",
+          "ageMs": 88957,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "57f4b1e0-42f9-412e-a6ff-d21b4aab6538",
+          "kind": "dispatch",
+          "ageMs": 89528,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "65f810c7-39c1-47bd-946c-fbf9b6e25886",
+          "kind": "dispatch",
+          "ageMs": 89093,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "3aae2c17-c916-4a5a-a4f3-1d91b1d2b45e",
+          "kind": "poll",
+          "ageMs": 76213,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "7021f2c0-8edf-475d-897f-f9cda63cb5e5",
+          "kind": "poll",
+          "ageMs": 73999,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "b4d46cb6-7658-499e-b721-bfe305affa24",
+          "kind": "poll",
+          "ageMs": 74948,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "97eee428-1cfb-47d7-9d9e-d562dfe77cd4",
+          "kind": "poll",
+          "ageMs": 73729,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "4865cbbf-6236-4e49-8f00-0fc8faf64870",
+          "kind": "dispatch",
+          "ageMs": 89947,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "150ad895-ec11-43a7-9ddf-7d7c44d16d02",
+          "kind": "pool",
+          "ageMs": -29622,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "3b1174b3-6f77-4dcd-880f-661491198e03",
+          "kind": "poll",
+          "ageMs": 76052,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "7da489c8-93d8-4a61-815e-60d0a1702880",
+          "kind": "pool",
+          "ageMs": -30987,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "4865cbbf-6236-4e49-8f00-0fc8faf64870",
+          "kind": "pool",
+          "ageMs": -31019,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "3b1174b3-6f77-4dcd-880f-661491198e03",
+          "kind": "pool",
+          "ageMs": -31067,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "964ed16e-0448-44ec-9561-589c8c09a01f",
+          "kind": "pool",
+          "ageMs": -31119,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "57f4b1e0-42f9-412e-a6ff-d21b4aab6538",
+          "kind": "pool",
+          "ageMs": -31154,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "4a0564b8-8b28-482b-8412-7f60149d6a18",
+          "kind": "pool",
+          "ageMs": -31203,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "af461550-1dd6-4044-ad7d-7babba365558",
+          "kind": "pool",
+          "ageMs": -31244,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "65f810c7-39c1-47bd-946c-fbf9b6e25886",
+          "kind": "pool",
+          "ageMs": -31293,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "4a0564b8-8b28-482b-8412-7f60149d6a18",
+          "kind": "poll",
+          "ageMs": 75833,
+          "reason": "provider_backoff"
+        },
+        {
+          "id": "53e31441-dc6c-49a9-9bbf-3e37b12d31d6",
+          "kind": "pool",
+          "ageMs": -31375,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "b4d46cb6-7658-499e-b721-bfe305affa24",
+          "kind": "pool",
+          "ageMs": -31413,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "92c1a6c6-3b4b-474e-b360-dcd3beba4197",
+          "kind": "pool",
+          "ageMs": -31486,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "7021f2c0-8edf-475d-897f-f9cda63cb5e5",
+          "kind": "pool",
+          "ageMs": -32538,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "c5b060bd-bb59-46bf-9d3d-134ef3a21517",
+          "kind": "pool",
+          "ageMs": -32562,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "97eee428-1cfb-47d7-9d9e-d562dfe77cd4",
+          "kind": "pool",
+          "ageMs": -32599,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "8832a247-e346-443c-b373-c0199fe896be",
+          "kind": "pool",
+          "ageMs": -32623,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "d23edb33-2685-4d44-be0d-39f200b608bb",
+          "kind": "pool",
+          "ageMs": -33762,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "b93a8bbe-23c2-4afb-a286-b5aa392a0924",
+          "kind": "pool",
+          "ageMs": -33823,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "b9b06b68-4689-4f74-a0da-d8706e5360c3",
+          "kind": "pool",
+          "ageMs": -33855,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "ee33d1e5-7452-451b-9cdc-7fa680d99d66",
+          "kind": "pool",
+          "ageMs": -33891,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "cba47c92-9897-412f-b7d3-6b7456ce1109",
+          "kind": "pool",
+          "ageMs": -33922,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "e3ac74bd-532e-4a52-9bc1-2dfd60e10569",
+          "kind": "pool",
+          "ageMs": -33942,
+          "reason": "waiting_peer"
+        },
+        {
+          "id": "ee33d1e5-7452-451b-9cdc-7fa680d99d66",
+          "kind": "dispatch",
+          "ageMs": 86746,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "f74d88ad-4605-4419-b416-4f18ee004d96",
+          "kind": "dispatch",
+          "ageMs": 86011,
+          "reason": "authority_denied"
+        },
+        {
+          "id": "92c1a6c6-3b4b-474e-b360-dcd3beba4197",
+          "kind": "poll",
+          "ageMs": 74914,
+          "reason": "provider_backoff"
+        }
+      ]
+    }
+  ],
+  "lastReasons": {
+    "poll:rescan_incomplete": 26,
+    "dispatch:waiting_peer": 13,
+    "poll:ready": 4,
+    "dispatch:authority_denied": 17,
+    "pool:waiting_peer": 28,
+    "pool:ready": 2
+  },
+  "stderr": "",
+  "classification": "No abort-cause claim made from reason counters alone. Raw resources show provider_backoff begins in declared NO failure phase and persists across restart; exact cause per row requires bounded next-stage instrumentation/oracle. One incomplete hold remains observable; strict all30 criterion fails rather than excluding blocked participant."
+}

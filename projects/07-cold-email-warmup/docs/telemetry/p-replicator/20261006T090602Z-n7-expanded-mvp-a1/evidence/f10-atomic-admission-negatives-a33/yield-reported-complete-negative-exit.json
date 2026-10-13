@@ -1,0 +1,65 @@
+{
+  "utc": "2026-10-06T22:39:23.666510+00:00",
+  "native_exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 1.3407861290033907,
+  "pid": 4112086,
+  "startticks": "124937232",
+  "runner_pid": 4084682,
+  "PG": {
+    "at": "2026-10-06T22:39:23.479Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB_slots_claims_after_join": {
+    "utc": "2026-10-06T22:39:23.649Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 2,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 3,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 4,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 2,
+        "occupied": false
+      }
+    ]
+  },
+  "owned_nodes": [],
+  "assertion_failure": true,
+  "failure_titles": [
+    "not ok 1 - poll quanta persist the fixed tail before yielding and never retry incomplete scans"
+  ],
+  "tap_sha256": "b69bf2eb8b91a408f0619092891a17cfc0850425355829c666d208d41e74794a",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

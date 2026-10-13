@@ -1,0 +1,66 @@
+{
+  "utc": "2026-10-06T23:18:38.509410+00:00",
+  "candidate_head": "db50798a76a97fed75931544f24cd1181ff082d8",
+  "source120_build73_sql15_drift": [],
+  "shadow183_drift": [],
+  "nodes": [],
+  "PG": {
+    "at": "2026-10-06T23:18:38.320Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB": {
+    "utc": "2026-10-06T23:18:38.459Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 2,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 3,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 4,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 2,
+        "occupied": false
+      }
+    ]
+  },
+  "legacy_original_hashes": {
+    "/tmp/n7-f10-cadence-implement-a7/short-native-v2.json": "60d07dcb6bcec2d5faa0419f86ccb41fce2997564376df6f25d197f5b4ce1007",
+    "/tmp/n7-f10-cadence-implement-a7/short-native-v2-drain.json": "3d19f0b8d4ed427ae24293f9d897c17f0165ef5bc6132b2fffbd8af01f663b2a"
+  },
+  "A34_prior_raw_verified_count": 549,
+  "A34_prior_artifact_drift": [],
+  "native_node_sha256": "b1cbec894e45a5814b6ab756e1e14f8a76516273197e67e0412b57c1e10d0d9f",
+  "protected_dependency_realpath": "/tmp/n7-f08-dependency-fix-20261006/projects/07-cold-email-warmup/node_modules",
+  "disk_available_bytes": 2772156416,
+  "mutex": "exclusive reacquired for proof, released after receipt"
+}

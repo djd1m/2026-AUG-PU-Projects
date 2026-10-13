@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T20:25:03.145416+00:00",
+  "native_returncode": 1,
+  "timed_out": false,
+  "elapsed_ms": 1228.4365391824394,
+  "pid": 2056633,
+  "startticks": "124131191",
+  "pgid": 2056633,
+  "TAP_sha256": "8e43f1c443d38f8413df80f1367cd3188a3a75ccef01d07f4cde4238d5a4f832",
+  "failure_titles": [
+    "not ok 1 - complete proof becomes immediately eligible without resetting its selected fair turn"
+  ],
+  "assertion_failure": true,
+  "PG": {
+    "at": "2026-10-06T20:25:03.266Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "owned_nodes": []
+}

@@ -1,0 +1,10 @@
+{
+  "source": "e043bb270a8dec50d2e090379ffff5f655a3461f",
+  "result": "pre_data_transient",
+  "ehloElapsedMs": 10006,
+  "commands": [
+    "EHLO"
+  ],
+  "expected": "EHLO phase must time out at 10000 ms before AUTH/DATA",
+  "node": "v22.20.0"
+}

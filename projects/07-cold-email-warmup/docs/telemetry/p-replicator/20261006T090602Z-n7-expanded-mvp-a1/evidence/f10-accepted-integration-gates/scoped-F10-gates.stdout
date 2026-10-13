@@ -1,0 +1,7 @@
+TRACE contour=f10-durable-runtime specification=/tmp/n7-f10-gate-scope-20261006/docs/features/f10-durable-runtime/01_specification.md pseudocode=/tmp/n7-f10-gate-scope-20261006/docs/features/f10-durable-runtime/02_pseudocode.md
+COUNT requirements=14 algorithms=14 missing-algorithm=0 orphan-algorithm=0
+PASS contour=f10-durable-runtime bidirectional traceability complete
+VERDICT traceability=PASS features=1 gaps=0 inconclusive=0
+VERDICT completion=PASS features=1 gaps=0 inconclusive=0
+VERDICT report-revision=PASS features=1 gaps=0 inconclusive=0
+VERDICT criterion-scenarios=PASS features=1 gaps=0 inconclusive=0

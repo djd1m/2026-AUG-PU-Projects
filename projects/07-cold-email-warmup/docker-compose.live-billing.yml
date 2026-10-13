@@ -1,0 +1,18 @@
+# Opt in explicitly; baseline disabled/local_test has no merchant-file dependency.
+services:
+  web:
+    environment:
+      BILLING_MODE: live_provider
+      YOOKASSA_SHOP_ID_FILE: /run/secrets/yookassa_shop_id
+      YOOKASSA_SECRET_KEY_FILE: /run/secrets/yookassa_secret_key
+      N7_TEAM_PRICE_MINOR: ${N7_TEAM_PRICE_MINOR:?owner-approved positive integer price required}
+      APP_ORIGIN: ${N7_APP_ORIGIN:?verified HTTPS application origin required}
+    secrets:
+      - yookassa_shop_id
+      - yookassa_secret_key
+
+secrets:
+  yookassa_shop_id:
+    file: ${N7_YOOKASSA_SHOP_ID_FILE:?private host shop-id file path required}
+  yookassa_secret_key:
+    file: ${N7_YOOKASSA_SECRET_KEY_FILE:?private host secret-key file path required}

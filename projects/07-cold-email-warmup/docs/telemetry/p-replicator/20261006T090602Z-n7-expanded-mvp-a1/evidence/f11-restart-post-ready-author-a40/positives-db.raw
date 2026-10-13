@@ -1,0 +1,32 @@
+TAP version 13
+# Subtest: F11 short compiled worker SIGTERM while native BODY physically claimed
+not ok 1 - F11 short compiled worker SIGTERM while native BODY physically claimed
+  ---
+  duration_ms: 325.415626
+  type: 'test'
+  location: '/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts:12:33310'
+  failureType: 'testCodeFailure'
+  error: 'cohort_requires_empty_owned_capacity'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    seedBodyPressureCohort (/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts:99:228)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async TestContext.<anonymous> (/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts:210:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: F11 native empty-tail counterproofs retain old proof and restored genuine result completes
+ok 2 - F11 native empty-tail counterproofs retain old proof and restored genuine result completes
+  ---
+  duration_ms: 20120.883192
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 1
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 20956.444791

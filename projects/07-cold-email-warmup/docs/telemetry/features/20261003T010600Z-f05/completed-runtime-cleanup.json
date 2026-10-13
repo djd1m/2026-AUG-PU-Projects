@@ -1,0 +1,35 @@
+{
+  "at": "2026-10-03T01:27:52.627253+00:00",
+  "reason": "accepted F03 runtimes no longer needed; own subnets exhausted, preserve all data volumes and source/evidence",
+  "containers": [
+    {
+      "container": "n7f03a-db-1",
+      "image": "sha256:38471f330eb885e04de130b768d6db4e10469e2311879c7e5c699f6d2d8a1c74",
+      "volumes_preserved": [
+        "n7f03a_pg"
+      ]
+    },
+    {
+      "container": "n7f03a-web-1",
+      "image": "sha256:7fd30f7b180b368689e4c988b3aaa6adb9f0f48a872836341a897c38860d6d74",
+      "volumes_preserved": []
+    },
+    {
+      "container": "n7f03b-db-1",
+      "image": "sha256:38471f330eb885e04de130b768d6db4e10469e2311879c7e5c699f6d2d8a1c74",
+      "volumes_preserved": [
+        "n7f03b_pg"
+      ]
+    },
+    {
+      "container": "n7f03b-web-1",
+      "image": "sha256:bb93d01382f53a6309d3d1c81389311d9e5195ee1df5d612081cfa8d3eda68a2",
+      "volumes_preserved": []
+    }
+  ],
+  "networks_removed": [
+    "n7f03a_network",
+    "n7f03b_network"
+  ],
+  "volumes_deleted": false
+}

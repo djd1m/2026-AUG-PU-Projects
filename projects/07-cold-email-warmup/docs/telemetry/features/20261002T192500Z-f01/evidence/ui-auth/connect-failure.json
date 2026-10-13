@@ -1,0 +1,27 @@
+{
+  "run_id": "20261002T192500Z-f01",
+  "work_unit_id": "n7-f01-ui-sol",
+  "attempt_id": "ui-1",
+  "source_revision": "e557c73bd87495ad099e66981c2a7ef4e61f713f",
+  "build": {
+    "source_revision": "f32ab9bedd7658a6afffcd2890f34950af6aa0bf",
+    "snapshot_sha256": "9596eaea1f3da13e9f5aba7ea24b4d0afea4f9cd2e040485b822fdeb8df00d7c",
+    "image": "sha256:6a77e7410ef8d66f032f6cbbbf1afd2631b9c53d033ebbc403b075b016db465f"
+  },
+  "started_at": "2026-10-02T19:58:39.268Z",
+  "runtime_node": "v24.20.0",
+  "playwright": "1.63.0",
+  "preflight": "preflight.json",
+  "viewports": [],
+  "result": "failed",
+  "cleanup": {
+    "own_contexts_closed": true,
+    "bridge_closed": true,
+    "sockets_closed": true
+  },
+  "failure": {
+    "phase": "browser-connect",
+    "kind": "assertion_or_runtime_failure"
+  },
+  "finished_at": "2026-10-02T19:58:39.361Z"
+}

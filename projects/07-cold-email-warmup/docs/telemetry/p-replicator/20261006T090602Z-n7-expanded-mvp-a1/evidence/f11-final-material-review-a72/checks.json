@@ -1,0 +1,32 @@
+{
+  "verdict": "LOCAL_RUNNER_PREPARATION_ACCEPT",
+  "blocking_findings": [],
+  "objective_sha256": "f6712e1743f6bf4659cefa5b68f93de561f07efc58c04c1bd75e58b8fb7d2fa4",
+  "bound_artifact_count": 18,
+  "artifact_hashes_match": true,
+  "source_paths": 227,
+  "source_hashes_match": true,
+  "dependency_hashes_match": true,
+  "helpers_match": true,
+  "accepted_A68_guard_trace_only": true,
+  "four_commands_exact_original_names_args_bound45_callback1": true,
+  "all4_new_schema_lexical_valid_distinct_and_nonprotected": true,
+  "called_material_fixtures_require_db_owner_exact_guard_mapping": "runtimeFixture/seedBodyPressureCohort; no assertFairDatabase call on these selected paths",
+  "placeholder48_schemas1886_tables": true,
+  "all48_protected_exact_names": true,
+  "oldA68_stale_config_protected": true,
+  "WHOLE_public_tables_preserved": true,
+  "saved_public_fields_preserved": true,
+  "lease_absent": true,
+  "verified_live_baseline_absent": true,
+  "Python_AST": [
+    "launch.py",
+    "joins.py",
+    "prepare.py"
+  ],
+  "existing_bash_n_exit": 0,
+  "runtime_Node_DB_tests_executed": false,
+  "actual_model": null,
+  "actual_usage": null,
+  "fresh_fork": false
+}

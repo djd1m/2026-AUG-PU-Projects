@@ -1,0 +1,12 @@
+{
+  "original_file": "cancel-disposal-omitted-source-negative.tap",
+  "original_sha256": "5b673a2d3463dca7ac6459bfb62d26f8fd79bf62daa27e88662bcff3e764c6cb",
+  "original_bytes": 4781,
+  "original_scratch_path": "/tmp/n7-f10-cancel-diagnostic-a34/cancel-disposal-omitted-source-negative.tap",
+  "original_scratch_unchanged": true,
+  "export_archive": "cancel-disposal-omitted-source-negative.tap.gz",
+  "archive_sha256": "be0b658d015a4b3129ea8fe30f0d8c1a0c357f784f69194275645a67948290de",
+  "archive_bytes": 947,
+  "roundtrip_verified": true,
+  "reason": "Lossless export of immutable raw TAP whose whitespace-only diagnostic lines fail git diff --check; no source or raw test bytes normalized."
+}

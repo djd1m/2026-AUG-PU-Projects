@@ -1,0 +1,195 @@
+{
+  "review_contract_exit": 0,
+  "F10_scoped_existing_pipeline_exit": 0,
+  "full_project_pipeline_exit": 2,
+  "full_project_completion_known_pending_gaps": 7,
+  "full_project_completion_inconclusive": "Installed PROJECT_COMPLETION fullpath reused as basename; original package unchanged",
+  "full_project_traceability_report_revision_scenarios": "PASS",
+  "candidate_26_matches": [
+    {
+      "path": "projects/07-cold-email-warmup/db/015-durable-runtime.sql",
+      "candidate_sha256": "70bd0248636e06577f56d867e3b983f44e82dbe38877067749122ee34b297581",
+      "main_sha256": "70bd0248636e06577f56d867e3b983f44e82dbe38877067749122ee34b297581",
+      "bytes": 2069,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/db.ts",
+      "candidate_sha256": "71d5c71d5742f4e348bb1e9c08fdc10562402e6308af15cbdc01349eec900cc2",
+      "main_sha256": "71d5c71d5742f4e348bb1e9c08fdc10562402e6308af15cbdc01349eec900cc2",
+      "bytes": 4256,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/dispatch/store.ts",
+      "candidate_sha256": "366115624196439b5f759c6a04c7699a90136063d770ddafb3b022d0a0af6b07",
+      "main_sha256": "366115624196439b5f759c6a04c7699a90136063d770ddafb3b022d0a0af6b07",
+      "bytes": 6197,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/dispatch/submission.ts",
+      "candidate_sha256": "c1ff349f29beb7267982ee5e4e02b2339a60524c6df3b8ec4fcfd7e0bcf5085f",
+      "main_sha256": "c1ff349f29beb7267982ee5e4e02b2339a60524c6df3b8ec4fcfd7e0bcf5085f",
+      "bytes": 13735,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/mailboxes/transport-slots.ts",
+      "candidate_sha256": "93c3509a79bf43296b99f20610045da188e26d057fd6f8b14c2fb1e6bd23bb66",
+      "main_sha256": "93c3509a79bf43296b99f20610045da188e26d057fd6f8b14c2fb1e6bd23bb66",
+      "bytes": 3916,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/pool/store.ts",
+      "candidate_sha256": "5c79c8cabbdf6f47bf49b1e2e54b0f85f1631dc9992ed69c7849afa097fa9ba1",
+      "main_sha256": "5c79c8cabbdf6f47bf49b1e2e54b0f85f1631dc9992ed69c7849afa097fa9ba1",
+      "bytes": 5049,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/adapter.ts",
+      "candidate_sha256": "54e40ca7270ca7299c6a9601b3cf268663877413fc131a8e9c76b4e117d1fcf9",
+      "main_sha256": "54e40ca7270ca7299c6a9601b3cf268663877413fc131a8e9c76b4e117d1fcf9",
+      "bytes": 6571,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/imap.ts",
+      "candidate_sha256": "e84dfccb60b3236ab3004815b19ecb4eee6c2233e601e0e8cbbd14d117df0200",
+      "main_sha256": "e84dfccb60b3236ab3004815b19ecb4eee6c2233e601e0e8cbbd14d117df0200",
+      "bytes": 4235,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/store.ts",
+      "candidate_sha256": "041516f0fb492bd0e7d92567cf0b94bec23f770991f449fcc8343961d3e6363c",
+      "main_sha256": "041516f0fb492bd0e7d92567cf0b94bec23f770991f449fcc8343961d3e6363c",
+      "bytes": 10709,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/replies/worker.ts",
+      "candidate_sha256": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+      "main_sha256": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+      "bytes": 8935,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/runtime/loop.ts",
+      "candidate_sha256": "96041a5d3f55a02ba6e55faeda69142a9f6826ea50ce988beceaa00a1b85edc6",
+      "main_sha256": "96041a5d3f55a02ba6e55faeda69142a9f6826ea50ce988beceaa00a1b85edc6",
+      "bytes": 2185,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/runtime/store.ts",
+      "candidate_sha256": "983a1e5331f17bc7312a4c3f8ea95c7c2728e60b24d5e14708a9084e50fcff28",
+      "main_sha256": "983a1e5331f17bc7312a4c3f8ea95c7c2728e60b24d5e14708a9084e50fcff28",
+      "bytes": 13726,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/runtime/worker.ts",
+      "candidate_sha256": "820513ecaa13b25bededc8845306365f635d1dae41232451cd96a2decc31c774",
+      "main_sha256": "820513ecaa13b25bededc8845306365f635d1dae41232451cd96a2decc31c774",
+      "bytes": 3559,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/capacity-integration.test.ts",
+      "candidate_sha256": "c6148b977a1fa39a035e19a2c70c15f891326a737abd10990e3a2aeec585e184",
+      "main_sha256": "c6148b977a1fa39a035e19a2c70c15f891326a737abd10990e3a2aeec585e184",
+      "bytes": 14017,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/diagnostics-integration.test.ts",
+      "candidate_sha256": "27ba7b2d3652779f6888ce362d90053019a01e3950e13bb115c699433a2c84ba",
+      "main_sha256": "27ba7b2d3652779f6888ce362d90053019a01e3950e13bb115c699433a2c84ba",
+      "bytes": 11106,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/expanded-mvp-04.test.ts",
+      "candidate_sha256": "4b910abd04ea6686eda746079432eed7a83528a68163452ad080fbe17c1f7faa",
+      "main_sha256": "4b910abd04ea6686eda746079432eed7a83528a68163452ad080fbe17c1f7faa",
+      "bytes": 10200,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f09-live-protocol.test.ts",
+      "candidate_sha256": "9922a78ba4e713b4af4a529b373dff418a8314b6479c970f73c9b18729f21e3f",
+      "main_sha256": "9922a78ba4e713b4af4a529b373dff418a8314b6479c970f73c9b18729f21e3f",
+      "bytes": 9858,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f09-live-transport.test.ts",
+      "candidate_sha256": "64d166c0bcb983f647a9885ae29d21bc191e7980aa4bb800461af2c33bcd67b3",
+      "main_sha256": "64d166c0bcb983f647a9885ae29d21bc191e7980aa4bb800461af2c33bcd67b3",
+      "bytes": 25686,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f09-transport-fixture.ts",
+      "candidate_sha256": "984e6242be0a61880750c114dde53e5993588d9d3c82990c608e7e4db0eb5328",
+      "main_sha256": "984e6242be0a61880750c114dde53e5993588d9d3c82990c608e7e4db0eb5328",
+      "bytes": 16143,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f10-runtime-fixture.ts",
+      "candidate_sha256": "c42e2a6862249baecd05617d4cb8dd8c4f0cb0b5eb023e9c8254c0cd2cdaae95",
+      "main_sha256": "c42e2a6862249baecd05617d4cb8dd8c4f0cb0b5eb023e9c8254c0cd2cdaae95",
+      "bytes": 11658,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f10-runtime-integration.test.ts",
+      "candidate_sha256": "e7fabd24ea02d2d52bc5b7571d4338c4d471cde58741812496061afaa5679929",
+      "main_sha256": "e7fabd24ea02d2d52bc5b7571d4338c4d471cde58741812496061afaa5679929",
+      "bytes": 37686,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts",
+      "candidate_sha256": "e3d889eba4dda70d1236c508e6819111eb38cd8b3e6de0e8047f8bacac76cadd",
+      "main_sha256": "e3d889eba4dda70d1236c508e6819111eb38cd8b3e6de0e8047f8bacac76cadd",
+      "bytes": 1217,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+      "candidate_sha256": "4edb0be1f37ae1a1b32e1d530db4a5db5ea3f79bfab993be9197b009cfbdc366",
+      "main_sha256": "4edb0be1f37ae1a1b32e1d530db4a5db5ea3f79bfab993be9197b009cfbdc366",
+      "bytes": 27997,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/f10-runtime-unit.test.ts",
+      "candidate_sha256": "148a2b4a8444c66b83219b84a60d02ff2f9b8f8bbae1ebcb72ad977ef510a6e4",
+      "main_sha256": "148a2b4a8444c66b83219b84a60d02ff2f9b8f8bbae1ebcb72ad977ef510a6e4",
+      "bytes": 6474,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/replies-integration.test.ts",
+      "candidate_sha256": "cd79f7ec1a6345f9e63a1782afd7010acec1e2d808f7e22bc76726b0f426c051",
+      "main_sha256": "cd79f7ec1a6345f9e63a1782afd7010acec1e2d808f7e22bc76726b0f426c051",
+      "bytes": 22156,
+      "exact_match": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/submission-integration.test.ts",
+      "candidate_sha256": "350b22220e81b829490ae47fbb4bdc30c1757217551da2c0410aafc3f11a2d1a",
+      "main_sha256": "350b22220e81b829490ae47fbb4bdc30c1757217551da2c0410aafc3f11a2d1a",
+      "bytes": 23152,
+      "exact_match": true
+    }
+  ],
+  "source120_SQL15_equivalence": true,
+  "tested_build73_frozen_reference": true,
+  "no_runtime_deployment": true
+}

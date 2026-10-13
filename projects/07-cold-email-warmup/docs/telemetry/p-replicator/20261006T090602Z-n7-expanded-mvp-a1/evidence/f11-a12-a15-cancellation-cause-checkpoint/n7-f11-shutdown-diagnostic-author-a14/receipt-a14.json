@@ -1,0 +1,164 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-shutdown-diagnostic-author-a14",
+  "model": "gpt-6.1-sol",
+  "effort": "medium",
+  "profile": "model-routing-econom",
+  "ack_utc": "2026-10-07T02:09:25Z",
+  "freeze_utc": "2026-10-07T02:14:24.978764+00:00",
+  "source_revision": "8352feb9f6b970d5d42218b12e63bfbaecb180cc",
+  "base_revision": "b369b016187641f678e424ccfc42c7db5df28274",
+  "files": {
+    "tests/f10-runtime-process-fixture.ts": "f53dc6973ea4a95c707810ac3998148eeb0144ce96a02cd0957e529cd912a88c",
+    "tests/f10-runtime-protocol.test.ts": "063a23c01cf52bb847459b65e093749f5eb8f862397f6be143f4897311166206",
+    "tests/f10-runtime-unit.test.ts": "0c23b66b1aeebdfd4f331a8ca2d32b1b92623313661a696c33e3d77aa1ea375d",
+    "tests/replies-integration.test.ts": "3bdbec78c56cf0451ad8aba6567aefe2e3f2c098e10df699b9db25de89712e08"
+  },
+  "checks": {
+    "typecheck": 0,
+    "lint_four_files": 0,
+    "unit_suite": {
+      "native_exit": 0,
+      "pass": 7
+    },
+    "short_native_probe": {
+      "utc": "2026-10-07T02:13:15.901Z",
+      "exit": 0
+    },
+    "compiled_worker": {
+      "code": 1,
+      "signal": null,
+      "utc": "2026-10-07T02:13:13.122Z",
+      "monotonicNs": "1262203121883511"
+    }
+  },
+  "live_body_proof": {
+    "phase": {
+      "connection": 214,
+      "mailbox": "030fcfe9-4a64-47aa-9704-29205d4695d1",
+      "phase": "phase_start",
+      "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+      "utc": "2026-10-07T02:13:12.996Z",
+      "monotonicMs": 21362.298755
+    },
+    "rows": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "operation": "d5c2d724-d3cb-4970-bac8-09aff6946e2b",
+        "owner_process": "98fbb8fa-3086-43f7-8b34-e27fc8def49e",
+        "mailbox_id": "030fcfe9-4a64-47aa-9704-29205d4695d1",
+        "id": "3871bcdd-5f0b-4e4b-89a4-af25ad129998",
+        "capture_state": "claimed",
+        "capture_phase": "metadata"
+      }
+    ],
+    "utc": "2026-10-07T02:13:13.031Z",
+    "monotonicNs": "1262203030712359"
+  },
+  "signals": [
+    {
+      "pid": 3197215,
+      "startTicks": "126218546",
+      "signal": "SIGTERM",
+      "sent": true,
+      "utc": "2026-10-07T02:13:13.031Z",
+      "monotonicNs": "1262203030934219"
+    }
+  ],
+  "failure_ipc": [
+    {
+      "failed": true,
+      "code": "23514",
+      "name": "error",
+      "messageSha256": "7571ffe9266841b15f95afdd711faf2f0034ca9916a38f69ec57ab4e3e634efa",
+      "frames": [
+        {
+          "file": "node:internal/process/task_queues",
+          "line": 105,
+          "column": 5
+        },
+        {
+          "file": "dist/replies/context-store.js",
+          "line": 163,
+          "column": 21
+        },
+        {
+          "file": "dist/consent/transaction.js",
+          "line": 7,
+          "column": 24
+        },
+        {
+          "file": "dist/replies/context-store.js",
+          "line": 160,
+          "column": 13
+        },
+        {
+          "file": "dist/runtime/loop.js",
+          "line": 82,
+          "column": 21
+        },
+        {
+          "file": "dist/runtime/loop.js",
+          "line": 110,
+          "column": 20
+        }
+      ],
+      "utc": "2026-10-07T02:13:13.079Z",
+      "monotonicNs": "1262203079282006"
+    }
+  ],
+  "all_owned_pidticks_alive": [],
+  "guard_count": 221,
+  "native_transport_guard_denials": [],
+  "db": {
+    "utc": "2026-10-07T02:13:40.390Z",
+    "identity": {
+      "db": "n7f11_a8",
+      "role": "n7",
+      "owner": "n7"
+    },
+    "counts": {
+      "tenants": 3,
+      "connected": 100,
+      "campaigns": 30,
+      "capacity_active": 30,
+      "runtime_claims": 0,
+      "physical_slots": 0,
+      "body_claims": 1,
+      "other_sessions": 0
+    },
+    "locks": []
+  },
+  "logical_state": [
+    {
+      "id": "67731754-17e4-4f3d-8c40-02e812a9eaad",
+      "mailbox_id": "599bb27c-2367-4f23-82f8-473d494e6432",
+      "capture_state": "claimed",
+      "capture_phase": "metadata",
+      "window_start": "2026-10-07T02:13:12.894Z",
+      "window_end": "2026-10-07T02:13:24.894Z",
+      "lease_until": "2026-10-07T02:13:24.894Z",
+      "owner_id": "12c1c899-838e-4b75-bc99-1704deda74ef",
+      "generation": "2",
+      "has_phase_metadata": false,
+      "has_content": false
+    }
+  ],
+  "resource_release": {
+    "physical_empty": true,
+    "all_pidticks_closed": true,
+    "sessions_zero": true,
+    "locks_empty": true
+  },
+  "usage": null,
+  "cost": null,
+  "measurement_gap": "usage/model cost counters unavailable",
+  "remaining_ac": [
+    "Independent HIGH cause counterproof",
+    "Any production fix only after counterproof",
+    "Full300 fault/recovery mandatory verification",
+    "Regression replies integration remains unrun; exact guard source repaired"
+  ],
+  "db_handoff": "Coordinator owns next cleanup using short-owned-cohort.json IDs; short logical claim preserved; old n7f10_a2 protected"
+}

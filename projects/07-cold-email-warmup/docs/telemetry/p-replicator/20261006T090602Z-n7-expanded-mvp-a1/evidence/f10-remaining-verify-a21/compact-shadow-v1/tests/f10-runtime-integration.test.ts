@@ -1,0 +1,272 @@
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
+import { runRuntime } from '../src/runtime/loop.js';
+import { RuntimeStore } from '../src/runtime/store.js';
+import { PollWorker } from '../src/replies/worker.js';
+import { seedFixture } from '../src/replies/fixture.js';
+import { eligibilityTransaction } from '../src/consent/transaction.js';
+import { randomUUID } from 'node:crypto';
+import { PoolStore } from '../src/pool/store.js';
+import { DispatchStore } from '../src/dispatch/store.js';
+import { SubmissionStore } from '../src/dispatch/submission.js';
+import { runtimeFixture,poolRuntimeFixture } from './f10-runtime-fixture.js';
+test('overload backoff preserves due age and independent tenant progress',async()=>{
+ const {pool,boxes}=await runtimeFixture();try{
+  const store=new RuntimeStore(pool);await store.maintenance();
+  await pool.query("UPDATE runtime_due SET due_at=clock_timestamp()-interval '1 hour' WHERE mailbox_id=ANY($1::uuid[])",[boxes.slice(0,4)]);
+  const served:string[]=[];
+  for(let i=0;i<5;i++){
+   const claim=await new RuntimeStore(pool).claim('poll');assert.ok(claim);served.push(claim.mailbox_id);
+   const age=claim.due_at;await store.finish(claim,'transport_busy');
+   await pool.query("UPDATE runtime_due SET next_check_at=clock_timestamp()-interval '1 second' WHERE mailbox_id=$1 AND kind='poll'",[claim.mailbox_id]);
+   assert.equal((await pool.query("SELECT due_at FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[claim.mailbox_id])).rows[0].due_at.getTime(),age.getTime());
+  }
+  assert.equal(new Set(served).size,5,'A-D old due turns must yield to healthy E before a second turn');
+  const claim=await store.claim('poll');assert.ok(claim);await store.finish(claim,'provider_backoff');
+  const r=(await pool.query("SELECT failure_count,extract(epoch from(next_check_at-clock_timestamp())) AS seconds FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[claim.mailbox_id])).rows[0];assert.equal(r.failure_count,1);assert.ok(Number(r.seconds)>28);
+ }finally{await pool.end();}
+});
+test('durable runtime drains and recovers without replaying uncertain sends',async()=>{
+ const {pool}=await runtimeFixture(30);try{
+  const store=new RuntimeStore(pool);await store.maintenance();
+  const claims=await Promise.all(Array.from({length:20},()=>store.claim('poll')));assert.equal(new Set(claims.map(c=>c?.mailbox_id)).size,20);
+  const old=claims[0]!;await pool.query("UPDATE runtime_due SET lease_until=clock_timestamp()-interval '1 second' WHERE mailbox_id=$1 AND kind='poll'",[old.mailbox_id]);
+  await store.claim('poll');assert.equal(await store.finish(old),0,'expired owner cannot overwrite a new generation');
+  await assert.rejects(eligibilityTransaction(pool,c=>store.guard(old)(c)));
+  await pool.query("UPDATE runtime_due SET state='claimed',owner_id=$2,generation=generation+1,lease_until=clock_timestamp()+interval '120 seconds' WHERE mailbox_id=$1 AND kind='poll'",[old.mailbox_id,old.owner_id]);
+  assert.equal(await store.finish(old),0,'same owner UUID cannot bypass changed generation');
+  assert.equal((await pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');
+ }finally{await pool.end();}
+});
+test('fair polling serves thirty active mailboxes and preserves activity intent',async()=>{
+ const {pool,boxes}=await runtimeFixture(100);try{
+  await pool.query("UPDATE capacity_lease SET state='waiting_capacity',expires_at=NULL WHERE mailbox_id=ANY($1::uuid[])",[boxes.slice(30)]);
+  const store=new RuntimeStore(pool);assert.equal(await store.maintenance(),30);
+  const selected=new Set<string>();for(let i=0;i<30;i++){const c=await store.claim('poll');assert.ok(c);selected.add(c.mailbox_id);await store.finish(c);}assert.equal(selected.size,30);
+  await eligibilityTransaction(pool,c=>c.query('DELETE FROM capacity_lease WHERE mailbox_id=$1',[boxes[0]]));
+  await store.maintenance();assert.equal((await pool.query('SELECT count(*) FROM capacity_lease WHERE mailbox_id=$1',[boxes[0]])).rows[0].count,'0');
+  assert.equal((await pool.query("SELECT count(*) FROM capacity_lease WHERE state='active'")).rows[0].count,'30');
+ }finally{await pool.end();}
+});
+test('poll quanta persist the fixed tail before yielding and never retry incomplete scans',async()=>{
+ const {pool,config,tenant,boxes}=await runtimeFixture(1);try{
+  const id=boxes[0]!,store=new RuntimeStore(pool),worker=new PollWorker(pool,config.credentialKeyring,'local_test');
+  await seedFixture(pool,tenant,id,{uidvalidity:'1',uidNext:3,headers:[{uid:1,from:'unrelated@example.test'}]});await store.maintenance();
+  const run=async()=>{const c=await store.claim('poll');assert.ok(c);const r=await worker.quantum(tenant,id,store.guard(c),new AbortController().signal);await store.finish(c);return r;};
+  assert.equal((await run()).state,'scanning');assert.equal((await worker.store.status(tenant,id))!.pages,0);
+  await run();assert.equal((await worker.store.status(tenant,id))!.cursor,2);
+  await run();assert.equal((await worker.store.status(tenant,id))!.tailHighWater,2);
+  assert.equal((await run()).state,'complete');
+  await run();await pool.query("UPDATE reply_rescan SET state='rescan_incomplete' WHERE mailbox_id=$1",[id]);
+  const before=await worker.store.status(tenant,id);assert.equal((await run()).state,'rescan_incomplete');assert.deepEqual(await worker.store.status(tenant,id),before);
+ }finally{await pool.end();}
+});
+test('automatic pool allocation skips pair conflicts and remains idempotent',async()=>{
+ const {pool,actors,now}=await poolRuntimeFixture();try{
+  const cohort=new PoolStore(pool),a=actors[0]!;assert.equal((await cohort.tick(now,a.id)).created,1);
+  const initial=(await pool.query("SELECT * FROM send_job WHERE mailbox_id=$1",[a.id])).rows[0];
+  await pool.query("UPDATE send_job SET state='submitted' WHERE id=$1",[initial.id]);
+  assert.equal((await cohort.tick(now,a.id)).created,1,'pair conflict must skip to another eligible tenant');
+  assert.equal((await cohort.tick(now,a.id)).created,0,'one movable outbound per sender');
+  assert.equal((await pool.query("SELECT count(*) FROM send_job WHERE mailbox_id=$1 AND kind='initial'",[a.id])).rows[0].count,'2');
+  await cohort.tick(now,initial.recipient_mailbox_id);await cohort.tick(now,initial.recipient_mailbox_id);
+  assert.equal((await pool.query("SELECT count(*) FROM send_job WHERE parent_id=$1",[initial.id])).rows[0].count,'1');
+ }finally{await pool.end();}
+});
+test('paced dispatch preserves current day quota and every stop fence',async()=>{
+ const {pool,config,actors,now}=await poolRuntimeFixture();try{
+  const a=actors[0]!,b=actors[1]!,day=now.toISOString().slice(0,10);let calls=0;
+  const enqueue=async()=>{const id=randomUUID();await pool.query(`INSERT INTO send_job(id,tenant_id,mailbox_id,recipient_mailbox_id,scope,state,due_at,payload,pair_key,kind,parent_id)
+   VALUES($1,$2,$3,$4,'pool','queued',$5,'{"subject":"F10","body":"Consented fixture"}',$6,'initial',NULL)`,[id,a.tenant,a.id,b.id,now,id+':'+day]);return id;};
+  await enqueue();const claim=await new DispatchStore(pool).claim(undefined,now,a.id);assert.ok(claim);
+  const submit=new SubmissionStore(pool,{...config,dispatchMode:'local_test'},{clock:()=>now,adapter:{mode:'local_test',async submit(){calls++;return {kind:'pre_data_transient',proof:'no_data_submitted'};}}});
+  assert.equal((await submit.submit(claim.id,claim.lease_owner)).state,'queued');assert.equal(calls,1);
+  const retry=(await pool.query('SELECT due_at,first_attempt_at FROM send_job WHERE id=$1',[claim.id])).rows[0];assert.equal(retry.due_at.getTime()-retry.first_attempt_at.getTime(),60000);
+  await enqueue();assert.equal(await new DispatchStore(pool).claim(undefined,now,a.id),null);
+  const next=new Date(now.getTime()+60000);await pool.query('UPDATE mailbox_poll SET completed_at=$1',[next]);
+  const c=await new DispatchStore(pool).claim(undefined,next,a.id);assert.ok(c);
+  await eligibilityTransaction(pool,async client=>{await client.query('DELETE FROM capacity_lease WHERE mailbox_id=$1',[a.id]);});
+  assert.equal((await new SubmissionStore(pool,{...config,dispatchMode:'local_test'},{clock:()=>next,adapter:{mode:'local_test',async submit(){calls++;return {kind:'accepted'};}}}).submit(c.id,c.lease_owner)).state,'blocked');assert.equal(calls,1);
+  assert.equal((await pool.query("SELECT count(*) FROM send_job WHERE state='unknown'")).rows[0].count,'0');
+ }finally{await pool.end();}
+});
+test('persisted keyset reconciliation advances beyond first hundred without recreating activity',async()=>{
+ const {pool,boxes}=await runtimeFixture(205);try{
+  await pool.query("UPDATE capacity_lease SET state='waiting_capacity',expires_at=NULL WHERE mailbox_id=ANY($1::uuid[])",[boxes.slice(30)]);
+  const late=boxes[204]!;
+  await pool.query('DELETE FROM capacity_lease WHERE mailbox_id=$1',[late]);
+  await pool.query("INSERT INTO runtime_due(tenant_id,mailbox_id,kind,due_at,next_check_at) SELECT tenant_id,id,'poll',clock_timestamp(),clock_timestamp() FROM mailbox WHERE id=$1",[late]);
+  await new RuntimeStore(pool).maintenance();const first=(await pool.query('SELECT * FROM runtime_reconcile')).rows[0];assert.ok(first.after_mailbox);
+  assert.equal((await pool.query("SELECT reason FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[late])).rows[0].reason,'ready');
+  await new RuntimeStore(pool).maintenance();const second=(await pool.query('SELECT * FROM runtime_reconcile')).rows[0];assert.ok(second.after_created_at>first.after_created_at||second.after_mailbox!==first.after_mailbox);
+  await new RuntimeStore(pool).maintenance();assert.equal((await pool.query('SELECT after_mailbox FROM runtime_reconcile')).rows[0].after_mailbox,null);
+  assert.equal((await pool.query("SELECT reason FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[late])).rows[0].reason,'waiting_capacity');
+  assert.equal((await pool.query('SELECT count(*) FROM capacity_lease WHERE mailbox_id=$1',[late])).rows[0].count,'0');
+ }finally{await pool.end();}
+});
+test('actual dispatch job age survives restart backoff pacing quota and an empty queue',async()=>{
+ const {pool,actors,now}=await poolRuntimeFixture();try{
+  const id=actors[0]!.id,store=new RuntimeStore(pool);await new PoolStore(pool).tick(now,id);
+  const due=new Date(now.getTime()-7200000);await pool.query('UPDATE send_job SET due_at=$1 WHERE mailbox_id=$2',[due,id]);
+  await store.maintenance();let row=(await pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='dispatch'",[id])).rows[0];assert.equal(row.due_at.getTime(),due.getTime());
+  const claim=await store.claim('dispatch');assert.ok(claim);assert.equal(claim.mailbox_id,id);await store.finish(claim,'provider_backoff');
+  row=(await pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='dispatch'",[id])).rows[0];const next=row.next_check_at;
+  await new RuntimeStore(pool).maintenance();row=(await pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='dispatch'",[id])).rows[0];assert.equal(row.due_at.getTime(),due.getTime());assert.ok(row.next_check_at>=next);
+  await pool.query("UPDATE runtime_due SET failure_count=0,reason='ready' WHERE mailbox_id=$1 AND kind='dispatch'",[id]);
+  const pacing=new Date(now.getTime()+90000);await pool.query('UPDATE runtime_mailbox SET next_smtp_at=$2 WHERE mailbox_id=$1',[id,pacing]);await store.maintenance();
+  row=(await pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='dispatch'",[id])).rows[0];assert.equal(row.reason,'waiting_pacing');assert.equal(row.next_check_at.getTime(),pacing.getTime());assert.equal(row.due_at.getTime(),due.getTime());
+  await pool.query('UPDATE mailbox SET daily_limit=1 WHERE id=$1',[id]);
+  await pool.query("INSERT INTO send_job(id,tenant_id,mailbox_id,recipient_mailbox_id,scope,state,reserved_day,pair_key,due_at,payload) SELECT $1::uuid,tenant_id,mailbox_id,recipient_mailbox_id,'pool','unknown',$2::date,$1::text||':'||$2::text,$3,payload FROM send_job WHERE mailbox_id=$4 LIMIT 1",[randomUUID(),now.toISOString().slice(0,10),now,id]);
+  await store.maintenance();row=(await pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='dispatch'",[id])).rows[0];assert.equal(row.reason,'waiting_budget');assert.equal(row.due_at.getTime(),due.getTime());
+  await pool.query("UPDATE send_job SET state='cancelled' WHERE mailbox_id=$1 AND state='queued'",[id]);await store.maintenance();row=(await pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='dispatch'",[id])).rows[0];assert.equal(row.reason,'waiting_peer');assert.equal(row.due_at.getTime(),due.getTime());
+  assert.equal((await pool.query("SELECT count(*) FROM send_job WHERE mailbox_id=$1 AND state='unknown'",[id])).rows[0].count,'1');
+ }finally{await pool.end();}
+});
+test('actual database failure during a poll quantum propagates without provider backoff writes',async()=>{
+ const {pool,config,tenant,boxes}=await runtimeFixture(1);try{
+  const id=boxes[0]!,store=new RuntimeStore(pool);await store.maintenance();await seedFixture(pool,tenant,id,{uidvalidity:'1',uidNext:1,headers:[]});const claim=await store.claim('poll');assert.ok(claim);
+  const worker=new PollWorker(pool,config.credentialKeyring,'local_test',{mode:'local_test',async snapshot(){
+   const client=await pool.connect();client.on('error',()=>{});try{
+    const pid=(await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+    await pool.query('SELECT pg_terminate_backend($1)',[pid]);await client.query('SELECT 1');assert.fail('terminated owned connection must fail');
+   }finally{client.release(true);}
+  },async read(){assert.fail('no page IO after database failure');}});
+  await assert.rejects(worker.quantum(tenant,id,store.guard(claim),new AbortController().signal));
+  assert.equal(await worker.store.status(tenant,id),null);
+  assert.equal((await pool.query("SELECT failure_count FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[id])).rows[0].failure_count,0);
+ }finally{await pool.end();}
+});
+test('denied live submission returns typed authority outcome before acquiring a physical slot',async()=>{
+ const {pool,config,actors,now}=await poolRuntimeFixture();try{
+  const id=actors[0]!.id;await new PoolStore(pool).tick(now,id);const claim=await new DispatchStore(pool).claim(undefined,now,id);assert.ok(claim);
+  const result=await new SubmissionStore(pool,{...config,dispatchMode:'live_provider'}).submit(claim.id,claim.lease_owner);
+  assert.equal(result.state,'blocked');assert.ok('reason' in result);assert.equal(result.reason,'authority_denied');
+  assert.equal((await pool.query('SELECT count(*) FROM transport_operation WHERE operation IS NOT NULL')).rows[0].count,'0');
+  assert.equal((await pool.query('SELECT attempt_count FROM send_job WHERE id=$1',[claim.id])).rows[0].attempt_count,0);
+ }finally{await pool.end();}
+});
+test('projection recovers expired logical claims without self quota deadlock and holds fresh owners',async()=>{
+ const {pool,actors,now}=await poolRuntimeFixture();try{
+  const id=actors[0]!.id;await new PoolStore(pool).tick(now,id);await pool.query('UPDATE mailbox SET daily_limit=1 WHERE id=$1',[id]);const job=await new DispatchStore(pool).claim(undefined,now,id);assert.ok(job);
+  const store=new RuntimeStore(pool);await store.maintenance();let row=(await pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='dispatch'",[id])).rows[0];assert.equal(row.reason,'waiting_peer');assert.equal(row.next_check_at.getTime(),job.lease_until.getTime());
+  await pool.query("UPDATE send_job SET lease_until=clock_timestamp()-interval '1 second' WHERE id=$1",[job.id]);await store.maintenance();
+  row=(await pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='dispatch'",[id])).rows[0];assert.equal(row.reason,'ready');assert.ok(await store.claim('dispatch'));
+  const recovered=(await pool.query('SELECT * FROM send_job WHERE id=$1',[job.id])).rows[0];assert.equal(recovered.state,'queued');assert.equal(recovered.reserved_day,null);assert.equal(recovered.lease_owner,null);
+ }finally{await pool.end();}
+});
+test('new and proved completed jobs reset backoff while the same failed job retains original age',async()=>{
+ const {pool,actors,now}=await poolRuntimeFixture();try{
+  const id=actors[0]!.id,store=new RuntimeStore(pool);await new PoolStore(pool).tick(now,id);await store.maintenance();const claim=await store.claim('dispatch');assert.ok(claim);await store.finish(claim,'provider_backoff');
+  await store.maintenance();let row=(await pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='dispatch'",[id])).rows[0];assert.equal(row.failure_count,1);assert.equal(row.due_at.getTime(),claim.due_at.getTime());
+  await pool.query("UPDATE send_job SET state='submitted' WHERE id=$1",[row.job_id]);await store.maintenance();row=(await pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='dispatch'",[id])).rows[0];assert.equal(row.failure_count,0);assert.equal(row.reason,'waiting_peer');
+  await pool.query("UPDATE runtime_due SET failure_count=3,reason='provider_backoff',next_check_at=clock_timestamp()+interval '300 seconds' WHERE mailbox_id=$1 AND kind='dispatch'",[id]);
+  await new PoolStore(pool).tick(now,id);await store.maintenance();row=(await pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='dispatch'",[id])).rows[0];assert.equal(row.failure_count,0);assert.equal(row.reason,'ready');assert.ok(row.next_check_at.getTime()<Date.now()+1000);
+ }finally{await pool.end();}
+});
+test('expired claimed reservation is recovered before quota projection independently of a fresh hold',async()=>{
+ const {pool,actors,now}=await poolRuntimeFixture();try{
+  const id=actors[0]!.id;await new PoolStore(pool).tick(now,id);await pool.query('UPDATE mailbox SET daily_limit=1 WHERE id=$1',[id]);const job=await new DispatchStore(pool).claim(undefined,now,id);assert.ok(job);
+  await pool.query("UPDATE send_job SET lease_until=clock_timestamp()-interval '1 second' WHERE id=$1",[job.id]);await new RuntimeStore(pool).maintenance();
+  const row=(await pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='dispatch'",[id])).rows[0];assert.equal(row.reason,'ready');assert.ok(await new RuntimeStore(pool).claim('dispatch'));
+  assert.equal((await pool.query('SELECT reserved_day FROM send_job WHERE id=$1',[job.id])).rows[0].reserved_day,null);
+ }finally{await pool.end();}
+});
+test('a new oldest logical job clears prior backoff independently of terminal history',async()=>{
+ const {pool,actors,now}=await poolRuntimeFixture();try{
+  const id=actors[0]!.id,store=new RuntimeStore(pool);await new PoolStore(pool).tick(now,id);await store.maintenance();const claim=await store.claim('dispatch');assert.ok(claim);await store.finish(claim,'provider_backoff');
+  const old=(await pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='dispatch'",[id])).rows[0];
+  await pool.query("UPDATE send_job SET due_at=$2::timestamptz+interval '1 day' WHERE id=$1",[old.job_id,now]);
+  const next=randomUUID();await pool.query("INSERT INTO send_job(id,tenant_id,mailbox_id,recipient_mailbox_id,scope,state,pair_key,due_at,payload) SELECT $1::uuid,tenant_id,mailbox_id,recipient_mailbox_id,scope,'queued',$1::text||':'||$2::text,$3,payload FROM send_job WHERE id=$4",[next,now.toISOString().slice(0,10),now,old.job_id]);
+  await store.maintenance();let row=(await pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='dispatch'",[id])).rows[0];assert.equal(row.job_id,next);assert.equal(row.failure_count,0);assert.equal(row.reason,'ready');
+  await pool.query("UPDATE send_job SET state='unknown' WHERE mailbox_id=$1",[id]);await pool.query("UPDATE runtime_due SET failure_count=1,reason='provider_backoff',next_check_at=clock_timestamp()+interval '30 seconds' WHERE mailbox_id=$1 AND kind='dispatch'",[id]);await store.maintenance();
+  row=(await pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='dispatch'",[id])).rows[0];assert.equal(row.failure_count,1);assert.equal((await pool.query("SELECT count(*) FROM send_job WHERE mailbox_id=$1 AND state='unknown'",[id])).rows[0].count,'2');
+ }finally{await pool.end();}
+});
+test('a fresh logical owner holds the sender even when another queued job is older',async()=>{
+ const {pool,actors,now}=await poolRuntimeFixture();try{
+  const id=actors[0]!.id;await new PoolStore(pool).tick(now,id);const job=await new DispatchStore(pool).claim(undefined,now,id);assert.ok(job);
+  const next=randomUUID();await pool.query("INSERT INTO send_job(id,tenant_id,mailbox_id,recipient_mailbox_id,scope,state,pair_key,due_at,payload) SELECT $1::uuid,tenant_id,mailbox_id,recipient_mailbox_id,scope,'queued',$1::text||':'||$2::text,$3::timestamptz-interval '1 hour',payload FROM send_job WHERE id=$4",[next,now.toISOString().slice(0,10),now,job.id]);
+  const store=new RuntimeStore(pool);await store.maintenance();const row=(await pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='dispatch'",[id])).rows[0];assert.equal(row.job_id,next);assert.equal(row.reason,'waiting_peer');assert.equal(row.next_check_at.getTime(),job.lease_until.getTime());assert.equal(await store.claim('dispatch'),null);
+ }finally{await pool.end();}
+});
+
+test('complete proof becomes immediately eligible without resetting its selected fair turn',async()=>{
+ const {pool}=await runtimeFixture(1);try{const store=new RuntimeStore(pool);await store.maintenance();
+  const poll=await store.claim('poll');assert.ok(poll);await seedFixture(pool,poll.tenant_id,poll.mailbox_id,{uidvalidity:'1',uidNext:1,headers:[]});const worker=new PollWorker(pool,(await import('../src/config.js')).loadConfig().credentialKeyring,'local_test');await worker.quantum(poll.tenant_id,poll.mailbox_id,store.guard(poll),new AbortController().signal);await worker.quantum(poll.tenant_id,poll.mailbox_id,store.guard(poll),new AbortController().signal);await worker.quantum(poll.tenant_id,poll.mailbox_id,store.guard(poll),new AbortController().signal);const selectedSeq=(await pool.query("SELECT service_seq FROM runtime_due WHERE kind='poll'")).rows[0].service_seq;await store.finish(poll,'ready',true);const next=(await pool.query("SELECT next_check_at=due_at AND next_check_at<=clock_timestamp() AS ready,service_seq,failure_count FROM runtime_due WHERE kind='poll'")).rows[0];assert.equal(next.ready,true,'complete proof adds no successful-poll sleep');assert.equal(next.service_seq,selectedSeq,'completion retains the selected mailbox turn');assert.equal(next.failure_count,0);
+  const peer=await store.claim('pool');assert.ok(peer);await store.finish(peer,'waiting_peer',true);const seconds=Number((await pool.query("SELECT extract(epoch from(next_check_at-clock_timestamp())) AS seconds FROM runtime_due WHERE kind='pool'")).rows[0].seconds);assert.ok(seconds>58&&seconds<=60,'pool opportunity is rechecked within the sixty-second fair round');
+  for(const [index,minimum] of [29,59,119,299].entries()){await pool.query("UPDATE runtime_due SET next_check_at=clock_timestamp()-interval '1 second' WHERE kind='poll'");const failed=await store.claim('poll');assert.ok(failed);const age=failed.due_at;await store.finish(failed,'provider_backoff',true);assert.equal((await pool.query("SELECT due_at FROM runtime_due WHERE kind='poll'")).rows[0].due_at.getTime(),age.getTime(),'failure cannot become successful readiness even with a satisfied flag');const row=(await pool.query("SELECT failure_count,extract(epoch from(next_check_at-clock_timestamp())) AS seconds FROM runtime_due WHERE kind='poll'")).rows[0];assert.equal(row.failure_count,index+1);assert.ok(Number(row.seconds)>minimum&&Number(row.seconds)<=minimum+1);}
+ }finally{await pool.end();}
+});
+
+test('partial and held scans cannot manufacture successful polling readiness',async()=>{const {pool}=await runtimeFixture(1);try{const store=new RuntimeStore(pool);await store.maintenance();for(const reason of ['ready','transport_busy','authority_denied','rescan_incomplete','cleanup_blocked'] as const){await pool.query("UPDATE runtime_due SET state='ready',next_check_at=clock_timestamp()-interval '1 second' WHERE kind='poll'");const claim=await store.claim('poll');assert.ok(claim);await store.finish(claim,reason,true);const row=(await pool.query("SELECT due_at,state,reason FROM runtime_due WHERE kind='poll'")).rows[0];assert.equal(row.due_at.getTime(),claim.due_at.getTime());assert.equal(row.reason,reason);assert.equal(row.state,['rescan_incomplete','cleanup_blocked'].includes(reason)?'blocked':'ready');}}finally{await pool.end();}});
+
+test('dispatch claims project only one sender and rotate deferred candidates',async()=>{const {pool}=await runtimeFixture(30);try{const store=new RuntimeStore(pool);await store.maintenance();await pool.query("UPDATE runtime_due SET next_check_at=clock_timestamp()-interval '1 second' WHERE kind='dispatch'");const originalConnect=pool.connect,projected:string[]=[],perClaim:number[]=[];pool.connect=new Proxy(originalConnect,{apply(target,thisArg,args){return Reflect.apply(target,thisArg,args).then((client:import('pg').PoolClient)=>{const originalQuery=client.query,originalRelease=client.release;client.query=new Proxy(originalQuery,{apply(query,that,arguments_){const text=typeof arguments_[0]==='string'?arguments_[0]:arguments_[0]?.text??'';if(text.includes("UPDATE send_job SET state='queued',reserved_day=NULL"))projected.push(arguments_[1][1]);return Reflect.apply(query,that,arguments_);}});client.release=new Proxy(originalRelease,{apply(release,that,arguments_){client.query=originalQuery;client.release=originalRelease;return Reflect.apply(release,that,arguments_);}});return client;});}});try{for(let i=0;i<5;i++){const before=projected.length;assert.equal(await store.claim('dispatch'),null);perClaim.push(projected.length-before);}}finally{pool.connect=originalConnect;}assert.deepEqual(perClaim,[1,1,1,1,1],'one fresh projection per selected sender');assert.equal(new Set(projected).size,5,'deferred first candidate cannot hide another sender');}finally{await pool.end();}});
+
+test('graceful stop after committed claim releases logical owners before lease expiry',async()=>{
+ const {pool}=await runtimeFixture(1);try{
+  const store=new RuntimeStore(pool),abort=new AbortController();let operations=0;
+  await store.maintenance();
+  const claim=store.claim.bind(store);store.claim=async kind=>{const result=await claim(kind);if(result)abort.abort();return result;};
+  const operation=async()=>{operations++;return {};};
+  await runRuntime(store,{poll:operation,pool:operation,dispatch:operation},abort.signal);
+  assert.equal(operations,0);
+  assert.equal((await pool.query("SELECT count(*) FROM runtime_due WHERE state='claimed'")).rows[0].count,'0','joined graceful stop must not wait 120s for committed claim');
+ }finally{await pool.end();}
+});
+
+test('inflight graceful drain joins cleanup and retains explicit holds and fairness',async()=>{
+ const {pool}=await runtimeFixture(5);try{
+  const store=new RuntimeStore(pool),abort=new AbortController();let started=0,joined=0;const seen:import('../src/runtime/store.js').RuntimeClaim[]=[];
+  await store.maintenance();await pool.query("UPDATE runtime_due SET due_at=clock_timestamp()-interval '1 hour'");
+  const claim=store.claim.bind(store);store.claim=async kind=>kind==='poll'?claim(kind):null;
+  const operation=async(c:import('../src/runtime/store.js').RuntimeClaim,signal:AbortSignal)=>{
+   const ordinal=started++;seen.push(c);if(started===4)setImmediate(()=>abort.abort());
+   await new Promise<void>(resolve=>signal.addEventListener('abort',()=>setTimeout(resolve,20),{once:true}));joined++;
+   return {reason:ordinal===0?'rescan_incomplete' as const:ordinal===1?'cleanup_blocked' as const:'ready' as const,satisfied:true};
+  };
+  await runRuntime(store,{poll:operation,pool:operation,dispatch:operation},abort.signal);
+  assert.equal(started,4);assert.equal(joined,4);
+  assert.equal((await pool.query("SELECT count(*) FROM runtime_due WHERE state='claimed'")).rows[0].count,'0');
+  for(let i=0;i<seen.length;i++){
+   const c=seen[i]!,row=(await pool.query('SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind=$2',[c.mailbox_id,c.kind])).rows[0];
+   assert.equal(row.due_at.getTime(),c.due_at.getTime());assert.equal(row.service_seq,c.service_seq);
+   if(i<2){assert.equal(row.state,'blocked');assert.equal(row.reason,i===0?'rescan_incomplete':'cleanup_blocked');}
+   assert.equal(await store.cancel(c),0,'cancelled owner cannot mutate released or held row');
+  }
+  const held=(await pool.query("SELECT mailbox_id,kind FROM runtime_due WHERE reason IN ('rescan_incomplete','cleanup_blocked')")).rows;
+  for(let i=0;i<15;i++){const c=await store.claim('poll');if(c){assert.ok(!held.some(r=>r.mailbox_id===c.mailbox_id&&r.kind===c.kind));await store.finish(c);}}
+  assert.equal((await pool.query("SELECT count(*) FROM runtime_due WHERE state='blocked' AND reason IN ('rescan_incomplete','cleanup_blocked')")).rows[0].count,'2','restart selection must never auto-retry explicit holds');
+ }finally{await pool.end();}
+});
+
+test('cancel scopes occupied cleanup to its own protocol without releasing physical ownership',async()=>{
+ const {pool,tenant,boxes}=await runtimeFixture(1);try{
+  const {acquireTransportSlot,closedOwnerProof,releaseTransportSlot}=await import('../src/mailboxes/transport-slots.js');
+  const store=new RuntimeStore(pool);await store.maintenance();const poll=await store.claim('poll'),allocation=await store.claim('pool');assert.ok(poll);assert.ok(allocation);
+  const physical=await acquireTransportSlot(pool,'imap',tenant,boxes[0]!);
+  assert.equal(await store.cancel(allocation),1);
+  assert.equal((await pool.query("SELECT state FROM runtime_due WHERE mailbox_id=$1 AND kind='pool'",[boxes[0]])).rows[0].state,'ready','non-I/O pool cancellation must not inherit sibling IMAP cleanup');
+  assert.equal(await store.cancel(poll),1);
+  const held=(await pool.query("SELECT * FROM runtime_due WHERE mailbox_id=$1 AND kind='poll'",[boxes[0]])).rows[0];assert.equal(held.state,'blocked');assert.equal(held.reason,'cleanup_blocked');
+  assert.equal((await pool.query("SELECT operation FROM transport_operation WHERE protocol='imap' AND slot=$1",[physical.slot])).rows[0].operation,physical.operation,'logical cancellation never clears physical occupancy');
+  assert.equal(await store.cancel(poll),0);assert.equal(await store.finish(poll),0);assert.equal(await store.claim('poll'),null,'held same-protocol owner cannot be auto-retried');
+  await releaseTransportSlot(pool,closedOwnerProof(physical));
+  assert.equal(await store.claim('poll'),null,'later closure alone does not erase an explicit cleanup hold');
+ }finally{await pool.end();}
+});
+
+test('reset capture fences expected identity provenance tenant holds and transaction rollback',async()=>{
+ const {pool,tenant,boxes,config}=await runtimeFixture(1);try{
+  const {ReplyStore}=await import('../src/replies/store.js');const {identity}=await import('../src/replies/worker.js');const {validateReadResult}=await import('../src/replies/adapter.js');const store=new ReplyStore(pool,config.credentialKeyring),id=boxes[0]!;
+  const proof=(v:string)=>({uidvalidity:v,uidNext:2,observedAt:new Date(),provenance:'local_fixture' as const});let run=await store.capture(tenant,id,proof('1'));
+  await assert.rejects(store.capture(randomUUID(),id,proof('2'),undefined,identity(run)));
+  await assert.rejects(store.capture(tenant,id,{...proof('2'),provenance:'imap_headers'},undefined,identity(run)));
+  const old=run;run=await store.capture(tenant,id,proof('2'),undefined,identity(run));await assert.rejects(store.capture(tenant,id,proof('3'),undefined,identity(old)));assert.deepEqual(await store.status(tenant,id),run);
+  await store.failTail(tenant,id,identity(run));await assert.rejects(store.capture(tenant,id,proof('3'),undefined,identity(run)));const held=(await store.status(tenant,id))!;run=await store.retry(tenant,id,identity(held));await assert.rejects(store.capture(tenant,id,proof('3'),undefined,identity(held)));assert.deepEqual(await store.status(tenant,id),run);
+  const before=(await pool.query('SELECT * FROM mailbox_poll WHERE mailbox_id=$1',[id])).rows[0];
+  await pool.query("CREATE FUNCTION n7_a15_reset_fail() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'reset_injected'; END $$");await pool.query('CREATE TRIGGER n7_a15_reset_fail BEFORE UPDATE ON reply_rescan FOR EACH ROW EXECUTE FUNCTION n7_a15_reset_fail()');
+  await assert.rejects(store.capture(tenant,id,proof('3'),undefined,identity(run)));assert.deepEqual(await store.status(tenant,id),run);assert.deepEqual((await pool.query('SELECT * FROM mailbox_poll WHERE mailbox_id=$1',[id])).rows[0],before);
+  await pool.query('DROP TRIGGER n7_a15_reset_fail ON reply_rescan');await pool.query('DROP FUNCTION n7_a15_reset_fail()');
+  for(const result of [{kind:'unknown'}, {kind:'uidvalidity_changed',snapshot:proof('2')},{kind:'uidvalidity_changed',snapshot:{...proof('3'),provenance:'imap_headers'}}])assert.throws(()=>validateReadResult(result,'2','local_fixture'));
+ }finally{await pool.query('DROP TRIGGER IF EXISTS n7_a15_reset_fail ON reply_rescan');await pool.query('DROP FUNCTION IF EXISTS n7_a15_reset_fail()');await pool.end();}
+});

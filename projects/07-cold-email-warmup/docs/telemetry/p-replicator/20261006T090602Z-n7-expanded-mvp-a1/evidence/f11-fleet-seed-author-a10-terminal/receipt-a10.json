@@ -1,0 +1,103 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-fleet-seed-author-a10",
+  "launch_sha256": "1d688e65826c703818b04a9a6e491a79284218fef09508efa3904fedc2ba26dd",
+  "status": "completed",
+  "verdict": "PASS_LIMITED_FIXTURE_COUNTERPROOF",
+  "finished_at": "2026-10-07T01:30:03.530792+00:00",
+  "source_revision": "b2bbbf533a74485f46986bb8c6520a63fc8c45a1",
+  "source_sha256": "031dfbe605df4f0d6edc71d582e3a9c35103e6da473905cf22befad7dd0b5086",
+  "exclusive_changed_files": [
+    "projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts"
+  ],
+  "prelaunch_inputs_unchanged": {
+    "/tmp/n7-f11-fleet-seed-author-a10/seed-proof-a10.mjs": true,
+    "/tmp/n7-f11-fleet-seed-author-a10/seed-a10.sh": true,
+    "/tmp/n7-f11-fleet-seed-author-a10/guard-a10.mjs": true,
+    "/tmp/n7-f11-fleet-seed-author-a10/database-ownership-lease.json": true,
+    "/tmp/n7-f11-fleet-seed-author-a10/failed-seed-identities.json": true,
+    "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts": true,
+    "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/billing-fixture.ts": true,
+    "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/runtime/worker.js": true
+  },
+  "source_ownership_released": true,
+  "database_ownership_released": true,
+  "checks": {
+    "actual_seed_native_exit": 0,
+    "typecheck_native_exit": 0,
+    "targeted_lint_native_exit": 0,
+    "seed_counterproof": "3 TEST TEAM/100connected/30active/30participants/10campaigns each",
+    "post_cleanup": {
+      "quiet": {
+        "db": "n7f11_a8",
+        "role": "n7",
+        "owner": "n7",
+        "sessions": 0,
+        "physical": 0,
+        "claims": 0,
+        "body_claims": 0,
+        "locks": 0
+      },
+      "tenants": 0
+    },
+    "guards": [
+      {
+        "file": "/tmp/n7-f11-fleet-seed-author-a10/guard-2499995-1791336540006.json",
+        "pid": 2499995,
+        "startTicks": "125954996",
+        "endedAt": 1791336542340,
+        "alive": false,
+        "socketAllowed": 2,
+        "socketDenied": 2,
+        "deniedCategories": {
+          "unix": 2,
+          "defaultHost": 0,
+          "numeric": 0,
+          "other": 0
+        },
+        "dnsDenied": 0
+      },
+      {
+        "file": "/tmp/n7-f11-fleet-seed-author-a10/guard-2500441-1791336542403.json",
+        "pid": 2500441,
+        "startTicks": "125955236",
+        "endedAt": 1791336542404,
+        "alive": false,
+        "socketAllowed": 0,
+        "socketDenied": 0,
+        "deniedCategories": {
+          "unix": 0,
+          "defaultHost": 0,
+          "numeric": 0,
+          "other": 0
+        },
+        "dnsDenied": 0
+      }
+    ],
+    "native_join": "PTY34662 completed exit0; all guarded native PIDs absent",
+    "heavy_mutex": "seed wrapper exited; fd9 lock released",
+    "dist_worker_unchanged": true,
+    "build": "not rerun: TEST file-only correction; dist unchanged; parent explicitly prohibited unnecessary rebuild"
+  },
+  "scope_limits": {
+    "full300_executed": false,
+    "runtime_worker_launched": false,
+    "peer_launched": false,
+    "external_attempts": 0,
+    "loader_unix_denied": 2,
+    "failure_cleanup_in_fixture": "Optional helper cleanup omitted to retain minimal2-line correction; runner cleaned only owned IDs"
+  },
+  "remaining_parent_AC": [
+    "fresh independent HIGH source review",
+    "actual full300 runtime acceptance",
+    "F12 independent plan validation",
+    "fault/current-grant/C2 matrix"
+  ],
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "host_usage": null,
+  "cost": null,
+  "elapsed_wall_ms": 163530
+}

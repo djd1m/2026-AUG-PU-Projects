@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T20:27:22.112985+00:00",
+  "native_returncode": 1,
+  "timed_out": false,
+  "elapsed_ms": 25689.846081193537,
+  "pid": 2085005,
+  "startticks": "124142642",
+  "pgid": 2085005,
+  "TAP_sha256": "e2fd71a6af5bf62f49e11a92edd05cbb195bc5babbf079f48e9267f83972d2f2",
+  "failure_titles": [
+    "not ok 21 - B3 durable rendered sink/token/message refs with own OR intended pool peer read only",
+    "not ok 1 - F03b real PG durable final authority, all stop races, sink privacy and outcomes"
+  ],
+  "assertion_failure": true,
+  "PG": {
+    "at": "2026-10-06T20:27:22.265Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "owned_nodes": []
+}

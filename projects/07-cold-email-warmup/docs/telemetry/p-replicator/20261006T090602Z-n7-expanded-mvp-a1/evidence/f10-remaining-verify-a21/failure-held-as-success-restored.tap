@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: complete proof becomes immediately eligible without resetting its selected fair turn
+ok 1 - complete proof becomes immediately eligible without resetting its selected fair turn
+  ---
+  duration_ms: 684.665624
+  type: 'test'
+  ...
+# Subtest: partial and held scans cannot manufacture successful polling readiness
+ok 2 - partial and held scans cannot manufacture successful polling readiness
+  ---
+  duration_ms: 384.721568
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1558.568876

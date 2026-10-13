@@ -1,0 +1,19 @@
+{
+  "paths": [
+    "src/runtime/store.ts",
+    "src/runtime/loop.ts",
+    "src/runtime/worker.ts",
+    "db/015-durable-runtime.sql",
+    "src/replies/worker.ts",
+    "src/dispatch/store.ts",
+    "src/dispatch/submission.ts",
+    "src/pool/store.ts",
+    "tests/f10-runtime-integration.test.ts",
+    "tests/f10-runtime-unit.test.ts",
+    "tests/f10-runtime-fixture.ts",
+    "tests/expanded-mvp-04.test.ts"
+  ],
+  "project": "projects/07-cold-email-warmup",
+  "source_revision": "457f006c76d3b4a908e1a2e9ae9a372e01ba20e3",
+  "scope": "Three concrete implementation gaps only; no new general engine or unrelated corrections"
+}

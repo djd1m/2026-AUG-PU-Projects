@@ -1,0 +1,91 @@
+{
+  "source_revision": "bf8a5373a409181a42d5dc06be06a2c6aca611e6",
+  "author_allowlist": [
+    "tests/f10-runtime-fixture.ts"
+  ],
+  "diagnostic_gate": {
+    "exact_title": "F11 native complete empty-tail refresh composes one settled old UID read and original BODY window",
+    "argv": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^F11 native complete empty-tail refresh composes one settled old UID read and original BODY window$",
+      "tests/f10-runtime-protocol.test.ts"
+    ],
+    "source_native_timeout_ms": 45000,
+    "outer_timeout_seconds": 45,
+    "required_actual_callback_attempts": 1,
+    "required_callback_PASS_to_accept_genuine_gate": 1,
+    "instrumentation_evidence_basename": "runtime-fixture-reset.jsonl",
+    "fixed_phase_labels": [
+      "assert_owned",
+      "migrate",
+      "truncate_tenant",
+      "reconcile_reset"
+    ],
+    "event_labels": [
+      "begin",
+      "complete",
+      "failed"
+    ],
+    "future_runtime_lease_required": true,
+    "fresh_owned_schema_required": true,
+    "commands_executed_by_planner": false
+  },
+  "protected_baseline": {
+    "path": "/tmp/n7-f11-material-regression-prep-a60-20261007/db-runtime_final_snapshot.json",
+    "sha256": "ece792ce9a3c9478adbb5391483ff130b17fd2072bcee8e351c474ea74e8840b",
+    "schemas": [
+      "n7_a44_checks_261007084949",
+      "n7_a44_short_261007084949",
+      "n7_a45_checks_261007091307",
+      "n7_a45_short_261007091307",
+      "n7_a50_checks_261007103708",
+      "n7_a50_context_261007103708",
+      "n7_a52_attempt_261007110600",
+      "n7_a52_controls_261007110600",
+      "n7_a52_green_261007110600",
+      "n7_a52_operation_261007110600",
+      "n7_a52_operationretry_261007110900",
+      "n7_a55_compiled_261007112820",
+      "n7_a55_context_261007112820",
+      "n7_a55_logical_261007112820",
+      "n7_a57_already_aborted_261007115721",
+      "n7_a57_body_failure_261007115721",
+      "n7_a57_counterproof_261007115721",
+      "n7_a57_finish_stop_261007115721",
+      "n7_a57_generation_261007115721",
+      "n7_a57_owner_261007115721",
+      "n7_a57_physical_operation_261007115721",
+      "n7_a57_physical_owner_host_261007115721",
+      "n7_a57_physical_owner_process_261007115721",
+      "n7_a57_started_261007115721",
+      "n7_a58_capacity_261007121817",
+      "n7_a58_capacityretry_261007122719",
+      "n7_a58_counterproof_261007121817",
+      "n7_a58_counterproofretry_261007122719",
+      "n7_a58_diagnostics_261007121817",
+      "n7_a60_genuine_empty_tail_261007122036",
+      "n7_a60_runtime_external_261007122036",
+      "n7_f07_upgrade_098c64f5b7e64c58acaaf353b9779c83",
+      "n7_f07_upgrade_12aa22da007545c7bf75c3f9c7349feb",
+      "n7_f07_upgrade_bcb4830ed5e9484083eaa96602944445",
+      "n7_f07_upgrade_e961b534734c4ef2ab77b001d9940e09",
+      "public"
+    ],
+    "full_tables": 1394
+  },
+  "diagnostic_verdicts": [
+    "DIAGNOSIS_CAPTURED_NOT_GENUINE_PASS",
+    "GENUINE_GATE_PASS_WITH_COMPLETE_SETUP_JOURNAL",
+    "DIAGNOSIS_INCONCLUSIVE"
+  ],
+  "unwaived": [
+    "remaining13material singletons",
+    "full integration/current-source regression inventory",
+    "ALL30/fault300+original150SIGTERM+healthy300",
+    "literal20pages real5s/native19",
+    "compiled/unstarted/current-source guard proofs",
+    "full F11 XL approval/checks"
+  ]
+}

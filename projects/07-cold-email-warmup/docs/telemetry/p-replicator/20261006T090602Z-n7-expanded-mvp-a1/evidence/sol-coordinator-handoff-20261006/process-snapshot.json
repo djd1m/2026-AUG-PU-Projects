@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-06T17:43:57.580708+00:00",
+  "roots": [
+    3832609
+  ],
+  "processes": [
+    {
+      "pid": 3832609,
+      "ppid": 124366,
+      "start_ticks": "123156198",
+      "comm": "bash"
+    },
+    {
+      "pid": 3832616,
+      "ppid": 3832609,
+      "start_ticks": "123156202",
+      "comm": "node"
+    },
+    {
+      "pid": 3832618,
+      "ppid": 3832609,
+      "start_ticks": "123156202",
+      "comm": "node"
+    },
+    {
+      "pid": 3832646,
+      "ppid": 3832618,
+      "start_ticks": "123156213",
+      "comm": "node"
+    },
+    {
+      "pid": 3832704,
+      "ppid": 3832646,
+      "start_ticks": "123156224",
+      "comm": "node"
+    },
+    {
+      "pid": 3833039,
+      "ppid": 3832704,
+      "start_ticks": "123156426",
+      "comm": "node"
+    },
+    {
+      "pid": 3855975,
+      "ppid": 3833039,
+      "start_ticks": "123164714",
+      "comm": "node"
+    }
+  ],
+  "scope": "exact A11 shell-script argv roots and current descendants only; no command/env values exported"
+}

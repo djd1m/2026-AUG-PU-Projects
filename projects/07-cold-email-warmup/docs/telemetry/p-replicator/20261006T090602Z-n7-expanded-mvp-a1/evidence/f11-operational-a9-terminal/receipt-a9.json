@@ -1,0 +1,187 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-operational-verifier-a9",
+  "status": "failed",
+  "attempt_terminal": true,
+  "finished_at": "2026-10-07T01:25:35.402501+00:00",
+  "freeze_ack": "2026-10-07T01:24:39.133688Z",
+  "launch_sha256": "8d98eaf9d2f1bd5e50da66a1d6e784395295075b889d3a5a70fe2f2c326b6c8e",
+  "source_revision": "feb0aae996c80c6e591ebfba5585ec7d5ca27c62",
+  "source_pre_post_mismatches": [
+    0,
+    0
+  ],
+  "build_pre_post_mismatches": [
+    0,
+    0
+  ],
+  "runner_post_mismatches": 0,
+  "native_exit": 1,
+  "test_duration_ms": 905.578313,
+  "native_runner_duration_ms": 11365.022207,
+  "load_runtime_duration_ms": null,
+  "load_runtime_started": false,
+  "ALL30_denominator": 30,
+  "ALL30_ready_or_completed": null,
+  "ALL30_absence_reason": "seed failed after10mailboxes before runtime witness try/finally; no all30-body JSON",
+  "failure": {
+    "code": "plan_limit_reached",
+    "source": "tests/f10-runtime-process-fixture.ts:33",
+    "cause": "FREE activeCampaigns3; per-tenant fourth campaign at cohort index9; no TEST entitlements seeded",
+    "correction_proposal": "existing tests/billing-fixture.ts seedTestEntitlement on each3 actors before100mailbox loop; no production limit changes"
+  },
+  "raw_manifest_sha256": "e76de2496f4f3c24d524661b7169b142a1a3ac9126f5406bccb6884550f0d56c",
+  "native_log_sha256": "eb6f2050b9cec099c53cb478cb9ec9149904694ead67e11c500292b3afd1ca02",
+  "postflight": {
+    "utc": "2026-10-07T01:24:39.133688+00:00",
+    "disk_available_bytes": 2662432768,
+    "source": {
+      "count": 20,
+      "mismatches": []
+    },
+    "build": {
+      "count": 76,
+      "mismatches": []
+    },
+    "runner": {
+      "count": 4,
+      "mismatches": []
+    },
+    "guard_owned_pids": [
+      {
+        "pid": 2365092,
+        "recorded_startTicks": "125901149",
+        "endedAt": 1791336012825,
+        "current_pid_exists": false,
+        "ipcValidated": 0,
+        "socketAllowed": 1,
+        "socketDenied": 2,
+        "dnsDenied": 0,
+        "path": "/tmp/n7-f11-context-verify-a9/guard-2365092-1791336001535.json"
+      },
+      {
+        "pid": 2365078,
+        "recorded_startTicks": "125901139",
+        "endedAt": 1791336001434,
+        "current_pid_exists": false,
+        "ipcValidated": 0,
+        "socketAllowed": 0,
+        "socketDenied": 0,
+        "dnsDenied": 0,
+        "path": "/tmp/n7-f11-context-verify-a9/guard-2365078-1791336001433.json"
+      },
+      {
+        "pid": 2433618,
+        "recorded_startTicks": "125928486",
+        "endedAt": 1791336275231,
+        "current_pid_exists": false,
+        "ipcValidated": 0,
+        "socketAllowed": 1,
+        "socketDenied": 2,
+        "dnsDenied": 0,
+        "path": "/tmp/n7-f11-context-verify-a9/guard-2433618-1791336274910.json"
+      },
+      {
+        "pid": 2367360,
+        "recorded_startTicks": "125902286",
+        "endedAt": 1791336012907,
+        "current_pid_exists": false,
+        "ipcValidated": 0,
+        "socketAllowed": 0,
+        "socketDenied": 0,
+        "dnsDenied": 0,
+        "path": "/tmp/n7-f11-context-verify-a9/guard-2367360-1791336012906.json"
+      },
+      {
+        "pid": 2364997,
+        "recorded_startTicks": "125901098",
+        "endedAt": 1791336001377,
+        "current_pid_exists": false,
+        "ipcValidated": 0,
+        "socketAllowed": 1,
+        "socketDenied": 2,
+        "dnsDenied": 0,
+        "path": "/tmp/n7-f11-context-verify-a9/guard-2364997-1791336001026.json"
+      },
+      {
+        "pid": 2380927,
+        "recorded_startTicks": "125908671",
+        "endedAt": 1791336077086,
+        "current_pid_exists": false,
+        "ipcValidated": 0,
+        "socketAllowed": 1,
+        "socketDenied": 2,
+        "dnsDenied": 0,
+        "path": "/tmp/n7-f11-context-verify-a9/guard-2380927-1791336076770.json"
+      }
+    ],
+    "launch_pid_absence": [
+      {
+        "pid": 2364990,
+        "exists": false,
+        "startTicks": null,
+        "startTicks_gap": "not measured for launcher/timeout; no inference after exit"
+      },
+      {
+        "pid": 2365085,
+        "exists": false,
+        "startTicks": null,
+        "startTicks_gap": "not measured for launcher/timeout; no inference after exit"
+      },
+      {
+        "pid": 2365086,
+        "exists": false,
+        "startTicks": null,
+        "startTicks_gap": "not measured for launcher/timeout; no inference after exit"
+      }
+    ]
+  },
+  "db_post_failure": {
+    "utc": "2026-10-07T01:21:17.079Z",
+    "identity": {
+      "db": "n7f11_a8",
+      "role": "n7",
+      "owner": "n7"
+    },
+    "counts": {
+      "tenants": 3,
+      "connected": 10,
+      "campaigns": 10,
+      "capacity_active": 10,
+      "runtime_claims": 0,
+      "physical_slots": 0,
+      "body_claims": 0,
+      "other_sessions": 0
+    },
+    "locks": []
+  },
+  "heavy_mutex_released": true,
+  "runtime_worker_or_peer_started": false,
+  "own_children_joined": true,
+  "startTicks_gap": "wrapper2364990/timeout2365085/node2365086 ticks not captured; their /proc absence confirmed. Test2365092 and all guard native starts captured ticks and exit records.",
+  "fixture_seed_retained": true,
+  "old_db_untouched": true,
+  "provider_calls": 0,
+  "guard_scope": "Numeric PG192.168.176.2:5432; configured numeric loopback TLS only. No fixture IPC used because seed failed first; cannot claim native TLS/IPC canary pass. Unix tsx socket attempts denied;0DNS/other numeric/default host attempts.",
+  "f12_receipt_sha256": "88af306fb99022c11d7963b79d0afa1f08153b15cec4929bdc85e4e7b27fcfd7",
+  "f12_plan_status": "completed candidate; unaccepted",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_model_reason": "host_not_exposed",
+  "usage": null,
+  "cost": null,
+  "elapsed_wall_ms": 411402,
+  "remaining_AC": [
+    "fixture TEST team entitlement correction/counterproof/new immutable full300 witness",
+    "fleetfault/material negatives",
+    "production current/missing/revoked grant negatives",
+    "C2/privacy/limits/full-current-PG-unit-regression",
+    "distinct fresh final F11 HIGH clean review",
+    "F12 independent plan validation/current accepted interface reconciliation",
+    "F12 actual-model financial/privacy authorization and gate"
+  ],
+  "next_executor": "Coordinator fresh MEDIUM fixture-only correction\u22648min, seed cardinality preflight, then NEW immutable HIGH full300 witness; separate final clean HIGH reviewer",
+  "no_retry": true
+}

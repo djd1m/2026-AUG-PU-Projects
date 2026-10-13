@@ -1,0 +1,49 @@
+{
+  "revision": "530a73fb5498ae873d48e4b05176946bee1734a4",
+  "base": "04ccbb65b0fb78dafecc1ab09106a09c5d267fe4",
+  "paths": [
+    {
+      "path": "projects/07-cold-email-warmup/experiments/mail-library-prototype/.gitignore",
+      "bytes": 54,
+      "sha256": "b16ddf1ac5e3f8e85384234af08a29654d144cce972458fe9bb722dce2f136de"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/experiments/mail-library-prototype/README.md",
+      "bytes": 3903,
+      "sha256": "b5fbf957af901a005d08492a43b61942b07406c1eb199351bd277db59ddb4d36"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/experiments/mail-library-prototype/fixture.mjs",
+      "bytes": 7450,
+      "sha256": "79857732058c633009005b7c5e487a4cd7eead7397b53b508e75fc93da131c7e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/experiments/mail-library-prototype/imap.mjs",
+      "bytes": 2446,
+      "sha256": "596c376eff46b07cc1aa7c263394cf321b5bb1af03208235d49803ce438fda8e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/experiments/mail-library-prototype/package-lock.json",
+      "bytes": 10587,
+      "sha256": "d5f6245e15ba7d07bc4c3fc2ce41ea01f107596163526eccf22f6e9dec9ee3d8"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/experiments/mail-library-prototype/package.json",
+      "bytes": 187,
+      "sha256": "3d58acc3f38ec430710a10989e2ba0122c9bc331bca449fb850cb73f1b54dffe"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/experiments/mail-library-prototype/smtp.mjs",
+      "bytes": 2427,
+      "sha256": "f322656e66140f9ff5689c0a3cbf2ab94b8cdec7d105834dd0874ee9cbe2a8ba"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/experiments/mail-library-prototype/test.mjs",
+      "bytes": 8235,
+      "sha256": "b891dac782c0d230b8b76bc0b80766a1e075f5f950dab3d21c6e4e6950dff3bd"
+    }
+  ],
+  "total_bytes": 35289,
+  "private_pem_marker_matches": 0,
+  "scope": "isolated experiment; no production adapter changes"
+}

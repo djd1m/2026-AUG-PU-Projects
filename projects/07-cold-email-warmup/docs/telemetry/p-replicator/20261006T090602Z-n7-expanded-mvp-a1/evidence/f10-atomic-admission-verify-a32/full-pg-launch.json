@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-06T22:18:12.747333+00:00",
+  "pid": 3783534,
+  "startticks": "124810274",
+  "runner_pid": 3684977,
+  "command": [
+    "/tmp/n7-expanded-runtime-20261006/bin/node",
+    "node_modules/tsx/dist/cli.mjs",
+    "--test",
+    "--test-concurrency=1",
+    "tests/auth-integration.test.ts",
+    "tests/billing-integration.test.ts",
+    "tests/capacity-integration.test.ts",
+    "tests/diagnostics-disconnect-integration.test.ts",
+    "tests/diagnostics-final-cancel-integration.test.ts",
+    "tests/diagnostics-integration.test.ts",
+    "tests/diagnostics-ordered-integration.test.ts",
+    "tests/dispatch-integration.test.ts",
+    "tests/evidence-integration.test.ts",
+    "tests/f09-transport-integration.test.ts",
+    "tests/f10-runtime-integration.test.ts",
+    "tests/mailboxes-integration.test.ts",
+    "tests/replies-integration.test.ts",
+    "tests/submission-integration.test.ts",
+    "tests/suppression-integration.test.ts",
+    "tests/suppression-owner-integration.test.ts",
+    "tests/web-integration.test.ts"
+  ],
+  "inventory_sha256": "8ed8ceef27f5a5fb3f3b3430b96232b3dfe7cc0fb8393e1b3cfc4d0084783263"
+}

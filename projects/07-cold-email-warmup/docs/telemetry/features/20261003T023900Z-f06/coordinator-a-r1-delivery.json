@@ -1,0 +1,21 @@
+{
+  "recorded_at": "2026-10-03T03:41:30.662069+00:00",
+  "source_files_verified": 93,
+  "original_delivery": {
+    "exit_code": 124,
+    "receipt_exists": false,
+    "status": "failed_missing_receipt",
+    "runtime": "sol-a-r1-runtime.json"
+  },
+  "recovery": {
+    "exit_code": 0,
+    "receipt_gate": "passed",
+    "runtime": "sol-a-r1-delivery-runtime.json"
+  },
+  "hooks": {
+    "configured_core_hooks_path": null,
+    "active_non_sample_hooks": [],
+    "recovery_per_command_override": "/dev/null; no configured active hook skipped; integrator commits used defaults"
+  },
+  "correctness": "fresh R1 review pending; browser B pending"
+}

@@ -1,0 +1,2341 @@
+[
+  {
+    "protocol": "imap",
+    "scenario": "normal",
+    "mutation": false,
+    "certificateSha256": "5fd2d1e08fb231c29cb30a8a76883741aa6fa6810775f83f7d573e8c2c798db2",
+    "options": {},
+    "elapsed": 379,
+    "pid": 3716438,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "complete",
+      "uidValidity": "7",
+      "horizon": 9,
+      "messages": [
+        {
+          "uid": 3,
+          "bytes": 5
+        }
+      ],
+      "received": 445
+    },
+    "memory": {
+      "baseline": {
+        "rss": 74358784,
+        "heapTotal": 19562496,
+        "heapUsed": 13097928,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 77230080,
+        "heapTotal": 20766720,
+        "heapUsed": 14894032,
+        "external": 2453089,
+        "arrayBuffers": 27799
+      },
+      "rssDelta": 2871296
+    },
+    "peer": {
+      "sentBytes": 445,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "CAPABILITY",
+        "AUTHENTICATE",
+        "CAPABILITY",
+        "LIST",
+        "LIST",
+        "LSUB",
+        "EXAMINE",
+        "UID FETCH 1:9 (UID BODY.PEEK[1.MIME]<0.8192> BODY.PEEK[1]<0.32768>)",
+        "LOGOUT"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "imap",
+    "scenario": "out-of-range",
+    "mutation": false,
+    "certificateSha256": "a66e169f87af813f5e4b1fd26143a21667f5a09f7e5755feaa6e92215e74e8c1",
+    "options": {},
+    "elapsed": 334,
+    "pid": 3716694,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "code": "guard"
+    },
+    "memory": {
+      "baseline": {
+        "rss": 72278016,
+        "heapTotal": 19824640,
+        "heapUsed": 13118088,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 75169792,
+        "heapTotal": 20766720,
+        "heapUsed": 14813448,
+        "external": 2453049,
+        "arrayBuffers": 27759
+      },
+      "rssDelta": 2891776
+    },
+    "peer": {
+      "sentBytes": 419,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "CAPABILITY",
+        "AUTHENTICATE",
+        "CAPABILITY",
+        "LIST",
+        "LIST",
+        "LSUB",
+        "EXAMINE",
+        "UID FETCH 1:9 (UID BODY.PEEK[1.MIME]<0.8192> BODY.PEEK[1]<0.32768>)"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "imap",
+    "scenario": "duplicate",
+    "mutation": false,
+    "certificateSha256": "241a95506c4484a9096cd8c450321cdf240b27ad5a749c348d1106d7894432a8",
+    "options": {},
+    "elapsed": 359,
+    "pid": 3716767,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "code": "guard"
+    },
+    "memory": {
+      "baseline": {
+        "rss": 77115392,
+        "heapTotal": 19824640,
+        "heapUsed": 13095848,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 80023552,
+        "heapTotal": 20766720,
+        "heapUsed": 14865856,
+        "external": 2453102,
+        "arrayBuffers": 27812
+      },
+      "rssDelta": 2908160
+    },
+    "peer": {
+      "sentBytes": 458,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "CAPABILITY",
+        "AUTHENTICATE",
+        "CAPABILITY",
+        "LIST",
+        "LIST",
+        "LSUB",
+        "EXAMINE",
+        "UID FETCH 1:9 (UID BODY.PEEK[1.MIME]<0.8192> BODY.PEEK[1]<0.32768>)"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "imap",
+    "scenario": "no-tag",
+    "mutation": false,
+    "certificateSha256": "76065ea7f60ec55430ba4649aae449cd44de458dfe99afca23dc120e7ddede0c",
+    "options": {},
+    "elapsed": 313,
+    "pid": 3716843,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "code": "NoConnection"
+    },
+    "memory": {
+      "baseline": {
+        "rss": 71393280,
+        "heapTotal": 19562496,
+        "heapUsed": 13076648,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 74313728,
+        "heapTotal": 20766720,
+        "heapUsed": 14778000,
+        "external": 2453047,
+        "arrayBuffers": 27757
+      },
+      "rssDelta": 2920448
+    },
+    "peer": {
+      "sentBytes": 403,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "CAPABILITY",
+        "AUTHENTICATE",
+        "CAPABILITY",
+        "LIST",
+        "LIST",
+        "LSUB",
+        "EXAMINE",
+        "UID FETCH 1:9 (UID BODY.PEEK[1.MIME]<0.8192> BODY.PEEK[1]<0.32768>)"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "imap",
+    "scenario": "oversized-metadata",
+    "mutation": false,
+    "certificateSha256": "15e64ecb307d9ff2cba827d78da56019f8543a836a6b34a8924faacedb424531",
+    "options": {},
+    "elapsed": 290,
+    "pid": 3716956,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "code": "guard"
+    },
+    "memory": {
+      "baseline": {
+        "rss": 72654848,
+        "heapTotal": 19824640,
+        "heapUsed": 13200528,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 75309056,
+        "heapTotal": 20504576,
+        "heapUsed": 14897064,
+        "external": 2471023,
+        "arrayBuffers": 45733
+      },
+      "rssDelta": 2654208
+    },
+    "peer": {
+      "sentBytes": 9393,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "CAPABILITY",
+        "AUTHENTICATE",
+        "CAPABILITY",
+        "LIST",
+        "LIST",
+        "LSUB",
+        "EXAMINE",
+        "UID FETCH 1:9 (UID BODY.PEEK[1.MIME]<0.8192> BODY.PEEK[1]<0.32768>)"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "imap",
+    "scenario": "unsupported-mime",
+    "mutation": false,
+    "certificateSha256": "2bd3a058b3a3a3e11b0b7a45fc7463a91e02f12c990fd3cd3eb20245079ea2c5",
+    "options": {},
+    "elapsed": 310,
+    "pid": 3717100,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "code": "guard"
+    },
+    "memory": {
+      "baseline": {
+        "rss": 72867840,
+        "heapTotal": 20086784,
+        "heapUsed": 13250000,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 75649024,
+        "heapTotal": 21028864,
+        "heapUsed": 14948016,
+        "external": 2453052,
+        "arrayBuffers": 27762
+      },
+      "rssDelta": 2781184
+    },
+    "peer": {
+      "sentBytes": 422,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "CAPABILITY",
+        "AUTHENTICATE",
+        "CAPABILITY",
+        "LIST",
+        "LIST",
+        "LSUB",
+        "EXAMINE",
+        "UID FETCH 1:9 (UID BODY.PEEK[1.MIME]<0.8192> BODY.PEEK[1]<0.32768>)"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "imap",
+    "scenario": "changed-uid",
+    "mutation": false,
+    "certificateSha256": "78e547a5a9f557ce9235f167135554ff63df3c5b2c920439a03026e317b6e194",
+    "options": {},
+    "elapsed": 446,
+    "pid": 3717239,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "reset",
+      "uidValidity": "8"
+    },
+    "memory": {
+      "baseline": {
+        "rss": 72921088,
+        "heapTotal": 19562496,
+        "heapUsed": 13106776,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 75497472,
+        "heapTotal": 20504576,
+        "heapUsed": 14609096,
+        "external": 2452957,
+        "arrayBuffers": 27667
+      },
+      "rssDelta": 2576384
+    },
+    "peer": {
+      "sentBytes": 313,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "CAPABILITY",
+        "AUTHENTICATE",
+        "CAPABILITY",
+        "LIST",
+        "LIST",
+        "LSUB",
+        "EXAMINE"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "imap",
+    "scenario": "advertised",
+    "mutation": false,
+    "certificateSha256": "bb54075ea7f80263eeff873d6d5f9175fc57d882ff5d4de93528d5882dbe8632",
+    "options": {},
+    "elapsed": 345,
+    "pid": 3717622,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "code": "LiteralTooLarge"
+    },
+    "memory": {
+      "baseline": {
+        "rss": 75374592,
+        "heapTotal": 19562496,
+        "heapUsed": 13195616,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 78127104,
+        "heapTotal": 20766720,
+        "heapUsed": 14812592,
+        "external": 2452997,
+        "arrayBuffers": 27707
+      },
+      "rssDelta": 2752512
+    },
+    "peer": {
+      "sentBytes": 1377,
+      "literalAdvertised": 67108864,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "CAPABILITY",
+        "AUTHENTICATE",
+        "CAPABILITY",
+        "LIST",
+        "LIST",
+        "LSUB",
+        "EXAMINE",
+        "UID FETCH 1:9 (UID BODY.PEEK[1.MIME]<0.8192> BODY.PEEK[1]<0.32768>)"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "imap",
+    "scenario": "ignore-partial",
+    "mutation": false,
+    "certificateSha256": "2f3b18aa0a34d35a598c0820491ae53f570888fba1cf1da291692dab3867a805",
+    "options": {},
+    "elapsed": 289,
+    "pid": 3717708,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "code": "LiteralTooLarge"
+    },
+    "memory": {
+      "baseline": {
+        "rss": 72294400,
+        "heapTotal": 20086784,
+        "heapUsed": 13351176,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 74903552,
+        "heapTotal": 21028864,
+        "heapUsed": 14963792,
+        "external": 2452996,
+        "arrayBuffers": 27706
+      },
+      "rssDelta": 2609152
+    },
+    "peer": {
+      "sentBytes": 33120,
+      "literalAdvertised": 8388608,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "CAPABILITY",
+        "AUTHENTICATE",
+        "CAPABILITY",
+        "LIST",
+        "LIST",
+        "LSUB",
+        "EXAMINE",
+        "UID FETCH 1:9 (UID BODY.PEEK[1.MIME]<0.8192> BODY.PEEK[1]<0.32768>)"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "imap",
+    "scenario": "stall-literal",
+    "mutation": false,
+    "certificateSha256": "5dccf21f71efde7d58060a58a8fd0fe0c81a9a12974e7482aca755cf1a9149ba",
+    "options": {
+      "deadline": 400
+    },
+    "elapsed": 656,
+    "pid": 3717863,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "code": "NoConnection"
+    },
+    "memory": {
+      "baseline": {
+        "rss": 73396224,
+        "heapTotal": 19824640,
+        "heapUsed": 13230960,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 76181504,
+        "heapTotal": 20766720,
+        "heapUsed": 14891808,
+        "external": 2452992,
+        "arrayBuffers": 27702
+      },
+      "rssDelta": 2785280
+    },
+    "peer": {
+      "sentBytes": 348,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "CAPABILITY",
+        "AUTHENTICATE",
+        "CAPABILITY",
+        "LIST",
+        "LIST",
+        "LSUB",
+        "EXAMINE",
+        "UID FETCH 1:9 (UID BODY.PEEK[1.MIME]<0.8192> BODY.PEEK[1]<0.32768>)"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "imap",
+    "scenario": "trickle-literal",
+    "mutation": false,
+    "certificateSha256": "dc506697695c673305287b15ac1c77f4cf0f76336ba0239bc0376ee72f5c78bb",
+    "options": {
+      "deadline": 400
+    },
+    "elapsed": 657,
+    "pid": 3717958,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "code": "NoConnection"
+    },
+    "memory": {
+      "baseline": {
+        "rss": 72372224,
+        "heapTotal": 19562496,
+        "heapUsed": 13074616,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 75259904,
+        "heapTotal": 20766720,
+        "heapUsed": 14761464,
+        "external": 2452999,
+        "arrayBuffers": 27709
+      },
+      "rssDelta": 2887680
+    },
+    "peer": {
+      "sentBytes": 355,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "CAPABILITY",
+        "AUTHENTICATE",
+        "CAPABILITY",
+        "LIST",
+        "LIST",
+        "LSUB",
+        "EXAMINE",
+        "UID FETCH 1:9 (UID BODY.PEEK[1.MIME]<0.8192> BODY.PEEK[1]<0.32768>)"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "imap",
+    "scenario": "aggregate-receive",
+    "mutation": false,
+    "certificateSha256": "d416fe14c58e3f4f10a6ca6564ebe9c38ea5352b930bb0991a85584829bc0071",
+    "options": {},
+    "elapsed": 459,
+    "pid": 3718121,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "complete",
+      "uidValidity": "7",
+      "horizon": 9,
+      "messages": [
+        {
+          "uid": 3,
+          "bytes": 5
+        }
+      ],
+      "received": 1134545
+    },
+    "memory": {
+      "baseline": {
+        "rss": 77520896,
+        "heapTotal": 20086784,
+        "heapUsed": 13159792,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 85704704,
+        "heapTotal": 21667840,
+        "heapUsed": 15251360,
+        "external": 3093197,
+        "arrayBuffers": 668728
+      },
+      "rssDelta": 8183808
+    },
+    "peer": {
+      "sentBytes": 1134545,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "CAPABILITY",
+        "AUTHENTICATE",
+        "CAPABILITY",
+        "LIST",
+        "LIST",
+        "LSUB",
+        "EXAMINE",
+        "UID FETCH 1:9 (UID BODY.PEEK[1.MIME]<0.8192> BODY.PEEK[1]<0.32768>)",
+        "LOGOUT"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "imap",
+    "scenario": "normal",
+    "mutation": false,
+    "certificateSha256": "3ad1eff174e5e89d3e433a49152cea5e20a8dbaa46c4c0e5c3813a7b2aa8ea59",
+    "options": {
+      "hostname": "mismatch.invalid"
+    },
+    "elapsed": 266,
+    "pid": 3718310,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "code": "ERR_TLS_CERT_ALTNAME_INVALID"
+    },
+    "memory": {
+      "baseline": {
+        "rss": 72724480,
+        "heapTotal": 19562496,
+        "heapUsed": 13250344,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 74321920,
+        "heapTotal": 20242432,
+        "heapUsed": 13800472,
+        "external": 2452644,
+        "arrayBuffers": 27354
+      },
+      "rssDelta": 1597440
+    },
+    "peer": {
+      "sentBytes": 0,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [],
+      "auth": 0,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "imap",
+    "scenario": "normal",
+    "mutation": false,
+    "certificateSha256": "feae24cd9608a24dee0dcbf1138580ab828380d8b2a6d4f0b57ce68ec5f083c5",
+    "options": {
+      "untrusted": true
+    },
+    "elapsed": 279,
+    "pid": 3718358,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "code": "DEPTH_ZERO_SELF_SIGNED_CERT"
+    },
+    "memory": {
+      "baseline": {
+        "rss": 70897664,
+        "heapTotal": 19824640,
+        "heapUsed": 13124848,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 72060928,
+        "heapTotal": 20086784,
+        "heapUsed": 13511288,
+        "external": 2451529,
+        "arrayBuffers": 27060
+      },
+      "rssDelta": 1163264
+    },
+    "peer": {
+      "sentBytes": 0,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [],
+      "auth": 0,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "normal",
+    "mutation": false,
+    "certificateSha256": "ed02ddf448589c54d45aee402882f6ac5a0a3b07069ab6153fcd0c22964c13db",
+    "options": {
+      "hostname": "mismatch.invalid"
+    },
+    "elapsed": 178,
+    "pid": 3718523,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "not_accepted",
+      "bodyStarted": false,
+      "code": "ESOCKET",
+      "responseCode": null,
+      "command": "CONN"
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 0,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [],
+      "auth": 0,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "normal",
+    "mutation": false,
+    "certificateSha256": "7506da85887785e008c5ed8c0d1fdde26dcb68bc4e757b587abd81776d238bb7",
+    "options": {
+      "untrusted": true
+    },
+    "elapsed": 178,
+    "pid": 3718606,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "not_accepted",
+      "bodyStarted": false,
+      "code": "ESOCKET",
+      "responseCode": null,
+      "command": "CONN"
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 0,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [],
+      "auth": 0,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "starttls-normal",
+    "mutation": false,
+    "certificateSha256": "2d56350b02768096c03ffd8b5f7c2388e5a2be3a7a931006d07bfef11efe9540",
+    "options": {
+      "starttls": true
+    },
+    "elapsed": 241,
+    "pid": 3718724,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "accepted",
+      "bodyStarted": true,
+      "code": null,
+      "responseCode": null,
+      "command": null
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 158,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "EHLO",
+        "STARTTLS",
+        "EHLO",
+        "AUTH",
+        "MAIL",
+        "RCPT",
+        "DATA"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 1,
+      "bytes": 168,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": true
+    },
+    "mimeMatches": true,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "normal",
+    "mutation": false,
+    "certificateSha256": "0c6439d58b36d43ae88d9ce29fac1c0ef10be6f554db3c2232ca7d42724d529f",
+    "options": {},
+    "elapsed": 242,
+    "pid": 3718816,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "accepted",
+      "bodyStarted": true,
+      "code": null,
+      "responseCode": null,
+      "command": null
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 118,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "EHLO",
+        "AUTH",
+        "MAIL",
+        "RCPT",
+        "DATA"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 1,
+      "bytes": 168,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": true
+    },
+    "mimeMatches": true,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "data-450",
+    "mutation": false,
+    "certificateSha256": "a28146c01956505a938955ed241598e89b2b856b433809b7d11f863bbdb7b245",
+    "options": {},
+    "elapsed": 173,
+    "pid": 3719000,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "bodyStarted": false,
+      "code": "EENVELOPE",
+      "responseCode": 450,
+      "command": "DATA"
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 107,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "EHLO",
+        "AUTH",
+        "MAIL",
+        "RCPT",
+        "DATA"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 1,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "data-550",
+    "mutation": false,
+    "certificateSha256": "6804c90de58f500295eb244e6ec160e5e783963129d22fec6d5c1fa589ddaf32",
+    "options": {},
+    "elapsed": 162,
+    "pid": 3719029,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "bodyStarted": false,
+      "code": "EENVELOPE",
+      "responseCode": 550,
+      "command": "DATA"
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 107,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "EHLO",
+        "AUTH",
+        "MAIL",
+        "RCPT",
+        "DATA"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 1,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "drop-pre",
+    "mutation": false,
+    "certificateSha256": "b12941a218dec3b64e885acae70af58b655effcdd5c973925adb01c217d3be18",
+    "options": {
+      "deadline": 400
+    },
+    "elapsed": 189,
+    "pid": 3719124,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "not_accepted",
+      "bodyStarted": false,
+      "code": "ECONNECTION",
+      "responseCode": null,
+      "command": "CONN"
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 94,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "EHLO",
+        "AUTH",
+        "MAIL",
+        "RCPT",
+        "DATA"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 1,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "drop-body",
+    "mutation": false,
+    "certificateSha256": "ff853fdefc8d9aa57cd1b811a30bdea9d22fbf9deae42b8fc0cd717591f51053",
+    "options": {
+      "deadline": 400
+    },
+    "elapsed": 211,
+    "pid": 3719192,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "unknown_delivery",
+      "bodyStarted": true,
+      "code": "ECONNECTION",
+      "responseCode": null,
+      "command": "CONN"
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 104,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "EHLO",
+        "AUTH",
+        "MAIL",
+        "RCPT",
+        "DATA"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 1,
+      "bytes": 165,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "drop-final",
+    "mutation": false,
+    "certificateSha256": "c074b9efd07bd69d2b7a00bc45cc62dc75cee8ee077c1734fccb475baf74267d",
+    "options": {
+      "deadline": 400
+    },
+    "elapsed": 258,
+    "pid": 3719399,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "unknown_delivery",
+      "bodyStarted": true,
+      "code": "ECONNECTION",
+      "responseCode": null,
+      "command": "CONN"
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 104,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "EHLO",
+        "AUTH",
+        "MAIL",
+        "RCPT",
+        "DATA"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 1,
+      "bytes": 168,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": true
+    },
+    "mimeMatches": true,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "malformed-final",
+    "mutation": false,
+    "certificateSha256": "8728b16664b491c49d2a171f105cd65edd4fd523c3e4f25b5616fbb179af42e5",
+    "options": {
+      "deadline": 400
+    },
+    "elapsed": 196,
+    "pid": 3719636,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "unknown_delivery",
+      "bodyStarted": true,
+      "code": "ECONNECTION",
+      "responseCode": null,
+      "command": "CONN"
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 118,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "EHLO",
+        "AUTH",
+        "MAIL",
+        "RCPT",
+        "DATA"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 1,
+      "bytes": 168,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": true
+    },
+    "mimeMatches": true,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "stall-final",
+    "mutation": false,
+    "certificateSha256": "3fbaa3351a483c0733c4448e7beefb8a7853b748578fc52cb2def90b5990fbed",
+    "options": {
+      "deadline": 400
+    },
+    "elapsed": 566,
+    "pid": 3719664,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "unknown_delivery",
+      "bodyStarted": true,
+      "code": null,
+      "responseCode": null,
+      "command": null
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 104,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "EHLO",
+        "AUTH",
+        "MAIL",
+        "RCPT",
+        "DATA"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 1,
+      "bytes": 168,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": true
+    },
+    "mimeMatches": true,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "final-450",
+    "mutation": false,
+    "certificateSha256": "ff40f23c1cd08517bdbe5452c3f8ebd8da9dab1128c6198931a453b30140056d",
+    "options": {},
+    "elapsed": 216,
+    "pid": 3719730,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "bodyStarted": true,
+      "code": "EMESSAGE",
+      "responseCode": 450,
+      "command": "DATA"
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 118,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "EHLO",
+        "AUTH",
+        "MAIL",
+        "RCPT",
+        "DATA"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 1,
+      "bytes": 168,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": true
+    },
+    "mimeMatches": true,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "final-550",
+    "mutation": false,
+    "certificateSha256": "9ca960303608bcc015425e2368e678bced10bd02f74089d1b7a4900125b1542e",
+    "options": {},
+    "elapsed": 236,
+    "pid": 3719848,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "bodyStarted": true,
+      "code": "EMESSAGE",
+      "responseCode": 550,
+      "command": "DATA"
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 118,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "EHLO",
+        "AUTH",
+        "MAIL",
+        "RCPT",
+        "DATA"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 1,
+      "bytes": 168,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": true
+    },
+    "mimeMatches": true,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "imap",
+    "scenario": "stall-connect",
+    "mutation": false,
+    "certificateSha256": "2b763cfc7168280af6a51f61d253fbd66e1a14ff1536cbd44677321f1da2a7ce",
+    "options": {
+      "deadline": 400
+    },
+    "elapsed": 675,
+    "pid": 3719924,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "code": "ClosedAfterConnectTLS"
+    },
+    "memory": {
+      "baseline": {
+        "rss": 73826304,
+        "heapTotal": 19824640,
+        "heapUsed": 13093856,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 75816960,
+        "heapTotal": 20242432,
+        "heapUsed": 13773352,
+        "external": 2452644,
+        "arrayBuffers": 27354
+      },
+      "rssDelta": 1990656
+    },
+    "peer": {
+      "sentBytes": 0,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [],
+      "auth": 0,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "imap",
+    "scenario": "stall-auth",
+    "mutation": false,
+    "certificateSha256": "e7411f12190b461d2a14ce375983df69d239028856c85e50ea7d642e57ec2e04",
+    "options": {
+      "deadline": 400
+    },
+    "elapsed": 648,
+    "pid": 3720090,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "code": "ClosedAfterConnectTLS"
+    },
+    "memory": {
+      "baseline": {
+        "rss": 71917568,
+        "heapTotal": 19562496,
+        "heapUsed": 13078344,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 74067968,
+        "heapTotal": 20504576,
+        "heapUsed": 14100856,
+        "external": 2452710,
+        "arrayBuffers": 27420
+      },
+      "rssDelta": 2150400
+    },
+    "peer": {
+      "sentBytes": 66,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "CAPABILITY",
+        "AUTHENTICATE"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "stall-connect",
+    "mutation": false,
+    "certificateSha256": "7b212452ef361f005baddcf33a8003a1fbfa89caaa2f21c10710cafa5524943d",
+    "options": {
+      "deadline": 400
+    },
+    "elapsed": 567,
+    "pid": 3720316,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "not_accepted",
+      "bodyStarted": false,
+      "code": null,
+      "responseCode": null,
+      "command": null
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 0,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [],
+      "auth": 0,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "stall-auth",
+    "mutation": false,
+    "certificateSha256": "01db36cb81e635608e841eae80bb55f540a1a8af5eb2383d5468161bbed38581",
+    "options": {
+      "deadline": 400
+    },
+    "elapsed": 620,
+    "pid": 3720467,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "not_accepted",
+      "bodyStarted": false,
+      "code": null,
+      "responseCode": null,
+      "command": null
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 48,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "EHLO",
+        "AUTH"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "imap",
+    "scenario": "stall-tls",
+    "mutation": false,
+    "certificateSha256": "ffd98bcf354bf497dce586861346e6a0b8fc17d367ed3e6fa39ebc423dd127e8",
+    "options": {
+      "deadline": 400
+    },
+    "elapsed": 668,
+    "pid": 3720642,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "rejected",
+      "code": "ClosedAfterConnectTLS"
+    },
+    "memory": {
+      "baseline": {
+        "rss": 74657792,
+        "heapTotal": 19824640,
+        "heapUsed": 13248224,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 75489280,
+        "heapTotal": 20086784,
+        "heapUsed": 13709344,
+        "external": 2451529,
+        "arrayBuffers": 27060
+      },
+      "rssDelta": 831488
+    },
+    "peer": {
+      "sentBytes": 0,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [],
+      "auth": 0,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "stall-tls",
+    "mutation": false,
+    "certificateSha256": "d41854ca0ecc9822ccd099188780e81ce5a54dae8ec4cd2d26101344bfab8f38",
+    "options": {
+      "deadline": 400
+    },
+    "elapsed": 545,
+    "pid": 3720825,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "not_accepted",
+      "bodyStarted": false,
+      "code": null,
+      "responseCode": null,
+      "command": null
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 0,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [],
+      "auth": 0,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "starttls-normal",
+    "mutation": false,
+    "certificateSha256": "6c2de21d96efc770d8140a014cdd407b1c3bdd295c401572bae0739758d3f7c4",
+    "options": {
+      "starttls": true,
+      "hostname": "mismatch.invalid"
+    },
+    "elapsed": 180,
+    "pid": 3720980,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "not_accepted",
+      "bodyStarted": false,
+      "code": "ESOCKET",
+      "responseCode": null,
+      "command": "CONN"
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 59,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "EHLO",
+        "STARTTLS"
+      ],
+      "auth": 0,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "starttls-normal",
+    "mutation": false,
+    "certificateSha256": "d418951f8363c61bbc58a0f8fccf4833731fc01f6fabc51b206af3e656a9b004",
+    "options": {
+      "starttls": true,
+      "untrusted": true
+    },
+    "elapsed": 180,
+    "pid": 3721040,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "not_accepted",
+      "bodyStarted": false,
+      "code": "ESOCKET",
+      "responseCode": null,
+      "command": "CONN"
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 59,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "EHLO",
+        "STARTTLS"
+      ],
+      "auth": 0,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "normal",
+    "mutation": false,
+    "certificateSha256": "c1098b03448d04f8277f5a51925b72dd3623245c36aa25dc859b37e19c449403",
+    "options": {
+      "slowBody": true,
+      "deadline": 400
+    },
+    "elapsed": 592,
+    "pid": 3721114,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "unknown_delivery",
+      "bodyStarted": true,
+      "code": null,
+      "responseCode": null,
+      "command": null
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 104,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "EHLO",
+        "AUTH",
+        "MAIL",
+        "RCPT",
+        "DATA"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 1,
+      "bytes": 56,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "trickle-final",
+    "mutation": false,
+    "certificateSha256": "3e21b3c46fbed2362c518be9fcc1cc751759d5c2962f005941fc211de366ecdd",
+    "options": {
+      "deadline": 400
+    },
+    "elapsed": 542,
+    "pid": 3721359,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "unknown_delivery",
+      "bodyStarted": true,
+      "code": null,
+      "responseCode": null,
+      "command": null
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 108,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "EHLO",
+        "AUTH",
+        "MAIL",
+        "RCPT",
+        "DATA"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 1,
+      "bytes": 168,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": true
+    },
+    "mimeMatches": true,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "imap",
+    "scenario": "normal",
+    "mutation": true,
+    "certificateSha256": "e417c4e392129475f482c4bf4efa30ff2c379fdf4459641f99fbecb26c8416d9",
+    "options": {},
+    "elapsed": 328,
+    "pid": 3721631,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "complete",
+      "uidValidity": "7",
+      "horizon": 9,
+      "messages": [
+        {
+          "uid": 3,
+          "bytes": 5
+        }
+      ],
+      "received": 445
+    },
+    "memory": {
+      "baseline": {
+        "rss": 71622656,
+        "heapTotal": 19824640,
+        "heapUsed": 13250032,
+        "external": 2451476,
+        "arrayBuffers": 27047
+      },
+      "peak": {
+        "rss": 74534912,
+        "heapTotal": 20766720,
+        "heapUsed": 15047256,
+        "external": 2453089,
+        "arrayBuffers": 27799
+      },
+      "rssDelta": 2912256
+    },
+    "peer": {
+      "sentBytes": 445,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "CAPABILITY",
+        "AUTHENTICATE",
+        "CAPABILITY",
+        "LIST",
+        "LIST",
+        "LSUB",
+        "SELECT",
+        "UID FETCH 1:9 (UID BODY.PEEK[1.MIME]<0.8192> BODY.PEEK[1]<0.32768>)",
+        "LOGOUT"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 0,
+      "bytes": 0,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": false
+    },
+    "mimeMatches": false,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  },
+  {
+    "protocol": "smtp",
+    "scenario": "drop-final",
+    "mutation": true,
+    "certificateSha256": "a93b0abd0de92fab04e414ad4a653591e5f31402414da99f2816710b03fe8516",
+    "options": {},
+    "elapsed": 259,
+    "pid": 3721679,
+    "exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close": {
+      "code": 0,
+      "signal": null
+    },
+    "killed": false,
+    "result": {
+      "status": "accepted",
+      "bodyStarted": true,
+      "code": "ECONNECTION",
+      "responseCode": null,
+      "command": "CONN"
+    },
+    "memory": null,
+    "peer": {
+      "sentBytes": 104,
+      "literalAdvertised": 0,
+      "accepted": 1,
+      "closed": 1,
+      "commands": [
+        "EHLO",
+        "AUTH",
+        "MAIL",
+        "RCPT",
+        "DATA"
+      ],
+      "auth": 1,
+      "plaintextAuth": 0,
+      "recipients": 1,
+      "bytes": 168,
+      "sni": [
+        "fixture.invalid"
+      ],
+      "terminator": true
+    },
+    "mimeMatches": true,
+    "joins": {
+      "sockets": 0,
+      "timers": 0,
+      "listening": false
+    }
+  }
+]

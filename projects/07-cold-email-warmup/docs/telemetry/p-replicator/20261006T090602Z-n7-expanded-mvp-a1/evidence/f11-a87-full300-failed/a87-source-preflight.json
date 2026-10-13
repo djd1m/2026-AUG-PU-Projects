@@ -1,0 +1,31 @@
+{
+  "utc": "2026-10-07T15:20:16.626816+00:00",
+  "ACK_utc": "2026-10-07T15:18:37Z",
+  "source_preflight_cut_utc": "2026-10-07T15:22:37Z",
+  "driver_sha256": "0bcfc86778142fc17455539517472fc040a04acf157d4dcf8ff63ba117fd89de",
+  "driver_AST_pass": true,
+  "verdict": "LOCAL_CLOSED_DRIVER_ACCEPT",
+  "source227_helpers7_dependencies_match": true,
+  "Original_HEAD": "f79543db87bc3188c3707e6bf773e446bef7a3ae",
+  "Original_tracked_clean": true,
+  "root_authorized_binding_fields": [
+    "futureA68BaselineRequired",
+    "baselineStatus",
+    "sourceActivationStatus",
+    "protectedSchemas"
+  ],
+  "all54_whole_tablepairs2132_baseline_pinned": true,
+  "WHOLE_public_saved_fields_preserved": true,
+  "lease_absent": true,
+  "no_DB_Node_runtime_before_READY": true,
+  "driver_finite_wait_seconds": 60,
+  "driver_commands": "accepted launcher only pre_setup/setup/pre/native/post/strict joins; faultFIRST330 healthySECOND330 legacyTHIRD145",
+  "TAP_requirements": "native0/exactok1/tests1/pass1/fail0/skipped0/no notok",
+  "failure_STOP": true,
+  "post_only_if_clockfits30plus15": true,
+  "disk_available_bytes": 2960338944,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_usage": null
+}

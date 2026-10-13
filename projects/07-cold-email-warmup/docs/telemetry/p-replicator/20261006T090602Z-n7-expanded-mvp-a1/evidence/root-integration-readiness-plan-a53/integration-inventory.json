@@ -1,0 +1,261 @@
+{
+  "package_script": "tsx --test --test-concurrency=1 tests/*-integration.test.ts",
+  "files": [
+    {
+      "path": "tests/auth-integration.test.ts",
+      "sha256": "cba20b7dfb4bdfc5c2a0dc37b6973db623d3b33ed32d5f53299a0638d2eb9efa",
+      "top_level_registrations": 1,
+      "nested_registrations": 7,
+      "lines": 122,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/auth-integration.test.ts"
+      ]
+    },
+    {
+      "path": "tests/billing-integration.test.ts",
+      "sha256": "5f9591e96337e41a06374c46c255e08961e5f0c266644542519b4eee891d3087",
+      "top_level_registrations": 1,
+      "nested_registrations": 6,
+      "lines": 111,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/billing-integration.test.ts"
+      ]
+    },
+    {
+      "path": "tests/capacity-integration.test.ts",
+      "sha256": "b2ab38150bf0eafde9783d0b84036964c5b873999763745fefe69af0238f3a86",
+      "top_level_registrations": 1,
+      "nested_registrations": 10,
+      "lines": 138,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/capacity-integration.test.ts"
+      ]
+    },
+    {
+      "path": "tests/diagnostics-disconnect-integration.test.ts",
+      "sha256": "e9d0bfbe42ece08c9503bff6743eb06cf95b20747602f4877328961cacf9abaa",
+      "top_level_registrations": 1,
+      "nested_registrations": 0,
+      "lines": 34,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/diagnostics-disconnect-integration.test.ts"
+      ]
+    },
+    {
+      "path": "tests/diagnostics-final-cancel-integration.test.ts",
+      "sha256": "d412dad9622659e21aabcb168021c01919dfad9366584635ef74929a63c7ad93",
+      "top_level_registrations": 1,
+      "nested_registrations": 3,
+      "lines": 49,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/diagnostics-final-cancel-integration.test.ts"
+      ]
+    },
+    {
+      "path": "tests/diagnostics-integration.test.ts",
+      "sha256": "27ba7b2d3652779f6888ce362d90053019a01e3950e13bb115c699433a2c84ba",
+      "top_level_registrations": 2,
+      "nested_registrations": 5,
+      "lines": 107,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/diagnostics-integration.test.ts"
+      ]
+    },
+    {
+      "path": "tests/diagnostics-ordered-integration.test.ts",
+      "sha256": "795225b1535dea4d7f3c570fed1961dc1f66a431026b0c60eb93f2f1a8b65871",
+      "top_level_registrations": 1,
+      "nested_registrations": 6,
+      "lines": 77,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/diagnostics-ordered-integration.test.ts"
+      ]
+    },
+    {
+      "path": "tests/dispatch-integration.test.ts",
+      "sha256": "78ad4012111d02e618a813f59247784e4e523ec79171e9b80576cd191e393f3b",
+      "top_level_registrations": 1,
+      "nested_registrations": 5,
+      "lines": 142,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/dispatch-integration.test.ts"
+      ]
+    },
+    {
+      "path": "tests/evidence-integration.test.ts",
+      "sha256": "e8d4e30a27e2022787e2a86b8072d9d0558ab124e436be8839e93d59beab651b",
+      "top_level_registrations": 1,
+      "nested_registrations": 10,
+      "lines": 164,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/evidence-integration.test.ts"
+      ]
+    },
+    {
+      "path": "tests/f09-transport-integration.test.ts",
+      "sha256": "a043d3d8044efb787d0b9b3dea70f92be0e56841b11918a0867c00e01ea1978c",
+      "top_level_registrations": 1,
+      "nested_registrations": 0,
+      "lines": 3,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/f09-transport-integration.test.ts"
+      ]
+    },
+    {
+      "path": "tests/f10-runtime-integration.test.ts",
+      "sha256": "2d79ea1b4a9d92f5dc390b40bf75b6f2ea5c05e58af14d3873360380bdd24536",
+      "top_level_registrations": 25,
+      "nested_registrations": 0,
+      "lines": 395,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/f10-runtime-integration.test.ts"
+      ]
+    },
+    {
+      "path": "tests/f11-context-integration.test.ts",
+      "sha256": "4e65a0d76ede8e3e9c76232cb4e45ce6f284c9e568241557145a493aee03a6f7",
+      "top_level_registrations": 1,
+      "nested_registrations": 11,
+      "lines": 289,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-skip-pattern=current authority mutations deny preIO and real native result commit",
+        "tests/f11-context-integration.test.ts"
+      ]
+    },
+    {
+      "path": "tests/mailboxes-integration.test.ts",
+      "sha256": "c072c3a693cfc63d9e5e5a768de3cdead03564b6b197822d052e0a7567068e3a",
+      "top_level_registrations": 1,
+      "nested_registrations": 5,
+      "lines": 112,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/mailboxes-integration.test.ts"
+      ]
+    },
+    {
+      "path": "tests/replies-integration.test.ts",
+      "sha256": "3bdbec78c56cf0451ad8aba6567aefe2e3f2c098e10df699b9db25de89712e08",
+      "top_level_registrations": 1,
+      "nested_registrations": 12,
+      "lines": 211,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/replies-integration.test.ts"
+      ]
+    },
+    {
+      "path": "tests/submission-integration.test.ts",
+      "sha256": "350b22220e81b829490ae47fbb4bdc30c1757217551da2c0410aafc3f11a2d1a",
+      "top_level_registrations": 1,
+      "nested_registrations": 11,
+      "lines": 250,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/submission-integration.test.ts"
+      ]
+    },
+    {
+      "path": "tests/suppression-integration.test.ts",
+      "sha256": "26afb13cfc49b2a55a6b166c9a2f8a29a5e6ae67d12054aa4cf8d31289a9c8d4",
+      "top_level_registrations": 1,
+      "nested_registrations": 10,
+      "lines": 153,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/suppression-integration.test.ts"
+      ]
+    },
+    {
+      "path": "tests/suppression-owner-integration.test.ts",
+      "sha256": "eb1fe102d46d46ab359342d41cc1b6230f5c3f0b8d0be1b332df3a02a95544d1",
+      "top_level_registrations": 1,
+      "nested_registrations": 4,
+      "lines": 72,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/suppression-owner-integration.test.ts"
+      ]
+    },
+    {
+      "path": "tests/web-integration.test.ts",
+      "sha256": "7ea40927de0644e4305d3a7ab6cf5b3928129575fc6e921ddd25e7b0e7d8683d",
+      "top_level_registrations": 1,
+      "nested_registrations": 5,
+      "lines": 62,
+      "bound_seconds": 240,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/web-integration.test.ts"
+      ]
+    }
+  ],
+  "file_count": 18,
+  "unique_group_per_file": true,
+  "coverage_note": "Each file fully unfiltered except one unique F11 nested matrix skip covered by frozen A50 raw; top-level count includes source registrations, dynamic loops expand at runtime. F09/F10 integration files retained; distinct protocol/load suites are separately unwaived."
+}

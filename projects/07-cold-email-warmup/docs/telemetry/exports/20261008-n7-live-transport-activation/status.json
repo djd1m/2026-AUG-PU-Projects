@@ -1,0 +1,67 @@
+{
+  "updated_at": "2026-10-08T05:49:53.295564+00:00",
+  "status": "scoped_transport_authorized_external_connectivity_blocker",
+  "responsible": "root",
+  "source": "bb52e17d2c50eae78ebc4345bfe49534914fc1c6",
+  "image": "sha256:dc59abdec230519befd55cbcd48150d49944fc7f5cae04d5f4986e9131444a6d",
+  "grant_operation_exit": 0,
+  "mailboxes_authorized": 1,
+  "mailboxes_excluded": 1,
+  "excluded_reason": "Gmail-configured record contains example.test fixture address; sender/login mismatch; no real owner Gmail present.",
+  "campaigns_started": 0,
+  "tls_or_auth_success": false,
+  "fresh_full_imap_poll_success": false,
+  "mail_sent": false,
+  "operator_token_or_credentials_exposed": false,
+  "runtime_after_grant": "provider_backoff",
+  "diagnostic_result": "SMTP and IMAP timeout before TLS/AUTH",
+  "host_ipv4_connect_tests_recorded_from_tool_output": [
+    {
+      "target": "77.88.21.125",
+      "port": 993,
+      "result": "timeout",
+      "limit_seconds": 4
+    },
+    {
+      "target": "77.88.21.158",
+      "port": 465,
+      "result": "timeout",
+      "limit_seconds": 4
+    },
+    {
+      "target": "77.88.21.158",
+      "port": 587,
+      "result": "timeout",
+      "limit_seconds": 4
+    },
+    {
+      "target": "imap.gmail.com",
+      "port": 993,
+      "result": "timeout",
+      "limit_seconds": 4
+    },
+    {
+      "target": "smtp.gmail.com",
+      "port": 465,
+      "result": "timeout",
+      "limit_seconds": 4
+    },
+    {
+      "target": "yandex.ru",
+      "port": 443,
+      "result": "connected",
+      "elapsed_seconds": 0.05
+    }
+  ],
+  "local_output_policy": "ACCEPT",
+  "local_docker_user": "empty",
+  "independent_network_review": "completed",
+  "provider_filter_attribution": "not_proven",
+  "profile": "model-routing-econom",
+  "requested_independent_reviewer": "gpt-6.1-sol high",
+  "actual_models": null,
+  "tokens": null,
+  "cost": null,
+  "measurement_gap": "Authoritative runtime model and usage counters unavailable.",
+  "boundary_witness": "16 outbound SYNs, zero SYNACK, zero capture drops; HTTPS control connected from host/web/worker"
+}

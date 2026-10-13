@@ -1,0 +1,115 @@
+TAP version 13
+# Subtest: overload backoff preserves due age and independent tenant progress
+ok 1 - overload backoff preserves due age and independent tenant progress
+  ---
+  duration_ms: 744.665586
+  type: 'test'
+  ...
+# Subtest: durable runtime drains and recovers without replaying uncertain sends
+ok 2 - durable runtime drains and recovers without replaying uncertain sends
+  ---
+  duration_ms: 1257.208979
+  type: 'test'
+  ...
+# Subtest: fair polling serves thirty active mailboxes and preserves activity intent
+ok 3 - fair polling serves thirty active mailboxes and preserves activity intent
+  ---
+  duration_ms: 2316.920017
+  type: 'test'
+  ...
+# Subtest: poll quanta persist the fixed tail before yielding and never retry incomplete scans
+ok 4 - poll quanta persist the fixed tail before yielding and never retry incomplete scans
+  ---
+  duration_ms: 788.205232
+  type: 'test'
+  ...
+# Subtest: automatic pool allocation skips pair conflicts and remains idempotent
+ok 5 - automatic pool allocation skips pair conflicts and remains idempotent
+  ---
+  duration_ms: 502.477929
+  type: 'test'
+  ...
+# Subtest: paced dispatch preserves current day quota and every stop fence
+ok 6 - paced dispatch preserves current day quota and every stop fence
+  ---
+  duration_ms: 782.91769
+  type: 'test'
+  ...
+# Subtest: persisted keyset reconciliation advances beyond first hundred without recreating activity
+ok 7 - persisted keyset reconciliation advances beyond first hundred without recreating activity
+  ---
+  duration_ms: 2783.137233
+  type: 'test'
+  ...
+# Subtest: actual dispatch job age survives restart backoff pacing quota and an empty queue
+ok 8 - actual dispatch job age survives restart backoff pacing quota and an empty queue
+  ---
+  duration_ms: 1034.909089
+  type: 'test'
+  ...
+# Subtest: actual database failure during a poll quantum propagates without provider backoff writes
+ok 9 - actual database failure during a poll quantum propagates without provider backoff writes
+  ---
+  duration_ms: 488.379264
+  type: 'test'
+  ...
+# Subtest: denied live submission returns typed authority outcome before acquiring a physical slot
+ok 10 - denied live submission returns typed authority outcome before acquiring a physical slot
+  ---
+  duration_ms: 442.760648
+  type: 'test'
+  ...
+# Subtest: projection recovers expired logical claims without self quota deadlock and holds fresh owners
+ok 11 - projection recovers expired logical claims without self quota deadlock and holds fresh owners
+  ---
+  duration_ms: 663.202996
+  type: 'test'
+  ...
+# Subtest: new and proved completed jobs reset backoff while the same failed job retains original age
+ok 12 - new and proved completed jobs reset backoff while the same failed job retains original age
+  ---
+  duration_ms: 1094.564171
+  type: 'test'
+  ...
+# Subtest: expired claimed reservation is recovered before quota projection independently of a fresh hold
+ok 13 - expired claimed reservation is recovered before quota projection independently of a fresh hold
+  ---
+  duration_ms: 699.45268
+  type: 'test'
+  ...
+# Subtest: a new oldest logical job clears prior backoff independently of terminal history
+ok 14 - a new oldest logical job clears prior backoff independently of terminal history
+  ---
+  duration_ms: 817.318852
+  type: 'test'
+  ...
+# Subtest: a fresh logical owner holds the sender even when another queued job is older
+ok 15 - a fresh logical owner holds the sender even when another queued job is older
+  ---
+  duration_ms: 844.093081
+  type: 'test'
+  ...
+# Subtest: complete proof becomes immediately eligible without resetting its selected fair turn
+ok 16 - complete proof becomes immediately eligible without resetting its selected fair turn
+  ---
+  duration_ms: 665.243748
+  type: 'test'
+  ...
+# Subtest: partial and held scans cannot manufacture successful polling readiness
+ok 17 - partial and held scans cannot manufacture successful polling readiness
+  ---
+  duration_ms: 837.087388
+  type: 'test'
+  ...
+# Subtest: dispatch claims project only one sender and rotate deferred candidates
+ok 18 - dispatch claims project only one sender and rotate deferred candidates
+  ---
+  duration_ms: 1312.077159
+  type: 'test'
+  ...
+# Subtest: graceful stop after committed claim releases logical owners before lease expiry
+ok 19 - graceful stop after committed claim releases logical owners before lease expiry
+  ---
+  duration_ms: 588.55612
+  type: 'test'
+  ...

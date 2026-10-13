@@ -1,0 +1,47 @@
+{
+  "at": "2026-10-06T19:50:01.483554+00:00",
+  "source_build_drift": [],
+  "immutable_runner_preload_drift": [],
+  "fixture_drift": [],
+  "own_nodes": [],
+  "prior_exact_pid_check": "prior-exact-pids.json; measured after first launch, timing limitation retained",
+  "PG": {
+    "at": "2026-10-06T19:50:01.162Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "mutex": "free verified via nonblocking acquisition then release",
+  "disk_available_bytes": 3213668352,
+  "free_inodes": 4772078,
+  "private_probe_key_removed": true,
+  "per_file_native_exits": {
+    "suppression": {
+      "at": "2026-10-06T19:47:28.256076+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 17955.401789862663,
+      "pid": 1481454,
+      "startticks": "123904030"
+    },
+    "capacity": {
+      "at": "2026-10-06T19:48:02.202566+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 11834.826515056193,
+      "pid": 1493228,
+      "startticks": "123908036"
+    },
+    "submission": {
+      "at": "2026-10-06T19:49:00.371682+00:00",
+      "native_returncode": 0,
+      "timed_out": false,
+      "elapsed_ms": 34864.82768598944,
+      "pid": 1503445,
+      "startticks": "123911550"
+    }
+  },
+  "source_acceptance": false,
+  "new_tests_after_seal": false
+}

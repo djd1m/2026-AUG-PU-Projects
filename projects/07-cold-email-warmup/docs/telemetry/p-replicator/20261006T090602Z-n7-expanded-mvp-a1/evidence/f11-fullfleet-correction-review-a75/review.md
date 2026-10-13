@@ -1,0 +1,7 @@
+# A75 independent source-only review
+
+LOCAL_RUNNER_PREPARATION_ACCEPT. A70 namespace rejection is fixed: source-binding.json:3–5 maps fault/short/checks with12 digits and matches unchanged native assertFairDatabase. All21 clean objective artifacts,227 source/config pins and dependencies match. Copied guard/run/setup/snapshot/joins are identical to A69 after exact trace/basename changes. Launch differences additionally select the stronger A68 placeholder and A73 labels; no widened transport/schema/command scope. Saved public fields and WHOLE public tables remain intact. Python AST and bash-n pass; no Node/tests/DB work.
+
+Exact closed singleton args retain330/330/145; fault FIRST and prior native0/allJoined gate unchanged. Source full300000/restart150000 and legacy20 pages/real5000/native19 remain unwaived. Clock reserves805+45 plus explicit nonnegative actual overhead within a future17-minute source cutoff; separate20-minute seal.
+
+Preparation only: lease and live db-protected are absent and futureA68BaselineRequired true blocks launch. Root must refresh ALL actual A74 final51 schemas/2009 tables plus any later retained schemas, and rebind/reconcile any later accepted source changes. This acceptance covers current e7 source only. Actual disk/identity/0sessions/FIRST/absence/current source/input continuity and all joins remain runtime obligations. No fullfleet or F11 execution/pass claimed. A73 recorded timing overruns remain disclosed in its objective, not retroactive runtime evidence.

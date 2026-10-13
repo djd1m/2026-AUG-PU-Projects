@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T19:14:57.144767+00:00",
+  "timeout_budget_s": 150,
+  "raw_exit": 124,
+  "completed_top_level_tests": 36,
+  "sum_completed_top_level_duration_ms": 130693.066375,
+  "last_completed_parent": "F03b real PG durable final authority, all stop races, sink privacy and outcomes",
+  "last_completed_subtest": "B2/B3 actual unsubscribe shared-lock race before final: before0 after1 later0",
+  "first_not_reported_expected_subtest": "B2/B3 actual unsubscribe shared-lock race after final: before0 after1 later0",
+  "source_test_file": "tests/suppression-integration.test.ts",
+  "current_postreset_blockers": 0,
+  "prior_guard_terminal_count": 2192,
+  "all_prior_terminal_PIDs_absent": true,
+  "owned_processes_now_all_start_after_physical_start": true,
+  "pre_reset_wait_snapshot": null,
+  "classification": "bounded suite still making progress at timeout; hang not established; pre-reset SQL state unavailable",
+  "next_action": "fresh bounded coordinator diagnostic must collect PID/startticks and PG wait snapshots during suite; choose bound after reconciling preserved durations; no unproved hang or extra duration claim",
+  "causal_wait_state_at_timeout": "UNKNOWN: required pre-reset snapshot not collected",
+  "last_completed_subtest_duration_ms": 565.234782,
+  "last_completed_timestamp": null,
+  "last_completed_timestamp_reason": "TAP carries durations, not per-test absolute UTC",
+  "last_raw_TAP_write_utc": "2026-10-06T19:11:39.229000+00:00"
+}

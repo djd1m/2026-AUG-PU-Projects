@@ -1,0 +1,32 @@
+{
+  "exit_code": 0,
+  "image_id": "sha256:aa2285578e487a3d2a3c3cf64fb1ed60f37e908de7dfd79082041f1d72f44abd",
+  "changed_scope_sha256": {
+    ".env.example": "7f62a2d6c43793a291d4748dbf8e764f6e364b5825171f19b769f54d8ee16e3c",
+    "db/002-mailboxes-consent.sql": "6f23a16557abfd8223de32e9c5e01442941ef2ff08bbdb89d9ae31c006680f5c",
+    "docker-compose.yml": "f5415fb85ed637cdbe7484adba68d6c5b2e1053420c0e6405803581102442beb",
+    "package.json": "f3e842221d55b6a428051239958708c309a28a5ddd00305ed155372bf61b3277",
+    "scripts/check-f02-heavy.sh": "c89cf32f9d6be57cbdfd6adebd2e4b97797bc306905ffc34a5bc795f57b05a9b",
+    "scripts/check-f02-mutation.py": "d7d959663ee5500add443b4a9cbef9c8038338bc9fb42a038bf3b8c57ffbdce3",
+    "scripts/check-f02-secrets.py": "dfc6f0636b82fb954ddc4570faeb9e9e59365e8123d74478e7b83e8530b428cb",
+    "scripts/local-runtime.sh": "920633ad5d274dcc44430439221ff9c9cbfacc9218fbd4de910aeca6d24c955d",
+    "src/config.ts": "aa02cd3c821d7f6d1b68573ab61fdffb0c465d2f5272bffbd22231cd71f43d6c",
+    "src/consent/store.ts": "76aee7c2c1d489d2c7eb96ddfb94b86fae415af48bf2156f4e817595bf2538b0",
+    "src/consent/transaction.ts": "24e85675413e5391e75d1c3dfbc77717222439ff5870b53764f4f5aad25896b4",
+    "src/db.ts": "8a80c4d35f9ba23b63359c4cd5f774e742e899b7484e57ab5ca93c842f67eec2",
+    "src/mailboxes/crypto.ts": "cfcd13a73ccd7126825ef40ae7624ad7f945659a02a74a1d7cfcebcfa097f020",
+    "src/mailboxes/input.ts": "127f2e4787a0afe49e2c485ae752bed05077a48b18c4912cfc9a1c4a23de91b3",
+    "src/mailboxes/network.ts": "ba9a178fbabed69adaa26097629c18ded1bb1ac7dbca679d2edf260039745806",
+    "src/mailboxes/provider.ts": "064c9aad2964ade6913e442e67cf1d7bbb607d20297fc63d0c0a2188b7de65ac",
+    "src/mailboxes/store.ts": "df68009cf1ce301f5644d38b90eeb52a5a8fcf283071eda72df00369a9a65d95",
+    "src/server.ts": "a8166903c3db759d7aea13d08eba50792eaf54bc8b06a6169034216f7e62c47e",
+    "tests/auth-integration.test.ts": "cba20b7dfb4bdfc5c2a0dc37b6973db623d3b33ed32d5f53299a0638d2eb9efa",
+    "tests/auth-unit.test.ts": "5da811de5f14fd676087229edb27e30c50e4ed1a282dc4f8a23297d633172793",
+    "tests/mailboxes-integration.test.ts": "c072c3a693cfc63d9e5e5a768de3cdead03564b6b197822d052e0a7567068e3a",
+    "tests/mailboxes-unit.test.ts": "184d359409e653e2ff90f1ce14248951643c9cab89d50a722a380b54a6c89b49"
+  },
+  "initial_check_error": "Dockerfile is not copied into /app; repeated hash read excludes Dockerfile.",
+  "node": "v22.20.0",
+  "checked_files": 29,
+  "runtime_snapshot_mismatches": []
+}

@@ -1,0 +1,31 @@
+Status: completed
+Scope: independent read-only network deployment audit. No source, container, firewall, grants, environment, credentials, TLS policy, consent, or campaign changes. No SMTP/IMAP commands, AUTH, DATA, or application data transmitted. Only TCP connections and SYN/SYN-ACK header witnesses.
+Source: bb52e17d
+Build: sha256:dc59abdec230519befd55cbcd48150d49944fc7f5cae04d5f4986e9131444a6d
+
+Finding: The observed Yandex TCP timeout is beyond the guest/container forwarding boundary. No local egress-rule correction is justified by this evidence. Exact upstream filtering party or provider policy remains unidentified.
+
+Evidence:
+- Both approved N7 containers match the build. n7f06a_network is a non-internal bridge. Web default route via 192.168.176.1 on eth1; worker default route via 192.168.176.1 on eth0.
+- Host IPv4 forwarding is enabled. DOCKER-USER is empty; DOCKER-FORWARD explicitly accepts traffic entering br-95ded803a23a; DOCKER-CT accepts established return traffic to that bridge; POSTROUTING MASQUERADE exists for 192.168.176.0/20.
+- nftables exposes standard Docker IPv4/IPv6 tables; no additional inet/bridge/netdev filter table. Relevant forwarding hooks match iptables. No eth0 ingress/egress tc filters or XDP attachment shown. Raw PREROUTING guards private/loopback destination access, not outbound public provider destinations.
+- Fresh DNS: imap.yandex.ru 77.88.21.125; smtp.yandex.ru 77.88.21.158.
+- Host and worker connect-only 993 each timeout 4 seconds. Host and web connect-only 465 each timeout 4 seconds.
+- At 2026-10-08T05:47:24Z–05:47:40Z, eth0 SYN-only witness captures 16 mail SYN/retransmits, source 194.85.249.105 after NAT, with no SYN-ACK and zero capture drops. This proves SYNs reach guest eth0, and no first TCP handshake response reaches that capture point during the bounded checks.
+- yandex.ru 77.88.44.55:443 TCP connects successfully from host 0.052s, worker 0.059s, web 0.043s. Control capture shows SYN/SYN-ACK for host/worker. Web success is witnessed by the socket receipt; capture ended before flushing its final two packets.
+- SMTP endpoint 77.88.21.158:443 also timeout 4s; this is not a valid general HTTPS service control and is not used for the diagnosis.
+
+Required narrow action:
+1. Present syn-only-eth0.txt plus exact source IP 194.85.249.105, fresh provider addresses, ports 465/993, and UTC times to hosting/network operator; request inspection of outbound/return-path filtering for only the already authorized Yandex endpoints. Do not assert which upstream party blocks traffic or request global firewall disablement.
+2. If hosting/network evidence proves a deny, owner/operator may authorize the smallest endpoint/port/source-specific correction. No local rule change or alternate relay is warranted now. SMTP 587 remains untested in this independent slice; it is not a substitute for the saved 465 configuration.
+3. After restoration, coordinator reruns bounded DNS/TCP/TLS/AUTH using the existing owner-approved mailbox and private grant, preserving TLS validation and provider backoff. Sending/inbox acceptance and reply-stop checks remain coordinator-owned authorized work; no automatic campaign start.
+
+Artifacts:
+receipt.json: TCP outcomes and source/build binding.
+syn-only-eth0.txt: mail SYN header witness.
+https-control-syn-only.txt and https-control-status.txt: control handshake witness/capture metrics.
+network-rule-evidence.json: metadata-only routes/rules/DNS snapshots.
+
+Profile: bounded independent network review, 5-minute cap.
+Requested model: Sol6.1HIGH. Actual model/token/cost metadata unavailable; null in receipt.
+Measured socket/capture interval: 2026-10-08T05:47:24.343003Z–05:48:13Z, about 49 seconds. Total review duration includes instruction/network inspection and is not independently metered.

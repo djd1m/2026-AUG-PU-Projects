@@ -1,0 +1,7 @@
+# F06 architecture / reuse
+
+Adapt selected docs/cjm/cohort-desk.html layout/hierarchy only (original N7 design), src/web/page.ts accepted auth seam and scripts/ui/f01-auth.mjs known existingDockerbridge pattern; donor baseline52ae6bcf fromsameproject. Exactfilehashes capturedbySol; previousfixedsourceSHA inF01script mustnotcarryforward. Existing src/{mailboxes,consent,campaigns,replies,billing,evidence,growth} APIauthority remains. Minimal safe authenticatedmetadata endpoint permitted for actualmodes/readonlydashboard withoutprivateproviderdetails. No newbusinessschema/framework/dependencies expected.
+
+Split browserclient into small TS-servedJS modules or staticassets with documentedbuildcopy; nativeHTTP app unchanged. Neverinline untrusteduserHTML; sameoriginCSP. Sessionrequest epoch/abort centralclient. Publicreports retainserverHTML anddynamicbadge. Ownerfullautonomy accepted team: Astrahighplan/review, Sol6.1highproduct/test; oneisolatedwriter+freshreader sequential lane. A<=25min, B<=25min, reviews<=8min, correctionsconcrete<=15min; no silentextension. Root/sharedtoolkit immutable.
+
+Risk: liveSMTP/providerintegration excluded and clearlylabelled, no operatorcredentialsinUI, no fabricatedmetrics; UIactionstate reflectsbackend authority. Browserfixture seeds mustbe source-boundTEST and maynotmute realAPI. Externalspend0. Developmentruntime allowed ownloopbackstack only, releasecheckpoint separate.

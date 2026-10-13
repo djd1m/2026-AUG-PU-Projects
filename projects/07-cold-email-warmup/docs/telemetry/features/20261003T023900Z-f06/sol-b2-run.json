@@ -1,0 +1,54 @@
+{
+  "run_id": "20261003T023900Z-f06",
+  "work_unit_id": "n7-f06b-resume-sol",
+  "attempt_id": "b2",
+  "status": "failed",
+  "profile": "compact-quality-first-v2",
+  "tier": "XL",
+  "started_at": "2026-10-03T04:25:16.391164+00:00",
+  "source_revision": "647639ec7da7d328944ac16fe7e0850c615d9f81",
+  "spec_sha256": "72b44888ddab0405d955084d572130649fbdddc70b33d53a364db7dd80f05de5",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host actual model/effort/token/billing evidence unavailable",
+    "active interval and billing unavailable; performance matrix unexecuted"
+  ],
+  "approval": "OWN-N7-002 and explicit current bounded owner autonomy",
+  "scope": "B1-B4 actual matrix; scripts/ui/f06-* and own evidence only",
+  "exclusions": [
+    "product src/db/dependencies",
+    "B5 canonical docs",
+    "B6 push/PR",
+    "live SMTP/charge/paid LLM/deployment",
+    "fresh Astra review owned by coordinator"
+  ],
+  "ended_at": "2026-10-03T04:33:55.261538+00:00",
+  "elapsed_wall_ms": 518870,
+  "active_wall_ms": null,
+  "retry_count": 0,
+  "diagnostic_executions": 1,
+  "confirmed_findings": [
+    "F06B-BLOCK-002"
+  ],
+  "acceptance_evidence": [
+    "sol-b-b2-attempt-1/checks.json",
+    "sol-b-b2-unsubscribe-probe-1/diagnostic.json",
+    "sol-b2-audit.json",
+    "sol-b2-light-checks.json"
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_total": 4,
+    "ac_met": 0,
+    "followup_status": "pending",
+    "known_defects_missed": null
+  },
+  "remaining": "Full B1-B4 blocked; fresh Astra B review and B5/B6 coordinator",
+  "elapsed_scope": "start through terminal artifact preparation; final commit follows",
+  "telemetry_status": "partial"
+}

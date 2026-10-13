@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-03T01:54:33.863563+00:00",
+  "status": "ready",
+  "source_revision": "6054bee12246950ff8f1465f1e0b68f3d8cc4148",
+  "image_id": "sha256:37b8ba805358d115aaba5cf8018d4a2d1cdf5e14c89444ab250df0564361a516",
+  "environment": "n7f05b loopback18708 privatePG",
+  "inputs": [
+    {
+      "name": "local_test provider",
+      "available": true
+    },
+    {
+      "name": "own random runtime secrets",
+      "available": true
+    },
+    {
+      "name": "migration011",
+      "available": true
+    }
+  ],
+  "test_command": "docker compose -p n7f05b exec -T web npm run test:integration",
+  "environment_available": true,
+  "evidence_root": {
+    "root": "project",
+    "path": "docs/telemetry/features/20261003T010600Z-f05"
+  },
+  "expected_effects": [
+    "local fixture payments and entitlements only",
+    "test tenant resets"
+  ],
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "build_revision": "6054bee12246950ff8f1465f1e0b68f3d8cc4148",
+  "source_sha256": "981749a21b0b2d097c12a69b86c51ee8a144985e818b29ab66ed14910b81517e",
+  "build_sha256": "8973b6ad99aefd33520dd77939ed55348431dc7c323cddc7fde06704bd8cb316"
+}

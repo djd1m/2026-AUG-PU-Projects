@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-10-06T15:38:39.109604+00:00",
+  "action": "git push origin feature/07-cold-email-warmup",
+  "state": "blocked_by_automatic_approval_review",
+  "attempts": 2,
+  "local_revision": "cc69b0c3d0bfbf930e78f06cf482f944dc79bec6",
+  "last_successful_remote_revision": "08afb3c6",
+  "destination": "github.com/djd1m/2026-AUG-PU-Projects.git",
+  "payload": "54 N7 documentation and telemetry files",
+  "reason": "Approval reviewer classifies owner quote relayed by parent and project-file push instructions as untrusted assistant/file context; trusted exact-destination/payload authorization still absent according to reviewer",
+  "verification": "exact origin matched, outgoing54 files N7 docs only, gzip decoded, known runtime secret variants0hits",
+  "bypass_attempted": false,
+  "next": "Root informed of exact approval blocker; no further push retry without changed trusted authorization/review state. Continue all independent local implementation."
+}

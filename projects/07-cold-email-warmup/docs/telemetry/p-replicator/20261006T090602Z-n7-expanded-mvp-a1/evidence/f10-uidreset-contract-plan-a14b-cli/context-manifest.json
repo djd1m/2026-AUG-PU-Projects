@@ -1,0 +1,49 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-uidreset-contract-plan-a14b-cli",
+  "launch_sha256": "07ac6bb1e3d338432b278ee5889031090bda62cba06db614f6687a4bb4fe8324",
+  "source_revision": "6255b8f19a456103f062b0d1d5fd2313b914af94",
+  "source_worktree": "/tmp/n7-f10-restart-fix-20261006-a12",
+  "normative_repository": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate",
+  "normative_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+  "approved_f10_plan_revision": "e5fad0bd750f0ec40cbd4c1b898f159c1bb20da8",
+  "independent_requirements_validation": "2f24e06cc8460450c88d2103c38221fa85f32b48",
+  "planner_packet": {
+    "path": "projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/sol-coordinator-handoff-20261006/planner-only-review-packet.json",
+    "sha256": "c56fa1bef6b60a4f413320469fe4ee7314439e4aa5d1c48e5ea9328c5f4682e5"
+  },
+  "normative_files": {
+    "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/01_specification.md": "410d329fcc9d433f51e554310318457096a8dfdd82aad9754e47d7122744eeb8",
+    "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/02_pseudocode.md": "c08da0230b35a07f749f186ce0c54d363662c1c70e3e95e617e321974e456fdb",
+    "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/03_architecture.md": "7ba1644e010feb420901d5b24e5a41fd2ec959a237f5f72b85d4fb31f6b12df1",
+    "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/04_refinement.md": "a28d4e29ae8e54ae487caaa285938059b67c215546443baa66e1d7b4c70e1300",
+    "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/05_completion.md": "913b45a0e49dbfc95e98d33db485c382d1e935f77f3559c2fd1e4835e2278b27",
+    "projects/07-cold-email-warmup/docs/features/f10-durable-runtime/validation-report.md": "22eabfaba1f78ec1f9c74d5b0eb8763c2d28babcd00be98b5d86e88b57e1400d",
+    "projects/07-cold-email-warmup/docs/ADR.md": "6baf1874848d3c4bceb8eab65ccfc12ccd6bf6920c9a9a19a2e6bcc7a32880a4",
+    "projects/07-cold-email-warmup/docs/decisions-owner.md": "cf47d55af1d5ad4cd5f34c7531f1d2004dfdc98076e7459c76af8b93f3e709d8",
+    "projects/07-cold-email-warmup/docs/plans/expanded-mvp-plan.md": "cb9449fb233471275dd6ee67a496d8d04f38ddedf637bdfe4588dfc9689fb13d",
+    "projects/07-cold-email-warmup/docs/features/expanded-mvp/01_specification.md": "dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+    "projects/07-cold-email-warmup/docs/features/expanded-mvp/ai-policy-v1.md": "d3d7c9d4614134f1dca9078ed797e3f8ee94a7bc613856bb54f2f2628b566512",
+    ".claude/commands/feature.md": "6908fa6c8ba770f829378a021d5f7e9a9bc79a15bdd67b278d8c6a765968b291",
+    ".claude/skills/sparc-prd-mini/SKILL.md": "b663793d1e1d1de028f91f2e266a191811bb610f97a12be7f95d62327589d53a",
+    ".claude/skills/requirements-validator/references/feature-report-contracts.md": "df263cbce17fb5d9dec6514561c66f6283b3f19e2fc85056f0531bac615be0f1"
+  },
+  "additional_canonical_files_at_normative_revision": {
+    "projects/07-cold-email-warmup/docs/Specification.md": "9faaacfa11f4c6351f936d26e1ee74839eadab6b47289a7d1890ba5878dd211c",
+    "projects/07-cold-email-warmup/docs/Pseudocode.md": "4cfb8ac0df218e1e16eefa418d76414d9c928ecc4da63ec0c05cc3578bcc4011",
+    "projects/07-cold-email-warmup/docs/Refinement.md": "a06f2b4a277d23e822f6f13cc28ab06dbe0da84e9d71a56a003ed44487208d9c"
+  },
+  "objective_files": {
+    "/tmp/n7-f10-verify-a13/diagnostic-classification-v1.json": "f2bd536e9633109f17277fae06af15a0e77b75fda68ecaa6da8a1d2c24eb36e0",
+    "/tmp/n7-f10-verify-a13/child-error-v2.jsonl": "a83e8a01db833edaa5659a8a9034dc722779b13517bb1e583a7042d33364a570",
+    "/tmp/n7-f10-verify-a13/diagnostic-summary-v3.json": "e823316a0c802eef6793512059965a035487ee0884ca93b1e84746f5cf847e73"
+  },
+  "review_context": "planner requirements, architecture, invariants, tests, exact frozen candidate and raw evidence; no author history or prior review dialogue",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "acceptance": "pending implementation, mandatory gates and independent review"
+}

@@ -1,0 +1,192 @@
+{
+  "prepared_at": "2026-10-07T00:48:39.277925+00:00",
+  "purpose": "Distinct bounded SAME fixed independent HIGH planner refinement after actual native two individually legal2800ms phases exceed one5s total window; no author narrative",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "fork_turns": "none",
+  "exclude": [
+    "author chat",
+    "author reasoning/working notes",
+    "coordinator mixed history",
+    "author/verifier narrative receipts",
+    "operational handoff"
+  ],
+  "normative_files": [
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/01_specification.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/f10-durable-runtime/01_specification.md",
+      "sha256": "410d329fcc9d433f51e554310318457096a8dfdd82aad9754e47d7122744eeb8",
+      "bytes": 16218,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/02_pseudocode.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/f10-durable-runtime/02_pseudocode.md",
+      "sha256": "c08da0230b35a07f749f186ce0c54d363662c1c70e3e95e617e321974e456fdb",
+      "bytes": 17902,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/03_architecture.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/f10-durable-runtime/03_architecture.md",
+      "sha256": "7ba1644e010feb420901d5b24e5a41fd2ec959a237f5f72b85d4fb31f6b12df1",
+      "bytes": 13233,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/04_refinement.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/f10-durable-runtime/04_refinement.md",
+      "sha256": "a28d4e29ae8e54ae487caaa285938059b67c215546443baa66e1d7b4c70e1300",
+      "bytes": 13981,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/05_completion.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/f10-durable-runtime/05_completion.md",
+      "sha256": "913b45a0e49dbfc95e98d33db485c382d1e935f77f3559c2fd1e4835e2278b27",
+      "bytes": 8866,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/01_specification.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/01_specification.md",
+      "sha256": "dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+      "bytes": 8592,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/02_pseudocode.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/02_pseudocode.md",
+      "sha256": "1deb0b3d98038350f2284e9af0313df8d3792c0b0b1c8be869b8da750b5a1752",
+      "bytes": 12226,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/03_architecture.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/03_architecture.md",
+      "sha256": "307b5f5fc82e483f3d880b108c6abac25c44ba43e01ec6eaa001864179850dfe",
+      "bytes": 6923,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/04_refinement.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/04_refinement.md",
+      "sha256": "ca4f3cb774b0a3cad91cb4e3cbab21f0e951c9fc9e9fd52b2308794c441fa8de",
+      "bytes": 4699,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/05_completion.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/05_completion.md",
+      "sha256": "5bb05f10bbcc155b96d0f0d0b8594305fb1ee1cebfdf1fef1aac28e1303da6f2",
+      "bytes": 7125,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/ADR.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/ADR.md",
+      "sha256": "6baf1874848d3c4bceb8eab65ccfc12ccd6bf6920c9a9a19a2e6bcc7a32880a4",
+      "bytes": 1739,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/decisions-owner.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/decisions-owner.md",
+      "sha256": "cf47d55af1d5ad4cd5f34c7531f1d2004dfdc98076e7459c76af8b93f3e709d8",
+      "bytes": 8783,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/plans/expanded-mvp-plan.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/plans/expanded-mvp-plan.md",
+      "sha256": "cb9449fb233471275dd6ee67a496d8d04f38ddedf637bdfe4588dfc9689fb13d",
+      "bytes": 18681,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/docs/features/expanded-mvp/ai-policy-v1.md",
+      "origin": "git:dfb3219e58a86dbf0a16b68e4fb6f26def99a4da:projects/07-cold-email-warmup/docs/features/expanded-mvp/ai-policy-v1.md",
+      "sha256": "d3d7c9d4614134f1dca9078ed797e3f8ee94a7bc613856bb54f2f2628b566512",
+      "bytes": 13041,
+      "role": "approved normative artifact"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/n7-f11-context-plan-validation-a28-native/report.md",
+      "origin": "/tmp/n7-f11-context-plan-validation-a28-native/report.md",
+      "sha256": "745545a9fb09eda73264c957fd6f1eb225702e42492c2da9a98f4581bc1da201",
+      "bytes": 17397,
+      "role": "approved original planner / independently corrected planner context"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/n7-f11-context-plan-a1c-cli/plan.md",
+      "origin": "/tmp/n7-f11-context-plan-a1c-cli/plan.md",
+      "sha256": "6a55facebae60282a6580a3809cbfa9e662214e4621814447c6ffac03523e364",
+      "bytes": 18235,
+      "role": "approved original planner / independently corrected planner context"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/AGENTS.md",
+      "origin": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/AGENTS.md",
+      "git_revision": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
+      "sha256": "ca1b4cc25738f7d9d58f37da640c741d79befa45e2209364474bea6d097181d8",
+      "bytes": 7418,
+      "role": "owner execution instruction"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/CLAUDE.md",
+      "origin": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/CLAUDE.md",
+      "git_revision": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
+      "sha256": "c1669853c58eddd6994761d510f5f1a4d1b992b50e16f8ebedf18a10937144a2",
+      "bytes": 13438,
+      "role": "owner execution instruction"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/projects/07-cold-email-warmup/CLAUDE.md",
+      "origin": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/CLAUDE.md",
+      "git_revision": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
+      "sha256": "3b548fa6dea02c7639aa7fbdfdc3fa1f7bbf90b6726c406501d89cc2b3fe3ba0",
+      "bytes": 7533,
+      "role": "owner execution instruction"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/docs/development/model-routing-econom.md",
+      "origin": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/docs/development/model-routing-econom.md",
+      "git_revision": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
+      "sha256": "4622c96c879baa08d548f99b4f48ec19e7f59bb0eb91b2a58de46db4a079ee09",
+      "bytes": 5589,
+      "role": "owner execution instruction"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/.claude/rules/complexity-router.md",
+      "origin": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/.claude/rules/complexity-router.md",
+      "git_revision": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
+      "sha256": "422a1d1952f7755c1ea772b33e9e41e1bd78a239af8a0a490f03bc48eb4e0c70",
+      "bytes": 10185,
+      "role": "owner execution instruction"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/.claude/rules/project-work-companion-local.md",
+      "origin": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/.claude/rules/project-work-companion-local.md",
+      "git_revision": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
+      "sha256": "273c7cb0d069609ba2823786e98f914362bc1fb38d864e3e4f720d6f3ecddbc4",
+      "bytes": 799,
+      "role": "owner execution instruction"
+    },
+    {
+      "path": "/tmp/n7-f11-c1-adjudication-a5-native/normative/.claude/skills/project-work-companion/SKILL.md",
+      "origin": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/.claude/skills/project-work-companion/SKILL.md",
+      "git_revision": "c6c16916de8adb1144dcf54a31b9b063e15dd48f",
+      "sha256": "7d27b2e123cfab42ddb5d8930ac1a6fce3aaaeb3ceb626f77a9f2cad56858403",
+      "bytes": 6121,
+      "role": "owner execution instruction"
+    }
+  ],
+  "source_binding_pending_A4_terminal": true,
+  "no_code_tests_DB_network_permission": true,
+  "previous_independent_planner_report": {
+    "path": "/tmp/n7-f11-c1-adjudication-a5-native/report.md",
+    "sha256": "8c4c56ba9a6e1fd72554af856e674a27b7e8092802e4b4218b0d625e0818f772",
+    "role": "own previous independent planner output, preserved unchanged"
+  },
+  "source_binding_pending_A6_terminal": true
+}

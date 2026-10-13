@@ -1,0 +1,49 @@
+{
+  "utc": "2026-10-06T22:56:46.175242+00:00",
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "source_head": "db50798a76a97fed75931544f24cd1181ff082d8",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "elapsed_seconds": 326.852744,
+  "fence_source_and_compiled_material_cases": 4,
+  "cancellation_source_and_compiled_material_cases": 2,
+  "abort_identity_diagnostic_source_and_compiled_cases": 2,
+  "all_cases": "baseline actual0 / named ERR_ASSERTION actual1 / restored actual0, no timeout",
+  "source_build_sql_unchanged": true,
+  "shadow177_unchanged": true,
+  "owned_nodes_joined": true,
+  "DB_slots_claims_sessions_zero": true,
+  "mutex_released": true,
+  "ownership_sha256": "a767ebf74e7b60b4c7412b6be8affde39a886159b1d426947fb9aeab6dd13823",
+  "diagnostic_reconciliation_sha256": "c16ee26e99a423d248da96b160f42f8a9b1cff06e8d995aaef1cdba43408bdc2",
+  "canary": {
+    "authorized_secret_files_read_exact": 5,
+    "raw_or_nested_long_string_count": 6,
+    "bounded_variant_count": 25,
+    "file_count": 546,
+    "runtime_secret_variant_hits": 0,
+    "literal_marker_numeric_counts_outputs": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "private_PEM_numeric_counts_outputs": 0,
+    "runtime_canary_pass": true,
+    "generic_private_scan_pass": true,
+    "scope_gaps": [
+      "postscan receipt/context/artifactmanifest metadata unscanned",
+      "terminal tool transcripts outside ownregularartifacts are not a genericsecret/private scanner",
+      "runtime canary and generic privatePEM check are separate claims"
+    ]
+  },
+  "previous_timeout": "immutable A33 raw remains timeout, not product failure/caught assertion; bounded same-seam witness now established",
+  "confirmed_product_defect": null,
+  "next_required_executor": "coordinator to actually launch new independent fork-none HIGH source reviewer after this terminal",
+  "product_acceptance": false
+}

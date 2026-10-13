@@ -1,0 +1,71 @@
+{
+  "utc": "2026-10-06T22:44:14.400611+00:00",
+  "PG": {
+    "at": "2026-10-06T22:44:14.530Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [
+      {
+        "pid": 871812,
+        "state": "idle",
+        "wait_event_type": "Client",
+        "wait_event": "ClientRead",
+        "xact_start": null,
+        "query_start": "2026-10-06T22:43:05.395Z",
+        "blocking": [],
+        "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+      },
+      {
+        "pid": 871813,
+        "state": "idle",
+        "wait_event_type": "Client",
+        "wait_event": "ClientRead",
+        "xact_start": null,
+        "query_start": "2026-10-06T22:43:05.415Z",
+        "blocking": [],
+        "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+      },
+      {
+        "pid": 871814,
+        "state": "idle",
+        "wait_event_type": "Client",
+        "wait_event": "ClientRead",
+        "xact_start": null,
+        "query_start": "2026-10-06T22:43:05.428Z",
+        "blocking": [],
+        "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+      },
+      {
+        "pid": 871815,
+        "state": "idle",
+        "wait_event_type": "Client",
+        "wait_event": "ClientRead",
+        "xact_start": null,
+        "query_start": "2026-10-06T22:43:05.450Z",
+        "blocking": [],
+        "query_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+      }
+    ],
+    "quiescent": false
+  },
+  "owned_nodes": [
+    {
+      "pid": 4172308,
+      "startticks": "124959439",
+      "state": "S"
+    },
+    {
+      "pid": 4172355,
+      "startticks": "124959449",
+      "state": "S"
+    },
+    {
+      "pid": 4172419,
+      "startticks": "124959460",
+      "state": "R"
+    }
+  ],
+  "last_tap": [
+    "TAP version 13"
+  ]
+}

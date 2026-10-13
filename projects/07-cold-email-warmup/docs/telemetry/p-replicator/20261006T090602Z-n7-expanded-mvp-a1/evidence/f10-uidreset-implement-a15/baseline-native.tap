@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: explicit retry captures changed native UID proof in one quantum without old FETCH or freshness
+not ok 1 - explicit retry captures changed native UID proof in one quantum without old FETCH or freshness
+  ---
+  duration_ms: 33117.928062
+  type: 'test'
+  location: '/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts:1:7222'
+  failureType: 'testCodeFailure'
+  error: |-
+    current native EXAMINE must recover explicit old-generation retry
+    + actual - expected
+    
+    + 'paused'
+    - 'scanning'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'scanning'
+  actual: 'paused'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts:55:10)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 33683.360154

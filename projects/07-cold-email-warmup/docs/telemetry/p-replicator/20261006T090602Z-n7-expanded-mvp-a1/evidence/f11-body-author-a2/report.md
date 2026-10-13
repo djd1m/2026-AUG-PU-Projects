@@ -1,0 +1,18 @@
+# F11 second native capture slice
+
+Verdict: coherent partial; F11 is not accepted.
+
+Local commit `e10419a60a032bb39fd6e29afaca5a9b9585b9db` contains only the 13 owned changed paths. Automatic runtime body scheduling remains absent. The native internal capture path uses a separate closed-default `imap_body` capability, exact read-only UID body stages, EXAMINE validity, metadata8192/text sentinel32769, five-second cancellation and exact child-exit physical cleanup. Metadata unsupported MIME prevents text fetching. Each stage checks current tenant/mailbox/grant/config/root/decrypted recipient and current run/source/claim generation. Opaque single-use native evidence governs final encrypted commit; caller body/labels cannot authorize capture.
+
+Current slot admission conservatively denies body at three total occupied IMAP slots, reserves polling capacity under FIRST(7,1), denies same-mailbox incomplete/due/claimed polling, and releases/yields between stages. The full runtime C1 lane and literal healthy30s/all-participant60s fairness proof are unfinished. Encrypted content reconciliation uses authenticated root/enrollment/content HMAC across retained key versions; tested UID reset links one opaque semantic event, while a different own body using the same Message-ID remains distinct. A newer claim and post-fetch grant revocation reject old proof without content commit. Current native path stores encrypted text; production rule/classifier/body suppression integration remains pending and grants no F12/send permission.
+
+Checks: typecheck/lint/build exit0; complete unit67/67; final exact parent with meaningful PG/TLS18/18; affected IMAP5/5 and replyPG15/15. Initial PG failure is retained: fixture truncation removed physical slot rows, then the fixture restored exactly the existing4IMAP2SMTP. Fresh SQL16, migration repeated/rollback, tenant/retention tests run in the PG helpers. Source/build SHA and frozen runner/guard dependencies are in manifests. Source froze `2026-10-06T23:57:32.193321+00:00`; final source has not changed since the frozen checks.
+
+Final database n7f10_a2: other sessions0, transport occupied0, runtime claims0. All seven owned check sessions joined. Guard summary contains132 exited Node records and no matching live PID/startticks. Current socket denials203 comprise198 sanitized unix-category denials, one explicit negative numeric guard probe and four initially uncategorized denials. Their causes are not inferred; the prior22 uncategorized denials remain independently UNKNOWN. DNS1 is the explicit negative guard probe. Native role records44 validated fixture IPC and4 deliberately invalid fixture IPC rejected before socket creation. Guard decisions were not widened; literal differences and immutable hashes precede child launches.
+
+Bounded owned-source/log scan found no private PEM or synthetic body canary in logs. Protected node_modules symlink was neither staged nor modified. No external provider/API/SMTP/IMAP/OpenAI request, spend, container launch, publication or global configuration change was authorized or performed.
+
+Remaining AC are listed verbatim in source-freeze.json and receipt.json. Coordinator `/root/n7_sol_coordinator` owns the next bounded runtime/classifier/retention continuation and fresh independent HIGH fork-none review. No background work is represented as active after this attempt. Profile model-routing-econom; requested Sol6.1 MEDIUM, actual model/effort/usage/cost null because host metadata is unavailable to this executor. Wall duration 917741ms; active time unknown.
+
+Finished-At: 2026-10-06T23:58:46.741297+00:00
+Status: completed

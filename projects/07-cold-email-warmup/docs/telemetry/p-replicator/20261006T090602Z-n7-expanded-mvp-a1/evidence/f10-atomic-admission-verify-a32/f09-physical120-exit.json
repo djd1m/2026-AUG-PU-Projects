@@ -1,0 +1,32 @@
+{
+  "stage": "f09-physical120",
+  "started": {
+    "at": "2026-10-06T22:23:21.891248+00:00",
+    "pid": 3864715,
+    "startticks": "124841188",
+    "runner_pid": 3684977,
+    "command": [
+      "/tmp/n7-expanded-runtime-20261006/bin/node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^expired occupied slots survive actual SIGSTOP120s until exact child exit$",
+      "tests/f09-live-transport.test.ts"
+    ],
+    "inventory_sha256": "8ed8ceef27f5a5fb3f3b3430b96232b3dfe7cc0fb8393e1b3cfc4d0084783263"
+  },
+  "joined_utc": "2026-10-06T22:25:26.068653+00:00",
+  "native_returncode": 0,
+  "timed_out": false,
+  "elapsed_seconds": 124.17896784911864,
+  "PG": {
+    "at": "2026-10-06T22:25:26.038Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "remaining_owned_nodes": [],
+  "tap_sha256": "aa8d53b20b6907bd4b6bf10e1a84f549ad019af6d151bc6ddc72f78c7fc5dbae",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

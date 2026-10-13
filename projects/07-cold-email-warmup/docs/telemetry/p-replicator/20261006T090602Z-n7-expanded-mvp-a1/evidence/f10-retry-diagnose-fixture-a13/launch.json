@@ -1,0 +1,38 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-retry-diagnose-fixture-a13",
+  "attempt_id": "f10-retry-diagnose-fixture-a13",
+  "launched_at": "2026-10-06T18:14:21.482141+00:00",
+  "freeze_at": "2026-10-06T18:32:51.482141+00:00",
+  "deadline": "2026-10-06T18:34:21.482141+00:00",
+  "source_revision": "a8d4b6b2d46f1f45f27fe0a8028288057d0fa491",
+  "worktree": "/tmp/n7-f10-restart-fix-20261006-a12",
+  "project": "projects/07-cold-email-warmup",
+  "trace_path": "/tmp/n7-f10-retry-diagnose-fixture-a13-receipt.md",
+  "trace_prelaunch_absent": true,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "profile": "model-routing-econom",
+  "executor": "/root/n7_sol_coordinator/f10_restart_author_a12 fixed MEDIUM resumed new bounded attempt",
+  "allowed_files": [
+    "tests/f09-transport-fixture.ts",
+    "tests/f09-live-transport.test.ts",
+    "tests/f10-runtime-integration.test.ts"
+  ],
+  "runtime_files": "read-only until exact diagnosed failure and coordinator explicit added ownership",
+  "scratch_root": "/tmp/n7-f10-verify-a13",
+  "disk_before_launch": {
+    "available_bytes": 3453739008,
+    "free_inodes": 4788347
+  },
+  "question": "Why26 rescan_incomplete after explicit retry in native985: actual read/snapshot/error/outcome/attempt budget timestamps vs cancellation and due-backoff; reproduce deterministically without blind330",
+  "confirmed_fixture_defect": "transportContext(pool) randomUUID pair_key cancelled by approved recoverLogicalClaims day suffix before claim; fix canonical unordered pair/DB UTC day, never weaken runtime",
+  "acceptance": [
+    "Exact deterministic typed error/outcome/attempt/due/guard timing proof with small declared cohort and fault/retry/restart; no raw provider/body/secret messages",
+    "Canonical current-day F09 fixture correction proves native final-fence regression before protocol IO then all affected native fence/UID cases",
+    "Own identical network guard outputroot plus narrow validated known slotowner BufferCA path; negative TCP/TLS/DNS/missing-fixture and real positive local TLS witnesses before tests",
+    "No runtime fix before concrete cause; rescan_incomplete only explicit authorized fixture retry, unknown/physical holds unchanged",
+    "Source checkpoint/static/affected/fullPG if fits, exact retained raw/source hashes, no finalsource330 or physical/mutation PASS without execution, terminal receipt by bound"
+  ]
+}

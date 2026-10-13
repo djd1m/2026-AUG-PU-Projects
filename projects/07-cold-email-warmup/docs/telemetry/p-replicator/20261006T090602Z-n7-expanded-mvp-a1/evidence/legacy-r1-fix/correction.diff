@@ -1,0 +1,25 @@
+diff --git a/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/scenarios.md b/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/scenarios.md
+index 442ddab9..89f5f810 100644
+--- a/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/scenarios.md
++++ b/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/scenarios.md
+@@ -131,7 +131,7 @@ Scenario Outline: SC-f06-cabinet-e2e-delivery-005
+   And the unchanged contract assertion holds: Usercan copycode/link with clipboardfallback.
+   Examples:
+     | case | expected |
+-    | TESTcheckoutstablepayloadrepeat /changedpayload /disabled /operatorcanonicalsuccessoutsidebrowser /partnercopyfallback | actualfree-teamlimitsTEST100RUB30daysstatusintent; stablekeyretrynotclientpaidflag; explicitcodecookievisible; operatorsecretabsent; refreshrealgrant; codeactivate/deactivatecountsTESTboundedhistorynofakereward; clipboardfallback |
++    | TESTcheckoutstablepayloadrepeat /changedpayload /disabled /operatorcanonicalsuccessoutsidebrowser /partnercopyfallback | actualfree-teamlimitsTEST100minorRUB30daysstatusintent; stablekeyretrynotclientpaidflag; explicitcodecookievisible; operatorsecretabsent; refreshrealgrant; codeactivate/deactivatecountsTESTboundedhistorynofakereward; clipboardfallback |
+ ```
+ 
+ ## SC-f06-cabinet-e2e-delivery-006
+diff --git a/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/validation-report.md b/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/validation-report.md
+index a98bf2a8..5d2cdf17 100644
+--- a/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/validation-report.md
++++ b/projects/07-cold-email-warmup/docs/features/f06-cabinet-e2e-delivery/validation-report.md
+@@ -54,6 +54,6 @@ Previous index: `history/validation-report.pre-a2-bdd.md`, sha256:11810a7376e88f
+ ## Input digests
+ 
+ - `01_specification.md`: sha256:044d738715cc33c29c453805648b209176ecdcf12c8c8c7320b2e7cd3265e1ce
+-- `scenarios.md`: sha256:27f3431cf25443232fa0b81c5d4cb3090754a0a51347d9947ce4119eec416a5e
++- `scenarios.md`: sha256:f07cb6e8da966b4c857aab1911c4c11ffe2edb46462117b29b50867a9619b31c
+ 
+ F06 B6 remains not met: GitHub403 PR creation, no PR and no newly authorized release. Full documentation testability does not remove this delivery blocker.

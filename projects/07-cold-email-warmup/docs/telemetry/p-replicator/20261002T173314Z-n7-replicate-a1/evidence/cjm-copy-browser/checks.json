@@ -1,0 +1,66 @@
+{
+  "finished_at": "2026-10-02T18:41:27.857Z",
+  "mode": "N7-V01/V02 focused copy",
+  "browser": "Chromium via existing Playwright 1.63.0",
+  "sources": [
+    {
+      "file": "cohort-desk.html",
+      "sha256": "9e464965d558a6cfdc3d7e8f1a99aa9a0ff70937dd1876f165074f1a38cf1172"
+    },
+    {
+      "file": "partner-studio.html",
+      "sha256": "a61b702732881c4a09532f2f0ede6719841b0781655bf74533072b5d19d41bd2"
+    },
+    {
+      "file": "operator-review.html",
+      "sha256": "eb6572948b0fa47a908a7d965ec89d5bee92d76a41a939933457f9869cf7f9df"
+    }
+  ],
+  "results": [
+    {
+      "check": "static",
+      "status": "pass",
+      "detail": "cohort-desk.html: 57 unique IDs, labels/links/dependencies/syntax valid, SHA256=9e464965d558a6cfdc3d7e8f1a99aa9a0ff70937dd1876f165074f1a38cf1172"
+    },
+    {
+      "check": "static",
+      "status": "pass",
+      "detail": "partner-studio.html: 57 unique IDs, labels/links/dependencies/syntax valid, SHA256=a61b702732881c4a09532f2f0ede6719841b0781655bf74533072b5d19d41bd2"
+    },
+    {
+      "check": "static",
+      "status": "pass",
+      "detail": "operator-review.html: 57 unique IDs, labels/links/dependencies/syntax valid, SHA256=eb6572948b0fa47a908a7d965ec89d5bee92d76a41a939933457f9869cf7f9df"
+    },
+    {
+      "check": "copy-browser",
+      "status": "pass",
+      "detail": "cohort-desk.html 1440px: visible peer disclosure, queue/in-flight wording, unchecked separate consent, keyboard toggle, blocked launch, no overflow/runtime errors"
+    },
+    {
+      "check": "copy-browser",
+      "status": "pass",
+      "detail": "cohort-desk.html 390px: visible peer disclosure, queue/in-flight wording, unchecked separate consent, keyboard toggle, blocked launch, no overflow/runtime errors"
+    },
+    {
+      "check": "copy-browser",
+      "status": "pass",
+      "detail": "partner-studio.html 1440px: visible peer disclosure, queue/in-flight wording, unchecked separate consent, keyboard toggle, blocked launch, no overflow/runtime errors"
+    },
+    {
+      "check": "copy-browser",
+      "status": "pass",
+      "detail": "partner-studio.html 390px: visible peer disclosure, queue/in-flight wording, unchecked separate consent, keyboard toggle, blocked launch, no overflow/runtime errors"
+    },
+    {
+      "check": "copy-browser",
+      "status": "pass",
+      "detail": "operator-review.html 1440px: visible peer disclosure, queue/in-flight wording, unchecked separate consent, keyboard toggle, blocked launch, no overflow/runtime errors"
+    },
+    {
+      "check": "copy-browser",
+      "status": "pass",
+      "detail": "operator-review.html 390px: visible peer disclosure, queue/in-flight wording, unchecked separate consent, keyboard toggle, blocked launch, no overflow/runtime errors"
+    }
+  ]
+}

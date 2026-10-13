@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-06T22:03:50.000274+00:00",
+  "results": {
+    "typecheck": {
+      "exit": 0,
+      "pid": 3548248,
+      "startticks": "124722875",
+      "joined_utc": "2026-10-06T22:03:44.316731+00:00",
+      "elapsed_seconds": 5.560645224992186,
+      "sha": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "lint": {
+      "exit": 0,
+      "pid": 3550024,
+      "startticks": "124723431",
+      "joined_utc": "2026-10-06T22:03:48.318881+00:00",
+      "elapsed_seconds": 4.000696897972375,
+      "sha": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pg": {
+      "exit": 0,
+      "pid": 3551212,
+      "startticks": "124723831",
+      "joined_utc": "2026-10-06T22:03:49.845062+00:00",
+      "elapsed_seconds": 1.5252453938592225,
+      "sha": "b2b88c8d93913cf0d4ebc712db8930c8a36d175f88fdfdf3805cc36c0a663250"
+    }
+  },
+  "post": {
+    "at": "2026-10-06T22:03:49.983Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "remaining_nodes": []
+}

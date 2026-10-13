@@ -1,0 +1,123 @@
+[
+  {
+    "name": "port-conflicts-own-reuse",
+    "command": [
+      "bash",
+      "../../scripts/check-port-conflicts.sh",
+      "."
+    ],
+    "exit_code": 1,
+    "started_at": "2026-10-02T21:57:19.575777+00:00",
+    "finished_at": "2026-10-02T21:57:21.825082+00:00"
+  },
+  {
+    "name": "typecheck",
+    "command": [
+      "taskset",
+      "-c",
+      "0,1",
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-02T21:57:21.826412+00:00",
+    "finished_at": "2026-10-02T21:57:26.543438+00:00"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "taskset",
+      "-c",
+      "0,1",
+      "npm",
+      "run",
+      "lint"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-02T21:57:26.544145+00:00",
+    "finished_at": "2026-10-02T21:57:30.167205+00:00"
+  },
+  {
+    "name": "build",
+    "command": [
+      "taskset",
+      "-c",
+      "0,1",
+      "npm",
+      "run",
+      "build"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-02T21:57:30.168056+00:00",
+    "finished_at": "2026-10-02T21:57:33.929218+00:00"
+  },
+  {
+    "name": "image-build",
+    "command": [
+      "docker",
+      "build",
+      "--cpu-period",
+      "100000",
+      "--cpu-quota",
+      "200000",
+      "-t",
+      "n7f03a-web",
+      "."
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-02T21:57:33.930132+00:00",
+    "finished_at": "2026-10-02T21:57:55.703999+00:00"
+  },
+  {
+    "name": "own-stack-up",
+    "command": [
+      "docker",
+      "compose",
+      "-p",
+      "n7f03a",
+      "up",
+      "-d",
+      "--no-build",
+      "--wait"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-02T21:57:55.704449+00:00",
+    "finished_at": "2026-10-02T21:58:03.796549+00:00"
+  },
+  {
+    "name": "unit",
+    "command": [
+      "docker",
+      "compose",
+      "-p",
+      "n7f03a",
+      "exec",
+      "-T",
+      "web",
+      "npm",
+      "test"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-02T21:58:03.796967+00:00",
+    "finished_at": "2026-10-02T21:58:06.387874+00:00"
+  },
+  {
+    "name": "full-pg",
+    "command": [
+      "docker",
+      "compose",
+      "-p",
+      "n7f03a",
+      "exec",
+      "-T",
+      "web",
+      "npm",
+      "run",
+      "test:integration"
+    ],
+    "exit_code": 1,
+    "started_at": "2026-10-02T21:58:06.388351+00:00",
+    "finished_at": "2026-10-02T21:58:21.548762+00:00"
+  }
+]

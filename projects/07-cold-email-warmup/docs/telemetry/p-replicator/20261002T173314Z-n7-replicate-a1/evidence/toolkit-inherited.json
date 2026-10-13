@@ -1,0 +1,366 @@
+[
+  {
+    "path": ".p-replicator.json",
+    "source": ".p-replicator.json",
+    "mode": "inherited symlink",
+    "sha256": "440427a1469ff64440d22bfb8fd6773296f006a9651aa0ae0c5e1b9177b26dd4"
+  },
+  {
+    "path": ".claude/agents/doc-validator.md",
+    "source": ".claude/agents/doc-validator.md",
+    "mode": "inherited symlink",
+    "sha256": "e57950758cd4764b2cb54b3f1905567e9dbc1ed20ac6ecd30998614894689f4f"
+  },
+  {
+    "path": ".claude/agents/harvest-coordinator.md",
+    "source": ".claude/agents/harvest-coordinator.md",
+    "mode": "inherited symlink",
+    "sha256": "71e524e8379df46bbf457dbc1d4480634e05c99b7d3a4f59a356b8d71a0a4166"
+  },
+  {
+    "path": ".claude/agents/product-discoverer.md",
+    "source": ".claude/agents/product-discoverer.md",
+    "mode": "inherited symlink",
+    "sha256": "be7d707a5fc1ee2eb18dda9e904ffbdc0be21c874b3a721349fd9e840bf77bc8"
+  },
+  {
+    "path": ".claude/agents/replicate-coordinator.md",
+    "source": ".claude/agents/replicate-coordinator.md",
+    "mode": "inherited symlink",
+    "sha256": "bbfe18a7642954f357db08e849349fee02681e2f0ffa036539c45d98dbaba960"
+  },
+  {
+    "path": ".claude/commands/deploy.md",
+    "source": ".claude/commands/deploy.md",
+    "mode": "inherited symlink",
+    "sha256": "27f5424ee217163c55e5e6b9322a1f0858159407bd24ebd6d6588d6c22a5f890"
+  },
+  {
+    "path": ".claude/commands/docs.md",
+    "source": ".claude/commands/docs.md",
+    "mode": "inherited symlink",
+    "sha256": "be03592cb3f1d61b60dc96d3e26d71281ad4eb2d4626012c080ce609a32c96e4"
+  },
+  {
+    "path": ".claude/commands/feature.md",
+    "source": ".claude/commands/feature.md",
+    "mode": "inherited symlink",
+    "sha256": "6908fa6c8ba770f829378a021d5f7e9a9bc79a15bdd67b278d8c6a765968b291"
+  },
+  {
+    "path": ".claude/commands/go.md",
+    "source": ".claude/commands/go.md",
+    "mode": "inherited symlink",
+    "sha256": "e7337012dccaab09e0cf27a696ebff14bea4626fb5167538af7da2f5cc7b597a"
+  },
+  {
+    "path": ".claude/commands/harvest.md",
+    "source": ".claude/commands/harvest.md",
+    "mode": "inherited symlink",
+    "sha256": "ed6355c102af0f2c62bf6714fce63157e0cb1c1ee85bc32c96f137b8b0c0e1ba"
+  },
+  {
+    "path": ".claude/commands/myinsights.md",
+    "source": ".claude/commands/myinsights.md",
+    "mode": "inherited symlink",
+    "sha256": "f31c5e133b5027197359e4179cbba1ab535f990634a69ea7c5c73bd2bc329d68"
+  },
+  {
+    "path": ".claude/commands/next.md",
+    "source": ".claude/commands/next.md",
+    "mode": "inherited symlink",
+    "sha256": "1e4984306c3aa80dfc8734dc1c975dfe5fdf2cf6396ddd759e4c7635646107b8"
+  },
+  {
+    "path": ".claude/commands/plan.md",
+    "source": ".claude/commands/plan.md",
+    "mode": "inherited symlink",
+    "sha256": "6fef889f51168981bf4a98b8392a0d595e3d199e1cfaa8e08c0a181ec6c440e4"
+  },
+  {
+    "path": ".claude/commands/replicate.md",
+    "source": ".claude/commands/replicate.md",
+    "mode": "inherited symlink",
+    "sha256": "165d7b3c0606be6817893b53cbfc5ca55c7b81cbe35cbdd0dccf8679d702e81a"
+  },
+  {
+    "path": ".claude/commands/run.md",
+    "source": ".claude/commands/run.md",
+    "mode": "inherited symlink",
+    "sha256": "87144dfe8c56c15ba7c117daa544d8a08b84d7205f21dafcc48d27c6c3995059"
+  },
+  {
+    "path": ".claude/commands/start.md",
+    "source": ".claude/commands/start.md",
+    "mode": "inherited symlink",
+    "sha256": "fb8a7762f4073b9e8689dec3830680907efb9ec68bb2faa39b8a547793d9a078"
+  },
+  {
+    "path": ".claude/hooks/autocommit-insights.cjs",
+    "source": ".claude/hooks/autocommit-insights.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/autocommit-plans.cjs",
+    "source": ".claude/hooks/autocommit-plans.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/autocommit-roadmap.cjs",
+    "source": ".claude/hooks/autocommit-roadmap.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/capture-source-path.cjs",
+    "source": ".claude/hooks/capture-source-path.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/check-canon.cjs",
+    "source": ".claude/hooks/check-canon.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/check-docs-complete.cjs",
+    "source": ".claude/hooks/check-docs-complete.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/check-embed-contract.cjs",
+    "source": ".claude/hooks/check-embed-contract.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/check-external-deps.cjs",
+    "source": ".claude/hooks/check-external-deps.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/check-file-ownership.cjs",
+    "source": ".claude/hooks/check-file-ownership.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/check-growth-trace.cjs",
+    "source": ".claude/hooks/check-growth-trace.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/check-handoff-manifest.cjs",
+    "source": ".claude/hooks/check-handoff-manifest.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/check-job-contract.cjs",
+    "source": ".claude/hooks/check-job-contract.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/check-look-origin.cjs",
+    "source": ".claude/hooks/check-look-origin.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/check-look-trace.cjs",
+    "source": ".claude/hooks/check-look-trace.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/check-metric-source.cjs",
+    "source": ".claude/hooks/check-metric-source.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/check-model-cost.cjs",
+    "source": ".claude/hooks/check-model-cost.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/check-ports.cjs",
+    "source": ".claude/hooks/check-ports.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/check-review-contract.cjs",
+    "source": ".claude/hooks/check-review-contract.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/check-source-version.cjs",
+    "source": ".claude/hooks/check-source-version.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/check-swarm-receipts.cjs",
+    "source": ".claude/hooks/check-swarm-receipts.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/check-webhook-contract.cjs",
+    "source": ".claude/hooks/check-webhook-contract.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/session-insights.cjs",
+    "source": ".claude/hooks/session-insights.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/state-update.cjs",
+    "source": ".claude/hooks/state-update.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/statusline.cjs",
+    "source": ".claude/hooks/statusline.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/hooks/write-insight.cjs",
+    "source": ".claude/hooks/write-insight.cjs",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/rules/cost-of-detection-ladder.md",
+    "source": ".claude/rules/cost-of-detection-ladder.md",
+    "mode": "inherited symlink",
+    "sha256": "f15309ee8f1494478ff7678380dbe8fc8eecd154be36d57c9090cd17126a07da"
+  },
+  {
+    "path": ".claude/rules/docker-ports.md",
+    "source": ".claude/rules/docker-ports.md",
+    "mode": "inherited symlink",
+    "sha256": "59eb430f29dd762e8b76ad6d1177fe8b5b250de007856c743387cb88ee157942"
+  },
+  {
+    "path": ".claude/rules/embeddable-widget.md",
+    "source": ".claude/rules/embeddable-widget.md",
+    "mode": "inherited symlink",
+    "sha256": "0159224f8e9599b67a860738bb42e3e40adf598176c48ea6c86a01c891f0f18c"
+  },
+  {
+    "path": ".claude/rules/feature-lifecycle.md",
+    "source": ".claude/rules/feature-lifecycle.md",
+    "mode": "inherited symlink",
+    "sha256": "4e926f84f244feb6824114a0624733738669c93e0508693fa2afa4e9a35c2aa3"
+  },
+  {
+    "path": ".claude/rules/git-workflow.md",
+    "source": ".claude/rules/git-workflow.md",
+    "mode": "inherited symlink",
+    "sha256": "7d8d2ded47fcc0fb95da3dc226efa6cb3c80d6adf7296977588c181dfce20192"
+  },
+  {
+    "path": ".claude/rules/honest-configuration.md",
+    "source": ".claude/rules/honest-configuration.md",
+    "mode": "inherited symlink",
+    "sha256": "851bc28e9e2baf1043bc09b982f3df3431bc7af1e076f8ff9df3d6729835bad5"
+  },
+  {
+    "path": ".claude/rules/incoming-webhooks.md",
+    "source": ".claude/rules/incoming-webhooks.md",
+    "mode": "inherited symlink",
+    "sha256": "92f3de02814ed0610df644acf554f4b41b2bae2f9d281695e2e217a1d6558e84"
+  },
+  {
+    "path": ".claude/rules/insights-capture.md",
+    "source": ".claude/rules/insights-capture.md",
+    "mode": "inherited symlink",
+    "sha256": "d529e6be79178636ca362d83366b1dd7a843371e8ba4f2b09d65c009fab52dc4"
+  },
+  {
+    "path": ".claude/rules/long-running-job.md",
+    "source": ".claude/rules/long-running-job.md",
+    "mode": "inherited symlink",
+    "sha256": "e6bd0efff89338998d34440a94dc9288cf7bcf790b27bcaa51b83d43f57942ed"
+  },
+  {
+    "path": ".claude/rules/model-call-cost.md",
+    "source": ".claude/rules/model-call-cost.md",
+    "mode": "inherited symlink",
+    "sha256": "26c3b20ac3ed7f9cf6deb5e94302ade87f9e3e51fffca7ac2377ff31bc144f34"
+  },
+  {
+    "path": ".claude/rules/replicate-pipeline.md",
+    "source": ".claude/rules/replicate-pipeline.md",
+    "mode": "inherited symlink",
+    "sha256": "13bf073273820addeb87167402495b2f683cefac70a9f6cb07b6e054b1851e0f"
+  },
+  {
+    "path": ".claude/rules/skill-interface-protocol.md",
+    "source": ".claude/rules/skill-interface-protocol.md",
+    "mode": "inherited symlink",
+    "sha256": "c3f624d0a8a4c7e0f5744e529eb4486cc0589fdb732b9799bccc75091a6d63ca"
+  },
+  {
+    "path": ".claude/rules/swarm-file-evidence.md",
+    "source": ".claude/rules/swarm-file-evidence.md",
+    "mode": "inherited symlink",
+    "sha256": "c71a216dbc3fd633c30949823ceac354f8439b96279a1a8dd606afb1b3ef5c45"
+  },
+  {
+    "path": ".claude/settings.json",
+    "source": ".claude/settings.json",
+    "mode": "inherited manifest only; no project hook registration"
+  },
+  {
+    "path": ".claude/skills/brutal-honesty-review",
+    "source": ".claude/skills/brutal-honesty-review",
+    "mode": "inherited symlink",
+    "sha256": "f49957f8bac6b55ab49bb953867b1aa3d6d658f4a1d24eddec5b05a71a07da54"
+  },
+  {
+    "path": ".claude/skills/cc-toolkit-generator-enhanced",
+    "source": ".claude/skills/cc-toolkit-generator-enhanced",
+    "mode": "inherited symlink",
+    "sha256": "ef4f8901f49f7fbb7db0c2994973c42840e3e909f1585c70a4f7442752b41265"
+  },
+  {
+    "path": ".claude/skills/explore",
+    "source": ".claude/skills/explore",
+    "mode": "inherited symlink",
+    "sha256": "2473e7961845db0d64566cd42627b374d1830664b9e302058a1b1aa466bc7361"
+  },
+  {
+    "path": ".claude/skills/goap-research-ed25519",
+    "source": ".claude/skills/goap-research-ed25519",
+    "mode": "inherited symlink",
+    "sha256": "c6503749a8bd8222d63542831c2003e16f1bc0239dd903d59a934cd2ff40d1c9"
+  },
+  {
+    "path": ".claude/skills/knowledge-extractor",
+    "source": ".claude/skills/knowledge-extractor",
+    "mode": "inherited symlink",
+    "sha256": "3ac6d9832dd263eba21ccadb091e845dc2cfcb656c4cda447f744e16f96870c7"
+  },
+  {
+    "path": ".claude/skills/pipeline-forge",
+    "source": ".claude/skills/pipeline-forge",
+    "mode": "inherited symlink",
+    "sha256": "66a135c30ed384b4db8088571735c8333b2bc8f06e736fda6075f8e17e59291c"
+  },
+  {
+    "path": ".claude/skills/problem-solver-enhanced",
+    "source": ".claude/skills/problem-solver-enhanced",
+    "mode": "inherited symlink",
+    "sha256": "031378aa2e10c98928e35de07d454135e73550cd0c49f0cd886d53e4208d6b9f"
+  },
+  {
+    "path": ".claude/skills/requirements-validator",
+    "source": ".claude/skills/requirements-validator",
+    "mode": "inherited symlink",
+    "sha256": "b4b394adf08feee552f39c83331398f119e0d4abf21e683fe4706da438b4a426"
+  },
+  {
+    "path": ".claude/skills/reverse-engineering-unicorn",
+    "source": ".claude/skills/reverse-engineering-unicorn",
+    "mode": "inherited symlink",
+    "sha256": "20d6b667971f9749d091c1d47e2f75df957f259647cbb861ac54174280096c71"
+  },
+  {
+    "path": ".claude/skills/sparc-prd-mini",
+    "source": ".claude/skills/sparc-prd-mini",
+    "mode": "inherited symlink",
+    "sha256": "b663793d1e1d1de028f91f2e266a191811bb610f97a12be7f95d62327589d53a"
+  }
+]

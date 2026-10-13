@@ -1,0 +1,30 @@
+{
+  "scope": "DELETE ONLY exact sealed A13 owned three synthetic tenants in n7f11_a8 after identity/physical/runtime/session/foreignrow checks and exact preserved expired logicalclaim verification; no protectedDB",
+  "files": [
+    {
+      "path": "/tmp/n7-f11-a14-coordinator-cleanup/cleanup.mjs",
+      "sha256": "89e402dd608b50dd6c6ab4753284e60be269eb669db14b67bc3d793d60b573ed",
+      "bytes": 4219
+    },
+    {
+      "path": "/tmp/n7-f11-a14-coordinator-cleanup/guard.mjs",
+      "sha256": "51489c0df345b70214a08f95ee8be63c74d4d50abf1475d649a32c1f9de0cf5d",
+      "bytes": 4256
+    },
+    {
+      "path": "/tmp/n7-f11-context-verify-a13/owned-partial-cohort-identities.json",
+      "sha256": "3113f4fb8c2f8612371ab662a130cebc2ae44f09ce3722fe0215bbd3d3ce8e55",
+      "bytes": 11816
+    },
+    {
+      "path": "/tmp/n7-f11-context-verify-a13/remaining-body-claim.json",
+      "sha256": "6a26100f3a8c64d1f6a526e2bd22b091a3227659f952b419f2e715997bfab7d1",
+      "bytes": 1100
+    },
+    {
+      "path": "/tmp/n7-f11-context-verify-a11/database-ownership-lease.json",
+      "sha256": "a876c612b39ec8624310fc0ceb8c8863e2933034a848aec40f320b0399b8d950",
+      "bytes": 1569
+    }
+  ]
+}

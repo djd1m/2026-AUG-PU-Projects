@@ -1,0 +1,125 @@
+{
+  "source_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
+  "actualWorker": {
+    "pid": 300309,
+    "startTicks": "128376060",
+    "outcome": {
+      "code": 0,
+      "signal": null,
+      "utc": "2026-10-07T08:12:49.675Z",
+      "monotonicNs": "1283779675311579"
+    },
+    "joined": {
+      "utc": "2026-10-07T08:12:49.675Z",
+      "monotonicNs": "1283779675385249"
+    }
+  },
+  "signal": [
+    {
+      "pid": 300309,
+      "startTicks": "128376060",
+      "signal": "SIGTERM",
+      "sent": true,
+      "utc": "2026-10-07T08:12:49.559Z",
+      "monotonicNs": "1283779558736858"
+    }
+  ],
+  "allOpenedAdmissions": [
+    {
+      "event": "8c638ed7-13a2-431f-af97-e0988e83c46a",
+      "mailbox": "1391f942-5bd1-4a78-8986-4b953d71361d",
+      "owner": "a6c95861-398e-40cb-9992-e4ebf3b66ad8",
+      "generation": "1",
+      "windowStart": "2026-10-07T08:12:49.044Z",
+      "windowEnd": "2026-10-07T08:13:01.044Z",
+      "openedAt": "2026-10-07T08:12:49.067Z",
+      "openedAfterSignal": false,
+      "sequence": 297
+    },
+    {
+      "event": "75ac1a41-d3d9-4be6-a299-c1c74aabf132",
+      "mailbox": "1269fade-a9df-428c-93c3-5acd691fb9e3",
+      "owner": "a402dbf9-3728-47f9-98c9-8a256c39bb47",
+      "generation": "1",
+      "windowStart": "2026-10-07T08:12:49.069Z",
+      "windowEnd": "2026-10-07T08:13:01.069Z",
+      "openedAt": "2026-10-07T08:12:49.088Z",
+      "openedAfterSignal": false,
+      "sequence": 315
+    },
+    {
+      "event": "a685174c-bf02-41a5-8587-84946e7318aa",
+      "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+      "owner": "85e9f6b2-86b1-44ed-a296-25b58a67c1f2",
+      "generation": "1",
+      "windowStart": "2026-10-07T08:12:49.538Z",
+      "windowEnd": "2026-10-07T08:13:01.538Z",
+      "openedAt": "2026-10-07T08:12:49.566Z",
+      "openedAfterSignal": true,
+      "sequence": 336
+    }
+  ],
+  "residual": [
+    {
+      "id": "a685174c-bf02-41a5-8587-84946e7318aa",
+      "mailbox_id": "35ad397d-5151-409b-b746-c7b215683911",
+      "capture_state": "claimed",
+      "capture_phase": "metadata",
+      "window_start": "2026-10-07T08:12:49.538Z",
+      "window_end": "2026-10-07T08:13:01.538Z",
+      "lease_until": "2026-10-07T08:13:01.538Z",
+      "owner_id": "85e9f6b2-86b1-44ed-a296-25b58a67c1f2",
+      "generation": "1",
+      "has_phase_metadata": false,
+      "has_content": false
+    }
+  ],
+  "physical": [],
+  "interruptedTerminal": [
+    {
+      "id": "8c638ed7-13a2-431f-af97-e0988e83c46a",
+      "capture_state": "held",
+      "state": "held",
+      "reason": "capture_cancelled",
+      "owner_id": null,
+      "lease_until": null,
+      "terminal_at": "2026-10-07T08:12:49.598Z",
+      "expires_at": "2026-10-08T08:12:49.598Z",
+      "created_at": "2026-10-07T08:12:38.929Z",
+      "phase_metadata": null,
+      "phase_revision": null,
+      "phase_mailbox_revision": null,
+      "retention_valid": true
+    }
+  ],
+  "nativePhaseStarts": [
+    {
+      "connection": 94,
+      "mailbox": "1269fade-a9df-428c-93c3-5acd691fb9e3",
+      "phase": "phase_start",
+      "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+      "utc": "2026-10-07T08:12:49.507Z",
+      "monotonicMs": 22892.807762
+    },
+    {
+      "connection": 95,
+      "mailbox": "1391f942-5bd1-4a78-8986-4b953d71361d",
+      "phase": "phase_start",
+      "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+      "utc": "2026-10-07T08:12:49.510Z",
+      "monotonicMs": 22896.123683
+    }
+  ],
+  "allNativeSocketsClosed": true,
+  "residualNativeStartAbsence": [
+    {
+      "event": "a685174c-bf02-41a5-8587-84946e7318aa",
+      "mailbox": "35ad397d-5151-409b-b746-c7b215683911",
+      "BODY_phase_starts": 0
+    }
+  ],
+  "observerGaps": [],
+  "observedSeam": "finish can complete admission after abort; aborted yield disposes physical unused slot only; unstarted logical owner/generation persists",
+  "minimalNextExecutor": "gpt-6.1-sol MEDIUM; runtime/store.ts logical exact-owner/gen disposal; context-store.ts preadmitted early-abort cleanup; runtime/loop.ts only if required; existing protocol tests deterministic finish/entry abort counterproof",
+  "importantDistinction": "actual trusted fixture sends generic abort, so physically interrupted BODY terminal held is correct; planned native drain capability qualified pending is separate"
+}

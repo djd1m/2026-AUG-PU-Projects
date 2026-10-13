@@ -1,0 +1,34 @@
+[
+  {
+    "command": "Python AST scripts/ui/f06-run.py",
+    "exit": 0
+  },
+  {
+    "command": "Python AST scripts/ui/f06-audit.py",
+    "exit": 0
+  },
+  {
+    "command": "Python AST scripts/check-f06b-r1-snapshot.py",
+    "exit": 0
+  },
+  {
+    "command": "Python AST scripts/check-f06b-r1-mutation.py",
+    "exit": 0
+  },
+  {
+    "command": "node --check scripts/ui/f06-fixture.mjs",
+    "exit": 0
+  },
+  {
+    "command": "node --check scripts/ui/f06-unsubscribe-probe.mjs",
+    "exit": 0
+  },
+  {
+    "command": "git diff --check",
+    "exit": 0
+  },
+  {
+    "command": "changed scripts <500 lines",
+    "exit": 0
+  }
+]

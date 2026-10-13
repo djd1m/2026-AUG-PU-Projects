@@ -1,0 +1,59 @@
+{
+  "utc": "2026-10-06T22:50:05.457133+00:00",
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "source_head": "db50798a76a97fed75931544f24cd1181ff082d8",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "elapsed_seconds": 1094.294677,
+  "positive_F09_exact5_native_exit": 0,
+  "combined_material_caught": 22,
+  "combined_material_total": 25,
+  "slot_material_caught": 5,
+  "slot_material_total": 5,
+  "timeout_case": "atomic-cancel-unused-leak",
+  "timeout_counted_caught": false,
+  "restored_timeout_fixture_actual_exit": 0,
+  "remaining": [
+    "cancellation witness diagnosis",
+    "runtime result fence mutation",
+    "transport result fence mutation",
+    "isolated abort-seam mutation",
+    "separate fresh HIGH source review"
+  ],
+  "ownership_sha256": "0ddbc1782dbe80322f6a7bf82bc9b40b7616b477501ec7f2192ed210da0e9e0d",
+  "material_reconciliation_sha256": "ac18c1ab3d3e1aa1977e8de9ec3feb01a3eb3355e90c255f25906be011546130",
+  "canary_sha256": "8a63d4e1c6b63bf5ef61441934e970e5fa900b83bc2f96e6bc1c893905b18464",
+  "canary": {
+    "authorized_secret_files_read_exact": 5,
+    "raw_or_nested_long_string_count": 6,
+    "bounded_variant_count": 25,
+    "file_count": 1580,
+    "runtime_secret_variant_hits": 0,
+    "literal_marker_numeric_counts_outputs": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "private_PEM_numeric_counts_outputs": 0,
+    "runtime_canary_pass": true,
+    "generic_private_scan_pass": true,
+    "scope_gaps": [
+      "postscan receipt/context/artifactmanifest metadata unscanned",
+      "terminal tool transcripts outside ownregularartifacts are not a genericsecret/private scanner",
+      "runtime canary and generic privatePEM check are separate claims"
+    ]
+  },
+  "source_build_sql_unchanged": true,
+  "owned_nodes_joined": true,
+  "DB_slots_claims_sessions_zero": true,
+  "mutex_released": true,
+  "verification_result": "completed checks PASS, unresolved mandatory gates retained",
+  "product_acceptance": false,
+  "predecessor_unchanged_green_reuse": "A32 all9 native0 stages via verified raw manifest and exact source120/build73/sql15/current protected dependency path; no canonical/fullPG/unit/physical repeat"
+}

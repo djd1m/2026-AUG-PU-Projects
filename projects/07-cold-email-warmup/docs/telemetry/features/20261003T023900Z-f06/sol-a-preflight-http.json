@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-03T03:03:12.707542+00:00",
+  "status": "ready",
+  "source_revision": "27608099a7b58473d953f88153313033622fa1a9",
+  "source_sha256": "9d8687754a8c85dada747898492e72f71f53582bcfb388bf981c7e3bbe7a3574",
+  "build_revision": "27608099a7b58473d953f88153313033622fa1a9",
+  "build_sha256": "b9a214109bef0d428a4609960962782d2631abcb2bb1d311d44084934a403e5a",
+  "image_id": "sha256:79c996d66355dbdd6d2d87b4fb5e0723d4d899651b798b1ce6d34a1d98b7ecf9",
+  "environment": "own n7f06a loopback18709 privatePG CPU2",
+  "environment_available": true,
+  "inputs": [
+    {
+      "name": "random external runtime key files",
+      "available": true
+    },
+    {
+      "name": "accepted TEST fixtures and realPG suite",
+      "available": true
+    }
+  ],
+  "test_command": "docker compose -p n7f06a exec -T web npm run test:integration",
+  "expected_effects": [
+    "own DB fixture tenant resets only",
+    "no external SMTP/IMAP/charge"
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "docs/telemetry/features/20261003T023900Z-f06"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

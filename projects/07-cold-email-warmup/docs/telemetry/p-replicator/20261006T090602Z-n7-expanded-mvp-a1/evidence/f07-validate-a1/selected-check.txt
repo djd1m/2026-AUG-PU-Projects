@@ -1,0 +1,9 @@
+COMMAND: ['bash', '/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh', '/tmp/n7-f07-validate-selected-4lp2c1ty', '--traceability', '--report-revision', '--criterion-scenarios', '--role-map-source', '/tmp/n7-f07-plan-20261006/.claude/commands/feature.md', '--project-role-map-source', '/tmp/n7-f07-plan-20261006/.claude/skills/sparc-prd-mini/SKILL.md']
+TRACE contour=f07-connected-capacity specification=/tmp/n7-f07-validate-selected-4lp2c1ty/docs/features/f07-connected-capacity/01_specification.md pseudocode=/tmp/n7-f07-validate-selected-4lp2c1ty/docs/features/f07-connected-capacity/02_pseudocode.md
+COUNT requirements=8 algorithms=8 missing-algorithm=0 orphan-algorithm=0
+PASS contour=f07-connected-capacity bidirectional traceability complete
+VERDICT traceability=PASS features=1 gaps=0 inconclusive=0
+VERDICT report-revision=PASS features=1 gaps=0 inconclusive=0
+VERDICT criterion-scenarios=PASS features=1 gaps=0 inconclusive=0
+
+Exit: 0

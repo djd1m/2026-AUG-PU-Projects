@@ -1,0 +1,116 @@
+[
+  {
+    "name": "uid-mismatch-as-error",
+    "title": "full poll captures a reset between snapshot and read and incomplete entry performs no IO",
+    "file": "tests/f09-live-transport-a36-{mode}.test.ts",
+    "budget_s": 30,
+    "predicate": "typed change proof returns scanning, authenticated read ends before old FETCH",
+    "changes": [
+      {
+        "path": "src/replies/imap.ts",
+        "old": "if(snapshot.uidvalidity!==expectedValidity)return {kind:'uidvalidity_changed',snapshot};",
+        "new": "if(snapshot.uidvalidity!==expectedValidity)throw invalid();"
+      },
+      {
+        "path": "dist/replies/imap.js",
+        "old": "if (snapshot.uidvalidity !== expectedValidity)\n            return { kind: 'uidvalidity_changed', snapshot };",
+        "new": "if (snapshot.uidvalidity !== expectedValidity) throw invalid();"
+      }
+    ]
+  },
+  {
+    "name": "uid-accept-old-fetch-relabel",
+    "title": "full poll captures a reset between snapshot and read and incomplete entry performs no IO",
+    "file": "tests/f09-live-transport-a36-{mode}.test.ts",
+    "budget_s": 30,
+    "predicate": "old-generation FETCH/page is forbidden once EXAMINE proves changed generation",
+    "changes": [
+      {
+        "path": "src/replies/imap.ts",
+        "old": "if(snapshot.uidvalidity!==expectedValidity)return {kind:'uidvalidity_changed',snapshot};",
+        "new": "/* mutant accepts old generation after changed EXAMINE */"
+      },
+      {
+        "path": "dist/replies/imap.js",
+        "old": "if (snapshot.uidvalidity !== expectedValidity)\n            return { kind: 'uidvalidity_changed', snapshot };",
+        "new": "/* mutant accepts old generation after changed EXAMINE */"
+      }
+    ]
+  },
+  {
+    "name": "uid-second-snapshot",
+    "title": "explicit retry captures changed native UID proof in one quantum without old FETCH or freshness",
+    "file": "tests/f10-runtime-protocol-a36-{mode}.test.ts",
+    "budget_s": 65,
+    "predicate": "one native quantum performs exactly one EXAMINE and no added snapshot after read change proof",
+    "changes": [
+      {
+        "path": "src/replies/worker.ts",
+        "old": "if(read.kind==='uidvalidity_changed'){run=await this.store.capture(tenant,mailbox,read.snapshot,guard,identity(run));",
+        "new": "if(read.kind==='uidvalidity_changed'){await this.adapter.snapshot(tenant,mailbox,signal);run=await this.store.capture(tenant,mailbox,read.snapshot,guard,identity(run));"
+      },
+      {
+        "path": "dist/replies/worker.js",
+        "old": "if (read.kind === 'uidvalidity_changed') {\n                run = await this.store.capture(tenant, mailbox, read.snapshot, guard, identity(run));",
+        "new": "if (read.kind === 'uidvalidity_changed') {\n                await this.adapter.snapshot(tenant, mailbox, signal);\n                run = await this.store.capture(tenant, mailbox, read.snapshot, guard, identity(run));"
+      }
+    ]
+  },
+  {
+    "name": "uid-retry-tail-cursor-reset",
+    "title": "A36 explicit retry preserves fixed tail cursor horizon and run identity",
+    "file": "tests/a36-retry-{mode}.test.ts",
+    "budget_s": 20,
+    "predicate": "real PG explicit retry retains tail30,cursor20,high10,sameRun, incrementsattempt2/pages0; observer extracted from existing R1 empty/sparse tail subtest",
+    "changes": [
+      {
+        "path": "src/replies/store.ts",
+        "old": "UPDATE reply_rescan SET state='scanning',attempt=attempt+1,pages=0,attempt_started_at=$3 WHERE tenant_id=$1 AND mailbox_id=$2 RETURNING *",
+        "new": "UPDATE reply_rescan SET state='scanning',attempt=attempt+1,pages=0,attempt_started_at=$3,tail_high_water=NULL,cursor_uid=0 WHERE tenant_id=$1 AND mailbox_id=$2 RETURNING *"
+      },
+      {
+        "path": "dist/replies/store.js",
+        "old": "UPDATE reply_rescan SET state='scanning',attempt=attempt+1,pages=0,attempt_started_at=$3 WHERE tenant_id=$1 AND mailbox_id=$2 RETURNING *",
+        "new": "UPDATE reply_rescan SET state='scanning',attempt=attempt+1,pages=0,attempt_started_at=$3,tail_high_water=NULL,cursor_uid=0 WHERE tenant_id=$1 AND mailbox_id=$2 RETURNING *"
+      }
+    ]
+  },
+  {
+    "name": "uid-false-freshness-reset-success",
+    "title": "full poll captures a reset between snapshot and read and incomplete entry performs no IO",
+    "file": "tests/f09-live-transport-a36-{mode}.test.ts",
+    "budget_s": 30,
+    "predicate": "reset capture leaves scan_complete false and never supplies completed_at freshness",
+    "changes": [
+      {
+        "path": "src/replies/store.ts",
+        "old": "ON CONFLICT(mailbox_id) DO UPDATE SET scan_complete=false,uidvalidity=$2,cursor_uid=$3",
+        "new": "ON CONFLICT(mailbox_id) DO UPDATE SET scan_complete=true,completed_at=clock_timestamp(),uidvalidity=$2,cursor_uid=$3"
+      },
+      {
+        "path": "dist/replies/store.js",
+        "old": "ON CONFLICT(mailbox_id) DO UPDATE SET scan_complete=false,uidvalidity=$2,cursor_uid=$3",
+        "new": "ON CONFLICT(mailbox_id) DO UPDATE SET scan_complete=true,completed_at=clock_timestamp(),uidvalidity=$2,cursor_uid=$3"
+      }
+    ]
+  },
+  {
+    "name": "uid-explicit-retry-bypass",
+    "title": "full poll captures a reset between snapshot and read and incomplete entry performs no IO",
+    "file": "tests/f09-live-transport-a36-{mode}.test.ts",
+    "budget_s": 30,
+    "predicate": "ordinary full polling holds incomplete with zero IO until explicit authorized retry; mutate to forbidden auto-retry",
+    "changes": [
+      {
+        "path": "src/replies/worker.ts",
+        "old": "if(run?.state==='rescan_incomplete')return {mode:this.mode,state:run.state};",
+        "new": "if(run?.state==='rescan_incomplete')run=await this.store.retry(tenant,mailbox,identity(run));"
+      },
+      {
+        "path": "dist/replies/worker.js",
+        "old": "if (run?.state === 'rescan_incomplete')\n            return { mode: this.mode, state: run.state };",
+        "new": "if (run?.state === 'rescan_incomplete') run = await this.store.retry(tenant, mailbox, identity(run));"
+      }
+    ]
+  }
+]

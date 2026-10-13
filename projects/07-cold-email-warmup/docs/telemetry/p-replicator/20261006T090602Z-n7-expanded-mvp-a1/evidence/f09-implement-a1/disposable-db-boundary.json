@@ -1,0 +1,16 @@
+{
+  "recorded_at": "2026-10-06T13:23:55.899209+00:00",
+  "automatic_review_rejection": "Author combined test write/runtime command rejected beforeexecution because broad TRUNCATE tenant,auth_bucket CASCADE had not established disposable database authorization;120sheldsocket also noted. Commanddidnotexecute.",
+  "safe_resolution": "CREATE DATABASE n7f09_a1 OWNER n7 succeeded13:22:38UTC peractualauthorreceipt; use existing DATABASE_NAME support for all tests, assert current_database before fixtures reset. Existing default n7 remains untouched.",
+  "coordinator_readonly_proof": {
+    "container": "n7f06a-db-1",
+    "compose_project": "n7f06a",
+    "compose_service": "db",
+    "compose_config": "/tmp/n7-f06a-sol/projects/07-cold-email-warmup/docker-compose.yml",
+    "volume": "n7f06a_pg",
+    "secret_readonly_bind": "/tmp/n7-f06a-runtime/db-password",
+    "host_port_5432": null
+  },
+  "authorization": "OWN-N7-005 local protocol/PG fixtures; actual120s suspendedsocket witness independentlyrequiredbyF09-V1; no externaldial/spend/foreignresourcechanges",
+  "next": "author runs source-bound runtime fixtures against n7f09_a1, no concurrent PG mutation suites sharing that DB"
+}

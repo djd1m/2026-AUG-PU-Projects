@@ -1,0 +1,59 @@
+{
+  "checked_at": "2026-10-02T20:39:24.977388+00:00",
+  "head": "b20b45c5c0a326db64bf868d3ff64b2a4901e4e9",
+  "snapshot_sha256": "7efce69a55af38844b294428ec8fdc84c1869e91730d420a512049dd3611d4a7",
+  "snapshot_files": 30,
+  "snapshot_mismatches": [],
+  "build_different_snapshot_files": [
+    "tests/auth-unit.test.ts"
+  ],
+  "spec_sha256": "651a803c327b9b8282085d661ddcca68d7bba5e63fc67b5bc3c6faf0135cf76e",
+  "launch_sha256": "ca8629478f5908534cd20f52697ab875bb70589c3d2ead02915770debd85329e",
+  "manifest_sha256": "43820aa73a79499872dc6dd8e3536315d5562f7947d2a124480259596cb048d5",
+  "audit_vulnerabilities": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "author_runtime": {
+    "thread_id": "01a0fe42-b68e-72f1-9cdf-11cfbd005b4a",
+    "process": {
+      "exit_code": 0,
+      "pid": 2156071,
+      "started_at": "2026-10-02T20:16:19.786127+00:00",
+      "finished_at": "2026-10-02T20:35:33.281751+00:00",
+      "elapsed_seconds": 1153.4956118200207
+    },
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "host_turn_contexts": [
+      {
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "reasoning_effort": null
+      }
+    ],
+    "cli_usage": {
+      "input_tokens": 2116345,
+      "cached_input_tokens": 2019200,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 33285,
+      "reasoning_output_tokens": 7252
+    },
+    "raw_total_token_usage": {
+      "input_tokens": 2116345,
+      "cached_input_tokens": 2019200,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 33285,
+      "reasoning_output_tokens": 7252,
+      "total_tokens": 2149630
+    },
+    "cost": null,
+    "cost_basis": "unavailable",
+    "coordinator_usage": null,
+    "coordinator_actual_model": null
+  }
+}

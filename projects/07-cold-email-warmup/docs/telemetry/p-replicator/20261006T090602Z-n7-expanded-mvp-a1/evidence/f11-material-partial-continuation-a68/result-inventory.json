@@ -1,0 +1,249 @@
+[
+  {
+    "mode": "negative_empty_tail",
+    "exact_title": "F11 native empty-tail counterproofs retain old proof and restored genuine result completes",
+    "started_at": "2026-10-07T13:37:29.653174+00:00",
+    "ended_at": "2026-10-07T13:38:04.118065+00:00",
+    "native_exit": 0,
+    "actual_pass_names": [
+      "F11 native empty-tail counterproofs retain old proof and restored genuine result completes"
+    ],
+    "actual_failed_names": [],
+    "actual_callback_count": 1,
+    "journal_invocations": 1,
+    "journal_records": 8,
+    "journal_complete": true,
+    "status": "PASS",
+    "post_own": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    },
+    "all_prior_fulltables_unchanged": true,
+    "schema": "n7_a68_negative_empty_tail_261007133225",
+    "raw_sha256": "762b29335e59312d06b7e705bb4dd663c5a1f88a334b9a5475c7dfd3721eb50f"
+  },
+  {
+    "mode": "closure_crosses_window",
+    "exact_title": "F11 A40 process drain closure_crosses_window original window",
+    "started_at": "2026-10-07T13:38:04.118508+00:00",
+    "ended_at": "2026-10-07T13:38:36.890430+00:00",
+    "native_exit": 0,
+    "actual_pass_names": [
+      "F11 A40 process drain closure_crosses_window original window"
+    ],
+    "actual_failed_names": [],
+    "actual_callback_count": 1,
+    "journal_invocations": 1,
+    "journal_records": 8,
+    "journal_complete": true,
+    "status": "PASS",
+    "post_own": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    },
+    "all_prior_fulltables_unchanged": true,
+    "schema": "n7_a68_closure_crosses_window_261007133225",
+    "raw_sha256": "4cb6d5b4d1a015f215842a3b395d9093aeed54590724a36e952159aa3396d51a"
+  },
+  {
+    "mode": "restart_crosses_window",
+    "exact_title": "F11 A40 process drain restart_crosses_window original window",
+    "started_at": "2026-10-07T13:38:36.895509+00:00",
+    "ended_at": "2026-10-07T13:39:07.165937+00:00",
+    "native_exit": 0,
+    "actual_pass_names": [
+      "F11 A40 process drain restart_crosses_window original window"
+    ],
+    "actual_failed_names": [],
+    "actual_callback_count": 1,
+    "journal_invocations": 1,
+    "journal_records": 8,
+    "journal_complete": true,
+    "status": "PASS",
+    "post_own": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    },
+    "all_prior_fulltables_unchanged": true,
+    "schema": "n7_a68_restart_crosses_window_261007133225",
+    "raw_sha256": "43ff7b44480c00e3c80ac85278233293bbc703f98e496bc98d2a2c9e66a9baee"
+  },
+  {
+    "mode": "header_normal",
+    "exact_title": "F11 A40 ordinary HEADER-only READY empty tail needs no pending capture",
+    "started_at": "2026-10-07T13:40:06.116830+00:00",
+    "ended_at": "2026-10-07T13:40:32.888771+00:00",
+    "native_exit": 0,
+    "actual_pass_names": [
+      "F11 A40 ordinary HEADER-only READY empty tail needs no pending capture"
+    ],
+    "actual_failed_names": [],
+    "actual_callback_count": 1,
+    "journal_invocations": 1,
+    "journal_records": 8,
+    "journal_complete": true,
+    "journal_not_applicable": false,
+    "status": "PASS",
+    "post_own": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    },
+    "all_prior_fulltables_unchanged": true,
+    "schema": "n7_a68_header_normal_261007133225",
+    "raw_sha256": "f88d268c6adec3eab0963b1011d4126a5c5b41ada44b4ddb1ed5db05e6ee6ba2"
+  },
+  {
+    "mode": "native_decreased_uidnext",
+    "exact_title": "F11 ordinary HEADER material native_decreased_uidnext",
+    "started_at": "2026-10-07T13:40:32.890319+00:00",
+    "ended_at": "2026-10-07T13:40:56.666414+00:00",
+    "native_exit": 0,
+    "actual_pass_names": [
+      "F11 ordinary HEADER material native_decreased_uidnext"
+    ],
+    "actual_failed_names": [],
+    "actual_callback_count": 1,
+    "journal_invocations": 1,
+    "journal_records": 8,
+    "journal_complete": true,
+    "journal_not_applicable": false,
+    "status": "PASS",
+    "post_own": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    },
+    "all_prior_fulltables_unchanged": true,
+    "schema": "n7_a68_native_decreased_uidnext_261007133225",
+    "raw_sha256": "a004a5e8346dce0d1b384b5689fdbc3da976f2c401081439363cf7823780a3d5"
+  },
+  {
+    "mode": "native_uidvalidity_reset",
+    "exact_title": "F11 ordinary HEADER material native_uidvalidity_reset",
+    "started_at": "2026-10-07T13:40:56.667165+00:00",
+    "ended_at": "2026-10-07T13:41:17.890728+00:00",
+    "native_exit": 0,
+    "actual_pass_names": [
+      "F11 ordinary HEADER material native_uidvalidity_reset"
+    ],
+    "actual_failed_names": [],
+    "actual_callback_count": 1,
+    "journal_invocations": 1,
+    "journal_records": 8,
+    "journal_complete": true,
+    "journal_not_applicable": false,
+    "status": "PASS",
+    "post_own": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    },
+    "all_prior_fulltables_unchanged": true,
+    "schema": "n7_a68_native_uidvalidity_reset_261007133225",
+    "raw_sha256": "b6a7b4dc63b66af54df24f151649f7a8a76ac220ef6bed54cf95eb9e49a88630"
+  },
+  {
+    "mode": "native_missing_snapshot",
+    "exact_title": "F11 ordinary HEADER material native_missing_snapshot",
+    "started_at": "2026-10-07T13:41:17.891316+00:00",
+    "ended_at": "2026-10-07T13:41:38.853526+00:00",
+    "native_exit": 0,
+    "actual_pass_names": [
+      "F11 ordinary HEADER material native_missing_snapshot"
+    ],
+    "actual_failed_names": [],
+    "actual_callback_count": 1,
+    "journal_invocations": 1,
+    "journal_records": 8,
+    "journal_complete": true,
+    "journal_not_applicable": false,
+    "status": "PASS",
+    "post_own": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    },
+    "all_prior_fulltables_unchanged": true,
+    "schema": "n7_a68_native_missing_snapshot_261007133225",
+    "raw_sha256": "ad7bbf6bdeb5cdab856168a09345cf7a539948c608c1e036ac05dc1584ba11b4"
+  },
+  {
+    "mode": "partial_prefix",
+    "exact_title": "F11 ordinary HEADER material partial_prefix",
+    "started_at": "2026-10-07T13:41:38.854531+00:00",
+    "ended_at": "2026-10-07T13:41:58.058167+00:00",
+    "native_exit": 0,
+    "actual_pass_names": [
+      "F11 ordinary HEADER material partial_prefix"
+    ],
+    "actual_failed_names": [],
+    "actual_callback_count": 1,
+    "journal_invocations": 1,
+    "journal_records": 8,
+    "journal_complete": true,
+    "journal_not_applicable": false,
+    "status": "PASS",
+    "post_own": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    },
+    "all_prior_fulltables_unchanged": true,
+    "schema": "n7_a68_partial_prefix_261007133225",
+    "raw_sha256": "64116dbd021b874aad2c73e763a0074adaa5fd4fd23e50913e3b6597862397ae"
+  },
+  {
+    "mode": "poll_incomplete",
+    "exact_title": "F11 ordinary HEADER material poll_incomplete",
+    "started_at": "2026-10-07T13:41:58.059146+00:00",
+    "ended_at": "2026-10-07T13:42:20.388157+00:00",
+    "native_exit": 0,
+    "actual_pass_names": [
+      "F11 ordinary HEADER material poll_incomplete"
+    ],
+    "actual_failed_names": [],
+    "actual_callback_count": 1,
+    "journal_invocations": 1,
+    "journal_records": 8,
+    "journal_complete": true,
+    "journal_not_applicable": false,
+    "status": "PASS",
+    "post_own": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    },
+    "all_prior_fulltables_unchanged": true,
+    "schema": "n7_a68_poll_incomplete_261007133225",
+    "raw_sha256": "7a50af40087eaac7400f31457932eb1b1a6a84a806e10627812d9f373c9a48ae"
+  },
+  {
+    "mode": "stale_header_grant",
+    "exact_title": "F11 ordinary HEADER material stale_header_grant",
+    "started_at": "2026-10-07T13:42:20.389365+00:00",
+    "ended_at": "2026-10-07T13:42:44.829734+00:00",
+    "native_exit": 0,
+    "actual_pass_names": [
+      "F11 ordinary HEADER material stale_header_grant"
+    ],
+    "actual_failed_names": [],
+    "actual_callback_count": 1,
+    "journal_invocations": 1,
+    "journal_records": 8,
+    "journal_complete": true,
+    "journal_not_applicable": false,
+    "status": "PASS",
+    "post_own": {
+      "physical": 0,
+      "runtime_claims": 0,
+      "body_claims": 0
+    },
+    "all_prior_fulltables_unchanged": true,
+    "schema": "n7_a68_stale_header_grant_261007133225",
+    "raw_sha256": "6eda736fd00e0641f80473b1606d3008c517379db829c774264752adc3400be1"
+  }
+]

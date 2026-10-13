@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-06T18:26:04.889858+00:00",
+  "status": "ready",
+  "source": "runtime a8d4 unchanged; two authorized F09 test files SHA bound",
+  "source_sha": {
+    "tests/f09-transport-fixture.ts": "8c257e75d6d2dde2b0d00b4a27c25dcf843eb08efc6b34e6bac334c5b8c89dc5",
+    "tests/f09-live-transport.test.ts": "6b77fe26061e4d372954fcf8837de2efeb93a4f64deeb1f7711399045e6b4395"
+  },
+  "guard_sha": "0e40094d148dd350f2b007850093d75bd3f96e006d5f49a5cbe252a24b1d4e8b",
+  "build": "existing a8d4 compiled runtime; F09 tests/source executed through tsx",
+  "command": "node --import tsx --test --test-concurrency=1 --test-name-pattern=transport grants|final live submission|UID reset|independent capacity|expired slot age|native pool fixture uses canonical tests/f09-live-transport.test.ts",
+  "inputs": "current-day canonical poolfixture; old malformedkey fence; current grants/finalstop/UID atomic/nativeTLS fixtures",
+  "effects": "owned n7f10_a2 reset; exactguardPG/numericloopback TLS only; no live provider; physical120s excluded from this pattern",
+  "e2e_claim": null,
+  "external_actions_executed": false
+}

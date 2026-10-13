@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-06T22:40:30.523695+00:00",
+  "native_exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 20.623490202007815,
+  "pid": 4121271,
+  "startticks": "124941989",
+  "runner_pid": 4084682,
+  "PG": {
+    "at": "2026-10-06T22:40:30.345Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB_slots_claims_after_join": {
+    "utc": "2026-10-06T22:40:30.505Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": []
+  },
+  "owned_nodes": [],
+  "assertion_failure": true,
+  "failure_titles": [
+    "not ok 21 - B3 durable rendered sink/token/message refs with own OR intended pool peer read only",
+    "not ok 1 - F03b real PG durable final authority, all stop races, sink privacy and outcomes"
+  ],
+  "tap_sha256": "b9bd6580de93e1ff1aab224ff20f04ed79689dbe5f72de33f8df05732861c7a2",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

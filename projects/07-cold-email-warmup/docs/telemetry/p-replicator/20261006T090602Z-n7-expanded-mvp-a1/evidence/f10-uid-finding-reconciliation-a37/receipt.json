@@ -1,0 +1,28 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-uid-finding-reconciliation-a37",
+  "status": "completed",
+  "verdict": "ACCEPT",
+  "closed_findings": [
+    "F10-A35-001"
+  ],
+  "remaining_findings": [],
+  "source_revision": "db50798a76a97fed75931544f24cd1181ff082d8",
+  "spec_sha256": "410d329fcc9d433f51e554310318457096a8dfdd82aad9754e47d7122744eeb8",
+  "prior_report_sha256": "dfaaf15d614ed108a77a2cfe2fac99d107b08b5ba76e9a3570c66d5373a806e0",
+  "ack_utc": "2026-10-06T23:19:19Z",
+  "substantive_complete_and_seal_utc": "2026-10-06T23:24:04.654810+00:00",
+  "elapsed_seconds": 285.65481,
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gap": "host_not_exposed",
+  "review_scope": "six UID finding obligations; cumulative scoped F10 source/runtime acceptance with unchanged A35 conclusions",
+  "report_sha256": "27d45a5d73d5c49ae100f3275ff80843dec91f5afd03b0b04c61969b174602e9",
+  "context_manifest_sha256": "a27e00e0e1dfea40125da0b33207675d7feeb21da2df3c87774f97202363b888",
+  "next_owner": "root N7 coordinator for integration/report-contract gates/permitted delivery"
+}

@@ -1,0 +1,89 @@
+{
+  "record_created_at": "2026-10-08T06:31:06.950524+00:00",
+  "profile": "model-routing-econom",
+  "scope": [
+    "Subscription/API replacement of outbound+inbound mail transport and cold-outreach compatibility",
+    "Cloud outbound SMTP/IMAP policy and shortlist without whole-app migration"
+  ],
+  "authorization": "Owner explicitly requested separate research swarms; no purchases, registrations, provider contact, migrations or source changes authorized by this research. Existing N7 documentation commit/push authorization persists.",
+  "ac": [
+    "Official primary sources for facts/prices/policies, date08Oct2026",
+    "Distinguish SMTP sending, inbound address routing and full external inbox sync",
+    "Existing Gmail/Yandex sender compatibility labelled confirmed/unknown",
+    "Separate policy-blocked from technically supported",
+    "Cloud ports25/465/587/993/443 distinguished; never infer open ports from lack of docs",
+    "Give shortlist and proof-of-concept checks as data, do not execute paid pilot"
+  ],
+  "agents": {
+    "provider-api": "/root/n7_mail_services_research",
+    "inbox-connectors": "/root/n7_inbox_connectors_research",
+    "outreach-platforms": "/root/n7_outreach_platforms_research"
+  },
+  "cloud_agents": [
+    "/root/n7_cloud_paas_research",
+    "/root/n7_cloud_vm_research",
+    "/root/n7_cloud_regional_review"
+  ],
+  "source_revision": "cfc07594",
+  "actual_models": null,
+  "requested_research_models": "gpt-6.1-sol high",
+  "usage": null,
+  "cost": null,
+  "measurement_gaps": [
+    "Exact initial delegate launch timestamps not independently metered; this record created after initial delegation.",
+    "No authoritative actual model/token/cost counters."
+  ],
+  "dz_recall": {
+    "query": "N7 SMTP IMAP transport upstream network external provider",
+    "matches": 0
+  },
+  "status": "accepted_research_complete",
+  "service_research_status": "three reports completed",
+  "cloud_research_status": "three reports completed",
+  "synthesis_written_at": "2026-10-08T06:42:22.402132+00:00",
+  "artifact_count": 14,
+  "review_corrections": [
+    "Nylas restriction verified in section9; report section6 reference corrected",
+    "Fly ingress/outbound IP distinction preserved",
+    "Aurinko pricing discrepancy preserved"
+  ],
+  "runtime_e2e": "not_run_research_only",
+  "checks": {
+    "json_parse": "pass",
+    "local_markdown_links": "pass",
+    "secret_pattern_scan": "0_matches",
+    "live_provider_tests": "not_run",
+    "browser_e2e": "not_applicable_docs_only",
+    "git_diff_check": "pass"
+  },
+  "review_requested": {
+    "model": "gpt-6.1-sol",
+    "reasoning": "high",
+    "context": "planner AC + frozen artifacts only; no author chat"
+  },
+  "dz_teach": {
+    "id": "teach:4d322619cc2dd747",
+    "backend": "memory (@dzhechkov/memory)",
+    "store": "project .dz (--no-mirror)",
+    "exit_code": 0
+  },
+  "disk_available": "2.2GiB at verification",
+  "completed_at": "2026-10-08T06:44:20.180698+00:00",
+  "independent_review": {
+    "result": "pass",
+    "scope": "documental research only; six reports and source inventories",
+    "reviewer": "n7_mail_research_acceptance",
+    "context": "planner AC + frozen artifacts; fork none",
+    "actual_model": null,
+    "usage": null,
+    "blocking_findings": 0,
+    "remaining_unknowns": [
+      "IMAP993 live cloud access",
+      "Yandex hosted connector compatibility",
+      "AUTH/delivery",
+      "per-account service/payment availability",
+      "workflow and reseller rights"
+    ]
+  },
+  "measured_seconds_since_record_creation": 793.230174
+}

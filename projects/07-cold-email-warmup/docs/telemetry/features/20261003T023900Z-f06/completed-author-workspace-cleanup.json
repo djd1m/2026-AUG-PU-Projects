@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-03T02:42:49.919570+00:00",
+  "reason": "disk1.9GB beforeF06; onlyacceptedcompletedownwriters",
+  "rows": [
+    {
+      "path": "/tmp/n7-f04b-sol",
+      "revision": "13efec85c6a4e502c9ddd49be0684a8fdeb90f77",
+      "terminal_process": {
+        "exit_code": 0,
+        "pid": 2020763,
+        "started_at": "2026-10-03T00:15:01.832707+00:00",
+        "finished_at": "2026-10-03T00:35:36.194247+00:00",
+        "elapsed_seconds": 1234.3615439269925
+      },
+      "archive": "same absolute N7 subtree retained; now not git worktree; reproducible node_modules/dist excluded"
+    },
+    {
+      "path": "/tmp/n7-f04b-r1",
+      "revision": "d9e280b43a9610bce8634025eb8bcee2d0c8d378",
+      "terminal_process": {
+        "exit_code": 0,
+        "pid": 2567067,
+        "started_at": "2026-10-03T00:44:53.636043+00:00",
+        "finished_at": "2026-10-03T00:55:25.069289+00:00",
+        "elapsed_seconds": 631.4332955769496
+      },
+      "archive": "same absolute N7 subtree retained; now not git worktree; reproducible node_modules/dist excluded"
+    },
+    {
+      "path": "/tmp/n7-f05a-sol",
+      "revision": "9e03047b588af6ba282858da601c2ac320e0cab9",
+      "terminal_process": {
+        "exit_code": 0,
+        "pid": 2919319,
+        "started_at": "2026-10-03T01:04:50.530828+00:00",
+        "finished_at": "2026-10-03T01:23:17.837250+00:00",
+        "elapsed_seconds": 1107.3064334710361
+      },
+      "archive": "same absolute N7 subtree retained; now not git worktree; reproducible node_modules/dist excluded"
+    },
+    {
+      "path": "/tmp/n7-f05b-sol",
+      "revision": "5b1888a0de74e7aacc3878b35bce2b4330e56e42",
+      "terminal_process": {
+        "exit_code": 0,
+        "pid": 3895854,
+        "started_at": "2026-10-03T01:59:59.763064+00:00",
+        "finished_at": "2026-10-03T02:02:58.066122+00:00",
+        "elapsed_seconds": 178.30305877898354
+      },
+      "archive": "same absolute N7 subtree retained; now not git worktree; reproducible node_modules/dist excluded"
+    },
+    {
+      "path": "/tmp/n7-f05b-r1",
+      "revision": "e50ee9a9ef52be311b08a964c67644018208e806",
+      "terminal_process": {
+        "exit_code": 0,
+        "pid": 17188,
+        "started_at": "2026-10-03T02:17:11.099184+00:00",
+        "finished_at": "2026-10-03T02:28:28.612037+00:00",
+        "elapsed_seconds": 677.5128490249626
+      },
+      "archive": "same absolute N7 subtree retained; now not git worktree; reproducible node_modules/dist excluded"
+    }
+  ],
+  "absolute_trace_paths_preserved": true,
+  "immutable_dependency_target_n7_f03b_sol_untouched": true
+}

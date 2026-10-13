@@ -1,0 +1,65 @@
+{
+  "utc": "2026-10-06T23:15:01.978500+00:00",
+  "native_exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 1.2285967390052974,
+  "pid": 464387,
+  "startticks": "125151074",
+  "runner_pid": 397326,
+  "PG": {
+    "at": "2026-10-06T23:15:01.786Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB_slots_claims_after_join": {
+    "utc": "2026-10-06T23:15:01.958Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 2,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 3,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 4,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 2,
+        "occupied": false
+      }
+    ]
+  },
+  "owned_nodes": [],
+  "assertion_failure": true,
+  "failure_titles": [
+    "not ok 1 - A36 explicit retry preserves fixed tail cursor horizon and run identity"
+  ],
+  "tap_sha256": "3f67c39899a8a9289231edb5bf056ee7102605659612d168bac3519e2ef772a7",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

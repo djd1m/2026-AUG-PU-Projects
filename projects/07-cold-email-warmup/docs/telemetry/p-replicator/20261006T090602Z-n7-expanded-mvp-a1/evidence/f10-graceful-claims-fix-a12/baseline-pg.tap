@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: graceful stop after committed claim releases logical owners before lease expiry
+not ok 1 - graceful stop after committed claim releases logical owners before lease expiry
+  ---
+  duration_ms: 881.252275
+  type: 'test'
+  location: '/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-integration.test.ts:2:18840'
+  failureType: 'testCodeFailure'
+  error: |-
+    joined graceful stop must not wait 120s for committed claim
+    
+    '2' !== '0'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '0'
+  actual: '2'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-integration.test.ts:213:10)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1588.529037

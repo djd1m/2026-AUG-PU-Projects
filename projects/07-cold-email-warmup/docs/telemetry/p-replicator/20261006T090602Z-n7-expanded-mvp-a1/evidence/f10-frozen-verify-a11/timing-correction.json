@@ -1,0 +1,20 @@
+{
+  "observed_at": "2026-10-06T17:56:25.580547+00:00",
+  "receipt_preserved": true,
+  "receipt_sha256": "588a84cc79565a750bd214de1ed060bc139087d15fd9ebc4006d6a3c19dac966",
+  "author_explicit_factual_correction": true,
+  "actual_sealed_at": "2026-10-06T17:53:17.369196Z",
+  "deadline": "2026-10-06T17:53:03.202055Z",
+  "deadline_overrun_ms": 14167,
+  "freeze_overrun_ms": 20670,
+  "actual_elapsed_ms": 1214167,
+  "incorrect_receipt_claims": [
+    "terminal sealed before final deadline",
+    "Duration~19min22s"
+  ],
+  "excluded_large_raw_artifacts_retained_at": "/tmp/n7-f10-frozen-verify-a11",
+  "excluded_with_hashes": {
+    "cadence-1791308554261.json": "6ebab81367bac80ebfd81ab591756ed09e9575a7a7bb7762f55c2b4580dda3a4",
+    "cadence-partial-1791308554261.json": "1d4623beb9f88fb0f2a5b8b2741c58fb4af2ef726780349e54ec385e7b3d217b"
+  }
+}

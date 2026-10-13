@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: ImapFlow read-only UID bounded partial and hostile limits
+ok 1 - ImapFlow read-only UID bounded partial and hostile limits
+  ---
+  duration_ms: 8946.253543
+  type: 'test'
+  ...
+# Subtest: aggregate receive compatibility counterexample remains explicit
+ok 2 - aggregate receive compatibility counterexample remains explicit
+  ---
+  duration_ms: 673.73984
+  type: 'test'
+  ...
+# Subtest: verified numeric IP and hostname gates
+ok 3 - verified numeric IP and hostname gates
+  ---
+  duration_ms: 2261.565947
+  type: 'test'
+  ...
+# Subtest: SMTP public connection acceptance, exact MIME, refusals and uncertainty
+ok 4 - SMTP public connection acceptance, exact MIME, refusals and uncertainty
+  ---
+  duration_ms: 6182.010497
+  type: 'test'
+  ...
+# Subtest: stalled greeting/auth deadlines close exact children
+ok 5 - stalled greeting/auth deadlines close exact children
+  ---
+  duration_ms: 3701.415912
+  type: 'test'
+  ...
+# Subtest: additional handshake, STARTTLS-negative and body/final abort witnesses
+ok 6 - additional handshake, STARTTLS-negative and body/final abort witnesses
+  ---
+  duration_ms: 4737.757191
+  type: 'test'
+  ...
+# Subtest: guard mutations can fail
+ok 7 - guard mutations can fail
+  ---
+  duration_ms: 1442.741815
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 28112.097745

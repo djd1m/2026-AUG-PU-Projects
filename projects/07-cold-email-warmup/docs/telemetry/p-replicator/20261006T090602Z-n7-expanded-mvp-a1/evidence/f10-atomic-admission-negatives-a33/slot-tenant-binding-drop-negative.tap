@@ -1,0 +1,32 @@
+TAP version 13
+# Subtest: preadmitted slots are one-use and unused cleanup refuses a child-bound owner
+not ok 1 - preadmitted slots are one-use and unused cleanup refuses a child-bound owner
+  ---
+  duration_ms: 16.056296
+  type: 'test'
+  location: '/tmp/n7-f10-atomic-admission-negatives-a33/slot-shadow-a33/tests/atomic-slot-unit.test.ts:1:68'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (/tmp/n7-f10-atomic-admission-negatives-a33/slot-shadow-a33/tests/atomic-slot-unit.test.ts:10:9)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: unused reservation cleanup retains exact proof after a database release failure
+ok 2 - unused reservation cleanup retains exact proof after a database release failure
+  ---
+  duration_ms: 4.207321
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 1
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 330.863768

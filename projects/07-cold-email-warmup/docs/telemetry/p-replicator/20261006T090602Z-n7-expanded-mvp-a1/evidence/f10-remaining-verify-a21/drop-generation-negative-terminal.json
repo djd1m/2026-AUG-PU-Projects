@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T20:24:46.830388+00:00",
+  "native_returncode": 1,
+  "timed_out": false,
+  "elapsed_ms": 2033.3984158933163,
+  "pid": 2050878,
+  "startticks": "124129479",
+  "pgid": 2050878,
+  "TAP_sha256": "13cb7db466d5d49a1c1ac7fb5de8fafe10d5ddc3d983682261d78dda07f3f95c",
+  "failure_titles": [
+    "not ok 1 - durable runtime drains and recovers without replaying uncertain sends"
+  ],
+  "assertion_failure": true,
+  "PG": {
+    "at": "2026-10-06T20:24:46.947Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "owned_nodes": []
+}

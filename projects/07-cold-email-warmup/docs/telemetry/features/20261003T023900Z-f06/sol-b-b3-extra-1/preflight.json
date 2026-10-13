@@ -1,0 +1,66 @@
+{
+  "focused_resume": false,
+  "target_tenants": [
+    "38abd648-6fe6-47e9-b4f4-51e78b1250a3",
+    "4ea5b811-a21f-48cb-8a22-19e8152f655c"
+  ],
+  "seed_auth": true,
+  "group": "extra",
+  "status": "ready",
+  "at": "2026-10-03T05:14:51.534995+00:00",
+  "source_revision": "03c8952488baa781e88fe54a41d891d2c6aa8e9a",
+  "source_sha256": "e9e78e47c349a0c23b3542dc68945d1f976f76c6edbb8bee61c817a3aebd084b",
+  "source_files_matched": 93,
+  "image_id": "sha256:4a0935cfa92622f453ef0b922d3b119099a20b066e5ac7880dec0f2d67ee70fb",
+  "build_sha256": "455e80941dc8bc0c0dd7cca1a2f9b1388e1275b7f8b85fdf716993fdcb1ca27f",
+  "spec_sha256": "72b44888ddab0405d955084d572130649fbdddc70b33d53a364db7dd80f05de5",
+  "scripts": {
+    "f06-b3-focused.mjs": "44c7a00af6de94cbe0a03728635cd8dbbca9e8af4ec8ef5369c755052c96e4a9",
+    "f06-audit.py": "26a937a7633775d9893931325bb49de90f39d4a9567c257dd9a660d44c52ea06",
+    "f06-fixture.mjs": "bd7a2e6fdc6428451f7417a9fc9c3fca9907ae4903e82521666f04d439e5142c",
+    "f06-b3-extra.mjs": "2f37b152d61504baa7f68b9bbac860371c5cd76d6662c38c039c5ae90b71b7c9",
+    "f06-run.py": "36471bece7f86163f027671ff1524b1108a316724dbc68e657a2dc8d7fb65fa0",
+    "f06-journey.mjs": "5b0da60e0b7fd03d4dffff1e93246a6a86484b6de53288cfc8f42005b3393d9e",
+    "f06-security.mjs": "b8e011c18270ca204e78f2f892404aa628fcf7faed97aba3dbf56c498e7fc773",
+    "f06-unsubscribe-probe.py": "c1e26091e1e2610460e2a424259f9f17762564b449091b6bee5e77a796ff39b7",
+    "f06-unsubscribe-probe.mjs": "a32b671965c2bcc46946ac6650b36e6093cf69849cdb08c8da8c67a94be66b76",
+    "f06-browser.mjs": "3b394578ea77e241d2212cc9576d3c904cf1a78c91605d2e8cf54bfeffb999d5"
+  },
+  "environment": {
+    "cpu": 2,
+    "origin": "http://127.0.0.1:18709",
+    "web": "n7f06a-web-1",
+    "db_no_host_ports": true,
+    "browser_container": "codex-ui-playwright",
+    "playwright": "1.63.0",
+    "ws": "ws://127.0.0.1:9320/"
+  },
+  "input_names": [
+    "N7_UI_EVIDENCE",
+    "SESSION_HMAC_KEY_FILE",
+    "CREDENTIAL_KEYRING_FILE",
+    "RECIPIENT_HASH_KEY_FILE",
+    "DATABASE_PASSWORD_FILE"
+  ],
+  "command_as_data": [
+    "docker",
+    "exec",
+    "-i",
+    "-e",
+    "N7_UI_EVIDENCE=/opt/browser/n7-f06b-20261003T023900Z-b3-extra-1",
+    "codex-ui-playwright",
+    "node",
+    "/opt/browser/n7-f06b-20261003T023900Z-b3-extra-1/f06-browser.mjs"
+  ],
+  "effects": [
+    "own TEST tenant UI mutations",
+    "trusted accepted local fixture poll/sink/provider",
+    "own network attach only if absent; detach in finally",
+    "own contexts/bridge/sockets close; shared browser server stays running"
+  ],
+  "evidence_destination": "/tmp/n7-f06b-final/projects/07-cold-email-warmup/docs/telemetry/features/20261003T023900Z-f06/sol-b-b3-extra-1",
+  "external_actions_executed": false,
+  "environment_available": true,
+  "e2e_claim": null,
+  "secrets": "operator and runtime values remain in web process; never browser/logs"
+}

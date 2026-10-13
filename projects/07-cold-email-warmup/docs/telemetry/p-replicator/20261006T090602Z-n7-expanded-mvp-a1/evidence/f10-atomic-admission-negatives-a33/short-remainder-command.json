@@ -1,0 +1,14 @@
+{
+  "utc": "2026-10-06T22:47:56.916605+00:00",
+  "runner_sha256": "253d3c63cebf29c1baf041480f9781d86e45dd804e1101d30275616c727a631c",
+  "guard_sha256": "69f957d905a8a4fa4271cebd24fe94418d657ce5bf69a51fc6aad4f8cb0a8c7d",
+  "preload_sha256": "08cfe84935660f4dcd6bb4fc700f6768823fd9b936def15e29e2139df1407d18",
+  "native_runner_sha256": "02c18886307b72068c53b51f5981922ba7a4e023f14467be03e40055f3c0bad7",
+  "cases": [
+    "atomic-native-authority-check-drop",
+    "native-runtime-result-guard-drop",
+    "native-transport-result-guard-drop"
+  ],
+  "timeout_seconds_per_child": 10,
+  "reason": "previous cancel negative timeout preserved; bounded remaining short probes only"
+}

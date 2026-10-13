@@ -1,0 +1,18 @@
+{
+  "mutation": "exact original actual src/server.ts unsubscribe HTML policy",
+  "original_revision": "03c8952488baa781e88fe54a41d891d2c6aa8e9a",
+  "command": [
+    "docker",
+    "exec",
+    "n7f06a-web-1",
+    "node_modules/.bin/tsx",
+    "--test",
+    "--test-name-pattern=F04B|B1/B4",
+    "tests/suppression-integration.test.ts"
+  ],
+  "red_exit": 1,
+  "green_exit": 0,
+  "restored_exactly": true,
+  "source_sha256": "da0643da88efb42fe3aa646d272264a11ac3d2178d5729363ce5aa2630216bf9",
+  "at": "2026-10-03T04:45:37.250464+00:00"
+}

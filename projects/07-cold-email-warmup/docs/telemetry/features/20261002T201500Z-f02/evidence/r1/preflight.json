@@ -1,0 +1,24 @@
+{
+  "status": "ready",
+  "source": "immutable R1 source-snapshot.json",
+  "environment": "n7f02 only; synthetic local fixtures; tests own reset",
+  "input": "external existing runtime files; values suppressed",
+  "expected_effects": "rebuild/recreate own web; full F01/F02 isolated realPG tests",
+  "port_owner": {
+    "container": "b1fa49dfa28238a3001824e2ac82a4396d901411e18171ad4bf02973e3306728",
+    "project": "n7f02",
+    "service": "web",
+    "bindings": [
+      {
+        "HostIp": "127.0.0.1",
+        "HostPort": "18702"
+      }
+    ]
+  },
+  "db_host_ports": [],
+  "cpus_per_service": 2,
+  "generic_port_exit": 1,
+  "ownership_equivalent_exit": 0,
+  "external_actions_executed": false,
+  "ui_e2e": "not_applicable: full mailbox UI is F06"
+}

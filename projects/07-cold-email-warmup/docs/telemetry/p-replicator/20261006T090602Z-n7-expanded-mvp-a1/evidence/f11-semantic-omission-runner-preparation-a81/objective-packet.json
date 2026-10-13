@@ -1,0 +1,91 @@
+{
+  "attempt": "A81",
+  "status": "OMISSION_RUNNER_SOURCE_ONLY_PREPARED",
+  "sealed_utc": "2026-10-07T14:34:44.693032+00:00",
+  "ack_utc": "2026-10-07T14:32:27Z",
+  "sourcecut_utc": "2026-10-07T14:35:27Z",
+  "sealcut_utc": "2026-10-07T14:37:27Z",
+  "elapsed_seconds": 137.693032,
+  "source_revision": "0e20143b3826a73374e63ac46ec291b98516f84e",
+  "artifact_bindings": {
+    "db-protected-a68-placeholder.json": {
+      "sha256": "86801471bedc8e1af903d832ec1897aef71b3b5b55438fdde9c44603144a497a",
+      "bytes": 271334
+    },
+    "scenario-inventory.json": {
+      "sha256": "8152ae069367aaa4fe989297bbc3bb8a9ad0c7bb5c26bed64bb7940018694287",
+      "bytes": 1608
+    },
+    "syntax-checks.json": {
+      "sha256": "8f3e95492a2de3fbaed67374f1c5f8b31f5d4751d4631b572163562a5bf7a2c1",
+      "bytes": 271
+    },
+    "helper-bindings.json": {
+      "sha256": "9d8306a65478215a0e001a1affd2d4b8ea3f5fb3565042530edd12c05e99aca6",
+      "bytes": 523
+    },
+    "public-before.json": {
+      "sha256": "f9b6e85cf2ac2ed457e13d6cab4ba461da56457056d7445495fcd740a36e131b",
+      "bytes": 4825
+    },
+    "root-source-preparation.json": {
+      "sha256": "d948d965a2c5a25928972fbccb4c1fba980876ba71a09761423b50b14b535b55",
+      "bytes": 795
+    },
+    "schema-setup-a81.mjs": {
+      "sha256": "fadac2fad7717d2da52d3322d59d55f5515b5570564a59c4a758266f2ff25848",
+      "bytes": 4403
+    },
+    "run-a81.sh": {
+      "sha256": "31abf0bd59b10f48cc65a3abc726dabfbd7cbdecca3b21e30b16df38c5b5b7a6",
+      "bytes": 1265
+    },
+    "snapshot-a81.mjs": {
+      "sha256": "f80642240010baac89e8506a15391f5b207aab24e335aabe3364f09cff2f3a51",
+      "bytes": 3084
+    },
+    "source-binding.json": {
+      "sha256": "fbe623af81d49946de84fb5ff034df8d933f93ced6a97b364ca5337cad084312",
+      "bytes": 2798
+    },
+    "guard-a81.mjs": {
+      "sha256": "d53bd7e871fb57ba8ced30256062f2236afcd550da161db49eb82cda835f28e3",
+      "bytes": 5971
+    },
+    "source-freeze.json": {
+      "sha256": "877959c87b99fc6d5ef4c17bb077e69c538d8a5cebba7a9318d09a9aad40a16f",
+      "bytes": 22444
+    },
+    "activation-handoff.json": {
+      "sha256": "355db4f51c82397cf43f298c04f164b6f30fc9d4e0c88b6f2129afbd47a257a8",
+      "bytes": 1827
+    },
+    "copy-diff.raw": {
+      "sha256": "b25a32d3761b6228a8c81811981a5e42db2ad3cb3f0423bed4905d317a369504",
+      "bytes": 29638
+    },
+    "launch.py": {
+      "sha256": "a51e81395d7b8e7d5302d1d40e3be1d7c3a0ea11daa23e2acdf89fcb3b227e7d",
+      "bytes": 5071
+    },
+    "dependency-bindings.json": {
+      "sha256": "f128a44c5295b3be01d40314893296cc9785d09da50811a60ecd270c07262169",
+      "bytes": 803
+    },
+    "joins.py": {
+      "sha256": "04b3752c68f132df69353a9665e5d05263aa438ade1faa2b2a723710d47fc628",
+      "bytes": 779
+    },
+    "copy-provenance.json": {
+      "sha256": "427477df7d798a5fd9d5e20235570d6f6227f173a7d4431e06ee17cf93f5303a",
+      "bytes": 1492
+    }
+  },
+  "runtime_executed": false,
+  "runtime_lease_absent": true,
+  "live_db_protected_absent": true,
+  "actual_model": null,
+  "actual_effort": null,
+  "actual_usage": null,
+  "actual_cost": null
+}

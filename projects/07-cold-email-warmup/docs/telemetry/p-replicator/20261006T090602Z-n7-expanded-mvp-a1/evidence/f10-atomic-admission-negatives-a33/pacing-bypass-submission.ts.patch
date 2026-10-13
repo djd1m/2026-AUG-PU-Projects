@@ -1,0 +1,11 @@
+--- src/dispatch/submission.ts
++++ src/dispatch/submission.ts
+@@ -74,7 +74,7 @@
+        AND q.state IN ('claimed','submitting','submitted','unknown'))>=LEAST(m.daily_limit,m.provider_limit,30)`,[now,id,owner,day]);
+     return null;
+    }
+-   await client.query("UPDATE runtime_mailbox SET next_smtp_at=$2::timestamptz+interval '60 seconds' WHERE mailbox_id=$1",[row.mailbox_id,now]);
++   await client.query("UPDATE runtime_mailbox SET next_smtp_at=$2::timestamptz+interval '5 seconds' WHERE mailbox_id=$1",[row.mailbox_id,now]);
+    const sender=(await client.query('SELECT credential_envelope FROM mailbox WHERE tenant_id=$1 AND id=$2',[row.tenant_id,row.mailbox_id])).rows[0];
+    // Reuse AEAD solely to obtain addresses; adapter receives no credential object.
+    const from=decryptCredentials<MailboxInput>(sender.credential_envelope,row.tenant_id,row.mailbox_id,this.config.credentialKeyring).senderAddress;

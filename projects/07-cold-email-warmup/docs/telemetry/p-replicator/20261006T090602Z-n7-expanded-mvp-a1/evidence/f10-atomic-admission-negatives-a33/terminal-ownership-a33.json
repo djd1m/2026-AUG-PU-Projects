@@ -1,0 +1,65 @@
+{
+  "utc": "2026-10-06T22:50:05.161565+00:00",
+  "source120_build73_sql15_drift": [],
+  "shadow177_drift": [],
+  "owned_nodes": [],
+  "PG": {
+    "at": "2026-10-06T22:50:04.764Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB": {
+    "utc": "2026-10-06T22:50:04.940Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 2,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 3,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 4,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 2,
+        "occupied": false
+      }
+    ]
+  },
+  "legacy_original_hashes": {
+    "/tmp/n7-f10-cadence-implement-a7/short-native-v2.json": "60d07dcb6bcec2d5faa0419f86ccb41fce2997564376df6f25d197f5b4ce1007",
+    "/tmp/n7-f10-cadence-implement-a7/short-native-v2-drain.json": "3d19f0b8d4ed427ae24293f9d897c17f0165ef5bc6132b2fffbd8af01f663b2a"
+  },
+  "A32_raw_manifest_SHA": "562007f57c9af0fc58e289fe892ddb239c1fd736c9ea7aa611bc7ad762dc76aa",
+  "A32_verified_file_count": 3225,
+  "A32_artifact_drift": [],
+  "protected_dependency_realpath": "/tmp/n7-f08-dependency-fix-20261006/projects/07-cold-email-warmup/node_modules",
+  "disk_available_bytes": 2819178496,
+  "mutex": "exclusive acquired, released after this proof"
+}

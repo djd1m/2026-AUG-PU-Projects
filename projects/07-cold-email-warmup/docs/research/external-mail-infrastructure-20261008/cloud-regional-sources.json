@@ -1,0 +1,156 @@
+{
+  "checked_at": "2026-10-08",
+  "started_at": "2026-10-08T06:35:04Z",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning": "high",
+  "actual_runtime_model": null,
+  "tokens": null,
+  "cost": null,
+  "sources": [
+    {
+      "id": "adminvps-network",
+      "title": "AdminVPS network settings",
+      "url": "https://my.adminvps.ru/knowledgebase/280/setevye-nastroiki.html",
+      "updated_at": null,
+      "retrieval": "official_search_index; live502; indexed5months",
+      "supports": "25/465/587 blocked certain locations; EU NL DE FI PL; support;993 absent",
+      "primary": true
+    },
+    {
+      "id": "selectel-ports",
+      "title": "Selectel blocked ports",
+      "url": "https://docs.selectel.ru/infrastructure/blocked-ports/",
+      "updated_at": "2026-09-16",
+      "retrieval": "live_open",
+      "supports": "25/465/587 default public outbound blocked; exact pool/IP exceptions;993 not-listed",
+      "primary": true
+    },
+    {
+      "id": "yandex-vpc-address",
+      "title": "Yandex VPC addresses",
+      "url": "https://yandex.cloud/ru/docs/vpc/concepts/address",
+      "updated_at": "2026-10-02",
+      "retrieval": "live_open",
+      "supports": "25 blocked except Yandex Mail",
+      "primary": true
+    },
+    {
+      "id": "yandex-vpc-faq",
+      "title": "Yandex VPC FAQ",
+      "url": "https://yandex.cloud/ru/docs/vpc/qa/",
+      "updated_at": "2026-10-02",
+      "retrieval": "live_open",
+      "supports": "explicit465/587 alternative; only25 block; newIP support;993 not individually named",
+      "primary": true
+    },
+    {
+      "id": "yandex-airflow",
+      "title": "Yandex Airflow SMTP tutorial",
+      "url": "https://yandex.cloud/ru/docs/managed-airflow/tutorials/test-smtp-notification",
+      "updated_at": null,
+      "retrieval": "official_search_index",
+      "supports": "smtp.yandex.ru465 SSL NAT supporting scenario",
+      "primary": true
+    },
+    {
+      "id": "cloudru-passbolt",
+      "title": "Cloud.ru Evolution Passbolt",
+      "url": "https://cloud.ru/docs/tutorials-evolution/list/topics/free-tier-vm__passbolt",
+      "updated_at": null,
+      "retrieval": "live_open",
+      "supports": "explicit personal mailbox SMTP scenario; no blanket port guarantee",
+      "primary": true
+    },
+    {
+      "id": "cloudru-twenty",
+      "title": "Cloud.ru Evolution Twenty",
+      "url": "https://cloud.ru/docs/tutorials-evolution/list/topics/free-tier-vm__twenty-crm",
+      "updated_at": null,
+      "retrieval": "official_search_index",
+      "supports": "commented Gmail465 example; no blanket guarantee",
+      "primary": true
+    },
+    {
+      "id": "cloudru-vpc-limits",
+      "title": "Cloud.ru Evolution VPC limits",
+      "url": "https://cloud.ru/docs/evolution-vpc/ug/topics/overview__limitations",
+      "updated_at": null,
+      "retrieval": "official_search_index",
+      "supports": "no explicit email-port policy found",
+      "primary": true
+    },
+    {
+      "id": "cloudru-compute-terms",
+      "title": "Cloud.ru Evolution Compute terms",
+      "url": "https://cloud.ru/documents/contracts/terms-of-service/evolution/evolution-compute/description-evolution-compute",
+      "updated_at": null,
+      "retrieval": "official_search_index",
+      "supports": "SG explicit allow; distinct from provider policy",
+      "primary": true
+    },
+    {
+      "id": "akamai-email",
+      "title": "Akamai send email",
+      "url": "https://techdocs.akamai.com/cloud-computing/docs/send-email",
+      "updated_at": null,
+      "retrieval": "official_search_index_crawled_today; live_open_error",
+      "supports": "some newaccounts outbound25/465/587 blocked; support; allrecipients opt-in;993 not-listed",
+      "primary": true
+    },
+    {
+      "id": "akamai-faq",
+      "title": "Akamai Compute FAQ",
+      "url": "https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances",
+      "updated_at": null,
+      "retrieval": "official_search_index_crawled_today",
+      "supports": "25/465/587 restriction corroboration",
+      "primary": true
+    },
+    {
+      "id": "google-policy",
+      "title": "Google Workspace developer policy",
+      "url": "https://developers.google.com/workspace/workspace-api-user-data-developer-policy",
+      "updated_at": null,
+      "retrieval": "official_search_index",
+      "supports": "Gmail unsolicited commercial mail notallowed",
+      "primary": true
+    },
+    {
+      "id": "google-scopes",
+      "title": "Gmail API scopes",
+      "url": "https://developers.google.com/workspace/gmail/api/auth/scopes",
+      "updated_at": null,
+      "retrieval": "official_search_index",
+      "supports": "OAuth verification and restricted-data security assessment",
+      "primary": true
+    },
+    {
+      "id": "nylas-terms",
+      "title": "Nylas terms",
+      "url": "https://www.nylas.com/legal/terms/",
+      "updated_at": "2025-06-23",
+      "retrieval": "live_open",
+      "supports": "unsolicited solicitation prohibited; specific contract Terms precedence",
+      "primary": true
+    },
+    {
+      "id": "resend-aup",
+      "title": "Resend Acceptable Use Policy",
+      "url": "https://resend.com/legal/acceptable-use",
+      "updated_at": "2026-08-27",
+      "retrieval": "live_open",
+      "supports": "cold outreach prohibited; explicit opt-in",
+      "primary": true
+    }
+  ],
+  "limitations": [
+    "No actual candidate VPS egress tests",
+    "AdminVPS live fetch502/index5months",
+    "Cloud.ru SMTP policies not definitively located",
+    "IMAP993 not explicitly confirmed",
+    "No external messages or infrastructure changes"
+  ],
+  "completed_at": "2026-10-08T06:38:57Z",
+  "elapsed_seconds": 233,
+  "validation": "15 official primary sources, JSON parsed, report present"
+}

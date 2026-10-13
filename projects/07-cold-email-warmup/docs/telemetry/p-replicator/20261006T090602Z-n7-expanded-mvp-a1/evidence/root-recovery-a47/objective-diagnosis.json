@@ -1,0 +1,46 @@
+{
+  "raw": "/tmp/n7-f11-deferred-material-author-a46/foreign-v2/a40-drain-foreign_tenant.json",
+  "raw_sha256": "1a9277fc8fb437524b8dd9170c8b17902de75f50fb8f7c9877c114b304cb66de",
+  "event": "7d2e515f-d8fb-4a30-b160-52d381c3fa9e",
+  "window_start": "2026-10-07T09:39:53.674Z",
+  "window_end": "2026-10-07T09:40:05.674Z",
+  "substituted_at": {
+    "utc": "2026-10-07T09:39:54.170Z",
+    "monotonicNs": "1289004169747677"
+  },
+  "recovery_at": {
+    "utc": "2026-10-07T09:39:54.221Z",
+    "monotonicNs": "1289004220589616"
+  },
+  "changed_fields": {
+    "state": {
+      "before": "pending",
+      "after": "held"
+    },
+    "capture_state": {
+      "before": "claimed",
+      "after": "held"
+    },
+    "reason": {
+      "before": "body_authority_required",
+      "after": "capture_cancelled"
+    },
+    "terminal_at": {
+      "before": null,
+      "after": "2026-10-07T09:39:54.213Z"
+    },
+    "expires_at": {
+      "before": "2026-10-14T09:39:52.554Z",
+      "after": "2026-10-08T09:39:54.213Z"
+    },
+    "owner_id": {
+      "before": "0fa18447-5907-44b0-a65a-c2f3c5d58f81",
+      "after": null
+    },
+    "lease_until": {
+      "before": "2026-10-07T09:40:05.674Z",
+      "after": null
+    }
+  },
+  "confirmed_finding": "A47-F1: stale recovery mutates coherently replaced foreign operation identity"
+}

@@ -1,0 +1,32 @@
+{
+  "stage": "f10-physical120",
+  "started": {
+    "at": "2026-10-06T22:21:18.540951+00:00",
+    "pid": 3834274,
+    "startticks": "124828853",
+    "runner_pid": 3684977,
+    "command": [
+      "/tmp/n7-expanded-runtime-20261006/bin/node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^suspended transport owners retain physical slots across runtime restart$",
+      "tests/f10-runtime-protocol.test.ts"
+    ],
+    "inventory_sha256": "8ed8ceef27f5a5fb3f3b3430b96232b3dfe7cc0fb8393e1b3cfc4d0084783263"
+  },
+  "joined_utc": "2026-10-06T22:23:21.888119+00:00",
+  "native_returncode": 0,
+  "timed_out": false,
+  "elapsed_seconds": 123.35134065314196,
+  "PG": {
+    "at": "2026-10-06T22:23:21.853Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "remaining_owned_nodes": [],
+  "tap_sha256": "806570fb49c927ac80fb59342a8798dbc0739eff849a25ed8ef5c795d13da14c",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

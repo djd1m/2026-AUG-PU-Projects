@@ -1,0 +1,38 @@
+{
+  "at": "2026-10-06T22:04:42.049084+00:00",
+  "PG": {
+    "at": "2026-10-06T22:04:42.026Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "mutex": "held",
+  "command": [
+    "/tmp/n7-expanded-runtime-20261006/bin/node",
+    "node_modules/tsx/dist/cli.mjs",
+    "--test",
+    "--test-concurrency=1",
+    "--test-name-pattern=native five-second rescans",
+    "tests/f10-runtime-protocol.test.ts"
+  ],
+  "cwd": "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup",
+  "runner_sha256": "f465b0aa3feb29d238f6de967bc8951260f1d21a1f446dab2c2027ed181b39ca",
+  "guard_sha256": "d24c1fe9535894b7bcf38ffa597c831b188e8830f565300d6a725c5d5c8cd1ef",
+  "snapshot_sha256": "9f829e4efe2dce6f3e8125996cd9fe9e83e4cdc12e6c25d7550ee0fbb1c40bf1",
+  "inputs": {
+    "src/mailboxes/transport-slots.ts": "93c3509a79bf43296b99f20610045da188e26d057fd6f8b14c2fb1e6bd23bb66",
+    "src/runtime/store.ts": "983a1e5331f17bc7312a4c3f8ea95c7c2728e60b24d5e14708a9084e50fcff28",
+    "src/runtime/worker.ts": "820513ecaa13b25bededc8845306365f635d1dae41232451cd96a2decc31c774",
+    "src/replies/adapter.ts": "54e40ca7270ca7299c6a9601b3cf268663877413fc131a8e9c76b4e117d1fcf9",
+    "tests/f10-runtime-protocol.test.ts": "4edb0be1f37ae1a1b32e1d530db4a5db5ea3f79bfab993be9197b009cfbdc366",
+    "tests/f10-runtime-fixture.ts": "c42e2a6862249baecd05617d4cb8dd8c4f0cb0b5eb023e9c8254c0cd2cdaae95",
+    "tests/f10-runtime-process-fixture.ts": "e3d889eba4dda70d1236c508e6819111eb38cd8b3e6de0e8047f8bacac76cadd",
+    "tests/f09-transport-fixture.ts": "984e6242be0a61880750c114dde53e5993588d9d3c82990c608e7e4db0eb5328",
+    "tests/diagnostics-fixture.ts": "889f428735c251a33c18a026d3afbdd761bc3e4b9d7e965ab6848ac788740017",
+    "dist/runtime/store.js": "f579feda5be195e46e021cc73a81012eb940b9ca5360f6ca055ea188a079dd6c",
+    "dist/runtime/worker.js": "b92e33a226964bea25f8df3923d4ac4c81898ef1f5ceba58d3974c3fb2ec9aee"
+  },
+  "disk_available_bytes": 2964054016,
+  "warn_lt_2GiB": false
+}

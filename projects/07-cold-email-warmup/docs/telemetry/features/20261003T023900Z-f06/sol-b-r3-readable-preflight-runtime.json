@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-03T05:48:33.806056+00:00",
+  "status": "ready",
+  "source_revision": "a7fb40c9ab36eef9e7e5d16173083fc646199baf",
+  "source_sha256": "1144c60cfff6a30ae94be77971274102d5239adbfc8b19f3ee7f7f47f7d98e6a",
+  "build_sha256": "2b5c0c6b974feff5774b064f1fe038a3ff4345e9eb520c089945987ed107774c",
+  "image_id": "sha256:e04c5647ca2e18e97a104b8ee348a1fc5880c9310d3a102371504571e066aeeb",
+  "environment": "own n7f06a loopback18709 privatePG CPU2; existing runtime files present",
+  "environment_available": true,
+  "inputs": [
+    "frozen source and compiled JS",
+    "existing external random runtime files",
+    "new image tag"
+  ],
+  "test_command": "python3 scripts/ui/f06-run.py r3-report-layout-3 /tmp/n7-f06b-r3/projects/07-cold-email-warmup/docs/telemetry/features/20261003T023900Z-f06/sol-b-r3-readable-image-receipt.json",
+  "expected_effects": [
+    "own stack web replacement",
+    "own TEST account registration and native fetch only"
+  ],
+  "evidence_root": "/tmp/n7-f06b-r3/projects/07-cold-email-warmup/docs/telemetry/features/20261003T023900Z-f06",
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "exact_image_contents": "pending live-container comparison before browser"
+}

@@ -1,0 +1,416 @@
+{
+  "work_unit_id": "n7_mail_services_research",
+  "status": "completed",
+  "source_revision": "cfc075948e1f0dfa12fbe600fe0b8539f3ddb959",
+  "profile": "model-routing-econom",
+  "requested_model": "Sol6.1/high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gap": "Runtime model and usage counters unavailable",
+  "checked_at": "2026-10-08",
+  "sources": [
+    {
+      "provider": "resend",
+      "purpose": "send",
+      "url": "https://resend.com/docs/api-reference/emails/send-email",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "resend",
+      "purpose": "outbound/inbound events",
+      "url": "https://resend.com/docs/webhooks/introduction",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "resend",
+      "purpose": "receiving API",
+      "url": "https://resend.com/docs/dashboard/receiving/introduction",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "resend",
+      "purpose": "domain identity",
+      "url": "https://resend.com/docs/dashboard/domains/introduction",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "resend",
+      "purpose": "inbound metadata/MX caveat official repository",
+      "url": "https://github.com/resend/resend-skills/blob/main/skills/resend/references/receiving.md",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "resend",
+      "purpose": "private-beta hosted inbox",
+      "url": "https://resend.com/docs/api-reference/inboxes/create-inbox",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "resend",
+      "purpose": "cold outreach prohibition",
+      "url": "https://resend.com/legal/acceptable-use",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "resend",
+      "purpose": "domain scoped keys",
+      "url": "https://resend.com/changelog/new-api-key-permissions",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "resend",
+      "purpose": "quotas",
+      "url": "https://resend.com/docs/api-reference/rate-limit",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "resend",
+      "purpose": "pricing",
+      "url": "https://resend.com/pricing",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "resend",
+      "purpose": "dedicated IP warmup",
+      "url": "https://resend.com/features/dedicated-ips",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "postmark",
+      "purpose": "send",
+      "url": "https://postmarkapp.com/developer/api/email-api",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "postmark",
+      "purpose": "inbound JSON",
+      "url": "https://postmarkapp.com/developer/webhooks/inbound-webhook",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "postmark",
+      "purpose": "sender/domain ownership",
+      "url": "https://postmarkapp.com/developer/user-guide/managing-your-account/managing-sender-signatures",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "postmark",
+      "purpose": "customer sending/free domains",
+      "url": "https://postmarkapp.com/support/article/how-do-i-send-email-on-behalf-of-my-customers",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "postmark",
+      "purpose": "inbound/forwarding",
+      "url": "https://www.postmarkapp.com/developer/user-guide/inbound/configure-an-inbound-server",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "postmark",
+      "purpose": "permission policy",
+      "url": "https://postmarkapp.com/terms-of-service",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "postmark",
+      "purpose": "SaaS customer vetting",
+      "url": "https://postmarkapp.com/guides/how-to-vet-and-set-up-new-customers-for-sending-through-postmark",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "postmark",
+      "purpose": "historical domain limit caveat",
+      "url": "https://postmarkapp.com/support/article/adding-sender-signatures",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "postmark",
+      "purpose": "pricing",
+      "url": "https://postmarkapp.com/pricing/",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "postmark",
+      "purpose": "dedicated IP warmup",
+      "url": "https://www.postmarkapp.com/dedicated-ips",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "ses",
+      "purpose": "receiving/no POP IMAP",
+      "url": "https://docs.aws.amazon.com/ses/latest/dg/receiving-email-concepts.html",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "ses",
+      "purpose": "receiving identity",
+      "url": "https://docs.aws.amazon.com/ses/latest/dg/receiving-email-verification.html",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "ses",
+      "purpose": "SNS inbound body limit",
+      "url": "https://docs.aws.amazon.com/ses/latest/dg/receiving-email-action-sns.html",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "ses",
+      "purpose": "DMARC",
+      "url": "https://docs.aws.amazon.com/ses/latest/dg/send-email-authentication-dmarc.html",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "ses",
+      "purpose": "sandbox/production",
+      "url": "https://docs.aws.amazon.com/ses/latest/dg/request-production-access.html",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "ses",
+      "purpose": "spam policy",
+      "url": "https://aws.amazon.com/aup/",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "ses",
+      "purpose": "unsolicited enforcement",
+      "url": "https://docs.aws.amazon.com/ses/latest/dg/faqs-enforcement.html",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "ses",
+      "purpose": "tenant reputation isolation",
+      "url": "https://docs.aws.amazon.com/ses/latest/dg/tenants.html",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "ses",
+      "purpose": "quotas",
+      "url": "https://docs.aws.amazon.com/en_en/ses/latest/dg/manage-sending-quotas.html",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "ses",
+      "purpose": "pricing/plans",
+      "url": "https://aws.amazon.com/ses/pricing/",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "ses",
+      "purpose": "IP warmup",
+      "url": "https://docs.aws.amazon.com/en_en/ses/latest/dg/dedicated-ip.html",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "sendgrid",
+      "purpose": "pricing official static mirror",
+      "url": "https://static0.twilio.com/en-us/products/email-api/pricing",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "sendgrid",
+      "purpose": "pricing PDF",
+      "url": "https://www.twilio.com/content/dam/sendgrid/global/en/other/sendgrid-pricing/twi121--sendgrid-pricing-pdf-st1.pdf",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "sendgrid",
+      "purpose": "inbound setup",
+      "url": "https://www.twilio.com/docs/sendgrid/for-developers/parsing-email/setting-up-the-inbound-parse-webhook",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "sendgrid",
+      "purpose": "inbound retry/drop",
+      "url": "https://www.twilio.com/docs/sendgrid/for-developers/parsing-email/inbound-email",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "sendgrid",
+      "purpose": "public address DMARC caveat",
+      "url": "https://www.twilio.com/docs/sendgrid/ui/sending-email/dmarc",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "sendgrid",
+      "purpose": "affirmative consent",
+      "url": "https://help.twilio.com/articles/47432543786907",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "sendgrid",
+      "purpose": "consent guidance",
+      "url": "https://www.twilio.com/docs/sendgrid/ui/sending-email/deliverability",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "sendgrid",
+      "purpose": "IP warmup",
+      "url": "https://www.twilio.com/docs/sendgrid/concepts/reputation/warm-up-ip-addresses",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "mailgun",
+      "purpose": "HTTPS send/sandbox",
+      "url": "https://documentation.mailgun.com/docs/mailgun/quickstart",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "mailgun",
+      "purpose": "domain/MX verification",
+      "url": "https://documentation.mailgun.com/docs/mailgun/user-manual/domains/domains-verify",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "mailgun",
+      "purpose": "routes/forward/store",
+      "url": "https://documentation.mailgun.com/docs/mailgun/user-manual/receive-forward-store/route-actions",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "mailgun",
+      "purpose": "consent policy",
+      "url": "https://www.mailgun.com/legal/aup/",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "mailgun",
+      "purpose": "subaccount features",
+      "url": "https://documentation.mailgun.com/docs/mailgun/user-manual/subaccounts/subaccounts-features",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "mailgun",
+      "purpose": "subaccount quota API",
+      "url": "https://documentation.mailgun.com/docs/mailgun/api-reference/send/mailgun/subaccounts",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "mailgun",
+      "purpose": "parent/subaccount caveat",
+      "url": "https://help.mailgun.com/hc/en-us/articles/16380043681435-Subaccounts",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "mailgun",
+      "purpose": "pricing",
+      "url": "https://www.mailgun.com/pricing/",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    },
+    {
+      "provider": "mailgun",
+      "purpose": "IP warmup",
+      "url": "https://documentation.mailgun.com/docs/mailgun/api-reference/send/mailgun/ip-address-warmup/get-v3-ip-warmups--addr-",
+      "source_type": "primary official",
+      "verified_at": "2026-10-08",
+      "verification": "web browser open/search official source"
+    }
+  ],
+  "fetch_caveats": [
+    {
+      "url": "https://www.twilio.com/en-us/products/email-api/pricing",
+      "result": "Browser timeout; official static mirror and PDF used"
+    },
+    {
+      "url": "https://resend.com/docs/receive-email",
+      "result": "Invalid legacy path; official dashboard/receiving docs used"
+    }
+  ]
+}

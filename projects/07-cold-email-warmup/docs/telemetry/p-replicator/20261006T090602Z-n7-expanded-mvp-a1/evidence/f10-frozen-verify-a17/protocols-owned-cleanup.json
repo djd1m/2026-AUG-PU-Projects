@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-06T19:38:58.253969+00:00",
+  "exact_owned_PID_before": {
+    "pid": 1328476,
+    "startticks": "123840523",
+    "state": "T",
+    "pgid": "1305532"
+  },
+  "signal": "SIGKILL only after exact PID/startticks and own guard ownership check",
+  "PID_absent_after": true,
+  "remaining_own_nodes": [],
+  "mutex_free": true,
+  "native_freeze_violation": true,
+  "reason": "negative anchored test-name pattern failed to exclude existing physical test; timeout TERM left stopped own child; exact cleanup required after freeze",
+  "no_DB_release_or_reset": true
+}

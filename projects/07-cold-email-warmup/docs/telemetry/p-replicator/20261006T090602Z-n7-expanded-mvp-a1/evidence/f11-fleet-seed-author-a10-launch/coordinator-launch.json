@@ -1,0 +1,35 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-fleet-seed-author-a10",
+  "prepared_at": "2026-10-07T01:26:43.561201+00:00",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "profile": "model-routing-econom",
+  "fork_turns": "none",
+  "worktree": "/tmp/n7-f11-context-20261006-a1",
+  "source_revision": "feb0aae996c80c6e591ebfba5585ec7d5ca27c62",
+  "exclusive_files": [
+    "projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts"
+  ],
+  "baseline_file_sha256": "5b56cc97e444872984005b3c8e63c7e325c50e2c0a9bad9e7a7444ca692d363b",
+  "budget_minutes": 8,
+  "seal_reserve_minutes": 2,
+  "approved_change": "existing tests/billing-fixture.ts seedTestEntitlement called for each3 actors immediately aftertenant/account insertion BEFOREmailbox/campaignloop, genuineTESTteam.activeCampaigns10 no productcap/billing changes",
+  "mandatory_short_counterproof": [
+    "exactn7f11_a8 ownershiplease/currentDB/currentuserowner BEFOREwrites",
+    "preservefailed3tenantIDs/raw and verifyallnodesclaimsphysicalslots0 beforeonlyfailed-ownrows cleanup",
+    "seed3succeeded/unrevoked/unexpired TESTteam entitlements then100connected/30active/3tenant/30participants/10campaigns each",
+    "caller-scope setupfailure cleanup ifminimal samefixture; no unownedrow deletion",
+    "no runtime/full300worker launch; nativeactualexit and ownpeer/PG processjoin",
+    "remainingfull300/F12validation/fault/currentgrant/C2matrix explicit"
+  ],
+  "lease_file": "/tmp/n7-f11-fleet-seed-author-a10/database-ownership-lease.json",
+  "lease_sha256": "52cb3b1be7ebb21943aec3caa27f1c460f4af3482290e4da7bc283a3a9dae73b",
+  "failed_seed_ids_file": "/tmp/n7-f11-fleet-seed-author-a10/failed-seed-identities.json",
+  "failed_seed_ids_sha256": "9476b8587b72ac367e18ef33dbf4ed78141f1ee9d75dcceef4e25d9946d387bf",
+  "guard_source": "/tmp/n7-f11-context-verify-a9/guard-a9.mjs",
+  "disk_available_bytes": 2661658624,
+  "source_db_ownership_released": "A9 TERMINAL01:25:35.402501Z explicitrelease",
+  "F11_accepted": false
+}

@@ -1,0 +1,51 @@
+{
+  "utc": "2026-10-07T05:01:22.696525+00:00",
+  "monotonic_ns": 1272292695933075,
+  "head": "a1d1521fe1ad9beeb2598ec3f8d625bf97a087e7",
+  "input_drift_count": 0,
+  "input_entries": 277,
+  "new_pack_entries": 280,
+  "source_writes": 0,
+  "database_actions": 0,
+  "test_runs": 0,
+  "native_launches": 0,
+  "owned_persistent_processes": 0,
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "disk_available_bytes": 1930149888,
+  "plan_sha256": "b7a787a8c8f1bf82d0cf8b6b7bf32ea40ba400d8cf2654282cd463bf69e72728",
+  "pack_sha256": "e576bd883019b38c695379d112667bb309b1f3f5a40ff9da89b9444448e80bc0",
+  "files": [
+    {
+      "path": "/tmp/n7-f11-initial-admission-scheduling-plan-a31/attempt.json",
+      "sha256": "a2f0fb97bb5758014b962942bd7c0b7d66868feab1facf7915201d4f1e0e7681",
+      "bytes": 998
+    },
+    {
+      "path": "/tmp/n7-f11-initial-admission-scheduling-plan-a31/author-scope.json",
+      "sha256": "552d198b37d2166e5949b1f6c3036fd088b1cbb6fea3312dd1efe6557a1737d0",
+      "bytes": 1691
+    },
+    {
+      "path": "/tmp/n7-f11-initial-admission-scheduling-plan-a31/clean-next-author-input-manifest.json",
+      "sha256": "e576bd883019b38c695379d112667bb309b1f3f5a40ff9da89b9444448e80bc0",
+      "bytes": 73685
+    },
+    {
+      "path": "/tmp/n7-f11-initial-admission-scheduling-plan-a31/manifest-verified.json",
+      "sha256": "f505ffe816f6ea01ffd7ff172d9790c4084c5f1e7edafafc0a1b5bdd0555bf44",
+      "bytes": 173
+    },
+    {
+      "path": "/tmp/n7-f11-initial-admission-scheduling-plan-a31/normative-source-bindings.json",
+      "sha256": "96038efbd8c76193a000b689168f08ccf80c59e3cb6e6a51d8662850dd78fc39",
+      "bytes": 20837
+    },
+    {
+      "path": "/tmp/n7-f11-initial-admission-scheduling-plan-a31/repair_plan.md",
+      "sha256": "b7a787a8c8f1bf82d0cf8b6b7bf32ea40ba400d8cf2654282cd463bf69e72728",
+      "bytes": 12614
+    }
+  ]
+}

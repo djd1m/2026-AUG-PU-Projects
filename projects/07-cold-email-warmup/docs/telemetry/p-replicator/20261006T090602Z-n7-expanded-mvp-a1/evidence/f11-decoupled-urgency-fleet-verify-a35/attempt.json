@@ -1,0 +1,40 @@
+{
+  "stage": "VALIDATE",
+  "risk": "HIGH/inheritedXL",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "persisted_at": "2026-10-07T05:59:44.336370+00:00",
+  "monotonic_ns": 1275794335776706,
+  "source": "1632d295d8eae3eb46f44cd48c96df3ff5abbdb8",
+  "status": "RED_sealed",
+  "disk_available_bytes": 1734864896,
+  "authoritative_ack": "2026-10-07T05:59:41Z",
+  "work_cutoff": "2026-10-07T06:16:41Z",
+  "final_cutoff": "2026-10-07T06:19:41Z",
+  "preflight_cutoff": "2026-10-07T06:01:41Z",
+  "phase_boundaries": {
+    "fault_actual_native_join": "2026-10-07T06:06:45.752171Z",
+    "cause_start": "2026-10-07T06:07:09.246297+00:00",
+    "cause_work_cutoff": "2026-10-07T06:13:09.246297+00:00",
+    "cause_seal_cutoff": "2026-10-07T06:15:09.246297+00:00",
+    "cause_monotonic_ns": 1276239246939669,
+    "cause_work_finished_at": "2026-10-07T06:13:46.120029+00:00",
+    "cause_work_finished_monotonic_ns": 1276636119434313
+  },
+  "root_steering": "No new heavy launch until root audit clearance; bounded small raw cause and joins only",
+  "cause_work_overrun_seconds": 36.873732,
+  "sealed_at": "2026-10-07T06:15:05.691933+00:00",
+  "source_ownership_released": true,
+  "next_executor": "coordinator/fresh MEDIUM native empty-tail proof composition exact8 files",
+  "root_clearance_received": "coordinator reports06:07:52 rootclearance; faultRED still prevents healthy",
+  "remaining_ac": [
+    "HEADER30/fullfaultPASS",
+    "fullhealthy300",
+    "legacy20pagecap fairness",
+    "activeBODY_SIGTERM/bodyprotocol5/units16/PG18/materialprivacyAEAD/newfinalreview"
+  ]
+}

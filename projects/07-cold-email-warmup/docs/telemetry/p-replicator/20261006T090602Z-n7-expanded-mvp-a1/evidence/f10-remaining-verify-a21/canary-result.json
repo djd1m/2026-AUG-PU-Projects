@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-06T20:32:10.730Z",
+  "source_revision": "afb58dc9b26f814433b117a63e45994c71e7cbde",
+  "runtime_secret_files_available": 5,
+  "secret_variant_count": 65,
+  "fixture_marker_count": 25,
+  "marker_variant_count": 320,
+  "inventory_file_count": 3862,
+  "inventory_bytes": 24902172,
+  "encoded_forms": [
+    "plain",
+    "Base64 with embedded byte alignments0/1/2",
+    "hex upper/lower",
+    "URL standard/full percent upper/lower",
+    "JSON escaped/unicode upper/lower"
+  ],
+  "DB_public_diagnostic_outcome_audit_sink_checks": [
+    {
+      "name": "mailbox diagnostic_result",
+      "rows": 0
+    },
+    {
+      "name": "send_job public typed outcome",
+      "rows": 0
+    },
+    {
+      "name": "complaint_event",
+      "rows": 0
+    },
+    {
+      "name": "evidence_event",
+      "rows": 0
+    },
+    {
+      "name": "local_test_message",
+      "rows": 0
+    },
+    {
+      "name": "reply_observation",
+      "rows": 0
+    },
+    {
+      "name": "reply_effect",
+      "rows": 0
+    },
+    {
+      "name": "mailbox_poll",
+      "rows": 3
+    },
+    {
+      "name": "reply_rescan",
+      "rows": 0
+    },
+    {
+      "name": "runtime_due",
+      "rows": 0
+    }
+  ],
+  "hits": [],
+  "hit_count": 0,
+  "values_never_exported": true,
+  "scope_gaps": [
+    "API response artifacts inspected where captured by existing tests; no separately uncaptured live HTTP response corpus",
+    "trusted fixture/tool definition literals, encrypted credential/business storage and TSX cache excluded explicitly",
+    "scanner generated result/inventory and later terminal seal are metadata, produced after read-only scan"
+  ],
+  "pass": true
+}

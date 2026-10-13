@@ -1,0 +1,11 @@
+--- src/replies/worker.ts
++++ src/replies/worker.ts
+@@ -78,7 +78,7 @@
+    }
+    const tail=run.cursor>=run.highWater,horizon=tail?run.tailHighWater!:run.highWater;
+    const read=validateReadResult(await this.adapter.read(tenant,mailbox,run.uidvalidity,run.cursor,horizon,signal),run.uidvalidity,this.adapter.mode==='local_test'?'local_fixture':'imap_headers');
+-   if(read.kind==='uidvalidity_changed'){run=await this.store.capture(tenant,mailbox,read.snapshot,guard,identity(run));return {state:run.state};}
++   if(read.kind==='uidvalidity_changed'){await this.adapter.snapshot(tenant,mailbox,signal);run=await this.store.capture(tenant,mailbox,read.snapshot,guard,identity(run));return {state:run.state};}
+    const page=read.page;
+    const base={...identity(run),...page};
+    return await this.store.page(tenant,mailbox,tail?{...base,kind:'tail',tailHighWater:horizon}:{...base,kind:'scan'},guard);

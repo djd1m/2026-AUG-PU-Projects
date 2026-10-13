@@ -1,0 +1,101 @@
+{
+  "at": "2026-10-06T19:14:17.053824+00:00",
+  "prior_guard_terminal_count": 2192,
+  "prior_terminal_PID_currently_exists": [],
+  "currently_owned_guarded_processes": [
+    {
+      "pid": 1000729,
+      "startticks": "123695364",
+      "state": "S",
+      "command_sha256": "23b7bad064727444d53c48e974b3d871c6f1a69a6b3de21a5fe54160d17132ee",
+      "native_start_tick": "123695364"
+    },
+    {
+      "pid": 1000730,
+      "startticks": "123695365",
+      "state": "S",
+      "command_sha256": "c640e0b4487c250537ad5b7fd96d5748fe3624d7ced2db4a9f9f1ef09c603485",
+      "native_start_tick": "123695365"
+    },
+    {
+      "pid": 1000783,
+      "startticks": "123695381",
+      "state": "S",
+      "command_sha256": "7754c7daa1c966a31d6616b68c734d118f5cd2e68cd4d668a5a3fce8b032d5dc",
+      "native_start_tick": "123695381"
+    },
+    {
+      "pid": 1000808,
+      "startticks": "123695393",
+      "state": "S",
+      "command_sha256": "d0f6412f395f63b5d039e4af64702e286ec7a16546c48c44b23560a69e1a0723",
+      "native_start_tick": "123695393"
+    },
+    {
+      "pid": 1000881,
+      "startticks": "123695426",
+      "state": "S",
+      "command_sha256": "5cfabffde7b5c5a9c15c59fd926ab2ac2d978ac192bdb96de84e10d178569e6f",
+      "native_start_tick": "123695426"
+    },
+    {
+      "pid": 1001404,
+      "startticks": "123695567",
+      "state": "T",
+      "command_sha256": "3c213cb5bdb25cbcf65df36e28738ae4b21285f13c1b3e81a26e376cfefd8afd",
+      "native_start_tick": "123695567"
+    },
+    {
+      "pid": 1001473,
+      "startticks": "123695598",
+      "state": "S",
+      "command_sha256": "5cfabffde7b5c5a9c15c59fd926ab2ac2d978ac192bdb96de84e10d178569e6f",
+      "native_start_tick": "123695598"
+    },
+    {
+      "pid": 1001480,
+      "startticks": "123695607",
+      "state": "S",
+      "command_sha256": "3c213cb5bdb25cbcf65df36e28738ae4b21285f13c1b3e81a26e376cfefd8afd",
+      "native_start_tick": "123695607"
+    },
+    {
+      "pid": 1001553,
+      "startticks": "123695643",
+      "state": "S",
+      "command_sha256": "3c213cb5bdb25cbcf65df36e28738ae4b21285f13c1b3e81a26e376cfefd8afd",
+      "native_start_tick": "123695643"
+    },
+    {
+      "pid": 1001685,
+      "startticks": "123695683",
+      "state": "S",
+      "command_sha256": "3c213cb5bdb25cbcf65df36e28738ae4b21285f13c1b3e81a26e376cfefd8afd",
+      "native_start_tick": "123695683"
+    },
+    {
+      "pid": 1001892,
+      "startticks": "123695728",
+      "state": "S",
+      "command_sha256": "3c213cb5bdb25cbcf65df36e28738ae4b21285f13c1b3e81a26e376cfefd8afd",
+      "native_start_tick": "123695728"
+    },
+    {
+      "pid": 1002075,
+      "startticks": "123695772",
+      "state": "S",
+      "command_sha256": "3c213cb5bdb25cbcf65df36e28738ae4b21285f13c1b3e81a26e376cfefd8afd",
+      "native_start_tick": "123695772"
+    },
+    {
+      "pid": 1026801,
+      "startticks": "123706673",
+      "state": "R",
+      "command_sha256": "1aa9cf5c0bca8df239eca152d65c19745f1607b3f38766e7b7bef5f353d3c116",
+      "native_start_tick": "123706673"
+    }
+  ],
+  "fullpg_shell_pid": 951190,
+  "fullpg_shell_exists": false,
+  "prephysical_snapshot": "unavailable; physical already reset"
+}

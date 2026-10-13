@@ -1,0 +1,189 @@
+TAP version 13
+# Subtest: F05 B1–B6 real PostgreSQL HTTP evidence and public report gates
+    # Subtest: B1 owner input manual provenance unknown and no external source IO
+    ok 1 - B1 owner input manual provenance unknown and no external source IO
+      ---
+      duration_ms: 104.245617
+      type: 'test'
+      ...
+    # Subtest: F1 primitive direction rejects arrays objects null with zero observation/event writes
+    ok 2 - F1 primitive direction rejects arrays objects null with zero observation/event writes
+      ---
+      duration_ms: 37.849574
+      type: 'test'
+      ...
+    # Subtest: B2 owner pair, stale/incomparable/noimprovement and foreign404
+    ok 3 - B2 owner pair, stale/incomparable/noimprovement and foreign404
+      ---
+      duration_ms: 95.971714
+      type: 'test'
+      ...
+    # Subtest: B3 concurrent explicit share yields ONE report/event and payload409
+    not ok 4 - B3 concurrent explicit share yields ONE report/event and payload409
+      ---
+      duration_ms: 40.197814
+      type: 'test'
+      location: '/app/tests/evidence-integration.test.ts:1:5560'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          {
+        +   error: {
+        +     code: 'idempotency_conflict',
+        +     message: 'idempotency_conflict'
+        -   data: {
+        -     id: 'd0c3400d-0f23-4665-9c87-4ac26b11bf8f',
+        -     url: '/reports/5ssb59L4--1WT6t2wxn8Qvh-pcedSJnPUrxvm8PoO-c'
+            },
+        -   meta: {}
+          }
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        data:
+          id: 'd0c3400d-0f23-4665-9c87-4ac26b11bf8f'
+          url: '/reports/5ssb59L4--1WT6t2wxn8Qvh-pcedSJnPUrxvm8PoO-c'
+        meta:
+      actual:
+        error:
+          code: 'idempotency_conflict'
+          message: 'idempotency_conflict'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (/app/tests/evidence-integration.test.ts:63:11)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (/app/tests/evidence-integration.test.ts:57:3)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: B2/B3 HTTP denominators29/30 raw counts versus ratios and window guard
+    ok 5 - B2/B3 HTTP denominators29/30 raw counts versus ratios and window guard
+      ---
+      duration_ms: 103.783807
+      type: 'test'
+      ...
+    # Subtest: B3 authoritative clock after waiting lock blocks expired create
+    ok 6 - B3 authoritative clock after waiting lock blocks expired create
+      ---
+      duration_ms: 280.09982
+      type: 'test'
+      ...
+    # Subtest: B4 EVERY view current TEST entitlement, expiry and committed revocation
+    not ok 7 - B4 EVERY view current TEST entitlement, expiry and committed revocation
+      ---
+      duration_ms: 52.117648
+      type: 'test'
+      location: '/app/tests/evidence-integration.test.ts:1:9584'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        false !== true
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (/app/tests/evidence-integration.test.ts:96:11)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (/app/tests/evidence-integration.test.ts:91:3)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: F1 primitive kind rejects arrays objects null with zero observation/event writes
+    not ok 8 - F1 primitive kind rejects arrays objects null with zero observation/event writes
+      ---
+      duration_ms: 13.711724
+      type: 'test'
+      location: '/app/tests/evidence-integration.test.ts:1:11846'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        404 !== 400
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 400
+      actual: 404
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (/app/tests/evidence-integration.test.ts:114:130)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (/app/tests/evidence-integration.test.ts:110:3)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: B5 own aggregate counts explicit idempotent copy/link and bounded histories
+    not ok 9 - B5 own aggregate counts explicit idempotent copy/link and bounded histories
+      ---
+      duration_ms: 23.021748
+      type: 'test'
+      location: '/app/tests/evidence-integration.test.ts:1:12449'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        404 !== 200
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 200
+      actual: 404
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (/app/tests/evidence-integration.test.ts:121:115)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (/app/tests/evidence-integration.test.ts:118:3)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: B1/B5 server storage caps observations1000 reports200 events600
+    not ok 10 - B1/B5 server storage caps observations1000 reports200 events600
+      ---
+      duration_ms: 96.921265
+      type: 'test'
+      location: '/app/tests/evidence-integration.test.ts:1:16143'
+      failureType: 'testCodeFailure'
+      error: 'invalid input syntax for type uuid: ""'
+      code: '22P02'
+      name: 'error'
+      stack: |-
+        /app/node_modules/pg-pool/index.js:45:11
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async TestContext.<anonymous> (/app/tests/evidence-integration.test.ts:156:4)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (/app/tests/evidence-integration.test.ts:146:3)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    1..10
+not ok 1 - F05 B1–B6 real PostgreSQL HTTP evidence and public report gates
+  ---
+  duration_ms: 2012.637058
+  type: 'test'
+  location: '/app/tests/evidence-integration.test.ts:1:977'
+  failureType: 'subtestsFailed'
+  error: '5 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 11
+# suites 0
+# pass 5
+# fail 6
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2611.790763
+
+Mutant exit: 1

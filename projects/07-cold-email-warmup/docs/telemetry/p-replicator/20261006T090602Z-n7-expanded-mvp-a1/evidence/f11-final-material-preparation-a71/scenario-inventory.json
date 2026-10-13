@@ -1,0 +1,131 @@
+{
+  "source_revision": "e7f03164549f011b0adef80f1e2d6df3d734487a",
+  "source_sha256": "bcfedf23511d32f8b41f38a8d83ee6d655887461b9023b4d58ac03885560b658",
+  "source_only_preparation": true,
+  "runtime_authorized": false,
+  "entries": {
+    "stale_header_config": {
+      "title": "F11 ordinary HEADER material stale_header_config",
+      "bound_seconds": 45,
+      "source_test_timeout_ms": 45000,
+      "arguments": [
+        "stale_header_config",
+        "stale_header_config",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material stale_header_config$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "launcher_argv": [
+        "python3",
+        "/tmp/n7-f11-final-material-prep-a71-20261007/launch.py",
+        "stale_header_config",
+        "45",
+        "stale_header_config",
+        "stale_header_config",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material stale_header_config$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "parent_schema": "n7_a71_stale_header_config_261007135137",
+      "required_actual_callbacks": 1,
+      "expected_evidence_file": "a40-header-only-stale_header_config.json",
+      "source_sha256": "bcfedf23511d32f8b41f38a8d83ee6d655887461b9023b4d58ac03885560b658"
+    },
+    "stale_header_source_mailbox": {
+      "title": "F11 ordinary HEADER material stale_header_source_mailbox",
+      "bound_seconds": 45,
+      "source_test_timeout_ms": 45000,
+      "arguments": [
+        "stale_header_source_mailbox",
+        "stale_header_source_mailbox",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material stale_header_source_mailbox$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "launcher_argv": [
+        "python3",
+        "/tmp/n7-f11-final-material-prep-a71-20261007/launch.py",
+        "stale_header_source_mailbox",
+        "45",
+        "stale_header_source_mailbox",
+        "stale_header_source_mailbox",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material stale_header_source_mailbox$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "parent_schema": "n7_a71_stale_header_source_mailbox_261007135137",
+      "required_actual_callbacks": 1,
+      "expected_evidence_file": "a40-header-only-stale_header_source_mailbox.json",
+      "source_sha256": "bcfedf23511d32f8b41f38a8d83ee6d655887461b9023b4d58ac03885560b658"
+    },
+    "new_uid_semantic_stop": {
+      "title": "F11 ordinary HEADER material new_uid_semantic_stop",
+      "bound_seconds": 45,
+      "source_test_timeout_ms": 45000,
+      "arguments": [
+        "new_uid_semantic_stop",
+        "new_uid_semantic_stop",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material new_uid_semantic_stop$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "launcher_argv": [
+        "python3",
+        "/tmp/n7-f11-final-material-prep-a71-20261007/launch.py",
+        "new_uid_semantic_stop",
+        "45",
+        "new_uid_semantic_stop",
+        "new_uid_semantic_stop",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ordinary HEADER material new_uid_semantic_stop$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "parent_schema": "n7_a71_new_uid_semantic_stop_261007135137",
+      "required_actual_callbacks": 1,
+      "expected_evidence_file": "a40-header-only-new_uid_semantic_stop.json",
+      "source_sha256": "bcfedf23511d32f8b41f38a8d83ee6d655887461b9023b4d58ac03885560b658"
+    },
+    "runtime_external": {
+      "title": "F11 A40 runtime external reason and internal failure stay distinct",
+      "bound_seconds": 45,
+      "source_test_timeout_ms": null,
+      "arguments": [
+        "runtime_external",
+        "runtime_external",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 A40 runtime external reason and internal failure stay distinct$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "launcher_argv": [
+        "python3",
+        "/tmp/n7-f11-final-material-prep-a71-20261007/launch.py",
+        "runtime_external",
+        "45",
+        "runtime_external",
+        "runtime_external",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 A40 runtime external reason and internal failure stay distinct$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "parent_schema": "n7_a71_runtime_external_261007135137",
+      "required_actual_callbacks": 1,
+      "expected_evidence_file": null,
+      "source_sha256": "bcfedf23511d32f8b41f38a8d83ee6d655887461b9023b4d58ac03885560b658"
+    }
+  },
+  "order": [
+    "stale_header_config",
+    "stale_header_source_mailbox",
+    "new_uid_semantic_stop",
+    "runtime_external"
+  ],
+  "default_empty_command_allowed": false
+}

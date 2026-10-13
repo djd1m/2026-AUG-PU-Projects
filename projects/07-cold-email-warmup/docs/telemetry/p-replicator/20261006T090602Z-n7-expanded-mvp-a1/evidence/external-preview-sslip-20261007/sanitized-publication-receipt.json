@@ -1,0 +1,28 @@
+{
+  "publication_confirmation_utc": "2026-10-07T05:48:40Z",
+  "url": "https://n7.194.85.249.105.sslip.io/signin",
+  "image": "sha256:3791cac50f5b6c2c87dd5cd3975f8141a1dd846b405361ca7456623121ec0b37",
+  "changed": [
+    "APP_ORIGIN",
+    "web ingress network",
+    "additive Caddy host route"
+  ],
+  "https_status": 200,
+  "tls_verify_result": 0,
+  "http_redirect": 308,
+  "browser": "existing Docker codex-ui-playwright",
+  "registration": "PASS",
+  "authenticated_app": "PASS",
+  "secure_http_only_cookie": true,
+  "six_nav_headings_and_content": "PASS",
+  "page_errors": 0,
+  "partner_api_status": 404,
+  "auth_me_before_registration_status": 401,
+  "limitations": [
+    "F08 preview; F11 candidate not deployed",
+    "partner API404; six navigation checks are not full functional acceptance"
+  ],
+  "model_actual": null,
+  "usage": null,
+  "cost": null
+}

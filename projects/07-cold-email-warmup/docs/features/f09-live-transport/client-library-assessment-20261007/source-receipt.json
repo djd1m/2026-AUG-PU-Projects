@@ -1,0 +1,91 @@
+{
+  "measured_utc": "2026-10-07T06:34:01Z",
+  "packages": [
+    {
+      "name": "nodemailer",
+      "version": "10.0.15",
+      "license": "MIT-0",
+      "engines": {
+        "node": ">=20.0.0"
+      },
+      "dependencies": {},
+      "integrity": "sha512-EUqp5PhtcsYXs9Fq/lS7s/8zlTrnBqmzZWzFFROrNikMiz+om/YRKMwqN907t+0A1KKyT8jd39CBUbFZmaZmcA==",
+      "archive_bytes": 348050,
+      "files": [
+        {
+          "path": "/tmp/n7-client-library-assessment-20261007/nodemailer/LICENSE",
+          "sha256": "4f814dcacd2da618d62829ea1f6238701cf421f18a6b36c91c5d8212245e2c78",
+          "bytes": 935
+        },
+        {
+          "path": "/tmp/n7-client-library-assessment-20261007/nodemailer/package.json",
+          "sha256": "5fa4fd8866ae6b39faa90cc71d750ce44a96bbf4a0156e62ad80b43eb31f69e6",
+          "bytes": 6301
+        }
+      ],
+      "source_files": [
+        {
+          "member": "package/dist/esm/smtp-connection/index.js",
+          "path": "/tmp/n7-client-library-assessment-20261007/nodemailer/sources/smtp-connection.js",
+          "sha256": "f35b6dc75f1237d68235d65df2ef19c8058699651c4eb7e1fc376eae5e9c85c6",
+          "bytes": 76795
+        },
+        {
+          "member": "package/dist/esm/smtp-transport/index.js",
+          "path": "/tmp/n7-client-library-assessment-20261007/nodemailer/sources/smtp-transport.js",
+          "sha256": "eea1daa5ee93836054a72a903e762eff76dbed594965194b02d97da2627ee383",
+          "bytes": 13134
+        }
+      ]
+    },
+    {
+      "name": "imapflow",
+      "version": "2.2.6",
+      "license": "MIT",
+      "engines": {
+        "node": ">=20.0.0"
+      },
+      "dependencies": {
+        "pino": "10.3.1",
+        "libqp": "2.1.2",
+        "socks": "2.8.10",
+        "libmime": "5.4.7",
+        "libbase64": "1.3.2",
+        "iconv-lite": "0.7.3",
+        "encoding-japanese": "2.4.0",
+        "@zone-eu/mailsplit": "5.4.20"
+      },
+      "integrity": "sha512-8yMy5Pe9CfWGGrs8z+GzJ3q7DVCD6hNiiuUjxNTUJHM/QwwMHLYiVmTfcwWKSPaf8Aim/IPkcMK0I1thDdjgWg==",
+      "archive_bytes": 329622,
+      "files": [
+        {
+          "path": "/tmp/n7-client-library-assessment-20261007/imapflow/package.json",
+          "sha256": "2eaee15a684970bc74d2fc7d520435ecc2510fd8dc7f7b4b871ff468c3debecd",
+          "bytes": 3332
+        }
+      ],
+      "source_files": [
+        {
+          "member": "package/dist/esm/imap-flow.js",
+          "path": "/tmp/n7-client-library-assessment-20261007/imapflow/sources/imap-flow.js",
+          "sha256": "6a97b527bd05774874b0149f21883e9f022db089dfc5be8d298605ef5f55a55e",
+          "bytes": 166616
+        },
+        {
+          "member": "package/dist/esm/commands/fetch.js",
+          "path": "/tmp/n7-client-library-assessment-20261007/imapflow/sources/fetch.js",
+          "sha256": "963469c4183f08cc63ea80a85a6222dad1b21602e18bdf600f9ffae1e7550724",
+          "bytes": 12363
+        },
+        {
+          "member": "package/LICENSE.txt",
+          "path": "/tmp/n7-client-library-assessment-20261007/imapflow/sources/LICENSE.txt",
+          "sha256": "47332d2cd4269747a7b8a1ab5406ded5ff177dbafd7cf7e79060fe48ff5b45eb",
+          "bytes": 939
+        }
+      ]
+    }
+  ],
+  "execution": "read-only source extraction; no install, lifecycle scripts or library execution",
+  "inspection_correction": "Intermediate SMTP filename collision with .d.ts corrected; final receipts bind explicit ESM JS members."
+}

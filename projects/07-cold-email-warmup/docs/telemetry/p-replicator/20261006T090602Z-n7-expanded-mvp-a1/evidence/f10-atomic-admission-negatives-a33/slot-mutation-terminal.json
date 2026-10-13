@@ -1,0 +1,235 @@
+{
+  "utc": "2026-10-06T22:48:05.832369+00:00",
+  "results": [
+    {
+      "name": "one-use-consumed-drop",
+      "expected_material_assertion": "second consumption must reject",
+      "baseline": {
+        "utc": "2026-10-06T22:47:59.807546+00:00",
+        "pid": 54047,
+        "startticks": "124988927",
+        "native_exit": 0,
+        "elapsed_seconds": 0.5282967190723866,
+        "test_count_exact2": true,
+        "assertion_failure": false,
+        "failure_titles": [],
+        "executed_compiled_module_sha256": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701",
+        "tap_sha256": "df1d34eb75ccbde976e3c4992cee9eb6a2d4b2a4cbe94015f790a9e21b235549"
+      },
+      "negative": {
+        "utc": "2026-10-06T22:48:00.347512+00:00",
+        "pid": 54143,
+        "startticks": "124988981",
+        "native_exit": 1,
+        "elapsed_seconds": 0.5283218289259821,
+        "test_count_exact2": true,
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - preadmitted slots are one-use and unused cleanup refuses a child-bound owner"
+        ],
+        "executed_compiled_module_sha256": "cbb7575aa6d6363979b6cfba92560a8d080455c4caf98e8b87535732230eded3",
+        "tap_sha256": "12396cd55a69c89f8cc3096b598511602a634abcc0ec59495bda87f469483710"
+      },
+      "restored": {
+        "utc": "2026-10-06T22:48:00.998298+00:00",
+        "pid": 54203,
+        "startticks": "124989036",
+        "native_exit": 0,
+        "elapsed_seconds": 0.637129798065871,
+        "test_count_exact2": true,
+        "assertion_failure": false,
+        "failure_titles": [],
+        "executed_compiled_module_sha256": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701",
+        "tap_sha256": "35bfc20783bad7d739c1bfe571c8ca8256d0b2a7dfa298ad3bd79d3e8879e77f"
+      },
+      "original_sha256": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701",
+      "mutant_sha256": "cbb7575aa6d6363979b6cfba92560a8d080455c4caf98e8b87535732230eded3",
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "unused-reservation-leak",
+      "expected_material_assertion": "unused exact reservation releases1 row",
+      "baseline": {
+        "utc": "2026-10-06T22:47:59.807546+00:00",
+        "pid": 54047,
+        "startticks": "124988927",
+        "native_exit": 0,
+        "elapsed_seconds": 0.5282967190723866,
+        "test_count_exact2": true,
+        "assertion_failure": false,
+        "failure_titles": [],
+        "executed_compiled_module_sha256": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701",
+        "tap_sha256": "df1d34eb75ccbde976e3c4992cee9eb6a2d4b2a4cbe94015f790a9e21b235549"
+      },
+      "negative": {
+        "utc": "2026-10-06T22:48:01.657432+00:00",
+        "pid": 54548,
+        "startticks": "124989101",
+        "native_exit": 1,
+        "elapsed_seconds": 0.638878287980333,
+        "test_count_exact2": true,
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - preadmitted slots are one-use and unused cleanup refuses a child-bound owner",
+          "not ok 2 - unused reservation cleanup retains exact proof after a database release failure"
+        ],
+        "executed_compiled_module_sha256": "bdb71343d38c22417fd80fbf60b6ad9c2ef49fe154ce6296c752f4257d2dafb1",
+        "tap_sha256": "1a4484712a457198db099098a082c7df5217be2610e0f8c5d71fd477b8dd38e4"
+      },
+      "restored": {
+        "utc": "2026-10-06T22:48:02.253718+00:00",
+        "pid": 54887,
+        "startticks": "124989167",
+        "native_exit": 0,
+        "elapsed_seconds": 0.5813788380473852,
+        "test_count_exact2": true,
+        "assertion_failure": false,
+        "failure_titles": [],
+        "executed_compiled_module_sha256": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701",
+        "tap_sha256": "2dccc7a070d28da148dfdc5f3ae496436650cf318cda1a071a7a140c2fca4880"
+      },
+      "original_sha256": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701",
+      "mutant_sha256": "bdb71343d38c22417fd80fbf60b6ad9c2ef49fe154ce6296c752f4257d2dafb1",
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "child-bound-unused-release",
+      "expected_material_assertion": "live child-bound owner cannot dispose as unused",
+      "baseline": {
+        "utc": "2026-10-06T22:47:59.807546+00:00",
+        "pid": 54047,
+        "startticks": "124988927",
+        "native_exit": 0,
+        "elapsed_seconds": 0.5282967190723866,
+        "test_count_exact2": true,
+        "assertion_failure": false,
+        "failure_titles": [],
+        "executed_compiled_module_sha256": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701",
+        "tap_sha256": "df1d34eb75ccbde976e3c4992cee9eb6a2d4b2a4cbe94015f790a9e21b235549"
+      },
+      "negative": {
+        "utc": "2026-10-06T22:48:02.848418+00:00",
+        "pid": 54939,
+        "startticks": "124989226",
+        "native_exit": 1,
+        "elapsed_seconds": 0.5811709770932794,
+        "test_count_exact2": true,
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - preadmitted slots are one-use and unused cleanup refuses a child-bound owner"
+        ],
+        "executed_compiled_module_sha256": "5168250b4008513519822f80233f303c43e7e1b306f7367f07e58872f2f1a4e0",
+        "tap_sha256": "b9d3f2eef21d75a206dda869b38ef2de105b6cbee65775093809468edac33158"
+      },
+      "restored": {
+        "utc": "2026-10-06T22:48:03.440345+00:00",
+        "pid": 55044,
+        "startticks": "124989286",
+        "native_exit": 0,
+        "elapsed_seconds": 0.5795238169375807,
+        "test_count_exact2": true,
+        "assertion_failure": false,
+        "failure_titles": [],
+        "executed_compiled_module_sha256": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701",
+        "tap_sha256": "52c81195f8b54661a4b56b627e5381e5e0c8ae897be3a74fdbb5cfef9659fdfe"
+      },
+      "original_sha256": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701",
+      "mutant_sha256": "5168250b4008513519822f80233f303c43e7e1b306f7367f07e58872f2f1a4e0",
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "retry-unused-proof-lost",
+      "expected_material_assertion": "DB release fault retains exact proof for later retry",
+      "baseline": {
+        "utc": "2026-10-06T22:47:59.807546+00:00",
+        "pid": 54047,
+        "startticks": "124988927",
+        "native_exit": 0,
+        "elapsed_seconds": 0.5282967190723866,
+        "test_count_exact2": true,
+        "assertion_failure": false,
+        "failure_titles": [],
+        "executed_compiled_module_sha256": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701",
+        "tap_sha256": "df1d34eb75ccbde976e3c4992cee9eb6a2d4b2a4cbe94015f790a9e21b235549"
+      },
+      "negative": {
+        "utc": "2026-10-06T22:48:04.032911+00:00",
+        "pid": 55249,
+        "startticks": "124989345",
+        "native_exit": 1,
+        "elapsed_seconds": 0.5801004769746214,
+        "test_count_exact2": true,
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 2 - unused reservation cleanup retains exact proof after a database release failure"
+        ],
+        "executed_compiled_module_sha256": "865140e262d7cd9e116e9c7630530646845142667f09a05d8bcb279e835a7036",
+        "tap_sha256": "e4df71e5c95708650a94d1e64d4a90f4284ee81c6a18140e24c264eb5cc883c3"
+      },
+      "restored": {
+        "utc": "2026-10-06T22:48:04.628859+00:00",
+        "pid": 55348,
+        "startticks": "124989404",
+        "native_exit": 0,
+        "elapsed_seconds": 0.5838654690887779,
+        "test_count_exact2": true,
+        "assertion_failure": false,
+        "failure_titles": [],
+        "executed_compiled_module_sha256": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701",
+        "tap_sha256": "215d5a80c9d41b4e301a4adf560a01985d73fcd597757e975d5ff8f0f97aba90"
+      },
+      "original_sha256": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701",
+      "mutant_sha256": "865140e262d7cd9e116e9c7630530646845142667f09a05d8bcb279e835a7036",
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "tenant-binding-drop",
+      "expected_material_assertion": "foreign tenant one-use consumption denied",
+      "baseline": {
+        "utc": "2026-10-06T22:47:59.807546+00:00",
+        "pid": 54047,
+        "startticks": "124988927",
+        "native_exit": 0,
+        "elapsed_seconds": 0.5282967190723866,
+        "test_count_exact2": true,
+        "assertion_failure": false,
+        "failure_titles": [],
+        "executed_compiled_module_sha256": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701",
+        "tap_sha256": "df1d34eb75ccbde976e3c4992cee9eb6a2d4b2a4cbe94015f790a9e21b235549"
+      },
+      "negative": {
+        "utc": "2026-10-06T22:48:05.228992+00:00",
+        "pid": 55501,
+        "startticks": "124989464",
+        "native_exit": 1,
+        "elapsed_seconds": 0.5859756390564144,
+        "test_count_exact2": true,
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - preadmitted slots are one-use and unused cleanup refuses a child-bound owner"
+        ],
+        "executed_compiled_module_sha256": "49a8e6246dc32810fbf0ab283479c6af38fdd0310b615e015181ed25eea3b751",
+        "tap_sha256": "bd8c397bca61ae0ce45bfd2805893730d77c9549c513f11f2fb4051350b962b0"
+      },
+      "restored": {
+        "utc": "2026-10-06T22:48:05.831371+00:00",
+        "pid": 55649,
+        "startticks": "124989524",
+        "native_exit": 0,
+        "elapsed_seconds": 0.5823554678354412,
+        "test_count_exact2": true,
+        "assertion_failure": false,
+        "failure_titles": [],
+        "executed_compiled_module_sha256": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701",
+        "tap_sha256": "53b98fa94bb29dcb9695c0687fa865da6028b52afeff4604d8c3e36f76c32a77"
+      },
+      "original_sha256": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701",
+      "mutant_sha256": "49a8e6246dc32810fbf0ab283479c6af38fdd0310b615e015181ed25eea3b751",
+      "status": "caught_material_assertion"
+    }
+  ],
+  "shadow_restored": true,
+  "candidate_input_unchanged": true,
+  "remaining_owned_nodes": [],
+  "mutex": "released after receipt"
+}

@@ -1,0 +1,32 @@
+{
+  "scope": "owner-requested priorcontextaudit anddiskthreshold; publicprocesspattern only",
+  "records": [
+    {
+      "operation": "teach",
+      "started_at": "2026-10-07T07:47:33.582918+00:00",
+      "finished_at": "2026-10-07T07:47:34.390883+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "816a06dedd40f511aa2d51df3fe4c038c883aaa94af29105c9b01303665da50b",
+      "stdout_bytes": 372,
+      "expected_reference_found": true,
+      "project_pinned": true,
+      "no_mirror": true,
+      "no_semantic": null
+    },
+    {
+      "operation": "recall",
+      "started_at": "2026-10-07T07:47:34.390942+00:00",
+      "finished_at": "2026-10-07T07:47:35.433155+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "894b2da5ea5d3bed4f88db9df2aea9fd5f79f9659b27a47ddad38280c20428d3",
+      "stdout_bytes": 427,
+      "expected_reference_found": true,
+      "project_pinned": true,
+      "no_mirror": false,
+      "no_semantic": true
+    }
+  ],
+  "lesson_sha256": "2af6bce18a90e93059562d843b1e2f0710bc1d2054182977a6ac418026b548e7",
+  "actual_model": null,
+  "usage": null
+}

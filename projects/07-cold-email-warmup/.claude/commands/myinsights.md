@@ -1,0 +1,1 @@
+../../../../.claude/commands/myinsights.md

@@ -1,0 +1,12 @@
+{
+  "original_file": "yield-reported-complete-negative.tap",
+  "original_sha256": "b69bf2eb8b91a408f0619092891a17cfc0850425355829c666d208d41e74794a",
+  "original_bytes": 1123,
+  "original_scratch_path": "/tmp/n7-f10-atomic-admission-negatives-a33/yield-reported-complete-negative.tap",
+  "original_scratch_unchanged": true,
+  "export_archive": "yield-reported-complete-negative.tap.gz",
+  "archive_sha256": "258b317ba548f188d2417730507a5cc41c17a9ccb24c19e2a83d6e972ace0e24",
+  "archive_bytes": 564,
+  "roundtrip_verified": true,
+  "reason": "Lossless export of immutable raw TAP whose whitespace-only diagnostic lines fail git diff --check; no source or raw test bytes normalized."
+}

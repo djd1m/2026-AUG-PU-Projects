@@ -1,0 +1,20 @@
+TAP version 13
+# Subtest: native five-second rescans yield fairly to later healthy E across competing worker restart
+not ok 1 - native five-second rescans yield fairly to later healthy E across competing worker restart
+  ---
+  duration_ms: 724.096099
+  type: 'test'
+  location: '/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts:1:11100'
+  failureType: 'testCodeFailure'
+  error: 'transport_denied'
+  code: 'transport_denied'
+  stack: |-
+    LiveReplyAdapter.operation (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/src/replies/adapter.ts:69:51)
+    LiveReplyAdapter.snapshot (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/src/replies/adapter.ts:75:73)
+    <anonymous> (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-fixture.ts:89:99)
+    Array.map (<anonymous>)
+    adversarialFixture (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-fixture.ts:89:37)
+    async TestContext.<anonymous> (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts:66:122)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...

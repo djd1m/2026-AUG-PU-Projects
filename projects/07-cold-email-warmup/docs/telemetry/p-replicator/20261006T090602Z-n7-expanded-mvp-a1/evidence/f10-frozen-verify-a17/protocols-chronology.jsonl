@@ -1,0 +1,93 @@
+{"at": "2026-10-06T19:35:13.321374+00:00", "stream": "tap", "line": "TAP version 13"}
+{"at": "2026-10-06T19:35:15.418294+00:00", "stream": "tap", "line": "# Subtest: pinned SMTP accepts only the final DATA completion"}
+{"at": "2026-10-06T19:35:15.419809+00:00", "stream": "tap", "line": "ok 1 - pinned SMTP accepts only the final DATA completion"}
+{"at": "2026-10-06T19:35:15.419987+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:35:15.420009+00:00", "stream": "tap", "line": "  duration_ms: 1354.801894"}
+{"at": "2026-10-06T19:35:15.420022+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:35:15.420034+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:35:17.012611+00:00", "stream": "tap", "line": "# Subtest: post DATA uncertainty never retries or releases quota"}
+{"at": "2026-10-06T19:35:17.012840+00:00", "stream": "tap", "line": "ok 2 - post DATA uncertainty never retries or releases quota"}
+{"at": "2026-10-06T19:35:17.012878+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:35:17.012894+00:00", "stream": "tap", "line": "  duration_ms: 1479.466018"}
+{"at": "2026-10-06T19:35:17.012906+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:35:17.012919+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:35:17.343140+00:00", "stream": "tap", "line": "# Subtest: IMAP proves bounded read only UID range coverage"}
+{"at": "2026-10-06T19:35:17.345542+00:00", "stream": "tap", "line": "ok 3 - IMAP proves bounded read only UID range coverage"}
+{"at": "2026-10-06T19:35:17.345639+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:35:17.345662+00:00", "stream": "tap", "line": "  duration_ms: 456.508693"}
+{"at": "2026-10-06T19:35:17.345683+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:35:17.345698+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:35:18.637198+00:00", "stream": "tap", "line": "# Subtest: hostile framing and cancellation release bounded resources"}
+{"at": "2026-10-06T19:35:18.640041+00:00", "stream": "tap", "line": "ok 4 - hostile framing and cancellation release bounded resources"}
+{"at": "2026-10-06T19:35:18.640132+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:35:18.640159+00:00", "stream": "tap", "line": "  duration_ms: 914.363267"}
+{"at": "2026-10-06T19:35:18.640180+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:35:18.640199+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:35:19.224451+00:00", "stream": "tap", "line": "# Subtest: transport secrets and fixture authority remain isolated"}
+{"at": "2026-10-06T19:35:19.225992+00:00", "stream": "tap", "line": "ok 5 - transport secrets and fixture authority remain isolated"}
+{"at": "2026-10-06T19:35:19.226316+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:35:19.226826+00:00", "stream": "tap", "line": "  duration_ms: 619.678481"}
+{"at": "2026-10-06T19:35:19.226919+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:35:19.227010+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:35:22.413945+00:00", "stream": "tap", "line": "# Subtest: fragmented literals numeric gaps empty tails and exact byte bounds fail closed"}
+{"at": "2026-10-06T19:35:22.414060+00:00", "stream": "tap", "line": "ok 6 - fragmented literals numeric gaps empty tails and exact byte bounds fail closed"}
+{"at": "2026-10-06T19:35:22.414092+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:35:22.414120+00:00", "stream": "tap", "line": "  duration_ms: 3772.469057"}
+{"at": "2026-10-06T19:35:22.414142+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:35:22.414158+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:35:23.572480+00:00", "stream": "tap", "line": "# Subtest: write drain TLS hostname receive limits and cleanup use actual sockets"}
+{"at": "2026-10-06T19:35:23.572598+00:00", "stream": "tap", "line": "ok 7 - write drain TLS hostname receive limits and cleanup use actual sockets"}
+{"at": "2026-10-06T19:35:23.572699+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:35:23.572748+00:00", "stream": "tap", "line": "  duration_ms: 704.639871"}
+{"at": "2026-10-06T19:35:23.572791+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:35:23.572806+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:35:25.689345+00:00", "stream": "tap", "line": "# Subtest: pre DATA proof post DATA truncated final and acceptance before close remain distinct"}
+{"at": "2026-10-06T19:35:25.689431+00:00", "stream": "tap", "line": "ok 8 - pre DATA proof post DATA truncated final and acceptance before close remain distinct"}
+{"at": "2026-10-06T19:35:25.689455+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:35:25.689477+00:00", "stream": "tap", "line": "  duration_ms: 2379.313629"}
+{"at": "2026-10-06T19:35:25.689498+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:35:25.689515+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:35:25.919273+00:00", "stream": "tap", "line": "# Subtest: receive line bound rejects8193 bytes before peer text is accepted"}
+{"at": "2026-10-06T19:35:25.919688+00:00", "stream": "tap", "line": "ok 9 - receive line bound rejects8193 bytes before peer text is accepted"}
+{"at": "2026-10-06T19:35:25.919793+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:35:25.919854+00:00", "stream": "tap", "line": "  duration_ms: 200.525532"}
+{"at": "2026-10-06T19:35:25.919880+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:35:25.919914+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:35:35.933936+00:00", "stream": "tap", "line": "# {\"phase\":\"EHLO\",\"elapsedMs\":10013.419614999999,\"outcome\":\"pre_data_transient\",\"commands\":[\"EHLO\"]}"}
+{"at": "2026-10-06T19:35:36.276028+00:00", "stream": "tap", "line": "# Subtest: whole SMTP EHLO challenge phase expires once at ten seconds"}
+{"at": "2026-10-06T19:35:36.276256+00:00", "stream": "tap", "line": "ok 10 - whole SMTP EHLO challenge phase expires once at ten seconds"}
+{"at": "2026-10-06T19:35:36.276285+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:35:36.276302+00:00", "stream": "tap", "line": "  duration_ms: 10262.430953"}
+{"at": "2026-10-06T19:35:36.276317+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:35:36.276331+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:35:46.294745+00:00", "stream": "tap", "line": "# {\"phase\":\"AUTH\",\"elapsedMs\":10017.823145999999,\"outcome\":\"pre_data_transient\",\"commands\":[\"EHLO\",\"AUTH\",\"AUTH_RESPONSE\"]}"}
+{"at": "2026-10-06T19:35:46.589078+00:00", "stream": "tap", "line": "# Subtest: whole SMTP AUTH challenge phase expires once at ten seconds"}
+{"at": "2026-10-06T19:35:46.589172+00:00", "stream": "tap", "line": "ok 11 - whole SMTP AUTH challenge phase expires once at ten seconds"}
+{"at": "2026-10-06T19:35:46.589649+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:35:46.589686+00:00", "stream": "tap", "line": "  duration_ms: 10359.945388"}
+{"at": "2026-10-06T19:35:46.589702+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:35:46.589715+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:35:46.797196+00:00", "stream": "tap", "line": "# Subtest: same UID coverage remains fixed while a smaller declared horizon fails"}
+{"at": "2026-10-06T19:35:46.797292+00:00", "stream": "tap", "line": "ok 12 - same UID coverage remains fixed while a smaller declared horizon fails"}
+{"at": "2026-10-06T19:35:46.797522+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:35:46.797562+00:00", "stream": "tap", "line": "  duration_ms: 474.91633"}
+{"at": "2026-10-06T19:35:46.797598+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:35:46.797660+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:35:48.947153+00:00", "stream": "tap", "line": "# Subtest: transport grants are separate scoped expiring authority"}
+{"at": "2026-10-06T19:35:48.947294+00:00", "stream": "tap", "line": "ok 13 - transport grants are separate scoped expiring authority"}
+{"at": "2026-10-06T19:35:48.947352+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:35:48.947375+00:00", "stream": "tap", "line": "  duration_ms: 1573.944212"}
+{"at": "2026-10-06T19:35:48.947395+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:35:48.947417+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:36:24.041468+00:00", "stream": "tap", "line": "# Subtest: final live submission preserves all eligibility fences"}
+{"at": "2026-10-06T19:36:24.041570+00:00", "stream": "tap", "line": "ok 14 - final live submission preserves all eligibility fences"}
+{"at": "2026-10-06T19:36:24.041611+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:36:24.041678+00:00", "stream": "tap", "line": "  duration_ms: 35096.656419"}
+{"at": "2026-10-06T19:36:24.041700+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:36:24.041719+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:36:34.670539+00:00", "stream": "tap", "line": "# Subtest: UID reset crash and replay preserve atomic stop effects"}
+{"at": "2026-10-06T19:36:34.671170+00:00", "stream": "tap", "line": "ok 15 - UID reset crash and replay preserve atomic stop effects"}
+{"at": "2026-10-06T19:36:34.671269+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:36:34.671289+00:00", "stream": "tap", "line": "  duration_ms: 10331.526188"}
+{"at": "2026-10-06T19:36:34.671305+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:36:34.671320+00:00", "stream": "tap", "line": "  ..."}

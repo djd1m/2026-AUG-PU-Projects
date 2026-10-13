@@ -1,0 +1,23 @@
+{
+  "runId": "20261006T090602Z-n7-expanded-mvp-a1",
+  "launchMs": 1791371982756.2322,
+  "units": [
+    {
+      "workUnitId": "f11_a54_remaining_controls_review",
+      "tracePath": "/tmp/n7-f11-remaining-controls-review-a54-20261007/receipt.md"
+    }
+  ],
+  "allocated_at": "2026-10-07T11:19:42.756237+00:00",
+  "expected_source_revision": "e9ec591e714932cfdd17339f5017b460f8476b16",
+  "expected_planner_sha256": "3405f012e9f64fcd4da4b8bec346c772d27e6595ac22325d5d0ba58aab7e9063",
+  "expected_objective_sha256": "454daf36fcc7664461732ba347172d395044c2347535406909e58a0bdbb2386b",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "trace_absent_before_dispatch": true,
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "read-only independentreview, no E2E execution"
+  },
+  "scope": "review ONLY A52 exacttestdelta, no coder narrative, no source/DB/runtime mutation"
+}

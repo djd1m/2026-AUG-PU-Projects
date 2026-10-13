@@ -1,0 +1,94 @@
+{
+  "launch_sha256": "d8e28ca38f268d1508c1d889f1ee0aaa6505a4571698ee6331c1f6d8e37eb4e7",
+  "normative_files": [
+    {
+      "path": "projects/07-cold-email-warmup/docs/decisions-owner.md",
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "sha256": "cf47d55af1d5ad4cd5f34c7531f1d2004dfdc98076e7459c76af8b93f3e709d8",
+      "bytes": 8783,
+      "copy": "/tmp/n7-f11-context-plan-a1b-cli/canonical/decisions-owner.md"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/plans/expanded-mvp-plan.md",
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "sha256": "cb9449fb233471275dd6ee67a496d8d04f38ddedf637bdfe4588dfc9689fb13d",
+      "bytes": 18681,
+      "copy": "/tmp/n7-f11-context-plan-a1b-cli/canonical/expanded-mvp-plan.md"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/expanded-mvp/01_specification.md",
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "sha256": "dddb2cbdb5b3f7f54c7d63571ed7429b7abac1d42e6f8eb6ff8079dddc69979a",
+      "bytes": 8592,
+      "copy": "/tmp/n7-f11-context-plan-a1b-cli/canonical/01_specification.md"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/docs/features/expanded-mvp/ai-policy-v1.md",
+      "git_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+      "sha256": "d3d7c9d4614134f1dca9078ed797e3f8ee94a7bc613856bb54f2f2628b566512",
+      "bytes": 13041,
+      "copy": "/tmp/n7-f11-context-plan-a1b-cli/canonical/ai-policy-v1.md"
+    },
+    {
+      "path": "AGENTS.md",
+      "revision": "currentmain4053db4c",
+      "sha256": "ca1b4cc25738f7d9d58f37da640c741d79befa45e2209364474bea6d097181d8",
+      "bytes": 7418,
+      "copy": "/tmp/n7-f11-context-plan-a1b-cli/canonical/AGENTS.md",
+      "role": "applicable instructions currentownerpolicy"
+    },
+    {
+      "path": "CLAUDE.md",
+      "revision": "currentmain4053db4c",
+      "sha256": "c1669853c58eddd6994761d510f5f1a4d1b992b50e16f8ebedf18a10937144a2",
+      "bytes": 13438,
+      "copy": "/tmp/n7-f11-context-plan-a1b-cli/canonical/CLAUDE.md",
+      "role": "applicable instructions currentownerpolicy"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/CLAUDE.md",
+      "revision": "currentmain4053db4c",
+      "sha256": "3b548fa6dea02c7639aa7fbdfdc3fa1f7bbf90b6726c406501d89cc2b3fe3ba0",
+      "bytes": 7533,
+      "copy": "/tmp/n7-f11-context-plan-a1b-cli/canonical/projects__07-cold-email-warmup__CLAUDE.md",
+      "role": "applicable instructions currentownerpolicy"
+    },
+    {
+      "path": "docs/development/model-routing-econom.md",
+      "revision": "currentmain4053db4c",
+      "sha256": "4622c96c879baa08d548f99b4f48ec19e7f59bb0eb91b2a58de46db4a079ee09",
+      "bytes": 5589,
+      "copy": "/tmp/n7-f11-context-plan-a1b-cli/canonical/docs__development__model-routing-econom.md",
+      "role": "applicable instructions currentownerpolicy"
+    },
+    {
+      "path": ".claude/rules/complexity-router.md",
+      "revision": "currentmain4053db4c",
+      "sha256": "422a1d1952f7755c1ea772b33e9e41e1bd78a239af8a0a490f03bc48eb4e0c70",
+      "bytes": 10185,
+      "copy": "/tmp/n7-f11-context-plan-a1b-cli/canonical/.claude__rules__complexity-router.md",
+      "role": "applicable instructions currentownerpolicy"
+    },
+    {
+      "path": ".claude/rules/project-work-companion-local.md",
+      "revision": "currentmain4053db4c",
+      "sha256": "273c7cb0d069609ba2823786e98f914362bc1fb38d864e3e4f720d6f3ecddbc4",
+      "bytes": 799,
+      "copy": "/tmp/n7-f11-context-plan-a1b-cli/canonical/.claude__rules__project-work-companion-local.md",
+      "role": "applicable instructions currentownerpolicy"
+    },
+    {
+      "path": ".claude/skills/project-work-companion/SKILL.md",
+      "revision": "currentmain4053db4c",
+      "sha256": "7d27b2e123cfab42ddb5d8930ac1a6fce3aaaeb3ceb626f77a9f2cad56858403",
+      "bytes": 6121,
+      "copy": "/tmp/n7-f11-context-plan-a1b-cli/canonical/.claude__skills__project-work-companion__SKILL.md",
+      "role": "applicable instructions currentownerpolicy"
+    }
+  ],
+  "frozen_source_revision": "afb58dc9b26f814433b117a63e45994c71e7cbde",
+  "source_path": "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup",
+  "context_policy": "planner normative only+frozen legitimate product source; NOauthorchat/reasoning/receipt/operationalhandoff",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high"
+}

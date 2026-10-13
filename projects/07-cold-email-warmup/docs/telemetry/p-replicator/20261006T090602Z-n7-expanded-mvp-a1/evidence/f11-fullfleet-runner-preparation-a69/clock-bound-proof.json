@@ -1,0 +1,29 @@
+{
+  "prepared_at": "2026-10-07T13:45:36.992860+00:00",
+  "native_timeouts_seconds": [
+    330,
+    330,
+    145
+  ],
+  "source_duration_seconds": [
+    300,
+    300
+  ],
+  "original_fault_and_healthy_SIGTERM_ms": 150000,
+  "unchanged_source_literals": [
+    "while(Date.now()-begun<300000)",
+    "if(!restarted&&at-begun>150000)",
+    "phaseDelayMs:2800",
+    "row.pages,20",
+    "literal twenty-page attempt cap"
+  ],
+  "bound_scope": "330 only exact two inventory title/argv pairs;145 only exact legacy pair;30 only named setup/terminal commands; all other reject",
+  "runtime_timeout_sum_seconds": 805,
+  "timeout_kill_grace_total_seconds": 45,
+  "minimum_runtime_reservation_seconds": 850,
+  "future_source_cut_seconds": 1020,
+  "time_available_for_actual_setup_snapshot_joins_if_no_prior_time_consumed": 170,
+  "activation_clock_formula": "actual now + remaining exact command bounds +15s per remaining command + root measured remaining setup/snapshot/join budget <= future source_cut_utc; lease sourcecut/deadline equal; no historical deadlines",
+  "not_a_duration_forecast": true,
+  "no_current_DB_sessions_or_runtime_claims_measured": true
+}

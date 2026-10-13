@@ -1,0 +1,34 @@
+{
+  "utc": "2026-10-07T15:31:37.771845+00:00",
+  "session_id": 77109,
+  "session_actual_native_exit": 1,
+  "driver_PID": 2411673,
+  "driver_expected_startTicks": "130946999",
+  "driver_current_startTicks": null,
+  "driver_joined": true,
+  "original_worker_PIDticks": [
+    {
+      "pid": 2427520,
+      "expected_startTicks": "130952787",
+      "current_startTicks": null,
+      "joined": true
+    },
+    {
+      "pid": 2428144,
+      "expected_startTicks": "130952974",
+      "current_startTicks": null,
+      "joined": true
+    },
+    {
+      "pid": 2469229,
+      "expected_startTicks": "130967823",
+      "current_startTicks": null,
+      "joined": true
+    }
+  ],
+  "terminal": {
+    "state": "full_fault:NATIVE_OR_TAP_FAILED",
+    "native_exit": 1,
+    "utc": "2026-10-07T15:27:04.970823+00:00"
+  }
+}

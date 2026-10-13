@@ -1,0 +1,7 @@
+{
+  "original_sha256": "4f022e11e812813e495b3376b6c7d39c6842b3f6b7da8dd14d65dba235051716",
+  "mutated_sha256": "c5138428909f17bc3b3bf40517d2cc1a6bd0d49843853d9cfaf680013544fd94",
+  "path": "/tmp/n7-f10-adversarial-fairness-a24/compact-shadow/dist/runtime/store.js",
+  "old": "ORDER BY t.service_seq,d.service_seq,d.due_at,d.mailbox_id",
+  "new": "ORDER BY t.service_seq,d.due_at,d.service_seq,d.mailbox_id"
+}

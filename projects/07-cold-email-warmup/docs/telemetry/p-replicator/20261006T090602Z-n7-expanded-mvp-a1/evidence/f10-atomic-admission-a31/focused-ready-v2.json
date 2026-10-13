@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-06T22:03:38.748978+00:00",
+  "source_head": "0f0653f010e40122532f6dd446fc1e16937656e8",
+  "pre": {
+    "at": "2026-10-06T22:03:38.731Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "commands": {
+    "typecheck": [
+      "/tmp/n7-expanded-runtime-20261006/bin/node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "lint": [
+      "/tmp/n7-expanded-runtime-20261006/bin/node",
+      "node_modules/eslint/bin/eslint.js",
+      "src",
+      "tests"
+    ],
+    "build": [
+      "/tmp/n7-expanded-runtime-20261006/bin/node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.build.json"
+    ],
+    "unit": [
+      "/tmp/n7-expanded-runtime-20261006/bin/node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "tests/f10-runtime-unit.test.ts"
+    ],
+    "pg": [
+      "/tmp/n7-expanded-runtime-20261006/bin/node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=native poll claim reserves physical admission atomically",
+      "tests/f10-runtime-integration.test.ts"
+    ]
+  },
+  "source": {
+    "src/runtime/loop.ts": "96041a5d3f55a02ba6e55faeda69142a9f6826ea50ce988beceaa00a1b85edc6",
+    "src/runtime/worker.ts": "820513ecaa13b25bededc8845306365f635d1dae41232451cd96a2decc31c774",
+    "src/runtime/store.ts": "983a1e5331f17bc7312a4c3f8ea95c7c2728e60b24d5e14708a9084e50fcff28",
+    "src/mailboxes/transport-slots.ts": "93c3509a79bf43296b99f20610045da188e26d057fd6f8b14c2fb1e6bd23bb66",
+    "src/replies/adapter.ts": "54e40ca7270ca7299c6a9601b3cf268663877413fc131a8e9c76b4e117d1fcf9",
+    "tests/f10-runtime-fixture.ts": "c42e2a6862249baecd05617d4cb8dd8c4f0cb0b5eb023e9c8254c0cd2cdaae95",
+    "tests/f10-runtime-unit.test.ts": "148a2b4a8444c66b83219b84a60d02ff2f9b8f8bbae1ebcb72ad977ef510a6e4",
+    "tests/f10-runtime-protocol.test.ts": "4edb0be1f37ae1a1b32e1d530db4a5db5ea3f79bfab993be9197b009cfbdc366",
+    "tests/f10-runtime-integration.test.ts": "e7fabd24ea02d2d52bc5b7571d4338c4d471cde58741812496061afaa5679929",
+    "tests/f10-runtime-process-fixture.ts": "e3d889eba4dda70d1236c508e6819111eb38cd8b3e6de0e8047f8bacac76cadd"
+  },
+  "runner_sha": "77c1261b7e3b088810d49ce7ac692eb638cbfff12f5e59c9e99ec7697ef806fb",
+  "guard_sha": "d24c1fe9535894b7bcf38ffa597c831b188e8830f565300d6a725c5d5c8cd1ef"
+}

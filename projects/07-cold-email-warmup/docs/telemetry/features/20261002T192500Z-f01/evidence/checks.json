@@ -1,0 +1,80 @@
+[
+  {
+    "name": "node22",
+    "command": [
+      "docker",
+      "compose",
+      "exec",
+      "-T",
+      "web",
+      "node",
+      "--version"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-02T19:34:19.537705+00:00",
+    "finished_at": "2026-10-02T19:34:19.992709+00:00"
+  },
+  {
+    "name": "typecheck",
+    "command": [
+      "docker",
+      "compose",
+      "exec",
+      "-T",
+      "web",
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-02T19:34:19.993014+00:00",
+    "finished_at": "2026-10-02T19:34:24.196678+00:00"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "docker",
+      "compose",
+      "exec",
+      "-T",
+      "web",
+      "npm",
+      "run",
+      "lint"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-02T19:34:24.197095+00:00",
+    "finished_at": "2026-10-02T19:34:27.407879+00:00"
+  },
+  {
+    "name": "unit",
+    "command": [
+      "docker",
+      "compose",
+      "exec",
+      "-T",
+      "web",
+      "npm",
+      "test"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-02T19:34:27.408235+00:00",
+    "finished_at": "2026-10-02T19:34:28.870242+00:00"
+  },
+  {
+    "name": "integration",
+    "command": [
+      "docker",
+      "compose",
+      "exec",
+      "-T",
+      "web",
+      "npm",
+      "run",
+      "test:integration"
+    ],
+    "exit_code": 0,
+    "started_at": "2026-10-02T19:34:28.870702+00:00",
+    "finished_at": "2026-10-02T19:34:37.477794+00:00"
+  }
+]

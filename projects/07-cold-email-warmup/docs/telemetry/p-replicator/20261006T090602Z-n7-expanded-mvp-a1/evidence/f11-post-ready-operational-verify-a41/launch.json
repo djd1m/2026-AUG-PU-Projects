@@ -1,0 +1,691 @@
+{
+  "utc": "2026-10-07T08:12:06.807056+00:00",
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-post-ready-operational-verify-a41",
+  "attempt": "a41",
+  "source_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "unknown_reason": "Host runtime model and usage metadata not exposed",
+  "profile": "model-routing-econom",
+  "risk": "XL",
+  "workcut": "2026-10-07T08:27:23Z",
+  "bound": "2026-10-07T08:30:23Z",
+  "checks": [
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-planner-a38/plan.md",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-scope-amendment-a40.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/02_pseudocode.md",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/03_architecture.md",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/runtime/worker.ts",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/runtime/loop.ts",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/mailboxes/transport-lifetime.ts",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/context-store.ts",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/worker.ts",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/store.ts",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/schema-setup.mjs",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/targeted.sh",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/positives.sh",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/baseline.py",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/reset-own.mjs",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/terminal-db-readonly.mjs",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/guard-a40.mjs",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/candidate.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/schema-setup.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/typecheck-v2.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/revoke-fixed.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material-v2.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/lint-v1.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/diff-stat.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/diff-check.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/build-v4.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/typecheck-v3.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/route.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/positives-pure.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/terminal-db-readonly.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/lint-v4.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/typecheck-v4.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/build-v3.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/typecheck-final.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/candidate-build.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/baseline-build.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/lint-final.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/typecheck-v1.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/commit.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/baseline.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/positives-db.raw",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/baseline/a40-header-only.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/baseline/a40-drain-text.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/baseline/a40-drain-metadata.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/candidate/a40-header-only.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/candidate/a40-drain-text.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/candidate/a40-drain-metadata.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-revision.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-wrong_owner.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-corrupt.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-header-only.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-release_failure.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-text.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-suppression.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-generic.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-replay.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-wrong_uid.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-config.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-wrong_slot.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-revoke.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-metadata.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material/a40-drain-forged.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-revision.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-wrong_owner.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-corrupt.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-header-only.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-release_failure.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-text.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-suppression.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-generic.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-replay.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-wrong_uid.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-config.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-wrong_slot.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-revoke.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-metadata.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/material-v2/a40-drain-forged.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/revoke-fixed/a40-drain-revoke.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/positives/native-empty-tail-counterproofs.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/terminal-db-readonly.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/owned-pid-joins.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/dist-inventory.json",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/auth/password.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/auth/service.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/auth/session.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/auth/store.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/billing/plans.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/billing/provider.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/billing/service.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/billing/transaction.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/campaigns/input.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/campaigns/store.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/config.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/consent/store.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/consent/transaction.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/db.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/dispatch/adapter.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/dispatch/eligibility.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/dispatch/message.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/dispatch/seams.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/dispatch/smtp.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/dispatch/store.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/dispatch/submission.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/dispatch/worker.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/errors.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/evidence/compare.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/evidence/input.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/evidence/store.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/growth/attribution.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/growth/partner.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/growth/reports.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/capacity.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/crypto.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/diagnostic-authority.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/diagnostic-channel.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/diagnostic-operator.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/diagnostic-store.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/diagnostics.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/input.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/network.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/provider.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/store.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/transport-authority.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/transport-channel.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/transport-child.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/transport-lifetime.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/transport-operator.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/mailboxes/transport-slots.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/main.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/migrate.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/pool/store.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/adapter.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/body.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/context-store.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/crypto.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/fixture.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/headers.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/imap.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/input.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/operator.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/store.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/replies/worker.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/runtime/loop.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/runtime/store.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/runtime/worker.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/server.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/suppression/http.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/suppression/store.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/app.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/billing.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/cabinet.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/campaigns.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/client.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/dom.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/evidence.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/mailboxes.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/models.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/dist/web/page.js",
+      "ok": true
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-author-a40/clean-next-high-input-manifest.json",
+      "ok": true
+    }
+  ],
+  "disk_free_bytes": 3672350720,
+  "old_joins_count": 233,
+  "scratch_hashes": {
+    "/tmp/n7-f11-post-ready-operational-verify-a41/guard-a41.mjs": "55e269475e282f833afb5719533617ae9649c76a22ea33dca2a2d1017264c9bc",
+    "/tmp/n7-f11-post-ready-operational-verify-a41/schema-setup-a41.mjs": "de1725215a8ceb941674b6206ac7d999d0ecad2e9c45a3c3a4ed591bb4aed4a4",
+    "/tmp/n7-f11-post-ready-operational-verify-a41/terminal-db-a41.mjs": "df7c8f0235c44278086a685c54baed94a876aaa4b4e599988b033c4085fa1ffd",
+    "/tmp/n7-f11-post-ready-operational-verify-a41/run-a41.sh": "047aebab016e8a6ed65b573929723633971a5b9b5bfdc0a0233a1a69a177a6c4"
+  },
+  "commands": [
+    {
+      "title": "F11 short compiled worker SIGTERM while native BODY physically claimed",
+      "argv": [
+        "bash",
+        "/tmp/n7-f11-post-ready-operational-verify-a41/run-a41.sh",
+        "short"
+      ]
+    },
+    {
+      "title": "F11 real PG additive migration, stop-first authenticated intent and retention",
+      "argv": [
+        "bash",
+        "/tmp/n7-f11-post-ready-operational-verify-a41/run-a41.sh",
+        "checks"
+      ]
+    }
+  ],
+  "trace_prelaunch_absent": true,
+  "preflight": "source/build/helper/oldPID checks ready; DB checked by bounded schema-setup before CREATE; no source/build mutations"
+}

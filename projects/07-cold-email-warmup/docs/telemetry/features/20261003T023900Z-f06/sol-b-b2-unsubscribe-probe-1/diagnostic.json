@@ -1,0 +1,30 @@
+{
+  "status": "confirmed-product-defect",
+  "source": "cbe07f1ca34ec24312cc77ca14625be26dcf7ed07f79a44656b55e6b8cb9d047",
+  "build": "45385ec142c3cf23790226575dcbe2b4f7d2d760cd108cab5383e18a81fd8ae8",
+  "http_status": 403,
+  "body": {
+    "error": {
+      "code": "origin_denied",
+      "message": "origin_denied"
+    }
+  },
+  "requests": [
+    {
+      "method": "GET",
+      "origin_class": "absent",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "origin_class": "opaque-null",
+      "status": 403
+    }
+  ],
+  "cleanup": {
+    "contexts_closed": true,
+    "bridge_closed": true,
+    "sockets_destroyed": true,
+    "shared_browser_preserved": true
+  }
+}

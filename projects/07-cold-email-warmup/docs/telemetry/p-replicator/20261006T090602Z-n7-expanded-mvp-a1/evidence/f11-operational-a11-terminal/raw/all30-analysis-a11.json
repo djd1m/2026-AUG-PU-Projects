@@ -1,0 +1,566 @@
+{
+  "at": "2026-10-07T01:39:44.972302+00:00",
+  "native_exit": {
+    "utc": "2026-10-07T01:38:37.825Z",
+    "exit": 0
+  },
+  "actual_measured_runtime_ms": 301504,
+  "denominator": 30,
+  "participants": 30,
+  "ready": 30,
+  "max_ready_ms_from_seed": 215788,
+  "max_complete_header_gap_ms": 21163,
+  "max_fair_due_ms": 14970.0,
+  "phase_response_count": 60,
+  "phase_native_delay_min_ms": 2799.331059000002,
+  "phase_native_delay_max_ms": 2802.1906200000085,
+  "wire_peaks": {
+    "imap": 4,
+    "body": 3,
+    "smtp": 2
+  },
+  "window_peak": 3,
+  "smtp_DATA_N": 28,
+  "joins": [
+    {
+      "code": 0,
+      "signal": null,
+      "drained": true,
+      "stderr": ""
+    },
+    {
+      "code": 0,
+      "signal": null,
+      "drained": true,
+      "stderr": ""
+    },
+    {
+      "code": 0,
+      "signal": null,
+      "drained": true,
+      "stderr": ""
+    }
+  ],
+  "occupied": 0,
+  "failure": null,
+  "all_single_fixed12000_window": true,
+  "all_single_deadline": true,
+  "all_capture_before_window_end": true,
+  "participants_rows": [
+    {
+      "mailbox": "bfe23cae-8763-4bab-9f29-18e866186088",
+      "tenant": "a85b2dae-d4f5-4f65-b41c-dbfa0b6c41f4",
+      "capture_ready_ms_from_seed": 110930,
+      "complete_header_N": 32,
+      "complete_header_max_gap_ms_including_edges": 18065,
+      "fair_due_max_ms": 14288.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.021860000008,
+        2799.8812800000014
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "75076370-8df4-4f47-bafe-49dbe6b61622",
+      "tenant": "8ddb76db-9fa4-46d5-a261-5785df632a4a",
+      "capture_ready_ms_from_seed": 96606,
+      "complete_header_N": 33,
+      "complete_header_max_gap_ms_including_edges": 20465,
+      "fair_due_max_ms": 13954.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.6729389999964,
+        2800.629679000005
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "6610465b-6dca-4902-92de-ff5c6ccefcbe",
+      "tenant": "692007e6-b9c3-4e11-b695-62a5a2cf06e2",
+      "capture_ready_ms_from_seed": 29633,
+      "complete_header_N": 34,
+      "complete_header_max_gap_ms_including_edges": 17782,
+      "fair_due_max_ms": 12202.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.8713700000008,
+        2800.203648999999
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "ff8e1560-bfde-4557-b788-1d8b1f2c1841",
+      "tenant": "a85b2dae-d4f5-4f65-b41c-dbfa0b6c41f4",
+      "capture_ready_ms_from_seed": 153843,
+      "complete_header_N": 30,
+      "complete_header_max_gap_ms_including_edges": 16941,
+      "fair_due_max_ms": 14692.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.802640000009,
+        2800.5054999999993
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "6a0a37ae-3887-41c8-866b-c1dc49a7428d",
+      "tenant": "8ddb76db-9fa4-46d5-a261-5785df632a4a",
+      "capture_ready_ms_from_seed": 95769,
+      "complete_header_N": 32,
+      "complete_header_max_gap_ms_including_edges": 20637,
+      "fair_due_max_ms": 13667.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.2208390000014,
+        2800.5182499999937
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "8c614b80-367f-4e82-b067-7d38cfa04816",
+      "tenant": "692007e6-b9c3-4e11-b695-62a5a2cf06e2",
+      "capture_ready_ms_from_seed": 37629,
+      "complete_header_N": 34,
+      "complete_header_max_gap_ms_including_edges": 18792,
+      "fair_due_max_ms": 12120.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.66259,
+        2800.3382099999944
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "5e6314aa-a193-4753-addb-651c9a6e8d2c",
+      "tenant": "a85b2dae-d4f5-4f65-b41c-dbfa0b6c41f4",
+      "capture_ready_ms_from_seed": 73752,
+      "complete_header_N": 33,
+      "complete_header_max_gap_ms_including_edges": 17322,
+      "fair_due_max_ms": 14416.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.320808999997,
+        2799.683710000012
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "21c2e120-d9dd-4c43-a998-c4bae5cfa65a",
+      "tenant": "8ddb76db-9fa4-46d5-a261-5785df632a4a",
+      "capture_ready_ms_from_seed": 16128,
+      "complete_header_N": 35,
+      "complete_header_max_gap_ms_including_edges": 18426,
+      "fair_due_max_ms": 10487.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2801.2078899999997,
+        2800.596159999999
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "11bc1435-bb3b-47df-9150-89c01b8b9e7a",
+      "tenant": "692007e6-b9c3-4e11-b695-62a5a2cf06e2",
+      "capture_ready_ms_from_seed": 60150,
+      "complete_header_N": 34,
+      "complete_header_max_gap_ms_including_edges": 19181,
+      "fair_due_max_ms": 12163.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.5162589999964,
+        2800.232229999994
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "54fc1736-6096-4220-be2e-8f7633362858",
+      "tenant": "a85b2dae-d4f5-4f65-b41c-dbfa0b6c41f4",
+      "capture_ready_ms_from_seed": 27105,
+      "complete_header_N": 34,
+      "complete_header_max_gap_ms_including_edges": 19219,
+      "fair_due_max_ms": 10253.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2799.8566790000004,
+        2799.991428999998
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "320efa30-e9a6-4218-96a3-fc059dd6a5fc",
+      "tenant": "8ddb76db-9fa4-46d5-a261-5785df632a4a",
+      "capture_ready_ms_from_seed": 37540,
+      "complete_header_N": 34,
+      "complete_header_max_gap_ms_including_edges": 18503,
+      "fair_due_max_ms": 11151.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2801.500659999998,
+        2800.446450000003
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "d27836b5-f67d-4053-bfed-5daccd6284d6",
+      "tenant": "692007e6-b9c3-4e11-b695-62a5a2cf06e2",
+      "capture_ready_ms_from_seed": 108318,
+      "complete_header_N": 32,
+      "complete_header_max_gap_ms_including_edges": 18690,
+      "fair_due_max_ms": 12887.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.0720290000027,
+        2800.263699999996
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "b6053e7a-6dd9-4e68-bbcb-93bbf484f211",
+      "tenant": "a85b2dae-d4f5-4f65-b41c-dbfa0b6c41f4",
+      "capture_ready_ms_from_seed": 122126,
+      "complete_header_N": 32,
+      "complete_header_max_gap_ms_including_edges": 17730,
+      "fair_due_max_ms": 14520.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.0802299999923,
+        2800.1433090000064
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "56444259-780f-460d-8356-da0e672e73a1",
+      "tenant": "8ddb76db-9fa4-46d5-a261-5785df632a4a",
+      "capture_ready_ms_from_seed": 59283,
+      "complete_header_N": 34,
+      "complete_header_max_gap_ms_including_edges": 19917,
+      "fair_due_max_ms": 10614.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2801.078649999996,
+        2800.880099999995
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "dfcc06a4-1b9b-407e-8c2a-56f36420e765",
+      "tenant": "692007e6-b9c3-4e11-b695-62a5a2cf06e2",
+      "capture_ready_ms_from_seed": 133594,
+      "complete_header_N": 31,
+      "complete_header_max_gap_ms_including_edges": 17423,
+      "fair_due_max_ms": 13767.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.78287000001,
+        2800.181058999995
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "5add7700-158d-41c9-932c-8bbd146428f3",
+      "tenant": "a85b2dae-d4f5-4f65-b41c-dbfa0b6c41f4",
+      "capture_ready_ms_from_seed": 47573,
+      "complete_header_N": 34,
+      "complete_header_max_gap_ms_including_edges": 21163,
+      "fair_due_max_ms": 10766.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2799.9638799999957,
+        2800.2243890000027
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "4b901d35-2a83-4373-8ca1-c44b29330507",
+      "tenant": "8ddb76db-9fa4-46d5-a261-5785df632a4a",
+      "capture_ready_ms_from_seed": 48436,
+      "complete_header_N": 34,
+      "complete_header_max_gap_ms_including_edges": 20619,
+      "fair_due_max_ms": 10992.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2801.760599999994,
+        2801.268440000007
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "f007768c-c382-49ff-aa79-94fd863c9d33",
+      "tenant": "692007e6-b9c3-4e11-b695-62a5a2cf06e2",
+      "capture_ready_ms_from_seed": 144056,
+      "complete_header_N": 31,
+      "complete_header_max_gap_ms_including_edges": 19391,
+      "fair_due_max_ms": 14386.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.344498999999,
+        2800.2921000000206
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "ec0a168f-76ad-49b6-8b31-a064d033eae6",
+      "tenant": "a85b2dae-d4f5-4f65-b41c-dbfa0b6c41f4",
+      "capture_ready_ms_from_seed": 143622,
+      "complete_header_N": 31,
+      "complete_header_max_gap_ms_including_edges": 19313,
+      "fair_due_max_ms": 14970.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.0060489999887,
+        2800.8628390000085
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "fd514a73-5970-4f2f-ae2f-40e0da7c73f7",
+      "tenant": "8ddb76db-9fa4-46d5-a261-5785df632a4a",
+      "capture_ready_ms_from_seed": 185431,
+      "complete_header_N": 29,
+      "complete_header_max_gap_ms_including_edges": 17475,
+      "fair_due_max_ms": 13586.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.532899999991,
+        2800.8230200000107
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "9b32ffdb-313e-4b9a-8eef-3095ab5d8ba4",
+      "tenant": "692007e6-b9c3-4e11-b695-62a5a2cf06e2",
+      "capture_ready_ms_from_seed": 73794,
+      "complete_header_N": 33,
+      "complete_header_max_gap_ms_including_edges": 17132,
+      "fair_due_max_ms": 12573.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.125458999988,
+        2800.6612400000013
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "0d2df2d5-f119-47d0-89b1-c027cced84ce",
+      "tenant": "a85b2dae-d4f5-4f65-b41c-dbfa0b6c41f4",
+      "capture_ready_ms_from_seed": 16091,
+      "complete_header_N": 35,
+      "complete_header_max_gap_ms_including_edges": 17381,
+      "fair_due_max_ms": 10651.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.71349,
+        2801.1291899999997
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "d28f9ccd-2a41-4c2f-9cc7-0612251ec306",
+      "tenant": "8ddb76db-9fa4-46d5-a261-5785df632a4a",
+      "capture_ready_ms_from_seed": 155231,
+      "complete_header_N": 31,
+      "complete_header_max_gap_ms_including_edges": 16848,
+      "fair_due_max_ms": 13369.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.8659890000126,
+        2800.7934589999786
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "9c0a8f5e-d087-4ed8-91b0-141dc89276a6",
+      "tenant": "692007e6-b9c3-4e11-b695-62a5a2cf06e2",
+      "capture_ready_ms_from_seed": 73843,
+      "complete_header_N": 33,
+      "complete_header_max_gap_ms_including_edges": 17505,
+      "fair_due_max_ms": 12849.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2799.6952099999908,
+        2802.1906200000085
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "2d125825-cf6d-424c-a3ee-089fbed37b72",
+      "tenant": "a85b2dae-d4f5-4f65-b41c-dbfa0b6c41f4",
+      "capture_ready_ms_from_seed": 16355,
+      "complete_header_N": 35,
+      "complete_header_max_gap_ms_including_edges": 17582,
+      "fair_due_max_ms": 11285.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.5907799999986,
+        2799.331059000002
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "f5cc35c5-aa52-4799-9891-71eea43a78e5",
+      "tenant": "8ddb76db-9fa4-46d5-a261-5785df632a4a",
+      "capture_ready_ms_from_seed": 175436,
+      "complete_header_N": 30,
+      "complete_header_max_gap_ms_including_edges": 17826,
+      "fair_due_max_ms": 13691.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.551449999999,
+        2800.6853790000023
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "f58ae9f5-0af4-4b0f-8aa4-6af74e60411f",
+      "tenant": "692007e6-b9c3-4e11-b695-62a5a2cf06e2",
+      "capture_ready_ms_from_seed": 215788,
+      "complete_header_N": 29,
+      "complete_header_max_gap_ms_including_edges": 17172,
+      "fair_due_max_ms": 14584.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2799.6559490000072,
+        2799.641889999999
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "83d3f026-b48a-43a9-93e5-7be150440915",
+      "tenant": "a85b2dae-d4f5-4f65-b41c-dbfa0b6c41f4",
+      "capture_ready_ms_from_seed": 108864,
+      "complete_header_N": 32,
+      "complete_header_max_gap_ms_including_edges": 18219,
+      "fair_due_max_ms": 14400.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2799.4173100000044,
+        2800.869590000002
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "84a33bfa-c200-437b-be92-429a9fa4d679",
+      "tenant": "8ddb76db-9fa4-46d5-a261-5785df632a4a",
+      "capture_ready_ms_from_seed": 134253,
+      "complete_header_N": 31,
+      "complete_header_max_gap_ms_including_edges": 17706,
+      "fair_due_max_ms": 13553.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2802.007769999982,
+        2800.3585690000036
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    },
+    {
+      "mailbox": "916b8106-0868-469d-8825-c5b373ebc20f",
+      "tenant": "692007e6-b9c3-4e11-b695-62a5a2cf06e2",
+      "capture_ready_ms_from_seed": 62377,
+      "complete_header_N": 34,
+      "complete_header_max_gap_ms_including_edges": 19946,
+      "fair_due_max_ms": 12154.0,
+      "metadata_and_text_native_responses": 2,
+      "native_response_delay_ms": [
+        2800.019570000004,
+        2799.987280000001
+      ],
+      "single_fixed_window": true,
+      "window_literal12000": true,
+      "single_attempt_deadline": true,
+      "capture_before_original_window_end": true
+    }
+  ],
+  "limitations": [
+    "peer phase response delay is not total native process lifetime or client receipt; native process phase acquisition/close must be separately correlated",
+    "header completions sampled250ms; DB/fair events supply durable native state",
+    "no fault/currentgrant/privacy/fullregression acceptance supplied by this healthy witness"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-uid-finding-reconciliation-a37",
+  "ack_utc": "2026-10-06T23:19:19Z",
+  "freeze_utc": "2026-10-06T23:25:19Z",
+  "terminal_utc": "2026-10-06T23:27:19Z",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "scope": "Finding-only reconciliation F10-A35-001, six UID mechanisms in composite AC007; retain original planner and independent source assessment",
+  "source_revision": "db50798a76a97fed75931544f24cd1181ff082d8",
+  "candidate_root": "/tmp/n7-f10-restart-fix-20261006-a12",
+  "original_inputs": {
+    "context_packet": {
+      "path": "/tmp/n7-f10-final-source-review-packet-20261006/context-sealed.json",
+      "sha256": "2fda3621a3f287c0bc93a8401a14d0a3cd7a0b3391b478b99db0e138b97ecebd"
+    },
+    "prior_own_report": {
+      "path": "/tmp/n7-f10-final-source-review-a35/report.md",
+      "sha256": "dfaaf15d614ed108a77a2cfe2fac99d107b08b5ba76e9a3570c66d5373a806e0"
+    },
+    "UID_planner_sha256": "998aeeb0b4c89294d7f196650b759954f3a965f62dacfaf8313d1e5eaf749662"
+  },
+  "new_raw_inputs": {
+    "directory": "/tmp/n7-f10-uid-material-verify-a36",
+    "command_manifest": {
+      "path": "uid-command-manifest-a36.json",
+      "sha256": "b326346baa527000d34569208b1c6eebdaa91bdf30cea350b1ac54501c54c8ca"
+    },
+    "artifact_manifest": {
+      "path": "raw-artifact-manifest-a36.json",
+      "sha256": "d16e60b83d670c17b5143ae11a23dccc6e7d94ef39b70fe3bf7958ee3d3d92f2"
+    },
+    "ownership_sha256": "132e81d5b04a731bc84ceebc2c5312a3c9738ba8c723600ae854d72078fc9010",
+    "declared_allowed": [
+      "freshness-command-manifest-a36.json",
+      "uid-results-a36.json",
+      "freshness-results-a36.json",
+      "referenced patch/input/launch/native-exit/TAP/named assertion records",
+      "ownership and numeric canary objective"
+    ]
+  },
+  "excluded": [
+    "report.md",
+    "terminal receipt",
+    "independent reconciliation narrative",
+    "author/verifier/coordinator chat/history",
+    "secret/PEM contents"
+  ],
+  "writes_only": "/tmp/n7-f10-uid-finding-reconciliation-a37",
+  "no_tests_or_DB_planned": true
+}

@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-06T18:52:40.172438+00:00",
+  "status": "ready",
+  "source": "isolated imap mismatch-as-error mutation, no other candidate changes",
+  "source_sha": "210e5239ede254618476b2d33f4e82592209459c18a814fef0d316c18c9b9b9d",
+  "restored_source_sha": "e84dfccb60b3236ab3004815b19ecb4eee6c2233e601e0e8cbbd14d117df0200",
+  "build": "notused: directsource TS protocoltest under tsx; candidatecompiledbuildunchanged",
+  "guard_sha": "9c2b899e9d7e173beb631415044e8b5106b257b006bb06cd2283500b528bd33f",
+  "environment": "Node22/CPU2 heavylock/read-onlydeps; inherited own guard; numericloopback nativeTLS only; noDBreset required",
+  "command": "node --import tsx --test --test-name-pattern=IMAP proves bounded read only tests/f09-live-protocol.test.ts",
+  "effects": "localTLS fixture only; no externalnetwork/DBwrites",
+  "e2e_claim": null
+}

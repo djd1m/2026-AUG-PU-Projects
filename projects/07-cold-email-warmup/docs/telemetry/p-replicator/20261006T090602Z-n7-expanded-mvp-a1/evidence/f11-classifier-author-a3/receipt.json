@@ -1,0 +1,212 @@
+{
+  "status": "completed",
+  "verdict": "coherent_partial_not_F11_acceptance",
+  "accepted": false,
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-context-author-a3",
+  "started_at": "2026-10-07T00:02:53Z",
+  "finished_at": "2026-10-07T00:10:00.831653+00:00",
+  "elapsed_wall_ms": 427831,
+  "launch_sha256": "58f0a4940d8366f28f3bd381dfc3a6805229b53782662fe5ce06fbd52e74ab85",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "source_revision": "e10419a60a032bb39fd6e29afaca5a9b9585b9db",
+  "final_revision": "a0f29eaee46b6639ad8d473caca8cc9dbbf5a89a",
+  "source_manifest_sha256": "6c10627ef735ba0d355a9a301c6fd368c268ed57370186680bdce0d7aba8567a",
+  "build_manifest_sha256": "b6f481ebacabb264d44b2f1b41f0195a01b21afa081fae12f207a2bc9aad82a2",
+  "raw_manifest_sha256": "cb1fcec04ef1e9b1e4f3c499b842b003c6382cb03b7340e9a4d4f69effbebc5f",
+  "guard_summary_sha256": "0313d37a366382110ee54a6587300eab894a701a89fee60a0a02a75e2c24128d",
+  "checks": [
+    {
+      "name": "typecheck",
+      "attempt": 1,
+      "native_exit": 0,
+      "log": "typecheck-a1.log",
+      "sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393",
+      "passed": null,
+      "duration_ms": null
+    },
+    {
+      "name": "lint",
+      "attempt": 1,
+      "native_exit": 0,
+      "log": "lint-a1.log",
+      "sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e",
+      "passed": null,
+      "duration_ms": null
+    },
+    {
+      "name": "build",
+      "attempt": 1,
+      "native_exit": 0,
+      "log": "build-a1.log",
+      "sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323",
+      "passed": null,
+      "duration_ms": null
+    },
+    {
+      "name": "unit",
+      "attempt": 1,
+      "native_exit": 0,
+      "log": "unit-a1.log",
+      "sha256": "e320d8cac06745064dd279ccd2e8301a42220f5fcfdf436e486d18ab308eb10c",
+      "passed": 68,
+      "duration_ms": 79896.672981
+    },
+    {
+      "name": "preflight",
+      "attempt": 1,
+      "native_exit": 0,
+      "log": "preflight-a1.log",
+      "sha256": "3d61ce15a13a47c5b8ad7a2bb3d70864ec44d0723d675656476197265bda4063",
+      "passed": null,
+      "duration_ms": null
+    },
+    {
+      "name": "parent",
+      "attempt": 1,
+      "native_exit": 0,
+      "log": "parent-a1.log",
+      "sha256": "bc4addd276b5339b150f7f959c1bfb4e03bded685125e1580e5bc87abc2e6f96",
+      "passed": 18,
+      "duration_ms": 25551.926561
+    },
+    {
+      "name": "quiescence",
+      "attempt": 1,
+      "native_exit": 0,
+      "log": "quiescence-a1.log",
+      "sha256": "3d61ce15a13a47c5b8ad7a2bb3d70864ec44d0723d675656476197265bda4063",
+      "passed": null,
+      "duration_ms": null
+    },
+    {
+      "name": "typecheck",
+      "attempt": 2,
+      "native_exit": 0,
+      "log": "typecheck-a2.log",
+      "sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393",
+      "passed": null,
+      "duration_ms": null
+    },
+    {
+      "name": "lint",
+      "attempt": 2,
+      "native_exit": 0,
+      "log": "lint-a2.log",
+      "sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e",
+      "passed": null,
+      "duration_ms": null
+    },
+    {
+      "name": "build",
+      "attempt": 2,
+      "native_exit": 0,
+      "log": "build-a2.log",
+      "sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323",
+      "passed": null,
+      "duration_ms": null
+    },
+    {
+      "name": "unit",
+      "attempt": 2,
+      "native_exit": 0,
+      "log": "unit-a2.log",
+      "sha256": "2b91eb984f9a3d582a3e37eb83c51cd572a814561d252605b79ec30adf2cfbdd",
+      "passed": 4,
+      "duration_ms": 447.29513
+    },
+    {
+      "name": "preflight",
+      "attempt": 2,
+      "native_exit": 0,
+      "log": "preflight-a2.log",
+      "sha256": "3d61ce15a13a47c5b8ad7a2bb3d70864ec44d0723d675656476197265bda4063",
+      "passed": null,
+      "duration_ms": null
+    },
+    {
+      "name": "parent",
+      "attempt": 2,
+      "native_exit": 0,
+      "log": "parent-a2.log",
+      "sha256": "d10e1e2e234cd7ec82cfa67b6702d94a7fd37aee5646184a01014e365f8915cc",
+      "passed": 18,
+      "duration_ms": 26197.642922
+    },
+    {
+      "name": "quiescence",
+      "attempt": 2,
+      "native_exit": 0,
+      "log": "quiescence-a2.log",
+      "sha256": "3d61ce15a13a47c5b8ad7a2bb3d70864ec44d0723d675656476197265bda4063",
+      "passed": null,
+      "duration_ms": null
+    }
+  ],
+  "host_sessions": [
+    {
+      "id": 23600,
+      "native_exit": 0,
+      "joined": true
+    },
+    {
+      "id": 70881,
+      "native_exit": 0,
+      "joined": true
+    }
+  ],
+  "owned_changed_paths": [
+    "projects/07-cold-email-warmup/src/mailboxes/transport-channel.ts",
+    "projects/07-cold-email-warmup/src/replies/adapter.ts",
+    "projects/07-cold-email-warmup/src/replies/body.ts",
+    "projects/07-cold-email-warmup/src/replies/context-store.ts",
+    "projects/07-cold-email-warmup/tests/f11-body-fixture.ts",
+    "projects/07-cold-email-warmup/tests/f11-context-integration.test.ts",
+    "projects/07-cold-email-warmup/tests/f11-context-unit.test.ts"
+  ],
+  "quiescence": {
+    "database": "n7f10_a2",
+    "other_sessions": 0,
+    "occupied_transport_operations": 0,
+    "runtime_claims": 0,
+    "matching_live_guarded_nodes": [],
+    "runner_pid_startticks": [
+      {
+        "pid": 1232804,
+        "startticks": "125453095",
+        "same_process_live": false
+      },
+      {
+        "pid": 1270401,
+        "startticks": "125468363",
+        "same_process_live": false
+      }
+    ],
+    "heavy_mutex": "released on runnerexit",
+    "ui_mutex": "not acquired"
+  },
+  "remaining_ac": [
+    "C1 RuntimeKind remains poll|pool|dispatch; loop exactly4 poll+2 dispatch+pool lanes. body must use these4 IMAP workers with atomic logical claim+physical admission under SAME FIRST(7,1), real durable metadata/text scheduler quanta, <=3 body physical slots, >=1 headers, mailbox due/claimed/incomplete header precedence, originaldue/serviceorder preserved and boundedretry. No body runtime launch was enabled.",
+    "C1 adapter.captureBody still runs metadata then setImmediate then text in one promise. Existing native5s budget/closedchild release and unknowncleanup occupancy remain. Next writer must split stages through existing context-store/adapter and runtime claim paths; existing bodyProof WeakMap is whole-operation proof, not durable phase scheduling.",
+    "C1 mandatory competing-worker/body-pressure witnesses ALL30 exactdenominator healthycompletion<=30s/dueselection<=60s; all ownership and phaseyield witnesses absent; no threshold waiver.",
+    "C2 authenticated pending UPSERT only refreshes same physicalUID under a newly authenticated header page and unchanged source/root/enrollment/sender, pending+unexpired; activeclaims and clocks untouched. Normal incremental newpollrun does not automatically reobserve oldpendingUID. Safe fresh observation/recovery still required before later runtime capture; never relabel oldproof.",
+    "C2 complete source/run/root/recipient/config/authority race matrix and copy earliest-deadline/restart physical deletion retention witnesses remain. No copy API introduced.",
+    "C3 supportedFAQ candidates/rules SHA, unsubscribe/complaint atomic production effects, nativeautomatic metadata noTEXT now covered. Pure classifier ownLoop negative covered; explicit native own-loop provenance variant and complete production variant matrix remain.",
+    "Full integration/full protocol/traceability/scenario/criterion/review gates and fresh independent HIGH F11 acceptance remain coordinator-owned."
+  ],
+  "next_responsible_executor": "/root/n7_sol_coordinator",
+  "missing_data": [
+    "host actual model/effort/usage/cost unavailable",
+    "exact per-command wall timings unavailable except TAP durations",
+    "E2E not executed; companion structural validator not executed because project telemetry sparse/coordinator-owned",
+    "fullunit68 passed before final small adapter noTEXT correction; final affected unit4 and parent18 passed",
+    "mechanical router unavailable exit127",
+    "earlier approximate future progress timestamp discarded"
+  ]
+}

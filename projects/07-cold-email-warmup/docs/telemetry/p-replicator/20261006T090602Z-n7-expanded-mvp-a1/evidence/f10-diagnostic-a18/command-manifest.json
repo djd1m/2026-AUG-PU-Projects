@@ -1,0 +1,113 @@
+{
+  "at": "2026-10-06T19:47:08.836738+00:00",
+  "files_count": 3,
+  "inventory": [
+    {
+      "file": "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/suppression-integration.test.ts",
+      "sha256": "26afb13cfc49b2a55a6b166c9a2f8a29a5e6ae67d12054aa4cf8d31289a9c8d4",
+      "literal_titles": [
+        "F04B real PostgreSQL public stop and durable local operator polling",
+        "B1/B4 generic accessible GET zero business writes; negative GET/POST and strict Origin",
+        "B1 exact30day expiry boundary and corrupted job binding zero business writes",
+        "B2 concurrent stable tenant-wide suppression and post-lock expiry",
+        "B3 complaints operator auth, closed absent config, durable dedup bound payload and 0 writes",
+        "B4 concurrent 31st request 429 counts failures and ignores forwarded IP",
+        "B2 pool optout globally withdraws intended recipient, preserves sender and in-flight",
+        "B5/B6 actual operator CLI durable seed\u2192poll\u2192ReplyStore stops pending; tenant status safe",
+        "B5 default/missing/failure pause, empty explicit complete, reset and incomplete explicit retry",
+        "B5 adapter source 101-tail honest prefix boundary and restart immutable H/tailH"
+      ],
+      "template_titles": [
+        "B2/B3 actual ${stop} shared-lock race ${ordering} final: before0 after1 later0"
+      ],
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "tests/suppression-integration.test.ts"
+      ],
+      "selection": "whole exact file; parent and all predecessor children permitted"
+    },
+    {
+      "file": "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/capacity-integration.test.ts",
+      "sha256": "667deb7986f057de112b259d011caf2d23af83fa687da0eda0d07ecbd8824f95",
+      "literal_titles": [
+        "F07 real PostgreSQL capacity boundaries and atomic safety",
+        "creates101st connected mailbox for free and expired TEST team without send",
+        "tenant pages remain bounded and foreign capacity actions cause no side effects",
+        "global30 admission serializes competing tenants and duplicate requests",
+        "lease120 expiry release and stale renewal never resurrect stopped mailbox",
+        "complaint quarantine immediately releases capacity for another tenant",
+        "sender and pool recipient need active lease at scheduling claim and final fence",
+        "capacity writers sample database time after shared lock and rollback admission",
+        "strict own capacity API rejects auth origin malformed cursor and rate abuse",
+        "real schema11 to12 upgrade preserves envelope states and has no automatic leases",
+        "additive migration idempotency keeps records without implicit lease"
+      ],
+      "template_titles": [],
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "tests/capacity-integration.test.ts"
+      ],
+      "selection": "whole exact file; parent and all predecessor children permitted"
+    },
+    {
+      "file": "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/submission-integration.test.ts",
+      "sha256": "350b22220e81b829490ae47fbb4bdc30c1757217551da2c0410aafc3f11a2d1a",
+      "literal_titles": [
+        "F03b real PG durable final authority, all stop races, sink privacy and outcomes",
+        "B3 durable rendered sink/token/message refs with own OR intended pool peer read only",
+        "R2 B5 authenticated disabled inspection unavailable before either reader",
+        "R1 post-lock clock lease45s rejects expired waiter with zero adapter calls",
+        "R1 post-lock clock poll60s rejects stale waiter with live lease and zero adapter calls",
+        "R1 post-lock clock retry120s rejects ceiling waiter with zero adapter calls",
+        "R1 post-lock clock midnight concurrent waiters enforce new-day provider limit1 and reservations",
+        "B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan",
+        "B5 midnight reservations move under concurrent final guard; provider lowered, no off-by-one",
+        "B4 proved pre-DATA only, 60s pacing within original120s ceiling, re-enter guards/quota",
+        "B4/B5 retry120s exact ceiling, ambiguous timeout/crash retain quota, never recover resend"
+      ],
+      "template_titles": [
+        "B1/B2 SC-US-003-${ordering==='before'?4:5} ${kind}"
+      ],
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "tests/submission-integration.test.ts"
+      ],
+      "selection": "whole exact file; parent and all predecessor children permitted"
+    }
+  ],
+  "immutable_inputs": {
+    "/tmp/n7-f10-diagnostic-a18/probes-v1.mjs": "9164f8ea3c36d578f9970f28839d3e39a640be47632e2e8bda6cec641d42a0a4",
+    "/tmp/n7-f10-diagnostic-a18/guard-v1.mjs": "d21314e62325ca0cd4d266efabc4a8feaf194c140b10ace62fb119a70d7e026a",
+    "/tmp/n7-f10-diagnostic-a18/probe-child.mjs": "5776bc1b781b48388d032b7e158ac5d9d16488273900d624aeb8e81eaceb12f8",
+    "/tmp/n7-f10-diagnostic-a18/suite-output-v2.mjs": "618900aee413ef486f2dd4b69fd1a46d9ddfb4dd0b43e51929bc7b6877517635",
+    "/tmp/n7-f10-diagnostic-a18/run-file-v1.py": "ba98c1e3d3f840b7bf9cf412063d3eec560ba8b39ef7aac38df838a1729b7a35",
+    "/tmp/n7-f10-diagnostic-a18/sql-observe-v1.mjs": "7b7a099b0addc3b89daf58b6b2a75805ad77768993a115bce784f1fdcdf4236f",
+    "/tmp/n7-f10-diagnostic-a18/fs-probe-v1.mjs": "5db67de28f1e45955215a4e0a4772cda6961bff6f65f84cf35074aaf5e4b6e75",
+    "/tmp/n7-f10-diagnostic-a18/pg-snapshot-v1.mjs": "9f829e4efe2dce6f3e8125996cd9fe9e83e4cdc12e6c25d7550ee0fbb1c40bf1"
+  },
+  "fixture_hashes": {
+    "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/capacity-fixture.ts": "8b6b6e928dd627dc8a0fcdc2f5cb73b3e5e0f2679f42be6e20bea134ff26dc32",
+    "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/diagnostics-fixture.ts": "889f428735c251a33c18a026d3afbdd761bc3e4b9d7e965ab6848ac788740017",
+    "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-fixture.ts": "654fb5e45e5dcc0f520bdae5906c5340baf68eb8fb0dd9a8e9d29b6d6a91aa2f",
+    "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/diagnostics-overlap-fixture.ts": "dc691f236c778d310914b3af609cf4cdaa8081dc7df2dd261fc24c9271ac6ca2",
+    "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f09-transport-fixture.ts": "984e6242be0a61880750c114dde53e5993588d9d3c82990c608e7e4db0eb5328",
+    "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/billing-fixture.ts": "57793f79d6c5b2f51d1daac35175663e98c0c25dc95d4e22bb5187cb7422f28d",
+    "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f09-slot-owner-fixture.ts": "c9c11e48e5e7af7e1fdb57f9860d043a8791f65095c35ad0683f7f51c3bd36df",
+    "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts": "af3523f51274e34d420ca1e8cd01927e7c3e262cfeb229cbe0dc1535b66a6340",
+    "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/diagnostics-deadline-fixture.ts": "50e208a0e801cbc9fc8937a6d44db125949875b6a91fd32ea1955ceb81f98deb"
+  },
+  "budget_s_per_file": 90,
+  "no_physical_or_protocol_files": true
+}

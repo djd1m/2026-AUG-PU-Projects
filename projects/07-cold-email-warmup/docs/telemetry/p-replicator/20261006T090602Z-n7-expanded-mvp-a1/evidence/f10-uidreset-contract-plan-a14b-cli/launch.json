@@ -1,0 +1,47 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-uidreset-contract-plan-a14b-cli",
+  "attempt_id": "f10-uidreset-contract-plan-a14b-cli",
+  "source_revision": "6255b8f19a456103f062b0d1d5fd2313b914af94",
+  "worktree": "/tmp/n7-f10-restart-fix-20261006-a12",
+  "project": "projects/07-cold-email-warmup",
+  "trace_path": "/tmp/n7-f10-uidreset-plan-a14b-cli/receipt.md",
+  "trace_prelaunch_absent": true,
+  "launched_at": "2026-10-06T18:31:26.543077+00:00",
+  "freeze_at": "2026-10-06T18:37:56.543077+00:00",
+  "deadline": "2026-10-06T18:39:26.543077+00:00",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "fork_turns": "none",
+  "profile": "model-routing-econom",
+  "role": "separate planner of confirmed internal adapter contract repair, no coding",
+  "planner_packet": {
+    "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/sol-coordinator-handoff-20261006/planner-only-review-packet.json",
+    "sha256": "c56fa1bef6b60a4f413320469fe4ee7314439e4aa5d1c48e5ea9328c5f4682e5"
+  },
+  "objective_facts": [
+    {
+      "path": "/tmp/n7-f10-verify-a13/diagnostic-classification-v1.json",
+      "sha256": "f2bd536e9633109f17277fae06af15a0e77b75fda68ecaa6da8a1d2c24eb36e0"
+    },
+    {
+      "path": "/tmp/n7-f10-verify-a13/child-error-v2.jsonl",
+      "sha256": "a83e8a01db833edaa5659a8a9034dc722779b13517bb1e583a7042d33364a570"
+    },
+    {
+      "path": "/tmp/n7-f10-verify-a13/diagnostic-summary-v3.json",
+      "sha256": "e823316a0c802eef6793512059965a035487ee0884ca93b1e84746f5cf847e73"
+    }
+  ],
+  "allowed_writes": "CLI host output-last-message receipt only; coordinator materializes plan/context manifest",
+  "acceptance": [
+    "Source-bound minimal proposal fixes OLD UID fixedtail retry trap via typed current EXAMINE proof; no more than1 protocoloperation/quantum",
+    "Preserves guarded tenant/owner/run generation, actual UIDVALIDITY reset/cursor semantics, incompleteexplicitretry/no falsefreshness/semanticdedup",
+    "Exact private type/IPC/caller files, compatibility fullpoll and onequantum consumers, independent testoracles+failcapablemutants/required regressions",
+    "No productscope change, no new schema/engine/automaticretry; identify any actual normative gap instead of silently altering",
+    "Short serialized plan artifact + provenance/SHA + terminal receipt within8min; actualmodel/usage null ifunexposed"
+  ],
+  "host": "fresh standalone Codex CLI, standard read-only sandbox; no resume/fork/inherited author context",
+  "fallback_reason": "native fresh spawn rejected agent thread limit, no actor created; original8min launch closed failed, new explicit8min attempt"
+}

@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: expired occupied slots survive actual SIGSTOP120s until exact child exit
+ok 1 - expired occupied slots survive actual SIGSTOP120s until exact child exit
+  ---
+  duration_ms: 124089.019147
+  type: 'test'
+  ...
+# Subtest: suspended transport owners retain physical slots across runtime restart
+ok 2 - suspended transport owners retain physical slots across runtime restart
+  ---
+  duration_ms: 123074.346885
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 248330.416718

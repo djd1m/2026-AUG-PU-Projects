@@ -1,0 +1,20 @@
+{
+  "runId": "20261006T090602Z-n7-expanded-mvp-a1",
+  "launchMs": 1791376077817.448,
+  "units": [
+    {
+      "workUnitId": "f11_a61_integration_readiness_review",
+      "tracePath": "/tmp/n7-f11-integration-readiness-review-a61-20261007/receipt.md"
+    }
+  ],
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "source_revision": "1ca3c56a43df544d752a516afdd96d93f1bef1da",
+  "planner_sha256": "d77b774bc3cbfd0ec843520fa999d5f5472059d53251224d5c0f70a788632876",
+  "objective_sha256": "55bd72091ad49bf7104311234e9ba87b2e8bcc0c9b72c8a0060800832229e677",
+  "dispatch_status": "ready for actual clean HIGH followup",
+  "context_policy": "reuse clean HIGH actor; no A58coder chat/narrative; not claimed fresh fork",
+  "runtime_db_lease": false,
+  "trace_absent_before_dispatch": true
+}

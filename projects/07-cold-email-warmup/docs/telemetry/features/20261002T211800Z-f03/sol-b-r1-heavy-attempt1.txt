@@ -1,0 +1,7 @@
+HEAVY_ACQUIRED 2026-10-02T22:55:41Z
+
+> n7-cold-email-warmup@0.1.0 typecheck
+> tsc --noEmit
+
+tests/submission-integration.test.ts(153,12): error TS7022: 'url' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
+HEAVY_RELEASED 2026-10-02T22:55:46Z

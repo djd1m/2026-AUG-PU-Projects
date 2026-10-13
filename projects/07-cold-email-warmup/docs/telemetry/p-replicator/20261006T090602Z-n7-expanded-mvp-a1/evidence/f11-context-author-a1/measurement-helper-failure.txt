@@ -1,0 +1,6 @@
+Receipt helper assertion failure retained from joined seal-check tool output:
+Traceback (most recent call last):
+  File "<stdin>", line 6, in <module>
+AssertionError
+
+Classification: measurement-helper failure from an unjustified socketDenied==0 assumption. Source/build/test outcomes unchanged. Actual helper-failure wall timestamp was not recorded; diagnosis first observed by subsequent command 2026-10-06T23:38:28Z, not used to invent failure time. Denials preserved and destinations unavailable. Corrected receipt records count22.

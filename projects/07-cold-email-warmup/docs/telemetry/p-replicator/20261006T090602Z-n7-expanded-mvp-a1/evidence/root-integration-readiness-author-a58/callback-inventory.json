@@ -1,0 +1,22 @@
+{
+  "diagnostics": {
+    "top": 2,
+    "nested": 5
+  },
+  "capacity": {
+    "top": 1,
+    "nested": 10
+  },
+  "commands": [
+    [
+      "--test",
+      "--test-concurrency=1",
+      "tests/diagnostics-integration.test.ts"
+    ],
+    [
+      "--test",
+      "--test-concurrency=1",
+      "tests/capacity-integration.test.ts"
+    ]
+  ]
+}

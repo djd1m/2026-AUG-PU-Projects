@@ -1,0 +1,20 @@
+{
+  "source": "b6b82cb83cdf7cb1d646784ad169af826e6c6852",
+  "build": "76",
+  "inputSHA256": "20c27e2d8c05515aee66e6a7adee071475f48cddcd4fb088ab2b368c586dc256",
+  "status": "ready",
+  "mechanicalRoute": "S lower bound",
+  "substantiveRoute": "inherited XL/HIGH; diagnostic only under existing authorization",
+  "selectedCount": 1,
+  "command": [
+    "node",
+    "--test",
+    "--test-name-pattern",
+    "^F11 ALL30 finite native BODY fault recovers both2800ms phases full300s$",
+    "tests/f10-runtime-protocol.test.ts"
+  ],
+  "effect": "single fresh owned retained schema, local protocol fixture only",
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "evidence": "/tmp/n7-f11-continuation-fleet-diagnostic-a26"
+}

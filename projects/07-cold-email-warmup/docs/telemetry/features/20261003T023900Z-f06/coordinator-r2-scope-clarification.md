@@ -1,0 +1,3 @@
+# R2 scope clarification
+
+The coordinator brief blanket missing-Origin403 clause was overbroad. Accepted existing capability-token server-to-server one-click unsubscribe deliberately supports no Origin; this is distinct from a browser form with Origin:null. Keep the accepted one-click exception. BLOCK002 is the HTML document Referrer-Policy only. Null/cross-origin denial and no effects remain mandatory. This clarification does not expand scope or relax the pre-existing security contract. Written control clarification at /tmp/n7-f06b-r2-run/coordinator-clarification.md before runtime. Author correctly left existing exception unchanged; its scope concern does not establish a new product defect.

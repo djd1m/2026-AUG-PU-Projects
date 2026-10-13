@@ -1,0 +1,26 @@
+{
+  "utc": "2026-10-06T22:27:16.474564+00:00",
+  "authority": "root exact2 legacyreservation",
+  "protocol_short_join_utc": "2026-10-06T22:26:21.233914+00:00",
+  "native_exit": 0,
+  "files": [
+    {
+      "legacy": "/tmp/n7-f10-cadence-implement-a7/short-native-v2.json",
+      "prior_sha256": "60d07dcb6bcec2d5faa0419f86ccb41fce2997564376df6f25d197f5b4ce1007",
+      "prior_bytes": 30677,
+      "new_archived": "/tmp/n7-f10-atomic-admission-verify-a32/a32-short-native-v2.json",
+      "new_sha256": "4297ccf307fe59423d3bffda37d5a2c8bf469d6354d69737cae8cfbf6030f27a",
+      "new_bytes": 30790,
+      "original_restored_verified": true
+    },
+    {
+      "legacy": "/tmp/n7-f10-cadence-implement-a7/short-native-v2-drain.json",
+      "prior_sha256": "3d19f0b8d4ed427ae24293f9d897c17f0165ef5bc6132b2fffbd8af01f663b2a",
+      "prior_bytes": 56,
+      "new_archived": "/tmp/n7-f10-atomic-admission-verify-a32/a32-short-native-v2-drain.json",
+      "new_sha256": "2b11a492eefc82f372d06f295575229bc02bfdbe17248377fd510eb3ff14b2ed",
+      "new_bytes": 55,
+      "original_restored_verified": true
+    }
+  ]
+}

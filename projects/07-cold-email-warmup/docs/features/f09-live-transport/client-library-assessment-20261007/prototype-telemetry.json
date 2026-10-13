@@ -1,0 +1,35 @@
+{
+  "run_id": "20261007-mail-library-prototype",
+  "attempt_id": "review-r1",
+  "profile": "model-routing-econom",
+  "role": "independent-review",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage_tokens": null,
+  "cost": null,
+  "measurement_gaps": [
+    "Host actual model/effort and usage/cost are unavailable",
+    "Active/waiting interval union not measured",
+    "Review telemetry file created during read-only review after measured ACK; earlier ACK/deadline recorded through parent message, not reconstructed counters"
+  ],
+  "started_at": "2026-10-07T07:22:58Z",
+  "deadline_at": "2026-10-07T07:30:58Z",
+  "source_revision": "530a73fb5498ae873d48e4b05176946bee1734a4",
+  "status": "completed",
+  "owned_children": [],
+  "sandbox_exception": "bwrap preexec failure; scoped escalated read-only and review-directory writes",
+  "finished_at": "2026-10-07T07:29:31.068792+00:00",
+  "elapsed_wall_ms": 393068,
+  "active_wall_ms": null,
+  "owned_children_joined": true,
+  "children_spawned": 0,
+  "runtime_tests_rerun": 0,
+  "verdicts": {
+    "imapflow": "FAIL",
+    "nodemailer": "INCONCLUSIVE"
+  },
+  "footprint_bytes": 39912,
+  "cost_basis": "unavailable"
+}

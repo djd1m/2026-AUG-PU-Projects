@@ -1,0 +1,28 @@
+{
+  "thread_id": "01a0fe11-eb11-7ef3-b415-2ae4c5a24347",
+  "actual_model_contexts": [
+    {
+      "model": "gpt-6.1-sol",
+      "effort": "high"
+    }
+  ],
+  "usage": {
+    "input_tokens": 2275966,
+    "cached_input_tokens": 2159232,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 34725,
+    "reasoning_output_tokens": 7350
+  },
+  "cost": null,
+  "process": {
+    "exit_code": 0,
+    "duration_seconds_process": 1174.906,
+    "finished_at": "2026-10-02T19:42:36.828844+00:00"
+  },
+  "feature_spec_digest_binding": {
+    "path": "docs/features/f01-foundation-auth/01-specification.md",
+    "sha256": "8c8603677811889b7ce9fb1498d689820bdee0fdc14276c4e0949cdd252afc23",
+    "matches_prelaunch": true
+  },
+  "worker_receipt_note": "Prelaunch feature spec digest was correct; worker compared separately to canonical project Specification and disclosed difference. Both baseline files unchanged."
+}

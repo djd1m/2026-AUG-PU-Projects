@@ -1,0 +1,46 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-uidreset-implement-a15",
+  "attempt_id": "f10-uidreset-implement-a15",
+  "launched_at": "2026-10-06T18:38:41.508868+00:00",
+  "freeze_at": "2026-10-06T18:57:11.508868+00:00",
+  "deadline": "2026-10-06T18:58:41.508868+00:00",
+  "source_revision": "6255b8f19a456103f062b0d1d5fd2313b914af94",
+  "worktree": "/tmp/n7-f10-restart-fix-20261006-a12",
+  "project": "projects/07-cold-email-warmup",
+  "trace_path": "/tmp/n7-f10-uidreset-implement-a15-receipt.md",
+  "trace_prelaunch_absent": true,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "profile": "model-routing-econom",
+  "executor": "/root/n7_sol_coordinator/f10_restart_author_a12 fixed MEDIUM new bounded attempt",
+  "allowed_files": [
+    "src/replies/adapter.ts",
+    "src/replies/imap.ts",
+    "src/replies/worker.ts",
+    "src/replies/store.ts",
+    "src/mailboxes/transport-child.ts",
+    "tests/f09-live-protocol.test.ts",
+    "tests/f09-transport-fixture.ts",
+    "tests/f10-runtime-protocol.test.ts",
+    "tests/f09-transport-integration.test.ts",
+    "tests/f09-live-transport.test.ts",
+    "tests/f10-runtime-integration.test.ts",
+    "tests/replies-integration.test.ts"
+  ],
+  "scratch_root": "/tmp/n7-f10-uidreset-implement-a15",
+  "planner_receipt_sha256": "998aeeb0b4c89294d7f196650b759954f3a965f62dacfaf8313d1e5eaf749662",
+  "planner_receipt": "/tmp/n7-f10-uidreset-plan-a14b-cli/receipt.md",
+  "disk_before_launch": {
+    "available_bytes": 3440570368,
+    "free_inodes": 4788392
+  },
+  "acceptance": [
+    "Implement exact private ReadResult union+typed current EXAMINE proof on UID mismatch before FETCH; no additional protocol operation or automatic retry",
+    "Expected run/attempt/source plus existing tenant/poll/runtime/grant guards on capture; full poll and quantum compatibility, incomplete held until authorized retry",
+    "Fail-capable native oldUID explicitretry and sameUID fixedhorizon/rollback/staleauthority/semanticdedup regressions",
+    "Static/unit/affectedPG/native checks with exact frozen hashes and actual commands/exits; full330/fullPG/physical/mutations/review remain mandatory if not executed",
+    "Terminal sealed receipt before deadline; source freeze 90s before; no main/ledger writes/external network/spend"
+  ]
+}

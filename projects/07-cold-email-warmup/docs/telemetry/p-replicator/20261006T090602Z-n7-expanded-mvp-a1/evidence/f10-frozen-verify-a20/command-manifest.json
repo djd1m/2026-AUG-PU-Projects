@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-06T20:04:33.043513+00:00",
+  "files": {
+    "guard-v1.mjs": "f50f46408191d17e69a250d7f682dc746a069b7ef0817d90bb8923466b7246d5",
+    "suite-output-v2.mjs": "92aa73261c5c8ab0f66d50693ae491add3bb2ef65517f75b35759bca9af82cd5",
+    "pg-snapshot-v1.mjs": "9f829e4efe2dce6f3e8125996cd9fe9e83e4cdc12e6c25d7550ee0fbb1c40bf1",
+    "observer-v1.mjs": "4c238946e866911b387ce36b8dbfe0bbdf3e2bbc37e5656af1210a05d8389eb1",
+    "sql-observe-v2.mjs": "255f186a2b00762188187ee2ef47c279f515e24eb00119419593390ce1241573",
+    "health-v1.mjs": "470e03b1747d68b27581b56ff5bc8afa0985e9302f2c4d3d4b5beefea2698e87",
+    "probes-v1.mjs": "d3dd0903cebb8e07fb04f81651790a781ae883586185596a53d7d531e0e42f1a",
+    "probe-child.mjs": "5776bc1b781b48388d032b7e158ac5d9d16488273900d624aeb8e81eaceb12f8",
+    "run-full330-v2.py": "e191dd15fe647949a66f514144b74a550e9ad44de4331e57af1f919fe609b7e5",
+    "run-fullpg-v2.py": "42c6accfafff24cc6bbb750d542a842349a732b710f90a591875d1d270d1b17a"
+  },
+  "fixtures": {
+    "tests/expanded-mvp-04.test.ts": "4b910abd04ea6686eda746079432eed7a83528a68163452ad080fbe17c1f7faa",
+    "tests/diagnostics-fixture.ts": "889f428735c251a33c18a026d3afbdd761bc3e4b9d7e965ab6848ac788740017",
+    "tests/f09-transport-fixture.ts": "984e6242be0a61880750c114dde53e5993588d9d3c82990c608e7e4db0eb5328",
+    "tests/f10-runtime-fixture.ts": "654fb5e45e5dcc0f520bdae5906c5340baf68eb8fb0dd9a8e9d29b6d6a91aa2f",
+    "tests/f10-runtime-process-fixture.ts": "af3523f51274e34d420ca1e8cd01927e7c3e262cfeb229cbe0dc1535b66a6340"
+  },
+  "canonical_command": [
+    "node",
+    "node_modules/tsx/dist/cli.mjs",
+    "--test",
+    "--test-concurrency=1",
+    "tests/expanded-mvp-04.test.ts"
+  ],
+  "fullpg_files": [
+    "tests/auth-integration.test.ts",
+    "tests/billing-integration.test.ts",
+    "tests/capacity-integration.test.ts",
+    "tests/diagnostics-disconnect-integration.test.ts",
+    "tests/diagnostics-final-cancel-integration.test.ts",
+    "tests/diagnostics-integration.test.ts",
+    "tests/diagnostics-ordered-integration.test.ts",
+    "tests/dispatch-integration.test.ts",
+    "tests/evidence-integration.test.ts",
+    "tests/f09-transport-integration.test.ts",
+    "tests/f10-runtime-integration.test.ts",
+    "tests/mailboxes-integration.test.ts",
+    "tests/replies-integration.test.ts",
+    "tests/submission-integration.test.ts",
+    "tests/suppression-integration.test.ts",
+    "tests/suppression-owner-integration.test.ts",
+    "tests/web-integration.test.ts"
+  ],
+  "observer": "max1 persistent same connection; fixed5s; nonoverlap; SQL hashes only",
+  "passive": "parent argv only; Pool original promise returned, original callbacks unchanged; bounded buffer10000,1s batched synchronous flush",
+  "measurement_bias": "observer adds one PG connection, queries every5s; parent adds promise settlement handler and batched1s I/O; TSX CLI has preload but no PG; production workers inactive",
+  "health_before_command_manifest": "health helper final bytes recorded after completed short health; immutable before canonical; context manifest and source/joins/mutex recorded before health child"
+}
