@@ -63,7 +63,7 @@ Scaniverse указан как источник пользовательског
 
 Проверка completion в `@dzhechkov/p-replicator@1.13.2` имеет ошибку двойного добавления project docs path. Неизменённый tool не считается PASS; временная двухстрочная compatibility-копия дала четыре PASS по 7 features / 65 AC без изменения validator logic. Воспроизведение и SHA описаны в [compatibility receipt](docs/research/pipeline-checker-compatibility.md).
 
-Основные документы: [Specification](docs/Specification.md), [Architecture](docs/Architecture.md), [Completion](docs/Completion.md), [Final Summary](docs/Final_Summary.md), [решения](docs/decision-log.md) и [исследования](docs/research/). Решения reuse/adapt/reject и source revisions сохранены отдельно для [foundation](docs/features/foundation/reuse.md), [space](docs/features/space/reuse.md), [design](docs/features/design/reuse.md), [procurement](docs/features/procurement/reuse.md), [billing](docs/features/billing/reuse.md) и [sharing](docs/features/sharing/reuse.md).
+Основные документы: [Pipeline walkthrough — полный user flow и data flow](docs/pipeline-walkthrough.md), [Specification](docs/Specification.md), [Architecture](docs/Architecture.md), [Completion](docs/Completion.md), [Final Summary](docs/Final_Summary.md), [решения](docs/decision-log.md) и [исследования](docs/research/). Решения reuse/adapt/reject и source revisions сохранены отдельно для [foundation](docs/features/foundation/reuse.md), [space](docs/features/space/reuse.md), [design](docs/features/design/reuse.md), [procurement](docs/features/procurement/reuse.md), [billing](docs/features/billing/reuse.md) и [sharing](docs/features/sharing/reuse.md).
 
 ## Чертёж с размерами
 
