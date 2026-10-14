@@ -130,3 +130,7 @@ Owner requests GLB selection/deletion and nextstage prompts. Existing asset path
 
 ## DRIFT-040 — GLB palette binding and design deletion
 Use installed Babylon _internalMetadata glTF primitive pointers with public metadata fallback. Palette/color edits select After. Logical design deletion retains historical content and budgets, hides deleted variants, revokes their shares and resets preview to surviving current design. Local palette helper explicitly does not claim Gemini or reference image analysis. Provider BYOK metadata blocks live inference. Four public journey checks pass; final design browser checks remain unverified after palette locator timeout at the time limit.
+
+
+## DRIFT-041 — ordinary OpenRouter credit funding does not require BYOK
+Owner corrects an unnecessary provider precondition: remove include_byok_in_limit=true as an acceptance requirement. Existing finite cap, exact daily/weekly period and sufficient consistent remaining checks remain. Accept false/true/absent flag; no new external call, dependency, ledger or payment change. Historical blocked receipts stay intact. Manual/live activation is a separate runtime setting; this correction alone does not execute inference.

@@ -1,0 +1,30 @@
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+ ❯ tests/design/provider.test.ts (9 tests | 1 failed | 8 skipped) 66ms
+   × credit-funded keys accept true, false or absent BYOK flag without weakening daily or weekly limits 64ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/design/provider.test.ts > credit-funded keys accept true, false or absent BYOK flag without weakening daily or weekly limits
+AssertionError: promise rejected "DomainError: Период и предел ключа провай… { …(3) }" instead of resolving
+ ❯ tests/design/provider.test.ts:39:147
+
+ ❯ fixture tests/design/provider.test.ts:12:626
+ ❯ tests/design/provider.test.ts:39:4
+
+Caused by: DomainError: Период и предел ключа провайдера не подтверждены
+ ❯ Object.verifyBudget packages/adapters/src/openrouter.ts:12:660
+ ❯ tests/design/provider.test.ts:39:84
+ ❯ fixture tests/design/provider.test.ts:12:620
+ ❯ tests/design/provider.test.ts:39:4
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { status: 503, code: 'PROVIDER_LIMIT_UNVERIFIED', fields: undefined }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 skipped (9)
+   Start at  19:08:55
+   Duration  390ms (import 43%, tests 31%, transform 22%, worker 3%)
