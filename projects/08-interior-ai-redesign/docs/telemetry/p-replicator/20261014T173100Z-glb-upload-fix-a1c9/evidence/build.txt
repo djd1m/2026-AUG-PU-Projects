@@ -1,4 +1,4 @@
- Image n8-interior-app:local Building 
+ Image n8-interior-app:local Building
 #1 [internal] load local bake definitions
 #1 reading from stdin 578B done
 #1 DONE 0.0s
@@ -56,36 +56,36 @@
 #17 DONE 0.1s
 
 #18 [13/14] RUN npm run build
-#18 0.436 
+#18 0.436
 #18 0.436 > n8-interior-planner@0.1.0 build
 #18 0.436 > npm run typecheck && npm run build -w @n8/web
-#18 0.436 
-#18 0.596 
+#18 0.436
+#18 0.596
 #18 0.596 > n8-interior-planner@0.1.0 typecheck
 #18 0.596 > tsc --noEmit -p tsconfig.json
-#18 0.596 
-#18 9.419 
+#18 0.596
+#18 9.419
 #18 9.419 > @n8/web@0.1.0 build
 #18 9.419 > next build
-#18 9.419 
+#18 9.419
 #18 10.37    ▲ Next.js 15.5.27
 #18 10.37    - Experiments (use with caution):
 #18 10.37      · cpus: 2
-#18 10.37 
+#18 10.37
 #18 10.42    Creating an optimized production build ...
 #18 38.05  ✓ Compiled successfully in 27.2s
 #18 38.05    Linting and checking validity of types ...
-#18 40.34 
+#18 40.34
 #18 40.34  ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
 #18 48.58    Collecting page data ...
 #18 53.18    Generating static pages (0/6) ...
-#18 53.76    Generating static pages (1/6) 
-#18 53.76    Generating static pages (2/6) 
-#18 53.76    Generating static pages (4/6) 
+#18 53.76    Generating static pages (1/6)
+#18 53.76    Generating static pages (2/6)
+#18 53.76    Generating static pages (4/6)
 #18 53.76  ✓ Generating static pages (6/6)
 #18 54.64    Finalizing page optimization ...
 #18 54.64    Collecting build traces ...
-#18 63.80 
+#18 63.80
 #18 63.80 Route (app)                                                     Size  First Load JS
 #18 63.80 ┌ ƒ /                                                          164 B         109 kB
 #18 63.80 ├ ƒ /_not-found                                                994 B         106 kB
@@ -136,10 +136,10 @@
 #18 63.80   ├ chunks/18-bb7d85faaf08e91b.js                            46.9 kB
 #18 63.80   ├ chunks/87c73c54-09e1ba5c70e60a51.js                      54.2 kB
 #18 63.80   └ other shared chunks (total)                              4.34 kB
-#18 63.80 
-#18 63.80 
+#18 63.80
+#18 63.80
 #18 63.80 ƒ  (Dynamic)  server-rendered on demand
-#18 63.80 
+#18 63.80
 #18 DONE 64.1s
 
 #19 [14/14] RUN mkdir -p /app/.runtime/assets && chown -R node:node /app/.runtime
@@ -160,4 +160,4 @@
 
 #21 resolving provenance for metadata file
 #21 DONE 0.0s
- Image n8-interior-app:local Built 
+ Image n8-interior-app:local Built
