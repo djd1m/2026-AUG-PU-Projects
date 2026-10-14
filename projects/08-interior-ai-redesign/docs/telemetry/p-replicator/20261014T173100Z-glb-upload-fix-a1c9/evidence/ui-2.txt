@@ -1,0 +1,15 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.setInputFiles: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('section.card').filter({ has: getByRole('heading', { name: 'Добавить фото или скан', exact: true }) }).getByLabel('Файл', { exact: true })
+
+    at async file:///app/scripts/e2e-glb-upload.mjs:21:3
+    at async checked (/app/scripts/e2e-glb-upload.mjs:14:33)
+    at async file:///app/scripts/e2e-glb-upload.mjs:20:2 {
+  name: 'TimeoutError'
+}
+
+Node.js v24.21.0

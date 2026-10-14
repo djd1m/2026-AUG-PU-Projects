@@ -1,0 +1,16 @@
+PASS generic file picker automatically routes 11MiB GLB, despite image purpose selection
+PASS UI calibration saves selected scan, survives reload and original hash matches
+PASS dedicated GLB picker accepts same 11MiB file and clears old calibration without overwriting shell
+PASS malformed GLB rejected through UI, original confirmed shell preserved
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+response.json: Protocol error (Network.getResponseBody): Request content was evicted from inspector cache
+    at /app/scripts/e2e-glb-upload.mjs:37:299
+    at async checked (/app/scripts/e2e-glb-upload.mjs:14:33)
+    at async file:///app/scripts/e2e-glb-upload.mjs:36:2 {
+  name: 'Error'
+}
+
+Node.js v24.21.0

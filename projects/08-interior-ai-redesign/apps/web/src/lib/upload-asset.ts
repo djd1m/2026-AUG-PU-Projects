@@ -1,3 +1,8 @@
+export type UploadKind = 'reference'|'room_photo'|'glb';
+/** Filename/MIME routing is a UX hint; the server validates the actual bytes. */
+export function resolveUploadKind(file:Pick<File,'name'|'type'>,selected:UploadKind):UploadKind {
+ return /\.glb$/i.test(file.name)||file.type==='model/gltf-binary'?'glb':selected;
+}
 /** Shared private upload transport; server remains authoritative for type/size/rights/ownership. */
 export async function uploadPrivateAsset<T extends {id:string}>(file:File,kind:'reference'|'room_photo'|'glb',projectId:string,version:number,rights:boolean):Promise<{asset:T;version:number}>{
  if(!file.size)throw Error('Выберите файл');

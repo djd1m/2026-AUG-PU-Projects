@@ -1,0 +1,18 @@
+PASS generic file picker automatically routes 11MiB GLB, despite image purpose selection
+PASS UI calibration saves selected scan, survives reload and original hash matches
+PASS dedicated GLB picker accepts same 11MiB file and clears old calibration without overwriting shell
+PASS malformed GLB rejected through UI, original confirmed shell preserved
+PASS GLB above 25MiB rejected by authoritative server with 413
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.waitForResponse: Timeout 30000ms exceeded while waiting for event "response"
+    at submit (/app/scripts/e2e-glb-upload.mjs:13:57)
+    at /app/scripts/e2e-glb-upload.mjs:40:232
+    at async checked (/app/scripts/e2e-glb-upload.mjs:14:33)
+    at async file:///app/scripts/e2e-glb-upload.mjs:39:2 {
+  name: 'TimeoutError'
+}
+
+Node.js v24.21.0

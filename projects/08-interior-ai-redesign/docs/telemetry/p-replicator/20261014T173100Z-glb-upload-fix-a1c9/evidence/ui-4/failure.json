@@ -1,0 +1,11 @@
+{
+  "status": "failed",
+  "checks": [
+    "generic file picker automatically routes 11MiB GLB, despite image purpose selection",
+    "UI calibration saves selected scan, survives reload and original hash matches",
+    "dedicated GLB picker accepts same 11MiB file and clears old calibration without overwriting shell",
+    "malformed GLB rejected through UI, original confirmed shell preserved",
+    "GLB above 25MiB rejected by authoritative server with 413"
+  ],
+  "error": "page.waitForResponse: Timeout 30000ms exceeded while waiting for event \"response\""
+}

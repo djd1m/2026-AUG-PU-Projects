@@ -1,0 +1,6 @@
+{"stage": "implement", "at": "2026-10-14T17:30:38.076659+00:00", "route": "S; existing UX routing bug, no API limit change", "mechanical_exit": 0}
+{"stage": "e2e", "attempt": "ui-1", "status": "failed_before_browser", "reason": "driver permission", "next": "ui-2"}
+{"stage": "e2e", "attempt": "ui-2", "status": "failed", "reason": "driver exactlabel selector; no upload attempted"}
+{"stage": "e2e", "attempt": "ui-3", "status": "failed", "reason": "four functional cases pass; 25MiB HTTP413 passed, inspector responsebody evicted", "next": "ui-4 same source/image"}
+{"stage": "e2e", "attempt": "ui-4", "status": "failed", "reason": "fivecasespassed; imagecase missingcheckbox afterreload prevented submit", "next": "ui-5 same source/image"}
+{"stage": "delivery", "at": "2026-10-14T17:38:16.119432+00:00", "scope": "routing fix only", "browser": "ui-5 pass", "pixel_error_owner_file": "not_verified"}
