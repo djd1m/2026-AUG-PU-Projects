@@ -56,6 +56,9 @@ INPUT: ManualRoom or ready owned GLB + anchors/measurement/confirmation. OUTPUT:
 3. Persist normalized transform and immutable source hash, derive shell hash from canonical geometry/calibration; transaction CAS Project.currentShellId/version. Prior design approval becomes ineffective by shell mismatch; clear currentBudgetId. RETURN revision + limitations.
 COMPLEXITY: O(openings² + anchors), counts bounded.
 
+
+Preview privately at source scale before persistence; actual surface picks supply source-world points. Alternative strict native method requires explicit userConfirmed=true, rejects supplied anchors/scale, stores scale1 and empty anchors. No preview/pick persists a shell; edits clear consent.
+
 ### Algorithm: StorePrivateAsset
 REQUIREMENT: `FR-space-2`
 REALISES: SC-US-004-1, SC-US-004-2, SC-US-004-3

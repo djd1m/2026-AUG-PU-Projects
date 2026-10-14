@@ -1,0 +1,28 @@
+'use client';
+import {useState} from 'react';
+import type {Point3} from '@n8/domain/space';
+import {SceneViewport} from './SceneViewport';
+import {decimalInput,type ProjectContext} from './project-types';
+export function GlbCalibration({context,selectedAssetId,onSelect,save,busy}:{context:ProjectContext;selectedAssetId:string;onSelect:(id:string)=>void;save:(body:unknown)=>Promise<void>;busy:boolean}){
+ const seed=context.shell?.mode==='glb'&&context.shell.sourceAssetId===selectedAssetId?context.shell:null;
+ const[method,setMethod]=useState<'measured'|'native'>(seed?.calibration.method==='native'?'native':'measured');
+ const[a,setA]=useState<Point3|null>(seed?.calibration.anchors[0]?.a??null),[b,setB]=useState<Point3|null>(seed?.calibration.anchors[0]?.b??null),[measured,setMeasured]=useState(seed?.calibration.anchors[0]?.measuredM??'');
+ const[confirmed,setConfirmed]=useState(false),[active,setActive]=useState<'A'|'B'|null>(null),[ready,setReady]=useState(false),[failed,setFailed]=useState(false);
+ const changeMethod=(value:'measured'|'native')=>{setMethod(value);setConfirmed(false);setActive(null);};
+ const distinct=!!a&&!!b&&Math.hypot(...a.map((v,i)=>v-b[i]!))>1e-9;
+ return <form onSubmit={event=>{event.preventDefault();const f=new FormData(event.currentTarget);const area=f.get('area');void save({mode:'glb',sourceAssetId:selectedAssetId,calibration:{...(method==='native'?{method:'native'}:{anchors:[{a,b,measuredM:decimalInput(measured)}]}),userConfirmed:confirmed,...(area?{floorAreaM2:decimalInput(area),floorAreaConfirmed:f.get('areaConfirmed')==='on'}:{})}});}}>
+ <label>Загруженный GLB<select name="asset" required value={selectedAssetId} onChange={e=>onSelect(e.target.value)}><option value="" disabled>Выберите скан</option>{context.assets.filter(a=>a.kind==='glb').map((asset,i)=><option key={asset.id} value={asset.id}>Скан {i+1} · {new Date(asset.createdAt).toLocaleDateString('ru')}</option>)}</select></label>
+ {selectedAssetId&&<><p className="notice">Предпросмотр исходного скана. Основа ещё не изменена. Вращайте модель перетаскиванием, приближайте колесом или жестом.</p><SceneViewport previewAssetId={selectedAssetId} picking={!!active} pickedPoints={[a,b].filter((p):p is Point3=>p!==null)} onReady={()=>setReady(true)} onError={()=>{setReady(false);setFailed(true);}} onPick={point=>{if(active==='A')setA(point);else if(active==='B')setB(point);setConfirmed(false);setActive(active==='A'?'B':null);}}/>
+ <h3>Как проверить масштаб</h3><p className="subtle">A и B — две точки одного известного вам отрезка, например края стены. Выберите их на скане, затем введите расстояние, измеренное рулеткой. Координаты вручную вводить не нужно.</p>
+ <div className="button-group"><button type="button" className={method==='measured'?'compact':'secondary compact'} onClick={()=>changeMethod('measured')}>По двум точкам</button><button type="button" className={method==='native'?'compact':'secondary compact'} onClick={()=>changeMethod('native')}>Сохранить масштаб 1:1</button></div>
+ {method==='measured'?<><p role="status">{active?`Щёлкните по поверхности скана: точка ${active}.`:'Нажмите «Выбрать точку A», затем отметьте две точки на модели.'}</p><div className="button-group"><button type="button" className="secondary compact" disabled={!ready} onClick={()=>setActive('A')}>Выбрать точку A</button><button type="button" className="secondary compact" disabled={!ready} onClick={()=>setActive('B')}>Выбрать точку B</button><button type="button" className="text-button" onClick={()=>{setA(null);setB(null);setConfirmed(false);setActive(null);}}>Сбросить точки</button></div><p className="subtle" data-testid="picked-points">Точка A: {a?'выбрана':'не выбрана'} · Точка B: {b?'выбрана':'не выбрана'}</p>
+ {distinct&&<p className="subtle">Расстояние в исходном скане: {Math.hypot(...a!.map((v,i)=>v-b![i]!)).toFixed(3)} м (масштаб пока не проверен).</p>}
+ <label>Реальное расстояние между A и B, м<input name="measured" inputMode="decimal" value={measured} onChange={e=>{setMeasured(e.target.value);setConfirmed(false);}} placeholder="Например, 3.25" required/></label>
+ <details><summary>Координаты выбранных точек</summary><p className="subtle">Это координаты x,y,z исходной модели. Они определены по щелчкам на скане; вводить их вручную не нужно.</p><p data-testid="point-coordinates">A: {a?.join(',')??'—'}; B: {b?.join(',')??'—'}</p></details>
+ </>:<p className="notice">Сохранится исходный масштаб: 1 единица GLB считается 1 метром. Выбирайте это, если проверили размеры скана в приложении сканирования или другим способом. Точность сканера автоматически не подтверждается; выдуманные опорные точки не создаются.</p>}
+ <label>Площадь пола, м² (если измерена отдельно)<input name="area" defaultValue={seed?.floorAreaM2??''} inputMode="decimal" onChange={()=>setConfirmed(false)}/></label><label className="check-label"><input type="checkbox" name="areaConfirmed" defaultChecked={seed?.floorAreaSource==='user_confirmed'} onChange={()=>setConfirmed(false)}/>Подтверждаю отдельно измеренную площадь.</label>
+ <label className="check-label"><input type="checkbox" name="confirmed" checked={confirmed} onChange={e=>setConfirmed(e.target.checked)} required/>{method==='native'?'Я проверил размеры и подтверждаю исходный масштаб 1:1.':'Я проверил выбранные точки и реальное расстояние между ними.'}</label>
+ {failed&&<p className="warning">Предпросмотр недоступен. Можно подтвердить 1:1 только после независимой проверки размеров.</p>}
+ <button disabled={busy||!confirmed||context.project.state==='archived'||(method==='measured'&&!distinct)}>{busy?'Сохраняем…':'Подтвердить масштаб'}</button></>}
+ </form>;
+}

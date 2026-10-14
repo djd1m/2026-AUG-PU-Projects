@@ -7,7 +7,7 @@ export interface Opening { id:string; wallId:WallId; offsetM:string; widthM:stri
 export interface ManualRoom { lengthM:string; widthM:string; heightM:string; openings:Opening[] }
 export type Point3 = [number,number,number];
 export interface Anchor { a:Point3; b:Point3; measuredM:string }
-export interface Calibration { anchors:Anchor[]; scale:string; toleranceM:string|null; checks:{actualM:string;measuredM:string;deltaM:string}[]; userConfirmed:boolean }
+export interface Calibration { method?:'measured'|'native'; anchors:Anchor[]; scale:string; toleranceM:string|null; checks:{actualM:string;measuredM:string;deltaM:string}[]; userConfirmed:boolean }
 export interface GLBDescriptor { assetId:string; originalHash:string; normalizationMatrix:number[]; vertexCount:number; triangleCount:number; nodeCount:number; surfaceIds:string[] }
 export interface ShellContent { mode:'manual'|'glb'; units:'m'; sourceAssetId:string|null; geometry:ManualRoom|GLBDescriptor; calibration:Calibration; floorAreaM2:string|null; floorAreaSource:'manual_geometry'|'user_confirmed'|'unknown' }
 export interface ShellRevision extends ShellContent { id:string; projectId:string; parentId:string|null; hash:string; confirmedAt:string; createdAt:string }
@@ -38,6 +38,12 @@ export function createManualShell(input:unknown,confirmed:unknown):ShellContent 
 const point=z.tuple([z.number().finite().min(-1e6).max(1e6),z.number().finite().min(-1e6).max(1e6),z.number().finite().min(-1e6).max(1e6)]);
 const calibrationShape=z.object({anchors:z.array(z.object({a:point,b:point,measuredM:z.unknown()}).strict()).min(1).max(16),toleranceM:z.unknown().optional(),userConfirmed:z.literal(true),floorAreaM2:z.unknown().optional(),floorAreaConfirmed:z.boolean().optional()}).strict();
 export function calibrateGlb(input:unknown,asset:Omit<GLBDescriptor,'normalizationMatrix'>):ShellContent {
+ if(input&&typeof input==='object'&&'method' in input&&input.method==='native'){
+  const native=z.object({method:z.literal('native'),userConfirmed:z.literal(true),floorAreaM2:z.unknown().optional(),floorAreaConfirmed:z.boolean().optional()}).strict().safeParse(input);
+  if(!native.success)throw new DomainError(409,'CALIBRATION_REQUIRED','Подтвердите исходный масштаб 1:1');
+  const area=native.data.floorAreaM2===undefined?null:parseDecimal(native.data.floorAreaM2,'0.001','10000','Площадь');if(area!==null&&native.data.floorAreaConfirmed!==true)invalid('Подтвердите отдельно введённую площадь');
+  return{mode:'glb',units:'m',sourceAssetId:asset.assetId,geometry:{...asset,normalizationMatrix:[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]},calibration:{method:'native',anchors:[],scale:'1',toleranceM:null,checks:[],userConfirmed:true},floorAreaM2:area,floorAreaSource:area===null?'unknown':'user_confirmed'};
+ }
  const parsed=calibrationShape.safeParse(input); if(!parsed.success) throw new DomainError(409,'CALIBRATION_REQUIRED','Нужны опорный отрезок и подтверждение масштаба');
  const raw=parsed.data; const anchors=raw.anchors.map(a=>({...a,measuredM:parseDecimal(a.measuredM,'0.001','1000','Длина отрезка')}));
  const distance=(a:Anchor)=>a.a.reduce((sum,v,i)=>sum.plus(new D(v.toString()).minus(a.b[i]!.toString()).pow(2)),new D(0)).sqrt();

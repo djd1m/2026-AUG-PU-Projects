@@ -1,0 +1,72 @@
+{
+  "run_id": "20261014T181240Z-glb-point-picker-54d0",
+  "started_at": "2026-10-14T18:12:40+00:00",
+  "status": "completed_scoped_feature",
+  "profile": "compact-quality-first-v2",
+  "tier": "M",
+  "lifecycle": "M direct; fullfeature attempt stopped by unrelated legacy globalgate. Disclosed before implementation.",
+  "budget_minutes": 10,
+  "scope": "Immediate privateGLB preview, two real surface point clicks, measured distance only, explicit native1:1 confirmation with no invented anchors. Preserve immutable owner-scoped shell.",
+  "source_revision": "cf4646ce272ca827838ce1bb1e8e88fcde22bbc9",
+  "models": [
+    {
+      "role": "coordinator",
+      "actual": null,
+      "reason": "hostmetadata unavailable"
+    },
+    {
+      "role": "independent_review",
+      "requested": "gpt-6-astra",
+      "effort": "high",
+      "actual": null,
+      "usage": null,
+      "receipts": [
+        "evidence/review-1.md",
+        "evidence/review-closure.md"
+      ]
+    }
+  ],
+  "tokens": null,
+  "cost": null,
+  "measurement_gaps": [
+    "active/token/cost unavailable",
+    "elapsed includes initial request clarification and tooling preparation"
+  ],
+  "ac": [
+    "preview uploadedscan before any shell persistence",
+    "real mouse/touch points in source GLB world coordinates, markers/line, rotation not a pick",
+    "measured path saves scale from distance and resets consent on change",
+    "native method saves scale1 with empty anchors, explicit true confirmation, no claimed measurement",
+    "newscan/reset/failures never overwrite shell; old revisions render unchanged",
+    "public browser clicks/reload/native+measured/failedguards,fulltests/mutation"
+  ],
+  "reuse": "Existing BabylonRoom/privateasset transport. Local01-07 search no spatialpicking implementation. Reuse BabylonJS scene.pick and pointer click observer from official code/docs, no new library. Khronos glTF distance meters verified primaryspec.",
+  "requirements": [
+    "docs/Specification.md",
+    "docs/Architecture.md",
+    "docs/Pseudocode.md"
+  ],
+  "tooling": "packaged mandatory featurechecker not resolvable; repair project-local ignored tooling only, do not mutate root/global toolkit",
+  "budget_restarted_at": "2026-10-14T18:16:30.187031+00:00",
+  "user_override": "10minute total remaining from latest instruction",
+  "finished_at": "2026-10-14T18:24:48.081407+00:00",
+  "elapsed_seconds": 728.081407,
+  "elapsed_since_10minute_instruction_seconds": 497.894376,
+  "checks": {
+    "full_suite": "259/259 in39files,103.41s isolated PostgreSQL",
+    "domain": "native strictproof/emptyanchors guards pass",
+    "mutation": "native boolean confirmation mutation fails guard; original restored",
+    "type_lint_build": "pass, finalbuild includes two review fixes",
+    "independent_review": "two UI findings fixed; targeted closure approved",
+    "public_browser": "7/7 actualraypickedpoints, measuredsave/reload, native proof/reload, contextloss, mobile overflow/noJS errors",
+    "source_image": "7 runtimefiles SHA match deployed container; preflight-1.json"
+  },
+  "build_revision": "sha256:e10ca081be03969720ce7ef311ea9a2c715c062eff1e54280f0dae4c153bb085",
+  "limitations": [
+    "Owner scan itself not attached; synthetic real surface picking tested",
+    "Fullfeature globalgate failed old floorplan-import missing pseudocode and gemini-weekly IDs; not claimed complete",
+    "Legacy extra controlanchors remain supported server-side; simplified UI uses one measuredsegment",
+    "No paid AI/payment changes; existing provider activation blocker remains separate"
+  ],
+  "delivery": "https://n8.77.83.87.178.sslip.io"
+}

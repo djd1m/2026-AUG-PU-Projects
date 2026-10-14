@@ -4,4 +4,4 @@ export interface ViewerObject { primitive?:'box'|'cylinder'; id:string; catalogI
 export interface ViewerScene {materials:ViewerMaterial[];objects:ViewerObject[]}
 export interface CameraPose {alpha:number;beta:number;radius:number;target:[number,number,number]}
 export interface SceneViewerHandle { capturePair():Promise<{before:string;after:string;camera:CameraPose}> }
-export interface SceneViewerProps { shell:ShellRevision; scene?:ViewerScene; before?:boolean; resolveAsset:(assetId:string)=>Promise<ArrayBuffer>; className?:string; onError?:(message:string)=>void; onCamera?:(pose:CameraPose)=>void }
+export interface SceneViewerProps { shell?:ShellRevision; previewAssetId?:string; picking?:boolean; pickedPoints?:[number,number,number][]; onPick?:(point:[number,number,number])=>void; onReady?:()=>void; scene?:ViewerScene; before?:boolean; resolveAsset:(assetId:string)=>Promise<ArrayBuffer>; className?:string; onError?:(message:string)=>void; onCamera?:(pose:CameraPose)=>void }

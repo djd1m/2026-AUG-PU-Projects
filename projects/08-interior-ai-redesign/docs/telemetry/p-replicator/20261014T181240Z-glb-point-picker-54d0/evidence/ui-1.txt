@@ -1,0 +1,7 @@
+PASS preview before immutable shell, no manual coordinates required
+PASS drag away and back does not select a point
+PASS actual surface mouse clicks select A and B
+PASS measured distance confirms actual picked coordinates and survives reload
+PASS native confirmation is explicit, scale1 and no invented anchors persist
+PASS server rejects unconfirmed native scale
+PASS WebGL loss disables surface point selection

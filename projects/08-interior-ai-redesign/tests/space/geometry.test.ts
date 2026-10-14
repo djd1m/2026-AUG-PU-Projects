@@ -13,3 +13,5 @@ describe('SC-US-005-1/2/3 reference contract',()=>{const input={sourceURL:'https
  it.each(['javascript:alert(1)','http://pinterest.com','https://u:p@example.com/a','https://example.com/\nfoo','https:\\example.com'])('rejects dangerous URL %s',sourceURL=>expect(()=>validateReference({...input,sourceURL})).toThrow());
  it('rejects both/neither source, missing rights, invalid tags and oversized note',()=>{for(const change of [{sourceURL:null},{assetId:glb.assetId},{rightsConfirmed:false},{tags:['price']},{note:'x'.repeat(2001)}])expect(()=>validateReference({...input,...change})).toThrow();});
 });
+
+it('native GLB scale requires explicit proof and never invents anchors',()=>{const result=calibrateGlb({method:'native',userConfirmed:true},glb);expect(result.calibration.scale).toBe('1');expect(result.calibration.anchors).toEqual([]);expect(result.calibration.method).toBe('native');expect(result.floorAreaM2).toBeNull();for(const data of [{method:'native',userConfirmed:false},{method:'native',userConfirmed:true,scale:'2'},{method:'native',userConfirmed:true,anchors:[]},{method:'native'}])expect(()=>calibrateGlb(data,glb)).toThrow();});

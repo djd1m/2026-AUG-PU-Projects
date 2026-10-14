@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "buildRevision": "sha256:e10ca081be03969720ce7ef311ea9a2c715c062eff1e54280f0dae4c153bb085",
+  "startedAt": "2026-10-14T18:23:11.662Z",
+  "finishedAt": "2026-10-14T18:23:17.649Z",
+  "checks": [
+    "preview before immutable shell, no manual coordinates required",
+    "drag away and back does not select a point",
+    "actual surface mouse clicks select A and B",
+    "measured distance confirms actual picked coordinates and survives reload",
+    "native confirmation is explicit, scale1 and no invented anchors persist",
+    "server rejects unconfirmed native scale",
+    "WebGL loss disables surface point selection"
+  ],
+  "errors": [
+    "Cannot read properties of null (reading 'program')"
+  ]
+}
