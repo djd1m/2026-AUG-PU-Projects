@@ -1,0 +1,66 @@
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+ ❯ tests/space/reference-removal.test.ts (2 tests | 2 failed) 688ms
+   × reference deletion hides active list but preserves used design, approval and restore; new uses reject 357ms
+   × simultaneous reference deletions use project CAS; one wins and foreign project never changes 329ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/space/reference-removal.test.ts > reference deletion hides active list but preserves used design, approval and restore; new uses reject
+AssertionError: expected [ { …(9) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "assetId": null,
++     "createdAt": "2026-10-14T19:42:58.639Z",
++     "id": "5f0c28d4-f2f2-4835-848d-37d26f7fd841",
++     "note": "keep history",
++     "observedAt": "2026-10-14T19:42:58.639Z",
++     "projectId": "7d622ee1-2bc7-449b-9db0-6a41a4a61dac",
++     "rightsConfirmed": true,
++     "sourceURL": "https://pinterest.com/pin/123/",
++     "tags": [],
++   },
++ ]
+
+ ❯ tests/space/reference-removal.test.ts:7:775
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/space/reference-removal.test.ts > simultaneous reference deletions use project CAS; one wins and foreign project never changes
+AssertionError: expected [ { …(9) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "assetId": null,
++     "createdAt": "2026-10-14T19:42:58.978Z",
++     "id": "211014e6-1536-4c13-a768-a5ccfdc10afa",
++     "note": "delete me",
++     "observedAt": "2026-10-14T19:42:58.978Z",
++     "projectId": "a72bc4ae-f760-41a3-aa1e-f59886b830dc",
++     "rightsConfirmed": true,
++     "sourceURL": "https://pinterest.com/pin/123/",
++     "tags": [],
++   },
++ ]
+
+ ❯ tests/space/reference-removal.test.ts:8:755
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  19:42:58
+   Duration  1.03s (tests 78%, transform 12%, import 10%, worker 1%)

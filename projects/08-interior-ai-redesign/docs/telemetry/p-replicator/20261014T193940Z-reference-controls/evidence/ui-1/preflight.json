@@ -1,0 +1,21 @@
+{
+  "status": "ready",
+  "at": "2026-10-14T19:45:59.410290+00:00",
+  "build": "sha256:39b18916efa56ba669905d5edaba83977587a41c07637fc863fb4ae3f7875e1d",
+  "source_hashes": {
+    "apps/web/src/components/DesignReferences.tsx": "33e154ac4775ab3829489a490970e46e4a6cb21514ed8e8451254c8724cea043",
+    "apps/web/src/components/DesignPanel.tsx": "0d8b405a20223952a037d11d2f8bb5f603ebb240fd91c2879423682b0ebdab21",
+    "apps/web/src/components/ReferencesPanel.tsx": "845f6d66c5dc897fd7ba5effc3f8679c35e43d77bf08e9413f6116ea5023b68d",
+    "apps/web/src/server/space.ts": "d58cf40af2a04b6009a50e52ab4c5273f623bb723d10efd5ad39a575ef84c101",
+    "apps/web/src/server/reference-design.ts": "e1afe442ff8004b1c830814695b25f1ff8ab4caba517350af76b52cfff60d3ff",
+    "packages/db/src/space.ts": "e37a9c40a08425f0198b5d124f710988f736f0e24e55db94a0d8c9f1fd1af4e7",
+    "packages/db/src/design/revisions.ts": "f71b554df010530612b80c14376253fe4239720b283a72d262c1e3fc1a111221",
+    "packages/db/src/design/jobs.ts": "6efc844e71acea3586a79a13482943db77225759b1f79a1e618d4e78848ba1a8"
+  },
+  "environment": "public HTTPS readiness200; migration007 applied; existing DB unchanged",
+  "effects": "synthetic account/project, image upload, reference/manual drafts, deletion of test references only; zero provider/payment calls",
+  "command": "node scripts/e2e-reference-controls.mjs",
+  "inputs": "synthetic solid red/blue PNG; rights explicitly confirmed in fixture UI",
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

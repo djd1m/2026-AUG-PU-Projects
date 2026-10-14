@@ -138,3 +138,7 @@ Owner corrects an unnecessary provider precondition: remove include_byok_in_limi
 
 ## DRIFT-042 — separate manual controls from image-reference palettes
 Owner requests mutually exclusive manual/reference design modes. Within explicit ten-minute scope, reference mode performs real local dominant-colour extraction from 1–5 selected owned normalized images using existing sharp; no semantic design, furniture transfer, image generation or Gemini claim. Link-only references require an uploaded image rather than untrusted external fetch. Existing revision validation/CAS/immutable shell is reused, preserving current objects. Manual saves omit attached reference IDs. More complete Gemini interpretation remains unimplemented; this is visibly labelled palette-from-images in the product.
+
+
+## DRIFT-043 — link selection and reference removal
+Owner reports unclickable references and requests deletion in02. Let link rows be selected, then explain missing pixels inline with existing-image choice or private image upload; create/select an image reference while retaining original link, never pretend the URL was analyzed. Soft-delete references through Account→Project/CAS, filter active lists/new design/job admissions, keep rows/assets for immutable past designs, approval, restore and already admitted jobs. Existing20 active reference cap retained; history bounded at200. Hidden historical IDs are removed from interactive selection without rewriting saved revisions.

@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "build": "sha256:39b18916efa56ba669905d5edaba83977587a41c07637fc863fb4ae3f7875e1d",
+  "checks": [
+    "manual mode hides reference choices",
+    "reference mode hides manual controls and explains limits/link-only input",
+    "link reference is clickable and inline file upload creates/selects an image reference",
+    "different uploaded images produce different saved materials and visible canvas pixels",
+    "reference version and selected image persist after reload",
+    "switch back to manual saves without reference attachment and remains manual after reload",
+    "unused and historically used references delete in UI and stay removed after reload without changing saved design"
+  ],
+  "errors": [],
+  "inference_calls": 0
+}

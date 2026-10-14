@@ -36,6 +36,11 @@ export function createSpaceHandlers(base:Base,options:{recognize?:typeof recogni
    const input=await readJson(req);if(input&&typeof input==='object'&&'importPinterest' in input)throw new DomainError(409,'CAPABILITY_DISABLED','Импорт Pinterest отключён; сохраните ссылку или загрузите изображение');
    const result=await repository.createReference(actor.accountId,projectId,actor.expectedVersion!,input);return success(result.reference,requestId,201,result.version);
   })(request),
+  reference:(request:Request,projectId:string,id:string)=>route(async(req,requestId)=>{
+   const actor=await guardRequest(req,{access:'mutation',projectId,expectedVersion:true},base,requestId);
+   const result=await repository.removeReference(actor.accountId,projectId,actor.expectedVersion!,id);
+   return success({deletedReferenceId:result.deletedReferenceId},requestId,200,result.version);
+  })(request),
   asset:(request:Request,assetId:string)=>route(async(req,requestId)=>{
    const actor=await guardRequest(req,{access:req.method==='DELETE'?'mutation':'read',expectedVersion:req.method==='DELETE'},base,requestId);const asset=await repository.ownedAsset(actor.accountId,assetId);
    if(req.method==='DELETE'){const deleted=await repository.deleteUnusedGlb(actor.accountId,asset.project_id,actor.expectedVersion!,assetId);try{await removeAssetFile(base.config.assetDir,deleted.originalKey);if(deleted.normalizedKey)await removeAssetFile(base.config.assetDir,deleted.normalizedKey);}catch{console.error(JSON.stringify({code:'ASSET_CLEANUP_PENDING'}));}return success({deletedAssetId:assetId},requestId,200,deleted.version);}

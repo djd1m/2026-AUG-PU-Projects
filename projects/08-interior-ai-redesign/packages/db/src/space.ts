@@ -57,10 +57,11 @@ export function createSpaceRepository(pool:Pool) {
   async createReference(actorId:string,projectId:string,expectedVersion:number,input:unknown) {
    const ref=validateReference(input);return withTransaction(pool,async c=>{await accountLock(c,actorId);await lockOwnedProject(c,actorId,projectId,expectedVersion);
     if(ref.assetId){const a=await c.query("SELECT id FROM asset WHERE id=$1 AND project_id=$2 AND state='ready' AND kind IN ('reference','room_photo') AND rights_confirmed=true",[ref.assetId,projectId]);if(!a.rowCount)throw fail404();}
-    const count=await c.query<{n:string}>('SELECT count(*) n FROM reference WHERE project_id=$1',[projectId]);if(Number(count.rows[0]!.n)>=20)throw new DomainError(422,'REFERENCE_LIMIT','Не более 20 референсов');
+    const count=await c.query<{n:string;total:string}>('SELECT count(*) FILTER (WHERE deleted_at IS NULL) n,count(*) total FROM reference WHERE project_id=$1',[projectId]);if(Number(count.rows[0]!.total)>=200)throw new DomainError(422,'REFERENCE_HISTORY_LIMIT','Достигнут предел истории референсов проекта');if(Number(count.rows[0]!.n)>=20)throw new DomainError(422,'REFERENCE_LIMIT','Не более 20 референсов');
     const r=await c.query(`INSERT INTO reference(project_id,asset_id,source_url,tags,note,observed_at,rights_confirmed) VALUES($1,$2,$3,$4,$5,now(),true) RETURNING *`,[projectId,ref.assetId,ref.sourceURL,JSON.stringify(ref.tags),ref.note]);const version=await bumpProject(c,actorId,projectId);return {reference:referenceDto(r.rows[0]),version};
    });
   },
+  async removeReference(actorId:string,projectId:string,expectedVersion:number,id:string){validId(id);return withTransaction(pool,async c=>{await accountLock(c,actorId);await lockOwnedProject(c,actorId,projectId,expectedVersion);const row=await c.query('UPDATE reference SET deleted_at=now() WHERE id=$1 AND project_id=$2 AND deleted_at IS NULL RETURNING id',[id,projectId]);if(!row.rowCount)throw fail404();return{deletedReferenceId:id,version:await bumpProject(c,actorId,projectId)};});},
   async listReferences(actorId:string,projectId:string,after?:string){const page=await pageOwned<Record<string,unknown>&{id:string}>(pool,actorId,projectId,'reference',after);return {...page,items:page.items.map(referenceDto)};},
  };
 }
@@ -69,7 +70,7 @@ export type SpaceRepository=ReturnType<typeof createSpaceRepository>;
 
 async function pageOwned<T extends {id:string}>(pool:Pool,actorId:string,projectId:string,table:'asset'|'shell_revision'|'reference',after?:string):Promise<{items:T[];nextCursor:string|null}> {
  validId(projectId);const p=await pool.query('SELECT id FROM project WHERE id=$1 AND account_id=$2',[projectId,actorId]);if(!p.rowCount)throw fail404();
- const filter=table==='asset'?" AND state='ready'":"";const descending=table==='shell_revision';
+ const filter=table==='asset'?" AND state='ready'":table==='reference'?" AND deleted_at IS NULL":"";const descending=table==='shell_revision';
  if(after!==undefined){validId(after);const cursor=await pool.query(`SELECT id FROM ${table} WHERE id=$1 AND project_id=$2${filter}`,[after,projectId]);if(!cursor.rowCount)throw fail404();}
  const rows=await pool.query<T>(`SELECT * FROM ${table} WHERE project_id=$1${filter} AND ($2::uuid IS NULL OR (created_at,id) ${descending?'<':'>'} (SELECT created_at,id FROM ${table} WHERE id=$2 AND project_id=$1)) ORDER BY created_at ${descending?'DESC':'ASC'},id ${descending?'DESC':'ASC'} LIMIT 51`,[projectId,after??null]);
  const items=rows.rows.slice(0,50);return {items,nextCursor:rows.rows.length>50?items[49]!.id:null};
