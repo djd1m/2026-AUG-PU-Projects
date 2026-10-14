@@ -1,0 +1,83 @@
+{
+  "run_id": "20261014T175100Z-glb-textures-7c21",
+  "started_at": "2026-10-14T17:50:56.222582+00:00",
+  "status": "completed",
+  "profile": "compact-quality-first-v2",
+  "tier": "M",
+  "budget_minutes": 25,
+  "source_revision": "e00dfdcc1c8df0fea7d5bb0f1168dd0462352c2a",
+  "scope": "Remove duplicate generic GLB uploader; support bounded embedded8K textures using existing sharp/parser isolation; publicbrowser regression with actual textured GLB.",
+  "ac": [
+    "One shared uploader for images and GLB, no duplicate GLB form",
+    "Embedded8192x8192 JPEG/PNG accepted within25MiB GLB",
+    "Textures over8192 per side or aggregate2x8192square rejected; standaloneimages20MP unchanged",
+    "No full-resolution raw output allocation; geometry/URI/time/RSS/slot/byte guards retained",
+    "Full regression, meaningful old-limit mutation, publicbrowser filepicker/calibration/reload/private original"
+  ],
+  "models": [
+    {
+      "role": "coordinator",
+      "actual": null,
+      "reason": "hostmetadata unavailable"
+    },
+    {
+      "role": "independent_reviewer",
+      "requested": "gpt-6-astra",
+      "effort": "high",
+      "actual": null,
+      "usage": null,
+      "elapsed_first_pass_seconds": 102.39,
+      "receipt": "evidence/review-1.md",
+      "closure": "evidence/review-closure-1.md"
+    }
+  ],
+  "tokens": null,
+  "cost": null,
+  "reuse": "N8 existing sharp+Khronos worker. Local01-07 boundeddecode search found N4 photo normalizer resizing; use pattern, no imports. GitHub lovell/sharp README/API primary docs checked; no newdependency.",
+  "requirements": [
+    "docs/Specification.md",
+    "docs/Architecture.md"
+  ],
+  "forecast": "uncalibrated25minute timebox; not measuredprediction",
+  "approval": "user bugfix request and existing deploy/push authorization",
+  "preflight": "evidence/preflight-3.json",
+  "mechanical_route": "S lower bound; raisedM for texture acceptance contract",
+  "finished_at": "2026-10-14T18:02:22.027984+00:00",
+  "elapsed_seconds": 685.805402,
+  "build_revision": "sha256:99e9f766a4f9b186c50e6aa632e952884b53a0f618f3d311ee38c0352c0cb58a",
+  "checks": {
+    "focused": "20/20 parser tests",
+    "full_regression": "258/258 in39files,104.56s; isolated PostgreSQL removed after test",
+    "mutation": "old20MP cap makes both8K acceptance tests fail; source restored",
+    "typecheck": "pass",
+    "lint": "pass",
+    "build": "pass",
+    "independent_review": "P2 stale normative limits fixed, closure approved",
+    "public_browser": "8/8 ui-3,44.651s, actual11535176byte GLB with embedded8192squareJPEG",
+    "source_image": "all manifest runtime files match actual container",
+    "database": "production container ID/start unchanged"
+  },
+  "delivery": "https://n8.77.83.87.178.sslip.io",
+  "measurement_gaps": [
+    "actual coordinator/reviewer model identifier unavailable",
+    "tokens/cost and active time not measured; elapsed recorded",
+    "no comparable baseline savings measurement"
+  ],
+  "limitations": [
+    "Owner Scaniverse file not attached/tested; actual fixture is synthetic referenced8K mesh",
+    "native decoder remains subject to512MiB RSS and10s rejection; bounded output does not promise constant native working memory",
+    "Gemini activation has independent existing provider verification blocker; unchanged manual mode"
+  ],
+  "retry_history": [
+    "initial fixturewrite used wrong cwd; no production mutation",
+    "first fullsuite lacked TEST_DATABASE_URL and failed; fullsuite2 with dedicated ephemeralDB passed",
+    "ui-1 DOM count before controlrender; ui-2 successful8Kupload then wrong publicmetadata expectation; ui-3 allchecks pass"
+  ],
+  "anti_drift": "docs/anti-drift-decisions.md#drift-037",
+  "donor_sources": [
+    "N4 apps/recognizer/src/photo/normalize.ts resize pattern, internal authorized reuse",
+    "https://github.com/lovell/sharp/blob/main/README.md",
+    "https://sharp.pixelplumbing.com/api-constructor/",
+    "https://sharp.pixelplumbing.com/api-resize/"
+  ]
+}

@@ -1,0 +1,16 @@
+
+> n8-interior-planner@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+
+ Test Files  39 passed (39)
+      Tests  258 passed (258)
+   Start at  17:55:32
+   Duration  104.56s (tests 95%, import 4%)
+
+    Isolate  39 workers spawned · ~152ms startup each (spawn + environment, per file)
+             at least ~5.76s faster with isolate: false — reuses workers across files instead of one per file
+

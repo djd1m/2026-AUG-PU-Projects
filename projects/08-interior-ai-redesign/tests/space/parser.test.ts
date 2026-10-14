@@ -6,7 +6,7 @@ import sharp from 'sharp';
 import { randomUUID,createHash } from 'node:crypto';
 import { parseAsset } from '../../packages/adapters/src/asset-parser.js';
 import { writeUpload,createAssetUploader } from '../../packages/adapters/src/assets.js';
-import { triangleGlb } from './fixtures.js';
+import { triangleGlb,texturedGlb } from './fixtures.js';
 let dir:string;beforeEach(async()=>{dir=await mkdtemp(join(tmpdir(),'n8-space-parser-'));});afterEach(async()=>{await rm(dir,{recursive:true,force:true});});
 async function parse(bytes:Buffer,kind:'glb'|'reference'='glb'){const originalPath=join(dir,randomUUID()),normalizedPath=kind==='glb'?null:join(dir,randomUUID());await writeFile(originalPath,bytes);return {result:await parseAsset({originalPath,normalizedPath,kind}),normalizedPath};}
 it('SC-US-004-1 decodes image, strips EXIF, preserves original hash and correct orientation',async()=>{const bytes=await sharp({create:{width:20,height:10,channels:3,background:'red'}}).jpeg().withMetadata({orientation:6}).withExif({IFD0:{Artist:'Private owner'}}).toBuffer();const {result,normalizedPath}=await parse(bytes,'reference');expect(result.originalHash).toBe(createHash('sha256').update(bytes).digest('hex'));const normalized=await sharp(await readFile(normalizedPath!)).metadata();expect(normalized.exif).toBeUndefined();expect(normalized.width).toBe(10);expect(normalized.height).toBe(20);expect(result.normalizedBytes).toBeGreaterThan(0);});
@@ -18,3 +18,21 @@ it('terminates a stuck decoder and rejects a concurrent parser without queue',as
 it('releases reservation and both files after finish/CAS failure',async()=>{let released=false;const originalKey=randomUUID(),normalizedKey=randomUUID();const uploader=createAssetUploader(dir,{reserveAsset:async()=>({id:randomUUID(),originalKey,normalizedKey,reservationBytes:30*1024*1024}),finishAsset:async()=>{throw new Error('VERSION_CONFLICT');},releaseReservation:async()=>{released=true;}});const png=await sharp({create:{width:1,height:1,channels:3,background:'blue'}}).png().toBuffer();await expect(uploader(new Request('http://localhost',{method:'POST',body:new Uint8Array(png)}),'actor','project',1,'reference',true)).rejects.toThrow('VERSION_CONFLICT');expect(released).toBe(true);expect(await readdir(dir)).toEqual([]);});
 
 it('Khronos validator rejects accessor bounds inconsistent with actual original mesh',async()=>{await expect(parse(triangleGlb(j=>{j.accessors[0]!.max=[0,0,0];}))).rejects.toMatchObject({code:'INVALID_ASSET'});});
+
+it.each(['jpeg','png'] as const)('supports real embedded 8192-square %s while standalone images remain20MP',async format=>{
+ const image=await sharp({create:{width:8192,height:8192,channels:3,background:'white'}})[format]().toBuffer();
+ const bytes=texturedGlb(image,format==='jpeg'?'image/jpeg':'image/png');const {result}=await parse(bytes);
+ expect(result.metadata.texturePixels).toBe(67108864);expect(result.metadata.textureCount).toBe(1);
+ expect(result.originalHash).toBe(createHash('sha256').update(bytes).digest('hex'));
+ await expect(parse(image,'reference')).rejects.toMatchObject({code:'INVALID_ASSET'});
+});
+it('rejects texture dimensions above8192 and aggregate pixels beyond two8K textures',async()=>{
+ const wide=await sharp({create:{width:8193,height:1,channels:3,background:'white'}}).png().toBuffer();
+ await expect(parse(texturedGlb(wide,'image/png'))).rejects.toThrow(/8192/);
+ const image=await sharp({create:{width:8192,height:8192,channels:3,background:'white'}}).jpeg().toBuffer();
+ await expect(parse(texturedGlb(image,'image/jpeg',3))).rejects.toThrow(/текстур/);
+});
+it('validates embedded pixels rather than trusting JPEG metadata',async()=>{
+ const image=await sharp({create:{width:1024,height:1024,channels:3,background:'red'}}).jpeg().toBuffer();
+ await expect(parse(texturedGlb(image.subarray(0,image.length-150)))).rejects.toMatchObject({code:'INVALID_ASSET'});
+});

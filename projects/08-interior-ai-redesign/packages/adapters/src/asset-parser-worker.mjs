@@ -4,6 +4,7 @@ import sharp from 'sharp';
 import validator from 'gltf-validator';
 sharp.cache(false); sharp.concurrency(1);
 const MP=20_000_000;
+const GLB_TEXTURE_SIDE=8192,GLB_TEXTURE_PIXELS=8192*8192,GLB_TOTAL_TEXTURE_PIXELS=2*8192*8192;
 const refuse=(message)=>{throw new Error(message);};
 function imageMime(b) {
  if(b[0]===255&&b[1]===216&&b[2]===255)return 'image/jpeg';
@@ -11,10 +12,10 @@ function imageMime(b) {
  if(b.subarray(0,4).toString()==='RIFF'&&b.subarray(8,12).toString()==='WEBP')return 'image/webp';
  return null;
 }
-async function imageInfo(bytes) {
+async function imageInfo(bytes,limit=MP) {
  if(!imageMime(bytes))refuse('Разрешены JPEG, PNG, WebP');
- const meta=await sharp(bytes,{limitInputPixels:MP,failOn:'warning'}).metadata();
- if(!meta.width||!meta.height||meta.width*meta.height>MP||(meta.pages??1)!==1)refuse('Слишком большое или анимированное изображение');
+ const meta=await sharp(bytes,{limitInputPixels:limit,failOn:'warning'}).metadata();
+ if(!meta.width||!meta.height||meta.width*meta.height>limit||(meta.pages??1)!==1)refuse('Слишком большое или анимированное изображение');
  return meta;
 }
 function inspectObject(root) {
@@ -44,10 +45,22 @@ async function parseGlb(b) {
  if(renderedVertices>750000||renderedTriangles>250000)refuse('Слишком много экземпляров геометрии');
  const binStart=20+length;let bin=Buffer.alloc(0);
  if(binStart<b.length){if(binStart+8>b.length||b.readUInt32LE(binStart+4)!==0x004e4942||binStart+8+b.readUInt32LE(binStart)!==b.length)refuse('Некорректный BIN GLB');bin=b.subarray(binStart+8);}
- let pixels=0;for(const img of j.images??[]){const view=j.bufferViews?.[img.bufferView];if(!view||view.buffer!==0||!Number.isSafeInteger(view.byteLength)||view.byteLength<1)refuse('Изображение GLB без bufferView');const offset=view.byteOffset??0;if(!Number.isSafeInteger(offset)||offset<0||offset+view.byteLength>bin.length)refuse('Изображение вне BIN');const bytes=bin.subarray(offset,offset+view.byteLength);const meta=await imageInfo(bytes);pixels+=meta.width*meta.height;if(pixels>MP)refuse('Встроенные изображения превышают 20 MP');await sharp(bytes,{limitInputPixels:MP,failOn:'warning'}).raw().toBuffer();}
+ let pixels=0;const textures=[];
+ for(const img of j.images??[]){
+  const view=j.bufferViews?.[img.bufferView];if(!view||view.buffer!==0||!Number.isSafeInteger(view.byteLength)||view.byteLength<1)refuse('Изображение GLB без bufferView');
+  const offset=view.byteOffset??0;if(!Number.isSafeInteger(offset)||offset<0||offset+view.byteLength>bin.length)refuse('Изображение вне BIN');
+  const bytes=bin.subarray(offset,offset+view.byteLength);let meta;
+  try{meta=await imageInfo(bytes,GLB_TEXTURE_PIXELS);}catch(error){if(/pixel limit/i.test(String(error)))refuse('Текстура GLB превышает 8192×8192 пикселей. Экспортируйте скан с текстурами до 8K.');throw error;}
+  if(meta.width>GLB_TEXTURE_SIDE||meta.height>GLB_TEXTURE_SIDE)refuse('Текстура GLB превышает 8192 пикселей по стороне. Экспортируйте текстуры до 8K.');
+  pixels+=meta.width*meta.height;if(pixels>GLB_TOTAL_TEXTURE_PIXELS)refuse('Суммарное разрешение текстур GLB превышает бюджет двух текстур 8K. Уменьшите текстуры при экспорте.');
+  textures.push(bytes);
+ }
+ // Decode sequentially to a bounded output, never allocate a full-resolution raw image.
+ // The original embedded textures and mesh remain byte-for-byte unchanged.
+ for(const bytes of textures)await sharp(bytes,{limitInputPixels:GLB_TEXTURE_PIXELS,failOn:'warning',sequentialRead:true}).resize(1,1,{fit:'fill'}).raw().toBuffer();
  const report=await validator.validateBytes(new Uint8Array(b),{format:'glb',maxIssues:64,externalResourceFunction:()=>Promise.reject(new Error('External resources forbidden'))});
  if(report.issues.numErrors||report.issues.truncated)refuse('GLB не прошёл Khronos validation');
- return {mime:'model/gltf-binary',metadata:{vertexCount,triangleCount,nodeCount:nodes.length,surfaceIds,validator:'2.0.0-dev.3.10'}};
+ return {mime:'model/gltf-binary',metadata:{vertexCount,triangleCount,nodeCount:nodes.length,surfaceIds,validator:'2.0.0-dev.3.10',textureCount:textures.length,texturePixels:pixels}};
 }
 async function run({originalPath,normalizedPath,kind}) {
  const b=await readFile(originalPath);if(!b.length||b.length>(kind==='glb'?25:10)*1024*1024)refuse('Неверный размер файла');

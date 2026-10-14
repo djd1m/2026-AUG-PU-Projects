@@ -1,0 +1,25 @@
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+ ❯ tests/space/parser.test.ts (20 tests | 2 failed | 18 skipped) 2157ms
+   × supports real embedded 8192-square jpeg while standalone images remain20MP 1154ms
+   × supports real embedded 8192-square png while standalone images remain20MP 1000ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 18 skipped (20)
+   Start at  17:57:53
+   Duration  2.44s (tests 94%, import 4%, transform 1%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/space/parser.test.ts > supports real embedded 8192-square jpeg while standalone images remain20MP
+ FAIL  tests/space/parser.test.ts > supports real embedded 8192-square png while standalone images remain20MP
+DomainError: Текстура GLB превышает 8192×8192 пикселей. Экспортируйте скан с текстурами до 8K.
+ ❯ ChildProcess.<anonymous> packages/adapters/src/asset-parser.ts:26:170
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+EXIT=1

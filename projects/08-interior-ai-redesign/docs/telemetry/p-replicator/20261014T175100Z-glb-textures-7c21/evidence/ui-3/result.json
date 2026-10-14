@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "startedAt": "2026-10-14T18:00:04.167Z",
+  "finishedAt": "2026-10-14T18:00:48.818Z",
+  "buildRevision": "sha256:99e9f766a4f9b186c50e6aa632e952884b53a0f618f3d311ee38c0352c0cb58a",
+  "fixtureBytes": 11535176,
+  "embeddedTexture": {
+    "width": 8192,
+    "height": 8192
+  },
+  "checks": [
+    "one GLB file picker without duplicate form",
+    "single file picker accepts11MiB GLB with real8192square texture and automatic kind routing",
+    "UI calibration saves selected scan, survives reload and original hash matches",
+    "second upload through same picker resets calibration without replacing confirmed shell",
+    "malformed GLB rejected through UI, original confirmed shell preserved",
+    "GLB above 25MiB rejected by authoritative server with 413",
+    "image remains subject to 10MiB limit",
+    "390px screen has no horizontal overflow and no runtime JavaScript errors"
+  ],
+  "errors": [],
+  "userFileTested": false
+}

@@ -7,7 +7,7 @@
 | Scenario | Input | Expected | Handling |
 |---|---|---|---|
 | Empty input | dimensions/price/coverage отсутствуют | 422 или явное unknown по полю, никогда 0 | boundary schemas |
-| Max size | 25MiB+1 GLB / 10MiB+1 image / >20MP / >250k triangles | ранний 413/422, память bounded | actual stream/decode limit |
+| Max size | 25MiB+1 GLB / 10MiB+1 image / standalone image >20MP / GLB texture side >8192 or total >134217728 pixels / >250k triangles | ранний 413/422, память bounded | actual stream/decode limit |
 | Concurrent access | same project version / two workers / duplicate webhook | один commit/dispatch/grant, другой конфликт/duplicate | real PostgreSQL transactions |
 | Network failure | timeout после отправки AI; checkout/provider refetch failure | uncertain hold / pending intent / retryable 503 без lost event | no blind paid retries |
 | Source context | регион/магазин сменён, timestamp future/expired | stale/422, снимок истории сохранён | derived freshness |

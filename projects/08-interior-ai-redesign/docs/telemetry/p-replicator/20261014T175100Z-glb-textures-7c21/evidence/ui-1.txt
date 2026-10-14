@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+0 !== 1
+
+    at file:///app/scripts/e2e-glb-upload.mjs:21:78
+    at async checked (file:///app/scripts/e2e-glb-upload.mjs:16:33)
+    at async file:///app/scripts/e2e-glb-upload.mjs:21:2 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.21.0
