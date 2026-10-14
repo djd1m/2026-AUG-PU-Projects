@@ -790,4 +790,3 @@ TypeError: Cannot read properties of undefined (reading 'close')
 
     Isolate  39 workers spawned · ~146ms startup each (spawn + environment, per file)
              at least ~5.56s faster with isolate: false — reuses workers across files instead of one per file
-
