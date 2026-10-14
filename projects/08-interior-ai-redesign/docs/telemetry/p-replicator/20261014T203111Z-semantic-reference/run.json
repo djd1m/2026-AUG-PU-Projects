@@ -1,7 +1,7 @@
 {
   "run_id": "20261014T203111Z-semantic-reference",
   "started_at": "2026-10-14T20:31:11+00:00",
-  "status": "verified_shipping",
+  "status": "complete_with_disclosed_validation_limits",
   "tier": "L",
   "profile": "compact-quality-first-v2",
   "scope": "Semantic reference appearance: walls/floor/furniture get distinct source-derived appearance; target GLB may be fused and requires explicit segmentation/annotation, no pretending per-mesh tint identifies a bed",
@@ -52,5 +52,11 @@
     "public_browser": "5 checks passed, attempt2",
     "paid_model_quality": "not run, no eligible funded QA; owner credit preserved"
   },
-  "deployed_image": "sha256:4b9deb07adb3372d3ac78fa35ba6dde87014ac30b0fd62567516a3e67ff4ed49"
+  "deployed_image": "sha256:4b9deb07adb3372d3ac78fa35ba6dde87014ac30b0fd62567516a3e67ff4ed49",
+  "finished_at": "2026-10-14T20:50:46.244794+00:00",
+  "elapsed_seconds": 1175,
+  "source_commit": "192348f25519a05391f77cb5410aa9f0b2b8b35e",
+  "github_push": "succeeded",
+  "delivery_url": "https://n8.77.83.87.178.sslip.io",
+  "lesson": "teach:e2a71bc2dc98a0ec"
 }
