@@ -1,0 +1,5 @@
+# Validation
+Regression case: connected noisy floor normals vary but surface stays one colour; isolated tiny islands cannot be painted. Bed/wall boundary keeps wall assignment, unsupported scan does not claim semantic recognition. Compare current owner's private scan locally; no private screenshots in git. Geometry accuracy remains approximation and ground truth unverified.
+Budget-only conditional acceptance: zero-credit configured UUID allowed with spend reservation, other zero-credit actor denied, forged payload denied; concurrent caps hold and successful/failed/uncertain jobs do not mint credits. No blanket daily/weekly cap change; existing admitted5/day and20global/day remain for all actors; owner choice changes credit enforcement only. Exact owner choice required for activation.
+
+Approved repair boundary: unsupported/noisy target scans show original3D without automatic overlay; palette-only OpenRouter analysis remains available and is explicitly labelled. Accurate semantic recolouring of such scans is still unimplemented, never claimed as fixed. No raw private owner scan/screenshots in git.

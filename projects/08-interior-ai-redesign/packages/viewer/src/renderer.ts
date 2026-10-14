@@ -37,6 +37,7 @@ export class SemanticMeshAppearance {
  private readonly originalSubMeshes: { materialIndex:number; verticesStart:number; verticesCount:number; indexStart:number; indexCount:number }[];
  private readonly originalMaterial: Material|null;
  private readonly partition: ReturnType<typeof segmentTriangles>;
+ get eligibility(){return this.partition.eligibility;}
  private owned: Material[] = [];
  private multi: MultiMaterial|null = null;
  private applied = false;
@@ -47,7 +48,7 @@ export class SemanticMeshAppearance {
   this.partition = segmentTriangles(positions, indices);
  }
  static create(mesh: Mesh): SemanticMeshAppearance|null {
-  if (mesh.material instanceof MultiMaterial || mesh.skeleton || mesh.morphTargetManager || mesh.isUnIndexed || (mesh.geometry?.meshes.length ?? 0) > 1) return null;
+  if (mesh.material instanceof MultiMaterial || mesh.instances.length>0 || mesh.skeleton || mesh.morphTargetManager || mesh.isUnIndexed || (mesh.geometry?.meshes.length ?? 0) > 1) return null;
   const source = mesh.getVerticesData(VertexBuffer.PositionKind), indices = mesh.getIndices();
   if (!source || !indices || indices.length === 0 || indices.length > 3_000_000) return null;
   const matrix = mesh.computeWorldMatrix(true), point = new Vector3(), transformed = new Vector3();
@@ -63,7 +64,7 @@ export class SemanticMeshAppearance {
   // These lists contain only materials created by this overlay, never imported materials.
   for (const material of this.owned) material.dispose();
   this.owned=[]; this.multi=null;
-  if (!appearance) return;
+  if (!appearance || !this.partition.eligibility.eligible) return;
   const multi = new MultiMaterial(`semantic-${this.mesh.uniqueId}`,this.mesh.getScene());
   this.multi=multi; this.owned.push(multi);
   for (const role of Object.keys(this.partition.groups) as SemanticRole[]) {
@@ -102,7 +103,7 @@ export class SemanticMeshAppearance {
 export class BabylonRoom {
  readonly engine:Engine;readonly world:Scene;readonly camera:ArcRotateCamera;
  private pickMeshes=new Set<AbstractMesh>();private marks:Mesh[]=[];private semanticMeshes:SemanticMeshAppearance[]=[];
- private originals=new Map<AbstractMesh,Material|null>();private surfaces=new Map<string,AbstractMesh[]>();private overlays:Mesh[]=[];private materials:StandardMaterial[]=[];private before=true;private destroyed=false;private ready=false;
+ private originals=new Map<AbstractMesh,Material|null>();private surfaces=new Map<string,AbstractMesh[]>();private overlays:Mesh[]=[];private materials:StandardMaterial[]=[];private unsupportedSemanticMeshes=0;private scanLoaded=false;private before=true;private destroyed=false;private ready=false;
  constructor(readonly canvas:HTMLCanvasElement,shell:ShellRevision|null){
   this.engine=new Engine(canvas,true,{preserveDrawingBuffer:true,stencil:true});this.world=new Scene(this.engine);this.world.useRightHandedSystem=true;this.world.clearColor=new Color4(.96,.95,.92,1);
   const room=shell?.mode==='manual'?shell.geometry as ManualRoom:null;const size=room?Math.max(Number(room.lengthM),Number(room.widthM)):5;const target=room?new Vector3(Number(room.lengthM)/2,Number(room.heightM)/3,Number(room.widthM)/2):Vector3.Zero();
@@ -123,15 +124,16 @@ export class BabylonRoom {
   const normalization=new TransformNode('measured-normalization',this.world);normalization.scaling.set(s,s,s);for(const node of imported.transformNodes)if(!node.parent)node.parent=normalization;for(const mesh of imported.meshes)if(!mesh.parent)mesh.parent=normalization;
   this.pickMeshes=new Set(imported.meshes);
   for(const mesh of imported.meshes){this.originals.set(mesh,mesh.material);const pointers=mesh._internalMetadata?.gltf?.pointers??mesh.metadata?.gltf?.pointers as unknown;const match=Array.isArray(pointers)?pointers.map(x=>typeof x==='string'?/\/meshes\/(\d+)\/primitives\/(\d+)/.exec(x):null).find(Boolean):null;if(match)this.surface(`mesh:${match[1]}:primitive:${match[2]}`,mesh,mesh.material);}
-  for(const mesh of imported.meshes)if(mesh instanceof Mesh){const semantic=SemanticMeshAppearance.create(mesh);if(semantic)this.semanticMeshes.push(semantic);}
-  const bounds=this.world.getWorldExtends(m=>imported.meshes.includes(m));const center=bounds.min.add(bounds.max).scale(.5);const extent=bounds.max.subtract(bounds.min).length();if(Number.isFinite(extent)&&extent>0){this.camera.setTarget(center);this.camera.radius=extent*1.4;}this.ready=true;
+  for(const mesh of imported.meshes){const semantic=mesh instanceof Mesh?SemanticMeshAppearance.create(mesh):null;if(semantic)this.semanticMeshes.push(semantic);else if(mesh.getTotalVertices()>0)this.unsupportedSemanticMeshes++;}
+  const bounds=this.world.getWorldExtends(m=>imported.meshes.includes(m));const center=bounds.min.add(bounds.max).scale(.5);const extent=bounds.max.subtract(bounds.min).length();if(Number.isFinite(extent)&&extent>0){this.camera.setTarget(center);this.camera.radius=extent*1.4;}this.ready=true;this.scanLoaded=true;
  }
  pickPoint(x:number,y:number):[number,number,number]|null {if(!this.ready||this.destroyed)return null;const hit=this.world.pick(x,y,m=>this.pickMeshes.has(m)&&m.getTotalVertices()>0);return hit?.hit&&hit.pickedPoint?hit.pickedPoint.asArray() as [number,number,number]:null;}
  setPickedPoints(points:[number,number,number][]){for(const m of this.marks){m.material?.dispose();m.dispose();}this.marks=[];const size=Math.max(.005,this.camera.radius*.008);for(const [i,p] of points.entries()){const mark=MeshBuilder.CreateSphere(`point-${i}`,{diameter:size},this.world);mark.position.copyFromFloats(...p);mark.isPickable=false;const mat=this.material(`point-material-${i}`,i===0?'#c54e31':'#276e9c');mat.disableLighting=true;mat.emissiveColor=mat.diffuseColor;mark.material=mat;this.marks.push(mark);}if(points.length===2){const line=MeshBuilder.CreateLines('measurement-line',{points:points.map(p=>Vector3.FromArray(p))},this.world);line.color=Color3.FromHexString('#c54e31');line.isPickable=false;this.marks.push(line);}}
- setDesign(scene?:ViewerScene){for(const semantic of this.semanticMeshes)semantic.configure(scene?.appearance);for(const m of this.overlays)m.dispose();for(const m of this.materials)m.dispose();this.overlays=[];this.materials=[];for(const [mesh,material] of this.originals){mesh.material=material;if(mesh.metadata)delete mesh.metadata.n8DesignMaterial;}
-  for(const entry of scene?.materials??[]){const material=this.material(`design-${entry.surfaceId}`,color(entry.materialCode,entry.color));this.materials.push(material);for(const mesh of this.surfaces.get(entry.surfaceId)??[]){mesh.metadata={...mesh.metadata,n8DesignMaterial:material};}}
+ setDesign(scene?:ViewerScene){const status=this.appearanceStatus();const blocked=!!status&&!status.eligible;for(const semantic of this.semanticMeshes)semantic.configure(blocked?undefined:scene?.appearance);for(const m of this.overlays)m.dispose();for(const m of this.materials)m.dispose();this.overlays=[];this.materials=[];for(const [mesh,material] of this.originals){mesh.material=material;if(mesh.metadata)delete mesh.metadata.n8DesignMaterial;}
+  for(const entry of blocked&&scene?.appearance?[]:scene?.materials??[]){const material=this.material(`design-${entry.surfaceId}`,color(entry.materialCode,entry.color));this.materials.push(material);for(const mesh of this.surfaces.get(entry.surfaceId)??[]){mesh.metadata={...mesh.metadata,n8DesignMaterial:material};}}
   for(const entry of scene?.objects??[]){const mesh=createObjectMesh(this.world,entry);const material=this.material(`object-material-${entry.id}`,color(entry.materialCode,entry.color));mesh.material=material;this.materials.push(material);this.overlays.push(mesh);}this.showBefore(this.before);
  }
+ appearanceStatus(){if(!this.scanLoaded)return null;const eligible=this.unsupportedSemanticMeshes===0&&this.semanticMeshes.length>0&&this.semanticMeshes.every(m=>m.eligibility.eligible);const coverage=this.semanticMeshes.length?Math.min(...this.semanticMeshes.map(m=>m.eligibility.coverage)):0;return{eligible,coverage,reason:eligible?'supported_regions':this.unsupportedSemanticMeshes>0?'unsupported_mesh':this.semanticMeshes.find(m=>!m.eligibility.eligible)?.eligibility.reason??'unsupported_mesh'};}
  showBefore(before:boolean){this.before=before;for(const mesh of this.overlays)mesh.setEnabled(!before);for(const [mesh,material] of this.originals)mesh.material=before?material:(mesh.metadata?.n8DesignMaterial as Material|undefined)??material;for(const semantic of this.semanticMeshes)semantic.showBefore(before);}
  pose():CameraPose {return {alpha:this.camera.alpha,beta:this.camera.beta,radius:this.camera.radius,target:this.camera.target.asArray() as [number,number,number]};}
  async capturePair(){if(!this.ready||this.destroyed)throw new Error('Дождитесь загрузки 3D');await this.world.whenReadyAsync();const camera=this.pose(),previous=this.before;this.camera.detachControl();this.camera.inertialAlphaOffset=0;this.camera.inertialBetaOffset=0;this.camera.inertialRadiusOffset=0;this.camera.inertialPanningX=0;this.camera.inertialPanningY=0;

@@ -1,3 +1,4 @@
+import {requiresAiCredit} from '@n8/domain/design';
 import { DomainError, safeInteger } from '@n8/domain/common';
 import { credentialsSchema, projectCreateSchema, projectPatchSchema } from '@n8/domain/identity';
 import { getBase, type Base } from './composition';
@@ -60,8 +61,8 @@ export function meHandler(factory: Factory = getBase) {
       FROM job WHERE account_id=$1 AND mode='live'`, [actor.accountId]);
     const ledger = await base.pool.query<{ reserved: string }>("SELECT COALESCE(sum(reserved_micro_usd),0)::text reserved FROM spend_budget WHERE scope='account' AND account_id=$1", [actor.accountId]);
     return success({ id: account.id, email: account.email_canonical, creditsAvailable: safeInteger(account.credits_available), creditsHeld: safeInteger(account.credits_held),
-      paidExport: account.paid_export, billingHold: account.billing_hold, aiMode: base.config.aiMode, paymentsMode: base.config.paymentsMode,
-      aiUsage: { admissionsToday: safeInteger(usage.rows[0].admissions), admissionsLimit: 5, reservedMicroUsd: safeInteger(ledger.rows[0].reserved),
+      aiCreditRequired:requiresAiCredit(account.id,base.config),paidExport: account.paid_export, billingHold: account.billing_hold, aiMode: base.config.aiMode, paymentsMode: base.config.paymentsMode,
+      aiUsage: { admissionsToday: safeInteger(usage.rows[0].admissions), admissionsLimit:5, reservedMicroUsd: safeInteger(ledger.rows[0].reserved),
         knownMicroUsd: safeInteger(usage.rows[0].known), unknownOutcomes: safeInteger(usage.rows[0].unknown),
         jobCapMicroUsd: base.config.aiLive?.jobCapMicroUsd ?? null, accountDayCapMicroUsd: base.config.aiLive?.accountDayCapMicroUsd ?? null } }, requestId);
   });

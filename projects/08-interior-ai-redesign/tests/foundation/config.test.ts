@@ -42,3 +42,5 @@ describe('SC-US-017-2 runtime fail closed without provider calls', () => {
       {N8_AI_PROVIDER_LIMIT_RESET:'daily',N8_AI_PROVIDER_CAP_MICRO_USD:'10000000'}])expect(()=>loadConfig({...base,...change},now)).toThrow('RUNTIME_CONFIG_INVALID');
   });
 });
+
+it('server-only budget account setting is opt-in and validates exact UUID',()=>{const id='00000000-0000-4000-8000-000000000001';expect(loadConfig({...required,...ai,N8_AI_BUDGET_ONLY_ACCOUNT_ID:id},now).aiLive?.budgetOnlyAccountId).toBe(id);expect(loadConfig({...required,...ai,N8_AI_BUDGET_ONLY_ACCOUNT_ID:''},now).aiLive?.budgetOnlyAccountId).toBeUndefined();for(const value of ['*','all','wrong',id+' '])expect(()=>loadConfig({...required,...ai,N8_AI_BUDGET_ONLY_ACCOUNT_ID:value},now)).toThrow();});

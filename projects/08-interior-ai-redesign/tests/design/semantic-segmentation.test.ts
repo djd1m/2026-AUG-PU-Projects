@@ -111,3 +111,74 @@ it('Babylon fused overlay restores original indices, submeshes, material and ver
     expect(SemanticMeshAppearance.create(mesh)).toBeNull();
   } finally { world.dispose(); engine.dispose(); }
 });
+
+function wrinkledFixture(corner=false) {
+  const positions:number[]=[], indices:number[]=[], spans:{role:string;start:number;end:number}[]=[];
+  function grid(role:string,n:number,m:number,point:(u:number,v:number,noise:number)=>number[]) {
+    const start=indices.length,first=positions.length/3;
+    for(let v=0;v<=m;v++)for(let u=0;u<=n;u++)positions.push(...point(u/n,v/m,((u+v)%2?1:-1)*0.04));
+    for(let v=0;v<m;v++)for(let u=0;u<n;u++){
+      const a=first+v*(n+1)+u,b=a+1,c=a+n+1,d=c+1;
+      indices.push(a,b,c,b,d,c);
+    }
+    spans.push({role,start,end:indices.length});
+  }
+  grid('floor',40,40,(u,v,noise)=>[0.3+4*u,noise,0.3+4*v]);
+  grid('walls',40,30,(u,v,noise)=>[noise,0.2+3*v,0.3+4*u]);
+  if(corner)grid('walls',40,30,(u,v,noise)=>[0.3+4*u,0.2+3*v,noise]);
+  grid('furniture',20,20,(u,v,noise)=>[1+2*u,0.65+noise,1+2*v]);
+  const unknownStart=indices.length;
+  for(const vertices of [
+    [10,0,10,10.05,0,10,10,0,10.05], // disconnected floor speck
+    [0,1,10,0,1.05,10,0,1,10.05], // disconnected wall speck
+    [10,0.6,10,10.05,0.6,10,10,0.6,10.05], // disconnected furniture speck
+    [8,2,8,9,3,8,8,3,9], // uncertain high slanted surface
+  ]) {const first=positions.length/3;positions.push(...vertices);indices.push(first,first+1,first+2);}
+  return {positions,indices,spans,unknownStart};
+}
+
+it('fills coherent wrinkled planes despite noisy normals and rejects disconnected colored specks',()=>{
+  const input=wrinkledFixture(), before=JSON.stringify(input);
+  const result=segmentTriangles(input.positions,input.indices);
+  for(const span of input.spans){
+    const role=span.role as 'floor'|'walls'|'furniture';
+    expect(result.groups[role],role).toEqual(input.indices.slice(span.start,span.end));
+  }
+  expect(result.groups.unknown).toEqual(input.indices.slice(input.unknownStart));
+  expect(result.eligibility.eligible).toBe(true);
+  expect(result.eligibility.coverage).toBeGreaterThan(0.9);
+  expect(result.eligibility.regions).toBe(3);
+  expect(JSON.stringify(input)).toBe(before);
+  expect(Object.values(result.counts).reduce((a,b)=>a+b,0)).toBe(input.indices.length/3);
+});
+
+it('marks sparse or fragmented segmentation ineligible instead of claiming a usable overlay',()=>{
+  const input=fixture();
+  for(let i=0;i<30;i++){
+    const first=input.positions.length/3;
+    input.positions.push(10+i*2,2,10,11+i*2,2,10,10+i*2,2,11);
+    input.indices.push(first,first+1,first+2);
+  }
+  const fragmented=segmentTriangles(input.positions,input.indices);
+  expect(fragmented.eligibility.eligible).toBe(false);
+  expect(fragmented.eligibility.reason).toBe('fragmented_regions');
+  expect(segmentTriangles([0,0,0],[0,0,0]).eligibility.reason).toBe('no_supported_floor');
+});
+
+
+it('intersecting noisy room walls do not create planes through a finely tessellated interior bed',()=>{
+  const input=wrinkledFixture(true),result=segmentTriangles(input.positions,input.indices);
+  const bed=input.spans.find(s=>s.role==='furniture')!;
+  expect(result.groups.furniture).toEqual(input.indices.slice(bed.start,bed.end));
+  expect(result.counts.walls).toBe(4800);
+  expect(result.counts.furniture).toBe(800);
+  expect(result.counts.unknown).toBe(4);
+  expect(result.eligibility.eligible).toBe(true);
+});
+
+it('renderer refuses a low-coverage overlay instead of painting coloured fragments',async()=>{
+ const [{NullEngine},{Scene},{Mesh},{StandardMaterial},{VertexBuffer},{SemanticMeshAppearance}]=await Promise.all([import('@babylonjs/core/Engines/nullEngine'),import('@babylonjs/core/scene'),import('@babylonjs/core/Meshes/mesh'),import('@babylonjs/core/Materials/standardMaterial'),import('@babylonjs/core/Buffers/buffer'),import('../../packages/viewer/src/renderer')]);
+ const engine=new NullEngine(),world=new Scene(engine);try{const input=fixture(),first=input.positions.length/3;input.positions.push(0,10,0,100,15,0,0,20,100);input.indices.push(first,first+1,first+2);const mesh=new Mesh('unsupported-scan',world);mesh.setVerticesData(VertexBuffer.PositionKind,input.positions);mesh.setIndices(input.indices);const original=new StandardMaterial('original',world);mesh.material=original;const overlay=SemanticMeshAppearance.create(mesh)!;expect(overlay.eligibility.eligible).toBe(false);overlay.configure({floor:{color:'#ff0000',description:''},walls:{color:'#00ff00',description:''},furniture:{color:'#0000ff',description:''},ceiling:{color:null,description:''}});overlay.showBefore(false);expect(mesh.material).toBe(original);expect(Array.from(mesh.getIndices()!)).toEqual(input.indices);expect(world.multiMaterials).toHaveLength(0);overlay.dispose();}finally{world.dispose();engine.dispose();}
+});
+
+it('mixed eligible and unsupported meshes fail the entire scan appearance gate',async()=>{const{BabylonRoom}=await import('../../packages/viewer/src/renderer');const room=Object.create(BabylonRoom.prototype) as import('../../packages/viewer/src/renderer').BabylonRoom;Object.assign(room,{scanLoaded:true,semanticMeshes:[{eligibility:{eligible:true,coverage:1,reason:'supported_regions'}}],unsupportedSemanticMeshes:1});expect(room.appearanceStatus()).toMatchObject({eligible:false,reason:'unsupported_mesh'});Object.assign(room,{unsupportedSemanticMeshes:0});expect(room.appearanceStatus()).toMatchObject({eligible:true});});

@@ -5,7 +5,7 @@ export interface AiLiveConfig {
   apiKey: string; modelId: string; allowedModels: string[]; inputRateMicroUsdPerMillion: number; outputRateMicroUsdPerMillion: number;
   rateValidUntil: string; maxTokens: number; requestOverheadTokens: number; jobCapMicroUsd: number; accountDayCapMicroUsd: number; globalDayCapMicroUsd: number;
   providerHardLimitVerified: true; operatorEnabled: true;
-  providerLimitReset?: 'daily' | 'weekly'; providerCapMicroUsd?: number;
+  budgetOnlyAccountId?: string; providerLimitReset?: 'daily' | 'weekly'; providerCapMicroUsd?: number;
 }
 export interface PaymentSku { sku: string; priceMinor: number; currency: 'RUB'; credits: number; unwatermarkedExport: boolean }
 export interface RuntimeConfig {
@@ -53,7 +53,8 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
       if(cap<jobCapMicroUsd||(reset==='daily'&&cap>globalDayCapMicroUsd))invalid();
       providerLimits={providerLimitReset:reset,providerCapMicroUsd:cap};
     }
-    config.aiLive = { ...providerLimits, apiKey: required(env, 'N8_OPENROUTER_API_KEY'), modelId, allowedModels,
+    const budgetOnlyAccountId=env.N8_AI_BUDGET_ONLY_ACCOUNT_ID;if(budgetOnlyAccountId!==undefined&&budgetOnlyAccountId!==''&&!z.string().uuid().safeParse(budgetOnlyAccountId).success)invalid();
+    config.aiLive = { ...(budgetOnlyAccountId?{budgetOnlyAccountId}:{}), ...providerLimits, apiKey: required(env, 'N8_OPENROUTER_API_KEY'), modelId, allowedModels,
       inputRateMicroUsdPerMillion: positive(env, 'N8_AI_RATE_INPUT_MICRO_USD_PER_MILLION'), outputRateMicroUsdPerMillion: positive(env, 'N8_AI_RATE_OUTPUT_MICRO_USD_PER_MILLION'),
       maxTokens: positive(env, 'N8_AI_MAX_TOKENS', 4096), requestOverheadTokens: positive(env, 'N8_AI_REQUEST_OVERHEAD_TOKENS', 100000), rateValidUntil, jobCapMicroUsd, accountDayCapMicroUsd, globalDayCapMicroUsd,
       providerHardLimitVerified: true, operatorEnabled: true };

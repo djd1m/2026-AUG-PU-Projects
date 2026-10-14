@@ -1,0 +1,50 @@
+{
+  "run_id": "20261014T213832Z-reference-patches",
+  "started_at": "2026-10-14T21:38:32.233505+00:00",
+  "status": "verified_shipping_with_functional_limitation",
+  "tier": "XL approved",
+  "profile": "compact-quality-first-v2",
+  "source_revision": "ea12532b9c612aa3fee8b15bcf42d394ae328dcb",
+  "scope": "Owner-approved OpenRouter use without internal credits; stop unsafe spotty GLB colouring, palette-only analysis when target segmentation unsupported. Accurate semantic recolouring of owner scan still not ready.",
+  "actual_models": null,
+  "tokens": null,
+  "cost": null,
+  "measurement_gaps": [
+    "host actual executor identity and usage unavailable",
+    "initial diagnostic tool reads preceded passport; initial elapsed unknown"
+  ],
+  "timebox_minutes": 25,
+  "authorization": "User explicitly answered: \u0434\u0430 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0439 openrouter. Configure budget-only ONLY existing owner UUID; preserve all money caps and other account credit controls. No credit grant/refund.",
+  "executor_models": [
+    {
+      "role": "coordinator",
+      "actual": null
+    },
+    {
+      "role": "geometry_author",
+      "requested": "gpt-6-astra high (existing agent)",
+      "actual": null
+    },
+    {
+      "role": "independent_review",
+      "actual": null
+    }
+  ],
+  "limitation": "True semantic colour transfer onto the owner partial/noisy GLB remains unsupported. Geometry confidence67.27% rejects overlay; original preserved, reference palette analysis remains available.",
+  "finished_verification_at": "2026-10-14T21:58:21.545178+00:00",
+  "elapsed_to_verification_seconds": 1189,
+  "checks": {
+    "full_regression": "296/296 pass before final concrete corrections",
+    "affected_final": "23/23 pass",
+    "provider_precision": "11/11 pass",
+    "build_typecheck_lint": "pass final delivery build/lint",
+    "independent_review": "targeted budget,geometry,provider closures pass",
+    "public_browser": "6checks pass exact final image",
+    "private_actual_scan": "original pixels preserved; bad candidate rejected; raw screenshots excluded fromgit",
+    "runtime_provider_proof": "live key GET pass, ownerCreditRequired false at0credits; othertrue"
+  },
+  "deployed_image": "sha256:bda6707dffb72cff83cd2ae27fc86f1fd9e781cfd98b0a0dbb0b7010583da58b",
+  "new_paid_inference_calls": 0,
+  "new_paid_inference_cost_usd": 0,
+  "delivery_url": "https://n8.77.83.87.178.sslip.io"
+}
