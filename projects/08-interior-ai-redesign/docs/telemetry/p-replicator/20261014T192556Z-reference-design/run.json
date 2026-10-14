@@ -1,0 +1,62 @@
+{
+  "run_id": "20261014T192556Z-reference-design",
+  "started_at": "2026-10-14T19:25:56+00:00",
+  "status": "complete_scoped_palette_feature",
+  "budget_minutes": 10,
+  "profile": "compact-quality-first-v2",
+  "tier": "M",
+  "scope": "Separate manual and reference mode. Real local image palette extraction from owned normalized images; preserve geometry and objects; no Gemini claim. Pinterest links alone prompt upload.",
+  "source_revision": "3f2ddd5ccdc00c6ad97636938ab457f7c2bec962",
+  "models": [
+    {
+      "role": "coordinator",
+      "actual": null
+    }
+  ],
+  "tokens": null,
+  "cost": null,
+  "reuse": "existing ownedAsset/private read, PgDesigns CAS/validate/create, installed sharp.stats; scanned projects01-07 and GitHub lovell/sharp dominant histogram; no dependency",
+  "ac": [
+    "manual and reference controls mutually exclusive",
+    "selected uploaded reference changes scene colors and creates draft",
+    "foreign/missing/link-only references reject, no external fetch",
+    "full tests/build/browser; bounded independent review"
+  ],
+  "route": "M existing design contract, authenticated route only; no schema/payment/new external call.",
+  "measurement_gaps": [
+    "actual model identity and usage unavailable"
+  ],
+  "ended_at": "2026-10-14T19:35:18.667592+00:00",
+  "elapsed_seconds": 562.7,
+  "checks": {
+    "typecheck": "passed in final image build",
+    "lint": "passed",
+    "full_suite": "269 passed / 41 files",
+    "targeted_final": "3 passed; real image HTTP integration plus concurrent requests",
+    "mutation": "constant palette mutation red as expected; restored",
+    "independent_review": "3 findings corrected; closure pass",
+    "browser_final": "5 scenarios passed on final image, rendered pixel change included",
+    "public_readiness": "200"
+  },
+  "build_revision": "sha256:749bbac5ca766fc9605e8a8c0ff4d873f0cc4826faa320670102b312c3bb1606",
+  "inference_calls": 0,
+  "retries": [
+    "build-1 failed test Uint8Array TS type; owned ArrayBuffer fixed",
+    "ui-1 fixture permissions; fixed, ui-2 passed",
+    "final copy correction build-3 and ui-3 pass"
+  ],
+  "pending": [
+    {
+      "scope": "outside bounded local palette feature",
+      "item": "Gemini semantic image analysis, furniture/style/texture transfer",
+      "status": "not implemented; UI explicitly discloses local palette only"
+    }
+  ],
+  "source_hashes": {
+    "apps/web/src/components/DesignPanel.tsx": "d51ca1cc90a37616992e8e470702fe3242a75e25df1fdba84adade8f5523a211",
+    "apps/web/src/components/JobsCard.tsx": "88a867ee5338259715ee3b12a1fa8e9f52d437f53f51334a08200e2a4f5339d4",
+    "apps/web/src/server/reference-design.ts": "3437f1a1171ca58af94c1bf0c6aa93d8e17d0b7345742cf3de7e5ba559944c19",
+    "packages/adapters/src/reference-palette.ts": "80fc6f78db4e5147dbdbe2ac70a1909be50d389ab3e61ee4813b57c128569aca",
+    "tests/design/reference-palette.test.ts": "73e2bba134241b11bb6386a53c01e2c2a8949d3c531873030a9b180a7da1f92d"
+  }
+}

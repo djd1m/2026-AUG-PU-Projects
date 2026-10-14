@@ -134,3 +134,7 @@ Use installed Babylon _internalMetadata glTF primitive pointers with public meta
 
 ## DRIFT-041 — ordinary OpenRouter credit funding does not require BYOK
 Owner corrects an unnecessary provider precondition: remove include_byok_in_limit=true as an acceptance requirement. Existing finite cap, exact daily/weekly period and sufficient consistent remaining checks remain. Accept false/true/absent flag; no new external call, dependency, ledger or payment change. Historical blocked receipts stay intact. Manual/live activation is a separate runtime setting; this correction alone does not execute inference.
+
+
+## DRIFT-042 — separate manual controls from image-reference palettes
+Owner requests mutually exclusive manual/reference design modes. Within explicit ten-minute scope, reference mode performs real local dominant-colour extraction from 1–5 selected owned normalized images using existing sharp; no semantic design, furniture transfer, image generation or Gemini claim. Link-only references require an uploaded image rather than untrusted external fetch. Existing revision validation/CAS/immutable shell is reused, preserving current objects. Manual saves omit attached reference IDs. More complete Gemini interpretation remains unimplemented; this is visibly labelled palette-from-images in the product.

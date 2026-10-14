@@ -1,0 +1,8 @@
+
+> n8-interior-planner@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+apps/web/src/server/reference-design.ts(22,270): error TS2339: Property 'normalized_hash' does not exist on type 'AssetRow'.
+apps/web/src/server/reference-design.ts(22,294): error TS2551: Property 'normalized_bytes' does not exist on type 'AssetRow'. Did you mean 'normalized_key'?
+apps/web/src/server/reference-design.ts(22,552): error TS2551: Property 'normalized_bytes' does not exist on type 'AssetRow'. Did you mean 'normalized_key'?
+apps/web/src/server/reference-design.ts(22,576): error TS2339: Property 'normalized_hash' does not exist on type 'AssetRow'.
