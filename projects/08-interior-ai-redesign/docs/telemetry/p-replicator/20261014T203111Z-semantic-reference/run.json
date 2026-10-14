@@ -1,0 +1,56 @@
+{
+  "run_id": "20261014T203111Z-semantic-reference",
+  "started_at": "2026-10-14T20:31:11+00:00",
+  "status": "verified_shipping",
+  "tier": "L",
+  "profile": "compact-quality-first-v2",
+  "scope": "Semantic reference appearance: walls/floor/furniture get distinct source-derived appearance; target GLB may be fused and requires explicit segmentation/annotation, no pretending per-mesh tint identifies a bed",
+  "source_revision": "fb07c8c9ac1e291183b2691de835ab70e29cc39c",
+  "models": [
+    {
+      "role": "coordinator",
+      "actual": null
+    },
+    {
+      "role": "semantic_geometry_renderer",
+      "requested": "gpt-6-astra",
+      "effort": "high",
+      "actual": null
+    },
+    {
+      "role": "independent_review",
+      "requested": "inherited session",
+      "actual": null
+    }
+  ],
+  "tokens": null,
+  "cost": null,
+  "measurement_gaps": [
+    "actual executor identity and billing unavailable"
+  ],
+  "timebox_minutes": 25,
+  "inference_calls": 0,
+  "provider_key_verified": {
+    "limit_usd": 10,
+    "period": "weekly",
+    "remaining_usd": 10,
+    "verified_at": "2026-10-14T20:42:09.533824+00:00",
+    "byok_required": false
+  },
+  "tier_rationale": "L: multimodal provider contract and web/worker/viewer boundary; mechanical route S lower bound overridden by actual risk",
+  "paid_QA": "skipped: no eligible funded QA account; owner sole credit preserved; no grants",
+  "verification_finished_at": "2026-10-14T20:50:08.498245+00:00",
+  "elapsed_to_verification_seconds": 1137,
+  "inference_cost_usd": 0,
+  "checks": {
+    "build": "pass",
+    "typecheck": "pass in final build",
+    "lint": "pass",
+    "full_regression": "285 passed/1 failed constructor-bypass fixture; fixed fixture, affected10/10 pass",
+    "mutation": "strict JSON guard killed; wall grouping guard killed",
+    "independent_review": "closure pass",
+    "public_browser": "5 checks passed, attempt2",
+    "paid_model_quality": "not run, no eligible funded QA; owner credit preserved"
+  },
+  "deployed_image": "sha256:4b9deb07adb3372d3ac78fa35ba6dde87014ac30b0fd62567516a3e67ff4ed49"
+}

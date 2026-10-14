@@ -1,4 +1,5 @@
 import Decimal from 'decimal.js';
+import {appearanceShape} from './appearance.js';
 import {z} from 'zod';
 import {DomainError,uuid} from '../common.js';
 import type {ShellContent,ManualRoom,GLBDescriptor} from '../space/index.js';
@@ -8,7 +9,7 @@ const text=z.string().max(120).regex(/^[\p{L}\p{N} _.,:()\-]+$/u);
 export const catalogShape=z.object({id:uuid,name:text.min(1),primitive:z.enum(['box','cylinder']),dimensionsM:dimensions,source:z.enum(['manual','product']),snapshotId:uuid.optional()}).strict();
 export const catalogInputShape=catalogShape.omit({id:true,source:true});
 export type ObjectDefinition=z.infer<typeof catalogShape>;
-export const sceneShape=z.object({shellId:uuid,shellHash:z.string().regex(/^[a-f0-9]{64}$/),materials:z.array(z.object({surfaceId:z.string().max(80),color:z.string().regex(/^#[a-fA-F0-9]{6}$/),materialCode:z.string().regex(/^[a-zA-Z0-9_-]{1,60}$/)}).strict()).max(100),objects:z.array(z.object({id:uuid,catalogId:uuid,positionM:z.tuple([z.number().finite().min(-1000).max(1000),z.number().finite().min(-1000).max(1000),z.number().finite().min(-1000).max(1000)]),rotationY:z.number().finite().min(-Math.PI*2).max(Math.PI*2),dimensionsM:dimensions}).strict()).max(200)}).strict();
+export const sceneShape=z.object({shellId:uuid,shellHash:z.string().regex(/^[a-f0-9]{64}$/),materials:z.array(z.object({surfaceId:z.string().max(80),color:z.string().regex(/^#[a-fA-F0-9]{6}$/),materialCode:z.string().regex(/^[a-zA-Z0-9_-]{1,60}$/)}).strict()).max(100),appearance:appearanceShape.optional(),objects:z.array(z.object({color:z.string().regex(/^#[a-fA-F0-9]{6}$/).optional(),id:uuid,catalogId:uuid,positionM:z.tuple([z.number().finite().min(-1000).max(1000),z.number().finite().min(-1000).max(1000),z.number().finite().min(-1000).max(1000)]),rotationY:z.number().finite().min(-Math.PI*2).max(Math.PI*2),dimensionsM:dimensions}).strict()).max(200)}).strict();
 export type SceneProposal=z.infer<typeof sceneShape>;
 export type SceneShell=ShellContent&{id:string;hash:string;confirmedAt?:string|null};
 export type Fit='bbox_checked'|'unconfirmed';

@@ -1,0 +1,3 @@
+import sharp from 'sharp';
+/** Small immutable image payload, bounded before entering the durable job transaction. */
+export async function referenceThumbnail(bytes:Uint8Array):Promise<string>{const image=await sharp(bytes,{limitInputPixels:20000000}).rotate().resize(160,160,{fit:'inside',withoutEnlargement:true}).flatten({background:'#ffffff'}).jpeg({quality:45}).toBuffer();if(image.length>3500){const reduced=await sharp(image).resize(96,96,{fit:'inside'}).jpeg({quality:30}).toBuffer();if(reduced.length>3500)throw new Error('REFERENCE_THUMBNAIL_TOO_LARGE');return `data:image/jpeg;base64,${reduced.toString('base64')}`;}return `data:image/jpeg;base64,${image.toString('base64')}`;}

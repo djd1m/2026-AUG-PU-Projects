@@ -13,7 +13,7 @@ export function providerBudgetLimits(c:LiveConfig):{reset:'daily'|'weekly';cap:n
 export interface JobConfig {aiMode:'manual'|'demo'|'live';aiLive?:LiveConfig}
 export interface ProviderResult {scene:unknown;actualMicroUsd:number|null;usage:Record<string,unknown>|null}
 export interface SceneProposalProvider {verifyBudget():Promise<void>;complete(requestBody:string):Promise<ProviderResult>}
-export const jobInputShape=z.object({shellId:uuid,style:z.string().trim().min(1).max(120),referenceIds:z.array(uuid).max(100),inputText:z.string().max(8000)}).strict();
+export const jobInputShape=z.object({shellId:uuid,style:z.string().trim().min(1).max(120),referenceIds:z.array(uuid).max(100),inputText:z.string().max(8000),referenceAppearance:z.literal(true).optional()}).strict();
 export type JobInput=z.infer<typeof jobInputShape>;
 export function requireLive(config:JobConfig,now:Date):LiveConfig{const c=config.aiLive;if(config.aiMode!=='live'||!c)throw new DomainError(409,'AI_UNAVAILABLE','Ручной режим · AI не подключён');
  if(!c.apiKey||!c.allowedModels.includes(c.modelId)||!c.operatorEnabled||!c.providerHardLimitVerified||Date.parse(c.rateValidUntil)<=now.getTime()||!Number.isFinite(Date.parse(c.rateValidUntil)))throw new DomainError(503,'AI_CONFIG_INVALID','Конфигурация AI недействительна');

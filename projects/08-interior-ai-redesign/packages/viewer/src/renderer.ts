@@ -4,6 +4,10 @@ import { ArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera';
 import { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import { Color3,Color4 } from '@babylonjs/core/Maths/math.color';
 import { HemisphericLight } from '@babylonjs/core/Lights/hemisphericLight';
+import { MultiMaterial } from '@babylonjs/core/Materials/multiMaterial';
+import { SubMesh } from '@babylonjs/core/Meshes/subMesh';
+import { VertexBuffer } from '@babylonjs/core/Buffers/buffer';
+import { segmentTriangles, type SemanticRole } from './semantic-segmentation';
 import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder';
 import { Mesh } from '@babylonjs/core/Meshes/mesh';
@@ -14,7 +18,7 @@ import '@babylonjs/loaders/glTF';
 import type { AbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
 import type { Material } from '@babylonjs/core/Materials/material';
 import type { ManualRoom, ShellRevision, GLBDescriptor, WallId } from '@n8/domain/space';
-import type { CameraPose, ViewerScene, ViewerObject } from './types';
+import type { CameraPose, ViewerScene, ViewerObject, ViewerAppearance } from './types';
 const palette:Record<string,string>={white:'#f7f3e9',warm_white:'#f7f3e9',oak:'#b89163',wood_oak:'#b89163',sage:'#a3ad96',terracotta:'#bf8169',graphite:'#50545a',concrete:'#aaa8a0'};
 function color(code?:string,explicit?:string){return explicit&&/^#[0-9a-f]{6}$/i.test(explicit)?explicit:palette[code??'']??'#d1c5b4';}
 export interface WallPanel {wallId:WallId;offset:number;width:number;bottom:number;height:number}
@@ -27,9 +31,77 @@ export function createObjectMesh(world:Scene,entry:ViewerObject):Mesh {
  if(entry.primitive==='cylinder')mesh.scaling.set(w,1,d);
  mesh.position.set(entry.positionM[0],entry.positionM[1]+h/2,entry.positionM[2]);mesh.rotation.y=entry.rotationY;return mesh;
 }
+/** Cached partition of a static, single-material mesh; source vertex buffers are untouched. */
+export class SemanticMeshAppearance {
+ private readonly originalIndices: number[];
+ private readonly originalSubMeshes: { materialIndex:number; verticesStart:number; verticesCount:number; indexStart:number; indexCount:number }[];
+ private readonly originalMaterial: Material|null;
+ private readonly partition: ReturnType<typeof segmentTriangles>;
+ private owned: Material[] = [];
+ private multi: MultiMaterial|null = null;
+ private applied = false;
+ private constructor(private readonly mesh: Mesh, positions: number[], indices: number[]) {
+  this.originalIndices = indices;
+  this.originalMaterial = mesh.material;
+  this.originalSubMeshes = mesh.subMeshes.map(s => ({materialIndex:s.materialIndex,verticesStart:s.verticesStart,verticesCount:s.verticesCount,indexStart:s.indexStart,indexCount:s.indexCount}));
+  this.partition = segmentTriangles(positions, indices);
+ }
+ static create(mesh: Mesh): SemanticMeshAppearance|null {
+  if (mesh.material instanceof MultiMaterial || mesh.skeleton || mesh.morphTargetManager || mesh.isUnIndexed || (mesh.geometry?.meshes.length ?? 0) > 1) return null;
+  const source = mesh.getVerticesData(VertexBuffer.PositionKind), indices = mesh.getIndices();
+  if (!source || !indices || indices.length === 0 || indices.length > 3_000_000) return null;
+  const matrix = mesh.computeWorldMatrix(true), point = new Vector3(), transformed = new Vector3();
+  const positions = new Array<number>(source.length);
+  for (let i = 0; i < source.length; i += 3) {
+   point.set(source[i], source[i+1], source[i+2]); Vector3.TransformCoordinatesToRef(point, matrix, transformed);
+   positions[i]=transformed.x; positions[i+1]=transformed.y; positions[i+2]=transformed.z;
+  }
+  try { return new SemanticMeshAppearance(mesh, positions, Array.from(indices)); } catch { return null; }
+ }
+ configure(appearance?: ViewerAppearance) {
+  this.showBefore(true);
+  // These lists contain only materials created by this overlay, never imported materials.
+  for (const material of this.owned) material.dispose();
+  this.owned=[]; this.multi=null;
+  if (!appearance) return;
+  const multi = new MultiMaterial(`semantic-${this.mesh.uniqueId}`,this.mesh.getScene());
+  this.multi=multi; this.owned.push(multi);
+  for (const role of Object.keys(this.partition.groups) as SemanticRole[]) {
+   const hex=role==='unknown'?null:appearance[role]?.color;
+   if (hex && /^#[0-9a-f]{6}$/i.test(hex)) {
+    const material=new StandardMaterial(`semantic-${role}-${this.mesh.uniqueId}`,this.mesh.getScene());
+    material.diffuseColor=Color3.FromHexString(hex); material.specularColor=Color3.Black(); material.backFaceCulling=false;
+    this.owned.push(material); multi.subMaterials.push(material);
+   } else multi.subMaterials.push(this.originalMaterial);
+  }
+ }
+ showBefore(before: boolean) {
+  if (before || !this.multi) {
+   if (!this.applied) return;
+   this.mesh.setIndices(this.originalIndices);
+   this.mesh.releaseSubMeshes();
+   for (const s of this.originalSubMeshes) new SubMesh(s.materialIndex,s.verticesStart,s.verticesCount,s.indexStart,s.indexCount,this.mesh);
+   this.mesh.material=this.originalMaterial; this.applied=false; return;
+  }
+  if (!this.applied) {
+   const groups=Object.values(this.partition.groups);
+   const indices: number[]=[];
+   for (const group of groups) for (const index of group) indices.push(index);
+   this.mesh.setIndices(indices); this.mesh.releaseSubMeshes();
+   let offset=0;
+   groups.forEach((group,materialIndex)=>{
+    if(group.length) new SubMesh(materialIndex,0,this.mesh.getTotalVertices(),offset,group.length,this.mesh);
+    offset+=group.length;
+   });
+   this.applied=true;
+  }
+  this.mesh.material=this.multi;
+ }
+ dispose() { this.showBefore(true); for(const material of this.owned) material.dispose(); this.owned=[];this.multi=null; }
+}
 export class BabylonRoom {
  readonly engine:Engine;readonly world:Scene;readonly camera:ArcRotateCamera;
- private pickMeshes=new Set<AbstractMesh>();private marks:Mesh[]=[];
+ private pickMeshes=new Set<AbstractMesh>();private marks:Mesh[]=[];private semanticMeshes:SemanticMeshAppearance[]=[];
  private originals=new Map<AbstractMesh,Material|null>();private surfaces=new Map<string,AbstractMesh[]>();private overlays:Mesh[]=[];private materials:StandardMaterial[]=[];private before=true;private destroyed=false;private ready=false;
  constructor(readonly canvas:HTMLCanvasElement,shell:ShellRevision|null){
   this.engine=new Engine(canvas,true,{preserveDrawingBuffer:true,stencil:true});this.world=new Scene(this.engine);this.world.useRightHandedSystem=true;this.world.clearColor=new Color4(.96,.95,.92,1);
@@ -51,18 +123,19 @@ export class BabylonRoom {
   const normalization=new TransformNode('measured-normalization',this.world);normalization.scaling.set(s,s,s);for(const node of imported.transformNodes)if(!node.parent)node.parent=normalization;for(const mesh of imported.meshes)if(!mesh.parent)mesh.parent=normalization;
   this.pickMeshes=new Set(imported.meshes);
   for(const mesh of imported.meshes){this.originals.set(mesh,mesh.material);const pointers=mesh._internalMetadata?.gltf?.pointers??mesh.metadata?.gltf?.pointers as unknown;const match=Array.isArray(pointers)?pointers.map(x=>typeof x==='string'?/\/meshes\/(\d+)\/primitives\/(\d+)/.exec(x):null).find(Boolean):null;if(match)this.surface(`mesh:${match[1]}:primitive:${match[2]}`,mesh,mesh.material);}
+  for(const mesh of imported.meshes)if(mesh instanceof Mesh){const semantic=SemanticMeshAppearance.create(mesh);if(semantic)this.semanticMeshes.push(semantic);}
   const bounds=this.world.getWorldExtends(m=>imported.meshes.includes(m));const center=bounds.min.add(bounds.max).scale(.5);const extent=bounds.max.subtract(bounds.min).length();if(Number.isFinite(extent)&&extent>0){this.camera.setTarget(center);this.camera.radius=extent*1.4;}this.ready=true;
  }
  pickPoint(x:number,y:number):[number,number,number]|null {if(!this.ready||this.destroyed)return null;const hit=this.world.pick(x,y,m=>this.pickMeshes.has(m)&&m.getTotalVertices()>0);return hit?.hit&&hit.pickedPoint?hit.pickedPoint.asArray() as [number,number,number]:null;}
  setPickedPoints(points:[number,number,number][]){for(const m of this.marks){m.material?.dispose();m.dispose();}this.marks=[];const size=Math.max(.005,this.camera.radius*.008);for(const [i,p] of points.entries()){const mark=MeshBuilder.CreateSphere(`point-${i}`,{diameter:size},this.world);mark.position.copyFromFloats(...p);mark.isPickable=false;const mat=this.material(`point-material-${i}`,i===0?'#c54e31':'#276e9c');mat.disableLighting=true;mat.emissiveColor=mat.diffuseColor;mark.material=mat;this.marks.push(mark);}if(points.length===2){const line=MeshBuilder.CreateLines('measurement-line',{points:points.map(p=>Vector3.FromArray(p))},this.world);line.color=Color3.FromHexString('#c54e31');line.isPickable=false;this.marks.push(line);}}
- setDesign(scene?:ViewerScene){for(const m of this.overlays)m.dispose();for(const m of this.materials)m.dispose();this.overlays=[];this.materials=[];for(const [mesh,material] of this.originals){mesh.material=material;if(mesh.metadata)delete mesh.metadata.n8DesignMaterial;}
+ setDesign(scene?:ViewerScene){for(const semantic of this.semanticMeshes)semantic.configure(scene?.appearance);for(const m of this.overlays)m.dispose();for(const m of this.materials)m.dispose();this.overlays=[];this.materials=[];for(const [mesh,material] of this.originals){mesh.material=material;if(mesh.metadata)delete mesh.metadata.n8DesignMaterial;}
   for(const entry of scene?.materials??[]){const material=this.material(`design-${entry.surfaceId}`,color(entry.materialCode,entry.color));this.materials.push(material);for(const mesh of this.surfaces.get(entry.surfaceId)??[]){mesh.metadata={...mesh.metadata,n8DesignMaterial:material};}}
   for(const entry of scene?.objects??[]){const mesh=createObjectMesh(this.world,entry);const material=this.material(`object-material-${entry.id}`,color(entry.materialCode,entry.color));mesh.material=material;this.materials.push(material);this.overlays.push(mesh);}this.showBefore(this.before);
  }
- showBefore(before:boolean){this.before=before;for(const mesh of this.overlays)mesh.setEnabled(!before);for(const [mesh,material] of this.originals)mesh.material=before?material:(mesh.metadata?.n8DesignMaterial as Material|undefined)??material;}
+ showBefore(before:boolean){this.before=before;for(const mesh of this.overlays)mesh.setEnabled(!before);for(const [mesh,material] of this.originals)mesh.material=before?material:(mesh.metadata?.n8DesignMaterial as Material|undefined)??material;for(const semantic of this.semanticMeshes)semantic.showBefore(before);}
  pose():CameraPose {return {alpha:this.camera.alpha,beta:this.camera.beta,radius:this.camera.radius,target:this.camera.target.asArray() as [number,number,number]};}
  async capturePair(){if(!this.ready||this.destroyed)throw new Error('Дождитесь загрузки 3D');await this.world.whenReadyAsync();const camera=this.pose(),previous=this.before;this.camera.detachControl();this.camera.inertialAlphaOffset=0;this.camera.inertialBetaOffset=0;this.camera.inertialRadiusOffset=0;this.camera.inertialPanningX=0;this.camera.inertialPanningY=0;
   try{this.showBefore(true);this.world.render();const before=this.canvas.toDataURL('image/png');this.showBefore(false);this.world.render();const after=this.canvas.toDataURL('image/png');return {before,after,camera};}finally{this.showBefore(previous);this.camera.attachControl(this.canvas,true);}}
  resize(){this.engine.resize();}
- dispose(){if(this.destroyed)return;this.destroyed=true;this.engine.stopRenderLoop();this.world.dispose();this.engine.dispose();}
+ dispose(){if(this.destroyed)return;this.destroyed=true;this.engine.stopRenderLoop();for(const semantic of this.semanticMeshes)semantic.dispose();this.world.dispose();this.engine.dispose();}
 }
