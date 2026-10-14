@@ -1,0 +1,56 @@
+{
+  "run_id": "20261013T220722Z-billing-e2fa",
+  "work_unit_id": "billing-review-1",
+  "stage": "REVIEW",
+  "started_at": "2026-10-13T23:41:55.339298+00:00",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "missing_data": [
+    "Host actual model and usage unavailable"
+  ],
+  "source_hashes": {
+    "apps/web/src/app/api/billing/checkout/route.ts": "87f075ba1ba432dcfd4a992e22cdb3df23b9245c58db9f7f54cd2e0a2b31b6e3",
+    "apps/web/src/app/api/billing/offers/route.ts": "5f034b79aed4e7023136c7bdf7334cdea043cf555d1f0ae46efd29d9b8dd7df7",
+    "apps/web/src/app/api/billing/orders/[id]/route.ts": "3b173711fbfdfeda150adc36cd3f0fc4671c484294dbd0d66d41be99fadd7554",
+    "apps/web/src/app/api/billing/orders/route.ts": "62afe4fc69a1a9a060a2194e0d2a0d5b82d9831fa01c0deb0de9128a3190be05",
+    "apps/web/src/app/api/billing/webhook/route.ts": "16292e63ee06cf9eb075b92b8a733f033367803ef69d85b21e9e6ed8b51ed16f",
+    "apps/web/src/server/billing.ts": "c3db93c55b3cd0d7a032b5a0c97430b49894816da084ce209d38ceb569f50d21",
+    "packages/adapters/src/yookassa.ts": "0bcdde03b1678db15ed8271fd1b3791017aefe942b5a8cd18f924d6aac27a3a1",
+    "packages/db/src/billing.ts": "ab601efc9e0d7d74c2b240686d16fc57007beeba5f14c5cc3d33f38696952260",
+    "packages/domain/src/billing/index.ts": "d814541b181475c0b6f7b106676e030d6be5d257fc2eddbbc4d47a160cbd9384",
+    "tests/billing/fixtures.ts": "49974b1c4aca403d9f3d1182083debb2c970eddecb9817e5969e54046e4818ad",
+    "tests/billing/http.test.ts": "7284d1ed8914e2ce0766185e36d1988b0c4a5b43001d097e114815f02472e73e",
+    "tests/billing/mutations.mjs": "abcf585669b299525ddc46af7c5bfc116d4472573eac77c807e4f0361b532785",
+    "tests/billing/provider.test.ts": "deda6c2434785c566fbc4a695a93d5f766737df1d5245379dbfa7eab4631f9c8",
+    "tests/billing/refund.test.ts": "6794c42eff9b48ea334f46d47ad7f05d6a275283dbb0882db70ecd77567b73ed",
+    "tests/billing/repository.test.ts": "8de3bb2d53305c06c8db2acd35f88f015471c3c2b601a7c3699bd8278967b3a2",
+    "apps/web/src/server/config.ts": "673be7cf1abafea2740ba20fd6d0366473a4bf93e27ed013fd29e1f75e8d4614",
+    "apps/web/src/server/http.ts": "aff7b1db753a69fb55df1780c1ac3749696dda30d60537490b01072bd53af776",
+    "apps/web/src/server/peer.ts": "04052144e5a4024ead67f18045fd6165264c96caabf5b9a91dc57b2a1f6b022a",
+    "docs/Pseudocode.md": "407824005319b4ba4fe6d4a83fcdfdb33d7d1005a1b138c916088891a9ea1d1d",
+    "docs/Specification.md": "7e6d118d36a4459927c244c90372e7c66ef7daa282b22e85186496332dc825dd",
+    "docs/features/billing/01_specification.md": "9d4bbe11281e2d831b9412044fe47dd761bad62739e5feefe4fa8d4eb13a39bc",
+    "docs/features/billing/02_pseudocode.md": "65b31147bda8cdd55653ce0f03dc202c39716de5110e92ea8727d6683f94f840",
+    "docs/features/billing/03_architecture.md": "e3c72aa0ea7f67bc5ebebe7e3c7af0da10a3a4ca8d149077f48eb8decb94d11d",
+    "docs/features/billing/04_refinement.md": "7469dbbce3e37af3b96a7f951cb1d7c621c89e6e24f6776c6a956722b1e355ff",
+    "package-lock.json": "5e9634e16705c578747fdc3344c6b40a1a9751cc438b7ad346f9b51a5659707c",
+    "packages/db/src/common.ts": "bb26426dbf34b0bc1836c8907a59f0ea6205ff92967471c6ba9123c178bbcc40",
+    "packages/db/src/design/jobs.ts": "714e5d5dcd785735d5b8ae9bdbb94e460d196fa5c619d98c772578dbb1367d07",
+    "packages/db/src/design/ledger.ts": "db614727b92c80d2c498f72a982c9b94beb1a99b95233b28156b93b89d79db64",
+    "packages/db/src/design/lifecycle.ts": "521fffaedaf67ef500cbcab7b67a4ca7bfd885b1319ab771b913a47f276875d5",
+    "packages/db/src/migrations/001-initial.sql": "c24a4540d2f4c27dee11a51388eb914cd838853c4a43fe150d7febad58692f98",
+    "packages/db/src/migrations/002-indexes.sql": "8e94f8b99f4e0f63c5d6c5ef401f893fb467841ca9bdeec11900ca0ab2a48da8",
+    "packages/db/src/migrations/003-job-input.sql": "f7ba9286a0e2dc55fd1dc8ddbc3f25be66eb5ca06402efaa3bc60fbe5d302aed",
+    "packages/db/src/migrations/004-payment-intent.sql": "06ea4553ec50132b51e370aebbb6d7dd731832cd4a3183c63ccd5f22777eb8a3",
+    "packages/domain/src/common.ts": "6fb8bc4b0c8f1855ee78d355b01e9e394f1afc71e0428f076b1dc1361cb2440a"
+  },
+  "changed_from_author_manifest": [
+    "docs/Pseudocode.md"
+  ],
+  "e2e_preflight": {
+    "status": "not_applicable",
+    "reason": "Independent service/HTTP integration review; deployed browser E2E owned by coordinator"
+  }
+}

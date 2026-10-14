@@ -1,0 +1,25 @@
+{
+  "engine": "chromium",
+  "message": "locator.waitFor: Error: strict mode violation: getByRole('alert') resolved to 2 elements:\n    1) <p role=\"alert\" class=\"error\" tabindex=\"-1\">Проверьте данные сметы</p> aka getByText('Проверьте данные сметы')\n    2) <div role=\"alert\" aria-live=\"assertive\" id=\"__next-route-announcer__\"></div> aka locator('[id=\"__next-route-announcer__\"]')\n\nCall log:\n  - waiting for getByRole('alert') to be visible\n",
+  "results": [
+    "chromium/landing",
+    "chromium/login",
+    "chromium/dashboard",
+    "chromium/keyboard-arrow-home-end-enter",
+    "chromium/project-1440-01",
+    "chromium/project-1440-02",
+    "chromium/project-1440-03",
+    "chromium/project-1440-04",
+    "chromium/project-1440-05",
+    "chromium/project-1440-06",
+    "chromium/project-390-01",
+    "chromium/project-390-02",
+    "chromium/project-390-03",
+    "chromium/project-390-04",
+    "chromium/project-390-05",
+    "chromium/project-390-06"
+  ],
+  "violations": [],
+  "errors": [],
+  "outbound": []
+}

@@ -1,0 +1,19 @@
+{
+  "started_at": "2026-10-14T01:10:41.297016+00:00",
+  "work_unit_id": "sharing-final-closure-1",
+  "scope": "Narrow decoder-resolution change and remaining sharing AC via parent production evidence",
+  "budget_minutes": 15,
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "source_hashes": {
+    "packages/adapters/src/image-exporter.ts": "7450d38dadc7b55d948d20d4a932148947e2f4126f600d4e4fe69883b49ba4e2",
+    "docs/features/sharing/review.md": "cae40940e571b4d400261af4dd1b6f7dc058ea43b662b04da64fc7e2e12f9ecd",
+    "docs/canon.md": "40f78b39c85769cfcb70f6a9d3b6cdcdc1f14193f4d34e4e255738c22e0813cc",
+    "docs/features/sharing/01_specification.md": "6c2ac4c8a9d932fef0502ba36438e76a378c9cd4a06105cbf173fefe51953fe1"
+  },
+  "e2e_execution": "Parent owns production browser execution; reviewer reads evidence only"
+}

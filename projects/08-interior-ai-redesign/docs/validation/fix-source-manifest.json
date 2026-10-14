@@ -1,0 +1,61 @@
+{
+  "timestamp": "2026-10-13T21:39:47.097266+00:00",
+  "reason": "One concrete correction pass for six independent Phase2 findings; no optional polish",
+  "before": {
+    "Final_Summary.md": "4831298d9e1e8df1f4e833fccd5eaa317bd089f5e5c48433fafb30e76b4f26f3",
+    "insights.md": "5dab36e54a3069c9770e1b13e744889eb8c6c23eab5d6270c9d2689d233998c1",
+    "model-cost-contract.md": "68f54ba11877cd4ef5915a4c73672e10135189527b54ec02c16b0a0d6a087545",
+    "Pseudocode.md": "1f53f758a978135b9ee29806c1544b5af1793dbaa22bbff4c3f43bbccb844ad7",
+    "C4_Diagrams.md": "88d59e8c3ad9596ee8eb1c08827dc263c4a8bc5de47d7d2ca1f5d3ab955c1317",
+    "project-input.md": "cdb8a9eb5a1d3f5a9f2dc6d00e25e242625952df9b7fb575c9d75b31ae58e231",
+    "decision-log.md": "f30f5db34529dbdf644c8da0c607792188862daf30bfcec3ede98a105718bc33",
+    "webhook-contract.md": "ee73fb64ee135e7ecdfdbbac355cc440e243e914193cf69240d7f8c0c4cbed3f",
+    "validation-report.md": "95118f81766ed0f872027bbe8fc07736917915518ba1d1fb06a5a4511682594d",
+    "source-product-profile.md": "c7f0252149687a210ebab7dc98d71d87c2f265ef780833b4d19e0870f2f7842f",
+    "Completion.md": "59e64f3fcfab60333107eabe845bcbd82e2a7b4fb341d68907684008f53769fa",
+    "embed-contract.md": "c348f29fbcec9f8a28dd627dc71ffdd28a7f978d39398bca081c1af3e034cb2b",
+    "long-job-contract.md": "d688b8d42cb163f38c6334b531026a70f1925c7ddb6ff4b7a3b6b2b55f53c522",
+    "Solution_Strategy.md": "845c56b03812c56f338db64ef24eec626cc5bde0346f69de3f5e9d53e2713f47",
+    "product-discovery-brief.md": "a9c7fd15931f52f1c8ab4977431fc3876cde39b5d7f65ff2fa5916588c5e03b5",
+    "PRD.md": "feb8c948e48db90300b59de6ebeb232569e235c24b976831db8684592b5d911b",
+    "ADR.md": "ef72f365b4004ed8856687a4d1153967a8a3e52de5a3838bae47e66cca3a3bbc",
+    "Architecture.md": "84535d8d3e854041f9a76accea581a56cb4b13841dcc2ef5010e9f01687ffbf3",
+    "Refinement.md": "117df54fc7fa7bfda66ce576c756dfe0d23556097034ed0b801046c5ccf39c67",
+    "Research_Findings.md": "d06081113f90cb959df6083c52b5160eeb13ce4c127c5ba15f87a13a88a53ce7",
+    "Specification.md": "fcfefeb2285784120c5614162f394d47ae895d6022eeca7371d8ed24f3a20fa1"
+  },
+  "after": {
+    "Final_Summary.md": "4831298d9e1e8df1f4e833fccd5eaa317bd089f5e5c48433fafb30e76b4f26f3",
+    "insights.md": "5dab36e54a3069c9770e1b13e744889eb8c6c23eab5d6270c9d2689d233998c1",
+    "model-cost-contract.md": "68f54ba11877cd4ef5915a4c73672e10135189527b54ec02c16b0a0d6a087545",
+    "Pseudocode.md": "af2c885a068d86f6b8a1f884f124bc6353c64975bc1e41e9dee240dbd1932b59",
+    "C4_Diagrams.md": "88d59e8c3ad9596ee8eb1c08827dc263c4a8bc5de47d7d2ca1f5d3ab955c1317",
+    "project-input.md": "cdb8a9eb5a1d3f5a9f2dc6d00e25e242625952df9b7fb575c9d75b31ae58e231",
+    "test-scenarios.md": "f577271cc075535af3cc37008d2a5b2b6773e680a8abe04a44c64226dc816496",
+    "decision-log.md": "64c91ceecb083657da859c2eea93a8b8ca69ad16ce13151285419edb8d6f28c5",
+    "webhook-contract.md": "ee73fb64ee135e7ecdfdbbac355cc440e243e914193cf69240d7f8c0c4cbed3f",
+    "validation-report.md": "26d3d4879c89f6a40b22da92dc1ba0c34a1d133571d557380c517521ed7d5f11",
+    "source-product-profile.md": "01f3ff4949f123044d6262d98f4943ab7ad7914554e37790fee7af210ad4e1f1",
+    "Completion.md": "59e64f3fcfab60333107eabe845bcbd82e2a7b4fb341d68907684008f53769fa",
+    "embed-contract.md": "c348f29fbcec9f8a28dd627dc71ffdd28a7f978d39398bca081c1af3e034cb2b",
+    "long-job-contract.md": "d688b8d42cb163f38c6334b531026a70f1925c7ddb6ff4b7a3b6b2b55f53c522",
+    "Solution_Strategy.md": "845c56b03812c56f338db64ef24eec626cc5bde0346f69de3f5e9d53e2713f47",
+    "product-discovery-brief.md": "7ef3a4301ce902188e72237b1a981872c2accd29dfb08f3e6d8323e4033ee643",
+    "PRD.md": "485f1d9230a7c01d991c76a22a0b0a6f473cf0c369c02f50c12b83d808ab407a",
+    "ADR.md": "4c6423846d8600bd1cf47591a5883da18e8d29042be916aaaf62fad40e91f6bc",
+    "Architecture.md": "5bfc8c2debc9f0ba67a028d3d348a3b4e63483943eed2fe38b0c1b21845345ee",
+    "Refinement.md": "c6e9813f10856e51df77e4959812ec09faaa7fe4df22676a2608beb8d640929d",
+    "Research_Findings.md": "d06081113f90cb959df6083c52b5160eeb13ce4c127c5ba15f87a13a88a53ce7",
+    "Specification.md": "7e6d118d36a4459927c244c90372e7c66ef7daa282b22e85186496332dc825dd"
+  },
+  "coherence_fixes": [
+    "ADR exact downstream references",
+    "growth101\u2013105 stable namespace/disposition",
+    "approval supersession",
+    "CJM12 owner-only CSV preserved"
+  ],
+  "narrow_residue_fixes": [
+    "GuardRequest pre-body-only; uploader sole reader",
+    "Image original+normalized files readiness and cleanup explicitly owned"
+  ]
+}

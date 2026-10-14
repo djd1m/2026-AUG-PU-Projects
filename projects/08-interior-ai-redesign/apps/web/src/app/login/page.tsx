@@ -1,0 +1,3 @@
+import Link from 'next/link';
+import {AuthForm} from '../../components/AuthForm';
+export default async function Login({searchParams}:{searchParams:Promise<{mode?:string}>}) {const query=await searchParams;return <main className="login-layout"><Link className="brand" href="/">комната<span>план вашего ремонта</span></Link><div className="login-grid"><section><p className="eyebrow">ВАШЕ ПРОСТРАНСТВО</p><h1>Ремонт начинается<br/><em>с ясного плана.</em></h1><p className="lead">Обмеры, идеи и смета хранятся в вашем личном проекте.</p></section><AuthForm initialMode={query.mode==='register'?'register':'login'}/></div></main>;}

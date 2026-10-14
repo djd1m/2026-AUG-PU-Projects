@@ -1,0 +1,376 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "delivered",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261014T064554Z-public-ui-53d8",
+    "work_unit_id": "public-release",
+    "current_attempt_id": "release-2"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T064554Z-public-ui-53d8/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T064554Z-public-ui-53d8/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+    "current_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+    "build_revision": "docker:sha256:f6d232b54b398c5175769af4f78369853b4880d8952119a9057326e94010df03",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/project-input.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261014T064554Z-public-ui-53d8/plan.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "observed_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "reconciliation": null
+    },
+    "input_sha256": "cdb8a9eb5a1d3f5a9f2dc6d00e25e242625952df9b7fb575c9d75b31ae58e231",
+    "working_tree_boundary": "Unchangedbaseline commit withuntrackedproduct; actual146 productionfiles match finalimage, correctedtestdriver SHA separatelyboundro.",
+    "snapshot": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T064554Z-public-ui-53d8/evidence/public-source-image-3.json"
+    }
+  },
+  "prepare": {
+    "scope_revision": "5e5c5a3abec448d3532f73f8b4dc866e2fdfc262598365075dae52450963f6f6",
+    "scope": [
+      "Public HTTPSsslip.io release",
+      "DedicatedDocker3browserUI/UX/accessibility review and concrete fixes"
+    ],
+    "exclusions": [
+      "PaidAI/livepayment activation",
+      "Storeaffiliation",
+      "Globaltoolkit/model/hook changes"
+    ],
+    "action_limits": [
+      "User authorizes publication/fixes",
+      "OnlyN8productchanges;privateDBretain",
+      "90minuteattemptbudget;2activechildrenmax"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-01",
+        "required": true,
+        "description": "PublicTLSredirecthealth;storesprivate"
+      },
+      {
+        "id": "AC-02",
+        "required": true,
+        "description": "ExactproxyOriginIPSecurecookies"
+      },
+      {
+        "id": "AC-03",
+        "required": true,
+        "description": "Isolated3browserPlaywrightcontainer"
+      },
+      {
+        "id": "AC-04",
+        "required": true,
+        "description": "Public21stepChromejourney+desktop/mobile/errors+3engines"
+      },
+      {
+        "id": "AC-05",
+        "required": true,
+        "description": "Concretefixes+independentantidrift"
+      },
+      {
+        "id": "AC-06",
+        "required": true,
+        "description": "Publichandoffinstructionsandevidence"
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "docs/research/public-release-reuse.md"
+          }
+        },
+        "provenance": "Explicit donorpaths/primaryGitHub sources in reuse report; runtime source hashes in new evidence",
+        "useful_fragment": "Caddyoverlay,existingN8driver,05/06AXE and N1controlledtabs",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Preservecurrentstackanddata; rejecthistoricalotherVPSaddresses"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No calibratedforecast requested; 90minuteattemptbudget is a limit, notprediction",
+      "scope_revision": "5e5c5a3abec448d3532f73f8b4dc866e2fdfc262598365075dae52450963f6f6",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [
+        "usage/cost unavailable"
+      ],
+      "external_expectations": [
+        "User requests publicsite/UIchecks now"
+      ],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "5e5c5a3abec448d3532f73f8b4dc866e2fdfc262598365075dae52450963f6f6",
+      "tier": "L",
+      "rationale": "Consequential publicingress exactsocket/paymentinvariant and isolatedbrowsercontainer; bounded no schema/livepaid work",
+      "script": {
+        "input": "compose.public.yml apps/web/src/server/peer.ts Dockerfile.e2e scripts/e2e.mjs",
+        "exit_code": 0,
+        "mechanical_tier": "S"
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "5e5c5a3abec448d3532f73f8b4dc866e2fdfc262598365075dae52450963f6f6",
+      "tier": "L",
+      "rationale": "Consequential publicingress exactsocket/paymentinvariant and isolatedbrowsercontainer; bounded no schema/livepaid work",
+      "script": {
+        "input": "compose.public.yml apps/web/src/server/peer.ts Dockerfile.e2e scripts/e2e.mjs",
+        "exit_code": 0,
+        "mechanical_tier": "S"
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "User explicitly authorized public publication and UI/UX fixes in current message; no new permission required"
+  },
+  "preflight": {
+    "status": "ready",
+    "recorded_at": "2026-10-14T07:23:08.516557+00:00",
+    "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+    "build_revision": "docker:sha256:f6d232b54b398c5175769af4f78369853b4880d8952119a9057326e94010df03",
+    "test_image": "sha256:c4f72c941c3eef79eeccb36dbbac303ae0741af920cb2e89c5a322040218a424",
+    "environment": "Dedicated isolated Docker container -> verified public HTTPS n8.77.83.87.178.sslip.io; only evidence/privatefixture mounts; no DB/provider secrets; exactly public-ui-audit.mjs source mounted read-only (no additionalcredentials)",
+    "environment_available": true,
+    "test_command": "docker compose -f compose.e2e.yml run --rm playwright node scripts/public-ui-audit.mjs",
+    "inputs": [
+      {
+        "name": "locked Playwright1.60 ChromiumFirefoxWebKit+fonts",
+        "available": true
+      },
+      {
+        "name": "publichealthready200 verifiedTLS",
+        "available": true
+      },
+      {
+        "name": "evidence target absent",
+        "available": true
+      },
+      {
+        "name": "testcontainer evidenceUID1000 writable",
+        "available": true
+      },
+      {
+        "name": "fictional owner generated in driver",
+        "available": true
+      },
+      {
+        "name": "exactsourceimage match145files",
+        "available": true
+      },
+      {
+        "name": "Synthetic owner/fulljourney fixture from successfulpublic-journey-1",
+        "available": true
+      },
+      {
+        "name": "Debian public CA roots installed; scriptincludesexplicitkeyboard and injectedfrontend422preservation",
+        "available": true
+      },
+      {
+        "name": "Fresh audit3target + exactpatchedrunner, scopeerrorselector tovisibletabpanel notNextrouteannouncer",
+        "available": true
+      }
+    ],
+    "expected_effects": [
+      "Read only savedproject sixsteps in3browserengines, desktop1440+mobile390",
+      "WCAG2A/AA+2.1AA Axe checks and screenshots",
+      "Login3times creates SecureHttpOnlysessions; no paidexternalcalls",
+      "Inject422 onlyinbrowser route forbudgetPOST; noactualbudgetcreation during thiscase"
+    ],
+    "evidence_root": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T064554Z-public-ui-53d8/evidence"
+    },
+    "external_actions_executed": false,
+    "e2e_claim": null,
+    "test_script_sha256": "e3b1e8d7e3d2564aed530522cda3dc1b206c02300a9070599b96e4e45820604a"
+  },
+  "attempts": [
+    {
+      "id": "release-1",
+      "status": "completed"
+    },
+    {
+      "id": "release-2",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "public-release",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/telemetry/p-replicator/20261014T064554Z-public-ui-53d8/plan.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [
+    {
+      "ac_id": "AC-01",
+      "outcome": "pass",
+      "command": "Actual evidence and acceptance mapping in public-release-final-1.md",
+      "exit_code": 0,
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "receipt_id": "public-release-final-1"
+    },
+    {
+      "ac_id": "AC-02",
+      "outcome": "pass",
+      "command": "Actual evidence and acceptance mapping in public-release-final-1.md",
+      "exit_code": 0,
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "receipt_id": "public-release-final-1"
+    },
+    {
+      "ac_id": "AC-03",
+      "outcome": "pass",
+      "command": "Actual evidence and acceptance mapping in public-release-final-1.md",
+      "exit_code": 0,
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "receipt_id": "public-release-final-1"
+    },
+    {
+      "ac_id": "AC-04",
+      "outcome": "pass",
+      "command": "Actual evidence and acceptance mapping in public-release-final-1.md",
+      "exit_code": 0,
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "receipt_id": "public-release-final-1"
+    },
+    {
+      "ac_id": "AC-05",
+      "outcome": "pass",
+      "command": "Actual evidence and acceptance mapping in public-release-final-1.md",
+      "exit_code": 0,
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "receipt_id": "public-release-final-1"
+    },
+    {
+      "ac_id": "AC-06",
+      "outcome": "pass",
+      "command": "Actual evidence and acceptance mapping in public-release-final-1.md",
+      "exit_code": 0,
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "receipt_id": "public-release-final-1"
+    }
+  ],
+  "receipts": [
+    {
+      "id": "public-release-final-1",
+      "work_id": "public-release",
+      "path": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261014T064554Z-public-ui-53d8/evidence/public-release-final-1.md"
+      },
+      "launch_path": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261014T064554Z-public-ui-53d8/evidence/public-release-final-1-launch.json"
+      },
+      "sha256": "bd7f9b797ef9e0eb511889b9d3c5b51844c865c13f160cf8153b6eae56913402",
+      "launch_sha256": "938a73b8e9dd853147c33008dd92231dae0c70e4a33783309a36a6149957c32c"
+    }
+  ],
+  "delivery": {
+    "uri": "https://n8.77.83.87.178.sslip.io",
+    "scope": {
+      "included": [
+        "reuse01–07 TLSdeployment pattern",
+        "dedicated Playwright container matching1.60.0",
+        "external HTTPS/fullUI journey mobilekeyboard/error/privateguest checks",
+        "fix concrete findings and independent anti-drift"
+      ],
+      "excluded": [
+        "PaidAI/livepayment activation",
+        "Storeaffiliation",
+        "Globaltoolkit/model/hook changes"
+      ]
+    },
+    "build": {
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "build_revision": "docker:sha256:f6d232b54b398c5175769af4f78369853b4880d8952119a9057326e94010df03"
+    },
+    "evidence": [
+      "public-release-final-1"
+    ],
+    "pending": [
+      {
+        "item": "LiveGemini/checkout/storepartnerships",
+        "scope": "out_of_scope",
+        "reason": "Preservedpriorboundary; no credentials/realfixture activation supplied"
+      },
+      {
+        "item": "RealScaniverse deviceaccuracy",
+        "scope": "out_of_scope",
+        "reason": "Preservedpriorboundary; no credentials/realfixture activation supplied"
+      }
+    ],
+    "e2e_claim": "pass"
+  },
+  "preflight_history": [
+    {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T064554Z-public-ui-53d8/evidence/public-journey-1-preflight.json"
+    },
+    {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T064554Z-public-ui-53d8/evidence/public-ui-audit-1-preflight.json"
+    },
+    {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T064554Z-public-ui-53d8/evidence/public-journey-2-preflight.json"
+    },
+    {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T064554Z-public-ui-53d8/evidence/public-ui-audit-2-preflight.json"
+    },
+    {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T064554Z-public-ui-53d8/evidence/public-ui-audit-3-preflight.json"
+    }
+  ],
+  "record_index_boundary": "Assembled from existing recordedrun/plan and real preflightartifacts; no backdating index beforefirstE2E."
+}

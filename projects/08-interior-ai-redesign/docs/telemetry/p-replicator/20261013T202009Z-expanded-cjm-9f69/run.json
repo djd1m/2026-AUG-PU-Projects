@@ -1,0 +1,135 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20261013T202009Z-expanded-cjm-9f69",
+  "batch_id": null,
+  "project": "projects/08-interior-ai-redesign",
+  "feature": "expanded-n8-autonomous-implementation",
+  "pipeline": "replicate AUTO -> start -> feature implementation -> review -> anti-drift -> integration",
+  "tier": "XL",
+  "risk_flags": [
+    "planned monetization",
+    "paid model calls",
+    "external dependencies",
+    "measured geometry invariant"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "gpt-5.6-terra unavailable: bounded research planned on gpt-5.6-sol medium",
+    "coordinator retained; exact runtime model not exposed"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+  "final_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+  "spec_sha256": "7e6d118d36a4459927c244c90372e7c66ef7daa282b22e85186496332dc825dd",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-10-13T20:20:09.120450+00:00",
+  "ended_at": "2026-10-14T01:47:20.491766+00:00",
+  "status": "accepted",
+  "acceptance_evidence": [
+    "evidence/journey-runtime-9/result.json",
+    "evidence/final-benchmark-4.json",
+    "evidence/restart-after-3.json",
+    "evidence/final-source-image-2.json",
+    "evidence/final-regression-2.txt",
+    "evidence/worker-process-crash-1.txt",
+    "evidence/final-pipeline-completion-patched-3.txt",
+    "evidence/integration-final-closure-1/receipt.md",
+    "evidence/sharing-final-closure-1/receipt.md",
+    "evidence/worker-crash-review-1/receipt.md"
+  ],
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 65,
+    "ac_total": 65,
+    "confirmed_findings_by_severity": null,
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "closed",
+    "known_open_findings": 0
+  },
+  "metrics": {
+    "wall_clock_seconds": 19631.371316,
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Host exposes no exact coordinator model identifier, usage or billing counters.",
+    "Instruction reading and initial planning reconnaissance preceded this record; their start and duration were not captured.",
+    "No paid-call budget or credentials established; live paid experiments excluded pending those inputs."
+  ],
+  "scope": [
+    "research dependencies",
+    "product discovery and source profile",
+    "three standalone interactive HTML extended CJM variants",
+    "independent review and approval handoff",
+    "selected canonical CJM A",
+    "SPARC and independent validation",
+    "project toolkit and scaffold",
+    "modular functional MVP implementation",
+    "per-feature independent review and anti-drift",
+    "isolated build/run/integration checks"
+  ],
+  "approval": {
+    "plan": "approved",
+    "cjm": "A selected explicitly by owner; waiting checkpoint revoked",
+    "evidence": "Owner explicitly approved plan; priority gist CJM and homeowners undertaking renovations; store partnerships later.",
+    "observed_at": "2026-10-13T20:25:50.516955+00:00",
+    "anti_drift": "Owner allows autonomous code/spec correction with decision log; later explicitly revoked CJM checkpoint and chose A.",
+    "implementation": "Owner explicitly instructs full autonomous implementation, with modular reuse and logged anti-drift decisions."
+  },
+  "autonomy": {
+    "maximum_hours_after_approval": 10,
+    "stop_on": [
+      "time budget exhausted",
+      "mandatory gate cannot be satisfied"
+    ],
+    "approval_observed_at": "2026-10-13T20:25:50.516955+00:00",
+    "owner_wake_target_hours": 8
+  },
+  "input_path": "projects/08-interior-ai-redesign/docs/project-input.md",
+  "scope_overrides": [
+    "new owner inputs supersede original exclusions and fixed GPU/ControlNet choice",
+    "mandatory projects 1\u20137 then GitHub reuse search for every coded feature",
+    "mandatory recall/apply/teach-or-reinforce learning loop",
+    "mandatory independent specification/code/test anti-drift gate after every implemented feature"
+  ],
+  "current_stage": "implementation",
+  "build_revision": "docker:sha256:3ac28e68ccef3576d428547f04bbbb9df3097bb8baf28823bdd87076611369cb",
+  "actual_model": null,
+  "source_identity": {
+    "git_head": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+    "git_head_is_dirty_baseline": true,
+    "runtime_manifest": "evidence/final-source-image-2.json",
+    "runtime_manifest_sha256": "426ed9f08b208346b7eb2c54936cfde52e556f117bdc3b7b3cf5abeab0336ed5",
+    "runtime_files": 148
+  },
+  "verification": {
+    "full_regression": {
+      "passed": 229,
+      "total": 229
+    },
+    "additional_process_crash": {
+      "passed": 1,
+      "total": 1,
+      "full_230_run_claimed": false
+    },
+    "production_journey": {
+      "passed": 21,
+      "total": 21
+    },
+    "api_p95_ms": 40.804434,
+    "budget_p95_ms": 8.007006,
+    "external_paid_calls": 0,
+    "pipeline_original_completion": "not_established_tool_variable_shadowing",
+    "pipeline_temporary_two_line_compatibility": "pass",
+    "generic_webhook_signature_checker": "not_applicable_YooKassa_no_HMAC",
+    "provider_specific_webhook_contract": "offline_spoof_replay_reorder_pass"
+  }
+}

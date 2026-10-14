@@ -1,0 +1,48 @@
+{
+  "status": "ready",
+  "recorded_at": "2026-10-14T08:56:43.707234+00:00",
+  "source_revision": "baseline3b84e9ef +154file snapshot source-image-1.json",
+  "build_revision": "sha256:6a9d07f999b0188caae0afb67994ccbc2524f972ff7752284289a6f3a191b131",
+  "test_image": "sha256:c16f3fc40392fc765ded5583538f398a47d55aaab348a6a078abab27a061ed41",
+  "runner_sha256": "4c2da55da663b6ddd79f83d3bcbda8f5f23062479e83d4967321fe586c32bc15",
+  "environment": "DedicatedDockerNode24Playwright1.60 3browsers/fonts/CA, verifiedpublicHTTPS;rotestrunner+evidence/privatefixtures,noDB/provider env",
+  "environment_available": true,
+  "test_command": "docker compose -f compose.e2e.yml run --rm playwright node scripts/floorplan-e2e.mjs",
+  "inputs": [
+    {
+      "name": "fresh evidence/UID1000 writable",
+      "available": true
+    },
+    {
+      "name": "realnativeOCR passed",
+      "available": true
+    },
+    {
+      "name": "deployed154filesource binding",
+      "available": true
+    },
+    {
+      "name": "synthetichorizontal/vertical/height PNG fixture",
+      "available": true
+    },
+    {
+      "name": "readyHTTPS200",
+      "available": true
+    },
+    {
+      "name": "Read-only driver readable by nonrootNode UID1000 after chmod0644; contenthash unchanged",
+      "available": true
+    }
+  ],
+  "expected_effects": [
+    "Syntheticprivateaccounts/projects/2images perengine/confirmedshells, no paidproviders",
+    "Screenshots+results freshdrawing-journey-1, passwords ignoredruntime only",
+    "Crossowner andmissing source404; noanonymousimagepublication"
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "docs/telemetry/p-replicator/20261014T080942Z-plan-import-8984/evidence"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

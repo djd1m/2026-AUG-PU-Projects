@@ -1,0 +1,21 @@
+{
+  "status": "failed",
+  "checks": [
+    "landing desktop + local hydration",
+    "register → authenticated dashboard",
+    "create private project persists",
+    "manual measured shell18m2 with opening + visibleplan",
+    "actualWebGL measured viewer",
+    "production malformedGLB returns typed422 before ready",
+    "production isolated image decode → owner normalized metadata",
+    "Pinterest deep link reference saves without fetch",
+    "390px keyboard/accessibility overflow",
+    "manual design saved and explicitly approved before procurement",
+    "native RUB1600 price validity and server integer160000 minor",
+    "unmatched expected elements and explicit unknown works/delivery remain unknown",
+    "owner product selection and retained reasons persist in all six elements"
+  ],
+  "error": "locator.fill: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('fieldset.cost-scope').first().getByLabel('Сумма расхода, ₽', { exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <input min=\"0\" value=\"\" step=\"0.01\" required=\"\" type=\"number\"/>\u001b[22m\n\u001b[2m    - fill(\"1000\")\u001b[22m\n\u001b[2m  - attempting fill action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and editable\u001b[22m\n\u001b[2m  - element was detached from the DOM, retrying\u001b[22m\n",
+  "errors": [],
+  "outbound": []
+}

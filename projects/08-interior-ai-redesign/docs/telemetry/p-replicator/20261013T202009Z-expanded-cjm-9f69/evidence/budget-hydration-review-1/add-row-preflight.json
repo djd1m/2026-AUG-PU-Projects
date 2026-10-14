@@ -1,0 +1,13 @@
+{
+  "status": "ready",
+  "at": "2026-10-14T01:17:31.918Z",
+  "imageRevision": "docker:sha256:e5be7120110b92ed9b15b163638e65e339c796b16a0b567e166f53e11d8d8d21",
+  "nextBuild": "W9tBOwFbU3PwZwa1-u6rr",
+  "source": "/home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/apps/web/src/components/BudgetPanel.tsx",
+  "sourceSha": "e79ebdac0a305444e6a893ad064759c3cc6ba0f15eee93eb35472fce5b06c932",
+  "healthHTTP": 200,
+  "fixture": "Existing private synthetic owner; same project as parent RED/GREEN",
+  "command": "node add-row-probe.mjs <imageRevision> <nextBuild>",
+  "effects": "Login session and GET reads only; no form submit; blocked external traffic",
+  "e2eClaim": null
+}

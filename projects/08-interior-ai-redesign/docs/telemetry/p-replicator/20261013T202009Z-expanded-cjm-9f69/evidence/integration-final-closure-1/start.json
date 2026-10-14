@@ -1,0 +1,31 @@
+{
+  "run_id": "20261013T202009Z-expanded-cjm-9f69",
+  "work_unit_id": "integration-final-closure-1",
+  "stage": "REVIEW",
+  "started_at": "2026-10-14T01:21:36.871813+00:00",
+  "profile": "compact-quality-first-v2",
+  "requested_model": null,
+  "requested_effort": null,
+  "actual_model": null,
+  "actual_effort": null,
+  "model_evidence": null,
+  "reason": "bounded independent final evidence closure; inherited launch metadata unavailable in child",
+  "timebox_minutes": 15,
+  "scope": [
+    "docs/features/integration/review.md",
+    "docs/features/integration/review-report.md",
+    "docs/telemetry/p-replicator/20261013T202009Z-expanded-cjm-9f69/evidence/integration-final-closure-1/"
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "read-only evidence review, no new E2E or service restart"
+  },
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "exact host model/effort and token counters unavailable"
+  ],
+  "applied_memory": [
+    "teach:deae300b63174339: targeted closure only, preserve prior independent review"
+  ]
+}

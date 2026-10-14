@@ -1,0 +1,55 @@
+{
+  "status": "pass",
+  "scope": "offline prototypes only; not product E2E",
+  "results": [
+    {
+      "variant": "a",
+      "status": "pass",
+      "fileSha256": "5f954a28e8599bca767a1505536852d0f751ce3b2d3e4005ecd2ac955f7eab40",
+      "checks": [
+        "10 stages",
+        "mobile no overflow",
+        "invalid dimensions rejected",
+        "18m2 gives10 packs and16000RUB",
+        "unknown costs incomplete",
+        "no external requests/errors"
+      ],
+      "at": "2026-10-13T20:59:06.389Z"
+    },
+    {
+      "variant": "b",
+      "status": "pass",
+      "fileSha256": "e063243737572b90a472229fd1e7b0477b861d1b4a994ac45098f3a1bbadca5a",
+      "checks": [
+        "10 stages",
+        "mobile no overflow",
+        "invalid dimensions rejected",
+        "18m2 gives10 packs and16000RUB",
+        "unknown costs incomplete",
+        "no external requests/errors"
+      ],
+      "at": "2026-10-13T20:59:23.355Z"
+    },
+    {
+      "variant": "c",
+      "status": "pass",
+      "fileSha256": "17d66f6bc914d7dc0673aff9645e6aacb62a58bc0cae9fa12463fa18fb4cdb6b",
+      "checks": [
+        "10 stages",
+        "mobile no overflow",
+        "invalid dimensions rejected",
+        "18m2 gives10 packs and16000RUB",
+        "unknown costs incomplete",
+        "no external requests/errors"
+      ],
+      "at": "2026-10-13T20:59:40.313Z"
+    },
+    {
+      "mutation": "ceil-to-floor",
+      "expected": 10,
+      "actual": 9,
+      "killed": true,
+      "at": "2026-10-13T20:59:40.398Z"
+    }
+  ]
+}

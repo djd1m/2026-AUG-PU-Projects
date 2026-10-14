@@ -1,0 +1,17 @@
+{
+  "status": "failed",
+  "checks": [
+    "landing desktop + local hydration",
+    "register → authenticated dashboard",
+    "create private project persists",
+    "manual measured shell18m2 with opening + visibleplan",
+    "actualWebGL measured viewer",
+    "production malformedGLB returns typed422 before ready",
+    "production isolated image decode → owner normalized metadata",
+    "Pinterest deep link reference saves without fetch",
+    "390px keyboard/accessibility overflow"
+  ],
+  "error": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByText('Согласован', { exact: true }) to be visible\u001b[22m\n",
+  "errors": [],
+  "outbound": []
+}

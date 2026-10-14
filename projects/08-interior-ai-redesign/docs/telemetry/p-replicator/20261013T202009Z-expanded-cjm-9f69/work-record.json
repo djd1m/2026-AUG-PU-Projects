@@ -1,0 +1,392 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "delivered",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261013T202009Z-expanded-cjm-9f69",
+    "work_unit_id": "n8-implementation",
+    "current_attempt_id": "final-delivery-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261013T202009Z-expanded-cjm-9f69/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261013T202009Z-expanded-cjm-9f69/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+    "current_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+    "build_revision": "docker:sha256:3ac28e68ccef3576d428547f04bbbb9df3097bb8baf28823bdd87076611369cb",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/project-input.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "observed_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "reconciliation": null
+    },
+    "input_sha256": "cdb8a9eb5a1d3f5a9f2dc6d00e25e242625952df9b7fb575c9d75b31ae58e231"
+  },
+  "prepare": {
+    "scope_revision": "cdb8a9eb5a1d3f5a9f2dc6d00e25e242625952df9b7fb575c9d75b31ae58e231",
+    "scope": [
+      "Selected CJM A full modular implementation F1\u2013F6",
+      "Independent validation/review/anti-drift",
+      "Isolated local build, PostgreSQL, worker, browser and failure checks"
+    ],
+    "exclusions": [
+      "Store affiliate partnerships",
+      "Paid inference/real payments without approved credentials/budget",
+      "Public deployment"
+    ],
+    "action_limits": [
+      "Maximum ten hours after approval",
+      "Two concurrent child agents",
+      "Writers in isolated source copies; actual Git worktrees were not created",
+      "Only selected project product files; shared canonical dz brain allowed"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-01",
+        "required": true,
+        "description": "Source-backed dependency research with explicit unknowns"
+      },
+      {
+        "id": "AC-02",
+        "required": true,
+        "description": "Three distinct clickable HTML journeys preserving canonical chain for homeowner"
+      },
+      {
+        "id": "AC-03",
+        "required": true,
+        "description": "Prototype browser checks and independent semantic review; concrete findings fixed"
+      },
+      {
+        "id": "AC-04",
+        "required": true,
+        "description": "Chosen A full implementation; every required SC mapped to actual code and verification; local handoff with limitations"
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "docs/research/reuse-inventory.md"
+          }
+        },
+        "provenance": "Original donor files identified by SHA256 at 3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+        "useful_fragment": "Standalone CJM navigation and state patterns; future auth/payment/storage candidates",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Reuse structure and patterns, replace domain content; no product modules copied at this stage."
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No completion-time forecast requested or calibrated; owner ten-hour limit is a budget, not measured prediction.",
+      "scope_revision": "cdb8a9eb5a1d3f5a9f2dc6d00e25e242625952df9b7fb575c9d75b31ae58e231",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [
+        "Provider usage inaccessible"
+      ],
+      "external_expectations": [
+        "Owner wake target8h/max10h from approval; budget not measured forecast"
+      ],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "cdb8a9eb5a1d3f5a9f2dc6d00e25e242625952df9b7fb575c9d75b31ae58e231",
+      "tier": "XL",
+      "rationale": "Expanded full implementation approved. Money and immutable geometry require full lifecycle.",
+      "script": {
+        "input": "packages/db/src/migrations/001.sql apps/web/src/app/api/billing/webhook/route.ts apps/worker/src/index.ts",
+        "exit_code": 1,
+        "mechanical_tier": "XL"
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "cdb8a9eb5a1d3f5a9f2dc6d00e25e242625952df9b7fb575c9d75b31ae58e231",
+      "tier": "XL",
+      "rationale": "Actual schema/payment/public/worker paths; approved full plan remains authorized; required independent feature review and anti-drift.",
+      "script": {
+        "input": "packages/db/src/migrations/001-initial.sql apps/web/src/server.ts apps/worker/src/index.ts apps/web/src/app/api/billing/webhook/route.ts",
+        "exit_code": 1,
+        "mechanical_tier": "XL"
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "required",
+    "reason": "User explicitly approved team/plan and later authorized full implementation/CJM A/no wait",
+    "evidence": {
+      "id": "owner-plan-20261013",
+      "plan_revision": "cdb8a9eb5a1d3f5a9f2dc6d00e25e242625952df9b7fb575c9d75b31ae58e231",
+      "covers": [
+        "plan",
+        "team",
+        "roles",
+        "models",
+        "skills"
+      ],
+      "path": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261013T202009Z-expanded-cjm-9f69/evidence/owner-approval.md"
+      },
+      "sha256": "9c40bf063d1e08fef59619fb06f6461a862052d9a9d48e742a7dcae9fca30bb0"
+    }
+  },
+  "preflight": {
+    "status": "ready",
+    "reason": "Image9 ready200 observed; final229PASS includes18embeddedforeign/missing404 no-side-effect cases; independentcodeclosure. Same completepasseddriver8.",
+    "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+    "build_revision": "docker:sha256:3ac28e68ccef3576d428547f04bbbb9df3097bb8baf28823bdd87076611369cb",
+    "environment": "Local127.0.0.1:3088 nonroot finalimage9/manual/off, privatePG16/assets/worker",
+    "environment_available": true,
+    "inputs": [
+      {
+        "name": "scripts/e2e.mjs fresh launch SHA + triangleGLB localpurefixture",
+        "available": true
+      },
+      {
+        "name": "Chromium1.60 swiftshader installed, loopbackready200, privateDB/storage",
+        "available": true
+      }
+    ],
+    "test_command": "N8_E2E_ATTEMPT=journey-runtime-9 N8_BUILD_REVISION=docker:sha256:3ac28e68ccef3576d428547f04bbbb9df3097bb8baf28823bdd87076611369cb node scripts/e2e.mjs",
+    "expected_effects": [
+      "Synthetic owners/manual+GLBprojects/references/designs/products/budgets/export/revokedlocalshare",
+      "Private0600fixture files, synthetic screenshots/PNG/CSV, actual failures retained",
+      "Nonorigin browser requests aborted, no paidAI/payment/networkretailer calls"
+    ],
+    "evidence_root": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261013T202009Z-expanded-cjm-9f69/evidence/journey-runtime-9"
+    },
+    "external_actions_executed": false,
+    "e2e_claim": null
+  },
+  "attempts": [
+    {
+      "id": "prepare-1",
+      "status": "completed"
+    },
+    {
+      "id": "html-1",
+      "status": "completed"
+    },
+    {
+      "id": "validator-stories-1",
+      "status": "completed"
+    },
+    {
+      "id": "implementation-root-1",
+      "status": "completed",
+      "outcome": "accepted_final_integration"
+    },
+    {
+      "id": "space-runtime-1",
+      "status": "completed"
+    },
+    {
+      "id": "space-runtime-2",
+      "status": "completed"
+    },
+    {
+      "id": "space-runtime-3",
+      "status": "completed"
+    },
+    {
+      "id": "journey-runtime-1",
+      "status": "completed"
+    },
+    {
+      "id": "journey-runtime-2",
+      "status": "completed",
+      "outcome": "failed_driver_async_hydration_assertion_before_budget_loaded"
+    },
+    {
+      "id": "journey-runtime-3",
+      "status": "completed",
+      "outcome": "failed_driver_keyboard_press_before_button_enabled"
+    },
+    {
+      "id": "journey-runtime-4",
+      "status": "completed",
+      "outcome": "failed_driver_reused_toast_did_not_await_final_line_commit"
+    },
+    {
+      "id": "journey-runtime-5",
+      "status": "completed",
+      "outcome": "failed_product_production_sharp_resolve_rewritten_to_bundle_id"
+    },
+    {
+      "id": "journey-runtime-6",
+      "status": "completed",
+      "outcome": "failed_product_budget_async_hydration_overwrites_active_input"
+    },
+    {
+      "id": "journey-runtime-7",
+      "status": "completed",
+      "outcome": "failed_driver_implicit_textarea_label_contains_initial_text_prefix_selector_needed"
+    },
+    {
+      "id": "journey-runtime-8",
+      "status": "completed",
+      "outcome": "passed21 image8; securitystatuscorrectionrequiresnewimage9binding"
+    },
+    {
+      "id": "journey-runtime-9",
+      "status": "completed",
+      "outcome": "accepted_final_integration"
+    },
+    {
+      "id": "final-delivery-1",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "cjm-preparation",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/discovery/cjm-a.html"
+        },
+        {
+          "root": "project",
+          "path": "docs/discovery/cjm-b.html"
+        },
+        {
+          "root": "project",
+          "path": "docs/discovery/cjm-c.html"
+        }
+      ]
+    },
+    {
+      "id": "n8-implementation",
+      "paths": [
+        {
+          "root": "project",
+          "path": "apps"
+        },
+        {
+          "root": "project",
+          "path": "packages"
+        },
+        {
+          "root": "project",
+          "path": "tests"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [
+    {
+      "ac_id": "AC-01",
+      "outcome": "pass",
+      "exit_code": 0,
+      "command": "node .claude/hooks/check-source-version.cjs projects/08-interior-ai-redesign",
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "receipt_id": "n8-final-delivery-1"
+    },
+    {
+      "ac_id": "AC-02",
+      "outcome": "pass",
+      "exit_code": 0,
+      "command": "Focused Chromium/Playwright A/B/C desktop and390px checks (retained actual prototype-browser-checks.json and independentfixreceipt)",
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "receipt_id": "n8-final-delivery-1"
+    },
+    {
+      "ac_id": "AC-03",
+      "outcome": "pass",
+      "exit_code": 0,
+      "command": "bash /tmp/n8-pipeline-completion-fix-1.sh projects/08-interior-ai-redesign --traceability --completion --report-revision --criterion-scenarios",
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "receipt_id": "n8-final-delivery-1"
+    },
+    {
+      "ac_id": "AC-04",
+      "outcome": "pass",
+      "exit_code": 0,
+      "command": "N8_E2E_ATTEMPT=journey-runtime-9 N8_BUILD_REVISION=docker:sha256:3ac28e68ccef3576d428547f04bbbb9df3097bb8baf28823bdd87076611369cb node scripts/e2e.mjs",
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "receipt_id": "n8-final-delivery-1"
+    }
+  ],
+  "receipts": [
+    {
+      "id": "n8-final-delivery-1",
+      "work_id": "n8-implementation",
+      "path": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261013T202009Z-expanded-cjm-9f69/evidence/final-delivery-1.md"
+      },
+      "launch_path": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261013T202009Z-expanded-cjm-9f69/evidence/final-delivery-1-launch.json"
+      },
+      "sha256": "e9c9c1b80cbb774a7d28eee3698033042f36b1498498631f98db2ee5aaaea5c3",
+      "launch_sha256": "fc396d3f83232548fb10d68402c4a2dbe9e1adc3968d2aa19e35f61862479a28"
+    }
+  ],
+  "delivery": {
+    "uri": "http://127.0.0.1:3088",
+    "scope": {
+      "included": [
+        "Selected canonicalCJM A homeowner modular localimplementation65AC",
+        "Independent feature review/anti-drift and actual local checks"
+      ],
+      "excluded": [
+        "Publicdeployment and partnerships",
+        "Live paid inference/payment without credentials/budget",
+        "ActualScaniversedevice precision and blockedautomaticretailer/Pinterest import"
+      ]
+    },
+    "build": {
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "build_revision": "docker:sha256:3ac28e68ccef3576d428547f04bbbb9df3097bb8baf28823bdd87076611369cb"
+    },
+    "evidence": [
+      "n8-final-delivery-1"
+    ],
+    "pending": [
+      {
+        "item": "Live credentialedexternalproviders/publicingress/actualdevicesample",
+        "reason": "Not supplied/approved for paid/public experiments; localmanual path accepted",
+        "scope": "out_of_scope"
+      }
+    ],
+    "e2e_claim": "pass"
+  }
+}

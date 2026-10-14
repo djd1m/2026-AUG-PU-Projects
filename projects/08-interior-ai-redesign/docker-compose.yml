@@ -1,0 +1,91 @@
+name: n8-interior-local
+x-runtime: &runtime
+  DATABASE_URL: postgresql://n8_app:${N8_APP_PASSWORD:?Run setup-local}@db:5432/n8
+  N8_PUBLIC_ORIGIN: ${N8_PUBLIC_ORIGIN:?Set local origin}
+  N8_TRUSTED_PROXY_IP: ${N8_TRUSTED_PROXY_IP:-}
+  N8_SESSION_SECRET: ${N8_SESSION_SECRET:?Generate private session secret}
+  N8_ASSET_DIR: /app/.runtime/assets
+  N8_AI_MODE: ${N8_AI_MODE:-manual}
+  N8_PAYMENTS_MODE: ${N8_PAYMENTS_MODE:-off}
+  N8_OPENROUTER_API_KEY: ${N8_OPENROUTER_API_KEY:-}
+  N8_AI_MODEL_ID: ${N8_AI_MODEL_ID:-}
+  N8_AI_ALLOWED_MODELS: ${N8_AI_ALLOWED_MODELS:-}
+  N8_AI_RATE_INPUT_MICRO_USD_PER_MILLION: ${N8_AI_RATE_INPUT_MICRO_USD_PER_MILLION:-}
+  N8_AI_RATE_OUTPUT_MICRO_USD_PER_MILLION: ${N8_AI_RATE_OUTPUT_MICRO_USD_PER_MILLION:-}
+  N8_AI_RATE_VALID_UNTIL: ${N8_AI_RATE_VALID_UNTIL:-}
+  N8_AI_MAX_TOKENS: ${N8_AI_MAX_TOKENS:-}
+  N8_AI_REQUEST_OVERHEAD_TOKENS: ${N8_AI_REQUEST_OVERHEAD_TOKENS:-}
+  N8_AI_JOB_CAP_MICRO_USD: ${N8_AI_JOB_CAP_MICRO_USD:-}
+  N8_AI_ACCOUNT_DAY_CAP_MICRO_USD: ${N8_AI_ACCOUNT_DAY_CAP_MICRO_USD:-}
+  N8_AI_GLOBAL_DAY_CAP_MICRO_USD: ${N8_AI_GLOBAL_DAY_CAP_MICRO_USD:-}
+  N8_AI_PROVIDER_HARD_LIMIT_VERIFIED: ${N8_AI_PROVIDER_HARD_LIMIT_VERIFIED:-}
+  N8_AI_OPERATOR_ENABLED: ${N8_AI_OPERATOR_ENABLED:-}
+  N8_PAYMENT_SHOP_ID: ${N8_PAYMENT_SHOP_ID:-}
+  N8_PAYMENT_SECRET: ${N8_PAYMENT_SECRET:-}
+  N8_PAYMENT_TEST_MODE: ${N8_PAYMENT_TEST_MODE:-}
+  N8_PAYMENT_SKUS_JSON: ${N8_PAYMENT_SKUS_JSON:-}
+  N8_HTTP_PORT: "3000"
+  N8_BIND_HOST: "0.0.0.0"
+services:
+  db:
+    image: postgres:16-bookworm@sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4
+    environment:
+      POSTGRES_DB: n8
+      POSTGRES_USER: n8_bootstrap
+      POSTGRES_PASSWORD: ${N8_DB_ADMIN_PASSWORD:?Generate private bootstrap secret}
+      N8_APP_PASSWORD: ${N8_APP_PASSWORD:?Generate app password}
+      N8_MIGRATOR_PASSWORD: ${N8_MIGRATOR_PASSWORD:?Generate migrator password}
+    expose: ["5432"]
+    volumes:
+      - database:/var/lib/postgresql/data
+      - ./scripts/init-db.sh:/docker-entrypoint-initdb.d/10-n8.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n8_bootstrap -d n8"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    mem_limit: 512m
+    restart: unless-stopped
+  migrate:
+    image: n8-interior-app:local
+    build: .
+    profiles: ["tools"]
+    environment:
+      DATABASE_URL: postgresql://n8_migrator:${N8_MIGRATOR_PASSWORD:?Generate migrator password}@db:5432/n8
+    command: ["npm", "run", "migrate"]
+    depends_on:
+      db: {condition: service_healthy}
+  web:
+    image: n8-interior-app:local
+    build: .
+    environment: *runtime
+    ports: ["127.0.0.1:${N8_HTTP_PORT:-3088}:3000"]
+    volumes: ["assets:/app/.runtime/assets"]
+    depends_on:
+      db: {condition: service_healthy}
+    mem_limit: 512m
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  worker:
+    image: n8-interior-app:local
+    build: .
+    environment: *runtime
+    command: ["npm", "run", "start:worker"]
+    stop_grace_period: 45s
+    healthcheck:
+      test: ["CMD", "node", "-e", "const fs=require('node:fs');try{const h=JSON.parse(fs.readFileSync('/app/.runtime/worker-heartbeat.json','utf8'));process.exit(h.state==='ready'&&Number.isSafeInteger(h.at)&&Date.now()-h.at>=0&&Date.now()-h.at<=60000?0:1)}catch{process.exit(1)}"]
+      interval: 10s
+      timeout: 5s
+      retries: 8
+    volumes: ["assets:/app/.runtime/assets"]
+    depends_on:
+      db: {condition: service_healthy}
+    mem_limit: 512m
+    restart: unless-stopped
+volumes:
+  database:
+  assets:

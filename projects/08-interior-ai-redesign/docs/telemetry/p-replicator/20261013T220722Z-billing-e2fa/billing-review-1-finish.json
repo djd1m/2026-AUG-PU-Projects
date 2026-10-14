@@ -1,0 +1,80 @@
+{
+  "run_id": "20261013T220722Z-billing-e2fa",
+  "work_unit_id": "billing-review-1",
+  "stage": "REVIEW",
+  "status": "completed",
+  "verdict": "blocked",
+  "finished_at": "2026-10-13T23:44:47.567637+00:00",
+  "elapsed_wall_ms": 225728.113,
+  "active_wall_ms": null,
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host actual model/effort/usage unavailable",
+    "Active time not instrumented",
+    "Author mutation/build/full-suite evidence absent in integrated root"
+  ],
+  "findings": [
+    {
+      "id": "BILLING-R1",
+      "severity": "high",
+      "adjudication": "confirmed",
+      "probe_exit": 1
+    }
+  ],
+  "ac_met": 5,
+  "ac_total": 6,
+  "tests": {
+    "files": 4,
+    "passed": 35,
+    "seconds": 10.66,
+    "exit": 0
+  },
+  "report_sha256": "dd5f5a79e215c9fa932ead012c6e5a364c369224970886de73f4c6ac6def4c4e",
+  "extra_source_hashes": {
+    "packages/db/src/space.ts": "0bcd7126756457e715ad049f1fecd8a9c64edb0d8cbe1e6a8f44a77676c6fed5",
+    "apps/web/src/server/space.ts": "d0cb58bc33921266a379481cb18e30d63a09881b05e27ad317400e032fe7f1e3",
+    "packages/adapters/src/assets.ts": "cd469ab768a39fcf1708c7651d471374cd3d3ca139f171eb02df4f5d8590843e",
+    "apps/web/src/server.ts": "d3beea49c54c36398cbeb109b8660514697240fbb665a8d11f47f339f0d7f4e1",
+    "docs/webhook-contract.md": "ee73fb64ee135e7ecdfdbbac355cc440e243e914193cf69240d7f8c0c4cbed3f",
+    "docs/Refinement.md": "c6e9813f10856e51df77e4959812ec09faaa7fe4df22676a2608beb8d640929d"
+  },
+  "original_source_continuity": {
+    "apps/web/src/app/api/billing/checkout/route.ts": true,
+    "apps/web/src/app/api/billing/offers/route.ts": true,
+    "apps/web/src/app/api/billing/orders/[id]/route.ts": true,
+    "apps/web/src/app/api/billing/orders/route.ts": true,
+    "apps/web/src/app/api/billing/webhook/route.ts": true,
+    "apps/web/src/server/billing.ts": true,
+    "packages/adapters/src/yookassa.ts": true,
+    "packages/db/src/billing.ts": true,
+    "packages/domain/src/billing/index.ts": true,
+    "tests/billing/fixtures.ts": true,
+    "tests/billing/http.test.ts": true,
+    "tests/billing/mutations.mjs": true,
+    "tests/billing/provider.test.ts": true,
+    "tests/billing/refund.test.ts": true,
+    "tests/billing/repository.test.ts": true,
+    "apps/web/src/server/config.ts": true,
+    "apps/web/src/server/http.ts": true,
+    "apps/web/src/server/peer.ts": true,
+    "docs/Pseudocode.md": true,
+    "docs/Specification.md": true,
+    "docs/features/billing/01_specification.md": true,
+    "docs/features/billing/02_pseudocode.md": true,
+    "docs/features/billing/03_architecture.md": true,
+    "docs/features/billing/04_refinement.md": true,
+    "package-lock.json": true,
+    "packages/db/src/common.ts": true,
+    "packages/db/src/design/jobs.ts": true,
+    "packages/db/src/design/ledger.ts": true,
+    "packages/db/src/design/lifecycle.ts": true,
+    "packages/db/src/migrations/001-initial.sql": true,
+    "packages/db/src/migrations/002-indexes.sql": true,
+    "packages/db/src/migrations/003-job-input.sql": true,
+    "packages/db/src/migrations/004-payment-intent.sql": true,
+    "packages/domain/src/common.ts": true
+  }
+}

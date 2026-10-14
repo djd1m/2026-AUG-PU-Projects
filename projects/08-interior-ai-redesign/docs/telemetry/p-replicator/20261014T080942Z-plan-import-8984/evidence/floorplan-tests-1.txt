@@ -1,0 +1,41 @@
+
+> n8-interior-planner@0.1.0 test
+> vitest run tests/space/floorplan.test.ts tests/space/floorplan-child.test.ts tests/space/floorplan-http.test.ts
+
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+stderr | tests/space/floorplan-http.test.ts > PLAN-HTTP-1 rejects missing/foreign source equally before OCR and leaves project/shell state unchanged
+{"requestId":"db115e90-a822-4b75-a384-85bfcd3769a8","code":"NOT_FOUND","latencyMs":15}
+
+stderr | tests/space/floorplan-http.test.ts > PLAN-HTTP-1 rejects missing/foreign source equally before OCR and leaves project/shell state unchanged
+{"requestId":"ed4aeac3-481d-4be1-9a1e-61c0a2f7a94b","code":"NOT_FOUND","latencyMs":6}
+
+ ❯ tests/space/floorplan-http.test.ts (4 tests | 1 failed) 1404ms
+   × PLAN-HTTP-1 rejects missing/foreign source equally before OCR and leaves project/shell state unchanged 402ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/space/floorplan-http.test.ts > PLAN-HTTP-1 rejects missing/foreign source equally before OCR and leaves project/shell state unchanged
+AssertionError: expected 1 to be '1' // Object.is equality
+
+- Expected:
+"1"
+
++ Received:
+1
+
+ ❯ tests/space/floorplan-http.test.ts:17:367
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 10 passed (11)
+   Start at  08:26:55
+   Duration  2.80s (tests 83%, transform 9%, import 7%, worker 1%)
+
+    Isolate  3 workers spawned · ~147ms startup each (spawn + environment, per file)
+             at least ~293ms faster with isolate: false — reuses workers across files instead of one per file
+

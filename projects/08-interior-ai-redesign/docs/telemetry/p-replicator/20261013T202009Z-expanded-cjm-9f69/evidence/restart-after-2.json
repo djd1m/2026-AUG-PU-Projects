@@ -1,0 +1,24 @@
+{
+  "testTitle": "SC-US-017-1 owned project revisions budgets and original asset hashes survive web and worker restart",
+  "status": "passed",
+  "mode": "verify",
+  "startedAt": "2026-10-14T01:21:40.333Z",
+  "finishedAt": "2026-10-14T01:21:40.652Z",
+  "buildRevision": "docker:sha256:e5be7120110b92ed9b15b163638e65e339c796b16a0b567e166f53e11d8d8d21",
+  "checks": [
+    "1b412593-5028-4c8d-b7d5-98184c86dc32",
+    "1b412593-5028-4c8d-b7d5-98184c86dc32/shells",
+    "1b412593-5028-4c8d-b7d5-98184c86dc32/designs",
+    "1b412593-5028-4c8d-b7d5-98184c86dc32/budgets",
+    "1b412593-5028-4c8d-b7d5-98184c86dc32/assets",
+    "asset:51a08e35-756e-4c88-98e1-6b13438e2a07",
+    "714cabd8-fd87-4169-9daa-5929b3566ab3",
+    "714cabd8-fd87-4169-9daa-5929b3566ab3/shells",
+    "714cabd8-fd87-4169-9daa-5929b3566ab3/designs",
+    "714cabd8-fd87-4169-9daa-5929b3566ab3/budgets",
+    "714cabd8-fd87-4169-9daa-5929b3566ab3/assets",
+    "asset:de4a00c6-640b-4e94-8035-13475aebb394"
+  ],
+  "readyHTTP": 200,
+  "providerCalls": 0
+}

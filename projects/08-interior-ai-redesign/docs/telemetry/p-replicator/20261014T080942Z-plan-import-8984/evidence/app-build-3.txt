@@ -1,0 +1,125 @@
+ Image n8-interior-app:local Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 578B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.09kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20
+#3 DONE 0.6s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 152B done
+#4 DONE 0.0s
+
+#5 [ 1/14] FROM docker.io/library/node:24-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20
+#5 resolve docker.io/library/node:24-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 1.12MB 0.1s done
+#6 DONE 0.1s
+
+#7 [10/14] COPY --chown=node:node packages/viewer/package.json packages/viewer/package.json
+#7 CACHED
+
+#8 [ 6/14] COPY --chown=node:node apps/worker/package.json apps/worker/package.json
+#8 CACHED
+
+#9 [ 2/14] RUN apt-get update && apt-get install -y --no-install-recommends tesseract-ocr tesseract-ocr-eng tesseract-ocr-rus fonts-dejavu-core && rm -rf /var/lib/apt/lists/*
+#9 CACHED
+
+#10 [ 3/14] WORKDIR /app
+#10 CACHED
+
+#11 [ 4/14] COPY --chown=node:node package.json package-lock.json ./
+#11 CACHED
+
+#12 [ 5/14] COPY --chown=node:node apps/web/package.json apps/web/package.json
+#12 CACHED
+
+#13 [ 7/14] COPY --chown=node:node packages/domain/package.json packages/domain/package.json
+#13 CACHED
+
+#14 [ 8/14] COPY --chown=node:node packages/db/package.json packages/db/package.json
+#14 CACHED
+
+#15 [ 9/14] COPY --chown=node:node packages/adapters/package.json packages/adapters/package.json
+#15 CACHED
+
+#16 [11/14] RUN npm ci --no-fund --no-audit
+#16 CACHED
+
+#17 [12/14] COPY --chown=node:node . .
+#17 DONE 0.2s
+
+#18 [13/14] RUN npm run build
+#18 0.417 
+#18 0.417 > n8-interior-planner@0.1.0 build
+#18 0.417 > npm run typecheck && npm run build -w @n8/web
+#18 0.417 
+#18 0.571 
+#18 0.571 > n8-interior-planner@0.1.0 typecheck
+#18 0.571 > tsc --noEmit -p tsconfig.json
+#18 0.571 
+#18 10.61 
+#18 10.61 > @n8/web@0.1.0 build
+#18 10.61 > next build
+#18 10.61 
+#18 11.56    ▲ Next.js 15.5.27
+#18 11.56    - Experiments (use with caution):
+#18 11.56      · cpus: 2
+#18 11.56 
+#18 11.60    Creating an optimized production build ...
+#18 37.38  ✓ Compiled successfully in 25.4s
+#18 37.39    Linting and checking validity of types ...
+#18 39.94 
+#18 39.94  ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
+#18 41.08 
+#18 41.08 Failed to compile.
+#18 41.08 
+#18 41.08 ./src/components/DrawingImport.tsx
+#18 41.08 23:294  Error: 'index' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+#18 41.08 
+#18 41.08 info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+#18 41.33 npm error Lifecycle script `build` failed with error:
+#18 41.33 npm error code 1
+#18 41.33 npm error path /app/apps/web
+#18 41.33 npm error workspace @n8/web@0.1.0
+#18 41.34 npm error location /app/apps/web
+#18 41.34 npm error command failed
+#18 41.34 npm error command sh -c next build
+#18 ERROR: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1
+------
+ > [13/14] RUN npm run build:
+41.08 23:294  Error: 'index' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+41.08 
+41.08 info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+41.33 npm error Lifecycle script `build` failed with error:
+41.33 npm error code 1
+41.33 npm error path /app/apps/web
+41.33 npm error workspace @n8/web@0.1.0
+41.34 npm error location /app/apps/web
+41.34 npm error command failed
+41.34 npm error command sh -c next build
+------
+Dockerfile:15
+
+--------------------
+
+  13 |     COPY --chown=node:node . .
+
+  14 |     ENV NEXT_TELEMETRY_DISABLED=1
+
+  15 | >>> RUN npm run build
+
+  16 |     RUN mkdir -p /app/.runtime/assets && chown -R node:node /app/.runtime
+
+  17 |     USER node
+
+--------------------
+
+failed to solve: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1
+

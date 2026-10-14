@@ -1,0 +1,17 @@
+# Design reuse evidence
+
+Run 20261013T220722Z-design-5c13, work unit design-author-1. Research performed in this attempt before implementation; tool transcript is timestamp authority (no inferred per-search timestamps). Root source commit 3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4. No new dependencies.
+
+Local-first inventory covered projects 01,02,03,03a,04,05,05a,06,07 with rg (lease/fence/advisory/spend/OpenRouter/response_format and geometry/rotationY/SceneProposal/catalogId), then fresh GitHub primary search. One initial inventory invocation used the isolated project cwd and failed to resolve sibling projects; successful inventory was rerun from original repository. No runtime imports across projects.
+
+| Sub-contour | Local evidence and decision | Fresh primary upstream evidence |
+|---|---|---|
+| Scene/catalog/manual fit | No compatible measured-room semantic validator in donors. Use existing N8 space pure ShellContent plus bounded rotated AABB; own domain logic, existing Zod/Decimal/canonical JSON | github.com/MikeMcl/decimal.js (MIT), github.com/colinhacks/zod issues4823/discussions976 (strict unknown-key behavior; implementation retains installed Zod3.25.76) |
+| Revision/history/approval | Existing N8 immutable revision/CAS schema and db/common reused. Donor UI design-shell is not measured scene history. New bounded owning transaction | github.com/brianc/node-postgres/blob/master/docs/pages/features/transactions.mdx (same client for all transaction statements; MIT pg) |
+| Jobs/lease/fence/watchdog | Adapt N4 apps/recognizer/src/lease.ts, SHA256 705f12c7a21fff6c960dfffe24d9db49b8eefe481042b1b854ed1c2e474eefb9: closed claim transaction, lease predicate, max3 attempts, stale fence. N8 prohibits paid redispatch after mark, unlike donor retry semantics | node-postgres primary transaction docs above; no job framework/dependency needed |
+| Spend/consent/reconciliation | Local N4/N5/N6 metering examined; account/global origin-day reservations and unknown cost require N8-specific implementation. No guessed prices, exact Decimal ceiling | github.com/OpenRouterTeam/docs/blob/main/api_reference/limits.mdx and cookbook/administration/usage-accounting.mdx |
+| Provider | Adapt N6 packages/rag/src/openrouter.ts SHA256 9d7be339e7dc22086274e3d339c2f7f1efd2d0da226b79a649820f142eb36268: constant endpoint, require_parameters, strict schema, no fallback. Remove donor retries, add bounded reader and unknown-cost semantics | github.com/OpenRouterTeam/docs/blob/main/guides/features/structured-outputs.mdx; api_reference/overview.mdx; limits.mdx |
+
+Local donor code is repository-owned; no separate project LICENSE found in tracked license inventory, so adaptation stays inside this private repository (no third-party relicensing assertion). External source code was not vendored. Existing locked libraries: Decimal10.6.0 MIT, Zod3.25.76 MIT, pg8.23.1 MIT, fast-json-stable-stringify2.1.0 MIT. Upstream moving docs are reference-only, not dependency source revisions. Local source SHA above is exact inspected artifact; upstream commit SHA not obtained and not invented.
+
+Provider guardrail refinement requested by coordinator: bounded fixed GET /api/v1/key before dispatch, daily finite limit <= configured global cap, enough remaining for full job cap, BYOK included. Unknown proof fails before dispatch. Actual configured provider account has not been inspected; all verification is offline fixture testing and no live paid call is authorized.

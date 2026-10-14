@@ -1,0 +1,17 @@
+{
+  "time": "2026-10-14T00:06:23.627Z",
+  "scope": "Copied current six source modules under temporary directory, runtime dependencies from image3; original services unchanged; fresh test schema; manual/off",
+  "sourceSha256": {
+    "apps/worker/src/index.ts": "ad36a63c704f9077d039d95c40898e188d7d3c52a35ff550bd834f93ecd2a64f",
+    "apps/worker/src/jobs.ts": "6cd5cf91ad9c7a7c03ec0677987cd9573e8434181b7a7c589e49e92d97d8f9f1",
+    "apps/worker/src/watchdog.ts": "91e061d4d6694f3a1d0b7ba1ff3c07304d75a25e4f4fe764d85b10325bf9e6a1",
+    "apps/worker/src/runtime.ts": "1b0870c88f16ada044dfc8592ea15e5833c971f4bde8ffc21adc3f33d31056b3",
+    "apps/web/src/server/config.ts": "673be7cf1abafea2740ba20fd6d0366473a4bf93e27ed013fd29e1f75e8d4614",
+    "apps/web/src/server/health.ts": "d3cce6e3f6932682f69c1943ff8a9aff40c680b847311d8edd485f38190c52d4"
+  },
+  "status": 0,
+  "stdout": "{\"boot\":{\"exitCode\":1,\"heartbeat\":null,\"output\":\"N8_WORKER_START_OR_LOOP_FAILED\\n\"},\"initial\":{\"at\":1791936362513,\"state\":\"ready\"},\"failed\":{\"at\":1791936372560,\"state\":\"failed\"},\"sticky\":{\"at\":1791936373563,\"state\":\"failed\"},\"recovered\":{\"at\":1791936382584,\"state\":\"ready\"},\"signalExitCode\":0,\"heartbeatAfterStop\":null,\"output\":\"N8_WORKER_START_OR_LOOP_FAILED\\nN8_WORKER_READY\\nN8_WORKER_STEP_FAILED readiness\\n\",\"passed\":true}\n",
+  "stderr": "",
+  "error": null,
+  "liveCalls": 0
+}

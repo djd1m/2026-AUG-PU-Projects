@@ -1,0 +1,1 @@
+../../../../.claude/rules/feature-adr-conventions.md

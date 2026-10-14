@@ -1,0 +1,59 @@
+[
+  {
+    "name": "n8-interior-local-db-1",
+    "id": "623227e203702a57e6abdfd73df2c8535d8e5d15d7960659ccbd26a9560b7b1b",
+    "created": "2026-10-13T22:59:07.809902442Z",
+    "startedAt": "2026-10-13T22:59:08.858711666Z",
+    "status": "running",
+    "image": "sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4",
+    "ports": {
+      "5432/tcp": null
+    },
+    "health": "healthy"
+  },
+  {
+    "name": "n8-interior-local-web-1",
+    "id": "73ea8f0d5bbe72d0c294278feb75459a1337cd8e1533e528a65c2c73986bb90f",
+    "created": "2026-10-14T09:14:05.911148391Z",
+    "startedAt": "2026-10-14T09:14:07.88585621Z",
+    "status": "running",
+    "image": "sha256:cfb77c15210f0ece9d8b0ab18bee285daee65666ebafdc5b476bd24802b40c61",
+    "ports": {},
+    "health": "healthy"
+  },
+  {
+    "name": "n8-interior-local-worker-1",
+    "id": "43873b7f351b95e37af07c07610a26ef085ce39326f7ab7728d083087840a5a7",
+    "created": "2026-10-14T09:14:05.913044838Z",
+    "startedAt": "2026-10-14T09:14:08.176853122Z",
+    "status": "running",
+    "image": "sha256:cfb77c15210f0ece9d8b0ab18bee285daee65666ebafdc5b476bd24802b40c61",
+    "ports": {},
+    "health": "healthy"
+  },
+  {
+    "name": "n8-interior-local-proxy-1",
+    "id": "4efd6fbf569889f473e879267f0ea231bc6f205311daae2710d815e070e1d809",
+    "created": "2026-10-14T07:06:53.84725312Z",
+    "startedAt": "2026-10-14T07:06:54.123797373Z",
+    "status": "running",
+    "image": "sha256:d8542f48d34a9cf4e4c11a478865229840e87e4c96ea3f439101f31a5d35f75f",
+    "ports": {
+      "2019/tcp": null,
+      "443/tcp": [
+        {
+          "HostIp": "0.0.0.0",
+          "HostPort": "443"
+        }
+      ],
+      "443/udp": null,
+      "80/tcp": [
+        {
+          "HostIp": "0.0.0.0",
+          "HostPort": "80"
+        }
+      ]
+    },
+    "health": "healthy"
+  }
+]

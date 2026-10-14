@@ -1,0 +1,1 @@
+../../../../.claude/rules/shared-resource-verification.md

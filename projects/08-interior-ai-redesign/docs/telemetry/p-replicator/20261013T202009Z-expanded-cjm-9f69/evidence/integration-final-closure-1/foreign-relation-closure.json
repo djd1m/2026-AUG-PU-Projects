@@ -1,0 +1,32 @@
+{
+  "observed_at": "2026-10-14T01:31:26.323324+00:00",
+  "finding": "FND-FINAL-1",
+  "status": "closed_on_corrected_source",
+  "source_sha256": {
+    "packages/db/src/design/revisions.ts": "493c0efda2edae3812846bec3e0b5b6e44b7d34b61cb2a236f8bc1c14e9408ec",
+    "packages/db/src/design/jobs.ts": "c9387e20575b3573da0715c4762c659973d9d7681dc6811cab308f766240a7e7",
+    "packages/domain/src/design/scene.ts": "2422f37cdba7f80253ae5194954074869a79139dbda5f58beb91d2235b6342e5",
+    "tests/design/revisions.test.ts": "efd6674d523d2484ab5f447244a5c1903e5bb53b97f8cfe0ed6b28c3ea33b17f"
+  },
+  "evidence_sha256": {
+    "foreign-relation-red-1.txt": "2ef187ff02c0cfed55da10509a9df29a899c7b6b81660a4dd07a66431a7e3ab5",
+    "foreign-relation-green-regression-1.txt": "85e36c335de07f7e40ffbcc2f7ec8a65d08158453ac04c13db47f44dee041489",
+    "final-regression-2.txt": "023f14e1f29418a5e35d70d8b2357b235c246051fbf75ae028ab5ddebe137595"
+  },
+  "checks": {
+    "red_reproduced": "Expected404 NOT_FOUND; actual422 INVALID_REFERENCES onforeignreference",
+    "targeted_tests": 47,
+    "full_regression_tests": 229,
+    "negative_calls": 18,
+    "foreign_and_random_missing_pairs": true,
+    "unchanged_project_and_catalog_and_pointer": true,
+    "unchanged_design_and_job_row_counts": true,
+    "unchanged_account_available_held_credits": true,
+    "unchanged_spend_rows": true,
+    "replay_first_preserved": true,
+    "null_shell_still409": true,
+    "owned_stale_shell_still409": true,
+    "known_catalog_changed_dimensions_still422": true
+  },
+  "new_image_binding": "pending parent final image9 ready/source evidence; image8 evidence remains historical source-bound"
+}

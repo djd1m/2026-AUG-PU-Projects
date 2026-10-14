@@ -1,0 +1,33 @@
+ Container n8-interior-ui-check-playwright-run-cfe196e409fc Creating 
+ Container n8-interior-ui-check-playwright-run-cfe196e409fc Created 
+PASS chromium emptynewroom has no guessed dimensions
+PASS chromium actualnativeOCR horizontalverticalheight+privacy noautosave
+PASS chromium keyboard importer select traversal +Enter transfer +missingheight focus
+PASS chromium 390px recognizeddrawing andAxe
+PASS chromium recognizeddims transfer no retype; missingheight blocks save +focus+oldopenings cleared
+PASS chromium printedheight transferred; editingresets consent; confirmedownedsource persisted
+PASS chromium reloadsource link +immutable18m2plan
+PASS chromium noOCR result honest and existingplan unchanged
+PASS chromium foreign andabsent drawing equally404 before recognition
+PASS chromium SecureHttpOnly +desktopoverflow
+PASS firefox emptynewroom has no guessed dimensions
+PASS firefox actualnativeOCR horizontalverticalheight+privacy noautosave
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+false !== true
+
+    at file:///app/scripts/floorplan-e2e.mjs:22:10 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.21.0
+

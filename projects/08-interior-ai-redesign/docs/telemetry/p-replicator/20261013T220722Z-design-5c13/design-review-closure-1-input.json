@@ -1,0 +1,31 @@
+{
+  "run_id": "20261013T220722Z-design-5c13",
+  "work_unit_id": "design-review-closure-1",
+  "recorded_at": "2026-10-13T23:50:51.502587+00:00",
+  "source_commit": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Narrow source review plus real-PG repository tests and NullEngine; no browser/deployed E2E"
+  },
+  "sha256": {
+    "packages/domain/src/design/provider.ts": "a8e02128852e11c4fc66ba19d98a14dfd03c4efac7b75d42c61e2bc08b9f9818",
+    "packages/domain/src/design/scene.ts": "0c049d707f7b6294beb5999453150a837e5e784a3b8eb4a9457c1990d7dae313",
+    "packages/db/src/design/lifecycle.ts": "521fffaedaf67ef500cbcab7b67a4ca7bfd885b1319ab771b913a47f276875d5",
+    "packages/db/src/design/ledger.ts": "db614727b92c80d2c498f72a982c9b94beb1a99b95233b28156b93b89d79db64",
+    "packages/viewer/src/types.ts": "4044472b6e734b6ccfabd386dfe6cccab3fece8bf2e39ae5b3672e0d7dd36ef6",
+    "packages/viewer/src/renderer.ts": "7ae61899b97a0e1e3a833a0096f5a54c336f66f666547b5e7267f385192a76b0",
+    "packages/viewer/src/index.tsx": "3c2eebfba5169923ba5f1b37477159bbf92805274bf6d8b2281403536996ba0d",
+    "tests/design/jobs.test.ts": "a2f074f962f92b95624015a7ac961ff02e690f9cca30f051a7ef5fa908a0958a",
+    "tests/design/scene.test.ts": "5956077d9b729e238cf28098a8dfbdca55132e4511bb680f2f1a551a7f36111b",
+    "tests/design/primitive.test.ts": "305b330a8146a365232bb4b905675efc173432f6f39ad9c1dcd83a15923bdd38",
+    "docs/Pseudocode.md": "407824005319b4ba4fe6d4a83fcdfdb33d7d1005a1b138c916088891a9ea1d1d",
+    "docs/canon.md": "70ae99506734ef86e0c6ac9474f48aa2d289b462cd801c155ccdcc4ee7e6a69d",
+    "docs/features/design/01_specification.md": "b643c102b0b1c970627ec475db08ec16cb02b89ee976464d06769ae5e22fd3ff",
+    "docs/features/design/review.md": "34f53e0b5e65d220eaae52dfcf78aec99a51380bdde3c8646da0f39656928287",
+    "apps/worker/src/jobs.ts": "6cd5cf91ad9c7a7c03ec0677987cd9573e8434181b7a7c589e49e92d97d8f9f1",
+    "apps/web/src/components/DesignPanel.tsx": "f4e19a8b68614c44500b1bcc28a28b8d7ccb540945ff4371e8538390e05a02e6"
+  }
+}

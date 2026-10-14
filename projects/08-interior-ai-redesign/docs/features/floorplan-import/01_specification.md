@@ -1,0 +1,20 @@
+# Dimensioned drawing import — accepted user request 2026-10-14
+
+User wants to avoid retyping dimensions already printed on a drawing. Furniture on the drawing is optional; it does not make the drawing invalid. Existing measured manual room/design workflow remains reusable. Default format PNG/JPG/WebP (formatclarification pending). No paidprovider activation/key assumed. One rectangular room perproject remains currentgeometrycontract; no implicit wholeapartment/irregularwall/height/door/furniture inference.
+
+AC-P01: Upload/select owned private image, native offlineTesseract detects numeric dimension candidates with rawtext/confidence and boundingboxes; user sees source drawing and recognized options, not invented numbers.
+AC-P02: Explicit units for unsuffixed dimensions (mm/cm/m), select detected length/width and height ifprinted; populate editable existing manualform withoutretyping numbers. Never autoassign largesttwo numbers fromtitleblock/multiroom drawing. Areas/scales/dates notdimensions; unknownheight remainsblank.
+AC-P03: Confirmed one-rectangle approximation and dimensions/openings requiredbefore immutable shell append. No recognitionauto-save; asset provenance retained in sourceAssetId+canonicalhash; existinghistory/budget invalidation preserved. Foreign/missing source returns404 beforeprocessing.
+AC-P04: ExactOrigin/auth/projectownership/version beforebody; fixedlocalCLI/no shell/secret env/no network; bounded20MPinput/10MiBoriginal, imageOCR output<=512KiB/pass, max3orientationpasses/20s/256MiBaggregate worker+nativeRSS, one sharedassetdecoder slot. Typedtimeout/busy/empty no falsePASS, noorphanOCR child.
+AC-P05: Drawing import UI explains what to upload, whichdimsareknown, why missingheight stillneedsinput, furnitureoptional and how to review existingmeasuredplan. Empty/lowconfidence result gives usefuloriginalimage/manualalternative. Correctedinputnotlost; save requires explicit confirmation. Existingmanual/GLB/reference flows continue.
+AC-P06: Meaningful parse/unit/failure/provenance/foreignownership/concurrency tests, fullregression/type/lint/build, actualnativeOCR syntheticdrawing inDocker and publicbrowser import-confirm-reload/source/privacy/mobile/keyboard/AXE checks; independent anti-drift closesconcretefindings. No claimed realdrawingaccuracy withoutusersample.
+
+## Architecture / reuse
+
+Pure reusable space/floorplan.ts owns OCR-token→dimension-candidate types/unit parsing; noNext/fs/SQL imports. Native adapter normalizes validated owned image inisolated fixedNode worker andexecutes Tesseract stdin/stdout, primary upstreamApache2.0. ExistingN8 parseAsset privateupload +sharedexclusiveparser slot, N6boundedsubprocess stdout/env/timeoutRSS pattern reused; nativegrandchild included inprocessgroupkill/RSS supervision. Adapter emitsdraft only; route verifiescurrentasset owner/project/readystate first. Existing createShell/manual geometry remainsvalidated and immutable, with optional ownedreadyimage source ID. No migration/newtable/queue/framework. UI component communicatesrecognizeddraft via controlled callback to existingSpacePanel; manual defaults/oldopenings cleared when a newdrawingdraft applied.
+
+Local01–07 sweep: N8asset parser/repository/viewer available; N6pdf extractor andN4vision/job contracts researched, no existingfloorplan recognizer in01–07. GitHubTesseract/tessdata_fast suitableApache2.0. Floorplan repositoriesGrishaSethi/OCR_Tesseract andpradhankukiran/floor-plan-scale-engine lackingverifiedLICENSE are reference-only, nocopy. Domain-specific unit parsing justified; do notguess meters frombaretext or alter physicalscale fromSVGpixels.
+
+## Scope boundaries
+
+Geometryimport limited to one confirmed rectangularroom usingprintedmeasurements. Door/windows/furniture notautomaticallyidentified; userchecks/adds them usingexistingeditor. 3D scene remainsmeasuredshell+manualdesign. Furniturecanbeabsent fromdrawing: recommendation/design followsconfirmedroom, not requirement forupload. PDF/DWG/DXF andpaidvision newcredentials requireseparate concrete input; pending optionalformatanswer may adjust this scope beforecoding formatboundary.

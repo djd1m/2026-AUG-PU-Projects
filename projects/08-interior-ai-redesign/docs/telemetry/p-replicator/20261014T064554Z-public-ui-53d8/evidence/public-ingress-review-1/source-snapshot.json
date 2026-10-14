@@ -1,0 +1,29 @@
+{
+  "captured_at": "2026-10-14T07:02:25.145784+00:00",
+  "root_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+  "qualification": "App files are untracked; these content hashes, not root HEAD alone, identify reviewed source.",
+  "sha256": {
+    "apps/web/src/server/peer.ts": "224863482628b652922c5dc9e38eb0223eb4faa1ed7cb4738b2272a0233e6a99",
+    "apps/web/src/server.ts": "79ff77d1532d6ad4c5f32174e73c15c16630e533ff02750ab74ee8c23a63c3cb",
+    "apps/web/src/server/config.ts": "eec4e9a9e51c633cb687090a629588bf8336ddfc401bf9c3e96881f3d12ee923",
+    "apps/web/src/server/http.ts": "8ee37ffb4626c928aa79d1af0db063d93609d4f6388d1b3a68f2540fbdcf3838",
+    "apps/web/src/server/billing.ts": "c3db93c55b3cd0d7a032b5a0c97430b49894816da084ce209d38ceb569f50d21",
+    "tests/foundation/public-peer.test.ts": "52f90ebfc5e03a52031ffed739d45968fe2260eb6835e8344435fee8200b06c1",
+    "tests/foundation/http.test.ts": "bf4fda7251c80a0353da874c0c3756537ea7990567fa569bc098ef88853efd2b",
+    "tests/foundation/config.test.ts": "8238bccfbdd76e6746113f32eb0c7739fa6abbc1d643aa6258ba98caa790d74f",
+    "docker-compose.yml": "3b70fe560fa414267cffd6991bc23ce8416a9ceea855d408d7314a2844c97c32",
+    "compose.public.yml": "bcc7afc36d7b9e338912d8079e183113a70f4db9111af180a4fe1c162f1c498a",
+    "compose.e2e.yml": "34b831c667f79c92356d9ff77acd05db95fc625063bd211e7954ee0ec561f7fa",
+    "Dockerfile": "94ad7e886baaa798de413084cc28eaffb0a6ae89868970cefd54d45ae166006b",
+    "Dockerfile.e2e": "ad09d3d4c36fadfe5e69bd556bc2ef3bf3b54c893d5339542fae28aacbe91ed5",
+    "config/public/Caddyfile": "746758d52c2c3754bea919927729883cd27d635ae35f58da53c91e4af512c7f1",
+    "scripts/e2e.mjs": "27290b813b9229c5db9fc38367ccc7b6ce0c22b514e3ee56985195c71f6539d4",
+    "package.json": "ebb9338d1c2a76a6a19f3fd6811a66f7d8dc12ed6dcd2015a79685e19ba7bdd0",
+    "package-lock.json": "ffc21f121d02583a744683e264efa31d0cc694c33a06cc8490e3cca7364f6b31",
+    ".dockerignore": "49893b1d023e344c324fce26488a487cd069e0835de6ca7c6c743ac5205ad018",
+    "docs/Specification.md": "7e6d118d36a4459927c244c90372e7c66ef7daa282b22e85186496332dc825dd",
+    "docs/Architecture.md": "1a902141862ccbfa411fb853460506a3238b8e6c10ba70a774ea1ba822f6b99c",
+    "docs/Pseudocode.md": "2e2fd7b7a294ce98a57fe1a7c41057e32f6b9e49da3c89f406ff5a126f376ffd",
+    "docs/telemetry/p-replicator/20261014T064554Z-public-ui-53d8/plan.md": "5e5c5a3abec448d3532f73f8b4dc866e2fdfc262598365075dae52450963f6f6"
+  }
+}

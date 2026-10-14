@@ -1,0 +1,136 @@
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+ ✓ tests/sharing/resources.test.ts > account retained quota includes pending assets across projects with concurrent export reservations 436ms
+ ✓ tests/sharing/resources.test.ts > stale export reservations reclaimed by existing cleanup and failed completion removes both files 488ms
+ ✓ tests/sharing/resources.test.ts > refund between export reservation and finish blocks unwatermarked derivative; CAS stale result not ready 318ms
+ ✓ tests/sharing/resources.test.ts > decoder slot admits one process and rejects second without queue; min size enforced 537ms
+ ✓ tests/sharing/resources.test.ts > slow body times out within10s without keeping database clients; pending capacity reclaimed 10328ms
+ ✓ tests/sharing/http.test.ts > AC-sharing-1 actual export strips EXIF, applies N8 pixels, discards raw upload, private PNG hash 856ms
+stderr | tests/sharing/http.test.ts > AC-sharing-1 paid current entitlement outputs clean pixels; refund denies later private bytes
+{"requestId":"72d704b0-b45d-4f75-b995-90d5310b56b1","code":"NOT_FOUND","latencyMs":3}
+
+ ✓ tests/sharing/http.test.ts > AC-sharing-1 paid current entitlement outputs clean pixels; refund denies later private bytes 526ms
+stderr | tests/sharing/http.test.ts > AC-sharing-2 public HTML exposes only selected caption/image, escapes text, sets private attribution cookie; revoke denies page/image
+{"requestId":"811befe1-caa4-4413-8f2a-fada2b698dce","code":"NOT_FOUND","latencyMs":4}
+
+stderr | tests/sharing/http.test.ts > AC-sharing-2 public HTML exposes only selected caption/image, escapes text, sets private attribution cookie; revoke denies page/image
+{"requestId":"bb0c5866-a1cc-4060-bc6e-1d8cac078d82","code":"NOT_FOUND","latencyMs":6}
+
+ ✓ tests/sharing/http.test.ts > AC-sharing-2 public HTML exposes only selected caption/image, escapes text, sets private attribution cookie; revoke denies page/image 560ms
+stderr | tests/sharing/http.test.ts > AC-sharing-3 auth/origin/owner/version/rights refuse before stream read or reservation
+{"requestId":"01f6b1ff-79ef-4b07-a821-7144672bf246","code":"UNAUTHENTICATED","latencyMs":0}
+
+stderr | tests/sharing/http.test.ts > AC-sharing-3 auth/origin/owner/version/rights refuse before stream read or reservation
+{"requestId":"249ef3d5-bc9a-4394-b19f-c7240714b08e","code":"ORIGIN_FORBIDDEN","latencyMs":3}
+
+stderr | tests/sharing/http.test.ts > AC-sharing-3 auth/origin/owner/version/rights refuse before stream read or reservation
+{"requestId":"04b5c5ba-8967-4833-8f61-ff5f83130854","code":"NOT_FOUND","latencyMs":3}
+
+stderr | tests/sharing/http.test.ts > AC-sharing-3 auth/origin/owner/version/rights refuse before stream read or reservation
+{"requestId":"f6df03cb-554b-4e14-be2e-eaa1fbe9cdd5","code":"VERSION_REQUIRED","latencyMs":5}
+
+stderr | tests/sharing/http.test.ts > AC-sharing-3 auth/origin/owner/version/rights refuse before stream read or reservation
+{"requestId":"abd7e9d1-041a-4808-a64e-b58400ac4ba7","code":"RIGHTS_REQUIRED","latencyMs":2}
+
+ ✓ tests/sharing/http.test.ts > AC-sharing-3 auth/origin/owner/version/rights refuse before stream read or reservation 333ms
+stderr | tests/sharing/http.test.ts > malformed/raw URL/SVG external photo/oversized body/over20MP reject with no ready assets or files
+{"requestId":"a7720680-b80d-42f8-b02e-e192189f9eaf","code":"INVALID_EXPORT","latencyMs":122}
+
+stderr | tests/sharing/http.test.ts > malformed/raw URL/SVG external photo/oversized body/over20MP reject with no ready assets or files
+{"requestId":"4ea306f1-b265-4b23-8544-6e0d56526c23","code":"INVALID_EXPORT","latencyMs":130}
+
+stderr | tests/sharing/http.test.ts > malformed/raw URL/SVG external photo/oversized body/over20MP reject with no ready assets or files
+{"requestId":"7a26b36a-5d3a-48f1-a8bc-1a6aed8809e1","code":"ASSET_TOO_LARGE","latencyMs":11}
+
+stderr | tests/sharing/http.test.ts > malformed/raw URL/SVG external photo/oversized body/over20MP reject with no ready assets or files
+{"requestId":"c389442d-ea7c-42d5-a4fc-e715cd8653ba","code":"RASTER_REQUIRED","latencyMs":3}
+
+stderr | tests/sharing/http.test.ts > malformed/raw URL/SVG external photo/oversized body/over20MP reject with no ready assets or files
+{"requestId":"08a31243-65b1-498b-9902-e82e4e051e0b","code":"INVALID_EXPORT","latencyMs":176}
+
+ ✓ tests/sharing/http.test.ts > malformed/raw URL/SVG external photo/oversized body/over20MP reject with no ready assets or files 1054ms
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"9d48a212-a035-44e7-a92f-255a674fb48d","code":"RATE_LIMITED","latencyMs":68}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"053d9469-2583-4da7-9417-a331bddbd4be","code":"RATE_LIMITED","latencyMs":78}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"fd84735d-fbf4-428d-8e02-a187f861c0b9","code":"RATE_LIMITED","latencyMs":86}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"862e15c7-5133-4a1b-b26c-b3ae9c7ff974","code":"RATE_LIMITED","latencyMs":91}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"b8b315f9-55d7-401f-9421-5d287cc4faa9","code":"RATE_LIMITED","latencyMs":123}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"0d76432c-242b-4444-80ae-ece6dacf3482","code":"RATE_LIMITED","latencyMs":122}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"cb950c5a-3614-4cb7-a799-4b2ae280f645","code":"RATE_LIMITED","latencyMs":136}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"64421e04-dbbf-4466-acc0-a2d87e878ede","code":"RATE_LIMITED","latencyMs":137}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"e2b1c61f-24ec-402f-a61b-62b3df00b680","code":"RATE_LIMITED","latencyMs":137}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"598303a3-c55a-4c20-b558-c60ce42fa315","code":"RATE_LIMITED","latencyMs":163}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"e38ecb4a-2e2b-419a-8f20-0edbd33fd0ca","code":"RATE_LIMITED","latencyMs":168}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"1f5ab8cf-fce2-4749-9d67-59ff3c504594","code":"RATE_LIMITED","latencyMs":171}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"160936b1-c9d0-4f33-9225-d80b053c779c","code":"RATE_LIMITED","latencyMs":175}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"3d6237c2-d922-4a5a-87e4-d8de9304cee8","code":"RATE_LIMITED","latencyMs":180}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"e9789137-5fe2-4a8e-a258-b8edcb29cc46","code":"RATE_LIMITED","latencyMs":189}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"b8548cce-14f5-4e42-bd6d-c877a5b284f9","code":"RATE_LIMITED","latencyMs":191}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"59e8e1aa-e557-4df0-bdf8-5a417e8b5860","code":"RATE_LIMITED","latencyMs":191}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"dfd48535-6719-4f20-b1b2-d0948dcce89b","code":"RATE_LIMITED","latencyMs":197}
+
+stderr | tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+{"requestId":"a330bc6e-678d-45e8-aa20-8c2af7a88570","code":"RATE_LIMITED","latencyMs":200}
+
+ ✓ tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds 1187ms
+stderr | tests/sharing/http.test.ts > forged disk bytes rejected before publication and every image delivery
+{"requestId":"4f007b91-7768-4929-9214-0c7b6e8dc1a9","code":"NOT_FOUND","latencyMs":4}
+
+stderr | tests/sharing/http.test.ts > forged disk bytes rejected before publication and every image delivery
+{"requestId":"22d1aac4-6cdb-4439-aba5-d48d20d17671","code":"NOT_FOUND","latencyMs":9}
+
+ ✓ tests/sharing/http.test.ts > forged disk bytes rejected before publication and every image delivery 938ms
+ ✓ tests/sharing/http.test.ts > arrival proof cannot be forged/replayed after30minutes; URL hint alone is not attribution 451ms
+ ✓ tests/sharing/repository.test.ts > AC-sharing-1/3 server watermark/provenance and ownership; ordinary photos cannot publish 850ms
+ ✓ tests/sharing/repository.test.ts > AC-sharing-2 random hashed token, frozen public DTO, owner revoke and archive fail closed 394ms
+ ✓ tests/sharing/repository.test.ts > expiry checked on every request and archived project blocks even nonrevoked links 364ms
+ ✓ tests/sharing/repository.test.ts > asset immutable provenance and share content reject direct edits; false must be boolean 430ms
+ ✓ tests/sharing/repository.test.ts > pending export quota serializes concurrent requests with Space uploader, account ceiling and count64 556ms
+ ✓ tests/sharing/repository.test.ts > CAS finish and simultaneous publish have one winner; design relationship cannot be forged 405ms
+ ✓ tests/sharing/repository.test.ts > verified entitlement removes watermark; refund revokes only paid links and private image access 388ms
+ ✓ tests/sharing/repository.test.ts > independent account barrier: refund commits before waiting publisher rechecks entitlement 414ms
+ ✓ tests/sharing/repository.test.ts > independent publish barrier: verified refund waits then revokes freshly created paid share atomically 429ms
+ ✓ tests/sharing/growth.test.ts > AC-sharing-4 duplicate event keys insert once under concurrency; only pseudonymous IDs and empty data 401ms
+ ✓ tests/sharing/growth.test.ts > AC-sharing-5/6 explicit 30-day readonly counts are zero, one, or unknown on storage failure 360ms
+ ✓ tests/sharing/growth.test.ts > first design and actual new project events derive unique owner-project keys 425ms
+
+ Test Files  4 passed (4)
+      Tests  25 passed (25)
+   Start at  23:59:44
+   Duration  25.03s (tests 96%, import 2%, transform 2%)
+

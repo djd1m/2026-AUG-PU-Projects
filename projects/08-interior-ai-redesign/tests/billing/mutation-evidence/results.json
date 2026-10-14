@@ -1,0 +1,27 @@
+{
+  "observedAt": "2026-10-13T23:28:33.716Z",
+  "results": [
+    {
+      "name": "merchant-proof",
+      "file": "packages/domain/src/billing/index.ts",
+      "test": "tests/billing/repository.test.ts",
+      "title": "merchant/test/amount/currency/paid/status/metadata/bound-id negatives",
+      "originalSha256": "d814541b181475c0b6f7b106676e030d6be5d257fc2eddbbc4d47a160cbd9384",
+      "mutatedSha256": "b1da83cc04c5a6af57de174fc492738ee96d057b68b5340cd4efb0a5fedfb5ef",
+      "restoredSha256": "d814541b181475c0b6f7b106676e030d6be5d257fc2eddbbc4d47a160cbd9384",
+      "redExit": 1,
+      "restoredExit": 0
+    },
+    {
+      "name": "refund-account-hold",
+      "file": "packages/db/src/billing.ts",
+      "test": "tests/billing/refund.test.ts",
+      "title": "refund before actual PgJobs dispatch mark",
+      "originalSha256": "ab601efc9e0d7d74c2b240686d16fc57007beeba5f14c5cc3d33f38696952260",
+      "mutatedSha256": "9c7dabe4e67b07c184977c97ec54ba20ec1271e55ec7c8d012982027a6204547",
+      "restoredSha256": "ab601efc9e0d7d74c2b240686d16fc57007beeba5f14c5cc3d33f38696952260",
+      "redExit": 1,
+      "restoredExit": 0
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+../../../../.claude/rules/project-work-companion-local.md

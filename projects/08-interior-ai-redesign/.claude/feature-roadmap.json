@@ -1,0 +1,123 @@
+{
+  "version": "1.0",
+  "project": "N8 homeowner CJM A",
+  "generated": "2026-10-13",
+  "generated_from": [
+    "docs/Specification.md",
+    "docs/Pseudocode.md",
+    "docs/Architecture.md",
+    "docs/validation-report.md"
+  ],
+  "notes": {
+    "state": "Source CAVEATS accepted, application not yet implemented.",
+    "limits": "Two children, user-approved overallXL, no paid/public actions.",
+    "core": "Root shared toolkit linked, no vendor copies/config changes."
+  },
+  "features": [
+    {
+      "id": "foundation",
+      "number": 1,
+      "title": "Аккаунты, приватные проекты, safe runtime",
+      "description": "Аккаунты, приватные проекты, safe runtime",
+      "priority": "mvp",
+      "status": "next",
+      "complexity": "complex",
+      "depends_on": [],
+      "blockers": []
+    },
+    {
+      "id": "space",
+      "number": 2,
+      "title": "Обмеры, GLB/images и references",
+      "description": "Обмеры, GLB/images и references",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "depends_on": [
+        "foundation"
+      ],
+      "blockers": [
+        "foundation"
+      ]
+    },
+    {
+      "id": "design",
+      "number": 3,
+      "title": "3D/версии/constrained jobs",
+      "description": "3D/версии/constrained jobs",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "depends_on": [
+        "space"
+      ],
+      "blockers": [
+        "space"
+      ]
+    },
+    {
+      "id": "procurement",
+      "number": 4,
+      "title": "Товары/бюджет/замены/ownerCSV",
+      "description": "Товары/бюджет/замены/ownerCSV",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "depends_on": [
+        "design"
+      ],
+      "blockers": [
+        "design"
+      ]
+    },
+    {
+      "id": "billing",
+      "number": 5,
+      "title": "ЮKassa package capability/verified ledger",
+      "description": "ЮKassa package capability/verified ledger",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "depends_on": [
+        "foundation"
+      ],
+      "blockers": [
+        "foundation"
+      ]
+    },
+    {
+      "id": "sharing",
+      "number": 6,
+      "title": "Watermarked export/private image/revoke",
+      "description": "Watermarked export/private image/revoke",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "depends_on": [
+        "design",
+        "billing"
+      ],
+      "blockers": [
+        "design",
+        "billing"
+      ]
+    },
+    {
+      "id": "integration",
+      "number": 7,
+      "title": "Full journey/restart/performance",
+      "description": "Full journey/restart/performance",
+      "priority": "mvp",
+      "status": "blocked",
+      "complexity": "complex",
+      "depends_on": [
+        "procurement",
+        "sharing"
+      ],
+      "blockers": [
+        "procurement",
+        "sharing"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+
+ RUN  v5.0.4 /tmp/n8-billing-author-20261013/projects/08-interior-ai-redesign
+
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-2 parallel same-key checkout has one durable order and provider id; client prices rejected 430ms
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > provider blocked outside DB transaction; intent already durable; timeout replay keeps same remote key 304ms
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > stale unknown remote outcome cannot charge again after provider 24h idempotence horizon 290ms
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-3 verified concurrent delivery grants exactly one package and one event; return GET is read-only 362ms
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-4 merchant/test/amount/currency/paid/status/metadata/bound-id negatives leave ledger empty 329ms
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > notification amount/status/merchant fields are ignored; only refetched object grants 332ms
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-5 verification outage occupies no event key; later retry grants once 323ms
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > database failure rolls back event/order/credits together and leaves retry possible 346ms
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > owned order reads hide foreign IDs and history cursor returns all 53 orders without overlap 433ms
+ ✓ tests/billing/repository.test.ts > DDL immutable intent and bound identity survive direct SQL; refund state cannot be restored by late write 389ms
+ ✓ tests/billing/repository.test.ts > verified webhook can arrive before create response persistence; later bind never downgrades succeeded state 314ms
+ ✓ tests/billing/repository.test.ts > merchant/test config rotation cannot replay or verify an immutable intent against another provider identity 303ms
+stderr | tests/billing/http.test.ts > AC-billing-1 default off checkout503 webhook404 before body; offers honest empty and no external calls
+{"requestId":"2dd4f84b-c036-4208-ac44-b8609e726834","code":"PAYMENTS_DISABLED","latencyMs":5}
+
+stderr | tests/billing/http.test.ts > AC-billing-1 default off checkout503 webhook404 before body; offers honest empty and no external calls
+{"requestId":"13fd5946-0163-463d-893f-e578f2a5490e","code":"NOT_FOUND","latencyMs":0}
+
+ ✓ tests/billing/http.test.ts > AC-billing-1 default off checkout503 webhook404 before body; offers honest empty and no external calls 349ms
+ ✓ tests/billing/http.test.ts > live startup requires explicit merchant/test/SKU and HTTPS origin; public offers expose whitelist only 324ms
+stderr | tests/billing/http.test.ts > checkout pre-body authentication, exact Origin and atomic rate guard; no project CAS needed
+{"requestId":"4a5afd3f-158c-410a-8945-98ac3afa8f0c","code":"UNAUTHENTICATED","latencyMs":0}
+
+stderr | tests/billing/http.test.ts > checkout pre-body authentication, exact Origin and atomic rate guard; no project CAS needed
+{"requestId":"349ddeb2-5b2a-42da-81fc-7c2ce0b35165","code":"ORIGIN_FORBIDDEN","latencyMs":5}
+
+stderr | tests/billing/http.test.ts > checkout pre-body authentication, exact Origin and atomic rate guard; no project CAS needed
+{"requestId":"5495740b-4317-49ee-b112-ff7f856b89f9","code":"ORIGIN_FORBIDDEN","latencyMs":2}
+
+stderr | tests/billing/http.test.ts > checkout pre-body authentication, exact Origin and atomic rate guard; no project CAS needed
+{"requestId":"fcf9393a-52f2-4d20-b853-19791e3818b6","code":"RATE_LIMITED","latencyMs":3}
+
+ ✓ tests/billing/http.test.ts > checkout pre-body authentication, exact Origin and atomic rate guard; no project CAS needed 415ms
+stderr | tests/billing/http.test.ts > billing HTTP rejects JSON size/schema/key and never creates orders for malformed inputs
+{"requestId":"1de096df-cfaf-4fcf-816d-699e2f422222","code":"INVALID_JSON","latencyMs":4}
+
+stderr | tests/billing/http.test.ts > billing HTTP rejects JSON size/schema/key and never creates orders for malformed inputs
+{"requestId":"502c1644-7542-472b-8c15-a52594884f5b","code":"BODY_TOO_LARGE","latencyMs":3}
+
+stderr | tests/billing/http.test.ts > billing HTTP rejects JSON size/schema/key and never creates orders for malformed inputs
+{"requestId":"d602df23-0053-4d86-8e0e-f67a389c1a30","code":"INVALID_INPUT","latencyMs":3}
+
+stderr | tests/billing/http.test.ts > billing HTTP rejects JSON size/schema/key and never creates orders for malformed inputs
+{"requestId":"41b079ed-ded4-4975-8607-c52dccf401c2","code":"IDEMPOTENCY_REQUIRED","latencyMs":4}
+
+stderr | tests/billing/http.test.ts > billing HTTP rejects JSON size/schema/key and never creates orders for malformed inputs
+{"requestId":"c1cab6eb-c95b-48eb-8b0e-4aaf846b0fd8","code":"UNKNOWN_SKU","latencyMs":5}
+
+ ✓ tests/billing/http.test.ts > billing HTTP rejects JSON size/schema/key and never creates orders for malformed inputs 325ms
+stderr | tests/billing/http.test.ts > webhook source rejected before bounded body; XFF cannot restore identity; mapped official peer accepted
+{"requestId":"9b035658-c3c4-466a-9f13-e1aab7888058","code":"PAYMENT_SOURCE_FORBIDDEN","latencyMs":0}
+
+stderr | tests/billing/http.test.ts > webhook source rejected before bounded body; XFF cannot restore identity; mapped official peer accepted
+{"requestId":"204ed0ea-085b-44dc-a131-f3c48d6d6c32","code":"PAYMENT_SOURCE_FORBIDDEN","latencyMs":0}
+
+stderr | tests/billing/http.test.ts > webhook source rejected before bounded body; XFF cannot restore identity; mapped official peer accepted
+{"requestId":"712600f6-b11e-4763-a208-a682775f005b","code":"PAYMENT_SOURCE_FORBIDDEN","latencyMs":5}
+
+stderr | tests/billing/http.test.ts > webhook source rejected before bounded body; XFF cannot restore identity; mapped official peer accepted
+{"requestId":"433e06e1-df08-495d-9432-8ad6ba250957","code":"INVALID_PEER","latencyMs":0}
+
+stderr | tests/billing/http.test.ts > webhook source rejected before bounded body; XFF cannot restore identity; mapped official peer accepted
+{"requestId":"83eb49f2-6a32-42bc-af18-8bcb9ad4bda8","code":"INVALID_PEER","latencyMs":0}
+
+ ✓ tests/billing/http.test.ts > webhook source rejected before bounded body; XFF cannot restore identity; mapped official peer accepted 301ms
+stderr | tests/billing/http.test.ts > actual HTTP listener overwrites spoofed source headers from loopback socket before webhook; no parsing/grant
+{"requestId":"f99c972e-1eac-44e2-9084-6c4f0480c81a","code":"PAYMENT_SOURCE_FORBIDDEN","latencyMs":0}
+
+ ✓ tests/billing/http.test.ts > actual HTTP listener overwrites spoofed source headers from loopback socket before webhook; no parsing/grant 329ms
+stderr | tests/billing/http.test.ts > webhook malformed/oversized body and rate failure never invoke provider or occupy event
+{"requestId":"660e59e8-a353-4040-8cc7-ab12199fda0d","code":"INVALID_JSON","latencyMs":2}
+
+stderr | tests/billing/http.test.ts > webhook malformed/oversized body and rate failure never invoke provider or occupy event
+{"requestId":"118cb8e7-5378-4b1c-8575-9cf66b33bc0b","code":"BODY_TOO_LARGE","latencyMs":1}
+
+stderr | tests/billing/http.test.ts > webhook malformed/oversized body and rate failure never invoke provider or occupy event
+{"requestId":"55e39b0a-3449-48e2-91a6-ff957da407ce","code":"PAYMENT_PROOF_INVALID","latencyMs":2}
+
+stderr | tests/billing/http.test.ts > webhook malformed/oversized body and rate failure never invoke provider or occupy event
+{"requestId":"7107e594-46fb-4fb2-96e5-7b9a13437337","code":"RATE_LIMITED","latencyMs":1}
+
+ ✓ tests/billing/http.test.ts > webhook malformed/oversized body and rate failure never invoke provider or occupy event 289ms
+stderr | tests/billing/http.test.ts > owned return/history GET never grants credits; foreign ID404; DTO omits merchant/remote/account
+{"requestId":"7b897f97-6131-4c43-8b5b-0d7bfffb2144","code":"NOT_FOUND","latencyMs":1}
+
+ ✓ tests/billing/http.test.ts > owned return/history GET never grants credits; foreign ID404; DTO omits merchant/remote/account 312ms
+ ✓ tests/billing/http.test.ts > provider/source test injection is forbidden under production; no fake runtime config accepted 328ms
+ ✓ tests/billing/refund.test.ts > AC-billing-6 partial refund distinct object verified via payment_id; replay cannot restore export or new billing 448ms
+ ✓ tests/billing/refund.test.ts > refund before late payment succeeds is monotonic; success audited ignored with zero credits 298ms
+ ✓ tests/billing/refund.test.ts > parallel success/refund always ends in durable hold, never duplicate credits 483ms
+ ✓ tests/billing/refund.test.ts > refund rejects nonpositive/excess/currency/unpaid/original-link proofs without occupying ledger 331ms
+ ✓ tests/billing/refund.test.ts > refund atomically revokes existing unwatermarked shares while watermarked snapshot remains; failure rolls back hold/revoke/event 359ms
+ ✓ tests/billing/refund.test.ts > refund before actual PgJobs dispatch mark releases held admission and prevents external dispatch 346ms
+ ✓ tests/billing/refund.test.ts > refund after dispatch mark leaves in-flight held job visible; no false cancellation or inline spend-lock settlement 328ms
+ ✓ tests/billing/provider.test.ts > offline HTTP adapter creates exact RUB intent with Basic merchant auth and order UUID idempotence; retries same remote ID 60ms
+ ✓ tests/billing/provider.test.ts > offline HTTP adapter gets payment and distinct partial refund payment_id, exact decimal and safe HTTPS 20ms
+ ✓ tests/billing/provider.test.ts > adapter rejects wrong merchant/test/currency/object ID/metadata/decimal before trusting provider object 33ms
+ ✓ tests/billing/provider.test.ts > provider HTTP redirect/error/content-type/invalid JSON/oversized declared and streamed bodies fail bounded with redacted503 25ms
+ ✓ tests/billing/provider.test.ts > deadline covers both response headers and endless response body; no unbounded text allocation 65ms
+ ✓ tests/billing/provider.test.ts > closed official source networks support IPv4-mapped peers; loopback, gateway, missing and unknown never allowed 1ms
+ ✓ tests/billing/provider.test.ts > production cannot inject test transport or endpoint; secrets stay server-only constructor 1ms
+
+ Test Files  4 passed (4)
+      Tests  35 passed (35)
+   Start at  23:27:22
+   Duration  11.13s (tests 95%, import 3%, transform 2%)
+

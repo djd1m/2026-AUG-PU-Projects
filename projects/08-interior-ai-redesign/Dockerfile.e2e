@@ -1,0 +1,10 @@
+# Reuse exact application Node24 and audited dependency lock; add browser tools only.
+ARG N8_APP_IMAGE=n8-interior-app:local
+FROM ${N8_APP_IMAGE}
+COPY --chown=node:node scripts/public-ui-audit.mjs /app/scripts/public-ui-audit.mjs
+USER root
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && update-ca-certificates && npx --no-install playwright install --with-deps chromium firefox webkit && chmod -R a+rX /ms-playwright
+USER node
+ENV NODE_ENV=test
+CMD ["node", "scripts/e2e.mjs"]

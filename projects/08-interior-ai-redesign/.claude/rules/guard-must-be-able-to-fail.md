@@ -1,0 +1,1 @@
+../../../../.claude/rules/guard-must-be-able-to-fail.md

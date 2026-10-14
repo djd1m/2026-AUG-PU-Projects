@@ -1,0 +1,13 @@
+ Container n8-interior-local-migrate-run-32c96c7bda94 Creating 
+ Container n8-interior-local-migrate-run-32c96c7bda94 Created 
+
+> n8-interior-planner@0.1.0 migrate
+> node --env-file-if-exists=.env --import tsx packages/db/src/migrate.ts
+
+.env not found. Continuing without it.
+Migrations applied
+npm notice
+npm notice New major version of npm available! 11.19.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

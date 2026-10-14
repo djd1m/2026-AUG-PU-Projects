@@ -1,0 +1,60 @@
+{
+  "observed_at": "2026-10-14T01:33:03.850220+00:00",
+  "status": "passed",
+  "build_revision": "docker:sha256:3ac28e68ccef3576d428547f04bbbb9df3097bb8baf28823bdd87076611369cb",
+  "next_build": "z7Mp9IiPagz7p0uRCxACH",
+  "corrected_source_image_matches": {
+    "packages/db/src/design/revisions.ts": "493c0efda2edae3812846bec3e0b5b6e44b7d34b61cb2a236f8bc1c14e9408ec",
+    "packages/db/src/design/jobs.ts": "c9387e20575b3573da0715c4762c659973d9d7681dc6811cab308f766240a7e7",
+    "packages/domain/src/design/scene.ts": "2422f37cdba7f80253ae5194954074869a79139dbda5f58beb91d2235b6342e5",
+    "tests/design/revisions.test.ts": "efd6674d523d2484ab5f447244a5c1903e5bb53b97f8cfe0ed6b28c3ea33b17f"
+  },
+  "unchanged_prior_integration_source_image_matches": {
+    "apps/worker/src/index.ts": "ad36a63c704f9077d039d95c40898e188d7d3c52a35ff550bd834f93ecd2a64f",
+    "apps/worker/src/jobs.ts": "6cd5cf91ad9c7a7c03ec0677987cd9573e8434181b7a7c589e49e92d97d8f9f1",
+    "apps/worker/src/watchdog.ts": "91e061d4d6694f3a1d0b7ba1ff3c07304d75a25e4f4fe764d85b10325bf9e6a1",
+    "apps/worker/src/runtime.ts": "1b0870c88f16ada044dfc8592ea15e5833c971f4bde8ffc21adc3f33d31056b3",
+    "apps/web/src/server/config.ts": "673be7cf1abafea2740ba20fd6d0366473a4bf93e27ed013fd29e1f75e8d4614",
+    "apps/web/src/server/health.ts": "d3cce6e3f6932682f69c1943ff8a9aff40c680b847311d8edd485f38190c52d4",
+    "scripts/benchmark.ts": "ea14bdb32fd26b15eafc06da6092950a91cd56a47c60f2bc6984ddca1f83b334",
+    "tests/procurement/fixture.ts": "76295d792f60b69da41338907d39c8d46664aa0378ee8ad85f25f5566a7191f9",
+    "package-lock.json": "5e9634e16705c578747fdc3344c6b40a1a9751cc438b7ad346f9b51a5659707c",
+    "packages/domain/src/procurement/schemas.ts": "8a5fd0e11744f51b76347917dd0debd8bbebc6e42b02c81eafff9a51684e840d",
+    "packages/domain/src/procurement/calculator.ts": "a56e8894e98ce2ba019df4f2a38e90d011fae404b2da0793af98a8078cdf43ca",
+    "packages/domain/src/procurement/index.ts": "623096e7d5e5e6566093ff4fd199683d9438446dc1eb7c1ce55f5173d12cce4e",
+    "packages/domain/src/procurement/types.ts": "fbb12748095281ff1e8abfc241ce7a9b13240b029a7545c4482bf01e52c37da1",
+    "packages/domain/src/procurement/csv.ts": "7f0c99989be51810bb373845b25f8bda8c369edc8664a9190bac05c7c6b14904"
+  },
+  "runtime": [
+    {
+      "name": "/n8-interior-local-web-1",
+      "image": "sha256:3ac28e68ccef3576d428547f04bbbb9df3097bb8baf28823bdd87076611369cb",
+      "health": "healthy",
+      "created": "2026-10-14T01:31:51.477672213Z",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "3088"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/n8-interior-local-worker-1",
+      "image": "sha256:3ac28e68ccef3576d428547f04bbbb9df3097bb8baf28823bdd87076611369cb",
+      "health": "healthy",
+      "created": "2026-10-14T01:31:51.477029938Z",
+      "ports": {}
+    },
+    {
+      "name": "/n8-interior-local-db-1",
+      "image": "sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4",
+      "health": "healthy",
+      "created": "2026-10-13T22:59:07.809902442Z",
+      "ports": {}
+    }
+  ],
+  "parent_full_manifest_sha256": "426ed9f08b208346b7eb2c54936cfde52e556f117bdc3b7b3cf5abeab0336ed5",
+  "runtime_tests_rerun_by_reviewer": 0
+}

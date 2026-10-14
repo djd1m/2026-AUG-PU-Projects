@@ -1,0 +1,25 @@
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+ ❯ tests/integration/read-pages.test.ts (3 tests | 1 failed) 927ms
+   × READ-R2 current cart remains bounded with540 historical cloned lines; owned design filter and cursor enforce scope 293ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/read-pages.test.ts > READ-R2 current cart remains bounded with540 historical cloned lines; owned design filter and cursor enforce scope
+error: null value in column "mode" of relation "design_revision" violates not-null constraint
+ ❯ node_modules/pg-pool/index.js:45:11
+ ❯ tests/integration/read-pages.test.ts:15:797
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 6 passed (7)
+   Start at  00:44:07
+   Duration  2.89s (tests 80%, import 11%, transform 9%, worker 1%)
+
+    Isolate  3 workers spawned · ~139ms startup each (spawn + environment, per file)
+             at least ~278ms faster with isolate: false — reuses workers across files instead of one per file
+

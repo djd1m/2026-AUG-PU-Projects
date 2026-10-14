@@ -1,0 +1,17 @@
+{
+  "testTitle": "SC-US-023-1 delayed saved-budget hydration preserves active unsaved cost and limit edits",
+  "status": "passed",
+  "startedAt": "2026-10-14T01:17:47.852Z",
+  "finishedAt": "2026-10-14T01:17:48.496Z",
+  "buildRevision": "docker:sha256:e5be7120110b92ed9b15b163638e65e339c796b16a0b567e166f53e11d8d8d21",
+  "observed": {
+    "kind": "estimate",
+    "limit": "12345"
+  },
+  "expected": {
+    "kind": "estimate",
+    "limit": "12345"
+  },
+  "productMutations": 0,
+  "liveCalls": 0
+}
