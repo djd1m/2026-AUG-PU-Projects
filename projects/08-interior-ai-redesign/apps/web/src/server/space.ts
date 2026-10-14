@@ -1,6 +1,6 @@
 import { DomainError } from '@n8/domain/common';
 import { createSpaceRepository, type UploadKind } from '@n8/db/space';
-import { createAssetUploader, readPrivateAsset, assetPath } from '@n8/adapters/assets';
+import { createAssetUploader, readPrivateAsset, assetPath, removeAssetFile } from '@n8/adapters/assets';
 import { recognizeDrawing } from '@n8/adapters/floorplan';
 import { getBase, type Base } from './composition';
 import { guardRequest, readJson, route, success, RateLimitError } from './http';
@@ -37,7 +37,8 @@ export function createSpaceHandlers(base:Base,options:{recognize?:typeof recogni
    const result=await repository.createReference(actor.accountId,projectId,actor.expectedVersion!,input);return success(result.reference,requestId,201,result.version);
   })(request),
   asset:(request:Request,assetId:string)=>route(async(req,requestId)=>{
-   const actor=await guardRequest(req,{access:'read'},base,requestId);const asset=await repository.ownedAsset(actor.accountId,assetId);
+   const actor=await guardRequest(req,{access:req.method==='DELETE'?'mutation':'read',expectedVersion:req.method==='DELETE'},base,requestId);const asset=await repository.ownedAsset(actor.accountId,assetId);
+   if(req.method==='DELETE'){const deleted=await repository.deleteUnusedGlb(actor.accountId,asset.project_id,actor.expectedVersion!,assetId);try{await removeAssetFile(base.config.assetDir,deleted.originalKey);if(deleted.normalizedKey)await removeAssetFile(base.config.assetDir,deleted.normalizedKey);}catch{console.error(JSON.stringify({code:'ASSET_CLEANUP_PENDING'}));}return success({deletedAssetId:assetId},requestId,200,deleted.version);}
    // Prepared exports use a dedicated entitlement-aware endpoint; never expose originals here.
    if(asset.kind==='share_image')throw new DomainError(404,'NOT_FOUND','Файл не найден');
    const original=new URL(req.url).searchParams.get('original')==='1';const key=original||asset.kind==='glb'?asset.original_key:asset.normalized_key;

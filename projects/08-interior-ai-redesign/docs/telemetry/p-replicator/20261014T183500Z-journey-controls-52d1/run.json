@@ -1,0 +1,48 @@
+{
+  "run_id": "20261014T183500Z-journey-controls-52d1",
+  "started_at": "2026-10-14T18:35:49.892903+00:00",
+  "budget_minutes": 5,
+  "status": "incomplete_at_user_time_limit",
+  "profile": "compact-quality-first-v2",
+  "tier": "M",
+  "source_revision": "2290070f23551aed36c73a106c69c1bde8788d43",
+  "scope": "Delete unreferenced GLB with owner/CAS/history guards, clear GLBselection, nextstep prompts, explicit perdesign reference subset reusedforAI preview",
+  "ac": [
+    "delete unusedGLB removesownerGET/list/file; retainedshellsource409 andforeign404",
+    "chooseGLB previews selected source, persistedbasischangesonlyafterconfirmation",
+    "savedstages showexplicit nextbutton withoutautonavigation or hidingunknowncosts",
+    "manualrevision storesselectedrefIDs and reload/historyrestorepreserves; AIpreview sharesselection"
+  ],
+  "models": [
+    {
+      "role": "coordinator",
+      "actual": null
+    },
+    {
+      "role": "reviewer",
+      "requested": "gpt-6-astra",
+      "effort": "high",
+      "actual": null
+    }
+  ],
+  "tokens": null,
+  "cost": null,
+  "reuse": "Existing N8 assetcleanup/privateownership, tabs and versionedreferenceIds; prior01-07 upload/revision patterns retained; no new dependencies. Roottooling unchanged.",
+  "process": "M direct; previous fullfeature globalgate legacy blockers remain outside scope",
+  "finished_at": "2026-10-14T18:41:21.761428+00:00",
+  "elapsed_seconds": 331.868525,
+  "checks": {
+    "full_regression": "261pass",
+    "typecheck_lint_build": "pass",
+    "mutation": "historyguard mutation fails targetedtest as intended",
+    "independent_review": "hydration finding corrected after firstpass, no independent closure",
+    "browser": "ui-1 firstGLBselection/nativeShellpass; immediateunuseddelete409 before UIversionrefresh, remainingcasesnotrun"
+  },
+  "delivery": "https://n8.77.83.87.178.sslip.io",
+  "pending": [
+    "Investigate UIcase409: await shell-save refresh vs disable concurrentdelete",
+    "Complete DELETE/reference-subset/nextstage realbrowser checks",
+    "Commit/push onlyafter relevantcheck closure"
+  ],
+  "git": "workingtree retained uncommitted; priorGitHEADunchanged"
+}

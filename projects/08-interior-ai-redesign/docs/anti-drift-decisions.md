@@ -123,3 +123,10 @@ Owner confirmed routing-only fix did not resolve Scaniverse texture error and in
 
 ## DRIFT-038 — preview and real picks before scale confirmation
 Owner replaces unexplained coordinate inputs with immediate private preview and real surface A/B clicks; distance-only measured path, or explicitnative1:1 with no syntheticanchors. Preview does not fabricate a persisted shell. Domain strictly rejects native falseproof/extra scale/anchors; legacy measured hashes unchanged. Viewer restricts picks to imported meshes and tracks drag movement; WebGL loss disables controls. Independentreview found drag-return and errorpropagation gaps, corrected before browser checks. Fullfeature attempted but globaltraceability gate fails on pre-existing floorplan-import missing pseudocode and gemini-weekly undeclared IDs; disclosed switch to permittedM process, not a fullfeature completion claim.
+
+## DRIFT-039 — explicit file, reference and journey choices
+Owner requests GLB selection/deletion and nextstage prompts. Existing asset path adds authenticated DELETE with Account→Project/CAS guard, all historical shell/reference checks and privatefile cleanup; usedsource409/foreign404. Preserve immutablehistory, no hidden source switch before calibration. Design saves explicit selectedreferenceIds instead of allprojectrefs; restorecurrent/history selection and share it with AIpreview. Review found reference editing before hydration; block editor until currentrevision is hydrated. NextStepHint reusable navigation follows saveddata without claiming unknownpricescomplete.
+
+
+## DRIFT-040 — GLB palette binding and design deletion
+Use installed Babylon _internalMetadata glTF primitive pointers with public metadata fallback. Palette/color edits select After. Logical design deletion retains historical content and budgets, hides deleted variants, revokes their shares and resets preview to surviving current design. Local palette helper explicitly does not claim Gemini or reference image analysis. Provider BYOK metadata blocks live inference. Four public journey checks pass; final design browser checks remain unverified after palette locator timeout at the time limit.

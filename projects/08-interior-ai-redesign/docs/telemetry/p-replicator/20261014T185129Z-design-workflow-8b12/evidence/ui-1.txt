@@ -1,0 +1,19 @@
+PASS choose source GLB and persist only after explicit scale confirmation
+PASS unused GLB deletes via UI; current/history source protected
+PASS saved space and references offer explicit next stage buttons
+PASS reference subset persists for current design through reload
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.selectOption: Timeout 30000ms exceeded.
+Call log:
+  - waiting for getByLabel('Палитра', { exact: true })
+
+    at /app/scripts/e2e-design-workflow.mjs:9:376
+    at async check (/app/scripts/e2e-design-workflow.mjs:2:434)
+    at async file:///app/scripts/e2e-design-workflow.mjs:9:1 {
+  name: 'TimeoutError'
+}
+
+Node.js v24.21.0
