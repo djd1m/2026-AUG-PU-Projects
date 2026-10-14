@@ -1,0 +1,17 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.screenshot: Element is not attached to the DOM
+Call log:
+  - taking element screenshot
+  - waiting for fonts to load...
+  - fonts loaded
+  - attempting scroll into view action
+    - waiting for element to be stable
+
+    at /app/scripts/e2e-pinterest-import.mjs:19:1462 {
+  name: 'Error'
+}
+
+Node.js v24.21.0

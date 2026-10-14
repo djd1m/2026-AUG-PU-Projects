@@ -1,0 +1,9 @@
+# Public Pinterest images in reference design
+
+FR-pinterest-import-1: Selected owned URL reference resolves public Pinterest pin or ideas page to actual image candidates without manual user download. Pin uses its own og:image, never unrelated recommendations. Ideas page offers up to8 deduplicated current-page image candidates.
+AC-pinterest-import-1: URLs limited to HTTPS explicit Pinterest hosts/public paths; no credentials, customports, arbitraryhost/IP, private DNS, cross-host unsafe redirect. Image only fixed i.pinimg.com paths. Bounded response/redirect/timeout, no cookies/secrets sent, no evaluated HTML/JS or login/CAPTCHA bypass.
+AC-pinterest-import-2: Auth/exactOrigin/projectownership/CAS and reference ownership checked before outbound; use existing private uploader, rights already confirmed, decoder/storage quotas, create image reference then select it; original link/history retained. No DB transaction held across network. Failed imports never create a design.
+AC-pinterest-import-3: Selecting link loads visible thumbnail candidates automatically; user selects candidate for pin/ideas. Main Apply resolves selected link candidates and applies real images; uploads appear only after actual import failure or unsupported source.
+AC-pinterest-import-4: Real public pin and actual saved ideas URL checked; tests include privateDNS/host/redirect/size failures and owned import/CAS. Full regression/build/independent review/public browser required. No Gemini or full-style transfer claim.
+
+Reuse: N8 private upload+CAS+references/colour pipeline; projects01-07 have no Pinterest/network fetch equivalent found; N6 bounded network patterns inspected. GitHub pinterest/api-quickstart requires OAuth, unsuitable for uncredentialed public references; public HTML og:image and i.pinimg CDN observed in both owner URLs. No dependency copied/added.

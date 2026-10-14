@@ -1,0 +1,5 @@
+
+> n8-interior-planner@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+packages/adapters/src/pinterest.ts(15,234): error TS2353: Object literal may only specify known properties, and 'autoSelectFamily' does not exist in type 'RequestOptions'.

@@ -1,0 +1,35 @@
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+ ❯ tests/space/pinterest.test.ts (4 tests | 2 failed) 22ms
+   × exact Pinterest/CDN hosts and public IPv4 only; private DNS or mixed records reject 9ms
+   × safe redirect follows but external/CDN redirect escape, oversized/error/mime and substituted choice fail closed 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/space/pinterest.test.ts > exact Pinterest/CDN hosts and public IPv4 only; private DNS or mixed records reject
+AssertionError: expected [Function] to throw an error
+ ❯ tests/space/pinterest.test.ts:5:347
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/space/pinterest.test.ts > safe redirect follows but external/CDN redirect escape, oversized/error/mime and substituted choice fail closed
+AssertionError: expected 4 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 4
+
+ ❯ tests/space/pinterest.test.ts:7:1067
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  20:03:31
+   Duration  309ms (transform 45%, import 32%, tests 18%, worker 5%)
