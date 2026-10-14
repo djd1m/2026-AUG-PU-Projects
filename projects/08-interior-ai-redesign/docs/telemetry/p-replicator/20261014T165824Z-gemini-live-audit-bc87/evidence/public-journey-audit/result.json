@@ -1,0 +1,1191 @@
+{
+  "status": "passed_with_observation",
+  "startedAt": "2026-10-14T17:03:54.084Z",
+  "finishedAt": "2026-10-14T17:04:04.762Z",
+  "sourceRevision": "47c4e6fb3f1e336822f97af227a1e5f905925b28",
+  "buildRevision": "sha256:181590da9bf545d69fb927e56abb5da50f52f5ead7bd3d0fdcca8a45d90058ee",
+  "fixtureBuildRevision": "sha256:cfb77c15210f0ece9d8b0ab18bee285daee65666ebafdc5b476bd24802b40c61",
+  "engine": "chromium",
+  "scope": "read-only public UI audit; the sole server mutation was synthetic-fixture login, which creates a session",
+  "dashboard": {
+    "hasAccountCapabilities": true,
+    "aiManualText": true,
+    "paymentsOffText": true,
+    "manualAvailableText": true
+  },
+  "account": {
+    "aiMode": "manual",
+    "paymentsMode": "off",
+    "creditsAvailable": 0,
+    "creditsHeld": 0,
+    "paidExport": false,
+    "billingHold": false,
+    "aiUsage": {
+      "admissionsToday": 0,
+      "admissionsLimit": 5,
+      "reservedMicroUsd": 0,
+      "knownMicroUsd": 0,
+      "unknownOutcomes": 0,
+      "jobCapMicroUsd": null,
+      "accountDayCapMicroUsd": null
+    }
+  },
+  "tabs": [
+    {
+      "label": "01 Обмеры",
+      "selected": true,
+      "headings": [
+        "Получить размеры с чертежа",
+        "Измеренный план",
+        "Добавить фото или скан",
+        "Уточнить основу",
+        "Двери и окна"
+      ],
+      "messages": [
+        "У ВАС УЖЕ ЕСТЬ ЧЕРТЁЖ",
+        "Загрузите изображение с размерными подписями. Выберите распознанные длину и ширину одной прямоугольной комнаты — повторно печатать числа не нужно.",
+        "Расстановка мебели необязательна. Высоту и проёмы, которых нет на чертеже, нужно уточнить отдельно. Сложные формы и вся квартира одним планом пока не поддерживаются.",
+        "Габариты и проёмы измерены вами. Проверка предметов будет приблизительной, по габаритным коробкам.",
+        "ИСХОДНЫЕ ФАЙЛЫ",
+        "Экспортируйте mesh в GLB. Splat, OBJ, FBX и PDF пока не принимаются.",
+        "ОБМЕРЫ",
+        "Длина и ширина 0,5–50 м; высота 1,5–10 м. Без округления обмеров."
+      ],
+      "controls": [
+        {
+          "kind": "input",
+          "label": "Чертёж с размерами",
+          "disabled": false,
+          "type": "file"
+        },
+        {
+          "kind": "input",
+          "label": "rights",
+          "disabled": false,
+          "type": "checkbox"
+        },
+        {
+          "kind": "button",
+          "label": "Загрузить и распознать чертёж",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Выберите файлИзображение 1",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Распознать размеры выбранного файла",
+          "disabled": true,
+          "type": "button"
+        },
+        {
+          "kind": "select",
+          "label": "Фото комнаты или чертёжРеференсGLB-скан",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Файл",
+          "disabled": false,
+          "type": "file"
+        },
+        {
+          "kind": "input",
+          "label": "rights",
+          "disabled": false,
+          "type": "checkbox"
+        },
+        {
+          "kind": "button",
+          "label": "Загрузить приватно",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "a",
+          "label": "Открыть приватный файл ↗",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "a",
+          "label": "Scaniverse для iPhone ↗",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Ручной план",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Скан GLB",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Длина, м",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Ширина, м",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Высота, м",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "СевернаяВосточнаяЮжнаяЗападная",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "От начала стены, м",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Ширина, м",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Высота, м",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "От пола, м",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Убрать проём",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "kind": "button",
+          "label": "+ Добавить проём",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "kind": "input",
+          "label": "",
+          "disabled": false,
+          "type": "checkbox"
+        },
+        {
+          "kind": "button",
+          "label": "Сохранить обмеры",
+          "disabled": true,
+          "type": null
+        }
+      ]
+    },
+    {
+      "label": "02 Референсы",
+      "selected": true,
+      "headings": [
+        "Соберите то, что нравится",
+        "Добавить референс"
+      ],
+      "messages": [
+        "ДОСКА ВДОХНОВЕНИЯ",
+        "Цвет, материал, форма — сохраните идеи и подпишите, что хотите повторить.",
+        "Тёплые фактуры <script>window.__escaped=1</script>",
+        "НОВАЯ ИДЕЯ",
+        "Автоматический импорт Pinterest пока не подключён. Используйте ссылку или своё изображение."
+      ],
+      "controls": [
+        {
+          "kind": "a",
+          "label": "Открыть исходный референс ↗",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Ссылка",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "kind": "button",
+          "label": "Изображение",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "kind": "input",
+          "label": "Публичная HTTPS-ссылка",
+          "disabled": false,
+          "type": "url"
+        },
+        {
+          "kind": "textarea",
+          "label": "Что понравилось",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "tags",
+          "disabled": false,
+          "type": "checkbox"
+        },
+        {
+          "kind": "input",
+          "label": "tags",
+          "disabled": false,
+          "type": "checkbox"
+        },
+        {
+          "kind": "input",
+          "label": "tags",
+          "disabled": false,
+          "type": "checkbox"
+        },
+        {
+          "kind": "input",
+          "label": "rights",
+          "disabled": false,
+          "type": "checkbox"
+        },
+        {
+          "kind": "button",
+          "label": "Сохранить идею",
+          "disabled": false,
+          "type": null
+        }
+      ]
+    },
+    {
+      "label": "03 Дизайн",
+      "selected": true,
+      "headings": [
+        "План расстановки",
+        "Сохранённые варианты",
+        "Палитра и предметы",
+        "Измеренные предметы",
+        "Помощник с вариантами"
+      ],
+      "messages": [
+        "Согласован",
+        "Проверка по габаритным коробкам учитывает стены, проёмы и предметы. Это предварительная проверка, без инженерной гарантии. Переключение «До / После» сохраняет одну камеру.",
+        "ИСТОРИЯ РЕШЕНИЙ",
+        "14.10.2026, 09:15:04 · Текущий",
+        "РУЧНОЙ ДИЗАЙН",
+        "X/Z — центр предмета, Y — низ. Сохранённые размеры предмета не меняются; для других размеров добавьте новый предмет.",
+        "ПРЕДЛОЖЕНИЕ ДИЗАЙНА",
+        "Пока доступен ручной дизайн. Выбирайте палитру и размещайте измеренные предметы; основа комнаты сохраняется."
+      ],
+      "controls": [
+        {
+          "kind": "button",
+          "label": "До",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "После",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Сохранить вариант",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Согласовать дизайн",
+          "disabled": true,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Просмотреть",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Тёплый минимализмСкандинавскийПриродная палитраТерракота",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Цвет: Пол",
+          "disabled": false,
+          "type": "color"
+        },
+        {
+          "kind": "input",
+          "label": "Цвет: Потолок",
+          "disabled": false,
+          "type": "color"
+        },
+        {
+          "kind": "input",
+          "label": "Цвет: Северная стена",
+          "disabled": false,
+          "type": "color"
+        },
+        {
+          "kind": "input",
+          "label": "Цвет: Восточная стена",
+          "disabled": false,
+          "type": "color"
+        },
+        {
+          "kind": "input",
+          "label": "Цвет: Южная стена",
+          "disabled": false,
+          "type": "color"
+        },
+        {
+          "kind": "input",
+          "label": "Цвет: Западная стена",
+          "disabled": false,
+          "type": "color"
+        },
+        {
+          "kind": "input",
+          "label": "Название предмета",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Прямоугольный предметЦилиндрический предмет",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Ширина, м",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Высота, м",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Глубина, м",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Добавить в каталог",
+          "disabled": false,
+          "type": null
+        }
+      ]
+    },
+    {
+      "label": "04 Покупки",
+      "selected": true,
+      "headings": [
+        "От образа к товару",
+        "Что покупаем",
+        "Добавить товар",
+        "Сохранённые цены"
+      ],
+      "messages": [
+        "РЕАЛЬНЫЕ ПОКУПКИ",
+        "Лемана ПРО и Дом Лента (бывший OBI). Автоматическое чтение их витрин сейчас заблокировано: откройте товар и подтвердите цену вручную.",
+        "Регион: Москва · магазин: не указан. Проверенная цена актуальна 24 часа для этого места.",
+        "Неподобранные позиции останутся неизвестными расходами. «Оставить имеющееся» требует пояснения.",
+        "СНИМОК ЦЕНЫ",
+        "Укажите все три размера по карточке товара. Пустые поля означают неизвестные габариты.",
+        "1 600,00 ₽ / упаковка · 1.99 m2",
+        "Проверен для текущего места",
+        "Москва · 14.10.2026, 09:15:05"
+      ],
+      "controls": [
+        {
+          "kind": "a",
+          "label": "Лемана ПРО ↗",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "a",
+          "label": "Дом Лента ↗",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Пока не подобраноКупить выбранный товарОставить имеющееся",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Не выбранЛаминат проверенный · 1 600,00 ₽ · проверен",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Почему оставляем имеющееся",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Площадь пола из обмеров (м²)Площадь стены минус проёмы (м²)Ручное количествоИзмеренная площадь поверхности",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Ручное количество",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Запас, %",
+          "disabled": false,
+          "type": "number"
+        },
+        {
+          "kind": "input",
+          "label": "quantityConfirmed",
+          "disabled": false,
+          "type": "checkbox"
+        },
+        {
+          "kind": "select",
+          "label": "ПодготовкаОтделкаОбстановка",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Сохранить выбор",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Пока не подобраноКупить выбранный товарОставить имеющееся",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Не выбранЛаминат проверенный · 1 600,00 ₽ · проверен",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Почему оставляем имеющееся",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Площадь пола из обмеров (м²)Площадь стены минус проёмы (м²)Ручное количествоИзмеренная площадь поверхности",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Ручное количество",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Запас, %",
+          "disabled": false,
+          "type": "number"
+        },
+        {
+          "kind": "input",
+          "label": "quantityConfirmed",
+          "disabled": false,
+          "type": "checkbox"
+        },
+        {
+          "kind": "select",
+          "label": "ПодготовкаОтделкаОбстановка",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Сохранить выбор",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Пока не подобраноКупить выбранный товарОставить имеющееся",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Не выбранЛаминат проверенный · 1 600,00 ₽ · проверен",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Почему оставляем имеющееся",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Площадь пола из обмеров (м²)Площадь стены минус проёмы (м²)Ручное количествоИзмеренная площадь поверхности",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Ручное количество",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Запас, %",
+          "disabled": false,
+          "type": "number"
+        },
+        {
+          "kind": "input",
+          "label": "quantityConfirmed",
+          "disabled": false,
+          "type": "checkbox"
+        },
+        {
+          "kind": "select",
+          "label": "ПодготовкаОтделкаОбстановка",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Сохранить выбор",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Пока не подобраноКупить выбранный товарОставить имеющееся",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Не выбранЛаминат проверенный · 1 600,00 ₽ · проверен",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Почему оставляем имеющееся",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Площадь пола из обмеров (м²)Площадь стены минус проёмы (м²)Ручное количествоИзмеренная площадь поверхности",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Ручное количество",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Запас, %",
+          "disabled": false,
+          "type": "number"
+        },
+        {
+          "kind": "input",
+          "label": "quantityConfirmed",
+          "disabled": false,
+          "type": "checkbox"
+        },
+        {
+          "kind": "select",
+          "label": "ПодготовкаОтделкаОбстановка",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Сохранить выбор",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Пока не подобраноКупить выбранный товарОставить имеющееся",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Не выбранЛаминат проверенный · 1 600,00 ₽ · проверен",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Почему оставляем имеющееся",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Площадь пола из обмеров (м²)Площадь стены минус проёмы (м²)Ручное количествоИзмеренная площадь поверхности",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Ручное количество",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Запас, %",
+          "disabled": false,
+          "type": "number"
+        },
+        {
+          "kind": "input",
+          "label": "quantityConfirmed",
+          "disabled": false,
+          "type": "checkbox"
+        },
+        {
+          "kind": "select",
+          "label": "ПодготовкаОтделкаОбстановка",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Сохранить выбор",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Пока не подобраноКупить выбранный товарОставить имеющееся",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Не выбранЛаминат проверенный · 1 600,00 ₽ · проверен",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Почему оставляем имеющееся",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Площадь пола из обмеров (м²)Площадь стены минус проёмы (м²)Ручное количествоИзмеренная площадь поверхности",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Ручное количество",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Запас, %",
+          "disabled": false,
+          "type": "number"
+        },
+        {
+          "kind": "input",
+          "label": "quantityConfirmed",
+          "disabled": false,
+          "type": "checkbox"
+        },
+        {
+          "kind": "select",
+          "label": "ПодготовкаОтделкаОбстановка",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Сохранить выбор",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Лемана ПРОДом Лента",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Название товара",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Артикул",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Ссылка на товар",
+          "disabled": false,
+          "type": "url"
+        },
+        {
+          "kind": "input",
+          "label": "Цена упаковки / штуки, ₽",
+          "disabled": false,
+          "type": "number"
+        },
+        {
+          "kind": "select",
+          "label": "м² в упаковкелитры в упаковкекг в упаковкеметры в упаковкештучный товар",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Покрытие / объём упаковки",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Ширина товара, м",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Высота товара, м",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Глубина товара, м",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Не подтвержденоЕсть в наличииНет в наличии",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "confirmed",
+          "disabled": false,
+          "type": "checkbox"
+        },
+        {
+          "kind": "button",
+          "label": "Сохранить снимок товара",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "a",
+          "label": "Проверить источник ↗",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Обновить цену",
+          "disabled": false,
+          "type": "button"
+        }
+      ]
+    },
+    {
+      "label": "05 Смета",
+      "selected": true,
+      "headings": [
+        "Смета без скрытых нулей",
+        "Покупки по элементам",
+        "19 250,00 ₽",
+        "Этапы",
+        "Что изменилось",
+        "История смет"
+      ],
+      "messages": [
+        "ОТ ЦЕНЫ К РЕШЕНИЮ",
+        "Работы, доставка и резерв считаются явно. Неподобранные товары и неизвестные суммы остаются видимыми.",
+        "До указанного лимита остаётся 750,00 ₽ Это сравнение выбранного расчёта; сохраните новый расчёт после изменения входов.",
+        "Смена цены, этапа или количества требует явного пересчёта. Старые версии воспроизводятся по сохранённым входам.",
+        "ПОЗИЦИИ И ФОРМУЛЫ",
+        "1 · запас 10% · 0 уп. · Отделка",
+        "Имеющееся исключено из новых покупок",
+        "Существующая отделка остаётся",
+        "18 m2 · запас 8% · 10 уп. · Подготовка",
+        "ceil(18 × (1 + 8/100) / 1.99) = 10 pack",
+        "Снимок: Москва, 14.10.2026, 09:15:05 · проверен",
+        "СОХРАНЁННАЯ СМЕТА",
+        "Полный подтверждённый состав расходов",
+        "Резерв 10%: 1 750,00 ₽",
+        "Сохранённый лимит: 20 000,00 ₽",
+        "Этапы разделяют покупки; общая сумма не уменьшается.",
+        "Уточнение сметы · Полная",
+        "Первый расчёт · Полная",
+        "Первый расчёт · Есть неизвестные"
+      ],
+      "controls": [
+        {
+          "kind": "input",
+          "label": "Название расхода",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Пока неизвестноПредварительная оценкаПодтверждённая суммаИсключено из сметы",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Сумма расхода, ₽",
+          "disabled": false,
+          "type": "number"
+        },
+        {
+          "kind": "button",
+          "label": "Добавить расход",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "kind": "input",
+          "label": "Название расхода",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "select",
+          "label": "Пока неизвестноПредварительная оценкаПодтверждённая суммаИсключено из сметы",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Сумма расхода, ₽",
+          "disabled": false,
+          "type": "number"
+        },
+        {
+          "kind": "button",
+          "label": "Добавить расход",
+          "disabled": false,
+          "type": "button"
+        },
+        {
+          "kind": "input",
+          "label": "Резерв, %",
+          "disabled": false,
+          "type": "number"
+        },
+        {
+          "kind": "select",
+          "label": "Известная суммаСценарная сумма",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "input",
+          "label": "Лимит ремонта, ₽",
+          "disabled": false,
+          "type": "number"
+        },
+        {
+          "kind": "input",
+          "label": "Причина пересчёта",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Рассчитать и сохранить смету",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "a",
+          "label": "Скачать список CSV",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "14.10.2026, 09:15:08 · 19 250,00 ₽",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "14.10.2026, 09:15:06 · 19 250,00 ₽",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "14.10.2026, 09:15:05 · Неизвестно",
+          "disabled": false,
+          "type": null
+        }
+      ]
+    },
+    {
+      "label": "06 До / после",
+      "selected": true,
+      "headings": [
+        "До и после одной камерой",
+        "Подготовленные изображения",
+        "Публичные ссылки"
+      ],
+      "messages": [
+        "ОБСУДИТЬ И СОХРАНИТЬ",
+        "В изображение входят только визуализация и подписи типа результата. Название проекта, обмеры, референсы, цены и бюджет не добавляются.",
+        "Ручной дизайн · согласован",
+        "Для подготовки PNG нужен работающий 3D-просмотрщик. При его сбое план и ручное редактирование остаются доступны.",
+        "Отозвана",
+        "Адрес показывается только при создании. Если он потерян, создайте новую ссылку и отзовите старую."
+      ],
+      "controls": [
+        {
+          "kind": "input",
+          "label": "",
+          "disabled": false,
+          "type": "checkbox"
+        },
+        {
+          "kind": "button",
+          "label": "Подготовить до / после",
+          "disabled": true,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Скачать до / после",
+          "disabled": true,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Поделиться",
+          "disabled": true,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "1262 × 608 · С водяным знаком",
+          "disabled": false,
+          "type": null
+        },
+        {
+          "kind": "button",
+          "label": "Отозвать ссылку",
+          "disabled": true,
+          "type": null
+        }
+      ]
+    }
+  ],
+  "billing": {
+    "paymentsDisabledText": true,
+    "manualCapabilitiesText": true,
+    "emptyHistoryText": true,
+    "checkoutButtons": 0,
+    "headings": [
+      "AI-кредиты и экспорт",
+      "История платежей"
+    ]
+  },
+  "network": [
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/me",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/me",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/me",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/414a96dc-285f-4821-b2bb-6d99563f5160",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/414a96dc-285f-4821-b2bb-6d99563f5160/references",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/414a96dc-285f-4821-b2bb-6d99563f5160/assets",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/414a96dc-285f-4821-b2bb-6d99563f5160/shells",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/414a96dc-285f-4821-b2bb-6d99563f5160/jobs",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/414a96dc-285f-4821-b2bb-6d99563f5160/designs",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/me",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/414a96dc-285f-4821-b2bb-6d99563f5160/products",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/414a96dc-285f-4821-b2bb-6d99563f5160/designs/5f9adff1-b254-46d0-9a62-ccc25aec8072",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/414a96dc-285f-4821-b2bb-6d99563f5160/lines",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/414a96dc-285f-4821-b2bb-6d99563f5160/budgets",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/414a96dc-285f-4821-b2bb-6d99563f5160/exports",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/414a96dc-285f-4821-b2bb-6d99563f5160/shares",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/414a96dc-285f-4821-b2bb-6d99563f5160/designs/5f9adff1-b254-46d0-9a62-ccc25aec8072",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/billing/offers",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/billing/orders",
+      "status": 200
+    }
+  ],
+  "forbiddenMutations": [],
+  "blockedAutomaticMutations": [
+    {
+      "method": "POST",
+      "path": "/api/projects/414a96dc-285f-4821-b2bb-6d99563f5160/designs/5f9adff1-b254-46d0-9a62-ccc25aec8072/view"
+    }
+  ],
+  "unexpectedOutbound": [],
+  "browserErrors": [
+    "console: Failed to load resource: net::ERR_FAILED"
+  ],
+  "unexpectedBrowserErrors": [],
+  "limits": [
+    "One Chromium desktop pass; prior three-engine evidence was not repeated.",
+    "Observed UI availability and fixture state do not prove all business behavior.",
+    "No project, design, budget, share, credit, order, or AI job was created or changed."
+  ]
+}

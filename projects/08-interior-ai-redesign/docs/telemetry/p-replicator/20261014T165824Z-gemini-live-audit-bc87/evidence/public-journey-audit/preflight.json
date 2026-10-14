@@ -1,0 +1,66 @@
+{
+  "status": "ready",
+  "recorded_at": "2026-10-14T17:01:37+00:00",
+  "run_id": "20261014T165824Z-gemini-live-audit-bc87",
+  "work_unit_id": "public-journey-audit",
+  "attempt_id": "audit-1",
+  "source": {
+    "current_revision": "47c4e6fb3f1e336822f97af227a1e5f905925b28",
+    "deployed_application_revision": "ffcdfb7a",
+    "continuity": "ready: commits after the deployed application revision touch only README, docs, telemetry, and .env.example; no runtime source",
+    "production_binding": {
+      "path": "docs/telemetry/p-replicator/20261014T080942Z-plan-import-8984/evidence/source-image-4.json",
+      "sha256": "a8859aa06c716bfacc223e255f22a4f281e93b4a9416859f2c0c3a10b5746347",
+      "matches": true
+    }
+  },
+  "build_revision": "sha256:181590da9bf545d69fb927e56abb5da50f52f5ead7bd3d0fdcca8a45d90058ee",
+  "live_container_image_id": "sha256:181590da9bf545d69fb927e56abb5da50f52f5ead7bd3d0fdcca8a45d90058ee",
+  "test_image": "sha256:c16f3fc40392fc765ded5583538f398a47d55aaab348a6a078abab27a061ed41",
+  "environment": {
+    "public_origin": "https://n8.77.83.87.178.sslip.io",
+    "health_ready_http_status": 200,
+    "health_ready_body_status": "ready",
+    "port_guard": "passed: no public storage binding; planned host port 3088 free",
+    "browser": "Chromium from dedicated Node 24 / Playwright 1.60 image",
+    "provider_or_database_environment_mounted": false,
+    "available": true
+  },
+  "runner": {
+    "path": "docs/telemetry/p-replicator/20261014T165824Z-gemini-live-audit-bc87/evidence/public-journey-audit/read-only-public-audit.mjs",
+    "sha256": "c9ec7629fd5b6e941681db312f3ad38cc78fcddc1c3454e5b2b21b0af44d8925",
+    "policy": "GET/HEAD/OPTIONS only, plus POST /api/auth/login for the synthetic fixture session; all other mutations are aborted and fail the audit"
+  },
+  "inputs": [
+    {
+      "name": "private synthetic fixture",
+      "path": ".runtime/public-e2e/compat-journey-2/runtime-fixture.json",
+      "sha256": "a1e851d1cf4bfd668c22f7c7fe818960d4f4e68061a106674a5548dee976bdb4",
+      "available": true,
+      "mount": "read-only"
+    },
+    {
+      "name": "fresh writable evidence directory",
+      "path": "docs/telemetry/p-replicator/20261014T165824Z-gemini-live-audit-bc87/evidence/public-journey-audit",
+      "available": true,
+      "mount": "writable"
+    }
+  ],
+  "test_command": "docker run --rm --network host -v <runner>:/app/scripts/read-only-public-audit.mjs:ro -v <fixture>:/app/.runtime/public-e2e/compat-journey-2/runtime-fixture.json:ro -v <evidence>:/app/evidence:rw -e N8_PUBLIC_ORIGIN=https://n8.77.83.87.178.sslip.io -e N8_BUILD_REVISION=sha256:181590da9bf545d69fb927e56abb5da50f52f5ead7bd3d0fdcca8a45d90058ee n8-interior-playwright:local node scripts/read-only-public-audit.mjs",
+  "expected_effects": [
+    "Create one synthetic login session.",
+    "Read the fixture account, project tabs, billing state, and usage through the public HTTPS UI and GET APIs.",
+    "Write screenshots and sanitized result evidence only to the allocated evidence directory."
+  ],
+  "forbidden_effects": [
+    "No project, design, budget, share, credit, order, or job mutation.",
+    "No paid provider call and no database or provider environment access.",
+    "No real customer project access."
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "docs/telemetry/p-replicator/20261014T165824Z-gemini-live-audit-bc87/evidence/public-journey-audit"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

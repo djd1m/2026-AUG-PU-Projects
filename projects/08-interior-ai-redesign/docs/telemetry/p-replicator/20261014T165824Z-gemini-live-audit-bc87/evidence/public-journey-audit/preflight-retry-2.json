@@ -1,0 +1,30 @@
+{
+  "status": "ready",
+  "recorded_at": "2026-10-14T17:03:38+00:00",
+  "run_id": "20261014T165824Z-gemini-live-audit-bc87",
+  "work_unit_id": "public-journey-audit",
+  "attempt_id": "audit-1",
+  "reason": "The protected read-only pass discovered that opening the Design tab automatically attempts POST .../designs/.../view. The harness blocked it before the server. The final runner classifies and preserves that observation while continuing to fail any other non-login mutation.",
+  "prior_browser_exit_code": 1,
+  "prior_external_mutation_reached_server": false,
+  "source_revision": "47c4e6fb3f1e336822f97af227a1e5f905925b28",
+  "build_revision": "sha256:181590da9bf545d69fb927e56abb5da50f52f5ead7bd3d0fdcca8a45d90058ee",
+  "test_image": "sha256:c16f3fc40392fc765ded5583538f398a47d55aaab348a6a078abab27a061ed41",
+  "runner_sha256": "76ebd8575d911472432bec50cf299d56c09701fd6ac610284506a08f4675c56a",
+  "fixture_sha256": "a1e851d1cf4bfd668c22f7c7fe818960d4f4e68061a106674a5548dee976bdb4",
+  "environment_available": true,
+  "public_health": "HTTP 200 ready",
+  "port_guard": "passed before container launch",
+  "test_command": "docker run --rm --user 0 --network host with exact runner:ro, fixture:ro, evidence:rw mounts and only N8_PUBLIC_ORIGIN/N8_BUILD_REVISION environment; node scripts/read-only-public-audit.mjs",
+  "expected_effects": [
+    "One synthetic login session and read-only HTTPS/GET observations.",
+    "The known automatic first-design-view analytics POST is blocked by the browser route before the server and retained as an observation.",
+    "Screenshots and sanitized JSON evidence in the allocated directory."
+  ],
+  "forbidden_effects": [
+    "No project, design, budget, share, credit, order, growth-event, or job mutation reaches the server.",
+    "No paid call, database environment, provider environment, or real customer data."
+  ],
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

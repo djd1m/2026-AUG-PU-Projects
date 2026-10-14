@@ -1,0 +1,29 @@
+{
+  "status": "ready",
+  "recorded_at": "2026-10-14T17:02:48+00:00",
+  "run_id": "20261014T165824Z-gemini-live-audit-bc87",
+  "work_unit_id": "public-journey-audit",
+  "attempt_id": "audit-1",
+  "reason": "The first container exited before browser launch because the mounted runner was not readable by the image user. The runner is now mode 0644; the private fixture remains mode 0600 and the container will run as uid 0 solely to read the exact read-only mount.",
+  "prior_container_exit_code": 1,
+  "prior_external_actions_executed": false,
+  "source_revision": "47c4e6fb3f1e336822f97af227a1e5f905925b28",
+  "build_revision": "sha256:181590da9bf545d69fb927e56abb5da50f52f5ead7bd3d0fdcca8a45d90058ee",
+  "test_image": "sha256:c16f3fc40392fc765ded5583538f398a47d55aaab348a6a078abab27a061ed41",
+  "runner_sha256": "c9ec7629fd5b6e941681db312f3ad38cc78fcddc1c3454e5b2b21b0af44d8925",
+  "fixture_sha256": "a1e851d1cf4bfd668c22f7c7fe818960d4f4e68061a106674a5548dee976bdb4",
+  "environment_available": true,
+  "public_health": "HTTP 200 ready",
+  "port_guard": "passed before container launch",
+  "test_command": "docker run --rm --user 0 --network host with exact runner:ro, fixture:ro, evidence:rw mounts and only N8_PUBLIC_ORIGIN/N8_BUILD_REVISION environment; node scripts/read-only-public-audit.mjs",
+  "expected_effects": [
+    "One synthetic login session and read-only HTTPS/GET observations.",
+    "Screenshots and sanitized JSON evidence in the allocated directory."
+  ],
+  "forbidden_effects": [
+    "No project, design, budget, share, credit, order, or job mutation.",
+    "No paid call, database environment, provider environment, or real customer data."
+  ],
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

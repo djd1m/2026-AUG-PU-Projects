@@ -30,4 +30,15 @@ describe('SC-US-017-2 runtime fail closed without provider calls', () => {
     expect(() => loadConfig({ ...live, N8_PUBLIC_ORIGIN: required.N8_PUBLIC_ORIGIN }, now)).toThrow();
     expect(() => loadConfig({ ...live, N8_PAYMENT_SKUS_JSON: '[{"priceMinor":1}]' }, now)).toThrow();
   });
+  it('explicit weekly provider ceiling is independent of daily application caps; malformed pairs fail closed', () => {
+    const base={...required,...ai,N8_AI_GLOBAL_DAY_CAP_MICRO_USD:'5000000'};
+    expect(loadConfig(base,now).aiLive?.providerLimitReset).toBeUndefined();
+    expect(loadConfig({...base,N8_AI_PROVIDER_LIMIT_RESET:'weekly',N8_AI_PROVIDER_CAP_MICRO_USD:'10000000'},now).aiLive).toMatchObject({providerLimitReset:'weekly',providerCapMicroUsd:10000000,globalDayCapMicroUsd:5000000});
+    expect(loadConfig({...base,N8_AI_PROVIDER_LIMIT_RESET:'daily',N8_AI_PROVIDER_CAP_MICRO_USD:'5000000'},now).aiLive?.providerLimitReset).toBe('daily');
+    for(const change of [{N8_AI_PROVIDER_LIMIT_RESET:'weekly'},{N8_AI_PROVIDER_CAP_MICRO_USD:'10000000'},
+      {N8_AI_PROVIDER_LIMIT_RESET:'',N8_AI_PROVIDER_CAP_MICRO_USD:''},
+      {N8_AI_PROVIDER_LIMIT_RESET:'monthly',N8_AI_PROVIDER_CAP_MICRO_USD:'10000000'},
+      ...['','0','-1','1.5','99','9007199254740992'].map(N8_AI_PROVIDER_CAP_MICRO_USD=>({N8_AI_PROVIDER_LIMIT_RESET:'weekly',N8_AI_PROVIDER_CAP_MICRO_USD})),
+      {N8_AI_PROVIDER_LIMIT_RESET:'daily',N8_AI_PROVIDER_CAP_MICRO_USD:'10000000'}])expect(()=>loadConfig({...base,...change},now)).toThrow('RUNTIME_CONFIG_INVALID');
+  });
 });

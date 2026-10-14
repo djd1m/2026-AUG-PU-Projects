@@ -5,6 +5,7 @@ export interface AiLiveConfig {
   apiKey: string; modelId: string; allowedModels: string[]; inputRateMicroUsdPerMillion: number; outputRateMicroUsdPerMillion: number;
   rateValidUntil: string; maxTokens: number; requestOverheadTokens: number; jobCapMicroUsd: number; accountDayCapMicroUsd: number; globalDayCapMicroUsd: number;
   providerHardLimitVerified: true; operatorEnabled: true;
+  providerLimitReset?: 'daily' | 'weekly'; providerCapMicroUsd?: number;
 }
 export interface PaymentSku { sku: string; priceMinor: number; currency: 'RUB'; credits: number; unwatermarkedExport: boolean }
 export interface RuntimeConfig {
@@ -44,7 +45,15 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
     const rateValidUntil = required(env, 'N8_AI_RATE_VALID_UNTIL');
     if (!Number.isFinite(Date.parse(rateValidUntil)) || Date.parse(rateValidUntil) <= now.getTime()) invalid();
     if (env.N8_AI_PROVIDER_HARD_LIMIT_VERIFIED !== 'true' || env.N8_AI_OPERATOR_ENABLED !== 'true') invalid();
-    config.aiLive = { apiKey: required(env, 'N8_OPENROUTER_API_KEY'), modelId, allowedModels,
+    let providerLimits: {providerLimitReset:'daily'|'weekly';providerCapMicroUsd:number}|undefined;
+    if(env.N8_AI_PROVIDER_LIMIT_RESET!==undefined||env.N8_AI_PROVIDER_CAP_MICRO_USD!==undefined){
+      const reset=env.N8_AI_PROVIDER_LIMIT_RESET;
+      if(reset!=='daily'&&reset!=='weekly')invalid();
+      const cap=positive(env,'N8_AI_PROVIDER_CAP_MICRO_USD');
+      if(cap<jobCapMicroUsd||(reset==='daily'&&cap>globalDayCapMicroUsd))invalid();
+      providerLimits={providerLimitReset:reset,providerCapMicroUsd:cap};
+    }
+    config.aiLive = { ...providerLimits, apiKey: required(env, 'N8_OPENROUTER_API_KEY'), modelId, allowedModels,
       inputRateMicroUsdPerMillion: positive(env, 'N8_AI_RATE_INPUT_MICRO_USD_PER_MILLION'), outputRateMicroUsdPerMillion: positive(env, 'N8_AI_RATE_OUTPUT_MICRO_USD_PER_MILLION'),
       maxTokens: positive(env, 'N8_AI_MAX_TOKENS', 4096), requestOverheadTokens: positive(env, 'N8_AI_REQUEST_OVERHEAD_TOKENS', 100000), rateValidUntil, jobCapMicroUsd, accountDayCapMicroUsd, globalDayCapMicroUsd,
       providerHardLimitVerified: true, operatorEnabled: true };
