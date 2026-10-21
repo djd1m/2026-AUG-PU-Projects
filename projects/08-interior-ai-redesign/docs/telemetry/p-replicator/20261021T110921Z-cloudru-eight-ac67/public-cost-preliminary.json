@@ -1,0 +1,45 @@
+{
+  "status": "public-tariff-preliminary-not-account-quote",
+  "as_of": "2026-10-21",
+  "tariff_version": "261014",
+  "tariff_url": "https://cdn.cloud.ru/docs/legal/tariffs/evolution/current-version/evolution-compute.pdf",
+  "tariff_sha256": "a459226e73c8db4dc650307f3f07d99d9f17be31e0e22cd65c7a360dc1685dc5",
+  "currency": "RUB",
+  "vat_included": true,
+  "horizon_hours": "730",
+  "assumptions": [
+    "Eight separate2vCPU4GB VMs,30GB SSD and1publicIP each",
+    "No measured workload capacity claim",
+    "No traffic/provider API/backups/discount/free-tier assumptions",
+    "Cloud account flavor and zone availability unverified without credentials"
+  ],
+  "scenarios": [
+    {
+      "id": "shared-10-percent",
+      "cpu_share": "0.1",
+      "compute_rate_rub_h": "0.99023334",
+      "compute_tariff_row": "36",
+      "vm_count": 8,
+      "per_vm_known_monthly_rub": "1221.60633820",
+      "eight_vm_known_monthly_rub": "9772.85070560"
+    },
+    {
+      "id": "shared-30-percent",
+      "cpu_share": "0.3",
+      "compute_rate_rub_h": "1.798524",
+      "compute_tariff_row": "47",
+      "vm_count": 8,
+      "per_vm_known_monthly_rub": "1811.658520",
+      "eight_vm_known_monthly_rub": "14493.268160"
+    },
+    {
+      "id": "dedicated-100-percent",
+      "cpu_share": "1",
+      "compute_rate_rub_h": "2.9707",
+      "compute_tariff_row": "18",
+      "vm_count": 8,
+      "per_vm_known_monthly_rub": "2667.34700",
+      "eight_vm_known_monthly_rub": "21338.77600"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20261021T110921Z-cloudru-eight-ac67",
+  "batch_id": "20261021T110921Z-cloudru-eight-ac67",
+  "project": "projects/08-interior-ai-redesign",
+  "feature": "cloudru-eight-project-deployment-coordination",
+  "pipeline": "cloudru-hub vm-deploy",
+  "tier": "L",
+  "risk_flags": [
+    "cloud-spend",
+    "public-service",
+    "secrets-transfer",
+    "database-migration"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [],
+  "comparison_id": null,
+  "baseline_revision": "e2803308144336a58f6e6481a2cece56ce56c317",
+  "baseline_diff_sha256": "ce6d3bb58aaaad06ec34c2cf7867ded0a8de1bfa4936c16721a938cf88f55a03",
+  "final_revision": null,
+  "spec_sha256": null,
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex API",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-10-21T11:09:21.574313+00:00",
+  "ended_at": null,
+  "status": "running",
+  "acceptance_evidence": [
+    "Hub self-test5/5",
+    "Codex MCP configuration recognized",
+    "Authenticated live VM/flavor/network inventory",
+    "Seven persisted VM plans verified with official tariff flavor rates"
+  ],
+  "quality": {
+    "required_gates_passed": null,
+    "ac_met": 0,
+    "ac_total": 8,
+    "confirmed_findings_by_severity": {},
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "Project07 source found in other branches; seven-only scope retracted, original eight-project request retained"
+  },
+  "metrics": {
+    "wall_seconds": 794.82903,
+    "input_tokens": null,
+    "output_tokens": null,
+    "cost": null,
+    "wall_seconds_basis": "Measured start to current checkpoint; run not complete"
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Coordinator actual model/effort and usage not exposed by host; no counters inferred",
+    "Organization quotas inaccessible403; provider account-specific discounts/traffic costs unknown"
+  ],
+  "scope": [
+    "Install Cloudru Hub native Codex integration",
+    "Inventory eight numbered app deployments",
+    "Prepare eight separate small VMs",
+    "Validate web entrypoints and private database networking"
+  ],
+  "exclusions": [
+    "Delete or stop original VPS deployments",
+    "Change production DNS before verification",
+    "Expose database/cache/object-storage ports"
+  ],
+  "source_continuity": "dirty existing files preserved; no unknown changes attributed to this task",
+  "last_checkpoint_at": "2026-10-21T14:39:40.803956+00:00",
+  "waiting_for": [
+    "Reconcile eight-project source revisions and final monthlycost before resource creation"
+  ]
+}

@@ -1,0 +1,949 @@
+
+> n8-interior-planner@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+ ❯ tests/sharing/review-probes/security.test.ts (8 tests | 8 failed) 21ms
+   × independent SQL: every ready-export field stays frozen, including kind relabel, IDs, timestamps and keys 11ms
+   × independent SQL: share identity and TTL frozen; revocation cannot be cleared, moved or bypassed 1ms
+   × independent capacity boundary: 63 pending assets allow exactly one simultaneous export reservation 2ms
+   × independent generic asset route denies free and paid frozen export through original and normalized paths 1ms
+   × independent archive and unknown tokens return404/no-store/noindex on both public surfaces 1ms
+   × independent expired active-project token returns404/no-store/noindex on page and image 1ms
+   × independent pagination correction: fifty plus one HTTP pages preserve all own rows and reject foreign cursors 1ms
+   × independent actual child deadline kills stalled decode and releases slot for next valid image 1ms
+ ❯ tests/sharing/resources.test.ts (5 tests | 5 failed) 24ms
+   × account retained quota includes pending assets across projects with concurrent export reservations 10ms
+   × stale export reservations reclaimed by existing cleanup and failed completion removes both files 2ms
+   × refund between export reservation and finish blocks unwatermarked derivative; CAS stale result not ready 2ms
+   × decoder slot admits one process and rejects second without queue; min size enforced 7ms
+   × slow body times out within10s without keeping database clients; pending capacity reclaimed 1ms
+ ❯ tests/design/jobs.test.ts (15 tests | 15 failed) 19ms
+   × exact consent + replay before archive, caps, credit and version, with mismatched replay rejected 8ms
+   × admission count races across connections reserve exactly five account jobs 1ms
+   × day boundary retains old holds and releases against origin day exactly once 1ms
+   × single claim dispatch known cost and stale completion fence 1ms
+   × late same-shell output creates detached draft and preserves newer manual pointer/budget 1ms
+   × malicious definite response releases credit but records known provider spend 0ms
+   × pre-dispatch crashes retry max three leases, live third lease survives sweep then expires 1ms
+   × post-dispatch crash stays uncertain with holds, never automatic redispatch 1ms
+   × operator reconcile exact-once evidence, full overrun and no guessed credit outcome 1ms
+   × unknown successful cost can settle later without creating another design or consuming another credit 1ms
+   × manual mode makes no provider request; demo is explicit fixture without credits or spend 1ms
+   × provider hard-limit verification fails before mark and releases without POST 0ms
+   × database admission snapshot immutable while lifecycle fields remain writable 0ms
+   × changed live config is rejected before outbound and overrun blocks another account 1ms
+   × DESIGN-R2 increased input rate and caps cannot dispatch above immutable original reservation 1ms
+ ❯ tests/sharing/http.test.ts (8 tests | 8 failed) 22ms
+   × AC-sharing-1 actual export strips EXIF, applies N8 pixels, discards raw upload, private PNG hash 11ms
+   × AC-sharing-1 paid current entitlement outputs clean pixels; refund denies later private bytes 1ms
+   × AC-sharing-2 public HTML exposes only selected caption/image, escapes text, sets private attribution cookie; revoke denies page/image 2ms
+   × AC-sharing-3 auth/origin/owner/version/rights refuse before stream read or reservation 2ms
+   × malformed/raw URL/SVG external photo/oversized body/over20MP reject with no ready assets or files 1ms
+   × public rate guard counts before token lookup: exactly one of20 requests after59 succeeds 1ms
+   × forged disk bytes rejected before publication and every image delivery 1ms
+   × arrival proof cannot be forged/replayed after30minutes; URL hint alone is not attribution 1ms
+ ❯ tests/space/repository.test.ts (14 tests | 14 failed) 27ms
+   × SC-US-003-1 shell hash stable, old shell immutable, update creates new revision 12ms
+   × same-version concurrent shell writes have exactly one winner on real PostgreSQL 1ms
+   × parallel upload reservations include pending retained bytes and release quota 1ms
+   × account quota serializes reservations across different projects 1ms
+   × 64 assets hard cap, unsupported ordinary share_image and missing rights refuse 1ms
+   × SC-US-004-3 owner and same-project checks reject known foreign assets, pending never served 1ms
+   × SC-US-005-1/3 stores exact owner pin and reference provenance, no asset/source mixing 1ms
+   × CAS rechecked after parsing; lost reservation cannot become ready 2ms
+   × stale pending and old orphan cleanup preserve ready and young files 1ms
+   × 20 reference cap rejects the 21st and preserves the existing list 1ms
+   × 100 combined immutable revision cap rejects new shell without bumping project 1ms
+   × paginated private assets expose all64 exactly once; forged foreign cursor404 1ms
+   × delete unused GLB preserves owner, version and immutable-history guards 0ms
+   × concurrent GLB delete and shell creation serialize without broken history 0ms
+ ❯ tests/billing/repository.test.ts (12 tests | 12 failed) 23ms
+   ❯ BILLING immutable checkout and verified ledger (9)
+     × AC-billing-2 parallel same-key checkout has one durable order and provider id; client prices rejected 9ms
+     × provider blocked outside DB transaction; intent already durable; timeout replay keeps same remote key 1ms
+     × stale unknown remote outcome cannot charge again after provider 24h idempotence horizon 1ms
+     × AC-billing-3 verified concurrent delivery grants exactly one package and one event; return GET is read-only 1ms
+     × AC-billing-4 merchant/test/amount/currency/paid/status/metadata/bound-id negatives leave ledger empty 1ms
+     × notification amount/status/merchant fields are ignored; only refetched object grants 1ms
+     × AC-billing-5 verification outage occupies no event key; later retry grants once 4ms
+     × database failure rolls back event/order/credits together and leaves retry possible 1ms
+     × owned order reads hide foreign IDs and history cursor returns all 53 orders without overlap 1ms
+   × DDL immutable intent and bound identity survive direct SQL; refund state cannot be restored by late write 1ms
+   × verified webhook can arrive before create response persistence; later bind never downgrades succeeded state 0ms
+   × merchant/test config rotation cannot replay or verify an immutable intent against another provider identity 0ms
+ ❯ tests/sharing/repository.test.ts (10 tests | 10 failed) 18ms
+   × AC-sharing-1/3 server watermark/provenance and ownership; ordinary photos cannot publish 9ms
+   × AC-sharing-2 random hashed token, frozen public DTO, owner revoke and archive fail closed 1ms
+   × expiry checked on every request and archived project blocks even nonrevoked links 1ms
+   × asset immutable provenance and share content reject direct edits; false must be boolean 1ms
+   × pending export quota serializes concurrent requests with Space uploader, account ceiling and count64 1ms
+   × CAS finish and simultaneous publish have one winner; design relationship cannot be forged 1ms
+   × verified entitlement removes watermark; refund revokes only paid links and private image access 1ms
+   × independent account barrier: refund commits before waiting publisher rechecks entitlement 1ms
+   × independent publish barrier: verified refund waits then revokes freshly created paid share atomically 1ms
+   × SHARE-R1 bounded pages preserve all exports and links; foreign/ineligible cursors stay private 1ms
+ ❯ tests/billing/http.test.ts (9 tests | 9 failed) 15ms
+   × AC-billing-1 default off checkout503 webhook404 before body; offers honest empty and no external calls 8ms
+   × live startup requires explicit merchant/test/SKU and HTTPS origin; public offers expose whitelist only 1ms
+   × checkout pre-body authentication, exact Origin and atomic rate guard; no project CAS needed 1ms
+   × billing HTTP rejects JSON size/schema/key and never creates orders for malformed inputs 1ms
+   × webhook source rejected before bounded body; XFF cannot restore identity; mapped official peer accepted 1ms
+   × actual HTTP listener overwrites spoofed source headers from loopback socket before webhook; no parsing/grant 0ms
+   × webhook malformed/oversized body and rate failure never invoke provider or occupy event 0ms
+   × owned return/history GET never grants credits; foreign ID404; DTO omits merchant/remote/account 1ms
+   × provider/source test injection is forbidden under production; no fake runtime config accepted 1ms
+ ❯ tests/billing/refund.test.ts (7 tests | 7 failed) 13ms
+   × AC-billing-6 partial refund distinct object verified via payment_id; replay cannot restore export or new billing 8ms
+   × refund before late payment succeeds is monotonic; success audited ignored with zero credits 1ms
+   × parallel success/refund always ends in durable hold, never duplicate credits 1ms
+   × refund rejects nonpositive/excess/currency/unpaid/original-link proofs without occupying ledger 1ms
+   × refund atomically revokes existing unwatermarked shares while watermarked snapshot remains; failure rolls back hold/revoke/event 1ms
+   × refund before actual PgJobs dispatch mark releases held admission and prevents external dispatch 0ms
+   × refund after dispatch mark leaves in-flight held job visible; no false cancellation or inline spend-lock settlement 0ms
+ ❯ tests/procurement/repository.test.ts (9 tests | 9 failed) 17ms
+   ❯ procurement PostgreSQL ownership and immutable history (9)
+     × AC-procurement-1/8/13 commits exact revisions and reproduces old budget after mutable line changes 9ms
+     × PR-04 confirms and revises quantity through line CAS, preview and immutable recalculation history 1ms
+     × AC-procurement-5/15 returns foreign scalar resources as 404 and never exposes export source 1ms
+     × AC-procurement-3 preserves old snapshots and invalidates effective context after region change 1ms
+     × AC-procurement-12 enforces line CAS and unique design element without duplicate rows 1ms
+     × AC-procurement-11/14 requires explicit substitution confirmation, validates fit, creates a draft and preserves history 1ms
+     × PR-05 applies matched selection and combined line fields to the replacement draft 1ms
+     × PR-07 rejects foreign shells and zero coverage before writes with typed statuses 1ms
+     × PR-07 returns catalog capacity conflict before substitution SQL and preserves state 1ms
+ ❯ tests/design/races.test.ts (5 tests | 5 failed) 13ms
+   × archive commits before mark authorization: zero dispatch 7ms
+   × refund commits before mark authorization: zero dispatch 1ms
+   × archive after mark keeps in-flight authorization but suppresses scene application 1ms
+   × refund after mark keeps in-flight authorization but suppresses scene application 1ms
+   × global twenty admissions cap across independent accounts under contention 1ms
+ ❯ tests/design/revisions.test.ts (7 tests | 7 failed) 14ms
+   × ownership, concurrent CAS, immutable approval and restore new draft 7ms
+   × catalog server UUID, exact immutable dimensions and same-project snapshot guard 1ms
+   × combined 100 revision capacity under competing connections 1ms
+   × history pagination does not drop equal timestamps 1ms
+   × FND-FINAL-1 foreign and absent array scalar JSON design relation IDs return identical404 without side effects 1ms
+   × remove design keeps immutable content and clears active pointers; foreign and stale denied 1ms
+   × concurrent removal and approval produce one winner without a deleted active pointer 1ms
+ ❯ tests/design/budget-only.test.ts (5 tests | 5 failed) 12ms
+   × only server-configured actor skips credits; real successful job still reserves and settles spend 7ms
+   × budget-only concurrent admission cannot exceed money cap; failed result never grants a credit 1ms
+   × budget-only retains unknown cost holds and terminal outcome through later reconciliation 1ms
+   × budget-only actor retains existing admission and money limits; invalid actor config rejected 1ms
+   × budget-only uncertain cost can settle first and finalize later without a second debit or credit grant 1ms
+ ❯ tests/foundation/integration.test.ts (11 tests | 11 skipped) 10ms
+ ❯ tests/space/floorplan-http.test.ts (4 tests | 4 failed) 12ms
+   × PLAN-HTTP-1 rejects missing/foreign source equally before OCR and leaves project/shell state unchanged 8ms
+   × PLAN-HTTP-2 requires origin/currentversion/allowedasset-kind before OCR; preview does not save a shell 1ms
+   × PLAN-HTTP-3 imported shell needs confirmation, retains owned image provenance/hash across reload and CAS 1ms
+   × PLAN-HTTP-4 busy recognition admission remains bounded per actor 1ms
+ ❯ tests/space/http.test.ts (3 tests | 3 failed) 12ms
+   × pre-body guard refuses Origin/ownership/version before sole upload body getter 9ms
+   × raw private upload round-trip serves fixed normalized MIME/nosniff, safe DTO and version 1ms
+   × SC-US-005-2 Pinterest import disabled with useful alternative and no write 1ms
+ ❯ tests/integration/read-pages.test.ts (3 tests | 3 failed) 11ms
+   × READ-R1 catalog endpoint returns50+2 immutable entries and denies foreign/unknown cursor 8ms
+   × READ-R2 current cart remains bounded with540 historical cloned lines; owned design filter and cursor enforce scope 1ms
+   × READ-R2 client paginator preserves existing design query on second page 1ms
+ ❯ tests/design/reference-palette.test.ts (3 tests | 1 failed) 74ms
+   × owned image references create real different drafts with CAS; link-only/foreign input fails without changing design 6ms
+ ❯ tests/sharing/growth.test.ts (3 tests | 3 failed) 11ms
+   × AC-sharing-4 duplicate event keys insert once under concurrency; only pseudonymous IDs and empty data 7ms
+   × AC-sharing-5/6 explicit 30-day readonly counts are zero, one, or unknown on storage failure 1ms
+   × first design and actual new project events derive unique owner-project keys 1ms
+ ❯ tests/procurement/http.test.ts (3 tests | 3 failed) 12ms
+   ❯ procurement HTTP contract (3)
+     × round-trips camelCase product DTO and blocked manual refresh with guard before body 8ms
+     × PR-07 maps zero coverage to 422 and foreign source shell to private 404 without mutation 1ms
+     × exports the owned immutable revision with private download headers and foreign 404 1ms
+ ❯ tests/design/process-crash.test.ts (1 test | 1 failed) 12ms
+   × SC-US-008-4 actual killed worker after dispatch resumes as uncertain with holds and zero redispatch 10ms
+ ❯ tests/integration/operations.test.ts (6 tests | 6 skipped) 8ms
+ ❯ tests/space/reference-removal.test.ts (2 tests | 2 failed) 11ms
+   × reference deletion hides active list but preserves used design, approval and restore; new uses reject 8ms
+   × simultaneous reference deletions use project CAS; one wins and foreign project never changes 1ms
+ ❯ tests/space/pinterest-http.test.ts (1 test | 1 failed) 10ms
+   × owned Pinterest import uses private validated upload and CAS; foreign/stale denied before network; real image applies 8ms
+ ❯ tests/design/provider.test.ts (11 tests | 1 failed) 335ms
+   × offline HTTP fixture runs complete real-PG worker path once and reconciles both ledgers 45ms
+ ❯ tests/design/appearance.test.ts (3 tests | 1 failed) 93ms
+   × real PostgreSQL durable worker freezes base scene, meters roles and activates result exactly once 6ms
+ ❯ tests/foundation/health.test.ts (1 test | 1 skipped) 8ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/operations.test.ts [ tests/integration/operations.test.ts ]
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/integration/operations.test.ts:14:36
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/265]⎯
+
+ FAIL  tests/foundation/health.test.ts [ tests/foundation/health.test.ts ]
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/foundation/health.test.ts:9:36
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/265]⎯
+
+ FAIL  tests/foundation/integration.test.ts [ tests/foundation/integration.test.ts ]
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/foundation/integration.test.ts:19:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/265]⎯
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 137 ⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/billing/http.test.ts > AC-billing-1 default off checkout503 webhook404 before body; offers honest empty and no external calls
+ FAIL  tests/billing/http.test.ts > live startup requires explicit merchant/test/SKU and HTTPS origin; public offers expose whitelist only
+ FAIL  tests/billing/http.test.ts > checkout pre-body authentication, exact Origin and atomic rate guard; no project CAS needed
+ FAIL  tests/billing/http.test.ts > billing HTTP rejects JSON size/schema/key and never creates orders for malformed inputs
+ FAIL  tests/billing/http.test.ts > webhook source rejected before bounded body; XFF cannot restore identity; mapped official peer accepted
+ FAIL  tests/billing/http.test.ts > actual HTTP listener overwrites spoofed source headers from loopback socket before webhook; no parsing/grant
+ FAIL  tests/billing/http.test.ts > webhook malformed/oversized body and rate failure never invoke provider or occupy event
+ FAIL  tests/billing/http.test.ts > owned return/history GET never grants credits; foreign ID404; DTO omits merchant/remote/account
+ FAIL  tests/billing/http.test.ts > provider/source test injection is forbidden under production; no fake runtime config accepted
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/billing/http.test.ts:16:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/265]⎯
+
+ FAIL  tests/billing/http.test.ts > AC-billing-1 default off checkout503 webhook404 before body; offers honest empty and no external calls
+ FAIL  tests/billing/http.test.ts > live startup requires explicit merchant/test/SKU and HTTPS origin; public offers expose whitelist only
+ FAIL  tests/billing/http.test.ts > checkout pre-body authentication, exact Origin and atomic rate guard; no project CAS needed
+ FAIL  tests/billing/http.test.ts > billing HTTP rejects JSON size/schema/key and never creates orders for malformed inputs
+ FAIL  tests/billing/http.test.ts > webhook source rejected before bounded body; XFF cannot restore identity; mapped official peer accepted
+ FAIL  tests/billing/http.test.ts > actual HTTP listener overwrites spoofed source headers from loopback socket before webhook; no parsing/grant
+ FAIL  tests/billing/http.test.ts > webhook malformed/oversized body and rate failure never invoke provider or occupy event
+ FAIL  tests/billing/http.test.ts > owned return/history GET never grants credits; foreign ID404; DTO omits merchant/remote/account
+ FAIL  tests/billing/http.test.ts > provider/source test injection is forbidden under production; no fake runtime config accepted
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ tests/billing/http.test.ts:18:30
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/265]⎯
+
+ FAIL  tests/billing/refund.test.ts > AC-billing-6 partial refund distinct object verified via payment_id; replay cannot restore export or new billing
+ FAIL  tests/billing/refund.test.ts > refund before late payment succeeds is monotonic; success audited ignored with zero credits
+ FAIL  tests/billing/refund.test.ts > parallel success/refund always ends in durable hold, never duplicate credits
+ FAIL  tests/billing/refund.test.ts > refund rejects nonpositive/excess/currency/unpaid/original-link proofs without occupying ledger
+ FAIL  tests/billing/refund.test.ts > refund atomically revokes existing unwatermarked shares while watermarked snapshot remains; failure rolls back hold/revoke/event
+ FAIL  tests/billing/refund.test.ts > refund before actual PgJobs dispatch mark releases held admission and prevents external dispatch
+ FAIL  tests/billing/refund.test.ts > refund after dispatch mark leaves in-flight held job visible; no false cancellation or inline spend-lock settlement
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/billing/refund.test.ts:8:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/265]⎯
+
+ FAIL  tests/billing/refund.test.ts > AC-billing-6 partial refund distinct object verified via payment_id; replay cannot restore export or new billing
+ FAIL  tests/billing/refund.test.ts > refund before late payment succeeds is monotonic; success audited ignored with zero credits
+ FAIL  tests/billing/refund.test.ts > parallel success/refund always ends in durable hold, never duplicate credits
+ FAIL  tests/billing/refund.test.ts > refund rejects nonpositive/excess/currency/unpaid/original-link proofs without occupying ledger
+ FAIL  tests/billing/refund.test.ts > refund atomically revokes existing unwatermarked shares while watermarked snapshot remains; failure rolls back hold/revoke/event
+ FAIL  tests/billing/refund.test.ts > refund before actual PgJobs dispatch mark releases held admission and prevents external dispatch
+ FAIL  tests/billing/refund.test.ts > refund after dispatch mark leaves in-flight held job visible; no false cancellation or inline spend-lock settlement
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ tests/billing/refund.test.ts:8:73
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/265]⎯
+
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-2 parallel same-key checkout has one durable order and provider id; client prices rejected
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > provider blocked outside DB transaction; intent already durable; timeout replay keeps same remote key
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > stale unknown remote outcome cannot charge again after provider 24h idempotence horizon
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-3 verified concurrent delivery grants exactly one package and one event; return GET is read-only
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-4 merchant/test/amount/currency/paid/status/metadata/bound-id negatives leave ledger empty
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > notification amount/status/merchant fields are ignored; only refetched object grants
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-5 verification outage occupies no event key; later retry grants once
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > database failure rolls back event/order/credits together and leaves retry possible
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > owned order reads hide foreign IDs and history cursor returns all 53 orders without overlap
+ FAIL  tests/billing/repository.test.ts > DDL immutable intent and bound identity survive direct SQL; refund state cannot be restored by late write
+ FAIL  tests/billing/repository.test.ts > verified webhook can arrive before create response persistence; later bind never downgrades succeeded state
+ FAIL  tests/billing/repository.test.ts > merchant/test config rotation cannot replay or verify an immutable intent against another provider identity
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/billing/repository.test.ts:7:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/265]⎯
+
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-2 parallel same-key checkout has one durable order and provider id; client prices rejected
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > provider blocked outside DB transaction; intent already durable; timeout replay keeps same remote key
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > stale unknown remote outcome cannot charge again after provider 24h idempotence horizon
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-3 verified concurrent delivery grants exactly one package and one event; return GET is read-only
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-4 merchant/test/amount/currency/paid/status/metadata/bound-id negatives leave ledger empty
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > notification amount/status/merchant fields are ignored; only refetched object grants
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-5 verification outage occupies no event key; later retry grants once
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > database failure rolls back event/order/credits together and leaves retry possible
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > owned order reads hide foreign IDs and history cursor returns all 53 orders without overlap
+ FAIL  tests/billing/repository.test.ts > DDL immutable intent and bound identity survive direct SQL; refund state cannot be restored by late write
+ FAIL  tests/billing/repository.test.ts > verified webhook can arrive before create response persistence; later bind never downgrades succeeded state
+ FAIL  tests/billing/repository.test.ts > merchant/test config rotation cannot replay or verify an immutable intent against another provider identity
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ tests/billing/repository.test.ts:7:73
+      5| import { account, counts, config, deferred, offer, services, signal } …
+      6| let db:Awaited<ReturnType<typeof freshDb>>;
+      7| beforeEach(async()=>{db=await freshDb();});afterEach(async()=>{await d…
+       |                                                                         ^
+      8| describe('BILLING immutable checkout and verified ledger',()=>{
+      9|  it('AC-billing-2 parallel same-key checkout has one durable order and…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/265]⎯
+
+ FAIL  tests/integration/read-pages.test.ts > READ-R1 catalog endpoint returns50+2 immutable entries and denies foreign/unknown cursor
+ FAIL  tests/integration/read-pages.test.ts > READ-R2 current cart remains bounded with540 historical cloned lines; owned design filter and cursor enforce scope
+ FAIL  tests/integration/read-pages.test.ts > READ-R2 client paginator preserves existing design query on second page
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/integration/read-pages.test.ts:12:74
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/265]⎯
+
+ FAIL  tests/integration/read-pages.test.ts > READ-R1 catalog endpoint returns50+2 immutable entries and denies foreign/unknown cursor
+ FAIL  tests/integration/read-pages.test.ts > READ-R2 current cart remains bounded with540 historical cloned lines; owned design filter and cursor enforce scope
+ FAIL  tests/integration/read-pages.test.ts > READ-R2 client paginator preserves existing design query on second page
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ tests/integration/read-pages.test.ts:12:116
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/265]⎯
+
+ FAIL  tests/design/appearance.test.ts > real PostgreSQL durable worker freezes base scene, meters roles and activates result exactly once
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/design/appearance.test.ts:15:129
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/265]⎯
+
+ FAIL  tests/design/budget-only.test.ts > only server-configured actor skips credits; real successful job still reserves and settles spend
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/design/budget-only.test.ts:7:128
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/265]⎯
+
+ FAIL  tests/design/budget-only.test.ts > budget-only concurrent admission cannot exceed money cap; failed result never grants a credit
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/design/budget-only.test.ts:8:125
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/265]⎯
+
+ FAIL  tests/design/budget-only.test.ts > budget-only retains unknown cost holds and terminal outcome through later reconciliation
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/design/budget-only.test.ts:9:120
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/265]⎯
+
+ FAIL  tests/design/budget-only.test.ts > budget-only actor retains existing admission and money limits; invalid actor config rejected
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/design/budget-only.test.ts:10:124
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/265]⎯
+
+ FAIL  tests/design/budget-only.test.ts > budget-only uncertain cost can settle first and finalize later without a second debit or credit grant
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/design/budget-only.test.ts:12:133
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/265]⎯
+
+ FAIL  tests/design/jobs.test.ts > exact consent + replay before archive, caps, credit and version, with mismatched replay rejected
+ FAIL  tests/design/jobs.test.ts > admission count races across connections reserve exactly five account jobs
+ FAIL  tests/design/jobs.test.ts > day boundary retains old holds and releases against origin day exactly once
+ FAIL  tests/design/jobs.test.ts > single claim dispatch known cost and stale completion fence
+ FAIL  tests/design/jobs.test.ts > late same-shell output creates detached draft and preserves newer manual pointer/budget
+ FAIL  tests/design/jobs.test.ts > malicious definite response releases credit but records known provider spend
+ FAIL  tests/design/jobs.test.ts > pre-dispatch crashes retry max three leases, live third lease survives sweep then expires
+ FAIL  tests/design/jobs.test.ts > post-dispatch crash stays uncertain with holds, never automatic redispatch
+ FAIL  tests/design/jobs.test.ts > operator reconcile exact-once evidence, full overrun and no guessed credit outcome
+ FAIL  tests/design/jobs.test.ts > unknown successful cost can settle later without creating another design or consuming another credit
+ FAIL  tests/design/jobs.test.ts > manual mode makes no provider request; demo is explicit fixture without credits or spend
+ FAIL  tests/design/jobs.test.ts > provider hard-limit verification fails before mark and releases without POST
+ FAIL  tests/design/jobs.test.ts > database admission snapshot immutable while lifecycle fields remain writable
+ FAIL  tests/design/jobs.test.ts > changed live config is rejected before outbound and overrun blocks another account
+ FAIL  tests/design/jobs.test.ts > DESIGN-R2 increased input rate and caps cannot dispatch above immutable original reservation
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/design/jobs.test.ts:7:74
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/265]⎯
+
+ FAIL  tests/design/jobs.test.ts > exact consent + replay before archive, caps, credit and version, with mismatched replay rejected
+ FAIL  tests/design/jobs.test.ts > admission count races across connections reserve exactly five account jobs
+ FAIL  tests/design/jobs.test.ts > day boundary retains old holds and releases against origin day exactly once
+ FAIL  tests/design/jobs.test.ts > single claim dispatch known cost and stale completion fence
+ FAIL  tests/design/jobs.test.ts > late same-shell output creates detached draft and preserves newer manual pointer/budget
+ FAIL  tests/design/jobs.test.ts > malicious definite response releases credit but records known provider spend
+ FAIL  tests/design/jobs.test.ts > pre-dispatch crashes retry max three leases, live third lease survives sweep then expires
+ FAIL  tests/design/jobs.test.ts > post-dispatch crash stays uncertain with holds, never automatic redispatch
+ FAIL  tests/design/jobs.test.ts > operator reconcile exact-once evidence, full overrun and no guessed credit outcome
+ FAIL  tests/design/jobs.test.ts > unknown successful cost can settle later without creating another design or consuming another credit
+ FAIL  tests/design/jobs.test.ts > manual mode makes no provider request; demo is explicit fixture without credits or spend
+ FAIL  tests/design/jobs.test.ts > provider hard-limit verification fails before mark and releases without POST
+ FAIL  tests/design/jobs.test.ts > database admission snapshot immutable while lifecycle fields remain writable
+ FAIL  tests/design/jobs.test.ts > changed live config is rejected before outbound and overrun blocks another account
+ FAIL  tests/design/jobs.test.ts > DESIGN-R2 increased input rate and caps cannot dispatch above immutable original reservation
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ tests/design/jobs.test.ts:7:116
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/265]⎯
+
+ FAIL  tests/design/process-crash.test.ts > SC-US-008-4 actual killed worker after dispatch resumes as uncertain with holds and zero redispatch
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/design/process-crash.test.ts:10:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/265]⎯
+
+ FAIL  tests/design/provider.test.ts > offline HTTP fixture runs complete real-PG worker path once and reconciles both ledgers
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/design/provider.test.ts:32:314
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/265]⎯
+
+ FAIL  tests/design/races.test.ts > archive commits before mark authorization: zero dispatch
+ FAIL  tests/design/races.test.ts > refund commits before mark authorization: zero dispatch
+ FAIL  tests/design/races.test.ts > archive after mark keeps in-flight authorization but suppresses scene application
+ FAIL  tests/design/races.test.ts > refund after mark keeps in-flight authorization but suppresses scene application
+ FAIL  tests/design/races.test.ts > global twenty admissions cap across independent accounts under contention
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/design/races.test.ts:7:74
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/265]⎯
+
+ FAIL  tests/design/races.test.ts > archive commits before mark authorization: zero dispatch
+ FAIL  tests/design/races.test.ts > refund commits before mark authorization: zero dispatch
+ FAIL  tests/design/races.test.ts > archive after mark keeps in-flight authorization but suppresses scene application
+ FAIL  tests/design/races.test.ts > refund after mark keeps in-flight authorization but suppresses scene application
+ FAIL  tests/design/races.test.ts > global twenty admissions cap across independent accounts under contention
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ tests/design/races.test.ts:7:116
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/265]⎯
+
+ FAIL  tests/design/reference-palette.test.ts > owned image references create real different drafts with CAS; link-only/foreign input fails without changing design
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/design/reference-palette.test.ts:15:147
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/265]⎯
+
+ FAIL  tests/design/revisions.test.ts > ownership, concurrent CAS, immutable approval and restore new draft
+ FAIL  tests/design/revisions.test.ts > catalog server UUID, exact immutable dimensions and same-project snapshot guard
+ FAIL  tests/design/revisions.test.ts > combined 100 revision capacity under competing connections
+ FAIL  tests/design/revisions.test.ts > history pagination does not drop equal timestamps
+ FAIL  tests/design/revisions.test.ts > FND-FINAL-1 foreign and absent array scalar JSON design relation IDs return identical404 without side effects
+ FAIL  tests/design/revisions.test.ts > remove design keeps immutable content and clears active pointers; foreign and stale denied
+ FAIL  tests/design/revisions.test.ts > concurrent removal and approval produce one winner without a deleted active pointer
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/design/revisions.test.ts:8:74
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/265]⎯
+
+ FAIL  tests/design/revisions.test.ts > ownership, concurrent CAS, immutable approval and restore new draft
+ FAIL  tests/design/revisions.test.ts > catalog server UUID, exact immutable dimensions and same-project snapshot guard
+ FAIL  tests/design/revisions.test.ts > combined 100 revision capacity under competing connections
+ FAIL  tests/design/revisions.test.ts > history pagination does not drop equal timestamps
+ FAIL  tests/design/revisions.test.ts > FND-FINAL-1 foreign and absent array scalar JSON design relation IDs return identical404 without side effects
+ FAIL  tests/design/revisions.test.ts > remove design keeps immutable content and clears active pointers; foreign and stale denied
+ FAIL  tests/design/revisions.test.ts > concurrent removal and approval produce one winner without a deleted active pointer
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ tests/design/revisions.test.ts:8:116
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/265]⎯
+
+ FAIL  tests/procurement/http.test.ts > procurement HTTP contract > round-trips camelCase product DTO and blocked manual refresh with guard before body
+ FAIL  tests/procurement/http.test.ts > procurement HTTP contract > PR-07 maps zero coverage to 422 and foreign source shell to private 404 without mutation
+ FAIL  tests/procurement/http.test.ts > procurement HTTP contract > exports the owned immutable revision with private download headers and foreign 404
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/procurement/http.test.ts:13:121
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/265]⎯
+
+ FAIL  tests/procurement/http.test.ts > procurement HTTP contract > round-trips camelCase product DTO and blocked manual refresh with guard before body
+ FAIL  tests/procurement/http.test.ts > procurement HTTP contract > PR-07 maps zero coverage to 422 and foreign source shell to private 404 without mutation
+ FAIL  tests/procurement/http.test.ts > procurement HTTP contract > exports the owned immutable revision with private download headers and foreign 404
+TypeError: close is not a function
+ ❯ tests/procurement/http.test.ts:13:152
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/265]⎯
+
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > AC-procurement-1/8/13 commits exact revisions and reproduces old budget after mutable line changes
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > PR-04 confirms and revises quantity through line CAS, preview and immutable recalculation history
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > AC-procurement-5/15 returns foreign scalar resources as 404 and never exposes export source
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > AC-procurement-3 preserves old snapshots and invalidates effective context after region change
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > AC-procurement-12 enforces line CAS and unique design element without duplicate rows
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > AC-procurement-11/14 requires explicit substitution confirmation, validates fit, creates a draft and preserves history
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > PR-05 applies matched selection and combined line fields to the replacement draft
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > PR-07 rejects foreign shells and zero coverage before writes with typed statuses
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > PR-07 returns catalog capacity conflict before substitution SQL and preserves state
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/procurement/repository.test.ts:7:150
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/265]⎯
+
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > AC-procurement-1/8/13 commits exact revisions and reproduces old budget after mutable line changes
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > PR-04 confirms and revises quantity through line CAS, preview and immutable recalculation history
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > AC-procurement-5/15 returns foreign scalar resources as 404 and never exposes export source
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > AC-procurement-3 preserves old snapshots and invalidates effective context after region change
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > AC-procurement-12 enforces line CAS and unique design element without duplicate rows
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > AC-procurement-11/14 requires explicit substitution confirmation, validates fit, creates a draft and preserves history
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > PR-05 applies matched selection and combined line fields to the replacement draft
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > PR-07 rejects foreign shells and zero coverage before writes with typed statuses
+ FAIL  tests/procurement/repository.test.ts > procurement PostgreSQL ownership and immutable history > PR-07 returns catalog capacity conflict before substitution SQL and preserves state
+TypeError: close is not a function
+ ❯ tests/procurement/repository.test.ts:7:181
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/265]⎯
+
+ FAIL  tests/sharing/growth.test.ts > AC-sharing-4 duplicate event keys insert once under concurrency; only pseudonymous IDs and empty data
+ FAIL  tests/sharing/growth.test.ts > AC-sharing-5/6 explicit 30-day readonly counts are zero, one, or unknown on storage failure
+ FAIL  tests/sharing/growth.test.ts > first design and actual new project events derive unique owner-project keys
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/sharing/growth.test.ts:7:74
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/265]⎯
+
+ FAIL  tests/sharing/growth.test.ts > AC-sharing-4 duplicate event keys insert once under concurrency; only pseudonymous IDs and empty data
+ FAIL  tests/sharing/growth.test.ts > AC-sharing-5/6 explicit 30-day readonly counts are zero, one, or unknown on storage failure
+ FAIL  tests/sharing/growth.test.ts > first design and actual new project events derive unique owner-project keys
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ tests/sharing/growth.test.ts:7:116
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/265]⎯
+
+ FAIL  tests/sharing/http.test.ts > AC-sharing-1 actual export strips EXIF, applies N8 pixels, discards raw upload, private PNG hash
+ FAIL  tests/sharing/http.test.ts > AC-sharing-1 paid current entitlement outputs clean pixels; refund denies later private bytes
+ FAIL  tests/sharing/http.test.ts > AC-sharing-2 public HTML exposes only selected caption/image, escapes text, sets private attribution cookie; revoke denies page/image
+ FAIL  tests/sharing/http.test.ts > AC-sharing-3 auth/origin/owner/version/rights refuse before stream read or reservation
+ FAIL  tests/sharing/http.test.ts > malformed/raw URL/SVG external photo/oversized body/over20MP reject with no ready assets or files
+ FAIL  tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+ FAIL  tests/sharing/http.test.ts > forged disk bytes rejected before publication and every image delivery
+ FAIL  tests/sharing/http.test.ts > arrival proof cannot be forged/replayed after30minutes; URL hint alone is not attribution
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/sharing/http.test.ts:16:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/265]⎯
+
+ FAIL  tests/sharing/http.test.ts > AC-sharing-1 actual export strips EXIF, applies N8 pixels, discards raw upload, private PNG hash
+ FAIL  tests/sharing/http.test.ts > AC-sharing-1 paid current entitlement outputs clean pixels; refund denies later private bytes
+ FAIL  tests/sharing/http.test.ts > AC-sharing-2 public HTML exposes only selected caption/image, escapes text, sets private attribution cookie; revoke denies page/image
+ FAIL  tests/sharing/http.test.ts > AC-sharing-3 auth/origin/owner/version/rights refuse before stream read or reservation
+ FAIL  tests/sharing/http.test.ts > malformed/raw URL/SVG external photo/oversized body/over20MP reject with no ready assets or files
+ FAIL  tests/sharing/http.test.ts > public rate guard counts before token lookup: exactly one of20 requests after59 succeeds
+ FAIL  tests/sharing/http.test.ts > forged disk bytes rejected before publication and every image delivery
+ FAIL  tests/sharing/http.test.ts > arrival proof cannot be forged/replayed after30minutes; URL hint alone is not attribution
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ tests/sharing/http.test.ts:17:30
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/265]⎯
+
+ FAIL  tests/sharing/repository.test.ts > AC-sharing-1/3 server watermark/provenance and ownership; ordinary photos cannot publish
+ FAIL  tests/sharing/repository.test.ts > AC-sharing-2 random hashed token, frozen public DTO, owner revoke and archive fail closed
+ FAIL  tests/sharing/repository.test.ts > expiry checked on every request and archived project blocks even nonrevoked links
+ FAIL  tests/sharing/repository.test.ts > asset immutable provenance and share content reject direct edits; false must be boolean
+ FAIL  tests/sharing/repository.test.ts > pending export quota serializes concurrent requests with Space uploader, account ceiling and count64
+ FAIL  tests/sharing/repository.test.ts > CAS finish and simultaneous publish have one winner; design relationship cannot be forged
+ FAIL  tests/sharing/repository.test.ts > verified entitlement removes watermark; refund revokes only paid links and private image access
+ FAIL  tests/sharing/repository.test.ts > independent account barrier: refund commits before waiting publisher rechecks entitlement
+ FAIL  tests/sharing/repository.test.ts > independent publish barrier: verified refund waits then revokes freshly created paid share atomically
+ FAIL  tests/sharing/repository.test.ts > SHARE-R1 bounded pages preserve all exports and links; foreign/ineligible cursors stay private
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/sharing/repository.test.ts:8:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/265]⎯
+
+ FAIL  tests/sharing/repository.test.ts > AC-sharing-1/3 server watermark/provenance and ownership; ordinary photos cannot publish
+ FAIL  tests/sharing/repository.test.ts > AC-sharing-2 random hashed token, frozen public DTO, owner revoke and archive fail closed
+ FAIL  tests/sharing/repository.test.ts > expiry checked on every request and archived project blocks even nonrevoked links
+ FAIL  tests/sharing/repository.test.ts > asset immutable provenance and share content reject direct edits; false must be boolean
+ FAIL  tests/sharing/repository.test.ts > pending export quota serializes concurrent requests with Space uploader, account ceiling and count64
+ FAIL  tests/sharing/repository.test.ts > CAS finish and simultaneous publish have one winner; design relationship cannot be forged
+ FAIL  tests/sharing/repository.test.ts > verified entitlement removes watermark; refund revokes only paid links and private image access
+ FAIL  tests/sharing/repository.test.ts > independent account barrier: refund commits before waiting publisher rechecks entitlement
+ FAIL  tests/sharing/repository.test.ts > independent publish barrier: verified refund waits then revokes freshly created paid share atomically
+ FAIL  tests/sharing/repository.test.ts > SHARE-R1 bounded pages preserve all exports and links; foreign/ineligible cursors stay private
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ tests/sharing/repository.test.ts:8:73
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/265]⎯
+
+ FAIL  tests/sharing/resources.test.ts > account retained quota includes pending assets across projects with concurrent export reservations
+ FAIL  tests/sharing/resources.test.ts > stale export reservations reclaimed by existing cleanup and failed completion removes both files
+ FAIL  tests/sharing/resources.test.ts > refund between export reservation and finish blocks unwatermarked derivative; CAS stale result not ready
+ FAIL  tests/sharing/resources.test.ts > decoder slot admits one process and rejects second without queue; min size enforced
+ FAIL  tests/sharing/resources.test.ts > slow body times out within10s without keeping database clients; pending capacity reclaimed
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/sharing/resources.test.ts:11:85
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/265]⎯
+
+ FAIL  tests/sharing/resources.test.ts > account retained quota includes pending assets across projects with concurrent export reservations
+ FAIL  tests/sharing/resources.test.ts > stale export reservations reclaimed by existing cleanup and failed completion removes both files
+ FAIL  tests/sharing/resources.test.ts > refund between export reservation and finish blocks unwatermarked derivative; CAS stale result not ready
+ FAIL  tests/sharing/resources.test.ts > decoder slot admits one process and rejects second without queue; min size enforced
+ FAIL  tests/sharing/resources.test.ts > slow body times out within10s without keeping database clients; pending capacity reclaimed
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ tests/sharing/resources.test.ts:11:183
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/265]⎯
+
+ FAIL  tests/space/floorplan-http.test.ts > PLAN-HTTP-1 rejects missing/foreign source equally before OCR and leaves project/shell state unchanged
+ FAIL  tests/space/floorplan-http.test.ts > PLAN-HTTP-2 requires origin/currentversion/allowedasset-kind before OCR; preview does not save a shell
+ FAIL  tests/space/floorplan-http.test.ts > PLAN-HTTP-3 imported shell needs confirmation, retains owned image provenance/hash across reload and CAS
+ FAIL  tests/space/floorplan-http.test.ts > PLAN-HTTP-4 busy recognition admission remains bounded per actor
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/space/floorplan-http.test.ts:16:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/265]⎯
+
+ FAIL  tests/space/floorplan-http.test.ts > PLAN-HTTP-1 rejects missing/foreign source equally before OCR and leaves project/shell state unchanged
+ FAIL  tests/space/floorplan-http.test.ts > PLAN-HTTP-2 requires origin/currentversion/allowedasset-kind before OCR; preview does not save a shell
+ FAIL  tests/space/floorplan-http.test.ts > PLAN-HTTP-3 imported shell needs confirmation, retains owned image provenance/hash across reload and CAS
+ FAIL  tests/space/floorplan-http.test.ts > PLAN-HTTP-4 busy recognition admission remains bounded per actor
+TypeError: close is not a function
+ ❯ tests/space/floorplan-http.test.ts:16:1269
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/265]⎯
+
+ FAIL  tests/space/http.test.ts > pre-body guard refuses Origin/ownership/version before sole upload body getter
+ FAIL  tests/space/http.test.ts > raw private upload round-trip serves fixed normalized MIME/nosniff, safe DTO and version
+ FAIL  tests/space/http.test.ts > SC-US-005-2 Pinterest import disabled with useful alternative and no write
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/space/http.test.ts:13:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/265]⎯
+
+ FAIL  tests/space/http.test.ts > pre-body guard refuses Origin/ownership/version before sole upload body getter
+ FAIL  tests/space/http.test.ts > raw private upload round-trip serves fixed normalized MIME/nosniff, safe DTO and version
+ FAIL  tests/space/http.test.ts > SC-US-005-2 Pinterest import disabled with useful alternative and no write
+TypeError: close is not a function
+ ❯ tests/space/http.test.ts:13:700
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/265]⎯
+
+ FAIL  tests/space/pinterest-http.test.ts > owned Pinterest import uses private validated upload and CAS; foreign/stale denied before network; real image applies
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/space/pinterest-http.test.ts:14:149
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[43/265]⎯
+
+ FAIL  tests/space/reference-removal.test.ts > reference deletion hides active list but preserves used design, approval and restore; new uses reject
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/space/reference-removal.test.ts:7:133
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[44/265]⎯
+
+ FAIL  tests/space/reference-removal.test.ts > simultaneous reference deletions use project CAS; one wins and foreign project never changes
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/space/reference-removal.test.ts:8:124
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[45/265]⎯
+
+ FAIL  tests/space/repository.test.ts > SC-US-003-1 shell hash stable, old shell immutable, update creates new revision
+ FAIL  tests/space/repository.test.ts > same-version concurrent shell writes have exactly one winner on real PostgreSQL
+ FAIL  tests/space/repository.test.ts > parallel upload reservations include pending retained bytes and release quota
+ FAIL  tests/space/repository.test.ts > account quota serializes reservations across different projects
+ FAIL  tests/space/repository.test.ts > 64 assets hard cap, unsupported ordinary share_image and missing rights refuse
+ FAIL  tests/space/repository.test.ts > SC-US-004-3 owner and same-project checks reject known foreign assets, pending never served
+ FAIL  tests/space/repository.test.ts > SC-US-005-1/3 stores exact owner pin and reference provenance, no asset/source mixing
+ FAIL  tests/space/repository.test.ts > CAS rechecked after parsing; lost reservation cannot become ready
+ FAIL  tests/space/repository.test.ts > stale pending and old orphan cleanup preserve ready and young files
+ FAIL  tests/space/repository.test.ts > 20 reference cap rejects the 21st and preserves the existing list
+ FAIL  tests/space/repository.test.ts > 100 combined immutable revision cap rejects new shell without bumping project
+ FAIL  tests/space/repository.test.ts > paginated private assets expose all64 exactly once; forged foreign cursor404
+ FAIL  tests/space/repository.test.ts > delete unused GLB preserves owner, version and immutable-history guards
+ FAIL  tests/space/repository.test.ts > concurrent GLB delete and shell creation serialize without broken history
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/space/repository.test.ts:13:42
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[46/265]⎯
+
+ FAIL  tests/space/repository.test.ts > SC-US-003-1 shell hash stable, old shell immutable, update creates new revision
+ FAIL  tests/space/repository.test.ts > same-version concurrent shell writes have exactly one winner on real PostgreSQL
+ FAIL  tests/space/repository.test.ts > parallel upload reservations include pending retained bytes and release quota
+ FAIL  tests/space/repository.test.ts > account quota serializes reservations across different projects
+ FAIL  tests/space/repository.test.ts > 64 assets hard cap, unsupported ordinary share_image and missing rights refuse
+ FAIL  tests/space/repository.test.ts > SC-US-004-3 owner and same-project checks reject known foreign assets, pending never served
+ FAIL  tests/space/repository.test.ts > SC-US-005-1/3 stores exact owner pin and reference provenance, no asset/source mixing
+ FAIL  tests/space/repository.test.ts > CAS rechecked after parsing; lost reservation cannot become ready
+ FAIL  tests/space/repository.test.ts > stale pending and old orphan cleanup preserve ready and young files
+ FAIL  tests/space/repository.test.ts > 20 reference cap rejects the 21st and preserves the existing list
+ FAIL  tests/space/repository.test.ts > 100 combined immutable revision cap rejects new shell without bumping project
+ FAIL  tests/space/repository.test.ts > paginated private assets expose all64 exactly once; forged foreign cursor404
+ FAIL  tests/space/repository.test.ts > delete unused GLB preserves owner, version and immutable-history guards
+ FAIL  tests/space/repository.test.ts > concurrent GLB delete and shell creation serialize without broken history
+TypeError: close is not a function
+ ❯ tests/space/repository.test.ts:13:481
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[47/265]⎯
+
+ FAIL  tests/sharing/review-probes/security.test.ts > independent SQL: every ready-export field stays frozen, including kind relabel, IDs, timestamps and keys
+ FAIL  tests/sharing/review-probes/security.test.ts > independent SQL: share identity and TTL frozen; revocation cannot be cleared, moved or bypassed
+ FAIL  tests/sharing/review-probes/security.test.ts > independent capacity boundary: 63 pending assets allow exactly one simultaneous export reservation
+ FAIL  tests/sharing/review-probes/security.test.ts > independent generic asset route denies free and paid frozen export through original and normalized paths
+ FAIL  tests/sharing/review-probes/security.test.ts > independent archive and unknown tokens return404/no-store/noindex on both public surfaces
+ FAIL  tests/sharing/review-probes/security.test.ts > independent expired active-project token returns404/no-store/noindex on page and image
+ FAIL  tests/sharing/review-probes/security.test.ts > independent pagination correction: fifty plus one HTTP pages preserve all own rows and reject foreign cursors
+ FAIL  tests/sharing/review-probes/security.test.ts > independent actual child deadline kills stalled decode and releases slot for next valid image
+Error: TEST_DATABASE_URL required: PostgreSQL tests cannot be skipped
+ ❯ freshDb tests/helpers/db.ts:6:30
+      4| export async function freshDb():Promise<{pool:Pool;close:()=>Promise<v…
+      5|  const connectionString=process.env.TEST_DATABASE_URL;
+      6|  if(!connectionString) throw new Error('TEST_DATABASE_URL required: Po…
+       |                              ^
+      7|  const schema=`n8_test_${randomBytes(12).toString('hex')}`;
+      8|  const admin=new Pool({connectionString,max:2});
+ ❯ tests/sharing/review-probes/security.test.ts:20:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[48/265]⎯
+
+ FAIL  tests/sharing/review-probes/security.test.ts > independent SQL: every ready-export field stays frozen, including kind relabel, IDs, timestamps and keys
+ FAIL  tests/sharing/review-probes/security.test.ts > independent SQL: share identity and TTL frozen; revocation cannot be cleared, moved or bypassed
+ FAIL  tests/sharing/review-probes/security.test.ts > independent capacity boundary: 63 pending assets allow exactly one simultaneous export reservation
+ FAIL  tests/sharing/review-probes/security.test.ts > independent generic asset route denies free and paid frozen export through original and normalized paths
+ FAIL  tests/sharing/review-probes/security.test.ts > independent archive and unknown tokens return404/no-store/noindex on both public surfaces
+ FAIL  tests/sharing/review-probes/security.test.ts > independent expired active-project token returns404/no-store/noindex on page and image
+ FAIL  tests/sharing/review-probes/security.test.ts > independent pagination correction: fifty plus one HTTP pages preserve all own rows and reject foreign cursors
+ FAIL  tests/sharing/review-probes/security.test.ts > independent actual child deadline kills stalled decode and releases slot for next valid image
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ tests/sharing/review-probes/security.test.ts:21:30
+     19| let db:Awaited<ReturnType<typeof freshDb>>,dir:string;
+     20| beforeEach(async()=>{db=await freshDb();dir=await mkdtemp(join(tmpdir(…
+     21| afterEach(async()=>{await db.close();await rm(dir,{recursive:true,forc…
+       |                              ^
+     22|
+     23| it('independent SQL: every ready-export field stays frozen, including …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[49/265]⎯
+
+
+ Test Files  27 failed | 20 passed (47)
+      Tests  137 failed | 145 passed | 18 skipped (300)
+   Start at  14:45:51
+   Duration  34.36s (tests 68%, import 27%, transform 4%, worker 1%)
+
+    Isolate  47 workers spawned · ~167ms startup each (spawn + environment, per file)
+             at least ~7.68s faster with isolate: false — reuses workers across files instead of one per file

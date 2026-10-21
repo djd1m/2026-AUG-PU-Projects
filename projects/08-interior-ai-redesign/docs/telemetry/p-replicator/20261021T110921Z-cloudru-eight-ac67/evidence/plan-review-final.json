@@ -1,0 +1,189 @@
+{
+  "status": "completed",
+  "verdict": "plan_requires_specific_corrections_before_cloud_apply",
+  "run_id": "20261021T110921Z-cloudru-eight-ac67",
+  "work_unit": "cloudru_plan_review",
+  "scope": "Read-only bounded consequential review of supplied inventories and proposed seven-VM plan; no cloud, secret, container, or source mutations.",
+  "source": {
+    "expected_revision": "e2803308144336a58f6e6481a2cece56ce56c317",
+    "observed_revision": "e2803308144336a58f6e6481a2cece56ce56c317",
+    "continuity": true,
+    "input_sha256": {
+      "/tmp/cloudru-eight-inventory-1-4.json": "a0d8e790b6ed1d49fa2b0a9fcd9f83ecb3ef339edb2c73d2235e5e4fa0a85852",
+      "/tmp/cloudru-eight-inventory-5-8.json": "94aa480da3c218456cdfaaa2024092c2356a1ec8b231062f61257b8d28e72cb5"
+    }
+  },
+  "profile": "compact-quality-first-v2; independent consequential plan review",
+  "telemetry": {
+    "requested_model": null,
+    "requested_model_reason": "Not supplied as trusted host launch metadata to worker; coordinator owns requested-model receipt.",
+    "actual_model": null,
+    "actual_model_reason": "No host execution metadata exposed; model cannot be confirmed by prose.",
+    "usage": null,
+    "usage_reason": "No measured counters exposed.",
+    "duration_seconds": null,
+    "duration_reason": "Coordinator owns dispatch/completion timing; worker did not capture initial clock.",
+    "finished_at": "2026-10-21T11:20:43.014013+00:00",
+    "repository_path": "/home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/docs/telemetry/p-replicator/20261021T110921Z-cloudru-eight-ac67",
+    "ownership": "coordinator"
+  },
+  "resource_verdict": {
+    "classification": "Reasonable low-traffic starting candidates; not measured minimums or proven production capacities.",
+    "candidates": {
+      "01": [
+        2,
+        4,
+        40
+      ],
+      "02": [
+        2,
+        4,
+        30
+      ],
+      "03": [
+        2,
+        4,
+        30
+      ],
+      "04": [
+        2,
+        4,
+        40
+      ],
+      "05": [
+        4,
+        8,
+        80
+      ],
+      "06": [
+        4,
+        8,
+        80
+      ],
+      "07": null,
+      "08": [
+        2,
+        4,
+        40
+      ]
+    },
+    "units": [
+      "vCPU",
+      "RAM GiB",
+      "SSD GiB"
+    ],
+    "total_seven": {
+      "vcpus": 18,
+      "ram_gib": 36,
+      "ssd_gib": 340
+    },
+    "evidence": [
+      "N3 full stack has 1408 MiB aggregate declared container limits, making 4 GiB reasonable host headroom.",
+      "N6 declares shared_buffers=2GB, so shrinking to 4 GiB without a deliberate DB configuration change is not a safe default; 4 vCPU is not established as a hard minimum.",
+      "N5 has ffmpeg/OpenCV, three concurrent media worker roles, source files up to 2 GB and about 18 GB possible reservations across STT/render; 8 GiB RAM/80 GiB disk are defensible initial candidates.",
+      "N8 declared aggregate service caps are 1.75 GiB before host overhead; private assets can grow to 1 GiB/account.",
+      "P1/P4 persistent media and all DB volumes need real occupied-byte measurements before assuming their chosen disks fit migration and temporary restore space."
+    ],
+    "cpu10_caveat": "Confirm Cloud.ru guarantee/burst semantics. If 10% denotes guaranteed share per vCPU, 2 and 4 vCPU offer only 0.2 and 0.4 core-equivalent sustained guarantee. In particular P5 media processing and P6 indexing must pass representative throughput/latency smoke before this tier can be accepted. Do not silently upgrade a paid flavor.",
+    "minimum_price_caveat": "The inventory supports RAM/disk floors more strongly than exact CPU counts. If a 2-vCPU/8-GiB flavor exists and is cheaper, it is a possible later measured candidate for P6; do not introduce tuning work solely to prove theoretical lowest price."
+  },
+  "findings": [
+    {
+      "severity": "resolved_cause_verify_before_apply",
+      "id": "PRICE",
+      "finding": "Supplied live list_flavors estimates conflict materially with preliminary PDF estimate.",
+      "evidence": "lowcost10-2-4 ~2114 RUB/month versus PDF 2/4 ~723; lowcost10-4-8 ~4158. Arithmetic for five small plus two larger =18886; flat eight small =16912.",
+      "required_action": "Install exact flavor hourly and SSD monthly tariff overrides with provenance under existing tool-configuration authorization; preserve prior config/evidence; regenerate seven exact plans and verify both flavor IDs use flavor lookup. Itemize public IP separately. User review must cover revised exact cost and P7 disposition before apply.",
+      "resolution": "Coordinator identified generic estimator fallback rather than provider tariff conflict. Reviewer read /tmp/cloudru-engine-pricing.go and confirmed supported ~/.cloudru-vm/pricing.json override, 730h/month and round2 decimal rounding."
+    },
+    {
+      "severity": "blocking_for_project07",
+      "id": "P07",
+      "finding": "P7 contains only README and no deployable application.",
+      "required_action": "Keep P7 explicitly pending source/scope clarification; do not spend on an empty eighth VM or substitute a static placeholder. Seven is partial fulfillment of an eight-project request until the user accepts that scope."
+    },
+    {
+      "severity": "blocking_for_project03",
+      "id": "P03_BASELINE",
+      "finding": "README explicitly forbids rebuilding HEAD; f8055e3 is a documented historical deployed baseline, not itself proof of a safe release today.",
+      "required_action": "Choose a verified known-good immutable build/source; include all four A-D variants; verify DB schema and runtime configuration compatibility. Do not pair an old binary with unverified newer DB migrations."
+    },
+    {
+      "severity": "blocking_before_deploy",
+      "id": "EDGE_CONFIG",
+      "finding": "Shared talk-ai-public/proxy/loopback assumptions do not constitute standalone internet ingress. P2 SESSION_SECRET wiring and P4 required config are known incomplete.",
+      "required_action": "Provide per-VM TLS ingress and exact public origin/trusted-proxy configuration; resolve listed environment/migration seams, validate rendered production compose. Keep DB/Redis/MinIO unpublished; expose only necessary HTTP/HTTPS and restricted administration."
+    },
+    {
+      "severity": "blocking_before_cutover",
+      "id": "DATA_JOBS",
+      "finding": "Migration must preserve durable state and prevent split-brain and duplicate jobs/webhooks.",
+      "required_action": "Keep existing VPS running; restore and verify backups on target before cutover. Quiesce source writes, queue consumers and schedulers for final consistent copy. P8 DB+assets form one recovery point; P5/P6 paid-call journals and uncertain jobs must be reconciled, not replayed blindly. Enable one active set of consumers, bot polling and webhook handlers. DNS rollback alone is insufficient once target accepts writes."
+    },
+    {
+      "severity": "required_before_acceptance",
+      "id": "CAPACITY",
+      "finding": "No live workload, disk, sustained CPU or OOM evidence supports production sizing yet.",
+      "required_action": "Build and run browser checks outside constrained production VMs where possible; use immutable image receipts. Validate representative P5 media processing, P6 indexing and each app critical user flow plus worker health. Record memory/disk headroom and CPU saturation; use measurements to decide a bounded correction."
+    },
+    {
+      "severity": "preserve",
+      "id": "P08_DIRTY",
+      "finding": "N8 Caddyfile contains uncommitted unrelated shino host/upstream.",
+      "required_action": "Preserve original working-tree change and generate scoped deployment config; do not overwrite it or unintentionally publish the unrelated service on the new VM."
+    }
+  ],
+  "minimal_rollout": [
+    "Install supported exact tariff override with provenance and verify regenerated seven persisted plans; resolve P7 disposition and review revised exact plan cost before apply. Preserve superseded estimates as evidence, not active quotes.",
+    "Prepare smallest deployment adaptations for isolated ingress, configuration, images, migrations and backup restore; do not rewrite application architecture or add infrastructure services.",
+    "Use N8 as first candidate because its standalone public overlay already exists, conditional on paired DB/assets restore and scoped Caddy handling. Create and validate one target before provisioning remaining targets.",
+    "Validate HTTPS and critical user flow, worker heartbeat/queue behavior, persistence through restart and backup restore; keep AI/payments in previously authorized modes. Confirm service reachability without public database/storage ports.",
+    "Move one project at a time using final source quiescence, consistent state transfer, single-consumer activation and DNS/webhook switch. Record source/target recovery points and a write-safe rollback procedure.",
+    "Keep the old VPS and recovery copies until acceptance and explicit retirement decision; report seven delivered plus P7 pending if that is the final agreed scope."
+  ],
+  "verification": {
+    "inventories_read": true,
+    "targeted_source_checks": [
+      "P3 README warning and baseline",
+      "P6 shared_buffers=2GB",
+      "P8 service mem_limit and public overlay bindings",
+      "P5/6 private DB/Redis comments and compose ingress",
+      "Pricing implementation: exact flavor overrides, SSD monthly units, 730h, two-decimal rounding, total includes disk, fallback behavior"
+    ],
+    "tests_run": false,
+    "tests_reason": "Read-only plan review, no changed code or E2E execution.",
+    "cloud_calls": false,
+    "secret_reads": false,
+    "source_writes": false,
+    "e2e_preflight": {
+      "status": "not_applicable",
+      "reason": "Plan review only; coordinator must run preflight immediately before actual E2E."
+    }
+  },
+  "stop_condition": "Review complete; return findings, no implementation.",
+  "pricing_resolution": {
+    "source_reviewed": "/tmp/cloudru-engine-pricing.go",
+    "source_sha256": "223740b4873a13f18dc0a48a4608b289cc6bed3f30382d56568815e67f90222d",
+    "coordinator_reported_official_pdf": "261014; rows 36 and 39 for selected flavors; row 85 for SSD",
+    "official_pdf_independently_read_by_reviewer": false,
+    "flavor_hourly_rub": {
+      "lowcost10-2-4": 0.99023334,
+      "lowcost10-4-8": 1.98046666
+    },
+    "disk_ssd_gb_monthly_rub": 11.5778,
+    "hours_per_month": 730,
+    "coordinator_reported_seven_total_including_seven_public_ips_rub": 11502.1,
+    "total_status": "Estimate conditional on exact tariff SKU/region/VAT applicability; coordinator owns PDF and regenerated-plan validation.",
+    "excluded": [
+      "traffic",
+      "backups",
+      "paid model/API usage",
+      "S3"
+    ],
+    "rounding": "round2 in reviewed Go source means two decimal places, not a 2 percent surcharge or discount. Preserve tariff precision in configuration; no adjustment to force a target budget.",
+    "non_double_counting": "total_monthly_rub already includes compute and disk; public IP is absent from estimator and must be added separately.",
+    "fallback_caveat": "Unknown flavor keys silently use generic vCPU+RAM defaults, and unreadable/malformed override silently falls back. Verify emitted source and numbers after installing; retain provenance outside unsupported estimator fields.",
+    "authorization_assessment": "Reversible supported pricing configuration is within coordinator-reported installation/configuration authorization. This does not authorize paid apply; exact revised plans remain for user review.",
+    "prior_generic_estimates": "Retained above as superseded evidence, not current provider prices. 2114/4158 appear to include 70 RUB of default disk estimate; they must not be treated as compute-only."
+  }
+}

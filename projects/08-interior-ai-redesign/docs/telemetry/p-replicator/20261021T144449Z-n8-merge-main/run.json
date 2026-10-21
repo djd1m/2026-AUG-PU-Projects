@@ -1,0 +1,60 @@
+{
+  "run_id": "20261021T144449Z-n8-merge-main",
+  "profile": "compact-quality-first-v2",
+  "tier": "L",
+  "task": "Merge latest N8 into main and push; preserve other projects and original dirty worktree",
+  "started_at": "2026-10-21T14:44:49.399691+00:00",
+  "status": "validated-before-save-and-merge",
+  "source_revision": "e2803308144336a58f6e6481a2cece56ce56c317",
+  "target_revision": "3e29d400e5cd7a6e54c1811e973e8474703f5166",
+  "actual_coordinator_model": null,
+  "requested_review_model": "gpt-5.6-sol",
+  "usage": null,
+  "cost": null,
+  "measurement_gaps": [
+    "Host actual model/usage not exposed"
+  ],
+  "checks": [
+    {
+      "name": "lint",
+      "exit_code": 0
+    },
+    {
+      "name": "build including typecheck",
+      "exit_code": 0
+    },
+    {
+      "name": "initial test attempt",
+      "exit_code": 1,
+      "reason": "TEST_DATABASE_URL absent; superseded by dedicated test database rerun"
+    },
+    {
+      "name": "Caddy adaptation",
+      "exit_code": 0
+    },
+    {
+      "name": "realcredential leakage scan",
+      "exit_code": 0,
+      "matches": 0
+    },
+    {
+      "name": "N8-only merge scope and exact feature tree",
+      "exit_code": 0
+    },
+    {
+      "name": "full test rerun with isolated PostgreSQL",
+      "exit_code": 0,
+      "tests": 300,
+      "files": 47
+    }
+  ],
+  "test_rerun": {
+    "status": "passed",
+    "exit_code": 0,
+    "files_passed": 47,
+    "tests_passed": 300,
+    "duration_seconds": 115.77,
+    "database": "Isolated temporary PostgreSQL; random password; loopback only; removed after test",
+    "fsync": "Off on ephemeral test DB only; no DB crash-durability claim"
+  }
+}
