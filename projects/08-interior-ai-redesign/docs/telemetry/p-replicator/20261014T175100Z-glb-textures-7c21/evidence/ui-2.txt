@@ -1,0 +1,25 @@
+PASS one GLB file picker without duplicate form
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- 67108864
+
+    at file:///app/scripts/e2e-glb-upload.mjs:25:461
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:541:9)
+    at async checked (file:///app/scripts/e2e-glb-upload.mjs:16:33)
+    at async file:///app/scripts/e2e-glb-upload.mjs:23:2 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: 67108864,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

@@ -1,0 +1,21 @@
+{
+  "name": "@n8/domain",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "zod": "3.25.76",
+    "decimal.js": "10.6.0",
+    "fast-json-stable-stringify": "2.1.0"
+  },
+  "exports": {
+    ".": "./src/common.ts",
+    "./common": "./src/common.ts",
+    "./identity": "./src/identity/index.ts",
+    "./space": "./src/space/index.ts",
+    "./design": "./src/design/index.ts",
+    "./procurement": "./src/procurement/index.ts",
+    "./billing": "./src/billing/index.ts",
+    "./sharing": "./src/sharing/index.ts"
+  }
+}

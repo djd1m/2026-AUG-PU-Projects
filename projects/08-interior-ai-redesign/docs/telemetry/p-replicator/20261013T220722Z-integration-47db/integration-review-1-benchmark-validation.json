@@ -1,0 +1,21 @@
+{
+  "time": "2026-10-14T00:06:40.968Z",
+  "sourceSha256": {
+    "scripts/benchmark.ts": "a1beb5eae3f63ee0474ef3a6fc011271e5a40eead2fefd83ae541f68f192c933",
+    "tests/procurement/fixture.ts": "76295d792f60b69da41338907d39c8d46664aa0378ee8ad85f25f5566a7191f9",
+    "packages/domain/src/procurement/calculator.ts": "a56e8894e98ce2ba019df4f2a38e90d011fae404b2da0793af98a8078cdf43ca",
+    "packages/domain/src/common.ts": "6fb8bc4b0c8f1855ee78d355b01e9e394f1afc71e0428f076b1dc1361cb2440a",
+    "apps/worker/src/index.ts": "ad36a63c704f9077d039d95c40898e188d7d3c52a35ff550bd834f93ecd2a64f",
+    "apps/web/src/server/health.ts": "d3cce6e3f6932682f69c1943ff8a9aff40c680b847311d8edd485f38190c52d4",
+    "tests/integration/operations.test.ts": "097e36529f88014495e5b22ff254b6f6f078c3dfe496d6e0651c343c7738535e"
+  },
+  "sampleCount": 1000,
+  "independentNearestRankP95": 8.502903000000515,
+  "claimedP95": 8.502903000000515,
+  "golden": "e859e7593e7ec83599a7f41435ef6db7a337f0cb481a808626b9485629706aee",
+  "hashesMatched": 1000,
+  "fixtureHash": "5c6ea206cb38d8e3f12d6b34531c672fa4d77537deb8a6835f492bbc2128a2c3",
+  "oracle": "100 material lines: floor 10 packs * 160000 + 99 * 1 pack * 160000 = 17440000; 99 known chair lines: ceil(1*1.08)=2 * 250000 * 99 = 49500000; confirmed work100000 + delivery50000 => known67090000; reserve10%=6709000; one unmatched chair unknown => scenario total null",
+  "buildScope": "Host pure calculation source hashes, no claim that source is deployed in image3",
+  "passed": true
+}

@@ -1,45 +1,89 @@
-# RoomKind — Refinement
+# N8 — Refinement and Verification v0.1
+
+Все ниже — требуемые проверки, **ещё не выполненные** в стадии SPARC. Их результат привязывается к exact code/spec/build revision и receipt. Mandatory gates нельзя менять ради срока; mutation проверяет, способен ли guard упасть на намеренно внесённом дефекте.
 
 ## Edge Cases Matrix
 
 | Scenario | Input | Expected | Handling |
 |---|---|---|---|
-| Empty input | no image/style | 400 with actionable message | no job/credit effect |
-| Max size | >10MB or20MP image | 413/422 | bounded decode and cleanup |
-| Concurrent access | two starts with one credit | one reservation | account lock + real postgres test |
-| Network failure | dropped202 response | same job via same key | idempotent resume |
-| Local worker crash | lease expires | ≤2 attempts, stale fence denied | deadline and unique customer credit release |
-| Hosted crash/response loss | durable submitting/ambiguous | no second POST | terminal local state, conservative spend, operator reconciliation |
-| Hosted known-ID reclaim | two workers/expired lease | same ticket/attempt/deadline, one new fence | GET only; stale attach/disposal denied |
-| Provider duplicate | two identical successes | one20-credit grant | unique ledger + transaction |
-| Provider mismatch | wrong amount/account/currency | no grant | provider GET + recorded rejection |
-| Structural defect | moved window | rejected quality | no public accepted example |
-| No GPU | real worker mode | explicit unavailable | never switch to fixture silently |
-| Share revoke | old token | 404/no media | state checked every access |
+| Empty input | dimensions/price/coverage отсутствуют | 422 или явное unknown по полю, никогда 0 | boundary schemas |
+| Max size | 25MiB+1 GLB / 10MiB+1 image / standalone image >20MP / GLB texture side >8192 or total >134217728 pixels / >250k triangles | ранний 413/422, память bounded | actual stream/decode limit |
+| Concurrent access | same project version / two workers / duplicate webhook | один commit/dispatch/grant, другой конфликт/duplicate | real PostgreSQL transactions |
+| Network failure | timeout после отправки AI; checkout/provider refetch failure | uncertain hold / pending intent / retryable 503 без lost event | no blind paid retries |
+| Source context | регион/магазин сменён, timestamp future/expired | stale/422, снимок истории сохранён | derived freshness |
+| Geometry | changed scale/window/shell hash, external URI/extension | scene/import rejected | immutable baseline + schema |
+| Privacy | другой owner, share после revoke, direct storage key | 404 без private bytes/DTO fields | scoped repositories + routed asset serving |
+| Budget | 19.9/1.99 exact; decimal just over pack boundary; null delivery; phase transfer | exact ceil; incomplete; total invariant | decimal + property tests |
+| Payment | чужая сумма/shop/test/remote id; replay/refund/out-of-order | rejection or once-only effect/refund hold | donor verifier + transactional ledger |
+| Mode honesty | отсутствующий key/caps, fake in normal app, disabled feature | startup reject/off UI, no egress | config and network spy |
 
 ## Testing Strategy
-Unit: auth/validation/limits/entitlement/provenance/provider parsing. Integration: real isolated postgres migrations, concurrent ledger reserve, duplicate notification, fencing and rollback. E2E: actual web fixtures in shared Docker browser, desktop1440/mobile390, upload through comparison/gallery/paywall/share/revoke plus second-account denial. GPU: separate real corpus and performance commands, unavailable until CUDA environment. Every test artifact binds to commit or immutable dirty snapshot; browser health alone does not pass app E2E.
-Full required test sets once per relevant change; no repeated green run without reason. Mutation guards must fail when owner check, payment idempotency, budget or fixture-quality exclusion is removed. Test runner capped2 workers. No new general-purpose validator.
+
+Unit: чистые domain модули, scene/budget/config validators, meaningful boundary/property cases. Не требовать произвольный процент coverage вместо перечисленных рисков.
+Integration: реальные ephemeral PostgreSQL, private temp storage и локальные HTTP provider simulators. Simulators используют реальный HTTP adapter/response parser, но не считаются live evidence. Успешные донорские тесты не доказывают N8; портировать их и адаптировать доменные fixtures.
+Concurrency: отдельные DB connections, barriers/held locks и bounded deadline; тест должен отличать SKIP LOCKED/fence/CAS от последовательного lucky-run. Skip из-за missing DB означает not-run, не pass.
+E2E: Playwright production build, две изолированные user sessions, ручной 4.5×4 план, upload image/self-contained GLB fixture, style/history, product snapshot, budget, replacement, export/share/revoke. Обязательный read-only companion preflight непосредственно до E2E.
+Performance: 200-line exact calculation benchmark и 10 concurrent local API clients; input/host/iterations/p95 фиксируются. Цели — NFR proposal, не уже наблюдённая скорость. Платные endpoints не нагрузочные targets.
+
+## Requirement / scenario test matrix
+
+| Suite | SC coverage | Обязательный adversarial case / mutation |
+|---|---|---|
+| auth | SC-US-001-1, SC-US-001-2 | expired/revoked session, dummy hash, forged cookie; bypass expiry mutation fails |
+| project-ownership | SC-US-002-1, SC-US-002-2, SC-US-004-3 | A cannot GET/PATCH/use any B project/asset/relation; remove owner predicate mutation fails |
+| space-calibration | SC-US-003-1, SC-US-003-2 | zero anchor distance, negative/NaN, invalid opening; altered scale/door fixture rejected |
+| asset-boundaries | SC-US-004-1, SC-US-004-2 | actual bytes exceed declaration, remote URI, image bomb, invalid GLB; no egress assertion |
+| references | SC-US-005-1, SC-US-005-2, SC-US-005-3 | malicious HTML/URL note, denied Pinterest, upload fallback and exact owner pin persist |
+| scene-invariants | SC-US-006-1, SC-US-006-2 | shell transform/new vertices/unknown catalog object/collision; guard mutation must fail |
+| revision-concurrency | SC-US-007-1, SC-US-007-2, SC-US-007-3 | same expectedVersion simultaneous; style/selected history revokes approval and warns products; stale shell completion can't replace current revision |
+| job-budget | SC-US-008-1, SC-US-008-2, SC-US-008-3 | keyless startup, malformed schema, two workers, midnight outstanding reservation, crash-before/after dispatch |
+| snapshots | SC-US-009-1, SC-US-009-2, SC-US-009-3 | 401 adapter → blocked; region switch/TTL; no price=0 invention |
+| budget-decimal | SC-US-010-1, SC-US-010-2, SC-US-010-3, SC-US-010-4 | exact 10 packs/1600000 minor; integer RUB native validity; live limit rerender; unmatched rows stay unknown despite known delivery/labor; reserve once |
+| substitutions | SC-US-011-1, SC-US-011-2, SC-US-011-3 | replacement changes dims invalidates fit; phase partition invariant; history reproducible |
+| payment-config-checkout | SC-US-012-1, SC-US-012-2 | fake prohibited outside tests; body price ignored/rejected; duplicate key different SKU→409 |
+| webhook-replay-rollback | SC-US-013-1, SC-US-013-2, SC-US-013-3 | provider timeout then successful replay, two callbacks, wrong merchant/amount, refund-before-late-success |
+| share-privacy-export | SC-US-014-1, SC-US-014-2, SC-US-014-3 | free watermark can't be client-bypassed; no private DTO fields; cached/direct image denied after revoke |
+| growth-events | SC-US-015-1, SC-US-015-2 | unique event key; DB down→unknown; no raw token/PII |
+| request-security | SC-US-016-1, SC-US-016-2 | forged Origin/XFF, missing Origin, concurrent rate limit, secret redaction |
+| compose-smoke-recovery | SC-US-017-1, SC-US-017-2 | no DB published ports, restart preserves history, missing storage/config non-ready |
+| browser-journey | SC-US-018-1 + happy chain | 390px+keyboard, WebGL fail fallback, mode labels, persisted choices |
+| bounded-load | NFR-performance-1 | page/object/quota cap race, 200-line benchmark; no optional reruns once unchanged passing |
 
 ## Test Cases
-Happy: Given authenticated owner with one credit and valid room, When one idempotent job is created and worker succeeds, Then one reservation exists and owner sees before/after.
-Error: Given same owner and key with a different style, When POST is repeated, Then409 and no second reserve. Growth-specific Gherkin happy/edge/security cases in `test-scenarios.md`.
 
-## Security Hardening and Accessibility
-Boundary validation, rate limits and structured safe logs; no raw media/credentials in logs. Keyboard reachable navigation, labelled image upload and slider, aria-live status, reduced-motion support, visible focus and contrast. Original/result labels remain visible; cancelled native share is not success.
+```gherkin
+Scenario: SC-US-010-1 exact purchases
+  Given owner has confirmed 18 m2 floor and 8 percent waste
+  And a user-confirmed pack covers 1.99 m2 and costs 160000 minor RUB
+  When owner calculates budget
+  Then line contains 10 packs and 1600000 minor RUB
+  And missing delivery stays explicitly unresolved
 
-## Performance and Technical Debt
-Use bounded pagination, indexes on owner/status/lease and short transactions. GPU target may require tuning/resolution tradeoff after real measurement. Manual structural review protects early public examples but is not a scalable automated detector; any replacement requires new measured quality evidence. No production deployment or external spend included in current local delivery.
+Scenario: SC-US-013-2 replay after verification outage
+  Given a pending order and first provider verification times out
+  When the same succeeded notification is delivered again with valid remote data
+  Then first response is retryable and no event key or entitlement was committed
+  And second response grants exactly one package
+```
 
-## Independent review corrections
-The41 individually identified ACs and concrete parameter matrices in Specification/test-scenarios are the current coverage contract. Add real PostgreSQL cases for refund hold versus reservation/cached export/start, stale success after refund, first-conversion competing intents/repeat purchases, last-ticket admission, retry exhaustion, UTC rollover, queued expiry and heartbeat-resistant deadlines. Validate quality actor/output/evidence binding and XSS using an otherwise valid accepted result; rejecting fixtures alone is insufficient. That statement described the original 2026-10-02 design; later scoped software runs are recorded in Completion/acceptance-map. It is not a current whole-suite PASS.
+## Security Hardening / accessibility / optimizations
 
-## F07 refinement reconciliation — 2026-10-03
+Parameter binding, schemas at every boundary, strict fixed network targets, trusted proxy source, CSP/nosniff/no-store, password/secret redaction, private volume. GLB/image parser timeout/limits guard resource exhaustion; PDF/FBX/splat unsupported now. Avoid caching permission/entitlement/share resolution. Index ownership/history/job keys; lazy-load viewer/library after form interaction. Bound derived scene/object lists before render. Labels/focus/error text, not colour-only status; no claim of full WCAG certification without audit.
 
-2026-10-03 I7 documentation reconciliation, source `be450153910208e2c043de24f7efab540b052c82`. Accepted I1–I6 includes R1/R2/R3 closures; I7 full runtime is pending at author time on parent-owned source `8890e0b7`. Fresh whole-feature review and I8 actual52 main+2 disabled browser/hosted-row restore remain pending. Historical proof retains its tested revision; this update does not declare F07/full MVP ready.
+## Independent validation and anti-drift
 
-Transport failures (429/5xx/timeout/malformed/oversized/ID-commit loss) preserve one-shot submission. GET retries are bounded by the same original decreasing budget; heartbeat never renews180s/360s. FinalAuthorize and completion sample DB time after ordered locks. Known-ID late success is cleanup evidence, never job revival; cancellation cannot prove free billing or erasure. Maintenance claim30s, one cancel intent then later GET,5s remote window/pass and submitting+1h unresolved boundary are independently tested.
+Before feature dispatch, independent review covers the six `/replicate` lenses exactly: validator-stories (INVEST), validator-acceptance (SMART/testability), validator-architecture (constraints/completeness/security), validator-pseudocode (coverage/implementability), validator-coherence (cross-document consistency), validator-dependencies (provider-owned capability evidence outside our documents). Each reports concrete requirement/algorithm/field/source and severity in a fresh terminal receipt, never invented minimum findings. Implementation uses exact source snapshots and two-way trace: every requirement→code/test; every behavior→authorized requirement. After EACH feature, reviewer independent of author checks actual code+tests, not only report.
+Coordinator may fix code or specification autonomously within intent. Log before/after, IDs, reason/alternative, revisions, affected tests and observed outcomes; re-run only changed mandatory suites plus required regressions by risk. Final integrated full suite remains required. Confirmed reusable lessons teach/reinforce canonical dz; no hypothesis as success.
 
-Single-frame media tests include CRC-correct APNG, compressed bombs, all-answer DNS policy/connection pinning, strict HTTPS hosts, metadata removal, exact crop/size, exclusive collisions and uncertain-commit winner preservation. Hosted evidence rejects unknown/sensitive fields and nonnull invented metrics, including zero/false. Quality validates actual private bytes and separate measured-hosted corpus declarations; synthetic fixtures are software proof only.
+## Technical Debt / deliberate exclusions
 
-Required regression plan remains [I7](features/f07-replicate/i7-check-plan.md):32 non-PG files plus13 sequential real-PG suites, Python worker5 cases, static lint/build and existing guard mutations. This writer runs none of those commands. Accepted [I6a](features/f07-replicate/i6a-review.md) send-CAS mutation is baseline0/intended1/restored0 with exactly1→2 POST oracle; it is separate from ordinary recovery tests. I6b R1/R2/R3 closures preserve deletion/hold/canonical hash checks and cap registration at5 and main reservations13<20. Actual52+2 browser remains I8-pending.
+Manual geometry limited to rectangle/openings; no promised automated mesh semantics. Local asset volume limits multi-host scaling. Password reset/email verification, physical privacy erasure lifecycle, engineering validation, public SEO gallery and affiliate are future scope. Until these are designed, this is a local evaluation build, not an unrestricted public launch. AI inference quality/cost/live merchant tests remain explicitly not-run; their absence does not excuse missing offline adapter/security tests.
+
+## Validation correction checks
+
+Add actual suites for bcrypt72-byte/multibyte boundaries; malformed-body rate-before-parse; same-key replay after eligibility changes; archive/refund versus dispatch mark and later manual same-shell edits; consent snapshot immutability; partial/foreign-payment refund verification; raw asset cannot share/design mismatch; entitlement loss versus export/share; aggregate quota/parser deadline/slot recovery and responsive unrelated reads; array/JSON relation isolation; budget snapshot-only reproduction/phase delta/server-computed reserve/unit-source mapping; source XOR; owned product/line reads + blocked refresh; local growth known/unknown and audited uncertain reconciliation.
+Performance protocol is SC-US-024-1/2: exact fixture/build/host hash, monotonic clock,10clients×20warm-up+100measured API GETs, nearest-rank p95 across1000 with errors retained; budget50warm-up+1000measured200-line golden-output hashes. Any error/omitted sample fails. No paid route is benchmarked. Phase preview is immediate, saved old budget remains outdated until explicit recalculation.
+
+Shopping-list export SC-US-025-1: owner CSV round-trip equals immutable snapshot including unknown/retained/source/unit/phase/cost groups; formula-like name =HYPERLINK and leading-tab payload inert; foreign owner404, no public share budget route. All added SC in Specification are implemented as new focused checks, not merely the historical45 table.
+
+Updated acceptance targets (each inherits its adjacent Specification test oracle): SC-US-001-3, SC-US-008-4, SC-US-008-5, SC-US-008-6, SC-US-010-5, SC-US-010-6, SC-US-010-7, SC-US-011-4, SC-US-013-4, SC-US-015-3, SC-US-016-3, SC-US-019-1, SC-US-020-1, SC-US-020-2, SC-US-021-1, SC-US-022-1, SC-US-023-1, SC-US-024-2.

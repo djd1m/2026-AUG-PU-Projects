@@ -1,28 +1,24 @@
-# Long job contract
+# Контракт фоновой задачи N8 — реализованный offline-контракт
 
 **Долгие задачи:** да
-**Идентификатор задачи:** job_id
-**Где живёт:** ответ POST /api/jobs; чтение GET /api/jobs/{job_id}
+**Идентификатор задачи:** id
+**Где живёт:** ответ POST /api/projects/:p/jobs → data.id; GET /api/projects/:p/jobs/:j
 **Выдаётся:** до начала работы
 **Ответ на создание:** идентификатор
-**Предельное время задачи:** 360 с
+**Предельное время задачи:** 120 с
 **Таймаут посредника:** 30 с
 **Молчание:** неизвестно
 **Продолжение при повторе:** идемпотентный-ключ
-**Проверка выполнена:** НЕ ВЫПОЛНЕНА
-**Причина:** no-worker
+**Проверка выполнена:** ВЫПОЛНЕНА
 
 ## Состояния
 
 | Состояние | Статус | Что видит пользователь | Доказательство |
 |---|---|---|---|
-| выполняется | НЕ ПРОВЕРЕН | queued/running по свежему GET, не по молчанию | ожидает реализацию |
-| успех | НЕ ПРОВЕРЕН | результат и comparison | ожидает реализацию |
-| отказ | НЕ ПРОВЕРЕН | причина, возврат кредита, повтор | ожидает реализацию |
+| выполняется | ПРОВЕРЕН | durable queued/running, owner GET and same-key replay | tests/design/jobs.test.ts, allocated f.job.id read through jobs.get(f.actor,f.job.id) |
+| успех | ПРОВЕРЕН | succeeded, new draft, exact fence and once-only settlement | tests/design/jobs.test.ts, allocated f.job.id read through jobs.get(f.actor,f.job.id) |
+| отказ | ПРОВЕРЕН | failed/uncertain, held unknown cost, no blind redispatch | tests/design/jobs.test.ts, allocated f.job.id read through jobs.get(f.actor,f.job.id) |
 
-Это проектный контракт, а не фиктивный runtime pass. После кода требуется cut/retry/crash/fence проверка на реальном Postgres.
+Уникальный (account_id,idempotency_key) + hash полного payload возвращает один job; изменённый payload даёт409. Claim SKIP LOCKED/fence отделён от внешнего HTTP. Once-only dispatchedAt сохраняется перед сетью. До dispatch истёкшую аренду можно reclaim максимум3; после dispatch только uncertain, никаких automatic paid re-dispatch. Uncertain cost/usage null и holds сохранены. После120с sweeper выводит из running/queued соответственно следам dispatch; реальные последствия reconcile оператором. Эти правила реализованы и независимо проверены в F3 review и narrow closure.
 
-## Deadline and capacity semantics (validation correction)
-The360s bound starts at job admission, including queue time. Unstarted queue expires at60s. Each attempt stops at min(start+180s,admission+360s), even with healthy heartbeats; second attempt may have less than180s remaining. Lease30s and heartbeat10s never extend the hard deadline. Sweeper/API reads make expired states terminal; worker child process is cancelled, late fenced output discarded.
-
-First conservative attempt ticket is admitted atomically with job/credit, so initial capacity exhaustion creates no reservation. A retry or cross-UTC-day start needs a new current-day ticket; failure to obtain it immediately fails/release-once. Old/unused tickets remain counted conservatively. Runtime verification remains NOT performed; these are acceptance rules.
+Проверка проведена против реального PostgreSQL с injected offline provider/test clock: admission races, queued→claim→dispatch→success, pre-dispatch expiry/release, post-dispatch uncertain/no redispatch, full-overrun reconciliation. Literal test titles and source hashes: docs/features/design/review.md; whole regression228/228: docs/telemetry/p-replicator/20261013T202009Z-expanded-cjm-9f69/evidence/final-regression-1.txt. Demo worker exercises real runOneJob without network/spend. Production default manual has no admitted AI jobs; browser reload with live paid inference/provider disruption has NOT been tested. This declaration proves offline lifecycle behavior, not live provider delivery.

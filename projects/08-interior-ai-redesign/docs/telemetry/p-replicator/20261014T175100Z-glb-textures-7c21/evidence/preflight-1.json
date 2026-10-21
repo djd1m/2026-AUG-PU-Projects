@@ -1,0 +1,22 @@
+{
+  "status": "ready",
+  "at": "2026-10-14T17:58:41.852162+00:00",
+  "source_manifest": "source-image.json",
+  "runtime_files_matched": 151,
+  "buildRevision": "sha256:99e9f766a4f9b186c50e6aa632e952884b53a0f618f3d311ee38c0352c0cb58a",
+  "driverSha256": "af5a53985f43b51e6e2a2dfbbed335e53ac758dddfb586ee4014295dce596415",
+  "fixtureSha256": "ebb7404bbc68fc9b5e5a71d7949ed843a2c245bf4d0ad5d6a3df3871dd1d8a4f",
+  "fixture": "real embedded8192x8192JPEG plus11MiB BIN",
+  "runner": "n8-interior-playwright:local, driver/fixture readonly mounts, no provider/db credentials",
+  "effects": [
+    "syntheticaccount/project",
+    "two texturedGLB uploads and oneexplicitcalibration",
+    "privateoriginal hashcheck",
+    "negative25MiBGLB and10MiBimage/malformed checks",
+    "mobile screenshot"
+  ],
+  "inputsAvailable": true,
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "command": "docker run isolated Playwright against authorized publicHTTPS"
+}

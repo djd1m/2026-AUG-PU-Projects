@@ -1,0 +1,34 @@
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+ ❯ tests/design/revisions.test.ts (5 tests | 1 failed | 4 skipped) 368ms
+   × FND-FINAL-1 foreign and absent array scalar JSON design relation IDs return identical404 without side effects 366ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/design/revisions.test.ts > FND-FINAL-1 foreign and absent array scalar JSON design relation IDs return identical404 without side effects
+AssertionError: expected DomainError: Референс не принадлежит прое… { …(3) } to match object { status: 404, code: 'NOT_FOUND' }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+- {
+-   "code": "NOT_FOUND",
+-   "status": 404,
++ DomainError {
++   "code": "INVALID_REFERENCES",
++   "status": 422,
+  }
+
+ ❯ tests/design/revisions.test.ts:22:84
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 skipped (5)
+   Start at  01:27:13
+   Duration  805ms (tests 58%, transform 25%, import 16%, worker 1%)
+

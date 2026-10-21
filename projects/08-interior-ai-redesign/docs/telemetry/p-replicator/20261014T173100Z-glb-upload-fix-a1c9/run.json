@@ -1,0 +1,66 @@
+{
+  "run_id": "20261014T173100Z-glb-upload-fix-a1c9",
+  "started_at": "2026-10-14T17:30:38.076659+00:00",
+  "status": "completed_scoped_routing_fix",
+  "profile": "compact-quality-first-v2",
+  "tier": "S",
+  "source_revision": "7eba5bed9e7352cc66c3500ddaa6e20c7d7d6d62",
+  "scope": "Fix GLB misclassification in product uploader; dedicated GLB upload and calibration selection. Existing server bounds unchanged.",
+  "budget_minutes": 20,
+  "ac": [
+    "GLB file always sent as glb in generic/dedicated upload",
+    "actual browser accepts valid >10MiB GLB through public HTTPS",
+    "auto-select new scan, preserve confirmed shell until calibration",
+    "images retain 10MiB bounds; malformed and oversized GLB rejected"
+  ],
+  "models": [
+    {
+      "role": "coordinator",
+      "actual": null,
+      "reason": "host metadata unavailable"
+    },
+    {
+      "role": "read_only_reviewer",
+      "requested": "gpt-6.1-sol",
+      "effort": "high",
+      "actual": null,
+      "reason": "host model metadata unavailable"
+    }
+  ],
+  "tokens": null,
+  "cost": null,
+  "reuse": "Existing N8 AssetUpload/private transport; donor 01-07 search only N5 generic file upload, incompatible video contract. GitHub mdn/content accept index and Khronos GLB spec consulted, no new dependency.",
+  "requirements": [
+    "docs/Specification.md",
+    "docs/Architecture.md"
+  ],
+  "finished_at": "2026-10-14T17:38:16.119432+00:00",
+  "elapsed_seconds": 458.042773,
+  "build_revision": "sha256:58ee78fcc34b940e761e8f2cce675d1760320d6f0c9a112f057a17a8d0723061",
+  "checks": {
+    "focused": "20/20",
+    "mutation": "routing override removed: negative tests fail; source restored",
+    "typecheck": "pass",
+    "lint": "pass",
+    "production_build": "pass",
+    "independent_review": "no blocking findings",
+    "public_browser": "7/7, ui-5, 11534720byte syntheticGLB"
+  },
+  "attempts": {
+    "ui-1": "driver permission failure before browser",
+    "ui-2": "exact label selector included helper text, before upload",
+    "ui-3": "4casespass, oversize413passed but CDP bodyevicted",
+    "ui-4": "5casespass; driver omitted renewed image rights after reload",
+    "ui-5": "7/7 pass"
+  },
+  "limits": {
+    "user_file_tested": false,
+    "pixel_error": "may be embedded GLB texture >20MP; awaiting user retry/source; bounds unchanged",
+    "gemini_activation": "separate existing provider BYOK verification blocker unchanged"
+  },
+  "measurement_gaps": [
+    "coordinator/agent actual model, usage and cost unavailable",
+    "independent review lacks caller prelaunch digest; source hashes included",
+    "no baseline savings measurement"
+  ]
+}

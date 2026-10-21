@@ -1,0 +1,70 @@
+{
+  "run_id": "20261013T220722Z-integration-47db",
+  "work_unit_id": "integration-review-1",
+  "started_at": "2026-10-13T23:58:47.982918+00:00",
+  "stage": "REVIEW",
+  "status": "completed",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6-astra",
+  "actual_model": null,
+  "actual_effort": null,
+  "missing_data": [
+    "Host model identity and token usage not exposed to worker"
+  ],
+  "risk_tier": "M substantive: independent review of approved operational boundaries; mechanical S for test/docs writes",
+  "spec_sha256": "d3a3312c1f961101fa116247f1c918f29c4d0006c5d934932f1bf1b5ced5e161",
+  "e2e_preflight": {
+    "status": "not_applicable",
+    "reason": "Reviewer performs focused tests and pure benchmark; final production E2E owner is root"
+  },
+  "memory": "dz recall bilingual operational query returned no lexical matches; no claim of empty memory",
+  "usage": {
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null
+  },
+  "updated_at": "2026-10-14T00:04:09.271431+00:00",
+  "checks": {
+    "existing_tests": 6,
+    "new_tests": 6,
+    "initial_run_failures": 1,
+    "failure_reason": "Reviewer expected wrong readiness response casing; corrected to data.status=not_ready; rerun affected suite 6/6 passed"
+  },
+  "confirmed_findings": [
+    "F7-R1 unknown component absent from measured 200-line fixture",
+    "F7-R2 actual worker readiness passes read-only asset storage"
+  ],
+  "next": "Coordinator final image API benchmark/restart receipts; targeted receipt reconciliation only",
+  "finished_at": "2026-10-14T00:08:08.188001+00:00",
+  "elapsed_wall_ms": 560205,
+  "active_wall_ms": null,
+  "report_sha256": "4d8722dc34ff8aa4fb67b049cd18ee637d6a618a08f414705c9a6ec5e7222dea",
+  "verdict": "CAVEATS: source findings closed; final deployed API benchmark and restart persistence pending owner receipts",
+  "findings": [
+    {
+      "id": "F7-R1",
+      "severity": "medium",
+      "adjudication": "confirmed",
+      "status": "closed",
+      "evidence": "integration-review-1-benchmark-validation.json"
+    },
+    {
+      "id": "F7-R2",
+      "severity": "high",
+      "adjudication": "confirmed",
+      "status": "closed",
+      "evidence": "integration-review-1-storage-closure.json"
+    }
+  ],
+  "ac_results": {
+    "AC-integration-1": "pending_final_runtime",
+    "AC-integration-2": "pass",
+    "AC-integration-3": "partial_pending_final_runtime",
+    "AC-integration-4": "pass_source_probe"
+  },
+  "attempt_notes": [
+    "Initial new test expected wrong readiness response casing, corrected and affected6/6 pass",
+    "Host nobody storage reproduction inconclusive due repository file permissions, image3 node-user reproduction confirmed",
+    "Reusable source-closure script initial relative helper import was wrong; corrected before schema/probe began"
+  ]
+}

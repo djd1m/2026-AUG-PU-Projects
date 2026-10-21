@@ -1,0 +1,10 @@
+{
+  "status": "failed",
+  "checks": [
+    "generic file picker automatically routes 11MiB GLB, despite image purpose selection",
+    "UI calibration saves selected scan, survives reload and original hash matches",
+    "dedicated GLB picker accepts same 11MiB file and clears old calibration without overwriting shell",
+    "malformed GLB rejected through UI, original confirmed shell preserved"
+  ],
+  "error": "response.json: Protocol error (Network.getResponseBody): Request content was evicted from inspector cache"
+}

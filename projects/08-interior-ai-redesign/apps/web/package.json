@@ -1,0 +1,19 @@
+{
+  "name": "@n8/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@n8/domain": "0.1.0",
+    "@n8/db": "0.1.0",
+    "@n8/adapters": "0.1.0",
+    "@n8/viewer": "0.1.0",
+    "next": "15.5.27",
+    "react": "19.1.9",
+    "react-dom": "19.1.9"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ../../tsconfig.json",
+    "build": "next build"
+  }
+}

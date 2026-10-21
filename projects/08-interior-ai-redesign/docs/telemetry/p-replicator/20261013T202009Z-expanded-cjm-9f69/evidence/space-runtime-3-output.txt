@@ -1,0 +1,25 @@
+PASS landing desktop + local hydration
+PASS register → authenticated dashboard
+PASS create private project persists
+PASS manual measured shell18m2 with opening + visibleplan
+PASS actualWebGL measured viewer
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: {"error":{"code":"UNAVAILABLE","message":"Сервис временно недоступен"},"meta":{"requestId":"7c2e7feb-ea3f-49ec-a887-11d2af1c9bce"}}
+
+503 !== 422
+
+    at file:///home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/scripts/e2e-space.mjs:28:267
+    at async checked (file:///home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/scripts/e2e-space.mjs:19:34)
+    at async file:///home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/scripts/e2e-space.mjs:28:2 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 503,
+  expected: 422,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

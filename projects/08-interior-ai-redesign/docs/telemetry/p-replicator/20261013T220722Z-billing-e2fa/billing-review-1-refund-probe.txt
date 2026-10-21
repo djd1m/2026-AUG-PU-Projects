@@ -1,0 +1,19 @@
+{"beforeStatus":200,"afterRefundStatus":200,"billing_hold":true,"paid_export":false,"privateBytesStillReturned":true,"expectedAfterRefundStatus":404}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Refund must prevent fetching an existing unwatermarked derivative through generic asset route
+
+200 !== 404
+
+    at <anonymous> (/home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/docs/telemetry/p-replicator/20261013T220722Z-billing-e2fa/billing-review-1-refund-probe.ts:32:9) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 200,
+  expected: 404,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

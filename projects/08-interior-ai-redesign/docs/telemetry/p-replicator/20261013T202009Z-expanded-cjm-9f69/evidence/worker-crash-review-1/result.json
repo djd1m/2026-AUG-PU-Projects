@@ -1,0 +1,59 @@
+{
+  "run_id": "20261013T202009Z-expanded-cjm-9f69",
+  "work_unit_id": "worker-crash-review-1",
+  "status": "completed",
+  "verdict": "PASS AC-design-9 process-crash gap closed",
+  "started_at": "2026-10-14T01:38:27.377037+00:00",
+  "finished_at": "2026-10-14T01:39:46.910845+00:00",
+  "elapsed_wall_ms": 79534,
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "active_wall_ms": null,
+  "source_sha256": {
+    "apps/worker/src/jobs.ts": "6cd5cf91ad9c7a7c03ec0677987cd9573e8434181b7a7c589e49e92d97d8f9f1",
+    "apps/worker/src/watchdog.ts": "91e061d4d6694f3a1d0b7ba1ff3c07304d75a25e4f4fe764d85b10325bf9e6a1",
+    "packages/db/src/design/jobs.ts": "c9387e20575b3573da0715c4762c659973d9d7681dc6811cab308f766240a7e7",
+    "packages/db/src/design/lifecycle.ts": "521fffaedaf67ef500cbcab7b67a4ca7bfd885b1319ab771b913a47f276875d5",
+    "tests/design/process-crash.test.ts": "b404a23893ab6a08a029ebae895c9e5a85994c68b6ae4c89b3a634b7c934eeff",
+    "tests/design/crash-worker.fixture.mjs": "7db5f145e8be0a470601a6c4dcc466466d6aa23f4bd86fe32757f1cb2bbaae5f",
+    "tests/helpers/db.ts": "a7b404328b879f31b1cd310c84f0f40055f81086ab0f053389887ef758618232",
+    "tests/design/fixtures.ts": "f01c403d3789e27c8c37812a7377104cfc971245d0376e6aa938d4c3f99350d1",
+    "docs/features/design/01_specification.md": "b643c102b0b1c970627ec475db08ec16cb02b89ee976464d06769ae5e22fd3ff"
+  },
+  "build_revision": "docker:sha256:3ac28e68ccef3576d428547f04bbbb9df3097bb8baf28823bdd87076611369cb",
+  "production_image_source_matches": {
+    "apps/worker/src/jobs.ts": "6cd5cf91ad9c7a7c03ec0677987cd9573e8434181b7a7c589e49e92d97d8f9f1",
+    "apps/worker/src/watchdog.ts": "91e061d4d6694f3a1d0b7ba1ff3c07304d75a25e4f4fe764d85b10325bf9e6a1",
+    "packages/db/src/design/jobs.ts": "c9387e20575b3573da0715c4762c659973d9d7681dc6811cab308f766240a7e7",
+    "packages/db/src/design/lifecycle.ts": "521fffaedaf67ef500cbcab7b67a4ca7bfd885b1319ab771b913a47f276875d5"
+  },
+  "evidence_sha256": {
+    "worker-process-crash-1.txt": "745732b8687bedf748283ff716f0b578e2d717aaaeb92fe3248c4c15cd59c7fc",
+    "final-source-image-2.json": "426ed9f08b208346b7eb2c54936cfde52e556f117bdc3b7b3cf5abeab0336ed5"
+  },
+  "review_sha256": {
+    "review.md": "7ad7d1bdd31b83fb5461e2832df78a948a2ff84616ae40d7062fb85e7211a613",
+    "review-report.md": "674cd1cc1606d212c6a20df52b61d17c3de14f7eeeb5a4cd4595f9b52de5dcde"
+  },
+  "targeted_tests_passed": 1,
+  "targeted_test_duration_seconds": 1.38,
+  "prior_full_suite_tests": 229,
+  "new_full_suite_tests": null,
+  "actual_process_kill": "SIGKILL",
+  "clock": "test advanced46seconds; actual process kill, no actual46secondwalloutage",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "no reviewer test execution, only source and evidence inspection"
+  },
+  "applied_memory": "teach:deae300b63174339",
+  "missing_data": [
+    "Host actual model/effort/token and billing metadata unavailable",
+    "Active-time intervals unavailable"
+  ],
+  "pending_in_scoped_review": []
+}

@@ -1,0 +1,40 @@
+{
+  "run_id": "20261013T220722Z-billing-e2fa",
+  "work_unit_id": "billing-review-1",
+  "stage": "REVIEW",
+  "event": "targeted_finding_closure",
+  "finished_at": "2026-10-13T23:45:34.452617+00:00",
+  "elapsed_wall_ms": 272613.093,
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "active_wall_ms": null,
+  "status": "completed",
+  "verdict": "pass_scope",
+  "finding": {
+    "id": "BILLING-R1",
+    "severity": "high",
+    "adjudication": "confirmed_fixed",
+    "probe_red_exit": 1,
+    "closure_exit": 0
+  },
+  "ac_met": 6,
+  "ac_total": 6,
+  "source_hashes": {
+    "apps/web/src/server/space.ts": "d0cb58bc33921266a379481cb18e30d63a09881b05e27ad317400e032fe7f1e3",
+    "packages/db/src/billing.ts": "ab601efc9e0d7d74c2b240686d16fc57007beeba5f14c5cc3d33f38696952260",
+    "packages/domain/src/billing/index.ts": "d814541b181475c0b6f7b106676e030d6be5d257fc2eddbbc4d47a160cbd9384",
+    "tests/billing/mutation-evidence/results.json": "9017717f60a7e234dcdb00ecb75a6d93198c941e443d48f18b9a384b8a3809ff",
+    "packages/db/src/migrations/005-share-provenance.sql": "9b72454b8864f226afd7a727be042b1d575c46d37c38f5f1929d721412070016"
+  },
+  "report_sha256": "410cf53c5219106df3064b0bed0e07342b0347b2cd1749dd91595a673a0314ed",
+  "pending": [
+    "F6 dedicated export/share entitlement read and creation rechecks",
+    "Final integrated checks owned by coordinator"
+  ],
+  "missing_data": [
+    "Host actual model/effort and usage unavailable",
+    "Active time not instrumented"
+  ]
+}

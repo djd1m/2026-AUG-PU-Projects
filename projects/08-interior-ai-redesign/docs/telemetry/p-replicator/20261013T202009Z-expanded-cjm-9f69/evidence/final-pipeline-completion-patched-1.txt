@@ -1,0 +1,93 @@
+TRACE contour=project specification=projects/08-interior-ai-redesign/docs/Specification.md pseudocode=projects/08-interior-ai-redesign/docs/Pseudocode.md
+COUNT requirements=22 algorithms=22 missing-algorithm=0 orphan-algorithm=0
+PASS contour=project bidirectional traceability complete
+TRACE contour=billing specification=projects/08-interior-ai-redesign/docs/features/billing/01_specification.md pseudocode=projects/08-interior-ai-redesign/docs/features/billing/02_pseudocode.md
+COUNT requirements=8 algorithms=8 missing-algorithm=0 orphan-algorithm=0
+PASS contour=billing bidirectional traceability complete
+GAP contour=billing completion AC-billing-1 test file ../../../tests/billing/http.test.ts escapes the project root
+GAP contour=billing completion AC-billing-2 test file ../../../tests/billing/repository.test.ts escapes the project root
+GAP contour=billing completion AC-billing-3 test file ../../../tests/billing/repository.test.ts escapes the project root
+GAP contour=billing completion AC-billing-4 test file ../../../tests/billing/repository.test.ts escapes the project root
+GAP contour=billing completion AC-billing-5 test file ../../../tests/billing/repository.test.ts escapes the project root
+GAP contour=billing completion AC-billing-6 test file ../../../tests/billing/refund.test.ts escapes the project root
+TRACE contour=design specification=projects/08-interior-ai-redesign/docs/features/design/01_specification.md pseudocode=projects/08-interior-ai-redesign/docs/features/design/02_pseudocode.md
+COUNT requirements=16 algorithms=16 missing-algorithm=0 orphan-algorithm=0
+PASS contour=design bidirectional traceability complete
+GAP contour=design completion AC-design-1 test file ../../../tests/design/scene.test.ts escapes the project root
+GAP contour=design completion AC-design-2 test file ../../../tests/design/scene.test.ts escapes the project root
+GAP contour=design completion AC-design-3 test file ../../../tests/design/revisions.test.ts escapes the project root
+GAP contour=design completion AC-design-4 test file ../../../tests/design/revisions.test.ts escapes the project root
+GAP contour=design completion AC-design-5 test file ../../../tests/design/revisions.test.ts escapes the project root
+GAP contour=design completion AC-design-6 test file ../../../tests/design/jobs.test.ts escapes the project root
+GAP contour=design completion AC-design-7 test file ../../../tests/foundation/config.test.ts escapes the project root
+GAP contour=design completion AC-design-8 test file ../../../tests/design/jobs.test.ts escapes the project root
+GAP contour=design completion AC-design-9 test file ../../../tests/design/jobs.test.ts escapes the project root
+GAP contour=design completion AC-design-10 test file ../../../tests/design/provider.test.ts escapes the project root
+GAP contour=design completion AC-design-11 test file ../../../tests/design/jobs.test.ts escapes the project root
+TRACE contour=foundation specification=projects/08-interior-ai-redesign/docs/features/foundation/01_specification.md pseudocode=projects/08-interior-ai-redesign/docs/features/foundation/02_pseudocode.md
+COUNT requirements=15 algorithms=15 missing-algorithm=0 orphan-algorithm=0
+PASS contour=foundation bidirectional traceability complete
+GAP contour=foundation completion AC-foundation-1 test file ../../../tests/foundation/integration.test.ts escapes the project root
+GAP contour=foundation completion AC-foundation-2 test file ../../../tests/foundation/integration.test.ts escapes the project root
+GAP contour=foundation completion AC-foundation-3 test file ../../../tests/foundation/auth.test.ts escapes the project root
+GAP contour=foundation completion AC-foundation-4 test file ../../../tests/foundation/integration.test.ts escapes the project root
+GAP contour=foundation completion AC-foundation-5 test file ../../../tests/foundation/integration.test.ts escapes the project root
+GAP contour=foundation completion AC-foundation-6 test file ../../../tests/foundation/http.test.ts escapes the project root
+GAP contour=foundation completion AC-foundation-7 test file ../../../tests/foundation/integration.test.ts escapes the project root
+GAP contour=foundation completion AC-foundation-8 test file ../../../tests/foundation/integration.test.ts escapes the project root
+GAP contour=foundation completion AC-foundation-9 test file ../../../tests/foundation/integration.test.ts escapes the project root
+GAP contour=foundation completion AC-foundation-10 test file ../../../tests/foundation/http.test.ts escapes the project root
+GAP contour=foundation completion AC-foundation-11 test file ../../../tests/foundation/integration.test.ts escapes the project root
+GAP contour=foundation completion AC-foundation-12 test file ../../../tests/foundation/http.test.ts escapes the project root
+TRACE contour=integration specification=projects/08-interior-ai-redesign/docs/features/integration/01_specification.md pseudocode=projects/08-interior-ai-redesign/docs/features/integration/02_pseudocode.md
+COUNT requirements=6 algorithms=6 missing-algorithm=0 orphan-algorithm=0
+PASS contour=integration bidirectional traceability complete
+GAP contour=integration completion AC-integration-1 test file ../../../scripts/benchmark.ts escapes the project root
+GAP contour=integration completion AC-integration-2 test file ../../../scripts/benchmark.ts escapes the project root
+GAP contour=integration completion AC-integration-3 test file ../../../scripts/restart-check.mjs escapes the project root
+GAP contour=integration completion AC-integration-4 test file ../../../tests/integration/operations.test.ts escapes the project root
+TRACE contour=procurement specification=projects/08-interior-ai-redesign/docs/features/procurement/01_specification.md pseudocode=projects/08-interior-ai-redesign/docs/features/procurement/02_pseudocode.md
+COUNT requirements=19 algorithms=19 missing-algorithm=0 orphan-algorithm=0
+PASS contour=procurement bidirectional traceability complete
+GAP contour=procurement completion AC-procurement-1 test file ../../../tests/procurement/calculator.test.ts escapes the project root
+GAP contour=procurement completion AC-procurement-2 test file ../../../tests/procurement/calculator.test.ts escapes the project root
+GAP contour=procurement completion AC-procurement-3 test file ../../../tests/procurement/repository.test.ts escapes the project root
+GAP contour=procurement completion AC-procurement-4 test file ../../../tests/procurement/calculator.test.ts escapes the project root
+GAP contour=procurement completion AC-procurement-5 test file ../../../tests/procurement/calculator.test.ts escapes the project root
+GAP contour=procurement completion AC-procurement-6 test file ../../../tests/procurement/calculator.test.ts escapes the project root
+GAP contour=procurement completion AC-procurement-7 test file ../../../tests/procurement/calculator.test.ts escapes the project root
+GAP contour=procurement completion AC-procurement-8 test file ../../../tests/procurement/repository.test.ts escapes the project root
+GAP contour=procurement completion AC-procurement-9 test file ../../../tests/procurement/calculator.test.ts escapes the project root
+GAP contour=procurement completion AC-procurement-10 test file ../../../tests/procurement/calculator.test.ts escapes the project root
+GAP contour=procurement completion AC-procurement-11 test file ../../../tests/procurement/repository.test.ts escapes the project root
+GAP contour=procurement completion AC-procurement-12 test file ../../../tests/procurement/calculator.test.ts escapes the project root
+GAP contour=procurement completion AC-procurement-13 test file ../../../tests/procurement/repository.test.ts escapes the project root
+GAP contour=procurement completion AC-procurement-14 test file ../../../tests/procurement/repository.test.ts escapes the project root
+GAP contour=procurement completion AC-procurement-15 test file ../../../tests/procurement/calculator.test.ts escapes the project root
+TRACE contour=sharing specification=projects/08-interior-ai-redesign/docs/features/sharing/01_specification.md pseudocode=projects/08-interior-ai-redesign/docs/features/sharing/02_pseudocode.md
+COUNT requirements=12 algorithms=12 missing-algorithm=0 orphan-algorithm=0
+PASS contour=sharing bidirectional traceability complete
+GAP contour=sharing completion AC-sharing-1 test file ../../../tests/sharing/http.test.ts escapes the project root
+GAP contour=sharing completion AC-sharing-2 test file ../../../tests/sharing/http.test.ts escapes the project root
+GAP contour=sharing completion AC-sharing-3 test file ../../../tests/sharing/http.test.ts escapes the project root
+GAP contour=sharing completion AC-sharing-4 test file ../../../tests/sharing/growth.test.ts escapes the project root
+GAP contour=sharing completion AC-sharing-5 test file ../../../tests/sharing/growth.test.ts escapes the project root
+GAP contour=sharing completion AC-sharing-6 test file ../../../tests/sharing/growth.test.ts escapes the project root
+GAP contour=sharing completion AC-sharing-7 test file ../../../scripts/e2e.mjs escapes the project root
+GAP contour=sharing completion AC-sharing-8 test file ../../../scripts/e2e.mjs escapes the project root
+GAP contour=sharing completion AC-sharing-9 test file ../../../scripts/e2e-budget-hydration.mjs escapes the project root
+TRACE contour=space specification=projects/08-interior-ai-redesign/docs/features/space/01_specification.md pseudocode=projects/08-interior-ai-redesign/docs/features/space/02_pseudocode.md
+COUNT requirements=11 algorithms=11 missing-algorithm=0 orphan-algorithm=0
+PASS contour=space bidirectional traceability complete
+GAP contour=space completion AC-space-1 test file ../../../tests/space/repository.test.ts escapes the project root
+GAP contour=space completion AC-space-2 test file ../../../tests/space/geometry.test.ts escapes the project root
+GAP contour=space completion AC-space-3 test file ../../../tests/space/parser.test.ts escapes the project root
+GAP contour=space completion AC-space-4 test file ../../../tests/space/parser.test.ts escapes the project root
+GAP contour=space completion AC-space-5 test file ../../../tests/space/repository.test.ts escapes the project root
+GAP contour=space completion AC-space-6 test file ../../../tests/space/repository.test.ts escapes the project root
+GAP contour=space completion AC-space-7 test file ../../../tests/space/http.test.ts escapes the project root
+GAP contour=space completion AC-space-8 test file ../../../tests/space/repository.test.ts escapes the project root
+VERDICT traceability=PASS features=7 gaps=0 inconclusive=0
+VERDICT completion=FAIL features=7 gaps=65 inconclusive=0
+VERDICT report-revision=PASS features=7 gaps=0 inconclusive=0
+VERDICT criterion-scenarios=PASS features=7 gaps=0 inconclusive=0

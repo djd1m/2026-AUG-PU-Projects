@@ -1,0 +1,1 @@
+../../../../.claude/rules/codex-invocation-local.md

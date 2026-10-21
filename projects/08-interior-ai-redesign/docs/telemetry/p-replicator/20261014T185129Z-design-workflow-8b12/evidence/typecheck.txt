@@ -1,0 +1,6 @@
+
+> n8-interior-planner@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+packages/db/src/design/revisions.ts(23,271): error TS1005: ',' expected.
+packages/db/src/design/revisions.ts(23,278): error TS1005: ',' expected.

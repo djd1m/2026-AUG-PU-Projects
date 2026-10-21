@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "build": "sha256:daa54c497d1a9d45c3b3a836191daac30c540b925535ba07e59b30028cdc5fab",
+  "checks": [
+    "manual mode hides reference choices",
+    "reference mode hides manual controls and explains limits/link-only input",
+    "different uploaded images produce different saved materials and visible canvas pixels",
+    "reference version and selected image persist after reload",
+    "switch back to manual saves without reference attachment and remains manual after reload"
+  ],
+  "errors": [],
+  "inference_calls": 0
+}

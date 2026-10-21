@@ -1,0 +1,24 @@
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+ ❯ tests/design/reference-palette.test.ts (2 tests | 1 failed | 1 skipped) 56ms
+   × image pixels determine different palettes; corrupt and oversized inputs reject 55ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/design/reference-palette.test.ts > image pixels determine different palettes; corrupt and oversized inputs reject
+AssertionError: expected '#000000' to be '#f80808' // Object.is equality
+
+Expected: "#f80808"
+Received: "#000000"
+
+ ❯ tests/design/reference-palette.test.ts:14:319
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 skipped (2)
+   Start at  19:28:42
+   Duration  558ms (import 45%, transform 39%, tests 15%, worker 2%)

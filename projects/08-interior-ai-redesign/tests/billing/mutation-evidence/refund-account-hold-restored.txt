@@ -1,0 +1,16 @@
+
+ RUN  v5.0.4 /tmp/n8-billing-author-20261013/projects/08-interior-ai-redesign
+
+ ↓ tests/billing/refund.test.ts > AC-billing-6 partial refund distinct object verified via payment_id; replay cannot restore export or new billing
+ ↓ tests/billing/refund.test.ts > refund before late payment succeeds is monotonic; success audited ignored with zero credits
+ ↓ tests/billing/refund.test.ts > parallel success/refund always ends in durable hold, never duplicate credits
+ ↓ tests/billing/refund.test.ts > refund rejects nonpositive/excess/currency/unpaid/original-link proofs without occupying ledger
+ ↓ tests/billing/refund.test.ts > refund atomically revokes existing unwatermarked shares while watermarked snapshot remains; failure rolls back hold/revoke/event
+ ✓ tests/billing/refund.test.ts > refund before actual PgJobs dispatch mark releases held admission and prevents external dispatch 334ms
+ ↓ tests/billing/refund.test.ts > refund after dispatch mark leaves in-flight held job visible; no false cancellation or inline spend-lock settlement
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 6 skipped (7)
+   Start at  23:28:33
+   Duration  634ms (tests 69%, import 19%, transform 11%, worker 1%)
+

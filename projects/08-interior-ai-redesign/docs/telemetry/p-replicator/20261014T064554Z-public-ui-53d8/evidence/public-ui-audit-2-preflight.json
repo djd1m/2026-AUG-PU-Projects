@@ -1,0 +1,56 @@
+{
+  "status": "ready",
+  "recorded_at": "2026-10-14T07:21:30.470437+00:00",
+  "source_revision": "147file content snapshot public-source-image-2.json",
+  "build_revision": "sha256:f6d232b54b398c5175769af4f78369853b4880d8952119a9057326e94010df03",
+  "test_image": "sha256:c4f72c941c3eef79eeccb36dbbac303ae0741af920cb2e89c5a322040218a424",
+  "environment": "Dedicated isolated Docker container -> verified public HTTPS n8.77.83.87.178.sslip.io; only evidence/privatefixture mounts; no DB/provider secrets",
+  "environment_available": true,
+  "test_command": "docker compose -f compose.e2e.yml run --rm playwright node scripts/public-ui-audit.mjs",
+  "inputs": [
+    {
+      "name": "locked Playwright1.60 ChromiumFirefoxWebKit+fonts",
+      "available": true
+    },
+    {
+      "name": "publichealthready200 verifiedTLS",
+      "available": true
+    },
+    {
+      "name": "evidence target absent",
+      "available": true
+    },
+    {
+      "name": "testcontainer evidenceUID1000 writable",
+      "available": true
+    },
+    {
+      "name": "fictional owner generated in driver",
+      "available": true
+    },
+    {
+      "name": "exactsourceimage match145files",
+      "available": true
+    },
+    {
+      "name": "Synthetic owner/fulljourney fixture from successfulpublic-journey-1",
+      "available": true
+    },
+    {
+      "name": "Debian public CA roots installed; scriptincludesexplicitkeyboard and injectedfrontend422preservation",
+      "available": true
+    }
+  ],
+  "expected_effects": [
+    "Read only savedproject sixsteps in3browserengines, desktop1440+mobile390",
+    "WCAG2A/AA+2.1AA Axe checks and screenshots",
+    "Login3times creates SecureHttpOnlysessions; no paidexternalcalls",
+    "Inject422 onlyinbrowser route forbudgetPOST; noactualbudgetcreation during thiscase"
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "docs/telemetry/p-replicator/20261014T064554Z-public-ui-53d8/evidence"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

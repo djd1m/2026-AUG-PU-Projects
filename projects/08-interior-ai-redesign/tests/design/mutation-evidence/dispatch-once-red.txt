@@ -1,0 +1,28 @@
+
+ RUN  v5.0.4 /tmp/n8-design-author-20261013/projects/08-interior-ai-redesign
+
+ ❯ tests/design/jobs.test.ts (14 tests | 1 failed | 13 skipped) 554ms
+   × single claim dispatch known cost and stale completion fence 552ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 skipped (14)
+   Start at  22:59:23
+   Duration  978ms (tests 69%, transform 18%, import 12%, worker 1%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/design/jobs.test.ts > single claim dispatch known cost and stale completion fence
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/design/jobs.test.ts:13:349
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

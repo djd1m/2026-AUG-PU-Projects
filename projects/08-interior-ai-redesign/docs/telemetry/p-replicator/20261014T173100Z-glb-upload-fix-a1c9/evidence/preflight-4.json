@@ -1,0 +1,22 @@
+{
+  "status": "ready",
+  "at": "2026-10-14T17:35:35.765408+00:00",
+  "buildRevision": "sha256:58ee78fcc34b940e761e8f2cce675d1760320d6f0c9a112f057a17a8d0723061",
+  "source": "source.json; runtime two modified app files SHA match host",
+  "driverSha256": "47dfd0a944d4490ea48c2cb79ff4c139da5b707f01bc85bf86d6e2c724101a3f",
+  "runner": "n8-interior-playwright:local",
+  "inputsAvailable": true,
+  "effects": [
+    "fresh synthetic account and project",
+    "2 valid GLB uploads,1 explicit shell save",
+    "malformed,over25MiB and imageover10MiB rejection",
+    "private original GET",
+    "mobile screenshot"
+  ],
+  "secrets": "no provider, DB or user credentials passed",
+  "external_actions_executed": false,
+  "command": "docker run --rm dedicatedPW glbdriver on publicHTTPS",
+  "e2e_claim": null,
+  "attempt": "ui-4",
+  "retry_reason": "Oversize25MiB response status413 passed but CDP inspector evicted body; assert status plus actual UI alert, no responsebody retrieval"
+}

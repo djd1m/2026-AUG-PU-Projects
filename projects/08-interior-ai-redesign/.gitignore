@@ -1,9 +1,10 @@
+node_modules/
+.next/
+dist/
 .env
 .env.*
 !.env.example
-.dz/
-node_modules/
-__pycache__/
-*.pyc
 .runtime/
-models/
+*.tsbuildinfo
+coverage/
+test-results/

@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-14T17:20:02.969578+00:00",
+  "status": "ready",
+  "sourceRevision": "47c4e6fb plus weekly-source-image-1.json",
+  "buildRevision": "sha256:ea805048b32fc121e7f1d5086d61775543b8e7cbd78392804b60ba79b731e886",
+  "runnerSha256": "447424d0f5bfcb96a6297dc13b2ca2e4a5e3d2c6cb98fe6521d434c8b5803a48",
+  "environment": "DedicatedPW image c16f3fc, HTTPS, synthetic private fixture mounted readonly; no provider/db env",
+  "effects": [
+    "Syntheticlogin session only",
+    "Read-only six-tabs/dashboard/billing, blockanalytics POST",
+    "New evidence root weekly-ui-smoke-1"
+  ],
+  "inputsAvailable": true,
+  "command": "docker run readonlydriver Chromium audit"
+}

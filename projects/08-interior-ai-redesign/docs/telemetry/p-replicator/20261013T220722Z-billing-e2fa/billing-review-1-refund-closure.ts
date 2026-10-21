@@ -1,0 +1,35 @@
+import { randomUUID } from 'node:crypto';
+import { mkdtemp, writeFile, rm } from 'node:fs/promises';
+import { resolve, join } from 'node:path';
+import { strict as assert } from 'node:assert';
+import { freshDb } from '../../../../tests/helpers/db';
+import { setup } from '../../../../tests/design/fixtures';
+import { services, signal, config } from '../../../../tests/billing/fixtures';
+import { createSpaceHandlers } from '../../../../apps/web/src/server/space';
+import { loadConfig } from '../../../../apps/web/src/server/config';
+import { AuthService } from '@n8/domain/identity';
+import { tokenPort, passwords } from '@n8/adapters/auth';
+import { PgAuthStore, PgProjects, PgRateGate } from '@n8/db/identity';
+const db = await freshDb();
+const dir = await mkdtemp(resolve('.runtime/billing-review-probe-'));
+try {
+ const f = await setup(db.pool), {service,provider} = services(db.pool);
+ await service.checkout(f.actor,randomUUID(),{sku:'room'});
+ const payment=provider.succeed([...provider.payments.keys()][0]);
+ await service.notification(signal(payment.id));
+ const asset=randomUUID(),key=randomUUID(),bytes=Buffer.from('offline unwatermarked image bytes');
+ await writeFile(join(dir,key),bytes,{mode:0o600});
+ await db.pool.query(`INSERT INTO asset(id,project_id,kind,original_key,normalized_key,original_hash,mime,bytes,rights_confirmed,state,stored_bytes,metadata) VALUES($1,$2,'share_image',$3,$3,$4,'image/png',$5,true,'ready',$5,$6)`,[asset,f.project,key,'a'.repeat(64),bytes.length,{watermarked:false}]);
+ const tokens=tokenPort('s'.repeat(32)),token=tokens.create();
+ await db.pool.query("INSERT INTO session(account_id,token_hash,expires_at) VALUES($1,$2,now()+interval '1 day')",[f.actor,tokens.hash(token)]);
+ const base={pool:db.pool,config:loadConfig({DATABASE_URL:'postgresql://localhost/test',N8_PUBLIC_ORIGIN:config.publicOrigin,N8_SESSION_SECRET:'s'.repeat(32),N8_ASSET_DIR:dir}),auth:new AuthService(new PgAuthStore(db.pool),passwords,tokens,{now:()=>new Date()}),projects:new PgProjects(db.pool),rate:new PgRateGate(db.pool),hashSubject:(s:string)=>tokens.hash(s)};
+ const request=()=>new Request(`${config.publicOrigin}/api/assets/${asset}?original=1`,{headers:{'x-n8-peer':'127.0.0.1',cookie:`n8_session=${token}`}});
+ const before=await createSpaceHandlers(base).asset(request(),asset);assert.ok([200,404].includes(before.status));
+ const refund=provider.refund(payment.id,100);await service.notification(signal(refund.id,'refund.succeeded'));
+ const hold=(await db.pool.query('SELECT billing_hold,paid_export FROM account WHERE id=$1',[f.actor])).rows[0];
+ const after=await createSpaceHandlers(base).asset(request(),asset);const returned=Buffer.from(await after.arrayBuffer());
+ console.log(JSON.stringify({beforeStatus:before.status,afterRefundStatus:after.status,...hold,privateBytesStillReturned:returned.equals(bytes),expectedAfterRefundStatus:404}));
+ assert.equal(after.status,404,'Refund must prevent fetching an existing unwatermarked derivative through generic asset route');
+ const normalizedRequest=new Request(`${config.publicOrigin}/api/assets/${asset}`,{headers:{'x-n8-peer':'127.0.0.1',cookie:`n8_session=${token}`}});
+ const normalized=await createSpaceHandlers(base).asset(normalizedRequest,asset);assert.equal(normalized.status,404);console.log(JSON.stringify({normalizedAfterRefundStatus:normalized.status,closure:'pass'}));
+} finally { await db.close();await rm(dir,{recursive:true,force:true}); }

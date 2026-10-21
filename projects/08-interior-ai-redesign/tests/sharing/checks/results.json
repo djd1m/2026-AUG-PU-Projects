@@ -1,0 +1,65 @@
+{
+  "recorded_at": "2026-10-13T23:58:15.469935+00:00",
+  "run_id": "20261013T220722Z-sharing-0e60",
+  "work_unit_id": "sharing-author-1",
+  "profile": "compact-quality-first-v2",
+  "tier": "XL",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "fallback": null,
+  "usage": null,
+  "cost": null,
+  "elapsed_wall_ms": 1033630,
+  "active_wall_ms": null,
+  "launch_sha256": "dc6c2cb5611845f968dbfc0bebb01db2f39cada2386159edc59fd4a5af881694",
+  "missing_data": [
+    "Host authoritative model/effort/usage/cost unavailable",
+    "No full substage clock or excluded-wait instrumentation; active duration null",
+    "First malformed mutation was syntax failure; not counted as guard evidence"
+  ],
+  "checks": [
+    {
+      "command": "npm run typecheck",
+      "exit_code": 0
+    },
+    {
+      "command": "npm run lint",
+      "exit_code": 0,
+      "evidence": "tests/sharing/checks/lint.txt"
+    },
+    {
+      "command": "npm run build",
+      "exit_code": 0,
+      "evidence": "tests/sharing/checks/build.txt"
+    },
+    {
+      "command": "node --env-file=<canonical-private-test-env> node_modules/vitest/vitest.mjs run tests/sharing",
+      "exit_code": 0,
+      "files": 4,
+      "tests": 25,
+      "duration_seconds": 26.34
+    },
+    {
+      "command": "node --env-file=<canonical-private-test-env> node_modules/vitest/vitest.mjs run",
+      "exit_code": 0,
+      "files": 29,
+      "tests": 208,
+      "duration_seconds": 65.4,
+      "evidence": "tests/sharing/checks/full-suite.txt"
+    },
+    {
+      "command": "node tests/sharing/mutations.mjs",
+      "exit_code": 0,
+      "meaningful_mutations": 3,
+      "mutation_exit_codes": [
+        1,
+        1,
+        1
+      ],
+      "restored": true,
+      "evidence": "tests/sharing/mutation-evidence/results.json"
+    }
+  ]
+}

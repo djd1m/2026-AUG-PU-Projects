@@ -1,0 +1,35 @@
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+ ↓ tests/sharing/review-probes/security.test.ts > independent SQL: every ready-export field stays frozen, including kind relabel, IDs, timestamps and keys
+ ↓ tests/sharing/review-probes/security.test.ts > independent SQL: share identity and TTL frozen; revocation cannot be cleared, moved or bypassed
+ ↓ tests/sharing/review-probes/security.test.ts > independent capacity boundary: 63 pending assets allow exactly one simultaneous export reservation
+ ↓ tests/sharing/review-probes/security.test.ts > independent generic asset route denies free and paid frozen export through original and normalized paths
+ ↓ tests/sharing/review-probes/security.test.ts > independent archive and unknown tokens return404/no-store/noindex on both public surfaces
+stderr | tests/sharing/review-probes/security.test.ts > independent expired active-project token returns404/no-store/noindex on page and image
+{"requestId":"d2e283b3-cc4a-4ebf-9581-cfe0aee1edd7","code":"NOT_FOUND","latencyMs":8}
+
+stderr | tests/sharing/review-probes/security.test.ts > independent expired active-project token returns404/no-store/noindex on page and image
+{"requestId":"b26fc67d-1d27-488f-8764-4f4b6ae9276e","code":"NOT_FOUND","latencyMs":7}
+
+ ✓ tests/sharing/review-probes/security.test.ts > independent expired active-project token returns404/no-store/noindex on page and image 433ms
+stderr | tests/sharing/review-probes/security.test.ts > independent pagination correction: fifty plus one HTTP pages preserve all own rows and reject foreign cursors
+{"requestId":"3deaf4be-e282-4454-8103-0dd9326b2fd6","code":"NOT_FOUND","latencyMs":2}
+
+stderr | tests/sharing/review-probes/security.test.ts > independent pagination correction: fifty plus one HTTP pages preserve all own rows and reject foreign cursors
+{"requestId":"294e4f3e-864b-4af1-be08-73066561c03b","code":"NOT_FOUND","latencyMs":4}
+
+stderr | tests/sharing/review-probes/security.test.ts > independent pagination correction: fifty plus one HTTP pages preserve all own rows and reject foreign cursors
+{"requestId":"0c773330-9ff2-419e-9781-af08cff8daff","code":"NOT_FOUND","latencyMs":3}
+
+stderr | tests/sharing/review-probes/security.test.ts > independent pagination correction: fifty plus one HTTP pages preserve all own rows and reject foreign cursors
+{"requestId":"0f5483ec-638b-4711-b9df-9962a80cbf5f","code":"NOT_FOUND","latencyMs":2}
+
+ ✓ tests/sharing/review-probes/security.test.ts > independent pagination correction: fifty plus one HTTP pages preserve all own rows and reject foreign cursors 1243ms
+ ↓ tests/sharing/review-probes/security.test.ts > independent actual child deadline kills stalled decode and releases slot for next valid image
+
+ Test Files  1 passed (1)
+      Tests  2 passed | 6 skipped (8)
+   Start at  00:02:08
+   Duration  2.18s (tests 84%, import 9%, transform 7%)
+

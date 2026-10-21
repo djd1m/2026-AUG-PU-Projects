@@ -1,0 +1,5 @@
+{
+  "status": "failed",
+  "checks": [],
+  "error": "locator.setInputFiles: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('section.card').filter({ has: getByRole('heading', { name: 'Добавить фото или скан', exact: true }) }).getByLabel('Файл', { exact: true })\n"
+}

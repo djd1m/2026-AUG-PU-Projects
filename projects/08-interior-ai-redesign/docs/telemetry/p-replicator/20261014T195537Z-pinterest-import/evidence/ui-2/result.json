@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "checks": [
+    "Пин Pinterest: automatic discovery and actual thumbnail loaded, no upload form",
+    "import error exposes real retry/manual fallback and rediscovery recovers without a design",
+    "Пин Pinterest: selected CDN image stored privately byte-for-byte and applied as new draft",
+    "Подборка Pinterest: automatic discovery and actual thumbnail loaded, no upload form",
+    "Подборка Pinterest: selected CDN image stored privately byte-for-byte and applied as new draft",
+    "imported selection persists after reload"
+  ],
+  "errors": [],
+  "build": "sha256:c40f215ccfbe27b6b9b3e6de082402a2f75dc5b4a73e710cbe9df4fd67cd8774",
+  "inference_calls": 0
+}

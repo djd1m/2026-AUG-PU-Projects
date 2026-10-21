@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "startedAt": "2026-10-14T17:37:14.902Z",
+  "finishedAt": "2026-10-14T17:37:46.956Z",
+  "buildRevision": "sha256:58ee78fcc34b940e761e8f2cce675d1760320d6f0c9a112f057a17a8d0723061",
+  "fixtureBytes": 11534720,
+  "checks": [
+    "generic file picker automatically routes 11MiB GLB, despite image purpose selection",
+    "UI calibration saves selected scan, survives reload and original hash matches",
+    "dedicated GLB picker accepts same 11MiB file and clears old calibration without overwriting shell",
+    "malformed GLB rejected through UI, original confirmed shell preserved",
+    "GLB above 25MiB rejected by authoritative server with 413",
+    "image remains subject to 10MiB limit",
+    "390px screen has no horizontal overflow and no runtime JavaScript errors"
+  ],
+  "errors": [],
+  "userFileTested": false
+}

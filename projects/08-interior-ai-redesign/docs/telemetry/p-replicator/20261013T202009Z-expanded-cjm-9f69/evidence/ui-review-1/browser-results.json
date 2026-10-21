@@ -1,0 +1,11 @@
+{
+  "finishedAt": "2026-10-14T00:26:53.925Z",
+  "build": "docker:sha256:a5fc8e6e026202de422e86bad9004e48a943cc2d861120e30d10c8110a91a6d2",
+  "results": [
+    {
+      "name": "probe execution",
+      "pass": false,
+      "error": "TimeoutError: locator.fill: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Пароль', { exact: true })\u001b[22m\n"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+../../../../.claude/rules/model-routing-local.md

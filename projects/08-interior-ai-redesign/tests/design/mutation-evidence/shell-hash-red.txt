@@ -1,0 +1,22 @@
+
+ RUN  v5.0.4 /tmp/n8-design-author-20261013/projects/08-interior-ai-redesign
+
+ ❯ tests/design/scene.test.ts (4 tests | 1 failed | 3 skipped) 27ms
+   ❯ strict measured scene (4)
+     × rejects shell edits, URI, changed dimensions and foreign surfaces 23ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 skipped (4)
+   Start at  22:59:22
+   Duration  388ms (transform 49%, import 34%, tests 14%, worker 3%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/design/scene.test.ts > strict measured scene > rejects shell edits, URI, changed dimensions and foreign surfaces
+AssertionError: expected [Function] to throw an error
+ ❯ tests/design/scene.test.ts:10:435
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

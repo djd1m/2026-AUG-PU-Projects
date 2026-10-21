@@ -1,417 +1,405 @@
-# Test scenarios
+# N8 — canonical BDD scenarios (source-bound plan)
 
-Gherkin contract; execution evidence is recorded separately. Fixtures never prove real geometry quality.
+Spec revision: sha256:7e6d118d36a4459927c244c90372e7c66ef7daa282b22e85186496332dc825dd
 
-@FR-GROWTH-001 @growth @happy-path
-Scenario: Growth 001 happy-path
-Given готовый результат владельца
-When он нажимает Поделиться и подтверждает системный share
-Then один share_completed за не более 2 действий
-
-@FR-GROWTH-001 @growth @edge-case
-Scenario: Growth 001 edge-case
-Given открытый системный share
-When пользователь отменяет
-Then число share_completed равно 0
-
-
-@FR-GROWTH-002 @growth @happy-path
-Scenario: Growth 002 happy-path
-Given валидный код партнёра до оплаты
-When провайдер подтверждает первую покупку
-Then ровно 1 paid_conversion связан с партнёром
-
-@FR-GROWTH-002 @growth @edge-case
-Scenario: Growth 002 edge-case
-Given cookie заблокированы
-When пользователь вводит персональный код в paywall
-Then подтверждённая покупка сохраняет 1 атрибуцию
-
-@FR-GROWTH-002 @growth @security
-Scenario: Growth 002 security
-Given код самого покупателя
-When он пытается применить self-referral
-Then атрибуция отклонена и начислений партнёру 0
-
-@FR-GROWTH-003 @growth @happy-path
-Scenario: Growth 003 happy-path
-Given бесплатный результат
-When владелец экспортирует композит
-Then на 1 изображении есть видимый badge RoomKind
-
-@FR-GROWTH-003 @growth @edge-case
-Scenario: Growth 003 edge-case
-Given подтверждённый платный пакет
-When владелец повторно экспортирует прежний результат
-Then badge RoomKind отсутствует и пометка AI сохранена
-
-@FR-GROWTH-003 @growth @security
-Scenario: Growth 003 security
-Given бесплатный аккаунт
-When запрос содержит removeBadge=true
-Then экспорт сохраняет badge и entitlement не меняется
-
-@FR-GROWTH-004 @growth @happy-path
-Scenario: Growth 004 happy-path
-Given два разных партнёра
-When оператор создаёт коды
-Then сохранены 2 уникальных кода и конверсии не смешиваются
-
-@FR-GROWTH-004 @growth @edge-case
-Scenario: Growth 004 edge-case
-Given существующий код
-When оператор повторяет создание того же кода
-Then возвращается конфликт и сохранён 1 код
-
-@FR-GROWTH-004 @growth @security
-Scenario: Growth 004 security
-Given оплата с одним provider_id
-When 10 одинаковых событий приходят одновременно
-Then в партнёрском агрегате ровно 1 конверсия
-
-@FR-GROWTH-005 @growth @happy-path
-Scenario: Growth 005 happy-path
-Given real accepted результат и описание 40 символов
-When владелец явно включает публикацию
-Then 1 публичная страница содержит сравнение и стиль
-
-@FR-GROWTH-005 @growth @edge-case
-Scenario: Growth 005 edge-case
-Given опубликованная работа
-When владелец отзывает публикацию
-Then прежний token и media URL возвращают 404
-
-@FR-GROWTH-005 @growth @security
-Scenario: Growth 005 security
-Given fixture или unverified результат и HTML в описании
-When пользователь пытается публиковать
-Then публичных страниц 0 и скрипты не исполняются
-
-@FR-payment-1 @security
-Scenario: Return URL forgery
-Given неоплаченный заказ
-When пользователь открывает success URL
-Then баланс не увеличивается
-
-@FR-redesign-1 @security
-Scenario: Late worker fence
-Given lease попытки A истёк и взят B
-When A сохраняет результат
-Then обновлено 0 job rows и кредит не расходуется повторно
+65 independently named scenario criteria; actual test evidence is added by each implementation feature. No runtime pass is implied.
 
 ## Criterion scenarios
 
-All are planned acceptance scenarios, not execution evidence. Each AC ID is canonical in Specification; matrix scenarios require every listed parameter case, not one representative.
-
 | Criterion | Scenario |
 |---|---|
-| FR-auth-1 | Registration and trial race; Session lifecycle and cookie flags; Auth abuse and origin boundaries; Session isolation |
-| FR-upload-1 | Image decode boundary matrix; Upload ownership and orphan cleanup |
-| FR-redesign-1 | Durable job admission and retry; Concurrent last-slot admission; Job timeout and crash recovery; Retry limit and release races; Interrupted status recovery; Late worker fence |
-| FR-geometry-1 | Generation provenance boundary; Real geometry corpus; Operator quality transition |
-| FR-gallery-1 | Gallery states and privacy; Accessible comparison layout; Delete revoke and cleanup |
-| FR-payment-1 | Checkout idempotency and return forgery; Provider verification matrix; Verified payment replay; Verified refund binding; Refund reservation export and success ordering; Return URL forgery |
-| FR-GROWTH-001 | Share artifact action count; Share outcome event matrix; Growth 001 security; Growth 001 happy-path; Growth 001 edge-case |
-| FR-GROWTH-002 | Attribution consent persistence and expiry; Attribution override and freeze; Concurrent first conversion and second purchase; Growth 002 happy-path; Growth 002 edge-case; Growth 002 security |
-| FR-GROWTH-003 | Composite entitlement and cached hold; Public token original exclusion; Growth 003 happy-path; Growth 003 edge-case; Growth 003 security |
-| FR-GROWTH-004 | Partner operator and binding boundary; Partner aggregate replay refund repeat; Growth 004 happy-path; Growth 004 edge-case; Growth 004 security |
-| FR-GROWTH-005 | Publication consent and content boundaries; Accepted-public XSS and privacy; Public revoke and cache replay; Growth 005 happy-path; Growth 005 edge-case; Growth 005 security |
-| NFR-security-1 | Fail closed configuration matrix; Security limits injection and leak matrix; Security guard mutation controls |
-| NFR-performance-1 | Attempt ticket counter matrix; UTC rollover and queued expiry; Measured GPU performance cohort |
-| AUTH-01 (FR-auth-1) | Registration and trial race |
-| AUTH-02 (FR-auth-1) | Session lifecycle and cookie flags |
-| AUTH-03 (FR-auth-1) | Auth abuse and origin boundaries |
-| AUTH-04 (FR-auth-1) | Session isolation |
-| UPLOAD-01 (FR-upload-1) | Image decode boundary matrix |
-| UPLOAD-02 (FR-upload-1) | Upload ownership and orphan cleanup |
-| JOB-01 (FR-redesign-1) | Durable job admission and retry |
-| JOB-02 (FR-redesign-1) | Concurrent last-slot admission |
-| JOB-03 (FR-redesign-1) | Job timeout and crash recovery |
-| JOB-04 (FR-redesign-1) | Retry limit and release races |
-| JOB-05 (FR-redesign-1) | Interrupted status recovery |
-| GEOM-01 (FR-geometry-1) | Generation provenance boundary |
-| GEOM-02 (FR-geometry-1) | Real geometry corpus |
-| GEOM-03 (FR-geometry-1) | Operator quality transition |
-| GALLERY-01 (FR-gallery-1) | Gallery states and privacy |
-| GALLERY-02 (FR-gallery-1) | Accessible comparison layout |
-| GALLERY-03 (FR-gallery-1) | Delete revoke and cleanup |
-| PAY-01 (FR-payment-1) | Checkout idempotency and return forgery |
-| PAY-02 (FR-payment-1) | Provider verification matrix |
-| PAY-03 (FR-payment-1) | Verified payment replay |
-| PAY-04 (FR-payment-1) | Verified refund binding |
-| PAY-05 (FR-payment-1) | Refund reservation export and success ordering |
-| SHARE-01 (FR-GROWTH-001) | Share artifact action count |
-| SHARE-02 (FR-GROWTH-001) | Share outcome event matrix |
-| SHARE-03 (FR-GROWTH-001) | Growth 001 security |
-| ATTR-01 (FR-GROWTH-002) | Attribution consent persistence and expiry |
-| ATTR-02 (FR-GROWTH-002) | Attribution override and freeze |
-| ATTR-03 (FR-GROWTH-002) | Concurrent first conversion and second purchase |
-| BADGE-01 (FR-GROWTH-003) | Composite entitlement and cached hold |
-| BADGE-02 (FR-GROWTH-003) | Public token original exclusion |
-| PARTNER-01 (FR-GROWTH-004) | Partner operator and binding boundary |
-| PARTNER-02 (FR-GROWTH-004) | Partner aggregate replay refund repeat |
-| PUBLIC-01 (FR-GROWTH-005) | Publication consent and content boundaries |
-| PUBLIC-02 (FR-GROWTH-005) | Accepted-public XSS and privacy |
-| PUBLIC-03 (FR-GROWTH-005) | Public revoke and cache replay |
-| SEC-01 (NFR-security-1) | Fail closed configuration matrix |
-| SEC-02 (NFR-security-1) | Security limits injection and leak matrix |
-| SEC-03 (NFR-security-1) | Security guard mutation controls |
-| PERF-01 (NFR-performance-1) | Attempt ticket counter matrix |
-| PERF-02 (NFR-performance-1) | UTC rollover and queued expiry |
-| PERF-03 (NFR-performance-1) | Measured GPU performance cohort |
+| SC-US-001-1 | SC-US-001-1 — новый адрес |
+| SC-US-001-2 | SC-US-001-2 — неверный пароль/истёкшая или отозванная сессия |
+| SC-US-001-3 | SC-US-001-3 — 72/73 UTF-8 bytes и multibyte пароль |
+| SC-US-002-1 | SC-US-002-1 — два проекта |
+| SC-US-002-2 | SC-US-002-2 — другой аккаунт/архив |
+| SC-US-003-1 | SC-US-003-1 — 4.5×4×2.7 м и допустимые проёмы |
+| SC-US-003-2 | SC-US-003-2 — ноль/NaN/отрицательное/проём вне стены/неподтверждённый масштаб |
+| SC-US-004-1 | SC-US-004-1 — безопасный GLB или reference image |
+| SC-US-004-2 | SC-US-004-2 — oversized/повреждённый/remote-URI GLB либо изображение-bomb |
+| SC-US-004-3 | SC-US-004-3 — чужой assetId |
+| SC-US-005-1 | SC-US-005-1 — reference |
+| SC-US-005-2 | SC-US-005-2 — недоступный Pinterest |
+| SC-US-005-3 | SC-US-005-3 — заданная владельцем ссылка `https://ru.pinterest.com/pin/1117807570051119485/` |
+| SC-US-006-1 | SC-US-006-1 — калиброванная основа |
+| SC-US-006-2 | SC-US-006-2 — предложение с shell transform, неизвестным catalogId или выходящим за ручную оболочку bbox |
+| SC-US-007-1 | SC-US-007-1 — согласованный вариант |
+| SC-US-007-2 | SC-US-007-2 — два одновременных редактирования |
+| SC-US-007-3 | SC-US-007-3 — approved design |
+| SC-US-008-1 | SC-US-008-1 — manual/off |
+| SC-US-008-2 | SC-US-008-2 — enabled без caps/key или тестовый вредоносный ответ |
+| SC-US-008-3 | SC-US-008-3 — два worker и один job/лимит |
+| SC-US-008-4 | SC-US-008-4 — запрос уже dispatched |
+| SC-US-008-5 | SC-US-008-5 — offline HTTP provider fixture с валидным JSON и подтверждённой стоимостью |
+| SC-US-008-6 | SC-US-008-6 — поздний replay либо archive/refund/manual edit |
+| SC-US-009-1 | SC-US-009-1 — официальная ссылка и ручной снимок |
+| SC-US-009-2 | SC-US-009-2 — retailer 401/нет цены |
+| SC-US-009-3 | SC-US-009-3 — fresh снимок |
+| SC-US-010-1 | SC-US-010-1 — площадь 18, запас 8%, упаковка 1.99, цена 160000 копеек |
+| SC-US-010-2 | SC-US-010-2 — unmatched/unselected товар даже при известных работах/доставке либо null coverage |
+| SC-US-010-5 | SC-US-010-5 — отрицательный/overflow input, несовместимые единицы либо floor_area для стены |
+| SC-US-010-6 | SC-US-010-6 — floor и wall material |
+| SC-US-010-7 | SC-US-010-7 — сохранённая смета и изменённые текущие shopping rows |
+| SC-US-010-3 | SC-US-010-3 — изменённые quantity/price/reserve и бюджетный лимит |
+| SC-US-010-4 | SC-US-010-4 — цена 1600 ₽ целым вводом и ранний лимит |
+| SC-US-011-1 | SC-US-011-1 — нет товара |
+| SC-US-011-2 | SC-US-011-2 — позиции двух этапов |
+| SC-US-011-3 | SC-US-011-3 — старая смета |
+| SC-US-011-4 | SC-US-011-4 — неподтверждённая либо не помещающаяся замена |
+| SC-US-012-1 | SC-US-012-1 — off/неполный live config |
+| SC-US-012-2 | SC-US-012-2 — тестовый provider и одинаковый ключ |
+| SC-US-013-1 | SC-US-013-1 — verified succeeded |
+| SC-US-013-2 | SC-US-013-2 — чужой merchant/amount/test mode/payment linkage |
+| SC-US-013-4 | SC-US-013-4 — verification timeout |
+| SC-US-013-3 | SC-US-013-3 — refund.succeeded |
+| SC-US-014-1 | SC-US-014-1 — первый вариант |
+| SC-US-014-2 | SC-US-014-2 — активная ссылка |
+| SC-US-014-3 | SC-US-014-3 — чужой аккаунт/неподтверждённые права |
+| SC-US-015-1 | SC-US-015-1 — повторный event key |
+| SC-US-015-2 | SC-US-015-2 — нет событий |
+| SC-US-015-3 | SC-US-015-3 — первое allowlisted событие |
+| SC-US-025-1 | SC-US-025-1 — выбранная смета с known/unknown/retained rows |
+| SC-US-016-1 | SC-US-016-1 — cross-origin/request без CSRF либо чужой ID |
+| SC-US-016-2 | SC-US-016-2 — 59 mutation attempts в минуте |
+| SC-US-016-3 | SC-US-016-3 — valid owned bounded mutation и точный Origin |
+| SC-US-019-1 | SC-US-019-1 — A и B |
+| SC-US-020-1 | SC-US-020-1 — malformed/oversized/slow body |
+| SC-US-020-2 | SC-US-020-2 — SQL/HTML/script/URL-userinfo input |
+| SC-US-021-1 | SC-US-021-1 — secret-bearing failure |
+| SC-US-017-1 | SC-US-017-1 — fresh isolated env |
+| SC-US-017-2 | SC-US-017-2 — incompatible config/schema/storage |
+| SC-US-018-1 | SC-US-018-1 — 390px и desktop |
+| SC-US-022-1 | SC-US-022-1 — WebGL initialization failed |
+| SC-US-023-1 | SC-US-023-1 — plan/reference/budget saved |
+| SC-US-024-1 | SC-US-024-1 — exact build/fixture/host |
+| SC-US-024-2 | SC-US-024-2 — immutable200-line fixture с Decimal/unknown/services/delivery/reserve |
 
-## Detailed acceptance scenarios
+## Scenarios
 
-@FR-auth-1 @AUTH-01
-Scenario: Registration and trial race
-Given two concurrent registrations with one canonical email, and password lengths11,12,128,129
-When register then login
-Then exactly1 account/trial exists;12/128 accepted and11/129 rejected
+```gherkin
+Scenario: SC-US-001-1
+  Given новый адрес
+  When зарегистрировался, вышел и вошёл
+  Then кабинет доступен только новой действующей сессии.
 
-@FR-auth-1 @AUTH-02
-Scenario: Session lifecycle and cookie flags
-Given valid, unknown and logged-out sessions, token construction and explicit expiry cases immediately before and at/after created_at+7days; instrumented dummy-hash invocation for unknown email
-When login and access a private resource over configured local/nonlocal origins
-Then tokens originate from32 random bytes and only their HMAC is stored; pre-7d valid session authorizes, at/after7d and logout deny; unknown-account branch calls dummy password hash verification; cookie flags match environment and failed login bodies are generic
+Scenario: SC-US-001-2
+  Given неверный пароль/истёкшая или отозванная сессия
+  When вход/чтение
+  Then общий 401, приватные данные отсутствуют.
 
-@FR-auth-1 @AUTH-03
-Scenario: Auth abuse and origin boundaries
-Given requests below/at/above auth caps with valid, foreign, missing and null Origin
-When send registration/login/logout and SQL-looking email input
-Then caps yield413/429; invalid Origin403; values stay data and do not bypass authentication
+Scenario: SC-US-001-3
+  Given 72/73 UTF-8 bytes и multibyte пароль
+  When register/login
+  Then 72 допустим при ≥12 символах,73 отклоняется явно до bcrypt, suffix не становится эквивалентным паролем.
 
-@FR-auth-1 @AUTH-04
-Scenario: Session isolation
-Given accountsA/B and resources belonging toA
-When B lists and reads/deletes A resources
-Then only B-owned entries listed; direct cross-account requests404 with zero media bytes
+Scenario: SC-US-002-1
+  Given два проекта
+  When изменён и перезагружен один
+  Then второй не изменён, состояние первого восстановлено.
 
-@FR-upload-1 @UPLOAD-01
-Scenario: Image decode boundary matrix
-Given each allowed format at/beyond byte and pixel limits, spoofed MIME/magic and EXIF orientation
-When upload each case
-Then valid boundary files normalize and strip EXIF; oversized413, invalid422; no original client filename exposed
+Scenario: SC-US-002-2
+  Given другой аккаунт/архив
+  When чужой ID либо мутация архива
+  Then 404 либо 409 PROJECT_ARCHIVED соответственно, данные не изменены.
 
-@FR-upload-1 @UPLOAD-02
-Scenario: Upload ownership and orphan cleanup
-Given two accounts, traversal/URL inputs and forced DB failure
-When read/delete/upload then run bounded cleanup
-Then wrong owner404, traversal/URL400; failed-write file removed; live/recent referenced files retained
+Scenario: SC-US-003-1
+  Given 4.5×4×2.7 м и допустимые проёмы
+  When подтвердил
+  Then площадь пола 18 м², стабильный shell hash, видны план и 3D.
 
-@FR-redesign-1 @JOB-01
-Scenario: Durable job admission and retry
-Given one valid upload plus invalid style/other-owner upload and a dropped202 response
-When create and retry same/different bodies
-Then valid response arrives before worker; retry same id; changed body409; invalid inputs create no job
+Scenario: SC-US-003-2
+  Given ноль/NaN/отрицательное/проём вне стены/неподтверждённый масштаб
+  When согласование
+  Then 422 либо 409 CALIBRATION_REQUIRED, проверенного статуса нет.
 
-@FR-redesign-1 @JOB-02
-Scenario: Concurrent last-slot admission
-Given one credit or one remaining account/platform ticket with two admissions and optional held account
-When race job creation
-Then at most1 reserve/ticket/job; exhausted/held requests create none and no partial bucket increment
+Scenario: SC-US-004-1
+  Given безопасный GLB или reference image
+  When upload
+  Then исходный hash сохранён, asset доступен только owner, normalized image/thumbnail декодирован и перекодирован без EXIF, fixed MIME/nosniff, external resources не загружались.
 
-@FR-redesign-1 @JOB-03
-Scenario: Job timeout and crash recovery
-Given queued job at60s, healthy-heartbeat attempt at180s, crashed lease and job at360s
-When sweeper/worker claims or finishes
-Then expired work is fenced/failed; local process is cancelled and hosted known ID gets best-effort bounded cleanup; no late success, no third attempt; status reads never wait for inference
+Scenario: SC-US-004-2
+  Given oversized/повреждённый/remote-URI GLB либо изображение-bomb
+  When upload
+  Then 413/415/422, нет опубликованного asset и сетевых запросов к вложенным URL.
 
-@FR-redesign-1 @JOB-04
-Scenario: Retry limit and release races
-Given an existing reserve and each case: retry at daily limit, ordinary final worker failure, attempt deadline, absolute job deadline, concurrent failure/sweeper/delete/late completion; plus a separate no-reserve case
-When transition terminal states then replay failure and late completion
-Then every reserved failed job has exactly1 release(job_id) ledger entry of+1 and balance restored by1; replays add0; no-reserve case has0 releases; stale output inaccessible
+Scenario: SC-US-004-3
+  Given чужой assetId
+  When скачать/использовать в проекте
+  Then 404 даже при известном storage key.
 
-@FR-redesign-1 @JOB-05
-Scenario: Interrupted status recovery
-Given queued/running/succeeded/failed job and a network outage
-When poll then reload
-Then unknown during outage; fresh GET resumes server state with same job and unchanged ledger
+Scenario: SC-US-005-1
+  Given reference
+  When выбраны tags/note и повторное открытие
+  Then данные сохранены вместе с source/дата.
 
-@FR-geometry-1 @GEOM-01
-Scenario: Generation provenance boundary
-Given explicit controlnet/replicate/fixture modes, missing required local CUDA/models or hosted pins/acceptances/envelope, or missing provenance field
-When generate and persist result
-Then unavailable selected mode fails explicitly without fallback; fixture labelled; successful result binds exact bytes and mode-specific complete evidence, with hosted hardware/warm/inference/bill explicitly null
+Scenario: SC-US-005-2
+  Given недоступный Pinterest
+  When добавлена ссылка
+  Then предлагается upload, нет обещания импортированной доски или автоматического доступа.
 
-@FR-geometry-1 @GEOM-02
-Scenario: Real geometry corpus
-Given 12 real rooms with annotated openings/anchors and3 styles
-When run actual selected depth-conditioned generation and independent measurement
-Then 36 valid pairs meet all thresholds; fixture or missing evidence cannot pass
+Scenario: SC-US-005-3
+  Given заданная владельцем ссылка `https://ru.pinterest.com/pin/1117807570051119485/`
+  When сохранена/переоткрыта
+  Then исходная ссылка сохранена и доступна, не заменена общим Pinterest URL.
 
-@FR-geometry-1 @GEOM-03
-Scenario: Operator quality transition
-Given real/fixture results with valid, missing or mismatched evidence and operator/user actors
-When attempt accept/reject and then publish
-Then only valid real operator review accepts bound bytes; all others refuse; rejection revokes and releases once
+Scenario: SC-US-006-1
+  Given калиброванная основа
+  When меняю стиль/мебель/ракурс и до/после
+  Then shell hash/размеры/проёмы неизменны, выбор сохранён.
 
-@FR-gallery-1 @GALLERY-01
-Scenario: Gallery states and privacy
-Given more than50 owned jobs spanning each state and a second account
-When list/reopen at desktop/mobile and simulate fetch error
-Then each page contains at most50 owned entries with continuation for remaining jobs; correct state/actions, unknown on failure; no cross-owner data, noindex and private/no-store headers
+Scenario: SC-US-006-2
+  Given предложение с shell transform, неизвестным catalogId или выходящим за ручную оболочку bbox
+  When сохранить
+  Then 422 SCENE_INVALID, предыдущий вариант цел.
 
-@FR-gallery-1 @GALLERY-02
-Scenario: Accessible comparison layout
-Given before/after result at1440px and390px with keyboard/reduced motion
-When navigate and change slider
-Then slider has a readable accessible label and state remains readable; separate before/after alt text is present, keyboard focus is visibly styled, status changes reach aria-live region; value changes by keyboard, computed body≥16px and document width≤viewport; reduced-motion preference disables nonessential animation
+Scenario: SC-US-007-1
+  Given согласованный вариант
+  When поменял размер/стиль
+  Then новая revision, старый результат доступен, quantities пересчитываются по новой подтверждённой площади либо остаются unknown.
 
-@FR-gallery-1 @GALLERY-03
-Scenario: Delete revoke and cleanup
-Given owned published/queued/running results plus failed filesystem delete
-When delete then request old tokens/private IDs and rerun cleanup
-Then all reads404 immediately; worker cannot attach; one reserve release if pending; files removed within bounded healthy-worker interval
+Scenario: SC-US-007-2
+  Given два одновременных редактирования
+  When одинаковый expectedVersion
+  Then один commit, второй 409 VERSION_CONFLICT без потери данных.
 
-@FR-payment-1 @PAY-01
-Scenario: Checkout idempotency and return forgery
-Given client price override, repeated key, provider timeout and missing keys
-When create/retry intent then visit return URL
-Then server amount unchanged, one intent/provider key; retry resumes; changed409; no return grant; unavailable config503
+Scenario: SC-US-007-3
+  Given approved design
+  When изменён стиль или выбран другой исторический вариант
+  Then создана новая draft revision, approval снят, история сохранена, покупки показывают предупреждение до повторного согласования.
 
-@FR-payment-1 @PAY-02
-Scenario: Provider verification matrix
-Given each merchant/id/account/order/amount/currency/paid/status field individually wrong plus timeout/malformed/oversized response
-When deliver success notification then valid retry
-Then each mismatch grants0; transient failure claims no dedupe; valid retry grants20 once
+Scenario: SC-US-008-1
+  Given manual/off
+  When пользователь ищет AI
+  Then видна надпись «Ручной режим · AI не подключён», пресеты сохраняются и network spy показывает0 внешних AI-вызовов.
 
-@FR-payment-1 @PAY-03
-Scenario: Verified payment replay
-Given 10 duplicate successes, reordered cancel/success and different purchases
-When settle concurrently
-Then one grant per payment; succeeded resists cancel; review monotonic; repeat package grants do not duplicate first conversion
+Scenario: SC-US-008-2
+  Given enabled без caps/key или тестовый вредоносный ответ
+  When startup/validation
+  Then отказ startup либо job failed, shell не меняется.
 
-@FR-payment-1 @PAY-04
-Scenario: Verified refund binding
-Given valid partial/full refund and wrong refundID/payment/merchant/account/currency/amount/status
-When process notification
-Then only correctly bound succeeded refund sets hold/review; mismatches no state change; duplicate harmless; ledger never guessed/reversed
+Scenario: SC-US-008-3
+  Given два worker и один job/лимит
+  When параллельный claim/dispatch
+  Then один dispatch, caps атомарны, старый fence не завершает job повторно.
 
-@FR-payment-1 @PAY-05
-Scenario: Refund reservation export and success ordering
-Given refund racing reservation/export/cached access/retry plus stale success before/after refund
-When execute each ordering
-Then no post-hold new reserve/start/badge-free response; cached asset cannot bypass; review stays and queued credit releases once; pre-hold authorized effects are explicitly distinguished
+Scenario: SC-US-008-4
+  Given запрос уже dispatched
+  When timeout/crash
+  Then job uncertain, cost/usage неизвестны и reservation сохранена, автоматического платного redispatch нет.
 
-@FR-GROWTH-001 @SHARE-01
-Scenario: Share artifact action count
-Given owner result and recorded browser network/actions
-When share using native API or download fallback
-Then artifact after≤2 actions contains comparison/badge and no messaging request
+Scenario: SC-US-008-5
+  Given offline HTTP provider fixture с валидным JSON и подтверждённой стоимостью
+  When job завершён
+  Then одна draft revision текущего shell, один held credit consumed, обе reservations reconciled по фактическому cost, live network не вызывалась.
 
-@FR-GROWTH-001 @SHARE-02
-Scenario: Share outcome event matrix
-Given native resolve/abort/error/unavailable and download success/failure
-When invoke each path and replay same event key
-Then only native resolve completed1; successful download export1, complete0; cancellation/errors0; dedupe prevents repeats
+Scenario: SC-US-008-6
+  Given поздний replay либо archive/refund/manual edit
+  When retry/mark-dispatch/completion
+  Then replay возвращает прежний job по тому же inputHash, archive до mark запрещает dispatch, поздний результат не заменяет новую ручную работу, consent body неизменен.
 
-@FR-GROWTH-001 @SHARE-03 @growth @security
-Scenario: Growth 001 security
-Given result of another account
-When request composite by job_id
-Then 404 and zero image bytes
+Scenario: SC-US-009-1
+  Given официальная ссылка и ручной снимок
+  When сохранён
+  Then все provenance-поля видны и подставляются в shopping line.
 
-@FR-GROWTH-002 @ATTR-01
-Scenario: Attribution consent persistence and expiry
-Given consent denied/accepted, blocked cookies and30d elapsed
-When onboard/reload and enter code at checkout
-Then no tracking cookie before opt-in; valid consent persists until expiry; denied/expired cookie not used; manual code works
+Scenario: SC-US-009-2
+  Given retailer 401/нет цены
+  When запрос обновления
+  Then blocked/unknown, нуля или текущей цены не появляется, предлагается ручное подтверждение.
 
-@FR-GROWTH-002 @ATTR-02
-Scenario: Attribution override and freeze
-Given valid cookieA/codeB plus self/tampered/inactive codes
-When edit before intent then change after intent creation
-Then validB replacesA before freeze; later input cannot alter intent; bad codes have no effect
+Scenario: SC-US-009-3
+  Given fresh снимок
+  When сменён регион/магазин либо прошло 24h
+  Then effective freshness stale, подтверждённый статус снят до нового снимка.
 
-@FR-GROWTH-002 @ATTR-03
-Scenario: Concurrent first conversion and second purchase
-Given cases: two differently attributed valid intents for one account; or first committed successful intent with no eligible partner followed by a partnered payment; and later purchase/refund of the first payment
-When settle concurrently then settle later/refund
-Then exactly1 immutable first-paid marker remains bound to first committed success; partnered winner gets exactly1 conversion; no-partner winner gets0 even after later partnered payment and refund of the first; no backfill/reassignment/promotion
+Scenario: SC-US-010-1
+  Given площадь 18, запас 8%, упаковка 1.99, цена 160000 копеек
+  When calculate
+  Then 10 упаковок, 1600000 копеек, видимая формула.
 
-@FR-GROWTH-003 @BADGE-01
-Scenario: Composite entitlement and cached hold
-Given free, paid and held accounts with cached artifact and removeBadge=true
-When export/request directly before and after hold
-Then free/held include badge or unavailable; paid unheld may omit; AI label always; stale badge-free cache never bypasses
+Scenario: SC-US-010-2
+  Given unmatched/unselected товар даже при известных работах/доставке либо null coverage
+  When calculate
+  Then incomplete с видимыми unknown rows, неизвестное не теряется.
 
-@FR-GROWTH-003 @BADGE-02
-Scenario: Public token original exclusion
-Given published valid composite token plus guessed original/result paths
-When request every public media variant
-Then only authorized composite returned; originals/direct raw paths404 without private bytes
+Scenario: SC-US-010-5
+  Given отрицательный/overflow input, несовместимые единицы либо floor_area для стены
+  When calculate
+  Then 422, предыдущая смета неизменна.
 
-@FR-GROWTH-004 @PARTNER-01
-Scenario: Partner operator and binding boundary
-Given operator/user actors, duplicate codes, changed owner and self code
-When create/attribute codes
-Then only operator creates; duplicate409, user denied, binding immutable and self conversion0
+Scenario: SC-US-010-6
+  Given floor и wall material
+  When derive quantity
+  Then floor4.5×4=18 м², wall площадь равна длине стены×высоте минус её проёмы; GLB area unknown до явного user-confirmed surface quantity.
 
-@FR-GROWTH-004 @PARTNER-02
-Scenario: Partner aggregate replay refund repeat
-Given two partners, duplicated notifications, repeat purchase and refunded first purchase
-When query counts/amount after each settlement
-Then exact sums/counts of eligible first records only; repeated/refunded events do not inflate; no financial payout writes
+Scenario: SC-US-010-7
+  Given сохранённая смета и изменённые текущие shopping rows
+  When воспроизвожу старый snapshot без текущих rows
+  Then совпадают totals, phases, unresolved/complete, reserve и delta по стабильным element/cost IDs.
 
-@FR-GROWTH-005 @PUBLIC-01
-Scenario: Publication consent and content boundaries
-Given accepted/unverified/fixture jobs, checked/unchecked consent, missing style; context lengths0/1/160/161 and description lengths39/40/2000/2001; independent consent on two jobs
-When publish two separate results
-Then only complete accepted real opted-in result succeeds with context1 or160 and description40 or2000; context0/161 and description39/2001 reject; no inherited consent or fixture SEO
+Scenario: SC-US-010-3
+  Given изменённые quantity/price/reserve и бюджетный лимит
+  When calculate
+  Then новая версия, точный delta, known/scenario отдельно; incomplete не получает «уложились».
 
-@FR-GROWTH-005 @PUBLIC-02
-Scenario: Accepted-public XSS and privacy
-Given accepted real job with script-like description and private EXIF/contact data
-When publish and load page/gallery
-Then text literal, script not executed; useful comparison remains; zero private fields/EXIF
+Scenario: SC-US-010-4
+  Given цена 1600 ₽ целым вводом и ранний лимит
+  When введены/изменены значения
+  Then native input допускает submit, minor=160000, текущий лимит отображается и немедленно влияет на сравнение.
 
-@FR-GROWTH-005 @PUBLIC-03
-Scenario: Public revoke and cache replay
-Given published accepted job and cached page/media/token
-When revoke/delete/reject then retry every old URL
-Then 404 with zero media bytes and no-store; absent from public list
+Scenario: SC-US-011-1
+  Given нет товара
+  When выбрал замену
+  Then видно отличие/новые габариты, новая версия и повторное согласование.
 
-@NFR-security-1 @SEC-01
-Scenario: Fail closed configuration matrix
-Given each missing DB/secret/storage/runtime config and unsafe production fixture/default credential/public DB port
-When start validated configuration/compose
-Then each unsafe case refuses before socket; safe isolated config starts; no secret in client files
+Scenario: SC-US-011-2
+  Given позиции двух этапов
+  When перенос строки
+  Then суммы этапов меняются, общая сумма неизменна.
 
-@NFR-security-1 @SEC-02
-Scenario: Security limits injection and leak matrix
-Given foreign origins, SQL/path/HTML injection, oversize public/provider bodies,121 requests/min and error containing secrets
-When exercise routes and inspect safe logs/config
-Then no bypass/execution/leak; size413 or provider503 and rate429; other provider64KiB, Replicate response512KiB/request384KiB and5s/original deadline; imported media10MiB/20MP/single frame; bounded resources; DB not published
+Scenario: SC-US-011-3
+  Given старая смета
+  When возвращаюсь к дизайну и пересчитываю
+  Then сохранены обе версии и причина изменения, old approval не переиспользован.
 
-@NFR-security-1 @SEC-03
-Scenario: Security guard mutation controls
-Given isolated tests tied to source snapshot
-When remove each named guard in disposable worktree and run relevant case
-Then each mutation makes its targeted assertion fail; original source restored and no fake fixtures accepted
+Scenario: SC-US-011-4
+  Given неподтверждённая либо не помещающаяся замена
+  When replace
+  Then 409/422 с причиной, указатели/история не изменены.
 
-@NFR-performance-1 @PERF-01
-Scenario: Attempt ticket counter matrix
-Given platform/account independently at limit, concurrent last slot, failed/retry work and invalid limits
-When admit/claim/retry
-Then no partial increments or overrun; every attempt ticket counted despite refund; impossible retry fails/releases exactly once
+Scenario: SC-US-012-1
+  Given off/неполный live config
+  When checkout/start
+  Then отключён checkout/отказ startup, денег и entitlement нет.
 
-@NFR-performance-1 @PERF-02
-Scenario: UTC rollover and queued expiry
-Given job admitted before midnight, current-day cap full/available and elapsed60s queue deadline
-When claim at new UTC day or after expiry
-Then new ticket only if both counters available; old count retained; exhaustion/expiry terminal and one credit release
+Scenario: SC-US-012-2
+  Given тестовый provider и одинаковый ключ
+  When два checkout
+  Then один order/remote id; клиент не меняет цену/credits.
 
-@NFR-performance-1 @PERF-03
-Scenario: Measured GPU performance cohort
-Given real warm/cold/fixture samples and missing metadata
-When calculate nearest-rank p95 on valid warm cohort
-Then eligible cohort requires n≥30 real warm jobs with complete provenance and nearest-rank p95≤25s; valid cohort with p95>25s FAILS performance acceptance; unavailable/ineligible cohort remains UNKNOWN; report queue separately
+Scenario: SC-US-013-1
+  Given verified succeeded
+  When webhook replay/concurrent delivery
+  Then одно начисление и один ledger outcome.
 
-## Hosted BDD references — accepted software, 2026-10-03
+Scenario: SC-US-013-2
+  Given чужой merchant/amount/test mode/payment linkage
+  When webhook
+  Then 400, credits/ledger неизменны.
 
-All11 original SC-US scenarios/subcase matrices remain in the unchanged [F07 specification](features/f07-replicate/01_specification.md); exact AC→literal test anchors plus complete suite/subcase references are in [05_completion](features/f07-replicate/05_completion.md#bdd-and-subcase-references). This adds coverage references rather than renaming original scenarios or tests. Durable CAS/response-loss/known recovery/deadline/hold/delete/media/corpus/ticket/leak cases use actual production paths with mocked provider HTTP; they are software evidence only.
+Scenario: SC-US-013-4
+  Given verification timeout
+  When та же delivery повторена с подтверждённым provider response
+  Then первый503 не занимает event key, повтор начисляет пакет ровно один раз.
 
-Actual send-CAS mutation uses the same durable submitting identity twice, requires exactly1 POST, and removes only concrete no-replay/CAS guards in a disposable copy to require intended assertion failure at actual2; restored source green/hash-equal. Cleanup requires one30s fenced claim, one cancel request then GET later, submitting+1h unresolved boundary and no erasure/refund/revival. I6b R1/R2/R3 preserves real DOM hold/delete/private hashes; accepted mode predicate is controlnet OR replicate, actual hosted mock is unverified/publication denied.
+Scenario: SC-US-013-3
+  Given refund.succeeded
+  When verified event
+  Then новые live jobs запрещены и export entitlement отозван, audit/history доступны.
 
-I7 full32nonPG+13PG/Python/static/mutations is parent-owned pending at this author freeze; fresh whole-feature review and I8 actual52+2 browser plus representative hosted-row restore remain pending. Historical42+2 and21table451row restore cannot substitute. PERF-03 warm30/p95≤25s remains unchanged/unmeasured. Provider/license/privacy/safety/corpus/billing/pilot real evidence is pending, externalspend0.
+Scenario: SC-US-014-1
+  Given первый вариант
+  When export/share preview
+  Then обе кнопки рядом, watermark соответствует entitlement, исходные приватные данные не включены.
+
+Scenario: SC-US-014-2
+  Given активная ссылка
+  When owner отзывает/архивирует проект или TTL истёк
+  Then последующий view/image 404, cache no-store; ранее скачанные копии не обещано удалить.
+
+Scenario: SC-US-014-3
+  Given чужой аккаунт/неподтверждённые права
+  When создание link
+  Then отказ без публикации.
+
+Scenario: SC-US-015-1
+  Given повторный event key
+  When повторная запись
+  Then один event, нет исходных фото/текста/токенов в log.
+
+Scenario: SC-US-015-2
+  Given нет событий
+  When локальная readonly метрика
+  Then наблюдаемое0 либо unknown при отказе хранилища, не прогноз конверсии.
+
+Scenario: SC-US-015-3
+  Given первое allowlisted событие
+  When записано
+  Then count1 в явном 30-day reporting window; share_created не означает external sharing.
+
+Scenario: SC-US-025-1
+  Given выбранная смета с known/unknown/retained rows
+  When download CSV
+  Then rows/provenance/phase/units/totals совпадают с immutable snapshot, unknown пустое/подписанное, dangerous formula text inert; другой owner получает404.
+
+Scenario: SC-US-016-1
+  Given cross-origin/request без CSRF либо чужой ID
+  When mutation/read
+  Then 403/404, side effect отсутствует.
+
+Scenario: SC-US-016-2
+  Given 59 mutation attempts в минуте
+  When 20 одновременных requests одного actor
+  Then ровно1 проходит и19 получают429/Retry-After; счёт включает отклонённые/невалидные попытки.
+
+Scenario: SC-US-016-3
+  Given valid owned bounded mutation и точный Origin
+  When active session обращается ниже лимита
+  Then одна успешная mutation с сохранённым результатом.
+
+Scenario: SC-US-019-1
+  Given A и B
+  When A использует B ID в URL/scalar/array/JSON relation
+  Then 404 без private bytes/side effect, разрешённое owned чтение успешно.
+
+Scenario: SC-US-020-1
+  Given malformed/oversized/slow body
+  When повтор обращений
+  Then rate counted до parse, typed400/413/timeout до decode, DB connection не удерживается на body read.
+
+Scenario: SC-US-020-2
+  Given SQL/HTML/script/URL-userinfo input
+  When accepted text or rejected URL обрабатывается
+  Then SQL параметризован, markup escaped, shell/network execution отсутствует.
+
+Scenario: SC-US-021-1
+  Given secret-bearing failure
+  When exception обработан
+  Then журнал содержит только code/requestId/latency/hashed IDs, без password/token/plan/payload.
+
+Scenario: SC-US-017-1
+  Given fresh isolated env
+  When migrate/build/start
+  Then health ready, DB не имеет published ports, project data переживают restart.
+
+Scenario: SC-US-017-2
+  Given incompatible config/schema/storage
+  When ready/start
+  Then non-ready/отказ startup с redacted причиной, live inference/payment не вызываются.
+
+Scenario: SC-US-018-1
+  Given 390px и desktop
+  When keyboard выбирает steps и submit формы
+  Then виден focus, controls имеют labels, ошибки текстовые, document.scrollWidth≤innerWidth; canonical actions: create/open project, save/confirm plan, add reference, save/approve design, add/replace product, calculate budget, export/share/revoke.
+
+Scenario: SC-US-022-1
+  Given WebGL initialization failed
+  When открываю viewer
+  Then видны2D план/размеры и список объектов, можно сохранить вариант, нет сообщения об успешной3D загрузке.
+
+Scenario: SC-US-023-1
+  Given plan/reference/budget saved
+  When reload либо field validation fails
+  Then сохранённые значения восстановлены, незавершённый ввод остаётся при typed field error, новые ошибки получают focus/text.
+
+Scenario: SC-US-024-1
+  Given exact build/fixture/host
+  When 10 clients каждый выполняет20 warm-up+100 measured GET owned project/list requests
+  Then nearest-rank p95≤500ms для1000 ответов, status/body проверены, ошибки/timeouts не удаляются и валят проверку.
+
+Scenario: SC-US-024-2
+  Given immutable200-line fixture с Decimal/unknown/services/delivery/reserve
+  When 50 warm-up+1000 measured calculations
+  Then nearest-rank p95≤100ms и1000 canonical result hashes равны golden; exception/missing sample валит проверку.
+
+```

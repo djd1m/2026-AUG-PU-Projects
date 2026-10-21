@@ -1,0 +1,13 @@
+{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "result": {
+    "content": [
+      {
+        "text": "{\n  \"detail\": \"HTTP 403: dont have permissions to customers\",\n  \"quota_usages\": [],\n  \"reason\": \"this service account lacks customer/organization quota scope; quota usages are not readable with the current credentials\",\n  \"status\": \"unavailable\"\n}",
+        "type": "text"
+      }
+    ],
+    "isError": false
+  }
+}

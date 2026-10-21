@@ -1,0 +1,86 @@
+
+> n8-interior-planner@0.1.0 build
+> npm run typecheck && npm run build -w @n8/web
+
+
+> n8-interior-planner@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> @n8/web@0.1.0 build
+> next build
+
+   ▲ Next.js 15.5.27
+   - Experiments (use with caution):
+     · cpus: 2
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 27.6s
+   Linting and checking validity of types ...
+
+ ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
+   Collecting page data ...
+   Generating static pages (0/6) ...
+   Generating static pages (1/6)
+   Generating static pages (2/6)
+   Generating static pages (4/6)
+ ✓ Generating static pages (6/6)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                                          Size  First Load JS
+┌ ƒ /                                                               164 B         109 kB
+├ ƒ /_not-found                                                     994 B         106 kB
+├ ƒ /api/assets/[assetId]                                           234 B         106 kB
+├ ƒ /api/auth/login                                                 234 B         106 kB
+├ ƒ /api/auth/logout                                                234 B         106 kB
+├ ƒ /api/auth/register                                              234 B         106 kB
+├ ƒ /api/billing/checkout                                           234 B         106 kB
+├ ƒ /api/billing/offers                                             234 B         106 kB
+├ ƒ /api/billing/orders                                             234 B         106 kB
+├ ƒ /api/billing/orders/[id]                                        234 B         106 kB
+├ ƒ /api/billing/webhook                                            234 B         106 kB
+├ ƒ /api/jobs/[jobId]                                               234 B         106 kB
+├ ƒ /api/me                                                         234 B         106 kB
+├ ƒ /api/projects                                                   234 B         106 kB
+├ ƒ /api/projects/[projectId]                                       234 B         106 kB
+├ ƒ /api/projects/[projectId]/assets                                234 B         106 kB
+├ ƒ /api/projects/[projectId]/budgets                               234 B         106 kB
+├ ƒ /api/projects/[projectId]/budgets/[budgetId]/export             234 B         106 kB
+├ ƒ /api/projects/[projectId]/catalog                               234 B         106 kB
+├ ƒ /api/projects/[projectId]/designs                               234 B         106 kB
+├ ƒ /api/projects/[projectId]/designs/[designId]                    234 B         106 kB
+├ ƒ /api/projects/[projectId]/designs/[designId]/approve            234 B         106 kB
+├ ƒ /api/projects/[projectId]/designs/[designId]/restore            234 B         106 kB
+├ ƒ /api/projects/[projectId]/designs/[designId]/view               234 B         106 kB
+├ ƒ /api/projects/[projectId]/designs/from-references               234 B         106 kB
+├ ƒ /api/projects/[projectId]/drawing                               234 B         106 kB
+├ ƒ /api/projects/[projectId]/exports                               234 B         106 kB
+├ ƒ /api/projects/[projectId]/exports/[assetId]                     234 B         106 kB
+├ ƒ /api/projects/[projectId]/jobs                                  234 B         106 kB
+├ ƒ /api/projects/[projectId]/jobs/preview                          234 B         106 kB
+├ ƒ /api/projects/[projectId]/lines                                 234 B         106 kB
+├ ƒ /api/projects/[projectId]/lines/[lineId]                        234 B         106 kB
+├ ƒ /api/projects/[projectId]/products                              234 B         106 kB
+├ ƒ /api/projects/[projectId]/products/[snapshotId]/refresh         234 B         106 kB
+├ ƒ /api/projects/[projectId]/references                            234 B         106 kB
+├ ƒ /api/projects/[projectId]/references/[referenceId]              234 B         106 kB
+├ ƒ /api/projects/[projectId]/references/[referenceId]/pinterest    234 B         106 kB
+├ ƒ /api/projects/[projectId]/shares                                234 B         106 kB
+├ ƒ /api/projects/[projectId]/shares/[shareId]                      234 B         106 kB
+├ ƒ /api/projects/[projectId]/shells                                234 B         106 kB
+├ ƒ /api/shared/[token]/image                                       234 B         106 kB
+├ ƒ /billing                                                       1.6 kB         140 kB
+├ ƒ /dashboard                                                    3.14 kB         112 kB
+├ ƒ /dashboard/[projectId]                                        32.1 kB         170 kB
+├ ƒ /health/live                                                    234 B         106 kB
+├ ƒ /health/ready                                                   234 B         106 kB
+├ ƒ /login                                                        1.99 kB         111 kB
+└ ƒ /s/[token]                                                      234 B         106 kB
++ First Load JS shared by all                                      105 kB
+  ├ chunks/18-bb7d85faaf08e91b.js                                 46.9 kB
+  ├ chunks/87c73c54-09e1ba5c70e60a51.js                           54.2 kB
+  └ other shared chunks (total)                                   4.34 kB
+
+
+ƒ  (Dynamic)  server-rendered on demand

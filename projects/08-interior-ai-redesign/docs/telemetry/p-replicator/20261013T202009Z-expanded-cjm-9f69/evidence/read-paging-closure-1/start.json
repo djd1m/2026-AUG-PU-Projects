@@ -1,0 +1,31 @@
+{
+  "work_unit_id": "read-paging-closure-1",
+  "started_at": "2026-10-14T00:55:48.398273+00:00",
+  "recorded_at": "2026-10-14T00:57:16.543903+00:00",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_model_reason": "Host actual model metadata unavailable; requested model is not confirmation",
+  "usage": null,
+  "cost": null,
+  "head": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+  "stage": "review",
+  "scope": "DRIFT022 catalog pagination and design-scoped cart reads only",
+  "source_sha256": {
+    "docs/Specification.md": "7e6d118d36a4459927c244c90372e7c66ef7daa282b22e85186496332dc825dd",
+    "docs/Pseudocode.md": "2e2fd7b7a294ce98a57fe1a7c41057e32f6b9e49da3c89f406ff5a126f376ffd",
+    "docs/Architecture.md": "1a902141862ccbfa411fb853460506a3238b8e6c10ba70a774ea1ba822f6b99c",
+    "apps/web/src/server/design.ts": "9b4b442e6316cdd542a22eecd0047ed75a3a4099846dd3ceaf6019dd62a6ee03",
+    "apps/web/src/server/procurement.ts": "612c8b4e41acea414bdfd328aea0e656be7b5971763151917fd1c7a586b599a3",
+    "packages/domain/src/procurement/schemas.ts": "8a5fd0e11744f51b76347917dd0debd8bbebc6e42b02c81eafff9a51684e840d",
+    "packages/db/src/procurement/repository.ts": "85d0903823945580189660e6204e1d9301eebf209354d9489359c007dd94be1c",
+    "apps/web/src/lib/api-client.ts": "2f642200661a2cd1d3ee3e519605ed3fa263f34b85ad5763993a17983469fe29",
+    "apps/web/src/components/ProductsPanel.tsx": "9a9fc864e032bae74ac08c13d82006ca4b89e699a46364719d318e3ff2fda653",
+    "tests/integration/read-pages.test.ts": "78c9ea12c44b0534d5922ca2a604d100cab6727fcc46b5a79dfa4550c4c4d569"
+  },
+  "e2e_preflight": {
+    "status": "not_applicable",
+    "reason": "Source and isolated PG integration closure only; coordinator owns built runtime verification"
+  }
+}

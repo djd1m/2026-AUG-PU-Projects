@@ -1,0 +1,19 @@
+{
+  "run_id": "20261013T202009Z-expanded-cjm-9f69",
+  "work_unit_id": "worker-crash-review-1",
+  "started_at": "2026-10-14T01:38:27.377037+00:00",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "requested_evidence": "same inherited reviewer agent; previous explicit parent launch confirmation",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "timebox_minutes": 5,
+  "scope": "test-only independent process-crash evidence review; own design review append and fresh evidence",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "no reviewer test execution, only source and evidence inspection"
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "profile": "compact-quality-first-v2",
+  "run_id": "20261014T165824Z-gemini-live-audit-bc87",
+  "started_at": "2026-10-14T16:58:24.976404+00:00",
+  "status": "waiting_external_control",
+  "baseline_revision": "47c4e6fb3f1e336822f97af227a1e5f905925b28",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "budget_minutes": 45,
+  "scope": [
+    "ConfigureexistingGemini4Argon sceneprovider with provenlimits",
+    "Independent planned-vs-implemented audit",
+    "Actual UI path audit without paidcalls/datachanges"
+  ],
+  "limits": [
+    "No secrets inlogs/git",
+    "No automatic relaxationofspend/credits",
+    "No DBrecreation/migration",
+    "Max2children readonly;rootsoleproductwriter"
+  ],
+  "gap": "Initialkeycheck/read instructions precededformalrun allocation; no backdating",
+  "observed_key_control": {
+    "valid": true,
+    "limit_usd": 10,
+    "remaining_usd": 10,
+    "reset": "weekly",
+    "include_byok": false
+  },
+  "requested_models": [
+    "gpt-5.6-sol/high planned-feature-audit",
+    "gpt-5.6-sol/high public-journey-audit",
+    "gpt-6-astra/high weeklyplan+review"
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "weekly_implementation_gates_passed": true,
+    "audit_completed": true
+  },
+  "tier": "XL",
+  "route": {
+    "mechanical_tier": "M",
+    "exit_code": 0,
+    "risk": "XL",
+    "reason": "Provider spend hardlimit periodcontract; owner explicitly chose weekly and daily5USD so applicable authorizationexists"
+  },
+  "scope_extension": "Explicit weeklyproviderkey10USD cap; app5USD/day,0.10USD/job; no generalcreditbootstrap",
+  "owner_budget": {
+    "app_day_usd": 5,
+    "job_usd": 0.1,
+    "provider_period": "weekly",
+    "provider_cap_usd": 10
+  },
+  "audit_status": "completed",
+  "weekly_feature_status": "implemented_tested_deployed",
+  "last_updated_at": "2026-10-14T17:22:15.445099+00:00",
+  "metrics": {
+    "wall_clock_seconds_to_current_handoff": 1430.468695,
+    "host_model_usage": null,
+    "host_cost": null,
+    "inference_calls_executed": 0
+  },
+  "checks": {
+    "scoped_tests": 12,
+    "provider_initial_checks": 14,
+    "full_tests": 250,
+    "test_files": 38,
+    "typecheck_exit": 0,
+    "lint_exit": 0,
+    "build_exit": 0,
+    "independent_plan": "pass",
+    "independent_code": "pass",
+    "public_ui_six_tabs": "passed_with_observation"
+  },
+  "deployment": {
+    "image": "sha256:ea805048b32fc121e7f1d5086d61775543b8e7cbd78392804b60ba79b731e886",
+    "exact_source_files": 153,
+    "ready": "verifiedHTTPS200",
+    "mode": "manual",
+    "payments": "off"
+  },
+  "remaining": [
+    "Provider Include BYOK usage false: owner must change keysetting; normal completion key cannot manage keys",
+    "Actual paidGemini generation and semantic/UI quality still unexecuted"
+  ],
+  "operator_actions": {
+    "target_account_found": true,
+    "trial_credits_granted": 1,
+    "idempotent_audit_record": true,
+    "owner_personal_identifier": "omitted"
+  }
+}

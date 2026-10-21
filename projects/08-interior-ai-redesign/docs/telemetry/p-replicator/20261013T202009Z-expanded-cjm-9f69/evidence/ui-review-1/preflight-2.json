@@ -1,0 +1,30 @@
+{
+  "run_id": "20261013T202009Z-expanded-cjm-9f69",
+  "work_unit_id": "ui-review-1",
+  "observed_at": "2026-10-14T00:27:54.108841+00:00",
+  "status": "ready",
+  "source_manifest": "source-closure.json",
+  "source_drift": [],
+  "build_revision": "docker:sha256:a5fc8e6e026202de422e86bad9004e48a943cc2d861120e30d10c8110a91a6d2",
+  "image_manifest_digest": "sha256:a5fc8e6e026202de422e86bad9004e48a943cc2d861120e30d10c8110a91a6d2",
+  "next_build_id": "oaNRtcaVQPEfmRdmeRafv",
+  "environment": {
+    "origin": "http://127.0.0.1:3088",
+    "health_ready_http_status": 200,
+    "worker": "healthy per parent handoff",
+    "ai": "manual default",
+    "payments": "off"
+  },
+  "inputs": {
+    "private_fixture_path": "/home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/.runtime/ui-review-owner-2.json",
+    "credential_values": "not copied",
+    "project_type": "synthetic approved manual + validated GLB"
+  },
+  "test_command": "node docs/telemetry/p-replicator/20261013T202009Z-expanded-cjm-9f69/evidence/ui-review-1/browser-probe.mjs .runtime/ui-review-owner-2.json 2",
+  "expected_effects": "Local browser login sessions and GET reads only. Design-view telemetry and form writes intercepted; non-origin network blocked.",
+  "evidence_destination": "/home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/docs/telemetry/p-replicator/20261013T202009Z-expanded-cjm-9f69/evidence/ui-review-1",
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "attempt": "browser-2",
+  "prior_attempt": "browser-results.json: driver exact password label timeout before project reads; corrected selector only"
+}

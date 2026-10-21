@@ -1,0 +1,1 @@
+../../../../.claude/rules/fail-closed-defaults.md

@@ -1,0 +1,181 @@
+{
+  "at": "2026-10-14T00:01:12.297432+00:00",
+  "manifest_sha256": "a348ddb99a041ddfcf85e3854d5740e391405c9dd29352b963e915e4f83ff25e",
+  "files": [
+    {
+      "path": "apps/web/src/app/api/projects/[projectId]/exports/[assetId]/route.ts",
+      "expected": "134d11dceec3f8c862c0bf002558f872f11c6bf2f5ebd1ebe9be4f25d62666dc",
+      "actual": "134d11dceec3f8c862c0bf002558f872f11c6bf2f5ebd1ebe9be4f25d62666dc",
+      "matches": true
+    },
+    {
+      "path": "apps/web/src/app/api/projects/[projectId]/exports/route.ts",
+      "expected": "df1278679b903335df91a55b78991da450e818cf8699ed025df4d89224420ebe",
+      "actual": "df1278679b903335df91a55b78991da450e818cf8699ed025df4d89224420ebe",
+      "matches": true
+    },
+    {
+      "path": "apps/web/src/app/api/projects/[projectId]/shares/[shareId]/route.ts",
+      "expected": "275689801ef04682ce6a4f9f09629cc96b5264852ef9f7de7c89b45d44b0a927",
+      "actual": "275689801ef04682ce6a4f9f09629cc96b5264852ef9f7de7c89b45d44b0a927",
+      "matches": true
+    },
+    {
+      "path": "apps/web/src/app/api/projects/[projectId]/shares/route.ts",
+      "expected": "fb052ea486adae2329d2687ea44c57a1c3b6477cba66edb4fbfdbde6a8fcea03",
+      "actual": "fb052ea486adae2329d2687ea44c57a1c3b6477cba66edb4fbfdbde6a8fcea03",
+      "matches": true
+    },
+    {
+      "path": "apps/web/src/app/api/shared/[token]/image/route.ts",
+      "expected": "5933622501eb3bcc421e237231ed16ca8f42abe91b140a221a6fdb2a81d6cb16",
+      "actual": "5933622501eb3bcc421e237231ed16ca8f42abe91b140a221a6fdb2a81d6cb16",
+      "matches": true
+    },
+    {
+      "path": "apps/web/src/app/s/[token]/route.ts",
+      "expected": "2a328a80a3c5a00ba0350ce9b7366b1b66ef3713f4ce1f3fb10b7b9d0c91ac44",
+      "actual": "2a328a80a3c5a00ba0350ce9b7366b1b66ef3713f4ce1f3fb10b7b9d0c91ac44",
+      "matches": true
+    },
+    {
+      "path": "apps/web/src/server/sharing.ts",
+      "expected": "b800ee92425df0e2c8f54bd9439430819bea3eae925b45fe7d3af5d71590528d",
+      "actual": "4d2837baa82eb5a70815359a2e799a326c5716b0fa65b8db6988aa9cfc0ea00a",
+      "matches": false
+    },
+    {
+      "path": "docs/features/sharing/implementation-receipt.md",
+      "expected": "df9f5d0949c3d0266a486a2f509faac0faac5b2be204be41be6b6d641c1acf60",
+      "actual": "df9f5d0949c3d0266a486a2f509faac0faac5b2be204be41be6b6d641c1acf60",
+      "matches": true
+    },
+    {
+      "path": "docs/features/sharing/reuse.md",
+      "expected": "3cf4b4f9fec7521d7951180d6467ab30a44a0fb6b0000c4bc1a6b5016614f452",
+      "actual": "3cf4b4f9fec7521d7951180d6467ab30a44a0fb6b0000c4bc1a6b5016614f452",
+      "matches": true
+    },
+    {
+      "path": "packages/adapters/src/image-exporter.ts",
+      "expected": "b3a3575248df12c0806f4391cc590549a82dae9038f7bc8724f82d9e5e8e9625",
+      "actual": "b3a3575248df12c0806f4391cc590549a82dae9038f7bc8724f82d9e5e8e9625",
+      "matches": true
+    },
+    {
+      "path": "packages/db/src/sharing/common.ts",
+      "expected": "49ff0ece210bb098d1173d80300024b055560dbe99716689545787000a5100ae",
+      "actual": "8d3308f3e09cf88ccdedc752565c717fa79af3cfbd578efd2032d86acd4f099f",
+      "matches": false
+    },
+    {
+      "path": "packages/db/src/sharing/exports.ts",
+      "expected": "bb332fb4498bcd13e03d3dab53801221476688d0845309c91e5cc8695fed82e0",
+      "actual": "d7edb430beb800b8fb79ac3a3a6f3024ea3b0081ef240c0e48f8e87b3fdef7c8",
+      "matches": false
+    },
+    {
+      "path": "packages/db/src/sharing/growth.ts",
+      "expected": "c2665949eb50d6f7b781f9273a765edaa0d2d5fd01494600dfebfdcde231c0a0",
+      "actual": "c2665949eb50d6f7b781f9273a765edaa0d2d5fd01494600dfebfdcde231c0a0",
+      "matches": true
+    },
+    {
+      "path": "packages/db/src/sharing.ts",
+      "expected": "094e1d227b262c00ca11457bfdb3322aaf34682d5335df13b47826f4d3655fc1",
+      "actual": "a846f7ebfcaa4c4fe81f46fe1d95c7e6797cf04a1053d70a2aea82a089c6380a",
+      "matches": false
+    },
+    {
+      "path": "packages/domain/src/sharing/index.ts",
+      "expected": "3662a213474736f9bcdfad45b532f4ad6c7703dd3a92d46e2f3f9b2c17508e94",
+      "actual": "3662a213474736f9bcdfad45b532f4ad6c7703dd3a92d46e2f3f9b2c17508e94",
+      "matches": true
+    },
+    {
+      "path": "tests/sharing/checks/build.txt",
+      "expected": "1bcddc126024635fb02364ebaa513c676d3e14293fee7b403e634d3f8de9160a",
+      "actual": "1bcddc126024635fb02364ebaa513c676d3e14293fee7b403e634d3f8de9160a",
+      "matches": true
+    },
+    {
+      "path": "tests/sharing/checks/full-suite.txt",
+      "expected": "0424adeb8ad67521342bd9f89bb21adf4cd6c339d02b1face2669bdad73c4291",
+      "actual": "0424adeb8ad67521342bd9f89bb21adf4cd6c339d02b1face2669bdad73c4291",
+      "matches": true
+    },
+    {
+      "path": "tests/sharing/checks/lint.txt",
+      "expected": "8a146416f0bffb662f0607f7b4e7cc8c8fbb40bc2921366b2b3e8a82d4002518",
+      "actual": "8a146416f0bffb662f0607f7b4e7cc8c8fbb40bc2921366b2b3e8a82d4002518",
+      "matches": true
+    },
+    {
+      "path": "tests/sharing/checks/results.json",
+      "expected": "562a0eb1629454b1e0119270341620ae4a502329517c7a26c17f0ec10eea96da",
+      "actual": "562a0eb1629454b1e0119270341620ae4a502329517c7a26c17f0ec10eea96da",
+      "matches": true
+    },
+    {
+      "path": "tests/sharing/fixtures.ts",
+      "expected": "1256cf525c62cb8bbe0a10cb07fc236d64c435896c17a572a153af1a9ae46547",
+      "actual": "1256cf525c62cb8bbe0a10cb07fc236d64c435896c17a572a153af1a9ae46547",
+      "matches": true
+    },
+    {
+      "path": "tests/sharing/growth.test.ts",
+      "expected": "f1ee720c86aa3d1dd016b77574f9263afc45a7dd41c6db6cbd07dc5546d2c5ae",
+      "actual": "f1ee720c86aa3d1dd016b77574f9263afc45a7dd41c6db6cbd07dc5546d2c5ae",
+      "matches": true
+    },
+    {
+      "path": "tests/sharing/http.test.ts",
+      "expected": "3a3a0984e42ef62ce18895a5ecff82e74964713113e677dc9a938902b261f07e",
+      "actual": "3a3a0984e42ef62ce18895a5ecff82e74964713113e677dc9a938902b261f07e",
+      "matches": true
+    },
+    {
+      "path": "tests/sharing/mutation-evidence/privacy-red.txt",
+      "expected": "e21fda2ea3a1f1b9329f6ff8d2d164101f71bdf3ea2248ffe1cf01c0e18710dd",
+      "actual": "e21fda2ea3a1f1b9329f6ff8d2d164101f71bdf3ea2248ffe1cf01c0e18710dd",
+      "matches": true
+    },
+    {
+      "path": "tests/sharing/mutation-evidence/results.json",
+      "expected": "eab74be648a58b5b7a2da8204ac2fb6225525219e34631feef84e7a9914571da",
+      "actual": "eab74be648a58b5b7a2da8204ac2fb6225525219e34631feef84e7a9914571da",
+      "matches": true
+    },
+    {
+      "path": "tests/sharing/mutation-evidence/rights-red.txt",
+      "expected": "27533a6cfa9dab6095afcc30ed24990afe9bcb934875e14069f0c16c72b2a6ed",
+      "actual": "27533a6cfa9dab6095afcc30ed24990afe9bcb934875e14069f0c16c72b2a6ed",
+      "matches": true
+    },
+    {
+      "path": "tests/sharing/mutation-evidence/watermark-red.txt",
+      "expected": "85496af5dab378972254c79652629804990e596900c98b0cfc23307766fefbed",
+      "actual": "85496af5dab378972254c79652629804990e596900c98b0cfc23307766fefbed",
+      "matches": true
+    },
+    {
+      "path": "tests/sharing/mutations.mjs",
+      "expected": "173c0962c4698b975da5a633a29abd897ad1bf5b6a478b4744f64c4174795741",
+      "actual": "173c0962c4698b975da5a633a29abd897ad1bf5b6a478b4744f64c4174795741",
+      "matches": true
+    },
+    {
+      "path": "tests/sharing/repository.test.ts",
+      "expected": "b666e4c8d6c1095bded21258c3e2b77a777b0afa6d36d72055341b2a2601f37e",
+      "actual": "b666e4c8d6c1095bded21258c3e2b77a777b0afa6d36d72055341b2a2601f37e",
+      "matches": true
+    },
+    {
+      "path": "tests/sharing/resources.test.ts",
+      "expected": "9b84eaef0127330df30b3f5a1af45bc6087ecda5afba6d2b31f301087716ae35",
+      "actual": "9b84eaef0127330df30b3f5a1af45bc6087ecda5afba6d2b31f301087716ae35",
+      "matches": true
+    }
+  ],
+  "spec_sha256": "6c2ac4c8a9d932fef0502ba36438e76a378c9cd4a06105cbf173fefe51953fe1"
+}

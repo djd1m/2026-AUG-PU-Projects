@@ -1,0 +1,26 @@
+{
+  "status": "ready",
+  "at": "2026-10-14T18:23:10.678411+00:00",
+  "image": "sha256:e10ca081be03969720ce7ef311ea9a2c715c062eff1e54280f0dae4c153bb085",
+  "source": {
+    "apps/web/src/components/GlbCalibration.tsx": "8a53e03e60fbddff75b856975179eef1d3833d3f7540cdf3245d454c3adbb572",
+    "apps/web/src/components/SpacePanel.tsx": "5f34d896c521223483629b4970b8f11cc1d2d41445773f73dff65e24455e9665",
+    "apps/web/src/components/SceneViewport.tsx": "6358e5281a05bf2a192679ab45049f42f458a4f43e3132e61d8dfde9907c84d8",
+    "packages/viewer/src/types.ts": "e287c4bc74a3dbd3d9a7140004321d46aeb05dd4a63c5f243e528b2dad9d3920",
+    "packages/viewer/src/index.tsx": "d190d4db79e74c6b7261266326d4062e4c9010832f5434b6d533039b37d46884",
+    "packages/viewer/src/renderer.ts": "fb727b885be85e87d9c5e54dc55837a80765aef811ebcceff424d04388d26831",
+    "packages/domain/src/space/geometry.ts": "a7ea06b2463c3cb3639e77ca00f3a0fbcad884c1f762d2d24dac52b7841ba4b8"
+  },
+  "driver_sha": "733d376ab0ffff359a359b0850c3e2f8e45db14beff6c584993dbacef554e7a5",
+  "effects": [
+    "syntheticaccount/project",
+    "privateupload",
+    "actualsurfaceclicks",
+    "measured/native shells",
+    "failedproof rejected",
+    "contextloss UI"
+  ],
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "secrets": "none supplied"
+}

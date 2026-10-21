@@ -1,0 +1,26 @@
+# BILLING feature-local reuse receipt
+
+RUN_ID: 20261013T220722Z-billing-e2fa; WORK_UNIT_ID: billing-author-1.
+Observed author start: clock tool 2026-10-13 23:15:37 UTC. Requested Astra high; actual model/usage null (not exposed to author). XL accepted autonomous scope; no external payments/deployment.
+
+Search order, before production code: root/project canon and local 4 rules → fresh local filename/content searches across projects 01–07 including 03a/05a → N6/N4 provider/order/source-IP implementations opened → primary GitHub SDK search → official API/webhook docs opened. A second local inventory after GitHub confirmed 03a/05a/07 contain no matching TS/MJS payment files; no invented per-call timestamps. N1 62, N2 2, N3 8, N4 13, N5 18, N6 16 candidate files. Covers checkout/provider/verified-payment/refund contours together; not inherited blanket reuse evidence.
+
+Local revision 3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4 (dirty donor bytes pinned separately):
+- N6 apps/web/src/server/payments/yookassa.ts sha256 301a9a7acb1130efee2474c0f410d0fd034b1385a92040424961eda2ea48edba: adapt fixed API, Basic auth, exact minor amount, merchant/test/metadata checks, order UUID idempotence; strengthen streamed body deadline; notification payload identifies only event/object, never trusted financial fields.
+- N6 packages/db/src/payments.ts sha256 169c5dfd3f6ef0dd1bb277a56d71d9aaf97e61c23db45e44909fe93682ff86aa: adapt durable intent/event uniqueness and network outside transaction. Do not copy subscription/commission arithmetic.
+- N4 apps/api/src/payments/yookassa.ts sha256 f090f0d03bf22d3607c2ed160e440953485825e0ca64d8e81f7d5077f300ebcb; origin.ts donor for closed IPv4/IPv6 networks. N4/N6 tests cover source, payment and refund behavior; N8 adds actual PostgreSQL races, holds and derivative share revocation.
+- Local repository has no top-level software LICENSE; this is authorized same-owner in-repository adaptation, not assertion of third-party redistribution permission.
+- GitHub primary yoomoney/yookassa-sdk-php revision 7ebbab8bfd25da5ee3108d7211653dd74ab95972, composer.json MIT sha256 2cb84c82470f6cdfcaa03904550ae5198c9ebf376ab8e225819cefed060fffd8. Contracts Payment/Refund/CreatePayment corroborate donor. Rejected runtime dependency: PHP SDK/archive, incompatible TypeScript stack, no need for new dependency. Source consulted, not copied.
+
+Official sources inspected 2026-10-13: https://yookassa.ru/developers/using-api/webhooks (IPv4/IPv6 source list and remote status check); https://yookassa.ru/developers/using-api/interaction-format (fixed https://api.yookassa.ru/v3, Basic shop/secret, Idempotence-Key 24h horizon); https://yookassa.ru/developers/api (payments/refunds). Unknown remote ID after 23h will require reconciliation rather than risk a new charge after provider dedupe expiry. Refund is distinct object linked through payment_id; partial positive RUB amount ≤ original, not equality.
+
+Canonical dz recall executed from original root for Russian “оплата возврат право экспорт идемпотентность”, plus “оплата” and “возврат”: no matching patterns returned. Confirmed repository lessons applied: source-before-body; Account→Order lock order; never network in transaction; no spend mutex after Account; verified failures do not reserve dedupe keys; return-page GET grants nothing.
+
+Implementation checks complete:35 final billing tests, full preceding152 tests, final build/lint and two final-source production mutation pairs; exact receipts in implementation-receipt.md. E2E preflight not_applicable to isolated service/unit integration phase; deployed E2E belongs to coordinator. No HMAC claim: generic root webhook checker incompatible and must stay exit2.
+
+Additional primary API inspection: https://yookassa.ru/developers/payment-acceptance/testing-and-going-live/testing confirms recipient.account_id, test=true and HTTPS yoomoney.ru confirmation; https://yookassa.ru/developers/payment-acceptance/after-the-payment/refunds confirms separate refund.id/payment_id and partial sums. Test 0.01 RUB is an adversarial exact-decimal/positive-refund parser boundary, not a claim provider permits creation below its current1 RUB minimum. No refund creation API implemented.
+
+Post-implementation correction: immutable request hash also binds configured shopId/testMode, checked again by bind/apply. This rejects merchant/test rotation before replay or credit grant, without persisting credentials. Pure domain service keeps provider/PG out; existing native fetch/crypto/Zod/pg used, no dependencies added. Shared004 immutable intent migration was written by coordinator, copied as read-only dependency for local verification.
+
+## Root UI binding — 2026-10-13T23:44Z
+Local01–07 search then actual N6 UpgradeScreen read: adapt persistent one-key intent, busy/error handling, off mode; omit donor fabricated launch notification/interest flow. Fresh GitHub search considered https://github.com/pavelety/react-yoomoneycheckoutwidget (loads external widget script and confirmation_token). Reject because approved backend is HTTPS redirect confirmationUrl and no external browser widget is needed; no source copied from this candidate. Existing N8 api-client/forms reused. Server offers supply actual SKU prices; browser return never grants rights.

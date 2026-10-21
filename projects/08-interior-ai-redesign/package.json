@@ -1,25 +1,42 @@
 {
-  "name": "roomkind-f01",
+  "name": "n8-interior-planner",
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "engines": {
-    "node": ">=22 <23"
+    "node": ">=24 <25"
   },
   "scripts": {
-    "start": "node web/server.js",
-    "migrate": "node scripts/migrate.js",
-    "sweep": "node scripts/sweep.js",
-    "lint": "node scripts/check.js",
-    "build": "node scripts/check.js",
-    "test": "node tests/boundaries.test.js && node tests/media.test.js",
-    "test:integration": "node tests/integration.test.js",
-    "test:boundaries": "node tests/boundaries.test.js",
-    "test:mutation": "node scripts/mutation.js"
+    "build": "npm run typecheck && npm run build -w @n8/web",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint apps packages tests scripts --max-warnings 0",
+    "test": "vitest run",
+    "test:integration": "vitest run tests/foundation tests/space tests/design tests/procurement tests/billing tests/sharing",
+    "test:e2e": "node scripts/e2e.mjs",
+    "setup:local": "node scripts/setup-local.mjs",
+    "migrate": "node --env-file-if-exists=.env --import tsx packages/db/src/migrate.ts",
+    "start:web": "NODE_ENV=production node --env-file-if-exists=.env --import tsx apps/web/src/server.ts",
+    "start:worker": "NODE_ENV=production node --env-file-if-exists=.env --import tsx apps/worker/src/index.ts"
   },
-  "dependencies": {
-    "bcrypt": "6.0.0",
-    "pg": "8.23.0",
-    "sharp": "0.35.4"
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@types/bcrypt": "6.0.0",
+    "@types/node": "24.10.0",
+    "@types/pg": "8.15.6",
+    "@types/react": "19.1.17",
+    "@types/react-dom": "19.1.11",
+    "eslint": "9.39.5",
+    "playwright": "1.60.0",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.2",
+    "vitest": "5.0.4"
+  },
+  "overrides": {
+    "postcss": "8.5.30"
   }
 }

@@ -1,0 +1,406 @@
+{
+  "run_id": "20261021T110921Z-cloudru-eight-ac67",
+  "status": "completed",
+  "work_kind": "read_only_repository_inventory",
+  "scope": {
+    "repository": "/home/2026-AUG-PU-Projects",
+    "source_projects": [
+      "projects/01-testimonials-senja",
+      "projects/02-review-qr-reputation",
+      "projects/03-affiliate-rewardful",
+      "projects/04-calorie-vision-cal-ai"
+    ],
+    "sibling_read_only": "projects/03a-affiliate-rewardful",
+    "excluded": [
+      "source edits",
+      "environment or secret reads",
+      "database changes",
+      "container starts or changes",
+      "Cloud.ru or CloudruHub actions",
+      "paid actions",
+      "live VM validation"
+    ]
+  },
+  "source": {
+    "git_head": "e2803308144336a58f6e6481a2cece56ce56c317",
+    "scoped_worktree_status": "clean",
+    "note": "The repository outside the scoped projects is dirty; all source and sibling paths inspected here had no porcelain status entries."
+  },
+  "execution": {
+    "profile": "single_executor_read_only_one_pass_timeboxed",
+    "requested_model": "gpt-5.6-sol high",
+    "actual_model": null,
+    "actual_model_reason": "No host execution metadata or model receipt was available; requested model text is not proof of a switch.",
+    "usage": null,
+    "usage_reason": "No measured usage counters were available; no estimate was substituted.",
+    "started_at": "2026-10-21T11:09:21Z",
+    "finished_at": "2026-10-21T11:12:49Z",
+    "duration_seconds": 208,
+    "telemetry_artifact": "/tmp/cloudru-eight-inventory-1-4.json",
+    "measurement_gaps": [
+      "No live VM capacity, performance, traffic, image-registry, backup, or CloudruHub measurements were made.",
+      "Resource suggestions are conservative component-derived floors, not measured-load sizing."
+    ]
+  },
+  "validation": {
+    "compose_config_quiet": {
+      "01-testimonials-senja": 0,
+      "02-review-qr-reputation": 0,
+      "03-affiliate-rewardful-root-and-four-variants": 0,
+      "04-calorie-vision-cal-ai": 0
+    },
+    "method": "docker compose config --quiet; placeholder values were supplied only in process environment for required interpolation and were not persisted",
+    "builds_or_tests_run": false,
+    "containers_started": false
+  },
+  "local_artifacts": {
+    "application_images_present_on_inspection_host": [],
+    "matching_base_images_seen": [
+      "caddy:2-alpine"
+    ],
+    "source_build_directories_or_archives_seen": [],
+    "note": "No Proofwall, ReviewQR, n3-*, or n4-* application image was present in docker image ls. The visible postgres:16-bookworm image does not match these compose declarations exactly."
+  },
+  "projects": {
+    "01-testimonials-senja": {
+      "deployment_readiness": "blocked_on_fresh_small_vm_without_preparation",
+      "runnable_surface": {
+        "compose": "docker-compose.yml",
+        "production_compose_present": false,
+        "services": [
+          "postgres: postgres:16-alpine",
+          "minio: minio/minio:RELEASE.2025-04-22T22-12-26Z",
+          "web: locally built Next.js image from apps/web/Dockerfile",
+          "worker: locally built Node worker from services/worker/Dockerfile",
+          "transcribe: locally built Node/ffmpeg service from services/transcribe/Dockerfile",
+          "caddy: caddy:2-alpine"
+        ],
+        "dockerfiles": [
+          "apps/web/Dockerfile",
+          "services/worker/Dockerfile",
+          "services/transcribe/Dockerfile"
+        ],
+        "additional_non_core_dockerfile": "services/agent-api/Dockerfile; it is not in the base compose",
+        "package_scripts": {
+          "root": ["build", "build:widget", "test", "lint", "typecheck", "db:migrate", "up", "down", "logs"],
+          "web": ["build", "start", "test", "typecheck"],
+          "widget": ["build", "check:size", "test", "typecheck"],
+          "worker": ["build", "start", "test", "typecheck"],
+          "transcribe": ["build", "start", "test", "typecheck"]
+        },
+        "required_order": [
+          "provision environment and external talk-ai-public network or replace that integration for a standalone VM",
+          "start PostgreSQL/MinIO",
+          "run npm run db:migrate",
+          "build/start the full compose stack"
+        ]
+      },
+      "durable_volumes": [
+        "postgres_data:/var/lib/postgresql/data",
+        "minio_data:/data",
+        "caddy_data:/data"
+      ],
+      "healthchecks": [
+        "postgres: pg_isready",
+        "minio: GET /minio/health/live",
+        "transcribe: GET /health via Dockerfile HEALTHCHECK"
+      ],
+      "healthcheck_gaps": [
+        "web has no container healthcheck",
+        "worker has no healthcheck and previously remained down unnoticed",
+        "caddy has no healthcheck",
+        "no public whole-app health endpoint was found"
+      ],
+      "environment_names": {
+        "core": [
+          "POSTGRES_DB", "POSTGRES_USER", "POSTGRES_PASSWORD", "DATABASE_URL",
+          "MINIO_ROOT_USER", "MINIO_ROOT_PASSWORD", "S3_ENDPOINT", "S3_BUCKET",
+          "S3_PHOTO_BUCKET", "S3_ACCESS_KEY", "S3_SECRET_KEY", "SESSION_SECRET",
+          "BASE_URL", "APP_DOMAIN", "PGPOOL_MAX", "PGPOOL_CONNECTION_TIMEOUT_MS",
+          "OPENAI_API_KEY", "MAIL_FROM", "RESEND_API_KEY"
+        ],
+        "routing_and_ports": ["HTTP_PORT", "HTTPS_PORT", "ACME_EMAIL"],
+        "conditional_features": [
+          "OPENAI_TRANSCRIBE_MODEL", "VIDEO_INTAKE_ENABLED", "PAYMENTS_STUB",
+          "YOOKASSA_SHOP_ID", "YOOKASSA_SECRET_KEY", "PAID_TIER_PRICE_RUB",
+          "YANDEX_CLIENT_ID", "YANDEX_CLIENT_SECRET", "N3_BRIDGE_ENABLED",
+          "N3_BASE_URL", "N3_TENANT_ID", "N3_CONNECTOR_KEY"
+        ]
+      },
+      "suggested_minimum": {
+        "vcpus": 2,
+        "ram_gib": 4,
+        "disk_gib": 40,
+        "basis": "Six long-running containers, Next.js SSR, PostgreSQL, MinIO video/photo storage, and ffmpeg transcription. Disk must be raised for actual video retention. This is not load-tested sizing."
+      },
+      "blocked_features": [
+        "Model/STT spend ceiling is not implemented, so video intake is documented as disabled.",
+        "Live Resend password-reset delivery is not verified and /forgot returns 503 without credentials.",
+        "Live Yandex ID login is not verified.",
+        "Several roadmap decision flags are stale/blocked relative to implemented code; readiness must follow current completion receipts rather than roadmap counts."
+      ],
+      "deployment_blockers": [
+        "The actual compose expects an external talk-ai-public network; a fresh VM cannot boot it unchanged unless that network exists.",
+        "The documented production deployment mentions docker-compose.prod.yml, but no such file exists; docker-compose.yml is the runnable manifest.",
+        "Migrations are a separate mandatory operation and are not run by compose.",
+        "Application images are not prebuilt or registry-addressable in the manifest; CloudruHub must build them from source or receive separately published images.",
+        "The Caddy and PostgreSQL tags are not digest-pinned."
+      ]
+    },
+    "02-review-qr-reputation": {
+      "deployment_readiness": "blocked_until_compose_env_seam_and_shared_proxy_are_resolved",
+      "runnable_surface": {
+        "compose": "docker-compose.yml",
+        "production_compose_present": false,
+        "services": [
+          "postgres: postgres:16.4-alpine",
+          "guest: locally built Node/tsx service",
+          "intake: locally built Node/tsx service",
+          "notifier: locally built Node/tsx service",
+          "web: locally built Node/tsx service"
+        ],
+        "dockerfiles": [
+          "apps/guest/Dockerfile", "apps/web/Dockerfile",
+          "services/intake/Dockerfile", "services/notifier/Dockerfile"
+        ],
+        "package_scripts": {
+          "root": ["test", "test:one", "typecheck", "guards", "migrate"],
+          "db": ["migrate"]
+        },
+        "required_order": [
+          "provision environment and a shared proxy attached to talk-ai-public",
+          "start postgres",
+          "run migrations using DATABASE_URL_MIGRATE",
+          "assign passwords to the four database roles and run npm run guards",
+          "start guest/intake/notifier/web"
+        ]
+      },
+      "durable_volumes": ["pgdata:/var/lib/postgresql/data"],
+      "healthchecks": ["postgres: pg_isready"],
+      "healthcheck_gaps": [
+        "guest, intake, notifier, and web have no container healthchecks",
+        "there is no application /health route in the inspected runtime",
+        "public smoke paths documented are /, /login, and /register"
+      ],
+      "environment_names": {
+        "core": [
+          "POSTGRES_USER", "POSTGRES_PASSWORD", "POSTGRES_DB",
+          "DATABASE_URL_RENDER", "DATABASE_URL_INTAKE", "DATABASE_URL_NOTIFY",
+          "DATABASE_URL_OWNER", "DATABASE_URL_MIGRATE", "PGPOOL_MAX",
+          "PGPOOL_CONNECTION_TIMEOUT_MS", "BASE_URL", "SESSION_SECRET",
+          "TRUSTED_PROXY_HOST"
+        ],
+        "conditional_features": [
+          "TELEGRAM_BOT_TOKEN", "TELEGRAM_BOT_USERNAME",
+          "YOOKASSA_SHOP_ID", "YOOKASSA_SECRET_KEY", "PRICE_POINT_RUB"
+        ]
+      },
+      "suggested_minimum": {
+        "vcpus": 2,
+        "ram_gib": 3,
+        "disk_gib": 20,
+        "basis": "PostgreSQL plus four Node processes; no object storage. This is not load-tested sizing."
+      },
+      "blocked_features": [
+        "MAX messenger integration is not implemented.",
+        "Guest reply channel FR-008 is not implemented.",
+        "Weekly share/metrics and active-point reporting are incomplete.",
+        "Partner share/codes and attribution are incomplete.",
+        "Client-account handover is planned but not implemented.",
+        "Production YooKassa shop and several live webhook/device checks are unverified."
+      ],
+      "deployment_blockers": [
+        "SESSION_SECRET is required by guest device hashing but is absent from guest.environment in compose; documented G-13 says protection is not reproducible until the manifest is fixed.",
+        "DATABASE_URL_MIGRATE is required operationally but absent from .env.example and compose by design; migration is an explicit one-off step.",
+        "The stack has no edge proxy and requires the external talk-ai-public network plus a trusted proxy host; a fresh standalone VM cannot expose the app unchanged.",
+        "TELEGRAM_BOT_USERNAME is consumed by compose/code but absent from .env.example.",
+        "Dockerfiles use an npm ci-or-install fallback and install tsx globally at build time, so builds depend on live registries and are not fully deterministic.",
+        "Application images are source builds only; no registry image coordinates are declared."
+      ]
+    },
+    "03-affiliate-rewardful": {
+      "intended_active_source": "projects/03-affiliate-rewardful",
+      "sibling_decision": "projects/03a-affiliate-rewardful is a separate paused product, explicitly says old N3 is another project, and is not the deployable variant for this requested scope",
+      "deployment_readiness": "do_not_rebuild_or_deploy_current_head",
+      "runnable_surface": {
+        "root_compose": "docker-compose.yml",
+        "variant_composes": [
+          "variants/a-merchant/docker-compose.yml",
+          "variants/b-customer/docker-compose.yml",
+          "variants/c-partner/docker-compose.yml",
+          "variants/d-agent/docker-compose.yml"
+        ],
+        "services": [
+          "postgres: postgres:16.15-alpine",
+          "api: n3-api:0.1.0 built from apps/api/Dockerfile",
+          "four frontend images n3-a/b/c/d:0.1.0 built from apps/frontend/Dockerfile"
+        ],
+        "package_scripts": ["build", "test", "start", "verify"],
+        "runtime_modes": ["fixture", "hybrid", "real"],
+        "full_app_definition": "root database/API plus all four A-D frontend compose projects"
+      },
+      "durable_volumes": ["postgres_data:/var/lib/postgresql/data"],
+      "healthchecks": [
+        "postgres: pg_isready",
+        "api: GET /health",
+        "each A-D frontend: GET /health"
+      ],
+      "environment_and_secret_names": {
+        "host_variables": ["N3_BIND", "N3_API_PORT", "N3_A_PORT", "N3_B_PORT", "N3_C_PORT", "N3_D_PORT"],
+        "secret_files": [
+          ".runtime/db-admin-password",
+          ".runtime/db-app-password",
+          ".runtime/yookassa.json",
+          ".runtime/access.json"
+        ],
+        "container_configuration_names": [
+          "N3_MODE", "PORT", "PGHOST", "PGPORT", "PGDATABASE", "PGUSER",
+          "PGPASSWORD_FILE", "N3_YOOKASSA_CONFIG_FILE", "N3_ACCESS_CONFIG_FILE", "API_ORIGIN"
+        ],
+        "env_example_present": false
+      },
+      "suggested_minimum": {
+        "vcpus": 2,
+        "ram_gib": 2,
+        "disk_gib": 20,
+        "basis": "Compose limits total 384 MiB PostgreSQL + 512 MiB API + 4 x 128 MiB frontends = 1408 MiB before Docker/OS overhead. Two GiB is a tight floor for all variants, not load-tested sizing."
+      },
+      "blocked_features": [
+        "Root fixture pages and payments are synthetic; they are not production money.",
+        "Current VPS YooKassa integration is disabled and no real merchant sandbox/live operation has been run.",
+        "Autopayout/split payments are not implemented; payouts remain manual.",
+        "Production cross-site identity/OAuth is deferred.",
+        "Streaming, push notifications, background scheduler, conversational continuation, and built-in LLM are not implemented.",
+        "Specialized A-D UIs remain fixture demonstrations; real /account functionality is shared."
+      ],
+      "deployment_blockers": [
+        "README explicitly warns that HEAD contains unfinished F3 access-onboarding code and says not to rebuild the stand from HEAD; the known deployed source was f8055e3.",
+        "No immutable image receipts or registry image coordinates for the current requested baseline are present in the runnable manifests.",
+        "All variant frontends require external network talk-ai-public; a fresh VM cannot start them unchanged without the edge network/proxy.",
+        "Required runtime secret files are intentionally absent and must be provisioned with restrictive permissions.",
+        "Deploying only one A-D variant would be a product-scope decision; the repository's accepted full F1 surface is all four variants."
+      ]
+    },
+    "04-calorie-vision-cal-ai": {
+      "deployment_readiness": "blocked_until_env_example_and_data_bootstrap_are_completed",
+      "runnable_surface": {
+        "compose": "docker-compose.yml with app/dev/edge/test profiles",
+        "production_profile": "edge",
+        "services": [
+          "db: digest-pinned postgres:16.15-alpine",
+          "storage: digest-pinned MinIO",
+          "storage-init: one-shot bucket/IAM bootstrap",
+          "api: Dockerfile target api",
+          "recognizer: Dockerfile target recognizer",
+          "web: Dockerfile target web",
+          "proxy: n4-tarelka-proxy:local built from proxy/Dockerfile with rate-limit module"
+        ],
+        "dockerfiles": ["Dockerfile", "proxy/Dockerfile"],
+        "package_scripts": {
+          "root": [
+            "build", "typecheck", "lint", "test", "test:integration",
+            "test:performance", "migrate", "check:env-wiring", "import:fdc",
+            "seed:food-synonyms"
+          ],
+          "api": ["build", "start"],
+          "recognizer": ["build", "start"],
+          "web": ["dev", "build", "start"]
+        },
+        "required_order": [
+          "provision all required environment variables and external talk-ai-public network",
+          "start db/storage and run storage-init",
+          "run migrations",
+          "import USDA FoodData Central data and seed food synonyms",
+          "build/start edge profile"
+        ]
+      },
+      "durable_volumes": [
+        "db-data:/var/lib/postgresql/data",
+        "storage-data:/data",
+        "caddy-data:/data",
+        "caddy-config:/config"
+      ],
+      "healthchecks": [
+        "db: pg_isready",
+        "storage: mc ready local",
+        "api: GET /health and database SELECT 1",
+        "web: TCP 3000",
+        "proxy: Caddy admin GET /config/",
+        "public full-stack probe: GET /health through proxy"
+      ],
+      "healthcheck_gaps": [
+        "recognizer intentionally has no healthcheck; required operational signal is oldest queued job age over 60 seconds"
+      ],
+      "environment_names": {
+        "required": [
+          "APP_ORIGIN", "N4_DB_ADMIN_PASSWORD", "N4_DB_APP_PASSWORD",
+          "N4_STORAGE_ROOT_USER", "N4_STORAGE_ROOT_PASSWORD", "N4_S3_ACCESS_KEY",
+          "N4_S3_SECRET_KEY", "TELEGRAM_BOT_TOKEN", "TELEGRAM_BOT_USERNAME",
+          "N4_SCAN_LIMIT_USER", "N4_SCAN_LIMIT_DAY", "N4_ESCALATION_LIMIT_DAY",
+          "N4_RATE_LIMIT_MUTATE_PER_MIN", "N4_RATE_LIMIT_READ_PER_MIN",
+          "N4_PROXY_RATE_MUTATE_PER_MIN", "N4_PROXY_RATE_READ_PER_MIN",
+          "N4_SUBSCRIPTION_PRICE_MINOR", "N4_SUBSCRIPTION_PERIOD_DAYS",
+          "N4_COMMISSION_HOLD_DAYS", "N4_SCAN_LIMIT_PRO", "N4_PAYMENTS_MODE"
+        ],
+        "optional_or_defaulted": [
+          "N4_COMPOSE_PROJECT", "N4_EDGE_PORT", "N4_EGRESS_SUBNET",
+          "N4_PRIVATE_SUBNET", "N4_S3_BUCKET", "N4_MODEL_PROVIDER"
+        ],
+        "conditional_live_model": ["ANTHROPIC_API_KEY", "OPENROUTER_API_KEY"],
+        "conditional_live_payments": [
+          "N4_PAYMENTS_PROVIDER", "YOOKASSA_SHOP_ID", "YOOKASSA_SECRET_KEY", "YOOKASSA_TEST_MODE"
+        ]
+      },
+      "suggested_minimum": {
+        "vcpus": 2,
+        "ram_gib": 4,
+        "disk_gib": 40,
+        "basis": "Next.js SSR, API, recognizer, PostgreSQL, MinIO photo storage, Caddy build/runtime, and local USDA import. Increase disk for retained photos and database growth. This is not load-tested sizing."
+      },
+      "blocked_features": [
+        "Real-money acceptance is not live; documented stand uses YooKassa test mode.",
+        "Automatic partner payouts are not implemented and require a separate contract/business setup.",
+        "Telegram login has not been verified live with the owner's account."
+      ],
+      "deployment_blockers": [
+        ".env.example omits five compose-required variables: N4_SUBSCRIPTION_PRICE_MINOR, N4_SUBSCRIPTION_PERIOD_DAYS, N4_COMMISSION_HOLD_DAYS, N4_SCAN_LIMIT_PRO, and N4_PAYMENTS_MODE; copying it verbatim cannot render the edge compose profile.",
+        "The edge profile requires the external talk-ai-public network and upstream proxy integration.",
+        "Migrations and USDA/synonym data loading are separate mandatory bootstrap operations.",
+        "No n4 application images are installed locally or published by immutable registry coordinate in compose; app/proxy images must be built.",
+        "The proxy image name uses :local; source Dockerfile pins base images but the built output itself has no immutable distribution receipt."
+      ]
+    }
+  },
+  "global_blockers": [
+    "This artifact is repository inventory only and does not claim any VM, CloudruHub, DNS, TLS, backup, restore, firewall, or live application work.",
+    "None of the four apps has a directly consumable set of immutable application image coordinates in the inspected production manifests.",
+    "All four were designed around the existing shared talk-ai-public edge network; Cloud.ru deployment must reproduce that topology or adapt the manifests before boot.",
+    "No paid action or external resource mutation was performed."
+  ],
+  "evidence": {
+    "CLAUDE.md": "c1669853c58eddd6994761d510f5f1a4d1b992b50e16f8ebedf18a10937144a2",
+    ".claude/rules/docker-ports.md": "59eb430f29dd762e8b76ad6d1177fe8b5b250de007856c743387cb88ee157942",
+    "projects/01-testimonials-senja/docker-compose.yml": "47acdb08d88f61fa4ec8de8405fd20522c9c6ede10aed3f41a71022805c8f463",
+    "projects/01-testimonials-senja/.env.example": "ae944d17d22802bbea61da1edd51b3c666a0dc2160d73955174dde2b0cc29b83",
+    "projects/01-testimonials-senja/apps/web/Dockerfile": "cf844d216505985c49152352bc78ee6aecade2b0b885cc455f62eca4374ead6c",
+    "projects/01-testimonials-senja/services/transcribe/Dockerfile": "c2747e6b97e80ae99b2bbdd38bcd982f5bc83f94cb472c124ce05e28a9c6f39f",
+    "projects/01-testimonials-senja/services/worker/Dockerfile": "7be31bb9e23cca15fca77253e8d1c18507bb6c5dcdd19d0288bf63572e69d97c",
+    "projects/02-review-qr-reputation/docker-compose.yml": "e71802ca172c6a83e4a26dc2f610a26ef4e12ae891735b610d66391868ed0131",
+    "projects/02-review-qr-reputation/.env.example": "75ce07a8e4544f1be8f0b59f74a6e37e5a68db657ebf1a6a8e0bd5c34614da5c",
+    "projects/03-affiliate-rewardful/README.md": "897c235881d57c6f1a4931b90a1dda54f217682fbd6653629c8400b1e48c61f4",
+    "projects/03-affiliate-rewardful/docker-compose.yml": "3ae649306cc16f252c9beb91e459ec4b4d949ee369ea811f921ceca225472a1b",
+    "projects/03-affiliate-rewardful/apps/api/Dockerfile": "895d3d10b4eb95134d877d7c4aa31ce23f78a11f8dda4236eec2a6d8ec5501c7",
+    "projects/03-affiliate-rewardful/apps/frontend/Dockerfile": "a3f08604138c3e0ccb95a02579d0dad69cf4266ee8319f77d1c7a405842d13a9",
+    "projects/03-affiliate-rewardful/docs/runtime-contract.md": "23aaad2177cbb00a8799460925b1039102aaf42ee59a1bf82a40902146721f9e",
+    "projects/03-affiliate-rewardful/variants/a-merchant/docker-compose.yml": "c70eec20cd4c473a8090c593fcfd5ee145f38142bcd67b55c70abfe81cddafaf",
+    "projects/03-affiliate-rewardful/variants/b-customer/docker-compose.yml": "8481bc056bfb123d4a307bd2ff516eb5af89f178a00f0dfdfc8e0be25d1e6f95",
+    "projects/03-affiliate-rewardful/variants/c-partner/docker-compose.yml": "0f1fe62a9f6302fa17dd6cdb63ac791bfb177872f1f08291a160978299ba6ac6",
+    "projects/03-affiliate-rewardful/variants/d-agent/docker-compose.yml": "94a049d131ff408a1a300afeb9ae85eebddafab7e33c026146da658802356007",
+    "projects/03a-affiliate-rewardful/CLAUDE.md": "2311a94ef6c01758b9c99701498687c8f4c836fd2041b92be0b811a0b6252d3f",
+    "projects/03a-affiliate-rewardful/README.md": "b3b52a41382ad10f147d550219ab7efb0d1d6d6f31b5ee8a587fc62b35a74fc7",
+    "projects/04-calorie-vision-cal-ai/docker-compose.yml": "06c369a183b862b40df3f38eb3bff35f86b4732a2b5bf291cef6b619e4e2c050",
+    "projects/04-calorie-vision-cal-ai/Dockerfile": "f542a40477c1c4f9894ea74713fddbfdd2d3d7eca85dbabc0b6e55f93c7e5e36",
+    "projects/04-calorie-vision-cal-ai/proxy/Dockerfile": "835b2e3027585b94be4ed5b65af020bcffc02f0c7b950c8c945bc563d821210f",
+    "projects/04-calorie-vision-cal-ai/.env.example": "cdcefe2b8800470d3f539e22e315933da2c7db2d7dc71b12cc0935f841540a4b"
+  }
+}

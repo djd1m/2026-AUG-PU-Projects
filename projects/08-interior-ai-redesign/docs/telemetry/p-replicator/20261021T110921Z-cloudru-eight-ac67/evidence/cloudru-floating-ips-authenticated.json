@@ -1,0 +1,13 @@
+{
+  "jsonrpc": "2.0",
+  "id": 3,
+  "result": {
+    "content": [
+      {
+        "text": "{\n  \"floating_ips\": [\n    {\n      \"available\": false,\n      \"id\": \"3426d53e-356d-4a06-9e55-35cb204b2ac3\",\n      \"ip_address\": \"37.230.192.19\",\n      \"state\": \"in_use\"\n    },\n    {\n      \"available\": false,\n      \"id\": \"eb24faf4-9d8e-41b9-be98-db3209615178\",\n      \"ip_address\": \"89.232.176.60\",\n      \"state\": \"in_use\"\n    },\n    {\n      \"available\": false,\n      \"id\": \"16a01334-57b9-4e3b-9196-b0cfbbd65fa5\",\n      \"ip_address\": \"176.109.101.56\",\n      \"state\": \"in_use\"\n    },\n    {\n      \"available\": false,\n      \"id\": \"d846fdaa-21bb-488c-9c2f-08b640670e50\",\n      \"ip_address\": \"176.109.104.115\",\n      \"state\": \"in_use\"\n    },\n    {\n      \"available\": true,\n      \"id\": \"8c7ca789-c263-448f-ac60-f1a359c37e67\",\n      \"ip_address\": \"87.242.87.168\",\n      \"state\": \"available\"\n    },\n    {\n      \"available\": true,\n      \"id\": \"8c34f52b-2de3-46f8-a3ca-b20fbc87d641\",\n      \"ip_address\": \"87.242.86.84\",\n      \"state\": \"available\"\n    },\n    {\n      \"available\": true,\n      \"id\": \"2d029253-023f-488d-a078-a755b06f6b0a\",\n      \"ip_address\": \"87.242.87.61\",\n      \"state\": \"available\"\n    }\n  ]\n}",
+        "type": "text"
+      }
+    ],
+    "isError": false
+  }
+}

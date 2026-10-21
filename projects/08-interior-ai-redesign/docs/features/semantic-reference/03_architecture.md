@@ -1,0 +1,4 @@
+# Boundaries
+Domain owns role appearance shape and deterministic scene construction. Server prepares only owned image bytes; PgJobs optional preloaded images input carries no filesystem/network dependency. Request includes server-frozen base scene with hash; worker/provider performs existing metered completion and adapts role response. Viewer pure geometry segmentation is isolated from Babylon lifecycle. No schema table/migration or new queue. Owner sole account credit retained during QA; no grant/ledger alteration.
+
+QA accounting amendment: any paid smoke MUST use ordinary durable job admission, reserved spend budgets and credit accounting on an eligible QA account. Otherwise paid smoke is skipped and disclosed. No standalone paid request and no owner credit consumption or credit grant. This supersedes the earlier separately logged smoke wording.

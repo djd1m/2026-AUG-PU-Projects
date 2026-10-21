@@ -1,0 +1,12 @@
+
+ RUN  v5.0.4 /tmp/n8-sharing-author-20261013/projects/08-interior-ai-redesign
+
+
+ Test Files  29 passed (29)
+      Tests  208 passed (208)
+   Start at  23:54:13
+   Duration  65.40s (tests 92%, import 6%, transform 2%)
+
+    Isolate  29 workers spawned · ~137ms startup each (spawn + environment, per file)
+             at least ~3.83s faster with isolate: false — reuses workers across files instead of one per file
+

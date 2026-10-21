@@ -1,0 +1,15 @@
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+ ↓ tests/integration/operations.test.ts > AC-integration-4 independent operational rejection probes > real schema accepts a directory but rejects a file, symlink and absent storage without egress
+ ↓ tests/integration/operations.test.ts > AC-integration-4 independent operational rejection probes > schema missing/extra/changed migration records fail closed and original records recover
+ ↓ tests/integration/operations.test.ts > AC-integration-4 independent operational rejection probes > readiness HTTP response redacts a DB failure containing credential and path sentinels
+ ↓ tests/integration/operations.test.ts > AC-integration-4 independent operational rejection probes > actual worker entrypoint refuses invalid configuration with only redacted startup reason
+ ↓ tests/integration/operations.test.ts > AC-integration-3 ephemeral PostgreSQL migration recovery > failed later migration rolls back earlier DDL and migration records atomically
+ ✓ tests/integration/operations.test.ts > AC-integration-3 ephemeral PostgreSQL migration recovery > changed applied migration rejects without altering existing application data or ledger 20ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 5 skipped (6)
+   Start at  00:06:11
+   Duration  825ms (tests 55%, transform 26%, import 17%, worker 1%)
+

@@ -1,0 +1,74 @@
+{
+  "observed_at": "2026-10-14T00:04:09.271431+00:00",
+  "image": "sha256:2f22714b3f42dfe3e6ed3645d22a1c4f851ef152ae998f66ac5cb485ba0088cf",
+  "source_files": {
+    "Dockerfile": "94ad7e886baaa798de413084cc28eaffb0a6ae89868970cefd54d45ae166006b",
+    "docker-compose.yml": "ae15959a8885b53d4bcc744ea481a99286db3ec2cc2b56d4b1efd558b1bf4769",
+    "apps/web/src/server.ts": "d3beea49c54c36398cbeb109b8660514697240fbb665a8d11f47f339f0d7f4e1",
+    "apps/web/src/server/config.ts": "673be7cf1abafea2740ba20fd6d0366473a4bf93e27ed013fd29e1f75e8d4614",
+    "apps/web/src/server/health.ts": "574f2a779034e307085f06463cc868a51c663f2f8f4d1ccfddb936f664917902",
+    "apps/worker/src/index.ts": "93d35f74f44624d566ae74d50cf06ec44793c01caf5628c4373ba33127da50ed",
+    "apps/worker/src/runtime.ts": "1b0870c88f16ada044dfc8592ea15e5833c971f4bde8ffc21adc3f33d31056b3",
+    "apps/worker/src/jobs.ts": "6cd5cf91ad9c7a7c03ec0677987cd9573e8434181b7a7c589e49e92d97d8f9f1",
+    "apps/worker/src/watchdog.ts": "91e061d4d6694f3a1d0b7ba1ff3c07304d75a25e4f4fe764d85b10325bf9e6a1",
+    "packages/db/src/schema.ts": "630ff6aa33f6852b7054c89b9079952f760966f08357459a6ae96c035f6f7d62",
+    "packages/db/src/migrate.ts": "4eb8adf1de23f115b01cda969cc44576c72e04a423ec126fa826042428d09080",
+    "packages/db/src/bounds.ts": "c50544e70b0c5f064470ae8c3e568040f1934b2036b35a298328be4ff1f378c2",
+    "packages/adapters/src/assets.ts": "cd469ab768a39fcf1708c7651d471374cd3d3ca139f171eb02df4f5d8590843e",
+    "scripts/benchmark.ts": "a1beb5eae3f63ee0474ef3a6fc011271e5a40eead2fefd83ae541f68f192c933",
+    "scripts/init-db.sh": "a7afdabf21443c5a58e0a4a71cccd4f52b3a1926a31eb9541aa223acde073104",
+    "scripts/setup-local.mjs": "96c4de3dc755b2e6648935c49b70dd1972b6a9f372cad4127250a9a9c962968b",
+    "tests/procurement/fixture.ts": "76295d792f60b69da41338907d39c8d46664aa0378ee8ad85f25f5566a7191f9",
+    "tests/integration/operations.test.ts": "c90d4775241f5b3315932d19f27e5bef3001ca1004916391ab63210496ee2b0f",
+    "docs/features/integration/01_specification.md": "d3a3312c1f961101fa116247f1c918f29c4d0006c5d934932f1bf1b5ced5e161"
+  },
+  "actual_runtime_readonly_probes": {
+    "db_ports": {
+      "5432/tcp": null
+    },
+    "web_ports": {
+      "3000/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": "3088"
+        }
+      ]
+    },
+    "named_volumes": [
+      "n8-interior-local_database",
+      "n8-interior-local_assets"
+    ],
+    "roles": {
+      "n8_app": {
+        "superuser": false,
+        "createdb": false,
+        "createrole": false,
+        "public_create": false,
+        "schema_ledger_write": false,
+        "project_dml": true
+      },
+      "n8_migrator": {
+        "superuser": false,
+        "createdb": false,
+        "createrole": false,
+        "owns_migration_ledger": true
+      }
+    },
+    "applied_migrations": [
+      "001-initial.sql",
+      "002-indexes.sql",
+      "003-job-input.sql",
+      "004-payment-intent.sql",
+      "005-share-provenance.sql"
+    ]
+  },
+  "claims_excluded": [
+    "No restart persistence probe by reviewer",
+    "No final image4 readiness or GLB runtime success claimed",
+    "No valid unknown-containing benchmark run yet"
+  ],
+  "lint": {
+    "command": "node_modules/.bin/eslint tests/integration/operations.test.ts --max-warnings 0",
+    "exit_code": 0
+  }
+}

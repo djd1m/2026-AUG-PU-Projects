@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "build": "sha256:bda6707dffb72cff83cd2ae27fc86f1fd9e781cfd98b0a0dbb0b7010583da58b",
+  "checks": [
+    "one fused GLB visibly renders separate blue walls, brown floor and green furniture",
+    "before and after preserve same camera and visibly restore scan",
+    "production preview includes actual owned image bytes and role-only Gemini schema",
+    "zero-credit QA account rejected before paid dispatch; no live call or credit grant",
+    "manual switch clears role overlay and persists editable material palette",
+    "low-coverage scan remains original with no coloured fragments and explicit palette-only action"
+  ],
+  "counts": {
+    "blue": 17107,
+    "green": 5997,
+    "brown": 23356
+  },
+  "errors": [],
+  "inference_calls": 0,
+  "live_quality": "not_tested_no_eligible_QA_credits"
+}

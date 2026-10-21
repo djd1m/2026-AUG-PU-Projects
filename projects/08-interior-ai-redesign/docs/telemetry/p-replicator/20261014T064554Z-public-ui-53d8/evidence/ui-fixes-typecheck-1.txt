@@ -1,0 +1,8 @@
+
+> n8-interior-planner@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+apps/web/src/components/BudgetPanel.tsx(17,1506): error TS2339: Property 'servicesSnapshot' does not exist on type 'BudgetRevision'.
+apps/web/src/components/BudgetPanel.tsx(17,1528): error TS7006: Parameter 'x' implicitly has an 'any' type.
+apps/web/src/components/BudgetPanel.tsx(17,1631): error TS2339: Property 'deliverySnapshot' does not exist on type 'BudgetRevision'.
+apps/web/src/components/BudgetPanel.tsx(17,1653): error TS7006: Parameter 'x' implicitly has an 'any' type.

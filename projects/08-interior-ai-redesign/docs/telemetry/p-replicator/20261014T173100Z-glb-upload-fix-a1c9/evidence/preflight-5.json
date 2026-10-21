@@ -1,0 +1,22 @@
+{
+  "status": "ready",
+  "at": "2026-10-14T17:37:13.903809+00:00",
+  "buildRevision": "sha256:58ee78fcc34b940e761e8f2cce675d1760320d6f0c9a112f057a17a8d0723061",
+  "source": "source.json; runtime two modified app files SHA match host",
+  "driverSha256": "411c57b70e39b31bf69c787527ed2e5b8734e3238392168174a29c8fc32fe3cf",
+  "runner": "n8-interior-playwright:local",
+  "inputsAvailable": true,
+  "effects": [
+    "fresh synthetic account and project",
+    "2 valid GLB uploads,1 explicit shell save",
+    "malformed,over25MiB and imageover10MiB rejection",
+    "private original GET",
+    "mobile screenshot"
+  ],
+  "secrets": "no provider, DB or user credentials passed",
+  "external_actions_executed": false,
+  "command": "docker run --rm dedicatedPW glbdriver on publicHTTPS",
+  "e2e_claim": null,
+  "attempt": "ui-5",
+  "retry_reason": "Image negative case needs renewed rights consent after reload; corrected test user steps, product unchanged"
+}

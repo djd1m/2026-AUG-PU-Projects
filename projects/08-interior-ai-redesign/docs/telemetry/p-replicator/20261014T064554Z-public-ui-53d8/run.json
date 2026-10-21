@@ -1,0 +1,61 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20261014T064554Z-public-ui-53d8",
+  "project": "projects/08-interior-ai-redesign",
+  "feature": "public-sslip-release-and-container-ui-review",
+  "pipeline": "plan -> validate -> isolated Playwright -> public release -> external UI review -> anti-drift",
+  "tier": "L",
+  "profile": "compact-quality-first-v2",
+  "started_at": "2026-10-14T06:45:54.313697+00:00",
+  "ended_at": "2026-10-14T07:29:41.432936+00:00",
+  "status": "accepted",
+  "baseline_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+  "spec_sha256": "7e6d118d36a4459927c244c90372e7c66ef7daa282b22e85186496332dc825dd",
+  "actual_model": null,
+  "metrics": {
+    "wall_clock_seconds": 2627.119239,
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null
+  },
+  "quality": {
+    "required_gates_passed": true,
+    "work_record_validation_exit_code": 0
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Host exact model ID/usage/cost not exposed"
+  ],
+  "authorization": "User explicitly requests publicsslip.io release plus dedicatedDockerPlaywright UI/UX check and fixes; supersedes prior local-only boundary. LivepaidAI/payment remain excluded.",
+  "scope": [
+    "reuse01\u201307 TLSdeployment pattern",
+    "dedicated Playwright container matching1.60.0",
+    "external HTTPS/fullUI journey mobilekeyboard/error/privateguest checks",
+    "fix concrete findings and independent anti-drift"
+  ],
+  "attempt_budget_minutes": 90,
+  "stop_condition": "accepted publicURL with actualexternalUI proof or concrete infrastructureblock requiringexternalstate/ownerinput",
+  "scope_sha256": "5e5c5a3abec448d3532f73f8b4dc866e2fdfc262598365075dae52450963f6f6",
+  "routes": [
+    {
+      "phase": "plan",
+      "tier": "L",
+      "mechanical_tier": "S",
+      "mechanical_exit_code": 0,
+      "rationale": "PublicTLSingress andbrowsercontainer crossescontainers; preservespayment sourceinvariant"
+    }
+  ],
+  "requested_models": [
+    "coordinator retained actualunknown",
+    "gpt-6-astra/high independentconsequentialreview",
+    "gpt-6.1-sol/high independentUI reviewer"
+  ],
+  "delivery_url": "https://n8.77.83.87.178.sslip.io",
+  "build_revision": "docker:sha256:f6d232b54b398c5175769af4f78369853b4880d8952119a9057326e94010df03",
+  "measurement_boundary": "Wallclockfrom recordedrunstart; actualmodels/tokens/costunknown.234suitepassedbeforeUI-onlyfixes; finalUIactual57+21.",
+  "clarifications": [
+    "ArrowRight/Home/End/Enter/Tab browser-tested; ArrowLeft implementation source-reviewed, no separate press in driver",
+    "RemoteReaderHTTP200+originpagecontent is externalaccess proof, not independentlymeasured originHTTPstatus"
+  ]
+}

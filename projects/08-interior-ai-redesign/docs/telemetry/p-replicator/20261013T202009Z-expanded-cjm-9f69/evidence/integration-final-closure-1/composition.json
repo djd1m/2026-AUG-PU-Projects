@@ -1,0 +1,32 @@
+{
+  "observed_at": "2026-10-14T01:25:59.200504+00:00",
+  "journey_driver_sha256": "c4a21f3fd875753a3527b71abca2272ac3b3bf93612e1819599306e1330a2d34",
+  "journey_launch_sha256": "ce41c4e0c075db2d38823b47cda8a0dc00113d483f01f20129a15a55b95a082f",
+  "journey_result_sha256": "dfe855b3f99bcd9013c0f42cb4d4b6f96558738d2bc6650a295de4e206ced75b",
+  "journey_passed_checks": 21,
+  "prior_regression": "33 files,228tests PASS; predates final2 product changes",
+  "export_affected_regression": "13tests PASS",
+  "finding": {
+    "id": "FND-FINAL-1",
+    "severity": "medium",
+    "scope": "foundation literal embedded-relation status contract",
+    "status": "confirmed_source_mismatch",
+    "file": "packages/db/src/design/revisions.ts",
+    "source_sha256": "c97c9e3d0361e3bde4738c553afb584fc0b7fcea931baeb826e9903c0fa59a54",
+    "line": 10,
+    "expected": "404 for foreign ID per AC-foundation-9",
+    "actual": "422 INVALID_REFERENCES for any reference outside owned project",
+    "privacy_observation": "Parameterized owned query denies mismatched IDs before insert; no exposure or mutation claimed",
+    "notified_parent": true
+  },
+  "read_only_command_failures": [
+    "Initial broad output truncated; bounded targeted reads subsequently used.",
+    "First source manifest image check attempted docs omitted by .dockerignore; retried with copied runtime source only.",
+    "A few guessed paths absent; resolved with rg --files without product changes."
+  ],
+  "contract_check": {
+    "command": "node .claude/hooks/check-review-contract.cjs projects/08-interior-ai-redesign integration",
+    "exit_code": 0,
+    "stdout": "PASS review-contract feature=integration AC-ids=4 rows=4"
+  }
+}

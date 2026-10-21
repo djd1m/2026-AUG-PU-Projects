@@ -1,0 +1,21 @@
+{
+  "observed_at": "2026-10-14T01:33:40.561438+00:00",
+  "status": "passed",
+  "image": "docker:sha256:3ac28e68ccef3576d428547f04bbbb9df3097bb8baf28823bdd87076611369cb",
+  "api_samples": 1000,
+  "api_warmup": 200,
+  "client_indices_validated": 10,
+  "api_p95_ms": 40.804433999999674,
+  "pure_samples": 1000,
+  "pure_warmup": 50,
+  "pure_p95_ms": 8.00700599999982,
+  "golden_count": 1000,
+  "literal_known": 67090000,
+  "literal_reserve": 6709000,
+  "unknown_total": null,
+  "journey_checks": 21,
+  "evidence_sha256": {
+    "final-benchmark-4.json": "0f2b58a8b14e76a93748656a9115c25cd0aa73b57d1629ccf5188475d2f46de4",
+    "journey-runtime-9/result.json": "242f315b3f80fabd6e293363066d643b403869276edf20f3cfc5297f14079c74"
+  }
+}

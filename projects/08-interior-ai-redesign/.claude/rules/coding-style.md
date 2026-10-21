@@ -1,5 +1,6 @@
-# Coding style
-Use ESM .js, Node built-ins then third-party then relative imports. camelCase functions/values, UPPER_SNAKE config constants, kebab-case filenames, explicit errors/status mapping. Keep API routing, auth, storage, jobs and payments in separate modules. Python snake_case/typed boundaries, worker adapters separate fixture/controlnet. No TypeScript/Jest/DDD framework is required.
-Amounts are integer minor RUB and credits integer; timestamps UTC; SQL transaction connection held explicitly and released in finally. Stable lock order from Pseudocode; never reverse account/job lock order. Promise errors must reach safe handler; no silent fallback. Only integration owner changes manifests/lockfiles.
+# N8 — coding-style
+
+TypeScript strict. Domain public exports have no Next/pg/fs/concrete provider dependency; small ports. Root integrates manifests/lock/migrations. Parameterized SQL, checked integer money + Decimal quantities, files<500lines.
+
 ## Known Gotchas
-JavaScript regex \w does not cover Cyrillic; use Unicode character classes when needed. PostgreSQL SET LOCAL applies only current transaction/connection; use parameterized set_config if needed. Rate limiters/DB pools/stateful provider adapters are startup singletons, not per-request objects. sharp limits apply before full decode; input Content-Type is not byte proof. Model/pipeline success is not geometry acceptance. Each retry consumes a new conservative ticket; credit release never refunds attempt capacity.
+Regex \w does not cover Cyrillic, use Unicode letters. pg bigint remains string until bounded conversion. SET LOCAL only current transaction; parameterized set_config. Bcrypt ignores >72UTF8bytes unless rejected. Recreated per-request rate stores defeat limits; share service instances. Quantity basis binds exact element/unit.

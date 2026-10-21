@@ -1,0 +1,8 @@
+PASS one GLB file picker without duplicate form
+PASS single file picker accepts11MiB GLB with real8192square texture and automatic kind routing
+PASS UI calibration saves selected scan, survives reload and original hash matches
+PASS second upload through same picker resets calibration without replacing confirmed shell
+PASS malformed GLB rejected through UI, original confirmed shell preserved
+PASS GLB above 25MiB rejected by authoritative server with 413
+PASS image remains subject to 10MiB limit
+PASS 390px screen has no horizontal overflow and no runtime JavaScript errors

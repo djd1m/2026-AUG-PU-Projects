@@ -1,70 +1,188 @@
-# Project: RoomKind — InteriorAI redesign
+# Project: N8 — помощник для ремонта
 
 ## Overview
-N8 turns a private room photo into a styled redesign while preserving geometry. Selected CJM A supports upload→style→job→comparison→gallery→package/share. All product/architecture Markdown lives in docs/. Repository toolkit lives at REPO_ROOT/.claude; never overwrite it or another project's files.
+
+Первый клиент делает ремонт для себя.
+Канон: обмер/план + референсы → оформление → согласование → товары → бюджет → пересмотр.
+Владелец выбрал CJM A; ожидание отдельного approval отменено.
+Источники: docs/project-input.md и docs/PRD.md.
+Полная реализация разрешена автономно в пределах согласованного времени.
+Локальный ручной путь работает без внешних ключей.
+Документ не является доказательством реализации.
 
 ## Problem & Solution
-Owners/renters need to visualize their own room. Use explicit pinned Replicate hosted depth inference or explicit local Stable Diffusion plus ControlNet-depth, with separate private result viewing and operator-verified public examples. Image fixtures demonstrate software flow only. No furniture catalog,3D,collaboration,subscriptions,partner payouts or automatic invitations.
+
+Картинка не подтверждает размеры, наличие товаров или полную цену ремонта.
+Измеренная основа immutable; варианты и воспроизводимые сметы хранятся отдельно.
+Неизвестная цена/площадь/доставка не превращается в ноль.
+GPU/ControlNet и прежние запреты на товары/3D заменены вводом владельца.
+См. docs/Solution_Strategy.md.
 
 ## Architecture
-Node web/API serves static UI, PostgreSQL holds accounts/ledger/queue, private volume stores media, Node hosted worker performs depth-conditioned inference; explicit local controlnet delegates to Python. Defaults remain disabled; no fallback, upgrades or automatically provisioned spend envelope. Provider hosted checkout keeps card entry off this app. Canonical field names/lock order are docs/Pseudocode.md; docs/Architecture.md owns component boundaries. Do not invent successful runtime evidence.
+
+Web, worker, private PostgreSQL, private asset volume.
+Domain: identity/space/design/procurement/billing/sharing с public subpaths.
+packages/db реализует repositories/transactions.
+packages/adapters реализует filesystem/provider/decoder ports.
+Composition root связывает concrete зависимости; domain их не импортирует.
+Worker применяет те же config/guards.
+Не добавлять Redis/GPU/микросервисы без конкретного принятого требования.
+Не импортировать runtime код соседних проектов.
+См. docs/Architecture.md и docs/C4_Diagrams.md.
 
 ## Tech Stack
-Node22 ESM/node:http, pg, bcrypt, sharp; PostgreSQL16; native HTML/CSS/JS; optional local Python/torch/transformers/diffusers/Pillow engine behind Node controller; isolated Docker Compose. Hosted mode needs no Python/GPU. Pin dependencies and inspect security advisories. No framework required. GPU weights are separately pinned in docs/model-provenance-candidates.md and require verified loading; never silently fall back.
+
+Next15 compatible line, React19, TypeScript strict, Node24.
+PostgreSQL16+, pg, parameterized SQL.
+Babylon viewer, Khronos glTF Validator, sharp, Decimal.js.
+Vitest и Playwright, exact audited lock.
+Reuse donor contracts, не устаревшие locks.
+Аудит реальной установки обязателен.
 
 ## Key Algorithms
-- register/login: canonical email,32random-byte session, HMAC-only DB token, bcrypt, one trial ledger.
-- reserveJob: stable idempotency, ordered locks, credit+first-attempt ticket+job in one transaction; queued60s/job360s.
-- settlePayment: authenticated provider GET, account→intent serialization, one purchase ledger; monotonic refund hold.
-- runAttempt: first/retry/currentUTC ticket, lease30s/heartbeat10s/fence, fixed180s attempt bounded by job deadline; hosted known-ID recovery preserves original ticket/deadline and durable submitting/ambiguous never replays.
-- exportComposite: owner/consent/quality/hold recheck at final delivery, AI label always and effective entitlement controls RoomKind badge.
+
+Authenticate: hash вне transaction; session expiry/revoked/active.
+CalibrateSpace: immutable geometry/calibration, user confirmation.
+ValidateAndRenderScene: known dimensions, no shell transform/code/URL.
+SubmitAndRunProposal: replay first, durable caps/holds/fenced dispatch.
+CalculateBudget: exact packaging, complete snapshot, unknown/phases.
+ApplyVerifiedPayment: provider proof before ledger, partial-refund hold.
+ExportAndShare: server provenance, watermark, private image/revoke.
+ExportShoppingList: owner CSV, formula text inert.
+Читать docs/Pseudocode.md, не заменять алгоритмы памятью.
 
 ## Security Rules
-Follow41 AC in docs/Specification.md and11 F07 AC in the unchanged docs/features/f07-replicate/01_specification.md, with their named scenarios and actual coverage in05_completion.md. Default private, EXIF stripped, UUID paths, no external upload URL, two-account404 boundaries. Held account cannot newly reserve/start/retry or receive badge-free cached output; an already authorized hosted attempt may recover/finish privately under its original ticket/deadline. Secrets only server runtime/ignored env; user explicitly forbids browser keys and printed values, overriding generic template client-key advice. No live payment, mail, deployment, GPU rental or external spend in current plan. Budget/config missing fails closed.
+
+Bcrypt password≤72 UTF-8 bytes, явный отказ длиннее.
+HttpOnly session; exact Origin на mutation, missing/foreign rejected.
+Pre-body guard считает rate и проверяет actor/owner без body consumption.
+JSON/upload читает только свой bounded handler после guard.
+Каждый read/write/file проверяет account+project ownership.
+Scalar composite FKs; arrays/JSON проверяются внутри owning transaction.
+SQL parameters, immutable content guards, CAS/fence.
+Fixed provider endpoints, no arbitrary URL fetch/executable AI code.
+Secrets server env; никогда NEXT_PUBLIC или browser storage.
+Uploads private, deadlines/slot/decoded resources/retained bytes bounded.
+DB ports никогда не публикуются; web loopback после root port guard.
+Public release и paid live experiments не разрешены.
 
 ## Parallel Execution Strategy
-Owner explicitly authorized separate swarms. Each independent work unit gets bounded files/AC/checks/time/stop, unique WORK_UNIT_ID and absolute TRACE_PATH, absent before launch. Substantive receipt ends exactly Status: completed or Status: failed and is atomically installed. Validate unique regular non-symlink source/launch-bound receipt before integration; silence and exit0 alone do not prove success. Use REPO_ROOT/.claude/hooks/check-swarm-receipts.cjs where its manifest applies. Shared4-slot limit includes CLI workers; coordinate capacity with root. One writer per isolated worktree. One project heavy build at a time; CPU2. Tests may run independently only when resource safe.
+
+Freeze canon/file ownership перед writing dispatch.
+До двух children, каждый writer в isolated worktree.
+Координатор интегрирует общие manifests/lock/migrations.
+Unit получает revision/AC/paths/checks/timebox/stop condition.
+Каждый parallel unit delivers FILE, not reply.
+До запуска unique WORK_UNIT_ID и absolute TRACE_PATH.
+Receipt ends Status: completed либо Status: failed.
+Fresh regular non-symlink receipt проверяется до integration.
+Shared checker: ../../.claude/hooks/check-swarm-receipts.cjs.
+Молчание не progress; failed/not-run не pass.
+Split file получает owner at creation.
 
 ## Swarm Agents
-| Scenario | Roles | Dispatch boundary |
-|---|---|---|
-| Feature | Astra planner, Sol6.1high coder, fresh Astra reviewer | Sequential bounded writer/review, independent tasks only when global capacity free |
-| Correction | One writer then affected independent review | Only confirmed findings, no optional polish |
-| Documentation | Coordinator with independent delta review | No product code by planner |
+
+Consequential plan/complex implementation: Astra high policy.
+Ordinary implementation/independent review: Sol high policy.
+Research: supported Sol fallback if Terra unavailable.
+Small correction: coordinator + affected reviewer, без нового полного обзора.
+Requested не доказывает actual; неизвестные usage/model=null.
+См. ../../docs/development/model-routing.md и telemetry protocol.
+Global model settings не менять.
 
 ## Git Workflow
-Commit logical steps in Russian using type(08): description, no CoAuthoredBy. Main product branch feature/08-interior-ai; PR base claude/install-npm-packages-n7l3m5. Do not create main or invoke /go --feature-branches (its main prerequisite is absent). Only code integration owner modifies N8 manifests/lockfiles. Never commit .env, raw agent logs/full prompts, model weights or user media.
+
+Own project files и logical completed changes.
+type(scope): description; feat/fix/refactor/test/docs/chore.
+Не включать secrets/.env/private assets/node_modules.
+Нет Co-Authored-By без enabled attribution.
+Не менять root vendor toolkit; проект подключает references.
+Code tests/build обязательны перед commit.
+Generic push/deploy не расширяет разрешение владельца.
 
 ## Available Agents
-| Agent | Purpose | Requested model |
-|---|---|---|
-| planner | Map AC to bounded feature/file/check plan | gpt-6-astra high |
-| architect | Preserve documented transaction/model boundaries | gpt-6-astra high |
-| code-reviewer | Fresh independent finding-based review | gpt-6-astra high |
-Product code executor: gpt-6.1-sol high. Requested names are routing instructions, never proof of actual host model; provider-resolved metadata/usage unknown stays null.
+
+planner: .claude/agents/planner.md — feature contracts/reuse.
+architect: .claude/agents/architect.md — invariant/module decisions.
+code-reviewer: .claude/agents/code-reviewer.md — independent anti-drift.
+replicate-coordinator/doc-validator: shared root toolkit.
+Agent definition — инструкция, не доказательство исполнения.
+Actual host routing задаётся supported launch parameters.
 
 ## Available Skills
-Local project-context, coding-standards, testing-patterns, security-patterns, feature-navigator. Shared repository lifecycle: sparc-prd-mini, explore, goap-research-ed25519, problem-solver-enhanced, requirements-validator, brutal-honesty-review. Shared project-work-companion governs preparation/read-only E2E preflight/handoff. Read full applicable modules, not keyword-triggered global copies.
+
+project-context: canonical homeowner domain/caveats.
+coding-standards: pure public boundaries.
+testing-patterns: risk-driven fixtures/mutations.
+security-patterns: provider secrets/boundaries.
+sparc-prd-mini: five document roles.
+requirements-validator: named AC/scenario contracts.
+brutal-honesty-review: independent technical review.
+project-work-companion: source-bound preflight/delivery.
+Shared skills лежат в root; local links сохраняют один toolkit.
 
 ## Quick Commands
-/start (bootstrap using docs/DEVELOPMENT_GUIDE.md); /myinsights; /feature; /plan; /next; /go; /run; /docs; /deploy. These are root shipped instruction commands, not an installed scheduler. /deploy requires separate applicable external-effects authorization. No /test command is installed or advertised; use actual package scripts after implementation.
+
+/start → scaffold accepted source; /feature → five docs + gates.
+/next → own roadmap; /go → route; /run → accepted feature loop.
+/plan → bounded work; /myinsights → confirmed lessons.
+/deploy доступен generic, public release не разрешён.
+Нет /test: используются actual npm scripts.
 
 ## Development Insights
-Index: docs/myinsights/1nsights.md, details under docs/myinsights/details/. Before debugging rg the error string and read only matching detail. /myinsights records reproducible lessons, no credentials/full prompts. dz teach/recall are supported; standalone dz store is absent on0.8.35. Project .dz stays ignored.
+
+Project: docs/insights.md; carrier .claude/insights/index.md.
+Canonical dz brain — original /home/2026-AUG-PU-Projects, даже в worktrees.
+Перед фичей/review dz recall по Russian/bilingual query.
+English empty lexical match не означает empty memory.
+Применённые lessons записать в feature receipt.
+Confirmed lesson: dz teach/reinforce --no-mirror.
+Не выдавать hypothesis/manual reward за измеренный успех.
 
 ## Feature Development Lifecycle
-PLAN→VALIDATE→IMPLEMENT→REVIEW using root /feature AUTO. Plan references existing SPARC41AC, avoid rewriting it for every small unit. Semantic score≥70 with no artifact floor plus confirmed design closure; implement only scoped accepted plan; fresh independent review then specific fixes. Do not weaken risk gates to save time. GPU quality and real provider acceptance remain distinct from fixture tests. No repeat owner XL checkpoint within docs/decisions-owner.md autonomy boundaries.
+
+PLAN: docs/features/slug/01_specification…05_completion, exact role map.
+VALIDATE: source hash, AC→named scenarios, no floor zero.
+IMPLEMENT: per-feature local01–07 incl03a/05a → GitHub search BEFORE code.
+Record revision/license/contracts/reuse/adapt/new reason.
+REVIEW independent of author, spec/code/tests both directions.
+One pass→review→concrete fixes→targeted closure.
+После каждой фичи mandatory anti-drift.
+Coordinator может исправить code OR spec, logs before/after/IDs/reasons/revisions/checks.
+Не ослаблять проверки ради срока, не начинать необязательную полировку.
 
 ## Feature Roadmap
-.claude/feature-roadmap.json is status authority, schema at REPO_ROOT/.claude/commands/next.md. /next chooses priority and dependencies, /next id marks done only with actual required checks/receipt. SessionStart hook is shared and not guaranteed active in native CLI; explicitly read roadmap here. Do not claim automatic status injection.
+
+.claude/feature-roadmap.json — own project state.
+F1 identity/ops → F2 space → F3 design → F4 procurement.
+F5 billing и F6 sharing подключаются через narrow ports.
+Integrated performance/recovery обязательны до handoff.
+Done требует code/tests/review, не docs alone.
 
 ## Implementation Plans
-Persist plans under docs/plans/ and feature evidence under docs/features/. /plan creates bounded goal/tasks/files/dependencies/risks; /go invokes the appropriate lifecycle. All product documents remain Markdown in docs/. Working source and telemetry stay N8.
+
+docs/plans/ — scope/ownership/timebox.
+docs/canon.md — shared geometry/entity/API names.
+docs/dispatch-plan.md — owners включая coordinator.
+docs/source-versions.md — source hashes edits/verdicts.
+Новый workflow/validator engine требует конкретного AC.
 
 ## Automation Commands
-/go feature selects /feature for financial/private-data scope regardless numerical size heuristic. /run mvp or /run all loops /next→/go within authorized scope; pending GPU gate stays visible while independent features proceed. /docs writes bilingual documentation under docs/README/. These commands do not authorize deployment/spend or install hooks.
+
+/run → /start → /next → /go → /feature → anti-drift.
+Owner уже authorized; revoked CJM wait не восстанавливать.
+Automation не разрешает paid inference/publication.
+Максимум10h от20:25UTC approval; wake target8h.
+Time budget не доказывает прохождение проверок.
 
 ## Resources
-Read docs/PRD.md, Specification.md, Pseudocode.md, Architecture.md, Refinement.md, Completion.md, decisions-owner.md, reuse-inventory.md, validation-report.md, pipeline-walkthrough.md and docs/DEVELOPMENT_GUIDE.md. Telemetry run n8-20261002-1740; update before stage/delegation/retry/model switch/end. Actualmodel/cost unknown null; no measurement guesses. I7 docs sourcebe450153, I1–I6/R1/R2/R3 accepted; I7 runtime parent-owned source8890e0b7, fresh whole-feature review and I8 actual52+2 browser/hosted-row restore remain pending at author time. Historical UI42+2 and21table451row restore do not prove hosted acceptance.
 
-Hosted configuration/API names come from .env.example, compose.yaml and web/replicate-worker-config.js. Web/base maintenance never receive provider token. Optional replicate-worker/replicate-cleanup profiles are --once/restart=no; default worker disabled and cleanup false. Cleanup exact true requires common config/pins/token, private WeakMap, no spend/create settings;30s claim, one cancel then GET later until submitting+1h, no erasure/refund assertion. Replicate SEC-02 response512KiB/request384KiB/call5s specializes other-provider64KiB; media10MiB/20MP/single frame. Hosted provider hardware/warm/inference/billing remain null; warm30/p95≤25s unmeasured. Proposed36creates/12USD is not approval; externalspend0. PR403 remains external, no PR exists, draft is not release.
+docs/Specification.md / Pseudocode.md / Architecture.md — normative.
+docs/ADR.md / decision-log.md — decisions.
+docs/Refinement.md / test-scenarios.md / Completion.md — checks.
+docs/validation-report.md — six-role corrected source verdict/caveats.
+docs/research/ — source capability/entitlement limits.
+docs/discovery/index.html — offline variants, selectedA.
+docs/telemetry/p-replicator/20261013T202009Z-expanded-cjm-9f69/ — run evidence.
+
+Public release override (owner2026-10-14): N8 sslip.io HTTPS publication and Docker browser testing explicitly authorized. Prior local-only exclusion remains historical; live paidAI/payments still excluded. Use exacttrustedproxy forclientrate only, preserve actualsocket forpayment source.

@@ -1,2 +1,3 @@
-# Server runtime secrets
-Provider/session/database credentials only server runtime or ignored .env; .env.example includes names/placeholders, never real values. Never output env dumps, keys, raw connection strings, auth headers or copy them into docs/dz/telemetry/commits. User permits N5/N6 reuse only as server runtime availability, not disclosure. Prefer no credentials at all for local fixture tests. Rotate leaked runtime credentials through separate approved operator process, invalidate dependent sessions when signing secret changes. Browser owns no provider key, so template client-side key encryption is inapplicable. Validate presence/shape without printing values; missing critical config fails closed before listen.
+# N8 — secrets-management
+
+Server-only env keys/session secret; no NEXT_PUBLIC/client storage/logs. Private .env ignored and0600. Local loopback, future TLS/release separately authorized. Client never receives provider key, encryption of exposed keys is not a substitute. Rotation needs explicit session/ledger impact plan; no global config change.

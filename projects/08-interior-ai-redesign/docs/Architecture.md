@@ -1,98 +1,126 @@
-# RoomKind — Architecture
+# N8 — Architecture v0.1
 
-## Architectural style
-Distributed monolith in one project directory: Node22 web/API serves a static accessible UI, PostgreSQL16 holds durable state and queue, Node hosted worker runs the pinned Replicate depth API; explicit local controlnet still delegates to Python SD+ControlNet-depth. Docker Compose joins private services. Simple ESM modules and browser JavaScript avoid an unnecessary UI build layer; this is an explicit minimal-stack choice, not a hidden replacement of geometry inference. Shared toolkit stays at repository root.
+2026-10-13 · modular monolith · план для реализации, не описание уже работающей системы. Следовать [Specification](Specification.md), [Pseudocode](Pseudocode.md), [ADR](ADR.md). Владелец разрешил локальный полный цикл; live inference, реальные платежи и публичная публикация остаются выключены без соответствующего отдельного разрешения/config.
 
-2026-10-03 I7 documentation reconciliation, source `be450153910208e2c043de24f7efab540b052c82`. Accepted I1–I6 includes R1/R2/R3 closures; I7 full runtime is pending at author time on parent-owned source `8890e0b7`. Fresh whole-feature review and I8 actual52 main+2 disabled browser/hosted-row restore remain pending. Historical proof retains its tested revision; this update does not declare F07/full MVP ready.
-
-## Components and boundaries
+## Architecture Overview
 
 ```mermaid
 flowchart LR
-  U[Browser] --> W[Web API and static UI]
-  W --> P[(PostgreSQL)]
-  W --> F[Private image volume]
-  H[Optional Node hosted worker] --> P
-  H --> F
-  H --> R[Pinned Replicate depth API]
-  C[Optional cleanup] --> R
-  G[Explicit local GPU worker] --> P
-  G --> F
-  G --> M[Pinned SD and ControlNet weights]
-  W --> K[YooKassa hosted checkout and verify]
+  U[Web browser] --> W[Next.js UI / API composition root]
+  W --> D[Domain identity / space / design / procurement / billing / sharing]
+  W --> A[Adapters: db / assets / payments / AI]
+  D -. ports .-> A
+  A --> PG[(Private PostgreSQL)]
+  A --> FS[(Private asset volume)]
+  WK[Worker: lease / validate / propose] --> PG
+  WK --> FS
+  WK -. live disabled .-> OR[OpenRouter]
+  A -. payments off .-> YK[ЮKassa]
+  U -->|official links opened by user| SHOP[Retailer pages]
 ```
 
-API: register/login/logout/me; upload/read/delete; create/list/get job; create/get payment intent; incoming payment notification; authorized composite export; publish/revoke and public share/gallery. No request-supplied remote fetch URL. Web authenticates before media reads; worker trusts only leased DB rows and UUID keys.
+No Redis/GPU/API gateway/microservice mesh for MVP. PostgreSQL job lease patterns already exist in N4; reuse them with N8 semantics. Worker is a separate process using the same packages, never holds a database transaction over provider I/O. No second renderer. No runtime imports from `projects/01..07`; selected code is adapted into N8 with provenance/tests.
+
+## Component Breakdown
+
+| Path / public export | Owns | Ports and allowed dependencies |
+|---|---|---|
+| `packages/domain/src/identity/index.ts` (`@n8/domain/identity`) | Account/session/project policy, ownership/caps | AuthStore, ProjectStore, Clock, TokenHasher; no Next/pg/fs imports |
+| `packages/domain/src/space/index.ts` | ManualRoom, calibration, shell hashes, reference rules | AssetStore, SpaceStore; pure geometry helpers |
+| `packages/domain/src/design/index.ts` | Scene schema/invariants, revisions, jobs/spend policy | DesignStore, JobStore, SceneProposalProvider; imports space public types only |
+| `packages/domain/src/procurement/index.ts` | Provenance/freshness, decimal quantity/budget/replacements | ProcurementStore, CatalogueProvider; design IDs/types only |
+| `packages/domain/src/billing/index.ts` | Order/ledger/credits/entitlement policy | PaymentStore, PaymentProvider; shared scalar types |
+| `packages/domain/src/sharing/index.ts` | Redaction, link lifecycle, export entitlement | ShareStore, ImageExporter, identity capability type |
+| `packages/db/src/{identity,space,design,procurement,billing,sharing}.ts` | SQL repositories, transaction/CAS/fence | Implements domain store ports; no UI/provider fetch |
+| `packages/adapters/src/{assets,openrouter,yookassa,catalogue}.ts` | Files/decoding/network/provider contracts | Implements domain ports; fixed endpoints, limits/config |
+| `apps/web/src/server/composition.ts` | Build dependencies, request actor, config | Only composition root wires concrete implementations |
+| `apps/web/src/app` | Routes + accessible UI, Babylon viewer | Domain public types/schemas; never SQL or secrets in client bundles |
+| `apps/worker/src` | Claim/sweep jobs, call adapters, persist fenced result | Same composition/config gates; no public listening port |
+
+Public interfaces are small typed functions: AuthStore sessions; AssetStore put/read/deleteOpaqueKey; SpaceStore appendShell; DesignStore append/approveCAS; JobStore reserve/claim/markDispatched/completeFence; CatalogueProvider resolve→Snapshot/ManualRequired/Blocked; ProcurementStore appendBudget; PaymentProvider create/get/verify; ShareStore create/resolve/revoke. Each adapter has contract tests; reusable means domain imports do not depend on the current web framework or N6 types, not a generic enterprise framework.
 
 ## Technology Stack
 
-| Layer | Selection | Reason |
+| Layer | Decision | Rationale / version policy |
 |---|---|---|
-| Web | Node22 ESM, node:http, pg, bcrypt, sharp | Small auditable surface, donors supply compatible patterns |
-| UI | HTML/CSS/JS, native forms and slider | CJM can become running UI without build-heavy framework |
-| Persistence | postgres16, SQL migrations | Atomic credits, jobs, idempotency and provenance |
-| Worker | Node22 hosted adapter; Python local engine through Node controller | Explicit pinned depth conditioning; hosted needs no Python/GPU |
-| Packaging | Docker Compose db/web/maintenance plus optional replicate-worker/replicate-cleanup profiles | Defaults disabled; one-shot optional processes, no shared deployment edits |
+| Frontend/backend | Next.js App Router + React + TypeScript | Donor N6 currently next 15.5.25, React ^19.1, Zod ^3.25; preserve compatible contracts, pin audited concrete versions during foundation, don't copy entire donor lock |
+| Runtime | Supported Node LTS compatible with selected Next and native image/bcrypt dependencies | Container version pinned in implementation after build/audit; no global upgrade |
+| Database | PostgreSQL 16+, pg 8-compatible repository adapter | Transactional ownership/revisions/spend/payments, donor pg ^8.16.3; exact image tag/digest recorded with build |
+| Cache | None beyond request-local values | No stale authorization or private share cache; stored source snapshots are domain data |
+| Queue | PostgreSQL Job table, N4 lease/fence adaptation | Atomic budget/job admission, no Redis delivery outbox needed |
+| 3D | Babylon.js + GLB loader + Khronos glTF validator | Prior source comparison [spatial research](research/spatial-ai.md); explicit small supported subset, library validation does not prove measurement accuracy |
+| Decimal/image | Established decimal arithmetic library; sharp for bounded decode/reencode/watermark | Do not handwrite money decimal parser or raster codec; versions/licenses audited/pinned by implementer |
+| Files | Private local volume adapter, N6 exclusive/bounded file pattern | No public asset root; S3 interface extension uses N5 SDK adapter when needed, not required now |
+| Infrastructure/tests | isolated Compose, Vitest, Playwright | N6/N5 patterns; no DB published ports, browser tooling may live in /tmp |
 
-Donor pinned versions are candidates, not automatic current-version recommendations; lockfile and dependency audit required before code acceptance. GPU weights/config pins and license decision are recorded before download. GPU image is not built on this resource-limited host until coordinated.
+Dependency versions above identify donor compatibility, not completed security validation. Foundation must commit exact compatible lock after audit and smoke build; an actionable high/critical vulnerability blocks using that version. No assertion that latest is automatically safe. Downloaded third-party libraries retain their licenses.
 
 ## External Dependencies
 
-| Capability needed | Provider / API | Evidence | Verdict | Requirements relying on it |
-|---|---|---|---|---|
-| Create payment with idempotency and metadata | YooKassa payments | https://yookassa.ru/developers/payment-acceptance/getting-started/payment-process · checked 2026-10-02 · «ключ идемпотентности»; «Данные необходимо передавать в объекте metadata» | CONFIRMED | FR-payment-1 |
-| Inspect actual payment status after incoming notification | YooKassa API/webhooks | https://yookassa.ru/developers/using-api/webhooks · checked 2026-10-02 · «Проверьте текущий статус объекта» | CONFIRMED | FR-payment-1, FR-GROWTH-002, FR-GROWTH-004 |
-| Depth-conditioned Stable Diffusion generation (self-hosted library, not cloud API) | Hugging Face Diffusers | https://huggingface.co/docs/diffusers/api/pipelines/controlnet · checked 2026-10-02 · “preserve the spatial information from the depth map” | CONFIRMED | FR-geometry-1 |
+Only provider-owned documentation actually opened is CONFIRMED. Check date for every row: **2026-10-13**. Documentation confirms a capability, not credentials, access in this deployment, quality or a completed live call.
 
-The confirmed capability is spatial conditioning, not guaranteed geometry quality or 25-second latency. Real geometry/performance remain acceptance measurements. No runtime OpenAI image dependency. Provider live mode unavailable until merchant credentials and separate external-effects authorization; fixture adapter is explicit local test functionality.
+| Capability needed | Provider / API | Evidence: exact short quote | Verdict | Requirements / consequence |
+|---|---|---|---|------ |
+| Model text response through POST | OpenRouter `/api/v1/chat/completions` | [API docs](https://openrouter.ai/docs/api/api-reference/chat/create-a-chat-completion): “Sends a request for a model response for the given chat conversation.”; checked 2026-10-13 | CONFIRMED | FR-design-3 adapter; live disabled without key/caps |
+| Schema-shaped response request | OpenRouter structured outputs | [Docs](https://openrouter.ai/docs/guides/features/structured-outputs): “Enforce specific JSON Schema validation on model responses”; checked 2026-10-13 | CONFIRMED | FR-design-3; local validation still mandatory; endpoint support checked |
+| Provider-side spend controls | OpenRouter guardrails | [Docs](https://openrouter.ai/docs/guides/best-practices/spend-controls): “Per-person or per-key limit that stacks with workspace budgets”; checked 2026-10-13 | CONFIRMED | NFR-cost-1; operator must configure actual limit, not a boolean promise |
+| Create redirect checkout | ЮKassa payments | [Quick start](https://yookassa.ru/developers/payment-acceptance/getting-started/quick-start): “Для оплаты перенаправьте пользователя на confirmation_url.”; checked 2026-10-13 | CONFIRMED | FR-billing-1; merchant access absent, adapter tested offline |
+| Verify webhook by remote status | ЮKassa notification contract | [Docs](https://yookassa.ru/developers/using-api/webhooks): “Проверьте текущий статус объекта, чтобы убедиться, что статус из уведомления актуален.”; checked 2026-10-13 | CONFIRMED | FR-billing-2; trusted source + order amount/merchant checks remain |
+| Automatic current retailer price/stock | Лемана ПРО/Дом Лента pages | [Retail browser addendum](research/retail-browser-addendum.md): ordinary Chromium observations 401/401, no usable fields; no provider-owned API citation granting this access; checked 2026-10-13 | UNCONFIRMED | Removed from mandatory MVP; FR-procurement-1 uses manual snapshots/blocked adapter |
+| Anonymous B2C catalogue API | Лемана ПРО B2B | [Provider docs](https://developers.lemanapro.ru/b2b-started/): “После одобрения заявки на интеграцию, вам будут предоставлены данные”; checked 2026-10-13 | UNCONFIRMED | B2B API is documented, consumer entitlement isn't; no automatic catalogue requirement |
+| Read any public Pinterest board/pin | Pinterest API | Prior [research](research/references-commerce.md) describes authorization/approval; universal access not confirmed by a provider citation; checked 2026-10-13 | UNCONFIRMED | No API-import dependency; FR-space-3 stores link/upload |
+| Metric 3D reconstruction / 25-second exact redesign | Gemini/Scaniverse | No provider technical guarantee or measured acceptance dataset; checked 2026-10-13 | UNCONFIRMED | Removed; FR-space-1/design-1 use measured input/immutable geometry, no SLA claim |
+
+No mandatory FR rests on an UNCONFIRMED provider behavior. Scraping is not declared CONTRADICTED globally: two 401 responses establish local no-go for sampled URLs, not provider-wide impossibility. The current implementation may ship a blocked CatalogueProvider, provided manual procurement is complete and honestly labelled.
 
 ## Data Architecture
-`Pseudocode.md / Data Structures` owns field names/types/enums. Each entity maps to a PostgreSQL table; UUID PKs, owner FKs and unique constraints for email, idempotency, provider payment, ledger reference, share token and event dedupe. Account row lock serializes credit mutations; check balance and reserve live in same transaction. Budget/financial lock order is platform-day→account-day→account→intent→job when needed; operations starting at account never later request budget locks. Nonlocking candidate reads are rechecked under these locks, never job-first/account-second. Network/hash/image operations occur outside transactions; no database port is published. Admission reserves first attempt ticket atomically with credit/job; retries and UTC rollover require additional nonrefundable capacity tickets. Exhaustion after admission fails/releases exactly once.
-Storage volume has originals/reencoded uploads, per-attempt temporary output and composites. Never expose the volume with a static file mount. Atomic rename prevents half-written images; lease fence guard prevents orphan late output becoming visible. Orphan sweeper only known UUID files older than safe interval, excluding live job references.
 
-## Security Architecture
-Passwords bcrypt cost10 following N5; HMAC hashed 32-byte opaque tokens following N5, expiry7d and revocation. Generic login errors and dummy hash. Origin/CSRF checks, rate limits and body caps. Cookie Secure outside loopback local test. Owner-bound SQL access checks cover jobs, uploads, payments and composite generation. Public share accesses only non-revoked accepted composite; no raw filename, original or contact information. All rendered user text escaped.
-YooKassa event authenticity uses authenticated provider GET, not invented HMAC signing. Unknown/mismatched provider response fails closed before ledger effects. Fake payment adapter disabled in production; same handler logic checked with replay/concurrent notifications.
+Logical fields/enums reside only in [Pseudocode Data Structures](Pseudocode.md). PostgreSQL tables map one-to-one to those entities using snake_case; UUID PK, timestamptz timestamps, text+CHECK enums, bigint money/counters, numeric for persisted scalar decimals, jsonb for bounded immutable scene/calibration/budget snapshots. No duplicated alternate field list here.
 
-## Runtime and bounded effects
-Web bound through `${WEB_PORT:-18088}` on127.0.0.1, PostgreSQL only internal expose. Local compose includes random supplied DB credential and CPU/memory caps. Worker fixture profile is unmistakably labelled and refuses production; real GPU profile requires CUDA and actual model revisions. No silent CPU/mock fallback. Daily conservative attempt-ticket caps200/account20 (lower configurable), max2 started attempts/job,180s fixed attempt deadline,60s queue expiry,360s absolute job deadline, heartbeat10s/lease30s capped by deadline. Every admitted ticket stays counted even if unused; retries require a new ticket. These are design values pending benchmark, not vendor guarantees.
-
-## Reuse decision
-PD-REUSE-001: N5 auth service and YooKassa response validator adapted; N6 job fencing/idempotency and orphan-cleanup semantics adapted. N6 tariff/commission code rejected wholesale because it grants time plans and financial commissions rather than generation credits. N5 Redis/S3 transport rejected for MVP because this task requires Postgres queue and can use a private volume. File SHA and security deltas in `reuse-inventory.md`.
+- Account→Session/Project/PaymentOrder; Project→Asset/Reference/ShellRevision/DesignRevision/Job/ProductSnapshot/ShoppingLine/BudgetRevision/ShareLink. Composite `(id,project_id)` uniqueness and composite FKs prevent cross-project relation injection; repositories still constrain account ownership.
+- Shell/Design/Budget content immutable at domain and DB update boundary; approval/state metadata separate from hashed content. Project pointers and version updated together; initial circular pointers nullable then set only after child insert in transaction. Cross-project FK must apply to current pointers too.
+- Unique canonical account email, tokenHash, `(account_id,idempotency_key)` on Job, `(account_id,idempotency_key)` on PaymentOrder, `(provider,remote_event_key)` on PaymentEvent, `AuditEvent.event_key`, ShareLink.tokenHash. SpendBudget unique scope/account/day with separate unique partial indexes for global nullable account and account rows; RateBucket unique subject/kind/window.
+- Index every ownership FK, history `(project_id,created_at,id)`, queued dispatch `(state,request_dispatched_at,lease_until,created_at)`, external remote payment ID. Do not use permissive UPDATE of entire JSON entity.
+- Transaction order for spend: stable PostgreSQL advisory transaction mutex independent of day → Account → Project → global/account-day budget → Job; admission/release/settlement/archive follow the same order. Past-day unresolved reservations aggregate under this same mutex, including requests crossing midnight. Payment paths lock Account then PaymentOrder consistently. Runtime SQL role has only app tables and no superuser; migrations use separate role.
+- Files are byte-addressed by random internal key, mounted only web/worker. No path supplied by client. Ready DB row grants access; DB/file failures use orphan cleanup with age+reachability, not mass directory deletion. Backup must include DB + asset volume consistently.
 
 ## Reconciliation with Pseudocode
-После независимых findings1–6 канон уточнён; повторные проверки и точечное закрытие последней LOW-регрессии завершены (цепочка receipts в telemetry). Сверены сущности: account, session, upload, job, credit_ledger, payment_intent, provider_event, partner, attribution, share, event, attempt_budget, attempt_ticket, generation_evidence, quality_review, verified_refund, first_conversion; алгоритмы: Account sessions, Receive image, Reserve job, Geometry evidence, Gallery, Provider purchase, Share, Attribution, Composite, Partner registry, Publish/revoke, Boundaries, Budget. F01 physical schema now defines account, session, credit_ledger and upload in `db/001-foundation.sql`; real PostgreSQL16 migration and transaction tests passed on source `29b070be`. F02 now implements generation jobs, immutable evidence, quality review and attempt budgets; F03 implements verified payments/refunds, consent, owner-bound partners and first-conversion records in migrations002–005. F04 share/publication was subsequently accepted as software; the historical source-bound proof is retained in Completion. F07 adds provider_submission/provider_spend_budget (007) and hosted evidence/mode/nullability (008); current migrate applies eight migrations. No historical ledger/evidence rows are rewritten.
+
+Расхождений с `Pseudocode.md` по физическому mapping не найдено. Сверены сущности: Account, Session, Project, Asset, Reference, ShellRevision, DesignRevision, Job, SpendBudget, ProductSnapshot, ShoppingLine, BudgetRevision, PaymentOrder, PaymentEvent, ShareLink, AuditEvent, RateBucket; value types ManualRoom/GLBDescriptor/Calibration/SceneProposal/ObjectDefinition/BudgetLine/CostRow. Сверены алгоритмы: Authenticate, ProjectCommand, CalibrateSpace, StorePrivateAsset, SaveReference, ValidateAndRenderScene, ReviseAndApprove, SubmitAndRunProposal, RecordProductSnapshot, CalculateBudget, ReplaceAndPhase, Checkout, ApplyVerifiedPayment, ExportAndShare, RecordGrowth, GuardRequest, BootOperational, RenderAccessibleJourney, EnforceBounds. Это сравнение плана, не проверка ещё не существующих migrations; при их появлении независимое ревью повторяет type/column/enum check.
+
+## Security Architecture
+
+Private by default. Exact Origin guard implements CSRF defense for cookie mutation; no wildcard CORS and missing Origin rejected. API browser session cookies, no session tokens in localStorage. Secrets loaded server-only and never embedded in Next public env. SQL parameterized, scoped repositories accept actor context, private files route through DB authorization. Admin/operator reconciliation isn't a public endpoint; first implementation can use a documented, audited local operator script under separate DB role.
+Untrusted GLB/images parse in bounded worker/process or worker thread with deadline; GLB textures have a separate8K-per-side and134217728-total-pixel budget, validated sequentially with bounded1×1 decoded output; standalone images retain20MP; reject external URI before loader; CSP restricts assets to self/blob where viewer needs it, and forbids script from assets. Client validation is UX, server validation authoritative. Share assets are redacted reencoded derivatives, accessible through revocation-aware routes. Public requests cannot name arbitrary asset/object keys.
+Outbound endpoints fixed in provider adapters; test endpoint injection exists only through constructor in tests. No arbitrary browser-proxy fetch, shell execution, evaluated code, credential scraping or CAPTCHA bypass. Payment proxy source/IP contract tested; unknown peer chain fails closed. Public deployment would require TLS and separate release approval, not covered here.
+
+## Per-feature reuse contract
+
+Before coding **each F1–F6**, author creates `docs/features/<slug>/reuse.md`: `local sweep 01,02,03,03a,04,05,05a,06,07` with paths/absence, then fresh GitHub search, candidates/revision/license/compatibility/decision, tests to port. Existing [inventory](research/reuse-inventory.md) is seed, not blanket completion. 07 has README only in baseline. Local root LICENSE absent: internal reuse authorized, external relicensing not inferred. Record base `3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4` and individual SHA-256 before adaptation.
+
+| Feature | Local candidates to reopen before coding | GitHub candidates to verify after local sweep | Decision / compatibility boundary |
+|---|---|---|---|
+| F1 foundation | N6 `apps/web/src/server/auth.ts`, `packages/db/src/pool.ts`, cabinet page; N3a session module | better-auth/better-auth, brianc/node-postgres | adapt N6 AuthStore/hash/revoke tests; remove @n6/rag status/partner rules; library alternative only if demonstrably better |
+| F2 space-assets | N6 `source-upload-handler.ts`; N5 `packages/s3/src/*`; local 3D gap | KhronosGroup/glTF-Validator, BabylonJS/Babylon.js, lovell/sharp | adapt bounded exclusive upload/local storage; reuse codecs/validator; new measured-domain module justified by donor gap |
+| F3 design | N4 `apps/recognizer/src/lease.ts` + sweep and concurrency tests; N6 model provider patterns | timgit/pg-boss, BabylonJS/Babylon.js, OpenRouterTeam docs/examples | adapt N4 lease/fence rather than bespoke broker; pg-boss alternative not added without need; new scene constraints necessary |
+| F4 procurement | N4 decimal computation modules, N6 integer-money helpers; no room procurement donor | MikeMcl/decimal.js; compatible unit libs if needed | use decimal library, adapt proven integer bounds; new shopping schema is N8-specific gap |
+| F5 billing | N6 `server/payments/{provider,config,yookassa,origin,cidr-match}.ts`, `packages/db/src/payments.ts`; N4 provider/tests | official yoomoney/yookassa SDK repositories where available; provider API examples | adapt N6 verified notification/rollback contracts; replace subscriptions/partner commissions by typed package credits; don't weaken trust checks |
+| F6 sharing | N6 guest/share security patterns and `packages/db/src/growth.ts`; N1 public token handlers; N5 exports | lovell/sharp, microsoft/playwright | adapt token/revoke/event pattern, new redacted visual payload only; no shared guest access to project data |
+
+Known spatial pinned source revisions/licenses remain in [spatial-ai](research/spatial-ai.md). Registry source/version/license/security checks before lock are part of each reuse decision; no donor secrets/.env/lock/workspace business tables copied wholesale.
 
 ## Scalability Considerations
-One explicitly selected inference worker initially, SKIP LOCKED permits later workers without changing ownership semantics. Pending jobs bounded per account. API pagination max50 and bounded response. GPU throughput and model warmup dominate latency; no speculative cache or batching until measured. A missing GPU blocks actual inference acceptance, not independent API/fixture verification.
 
-## Validation correction decisions
-Refund hold is monotonic and checked under account serialization by admission, start/retry and final cached/private/public export authorization. Prior-authorized bounded stream or active inference may complete; later operations cannot spend or receive badge-free artifacts. Any partial/full verified refund binds refund→payment→immutable account/order and sets review, without guessed ledger reversal; no MVP unhold or monetary refund operation. Publication denies held accounts. Account-scoped first-paid marker makes exactly one committed success the conversion winner; no partner on first payment means no later backfill, and refund never promotes a second purchase.
+One web and one worker are enough for local acceptance; scale claims wait for measurement. Stateless web can multiply after shared rate/session semantics are proven; local file volume currently requires shared mount and prevents naive independent replicas. Queue claim/fence supports multiple workers, but cost caps apply across all. Primary risks: GLB decode memory, image decode, too many scene objects, long DB holds, unresolved provider calls. Bound first; only optimize observed failures. No fabricated production SLA or user count forecast.
 
-`generation_evidence` binds immutable bytes/config/models/seed/timing to each result. Append-only operator CLI quality review binds actor/time/decision to output/evidence/corpus hashes; no public user quality setter. Runtime images start unverified, fixture never accepted. First-party partner tracking needs explicit unchecked consent; manual checkout code remains independently available. All41 named ACs map to scenarios in test-scenarios.md.
+## Concrete validation amendments
 
-Refund source checked2026-10-02: [YooKassa notifications](https://yookassa.ru/developers/using-api/webhooks) names `refund.succeeded` and requires actual object-state verification; [refund lifecycle](https://yookassa.ru/developers/payment-acceptance/after-the-payment/refunds) describes refund status separately from payment status. Implementation must use the authenticated refund endpoint and its payment binding; do not invent a `payment.status=refunded` enum.
+- Custom Node HTTP entrypoint is mandatory for Next production/dev; normal next build, no standalone/next-start bypass. Socket peer overwrites reserved headers before Next; mapped IPv6 normalization, missing peer refusal, no XFF/loopback provider trust. Exact ingress is tested against built server.
+- Scalar project references get composite FKs incl current pointers; bounded JSON/arrays (referenceIds, scene/catalog/snapshot IDs) require same-project validation inside owning mutation transaction. Catalog old entries append-only and ProductSnapshot immutable at DB boundary. Job(projectId,accountId) composite FK matches Project owner. Shopping unique(projectId,designId,elementId). SpendBudget global⇔accountId null, account⇔nonnull. pg bigint→bounded safe integer, numeric→canonical Decimal string, no unsafe implicit Number.
+- One parser slot in local web; process memory512MiB,10s body/10s decode deadline, native memory also bounded by container. Source/normalized images together count retained bytes; ready requires both for images. Asset pending row is reservation, originalHash null until success, storedBytes reserved maximum30MiB image/export or25MiB GLB. Account→Project locks reserve before streaming;≥512MiB filesystem free,64assets/project,200MiB/project,1GiB/account. Cleanup rejected/pending15min grace with reachability; no general scheduler.
+- GLB only embedded uncompressed triangle data and KHR_materials_unlit; accessor components≤8million/vertices≤750k, triangles≤250k,nodes≤1000, embedded textures≤8192px per side and≤134217728 total pixels, checked before sequential1×1 validation decode. Normalized image≤20MiB. Worker parsing cannot fetch external resource.
+- Export Asset provenance is server-only and immutable; share-image creation only export service. Account→Project transaction rechecks entitlement/provenance at publication. Public guarantee covers generated frame/DTO/metadata, not arbitrary sensitive owner-uploaded pixels; preview/rights explicitly covers pixels. Refund revokes existing unwatermarked share/derivative access; watermark regeneration creates new asset.
+- Jobs persist exact consented request bytes and origin design/version; replay lookup precedes mutable admission. Dispatch mark transaction is authorization linearization and completion never overwrites later same-shell manual work. Expiry120s and max3 predispatch claims. Refund blocks pending dispatch; in-flight uncertain cost keeps reservation. Local operator reconciliation records evidence and exact once-only cost/credit settlement, no blind redispatch.
+- Archive/share revocation is set-based with indexed predicates; lifetime work scales with owned rows rather than claimed constant bounds. Growth query has explicit30-day interval and kind/createdAt index. Historical camera orbit is not persisted; design choices are.
 
-## F02b runtime mapping (2026-10-02)
-
-F02a physical migration002 now implements jobs, tickets, conservative budgets and immutable generation evidence; acceptance is sourcec465ee73. Node controller reuses `createJobs` for every claim/heartbeat/complete/fail transition. Python never duplicates credit/SQL transitions, so psycopg is unnecessary in the selected minimal runtime. Controller spawns one bounded local Python inference process with an explicit JSON protocol; it cancels the process at a lost lease or fixed deadline and discards stale output. A persistent engine may cache loaded models for subsequent warm jobs; first/cold and later/warm timings remain distinct, and process restart clears warm state.
-
-Only offline, operator-provisioned local model directories/manifests may load. Each manifest pins repository revision plus actual weight/config/license hashes; no runtime download, arbitrary URL, trust_remote_code or unsafe pickle. Intel DPT candidate has no listed safetensors: actual loading remains blocked until safe weights-only compatibility is verified or a documented compatible safe alternative is provisioned. Retain the SD safety checker. Missing CUDA/model/license/manifest fails explicitly; no silent fixture/CPU fallback.
-
-Controller independently hashes bounded actual input/output/depth/config bytes outside transactions, then attaches immutable evidence through the existing fenced completion transaction. Private result reads recheck owner/tombstone/rejection and byte digest. Operator CLI is a separate trusted server command, with no public user setter. Append-only review stores actor/time/output/evidence/corpus digests; actual report validation must distinguish real measured corpus from synthetic software fixtures. A fixture can test rejection, never prove geometry. Quality rejection revokes read/public eligibility and performs existing unique release only if reserve existed.
-
-## F03 runtime mapping (2026-10-02)
-
-Node services `payments.js`/`provider.js` verify remote objects before account-serialized effects. `attribution.js` binds signed first-party cookie proof to persisted consent and the authenticated account; `partners.js` supports trusted operator CLI creation/activation/aggregates. Partner binding is immutable in PostgreSQL. Fixture provider is explicit non-production only, and default Compose provider remains disabled. F03a/F03b source-bound acceptance records preserve initial failed tests and independent review closures.
-
-## F07 hosted boundaries — accepted I1–I6, 2026-10-03
-
-[ADR-006](ADR.md#adr-006--hosted-depth-inference-and-conservative-remote-effects) specializes GEOM/JOB/SEC without relaxing warm performance or real quality. `web/provider-submissions.js` owns durable authorization/spend/CAS, `web/replicate.js` fixed HTTPS create/get/cancel, `web/replicate-media.js` private transform/import, `web/replicate-generation.js` reconstruction/heartbeat/commit/disposal, `web/replicate-worker-config.js` worker and cleanup config, `web/replicate-cleanup.js` fenced maintenance, and `web/replicate-evidence.js`/`web/replicate-quality.js` closed evidence/corpus validation. Existing jobs/ledger/public APIs remain the authority; no new public provider endpoint, webhook, scheduler or SDK.
-
-Pins: `jagilley/controlnet-depth2img`, version `922c7bb67b87ec32cbc2fd11b1d5f94f0ba4f5519c4dbd02856376444127cc60`, contract `3d94bb6e59e6a90e24a0504abb4c06c055f7619372e2c36313f42de5d86e99bc`. Capability/schema evidence is the preserved [research](features/f07-replicate/replicate-research.md); it establishes no real project quality, latency, license/privacy readiness or charge ceiling. No fallback/upgrades.
-
-Input is server-built JPEG data URI, never public upload URL; output/depth references stay internal and are imported through exact replicate.delivery label allowlist/public-IP pinning/TLS/no redirect/no auth forwarding. Replicate response512KiB/request384KiB and5s specialize other-provider64KiB; media10MiB/20MP/single frame. All network/image operations occur outside SQL locks. One POST after durable CAS; ambiguous no replay; known recovery retains original ticket/deadline. Reserved spend never decreases. Hosted hardware/warm/inference/billing remain null with separate DB queue/worker monotonic measurements.
-
-Base Compose web/maintenance remain disabled and contain no Replicate token. Optional worker/cleanup each add0.25CPU to default2CPU: WEB_CPUS=0.50 for one or0.25 for both retains aggregate2. Both profiles use restart=no and --once, not an automatic scheduler. Cleanup absent/false is off; exact true uses pins/token/common config in private WeakMap, independently of spend activation. It claims30s, persists a single cancel request then GETs later until submitting+1h, with unresolved uncertainty and no erasure/refund promise.
-
-I8 must verify actual image/Compose/startup/browser and backup/restore representative hosted submission/evidence/budget rows after the browser fills its owned DB. Historical21table/451row restore predates007/008 and cannot prove hosted recovery. Software mock corpus/HTTP evidence never authorizes a real provider call.
+GLB calibration preview uses existing BabylonRoom with previewAssetId and no ShellRevision. Surface picking is confined to imported mesh, ignoring drag gestures; marker state is ephemeral. Domain native calibration is strict explicit confirmation of scale1, with no fabricated anchors. Existing immutable shell/CAS and owner asset checks remain authoritative.

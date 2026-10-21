@@ -1,0 +1,33 @@
+PASS landing desktop + local hydration
+PASS register → authenticated dashboard
+PASS create private project persists
+PASS manual measured shell18m2 with opening + visibleplan
+PASS actualWebGL measured viewer
+PASS production malformedGLB returns typed422 before ready
+PASS production isolated image decode → owner normalized metadata
+PASS Pinterest deep link reference saves without fetch
+PASS 390px keyboard/accessibility overflow
+PASS manual design saved and explicitly approved before procurement
+PASS native RUB1600 price validity and server integer160000 minor
+PASS unmatched expected elements and explicit unknown works/delivery remain unknown
+PASS owner product selection and retained reasons persist in all six elements
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.fill: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('fieldset.cost-scope').first().getByLabel('Сумма расхода, ₽', { exact: true })[22m
+[2m    - locator resolved to <input min="0" value="" step="0.01" required="" type="number"/>[22m
+[2m    - fill("1000")[22m
+[2m  - attempting fill action[22m
+[2m    - waiting for element to be visible, enabled and editable[22m
+[2m  - element was detached from the DOM, retrying[22m
+
+    at /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/scripts/e2e.mjs:43:414
+    at async checked (/home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/scripts/e2e.mjs:21:34)
+    at async file:///home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/scripts/e2e.mjs:43:2 {
+  name: 'TimeoutError'
+}
+
+Node.js v24.21.0

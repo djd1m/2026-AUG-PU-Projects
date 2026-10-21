@@ -1,53 +1,49 @@
 ---
 name: coding-standards
-description: Coding standards with DDD patterns for RoomKind. Use when writing code, reviewing style, or applying project conventions. Keywords: style, convention, pattern, standard, Node ESM, PostgreSQL, Python, image processing.
+description: N8 TypeScript module boundaries, conventions, Decimal and SQL patterns for code/review.
 ---
 
 # Coding Standards
 
 ## From .ai-context
 
-No .ai-context. Follow docs/Architecture.md and project rules/coding-style.md: small ESM modules, typed boundary validation, parameterized SQL, Python worker separation. The DDD naming/file examples below are retained template reference only, NOT the selected project structure; actual structure is web/,worker/,db/,tests/.
+No .ai-context/DDD artifact was generated; authoritative SPARC paths docs/Architecture.md, Specification.md, Pseudocode.md, ADR.md. TypeScript strict, small pure domain functions/ports, validated runtime boundaries. Generic root toolkit remains linked.
 
 ## DDD Naming Conventions
 
 | Element | Convention | Example |
-|---------|------------|---------|
-| Aggregate | PascalCase, noun | `OrderAggregate` |
-| Entity | PascalCase, noun | `OrderItem` |
-| Value Object | PascalCase, descriptive | `Money`, `Address` |
-| Domain Event | PascalCase, past tense | `OrderPlaced` |
-| Repository | I{Aggregate}Repository | `IOrderRepository` |
-| Domain Service | {Action}Service | `PricingService` |
+|---|---|---|
+| Entity/DTO | PascalCase | DesignRevision |
+| Value | descriptive immutable type | BudgetLine |
+| Store port | named domain interface | AuthStore |
+| Provider port | named capability interface | PaymentProvider |
+| Command | verb reflecting effect | approveDesign |
+| SQL table/column | snake_case | design_revision/shell_id |
 
 ## File Organization (DDD)
 
+N8 uses modules instead of an additional DDD layer hierarchy:
+
+```text
+packages/domain/src/identity/index.ts
+packages/domain/src/space/index.ts
+packages/domain/src/design/index.ts
+packages/domain/src/procurement/index.ts
+packages/domain/src/billing/index.ts
+packages/domain/src/sharing/index.ts
+packages/db/src/
+packages/adapters/src/
+apps/web/src/server/composition.ts
+apps/web/src/app/
+apps/worker/src/
 ```
-src/
-├── domain/
-│   ├── {context}/
-│   │   ├── aggregates/
-│   │   ├── entities/
-│   │   ├── value-objects/
-│   │   ├── events/
-│   │   ├── repositories/
-│   │   └── services/
-│   └── shared/
-├── application/
-│   └── {context}/
-│       ├── commands/
-│       ├── queries/
-│       └── handlers/
-└── infrastructure/
-    └── {context}/
-        ├── persistence/
-        └── messaging/
-```
+
+Every module exports its public contract. Concrete I/O dependency belongs in adapters/db/composition. Types from other modules import public subpath only. No donor runtime import: adapted code carries provenance and tests.
 
 ## ADR-Based Standards
 
-Network/image work outside DB transactions. Lock budget→account→intent→job. Explicit provider/fixture modes and pinned model revisions; no silent fallback. Server integer money/credits and UTC.
+Identity guards pre-body, bcrypt bytes bounded. Canonical decimal strings until Decimal conversion; minor money bounded integer. Transaction lock order stable mutex→Account→Project→budgets→Job; payment Account→Order. Network outside transaction. Ownership predicates/scalar FKs/embedded relation validation are separate guards. One current-shell hash; immutable source content. Runtime secrets never client bundle.
 
 ## Anti-Patterns
 
-Do not copy N6 time-plan/commissions, add Redis/S3 without requirement, use OpenAI imagegen instead of ControlNet, accept fixture quality, expose raw volume, or trust return URL/client badge flags.
+No arbitrary model code/URLs; no computed unknown0; no current rows used to reproduce old budget; no in-memory rate/payment ledger; no client price/entitlement; no schema-mutating runtime role; no broad fallback from misspelled config. No shared file writers or new engines without concrete AC.

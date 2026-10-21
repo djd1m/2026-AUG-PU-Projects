@@ -1,0 +1,46 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20261013T220722Z-procurement-5834",
+  "batch_id": "20261013T202009Z-expanded-cjm-9f69",
+  "project": "projects/08-interior-ai-redesign",
+  "feature": "procurement",
+  "pipeline": "feature AUTO inherited accepted SPARC -> implementation -> independent review/anti-drift",
+  "tier": "M",
+  "profile": "compact-quality-first-v2",
+  "baseline_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+  "started_at": "2026-10-13T22:07:22.341810+00:00",
+  "ended_at": "2026-10-14T01:47:20.491766+00:00",
+  "status": "accepted",
+  "actual_model": null,
+  "metrics": {
+    "wall_clock_seconds": 13198.149956,
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Host exact model/usage/billing unavailable; requested routes do not prove actual."
+  ],
+  "acceptance_evidence": [
+    "docs/features/procurement/review-report.md",
+    "docs/features/procurement/05_completion.md",
+    "docs/telemetry/p-replicator/20261013T202009Z-expanded-cjm-9f69/evidence/final-delivery-1.md"
+  ],
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 15,
+    "ac_total": 15,
+    "followup_status": "closed",
+    "confirmed_findings_by_severity": {
+      "high": 6,
+      "medium": 2
+    }
+  },
+  "spec_sha256": "3ce7a6bdce65f2f76addcf6577b56376e69d9b9e4f9d583ce04bbb954b5f51f1",
+  "model_rationale": "Sol high for bounded, already validated exact-decimal/manual procurement algorithm; no live provider or spend ledger. Required integrity/review checks unchanged.",
+  "final_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+  "build_revision": "docker:sha256:3ac28e68ccef3576d428547f04bbbb9df3097bb8baf28823bdd87076611369cb",
+  "measurement_note": "Elapsed from feature record creation until final integrated acceptance, including queue/review/integration; not isolated agent runtime or summed model billing."
+}

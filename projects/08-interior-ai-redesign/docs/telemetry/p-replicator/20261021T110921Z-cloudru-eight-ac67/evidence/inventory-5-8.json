@@ -1,0 +1,353 @@
+{
+  "status": "completed",
+  "run_id": "20261021T110921Z-cloudru-eight-ac67",
+  "work_unit": "cloudru_inventory_5_8",
+  "scope": {
+    "repository": "/home/2026-AUG-PU-Projects",
+    "projects": [
+      "projects/05-podcast-clips-opus",
+      "projects/05a-podcast-clips-opus",
+      "projects/06-rag-sales-chatbase",
+      "projects/07-cold-email-warmup",
+      "projects/08-interior-ai-redesign"
+    ],
+    "mode": "read_only_deployment_inventory",
+    "excluded_actions": [
+      "repository edits",
+      "environment or secret reads",
+      "database mutations",
+      "container lifecycle changes",
+      "cloud changes",
+      "email sends",
+      "paid provider calls",
+      "new tests or installs"
+    ],
+    "full_application_required": true
+  },
+  "source": {
+    "baseline_revision": "e2803308144336a58f6e6481a2cece56ce56c317",
+    "observed_revision": "e2803308144336a58f6e6481a2cece56ce56c317",
+    "continuity": "matched",
+    "dirty_worktree_observed": true,
+    "relevant_dirty_paths_preserved": [
+      "projects/08-interior-ai-redesign/config/public/Caddyfile",
+      "projects/08-interior-ai-redesign/docs/telemetry/p-replicator/20261021T110921Z-cloudru-eight-ac67/"
+    ],
+    "dirty_caddy_fact": "The uncommitted Caddyfile adds shino.77.83.87.178.sslip.io reverse_proxy 172.29.8.1:5189; it was inspected read-only and must not be overwritten during N8 deployment preparation."
+  },
+  "profile": {
+    "complexity": "read-only bounded inventory; no implementation tier or mechanical router run applicable",
+    "requested_model": "gpt-5.6-sol",
+    "requested_reasoning_effort": "high",
+    "actual_model": null,
+    "actual_model_gap": "No host execution metadata exposed to this worker; requested model text is not proof of routing.",
+    "usage": null,
+    "usage_gap": "Token and cost counters unavailable; no estimate substituted for measurement.",
+    "started_at": "2026-10-21T11:09:21Z",
+    "finished_at": "2026-10-21T11:14:48Z",
+    "duration_seconds": 327
+  },
+  "details": {
+    "05": {
+      "selected_variant": "projects/05-podcast-clips-opus",
+      "selection_reason": "This variant contains application workspaces, a production multi-stage Dockerfile, compose, env template and operational scripts. The 05a sibling is documentation/toolkit only and has no package manifest, Dockerfile or compose file.",
+      "application_status": "runnable full application",
+      "compose": {
+        "path": "projects/05-podcast-clips-opus/docker-compose.yml",
+        "production_profile": "edge",
+        "steady_service_count": 7,
+        "services": ["web", "worker-stt", "worker-llm", "worker-video", "db", "redis", "proxy"],
+        "default_without_edge_service_count": 6,
+        "test_only_services": ["minio", "test"],
+        "database_public_port": false,
+        "redis_public_port": false,
+        "only_host_binding": "proxy -> 127.0.0.1:${N5_EDGE_PORT:-4181}:80",
+        "tls_constraint": "The edge proxy is loopback HTTP; public TLS must be supplied by an external proxy or by an explicitly adapted Caddy configuration."
+      },
+      "production_images": {
+        "dockerfile": "projects/05-podcast-clips-opus/Dockerfile",
+        "targets": ["web", "worker"],
+        "runtime_media_tools": "The common worker image installs ffmpeg, ffprobe, Python, OpenCV and NumPy; web excludes those tools.",
+        "reproducibility_gap": "The Dockerfile installs unpinned Alpine ffmpeg packages and comments say ffmpeg 7 while project docs claim ffmpeg 8.1; confirm the actual built image version before deployment."
+      },
+      "runnable_operations": [
+        "docker compose --profile edge --env-file <external-env> up -d --build",
+        "npm run db:migrate",
+        "scripts/check-env-complete.sh",
+        "scripts/check-env-wiring.sh",
+        "scripts/switch-to-clipmkr.sh",
+        "scripts/stand-set-yookassa.sh"
+      ],
+      "health": {
+        "web_route": "/health",
+        "web_check": "requires PostgreSQL SELECT 1",
+        "compose_checks": ["web /health", "db pg_isready", "redis authenticated PING"]
+      },
+      "persistent_data": [
+        {"volume": "pgdata", "purpose": "PostgreSQL source of truth"},
+        {"volume": "redisdata", "purpose": "Redis AOF queue transport"},
+        {"volume": "caddydata", "purpose": "edge proxy state"},
+        {"volume": "stt-work", "purpose": "STT local work files"},
+        {"volume": "llm-work", "purpose": "LLM worker work files"},
+        {"volume": "render-work", "purpose": "ffmpeg render work files"},
+        {"volume": "model-spend", "purpose": "paid-call attempt journal shared by model workers"}
+      ],
+      "external_persistent_store": "Cloud.ru-compatible S3 object storage is required for source and output media; production does not use the test MinIO service.",
+      "provider_env_names": [
+        "OPENROUTER_API_KEY",
+        "N5_LLM_MODEL",
+        "S3_ENDPOINT",
+        "S3_PUBLIC_ENDPOINT",
+        "S3_REGION",
+        "S3_BUCKET",
+        "S3_ACCESS_KEY",
+        "S3_SECRET_KEY",
+        "S3_FORCE_PATH_STYLE",
+        "N5_PAYMENTS_MODE",
+        "YOOKASSA_SHOP_ID",
+        "YOOKASSA_SECRET_KEY",
+        "YOOKASSA_TEST_MODE"
+      ],
+      "resource_basis": {
+        "minimum_candidate": {"vcpu": 4, "ram_gib": 8, "ssd_gib": 80},
+        "classification": "component-based planning floor, not a measured production claim",
+        "cpu_ram_reasons": [
+          "worker-stt runs up to two jobs concurrently and performs local ffmpeg extraction/chunking before remote STT",
+          "worker-video runs one ffmpeg render at a time and invokes Python/OpenCV face detection",
+          "web, PostgreSQL, Redis and three Node worker processes run concurrently",
+          "compose has no CPU or memory limits, so an oversized or adversarial media job can pressure the whole VM"
+        ],
+        "disk_reasons": [
+          "uploads are accepted up to 2,000,000,000 bytes",
+          "each source-processing worker reserves three times source bytes before download",
+          "STT concurrency two can reserve about 12 GB in stt-work; render concurrency one can reserve about 6 GB in render-work",
+          "the floor also leaves room for images, PostgreSQL, Redis AOF and Docker layers"
+        ],
+        "browser_and_oom": "Playwright browsers are test tooling launched by scripts/check-responsive.sh and are not part of production compose. Production OOM exposure is instead ffmpeg/OpenCV plus Node concurrency; face detection streams one raw frame at a time, but no container memory limit is present. Keep browser checks on a separate runner or budget extra RAM temporarily."
+      },
+      "blockers": [
+        "Provide an external env with all required ceilings, database/Redis/session secrets, public origin, S3 and OpenRouter configuration without copying repository secrets.",
+        "Choose and configure the public TLS ingress; the current edge profile binds only to loopback HTTP.",
+        "Confirm actual ffmpeg/ffprobe/OpenCV versions from the built worker image and set operational memory limits after a media smoke measurement.",
+        "Define backups for pgdata and model-spend; decide whether in-flight Redis/work volumes need crash-consistent recovery or can be reconstructed from PostgreSQL/S3."
+      ]
+    },
+    "06": {
+      "project": "projects/06-rag-sales-chatbase",
+      "application_status": "runnable full application",
+      "compose": {
+        "base_path": "projects/06-rag-sales-chatbase/docker-compose.yml",
+        "stand_overlay": "projects/06-rag-sales-chatbase/compose.stand.yml",
+        "service_count": 6,
+        "steady_service_count": 5,
+        "services": ["proxy", "web", "worker-index", "migrate", "db", "redis"],
+        "one_shot_services": ["migrate"],
+        "database_public_port": false,
+        "redis_public_port": false,
+        "only_host_binding": "proxy -> 127.0.0.1:${N6_HTTP_PORT:-8086}:80",
+        "stand_dependency": "compose.stand.yml requires the pre-existing external Docker network talk-ai-public and a separate shared TLS proxy."
+      },
+      "production_images": {
+        "app_dockerfile": "projects/06-rag-sales-chatbase/Dockerfile",
+        "targets": ["web", "worker", "migrate"],
+        "proxy_dockerfile": "projects/06-rag-sales-chatbase/proxy/Dockerfile",
+        "proxy_note": "Builds Caddy with the caddy-ratelimit module; production worker has no browser."
+      },
+      "runnable_operations": [
+        "docker compose -f docker-compose.yml -f compose.stand.yml --env-file <external-env> up -d --build",
+        "npm run db:migrate",
+        "scripts/check-env-complete.sh",
+        "scripts/check-env-wiring.sh",
+        "scripts/stand-set-yookassa.sh"
+      ],
+      "health": {
+        "web_route": "/health",
+        "web_check": "requires the PostgreSQL vector extension",
+        "worker_check": "heartbeat file newer than 120 seconds",
+        "compose_checks": ["proxy Caddy admin endpoint", "web /health", "worker heartbeat", "db pg_isready", "redis authenticated PING"]
+      },
+      "persistent_data": [
+        {"volume": "pgdata", "purpose": "PostgreSQL plus pgvector/HNSW source of truth"},
+        {"volume": "redisdata", "purpose": "Redis AOF queue transport"},
+        {"volume": "caddydata", "purpose": "proxy state"},
+        {"volume": "uploads", "purpose": "raw PDF while indexing"},
+        {"volume": "model-spend", "purpose": "paid model-call attempt journal"}
+      ],
+      "provider_env_names": [
+        "OPENROUTER_API_KEY",
+        "ANSWER_MODEL",
+        "EMBED_MODEL",
+        "N6_PAYMENTS_MODE",
+        "YOOKASSA_SHOP_ID",
+        "YOOKASSA_SECRET_KEY",
+        "YOOKASSA_TEST_MODE"
+      ],
+      "resource_basis": {
+        "minimum_candidate": {"vcpu": 4, "ram_gib": 8, "ssd_gib": 80},
+        "classification": "component-based planning floor, not a measured production claim",
+        "reasons": [
+          "PostgreSQL is explicitly started with shared_buffers=2GB and also maintains pgvector indexes",
+          "the index worker is concurrency one but PDF extraction permits a 384 MiB child RSS ceiling in addition to the parent Node process",
+          "web, worker, Redis, PostgreSQL and custom Caddy run together",
+          "disk growth depends on indexed corpus and HNSW data; the 80 GB floor is an initial deployment floor, not capacity planning"
+        ]
+      },
+      "blockers": [
+        "A clean Cloud.ru VM does not have talk-ai-public or the referenced shared TLS proxy; either recreate that edge contract or replace the stand overlay with a dedicated TLS ingress.",
+        "Provide the external env including 14 QUOTA_* values and provider configuration.",
+        "Size PostgreSQL disk from the expected corpus and establish backups for pgdata; preserve uploads/model-spend according to recovery policy."
+      ]
+    },
+    "07": {
+      "project": "projects/07-cold-email-warmup",
+      "application_status": "not deployable",
+      "full_application": false,
+      "inventory": "Only README.md exists. There is no source code, package manifest, Dockerfile, compose file, environment template, database schema, health route, mail provider adapter, queue, scheduler, or persistent state implementation.",
+      "service_count": 0,
+      "provider_env_names": [],
+      "network_and_deliverability": "The README describes mailbox warmup, mailbox rotation, unsubscribe and stop-list behavior, AI replies and n8n chains only as intended product behavior. No SMTP/IMAP/API provider, DKIM/SPF/DMARC verification, bounce/complaint handling, sending limits, suppression enforcement or scheduler state exists in code.",
+      "resource_basis": {
+        "minimum_candidate": null,
+        "classification": "cannot size components that are not implemented"
+      },
+      "blockers": [
+        "Hard blocker: build the full application and deployment stack; a static mockup would not satisfy scope.",
+        "Select a mail provider and define credentials, domain authentication checks, warmup/send scheduler, durable campaign state, idempotency, reply detection, unsubscribe/suppression, bounce/complaint handling and health/readiness behavior before any VM deployment.",
+        "No email was sent and no provider/network probe was made during this inventory."
+      ]
+    },
+    "08": {
+      "project": "projects/08-interior-ai-redesign",
+      "application_status": "runnable full application",
+      "compose": {
+        "base_path": "projects/08-interior-ai-redesign/docker-compose.yml",
+        "public_overlay": "projects/08-interior-ai-redesign/compose.public.yml",
+        "local_steady_service_count": 3,
+        "public_steady_service_count": 4,
+        "services": ["db", "web", "worker", "proxy"],
+        "optional_one_shot_services": ["migrate via tools profile"],
+        "database_public_port": false,
+        "local_host_binding": "web -> 127.0.0.1:${N8_HTTP_PORT:-3088}:3000",
+        "public_host_bindings": ["proxy -> 0.0.0.0:${N8_PROXY_HTTP_PORT:-80}:80", "proxy -> 0.0.0.0:${N8_PROXY_HTTPS_PORT:-443}:443"],
+        "public_behavior": "The overlay removes the web host port, exposes only Caddy 80/443, and keeps PostgreSQL/assets private."
+      },
+      "production_images": {
+        "dockerfile": "projects/08-interior-ai-redesign/Dockerfile",
+        "image": "one application image used by web, worker and migrate",
+        "runtime_components": ["Node 24", "Next.js custom server", "PostgreSQL 16", "tesseract", "sharp", "GLB parser/validator", "worker"]
+      },
+      "runnable_operations": [
+        "npm run setup:local",
+        "docker compose build",
+        "docker compose up -d db",
+        "docker compose --profile tools run --rm migrate",
+        "docker compose -f docker-compose.yml -f compose.public.yml up -d web worker proxy",
+        "npm run start:web",
+        "npm run start:worker"
+      ],
+      "health": {
+        "liveness_route": "/health/live",
+        "readiness_route": "/health/ready",
+        "readiness_requirements": ["database schema ready", "private asset directory is a real readable/writable/searchable directory", "at least 512 MiB free on asset filesystem", "live AI rates not expired"],
+        "worker_check": "heartbeat JSON state ready and no older than 60 seconds",
+        "proxy_check": "Caddy admin endpoint"
+      },
+      "persistent_data": [
+        {"volume": "database", "purpose": "PostgreSQL source of truth and asset metadata"},
+        {"volume": "assets", "purpose": "private user uploads, normalized images, self-contained GLB and share derivatives; mounted only by web/worker"},
+        {"volume": "tls-data", "purpose": "Caddy certificate/state data in public overlay"},
+        {"volume": "tls-config", "purpose": "Caddy config state in public overlay"}
+      ],
+      "asset_constraints": [
+        "GLB upload maximum 25 MiB; reference/room image upload maximum 10 MiB",
+        "64 assets/project, 200 MiB/project and 1 GiB/account are the implemented storage ceilings",
+        "GLB validation allows up to 750,000 vertices, 250,000 triangles and two 8K-equivalent texture pixel budgets",
+        "local asset volume prevents naive independent web/worker replicas without a shared filesystem"
+      ],
+      "backup_constraints": [
+        "Architecture explicitly requires a consistent backup of PostgreSQL plus the assets volume because database rows contain private object keys, sizes and hashes.",
+        "For a restorable snapshot, quiesce web and worker writes, capture pg_dump or a database-consistent snapshot and the assets volume as one recovery point, then verify referenced files/hashes after restore.",
+        "Do not use docker compose down -v. Preserve tls-data/tls-config when moving the current endpoint or accept certificate reissuance as a separate edge operation.",
+        "Uncertain AI jobs and payment events must not be blindly replayed after restore; reconcile durable job/payment state."
+      ],
+      "provider_env_names": [
+        "N8_AI_MODE",
+        "N8_OPENROUTER_API_KEY",
+        "N8_AI_MODEL_ID",
+        "N8_AI_ALLOWED_MODELS",
+        "N8_AI_RATE_INPUT_MICRO_USD_PER_MILLION",
+        "N8_AI_RATE_OUTPUT_MICRO_USD_PER_MILLION",
+        "N8_AI_RATE_VALID_UNTIL",
+        "N8_AI_MAX_TOKENS",
+        "N8_AI_REQUEST_OVERHEAD_TOKENS",
+        "N8_AI_JOB_CAP_MICRO_USD",
+        "N8_AI_ACCOUNT_DAY_CAP_MICRO_USD",
+        "N8_AI_GLOBAL_DAY_CAP_MICRO_USD",
+        "N8_AI_PROVIDER_LIMIT_RESET",
+        "N8_AI_PROVIDER_CAP_MICRO_USD",
+        "N8_AI_PROVIDER_HARD_LIMIT_VERIFIED",
+        "N8_AI_OPERATOR_ENABLED",
+        "N8_PAYMENTS_MODE",
+        "N8_PAYMENT_SHOP_ID",
+        "N8_PAYMENT_SECRET",
+        "N8_PAYMENT_TEST_MODE",
+        "N8_PAYMENT_SKUS_JSON"
+      ],
+      "resource_basis": {
+        "minimum_candidate": {"vcpu": 2, "ram_gib": 4, "ssd_gib": 40},
+        "classification": "component-based planning floor, not a measured production claim",
+        "reasons": [
+          "compose caps db, web and worker at 512 MiB each and proxy at 256 MiB, totaling 1.75 GiB before Docker and host overhead",
+          "sharp, tesseract and bounded GLB/image parsing can use native memory inside web/worker caps",
+          "40 GB is only an initial floor; retained private assets can grow to 1 GiB per account and database/TLS/Docker storage is additional"
+        ]
+      },
+      "blockers": [
+        "Preserve and review the dirty Caddyfile before generating deployment config; it currently carries an additional shino virtual host and host-gateway upstream unrelated to N8.",
+        "Change the sslip.io/public-host settings for the Cloud.ru public IP and run the repository port-conflict guard before binding 80/443.",
+        "Create and test the coupled database+assets backup/restore procedure before migration.",
+        "Keep AI manual and payments off unless separately authorized provider configuration, budgets and live checks are supplied."
+      ]
+    }
+  },
+  "evidence": [
+    {"path": "projects/05-podcast-clips-opus/docker-compose.yml", "sha256": "39f582715dbaae94f72522a150cd8117184a17f432bcf2f2574789ada5edde21"},
+    {"path": "projects/05-podcast-clips-opus/Dockerfile", "sha256": "3227c26d2a31af2c242867465285f8e7a07329d246f45a283edad337d1d9bfbf"},
+    {"path": "projects/05-podcast-clips-opus/.env.example", "sha256": "d7ebfa5958d058276f02db3d59331616a2b5c9f29f7c9bdfbff2e650568ec547"},
+    {"path": "projects/05a-podcast-clips-opus/README.md", "sha256": "ef62c5c501c344b7aefa9a16a2bc730a71f8c0d3a10d59e0c860edc88ffb8364"},
+    {"path": "projects/05a-podcast-clips-opus/docs/Architecture-compose.md", "sha256": "d311b55853470b726c46bc3e41b8d2c8cf5149f98e94caa43ef062673aea0800"},
+    {"path": "projects/06-rag-sales-chatbase/docker-compose.yml", "sha256": "7d714673f334676fc8cd9837f1c63d23c98193a0eac0255e4eb58d0e28f58992"},
+    {"path": "projects/06-rag-sales-chatbase/compose.stand.yml", "sha256": "1de61427ccb08196dc28bfc0bf2b9c04d30a93480a997b44dbfafe1f2ec4cdbc"},
+    {"path": "projects/06-rag-sales-chatbase/Dockerfile", "sha256": "713189844f797e578fae6642f50399d7e483bdced655b25a036a46295b4e666d"},
+    {"path": "projects/06-rag-sales-chatbase/.env.example", "sha256": "16784e0775fcb8c736ba8e37bd94c392b8b0c1a111f67a38a271702438725c07"},
+    {"path": "projects/07-cold-email-warmup/README.md", "sha256": "4dce3b08c9e81060e1da52b79783d769ccbd73fa6863a42581187be552169f41"},
+    {"path": "projects/08-interior-ai-redesign/docker-compose.yml", "sha256": "69bcdfc94f56f453920258c0f3892182fca01085b9946e4129c8d5215b0688f6"},
+    {"path": "projects/08-interior-ai-redesign/compose.public.yml", "sha256": "0f92b35203bf4c826d3799ae6ee85aeb6f35169c8d77aee478bae5d777491436"},
+    {"path": "projects/08-interior-ai-redesign/Dockerfile", "sha256": "fbec2c4408ee14411ec44d581f571e466c25f2f53deed2a398f623a179646e43"},
+    {"path": "projects/08-interior-ai-redesign/.env.example", "sha256": "75c25956e75b3a456e7c285bfd5a7dd0f66873aed9f141cb19d151089fe15bc5"},
+    {"path": "projects/08-interior-ai-redesign/config/public/Caddyfile", "sha256": "9e997a654174f7bc631e87e9c3f73f7583d0520ae0bde6e5bec4dd0e0498ff50", "state": "dirty-preserved"}
+  ],
+  "verification": {
+    "checks": [
+      "root and project instructions read",
+      "project-work-companion preparation guidance read",
+      "baseline git revision matched",
+      "compose/Dockerfile/package/scripts inspected read-only",
+      "database and Redis host-port publication checked in manifests",
+      "health routes located in source",
+      "provider variable names extracted without reading secret values",
+      "evidence SHA-256 values computed",
+      "JSON parsed after creation"
+    ],
+    "containers_started": false,
+    "network_calls": false,
+    "tests_run": false,
+    "tests_reason": "Read-only inventory requested; no new validation run or container mutation authorized.",
+    "e2e_preflight": {"status": "not_applicable", "reason": "No E2E execution in this read-only inventory."}
+  },
+  "telemetry": {
+    "repository_path": "projects/08-interior-ai-redesign/docs/telemetry/p-replicator/20261021T110921Z-cloudru-eight-ac67/",
+    "ownership": "coordinator-owned existing untracked run directory; not modified by this worker",
+    "external_output": "/tmp/cloudru-eight-inventory-5-8.json"
+  }
+}

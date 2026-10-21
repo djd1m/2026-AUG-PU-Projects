@@ -1,0 +1,11 @@
+# Reference repair result
+
+Implemented: owner-approved server-only budget account mode without internal credits; all spend/identity guards retained. Continuous-region segmentation replaces isolated triangle recolouring. Entire model gate includes unsupported renderable Mesh/InstancedMesh; pending/failing/new-shell status cannot promise3D application. Unsupported scans keep original materials with palette-only action. Source mesh/shell and existing designs remain unchanged.
+
+Observed private actual scan calibrated1.534455: eligibility false,67.27% support. Local Chromium confirms original pixels identical in safe mode; forced candidate visually rejected. No private screenshot/asset committed. Accurate semantic colour transfer for this scan remains NOT READY; only unsafe overlay suppression and honest palette analysis delivered. No new paid inference in this repair.
+
+Verification: full regression296/296 before final concrete guard/provider corrections; affected final23/23 and separate provider suite recorded in telemetry. Final build includes typecheck; lint/public browser/runtime proof retained in evidence when completed. Independent plan/budget/geometry/provider review and targeted closures retained separately, including rejected first candidates.
+
+Anti-drift: docs/decision-log.md DRIFT-REFERENCE-PATCHES. No internal credit mint/refund, no historical cost alteration, no new dependencies/table/provider endpoint, no global model settings. Existing OpenRouter fractional currency handling repaired with conservative micro precision and exact raw cap comparisons. Profile compact-quality-first-v2; actual executor model/usage unavailable, never claimed measured. Geometry author existing requestedAstraHigh actualunknown. Final timing/status/remaining verification in current reference-patches run.json.
+
+Final observed validation: final build/typecheck/lint pass; provider precision11/11; public Docker Playwright6checks pass incl eligible3colour and sparse-original pixel equality. Live GET key proof passes after fractional balance fix; ownerCreditRequired=false with0credits, otheractorsrequirecredits. Exact image/source binding in preflight-browser-1.json. Runtime DB container identity/start unchanged. No new paid model generation during repair.

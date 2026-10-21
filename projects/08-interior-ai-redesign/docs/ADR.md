@@ -1,28 +1,44 @@
-# Architecture Decisions
+# N8 — ADR register v0.1
 
-## ADR-001 — depth-conditioned generation
-Accepted design2026-10-02: Stable Diffusion + ControlNet-depth in separate worker. OpenAI-only instruction applies coding agents; product imagegen exception is explicit. Prompt-only generation rejected. Runtime quality and latency remain unverified until actual GPU corpus. PD-QUALITY-001 accepted.
+Status of ADR-001…010: **proposed implementation decisions under authorized scope**, pending independent validation. Owner has selected A and authorized autonomous code/spec corrections; status is not evidence of implementation. All IDs are immutable; changed decisions get dated amendments/reasons/tests.
 
-## ADR-002 — transaction owns credits and jobs
-PostgreSQL queue and ledger share one transaction boundary. Reserve once, fence each attempt, release once on terminal failure. Redis unnecessary; network/image work outside locks. Lease30s, heartbeat10s, deadline180s and attempts2 are initial bounded values, revisited only with measurement.
+| ID | Context and decision | Alternative rejected / consequence | Requirement → algorithm → tests |
+|---|---|---|---|
+| ADR-001 | Reuse N6/N5 Next/TS/Postgres modular monolith; pure domain public subpaths, concrete adapters and composition root | Copying an entire app drags donor business rules; new framework/microservice stack wastes bounded scope | FR-foundation-1/2 → Authenticate/ProjectCommand → auth/ownership/module-import-guard |
+| ADR-002 | Manual measured rectangle+openings and self-contained GLB first; immutable shell with calibration and unknown physical accuracy | Splat/AI image cannot be metric evidence; broad format import waits for fixtures | FR-space-1/2, FR-design-1 → CalibrateSpace/StorePrivateAsset/ValidateAndRenderScene → calibration/asset-boundaries/shell-mutation |
+| ADR-003 | One deterministic Babylon renderer, constrained declarative scene, manual/preset mode fully useful | Arbitrary generated code/shell meshes prohibited; no automatic photorealism promise | FR-design-1/2/3 → scene/revise/proposal procedures → schema-negative/geometry/browser-viewer |
+| ADR-004 | Postgres N4 lease+fence plus once-only dispatch marker; no automatic retries after uncertain live call | Redis/BullMQ already available donors but adds service without transactional admission benefit here; pg-boss considered at feature reuse gate | FR-design-3, NFR-cost-1 → SubmitAndRunProposal → two-worker/midnight/uncertain-budget |
+| ADR-005 | Manual official-source product snapshots; CatalogueProvider can return blocked; regions/time/unknown explicit | Retail scraping 401s cannot be promoted to live catalogue; no CAPTCHA bypass | FR-procurement-1 → RecordProductSnapshot → blocked/stale/region-change |
+| ADR-006 | Exact decimal quantities and integer minor-money, immutable budget snapshots, unknown separate from zero | Floating-point sums and silent missing delivery create false total | FR-procurement-2/3, NFR-integrity-1 → CalculateBudget/ReplaceAndPhase/ReviseAndApprove → pack-boundary/unknown/phase/CAS |
+| ADR-007 | Adapt N6 ЮKassa, payment default off, trusted SKU, credits+export entitlement, event transaction and refund hold | Fake storefront and client-return confirmation unacceptable; subscriptions/commissions excluded | FR-billing-1/2 → Checkout/ApplyVerifiedPayment → off/config/duplicate/refetch/rollback/refund |
+| ADR-008 | Private revocable share of reencoded visual only, owner preview, free watermark; public gallery deferred | Full project sharing leaks measurements; SEO gallery adds public-content lifecycle outside bounded homeowner core | FR-sharing-1/2 → ExportAndShare/RecordGrowth → redaction/revoke/cache/watermark |
+| ADR-009 | Local private asset adapter from N6, bounded decoders, authorization on each GET; S3 port retained | Public upload directory violates isolation; deploying MinIO now unnecessary | FR-space-2, NFR-security-1 → StorePrivateAsset/GuardRequest → cross-owner/URI/bomb/orphan |
+| ADR-010 | Default no external paid activity; exact config+caps and provider guardrail required; 8h target/10h autonomy cap do not waive checks | Target speed is owner's delivery constraint, not throughput proof; stopping unverified is preferable to claiming success | NFR-cost-1/operations-1/performance-1 → proposal/boot/bounds → config/no-egress/compose/bench |
 
-## ADR-003 — provider-verified generation pack
-PD-MONEY-001 accepted under owner autonomy instruction recorded in `decisions-owner.md`; 20 generations/900RUB hypothesis. YooKassa hosted checkout plus API status verification; no invented signature. Free1, no payouts/subscription/referral rewards. New external spend0 and no actual charges. Old N6 time-plan/commission logic deliberately not copied.
+## Amendment log
 
-## ADR-004 — small web surface and private media
-Node22 ESM API + native UI avoids a framework build for this bounded MVP. Auth, SQL, image normalization and provider integration reuse inspected N5/N6 patterns with local tests. Private volume never publicly mounted. Public media limited to consented composite; runtime images must be quality accepted before public indexing.
+Validation corrections are recorded below; no application implementation yet. For each future change record `timestamp, decisionId, before, after, requirement IDs, rationale, rejected alternative, source/spec/code revisions, checks rerun/results`. Never silently edit a requirement solely to make a test green. Concrete autonomous changes stay within owner authorization; paid spend/public publication are separate actions.
 
-## ADR-005 — labelled fixtures and evidence
-Fixture worker/test payment exist only explicit local test mode. They exercise flow/security and cannot pass geometry, GPU latency or real provider gates. Quality unverified/rejected are separate from job status; stale worker never publishes. Pipeline walkthrough records evidence as work evolves; no fabricated production claims.
+## Growth disposition
 
-## ADR-006 — hosted depth inference and conservative remote effects
+| Seed / original ID | Decision | Downstream coverage |
+|---|---|---|
+| FR-GROWTH-101 private preview | MVP preview and manually copied private link | FR-sharing-1, SC-US-014-1/2 |
+| FR-GROWTH-102 guest preference | Defer in-app voting/comments; close person views image and discusses outside app | FR-sharing-1; no ghost feedback event |
+| FR-GROWTH-103 selected content/revoke | MVP image+caption only, no size/address/budget by default or hidden fields | SC-US-014-2/3, share-privacy tests |
+| FR-GROWTH-104 viewer begins own project | MVP link to own registration/project, no copy of source private inputs | FR-sharing-2, SC-US-015-1 |
+| FR-GROWTH-105 store partnerships | Deferred by explicit owner instruction | No MVP provider credentials/affiliate tables |
+| Original FR-GROWTH-001 | First design view contains share/export affordance | SC-US-014-1, first_design_viewed event |
+| Original FR-GROWTH-003 | Free watermark, verified package removes it | FR-billing-1/2 + FR-sharing-1, export-entitlement |
+| Original FR-GROWTH-005 | Public SEO gallery deferred: moderation/rights/indexable value unavailable in this delivery | Private homeowner chain remains complete |
+| Original FR-GROWTH-004 | Realtor/blogger affiliate program deferred with wider partner scope | No incentive/CAC/revenue-share claims |
 
-Accepted software design2026-10-03 after F07 PLAN/VALIDATE and I1–I6 independent slice closures. Dated specialization of ADR-001/002/005: explicit replicate uses the pinned hosted depth contract; explicit local controlnet and its historical proof remain. [Original F07 spec](features/f07-replicate/01_specification.md) SHA256 `2f63500b8299fb4dba537b9c3494493116fa581d68ba72e34b662e21616d27ad` is unchanged.
+Partner deferral does not remove shopping links. Export/share-created metrics are observable; actual social publication rate remains unmeasured without direct evidence.
 
-DB cannot make remote HTTP exactly-once. Commit preflight→submitting CAS and conservative envelope reservation before one create invocation; never replay ambiguous/submitting work. Known ID recovery uses GET under the original attempt/ticket/deadline with a new fence. This sacrifices automatic retries after paid submission, including failure/cancel, to bound invocation count. Reservation never decrements; customer credit release is a separate local effect, not provider refund. Migration007 creates submission/envelope authority,008 adds closed hosted evidence while retaining historical rows.
+## 2026-10-13 validation amendments (owner autonomous authority)
 
-SEC-02 explicitly specializes Replicate JSON response to512KiB and request384KiB for sanitized≤256KiB JPEG data URI; other providers remain64KiB, all calls≤5s/original budget. Input stays private; delivery is strict HTTPS/public-IP-pinned and≤10MiB/20MP/single frame. Public predicates admit controlnet OR replicate only with accepted hash-bound quality/consent/hold checks. No fabricated local provenance: provider hardware/warm/inference/bill and sources are null. PERF-03 warm≥30/p95≤25s remains unchanged/unmeasured.
-
-Cleanup is independent default-false opt-in, private token WeakMap, no create authority:30s fenced claim, one persisted cancel request then GET on later passes,5s remote window, stop by submitting+1h as unresolved if unknown. A crash can leave cancel recorded but unsent; only observed canceled confirms. No erasure, instantaneous stop or billing ceiling guarantee. Generic prompt-only generation/public input URL/hidden POST retry/new scheduler/GPU fallback are rejected.
-
-Real license/privacy/safety/corpus/billing controls and provider deployment/pilot are pending with external spend0. Proposed36 creates/12USD (0.30USD modeled reservation/create) is not approval or a provider guarantee. I7 runtime, fresh integrated Astra review and I8 actual52+2 browser/hosted-row restore remain gates; draft PR is not release.
+ADR-001/009: one custom socket-peer HTTP entrypoint,72 UTF-8-byte bcrypt bound, rate-before-parse and finite asset resource reservations; no new authentication framework/parser engine.
+ADR-004/010: exact consent request snapshot, dispatch mark as linearization, detached late draft, idempotency replay before admission, local audited reconciliation; retain uncertain holds across midnight and no paid retries.
+ADR-006: complete immutable budget input, element-bound quantity sources/wall opening subtraction, server-computed reserve enum and phase preview. Client custom reserve amount rejected; history never derives from mutable current rows.
+ADR-007/008: distinct partial-refund verification by refund→payment→order; server export provenance and refund revocation of unwatermarked derivatives. Private pixels require owner preview; no claimed automatic pixel redaction/OCR.
+All retain owner CJM/core scope and mandatory checks; reasons and before/after source hashes in validation/fix-source-manifest.json. Provider capability inventory unchanged. No paid call/public release authorized.

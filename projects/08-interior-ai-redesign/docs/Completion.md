@@ -1,52 +1,61 @@
-# RoomKind — Completion and Operations
+# N8 — Completion / local delivery contract
 
-Текущий итог 2026-10-03: F07 AC1–11 локального software scope приняты; actual52+2 browser и hosted DB/private-media restore PASS. [Итог и точные доказательства](features/f07-replicate/local-acceptance.md). Ниже сохранены исторические состояния стадий; реальный платный пилот, качество и внешний релиз остаются закрытыми gates.
+Status: **implemented and verified local delivery**. The six product modules, web, worker, PostgreSQL schema, private assets and offline-tested provider adapters are integrated. Public deployment, paid inference and live payment remain outside scope.
 
-2026-10-03 I7 documentation reconciliation, source `be450153910208e2c043de24f7efab540b052c82`. Accepted I1–I6 includes R1/R2/R3 closures; I7 full runtime is pending at author time on parent-owned source `8890e0b7`. Fresh whole-feature review and I8 actual52 main+2 disabled browser/hosted-row restore remain pending. Historical proof retains its tested revision; this update does not declare F07/full MVP ready.
+## Delivered implementation
 
-## Deployment Plan
-Current authority covers reversible local implementation and review, not deployment. Before live release: all unit/integration/E2E gates pass, real selected-mode geometry corpus and unchanged warm performance gates pass, provider test-mode evidence obtained, security review closed, dependency audit complete, secrets configured server-side, owner approves external spend and destination. A draft PR may disclose pending gates; it is not accepted MVP.
-
-## Deployment Sequence
-1. Verify exact commit/lockfile and source/build receipts; use the actual scripts in `package.json`: `npm test` covers foundation boundaries/media, `npm run lint` and `npm run build` are syntax/static checks. The remaining named PG/browser/GPU suites are separate mandatory gates; do not claim a full regression from `npm test` alone. Run migrate against an isolated backup-restorable database and exercise rollback procedure.
-2. Before any compose start run root `bash scripts/check-port-conflicts.sh projects/08-interior-ai-redesign/compose.yaml` (from repository root, using the same private interpolation configuration); use internal database and loopback parametrized web port, never default credentials. Coordinate heavy builds with root and cap CPU2.
-3. Start exact images, check readiness and actual browser journey with companion preflight. Production deployment remains a separate approval, and no `deploy.sh` or production release automation exists in this source. Local Compose startup does not establish a release.
-
-## Rollback Procedure
-Stop new jobs, allow active fenced attempts to finish or timeout, preserve database and private volume. Roll back image version only after backward compatibility check; do not erase payment/ledger records. Migrations are versioned; inspect all eight before rollback, including007 provider submission/budget,008 hosted evidence/nullability and historical attribution cleanup. No down-migration CLI exists. Restore test backup into isolated DB to prove procedure; never rewrite live ledger or historical telemetry. Monetary discrepancies go to operator review.
-
-## Monitoring and logging
-
-| Metric | Threshold | Destination |
+| Area | Current implementation | Boundary |
 |---|---|---|
-| Response time p99 | >500ms API excluding generation | local operator report; PagerDuty not configured |
-| Error rate | >1% over30 requests | local report; Slack not configured |
-| CPU usage | >80% | local report; Email not configured |
-| Expired leases | any >60s without reclaim | worker health report |
-| GPU quality | any moved window/door | reject result and investigate |
+| Foundation | auth/session, owner projects, exact-Origin and atomic rate guards, redacted health/logging | final composed browser journey passed on image 8 |
+| Space | manual measured shell, private raster/GLB assets, references, plan and Babylon viewer | synthetic GLB tested; no actual Scaniverse device sample |
+| Design | immutable revisions, approval/history, manual presets, fenced worker jobs and OpenRouter adapter | manual default; live Gemini quality/cost not measured |
+| Procurement | manual provenance snapshots, exact packages, unknown costs, phases, substitutions and CSV | retailer pages returned 401; no bypass/automatic catalogue claim |
+| Billing | off/live config, durable intent, provider refetch, exactly-once credits and refund hold | local default off; no real merchant/live payment claim |
+| Sharing | normalized export, watermark entitlement, private expiring/revocable link and observed growth events | no public gallery or external analytics |
 
-These thresholds/retention are operator targets, not observed production SLOs or an installed monitoring pipeline. The named external monitoring services are not integrated; no alert delivery claim. Current source emits bounded status/error markers and opaque identifiers; structured JSON aggregation and automatic retention are not installed. Logging policy excludes image bytes/password/provider secrets. Local test retention target30d and production retention require an operator process and owner deployment decision. Telemetry unknown usage/cost stays null.
+Every feature AC remains defined verbatim in `docs/features/*/01_specification.md`. The 65 criteria are mapped exactly once to existing literal test titles in `docs/features/*/05_completion.md`. FND-FINAL-1 is closed: the RED probe reproduced foreign-reference 422, the correction returned consistent 404 without side effects, 47 affected tests passed, and the full regression passed 229/229. The corrected source and final runtime checks are bound to image 9.
 
-## Handoff
-Development: docs/Architecture.md, donor inventory, environment sample without secrets, pinned dependencies, bounded scripts. QA: deterministic labelled fixtures, two accounts, real Postgres concurrency, separate GPU corpus inputs/licenses. Operations: model availability, secret provisioning, DB backup, worker lease recovery, share revocation and payment review runbook. `pipeline-walkthrough.md` explains the actual evolving chain and distinguishes designed from measured behavior.
+## Local delivery procedure
 
-## Historical acceptance status — pre-hosted source, retained 2026-10-03
-Source `8030270f023d83c9cdd597c4578517a1b58b4b35`: F01 auth/private uploads, F02 queue/inference-controller/quality guards, F03 payment/partner software and F04a composition/publication backend have accepted historical source-bound receipts. F04b UI and specific corrections are independently reviewed. Actual UI6 completed42 main checks at1440/390 plus2 checks on a separately restarted disabled-payment server; see [F04 acceptance](features/f04b/acceptance.md). Failed attempts1–5 are retained unchanged.
+1. From the repository root run `bash scripts/check-port-conflicts.sh projects/08-interior-ai-redesign`.
+2. In the project run `npm ci` and `npm run setup:local`. The generated private `.env` uses AI `manual` and payments `off`.
+3. Run `docker compose build`, `docker compose up -d db`, `docker compose --profile tools run --rm migrate`, then `docker compose up -d web worker`.
+4. Require successful `/health/live` and `/health/ready`. Web is loopback-only at `http://127.0.0.1:3088`; remote use goes through `ssh -N -L 3088:127.0.0.1:3088 user@server`.
+5. Preserve image/source/config identity with test receipts. Stop only N8 containers; do not delete volumes needed for evidence or user data.
 
-[Individual41 AC map](features/f06a/acceptance-map.md) separates software evidence from real acceptance. F05 remains blocked: real CUDA/pinned safe weights and dependency/security compatibility, licensed12×3 corpus/openings/anchors and≥30warm p95≤25s have no accepted real evidence. GEOM-03 guards are tested but no real output quality acceptance is claimed. YooKassa fixture/HTTP tests do not establish real provider acceptance. No actual card charge/refund, payout, mail, GPU rental or deployment occurred in this docs scope.
+The database service uses `expose` only. Runtime app and migrator credentials are separate. No external provider call is needed for health or the manual homeowner path.
 
-F06a independent documentation preparation may complete without GPU. [English README](README/en.md), [Russian README](README/ru.md) and [operations](features/f06a/operations.md) describe existing commands/env names, manual configured stack and an inert owned synthetic PG16 restore procedure. [Actual restore receipt](telemetry/n8-20261002-1740/n8-f06-restore-1-receipt.md) verifies21tables/451rows and constraints, source unchanged, target cleanup; separate10file archive recovery passed. This does not claim an application restart against the recovered pair or production RPO/RTO.
+## Verification state
 
-F04 local software is accepted. F05/fullF06/MVP remain not done. This paragraph records the pre-hosted delivery state. Current F07 status and pending gates are below. Draft PR may target existing `claude/install-npm-packages-n7l3m5` with these gates disclosed; no main creation, merge or deployment is authorized. Deployment destination, secrets and external effects require the retained separate release authority.
+Completed evidence includes feature-level actual PostgreSQL/HTTP/filesystem tests, concurrency barriers, offline OpenRouter/ЮKassa fixtures, meaningful mutations, lint/typecheck/build receipts and independent reviews. Image 9 (`docker:sha256:3ac28e68ccef3576d428547f04bbbb9df3097bb8baf28823bdd87076611369cb`, build `z7Mp9IiPagz7p0uRCxACH`) passed the uninterrupted 21-check browser journey with no outbound/live calls. The source/image manifest matched all 148 runtime files.
 
-## Current F07 software and delivery gates — 2026-10-03
+`final-benchmark-4.json` records image 9 with 10 clients, 200 warm-ups, 1000 retained API measurements and p95 40.804434 ms; its pure 200-line case retained 1000/1000 golden hashes with one explicit unknown and p95 8.007006 ms. `restart-before-3.json` and `restart-after-3.json` bind image 9 to 12 equal checks covering two projects, revisions, budgets and original asset hashes, with readiness 200 and zero provider calls. The unchanged UI core passed 21 review checks. The hydration defect was reproduced RED on image 7, passed GREEN on image 8 and received an independent add-row closure.
 
-I1/I2/I3/I4a/I5a/I5b/I4b/I4c/I6a/I6b are accepted as bounded software, including preserved R1/R2/R3 finding closures; [I7 handback](features/f07-replicate/i7-documentation.md) indexes exact evidence and11 actual test-title mappings. Acceptance of each slice is not a fresh whole-feature runtime/review verdict. I7 full regression on parent-owned source8890e0b7 is **pending at this author's freeze**; parent reconciles later. No mutable runtime log is read here.
+The published `@dzhechkov/p-replicator@1.13.2` completion mode duplicates the project docs path and reports the real `Completion.md` as unreadable. The unmodified tool is therefore `NOT-ESTABLISHED`, not PASS. A temporary copy with the exact two-line variable-shadowing patch preserved validator logic and produced four PASS verdicts over 7 features / 65 criteria. See [pipeline checker compatibility](research/pipeline-checker-compatibility.md).
 
-Current schema is eight migrations. Optional hosted worker/cleanup profiles remain disabled/false and one-shot; tokens never enter web/browser. Hosted jobs attach private unverified evidence with hardware/warm/inference/billing null. Software mocks and synthetic reports cannot establish real geometry, license/privacy/safety/provider acceptance or performance. Reserved spend is never automatically decremented; cancel/unresolved is not erasure/refund.
+## External capabilities
 
-I8 owns actual image/startup/Compose and desktop1440/mobile390 **52 main+2 disabled-payment checks**, following a fresh ready companion preflight and existing mutexes. Accepted R3 harness accounts for5 registrations and13 unique main-owner reservations, preserving5/hour/IP and20/day. Historical UI6 42+2 remains valid only for its older source. Fresh independent whole-feature Astra review must receive exact spec, validation revision, implementation/docs snapshots and I7 proofs with I8 status explicit.
+OpenRouter live is fail-closed and requires key, allowlisted exact model ID, current rate validity, max tokens, request overhead, per-job/account/global caps, verified hard limit and operator enable. `google/gemini-4-argon` was observed as a candidate in the retained model catalogue; availability, tariff and fitness must be rechecked before activation. Current requests are bounded text/declarative scene JSON and cannot mutate the measured shell. No live call is authorized by this document.
 
-After I8 populates its owned DB, backup/restore must include representative provider_submission/provider_spend_budget/hosted generation_evidence and linked jobs/tickets/credits/media. Prior21tables/451rows plus10files is historical pre-hosted recovery only. No rollback to an older binary against hosted rows without compatibility review; disable admission, preserve remote IDs/reservations/ledger/private bytes, reconcile ambiguous costs and use an isolated restore.
+ЮKassa live requires HTTPS origin, actual shop credentials, test-mode declaration and server-owned SKU JSON. Webhook content is not financial proof; the server refetches provider state. Default local payment mode is off.
 
-Real provider license/privacy/content/safety/corpus, billing ceiling and pilot remain pending, authorized spend **0USD**. Proposed36 creates/12USD is not authorization or guaranteed billing. Warm≥30 real samples/p95≤25s remains unmeasured and unchanged. PR creation has known external403; **no PR exists** at author time. Parent owns any later permitted draft attempt/reconciliation; draft is not release, merge or deployment. F07/fullF06/MVP are not ready.
+Pinterest is supported as a saved public HTTPS link or user-uploaded image. No board/API import or server fetch is claimed. Retail catalogue refresh uses a blocked/manual-required adapter because tested pages returned 401; manual official links and provenance snapshots remain the supported path.
+
+## Rollback and operations
+
+Before a build change, retain the current image/config identity and backup owned database/asset volumes when data matters. On failure stop only N8 web/worker and restore a schema-compatible image. Test migration rollback only against disposable data; use a verified backup for destructive restore. A restart or restore must not redispatch uncertain paid jobs or replay payment events without provider evidence.
+
+Local signals are `/health/live`, `/health/ready`, worker heartbeat, structured redacted logs, job reservations/uncertain state, payment verification/refund hold and asset cleanup. No PagerDuty, Slack, external log shipper or production SLO is configured.
+
+## Documentation refresh receipt
+
+This delivery-document refresh used profile `compact-quality-first-v2`, requested model `gpt-5.6-sol` with high effort. The execution host did not expose actual model or usage counters, so both remain `null`; no cost or savings claim is made. `dz recall` ran before edits and returned no lesson applicable to delivery prose. Final evidence reconciliation and verdict remain coordinator-owned.
+
+## Criterion coverage
+
+| Criterion | Test file | Test title |
+|---|---|---|
+
+The parent Specification contains no AC headings: this empty parent wire table is not acceptance proof. All 65 actual criteria live in the seven feature specifications/completion tables and their measured test/runtime/review receipts.
+
+Final measured handoff:65/65 accepted; full229/229 plus separately targeted worker-crash1/1, no full230 claim. Tracked elapsed 5.453 hours; pre-record reading unmeasured. Requested Astra/high and Sol/high; actualmodel/usage/cost unavailable:null. Telemetry: `telemetry/p-replicator/20261013T202009Z-expanded-cjm-9f69/run.json`; receipt: `telemetry/p-replicator/20261013T202009Z-expanded-cjm-9f69/evidence/final-delivery-1.md`.

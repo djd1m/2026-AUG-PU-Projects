@@ -1,0 +1,21 @@
+{
+  "engine": "firefox",
+  "error": "page.waitForFunction: Timeout 5000ms exceeded.",
+  "checks": [
+    "chromium/emptynewroom has no guessed dimensions",
+    "chromium/actualnativeOCR horizontalverticalheight+privacy noautosave",
+    "chromium/keyboard importer select traversal +Enter transfer +missingheight focus",
+    "chromium/390px recognizeddrawing andAxe",
+    "chromium/recognizeddims transfer no retype; missingheight blocks save +focus+oldopenings cleared",
+    "chromium/printedheight transferred; editingresets consent; confirmedownedsource persisted",
+    "chromium/reloadsource link +immutable18m2plan",
+    "chromium/noOCR result honest and existingplan unchanged",
+    "chromium/foreign andabsent drawing equally404 before recognition",
+    "chromium/SecureHttpOnly +desktopoverflow",
+    "firefox/emptynewroom has no guessed dimensions",
+    "firefox/actualnativeOCR horizontalverticalheight+privacy noautosave"
+  ],
+  "violations": [],
+  "errors": [],
+  "outbound": []
+}

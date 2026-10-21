@@ -1,0 +1,159 @@
+{
+  "finishedAt": "2026-10-14T00:28:47.211Z",
+  "build": "docker:sha256:a5fc8e6e026202de422e86bad9004e48a943cc2d861120e30d10c8110a91a6d2",
+  "results": [
+    {
+      "name": "manual plan error retains draft and receives focus",
+      "pass": true,
+      "errorSource": "intercepted typed 422; no server mutation"
+    },
+    {
+      "name": "1440px keyboard tab 01 Обмеры",
+      "pass": true,
+      "width": 1440,
+      "scroll": 1440,
+      "focus": "3px",
+      "selected": "true",
+      "reachableByTab": true
+    },
+    {
+      "name": "1440px keyboard tab 02 Референсы",
+      "pass": true,
+      "width": 1440,
+      "scroll": 1440,
+      "focus": "3px",
+      "selected": "true",
+      "reachableByTab": true
+    },
+    {
+      "name": "1440px keyboard tab 03 Дизайн",
+      "pass": true,
+      "width": 1440,
+      "scroll": 1440,
+      "focus": "3px",
+      "selected": "true",
+      "reachableByTab": true
+    },
+    {
+      "name": "1440px keyboard tab 04 Покупки",
+      "pass": true,
+      "width": 1440,
+      "scroll": 1440,
+      "focus": "3px",
+      "selected": "true",
+      "reachableByTab": true
+    },
+    {
+      "name": "1440px keyboard tab 05 Смета",
+      "pass": true,
+      "width": 1440,
+      "scroll": 1440,
+      "focus": "3px",
+      "selected": "true",
+      "reachableByTab": true
+    },
+    {
+      "name": "1440px keyboard tab 06 До / после",
+      "pass": true,
+      "width": 1440,
+      "scroll": 1440,
+      "focus": "3px",
+      "selected": "true",
+      "reachableByTab": true
+    },
+    {
+      "name": "390px keyboard tab 01 Обмеры",
+      "pass": true,
+      "width": 390,
+      "scroll": 390,
+      "focus": "3px",
+      "selected": "true",
+      "reachableByTab": true
+    },
+    {
+      "name": "390px keyboard tab 02 Референсы",
+      "pass": true,
+      "width": 390,
+      "scroll": 390,
+      "focus": "3px",
+      "selected": "true",
+      "reachableByTab": true
+    },
+    {
+      "name": "390px keyboard tab 03 Дизайн",
+      "pass": true,
+      "width": 390,
+      "scroll": 390,
+      "focus": "3px",
+      "selected": "true",
+      "reachableByTab": true
+    },
+    {
+      "name": "390px keyboard tab 04 Покупки",
+      "pass": true,
+      "width": 390,
+      "scroll": 390,
+      "focus": "3px",
+      "selected": "true",
+      "reachableByTab": true
+    },
+    {
+      "name": "390px keyboard tab 05 Смета",
+      "pass": true,
+      "width": 390,
+      "scroll": 390,
+      "focus": "3px",
+      "selected": "true",
+      "reachableByTab": true
+    },
+    {
+      "name": "390px keyboard tab 06 До / после",
+      "pass": true,
+      "width": 390,
+      "scroll": 390,
+      "focus": "3px",
+      "selected": "true",
+      "reachableByTab": true
+    },
+    {
+      "name": "native 1600 RUB and optional dimensions reach request exactly",
+      "pass": true,
+      "capturedPriceMinor": 160000,
+      "capturedDimensions": [
+        "0.5",
+        "0.8",
+        "0.6"
+      ],
+      "mutation": "intercepted; not sent to server"
+    },
+    {
+      "name": "stored fresh snapshot is visibly stale after 24h",
+      "pass": true,
+      "fixture": "read response timestamp overridden; server snapshots untouched"
+    },
+    {
+      "name": "reference field error retains draft and receives focus",
+      "pass": true,
+      "errorSource": "intercepted typed 422; no server mutation"
+    },
+    {
+      "name": "saved budget reserve and limit restored",
+      "pass": true
+    },
+    {
+      "name": "budget error retains draft and receives focus",
+      "pass": true,
+      "errorSource": "intercepted typed 422; no server mutation"
+    },
+    {
+      "name": "WebGL initialization failure keeps plan and save available",
+      "pass": true,
+      "planCount": 2,
+      "scope": "forced initialization failure; manual shell"
+    },
+    {
+      "name": "saved GLB calibration restored on reload",
+      "pass": true
+    }
+  ]
+}

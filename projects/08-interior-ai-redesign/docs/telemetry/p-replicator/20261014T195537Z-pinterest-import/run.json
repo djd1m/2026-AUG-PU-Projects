@@ -1,0 +1,56 @@
+{
+  "run_id": "20261014T195537Z-pinterest-import",
+  "started_at": "2026-10-14T19:55:51.368932+00:00",
+  "status": "complete",
+  "profile": "compact-quality-first-v2",
+  "tier": "L",
+  "scope": "Automatically retrieve actual public Pinterest pin image when choosing URL reference; owned private storage; no user download unless public import genuinely unavailable",
+  "models": [
+    {
+      "role": "coordinator",
+      "actual": null
+    },
+    {
+      "role": "independent plan/code reviewer",
+      "actual": null
+    }
+  ],
+  "tokens": null,
+  "cost": null,
+  "source_revision": "f7d70f30edfc0a466a2cf497aecd9cd7ec7e12cd",
+  "measurement_gaps": [
+    "actual model/effort and billing unavailable"
+  ],
+  "timebox_minutes": 15,
+  "risk_flags": [
+    "new fixed Pinterest outbound import",
+    "untrusted HTML/redirect/image sizes",
+    "private asset ownership and CAS preservation"
+  ],
+  "ended_at": "2026-10-14T20:09:58.937855+00:00",
+  "elapsed_seconds": 847.6,
+  "checks": {
+    "plan_validation": "independent pass",
+    "review": "direct and short-link provenance plus error-recovery findings fixed; final closure pass",
+    "full_regression": "276 tests / 44 files pass before last focused corrections",
+    "targeted_final": "7 tests pass after final corrections",
+    "mutation": "removing external-host allowlist fails; source restored",
+    "typecheck_lint_build": "pass; final source bound to deployed image",
+    "browser": "6 scenarios pass; actual pin+ideas and byte-for-byte image verification, forced409 recovery, persisted selection",
+    "health": "public readiness200"
+  },
+  "build_revision": "sha256:c40f215ccfbe27b6b9b3e6de082402a2f75dc5b4a73e710cbe9df4fd67cd8774",
+  "inference_calls": 0,
+  "source_hashes": {
+    "packages/adapters/src/pinterest.ts": "31f7eb57796af01d025c28d6c6b2b988fec6d8103615b6f810b5f85c6381ff79",
+    "apps/web/src/server/reference-pinterest.ts": "91576b70d4337b009efc80ff4993855ef0f16f62fac6d995aee2b23ecc5d498c",
+    "apps/web/src/components/DesignReferences.tsx": "4276520c9bcb1150b490c409fac83895356e647e7759b29cfa10e30ff464d11b",
+    "apps/web/src/components/DesignPanel.tsx": "1b5bc8081b40073ef2b0644adae24b9e209d07f9c874be78c843da5295c1a254",
+    "apps/web/src/server.ts": "77c1019ff13088bcd56ac3b8532bc46db533ceca19eeca651cd1223eae89d136"
+  },
+  "pipeline": "L PLAN→independent VALIDATE→IMPLEMENT→independent REVIEW→targeted corrections→build/public browser. No claim of vendor global /feature gate execution.",
+  "retries": [
+    "two concrete security/recovery review corrections; targeted checks repeated",
+    "UI-1 screenshots raced DOM hydration after actual imports; UI-2 waits completed render and passes"
+  ]
+}

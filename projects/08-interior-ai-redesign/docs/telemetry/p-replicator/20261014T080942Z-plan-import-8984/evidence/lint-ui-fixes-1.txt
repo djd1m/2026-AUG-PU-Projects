@@ -1,0 +1,10 @@
+
+> n8-interior-planner@0.1.0 lint
+> eslint apps packages tests scripts --max-warnings 0
+
+
+/home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/apps/web/src/components/DrawingImport.tsx
+  23:294  error  'index' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+✖ 1 problem (1 error, 0 warnings)
+

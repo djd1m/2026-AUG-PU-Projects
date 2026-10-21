@@ -1,0 +1,13 @@
+{
+  "jsonrpc": "2.0",
+  "id": 5,
+  "result": {
+    "content": [
+      {
+        "text": "{\n  \"security_groups\": [\n    {\n      \"availability_zone_id\": \"\",\n      \"id\": \"58dc0ae2-5508-41f5-99a7-c24725f3cbad\",\n      \"name\": \"e2b-poc-20261009\"\n    },\n    {\n      \"availability_zone_id\": \"\",\n      \"id\": \"721538d7-85ca-452c-9a80-bce2d5fa8182\",\n      \"name\": \"kaizen-819-web\"\n    },\n    {\n      \"availability_zone_id\": \"\",\n      \"id\": \"89052348-2e80-4fdb-a3ac-cdceb723663a\",\n      \"name\": \"sg-permit-any-any\"\n    },\n    {\n      \"availability_zone_id\": \"\",\n      \"id\": \"46286230-99ba-4890-b7ea-34ff8577592c\",\n      \"name\": \"SSH-access_ru.AZ-2\"\n    },\n    {\n      \"availability_zone_id\": \"\",\n      \"id\": \"8d02e08b-0701-4ffb-8b48-55febf1ea6d1\",\n      \"name\": \"SSH-access_ru.AZ-3\"\n    },\n    {\n      \"availability_zone_id\": \"\",\n      \"id\": \"d3f3960a-4e15-4c7d-a9fc-fae09614f0f4\",\n      \"name\": \"SSH-access_ru.AZ-1\"\n    }\n  ]\n}",
+        "type": "text"
+      }
+    ],
+    "isError": false
+  }
+}

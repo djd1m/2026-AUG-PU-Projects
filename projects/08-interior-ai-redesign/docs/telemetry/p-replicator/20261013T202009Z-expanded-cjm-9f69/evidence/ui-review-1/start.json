@@ -1,0 +1,49 @@
+{
+  "run_id": "20261013T202009Z-expanded-cjm-9f69",
+  "work_unit_id": "ui-review-1",
+  "observed_at": "2026-10-14T00:10:57.665863+00:00",
+  "baseline_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "measurement_gap": "Host execution model and token counters unavailable to reviewer; self-identification is not measurement.",
+  "scope": "Independent UI source and focused browser review; product read-only",
+  "mechanical_route": {
+    "command": "bash scripts/complexity-router.sh projects/08-interior-ai-redesign/docs/reviews/ui-review.md",
+    "exit_code": 0,
+    "tier": "T"
+  },
+  "substantive_route": "Documentation-only reviewer write; preserved original consequential integration checks. No product implementation.",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Source review only so far; browser waits for parent final image and synthetic fixture."
+  },
+  "memory_ids": [
+    "teach:8552f9d9f133292e",
+    "teach:8d34121cb3afb17d",
+    "teach:deae300b63174339"
+  ],
+  "source_hashes": {
+    "apps/web/src/components/ProductsPanel.tsx": "52595ca82237f9ab7b820a388e6b76871d6dc792e7536561b7d6213dc5a3e819",
+    "apps/web/src/components/RoomEditor.tsx": "c076bbcd8edb2c3eddae7f2b81479b8160ee7b54449ccdd2e89437a90e33b7ca",
+    "apps/web/src/components/DesignPanel.tsx": "4bd45adb6b2a2a8458eb0af3754f5155f840bec472be0c484ef038de868239b0",
+    "apps/web/src/components/AuthForm.tsx": "f69f578ea6bcad7d246abf703472940d278de599de66489c7c8758c5b3cef6b5",
+    "apps/web/src/components/BudgetPanel.tsx": "bf523aa75e90a2a4fb649b1dd918dbb43e4a4459030f4e07594997c6ab1bd114",
+    "apps/web/src/components/JobsCard.tsx": "57bf8e4d977527ccb15248c83a32c62435d4121b42ce67acfd49901b7218fc9b",
+    "apps/web/src/components/BillingPanel.tsx": "b50719c336ba24011f87653d10cf2f7004b3286437d788d6e23e48c97ef5251f",
+    "apps/web/src/components/SceneViewport.tsx": "db04c900d7eb2481700af76715688154a9aa575f8b135bda4ee6c8ab8f33f068",
+    "apps/web/src/components/Dashboard.tsx": "cbf6559a1f9cb027fabd8c80997cc59911d4f3c6d8d17383cd5905cde87c4777",
+    "apps/web/src/components/SharingPanel.tsx": "e5733d6ccc2a48be9f1f558e20d60bf019c9a58d7e2e1e19d56000ac9421d7ac",
+    "apps/web/src/components/SpacePanel.tsx": "4c788282297db1213fede0300698a40ebe2f0099c4ac0306d45537912a33f274",
+    "apps/web/src/components/ReferencesPanel.tsx": "3e03f4f69131f160b4559710f4f8ea8d7632fb4a489a707e253423f7df4020fa",
+    "apps/web/src/lib/before-after.ts": "e8e55715d6573de865831af11870df0a28dfaac873cf7812382adaf21b57a6f6",
+    "apps/web/src/lib/api-client.ts": "cf1dd0ac6e92c9a1ff5914db2736062bce6d6a6ab9014031c13ff662e67075b2",
+    "packages/viewer/src/renderer.ts": "7ae61899b97a0e1e3a833a0096f5a54c336f66f666547b5e7267f385192a76b0",
+    "packages/viewer/src/index.tsx": "3c2eebfba5169923ba5f1b37477159bbf92805274bf6d8b2281403536996ba0d",
+    "packages/viewer/src/types.ts": "4044472b6e734b6ccfabd386dfe6cccab3fece8bf2e39ae5b3672e0d7dd36ef6",
+    "apps/web/src/app/globals.css": "f53d9bbbef81935c87a771f4aca41af325623291aa446e31531e4773d7eb349b"
+  }
+}

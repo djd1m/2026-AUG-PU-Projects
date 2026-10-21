@@ -1,5 +1,5 @@
-# Embedding applicability
+# N8 — встраивание
 
 **Встраиваемый виджет:** нет
 
-RoomKind is a standalone photo-redesign application. Public share links are ordinary pages; no third-party iframe or embeddable script is offered in the approved scope. This declaration is applicability evidence, not a runtime embedding pass.
+N8 — самостоятельное private web-приложение. Публичная private share image view не является JS/iframe-виджетом чужой страницы. Checker exit2 = not applicable; не заявляется проверкой embedding.

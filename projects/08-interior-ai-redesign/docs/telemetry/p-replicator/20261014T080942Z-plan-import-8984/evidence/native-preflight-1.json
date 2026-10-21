@@ -1,0 +1,36 @@
+{
+  "status": "ready",
+  "at": "2026-10-14T08:39:33.061399+00:00",
+  "build_revision": "sha256:910ede0e441a160e4341199baf136af01a060515447c45f78cfe319ca5b56565",
+  "source_revision": "Baseline3b84e9ef with exact recognitionfiles SHA below; UI subsequently added focus/source-link, will rebuild beforepublicbrowser",
+  "files": {
+    "packages/adapters/src/floorplan.ts": "9391ac736a5111b76f0bdbfe7f0bbb42efefb29392d603bba94006a26285d05e",
+    "packages/adapters/src/floorplan-worker.mjs": "fa56cf1d1157178cb26a1d42d1f3c9088bd1edd27dfca60dd7ea1d1e90e2a19d",
+    "packages/adapters/src/asset-parser.ts": "76103600c07d08ae512c9d228008c02f4871c1e9227e09de4692687f06781649",
+    "packages/domain/src/space/floorplan.ts": "db4fca248d9b479d27f7143cd65a6205a496c1e0c50c4d924f66075dbeea4fdf",
+    "tests/space/drawing-fixture.ts": "a3be1f20798dcacc6827eb10b63eeb3162da09cf78e87a9e16a4180d21d2f0f0",
+    "scripts/floorplan-native-check.mjs": "29c2efbe832859c3d91c7c2d4ec465388a5b7fb4e045108b904298d4e2fe2f65"
+  },
+  "environment": "Dedicated nonroot docker init/memory512MiB/capdropALL/no-newpriv/networknone, noDB/providerenv/volumes",
+  "environment_available": true,
+  "test_command": "docker run --rm --init --network none --cap-drop ALL --security-opt no-new-privileges --memory 512m --entrypoint node n8-interior-app:local --import tsx scripts/floorplan-native-check.mjs",
+  "inputs": [
+    {
+      "name": "synthetic vectorrenderedPNG horizontal/vertical/height andblankfixtures",
+      "available": true
+    },
+    {
+      "name": "Dockerappbuild1success nativeTesseractinstalled",
+      "available": true
+    }
+  ],
+  "expected_effects": [
+    "Boundedlocaltemporarysyntheticfiles, privateOCRprocesses, noegress; prints onlyfixtureOCR candidates"
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "docs/telemetry/p-replicator/20261014T080942Z-plan-import-8984/evidence"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

@@ -1,0 +1,26 @@
+ Container n8-interior-ui-check-playwright-run-685e41b85e76 Creating 
+ Container n8-interior-ui-check-playwright-run-685e41b85e76 Created 
+PASS chromium emptynewroom has no guessed dimensions
+PASS chromium actualnativeOCR horizontalverticalheight+privacy noautosave
+PASS chromium keyboard importer select traversal +Enter transfer +missingheight focus
+PASS chromium 390px recognizeddrawing andAxe
+PASS chromium recognizeddims transfer no retype; missingheight blocks save +focus+oldopenings cleared
+PASS chromium printedheight transferred; editingresets consent; confirmedownedsource persisted
+PASS chromium reloadsource link +immutable18m2plan
+PASS chromium noOCR result honest and existingplan unchanged
+PASS chromium foreign andabsent drawing equally404 before recognition
+PASS chromium SecureHttpOnly +desktopoverflow
+PASS firefox emptynewroom has no guessed dimensions
+PASS firefox actualnativeOCR horizontalverticalheight+privacy noautosave
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.waitForFunction: Timeout 5000ms exceeded.
+    at focused (/app/scripts/floorplan-e2e.mjs:15:433)
+    at async file:///app/scripts/floorplan-e2e.mjs:22:3 {
+  name: 'TimeoutError'
+}
+
+Node.js v24.21.0
+
