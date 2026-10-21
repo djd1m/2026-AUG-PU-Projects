@@ -1,0 +1,17 @@
+{
+  "method": "Exact route block with authenticated identity and stub readers; no HTTP/DB execution. Full handler has authentication but no dispatchMode gate.",
+  "results": [
+    {
+      "endpoint": "/api/dispatch/messages",
+      "dispatchMode": "disabled",
+      "status": 200,
+      "readCalls": 1
+    },
+    {
+      "endpoint": "/api/dispatch/jobs/11111111-1111-1111-1111-111111111111",
+      "dispatchMode": "disabled",
+      "status": 200,
+      "readCalls": 1
+    }
+  ]
+}

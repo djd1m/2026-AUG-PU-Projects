@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-06T20:25:59.960463+00:00",
+  "native_returncode": 1,
+  "timed_out": false,
+  "elapsed_ms": 1330.1585540175438,
+  "pid": 2074224,
+  "startticks": "124136863",
+  "pgid": 2074224,
+  "TAP_sha256": "7009a8244ce32ee9742f090ae746d39e4ec9458dae6626e6bd4fa4b1f87c8c75",
+  "failure_titles": [
+    "not ok 1 - poll quanta persist the fixed tail before yielding and never retry incomplete scans"
+  ],
+  "assertion_failure": true,
+  "PG": {
+    "at": "2026-10-06T20:26:00.091Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "owned_nodes": []
+}

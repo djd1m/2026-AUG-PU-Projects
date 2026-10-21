@@ -1,0 +1,92 @@
+{
+  "run_id": "20261003T010600Z-f05",
+  "work_unit_id": "n7-f05b-sol-r1",
+  "attempt_id": "correct-b-r1",
+  "started_at": "2026-10-03T02:17:11.035747+00:00",
+  "source_revision": "79d48cf2243954679f3f6003ffa1add672ec35a1",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gaps": [
+    "actual model/effort/usage/cost pending host"
+  ],
+  "status": "completed",
+  "finished_at": "2026-10-03T02:27:33.609700+00:00",
+  "elapsed_wall_seconds": 622.573953,
+  "active_wall_seconds": null,
+  "build_revision": "c5f3e3d8306b3b0b7e5dabfeee8ec3515db42cda",
+  "source_sha256": "00a1e013a6e4fe1a241da9b23adb3654a3e9bbf6a3d0456736c22ecfed517f3e",
+  "build_sha256": "e12d1ad7e80b56be58c851c8a3ce5d964472621b5cc359a77fcb364e3892f14d",
+  "image_id": "sha256:41a3d420d3265cf2d35e176564172459cdd47beae379e1f5f3735394648873f7",
+  "commands": [
+    {
+      "command": "npm run typecheck",
+      "exit": 0
+    },
+    {
+      "command": "npm run lint",
+      "exit": 0
+    },
+    {
+      "command": "npm test",
+      "exit": 0
+    },
+    {
+      "command": "bash scripts/check-f05b-r1-heavy.sh",
+      "exit": 0
+    },
+    {
+      "command": "npm run build",
+      "exit": 0
+    },
+    {
+      "command": "DOCKER_BUILDKIT=0 docker build --cpu-period 100000 --cpu-quota 200000 -t n7f05b-web .",
+      "exit": 0
+    },
+    {
+      "command": "docker compose -p n7f05b up -d --no-build --wait",
+      "exit": 0
+    },
+    {
+      "command": "docker compose -p n7f05b exec -T web npm run test:integration",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/check-f05b-r1-mutation.py",
+      "exit": 0
+    },
+    {
+      "command": "docker compose -p n7f05b exec -T web npx tsx --test --test-concurrency=1 tests/evidence-integration.test.ts",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/check-f05b-r1-secrets.py",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/check-f05b-r1-snapshot.py",
+      "exit": 0
+    },
+    {
+      "command": "bash ../../scripts/check-port-conflicts.sh .",
+      "exit": 1,
+      "interpretation": "only18708 conflict with own existing n7f05b-web-1; explicit own project/service/port and immutable source inspection passed before rebuild"
+    }
+  ],
+  "counts": {
+    "unit": 27,
+    "fullPG": 109,
+    "restoredAffected": 11,
+    "mutantsRED": 3
+  },
+  "first_pass_acceptance": null,
+  "independent_review": "pending parent fresh Astra",
+  "fallback": null,
+  "heavy_interval": {
+    "acquired_at": "2026-10-03T02:24:08+00:00",
+    "released_at": "2026-10-03T02:26:11+00:00"
+  }
+}

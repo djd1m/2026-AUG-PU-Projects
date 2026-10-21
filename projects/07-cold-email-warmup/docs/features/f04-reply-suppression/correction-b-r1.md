@@ -1,0 +1,11 @@
+# F04 B-R1 correction
+
+Confirmed review: `review-b.md`, B-R1 P2. Scope B5/B6 only; B1–B4 retained accepted. XL resume under existing owner autonomy; sole writer and no subagents. No public API changes.
+
+Minimal solution: one durable mailbox polling owner UUID and one fixture generation UUID in additive009. Poll claims owner, then observes generation before each adapter operation. Capture/page/failure apply the trusted guard inside their own eligibility transaction, before mutation. Seed validates input then serializes generation replacement with those transactions under the existing first-operation lock(7,1). No adapter I/O holds a DB client or lock. Missing source is represented as a null generation and remains distinguishable from a newly seeded source; current missing/failed source still pauses.
+
+Store changes are only the optional trusted guard on capture/page/failTail. A direct callers/tests and immutable scan H, tailH, durable identity/cursor, dedup,20page/120s attempt budgets and explicit retry are preserved. Failure application with no captured run also runs the guard in the pause transaction. Later owner and same-validity generation changes revoke pending callbacks.
+
+Deterministic PostgreSQL matrix: actual FixtureAdapter results/errors are captured first and delayed with promise barriers. First success, first failure, changed-tail success, same-validity success/failure and concurrent same-validity owner-only operations complete the second worker before releasing the first. Every test deep-compares the entire newer run and mailbox_poll (including runID, UIDVALIDITY,H,tailH,cursor,attempt,pages,timestamps,owner) plus observations/messages/effects/jobs. Generation-only changes revoke results without a second worker. Missing/failed-current and subsequent valid-current polls are checked. A real pg_locks waiter demonstrates seed cannot pass between guard check and transaction commit.
+
+Validation commands/results are retained in `docs/telemetry/features/20261002T232200Z-f04/sol-b-r1-heavy.txt`; final status and mutation/source/image artifacts are linked in the unique `sol-b-r1-receipt.md`. Independent fresh Astra recheck belongs to the parent and is pending. No SMTP/IMAP, charge, LLM, browser, deploy, push, dependency updates or other-project/root changes.

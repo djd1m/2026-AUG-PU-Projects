@@ -1,0 +1,61 @@
+{
+  "at": "2026-10-06T20:03:46.032Z",
+  "pid": 1722935,
+  "settings": {
+    "max": 6,
+    "connectionTimeoutMillis": 2000,
+    "idleTimeoutMillis": 10000,
+    "statement_timeout": 3000
+  },
+  "queries": [
+    {
+      "sql_sha256": "4e64c8dc961a2897e924462efa6682284b2ad9aacc203b5ebef3f4076539b6d9",
+      "elapsed_ms": 3.8600210000000175,
+      "pool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "sql_sha256": "e004ebd5b5532a4b85984a62f8ad48a81aa3460c1ca07701f386135d72cdecf5",
+      "elapsed_ms": 1.4814700000000016,
+      "pool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    },
+    {
+      "sql_sha256": "8573deca0074ab2249c10085be4c682a970fb11385fdf25f61a96a6fc49b1c2a",
+      "elapsed_ms": 5.4089620000000025,
+      "pool": {
+        "total": 1,
+        "idle": 1,
+        "waiting": 0
+      }
+    }
+  ],
+  "connect_ms": 36.18060200000001,
+  "database": "n7f10_a2",
+  "PG": {
+    "rows": [],
+    "quiescent": true
+  },
+  "counts": {
+    "max_connections": 100,
+    "server_connections": "7",
+    "scoped_connections": "1"
+  },
+  "ready": true,
+  "pool": {
+    "total": 1,
+    "idle": 1,
+    "waiting": 0
+  },
+  "eventloop": {
+    "max_ms": 12.820479,
+    "mean_ms": 10.971545599999999
+  },
+  "done": "2026-10-06T20:03:46.101Z"
+}

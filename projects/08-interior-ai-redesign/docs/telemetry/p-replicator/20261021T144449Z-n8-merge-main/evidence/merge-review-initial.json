@@ -1,0 +1,39 @@
+{
+  "review": "n8-main-merge",
+  "reviewed_candidate": {
+    "worktree": "/tmp/n8-main-merge-20261021",
+    "base": "3e29d400e5cd7a6e54c1811e973e8474703f5166",
+    "merged_feature": "e2803308144336a58f6e6481a2cece56ce56c317"
+  },
+  "status": "needs_update_before_commit",
+  "findings": [
+    {
+      "severity": "blocking",
+      "code": "CURRENT_PROGRESS_OMITTED",
+      "detail": "The candidate N8 index is byte-identical to origin/feature/n8-interior-planner (zero paths differ), so it omits the current dirty Caddyfile addition and the current two-file merge telemetry run. Recreate or refresh the merge from the save-progress commit before committing main."
+    },
+    {
+      "severity": "blocking",
+      "code": "MANDATORY_TESTS_NOT_PASSED",
+      "detail": "npm test completed with 27 failed files and 137 failed tests because TEST_DATABASE_URL was absent. This is an environment precondition failure, not evidence of a source regression, but the mandatory test gate is not passed."
+    }
+  ],
+  "verified": {
+    "unmerged_paths": 0,
+    "staged_paths_outside_n8": 0,
+    "unstaged_paths": 0,
+    "untracked_paths_in_candidate": 0,
+    "candidate_paths_differing_from_feature_within_n8": 0,
+    "targeted_high_confidence_secret_signatures_found": false,
+    "current_merge_telemetry_targeted_secret_signatures_found": false,
+    "lint": "passed",
+    "build": "passed",
+    "tests": "failed_missing_TEST_DATABASE_URL"
+  },
+  "notes": [
+    "The full N8 replacement strategy preserves the latest feature tree and avoids combining the two conflicting applications.",
+    "Tracked files outside projects/08-interior-ai-redesign remain identical to origin/main.",
+    "The tracked project-local symlinks point back into the repository root toolkit as designed.",
+    "No credential contents were printed or inspected beyond targeted signature matching."
+  ]
+}

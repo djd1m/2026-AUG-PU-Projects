@@ -1,0 +1,40 @@
+{
+  "attempt_id": "correction-1",
+  "build_revision": null,
+  "captured_at": "2026-10-03T04:04:49.443256+00:00",
+  "changed_from_implementation_snapshot": [
+    "apps/web/src/server/studio-handler.ts",
+    "apps/web/tests/unit/studio-handler.test.ts"
+  ],
+  "files": {
+    "apps/web/src/app/api/studio/clients/route.ts": "0539725b050e7f197b1fc0baa73ec08d6b464c3b68d66d3bdc04291bfefba65b",
+    "apps/web/src/app/cabinet/create-bot.tsx": "512f03a3ab390c125261f8029e2e0a6747da4f4de0e3f69e078d63f51a13bdc9",
+    "apps/web/src/app/cabinet/page.tsx": "ab3d04a361ea2f96776f890fe1bbe4d27fa3d646d0bb5b23c2cf71e32967d104",
+    "apps/web/src/app/cabinet/studio-clients.tsx": "6ac51640545816f23f12bcce9ccd5f9c2be3f92ca06d7f3b1afbd6217a3c4004",
+    "apps/web/src/server/ask-handler.ts": "46cc668ae6116ad1f8aea7a0cb7874cf08a1f8a65e4e46c27be7455d3a922b0f",
+    "apps/web/src/server/bots-handler.ts": "0b14e60cce34c840d43f111eb3bc123461caa657fd3da285b368f0ad2c347dce",
+    "apps/web/src/server/studio-handler.ts": "48676070704e23610ee46c675bfd9fbe710e2f4de4979c58857185e2261a2f60",
+    "apps/web/tests/int/studio-clients.int.test.ts": "3fb07df391b241f674b77d544ae41f96ade3a775dedb5de5e02145880e9b6556",
+    "apps/web/tests/int/studio-fixture.ts": "b829b7cd48633d5c49db1df86d0a3a3e45293794dcc1944e456097cf7d84e5e8",
+    "apps/web/tests/int/studio-referral-race.int.test.ts": "06f35594f97589ff94f52ec6c5a93da67fad644164c1b5ba944530810f167dc8",
+    "apps/web/tests/int/studio-workflow.int.test.ts": "bf29057f678e0bfe83d21907985d97fd7921f98a9f310024d1615dba37260ed3",
+    "apps/web/tests/unit/ask-handler.test.ts": "37dedcb8ea37dd096aba27ba3a1666246784ea620f8f9b31757d4f4ab889a889",
+    "apps/web/tests/unit/studio-clients-ui.test.ts": "eb387bf9567bf01606689a90ab25b85b8e8611f1a2434adbec9cdb25a4a4282e",
+    "apps/web/tests/unit/studio-handler.test.ts": "d39284f89afe78a1ac2f14a7b2aba9e35eef35cd21868113f868556b4c21495c",
+    "packages/db/src/answers.ts": "93685b29310349443f4333b07488d9908155666aabbccf3146dd3423f9a10f5f",
+    "packages/db/src/cabinet.ts": "bbb49fba9b1d76ba6f409b02e4d8c6e5873d8a3e93783fd8ccfd2f12ad835349",
+    "packages/db/src/index.ts": "b770b06967bf015d50d4931357760d03dfe61a2299c8eb8c906c470181211643",
+    "packages/db/src/jobs.ts": "eb348cb52305aef1329b0914536e23305cc4707e19c70c56820f47237f95b849",
+    "packages/db/src/publish.ts": "cc0e1f8af0023e44cede2e7df7cd44b701d15f94a18d108f087480ea61fa1ddf",
+    "packages/db/src/referral.ts": "2f88f02d1cef9865b6be877c0988dc725acab85300d4bad937921e11b3ae858e",
+    "packages/db/src/studio.ts": "334fc43e26ff8ea8d0c5cdf4a9c748b96188de0d841eb8daa4c752036225d50d",
+    "tests/artifacts/studio-subaccounts/cap-guard-mutation.mjs": "76ce62f6b1d8cc9926605fd309e35b8b7efd07b003b41e49916a4187bd24c968"
+  },
+  "launch_sha256": "ab553415a37710f175e81d09e60c79f20c489061f2e2e8c78e3d2474f7360615",
+  "run_id": "20261003T031332Z-studio-subaccounts",
+  "snapshot_method": "SHA256 of UTF-8 JSON files map with sort_keys=True and separators=(comma,colon); project-relative paths, exact-byte digests; all changed production/tests plus coordinator cap mutation script; excludes docs/coordinator-owned telemetry/generated check logs.",
+  "snapshot_sha256": "dd55491ba57d829f51f15a1b2a6c6ffb2b055151d852986d54afb53327085b02",
+  "source_revision": "902d31343bcfb05819dcca0d8009873679d0f292",
+  "unchanged_hashes_retained": 20,
+  "work_unit_id": "studio-subaccounts-correction"
+}

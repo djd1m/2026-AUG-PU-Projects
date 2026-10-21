@@ -1,0 +1,208 @@
+{
+  "work_unit_id": "n7-live-app-backend-a3",
+  "baseline_head": "1fb00e49189279159a95e537266cc627ca7ad1d2",
+  "integration_source_revision": "ba458df897304e8c6d51e1a2d678743069c36ee1",
+  "source_head": "4e4f0359fac7a22701f350adbb20447ade5de741",
+  "launch_sha256": "d0654103096ec0924741eb32423bb1a7e5b5f20b4508256b97f858bb73f60a31",
+  "files": [
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/live.ts",
+      "sha256": "1983b8aa6c8d6b114b3ae16f70893fc0228c1c4d95619d454c5c43a343f4eecd"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/plans.ts",
+      "sha256": "973b48db60abaedb4d0ede83e36e082957745611101726761a4b4aabf7e00c8e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/provider.ts",
+      "sha256": "bccdf51a6ca0ad6115d30018e44cc6859e2cd96adee05076265e3587ce1f32d0"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/service.ts",
+      "sha256": "56a840b7d50a222f67378803c6db4c503a26095c6922c653458bde5dc1293b6a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/yookassa.ts",
+      "sha256": "de35abe26bf1bedda372aa2a391ca613856604ed080254a141d2d0b175d7035e"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/campaigns/store.ts",
+      "sha256": "986c1440161c34fe7c9ce01a544da1eaa8458dbc37c42fc8fae3f8ac2a8f90f9"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/config.ts",
+      "sha256": "504b4e23fe14d7624c79a6a6b2309298f8fe2a696b62ddeffa374b1c2fdb8ec1"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/growth/reports.ts",
+      "sha256": "66e57d57459a003f291c5232dd55bd2e603b13381da112009383079c64b614a3"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/server.ts",
+      "sha256": "14847b4b1a47407bc940673df72a48303c105c1fce35acceb4bb26414a957d5b"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/billing-integration.test.ts",
+      "sha256": "c0679afe6321ec080c2616a21e2e401d277c283615a582bc7094c4030b419fbe"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/capacity-integration.test.ts",
+      "sha256": "3c8a93235bd361474361c9b05a20c699f3fcc0f77898d6f6edab85d76582ca7a"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/evidence-integration.test.ts",
+      "sha256": "75d6a65b6a997a3527ba69640f0e29a474403e54a43ac84ed0a29cca14d91670"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/evidence-unit.test.ts",
+      "sha256": "9c9f95ba45c4177e9932427b1a49aad1b4a4b8347f653c2a7ab9622f2280a867"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/live-app-integration.test.ts",
+      "sha256": "3322d07832584a634a0a09676fecd03330cb1f3cd925e11b7c7610ecf205ec48"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/live-app-unit.test.ts",
+      "sha256": "5435b5b443a608c25eccc737b5a7b3276a9b515b6c2aa31501d3c064ee1a3cca"
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/live-billing-integration.test.ts",
+      "sha256": "6d54de12fc1120bf440a641ff7593436df3fff97fff3499ff7ccad9685fd0928"
+    }
+  ],
+  "build_artifacts": [
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/config.js",
+      "sha256": "3ff773a2f13891288d8a129d5c569da99270f779f47d8a9074f81ed875fc0bcf"
+    },
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/server.js",
+      "sha256": "f72a6672e5318ecd508ec8a8958ca21a0796c52040e05823ec8485f270ff048b"
+    },
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/billing/live.js",
+      "sha256": "df50e5df198d502fde399b7856b4bf431d1be5eef0c33a02b6295d01df946954"
+    },
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/billing/plans.js",
+      "sha256": "df15f18085e1da667d6e547e1a88bb7f024212610ac770968e7a20d8e2ea6656"
+    },
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/billing/service.js",
+      "sha256": "b3e48322114013fef0aa892c1c309e8ba4157e42c8cfc2823121ef4ccadc5fa9"
+    },
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/billing/provider.js",
+      "sha256": "71d9e588b41ffb0e302ad626ad0d2f719c84d84ba58fbc783276d6ee65b166db"
+    },
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/billing/yookassa.js",
+      "sha256": "35d5e8a71f9ada9708e203cfdda182a01601f7b9cec41d8431e8d06392e6d175"
+    },
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/campaigns/store.js",
+      "sha256": "f4d16110f4154bc87c67bd0bfb829f2704cc3273badea91b770a2b408875dd4f"
+    },
+    {
+      "path": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/dist/growth/reports.js",
+      "sha256": "fd37396f0f4330bc0f6277efebe4b501c7c590935864c4176f515fce978596de"
+    }
+  ],
+  "checks": [
+    {
+      "name": "mode-mutation",
+      "command": "node --import tsx --test tests/live-app-integration.test.ts [LIVE selects TEST grants]",
+      "native_exit": 1,
+      "expected_exit": 1,
+      "raw_receipt": "/tmp/n7-live-app-backend-author-a3-20261007/mode-mutation.log",
+      "sha256": "efeee20f37e9cc7331756d3dac79ca45ce73f498eaf3aa42ebe989a2dbbbe4bb"
+    },
+    {
+      "name": "admission-mutation",
+      "command": "node --import tsx --test tests/live-app-integration.test.ts [shared admission threshold 1]",
+      "native_exit": 1,
+      "expected_exit": 1,
+      "raw_receipt": "/tmp/n7-live-app-backend-author-a3-20261007/admission-mutation.log",
+      "sha256": "93ec8a9036e82f3152da6dac621a8c32dbcab5b923a04003748690673aae87d2"
+    },
+    {
+      "name": "typecheck",
+      "command": "npm run typecheck",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_receipt": "/tmp/n7-live-app-backend-author-a3-20261007/typecheck.log",
+      "sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393"
+    },
+    {
+      "name": "lint",
+      "command": "npm run lint",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_receipt": "/tmp/n7-live-app-backend-author-a3-20261007/lint.log",
+      "sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e"
+    },
+    {
+      "name": "build",
+      "command": "npm run build",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_receipt": "/tmp/n7-live-app-backend-author-a3-20261007/build.log",
+      "sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323"
+    },
+    {
+      "name": "unit",
+      "command": "npm test",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_receipt": "/tmp/n7-live-app-backend-author-a3-20261007/unit.log",
+      "sha256": "048ccaf6077c1d0e22967882270eb478cd90d00e9fb4990ee5ce72e72404acff"
+    },
+    {
+      "name": "affected-integration",
+      "command": "node --import tsx --import db-guard.mjs --test --test-concurrency=1 tests/live-app-integration.test.ts tests/live-billing-integration.test.ts tests/billing-integration.test.ts tests/evidence-integration.test.ts tests/web-integration.test.ts tests/capacity-integration.test.ts",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_receipt": "/tmp/n7-live-app-backend-author-a3-20261007/affected-integration.log",
+      "sha256": "df5bea520c7a4ccce9be32115cf0be688a742c7da023ae5f49c6dda3f0bc56e7"
+    }
+  ],
+  "test_counts": {
+    "unit": {
+      "tests": 77,
+      "pass": 77,
+      "fail": 0
+    },
+    "affected_integration": {
+      "tests": 52,
+      "pass": 52,
+      "fail": 0
+    }
+  },
+  "mutation_restore": [
+    {
+      "source": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/src/billing/plans.ts",
+      "source_sha256": "973b48db60abaedb4d0ede83e36e082957745611101726761a4b4aabf7e00c8e",
+      "saved_sha256": "973b48db60abaedb4d0ede83e36e082957745611101726761a4b4aabf7e00c8e"
+    },
+    {
+      "source": "/tmp/n7-mailbox-error-source-20261007/projects/07-cold-email-warmup/src/server.ts",
+      "source_sha256": "14847b4b1a47407bc940673df72a48303c105c1fce35acceb4bb26414a957d5b",
+      "saved_sha256": "14847b4b1a47407bc940673df72a48303c105c1fce35acceb4bb26414a957d5b"
+    }
+  ],
+  "primary_database": "n7billing_20261007_a1",
+  "capacity_database_guard": {
+    "path": "/tmp/n7-live-billing-canonical-author-a1-20261007/db-guard.mjs",
+    "sha256": "9b7ed7abbdded91d896ca2c5d009bfcaa631f145a4012abbfe32789d87118b57"
+  },
+  "external_provider_calls_executed": false,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "elapsed_seconds": 888.685159,
+  "finished_at": "2026-10-07T19:19:14.981633+00:00",
+  "unmet_bounded_ac": [],
+  "status": "completed"
+}

@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: preadmitted slots are one-use and unused cleanup refuses a child-bound owner
+ok 1 - preadmitted slots are one-use and unused cleanup refuses a child-bound owner
+  ---
+  duration_ms: 17.826967
+  type: 'test'
+  ...
+# Subtest: unused reservation cleanup retains exact proof after a database release failure
+ok 2 - unused reservation cleanup retains exact proof after a database release failure
+  ---
+  duration_ms: 4.416401
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 318.606374

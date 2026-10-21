@@ -1,0 +1,4 @@
+1039|active|||
+    INSERT INTO chunk (document_id, bot_id, account_id, ord, text, text_sha256, tokens, embedding)
+    SELECT $1, $2, $3, i, $6 || i, md5($6 || i), 1,
+      (SELECT array_agg(q.x |{}

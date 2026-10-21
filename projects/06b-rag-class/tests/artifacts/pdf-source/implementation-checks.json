@@ -1,0 +1,113 @@
+[
+  {
+    "name": "typecheck",
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "started_at": "2026-10-02T19:30:04.054871+00:00",
+    "elapsed_seconds": 13.403,
+    "exit_code": 0,
+    "evidence": "tests/artifacts/pdf-source/typecheck.txt"
+  },
+  {
+    "name": "focused-unit",
+    "command": [
+      "./node_modules/.bin/vitest",
+      "run",
+      "--config",
+      "vitest.config.ts",
+      "apps/web/tests/unit/pdf-handler.test.ts",
+      "apps/web/tests/unit/jobs-handler.test.ts",
+      "services/worker/tests/unit/pdf-extract.test.ts",
+      "services/worker/tests/unit/crawl-rules.test.ts",
+      "services/worker/tests/unit/crawl-site-correction.test.ts",
+      "services/worker/tests/unit/job-guards.test.ts"
+    ],
+    "started_at": "2026-10-02T19:30:04.056270+00:00",
+    "elapsed_seconds": 5.434,
+    "exit_code": 1,
+    "evidence": "tests/artifacts/pdf-source/focused-unit.txt"
+  },
+  {
+    "name": "focused-integration",
+    "command": [
+      "./node_modules/.bin/vitest",
+      "run",
+      "--config",
+      "vitest.int.config.ts",
+      "apps/web/tests/int/pdf-sources.int.test.ts",
+      "services/worker/tests/int/pdf.int.test.ts"
+    ],
+    "started_at": "2026-10-02T19:30:17.458317+00:00",
+    "elapsed_seconds": 1.02,
+    "exit_code": 1,
+    "evidence": "tests/artifacts/pdf-source/focused-integration.txt"
+  },
+  {
+    "name": "build-db",
+    "command": [
+      "npm",
+      "run",
+      "build",
+      "--workspace",
+      "@n6b/db"
+    ],
+    "started_at": "2026-10-02T19:30:18.478288+00:00",
+    "elapsed_seconds": 2.845,
+    "exit_code": 0,
+    "evidence": "tests/artifacts/pdf-source/build-db.txt"
+  },
+  {
+    "name": "build-rag",
+    "command": [
+      "npm",
+      "run",
+      "build",
+      "--workspace",
+      "@n6b/rag"
+    ],
+    "started_at": "2026-10-02T19:30:21.323690+00:00",
+    "elapsed_seconds": 3.188,
+    "exit_code": 0,
+    "evidence": "tests/artifacts/pdf-source/build-rag.txt"
+  },
+  {
+    "name": "build-worker",
+    "command": [
+      "npm",
+      "run",
+      "build",
+      "--workspace",
+      "@n6b/worker"
+    ],
+    "started_at": "2026-10-02T19:30:24.511398+00:00",
+    "elapsed_seconds": 4.15,
+    "exit_code": 0,
+    "evidence": "tests/artifacts/pdf-source/build-worker.txt"
+  },
+  {
+    "name": "node-version",
+    "command": [
+      "node",
+      "--version"
+    ],
+    "started_at": "2026-10-02T19:30:28.661785+00:00",
+    "elapsed_seconds": 0.011,
+    "exit_code": 0,
+    "evidence": "tests/artifacts/pdf-source/node-version.txt"
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "started_at": "2026-10-02T19:30:28.673052+00:00",
+    "elapsed_seconds": 0.026,
+    "exit_code": 0,
+    "evidence": "tests/artifacts/pdf-source/diff-check.txt"
+  }
+]

@@ -1,0 +1,72 @@
+name: ${COMPOSE_PROJECT_NAME:-n7f02}
+services:
+  db:
+    image: postgres:16.10-bookworm
+    # SQL errors can contain supplied secrets; application emits typed errors only.
+    command: ["postgres", "-c", "log_min_messages=fatal", "-c", "log_min_error_statement=panic"]
+    cpus: 2
+    environment:
+      POSTGRES_USER: n7
+      POSTGRES_DB: n7
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [db_password]
+    expose: ["5432"]
+    volumes: [n7_pg:/var/lib/postgresql/data]
+    networks: [n7]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n7 -d n7"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  web: &application
+    build: .
+    cpus: 2
+    environment:
+      BILLING_MODE: ${N7_BILLING_MODE:-disabled}
+      POLL_MODE: ${N7_POLL_MODE:-disabled}
+      OPERATOR_TOKEN_FILE: /run/secrets/operator_token
+      DISPATCH_MODE: ${N7_DISPATCH_MODE:-disabled}
+      SAFETY_POLICY_VERSION: n7-safety-v1
+      RECIPIENT_HASH_KEY_FILE: /run/secrets/recipient_hash_key
+      CREDENTIAL_KEYRING_FILE: /run/secrets/credential_keyring
+      MAIL_PROVIDER_ALLOWLIST: ${MAIL_PROVIDER_ALLOWLIST:?operator allowlist required}
+      SESSION_HMAC_KEY_FILE: /run/secrets/session_key
+      DATABASE_PASSWORD_FILE: /run/secrets/db_password
+      DATABASE_USER: n7
+      DATABASE_NAME: n7
+      DATABASE_HOST: db
+      APP_ORIGIN: ${N7_APP_ORIGIN:-http://127.0.0.1:18702}
+      PORT: "3000"
+    secrets: [session_key, db_password, credential_keyring, recipient_hash_key, operator_token]
+    ports: ["127.0.0.1:${N7_WEB_PORT:-18702}:3000"]
+    networks: [n7]
+    depends_on:
+      db: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/readyz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  poll-worker:
+    <<: *application
+    profiles: [local-poll]
+    command: ["node", "dist/replies/worker.js", "loop"]
+    ports: []
+    healthcheck: {disable: true}
+    restart: unless-stopped
+
+secrets:
+  operator_token:
+    file: ${N7_RUNTIME_DIR:-/tmp/n7-f02-runtime}/operator-token
+  recipient_hash_key:
+    file: ${N7_RUNTIME_DIR:-/tmp/n7-f02-runtime}/recipient-hash-key
+  session_key:
+    file: ${N7_RUNTIME_DIR:-/tmp/n7-f02-runtime}/session-key
+  credential_keyring:
+    file: ${N7_RUNTIME_DIR:-/tmp/n7-f02-runtime}/credential-keyring.json
+  db_password:
+    file: ${N7_RUNTIME_DIR:-/tmp/n7-f02-runtime}/db-password
+networks:
+  n7: {name: "${COMPOSE_PROJECT_NAME:-n7f02}_network"}
+volumes:
+  n7_pg: {name: "${COMPOSE_PROJECT_NAME:-n7f02}_pg"}

@@ -1,0 +1,65 @@
+ Image n6b-f05-crawl-runner:20261002 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 724B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.44kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:22.22-bookworm-slim
+#3 DONE 0.4s
+
+#4 [internal] load build context
+#4 transferring context: 38.45kB 0.0s done
+#4 DONE 0.1s
+
+#5 [ 1/11] FROM docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752
+#5 resolve docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752 0.1s done
+#5 DONE 0.1s
+
+#6 [ 4/11] COPY --chown=node:node package.json package-lock.json ./
+#6 CACHED
+
+#7 [ 5/11] COPY --chown=node:node apps/web/package.json ./apps/web/
+#7 CACHED
+
+#8 [ 6/11] COPY --chown=node:node apps/widget/package.json ./apps/widget/
+#8 CACHED
+
+#9 [ 7/11] COPY --chown=node:node services/worker/package.json ./services/worker/
+#9 CACHED
+
+#10 [ 2/11] WORKDIR /app
+#10 CACHED
+
+#11 [ 8/11] COPY --chown=node:node packages/db/package.json ./packages/db/
+#11 CACHED
+
+#12 [ 9/11] COPY --chown=node:node packages/rag/package.json ./packages/rag/
+#12 CACHED
+
+#13 [ 3/11] RUN chown node:node /app
+#13 CACHED
+
+#14 [10/11] RUN npm ci
+#14 CACHED
+
+#15 [11/11] COPY --chown=node:node . .
+#15 DONE 0.2s
+
+#16 exporting to image
+#16 exporting layers
+#16 exporting layers 0.2s done
+#16 exporting manifest sha256:ec73a5eec4b818a45f33c9ca8bbfd0a105e104238fe7e61775c45837326c00a0 0.0s done
+#16 exporting config sha256:a66ed361f0d68b6d01106e63e4cb459676918301d2f0303ac2e9f2e744b16a66 0.1s done
+#16 exporting attestation manifest sha256:dcc575c23378f035de2eaf0d315346ca38c34b8e47cf716035ce31cf460b3af4 0.0s done
+#16 exporting manifest list sha256:38c46d24f5a3f6b98251db4467372d722d11e35953bd07560dc5bd0bf4a1d62a 0.0s done
+#16 naming to docker.io/library/n6b-f05-crawl-runner:20261002
+#16 naming to docker.io/library/n6b-f05-crawl-runner:20261002 done
+#16 unpacking to docker.io/library/n6b-f05-crawl-runner:20261002 0.1s done
+#16 DONE 0.6s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image n6b-f05-crawl-runner:20261002 Built 

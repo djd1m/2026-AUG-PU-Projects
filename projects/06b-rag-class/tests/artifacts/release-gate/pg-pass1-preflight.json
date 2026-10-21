@@ -1,0 +1,13 @@
+{
+  "status": "ready",
+  "source_revision": "e5672838a107c2cafc616600a4cb00de7d5895b8",
+  "build_revision": "sha256:ff0c8692df9cfbaeae0d176d4c9de9a28cadb7fd9d5e9dae2725e99ee2fcb65f",
+  "environment": "unique isolated compose PG16/pgvector; internal network; no published ports; random private credentials",
+  "inputs": "pg-source-hashes.json; explicit source/test overlays; cached dependencies",
+  "command": "npm run pretest && tsc --noEmit -p tsconfig.json && npm run test:int -- packages/rag/tests/int/release-gate.int.test.ts",
+  "expected_effects": "new ephemeral test DB/roles/rows only; fake provider no network calls",
+  "evidence_root": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-release-gate/projects/06b-rag-class/tests/artifacts/release-gate",
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "recorded_at": "2026-10-03T07:27:06.416918+00:00"
+}

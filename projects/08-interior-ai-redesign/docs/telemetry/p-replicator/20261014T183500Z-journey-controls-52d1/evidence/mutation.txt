@@ -1,0 +1,34 @@
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+ ❯ tests/space/repository.test.ts (14 tests | 1 failed | 13 skipped) 408ms
+   × delete unused GLB preserves owner, version and immutable-history guards 404ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 skipped (14)
+   Start at  18:40:03
+   Duration  771ms (tests 68%, transform 17%, import 14%, worker 1%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/space/repository.test.ts > delete unused GLB preserves owner, version and immutable-history guards
+AssertionError: expected error: update or delete on table "asset" … { …(15) } to match object { code: 'ASSET_IN_USE' }
+(17 matching properties omitted from actual)
+
+- Expected
++ Received
+
+- {
+-   "code": "ASSET_IN_USE",
++ DatabaseError {
++   "code": "23503",
+  }
+
+ ❯ tests/space/repository.test.ts:29:515
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+EXIT=1

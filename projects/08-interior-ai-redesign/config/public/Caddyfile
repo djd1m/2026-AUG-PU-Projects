@@ -1,0 +1,15 @@
+{$N8_PUBLIC_HOST} {
+ encode zstd gzip
+ header Strict-Transport-Security "max-age=15552000"
+ header X-Robots-Tag "noindex, nofollow"
+ reverse_proxy web:3000 {
+  header_up X-N8-Client-IP {remote_host}
+ }
+}
+
+shino.77.83.87.178.sslip.io {
+ encode zstd gzip
+ header X-Robots-Tag "noindex, nofollow"
+ header Referrer-Policy "no-referrer"
+ reverse_proxy 172.29.8.1:5189
+}

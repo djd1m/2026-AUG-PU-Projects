@@ -1,0 +1,9 @@
+{
+  "package": "@dzhechkov/p-replicator@1.13.2",
+  "originalPath": "/tmp/n8-pipeline-tools/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+  "originalSha256": "06e3dae22c533a81732b9870ae42d6b80b6e8419b3c90e11e1910e2a46888be8",
+  "temporaryPatchedPath": "/tmp/n8-pipeline-completion-fix-1.sh",
+  "patchedSha256": "635390797a395f63a3b40119b271a13eeb92d261dd2156af6019bc69fa1e03db",
+  "diff": "--- published/check-pipeline-gaps.sh\n+++ temporary/check-pipeline-gaps.sh\n@@ -760,7 +760,7 @@\n else\n   PROJECT_SPEC=\"$DOCS_ROOT/$PROJECT_SPECIFICATION\"\n   PROJECT_PSEUDO=\"$DOCS_ROOT/$PROJECT_PSEUDOCODE\"\n-  PROJECT_COMPLETION=\"$DOCS_ROOT/$PROJECT_COMPLETION\"\n+  PROJECT_COMPLETION_FILE=\"$DOCS_ROOT/$PROJECT_COMPLETION\"\n   PROJECT_VALIDATION=\"$DOCS_ROOT/validation-report.md\"\n   if [ \"$TRACEABILITY_MODE\" -eq 1 ] && { [ -e \"$PROJECT_SPEC\" ] || [ -L \"$PROJECT_SPEC\" ] || \\\n      [ -e \"$PROJECT_PSEUDO\" ] || [ -L \"$PROJECT_PSEUDO\" ]; }; then\n@@ -768,7 +768,7 @@\n     CHECKED_CONTOURS=$((CHECKED_CONTOURS + 1))\n   fi\n   if [ \"$COMPLETION_MODE\" -eq 1 ] && { [ -e \"$PROJECT_SPEC\" ] || [ -L \"$PROJECT_SPEC\" ] || \\\n-     [ -e \"$PROJECT_COMPLETION\" ] || [ -L \"$PROJECT_COMPLETION\" ]; }; then\n+     [ -e \"$PROJECT_COMPLETION_FILE\" ] || [ -L \"$PROJECT_COMPLETION_FILE\" ]; }; then\n     process_completion_contour project \"$DOCS_ROOT\" \"$PROJECT_SPECIFICATION\" \"$PROJECT_COMPLETION\"\n     COMPLETION_CHECKED_CONTOURS=$((COMPLETION_CHECKED_CONTOURS + 1))\n   fi\n",
+  "scope": "Two variable-shadowing lines only; published/roottoolkit untouched. Samevalidatorlogic allfeatures65AC; nofakeinputs/skipcontours."
+}

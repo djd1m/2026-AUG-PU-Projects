@@ -1,0 +1,73 @@
+### M1-rls-disabled — packages/db/migrations/002_rls.sql
+команда: bash /tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/f6d24409-ff6d-4818-a0f7-936162b5fe15/scratchpad/run-int.sh packages/db/tests/int/rls.test.ts
+код возврата с дефектом: 1
+ Test Files  1 failed (1)
+      Tests  9 failed | 12 passed (21)
+int-exit=1
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+### M2-rls-policy-true — packages/db/migrations/002_rls.sql
+команда: bash /tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/f6d24409-ff6d-4818-a0f7-936162b5fe15/scratchpad/run-int.sh packages/db/tests/int/rls.test.ts
+код возврата с дефектом: 1
+ Test Files  1 failed (1)
+      Tests  13 failed | 8 passed (21)
+int-exit=1
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+
+### M3-studio-access-ignored — packages/db/migrations/002_rls.sql
+команда: bash /tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/f6d24409-ff6d-4818-a0f7-936162b5fe15/scratchpad/run-int.sh packages/db/tests/int/rls.test.ts
+код возврата с дефектом: 1
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 passed (21)
+int-exit=1
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+### M4-config-empty-accepted — packages/db/src/boot-config.ts
+команда: bash /tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/f6d24409-ff6d-4818-a0f7-936162b5fe15/scratchpad/run-node.sh "npx vitest run --config vitest.config.ts apps/web/tests/unit/config.test.ts services/worker/tests/unit/boot.test.ts"
+код возврата с дефектом: 1
+ Test Files  1 failed | 1 passed (2)
+      Tests  13 failed | 53 passed (66)
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+
+### M5-config-pairs-skipped — packages/db/src/boot-config.ts
+команда: bash /tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/f6d24409-ff6d-4818-a0f7-936162b5fe15/scratchpad/run-node.sh "npx vitest run --config vitest.config.ts apps/web/tests/unit/config.test.ts services/worker/tests/unit/boot.test.ts"
+код возврата с дефектом: 1
+ Test Files  1 failed | 1 passed (2)
+      Tests  4 failed | 62 passed (66)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+### M6-config-number-coercion — packages/db/src/boot-config.ts
+команда: bash /tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/f6d24409-ff6d-4818-a0f7-936162b5fe15/scratchpad/run-node.sh "npx vitest run --config vitest.config.ts apps/web/tests/unit/config.test.ts"
+код возврата с дефектом: 1
+ Test Files  1 failed (1)
+      Tests  9 failed | 54 passed (63)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+### M7-auth-limit-skipped — apps/web/src/server/auth-handler.ts
+команда: bash /tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/f6d24409-ff6d-4818-a0f7-936162b5fe15/scratchpad/run-int.sh apps/web/tests/int/auth.int.test.ts
+код возврата с дефектом: 1
+ Test Files  1 failed (1)
+      Tests  3 failed | 6 passed (9)
+int-exit=1
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+### M9-ipv6-full-address — apps/web/src/server/ip.ts
+команда: bash /tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/f6d24409-ff6d-4818-a0f7-936162b5fe15/scratchpad/run-node.sh "npx vitest run --config vitest.config.ts apps/web/tests/unit/ip.test.ts"
+код возврата с дефектом: 1
+ Test Files  1 failed (1)
+      Tests  2 failed | 8 passed (10)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+### M10-no-dummy-hash — apps/web/src/server/auth.ts
+команда: bash /tmp/claude-0/-home-dz-projects-2026-2026-AUG-PU-Projects-2026-AUG-PU-Projects/f6d24409-ff6d-4818-a0f7-936162b5fe15/scratchpad/run-node.sh "npx vitest run --config vitest.config.ts apps/web/tests/unit/auth-handler.test.ts"
+код возврата с дефектом: 1
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+### M11-env-not-wired — docker-compose.yml
+команда: bash scripts/check-env-wiring.sh
+код возврата с дефектом: 1
+Не проброшены переменные:
+web: LIMIT_AUTH_ADDR_HOUR
+

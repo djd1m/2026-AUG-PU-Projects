@@ -1,0 +1,43 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-frozen-verify-a16",
+  "attempt_id": "f10-frozen-verify-a16",
+  "launched_at": "2026-10-06T18:58:30.376882+00:00",
+  "freeze_at": "2026-10-06T19:17:00.376882+00:00",
+  "deadline": "2026-10-06T19:18:30.376882+00:00",
+  "source_revision": "eae17bbea36312ee5290adb8390e066b1f0d6c2a",
+  "worktree": "/tmp/n7-f10-restart-fix-20261006-a12",
+  "project": "projects/07-cold-email-warmup",
+  "scratch_root": "/tmp/n7-f10-frozen-verify-a16",
+  "trace_path": "/tmp/n7-f10-frozen-verify-a16-receipt.md",
+  "trace_prelaunch_absent": true,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "profile": "model-routing-econom",
+  "executor": "fresh fork_none HIGH verifier pending one native allocation",
+  "source_build_manifest": "/tmp/n7-f10-uidreset-implement-a15/source-build-final-v1.json",
+  "source_build_manifest_sha256": "39eb6cc84f603c73d12ee641604fbb0beaf4eb1fa0d3287faa80a9c806a5826a",
+  "planner_packet": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/sol-coordinator-handoff-20261006/planner-only-review-packet.json",
+  "planner_plan": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f10-uidreset-contract-plan-a14b-cli/receipt.md",
+  "planner_plan_sha256": "998aeeb0b4c89294d7f196650b759954f3a965f62dacfaf8313d1e5eaf749662",
+  "context_provenance": "Approved canonical/planner packet+fresh independent HIGH private UID contract plan+frozen product/tests/manifests only; no author/coordinator chat/receipts/working notes",
+  "allowed_writes": [
+    "/tmp/n7-f10-frozen-verify-a16",
+    "/tmp/n7-f10-frozen-verify-a16-receipt.md",
+    "own isolated PostgreSQL n7f10_a2 test namespace"
+  ],
+  "read_only_source": true,
+  "disk_before_launch": {
+    "available_bytes": 3428835328,
+    "free_inodes": 4787590
+  },
+  "checks": [
+    "Guard externalTCP/TLS/DNS/inheritedchild/missingfixture/IPCdelivery+realnumericTLS string/Buffer probes before anynative",
+    "Actual ready JSON source/build/guard/env/commands/sideeffects/DBassertion/disk before eachnative phase",
+    "Full330 strict ALL30 cadence/fairness/pool/CPU/RSS/FD/slots and restart/fault/operatorretry/censoredmetrics; full300pooldeadline;100connected/30active/3tenants/2CPU",
+    "Full realPG integration suite plus protocol tests outsideglob when relevant; unit/static exact sourceboundproof reuse disclosed",
+    "Current actualSIGSTOP>120 physicalslots test plus affected exactexit/cleanupfault/staleproof/orphanhold controls; noTTLreclaim",
+    "Exact TAP/exits/resource raws+source/build/guard hashes+ownedPIDterminal proofs bybound; currentmutants/canary+independentfinalreview remain unless executed"
+  ]
+}

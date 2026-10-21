@@ -1,0 +1,42 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-graceful-claims-fix-a12",
+  "attempt_id": "f10-graceful-claims-fix-a12",
+  "source_revision": "52cad40204deed91d93c969fe95ed89f3d95a8c7",
+  "worktree": "/tmp/n7-f10-restart-fix-20261006-a12",
+  "project": "projects/07-cold-email-warmup",
+  "trace_path": "/tmp/n7-f10-graceful-claims-fix-a12-receipt.md",
+  "trace_prelaunch_absent": true,
+  "launched_at": "2026-10-06T17:54:27.402812+00:00",
+  "freeze_at": "2026-10-06T18:12:57.402812+00:00",
+  "deadline": "2026-10-06T18:14:27.402812+00:00",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "route": {
+    "mechanical": "S",
+    "exit": 0,
+    "substantive": "Approved XL safeguards retained; existing graceful drain and healthy restart cadence repair, no contract change"
+  },
+  "allowed_files": [
+    "src/runtime/loop.ts",
+    "src/runtime/store.ts",
+    "tests/f10-runtime-unit.test.ts",
+    "tests/f10-runtime-integration.test.ts",
+    "tests/expanded-mvp-04.test.ts"
+  ],
+  "planner_packet": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/sol-coordinator-handoff-20261006/planner-only-review-packet.json",
+  "objective_witness_files": [
+    "/tmp/n7-f10-frozen-verify-a11/restart-state-v1.json",
+    "/tmp/n7-f10-frozen-verify-a11/restart-recovery-v1.json",
+    "/tmp/n7-f10-frozen-verify-a11/restart-deadline-red-v1.json",
+    "/tmp/n7-f10-frozen-verify-a11/analysis-v2.json"
+  ],
+  "acceptance": [
+    "Exact settled owned claims safely restart before120s; no post-drain admissions",
+    "FIRST lock + owner/generation CAS; staleowner cannot publish, crash/unconfirmed cleanup never steals ownership",
+    "rescan_incomplete remains held until explicit retry; physical slots require same exact proof; unknown SMTP never retried",
+    "Fail-capable baseline regression + affected realPG/unit/static checks; strengthened postrestart/censored native assertions if330s fits",
+    "Bound checkpoint commit+source/build/raw hash manifest+terminal receipt with truthful unfinished checks"
+  ]
+}

@@ -1,0 +1,540 @@
+{
+  "attempt": "A82",
+  "status": "completed",
+  "verdict": "LOCAL_TEST_DELTA_ACCEPT",
+  "ack_utc": "2026-10-07T14:46:11Z",
+  "accepted_candidate_revision": "f79543db87bc3188c3707e6bf773e446bef7a3ae",
+  "negative_source_revision": "0e20143b3826a73374e63ac46ec291b98516f84e",
+  "positive_clean_objective": {
+    "path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/a80-runtime-objective-packet.json",
+    "sha256": "15b792be7923fc7304e3199083077ebbdbbdd6acb7fe173bbd1e608754aaeadc"
+  },
+  "negative_result": {
+    "utc": "2026-10-07T14:48:37.375659+00:00",
+    "status": "EXPECTED_COUNTERPROOF_DELIVERED",
+    "semantic_callback_PASS": false,
+    "expected_native_exit": 1,
+    "actual_native_exit": 1,
+    "actual_callback_count": 1,
+    "actual_failed_names": [
+      "F11 ordinary HEADER material new_uid_semantic_stop"
+    ],
+    "actual_pass_names": [],
+    "actual_skipped": 0,
+    "code": "plan_limit_reached",
+    "raw_sha256": "6d39593c48649ebf5fc14dfb1634e090349183ceaa85c9825689451e405835bf",
+    "protected_all52_tablepairs2050_unchanged": true,
+    "final_schema_count": 53,
+    "final_table_pairs": 2091,
+    "identity": {
+      "db": "n7f11_a8",
+      "role": "n7",
+      "owner": "n7",
+      "other_sessions": 0
+    },
+    "own_claim_classification": {
+      "n7_a81_semantic_omission_261007143227": {
+        "physical": 0,
+        "runtime_claims": 0,
+        "body_claims": 0
+      }
+    },
+    "post_snapshot_path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/db-post_semantic_omission.json",
+    "post_snapshot_sha256": "2c2bd0e178033a69f7a7ab3ba93d4b45c440e8a253e4cf2fff29072565db8f13",
+    "lease_sha256_unchanged": "5d64678b7bf2a8876a604113c0f09e1796a46a6c69a6ba29bc6641ee03417be5"
+  },
+  "checks": {
+    "utc": "2026-10-07T14:51:06.216703+00:00",
+    "verdict": "LOCAL_TEST_DELTA_ACCEPT",
+    "accepted_candidate_revision": "f79543db87bc3188c3707e6bf773e446bef7a3ae",
+    "omission_revision": "0e20143b3826a73374e63ac46ec291b98516f84e",
+    "exact_one_call_omission_all_other_candidate227_source_bytes_equal": true,
+    "positive_actual_one_native0": true,
+    "negative_actual_one_native1_plan_limit_reached": true,
+    "negative_semantic_callback_PASS": false,
+    "negative_TEST_team_limit10": true,
+    "negative_actual_active_campaigns": 10,
+    "negative_distribution": [
+      10,
+      10,
+      10
+    ],
+    "negative_connected": 100,
+    "negative_participants": 30,
+    "negative_native_phase_elapsed_ms": [
+      2801.0303889999996,
+      2801.05098
+    ],
+    "negative_READY_window12000_queue450000_captured_before_close": true,
+    "negative_evidence_sha256": "3ec409bf6381b976ec9d330ce4e589a607bac743877fc484e9cd169e1dec6392",
+    "journal_sha256": "92aca941f09ab1acc8c991c3f42e19c75d9daf497b793f607a9108ed3cf39fe6",
+    "journal_events": 8,
+    "journal_UUID_PID_count0_fixed_phase_order_monotonic": true,
+    "positive_measurements_path": "/tmp/n7-f11-semantic-fixture-author-a78-20261007/a80-positive-witness-checks.json",
+    "positive_measurements_sha256": "4b74b50f882f7374f3e9572ed6eb3707d3bd0b1eeb4bf039efaaf6315ea99dfc",
+    "all52_old_tables2050_preserved": true,
+    "all53_final_tables2091": true,
+    "negative_joins11_positive_joins15": true,
+    "reviewer_initial_static_comparison_stop": "retained; no DB before normalization corrected; exact guarded source/trace literal comparison then passed",
+    "source_helpers_lease_and_deadlines_unchanged": true,
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "actual_host_model": null,
+    "usage": null,
+    "cost": null,
+    "fresh_fork": false,
+    "findings": []
+  },
+  "release": {
+    "utc": "2026-10-07T14:51:06.216703+00:00",
+    "runtime_lease_released": true,
+    "all11_scoped_PIDticks_joined": true,
+    "all53_schemas_tablepairs2091": true,
+    "all52_old_tablepairs2050_exactly_preserved": true,
+    "own_claims": {
+      "n7_a81_semantic_omission_261007143227": {
+        "physical": 0,
+        "runtime_claims": 0,
+        "body_claims": 0
+      }
+    },
+    "identity_at_post_snapshot": {
+      "db": "n7f11_a8",
+      "role": "n7",
+      "owner": "n7",
+      "other_sessions": 0
+    },
+    "no_further_DB_runtime_work": true,
+    "source_cut_unchanged": "2026-10-07T14:50:36.061869+00:00",
+    "seal_cut_unchanged": "2026-10-07T14:52:36.061869+00:00"
+  },
+  "review_sha256": "d08c0be6b5d4b689aac0dc91be4134d6b199d6f387e09d774cc7403aa5e13b47",
+  "artifacts": [
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/a82-checks.json",
+      "sha256": "b8f233a8c36620d159cf66103adf37a20196d715356652ba21e64bb05349843f",
+      "bytes": 1794
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/a82-final-joins-native.json",
+      "sha256": "ddee19cc40c432bfb667e2401a397f7594364cd63ad63a78cbb3d0f1eef6a017",
+      "bytes": 174
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/a82-initial-preflight.json",
+      "sha256": "d5a3e79598a521b80c1211e0dd73bbfaaf73e2cbf559550ddff6747415833af0",
+      "bytes": 479
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/a82-negative-result.json",
+      "sha256": "9237214492e8704f28e5936b341b20c87175787c1c1af7c21f2a892e650e9db9",
+      "bytes": 1148
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/a82-runtime-release.json",
+      "sha256": "50660d1012d64d47179cd0222412cb9c8cbf8b73b4932d5fc20d5d80bf1662ad",
+      "bytes": 644
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/a82-runtime-steps.json",
+      "sha256": "9997534927da638fe1c4ec2e5c59fd621f48c41c2e978356ce044396f2332a2e",
+      "bytes": 965
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/a82-static-preflight-stop.json",
+      "sha256": "ac26f26517a562bcaf48451efe94ace379a0d7a24508162d6ae770dd0ec4c73c",
+      "bytes": 267
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/a82_final-joins.json",
+      "sha256": "27a21214ddc01d9f0a063ada9974f6328200d43823335068ee2dd7121bfeec54",
+      "bytes": 2473
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/activation-handoff.json",
+      "sha256": "355db4f51c82397cf43f298c04f164b6f30fc9d4e0c88b6f2129afbd47a257a8",
+      "bytes": 1827
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/copy-diff.raw",
+      "sha256": "b25a32d3761b6228a8c81811981a5e42db2ad3cb3f0423bed4905d317a369504",
+      "bytes": 29638
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/copy-provenance.json",
+      "sha256": "427477df7d798a5fd9d5e20235570d6f6227f173a7d4431e06ee17cf93f5303a",
+      "bytes": 1492
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/db-post_semantic_omission.json",
+      "sha256": "2c2bd0e178033a69f7a7ab3ba93d4b45c440e8a253e4cf2fff29072565db8f13",
+      "bytes": 282005
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/db-pre_semantic_omission.json",
+      "sha256": "30c1a9f46987c9fb7d6ab16437224c649cfe0b6e6cfbf995a73ccc031906c25b",
+      "bytes": 281993
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/db-pre_setup.json",
+      "sha256": "2136402a7dbdbd8eee8b5623ddb38a6c92671855fc70b50c08121000fa203e39",
+      "bytes": 276289
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/db-protected-a68-placeholder.json",
+      "sha256": "86801471bedc8e1af903d832ec1897aef71b3b5b55438fdde9c44603144a497a",
+      "bytes": 271334
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/db-protected.json",
+      "sha256": "1073fec531e87fde7ff30cbd32b85dcea7e633197ab2d8ff464a2064ddf20917",
+      "bytes": 276492
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/dependency-bindings.json",
+      "sha256": "f128a44c5295b3be01d40314893296cc9785d09da50811a60ecd270c07262169",
+      "bytes": 803
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/dispatch-manifest.json",
+      "sha256": "737dbc5b69723c2d1c6795bf2e6de2773cbdd2d2e8564c24e2cbed35cb70cce3",
+      "bytes": 475
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/guard-1933576-1791384477352.json",
+      "sha256": "d38386f2c975ab4ab9d458158e14441308f867e50212e3b97bc98466b006a414",
+      "bytes": 274
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/guard-1935086-1791384482528.json",
+      "sha256": "9c79574f6998447121de6bc4adcbb397a78a358b27b17bff881435926937336c",
+      "bytes": 274
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/guard-1935715-1791384484753.json",
+      "sha256": "043c78686d1e4b0ec44548f55cfc7cc9e821c80976a90632d5ab0ff45a0fcc10",
+      "bytes": 274
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/guard-1937788-1791384492375.json",
+      "sha256": "e950f8651a873fe75c650ca9254d5fc06d78d635652ca58ec49145bbd211d206",
+      "bytes": 274
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/guard-1940129-1791384500574.json",
+      "sha256": "a19d4bfde9ec9e33d6ea27bd79d5e65cc54dbc1d6917c08b8ee114db63f1714a",
+      "bytes": 288
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/guard-1940311-1791384501288.json",
+      "sha256": "f3cb6df01f04f5a28a1727b00f09ae0f33af33a97209e366eab74fe8e721b7c2",
+      "bytes": 288
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/guard-1940618-1791384502044.json",
+      "sha256": "fccb58878b5ecafabbca516e02c6b9b04008969189112def43b153ffe4ce9740",
+      "bytes": 288
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/guard-1940853-1791384502717.json",
+      "sha256": "210f427d9091a7dc1783bb3a16115bf2739eb746039d5fcfd7eae9e6fe7d663e",
+      "bytes": 288
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/guard-1940931-1791384503351.json",
+      "sha256": "9e5ba973bcceaa070ff5d610ea8f4c68fd6d590f1fd5be6e85fb1e04bf231e72",
+      "bytes": 288
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/guard-1941968-1791384506805.json",
+      "sha256": "01508fa7d324646c67cddbd666f9f2fd59dc1f2f473b5c2d7b3eaa0c0e584fa7",
+      "bytes": 288
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/guard-1943194-1791384511165.json",
+      "sha256": "92dfe544ae46a253427a41bab722d713120695458e1e23171514949d433ef625",
+      "bytes": 274
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/guard-a81.mjs",
+      "sha256": "d53bd7e871fb57ba8ced30256062f2236afcd550da161db49eb82cda835f28e3",
+      "bytes": 5971
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/helper-bindings.json",
+      "sha256": "9d8306a65478215a0e001a1affd2d4b8ea3f5fb3565042530edd12c05e99aca6",
+      "bytes": 523
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/joins.py",
+      "sha256": "04b3752c68f132df69353a9665e5d05263aa438ade1faa2b2a723710d47fc628",
+      "bytes": 779
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/launch.py",
+      "sha256": "a51e81395d7b8e7d5302d1d40e3be1d7c3a0ea11daa23e2acdf89fcb3b227e7d",
+      "bytes": 5071
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/objective-packet.json",
+      "sha256": "027bdab93a33a110765893c919a99a13aa9fd69845b51458835d2f6a39194048",
+      "bytes": 3078
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/post_semantic_omission-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/post_semantic_omission-joins.json",
+      "sha256": "6c6e05e82fac23615735c531243d2894812daeb8705c2bbe043ceacd453bd359",
+      "bytes": 2473
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/post_semantic_omission-launch.json",
+      "sha256": "51409cb18308b2f13bb6bcd307ab4ea2f709935ca2e2695f63db28845b91b5ae",
+      "bytes": 49661
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/post_semantic_omission.raw",
+      "sha256": "4e20c321edf506473f46d058ac4068b4511b482bf1ace984f4de3cd6c224a782",
+      "bytes": 2210
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/pre_semantic_omission-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/pre_semantic_omission-joins.json",
+      "sha256": "c2b6890279a7412cc8fba7efc762a112be70e0870faf1f325e9feff770026e0e",
+      "bytes": 717
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/pre_semantic_omission-launch.json",
+      "sha256": "47886d9f93d474e8d238cdbc0521e9fe9e9b49240e609203852f6693bb976de4",
+      "bytes": 49622
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/pre_semantic_omission.raw",
+      "sha256": "5fb5d6bf88edfd64aea712c10b8326a3f47a093938937c298fffc695bb17d1bf",
+      "bytes": 2209
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/pre_setup-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/pre_setup-joins.json",
+      "sha256": "8ecbddd62a72720dccbe2320fa77a4baf17c599852bb6a7732bcbd9850895855",
+      "bytes": 299
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/pre_setup-launch.json",
+      "sha256": "f6ea4cceb85bd87ea71e5a39ff42f451567b53a13a07e641683186b41a36ae7b",
+      "bytes": 49586
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/pre_setup.raw",
+      "sha256": "58f39fd27d572d602391ef48f19e809f57d2b197c982211a6a84973d56081c14",
+      "bytes": 2068
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/process-start-1933576-1791384477352.json",
+      "sha256": "a6ebcc6a9926c85ad8373030ca33a9d717c81b30bd3b202d351d3816f1b7884d",
+      "bytes": 227
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/process-start-1935086-1791384482528.json",
+      "sha256": "f8f342dbefd373f94cb0b4453e09b44e1cebc072b9902c42ce0338bb6d8e5c69",
+      "bytes": 227
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/process-start-1935715-1791384484753.json",
+      "sha256": "540a67eaf147b5c758094d8662c89e994ca9287f5a88e9581f97bb08133ccda7",
+      "bytes": 227
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/process-start-1937788-1791384492375.json",
+      "sha256": "c3dd01ce5371516ca7c5ea7228460a06212cf27e1d1cac49b9ff68c5f3877710",
+      "bytes": 227
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/process-start-1940129-1791384500574.json",
+      "sha256": "99687558e3af78e20af81a9077e0dde5b8b91e1bbf22456eeb8f04d63be2a837",
+      "bytes": 241
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/process-start-1940311-1791384501288.json",
+      "sha256": "edda6cf9fa20b2f67698bc8bc1faa210aa78391add8facd52a16c6870fa66672",
+      "bytes": 241
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/process-start-1940618-1791384502044.json",
+      "sha256": "2f34a98c5e786a2646b9f81e6b84ddd487db62630cdc22be3f61b35195cd9701",
+      "bytes": 241
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/process-start-1940853-1791384502717.json",
+      "sha256": "ee3e01da9300c8d238df848455bc693c0fd370e7d37baebaa1cd6c53b8e5738d",
+      "bytes": 241
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/process-start-1940931-1791384503351.json",
+      "sha256": "b8d197fb45b535965d2d512a5c16754565adc9402c84894e6a065a3980e1aa3b",
+      "bytes": 241
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/process-start-1941968-1791384506805.json",
+      "sha256": "bcc47dd0abf06418002da9399bb70abe4139b55807b71cddb49919dd1f05fedf",
+      "bytes": 241
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/process-start-1943194-1791384511165.json",
+      "sha256": "a33430ebd5863f824f6a71f7c40b71b1e4d54aa6ce2fb1be96277cf425752f16",
+      "bytes": 227
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/public-before.json",
+      "sha256": "f9b6e85cf2ac2ed457e13d6cab4ba461da56457056d7445495fcd740a36e131b",
+      "bytes": 4825
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/root-negative-activation-a82.json",
+      "sha256": "7548ba7164ebed4c4b1be5e8c6b430cfd797a03ec9bb2c39e8ac749aee4188e1",
+      "bytes": 490
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/root-source-binding-before-a80-negative.json",
+      "sha256": "fbe623af81d49946de84fb5ff034df8d933f93ced6a97b364ca5337cad084312",
+      "bytes": 2798
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/root-source-preparation.json",
+      "sha256": "d948d965a2c5a25928972fbccb4c1fba980876ba71a09761423b50b14b535b55",
+      "bytes": 795
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/run-a81.sh",
+      "sha256": "31abf0bd59b10f48cc65a3abc726dabfbd7cbdecca3b21e30b16df38c5b5b7a6",
+      "bytes": 1265
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/runtime-dispatch-manifest-a82.json",
+      "sha256": "b4ab76a007ddecb426406064c9ee804e6028cb683008d650ebfb451b9fa980b9",
+      "bytes": 588
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/runtime-lease.json",
+      "sha256": "5d64678b7bf2a8876a604113c0f09e1796a46a6c69a6ba29bc6641ee03417be5",
+      "bytes": 3850
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/scenario-inventory.json",
+      "sha256": "8152ae069367aaa4fe989297bbc3bb8a9ad0c7bb5c26bed64bb7940018694287",
+      "bytes": 1608
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/schema-semantic_omission-setup.json",
+      "sha256": "a12e1bf3882494fe038a915df722a192fdd8e7c18369642c637015cc3d8c160b",
+      "bytes": 5901
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/schema-session-1935086-1029805.json",
+      "sha256": "d215b354e842e7898a67c2f9ad86602d9cfc6e542766f24c0acb2fc26ddf3619",
+      "bytes": 334
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/schema-session-1937788-1029832.json",
+      "sha256": "86d40fbfa525dff5535c9951e550066f6fb322716c23c664a16cb7ce0bbccfd9",
+      "bytes": 368
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/schema-session-1937788-1029839.json",
+      "sha256": "08cb630e3ff0d2692ea98bb80db3458b836fe9823e20ccd42ca7b4af34f65bc2",
+      "bytes": 368
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/schema-setup-a81.mjs",
+      "sha256": "fadac2fad7717d2da52d3322d59d55f5515b5570564a59c4a758266f2ff25848",
+      "bytes": 4403
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/semantic_omission-exit.txt",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "bytes": 2
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/semantic_omission-joins.json",
+      "sha256": "d39e86f3c09c53510af63bedeeec4922bf7d67a81baa31593b6b35ab46318f2d",
+      "bytes": 2264
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/semantic_omission-launch.json",
+      "sha256": "051519dc26b6391323e3be77fbd7c671c10d129525100f89ad9725f55df307d5",
+      "bytes": 50100
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/semantic_omission.raw",
+      "sha256": "6d39593c48649ebf5fc14dfb1634e090349183ceaa85c9825689451e405835bf",
+      "bytes": 1402
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/setup_semantic_omission-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/setup_semantic_omission-joins.json",
+      "sha256": "1390934545ff98125a30cce710d81582f9c25e8b0152c706de8148ca57576ff1",
+      "bytes": 508
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/setup_semantic_omission-launch.json",
+      "sha256": "2c8ba6f728f3af75b956e2ee94a821f6e59ea746836cdaff2ceccd917e3d3e8f",
+      "bytes": 49555
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/setup_semantic_omission.raw",
+      "sha256": "76af69dbcb7f34a4c699553a6dcf2d357786b2e590e4e0bafc813ed41826e67e",
+      "bytes": 147
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/snapshot-a81.mjs",
+      "sha256": "f80642240010baac89e8506a15391f5b207aab24e335aabe3364f09cff2f3a51",
+      "bytes": 3084
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/source-binding.json",
+      "sha256": "28d530ce3107a1b5f6b599a001352f44acd3a75a21b14585b7aa61fc9338f4e9",
+      "bytes": 2801
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/source-freeze.json",
+      "sha256": "877959c87b99fc6d5ef4c17bb077e69c538d8a5cebba7a9318d09a9aad40a16f",
+      "bytes": 22444
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/syntax-checks.json",
+      "sha256": "8f3e95492a2de3fbaed67374f1c5f8b31f5d4751d4631b572163562a5bf7a2c1",
+      "bytes": 271
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/semantic_omission/a40-header-only-new_uid_semantic_stop.json",
+      "sha256": "3ec409bf6381b976ec9d330ce4e589a607bac743877fc484e9cd169e1dec6392",
+      "bytes": 23750
+    },
+    {
+      "path": "/tmp/n7-f11-semantic-omission-runner-prep-a81-20261007/semantic_omission/runtime-fixture-reset.jsonl",
+      "sha256": "92aca941f09ab1acc8c991c3f42e19c75d9daf497b793f607a9108ed3cf39fe6",
+      "bytes": 1419
+    }
+  ],
+  "full_F11_acceptance": false,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_usage": null,
+  "actual_cost": null
+}

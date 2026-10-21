@@ -1,0 +1,116 @@
+{
+  "work_unit_id": "n7-live-app-backend-review-a3",
+  "source_revision": "4e4f0359fac7a22701f350adbb20447ade5de741",
+  "baseline_revision": "1fb00e49189279159a95e537266cc627ca7ad1d2",
+  "launch_sha256": "0191ccdb643e3bf28dcd51f5164c970c58cb81d84fcd110723ef104ac1fcfe71",
+  "author_objective_sha256": "e014b2ec06b7afac2231f0da87bf62e41d2dec4cccf39c8c9908b8f9ff8fc8db",
+  "planner_context": [
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/docs/plans/live-business-release-20261007.md",
+      "sha256": "f8c9d37c8967478ff820663d302642a7c9a87b115138225e5638c83de62f5e9c",
+      "origin": "approved planner packet supplied by coordinator"
+    },
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/docs/plans/live-app-integration-20261007.md",
+      "sha256": "3da262981661901ebf6e6405e794b44652c4b916d6ef7db17e10325ab469fcd1",
+      "origin": "approved planner packet supplied by coordinator"
+    },
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/docs/plans/live-refund-seam-20261007.md",
+      "sha256": "7e650f5b9baf85bc9052d8a7fc123d6a118e26de140300526e8ca77f9b9cd8b9",
+      "origin": "approved planner packet supplied by coordinator"
+    }
+  ],
+  "checks": [
+    {
+      "name": "refund-witness",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_receipt": "/tmp/n7-live-app-backend-review-a3-20261007/refund-witness.log",
+      "sha256": "c5993f2f62521b0894e8c2c9687fe992b16e2dd6a94060faf89a034184c28ede"
+    },
+    {
+      "name": "unsafe-context",
+      "native_exit": 1,
+      "expected_exit": 1,
+      "raw_receipt": "/tmp/n7-live-app-backend-review-a3-20261007/unsafe-context.log",
+      "sha256": "d81457faebf5c4ab276084cc2b55b0f0fe8d0f2d9aa6f03c12254bed0e8dc113"
+    },
+    {
+      "name": "extra-fetch",
+      "native_exit": 1,
+      "expected_exit": 1,
+      "raw_receipt": "/tmp/n7-live-app-backend-review-a3-20261007/extra-fetch.log",
+      "sha256": "bd18b3d89eaef2ac716a35e2d2cdc044cc2dd72c3521e1b04a42cd35b65d05cb"
+    }
+  ],
+  "verified_author_checks": [
+    {
+      "name": "mode-mutation",
+      "command": "node --import tsx --test tests/live-app-integration.test.ts [LIVE selects TEST grants]",
+      "native_exit": 1,
+      "expected_exit": 1,
+      "raw_receipt": "/tmp/n7-live-app-backend-author-a3-20261007/mode-mutation.log",
+      "sha256": "efeee20f37e9cc7331756d3dac79ca45ce73f498eaf3aa42ebe989a2dbbbe4bb"
+    },
+    {
+      "name": "admission-mutation",
+      "command": "node --import tsx --test tests/live-app-integration.test.ts [shared admission threshold 1]",
+      "native_exit": 1,
+      "expected_exit": 1,
+      "raw_receipt": "/tmp/n7-live-app-backend-author-a3-20261007/admission-mutation.log",
+      "sha256": "93ec8a9036e82f3152da6dac621a8c32dbcab5b923a04003748690673aae87d2"
+    },
+    {
+      "name": "typecheck",
+      "command": "npm run typecheck",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_receipt": "/tmp/n7-live-app-backend-author-a3-20261007/typecheck.log",
+      "sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393"
+    },
+    {
+      "name": "lint",
+      "command": "npm run lint",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_receipt": "/tmp/n7-live-app-backend-author-a3-20261007/lint.log",
+      "sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e"
+    },
+    {
+      "name": "build",
+      "command": "npm run build",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_receipt": "/tmp/n7-live-app-backend-author-a3-20261007/build.log",
+      "sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323"
+    },
+    {
+      "name": "unit",
+      "command": "npm test",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_receipt": "/tmp/n7-live-app-backend-author-a3-20261007/unit.log",
+      "sha256": "048ccaf6077c1d0e22967882270eb478cd90d00e9fb4990ee5ce72e72404acff"
+    },
+    {
+      "name": "affected-integration",
+      "command": "node --import tsx --import db-guard.mjs --test --test-concurrency=1 tests/live-app-integration.test.ts tests/live-billing-integration.test.ts tests/billing-integration.test.ts tests/evidence-integration.test.ts tests/web-integration.test.ts tests/capacity-integration.test.ts",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "raw_receipt": "/tmp/n7-live-app-backend-author-a3-20261007/affected-integration.log",
+      "sha256": "df5bea520c7a4ccce9be32115cf0be688a742c7da023ae5f49c6dda3f0bc56e7"
+    }
+  ],
+  "all_source_and_build_hashes_match": true,
+  "node": "22.22.3",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "elapsed_seconds": 530.473614,
+  "finished_at": "2026-10-07T19:27:00.457568+00:00",
+  "external_provider_calls_executed": false,
+  "database_mutations_executed": false,
+  "verdict": "ACCEPT_BACKEND_SLICE",
+  "status": "completed"
+}

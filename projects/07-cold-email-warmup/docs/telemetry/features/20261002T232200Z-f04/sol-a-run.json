@@ -1,0 +1,84 @@
+{
+  "run_id": "20261002T232200Z-f04",
+  "work_unit_id": "n7-f04a-sol",
+  "attempt_id": "implement-a1",
+  "started_at": "2026-10-02T23:24:04.407884+00:00",
+  "deadline": "2026-10-02T23:49:04.407884+00:00",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gap": "Host model and usage proof unavailable to worker",
+  "source_revision": "64a093cc75eb4016a55e33196402ca84638bc811",
+  "stage": "handoff",
+  "route": {
+    "substantive": "XL",
+    "reason": "stop invariant, durable page atomicity, safety freshness",
+    "mechanical": "S",
+    "exit": 0,
+    "lower_bound_only": true
+  },
+  "approval": "OWN-N7-002",
+  "scope": "F04a AC A1-A6; no B/HTTP/live adapter",
+  "preflight": "not_applicable until runtime ready",
+  "donors": [
+    "F03 eligibilityTransaction, DispatchSeams, openRecipient, mailbox_poll"
+  ],
+  "forecast": "insufficient_data; hard 1500s caller budget",
+  "attempts": [
+    {
+      "id": "implement-a1",
+      "status": "completed"
+    }
+  ],
+  "route_implement": {
+    "substantive": "XL",
+    "reason": "stop invariant, durable page atomicity, safety freshness",
+    "mechanical": "S",
+    "exit": 0,
+    "lower_bound_only": true
+  },
+  "checks": {
+    "typecheck": 0,
+    "lint": 0,
+    "build": 0,
+    "full_unit": {
+      "exit": 0,
+      "pass": 16,
+      "fail": 0
+    },
+    "full_pg": {
+      "exit": 0,
+      "pass": 64,
+      "fail": 0
+    },
+    "mutation": {
+      "exit": 1,
+      "expected": "RED",
+      "restored_affected_exit": 0,
+      "restored_pass": 13
+    },
+    "canary": 0,
+    "source_secret_scan": 0,
+    "audit": {
+      "exit": 0,
+      "vulnerabilities": 0
+    },
+    "source_image_binding": 0
+  },
+  "dependency_fallback": "r1 absent; existing F03 sol node_modules reused by symlink; package-lock SHA256 identical 49b300c360c2c1471596b225ced88d8b509bb57fcc2787a83c0dd5190089eb1a",
+  "freeze_at": "2026-10-02T23:37:31.120443+00:00",
+  "blocker": null,
+  "finished_at": "2026-10-02T23:43:47.251731+00:00",
+  "elapsed_wall_ms": 1182843,
+  "active_wall_ms": null,
+  "product_revision": "c666af20eea2ff0a054d2febce3fc4ffbf7b5e91",
+  "source_sha256": "e554eddab0edb483efe61cc99fdaec6db37c8c68de4d19d2431d222021e6ee4c",
+  "build_sha256": "8eb7020e79a4b5ba95e4aefc706a57e1ef2fb5b2c1dca7042fe76d9eaf5ee125",
+  "image_id": "sha256:fdd7aedcce0d2b8d3e207f38fb7a9a555b70f48275e4c60d7a1a493616a40923",
+  "remaining_gates": [
+    "Parent fresh independent Astra A review; B implementation and fresh review before whole F04 acceptance"
+  ]
+}

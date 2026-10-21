@@ -1,0 +1,2674 @@
+{
+  "utc": "2026-10-06T23:15:41.633448+00:00",
+  "results": [
+    {
+      "name": "uid-mismatch-as-error-source",
+      "predicate": "typed change proof returns scanning, authenticated read ends before old FETCH",
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^full poll captures a reset between snapshot and read and incomplete entry performs no IO$",
+        "tests/f09-live-transport-a36-source.test.ts"
+      ],
+      "source_binding": "exact current src/replies modules through tsx",
+      "baseline": {
+        "utc": "2026-10-06T23:10:51.099308+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.369809529976919,
+        "pid": 397422,
+        "startticks": "125125672",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:10:50.896Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:10:51.077Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "bbd0f86829a59eca9c3426e4d07bd636e3026e29dba1898e43a18c142bddb94e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "baseline_test_count_exact1": true,
+      "original_sha256": {
+        "src/replies/imap.ts": "e84dfccb60b3236ab3004815b19ecb4eee6c2233e601e0e8cbbd14d117df0200",
+        "dist/replies/imap.js": "6fe481db6a4bed95f3108d4ba8a00955ffbdb54a0ed8d97eecd4091efba5bbc1"
+      },
+      "mutated_sha256": {
+        "src/replies/imap.ts": "210e5239ede254618476b2d33f4e82592209459c18a814fef0d316c18c9b9b9d",
+        "dist/replies/imap.js": "58f6ed87664780e555445bdb05820aaa4cb2fa9863fd99b6fb72d055cc438407"
+      },
+      "negative": {
+        "utc": "2026-10-06T23:10:54.003847+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 2.5586876939050853,
+        "pid": 398486,
+        "startticks": "125126144",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:10:53.836Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:10:53.987Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+        ],
+        "tap_sha256": "315f3a93df30d2465337864cac1a6541f93ebe10dd0f26d3a84107e651283766",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/imap.ts": "e84dfccb60b3236ab3004815b19ecb4eee6c2233e601e0e8cbbd14d117df0200",
+        "dist/replies/imap.js": "6fe481db6a4bed95f3108d4ba8a00955ffbdb54a0ed8d97eecd4091efba5bbc1"
+      },
+      "restored": {
+        "utc": "2026-10-06T23:10:58.267721+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 3.9537398621905595,
+        "pid": 399135,
+        "startticks": "125126431",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:10:58.107Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:10:58.251Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "19c7e0021648782455905e0c782de649aa5b967d851394233a2b50fa8cf8b45a",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "uid-mismatch-as-error-compiled",
+      "predicate": "typed change proof returns scanning, authenticated read ends before old FETCH",
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^full poll captures a reset between snapshot and read and incomplete entry performs no IO$",
+        "tests/f09-live-transport-a36-compiled.test.ts"
+      ],
+      "source_binding": "copied identical positive title with direct dist/replies imports and inherited compiled native child",
+      "baseline": {
+        "utc": "2026-10-06T23:11:02.903752+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.314451161073521,
+        "pid": 400043,
+        "startticks": "125126858",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:11:02.716Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:11:02.887Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "f8e3c6b4cb6db7cbcf994bde87c19d197a29a6a2ac6598336080563a500d81d5",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "baseline_test_count_exact1": true,
+      "original_sha256": {
+        "src/replies/imap.ts": "e84dfccb60b3236ab3004815b19ecb4eee6c2233e601e0e8cbbd14d117df0200",
+        "dist/replies/imap.js": "6fe481db6a4bed95f3108d4ba8a00955ffbdb54a0ed8d97eecd4091efba5bbc1"
+      },
+      "mutated_sha256": {
+        "src/replies/imap.ts": "210e5239ede254618476b2d33f4e82592209459c18a814fef0d316c18c9b9b9d",
+        "dist/replies/imap.js": "58f6ed87664780e555445bdb05820aaa4cb2fa9863fd99b6fb72d055cc438407"
+      },
+      "negative": {
+        "utc": "2026-10-06T23:11:05.976476+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 2.7641262870747596,
+        "pid": 401047,
+        "startticks": "125127321",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:11:05.801Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:11:05.959Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+        ],
+        "tap_sha256": "1dcd1351d51b6831ba85899bbe30ac04eca733c7ae092f7eb075f09e26ee60a3",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/imap.ts": "e84dfccb60b3236ab3004815b19ecb4eee6c2233e601e0e8cbbd14d117df0200",
+        "dist/replies/imap.js": "6fe481db6a4bed95f3108d4ba8a00955ffbdb54a0ed8d97eecd4091efba5bbc1"
+      },
+      "restored": {
+        "utc": "2026-10-06T23:11:11.024336+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.698314097011462,
+        "pid": 401952,
+        "startticks": "125127632",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:11:10.846Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:11:11.005Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "46f7cce1993defe898d47cfa70c663e82a71d8281d192711ca0ff79acb656d98",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "uid-accept-old-fetch-relabel-source",
+      "predicate": "old-generation FETCH/page is forbidden once EXAMINE proves changed generation",
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^full poll captures a reset between snapshot and read and incomplete entry performs no IO$",
+        "tests/f09-live-transport-a36-source.test.ts"
+      ],
+      "source_binding": "exact current src/replies modules through tsx",
+      "baseline": {
+        "utc": "2026-10-06T23:10:51.099308+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.369809529976919,
+        "pid": 397422,
+        "startticks": "125125672",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:10:50.896Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:10:51.077Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "bbd0f86829a59eca9c3426e4d07bd636e3026e29dba1898e43a18c142bddb94e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "baseline_test_count_exact1": true,
+      "original_sha256": {
+        "src/replies/imap.ts": "e84dfccb60b3236ab3004815b19ecb4eee6c2233e601e0e8cbbd14d117df0200",
+        "dist/replies/imap.js": "6fe481db6a4bed95f3108d4ba8a00955ffbdb54a0ed8d97eecd4091efba5bbc1"
+      },
+      "mutated_sha256": {
+        "src/replies/imap.ts": "9a650f7d9334095474030796f66fcd3c3958091644d5b9fde8cc6d88805072f1",
+        "dist/replies/imap.js": "9d9dfed9ef5c1011d176e80f39f6a8edc8cd087c1390a3f9e0f9ddde52826dbc"
+      },
+      "negative": {
+        "utc": "2026-10-06T23:11:14.913439+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 3.484273353824392,
+        "pid": 403593,
+        "startticks": "125128142",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:11:14.707Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:11:14.889Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+        ],
+        "tap_sha256": "33753056b53cc9245600ce64036aaf5ea0ccef4cd9529a5e9a7b180c1a479d47",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/imap.ts": "e84dfccb60b3236ab3004815b19ecb4eee6c2233e601e0e8cbbd14d117df0200",
+        "dist/replies/imap.js": "6fe481db6a4bed95f3108d4ba8a00955ffbdb54a0ed8d97eecd4091efba5bbc1"
+      },
+      "restored": {
+        "utc": "2026-10-06T23:11:19.393535+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.128180203959346,
+        "pid": 405129,
+        "startticks": "125128526",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:11:19.222Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:11:19.376Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "e8bf7cf59219147117e58bc4871be2ef19769091bb1c253e39388666904d245c",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "uid-accept-old-fetch-relabel-compiled",
+      "predicate": "old-generation FETCH/page is forbidden once EXAMINE proves changed generation",
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^full poll captures a reset between snapshot and read and incomplete entry performs no IO$",
+        "tests/f09-live-transport-a36-compiled.test.ts"
+      ],
+      "source_binding": "copied identical positive title with direct dist/replies imports and inherited compiled native child",
+      "baseline": {
+        "utc": "2026-10-06T23:11:02.903752+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.314451161073521,
+        "pid": 400043,
+        "startticks": "125126858",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:11:02.716Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:11:02.887Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "f8e3c6b4cb6db7cbcf994bde87c19d197a29a6a2ac6598336080563a500d81d5",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "baseline_test_count_exact1": true,
+      "original_sha256": {
+        "src/replies/imap.ts": "e84dfccb60b3236ab3004815b19ecb4eee6c2233e601e0e8cbbd14d117df0200",
+        "dist/replies/imap.js": "6fe481db6a4bed95f3108d4ba8a00955ffbdb54a0ed8d97eecd4091efba5bbc1"
+      },
+      "mutated_sha256": {
+        "src/replies/imap.ts": "9a650f7d9334095474030796f66fcd3c3958091644d5b9fde8cc6d88805072f1",
+        "dist/replies/imap.js": "9d9dfed9ef5c1011d176e80f39f6a8edc8cd087c1390a3f9e0f9ddde52826dbc"
+      },
+      "negative": {
+        "utc": "2026-10-06T23:11:23.145459+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 3.4324802048504353,
+        "pid": 406426,
+        "startticks": "125128971",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:11:22.946Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:11:23.125Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+        ],
+        "tap_sha256": "e15b2b82c011f8c08d9a4682f8368afc904a2484455092fbf70f2421924db79c",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/imap.ts": "e84dfccb60b3236ab3004815b19ecb4eee6c2233e601e0e8cbbd14d117df0200",
+        "dist/replies/imap.js": "6fe481db6a4bed95f3108d4ba8a00955ffbdb54a0ed8d97eecd4091efba5bbc1"
+      },
+      "restored": {
+        "utc": "2026-10-06T23:11:28.127774+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.6411371268332005,
+        "pid": 407865,
+        "startticks": "125129348",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:11:27.950Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:11:28.107Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "9ec945b342974025ac78cc80a06dfa7668e700a7fcc448187c199202d0260320",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "uid-second-snapshot-source",
+      "predicate": "one native quantum performs exactly one EXAMINE and no added snapshot after read change proof",
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^explicit retry captures changed native UID proof in one quantum without old FETCH or freshness$",
+        "tests/f10-runtime-protocol-a36-source.test.ts"
+      ],
+      "source_binding": "exact current src/replies modules through tsx",
+      "baseline": {
+        "utc": "2026-10-06T23:12:02.639062+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 34.12736757309176,
+        "pid": 409385,
+        "startticks": "125129851",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:12:02.467Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:12:02.621Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "f807d2d3b8268869cfcb6f719a2a0791972655c973439a1c68efc8c76263acdc",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "baseline_test_count_exact1": true,
+      "original_sha256": {
+        "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+        "dist/replies/worker.js": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d"
+      },
+      "mutated_sha256": {
+        "src/replies/worker.ts": "8f54320e533c84cfaf9f66043ceaf21ff8c4678c037fed32802507e8f274fedf",
+        "dist/replies/worker.js": "7bf137194b84cd41ab62261fc65d930bdbdae2ae72a9955a0f056ba18ffc844d"
+      },
+      "negative": {
+        "utc": "2026-10-06T23:12:36.491840+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 33.52182497596368,
+        "pid": 420460,
+        "startticks": "125133296",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:12:36.313Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:12:36.475Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - explicit retry captures changed native UID proof in one quantum without old FETCH or freshness"
+        ],
+        "tap_sha256": "48f849bfbe976a99efc2cc79b0a6a03483c7735635b33923a30500532b3ca606",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+        "dist/replies/worker.js": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d"
+      },
+      "restored": {
+        "utc": "2026-10-06T23:13:11.262690+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 34.44143552496098,
+        "pid": 428269,
+        "startticks": "125136682",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:13:11.055Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:13:11.244Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "77e17de5a5f4656a99521efd543227249c1876349760363e4a73f3f9411f3e70",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "uid-second-snapshot-compiled",
+      "predicate": "one native quantum performs exactly one EXAMINE and no added snapshot after read change proof",
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^explicit retry captures changed native UID proof in one quantum without old FETCH or freshness$",
+        "tests/f10-runtime-protocol-a36-compiled.test.ts"
+      ],
+      "source_binding": "copied identical positive title with direct dist/replies imports and inherited compiled native child",
+      "baseline": {
+        "utc": "2026-10-06T23:13:45.823954+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 34.202846999047324,
+        "pid": 434654,
+        "startticks": "125140162",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:13:45.663Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:13:45.808Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "7873a6fe2a52188decff7efaaf2bf595fe4055060a7274bbec74f58d237ab4d1",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "baseline_test_count_exact1": true,
+      "original_sha256": {
+        "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+        "dist/replies/worker.js": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d"
+      },
+      "mutated_sha256": {
+        "src/replies/worker.ts": "8f54320e533c84cfaf9f66043ceaf21ff8c4678c037fed32802507e8f274fedf",
+        "dist/replies/worker.js": "7bf137194b84cd41ab62261fc65d930bdbdae2ae72a9955a0f056ba18ffc844d"
+      },
+      "negative": {
+        "utc": "2026-10-06T23:14:19.327044+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 33.16867328993976,
+        "pid": 444870,
+        "startticks": "125143615",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:14:19.134Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:14:19.310Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - explicit retry captures changed native UID proof in one quantum without old FETCH or freshness"
+        ],
+        "tap_sha256": "0c3c6a7b9b9db215eeda0e81d865d1b38bb179b5185e50ec17ee46a3b9e24366",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+        "dist/replies/worker.js": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d"
+      },
+      "restored": {
+        "utc": "2026-10-06T23:14:53.819043+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 34.140253516845405,
+        "pid": 455513,
+        "startticks": "125146967",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:14:53.630Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:14:53.801Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "5be0f35a5cc3c939e0d2742ece50b4fdfd00d4f81bc3a8caaaae8157a5a1084e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "uid-retry-tail-cursor-reset-source",
+      "predicate": "real PG explicit retry retains tail30,cursor20,high10,sameRun, incrementsattempt2/pages0; observer extracted from existing R1 empty/sparse tail subtest",
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^A36 explicit retry preserves fixed tail cursor horizon and run identity$",
+        "tests/a36-retry-source.test.ts"
+      ],
+      "source_binding": "exact current src/replies modules through tsx",
+      "baseline": {
+        "utc": "2026-10-06T23:14:55.513218+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 1.3607368459925056,
+        "pid": 462823,
+        "startticks": "125150415",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:14:55.344Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:14:55.496Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "92a3db4e8e1222b86aa80f71fa24cd40486dc7a27d41d28cb6cb636b41418724",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "baseline_test_count_exact1": true,
+      "original_sha256": {
+        "src/replies/store.ts": "041516f0fb492bd0e7d92567cf0b94bec23f770991f449fcc8343961d3e6363c",
+        "dist/replies/store.js": "656f1d9cc163efb49ef80b3ee1846bab6b0841d27d1896d90484bd5cb2852d13"
+      },
+      "mutated_sha256": {
+        "src/replies/store.ts": "d2d385b1c86959d676c4f8c4cd8371ccb6fae87efc0162e12fccb34262786887",
+        "dist/replies/store.js": "85e94cc5a65509d0970be27fa8e2f30226ac45eefcec540b5cb3239b8df1f67d"
+      },
+      "negative": {
+        "utc": "2026-10-06T23:14:57.244182+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 1.3868437248747796,
+        "pid": 463157,
+        "startticks": "125150585",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:14:57.058Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:14:57.226Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - A36 explicit retry preserves fixed tail cursor horizon and run identity"
+        ],
+        "tap_sha256": "6a75505d37194ab691609036a6ba82c29fde96b4a3c0ce86c7e65601c875e5dc",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/store.ts": "041516f0fb492bd0e7d92567cf0b94bec23f770991f449fcc8343961d3e6363c",
+        "dist/replies/store.js": "656f1d9cc163efb49ef80b3ee1846bab6b0841d27d1896d90484bd5cb2852d13"
+      },
+      "restored": {
+        "utc": "2026-10-06T23:14:58.814357+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 1.2545705980155617,
+        "pid": 463670,
+        "startticks": "125150755",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:14:58.614Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:14:58.796Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "4f149715cef45e7cd95b920985353e5c0286599c3e979690ebd5c22e8a955caf",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "uid-retry-tail-cursor-reset-compiled",
+      "predicate": "real PG explicit retry retains tail30,cursor20,high10,sameRun, incrementsattempt2/pages0; observer extracted from existing R1 empty/sparse tail subtest",
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^A36 explicit retry preserves fixed tail cursor horizon and run identity$",
+        "tests/a36-retry-compiled.test.ts"
+      ],
+      "source_binding": "copied identical positive title with direct dist/replies imports and inherited compiled native child",
+      "baseline": {
+        "utc": "2026-10-06T23:15:00.407984+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 1.2464758849237114,
+        "pid": 464061,
+        "startticks": "125150916",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:15:00.246Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:15:00.390Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "ac18c141639dca5ec2ccb7e70d95ba4d943e75c9d7d5ccbd0a8c8961ee553113",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "baseline_test_count_exact1": true,
+      "original_sha256": {
+        "src/replies/store.ts": "041516f0fb492bd0e7d92567cf0b94bec23f770991f449fcc8343961d3e6363c",
+        "dist/replies/store.js": "656f1d9cc163efb49ef80b3ee1846bab6b0841d27d1896d90484bd5cb2852d13"
+      },
+      "mutated_sha256": {
+        "src/replies/store.ts": "d2d385b1c86959d676c4f8c4cd8371ccb6fae87efc0162e12fccb34262786887",
+        "dist/replies/store.js": "85e94cc5a65509d0970be27fa8e2f30226ac45eefcec540b5cb3239b8df1f67d"
+      },
+      "negative": {
+        "utc": "2026-10-06T23:15:01.978500+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 1.2285967390052974,
+        "pid": 464387,
+        "startticks": "125151074",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:15:01.786Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:15:01.958Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - A36 explicit retry preserves fixed tail cursor horizon and run identity"
+        ],
+        "tap_sha256": "3f67c39899a8a9289231edb5bf056ee7102605659612d168bac3519e2ef772a7",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/store.ts": "041516f0fb492bd0e7d92567cf0b94bec23f770991f449fcc8343961d3e6363c",
+        "dist/replies/store.js": "656f1d9cc163efb49ef80b3ee1846bab6b0841d27d1896d90484bd5cb2852d13"
+      },
+      "restored": {
+        "utc": "2026-10-06T23:15:03.537606+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 1.2441783738322556,
+        "pid": 464750,
+        "startticks": "125151229",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:15:03.380Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:15:03.522Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "dfa26642f7a393517fa5f9a8d35639eb472ad2bf1d78ccbb212db880a161bdb3",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "uid-false-freshness-reset-success-source",
+      "predicate": "reset capture leaves scan_complete false and never supplies completed_at freshness",
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^full poll captures a reset between snapshot and read and incomplete entry performs no IO$",
+        "tests/f09-live-transport-a36-source.test.ts"
+      ],
+      "source_binding": "exact current src/replies modules through tsx",
+      "baseline": {
+        "utc": "2026-10-06T23:10:51.099308+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.369809529976919,
+        "pid": 397422,
+        "startticks": "125125672",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:10:50.896Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:10:51.077Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "bbd0f86829a59eca9c3426e4d07bd636e3026e29dba1898e43a18c142bddb94e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "baseline_test_count_exact1": true,
+      "original_sha256": {
+        "src/replies/store.ts": "041516f0fb492bd0e7d92567cf0b94bec23f770991f449fcc8343961d3e6363c",
+        "dist/replies/store.js": "656f1d9cc163efb49ef80b3ee1846bab6b0841d27d1896d90484bd5cb2852d13"
+      },
+      "mutated_sha256": {
+        "src/replies/store.ts": "87162a9aa62e097563076be55dddcd880089b41350baa46ea9a1b49ad4e4a857",
+        "dist/replies/store.js": "8e57ef99f589b0f73cbb5e340fb5ca38fed0369b2337a5f7d2277b38a7c9c85e"
+      },
+      "negative": {
+        "utc": "2026-10-06T23:15:06.357122+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 2.4849940079730004,
+        "pid": 465180,
+        "startticks": "125151387",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:15:06.169Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:15:06.338Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+        ],
+        "tap_sha256": "eb1190da7bc0624e2d708802406da2476d607fa3e6f2d7b8c80af72da746d420",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/store.ts": "041516f0fb492bd0e7d92567cf0b94bec23f770991f449fcc8343961d3e6363c",
+        "dist/replies/store.js": "656f1d9cc163efb49ef80b3ee1846bab6b0841d27d1896d90484bd5cb2852d13"
+      },
+      "restored": {
+        "utc": "2026-10-06T23:15:11.772361+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 5.043261190876365,
+        "pid": 465758,
+        "startticks": "125151672",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:15:11.565Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:15:11.754Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "0be89fc1e026e8400eddea2a26825b6ff0c6dfac2bdfa404582286543e051199",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "uid-false-freshness-reset-success-compiled",
+      "predicate": "reset capture leaves scan_complete false and never supplies completed_at freshness",
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^full poll captures a reset between snapshot and read and incomplete entry performs no IO$",
+        "tests/f09-live-transport-a36-compiled.test.ts"
+      ],
+      "source_binding": "copied identical positive title with direct dist/replies imports and inherited compiled native child",
+      "baseline": {
+        "utc": "2026-10-06T23:11:02.903752+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.314451161073521,
+        "pid": 400043,
+        "startticks": "125126858",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:11:02.716Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:11:02.887Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "f8e3c6b4cb6db7cbcf994bde87c19d197a29a6a2ac6598336080563a500d81d5",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "baseline_test_count_exact1": true,
+      "original_sha256": {
+        "src/replies/store.ts": "041516f0fb492bd0e7d92567cf0b94bec23f770991f449fcc8343961d3e6363c",
+        "dist/replies/store.js": "656f1d9cc163efb49ef80b3ee1846bab6b0841d27d1896d90484bd5cb2852d13"
+      },
+      "mutated_sha256": {
+        "src/replies/store.ts": "87162a9aa62e097563076be55dddcd880089b41350baa46ea9a1b49ad4e4a857",
+        "dist/replies/store.js": "8e57ef99f589b0f73cbb5e340fb5ca38fed0369b2337a5f7d2277b38a7c9c85e"
+      },
+      "negative": {
+        "utc": "2026-10-06T23:15:15.206641+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 3.0443195968400687,
+        "pid": 466876,
+        "startticks": "125152216",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:15:14.983Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:15:15.183Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+        ],
+        "tap_sha256": "fd385f1c0224b03ed528536ad6c9eb205b4dbd6644754523289fa99791bc28ad",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/store.ts": "041516f0fb492bd0e7d92567cf0b94bec23f770991f449fcc8343961d3e6363c",
+        "dist/replies/store.js": "656f1d9cc163efb49ef80b3ee1846bab6b0841d27d1896d90484bd5cb2852d13"
+      },
+      "restored": {
+        "utc": "2026-10-06T23:15:19.795559+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.252061398001388,
+        "pid": 467552,
+        "startticks": "125152554",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:15:19.610Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:15:19.777Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "3c6c6131e76dccb3f2456b80289dc13ae47e47139d2b9cdcf2229ff5066eb1eb",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "uid-explicit-retry-bypass-source",
+      "predicate": "ordinary full polling holds incomplete with zero IO until explicit authorized retry; mutate to forbidden auto-retry",
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^full poll captures a reset between snapshot and read and incomplete entry performs no IO$",
+        "tests/f09-live-transport-a36-source.test.ts"
+      ],
+      "source_binding": "exact current src/replies modules through tsx",
+      "baseline": {
+        "utc": "2026-10-06T23:10:51.099308+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.369809529976919,
+        "pid": 397422,
+        "startticks": "125125672",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:10:50.896Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:10:51.077Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "bbd0f86829a59eca9c3426e4d07bd636e3026e29dba1898e43a18c142bddb94e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "baseline_test_count_exact1": true,
+      "original_sha256": {
+        "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+        "dist/replies/worker.js": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d"
+      },
+      "mutated_sha256": {
+        "src/replies/worker.ts": "9b48a5932511073e3ed0837b01ea99fb02e6bad9e15727d6fedcbc355e797bc7",
+        "dist/replies/worker.js": "75ecc35a5419c6678b9c2e8261882f78afb3e54912ebcc21c7a85341a27e80fa"
+      },
+      "negative": {
+        "utc": "2026-10-06T23:15:25.450359+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 5.329676602035761,
+        "pid": 468507,
+        "startticks": "125153012",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:15:25.266Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:15:25.427Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+        ],
+        "tap_sha256": "cdb972bcbd5c71caf9172fbee27f4b67954c6b524ebc32549eecd2a3aa66d032",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+        "dist/replies/worker.js": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d"
+      },
+      "restored": {
+        "utc": "2026-10-06T23:15:30.609507+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.811702428152785,
+        "pid": 469660,
+        "startticks": "125153579",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:15:30.418Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:15:30.590Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "a78ca3399c37cc4aaa7630f3ee9f207c27310d0f8687c3b09502d209225de1ed",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "caught_material_assertion"
+    },
+    {
+      "name": "uid-explicit-retry-bypass-compiled",
+      "predicate": "ordinary full polling holds incomplete with zero IO until explicit authorized retry; mutate to forbidden auto-retry",
+      "command": [
+        "/tmp/n7-expanded-runtime-20261006/bin/node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^full poll captures a reset between snapshot and read and incomplete entry performs no IO$",
+        "tests/f09-live-transport-a36-compiled.test.ts"
+      ],
+      "source_binding": "copied identical positive title with direct dist/replies imports and inherited compiled native child",
+      "baseline": {
+        "utc": "2026-10-06T23:11:02.903752+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.314451161073521,
+        "pid": 400043,
+        "startticks": "125126858",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:11:02.716Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:11:02.887Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "f8e3c6b4cb6db7cbcf994bde87c19d197a29a6a2ac6598336080563a500d81d5",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "baseline_test_count_exact1": true,
+      "original_sha256": {
+        "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+        "dist/replies/worker.js": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d"
+      },
+      "mutated_sha256": {
+        "src/replies/worker.ts": "9b48a5932511073e3ed0837b01ea99fb02e6bad9e15727d6fedcbc355e797bc7",
+        "dist/replies/worker.js": "75ecc35a5419c6678b9c2e8261882f78afb3e54912ebcc21c7a85341a27e80fa"
+      },
+      "negative": {
+        "utc": "2026-10-06T23:15:36.456769+00:00",
+        "native_exit": 1,
+        "timed_out": false,
+        "elapsed_seconds": 5.508425906067714,
+        "pid": 471122,
+        "startticks": "125154094",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:15:36.233Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:15:36.437Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": true,
+        "failure_titles": [
+          "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+        ],
+        "tap_sha256": "fbcedac30d133e05a01386b3775a23a0045ee3692dcd08385798cb50c8b5f8e6",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "restored_sha256": {
+        "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+        "dist/replies/worker.js": "ebf4455aa4c1e568423773bf3133d7a4a235709b9c3ec54d8a28083e09b9423d"
+      },
+      "restored": {
+        "utc": "2026-10-06T23:15:41.615774+00:00",
+        "native_exit": 0,
+        "timed_out": false,
+        "elapsed_seconds": 4.815701748942956,
+        "pid": 473085,
+        "startticks": "125154679",
+        "runner_pid": 397326,
+        "PG": {
+          "at": "2026-10-06T23:15:41.426Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "rows": [],
+          "quiescent": true
+        },
+        "DB_slots_claims_after_join": {
+          "utc": "2026-10-06T23:15:41.592Z",
+          "database": "n7f10_a2",
+          "reset": false,
+          "counts": {
+            "occupied_slots": 0,
+            "runtime_claims": 0,
+            "other_sessions": 0
+          },
+          "slots": [
+            {
+              "protocol": "imap",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 2,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 3,
+              "occupied": false
+            },
+            {
+              "protocol": "imap",
+              "slot": 4,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 1,
+              "occupied": false
+            },
+            {
+              "protocol": "smtp",
+              "slot": 2,
+              "occupied": false
+            }
+          ]
+        },
+        "owned_nodes": [],
+        "assertion_failure": false,
+        "failure_titles": [],
+        "tap_sha256": "371699bdd7add5998333a85d2cf654503a42e6985935c02519ee8dda8d029828",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "caught_material_assertion"
+    }
+  ],
+  "shadow_drift": [],
+  "source_drift": [],
+  "nodes": [],
+  "PG": {
+    "at": "2026-10-06T23:15:41.809Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB": {
+    "utc": "2026-10-06T23:15:41.960Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 2,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 3,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 4,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 2,
+        "occupied": false
+      }
+    ]
+  },
+  "mutex": "released after this receipt"
+}

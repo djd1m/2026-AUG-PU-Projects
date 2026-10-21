@@ -1,0 +1,122 @@
+{
+  "source_revision": "00f6888fe753a546ac17f63eb1eda270e260600a",
+  "exact_source_files_checked": 108,
+  "source_mismatches": [],
+  "secret_scan": {
+    "runtime_secrets": 5,
+    "representations": 20,
+    "candidate_files": 1729,
+    "candidate_hits": 0,
+    "fixture_canary_literals": 4,
+    "canary_representations_including_plain_pairs": 28,
+    "owned_container_log_hits": 0,
+    "diagnostic_db_scan": {
+      "diagnosticRows": 1,
+      "canaryHits": 0
+    },
+    "values_suppressed": true,
+    "scope": "Known runtime secrets in frozen tracked files; raw/encoded static fixture canaries in own logs/current diagnostic-result rows; actual API/DOM assertions separate. Initial git filename quoting scan error fixed with git archive; no initial PASS claimed."
+  },
+  "files": {
+    "lint.log.gz": {
+      "stored_sha256": "af69e9d91dc7a6b27e9a131a05765f96f0c2b75aa44f7934a1027fd593c96fc7",
+      "decoded_sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e"
+    },
+    "ordered-first.log.gz": {
+      "stored_sha256": "18bca75356d99b72e93b31dcc521343fb1ebec520b2f85113b3ffa1e603f7c9c",
+      "decoded_sha256": "a6ce57f6823d715dde648e0f06f14e22f084b51a4a5fddc2cad5820d9d378bf7"
+    },
+    "typecheck.log.gz": {
+      "stored_sha256": "5ac31778b249f652b5851bfe3330059b96ceab466d05e6703d93fd903802291b",
+      "decoded_sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393"
+    },
+    "typecheck-final.log.gz": {
+      "stored_sha256": "5ac31778b249f652b5851bfe3330059b96ceab466d05e6703d93fd903802291b",
+      "decoded_sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393"
+    },
+    "diagnostics.png": {
+      "stored_sha256": "2e5136f14f84c0d291d2eabdf9f4cf792a1184f02ffa0034aafcda1fce9d00d8",
+      "decoded_sha256": "2e5136f14f84c0d291d2eabdf9f4cf792a1184f02ffa0034aafcda1fce9d00d8"
+    },
+    "build-final.log.gz": {
+      "stored_sha256": "cd9f5e708cdc56a1975d2ee6e2bc1d6d80f3b1bdf7c928864938ba5c5a7ca887",
+      "decoded_sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323"
+    },
+    "disconnect.log.gz": {
+      "stored_sha256": "db7a77a0021e1a41836a6039b92d52dc255df71582e2e32fe6503135e999a37d",
+      "decoded_sha256": "373db54eef87462d25583dcd27a81838309682ac4d90d3fb1b1b994efe866bef"
+    },
+    "preflight.json": {
+      "stored_sha256": "7b87d8f40d77bd9c1f7512989f332cd2f7706c4255fb6b2b2a482129f268ef8d",
+      "decoded_sha256": "7b87d8f40d77bd9c1f7512989f332cd2f7706c4255fb6b2b2a482129f268ef8d"
+    },
+    "ports.log.gz": {
+      "stored_sha256": "e73c1d67279998d710e3d17a77f7da546b48b6d62974ce0fb3e5efa32eb3cc27",
+      "decoded_sha256": "5c54e4124bb5407e3ea01067a12ffcdecd6ddf2fad48ab6fddb140af763b9a4b"
+    },
+    "store-final.log.gz": {
+      "stored_sha256": "fdf8ae372b1b9d521eb89fe88e29d7d13b963f8a59033a8279925f48282725ed",
+      "decoded_sha256": "e22d36395275c2131fe576664c6e08fff47d335d738949997961c592dc5a8534"
+    },
+    "source-manifest.json": {
+      "stored_sha256": "cfb7ba2669f02f408d4a80af7351efb12e916865463d9b794e1d96e230f83b4b",
+      "decoded_sha256": "cfb7ba2669f02f408d4a80af7351efb12e916865463d9b794e1d96e230f83b4b"
+    },
+    "focused.log.gz": {
+      "stored_sha256": "f9e5ae130956e30ae3f1e509951b0bb6ab0ec3974d0b1813a0e62acf6236894d",
+      "decoded_sha256": "33958b1fbdc1c6f35f5da1ca50b5b426efbc52f3785c57f3834c3faf20ed1b15"
+    },
+    "lint-latest.log.gz": {
+      "stored_sha256": "144a9629130433fba2c4ec58acea3d2073a949790fe2054b53141f286d2b24ea",
+      "decoded_sha256": "61083b97b3b10bdcfa22f51239e51f943c0b674b7a1a7b44d2d783e16f0f41a9"
+    },
+    "runtime.log.gz": {
+      "stored_sha256": "9ab7f3b96b059656a46f6f2574ee27fd9cf2b46ca33cf2c1b5ceecea00f94620",
+      "decoded_sha256": "366af211f608820b4d92793ce20bc2be7ce7484bf03940b3384c0931090dcd1e"
+    },
+    "build-terminal.log.gz": {
+      "stored_sha256": "cd9f5e708cdc56a1975d2ee6e2bc1d6d80f3b1bdf7c928864938ba5c5a7ca887",
+      "decoded_sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323"
+    },
+    "browser-report.json": {
+      "stored_sha256": "37517f268d49aed5f54949b1dc83bb0bfffd7a649b64240c4fbf7d320a6886a9",
+      "decoded_sha256": "37517f268d49aed5f54949b1dc83bb0bfffd7a649b64240c4fbf7d320a6886a9"
+    },
+    "integration-terminal.log.gz": {
+      "stored_sha256": "e19924bc62390f93d45cfb449c1cc838d03e460de00abc496af54c40e59ee498",
+      "decoded_sha256": "0a5517babde41e9d22e58f523fb0651f58db6bee9cd74c0bcaf2817eaa27a160"
+    },
+    "lint-terminal.log.gz": {
+      "stored_sha256": "af69e9d91dc7a6b27e9a131a05765f96f0c2b75aa44f7934a1027fd593c96fc7",
+      "decoded_sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e"
+    },
+    "typecheck-terminal.log.gz": {
+      "stored_sha256": "5ac31778b249f652b5851bfe3330059b96ceab466d05e6703d93fd903802291b",
+      "decoded_sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393"
+    },
+    "typecheck-latest.log.gz": {
+      "stored_sha256": "5ac31778b249f652b5851bfe3330059b96ceab466d05e6703d93fd903802291b",
+      "decoded_sha256": "bd00a1d1baa2f676cd34c58d56db9226d89fa06436a7c7dcb6edfaed41210393"
+    },
+    "docker-build.log.gz": {
+      "stored_sha256": "7b309bed06349f57371fcdbef8824ecfb755c1d3727240e48d6a8549c3edd4a6",
+      "decoded_sha256": "10c7fcb2c58a3190b4a1360284dd47880bef01571a814fa2f59fc5cd791f70a2"
+    },
+    "lint-final.log.gz": {
+      "stored_sha256": "af69e9d91dc7a6b27e9a131a05765f96f0c2b75aa44f7934a1027fd593c96fc7",
+      "decoded_sha256": "5e738abf0dc01360904b256ba4962ab5c9297cd4bf030e5e1069c42489b4317e"
+    },
+    "build.log.gz": {
+      "stored_sha256": "cd9f5e708cdc56a1975d2ee6e2bc1d6d80f3b1bdf7c928864938ba5c5a7ca887",
+      "decoded_sha256": "a468f47746119e02882d0856ffa5f4d0d122b8a2fdedabe9eddb4c40e48dd323"
+    },
+    "unit-terminal.log.gz": {
+      "stored_sha256": "bfc3935fc55f08187a9b2f2e67edcabcf29b687026230621ce8338a37ca9878b",
+      "decoded_sha256": "dba8b5b8000447174452bf8d06b9471e92a296d6aad9ebb6c449d4db76d3c8ff"
+    },
+    "browser.log.gz": {
+      "stored_sha256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec",
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

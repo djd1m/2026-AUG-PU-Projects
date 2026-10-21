@@ -1,0 +1,27 @@
+TAP version 13
+# Subtest: native five-second rescans yield fairly to later healthy E across competing worker restart
+not ok 1 - native five-second rescans yield fairly to later healthy E across competing worker restart
+  ---
+  duration_ms: 7299.153436
+  type: 'test'
+  location: '/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts:1:11100'
+  failureType: 'testCodeFailure'
+  error: 'trigger "n7_fair_record" for relation "runtime_due" already exists'
+  code: '42710'
+  name: 'error'
+  stack: |-
+    /tmp/n7-f08-dependency-fix-20261006/projects/07-cold-email-warmup/node_modules/pg-pool/index.js:45:11
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async TestContext.<anonymous> (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts:78:68)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7765.303222

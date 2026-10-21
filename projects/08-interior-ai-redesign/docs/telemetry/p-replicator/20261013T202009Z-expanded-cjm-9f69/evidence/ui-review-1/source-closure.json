@@ -1,0 +1,36 @@
+{
+  "work_unit_id": "ui-review-1",
+  "observed_at": "2026-10-14T00:19:38.464594+00:00",
+  "corrected_source_findings": [
+    "UI-01",
+    "UI-02",
+    "UI-03",
+    "UI-04",
+    "UI-05",
+    "UI-06-cursor"
+  ],
+  "adjudicated_nonblocking": "UI-06 pending-new-intent permitted by explicit distinct-preview/consent policy; coordinator will record decision",
+  "source_hashes": {
+    "apps/web/src/components/ProductsPanel.tsx": "f6c1a7f71dfd067edc8213309e428ea79a600be1a3e435fe4c8c3295b6b7c85f",
+    "apps/web/src/components/RoomEditor.tsx": "c076bbcd8edb2c3eddae7f2b81479b8160ee7b54449ccdd2e89437a90e33b7ca",
+    "apps/web/src/components/DesignPanel.tsx": "4bd45adb6b2a2a8458eb0af3754f5155f840bec472be0c484ef038de868239b0",
+    "apps/web/src/components/AuthForm.tsx": "f69f578ea6bcad7d246abf703472940d278de599de66489c7c8758c5b3cef6b5",
+    "apps/web/src/components/BudgetPanel.tsx": "bf523aa75e90a2a4fb649b1dd918dbb43e4a4459030f4e07594997c6ab1bd114",
+    "apps/web/src/components/JobsCard.tsx": "9aaaa45b0d8b3a4c47f63d24416161d548e62056ebad41739ab44a9e4ebf6539",
+    "apps/web/src/components/BillingPanel.tsx": "b50719c336ba24011f87653d10cf2f7004b3286437d788d6e23e48c97ef5251f",
+    "apps/web/src/components/SceneViewport.tsx": "db04c900d7eb2481700af76715688154a9aa575f8b135bda4ee6c8ab8f33f068",
+    "apps/web/src/components/Dashboard.tsx": "cbf6559a1f9cb027fabd8c80997cc59911d4f3c6d8d17383cd5905cde87c4777",
+    "apps/web/src/components/SharingPanel.tsx": "49908ddc8058d0fe8c35936b9df313b0885a91b2f4c8d09c51ac7ce39beac650",
+    "apps/web/src/components/SpacePanel.tsx": "001680e9c6af4281b14b14e280f823688e12b34b183aa21473a0f3275b401d23",
+    "apps/web/src/components/ReferencesPanel.tsx": "3e03f4f69131f160b4559710f4f8ea8d7632fb4a489a707e253423f7df4020fa",
+    "apps/web/src/lib/before-after.ts": "e8e55715d6573de865831af11870df0a28dfaac873cf7812382adaf21b57a6f6",
+    "apps/web/src/lib/api-client.ts": "cf1dd0ac6e92c9a1ff5914db2736062bce6d6a6ab9014031c13ff662e67075b2",
+    "packages/viewer/src/renderer.ts": "7ae61899b97a0e1e3a833a0096f5a54c336f66f666547b5e7267f385192a76b0",
+    "packages/viewer/src/index.tsx": "3c2eebfba5169923ba5f1b37477159bbf92805274bf6d8b2281403536996ba0d",
+    "packages/viewer/src/types.ts": "4044472b6e734b6ccfabd386dfe6cccab3fece8bf2e39ae5b3672e0d7dd36ef6",
+    "apps/web/src/app/globals.css": "f53d9bbbef81935c87a771f4aca41af325623291aa446e31531e4773d7eb349b"
+  },
+  "build_log": "../docker-build-5.txt",
+  "image_config_digest": "sha256:8a3849a4cd0f8e4413f52c21805062d8b57e93fc7422c8eeb28b9459f5ac175f",
+  "browser": "waiting_for_parent_synthetic_fixture"
+}

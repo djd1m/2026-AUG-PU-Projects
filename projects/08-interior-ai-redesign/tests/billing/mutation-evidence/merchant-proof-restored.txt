@@ -1,0 +1,21 @@
+
+ RUN  v5.0.4 /tmp/n8-billing-author-20261013/projects/08-interior-ai-redesign
+
+ ↓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-2 parallel same-key checkout has one durable order and provider id; client prices rejected
+ ↓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > provider blocked outside DB transaction; intent already durable; timeout replay keeps same remote key
+ ↓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > stale unknown remote outcome cannot charge again after provider 24h idempotence horizon
+ ↓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-3 verified concurrent delivery grants exactly one package and one event; return GET is read-only
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-4 merchant/test/amount/currency/paid/status/metadata/bound-id negatives leave ledger empty 367ms
+ ↓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > notification amount/status/merchant fields are ignored; only refetched object grants
+ ↓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-5 verification outage occupies no event key; later retry grants once
+ ↓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > database failure rolls back event/order/credits together and leaves retry possible
+ ↓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > owned order reads hide foreign IDs and history cursor returns all 53 orders without overlap
+ ↓ tests/billing/repository.test.ts > DDL immutable intent and bound identity survive direct SQL; refund state cannot be restored by late write
+ ↓ tests/billing/repository.test.ts > verified webhook can arrive before create response persistence; later bind never downgrades succeeded state
+ ↓ tests/billing/repository.test.ts > merchant/test config rotation cannot replay or verify an immutable intent against another provider identity
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 11 skipped (12)
+   Start at  23:28:30
+   Duration  655ms (tests 76%, import 15%, transform 7%, worker 1%)
+

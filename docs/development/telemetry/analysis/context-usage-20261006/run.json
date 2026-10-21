@@ -1,0 +1,29 @@
+{
+  "profile": "model-routing-econom",
+  "task": "read-only context usage audit",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": "gpt-6.1-sol",
+  "actual_effort": "high",
+  "actual_source": "auditor recorded runtime metadata",
+  "started_at_approx": "2026-10-06T18:03:00Z",
+  "completed_by": "2026-10-06T18:08:00Z",
+  "duration_seconds_exact": null,
+  "auditor_report_sha256": "12954297938abc80f72e75c1cb5d6cf53dc49e2e5a7d7a25b848899c53dfa43f",
+  "usage_snapshot_at": "2026-10-06T18:06:53Z",
+  "snapshot_input_inclusive": 239335,
+  "snapshot_cached_input_subset": 188544,
+  "snapshot_output_inclusive": 7783,
+  "snapshot_reasoning_output_subset": 1910,
+  "final_usage": null,
+  "usage_gaps": [
+    "snapshot excludes final reporting",
+    "weekly billing unavailable",
+    "parent/child overlap not excluded"
+  ],
+  "checks": [
+    "auditor exited 0",
+    "report contains no credential material",
+    "sample limitations explicit"
+  ]
+}

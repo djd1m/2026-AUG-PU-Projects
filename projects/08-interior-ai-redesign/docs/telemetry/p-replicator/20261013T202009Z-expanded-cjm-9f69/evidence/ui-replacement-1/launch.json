@@ -1,0 +1,32 @@
+{
+  "run_id": "20261013T202009Z-expanded-cjm-9f69",
+  "work_unit_id": "ui-replacement-1",
+  "started_at": "2026-10-14T01:07:01.891673+00:00",
+  "budget_minutes": 15,
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "route": {
+    "mechanical": "S, exit0 explicit2files",
+    "substantive": "Focused authorized UI/E2E closure within accepted F4 scope; no product edits or new domain behavior"
+  },
+  "memory": [
+    "teach:8d34121cb3afb17d",
+    "teach:8552f9d9f133292e"
+  ],
+  "source_hashes": {
+    "apps/web/src/components/ProductsPanel.tsx": "9a9fc864e032bae74ac08c13d82006ca4b89e699a46364719d318e3ff2fda653",
+    "apps/web/src/components/DesignPanel.tsx": "4bd45adb6b2a2a8458eb0af3754f5155f840bec472be0c484ef038de868239b0",
+    "apps/web/src/components/BudgetPanel.tsx": "bf523aa75e90a2a4fb649b1dd918dbb43e4a4459030f4e07594997c6ab1bd114",
+    "apps/web/src/lib/api-client.ts": "2f642200661a2cd1d3ee3e519605ed3fa263f34b85ad5763993a17983469fe29",
+    "apps/web/src/server/procurement.ts": "612c8b4e41acea414bdfd328aea0e656be7b5971763151917fd1c7a586b599a3",
+    "packages/db/src/procurement/repository.ts": "85d0903823945580189660e6204e1d9301eebf209354d9489359c007dd94be1c",
+    "packages/db/src/design/revisions.ts": "c97c9e3d0361e3bde4738c553afb584fc0b7fcea931baeb826e9903c0fa59a54",
+    "tests/procurement/db-fixture.ts": "de827be528c0d9c85e8f295061a4cd61064d8a3d5e2f8b65154d5cb9a07c4a00"
+  },
+  "image_revision": "docker:sha256:a870f8779ea77c2aaad8aadbc6b67f97a71c6f2f2c797e965927b9297c4fbace",
+  "next_build_id": "wfhm1wAXdEYLGdlYzhuhc",
+  "scope": "Own new synthetic project only. Existing owner login; actual UI replacement + API invariant reads; external egress abort; no existing fixture mutation."
+}

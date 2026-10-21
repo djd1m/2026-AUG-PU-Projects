@@ -1,0 +1,20 @@
+{
+  "kind": "read-only extracted production page branch with mocked dependencies",
+  "source_sha256": "948c2ce93e34c524dea4da2b9d8076ea178fda57d05c038503b262619f4fb65f",
+  "hypothesis": "Tail snapshot UIDNEXT=112 has unread matching reply UID111; bounded prefix11..110 is fully covered.",
+  "tail_snapshot_uidnext": 112,
+  "unread_reply_uid": 111,
+  "accepted_page": {
+    "expectedCursor": 10,
+    "coveredThrough": 110,
+    "headerCount": 100
+  },
+  "result": {
+    "state": "complete",
+    "effects": 0,
+    "cursor": 110
+  },
+  "poll_complete": true,
+  "poll_completed_at": "2026-10-02T12:00:00.000Z",
+  "limitation": "No DB, actual parsing, provider or dispatch executed. Source has no tail horizon/completeness input; this probe demonstrates the unconditional completion branch only."
+}

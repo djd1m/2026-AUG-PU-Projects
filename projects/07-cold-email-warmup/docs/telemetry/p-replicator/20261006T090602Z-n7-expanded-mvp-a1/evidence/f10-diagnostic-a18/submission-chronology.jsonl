@@ -1,0 +1,197 @@
+{"at": "2026-10-06T19:48:25.581862+00:00", "stream": "tap", "line": "TAP version 13"}
+{"at": "2026-10-06T19:48:27.271326+00:00", "stream": "tap", "line": "# Subtest: F03b real PG durable final authority, all stop races, sink privacy and outcomes"}
+{"at": "2026-10-06T19:48:27.271432+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 revoke"}
+{"at": "2026-10-06T19:48:27.272304+00:00", "stream": "tap", "line": "    ok 1 - B1/B2 SC-US-003-4 revoke"}
+{"at": "2026-10-06T19:48:27.272362+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:27.272378+00:00", "stream": "tap", "line": "      duration_ms: 759.752621"}
+{"at": "2026-10-06T19:48:27.272389+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:27.272400+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:28.166337+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 revoke"}
+{"at": "2026-10-06T19:48:28.166416+00:00", "stream": "tap", "line": "    ok 2 - B1/B2 SC-US-003-5 revoke"}
+{"at": "2026-10-06T19:48:28.166444+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:28.166461+00:00", "stream": "tap", "line": "      duration_ms: 895.75369"}
+{"at": "2026-10-06T19:48:28.166475+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:28.166488+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:28.774269+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 version"}
+{"at": "2026-10-06T19:48:28.774698+00:00", "stream": "tap", "line": "    ok 3 - B1/B2 SC-US-003-4 version"}
+{"at": "2026-10-06T19:48:28.774822+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:28.774850+00:00", "stream": "tap", "line": "      duration_ms: 607.099326"}
+{"at": "2026-10-06T19:48:28.774867+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:28.774883+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:29.909890+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 version"}
+{"at": "2026-10-06T19:48:29.909980+00:00", "stream": "tap", "line": "    ok 4 - B1/B2 SC-US-003-5 version"}
+{"at": "2026-10-06T19:48:29.910003+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:29.910018+00:00", "stream": "tap", "line": "      duration_ms: 1134.377365"}
+{"at": "2026-10-06T19:48:29.910031+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:29.910045+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:30.674446+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 pause"}
+{"at": "2026-10-06T19:48:30.674682+00:00", "stream": "tap", "line": "    ok 5 - B1/B2 SC-US-003-4 pause"}
+{"at": "2026-10-06T19:48:30.674795+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:30.674826+00:00", "stream": "tap", "line": "      duration_ms: 764.698483"}
+{"at": "2026-10-06T19:48:30.674847+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:30.674865+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:31.386110+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 pause"}
+{"at": "2026-10-06T19:48:31.387103+00:00", "stream": "tap", "line": "    ok 6 - B1/B2 SC-US-003-5 pause"}
+{"at": "2026-10-06T19:48:31.387154+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:31.387173+00:00", "stream": "tap", "line": "      duration_ms: 709.169553"}
+{"at": "2026-10-06T19:48:31.387189+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:31.387204+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:32.213785+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 sender_withdraw"}
+{"at": "2026-10-06T19:48:32.213877+00:00", "stream": "tap", "line": "    ok 7 - B1/B2 SC-US-003-4 sender_withdraw"}
+{"at": "2026-10-06T19:48:32.213921+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:32.213943+00:00", "stream": "tap", "line": "      duration_ms: 825.085344"}
+{"at": "2026-10-06T19:48:32.213960+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:32.213996+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:33.034937+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 sender_withdraw"}
+{"at": "2026-10-06T19:48:33.035023+00:00", "stream": "tap", "line": "    ok 8 - B1/B2 SC-US-003-5 sender_withdraw"}
+{"at": "2026-10-06T19:48:33.035053+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:33.035070+00:00", "stream": "tap", "line": "      duration_ms: 821.320534"}
+{"at": "2026-10-06T19:48:33.035089+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:33.035106+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:33.872765+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 recipient_withdraw"}
+{"at": "2026-10-06T19:48:33.873039+00:00", "stream": "tap", "line": "    ok 9 - B1/B2 SC-US-003-4 recipient_withdraw"}
+{"at": "2026-10-06T19:48:33.873090+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:33.873111+00:00", "stream": "tap", "line": "      duration_ms: 839.601869"}
+{"at": "2026-10-06T19:48:33.873141+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:33.873157+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:34.745452+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 recipient_withdraw"}
+{"at": "2026-10-06T19:48:34.745566+00:00", "stream": "tap", "line": "    ok 10 - B1/B2 SC-US-003-5 recipient_withdraw"}
+{"at": "2026-10-06T19:48:34.752643+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:34.752759+00:00", "stream": "tap", "line": "      duration_ms: 871.995381"}
+{"at": "2026-10-06T19:48:34.752788+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:34.752812+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:35.830028+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 reply"}
+{"at": "2026-10-06T19:48:35.831846+00:00", "stream": "tap", "line": "    ok 11 - B1/B2 SC-US-003-4 reply"}
+{"at": "2026-10-06T19:48:35.831943+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:35.831969+00:00", "stream": "tap", "line": "      duration_ms: 1084.061847"}
+{"at": "2026-10-06T19:48:35.831992+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:35.832015+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:36.711754+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 reply"}
+{"at": "2026-10-06T19:48:36.711853+00:00", "stream": "tap", "line": "    ok 12 - B1/B2 SC-US-003-5 reply"}
+{"at": "2026-10-06T19:48:36.711892+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:36.711917+00:00", "stream": "tap", "line": "      duration_ms: 880.886905"}
+{"at": "2026-10-06T19:48:36.711940+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:36.711964+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:37.523870+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 unsubscribe"}
+{"at": "2026-10-06T19:48:37.525865+00:00", "stream": "tap", "line": "    ok 13 - B1/B2 SC-US-003-4 unsubscribe"}
+{"at": "2026-10-06T19:48:37.525947+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:37.525971+00:00", "stream": "tap", "line": "      duration_ms: 812.38342"}
+{"at": "2026-10-06T19:48:37.525992+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:37.526013+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:38.393014+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 unsubscribe"}
+{"at": "2026-10-06T19:48:38.393114+00:00", "stream": "tap", "line": "    ok 14 - B1/B2 SC-US-003-5 unsubscribe"}
+{"at": "2026-10-06T19:48:38.393152+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:38.393181+00:00", "stream": "tap", "line": "      duration_ms: 869.722451"}
+{"at": "2026-10-06T19:48:38.393207+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:38.393256+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:39.094830+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 complaint"}
+{"at": "2026-10-06T19:48:39.095521+00:00", "stream": "tap", "line": "    ok 15 - B1/B2 SC-US-003-4 complaint"}
+{"at": "2026-10-06T19:48:39.095568+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:39.095608+00:00", "stream": "tap", "line": "      duration_ms: 697.454989"}
+{"at": "2026-10-06T19:48:39.095680+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:39.095718+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:40.233880+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 complaint"}
+{"at": "2026-10-06T19:48:40.234027+00:00", "stream": "tap", "line": "    ok 16 - B1/B2 SC-US-003-5 complaint"}
+{"at": "2026-10-06T19:48:40.234110+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:40.234130+00:00", "stream": "tap", "line": "      duration_ms: 1142.430668"}
+{"at": "2026-10-06T19:48:40.234147+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:40.234164+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:41.046990+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 disable"}
+{"at": "2026-10-06T19:48:41.047461+00:00", "stream": "tap", "line": "    ok 17 - B1/B2 SC-US-003-4 disable"}
+{"at": "2026-10-06T19:48:41.047500+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:41.047530+00:00", "stream": "tap", "line": "      duration_ms: 812.2668"}
+{"at": "2026-10-06T19:48:41.047547+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:41.047561+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:41.800743+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 disable"}
+{"at": "2026-10-06T19:48:41.800826+00:00", "stream": "tap", "line": "    ok 18 - B1/B2 SC-US-003-5 disable"}
+{"at": "2026-10-06T19:48:41.800851+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:41.800871+00:00", "stream": "tap", "line": "      duration_ms: 754.007779"}
+{"at": "2026-10-06T19:48:41.800891+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:41.800909+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:43.238404+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-4 limit"}
+{"at": "2026-10-06T19:48:43.238501+00:00", "stream": "tap", "line": "    ok 19 - B1/B2 SC-US-003-4 limit"}
+{"at": "2026-10-06T19:48:43.238529+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:43.238551+00:00", "stream": "tap", "line": "      duration_ms: 1438.012893"}
+{"at": "2026-10-06T19:48:43.238572+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:43.238606+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:43.868471+00:00", "stream": "tap", "line": "    # Subtest: B1/B2 SC-US-003-5 limit"}
+{"at": "2026-10-06T19:48:43.868546+00:00", "stream": "tap", "line": "    ok 20 - B1/B2 SC-US-003-5 limit"}
+{"at": "2026-10-06T19:48:43.870729+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:43.870792+00:00", "stream": "tap", "line": "      duration_ms: 629.300405"}
+{"at": "2026-10-06T19:48:43.870813+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:43.870828+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:45.661813+00:00", "stream": "tap", "line": "    # Subtest: B3 durable rendered sink/token/message refs with own OR intended pool peer read only"}
+{"at": "2026-10-06T19:48:45.661927+00:00", "stream": "tap", "line": "    ok 21 - B3 durable rendered sink/token/message refs with own OR intended pool peer read only"}
+{"at": "2026-10-06T19:48:45.661953+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:45.661971+00:00", "stream": "tap", "line": "      duration_ms: 1793.06381"}
+{"at": "2026-10-06T19:48:45.662028+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:45.662050+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:46.410785+00:00", "stream": "tap", "line": "    # Subtest: R2 B5 authenticated disabled inspection unavailable before either reader"}
+{"at": "2026-10-06T19:48:46.410903+00:00", "stream": "tap", "line": "    ok 22 - R2 B5 authenticated disabled inspection unavailable before either reader"}
+{"at": "2026-10-06T19:48:46.410935+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:46.410954+00:00", "stream": "tap", "line": "      duration_ms: 744.309506"}
+{"at": "2026-10-06T19:48:46.410972+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:46.410988+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:47.081689+00:00", "stream": "tap", "line": "    # Subtest: R1 post-lock clock lease45s rejects expired waiter with zero adapter calls"}
+{"at": "2026-10-06T19:48:47.081880+00:00", "stream": "tap", "line": "    ok 23 - R1 post-lock clock lease45s rejects expired waiter with zero adapter calls"}
+{"at": "2026-10-06T19:48:47.082404+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:47.082483+00:00", "stream": "tap", "line": "      duration_ms: 675.076471"}
+{"at": "2026-10-06T19:48:47.082506+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:47.082523+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:47.632835+00:00", "stream": "tap", "line": "    # Subtest: R1 post-lock clock poll60s rejects stale waiter with live lease and zero adapter calls"}
+{"at": "2026-10-06T19:48:47.632917+00:00", "stream": "tap", "line": "    ok 24 - R1 post-lock clock poll60s rejects stale waiter with live lease and zero adapter calls"}
+{"at": "2026-10-06T19:48:47.632942+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:47.632998+00:00", "stream": "tap", "line": "      duration_ms: 550.845077"}
+{"at": "2026-10-06T19:48:47.633031+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:47.633047+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:48.320388+00:00", "stream": "tap", "line": "    # Subtest: R1 post-lock clock retry120s rejects ceiling waiter with zero adapter calls"}
+{"at": "2026-10-06T19:48:48.320474+00:00", "stream": "tap", "line": "    ok 25 - R1 post-lock clock retry120s rejects ceiling waiter with zero adapter calls"}
+{"at": "2026-10-06T19:48:48.320504+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:48.320522+00:00", "stream": "tap", "line": "      duration_ms: 685.808465"}
+{"at": "2026-10-06T19:48:48.320538+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:48.320554+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:49.114082+00:00", "stream": "tap", "line": "    # Subtest: R1 post-lock clock midnight concurrent waiters enforce new-day provider limit1 and reservations"}
+{"at": "2026-10-06T19:48:49.114173+00:00", "stream": "tap", "line": "    ok 26 - R1 post-lock clock midnight concurrent waiters enforce new-day provider limit1 and reservations"}
+{"at": "2026-10-06T19:48:49.114200+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:49.114217+00:00", "stream": "tap", "line": "      duration_ms: 794.790393"}
+{"at": "2026-10-06T19:48:49.114233+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:49.114246+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:53.920547+00:00", "stream": "tap", "line": "    # Subtest: B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan"}
+{"at": "2026-10-06T19:48:53.920934+00:00", "stream": "tap", "line": "    ok 27 - B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan"}
+{"at": "2026-10-06T19:48:53.921064+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:53.921087+00:00", "stream": "tap", "line": "      duration_ms: 4806.887345"}
+{"at": "2026-10-06T19:48:53.921118+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:53.921132+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:54.617913+00:00", "stream": "tap", "line": "    # Subtest: B5 midnight reservations move under concurrent final guard; provider lowered, no off-by-one"}
+{"at": "2026-10-06T19:48:54.618096+00:00", "stream": "tap", "line": "    ok 28 - B5 midnight reservations move under concurrent final guard; provider lowered, no off-by-one"}
+{"at": "2026-10-06T19:48:54.618321+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:54.618351+00:00", "stream": "tap", "line": "      duration_ms: 695.795438"}
+{"at": "2026-10-06T19:48:54.618373+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:54.618393+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:48:56.261992+00:00", "stream": "tap", "line": "    # Subtest: B4 proved pre-DATA only, 60s pacing within original120s ceiling, re-enter guards/quota"}
+{"at": "2026-10-06T19:48:56.262078+00:00", "stream": "tap", "line": "    ok 29 - B4 proved pre-DATA only, 60s pacing within original120s ceiling, re-enter guards/quota"}
+{"at": "2026-10-06T19:48:56.262344+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:48:56.262380+00:00", "stream": "tap", "line": "      duration_ms: 1644.461017"}
+{"at": "2026-10-06T19:48:56.262399+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:48:56.262415+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:49:00.307599+00:00", "stream": "tap", "line": "    # Subtest: B4/B5 retry120s exact ceiling, ambiguous timeout/crash retain quota, never recover resend"}
+{"at": "2026-10-06T19:49:00.307813+00:00", "stream": "tap", "line": "    ok 30 - B4/B5 retry120s exact ceiling, ambiguous timeout/crash retain quota, never recover resend"}
+{"at": "2026-10-06T19:49:00.307844+00:00", "stream": "tap", "line": "      ---"}
+{"at": "2026-10-06T19:49:00.307866+00:00", "stream": "tap", "line": "      duration_ms: 4044.364724"}
+{"at": "2026-10-06T19:49:00.307886+00:00", "stream": "tap", "line": "      type: 'test'"}
+{"at": "2026-10-06T19:49:00.307905+00:00", "stream": "tap", "line": "      ..."}
+{"at": "2026-10-06T19:49:00.308749+00:00", "stream": "tap", "line": "    1..30"}
+{"at": "2026-10-06T19:49:00.308781+00:00", "stream": "tap", "line": "ok 1 - F03b real PG durable final authority, all stop races, sink privacy and outcomes"}
+{"at": "2026-10-06T19:49:00.308802+00:00", "stream": "tap", "line": "  ---"}
+{"at": "2026-10-06T19:49:00.308821+00:00", "stream": "tap", "line": "  duration_ms: 34154.045722"}
+{"at": "2026-10-06T19:49:00.308878+00:00", "stream": "tap", "line": "  type: 'test'"}
+{"at": "2026-10-06T19:49:00.308902+00:00", "stream": "tap", "line": "  ..."}
+{"at": "2026-10-06T19:49:00.355153+00:00", "stream": "tap", "line": "1..1"}
+{"at": "2026-10-06T19:49:00.355238+00:00", "stream": "tap", "line": "# tests 31"}
+{"at": "2026-10-06T19:49:00.355261+00:00", "stream": "tap", "line": "# suites 0"}
+{"at": "2026-10-06T19:49:00.355278+00:00", "stream": "tap", "line": "# pass 31"}
+{"at": "2026-10-06T19:49:00.355300+00:00", "stream": "tap", "line": "# fail 0"}
+{"at": "2026-10-06T19:49:00.355321+00:00", "stream": "tap", "line": "# cancelled 0"}
+{"at": "2026-10-06T19:49:00.355403+00:00", "stream": "tap", "line": "# skipped 0"}
+{"at": "2026-10-06T19:49:00.355453+00:00", "stream": "tap", "line": "# todo 0"}
+{"at": "2026-10-06T19:49:00.355545+00:00", "stream": "tap", "line": "# duration_ms 34799.682573"}

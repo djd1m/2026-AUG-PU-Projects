@@ -1,0 +1,152 @@
+{
+  "run_id": "20261002T202425Z-rag-answer-sandbox",
+  "work_unit_id": "rag-answer-sandbox-correction",
+  "attempt_id": "correction-1",
+  "source_revision": "8f088d8fbba3cf674cd62e7029d60d438df29c19",
+  "build_revision": null,
+  "launch_sha256": "07040c0daa124bae7e2503c03cf337b4c9fdd312030181549f3a18a6c497c4f4",
+  "prior_snapshot_path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-rag-answer-sandbox/projects/06b-rag-class/tests/artifacts/rag-answer-sandbox/implementation-source-hashes.json",
+  "prior_snapshot_file_sha256": "6aa5b849d35a899dfcbd62b1a4da7ec16f4720fbb8de040e0adc05dbc19e8c6c",
+  "snapshot_sha256": "22d10ce93a822b96bfe58225045eb2ede772572897bf4bcddb9993a25de77b9f",
+  "snapshot_basis": "SHA-256 of UTF-8 JSON(files), sort_keys=True, separators=(comma,colon)",
+  "files": {
+    "apps/web/src/app/api/bots/[id]/ask/route.ts": {
+      "sha256": "9d2f098e48b67891e4b4de4b89e64955d5b6f332099f3e0b9ebd99b991f9733a",
+      "bytes": 116,
+      "lines": 4,
+      "kind": "production"
+    },
+    "apps/web/src/app/cabinet/job-status.tsx": {
+      "sha256": "50389bcbb0d1093561f0f49488c92fe2fa75e7a78e65f099f0d9f81c7054960b",
+      "bytes": 2616,
+      "lines": 53,
+      "kind": "production"
+    },
+    "apps/web/src/app/cabinet/page.tsx": {
+      "sha256": "c543ee29ef69d86993384190589a15f27e050b6ea5261c300ef040efeddcad82",
+      "bytes": 3519,
+      "lines": 66,
+      "kind": "production"
+    },
+    "apps/web/src/app/cabinet/sandbox.tsx": {
+      "sha256": "11d1f96c45c6874e38eac2f0c47c5e32e737371a3b25c9c28a79e72498114934",
+      "bytes": 3694,
+      "lines": 61,
+      "kind": "production"
+    },
+    "apps/web/src/app/globals.css": {
+      "sha256": "9e4fabcb18064369109bb998c3f59f0d1b5858ce5ece8ee85e996becb618c9de",
+      "bytes": 3238,
+      "lines": 68,
+      "kind": "production"
+    },
+    "apps/web/src/server/ask-handler.ts": {
+      "sha256": "62a5c7db0e63baf3651cadb71061b6ccfc7f4c97fd581602dda39282ceedbd07",
+      "bytes": 2942,
+      "lines": 49,
+      "kind": "production"
+    },
+    "apps/web/src/server/config.ts": {
+      "sha256": "ac3601a0c9f5d4b3577b4a63ba17edfd468fc37b93d954fc0facb32bf430c2a1",
+      "bytes": 6271,
+      "lines": 90,
+      "kind": "production"
+    },
+    "apps/web/src/server/runtime.ts": {
+      "sha256": "0ded6b05228fb4ac11049c997015cfe7553f4b6e160cf3eeac5a7dbfc464de67",
+      "bytes": 4270,
+      "lines": 79,
+      "kind": "production"
+    },
+    "apps/web/tests/int/answer-fixture.ts": {
+      "sha256": "e389b52f88387c9f884e111a15feaa09f13ec8e03f5b1694ac4174f5506978bd",
+      "bytes": 3920,
+      "lines": 55,
+      "kind": "test"
+    },
+    "apps/web/tests/int/ask.int.test.ts": {
+      "sha256": "a3b25114a170a611f5dbc94fbf11b30bc3957ec5504b751102093c427a325f55",
+      "bytes": 13536,
+      "lines": 187,
+      "kind": "test"
+    },
+    "apps/web/tests/unit/ask-handler.test.ts": {
+      "sha256": "a693bb4fb40dd5633f7acc62a6a0860819b027cd4faf22471eb319d5ac2a64dc",
+      "bytes": 4738,
+      "lines": 69,
+      "kind": "test"
+    },
+    "apps/web/tests/unit/config-wiring.test.ts": {
+      "sha256": "ebca66224746c61fe7091f9989072832e77e176038d2a83883dc5ca938a500df",
+      "bytes": 5346,
+      "lines": 90,
+      "kind": "test"
+    },
+    "apps/web/tests/unit/config.test.ts": {
+      "sha256": "a3367a97da6810630c91edf54b85c469f23f7a958b8b6b1a6c587320ba565589",
+      "bytes": 10668,
+      "lines": 189,
+      "kind": "test"
+    },
+    "packages/db/src/answers.ts": {
+      "sha256": "3c0130cf5a3f45b0d77095b8929a1d673aefb24e5c1345c5dbf0051d174eb72d",
+      "bytes": 3166,
+      "lines": 65,
+      "kind": "production"
+    },
+    "packages/db/src/index.ts": {
+      "sha256": "da399346b591b0dd71fedeaf7192aa47f4dca147f1b4c705a00668077a7b4ad3",
+      "bytes": 412,
+      "lines": 13,
+      "kind": "production"
+    },
+    "packages/rag/src/answer.ts": {
+      "sha256": "7b8d23f4fde6af23411c5a90fb6217b7f71f757a355b025286c2121f8e7e7b41",
+      "bytes": 4418,
+      "lines": 84,
+      "kind": "production"
+    },
+    "packages/rag/src/citations.ts": {
+      "sha256": "9d20823703092b0caaa85dc706b2237cc5cbc25b217fd077e957cf27a4e914d5",
+      "bytes": 1937,
+      "lines": 45,
+      "kind": "production"
+    },
+    "packages/rag/src/index.ts": {
+      "sha256": "0de9462325c3f5468b293e930af1a4dd8d30be5cf88fab60106ec5d1defa7f08",
+      "bytes": 1686,
+      "lines": 15,
+      "kind": "production"
+    },
+    "packages/rag/src/prompt.ts": {
+      "sha256": "f10059ebe9049d0a0295e7051fed08048eec748f040b255714d186ed8ed13010",
+      "bytes": 1037,
+      "lines": 13,
+      "kind": "production"
+    },
+    "packages/rag/tests/unit/answer-citations.test.ts": {
+      "sha256": "7df93306c063215f72e1bd8069b23bb91bb095b4833dbe8bb0fed7ccb278c736",
+      "bytes": 4544,
+      "lines": 64,
+      "kind": "test"
+    },
+    "packages/rag/tests/unit/answer-flow.test.ts": {
+      "sha256": "5cfdcbc2082be30ceb7da959793d6b9be3e202328250eca148b923cfb36a388d",
+      "bytes": 7064,
+      "lines": 88,
+      "kind": "test"
+    }
+  },
+  "delta": {
+    "packages/rag/src/citations.ts": {
+      "before_sha256": "624b5ccfa9a475f8591089ee08a39d476ca9b399a39d728b302da4ed776e15c1",
+      "after_sha256": "9d20823703092b0caaa85dc706b2237cc5cbc25b217fd077e957cf27a4e914d5"
+    },
+    "packages/rag/tests/unit/answer-citations.test.ts": {
+      "before_sha256": "90c2b0b25a79bf37d1ed8dbe7e56365d5c7021687b4a23a9146575fd8564e8af",
+      "after_sha256": "7df93306c063215f72e1bd8069b23bb91bb095b4833dbe8bb0fed7ccb278c736"
+    }
+  },
+  "unchanged_file_count": 19,
+  "patch_sha256": "a2c4708c3bd0d6a0e8982e203efc860e9c0606ac97ffe1b5ed8d5ca74cb6426f"
+}

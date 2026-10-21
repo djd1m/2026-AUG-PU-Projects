@@ -1,0 +1,32 @@
+{
+  "stage": "f09-short",
+  "started": {
+    "at": "2026-10-06T22:26:21.236108+00:00",
+    "pid": 3911316,
+    "startticks": "124859123",
+    "runner_pid": 3684977,
+    "command": [
+      "/tmp/n7-expanded-runtime-20261006/bin/node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^(expired slot age alone cannot replace its allocated identity|settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences|full poll captures a reset between snapshot and read and incomplete entry performs no IO)$",
+      "tests/f09-live-transport.test.ts"
+    ],
+    "inventory_sha256": "8ed8ceef27f5a5fb3f3b3430b96232b3dfe7cc0fb8393e1b3cfc4d0084783263"
+  },
+  "joined_utc": "2026-10-06T22:26:36.107190+00:00",
+  "native_returncode": 0,
+  "timed_out": false,
+  "elapsed_seconds": 14.872293748892844,
+  "PG": {
+    "at": "2026-10-06T22:26:36.073Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "remaining_owned_nodes": [],
+  "tap_sha256": "7accd7f8613e8da42251b4b0d2e0fa7d40945b4bdb21c514d2bcb5d10f5dc350",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

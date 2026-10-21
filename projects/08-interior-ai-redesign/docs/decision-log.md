@@ -1,0 +1,70 @@
+# N8 — журнал решений
+
+Это решения подготовки до выбора CJM, не окончательные ADR и не утверждение,
+что интеграции уже реализованы. Дата: 2026-10-13.
+
+| ID | Решение | Основание | Последствие / проверка |
+|---|---|---|---|
+| PREP-001 | Перезапустить подготовку в существующем N8 | В дереве только README; владелец одобрил план | Приложение не мигрируется; исходный start-промпт сохранён, действующий ввод в project-input.md |
+| PREP-002 | Gist — основной оптимальный CJM; первый клиент делает ремонт для себя | Прямое уточнение владельца | Все три варианта сохраняют обмер/референсы → дизайн → товары → бюджет |
+| PREP-003 | Новые вводные заменяют запреты на товары/3D и фиксированный GPU/ControlNet | Прямое требование владельца | Gemini/OpenRouter исследуется; неизменность геометрии остаётся обязательной |
+| PREP-004 | API магазинов, публичный scraping и ручное подтверждение рассматриваются как адаптеры каталога | Уточнение владельца + ограничения доступа API | Источник, регион, единицы, время проверки и неизвестное наличие обязательны; scraper пока не реализован |
+| PREP-005 | Партнёрка с магазинами deferred | Прямое уточнение владельца | Не блокирует ссылки на реальные товары и смету; комиссия не считается выручкой первого продукта |
+| PREP-006 | До каждой кодируемой фичи: локальный поиск N1–N7, затем GitHub | Обязательное требование владельца | Лицензия/ревизия/контракт и reuse/adapt/new фиксируются; предварительный реестр не заменяет поиск фичи |
+| PREP-007 | Единый dz brain в корне репозитория; recall/apply/teach/reinforce | Требование владельца и локальная политика | CLI 0.8.49 установлен; исходный recall [] — исторических уроков в этом store нет |
+| PREP-008 | После фичи: независимый anti-drift; координатор может исправлять код или спецификацию автономно | Последние два сообщения владельца | Каждое изменение имеет before/after, ID, причину и повторные проверки; выбор CJM всё ещё требует approval |
+| PREP-009 | HTML показывает демонстрационный сценарий, не живую AI/retail интеграцию | Нет бюджета inference/реальных сканов и retailer credentials | Демо-геометрия/цены отмечены; неподтверждённые цены и размеры не становятся проверенными молча |
+| PREP-010 | Полная съёмка облика Interior AI не выполнена; использовать подписанный авторский фолбэк | Внешний recon-навык/browser MCP отсутствуют | source-product-profile.md: НЕ ИЗМЕРЕНО; check-look-trace=2, не pass |
+
+## Формат решений anti-drift при кодировании
+
+На каждое расхождение: `DRIFT-<nnn>`, точная source/spec ревизия, требование/ADR/CJM,
+наблюдаемое поведение и воспроизведение, исправить код или спецификацию, причина,
+рассмотренная альтернатива, before/after, изменённые файлы, повторные проверки,
+независимый verdict и teach/reinforce при новом подтверждённом уроке.
+Нерешённое расхождение не объявляется успешным завершением.
+
+## Контрольная точка
+
+PREP-011: владелец выбрал CJM максимально близкий к gist и отменил ожидание
+следующего approval. Выбран A; после ревью HTML продолжать SPARC → validation →
+toolkit → scaffold → модульную реализацию. PREP-001–010 сохраняют историю.
+Ориентир готовности — 8 часов после сообщения владельца; предел автономии —
+10 часов после первоначального одобрения. Платные inference и публикация не включены.
+
+## DRIFT-001 — конкретные расхождения HTML и CJM, 2026-10-13
+
+Независимый review: H1–H3, M1–M3, L1; before hashes и воспроизведения в
+`docs/discovery/html-review.md`. Решение: исправить код, требования не ослаблять.
+Изменены prototype.js/.css и builder: ревизия/инвалидация approval на смене
+дизайна/стиля, предупреждение перед закупками, корректный native price step,
+полнота по всем неизвестным позициям, обновление лимита, реальный Pinterest pin,
+выбранный A без ожидания approval, горизонтальная mobile-навигация.
+Root targeted browser A/B/C pass; independent narrow closure all7 findings pass
+(`html-review-fix.md` и receipt-html-review-fix.md). История первого review сохранена.
+Эти состояния перенесены в SPARC как обязательные AC приложения.
+
+
+## DRIFT-002 — исправления независимой Phase2 validation
+
+Все шесть ролей завершили первый проход; исходные отчёты сохранены в validation/. Исправлена спецификация/алгоритмы, код пока не существовал. Причины: bcrypt byte bound, rate-before-parse, job replay/dispatch/consent/fence, partial refund, export provenance/pixel limit, asset aggregate caps, JSON relation mapping, exact reproducible budget/area/reserve/phase, callable reads/refresh/reconcile, scoped AC/perf protocol, ADR/growth trace и сохранённый CJM12 CSV. Before/after hashes: validation/fix-source-manifest.json. Альтернатива скрыть пробелы или ослабить проверки отклонена; runtime checks остаются обязательными. Следующий шаг — один narrow independent closure без повторного полного research.
+
+## DRIFT-SEMANTIC-REFERENCE — 2026-10-14
+
+Причина: общий dominant colour смешивал стены/пол/мебель в один оттенок. Решение: заменить путь кнопки «Применить референсы» на существующее durable AI-задание с изображениями и строгими четырьмя ролями. Сервер строит сцену из замороженной основы; модель не управляет геометрией. Старый локальный endpoint сохранён для совместимости, новый UI его не вызывает. У целевого GLB одна сетка, поэтому добавлено приблизительное геометрическое разбиение, неизвестное остаётся исходным. Текстуры и распознавание каждого предмета не входят в эту поставку.
+
+Независимое ревью выявило дрейф гарантии replay: подготовка файлов до lookup ломала повтор после удаления референса. Добавлен ранний lookup с тем же input hash, атомарный lookup внутри submit сохранён. Второй дефект: новый ключ при повторном клике мог повторно оплатить запрос после потери ответа. UI сохраняет замороженную попытку; transport/5xx/429 не сбрасывают ключ, только явные доменные отказы. Точные хеши и закрытие — `docs/telemetry/p-replicator/20261014T203111Z-semantic-reference/evidence/code-review-closure.md`.
+
+План QA уточнён: отдельный платный вызов в обход durable caps отклонён; funded QA-аккаунтов нет, единственный кредит владельца сохранён. Платный smoke не выполнен, качество ответа Gemini на живой картинке не подтверждено. Вместо него полный реальный PostgreSQL worker-path с HTTP fixture, строгая JSON-мутация и опубликованный браузерный тест с явно синтетическими цветами. Это ограничение проверки, а не заявление о проверенном paid результате. Настройка ключа weekly/$10 проверена реальным GET без генерации; приложение live/$5day/$0.10job.
+
+Полная регрессия: 285/286; один старый тест создавал BabylonRoom через Object.create без constructor и не инициализировал новое поле. Исправлена только фикстура; связанный набор10/10 проходит. Остальные прошедшие наборы не запускались повторно. Build/typecheck/lint успешны. Browser2 проверяет три раздельных цвета на одной GLB-сетке, «До», реальные pixels в production preview, no-credit отказ и ручной режим. Геометрический read-only анализ настоящего скана: floor3543/walls1831/furniture20901/unknown111390, ceiling0 из137665 треугольников; это не ground truth, большая часть скана консервативно сохраняет материал.
+
+## DRIFT-REFERENCE-PATCHES — 2026-10-14
+
+Owner reported noisy scan covered in colour spots, then CREDITS_REQUIRED. Actual prior paid job returned four distinct role colours; renderer's per-triangle heuristic, not Pinterest/Gemini colour extraction, caused mixed patches. Owner explicitly approved OpenRouter use without internal credits («да используй openrouter» in response to account-specific budget-only choice). Added server-only exact UUID setting; default accounts unchanged. Spend reservation, caps, 5-own/20-global admission counts, provider proof/fence/replay retained. No grants/refunds/previous-job ledger edits.
+
+Geometry replacement uses supported continuous planes and connected minimum-area regions, rejects intersecting false wall planes using residual/normal alignment, and gates whole-model automatic colour on usable coverage. Real calibrated private scan gives67.27% area support and fails the gate. Private browser confirms original pixels preserved; forcing the rejected candidate still looks wrong. Therefore this repair DOES NOT deliver accurate semantic recolouring for this scan: original3D and separately analysed reference palette are displayed, UI action explicitly says «Определить цвета референса». Existing role colours remain saved, no new paid request needed for fallback. Semantic mask/instance identification remains future work, no claimed complete 3D transfer.
+
+Independent review fixes: two-stage unknown-outcome credit-none reconciliation, restored count caps, unsupported Mesh/InstancedMesh all-model gate, reset/loading/shell-bound viewer status. Real duplicate-node glTF import test added, not only mocked count. Root and independent receipts under new reference-patches run. Current private image/scan copies stay ignored, never in git.
+
+Runtime-readiness investigation found OpenRouter fractional USD amounts rejected as noninteger microdollars: a valid remaining balance after first use blocked subsequent calls, and first actual cost was unknown. Amount conversion now rounds remaining down, provider cap/cost up at6decimal precision BEFORE multiplication; raw Decimal compares enforce exact cap/minimum/consistency. Raw usage preserved, unknown costs still reserved; no estimate fabricated. Fractional boundary and full HTTP fixture tests cover this repair.

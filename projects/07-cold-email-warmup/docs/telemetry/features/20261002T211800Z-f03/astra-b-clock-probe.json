@@ -1,0 +1,64 @@
+{
+  "method": "Exact source transaction body/final SQL prefix; mocked client only demonstrates timestamp binding, not realPG execution or adapter calls",
+  "results": [
+    {
+      "name": "lease expiry while acquiring lock",
+      "boundTime": "2026-10-02T12:00:44.999Z",
+      "boundDay": "2026-10-02",
+      "timeAfterLock": "2026-10-02T12:00:45.000Z",
+      "boundPredicate": true,
+      "currentPredicate": false,
+      "queryOrder": [
+        "BEGIN",
+        "LOCK acquired",
+        "conditional UPDATE",
+        "COMMIT",
+        "release"
+      ]
+    },
+    {
+      "name": "poll ages to exactly60s while acquiring lock",
+      "boundTime": "2026-10-02T12:00:59.999Z",
+      "boundDay": "2026-10-02",
+      "timeAfterLock": "2026-10-02T12:01:00.000Z",
+      "boundPredicate": true,
+      "currentPredicate": false,
+      "queryOrder": [
+        "BEGIN",
+        "LOCK acquired",
+        "conditional UPDATE",
+        "COMMIT",
+        "release"
+      ]
+    },
+    {
+      "name": "retry reaches120s while acquiring lock",
+      "boundTime": "2026-10-02T12:01:59.999Z",
+      "boundDay": "2026-10-02",
+      "timeAfterLock": "2026-10-02T12:02:00.000Z",
+      "boundPredicate": true,
+      "currentPredicate": false,
+      "queryOrder": [
+        "BEGIN",
+        "LOCK acquired",
+        "conditional UPDATE",
+        "COMMIT",
+        "release"
+      ]
+    },
+    {
+      "name": "UTC midnight while acquiring lock",
+      "boundTime": "2026-10-02T23:59:59.999Z",
+      "boundDay": "2026-10-02",
+      "timeAfterLock": "2026-10-03T00:00:00.000Z",
+      "currentDay": "2026-10-03",
+      "queryOrder": [
+        "BEGIN",
+        "LOCK acquired",
+        "conditional UPDATE",
+        "COMMIT",
+        "release"
+      ]
+    }
+  ]
+}

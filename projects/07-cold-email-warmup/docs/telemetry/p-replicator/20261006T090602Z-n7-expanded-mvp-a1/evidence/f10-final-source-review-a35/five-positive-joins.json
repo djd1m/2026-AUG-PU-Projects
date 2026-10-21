@@ -1,0 +1,146 @@
+{
+  "titles": [
+    "transport grants are separate scoped expiring authority",
+    "final live submission preserves all eligibility fences",
+    "UID reset crash and replay preserve atomic stop effects",
+    "independent capacity and consent predicates deny live transport",
+    "native pool fixture uses canonical current UTC pair day and malformed initial keys stay denied"
+  ],
+  "remaining-f09-five-exit.json": {
+    "utc": "2026-10-06T22:36:09.146511+00:00",
+    "native_exit": 0,
+    "timed_out": false,
+    "elapsed_seconds": 36.21525158802979,
+    "pid": 4049024,
+    "startticks": "124914293",
+    "runner_pid": 4048998,
+    "PG": {
+      "at": "2026-10-06T22:36:08.938Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [],
+      "quiescent": true
+    },
+    "DB_slots_claims_after_join": {
+      "utc": "2026-10-06T22:36:09.126Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "counts": {
+        "occupied_slots": 0,
+        "runtime_claims": 0,
+        "other_sessions": 0
+      },
+      "slots": [
+        {
+          "protocol": "imap",
+          "slot": 1,
+          "occupied": false
+        },
+        {
+          "protocol": "imap",
+          "slot": 2,
+          "occupied": false
+        },
+        {
+          "protocol": "imap",
+          "slot": 3,
+          "occupied": false
+        },
+        {
+          "protocol": "imap",
+          "slot": 4,
+          "occupied": false
+        },
+        {
+          "protocol": "smtp",
+          "slot": 1,
+          "occupied": false
+        },
+        {
+          "protocol": "smtp",
+          "slot": 2,
+          "occupied": false
+        }
+      ]
+    },
+    "owned_nodes": [],
+    "assertion_failure": false,
+    "failure_titles": [],
+    "tap_sha256": "2209f23e9880fcf79fea206fbbacf6d6433f3237982df9c35a391bdaf0831756",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "remaining-f09-five-ready.json": {
+    "utc": "2026-10-06T22:35:32.930579+00:00",
+    "command": [
+      "/tmp/n7-expanded-runtime-20261006/bin/node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^(transport\\ grants\\ are\\ separate\\ scoped\\ expiring\\ authority|final\\ live\\ submission\\ preserves\\ all\\ eligibility\\ fences|UID\\ reset\\ crash\\ and\\ replay\\ preserve\\ atomic\\ stop\\ effects|independent\\ capacity\\ and\\ consent\\ predicates\\ deny\\ live\\ transport|native\\ pool\\ fixture\\ uses\\ canonical\\ current\\ UTC\\ pair\\ day\\ and\\ malformed\\ initial\\ keys\\ stay\\ denied)$",
+      "tests/f09-live-transport.test.ts"
+    ],
+    "cwd": "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup",
+    "timeout_seconds": 150,
+    "PG": {
+      "at": "2026-10-06T22:35:32.785Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "rows": [],
+      "quiescent": true
+    },
+    "DB_slots_claims_before_reset": {
+      "utc": "2026-10-06T22:35:32.903Z",
+      "database": "n7f10_a2",
+      "reset": false,
+      "counts": {
+        "occupied_slots": 0,
+        "runtime_claims": 0,
+        "other_sessions": 0
+      },
+      "slots": [
+        {
+          "protocol": "imap",
+          "slot": 1,
+          "occupied": false
+        },
+        {
+          "protocol": "imap",
+          "slot": 2,
+          "occupied": false
+        },
+        {
+          "protocol": "imap",
+          "slot": 3,
+          "occupied": false
+        },
+        {
+          "protocol": "imap",
+          "slot": 4,
+          "occupied": false
+        },
+        {
+          "protocol": "smtp",
+          "slot": 1,
+          "occupied": false
+        },
+        {
+          "protocol": "smtp",
+          "slot": 2,
+          "occupied": false
+        }
+      ]
+    },
+    "source120_build73_sql15_drift": [],
+    "mutex": "held by caller",
+    "runner_sha256": "02c18886307b72068c53b51f5981922ba7a4e023f14467be03e40055f3c0bad7",
+    "guard_sha256": "69f957d905a8a4fa4271cebd24fe94418d657ce5bf69a51fc6aad4f8cb0a8c7d",
+    "preload_sha256": "08cfe84935660f4dcd6bb4fc700f6768823fd9b936def15e29e2139df1407d18",
+    "disk_available_bytes": 2833608704
+  },
+  "remaining-f09-five-launch.json": {
+    "utc": "2026-10-06T22:35:32.932089+00:00",
+    "pid": 4049024,
+    "startticks": "124914293",
+    "runner_pid": 4048998
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-06T22:50:05.456857+00:00",
+  "completed_combined_material_count": 22,
+  "completed_slot_material_count": 5,
+  "caught_names": [
+    "oldest-due-order",
+    "reset-sequence-on-yield",
+    "drop-generation",
+    "sleep30-completion",
+    "failure-held-as-success",
+    "reset-sequence-on-completed-poll",
+    "first-pair-conflict",
+    "pacing-bypass",
+    "occupied-slot-ttl-release",
+    "source-guard-drop",
+    "incomplete-reported-complete",
+    "yield-reported-complete",
+    "consent-check-remove",
+    "freshness-check-remove",
+    "tenant-predicate-bypass",
+    "shared-current-day-quota-weaken",
+    "native-delayed-success-gap",
+    "atomic-split-claim-no-reservation",
+    "atomic-skip-mailbox-service-sequence",
+    "atomic-rollback-commits-reservation",
+    "atomic-fullcapacity-consumes-turn",
+    "atomic-native-authority-check-drop"
+  ],
+  "slot_names": [
+    "one-use-consumed-drop",
+    "unused-reservation-leak",
+    "child-bound-unused-release",
+    "retry-unused-proof-lost",
+    "tenant-binding-drop"
+  ],
+  "predicate": "native baseline0, mutated native nonzero ERR_ASSERTION and named failing test, actual restored0; timeouts/import/compiler failures excluded",
+  "actual_quota_negative_titles": [
+    "B1/B2 SC-US-003-4 limit"
+  ],
+  "planned_B5_midnight_branch": "not exercised by quota negative; no inferred coverage",
+  "native_delay_binding": "source and compiled dist both mutated; negative actual44.319s, restored actual0",
+  "unresolved": "cancel native timeout plus two pending result-fence mutations; abort-specific mutation isolated in next phase"
+}

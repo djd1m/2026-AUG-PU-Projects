@@ -1,0 +1,255 @@
+{
+  "at": "2026-10-06T20:41:06.056455+00:00",
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-pair-fixture-fix-a22",
+  "status": "completed",
+  "verdict": "scoped fixture correction checks pass; independent HIGH review pending",
+  "baseline_revision": "afb58dc9b26f814433b117a63e45994c71e7cbde",
+  "revision": "74766159b38c0e346832992c3be7b62851aad577",
+  "launch_sha256": "56c41b1613290959f47e87509be617dd2dad81c1b5008b9df9cb43f9030911f7",
+  "final_manifest_sha256": "00d8a463aad276021583f4f94a07cf05024cfee05cfa61346937cfcc00775fbe",
+  "only_source_delta": [
+    "tests/f10-runtime-integration.test.ts"
+  ],
+  "target_before_sha256": "ce3cdd57354a75dab304567eaf686347e9c8df13469402f4fbedbaf61bdb9695",
+  "target_after_sha256": "97fb303f49f165f1242b37172644bcab5300ecd06358d3263ba0935bb03d1501",
+  "native_exits": [
+    0,
+    1,
+    0
+  ],
+  "native_timeout_flags": [
+    false,
+    false,
+    false
+  ],
+  "named_negative_assertion": true,
+  "PG": {
+    "at": "2026-10-06T20:41:06.230Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "owned_nodes": [],
+  "mutex": "free; independent nonblocking acquire/release",
+  "shadow_store_restored": true,
+  "guard_counts": [
+    {
+      "pid": 2281689,
+      "startedAt": 1791319176744,
+      "socketDenied": 0,
+      "socketAllowed": 1,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319176819
+    },
+    {
+      "pid": 2281750,
+      "startedAt": 1791319176942,
+      "socketDenied": 0,
+      "socketAllowed": 1,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319177028
+    },
+    {
+      "pid": 2281318,
+      "startedAt": 1791319175119,
+      "socketDenied": 0,
+      "socketAllowed": 1,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319175217
+    },
+    {
+      "pid": 2281026,
+      "startedAt": 1791319173236,
+      "socketDenied": 0,
+      "socketAllowed": 0,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319174792
+    },
+    {
+      "pid": 2274864,
+      "startedAt": 1791319152072,
+      "socketDenied": 0,
+      "socketAllowed": 1,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319152179
+    },
+    {
+      "pid": 2281070,
+      "startedAt": 1791319173522,
+      "socketDenied": 1,
+      "socketAllowed": 1,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319174752
+    },
+    {
+      "pid": 2281373,
+      "startedAt": 1791319175608,
+      "socketDenied": 1,
+      "socketAllowed": 1,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319176639
+    },
+    {
+      "pid": 2282165,
+      "startedAt": 1791319178616,
+      "socketDenied": 0,
+      "socketAllowed": 1,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319178718
+    },
+    {
+      "pid": 2292586,
+      "startedAt": 1791319234861,
+      "socketDenied": 0,
+      "socketAllowed": 1,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319234956
+    },
+    {
+      "pid": 2274936,
+      "startedAt": 1791319152275,
+      "socketDenied": 0,
+      "socketAllowed": 1,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319152370
+    },
+    {
+      "pid": 2302217,
+      "startedAt": 1791319266135,
+      "socketDenied": 0,
+      "socketAllowed": 1,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319266239
+    },
+    {
+      "pid": 2281782,
+      "startedAt": 1791319177126,
+      "socketDenied": 0,
+      "socketAllowed": 0,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319178280
+    },
+    {
+      "pid": 2280926,
+      "startedAt": 1791319172818,
+      "socketDenied": 0,
+      "socketAllowed": 1,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319172916
+    },
+    {
+      "pid": 2282082,
+      "startedAt": 1791319178362,
+      "socketDenied": 0,
+      "socketAllowed": 1,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319178487
+    },
+    {
+      "pid": 2281355,
+      "startedAt": 1791319175333,
+      "socketDenied": 0,
+      "socketAllowed": 0,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319176683
+    },
+    {
+      "pid": 2280957,
+      "startedAt": 1791319173036,
+      "socketDenied": 0,
+      "socketAllowed": 1,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319173126
+    },
+    {
+      "pid": 2281241,
+      "startedAt": 1791319174859,
+      "socketDenied": 0,
+      "socketAllowed": 1,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319174951
+    },
+    {
+      "pid": 2281891,
+      "startedAt": 1791319177363,
+      "socketDenied": 1,
+      "socketAllowed": 1,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319178229
+    },
+    {
+      "pid": 2274774,
+      "startedAt": 1791319151868,
+      "socketDenied": 0,
+      "socketAllowed": 1,
+      "dnsDenied": 0,
+      "ipcValidated": 0,
+      "installed": true,
+      "endedAt": 1791319151959
+    }
+  ],
+  "guard_denial_adjudication": "one denied socket per TSX test child, zero DNS denial; same as prior exact fixture run; consistent with TSX optional Unix IPC connection rejected by inherited numeric-only guard (inference from installed client implementation). No denied connection succeeded.",
+  "source_count": 120,
+  "source_unchanged_except_target": 119,
+  "build_count_unchanged": 73,
+  "SQL_count_unchanged": 15,
+  "reused_evidence": {
+    "/tmp/n7-f10-capacity-fixture-fix-a19/final-manifest.json": "237ad9bb03ef3afafdfdde1a55dc3298163978e152c109c978f19e55936c54d2",
+    "/tmp/n7-f10-capacity-fixture-fix-a19/database-source-manifest.json": "ed040e6ae61ee70f3f9171fd803196a79443892708d47b92d460cd6eb1cde17b",
+    "/tmp/n7-f10-capacity-fixture-fix-a19/terminal-seal.json": "587608354aa7c65d8eacd2cba516c367a2dd99a98fffebe7014ebf599ef31a81",
+    "/tmp/n7-f10-remaining-verify-a21/terminal-seal.json": "2c3bb5b1d5afb3865a54c003005153e1af37788c3157c26dda6bce2490fa51c0"
+  },
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "host actual model/effort/usage unavailable; no estimated counters"
+  ],
+  "elapsed_ms": 275677.964,
+  "prelaunch_retry": "one bookkeeping correction before any test child launched; preserved run.py and command-manifest.json",
+  "overall_F10_acceptance": false,
+  "source_and_DB_ownership": "released to coordinator for fresh independent HIGH review",
+  "next_responsible": "/root/n7_sol_coordinator"
+}

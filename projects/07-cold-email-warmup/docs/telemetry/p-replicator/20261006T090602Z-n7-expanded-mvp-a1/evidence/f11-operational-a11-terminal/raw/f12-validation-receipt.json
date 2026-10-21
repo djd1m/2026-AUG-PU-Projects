@@ -1,0 +1,21 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-operational-verifier-a11/F12-VALIDATE",
+  "started_at": "2026-10-07T01:33:43Z",
+  "finished_at": "2026-10-07T01:36:45.185088+00:00",
+  "status": "completed",
+  "verdict": "needs_literal_correction_and_accepted_F11_reconciliation",
+  "findings_high": [
+    "F12-V01",
+    "F12-V02",
+    "F12-V03"
+  ],
+  "plan_sha256": "6f125040982f7a9edfc51dccad049519aedac7d7b702d21bb334cc916a94afe0",
+  "validation_sha256": "1f91cf95466eed61fa013c717aefd8767398f51841968b9dd39cb92cdbdd1023",
+  "provenance_sha256": "9c903c8b3b09db2805219fa2f0ae0903b8035adbc8bc1af6a27eef799eeb86fb",
+  "actual_model": null,
+  "usage": null,
+  "actual_provider_calls": 0,
+  "source_build_test_writes": 0,
+  "F11_product_review": false
+}

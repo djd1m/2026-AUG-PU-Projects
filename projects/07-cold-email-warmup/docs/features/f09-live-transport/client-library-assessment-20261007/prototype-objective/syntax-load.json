@@ -1,0 +1,48 @@
+[
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--check",
+      "fixture.mjs"
+    ],
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--check",
+      "imap.mjs"
+    ],
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--check",
+      "smtp.mjs"
+    ],
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--check",
+      "test.mjs"
+    ],
+    "exit": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/tmp/n6b-f06-node22/bin/node",
+      "--input-type=module",
+      "-e",
+      "await Promise.all(['./fixture.mjs','./imap.mjs','./smtp.mjs'].map(p=>import(p)))"
+    ],
+    "exit": 0,
+    "stderr": ""
+  }
+]

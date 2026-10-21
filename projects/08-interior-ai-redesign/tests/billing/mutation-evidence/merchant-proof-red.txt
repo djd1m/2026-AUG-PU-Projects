@@ -1,0 +1,42 @@
+
+ RUN  v5.0.4 /tmp/n8-billing-author-20261013/projects/08-interior-ai-redesign
+
+ ↓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-2 parallel same-key checkout has one durable order and provider id; client prices rejected
+ ↓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > provider blocked outside DB transaction; intent already durable; timeout replay keeps same remote key
+ ↓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > stale unknown remote outcome cannot charge again after provider 24h idempotence horizon
+ ↓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-3 verified concurrent delivery grants exactly one package and one event; return GET is read-only
+ × tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-4 merchant/test/amount/currency/paid/status/metadata/bound-id negatives leave ledger empty 338ms
+   → promise resolved "{ outcome: 'applied' }" instead of rejecting
+ ↓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > notification amount/status/merchant fields are ignored; only refetched object grants
+ ↓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-5 verification outage occupies no event key; later retry grants once
+ ↓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > database failure rolls back event/order/credits together and leaves retry possible
+ ↓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > owned order reads hide foreign IDs and history cursor returns all 53 orders without overlap
+ ↓ tests/billing/repository.test.ts > DDL immutable intent and bound identity survive direct SQL; refund state cannot be restored by late write
+ ↓ tests/billing/repository.test.ts > verified webhook can arrive before create response persistence; later bind never downgrades succeeded state
+ ↓ tests/billing/repository.test.ts > merchant/test config rotation cannot replay or verify an immutable intent against another provider identity
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 skipped (12)
+   Start at  23:28:29
+   Duration  635ms (tests 72%, import 13%, transform 13%, worker 1%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-4 merchant/test/amount/currency/paid/status/metadata/bound-id negatives leave ledger empty
+AssertionError: promise resolved "{ outcome: 'applied' }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "outcome": "applied",
+  }
+
+ ❯ tests/billing/repository.test.ts:45:119
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

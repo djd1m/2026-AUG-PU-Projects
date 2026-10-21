@@ -1,0 +1,20 @@
+--- apps/web/tests/int/demo.int.test.ts (correction-1)
++++ apps/web/tests/int/demo.int.test.ts (correction-2)
+@@ -86,12 +86,14 @@
+   it.each(['visitor', 'bot'] as const)('SC-US-012-3: 50 shared widget+demo asks contend atomically at configured %s cap=3', async (cap) => {
+     const a = await fixture();
+     await owner.query('UPDATE bot SET allowed_origins = $2 WHERE id = $1', [a.botId, ['https://www.shop.example']]);
+-    const limits = { ...LIMITS, answerVisitorDay: cap === 'visitor' ? 3 : 50, answerBotDay: cap === 'bot' ? 3 : 50 };
++    const limits = { ...LIMITS, answerVisitorDay: 3, answerBotDay: cap === 'bot' ? 3 : 50 };
++    expect(limits.answerVisitorDay).toBeLessThanOrEqual(limits.answerBotDay);
++    const ips = Array.from({ length: 50 }, (_, i) => cap === 'visitor' ? '203.0.113.99' : `198.51.${i}.1`);
++    expect(new Set(ips.map((ip) => visitorKey(VISITOR_SECRET, ip, a.botId))).size).toBe(cap === 'bot' ? 50 : 1);
+     const gateway = constructGateway({ pool: service, provider: a.provider, limits, visitorSecret: VISITOR_SECRET, now: () => a.now });
+     const deps = { ...a.deps, gateway };
+     const widget = createWidgetHandler('ask', deps); const demo = createDemoHandler(deps);
+-    const calls = Array.from({ length: 50 }, (_, i) => {
+-      const ip = cap === 'visitor' ? '203.0.113.99' : `198.51.${i}.1`;
++    const calls = ips.map((ip, i) => {
+       return i % 2 ? demo(demoRequest(a.slug, { ip }), a.slug) : widget(widgetRequest(a.publicId, 'ask', { ip }));
+     });
+     const responses = await Promise.all(calls);

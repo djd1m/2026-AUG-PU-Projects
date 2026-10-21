@@ -1,0 +1,65 @@
+{
+  "focused_resume": false,
+  "target_tenants": [],
+  "seed_auth": true,
+  "group": "full",
+  "status": "ready",
+  "at": "2026-10-03T05:49:24.377252+00:00",
+  "source_revision": "a7fb40c9ab36eef9e7e5d16173083fc646199baf",
+  "source_sha256": "1144c60cfff6a30ae94be77971274102d5239adbfc8b19f3ee7f7f47f7d98e6a",
+  "source_files_matched": 93,
+  "image_id": "sha256:e04c5647ca2e18e97a104b8ee348a1fc5880c9310d3a102371504571e066aeeb",
+  "build_sha256": "2b5c0c6b974feff5774b064f1fe038a3ff4345e9eb520c089945987ed107774c",
+  "spec_sha256": "72b44888ddab0405d955084d572130649fbdddc70b33d53a364db7dd80f05de5",
+  "scripts": {
+    "f06-b3-focused.mjs": "44c7a00af6de94cbe0a03728635cd8dbbca9e8af4ec8ef5369c755052c96e4a9",
+    "f06-report-layout.mjs": "4d9d71457e6181971dec0726c03d02c66ef210cebdab403106c4af09eeb34507",
+    "f06-audit.py": "5c64c71c603fa51f53d26dc42aa9f59f5b20897bf06f6725ed05f6e966b157f0",
+    "f06-fixture.mjs": "ca751a67aa14fd9b6d85217f909dbd40545767b00aad3ddbda47b72cb3eb615e",
+    "f06-b3-login.mjs": "fe6319789d9e539971b1a32ff8318e20365aeac3f4b9294bedc3f6938637e916",
+    "f06-b3-extra.mjs": "49a6db6662085f3f8ce1b094117975577a3bccc8738be0e5d8e7a144570fba43",
+    "f06-run.py": "b2f6232cd59010abb9ddd8deddfa82a214571f8a8e00e589d115fb0b9ef43f64",
+    "f06-journey.mjs": "5b0da60e0b7fd03d4dffff1e93246a6a86484b6de53288cfc8f42005b3393d9e",
+    "f06-security.mjs": "b8e011c18270ca204e78f2f892404aa628fcf7faed97aba3dbf56c498e7fc773",
+    "f06-unsubscribe-probe.py": "c1e26091e1e2610460e2a424259f9f17762564b449091b6bee5e77a796ff39b7",
+    "f06-unsubscribe-probe.mjs": "a32b671965c2bcc46946ac6650b36e6093cf69849cdb08c8da8c67a94be66b76",
+    "f06-browser.mjs": "905c0f8df1f7fd82adc24380ba6bba601263aafae3412b15c3c017b10d84c947"
+  },
+  "environment": {
+    "cpu": 2,
+    "origin": "http://127.0.0.1:18709",
+    "web": "n7f06a-web-1",
+    "db_no_host_ports": true,
+    "browser_container": "codex-ui-playwright",
+    "playwright": "1.63.0",
+    "ws": "ws://127.0.0.1:9320/"
+  },
+  "input_names": [
+    "N7_UI_EVIDENCE",
+    "SESSION_HMAC_KEY_FILE",
+    "CREDENTIAL_KEYRING_FILE",
+    "RECIPIENT_HASH_KEY_FILE",
+    "DATABASE_PASSWORD_FILE"
+  ],
+  "command_as_data": [
+    "docker",
+    "exec",
+    "-i",
+    "-e",
+    "N7_UI_EVIDENCE=/opt/browser/n7-f06b-20261003T023900Z-r3-report-layout-4",
+    "codex-ui-playwright",
+    "node",
+    "/opt/browser/n7-f06b-20261003T023900Z-r3-report-layout-4/f06-report-layout.mjs"
+  ],
+  "effects": [
+    "own TEST tenant UI mutations",
+    "trusted accepted local fixture poll/sink/provider",
+    "own network attach only if absent; detach in finally",
+    "own contexts/bridge/sockets close; shared browser server stays running"
+  ],
+  "evidence_destination": "/tmp/n7-f06b-r3/projects/07-cold-email-warmup/docs/telemetry/features/20261003T023900Z-f06/sol-b-r3-report-layout-4",
+  "external_actions_executed": false,
+  "environment_available": true,
+  "e2e_claim": null,
+  "secrets": "operator and runtime values remain in web process; never browser/logs"
+}

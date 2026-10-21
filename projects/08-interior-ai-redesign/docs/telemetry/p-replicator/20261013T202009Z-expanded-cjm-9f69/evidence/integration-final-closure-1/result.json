@@ -1,0 +1,36 @@
+{
+  "run_id": "20261013T202009Z-expanded-cjm-9f69",
+  "work_unit_id": "integration-final-closure-1",
+  "status": "completed",
+  "verdict": "PASS",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "active_wall_ms": null,
+  "recorded_started_at": "2026-10-14T01:21:36.871813+00:00",
+  "finished_at": "2026-10-14T01:36:20.904256+00:00",
+  "elapsed_wall_ms": 884032,
+  "elapsed_scope": "from first recorded start; earlier instruction reading duration unavailable",
+  "missing_data": [
+    "Exact actual model/effort, usage, billing and active-time intervals unavailable",
+    "Initial instruction reading before recorded start has no measured duration"
+  ],
+  "build_revision": "docker:sha256:3ac28e68ccef3576d428547f04bbbb9df3097bb8baf28823bdd87076611369cb",
+  "review_sha256": {
+    "review.md": "c5310d1ba959c8350f3b00783c7eedce9d863a54bd6c7d236c1411fd5476d073",
+    "review-report.md": "c5310d1ba959c8350f3b00783c7eedce9d863a54bd6c7d236c1411fd5476d073"
+  },
+  "launch_sha256": "a33e852d20c58f021b981b6f9d9faaa73d620210cf143ff2060a491306c0ba88",
+  "contract_check": {
+    "exit_code": 0,
+    "output": "PASS review-contract feature=integration AC-ids=4 rows=4"
+  },
+  "ac_met": 4,
+  "ac_total": 4,
+  "finding": "FND-FINAL-1 independently closed on image9",
+  "receipt": "receipt.md"
+}

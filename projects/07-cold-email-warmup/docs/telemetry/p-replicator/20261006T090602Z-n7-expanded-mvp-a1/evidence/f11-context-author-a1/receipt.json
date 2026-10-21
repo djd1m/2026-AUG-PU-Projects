@@ -1,0 +1,84 @@
+{
+  "status": "completed",
+  "f11_acceptance": "partial_not_accepted",
+  "source_revision": "3b78670faad673711fd38b784c576243149b17f9",
+  "baseline": "3566a6a785cc1d0cd0f6b35140af1604ee05c003",
+  "source_freeze": "2026-10-06T23:37:43Z",
+  "finished_at": "2026-10-06T23:39:35.780840+00:00",
+  "elapsed_seconds": 540.780888,
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gap": "host_not_exposed; process start ticks/destination details unavailable, not reconstructed",
+  "source_manifest_sha256": "9abd830bc093888c45314f2a9d42e22084e1261ee162fd34a7d732687b973c7a",
+  "checks": [
+    {
+      "attempt": "a1",
+      "command": "npm run typecheck; npm run lint; npm run build; node --import tsx --test --test-concurrency=1 tests/f11-context-unit.test.ts",
+      "exits": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unit_tests": 3
+    },
+    {
+      "attempt": "a1",
+      "command": "node --import tsx --test --test-concurrency=1 tests/f11-context-integration.test.ts tests/replies-integration.test.ts",
+      "exit": 1,
+      "note": "new TTL fixture incorrectly backdated creation without metadata; inherited reply14subtests pass; failing raw retained"
+    },
+    {
+      "attempt": "a2",
+      "command": "bash check-a2.sh",
+      "exit": 1,
+      "note": "quiescence runner SQL quoting error, no test/reset started"
+    },
+    {
+      "attempt": "a3",
+      "command": "bash check-a3.sh",
+      "exit": 0,
+      "pg_tests": 6
+    },
+    {
+      "attempt": "a4",
+      "command": "bash check-a4.sh",
+      "exit": 0,
+      "pg_tests": 7,
+      "typecheck": 0,
+      "lint": 0
+    }
+  ],
+  "db_cleanup": {
+    "db": "n7f10_a2",
+    "otherSessions": 0,
+    "occupied": 0,
+    "claims": 0
+  },
+  "guards": {
+    "joined_guards": 25,
+    "socketDenied": 22,
+    "socketAllowed": 18,
+    "dnsDenied": 0,
+    "all_recorded_pids_absent": true,
+    "pid_start_ticks": null,
+    "gap": "guard reports PID and wall timestamps but not proc ticks/destination details; denied socket attempts preserved, not classified retrospectively"
+  },
+  "disk_prebuild_bytes": 2737598464,
+  "disk_measurement_provenance": "actual df -B1 output before check-a1 runner; no timestamp reconstructed",
+  "mutex": "acquired/released by every runner; terminal seal-check acquired after all test joins",
+  "remaining_AC": [
+    "authenticated closed-default imap_body authority and exact UID bounded native IPC/cancellation",
+    "capture claim/current grant-source-run-generation-mailbox fences and authenticated content semantic reconciliation across UID reset/reused IDs",
+    "constituent copy earliest-deadline/thread aggregation and body unsubscribe/suppression bridge",
+    "globally atomic body3of4 IMAP reserved poll capacity/fairness and propagated5s budget",
+    "runtime body-kind migration and parent AC005 witness; final integrated required gates and fresh independent HIGH review"
+  ],
+  "next_executor": "root coordinator assigns/launches explicit second bounded ownership slice incl context-store.ts and migration016 as needed",
+  "published": false
+}

@@ -1,0 +1,33 @@
+{
+  "status": "ready",
+  "source_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+  "build_revision": "sha256:82460803f628576175aac1dc260f8df39d8938d4f6defff683034100d3ccecc2",
+  "environment": "Isolated n6b-f09-ui Docker network, no published ports; shared codex-ui-playwright own context; foreign TLS host, restrictive CSP and hostile CSS",
+  "test_command": "docker exec -w /opt/browser codex-ui-playwright node /opt/browser/n6b-f09-ui.mjs /opt/browser/n6b-f09-fixture.json /opt/browser/n6b-f09-output-1",
+  "inputs": [
+    {
+      "name": "Final19source hashes match runner;515unchangedunit pass and finalallPG/type/build0",
+      "available": true
+    },
+    {
+      "name": "FreshR1sourceACCEPT; deterministic test-only fixtureserver mapped onlyask path, realconfig/events/w.js",
+      "available": true
+    },
+    {
+      "name": "Private fixture",
+      "available": true
+    }
+  ],
+  "environment_available": true,
+  "expected_effects": [
+    "Seed disposable published Free/paid/unknown/recovery bots and documentchunks in own PG; browser actualnetwork config/ask/OPTIONS/events with FakeProvider only behind realhandler/gateway; no paidcalls",
+    "Screenshots1440/390, initialcollapsed/closed/tamper/onceimpression, privacy/input gating/answers/refusal/recovery/CSP/CORS/CSS; cleanup own stack/contexts/networkattachments"
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "tests/artifacts/widget/ui-output/report.json"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "checked_at": "2026-10-02T23:52:04.712304+00:00"
+}

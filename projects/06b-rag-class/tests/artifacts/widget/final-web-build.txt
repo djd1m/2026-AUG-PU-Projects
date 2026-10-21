@@ -1,0 +1,158 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.90kB 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22.22-alpine
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 361B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 DONE 0.0s
+
+#5 [deps 1/9] FROM docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd
+#5 resolve docker.io/library/node:22.22-alpine@sha256:e58326d0d441090181ac150dc2078d3e2cf6a0d42e809aebba3ef5880935ffdd 0.0s done
+#5 DONE 0.1s
+
+#4 [internal] load build context
+#4 transferring context: 12.74kB 0.1s done
+#4 DONE 0.1s
+
+#6 [deps 7/9] COPY packages/db/package.json ./packages/db/
+#6 CACHED
+
+#7 [deps 3/9] COPY package.json package-lock.json ./
+#7 CACHED
+
+#8 [deps 5/9] COPY apps/widget/package.json ./apps/widget/
+#8 CACHED
+
+#9 [deps 2/9] WORKDIR /app
+#9 CACHED
+
+#10 [deps 4/9] COPY apps/web/package.json ./apps/web/
+#10 CACHED
+
+#11 [deps 6/9] COPY services/worker/package.json ./services/worker/
+#11 CACHED
+
+#12 [deps 8/9] COPY packages/rag/package.json ./packages/rag/
+#12 CACHED
+
+#13 [deps 9/9] RUN npm ci
+#13 CACHED
+
+#14 [build 1/2] COPY . .
+#14 DONE 0.2s
+
+#15 [build 2/2] RUN npm run build
+#15 1.157 
+#15 1.157 > n6b-rag-class@0.1.0 build
+#15 1.157 > npm run build --workspace @n6b/db && npm run build --workspace @n6b/rag && npm run build --workspace @n6b/worker && npm run build --workspace @n6b/web
+#15 1.157 
+#15 1.547 
+#15 1.547 > @n6b/db@0.1.0 build
+#15 1.547 > tsc -p tsconfig.build.json
+#15 1.547 
+#15 5.833 
+#15 5.833 > @n6b/rag@0.1.0 build
+#15 5.833 > tsc -p tsconfig.build.json
+#15 5.833 
+#15 10.90 
+#15 10.90 > @n6b/worker@0.1.0 build
+#15 10.90 > tsc -p tsconfig.build.json
+#15 10.90 
+#15 17.13 
+#15 17.13 > @n6b/web@0.1.0 build
+#15 17.13 > next build
+#15 17.13 
+#15 22.19 {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+#15 22.23 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+#15 22.23 This information is used to shape Next.js' roadmap and prioritize features.
+#15 22.23 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#15 22.23 https://nextjs.org/telemetry
+#15 22.23 
+#15 22.42    ▲ Next.js 15.5.27
+#15 22.42 
+#15 22.61    Creating an optimized production build ...
+#15 27.20 {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+#15 44.84 {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+#15 49.81 {"output":"/app/apps/web/public/w.js","bytes":11932,"gzipBytes":3756,"limit":30720}
+#15 57.84  ✓ Compiled successfully in 20.8s
+#15 57.85    Linting and checking validity of types ...
+#15 69.62    Collecting page data ...
+#15 77.15    Generating static pages (0/7) ...
+#15 79.14    Generating static pages (1/7) 
+#15 79.79    Generating static pages (3/7) 
+#15 79.79    Generating static pages (5/7) 
+#15 79.79  ✓ Generating static pages (7/7)
+#15 81.01    Finalizing page optimization ...
+#15 81.01    Collecting build traces ...
+#15 93.33 
+#15 93.34 Route (app)                                 Size  First Load JS
+#15 93.34 ┌ ○ /                                      161 B         106 kB
+#15 93.34 ├ ○ /_not-found                            988 B         104 kB
+#15 93.34 ├ ƒ /api/auth/login                        153 B         103 kB
+#15 93.34 ├ ƒ /api/auth/logout                       153 B         103 kB
+#15 93.34 ├ ƒ /api/auth/register                     153 B         103 kB
+#15 93.34 ├ ƒ /api/bots                              153 B         103 kB
+#15 93.34 ├ ƒ /api/bots/[id]/ask                     153 B         103 kB
+#15 93.34 ├ ƒ /api/bots/[id]/publish                 153 B         103 kB
+#15 93.34 ├ ƒ /api/bots/[id]/sources                 153 B         103 kB
+#15 93.34 ├ ƒ /api/health                            153 B         103 kB
+#15 93.34 ├ ƒ /api/jobs/[id]                         153 B         103 kB
+#15 93.34 ├ ƒ /api/jobs/[id]/retry                   153 B         103 kB
+#15 93.34 ├ ƒ /api/widget/ask                        153 B         103 kB
+#15 93.34 ├ ƒ /api/widget/config                     153 B         103 kB
+#15 93.34 ├ ƒ /api/widget/event                      153 B         103 kB
+#15 93.34 ├ ƒ /cabinet                             5.14 kB         108 kB
+#15 93.34 ├ ○ /login                               1.36 kB         107 kB
+#15 93.34 └ ○ /register                            1.36 kB         107 kB
+#15 93.34 + First Load JS shared by all             103 kB
+#15 93.34   ├ chunks/18-25b11e3a132b87ef.js        46.5 kB
+#15 93.34   ├ chunks/87c73c54-24122e7b92478d00.js  54.2 kB
+#15 93.34   └ other shared chunks (total)          1.92 kB
+#15 93.34 
+#15 93.34 
+#15 93.34 ○  (Static)   prerendered as static content
+#15 93.34 ƒ  (Dynamic)  server-rendered on demand
+#15 93.34 
+#15 DONE 93.7s
+
+#16 [prod-deps 1/1] RUN npm prune --omit=dev
+#16 CACHED
+
+#17 [web 3/8] COPY --from=prod-deps /app/node_modules ./node_modules
+#17 CACHED
+
+#18 [web 4/8] COPY --from=build /app/package.json ./package.json
+#18 CACHED
+
+#19 [web 5/8] COPY --from=build /app/apps/web/.next ./apps/web/.next
+#19 DONE 0.5s
+
+#20 [web 6/8] COPY --from=build /app/apps/web/public ./apps/web/public
+#20 DONE 0.1s
+
+#21 [web 7/8] COPY --from=build /app/apps/web/package.json ./apps/web/package.json
+#21 DONE 0.1s
+
+#22 [web 8/8] COPY --from=build /app/packages ./packages
+#22 DONE 0.1s
+
+#23 exporting to image
+#23 exporting layers
+#23 exporting layers 4.2s done
+#23 exporting manifest sha256:866b6447de08950c898304d12f83ba011581208572ce3b4ebf0a95c9eb59d296 0.0s done
+#23 exporting config sha256:6079ff35c5a4f3936a8ade679de6af2d0819651cc5410aded438444a56421b7d 0.0s done
+#23 exporting attestation manifest sha256:cf76230d249d6e4402d5318c1770761d9fbf18c6e1b0d3f6ceef7f854e75120c 0.0s done
+#23 exporting manifest list sha256:82460803f628576175aac1dc260f8df39d8938d4f6defff683034100d3ccecc2
+#23 exporting manifest list sha256:82460803f628576175aac1dc260f8df39d8938d4f6defff683034100d3ccecc2 0.0s done
+#23 naming to docker.io/library/n6b-f09-widget-web:20261002 done
+#23 unpacking to docker.io/library/n6b-f09-widget-web:20261002
+#23 unpacking to docker.io/library/n6b-f09-widget-web:20261002 0.8s done
+#23 DONE 5.3s

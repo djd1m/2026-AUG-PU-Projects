@@ -1,0 +1,618 @@
+{
+  "concurrency": 10,
+  "samples": [
+    {
+      "worker": 0,
+      "index": 0,
+      "ms": 31.800000071525574,
+      "status": 200
+    },
+    {
+      "worker": 1,
+      "index": 0,
+      "ms": 31.899999976158142,
+      "status": 200
+    },
+    {
+      "worker": 2,
+      "index": 0,
+      "ms": 80.39999997615814,
+      "status": 200
+    },
+    {
+      "worker": 3,
+      "index": 0,
+      "ms": 80.69999992847443,
+      "status": 200
+    },
+    {
+      "worker": 4,
+      "index": 0,
+      "ms": 82.39999997615814,
+      "status": 200
+    },
+    {
+      "worker": 5,
+      "index": 0,
+      "ms": 86.5,
+      "status": 200
+    },
+    {
+      "worker": 6,
+      "index": 0,
+      "ms": 96.10000002384186,
+      "status": 200
+    },
+    {
+      "worker": 7,
+      "index": 0,
+      "ms": 98.5,
+      "status": 200
+    },
+    {
+      "worker": 8,
+      "index": 0,
+      "ms": 98.60000002384186,
+      "status": 200
+    },
+    {
+      "worker": 9,
+      "index": 0,
+      "ms": 93.39999997615814,
+      "status": 200
+    },
+    {
+      "worker": 0,
+      "index": 1,
+      "ms": 68.69999992847443,
+      "status": 200
+    },
+    {
+      "worker": 1,
+      "index": 1,
+      "ms": 68.39999997615814,
+      "status": 200
+    },
+    {
+      "worker": 6,
+      "index": 1,
+      "ms": 19.600000023841858,
+      "status": 200
+    },
+    {
+      "worker": 2,
+      "index": 1,
+      "ms": 38,
+      "status": 200
+    },
+    {
+      "worker": 5,
+      "index": 1,
+      "ms": 32,
+      "status": 200
+    },
+    {
+      "worker": 4,
+      "index": 1,
+      "ms": 41,
+      "status": 200
+    },
+    {
+      "worker": 3,
+      "index": 1,
+      "ms": 48.200000047683716,
+      "status": 200
+    },
+    {
+      "worker": 7,
+      "index": 1,
+      "ms": 41.89999997615814,
+      "status": 200
+    },
+    {
+      "worker": 9,
+      "index": 1,
+      "ms": 46.5,
+      "status": 200
+    },
+    {
+      "worker": 0,
+      "index": 2,
+      "ms": 46.800000071525574,
+      "status": 200
+    },
+    {
+      "worker": 8,
+      "index": 1,
+      "ms": 47.700000047683716,
+      "status": 200
+    },
+    {
+      "worker": 1,
+      "index": 2,
+      "ms": 56.40000009536743,
+      "status": 200
+    },
+    {
+      "worker": 5,
+      "index": 2,
+      "ms": 48,
+      "status": 200
+    },
+    {
+      "worker": 4,
+      "index": 2,
+      "ms": 51.10000002384186,
+      "status": 200
+    },
+    {
+      "worker": 6,
+      "index": 2,
+      "ms": 59.59999990463257,
+      "status": 200
+    },
+    {
+      "worker": 2,
+      "index": 2,
+      "ms": 58.799999952316284,
+      "status": 200
+    },
+    {
+      "worker": 3,
+      "index": 2,
+      "ms": 48.5,
+      "status": 200
+    },
+    {
+      "worker": 7,
+      "index": 2,
+      "ms": 51.10000002384186,
+      "status": 200
+    },
+    {
+      "worker": 9,
+      "index": 2,
+      "ms": 51.89999997615814,
+      "status": 200
+    },
+    {
+      "worker": 0,
+      "index": 3,
+      "ms": 51.89999997615814,
+      "status": 200
+    },
+    {
+      "worker": 8,
+      "index": 2,
+      "ms": 52.60000002384186,
+      "status": 200
+    },
+    {
+      "worker": 5,
+      "index": 3,
+      "ms": 40.60000002384186,
+      "status": 200
+    },
+    {
+      "worker": 1,
+      "index": 3,
+      "ms": 51.299999952316284,
+      "status": 200
+    },
+    {
+      "worker": 4,
+      "index": 3,
+      "ms": 33.300000071525574,
+      "status": 200
+    },
+    {
+      "worker": 2,
+      "index": 3,
+      "ms": 52.300000071525574,
+      "status": 200
+    },
+    {
+      "worker": 6,
+      "index": 3,
+      "ms": 60.60000002384186,
+      "status": 200
+    },
+    {
+      "worker": 3,
+      "index": 3,
+      "ms": 61.60000002384186,
+      "status": 200
+    },
+    {
+      "worker": 9,
+      "index": 3,
+      "ms": 41.300000071525574,
+      "status": 200
+    },
+    {
+      "worker": 0,
+      "index": 4,
+      "ms": 41.10000002384186,
+      "status": 200
+    },
+    {
+      "worker": 7,
+      "index": 3,
+      "ms": 50.299999952316284,
+      "status": 200
+    },
+    {
+      "worker": 4,
+      "index": 4,
+      "ms": 48.799999952316284,
+      "status": 200
+    },
+    {
+      "worker": 8,
+      "index": 3,
+      "ms": 58,
+      "status": 200
+    },
+    {
+      "worker": 1,
+      "index": 4,
+      "ms": 50.10000002384186,
+      "status": 200
+    },
+    {
+      "worker": 5,
+      "index": 4,
+      "ms": 55.39999997615814,
+      "status": 200
+    },
+    {
+      "worker": 6,
+      "index": 4,
+      "ms": 28.600000023841858,
+      "status": 200
+    },
+    {
+      "worker": 2,
+      "index": 4,
+      "ms": 35.89999997615814,
+      "status": 200
+    },
+    {
+      "worker": 3,
+      "index": 4,
+      "ms": 40.59999990463257,
+      "status": 200
+    },
+    {
+      "worker": 0,
+      "index": 5,
+      "ms": 52.799999952316284,
+      "status": 200
+    },
+    {
+      "worker": 9,
+      "index": 4,
+      "ms": 53.199999928474426,
+      "status": 200
+    },
+    {
+      "worker": 7,
+      "index": 4,
+      "ms": 57.60000002384186,
+      "status": 200
+    },
+    {
+      "worker": 4,
+      "index": 5,
+      "ms": 43.700000047683716,
+      "status": 200
+    },
+    {
+      "worker": 8,
+      "index": 4,
+      "ms": 43.39999997615814,
+      "status": 200
+    },
+    {
+      "worker": 1,
+      "index": 5,
+      "ms": 43.10000002384186,
+      "status": 200
+    },
+    {
+      "worker": 6,
+      "index": 5,
+      "ms": 36.5,
+      "status": 200
+    },
+    {
+      "worker": 5,
+      "index": 5,
+      "ms": 44.299999952316284,
+      "status": 200
+    },
+    {
+      "worker": 2,
+      "index": 5,
+      "ms": 47.10000002384186,
+      "status": 200
+    },
+    {
+      "worker": 3,
+      "index": 5,
+      "ms": 50,
+      "status": 200
+    },
+    {
+      "worker": 8,
+      "index": 5,
+      "ms": 34.199999928474426,
+      "status": 200
+    },
+    {
+      "worker": 0,
+      "index": 6,
+      "ms": 44,
+      "status": 200
+    },
+    {
+      "worker": 7,
+      "index": 5,
+      "ms": 36.60000002384186,
+      "status": 200
+    },
+    {
+      "worker": 9,
+      "index": 5,
+      "ms": 44,
+      "status": 200
+    },
+    {
+      "worker": 4,
+      "index": 6,
+      "ms": 36.299999952316284,
+      "status": 200
+    },
+    {
+      "worker": 6,
+      "index": 6,
+      "ms": 42.5,
+      "status": 200
+    },
+    {
+      "worker": 5,
+      "index": 6,
+      "ms": 47.700000047683716,
+      "status": 200
+    },
+    {
+      "worker": 1,
+      "index": 6,
+      "ms": 61,
+      "status": 200
+    },
+    {
+      "worker": 2,
+      "index": 6,
+      "ms": 50.10000002384186,
+      "status": 200
+    },
+    {
+      "worker": 3,
+      "index": 6,
+      "ms": 33.40000009536743,
+      "status": 200
+    },
+    {
+      "worker": 8,
+      "index": 6,
+      "ms": 28.100000023841858,
+      "status": 200
+    },
+    {
+      "worker": 0,
+      "index": 7,
+      "ms": 29.399999976158142,
+      "status": 200
+    },
+    {
+      "worker": 7,
+      "index": 6,
+      "ms": 46,
+      "status": 200
+    },
+    {
+      "worker": 1,
+      "index": 7,
+      "ms": 24.399999976158142,
+      "status": 200
+    },
+    {
+      "worker": 9,
+      "index": 6,
+      "ms": 55,
+      "status": 200
+    },
+    {
+      "worker": 4,
+      "index": 7,
+      "ms": 55.299999952316284,
+      "status": 200
+    },
+    {
+      "worker": 5,
+      "index": 7,
+      "ms": 37.60000002384186,
+      "status": 200
+    },
+    {
+      "worker": 6,
+      "index": 7,
+      "ms": 48.60000002384186,
+      "status": 200
+    },
+    {
+      "worker": 2,
+      "index": 7,
+      "ms": 42.199999928474426,
+      "status": 200
+    },
+    {
+      "worker": 0,
+      "index": 8,
+      "ms": 39.10000002384186,
+      "status": 200
+    },
+    {
+      "worker": 3,
+      "index": 7,
+      "ms": 42.199999928474426,
+      "status": 200
+    },
+    {
+      "worker": 8,
+      "index": 7,
+      "ms": 49.800000071525574,
+      "status": 200
+    },
+    {
+      "worker": 1,
+      "index": 8,
+      "ms": 28.5,
+      "status": 200
+    },
+    {
+      "worker": 7,
+      "index": 7,
+      "ms": 33,
+      "status": 200
+    },
+    {
+      "worker": 9,
+      "index": 7,
+      "ms": 24.40000009536743,
+      "status": 200
+    },
+    {
+      "worker": 4,
+      "index": 8,
+      "ms": 32.60000002384186,
+      "status": 200
+    },
+    {
+      "worker": 5,
+      "index": 8,
+      "ms": 37.799999952316284,
+      "status": 200
+    },
+    {
+      "worker": 6,
+      "index": 8,
+      "ms": 51.89999997615814,
+      "status": 200
+    },
+    {
+      "worker": 0,
+      "index": 9,
+      "ms": 40,
+      "status": 200
+    },
+    {
+      "worker": 2,
+      "index": 8,
+      "ms": 40.300000071525574,
+      "status": 200
+    },
+    {
+      "worker": 3,
+      "index": 8,
+      "ms": 40,
+      "status": 200
+    },
+    {
+      "worker": 8,
+      "index": 8,
+      "ms": 32.299999952316284,
+      "status": 200
+    },
+    {
+      "worker": 1,
+      "index": 9,
+      "ms": 45.5,
+      "status": 200
+    },
+    {
+      "worker": 9,
+      "index": 8,
+      "ms": 57.39999997615814,
+      "status": 200
+    },
+    {
+      "worker": 4,
+      "index": 9,
+      "ms": 49.299999952316284,
+      "status": 200
+    },
+    {
+      "worker": 5,
+      "index": 9,
+      "ms": 56.89999997615814,
+      "status": 200
+    },
+    {
+      "worker": 7,
+      "index": 8,
+      "ms": 85.19999992847443,
+      "status": 200
+    },
+    {
+      "worker": 6,
+      "index": 9,
+      "ms": 57,
+      "status": 200
+    },
+    {
+      "worker": 2,
+      "index": 9,
+      "ms": 56.5,
+      "status": 200
+    },
+    {
+      "worker": 3,
+      "index": 9,
+      "ms": 63.800000071525574,
+      "status": 200
+    },
+    {
+      "worker": 8,
+      "index": 9,
+      "ms": 64.29999995231628,
+      "status": 200
+    },
+    {
+      "worker": 9,
+      "index": 9,
+      "ms": 36.299999952316284,
+      "status": 200
+    },
+    {
+      "worker": 7,
+      "index": 9,
+      "ms": 23.200000047683716,
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "p95": 85.19999992847443,
+  "min": 19.600000023841858,
+  "max": 98.60000002384186,
+  "started_at": "2026-10-03T05:02:04.174Z",
+  "finished_at": "2026-10-03T05:02:04.700Z",
+  "exclusions": [
+    "KDF",
+    "provider IO"
+  ],
+  "method": "nearest rank p95; includes actual browser fetch/body parse",
+  "source_sha256": "e9e78e47c349a0c23b3542dc68945d1f976f76c6edbb8bee61c817a3aebd084b",
+  "cpu_limit": 2
+}

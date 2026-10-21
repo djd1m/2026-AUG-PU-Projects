@@ -1,0 +1,11 @@
+{
+  "mutation": "Restore the exact HEAD handler (nonnull body always requires readJson) with the new fixed regressions unchanged",
+  "fixed_sha256": "48676070704e23610ee46c675bfd9fbe710e2f4de4979c58857185e2261a2f60",
+  "mutated_sha256": "9212cdaae85c59041934f6a397c0b413d8c8f4a6c780b7db7e4f3b92b0130fe9",
+  "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH /tmp/n6b-f06-node22/bin/node node_modules/vitest/vitest.mjs run --config vitest.config.ts apps/web/tests/unit/studio-handler.test.ts apps/web/tests/unit/studio-clients-ui.test.ts",
+  "started_at": "2026-10-03T04:03:23.068055+00:00",
+  "mutation_exit": 1,
+  "restored_sha256": "48676070704e23610ee46c675bfd9fbe710e2f4de4979c58857185e2261a2f60",
+  "recovery_exit": 0,
+  "finished_at": "2026-10-03T04:03:28.073412+00:00"
+}

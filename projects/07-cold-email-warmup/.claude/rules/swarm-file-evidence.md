@@ -1,0 +1,1 @@
+../../../../.claude/rules/swarm-file-evidence.md

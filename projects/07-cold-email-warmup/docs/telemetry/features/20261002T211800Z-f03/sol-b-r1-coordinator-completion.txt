@@ -1,0 +1,202 @@
+HEAVY_ACQUIRED 2026-10-02T23:07:55Z
+Pre-lock clock mutant rejected by all four realPG lock-wait boundary assertions.
+TAP version 13
+# Subtest: F03b real PG durable final authority, all stop races, sink privacy and outcomes
+    # Subtest: B1/B2 SC-US-003-4 revoke
+    ok 1 - B1/B2 SC-US-003-4 revoke
+      ---
+      duration_ms: 548.756805
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 revoke
+    ok 2 - B1/B2 SC-US-003-5 revoke
+      ---
+      duration_ms: 538.450332
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 version
+    ok 3 - B1/B2 SC-US-003-4 version
+      ---
+      duration_ms: 331.686209
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 version
+    ok 4 - B1/B2 SC-US-003-5 version
+      ---
+      duration_ms: 376.311284
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 pause
+    ok 5 - B1/B2 SC-US-003-4 pause
+      ---
+      duration_ms: 378.897195
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 pause
+    ok 6 - B1/B2 SC-US-003-5 pause
+      ---
+      duration_ms: 415.186758
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 sender_withdraw
+    ok 7 - B1/B2 SC-US-003-4 sender_withdraw
+      ---
+      duration_ms: 413.178248
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 sender_withdraw
+    ok 8 - B1/B2 SC-US-003-5 sender_withdraw
+      ---
+      duration_ms: 296.719055
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 recipient_withdraw
+    ok 9 - B1/B2 SC-US-003-4 recipient_withdraw
+      ---
+      duration_ms: 303.267798
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 recipient_withdraw
+    ok 10 - B1/B2 SC-US-003-5 recipient_withdraw
+      ---
+      duration_ms: 289.501264
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 reply
+    ok 11 - B1/B2 SC-US-003-4 reply
+      ---
+      duration_ms: 333.716829
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 reply
+    ok 12 - B1/B2 SC-US-003-5 reply
+      ---
+      duration_ms: 357.319007
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 unsubscribe
+    ok 13 - B1/B2 SC-US-003-4 unsubscribe
+      ---
+      duration_ms: 365.71384
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 unsubscribe
+    ok 14 - B1/B2 SC-US-003-5 unsubscribe
+      ---
+      duration_ms: 353.620536
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 complaint
+    ok 15 - B1/B2 SC-US-003-4 complaint
+      ---
+      duration_ms: 346.690893
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 complaint
+    ok 16 - B1/B2 SC-US-003-5 complaint
+      ---
+      duration_ms: 389.757699
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 disable
+    ok 17 - B1/B2 SC-US-003-4 disable
+      ---
+      duration_ms: 363.076769
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 disable
+    ok 18 - B1/B2 SC-US-003-5 disable
+      ---
+      duration_ms: 425.300921
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-4 limit
+    ok 19 - B1/B2 SC-US-003-4 limit
+      ---
+      duration_ms: 449.464421
+      type: 'test'
+      ...
+    # Subtest: B1/B2 SC-US-003-5 limit
+    ok 20 - B1/B2 SC-US-003-5 limit
+      ---
+      duration_ms: 511.995483
+      type: 'test'
+      ...
+    # Subtest: B3 durable rendered sink/token/message refs with own OR intended pool peer read only
+    ok 21 - B3 durable rendered sink/token/message refs with own OR intended pool peer read only
+      ---
+      duration_ms: 1082.910886
+      type: 'test'
+      ...
+    # Subtest: R2 B5 authenticated disabled inspection unavailable before either reader
+    ok 22 - R2 B5 authenticated disabled inspection unavailable before either reader
+      ---
+      duration_ms: 636.440017
+      type: 'test'
+      ...
+    # Subtest: R1 post-lock clock lease45s rejects expired waiter with zero adapter calls
+    ok 23 - R1 post-lock clock lease45s rejects expired waiter with zero adapter calls
+      ---
+      duration_ms: 512.586683
+      type: 'test'
+      ...
+    # Subtest: R1 post-lock clock poll60s rejects stale waiter with live lease and zero adapter calls
+    ok 24 - R1 post-lock clock poll60s rejects stale waiter with live lease and zero adapter calls
+      ---
+      duration_ms: 586.343339
+      type: 'test'
+      ...
+    # Subtest: R1 post-lock clock retry120s rejects ceiling waiter with zero adapter calls
+    ok 25 - R1 post-lock clock retry120s rejects ceiling waiter with zero adapter calls
+      ---
+      duration_ms: 466.870597
+      type: 'test'
+      ...
+    # Subtest: R1 post-lock clock midnight concurrent waiters enforce new-day provider limit1 and reservations
+    ok 26 - R1 post-lock clock midnight concurrent waiters enforce new-day provider limit1 and reservations
+      ---
+      duration_ms: 438.542837
+      type: 'test'
+      ...
+    # Subtest: B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan
+    ok 27 - B1/B5 default disabled, wrong/expired lease, exact poll boundaries and incomplete scan
+      ---
+      duration_ms: 2838.599933
+      type: 'test'
+      ...
+    # Subtest: B5 midnight reservations move under concurrent final guard; provider lowered, no off-by-one
+    ok 28 - B5 midnight reservations move under concurrent final guard; provider lowered, no off-by-one
+      ---
+      duration_ms: 349.756705
+      type: 'test'
+      ...
+    # Subtest: B4 proved pre-DATA only, exact5/30s, max3, re-enter guards/quota
+    ok 29 - B4 proved pre-DATA only, exact5/30s, max3, re-enter guards/quota
+      ---
+      duration_ms: 640.697909
+      type: 'test'
+      ...
+    # Subtest: B4/B5 retry120s exact ceiling, ambiguous timeout/crash retain quota, never recover resend
+    ok 30 - B4/B5 retry120s exact ceiling, ambiguous timeout/crash retain quota, never recover resend
+      ---
+      duration_ms: 2059.684105
+      type: 'test'
+      ...
+    1..30
+ok 1 - F03b real PG durable final authority, all stop races, sink privacy and outcomes
+  ---
+  duration_ms: 17774.008075
+  type: 'test'
+  ...
+1..1
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 18408.385531
+F03b secret/contact canary scan passed; values suppressed.
+Snapshot exit0: 46 COPY inputs match restored container; image sha256:bb93d01382f53a6309d3d1c81389311d9e5195ee1df5d612081cfa8d3eda68a2.
+HEAVY_RELEASED 2026-10-02T23:08:35Z

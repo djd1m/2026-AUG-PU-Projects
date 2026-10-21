@@ -1,0 +1,15 @@
+# F06B-003: узкая коррекция публичного отчёта
+
+Одна подтверждённая находка fresh full B review: таблица `/reports/:token` растягивала документ при390 (Chromium570, Firefox748, WebKit604). Исторические RED артефакты B3 сохранены без изменений.
+
+Изменён только `src/growth/reports.ts:reportHtml`: локальные CSS и markup ограничивают ширину документа, таблица остаётся семантической и читается в горизонтально прокручиваемой области. Область имеет label, пояснение, tabindex и видимый focus; стрелки позволяют читать крайние колонки. Длинные UTC ISO значения сохраняются целиком, начало/конец окна показаны отдельными строками. Caption, scope row/col, raw counts/ratios, historical disclaimer, provenance, privacy whitelist, escaping и source badge сохранены. Серверный CSP уже содержит `style-src 'self' 'unsafe-inline'`; сервер/CSP не изменялись.
+
+Substantive XL parent сохранён; mechanical ROUTE L exit1 обусловлен чтением всего файла с ролью БД. Пользователь разрешил только эту коррекцию; агенты не запускались. Повторный полный backend/PG115/benchmark не требуется: ни один backend input не менялся; неизменные B2/B3/B4 поддержаны review-b.md. Независимое Astra closure и B5/B6/PR остаются стадиями координатора.
+
+Новый harness `scripts/ui/f06-report-layout.mjs` использует существующий Docker Playwright1.63 и принятые fixture/UI/manual observations/share/get/revoke методы. Auth seed выполняется вне браузера; операторский ключ не попадает в браузер. Binding adapters допускают явный sol-b-r3 receipt, сохраняя исторические defaults. Скопированные скрипты и SHA фиксируются до каждого READY; locks/network/contexts/bridge/sockets освобождаются в finally.
+
+Evidence: `docs/telemetry/features/20261003T023900Z-f06/sol-b-r3-*`. Первые ошибки запуска сохранены: устаревший локальный dist/некорректный формат allowlist; harness selection TypeError; второй browser attempt заблокирован hash guard до READY. Итоговые результаты добавляются после фактических проверок.
+
+После визуального просмотра фактических Firefox390 start/end и Chromium1440 PNG исправлен наследуемый `overflow-wrap:anywhere` внутри таблицы: `table{overflow-wrap:normal}` сохраняет целые слова/числа. Это исправление читаемости колонок той же находки. Первая прошедшая сборка/evidence сохранена отдельно; окончательная binding — `sol-b-r3-readable-*`, финальный browser attempt — `sol-b-r3-report-layout-4`. Дополнительная браузерная геометрическая проверка требует одну строку для чисел/процентов; новый CSS unit mirror не создан.
+
+Окончательная проверка: 218/218 pass (Playwright1.63), ratios и raw counts на Chromium1440/390, Firefox390, WebKit390; все root390/body358 и desktop root1440/body1408. Full ISO timestamps, count/ratio значения без переноса, caption/header associations, Tab/focus/arrow scrolling, privacy/provenance/badge/revoke проверены. Page errors и failed requests отсутствуют; console только ожидаемые anonymous401/revoked404. Фактические финальные PNG просмотрены. Typecheck/lint/build/unit39 — exit0. Frozen R2→final input diff: только reports.ts. Final secret/image audit: sol-b-r3-readable-audit.json.

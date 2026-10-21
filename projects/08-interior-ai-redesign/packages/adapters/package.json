@@ -1,0 +1,16 @@
+{
+  "name": "@n8/adapters",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@n8/domain": "0.1.0",
+    "bcrypt": "6.0.0",
+    "sharp": "0.35.5",
+    "gltf-validator": "2.0.0-dev.3.10"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  }
+}

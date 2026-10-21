@@ -1,0 +1,19 @@
+{
+  "runId": "20261006T090602Z-n7-expanded-mvp-a1",
+  "launchMs": 1791372457520.4102,
+  "units": [
+    {
+      "workUnitId": "f11_a55_remaining_regression",
+      "tracePath": "/tmp/n7-f11-remaining-regression-a55-20261007/receipt.md"
+    }
+  ],
+  "allocated_at": "2026-10-07T11:27:37.520415+00:00",
+  "source_revision": "e9ec591e714932cfdd17339f5017b460f8476b16",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "trace_absent_before_dispatch": true,
+  "mode": "readonlysource operational localfixtures; immediateexactpreflight before eachactualcommand required",
+  "root_responsible": "/root",
+  "approval": "existing approved N7 autonomous expandedMVP; no externalprovider/send/cost/deployment"
+}

@@ -1,0 +1,62 @@
+{
+  "stage": "A38 independent normative planner; not product final reviewer",
+  "verdict": "ADDITIVE_AMENDMENT_REQUIRED_COMPATIBLE_CANDIDATE_ONLY",
+  "implementation_acceptance": "UNPROVEN; no PASS; existing held captures remain sealed",
+  "profile": "model-routing-econom",
+  "risk": "XL architecture/product; bounded implementation requested MEDIUM",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning": "HIGH",
+  "actual_host_model": null,
+  "usage": null,
+  "usage_gaps": [
+    "Host model metadata unavailable",
+    "Token/cost/provider usage counters unavailable; no estimate substituted"
+  ],
+  "source_revision": "b6e8ae16e8feb6c67888eb2f006cfbb299b40197",
+  "input_packet": "/tmp/n7-f11-post-ready-restart-planner-prep-20261007/context_manifest.json",
+  "input_packet_sha256": "f55759440f60bb6f62203a61e94b721dd97078da6e10b2fd32d85a517bc65ce3",
+  "ack_authoritative_utc": "2026-10-07 07:30:39 UTC",
+  "substantive_deadline_utc": "2026-10-07 07:36:39 UTC",
+  "final_deadline_utc": "2026-10-07 07:38:39 UTC",
+  "substantive_cut_authoritative_utc": "2026-10-07 07:36:28 UTC",
+  "seal_clock_authoritative_utc": "2026-10-07 07:37:16 UTC",
+  "elapsed_ack_to_substantive_cut_seconds": 349.0,
+  "elapsed_ack_to_seal_clock_seconds": 397.0,
+  "substantive_overrun_seconds": 0,
+  "final_overrun_at_seal_clock_seconds": 0,
+  "clock_note": "UTC snapshots from clock__curr_time; seal clock is the last authoritative observation immediately before receipt persistence, not an invented exact subsequent final-delivery timestamp",
+  "scope_completed": true,
+  "source_edits": false,
+  "test_or_fleet_executions": 0,
+  "db_mutations": 0,
+  "installs": 0,
+  "network_provider_calls": 0,
+  "new_runtime_actors": 0,
+  "only_outputs": [
+    "plan.md",
+    "receipt.json",
+    "context_manifest.json"
+  ],
+  "fallback": "Initial ordinary sandbox shell failed twice before execution: bwrap .codex mkdir Permission denied. Narrow require_escalated local read and named /tmp writes passed normal automatic review; no review rejection, unsafe flag or global configuration change.",
+  "remaining_acceptance": [
+    "Owner/MAIN incorporation of additive normative clauses",
+    "Bounded changed-source implementation",
+    "Targeted native/real PG baseline RED and candidate GREEN plus material safety controls/current revision proofs",
+    "Relevant existing mandatory positive regressions and source/material counters",
+    "Only then justified original fault rerun, healthy full300 witness and separately unresolved legacy20page real5s/native19 gate",
+    "Fresh independent final HIGH source review and permitted delivery"
+  ],
+  "next_executor": "Parent /root/n7_sol_coordinator owns MAIN writing and assignment; child releases slot on FINAL",
+  "outputs": {
+    "plan.md": {
+      "path": "/tmp/n7-f11-restart-post-ready-planner-a38/plan.md",
+      "sha256": "bbbbcd847f0abf82bb58eca1a58e8b1b6b4c91425d295d6f82498ce63d62fb48",
+      "bytes": 18839
+    },
+    "context_manifest.json": {
+      "path": "/tmp/n7-f11-restart-post-ready-planner-a38/context_manifest.json",
+      "sha256": "bc2dbd91f039b9374a954921fb58fb8f6dbf1d6664340d734f68d22a61744b7b",
+      "bytes": 6748
+    }
+  }
+}

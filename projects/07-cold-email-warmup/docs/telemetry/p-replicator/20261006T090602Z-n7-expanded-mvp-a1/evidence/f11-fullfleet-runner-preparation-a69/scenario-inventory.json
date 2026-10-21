@@ -1,0 +1,95 @@
+{
+  "execution_order": [
+    "full_fault",
+    "full_healthy",
+    "legacy"
+  ],
+  "entries": {
+    "full_fault": {
+      "title": "F11 ALL30 finite native BODY fault recovers both2800ms phases full300s",
+      "bound_seconds": 330,
+      "native_timeout_ms": 330000,
+      "arguments": [
+        "full_fault",
+        "full_fault",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ALL30 finite native BODY fault recovers both2800ms phases full300s$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "launcher_argv": [
+        "python3",
+        "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/launch.py",
+        "full_fault",
+        "330",
+        "full_fault",
+        "full_fault",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ALL30 finite native BODY fault recovers both2800ms phases full300s$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "parent_schema": "n7_a69_full_fault_261007134053",
+      "actual_callback_count_required": 1,
+      "source_sha256": "bcfedf23511d32f8b41f38a8d83ee6d655887461b9023b4d58ac03885560b658"
+    },
+    "full_healthy": {
+      "title": "F11 ALL30 both2800ms phases preserve complete headers and existing fleet lanes full300s",
+      "bound_seconds": 330,
+      "native_timeout_ms": 330000,
+      "arguments": [
+        "full_healthy",
+        "full_healthy",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ALL30 both2800ms phases preserve complete headers and existing fleet lanes full300s$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "launcher_argv": [
+        "python3",
+        "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/launch.py",
+        "full_healthy",
+        "330",
+        "full_healthy",
+        "full_healthy",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^F11 ALL30 both2800ms phases preserve complete headers and existing fleet lanes full300s$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "parent_schema": "n7_a69_full_healthy_261007134053",
+      "actual_callback_count_required": 1,
+      "source_sha256": "bcfedf23511d32f8b41f38a8d83ee6d655887461b9023b4d58ac03885560b658"
+    },
+    "legacy": {
+      "title": "native five-second rescans yield fairly to later healthy E across competing worker restart",
+      "bound_seconds": 145,
+      "native_timeout_ms": 145000,
+      "arguments": [
+        "legacy",
+        "legacy",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^native five-second rescans yield fairly to later healthy E across competing worker restart$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "launcher_argv": [
+        "python3",
+        "/tmp/n7-f11-fullfleet-runner-prep-a69-20261007/launch.py",
+        "legacy",
+        "145",
+        "legacy",
+        "legacy",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^native five-second rescans yield fairly to later healthy E across competing worker restart$",
+        "tests/f10-runtime-protocol.test.ts"
+      ],
+      "parent_schema": "n7_a69_legacy_261007134053",
+      "actual_callback_count_required": 1,
+      "source_sha256": "bcfedf23511d32f8b41f38a8d83ee6d655887461b9023b4d58ac03885560b658"
+    }
+  },
+  "runtime_authorized": false,
+  "native_denominators_required": "all observed 30 participants/100 connected; full300 fault then healthy; original150000SIGTERM; literal20pages real5s/native19; no reductions"
+}

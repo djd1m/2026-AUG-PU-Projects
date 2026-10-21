@@ -1,0 +1,42 @@
+{
+  "at": "2026-10-03T03:49:25.012479+00:00",
+  "reason": "disk1.5GB; accepted completed N7 own worktrees only",
+  "rows": [
+    {
+      "path": "/tmp/n7-f05b-r1-review",
+      "revision": "f0fb8556536381c968973e992d5e06ac0416cd83",
+      "terminal_process": {
+        "exit_code": 0,
+        "pid": 262596,
+        "started_at": "2026-10-03T02:30:47.435171+00:00",
+        "finished_at": "2026-10-03T02:35:41.057903+00:00",
+        "elapsed_seconds": 293.62272639607545
+      },
+      "archive": "same absolute N7 source/docs/TRACE retained; other tracked monorepo copy and reproducible dependencies removed"
+    },
+    {
+      "path": "/tmp/n7-f06a-review",
+      "revision": "d006c1dad03059c9dd73908f207e22985dd619e5",
+      "terminal_process": {
+        "exit_code": 0,
+        "pid": 997479,
+        "started_at": "2026-10-03T03:10:39.327128+00:00",
+        "finished_at": "2026-10-03T03:17:25.357971+00:00",
+        "elapsed_seconds": 406.03084008407313
+      },
+      "archive": "same absolute N7 source/docs/TRACE retained; other tracked monorepo copy and reproducible dependencies removed"
+    },
+    {
+      "path": "/tmp/n7-f06a-r1-review",
+      "revision": "7827dbca9277e688a6eafbacd4ce1c6496c38226",
+      "terminal_process": {
+        "exit_code": 0,
+        "pid": 1669535,
+        "started_at": "2026-10-03T03:46:22.518769+00:00",
+        "finished_at": "2026-10-03T03:47:28.786128+00:00",
+        "elapsed_seconds": 66.26735922601074
+      },
+      "archive": "same absolute N7 source/docs/TRACE retained; other tracked monorepo copy and reproducible dependencies removed"
+    }
+  ]
+}

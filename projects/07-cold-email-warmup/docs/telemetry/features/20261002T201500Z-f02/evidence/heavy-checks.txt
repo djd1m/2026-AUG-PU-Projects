@@ -1,0 +1,278 @@
+Local runtime key files present; values suppressed.
+== БД и хранилища не смотрят в интернет ==
+  ✅ ни одно хранилище не публикует порт наружу
+
+== За reverse-proxy приложение не публикуется ==
+  ✅ reverse-proxy в compose нет — проверка неприменима
+
+== Конфликты портов с уже занятым на этой машине ==
+  ✅ порт 18702 свободен
+               total        used        free      shared  buff/cache   available
+Mem:           11959        7906         219         319        4479        4053
+Swap:            511         511           0
+
+> n7-cold-email-warmup@0.1.0 build
+> tsc -p tsconfig.build.json
+
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            BuildKit is currently disabled; enable it by removing the DOCKER_BUILDKIT=0
+            environment-variable.
+
+Sending build context to Docker daemon  263.7kB
+Step 1/12 : FROM node:22.20.0-bookworm-slim
+22.20.0-bookworm-slim: Pulling from library/node
+Digest: sha256:b21fe589dfbe5cc39365d0544b9be3f1f33f55f3c86c87a76ff65a02f8f5848e
+Status: Downloaded newer image for node:22.20.0-bookworm-slim
+ ---> b21fe589dfbe
+Step 2/12 : WORKDIR /app
+ ---> Running in da4893d3b040
+ ---> Removed intermediate container da4893d3b040
+ ---> 957acab97279
+Step 3/12 : COPY package.json package-lock.json ./
+ ---> 3f4c72b198cc
+Step 4/12 : RUN npm ci --no-audit --no-fund
+ ---> Running in d7902be39fca
+[91mnpm warn deprecated eslint@9.39.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+[0m
+added 145 packages in 7s
+[91mnpm notice
+npm notice New major version of npm available! 10.9.3 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+[0m ---> Removed intermediate container d7902be39fca
+ ---> 3f2e5522dea6
+Step 5/12 : COPY tsconfig*.json eslint.config.js ./
+ ---> e8ac939db80f
+Step 6/12 : COPY src ./src
+ ---> 94a804452219
+Step 7/12 : COPY db ./db
+ ---> 77715f9480b2
+Step 8/12 : COPY tests ./tests
+ ---> d673a56c7667
+Step 9/12 : RUN npm run build
+ ---> Running in 479e03c84c8e
+
+> n7-cold-email-warmup@0.1.0 build
+> tsc -p tsconfig.build.json
+
+ ---> Removed intermediate container 479e03c84c8e
+ ---> 7cb63652b206
+Step 10/12 : USER node
+ ---> Running in de583025c353
+ ---> Removed intermediate container de583025c353
+ ---> d8463311f9f0
+Step 11/12 : EXPOSE 3000
+ ---> Running in 40a53654fda8
+ ---> Removed intermediate container 40a53654fda8
+ ---> 0ee2cd4dc12b
+Step 12/12 : CMD ["node", "dist/main.js"]
+ ---> Running in 277d94e8c60d
+ ---> Removed intermediate container 277d94e8c60d
+ ---> aa2285578e48
+Successfully built aa2285578e48
+Successfully tagged n7f02-web:latest
+ Network n7f02_network Creating 
+ Network n7f02_network Creating 
+ Volume n7f02_pg Creating 
+ Volume n7f02_pg Creating 
+ Volume n7f02_pg Created 
+ Volume n7f02_pg Created 
+ Network n7f02_network Created 
+ Network n7f02_network Created 
+ Container n7f02-db-1 Creating 
+ Container n7f02-db-1 Created 
+ Container n7f02-web-1 Creating 
+ Container n7f02-web-1 Created 
+ Container n7f02-db-1 Starting 
+ Container n7f02-db-1 Started 
+ Container n7f02-db-1 Waiting 
+ Container n7f02-db-1 Healthy 
+ Container n7f02-web-1 Starting 
+ Container n7f02-web-1 Started 
+ Container n7f02-db-1 Waiting 
+ Container n7f02-web-1 Waiting 
+ Container n7f02-db-1 Healthy 
+ Container n7f02-web-1 Healthy 
+
+> n7-cold-email-warmup@0.1.0 typecheck
+> tsc --noEmit
+
+npm notice
+npm notice New major version of npm available! 10.9.3 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> n7-cold-email-warmup@0.1.0 lint
+> eslint src tests
+
+
+> n7-cold-email-warmup@0.1.0 test
+> tsx --test --test-concurrency=1 tests/*-unit.test.ts
+
+TAP version 13
+# Subtest: AC-F01-4 Unicode/password byte boundaries reject before invoking KDF
+ok 1 - AC-F01-4 Unicode/password byte boundaries reject before invoking KDF
+  ---
+  duration_ms: 2.58291
+  type: 'test'
+  ...
+# Subtest: AC-F01-4 exact PHC params/salt/output reject adversarial stored costs
+ok 2 - AC-F01-4 exact PHC params/salt/output reject adversarial stored costs
+  ---
+  duration_ms: 1.54291
+  type: 'test'
+  ...
+# Subtest: AC-F01-4 two active KDFs: no queue, unrelated free slot, release on rejection
+ok 3 - AC-F01-4 two active KDFs: no queue, unrelated free slot, release on rejection
+  ---
+  duration_ms: 0.714571
+  type: 'test'
+  ...
+# Subtest: AC-F01-2 opaque canonical cookie and absolute7day HMAC session
+ok 4 - AC-F01-2 opaque canonical cookie and absolute7day HMAC session
+  ---
+  duration_ms: 1.3937
+  type: 'test'
+  ...
+# Subtest: AC-F01-1 safety config fails closed without external runtime key/policy
+ok 5 - AC-F01-1 safety config fails closed without external runtime key/policy
+  ---
+  duration_ms: 10.860634
+  type: 'test'
+  ...
+# Subtest: AEAD fresh nonce, ciphertext/tag/AAD substitution and retained versions fail closed before transport
+ok 6 - AEAD fresh nonce, ciphertext/tag/AAD substitution and retained versions fail closed before transport
+  ---
+  duration_ms: 5.958882
+  type: 'test'
+  ...
+# Subtest: operator host normalization and conservative public address oracle
+ok 7 - operator host normalization and conservative public address oracle
+  ---
+  duration_ms: 12.108025
+  type: 'test'
+  ...
+# Subtest: save input enforces TLS ports and limits
+ok 8 - save input enforces TLS ports and limits
+  ---
+  duration_ms: 1.41509
+  type: 'test'
+  ...
+# Subtest: connector revalidation, IP pin/TLS identity, canary scrub and abort deadlines
+ok 9 - connector revalidation, IP pin/TLS identity, canary scrub and abort deadlines
+  ---
+  duration_ms: 27.64592
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1147.65877
+
+> n7-cold-email-warmup@0.1.0 test:integration
+> tsx --test --test-concurrency=1 tests/*-integration.test.ts
+
+TAP version 13
+# Subtest: F01 real PostgreSQL16 HTTP identity acceptance
+    # Subtest: AC-F01-1 migrated readiness serves without exposing secrets
+    ok 1 - AC-F01-1 migrated readiness serves without exposing secrets
+      ---
+      duration_ms: 53.924779
+      type: 'test'
+      ...
+    # Subtest: AC-F01-2 registration atomically creates tenants and only HMAC sessions; no consent
+    ok 2 - AC-F01-2 registration atomically creates tenants and only HMAC sessions; no consent
+      ---
+      duration_ms: 628.941244
+      type: 'test'
+      ...
+    # Subtest: AC-F01-3 own200/foreign404; UUID and SQL injection400; auth/origin bypass0writes
+    ok 3 - AC-F01-3 own200/foreign404; UUID and SQL injection400; auth/origin bypass0writes
+      ---
+      duration_ms: 76.644448
+      type: 'test'
+      ...
+    # Subtest: AC-F01-2 logout/login/logout durable rejection, expired/inactive accounts and tenants
+    ok 4 - AC-F01-2 logout/login/logout durable rejection, expired/inactive accounts and tenants
+      ---
+      duration_ms: 665.369878
+      type: 'test'
+      ...
+    # Subtest: AC-F01-5 atomic concurrent ceilings and fixed UTC resets count rejected attempts
+    ok 5 - AC-F01-5 atomic concurrent ceilings and fixed UTC resets count rejected attempts
+      ---
+      duration_ms: 206.404633
+      type: 'test'
+      ...
+    # Subtest: AC-F01-5 HTTP wrong attempts count; spoofed forwarded IP cannot evade10/min
+    ok 6 - AC-F01-5 HTTP wrong attempts count; spoofed forwarded IP cannot evade10/min
+      ---
+      duration_ms: 3731.665343
+      type: 'test'
+      ...
+# secret_canary_scan_passed (value suppressed)
+    # Subtest: AC-F01-6 error secret canary redaction, invalid input no KDF/state, duplicate registration rollback
+    ok 7 - AC-F01-6 error secret canary redaction, invalid input no KDF/state, duplicate registration rollback
+      ---
+      duration_ms: 536.298661
+      type: 'test'
+      ...
+    1..7
+ok 1 - F01 real PostgreSQL16 HTTP identity acceptance
+  ---
+  duration_ms: 6361.986971
+  type: 'test'
+  ...
+# Subtest: F02 real PostgreSQL tenant, AEAD, scopes, locking and atomic stop writers
+    # Subtest: AC1 authenticated masked persistence sends0, no implicit consent, foreign404 and origin0writes
+    ok 1 - AC1 authenticated masked persistence sends0, no implicit consent, foreign404 and origin0writes
+      ---
+      duration_ms: 833.673608
+      type: 'test'
+      ...
+    # Subtest: AC2/3 tampered/substituted ciphertext0transport, scrubbed error, verified_test only and DNS revalidation
+    ok 2 - AC2/3 tampered/substituted ciphertext0transport, scrubbed error, verified_test only and DNS revalidation
+      ---
+      duration_ms: 95.251304
+      type: 'test'
+      ...
+    # Subtest: AC4 distinct affirmative scopes/version/content/recipient snapshots and tenant ownership
+    ok 3 - AC4 distinct affirmative scopes/version/content/recipient snapshots and tenant ownership
+      ---
+      duration_ms: 155.274825
+      type: 'test'
+      ...
+    # Subtest: AC5 revoke queue/member atomicity, submitting preserved and real rollback
+    ok 4 - AC5 revoke queue/member atomicity, submitting preserved and real rollback
+      ---
+      duration_ms: 135.552458
+      type: 'test'
+      ...
+    # Subtest: AC5 all real writers wait on shared advisory lock first; default/ceiling/provider cap
+    ok 5 - AC5 all real writers wait on shared advisory lock first; default/ceiling/provider cap
+      ---
+      duration_ms: 525.655478
+      type: 'test'
+      ...
+    1..5
+ok 2 - F02 real PostgreSQL tenant, AEAD, scopes, locking and atomic stop writers
+  ---
+  duration_ms: 2183.09694
+  type: 'test'
+  ...
+1..2
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9851.487147

@@ -1,0 +1,26 @@
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+stdout | tests/design/glb-materials.test.ts > production GLB material mapping changes colors and restores original material
+BJS - [18:58:31]: Babylon.js v9.30.0 - Null engine
+
+ ❯ tests/design/glb-materials.test.ts (2 tests | 1 failed | 1 skipped) 71ms
+   × production GLB material mapping changes colors and restores original material 69ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 skipped (2)
+   Start at  18:58:30
+   Duration  834ms (import 82%, tests 11%, transform 6%, worker 1%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/design/glb-materials.test.ts > production GLB material mapping changes colors and restores original material
+TypeError: Cannot read properties of undefined (reading 'toHexString')
+ ❯ tests/design/glb-materials.test.ts:13:850
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+EXIT=1

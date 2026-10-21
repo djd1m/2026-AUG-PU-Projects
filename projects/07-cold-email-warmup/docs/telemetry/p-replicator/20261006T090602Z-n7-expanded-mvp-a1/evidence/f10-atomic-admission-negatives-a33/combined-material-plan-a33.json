@@ -1,0 +1,422 @@
+{
+  "utc": "2026-10-06T22:36:56.251783+00:00",
+  "existing_material17": [
+    {
+      "name": "oldest-due-order",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "old": "ORDER BY t.service_seq,d.service_seq,d.due_at,d.mailbox_id",
+          "new": "ORDER BY d.due_at,d.mailbox_id",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f10-runtime-integration.test.ts",
+      "title": "overload backoff preserves due age and independent tenant progress",
+      "expected_material_assertion": "A-D old due turns must yield to healthy E before a second turn",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "reset-sequence-on-yield",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "old": "UPDATE runtime_due SET state=$5,owner_id=NULL",
+          "new": "UPDATE runtime_due SET service_seq=0,state=$5,owner_id=NULL",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f10-runtime-integration.test.ts",
+      "title": "overload backoff preserves due age and independent tenant progress",
+      "expected_material_assertion": "A-D old due turns must yield to healthy E before a second turn",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "drop-generation",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "old": "AND generation=$4 AND state='claimed'",
+          "new": "AND $4::bigint IS NOT NULL AND state='claimed'",
+          "anchor_count": 2
+        }
+      ],
+      "test_file": "tests/f10-runtime-integration.test.ts",
+      "title": "durable runtime drains and recovers without replaying uncertain sends",
+      "expected_material_assertion": "same owner UUID cannot bypass changed generation",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "sleep30-completion",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "old": "THEN $10::timestamptz ELSE",
+          "new": "THEN $10::timestamptz+interval '30 seconds' ELSE",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f10-runtime-integration.test.ts",
+      "title": "complete proof becomes immediately eligible without resetting its selected fair turn",
+      "expected_material_assertion": "complete proof adds no successful-poll sleep",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "failure-held-as-success",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "old": "if(claim.kind==='poll')satisfied=",
+          "new": "if(false)satisfied=",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f10-runtime-integration.test.ts",
+      "title": "complete proof becomes immediately eligible without resetting its selected fair turn|partial and held scans cannot manufacture successful polling readiness",
+      "expected_material_assertion": "failure cannot become successful readiness even with a satisfied flag; partial held due age",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "reset-sequence-on-completed-poll",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "old": "UPDATE runtime_due SET state=$5,owner_id=NULL",
+          "new": "UPDATE runtime_due SET service_seq=CASE WHEN $9 AND kind='poll' THEN 0 ELSE service_seq END,state=$5,owner_id=NULL",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f10-runtime-integration.test.ts",
+      "title": "complete proof becomes immediately eligible without resetting its selected fair turn",
+      "expected_material_assertion": "completion retains the selected mailbox turn",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "first-pair-conflict",
+      "changes": [
+        {
+          "path": "src/pool/store.ts",
+          "old": "created+=inserted;if(inserted)break;",
+          "new": "created+=inserted;break;",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f10-runtime-integration.test.ts",
+      "title": "automatic pool allocation skips pair conflicts and remains idempotent",
+      "expected_material_assertion": "pair conflict must skip to another eligible tenant",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "pacing-bypass",
+      "changes": [
+        {
+          "path": "src/dispatch/submission.ts",
+          "old": "interval '60 seconds'",
+          "new": "interval '5 seconds'",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f10-runtime-integration.test.ts",
+      "title": "paced dispatch preserves current day quota and every stop fence",
+      "expected_material_assertion": "60000 expected due-after-first-attempt",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "occupied-slot-ttl-release",
+      "changes": [
+        {
+          "path": "src/mailboxes/transport-slots.ts",
+          "old": "AND operation IS NULL ORDER BY slot",
+          "new": "AND (operation IS NULL OR expires_at<clock_timestamp()) ORDER BY slot",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f09-live-transport.test.ts",
+      "title": "expired slot age alone cannot replace its allocated identity",
+      "expected_material_assertion": "Missing expected rejection transport_busy",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "source-guard-drop",
+      "changes": [
+        {
+          "path": "src/replies/worker.ts",
+          "old": "await runtimeGuard(c);await source(c);await transport?.(c);",
+          "new": "await runtimeGuard(c);await transport?.(c);",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f09-live-transport.test.ts",
+      "title": "settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences",
+      "expected_material_assertion": "poll or source named fence assert denies capture",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "incomplete-reported-complete",
+      "changes": [
+        {
+          "path": "src/replies/worker.ts",
+          "old": "if(run?.state==='rescan_incomplete')return {state:run.state};",
+          "new": "if(run?.state==='rescan_incomplete')return {state:'complete'};",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f10-runtime-integration.test.ts",
+      "title": "poll quanta persist the fixed tail before yielding and never retry incomplete scans",
+      "expected_material_assertion": "expected rescan_incomplete actual complete",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "yield-reported-complete",
+      "changes": [
+        {
+          "path": "src/replies/worker.ts",
+          "old": "snapshot,guard,run?identity(run):undefined);return {state:run.state};",
+          "new": "snapshot,guard,run?identity(run):undefined);return {state:'complete'};",
+          "anchor_count": 2
+        }
+      ],
+      "test_file": "tests/f10-runtime-integration.test.ts",
+      "title": "poll quanta persist the fixed tail before yielding and never retry incomplete scans",
+      "expected_material_assertion": "expected scanning actual complete",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "consent-check-remove",
+      "changes": [
+        {
+          "path": "src/dispatch/eligibility.ts",
+          "old": "AND c.revoked_at IS NULL",
+          "new": "AND TRUE",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f09-live-transport.test.ts",
+      "title": "independent capacity and consent predicates deny live transport",
+      "expected_material_assertion": "senderConsentPredicate or recipientConsentPredicate transport denied",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "freshness-check-remove",
+      "changes": [
+        {
+          "path": "src/dispatch/eligibility.ts",
+          "old": "AND p.completed_at<=$1 AND p.completed_at>$1::timestamptz-interval '60 seconds'",
+          "new": "AND $1::timestamptz IS NOT NULL",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/dispatch-integration.test.ts",
+      "title": "F03a realPG campaign/pool/shared quota/lease seams without transport",
+      "expected_material_assertion": "A3/A5 fresh complete current opt-in aggregate privacy",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "tenant-predicate-bypass",
+      "changes": [
+        {
+          "path": "src/dispatch/submission.ts",
+          "old": "WHERE tenant_id=$1 OR (scope='pool' AND recipient_tenant_id=$1)",
+          "new": "WHERE $1::uuid IS NOT NULL",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/submission-integration.test.ts",
+      "title": "F03b real PG durable final authority, all stop races, sink privacy and outcomes",
+      "expected_material_assertion": "B3 own OR intended pool peer read only; foreign tenant must see0",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "shared-current-day-quota-weaken",
+      "changes": [
+        {
+          "path": "src/dispatch/submission.ts",
+          "old": "))<LEAST(m.daily_limit,m.provider_limit,30)",
+          "new": "))<100",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/submission-integration.test.ts",
+      "title": "F03b real PG durable final authority, all stop races, sink privacy and outcomes",
+      "expected_material_assertion": "B5 midnight reservations move under concurrent final guard",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "native-delayed-success-gap",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "old": "THEN $10::timestamptz ELSE",
+          "new": "THEN $10::timestamptz+interval '30 seconds' ELSE",
+          "anchor_count": 1
+        },
+        {
+          "path": "dist/runtime/store.js",
+          "old": "THEN $10::timestamptz ELSE",
+          "new": "THEN $10::timestamptz+interval '30 seconds' ELSE",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f10-runtime-protocol.test.ts",
+      "title": "compiled healthy polling completes twice without a TypeScript loader",
+      "expected_material_assertion": "gaps.every gap<=30000",
+      "budget_s": 120,
+      "status": "pending"
+    }
+  ],
+  "new_atomic_material8": [
+    {
+      "name": "atomic-split-claim-no-reservation",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "old": "else admission.slot=await acquireTransportSlotInTransaction(c,'imap',row.tenant_id,row.mailbox_id);",
+          "new": "else admission={};",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f10-runtime-integration.test.ts",
+      "title": "native poll claim reserves physical admission atomically across competing processes",
+      "expected_material_assertion": "committed four native claims have exactly4 physical reservations",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "atomic-skip-mailbox-service-sequence",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "old": "await c.query(\"UPDATE runtime_due SET service_seq=nextval('runtime_service_seq') WHERE mailbox_id=$1 AND kind=$2\",[row.mailbox_id,kind]);",
+          "new": "// mutant omits selected mailbox durable turn",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f10-runtime-integration.test.ts",
+      "title": "native poll claim reserves physical admission atomically across competing processes",
+      "expected_material_assertion": "laterdueE receives releasedslot beforeoldsecond",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "atomic-rollback-commits-reservation",
+      "changes": [
+        {
+          "path": "src/consent/transaction.ts",
+          "old": "} catch(error) { await client.query('ROLLBACK'); throw error; }",
+          "new": "} catch(error) { await client.query('COMMIT'); throw error; }",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f10-runtime-integration.test.ts",
+      "title": "native poll claim reserves physical admission atomically across competing processes",
+      "expected_material_assertion": "SQL fault afterreservation rollsback physicalslot and durableseq/owner",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "atomic-fullcapacity-consumes-turn",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "old": "if(kind==='poll'&&this.nativePollAuthority&&!(await c.query(\"SELECT 1 FROM transport_operation WHERE protocol='imap' AND operation IS NULL LIMIT 1\")).rowCount)return null;",
+          "new": "// mutant globalcapacity admissioncheck omitted",
+          "anchor_count": 1
+        },
+        {
+          "path": "src/runtime/store.ts",
+          "old": "else admission.slot=await acquireTransportSlotInTransaction(c,'imap',row.tenant_id,row.mailbox_id);",
+          "new": "else try{admission.slot=await acquireTransportSlotInTransaction(c,'imap',row.tenant_id,row.mailbox_id);}catch(error){if(error instanceof HttpError&&error.code==='transport_busy')admission.reason='transport_busy';else throw error;}",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f10-runtime-integration.test.ts",
+      "title": "native poll claim reserves physical admission atomically across competing processes",
+      "expected_material_assertion": "fullphysicalcapacity returnsnull withoutturn/claim",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "atomic-cancel-unused-leak",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "old": "async cancel(claim:RuntimeClaim,reason:RuntimeReason='ready'){\n  await this.disposeUnusedAdmission(claim);",
+          "new": "async cancel(claim:RuntimeClaim,reason:RuntimeReason='ready'){\n  // mutant unused reservation disposal omitted",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f10-runtime-integration.test.ts",
+      "title": "native poll claim reserves physical admission atomically across competing processes",
+      "expected_material_assertion": "cancel releases unusedreservation soE receives nextreleasedslot",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "atomic-native-authority-check-drop",
+      "changes": [
+        {
+          "path": "src/runtime/store.ts",
+          "old": "admission={};try{await this.nativePollAuthority(c,row.tenant_id,row.mailbox_id);}",
+          "new": "admission={};try{}",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f10-runtime-integration.test.ts",
+      "title": "native poll claim reserves physical admission atomically across competing processes",
+      "expected_material_assertion": "denied native authority commits typedauthoritydenied andzeroreservations",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "native-runtime-result-guard-drop",
+      "changes": [
+        {
+          "path": "src/replies/worker.ts",
+          "old": "await runtimeGuard(c);await source(c);await transport?.(c);",
+          "new": "await source(c);await transport?.(c);",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f09-live-transport.test.ts",
+      "title": "settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences",
+      "expected_material_assertion": "settled native UIDproof neverbypasses current runtime fence",
+      "budget_s": 70,
+      "status": "pending"
+    },
+    {
+      "name": "native-transport-result-guard-drop",
+      "changes": [
+        {
+          "path": "src/replies/worker.ts",
+          "old": "await runtimeGuard(c);await source(c);await transport?.(c);",
+          "new": "await runtimeGuard(c);await source(c);",
+          "anchor_count": 1
+        }
+      ],
+      "test_file": "tests/f09-live-transport.test.ts",
+      "title": "settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences",
+      "expected_material_assertion": "settled native UIDproof neverbypasses grant/mailbox fence",
+      "budget_s": 70,
+      "status": "pending"
+    }
+  ],
+  "source_head": "db50798a76a97fed75931544f24cd1181ff082d8",
+  "no_mutation_executed_yet": true,
+  "sameTX/preIO/checkdisposal/finalfences": "materialcasesexactexistingtitles, isolatedshadowonly after allchildjoin"
+}

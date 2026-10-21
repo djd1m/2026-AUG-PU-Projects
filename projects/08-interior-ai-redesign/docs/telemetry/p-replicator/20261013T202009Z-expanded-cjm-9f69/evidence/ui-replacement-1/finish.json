@@ -1,0 +1,31 @@
+{
+  "work_unit_id": "ui-replacement-1",
+  "run_id": "20261013T202009Z-expanded-cjm-9f69",
+  "status": "completed",
+  "verdict": "pass",
+  "finished_at": "2026-10-14T01:11:06.105348+00:00",
+  "elapsed_wall_ms": 297105,
+  "elapsed_basis": "First observed preparation clock 2026-10-14T01:06:09Z includes reads before launch record creation",
+  "active_wall_ms": null,
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "cost_basis": "unavailable",
+  "retry_count": 0,
+  "checks_passed": 5,
+  "image": "docker:sha256:a870f8779ea77c2aaad8aadbc6b67f97a71c6f2f2c797e965927b9297c4fbace",
+  "next_build": "wfhm1wAXdEYLGdlYzhuhc",
+  "source_drift": [],
+  "report_sha256": "cf8b555d3337967af2f3e8099f70db7399cf853684b25c89bc57ac1d7fa8ccbb",
+  "launch_sha256": "5693d0dfb7aaf1f637b307a745c640e72d7a10a903b9a7d63de4f9ef5fbe7602",
+  "script_sha256": "652a64f0ad3eb2da633d984ce604d6bfaa0d2bdec49ef7502b0e921fde9fdd8e",
+  "lint": {
+    "command": "npx --no-install eslint scripts/e2e-replacement.mjs --max-warnings 0",
+    "exit_code": 0
+  },
+  "handoff_note": "Coordinator rebuilds image7 for export-only native Sharp correction outside replacement scope; explicitly no unchanged replacement rerun. Receipt remains actual image6.",
+  "handoff_recorded_at": "2026-10-14T01:10:47.190188+00:00"
+}

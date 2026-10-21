@@ -1,0 +1,51 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "attempt": "A29",
+  "status": "completed",
+  "verdict": "diagnostic_red_observer_sealed_atomic_boundary_unavailable",
+  "baseline": "d2a03eb0ee91409b59b65dc66808159db7975d7e",
+  "revision": "0f0653f010e40122532f6dd446fc1e16937656e8",
+  "finished_at": "2026-10-06T21:47:18.951367+00:00",
+  "elapsed_wall_ms": 457572.21900000004,
+  "active_wall_ms": null,
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "scope": [
+    "projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+    "projects/07-cold-email-warmup/tests/f10-runtime-fixture.ts"
+  ],
+  "typecheck": 0,
+  "scoped_lint": 0,
+  "build": 0,
+  "short_corrected_v3": 0,
+  "native_original": 1,
+  "native_attempts": 1,
+  "no_timeout": true,
+  "all_children_joined": true,
+  "slot_occupancy": 0,
+  "runtime_claims": 0,
+  "mutex": "released",
+  "source_DB_lease": "returned_to_coordinator",
+  "launch_sha256": "29b257169bbd33e2da0261df59ffba9fd6419ece173ab88260884324aeaf2f6f",
+  "raw": {
+    "path": "/tmp/n7-f10-physical-admission-observer-a29/fairness-1791322988160.json",
+    "sha256": "0274319f69e7b2e1b36d6529d3b614811f178a26d6c7fa4ff0e24738c9ad34c2"
+  },
+  "report_sha256": "f7fa7b0fc2b20193af8a7a86cd8f9e3cfe23ed6b706c5b3e220a1b1ad4d5be95",
+  "measurement_gaps": [
+    "actual model/effort/usage/cost unavailable",
+    "118source validation after launch",
+    "atomic admission busy branch unavailable",
+    "operation connection mapping mailbox/time correlated"
+  ],
+  "remaining_AC": [
+    "independent HIGH diagnosis/review",
+    "exact busy branch seam if required",
+    "F10 acceptance gates"
+  ]
+}

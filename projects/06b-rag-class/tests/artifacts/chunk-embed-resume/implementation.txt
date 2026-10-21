@@ -1,0 +1,80 @@
+Chunk-embed correction implementation receipt
+RUN_ID: 20261002T164536Z-chunk-embed-fixes
+WORK_UNIT_ID: sole-writer-correction
+Attempt: correction-1 (one implementation pass; infra injection retry recorded)
+Workflow: /replicate resume → /run mvp → /go chunk-embed, AUTO, M correction (script S lower bound).
+REPO_ROOT: /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-chunk-resume
+PROJECT_ROOT: /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-chunk-resume/projects/06b-rag-class
+Started-At: 2026-10-02T16:46:53+00:00
+Finished-At: 2026-10-02T17:10:20.793316+00:00
+Elapsed-wall-ms through receipt preparation: 1407793; includes reading, implementation, waits, tests, corrections and cleanup.
+Budget: 25 min; final git delivery follows receipt preparation, its few seconds are outside this timestamp. Time to independent acceptance is unknown (coordinator responsibility).
+Trace was absent before launch, recorded in attempt.txt; regular new file, no symlink.
+
+SOURCE IDENTITY
+Worktree baseline: 19eedeb611eed976a1e153eecc35d233aee598e3
+Accepted original code: d3f2ad501538605916c5a214b0f88b382eb7a229
+Authoritative review / benchmark original: a266555530b158aa3d248d3660ea3be055313436
+Immutable tested source tree: 0bf06a342c9a4ae1b2d20d32479a129669d4875f (git write-tree after staging product code/tests/plan, before receipt-only metadata).
+Final delivered commit is the commit containing this receipt; coordinator can bind it without a self-referential Git hash.
+Product/test file hashes: source.sha256; restored container inputs: tested-source.sha256; 5/5 hashes match.
+Candidate chunk.ts SHA256: 7d322dfe3ebf4f6be48e3ca8d0ede300dfcc23468f448a8e698a9bbf7584a2fa
+Original chunk.ts SHA256: 8eaeda2abfc4a7daa5e5ad24a5bea450497dfb6da8bf5f87360f5da931e22668
+Build: npm run build against these restored inputs in disposable source-patched container, Node 22.22; no release image/deployment claim.
+
+EDITED PATHS (relative to PROJECT_ROOT)
+packages/rag/src/chunk.ts
+packages/rag/src/index.ts
+services/worker/src/embed.ts
+packages/rag/tests/unit/chunk.test.ts
+services/worker/tests/int/chunk-embed.int.test.ts
+docs/features/chunk-embed/01_plan.md
+docs/features/chunk-embed/05_completion.md
+tests/artifacts/chunk-embed-resume/ (receipt, reproducible benchmark, logs and source digests)
+
+IMPLEMENTATION / AC
+F-1: lazy atoms, exact per-atom tokens, incremental accumulation. Sum is only a trigger: exact assembled BPE chooses a whole prefix <=500. Atom BPE input <=4096 UTF-16 units; assembly size also bounded. Long runs use Unicode code-point windows. Async uses the same deterministic generator, setImmediate + checkpoint at ~10ms boundaries and document end. Worker awaits it inside each document, including a single large paragraph. Normal paragraph boundaries, exact hashes, dedup and local cache tests preserved. Large-document boundaries may change once vs old algorithm, then remain deterministic; no promise of identical old chunk hashes for all inputs.
+F-2: batchSize=1, >=3 parts; checkpoint raises JobCeilingExceeded AND JobLeaseLost after first provider call. Both assert exactly 1 fake provider call, 1 log, 1 saved chunk.
+F-3: 30 short paragraphs + 480-token atom; exact countTokens <=500, all paragraphs and large atom covered, large atom has no overlap and no extra tail-only chunk.
+F-4: fake paid call succeeds, state changed to failed before write, fence unchanged. JobLeaseLost and zero chunks; existing fence guard also retained.
+Concurrency/shared resources: worker timer can run during single-document chunking; existing quota concurrency, SKIP LOCKED lease, shared-pool and RLS tests in full integration run all pass.
+
+COMMANDS / RESULTS
+- bash scripts/complexity-router.sh <five scoped source/test paths>: exit=0, S; substantive M, forced by user and shared-worker behavior. Plan/implementation routes recorded before coding; route.txt captures full input paths.
+- dz recall --project PROJECT_ROOT: usage error because query required; its separate exit was not captured (not treated as success). Corrected: dz recall 'chunk-embed аренда нарезка' --project PROJECT_ROOT: exit=0, no matching patterns (dz-recall.txt).
+- dz verify --skills-dir PROJECT_ROOT/.claude/skills --target codex: exit=0, 15/15 valid (dz-verify.txt). This verifies skill structure, not product correctness.
+- bash scripts/check-port-conflicts.sh projects/06b-rag-class: exit=1; production compose unreadable because production env absent, including PROXY_NETWORK, DB secrets, LIMIT variables. No permission inferred or requested.
+- docker compose --env-file <outside-git random-password file> -p n6b-f04-resume -f compose.test.yml -f tests/artifacts/chunk-embed-resume/compose.override.yml config --format json + JSON port/cpu assertions: exit=0; zero published ports, db/tests cpus=2. Actual runner NanoCpus=2000000000, Ports={}; ports.txt.
+- docker build -f tests/compose/Dockerfile -t n6b-f04-resume-runner:local .: exit=0, docker-build.log; npm ci uses unchanged lockfile, no package updates.
+- docker compose ... run -d --name n6b-f04-resume-runner tests sleep 1400: exit=0; internal test network, no external model calls. Earlier --no-build flag attempt: exit=1, unsupported by installed compose; no container launched by that failed attempt.
+- Initial typecheck detected wrong helper argument (LeasedJob vs job.id), corrected; initial unit F-3 found atom needed a bounded 4096-character BPE window rather than 2048. Corrected within same implementation pass, no tests weakened.
+- Focused restored unit: exit=0, 12/12; focused integration before added worker timer test: exit=0, 14/14 (focused.log). New-only baseline: unit 2/2, integration 4/4, both exit=0; test filters skip unrelated tests only in targeted runs.
+- docker exec n6b-f04-resume-runner npx tsx /app/tmp/benchmark.ts: exit=0; original extracted with git show a2665555:projects/06b-rag-class/packages/rag/src/chunk.ts, candidate exact SHA above; five inputs/version measured once, sequential, no concurrent CPU tests (benchmark.jsonl / benchmark.txt / benchmark.ts).
+- docker exec n6b-f04-resume-runner sh -c 'npm run typecheck && npm test && npm run test:int && npm run build': exit=0; typecheck=0, unit 15 files 266/266, integration 13 files 148/148, build db/rag/worker/web=0. Full restored run has no skipped suites. Unit duration 34.21s, integration duration 170.07s; full-run.log.
+- git diff --check: exit=0 on product changes; staged raw logs initially flagged Docker/Vitest whitespace, normalized trailing spaces/blank EOF only, final commit diff check=0; source digest comparison: exit=0, 5/5 match.
+- docker compose ... -p n6b-f04-resume down -v --remove-orphans: exit=0; runner, db and own network removed; label-filtered docker ps -a afterwards empty (cleanup.txt). Random-password file and own temporary mutant/original sources removed. Unique runner image retained locally as build cache, no unrelated containers/images removed.
+
+EXPECTED-RED MUTATIONS (all immediately restored; no permanent mutant engines)
+Initial mutation injection used mode 0600 and produced EACCES/no tests; NOT counted as guard failures. Injection retried with 0644; real assertion failures below, details/source hashes/commands in mutations.txt and each F*.log.
+- F1-unit-no-yield: replace both await setImmediate() with await Promise.resolve(); exit=1, 1 failed / 11 skipped, timer ticks=0.
+- F1-worker-sync: revert worker import/call to synchronous splitIntoChunks; exit=1, 1 failed / 14 skipped.
+- F2-no-batch-checkpoints: remove both batch await ctx.checkpoint(); exit=1, 2 failed / 13 skipped (ceiling and lease scenarios).
+- F3-no-overlap-overflow-guard: unconditionally keep tail+rest; exit=1, 1 failed / 11 skipped. Exact final partition still protects cap, but mutant adds a tail-only part; scenario's boundary/coverage/part-count guard detects it.
+- F4-no-running-predicate: remove AND state='running' from holdLease; exit=1, 1 failed / 14 skipped.
+All final product files restored and hash-matched before full green run.
+
+BENCHMARK MEASUREMENTS (milliseconds: original elapsed / lag → candidate elapsed / lag)
+prose-100x1000: 2088.056 / 2082.352 → 1587.863 / 16.395
+prose-100x3000: 6730.078 / 6731.487 → 5294.931 / 14.940
+lists-100x1000: 1924.336 / 1924.071 → 1523.502 / 17.731
+no-punctuation-100x3000: 206181.105 / 206182.383 → 27840.648 / 22.922
+single-paragraph-6000: 4049.365 / 4040.598 → 574.207 / 11.018
+Worst candidate timer lag 22.922ms, required <30000ms. Timer interval 10ms, lag = gap minus interval; warm encoder per version. Inputs and their SHA256 in benchmark script/raw JSON. Review's exact historical text generator was unavailable: listed word/page counts and classes reproduced, no claim to reconstruct its old timing numbers. Benchmark measures chunk stage with noop checkpoint, excludes DB/quota/vector writing; real worker adapter with DB/fake gateway separately tested.
+
+MODELS / TELEMETRY / LIMITATIONS
+Profile: compact-quality-first-v2, coordinator-owned run 20261002T164536Z-chunk-embed-fixes. Requested writer model according to existing coordinator passport: gpt-6.1-sol high. Actual exact model/effort metadata not exposed to executor: null; no claimed model switch, fallback or subagent. LLM usage/input/output/cache/reasoning/cost: null, counters unavailable; no cost or savings claims. Model in product tests is fake only, real model calls zero by test design and internal isolated network.
+Telemetry: docs/telemetry/p-replicator/20261002T164536Z-chunk-embed-fixes/run.json and events.jsonl are coordinator-owned and unchanged. attempt.txt and this receipt supply stage/check evidence; no unknown counters reconstructed.
+No deployed E2E: companion preflight not_applicable, isolated local fake-model tests/build only. Independent review/acceptance and run telemetry reconciliation are coordinator responsibilities, outside this implementation delivery. No push/merge. No schema, public API, provider routing, reservation or paid-call behavior changes; no global environment/proxy edits, shared manifest/lockfile/compose/roadmap changes; N6 code not read/reused.
+Infrastructure corrections: an initial cwd-relative setup helper failed before launch and was corrected; unsupported compose flag corrected; temporary-file permission injection retry recorded above. Cleanup shell containing rm -f was automatically rejected before execution; safer exact-path Python unlink succeeded, no approval request needed.
+Verdict: mandatory implementation checks and F-1..F-4 correction evidence pass; independent review pending with coordinator.
+Status: completed

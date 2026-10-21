@@ -1,0 +1,11 @@
+--- src/runtime/store.ts
++++ src/runtime/store.ts
+@@ -131,7 +131,7 @@
+  async finish(claim:RuntimeClaim,reason:RuntimeReason='ready',satisfied=false){await this.disposeUnusedAdmission(claim);return eligibilityTransaction(this.pool,async c=>{
+   if(claim.kind==='dispatch'&&!['provider_backoff','authority_denied','db_unavailable','cleanup_blocked','rescan_incomplete','transport_busy'].includes(reason)){const now=(await c.query('SELECT clock_timestamp() AS now')).rows[0].now;return (await this.projectDispatch(c,claim.mailbox_id,now,claim)).updated;}
+   const now=(await c.query('SELECT clock_timestamp() AS now')).rows[0].now;
+-  if(claim.kind==='poll')satisfied=satisfied&&reason==='ready'&&Boolean((await c.query("SELECT 1 FROM reply_rescan r JOIN mailbox_poll p ON p.mailbox_id=r.mailbox_id WHERE r.mailbox_id=$1 AND r.state='complete' AND p.scan_complete AND p.uidvalidity=r.uidvalidity",[claim.mailbox_id])).rowCount);
++  if(false)satisfied=satisfied&&reason==='ready'&&Boolean((await c.query("SELECT 1 FROM reply_rescan r JOIN mailbox_poll p ON p.mailbox_id=r.mailbox_id WHERE r.mailbox_id=$1 AND r.state='complete' AND p.scan_complete AND p.uidvalidity=r.uidvalidity",[claim.mailbox_id])).rowCount);
+   const failed=reason==='provider_backoff'||reason==='authority_denied'||reason==='db_unavailable';
+   const count=failed?Math.min(5,claim.failure_count+1):0;
+   const delay=reason==='transport_busy'?1:failed?[30,60,120,300,300][count-1]!:satisfied?(claim.kind==='poll'?30:claim.kind==='pool'?60:1):0;

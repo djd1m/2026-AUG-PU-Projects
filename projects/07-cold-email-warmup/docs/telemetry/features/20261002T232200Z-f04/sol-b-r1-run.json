@@ -1,0 +1,39 @@
+{
+  "run_id": "20261002T232200Z-f04",
+  "work_unit_id": "n7-f04b-sol-r1",
+  "attempt_id": "correct-b1",
+  "status": "completed",
+  "profile": "compact-quality-first-v2",
+  "source_revision": "c3f5803b9796299773fb5d5db9c806b95c9875ad",
+  "build_revision": "af99d97f657dafd844c8a72fb5c66e37e54c31c2",
+  "started_at": "2026-10-03T00:44:53.566707+00:00",
+  "finished_at": "2026-10-03T00:55:16.572895+00:00",
+  "duration_seconds": 623.006188,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost_usd": null,
+  "measurement_gaps": [
+    "pending host model/usage/cost metadata",
+    "active/wait stage partition unavailable",
+    "independent parent recheck pending"
+  ],
+  "heavy_acquired_at": "2026-10-03T00:50:08Z",
+  "heavy_released_at": "2026-10-03T00:52:09Z",
+  "checks": {
+    "unit": "18/18",
+    "pg": "91/91",
+    "restored": "11/11",
+    "capture_mutant_exit": 1,
+    "failure_mutant_exit": 1,
+    "typecheck": 0,
+    "lint": 0,
+    "build": 0,
+    "image_build": 0,
+    "canary": 0,
+    "source_image": 0,
+    "raw_evidence_whitespace_exit": 2
+  }
+}

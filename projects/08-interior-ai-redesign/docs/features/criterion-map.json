@@ -1,0 +1,406 @@
+{
+  "foundation": [
+    {
+      "id": "AC-foundation-1",
+      "source_sc": "SC-US-001-1",
+      "scenario": "SC-US-001-1",
+      "text": "Given новый адрес; When зарегистрировался, вышел и вошёл; Then кабинет доступен только новой действующей сессии."
+    },
+    {
+      "id": "AC-foundation-2",
+      "source_sc": "SC-US-001-2",
+      "scenario": "SC-US-001-2",
+      "text": "Given неверный пароль/истёкшая или отозванная сессия; When вход/чтение; Then общий 401, приватные данные отсутствуют."
+    },
+    {
+      "id": "AC-foundation-3",
+      "source_sc": "SC-US-001-3",
+      "scenario": "SC-US-001-3",
+      "text": "Given 72/73 UTF-8 bytes и multibyte пароль; When register/login; Then 72 допустим при ≥12 символах,73 отклоняется явно до bcrypt, suffix не становится эквивалентным паролем."
+    },
+    {
+      "id": "AC-foundation-4",
+      "source_sc": "SC-US-002-1",
+      "scenario": "SC-US-002-1",
+      "text": "Given два проекта; When изменён и перезагружен один; Then второй не изменён, состояние первого восстановлено."
+    },
+    {
+      "id": "AC-foundation-5",
+      "source_sc": "SC-US-002-2",
+      "scenario": "SC-US-002-2",
+      "text": "Given другой аккаунт/архив; When чужой ID либо мутация архива; Then 404 либо 409 PROJECT_ARCHIVED соответственно, данные не изменены."
+    },
+    {
+      "id": "AC-foundation-6",
+      "source_sc": "SC-US-016-1",
+      "scenario": "SC-US-016-1",
+      "text": "Given cross-origin/request без CSRF либо чужой ID; When mutation/read; Then 403/404, side effect отсутствует."
+    },
+    {
+      "id": "AC-foundation-7",
+      "source_sc": "SC-US-016-2",
+      "scenario": "SC-US-016-2",
+      "text": "Given 59 mutation attempts в минуте; When 20 одновременных requests одного actor; Then ровно1 проходит и19 получают429/Retry-After; счёт включает отклонённые/невалидные попытки."
+    },
+    {
+      "id": "AC-foundation-8",
+      "source_sc": "SC-US-016-3",
+      "scenario": "SC-US-016-3",
+      "text": "Given valid owned bounded mutation и точный Origin; When active session обращается ниже лимита; Then одна успешная mutation с сохранённым результатом."
+    },
+    {
+      "id": "AC-foundation-9",
+      "source_sc": "SC-US-019-1",
+      "scenario": "SC-US-019-1",
+      "text": "Given A и B; When A использует B ID в URL/scalar/array/JSON relation; Then 404 без private bytes/side effect, разрешённое owned чтение успешно."
+    },
+    {
+      "id": "AC-foundation-10",
+      "source_sc": "SC-US-020-1",
+      "scenario": "SC-US-020-1",
+      "text": "Given malformed/oversized/slow body; When повтор обращений; Then rate counted до parse, typed400/413/timeout до decode, DB connection не удерживается на body read."
+    },
+    {
+      "id": "AC-foundation-11",
+      "source_sc": "SC-US-020-2",
+      "scenario": "SC-US-020-2",
+      "text": "Given SQL/HTML/script/URL-userinfo input; When accepted text or rejected URL обрабатывается; Then SQL параметризован, markup escaped, shell/network execution отсутствует."
+    },
+    {
+      "id": "AC-foundation-12",
+      "source_sc": "SC-US-021-1",
+      "scenario": "SC-US-021-1",
+      "text": "Given secret-bearing failure; When exception обработан; Then журнал содержит только code/requestId/latency/hashed IDs, без password/token/plan/payload."
+    }
+  ],
+  "space": [
+    {
+      "id": "AC-space-1",
+      "source_sc": "SC-US-003-1",
+      "scenario": "SC-US-003-1",
+      "text": "Given 4.5×4×2.7 м и допустимые проёмы; When подтвердил; Then площадь пола 18 м², стабильный shell hash, видны план и 3D."
+    },
+    {
+      "id": "AC-space-2",
+      "source_sc": "SC-US-003-2",
+      "scenario": "SC-US-003-2",
+      "text": "Given ноль/NaN/отрицательное/проём вне стены/неподтверждённый масштаб; When согласование; Then 422 либо 409 CALIBRATION_REQUIRED, проверенного статуса нет."
+    },
+    {
+      "id": "AC-space-3",
+      "source_sc": "SC-US-004-1",
+      "scenario": "SC-US-004-1",
+      "text": "Given безопасный GLB или reference image; When upload; Then исходный hash сохранён, asset доступен только owner, normalized image/thumbnail декодирован и перекодирован без EXIF, fixed MIME/nosniff, external resources не загружались."
+    },
+    {
+      "id": "AC-space-4",
+      "source_sc": "SC-US-004-2",
+      "scenario": "SC-US-004-2",
+      "text": "Given oversized/повреждённый/remote-URI GLB либо изображение-bomb; When upload; Then 413/415/422, нет опубликованного asset и сетевых запросов к вложенным URL."
+    },
+    {
+      "id": "AC-space-5",
+      "source_sc": "SC-US-004-3",
+      "scenario": "SC-US-004-3",
+      "text": "Given чужой assetId; When скачать/использовать в проекте; Then 404 даже при известном storage key."
+    },
+    {
+      "id": "AC-space-6",
+      "source_sc": "SC-US-005-1",
+      "scenario": "SC-US-005-1",
+      "text": "Given reference; When выбраны tags/note и повторное открытие; Then данные сохранены вместе с source/дата."
+    },
+    {
+      "id": "AC-space-7",
+      "source_sc": "SC-US-005-2",
+      "scenario": "SC-US-005-2",
+      "text": "Given недоступный Pinterest; When добавлена ссылка; Then предлагается upload, нет обещания импортированной доски или автоматического доступа."
+    },
+    {
+      "id": "AC-space-8",
+      "source_sc": "SC-US-005-3",
+      "scenario": "SC-US-005-3",
+      "text": "Given заданная владельцем ссылка `https://ru.pinterest.com/pin/1117807570051119485/`; When сохранена/переоткрыта; Then исходная ссылка сохранена и доступна, не заменена общим Pinterest URL."
+    }
+  ],
+  "design": [
+    {
+      "id": "AC-design-1",
+      "source_sc": "SC-US-006-1",
+      "scenario": "SC-US-006-1",
+      "text": "Given калиброванная основа; When меняю стиль/мебель/ракурс и до/после; Then shell hash/размеры/проёмы неизменны, выбор сохранён."
+    },
+    {
+      "id": "AC-design-2",
+      "source_sc": "SC-US-006-2",
+      "scenario": "SC-US-006-2",
+      "text": "Given предложение с shell transform, неизвестным catalogId или выходящим за ручную оболочку bbox; When сохранить; Then 422 SCENE_INVALID, предыдущий вариант цел."
+    },
+    {
+      "id": "AC-design-3",
+      "source_sc": "SC-US-007-1",
+      "scenario": "SC-US-007-1",
+      "text": "Given согласованный вариант; When поменял размер/стиль; Then новая revision, старый результат доступен, quantities пересчитываются по новой подтверждённой площади либо остаются unknown."
+    },
+    {
+      "id": "AC-design-4",
+      "source_sc": "SC-US-007-2",
+      "scenario": "SC-US-007-2",
+      "text": "Given два одновременных редактирования; When одинаковый expectedVersion; Then один commit, второй 409 VERSION_CONFLICT без потери данных."
+    },
+    {
+      "id": "AC-design-5",
+      "source_sc": "SC-US-007-3",
+      "scenario": "SC-US-007-3",
+      "text": "Given approved design; When изменён стиль или выбран другой исторический вариант; Then создана новая draft revision, approval снят, история сохранена, покупки показывают предупреждение до повторного согласования."
+    },
+    {
+      "id": "AC-design-6",
+      "source_sc": "SC-US-008-1",
+      "scenario": "SC-US-008-1",
+      "text": "Given manual/off; When пользователь ищет AI; Then видна надпись «Ручной режим · AI не подключён», пресеты сохраняются и network spy показывает0 внешних AI-вызовов."
+    },
+    {
+      "id": "AC-design-7",
+      "source_sc": "SC-US-008-2",
+      "scenario": "SC-US-008-2",
+      "text": "Given enabled без caps/key или тестовый вредоносный ответ; When startup/validation; Then отказ startup либо job failed, shell не меняется."
+    },
+    {
+      "id": "AC-design-8",
+      "source_sc": "SC-US-008-3",
+      "scenario": "SC-US-008-3",
+      "text": "Given два worker и один job/лимит; When параллельный claim/dispatch; Then один dispatch, caps атомарны, старый fence не завершает job повторно."
+    },
+    {
+      "id": "AC-design-9",
+      "source_sc": "SC-US-008-4",
+      "scenario": "SC-US-008-4",
+      "text": "Given запрос уже dispatched; When timeout/crash; Then job uncertain, cost/usage неизвестны и reservation сохранена, автоматического платного redispatch нет."
+    },
+    {
+      "id": "AC-design-10",
+      "source_sc": "SC-US-008-5",
+      "scenario": "SC-US-008-5",
+      "text": "Given offline HTTP provider fixture с валидным JSON и подтверждённой стоимостью; When job завершён; Then одна draft revision текущего shell, один held credit consumed, обе reservations reconciled по фактическому cost, live network не вызывалась."
+    },
+    {
+      "id": "AC-design-11",
+      "source_sc": "SC-US-008-6",
+      "scenario": "SC-US-008-6",
+      "text": "Given поздний replay либо archive/refund/manual edit; When retry/mark-dispatch/completion; Then replay возвращает прежний job по тому же inputHash, archive до mark запрещает dispatch, поздний результат не заменяет новую ручную работу, consent body неизменен."
+    }
+  ],
+  "procurement": [
+    {
+      "id": "AC-procurement-1",
+      "source_sc": "SC-US-009-1",
+      "scenario": "SC-US-009-1",
+      "text": "Given официальная ссылка и ручной снимок; When сохранён; Then все provenance-поля видны и подставляются в shopping line."
+    },
+    {
+      "id": "AC-procurement-2",
+      "source_sc": "SC-US-009-2",
+      "scenario": "SC-US-009-2",
+      "text": "Given retailer 401/нет цены; When запрос обновления; Then blocked/unknown, нуля или текущей цены не появляется, предлагается ручное подтверждение."
+    },
+    {
+      "id": "AC-procurement-3",
+      "source_sc": "SC-US-009-3",
+      "scenario": "SC-US-009-3",
+      "text": "Given fresh снимок; When сменён регион/магазин либо прошло 24h; Then effective freshness stale, подтверждённый статус снят до нового снимка."
+    },
+    {
+      "id": "AC-procurement-4",
+      "source_sc": "SC-US-010-1",
+      "scenario": "SC-US-010-1",
+      "text": "Given площадь 18, запас 8%, упаковка 1.99, цена 160000 копеек; When calculate; Then 10 упаковок, 1600000 копеек, видимая формула."
+    },
+    {
+      "id": "AC-procurement-5",
+      "source_sc": "SC-US-010-2",
+      "scenario": "SC-US-010-2",
+      "text": "Given unmatched/unselected товар даже при известных работах/доставке либо null coverage; When calculate; Then incomplete с видимыми unknown rows, неизвестное не теряется."
+    },
+    {
+      "id": "AC-procurement-6",
+      "source_sc": "SC-US-010-5",
+      "scenario": "SC-US-010-5",
+      "text": "Given отрицательный/overflow input, несовместимые единицы либо floor_area для стены; When calculate; Then 422, предыдущая смета неизменна."
+    },
+    {
+      "id": "AC-procurement-7",
+      "source_sc": "SC-US-010-6",
+      "scenario": "SC-US-010-6",
+      "text": "Given floor и wall material; When derive quantity; Then floor4.5×4=18 м², wall площадь равна длине стены×высоте минус её проёмы; GLB area unknown до явного user-confirmed surface quantity."
+    },
+    {
+      "id": "AC-procurement-8",
+      "source_sc": "SC-US-010-7",
+      "scenario": "SC-US-010-7",
+      "text": "Given сохранённая смета и изменённые текущие shopping rows; When воспроизвожу старый snapshot без текущих rows; Then совпадают totals, phases, unresolved/complete, reserve и delta по стабильным element/cost IDs."
+    },
+    {
+      "id": "AC-procurement-9",
+      "source_sc": "SC-US-010-3",
+      "scenario": "SC-US-010-3",
+      "text": "Given изменённые quantity/price/reserve и бюджетный лимит; When calculate; Then новая версия, точный delta, known/scenario отдельно; incomplete не получает «уложились»."
+    },
+    {
+      "id": "AC-procurement-10",
+      "source_sc": "SC-US-010-4",
+      "scenario": "SC-US-010-4",
+      "text": "Given цена 1600 ₽ целым вводом и ранний лимит; When введены/изменены значения; Then native input допускает submit, minor=160000, текущий лимит отображается и немедленно влияет на сравнение."
+    },
+    {
+      "id": "AC-procurement-11",
+      "source_sc": "SC-US-011-1",
+      "scenario": "SC-US-011-1",
+      "text": "Given нет товара; When выбрал замену; Then видно отличие/новые габариты, новая версия и повторное согласование."
+    },
+    {
+      "id": "AC-procurement-12",
+      "source_sc": "SC-US-011-2",
+      "scenario": "SC-US-011-2",
+      "text": "Given позиции двух этапов; When перенос строки; Then суммы этапов меняются, общая сумма неизменна."
+    },
+    {
+      "id": "AC-procurement-13",
+      "source_sc": "SC-US-011-3",
+      "scenario": "SC-US-011-3",
+      "text": "Given старая смета; When возвращаюсь к дизайну и пересчитываю; Then сохранены обе версии и причина изменения, old approval не переиспользован."
+    },
+    {
+      "id": "AC-procurement-14",
+      "source_sc": "SC-US-011-4",
+      "scenario": "SC-US-011-4",
+      "text": "Given неподтверждённая либо не помещающаяся замена; When replace; Then 409/422 с причиной, указатели/история не изменены."
+    },
+    {
+      "id": "AC-procurement-15",
+      "source_sc": "SC-US-025-1",
+      "scenario": "SC-US-025-1",
+      "text": "Given выбранная смета с known/unknown/retained rows; When download CSV; Then rows/provenance/phase/units/totals совпадают с immutable snapshot, unknown пустое/подписанное, dangerous formula text inert; другой owner получает404."
+    }
+  ],
+  "billing": [
+    {
+      "id": "AC-billing-1",
+      "source_sc": "SC-US-012-1",
+      "scenario": "SC-US-012-1",
+      "text": "Given off/неполный live config; When checkout/start; Then отключён checkout/отказ startup, денег и entitlement нет."
+    },
+    {
+      "id": "AC-billing-2",
+      "source_sc": "SC-US-012-2",
+      "scenario": "SC-US-012-2",
+      "text": "Given тестовый provider и одинаковый ключ; When два checkout; Then один order/remote id; клиент не меняет цену/credits."
+    },
+    {
+      "id": "AC-billing-3",
+      "source_sc": "SC-US-013-1",
+      "scenario": "SC-US-013-1",
+      "text": "Given verified succeeded; When webhook replay/concurrent delivery; Then одно начисление и один ledger outcome."
+    },
+    {
+      "id": "AC-billing-4",
+      "source_sc": "SC-US-013-2",
+      "scenario": "SC-US-013-2",
+      "text": "Given чужой merchant/amount/test mode/payment linkage; When webhook; Then 400, credits/ledger неизменны."
+    },
+    {
+      "id": "AC-billing-5",
+      "source_sc": "SC-US-013-4",
+      "scenario": "SC-US-013-4",
+      "text": "Given verification timeout; When та же delivery повторена с подтверждённым provider response; Then первый503 не занимает event key, повтор начисляет пакет ровно один раз."
+    },
+    {
+      "id": "AC-billing-6",
+      "source_sc": "SC-US-013-3",
+      "scenario": "SC-US-013-3",
+      "text": "Given refund.succeeded; When verified event; Then новые live jobs запрещены и export entitlement отозван, audit/history доступны."
+    }
+  ],
+  "sharing": [
+    {
+      "id": "AC-sharing-1",
+      "source_sc": "SC-US-014-1",
+      "scenario": "SC-US-014-1",
+      "text": "Given первый вариант; When export/share preview; Then обе кнопки рядом, watermark соответствует entitlement, исходные приватные данные не включены."
+    },
+    {
+      "id": "AC-sharing-2",
+      "source_sc": "SC-US-014-2",
+      "scenario": "SC-US-014-2",
+      "text": "Given активная ссылка; When owner отзывает/архивирует проект или TTL истёк; Then последующий view/image 404, cache no-store; ранее скачанные копии не обещано удалить."
+    },
+    {
+      "id": "AC-sharing-3",
+      "source_sc": "SC-US-014-3",
+      "scenario": "SC-US-014-3",
+      "text": "Given чужой аккаунт/неподтверждённые права; When создание link; Then отказ без публикации."
+    },
+    {
+      "id": "AC-sharing-4",
+      "source_sc": "SC-US-015-1",
+      "scenario": "SC-US-015-1",
+      "text": "Given повторный event key; When повторная запись; Then один event, нет исходных фото/текста/токенов в log."
+    },
+    {
+      "id": "AC-sharing-5",
+      "source_sc": "SC-US-015-2",
+      "scenario": "SC-US-015-2",
+      "text": "Given нет событий; When локальная readonly метрика; Then наблюдаемое0 либо unknown при отказе хранилища, не прогноз конверсии."
+    },
+    {
+      "id": "AC-sharing-6",
+      "source_sc": "SC-US-015-3",
+      "scenario": "SC-US-015-3",
+      "text": "Given первое allowlisted событие; When записано; Then count1 в явном 30-day reporting window; share_created не означает external sharing."
+    },
+    {
+      "id": "AC-sharing-7",
+      "source_sc": "SC-US-018-1",
+      "scenario": "SC-US-018-1",
+      "text": "Given 390px и desktop; When keyboard выбирает steps и submit формы; Then виден focus, controls имеют labels, ошибки текстовые, document.scrollWidth≤innerWidth; canonical actions: create/open project, save/confirm plan, add reference, save/approve design, add/replace product, calculate budget, export/share/revoke."
+    },
+    {
+      "id": "AC-sharing-8",
+      "source_sc": "SC-US-022-1",
+      "scenario": "SC-US-022-1",
+      "text": "Given WebGL initialization failed; When открываю viewer; Then видны2D план/размеры и список объектов, можно сохранить вариант, нет сообщения об успешной3D загрузке."
+    },
+    {
+      "id": "AC-sharing-9",
+      "source_sc": "SC-US-023-1",
+      "scenario": "SC-US-023-1",
+      "text": "Given plan/reference/budget saved; When reload либо field validation fails; Then сохранённые значения восстановлены, незавершённый ввод остаётся при typed field error, новые ошибки получают focus/text."
+    }
+  ],
+  "integration": [
+    {
+      "id": "AC-integration-1",
+      "source_sc": "SC-US-024-1",
+      "scenario": "SC-US-024-1",
+      "text": "Given exact build/fixture/host; When 10 clients каждый выполняет20 warm-up+100 measured GET owned project/list requests; Then nearest-rank p95≤500ms для1000 ответов, status/body проверены, ошибки/timeouts не удаляются и валят проверку."
+    },
+    {
+      "id": "AC-integration-2",
+      "source_sc": "SC-US-024-2",
+      "scenario": "SC-US-024-2",
+      "text": "Given immutable200-line fixture с Decimal/unknown/services/delivery/reserve; When 50 warm-up+1000 measured calculations; Then nearest-rank p95≤100ms и1000 canonical result hashes равны golden; exception/missing sample валит проверку."
+    },
+    {
+      "id": "AC-integration-3",
+      "source_sc": "SC-US-017-1",
+      "scenario": "SC-US-017-1",
+      "text": "Given fresh isolated env; When migrate/build/start; Then health ready, DB не имеет published ports, project data переживают restart."
+    },
+    {
+      "id": "AC-integration-4",
+      "source_sc": "SC-US-017-2",
+      "scenario": "SC-US-017-2",
+      "text": "Given incompatible config/schema/storage; When ready/start; Then non-ready/отказ startup с redacted причиной, live inference/payment не вызываются."
+    }
+  ]
+}

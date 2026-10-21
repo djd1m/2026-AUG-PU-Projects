@@ -1,0 +1,18 @@
+{
+  "guard": "STU-01 same-origin child creation",
+  "command": [
+    "/tmp/n6b-f06-node22/bin/node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "--config",
+    "vitest.config.ts",
+    "apps/web/tests/unit/studio-handler.test.ts"
+  ],
+  "mutation": "Disable the Origin rejection branch; fixed tests unchanged",
+  "original_sha256": "9212cdaae85c59041934f6a397c0b413d8c8f4a6c780b7db7e4f3b92b0130fe9",
+  "mutated_sha256": "fb9d8e3efa7d38c54046d36ec620fed9e3138592e93a395ad8a62025d6660c8b",
+  "restored_sha256": "9212cdaae85c59041934f6a397c0b413d8c8f4a6c780b7db7e4f3b92b0130fe9",
+  "red_exit": 1,
+  "restored_green_exit": 0,
+  "captured_at": "2026-10-03T03:29:45.079022+00:00"
+}

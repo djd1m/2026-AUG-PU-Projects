@@ -1,0 +1,19 @@
+{
+  "checked_at": "2026-10-03T05:18:29.576282+00:00",
+  "source_snapshot_sha256": "8800e312a8aee2f8e0dc48d3ba7add398c065f4d6ab4071e5c3344d93e4e66af",
+  "snapshot_method": "Exact compact map JSON file bytes including LF",
+  "runner_image": "sha256:aa779a54db0e01d587d341e32ff77c639607dfe470d7ee23d606c592ac4d018e",
+  "initial_full_stage_exits": {
+    "typecheck": 0,
+    "unit": 1,
+    "integration": 0,
+    "critical_mutation": 0,
+    "build": 0
+  },
+  "remaining_exit": 0,
+  "unit_unique_passed": 635,
+  "pg_passed": 293,
+  "coverage": "Composite: prior633unit green+corrected12seam (10overlap,1fixed,1new); original22 unchanged; all293PG/type/build0; criticalguard RED thenexactrestoreGREEN; final23imagehashmatch andtypecheck/productionimages0. Not monolithic final allgreen run.",
+  "all_required_passed": true,
+  "production_images": "[n6b-f14-handover-web:20261003] sha256:3ed4f43381dc4acff4d74aba9155c187f89747d626d39f04a9018bd627cbb2d5\n[n6b-f14-handover-migrate:20261003] sha256:433e8396077172fc92505a702dfef516033305abeb0909e320c6e199232dcc6e\n"
+}

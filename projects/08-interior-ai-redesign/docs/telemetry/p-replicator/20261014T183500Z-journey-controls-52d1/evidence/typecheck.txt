@@ -1,0 +1,7 @@
+
+> n8-interior-planner@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+apps/web/src/components/ProductsPanel.tsx(18,8): error TS17014: JSX fragment has no corresponding closing tag.
+apps/web/src/components/ProductsPanel.tsx(21,1): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+apps/web/src/components/ProductsPanel.tsx(22,1): error TS1005: '</' expected.

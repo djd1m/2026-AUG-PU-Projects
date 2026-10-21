@@ -1,0 +1,32 @@
+{
+  "stage": "protocol-short",
+  "started": {
+    "at": "2026-10-06T22:25:26.070568+00:00",
+    "pid": 3895558,
+    "startticks": "124853606",
+    "runner_pid": 3684977,
+    "command": [
+      "/tmp/n7-expanded-runtime-20261006/bin/node",
+      "node_modules/tsx/dist/cli.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^(compiled healthy polling completes twice without a TypeScript loader|explicit retry captures changed native UID proof in one quantum without old FETCH or freshness|native ambiguous submission and UID recovery compose with runtime transport guards)$",
+      "tests/f10-runtime-protocol.test.ts"
+    ],
+    "inventory_sha256": "8ed8ceef27f5a5fb3f3b3430b96232b3dfe7cc0fb8393e1b3cfc4d0084783263"
+  },
+  "joined_utc": "2026-10-06T22:26:21.233914+00:00",
+  "native_returncode": 0,
+  "timed_out": false,
+  "elapsed_seconds": 55.16433591186069,
+  "PG": {
+    "at": "2026-10-06T22:26:21.191Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "remaining_owned_nodes": [],
+  "tap_sha256": "8ba9006f4a795589c2486fdb86c333123b6de1dcbd381faee699853cf34366c3",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

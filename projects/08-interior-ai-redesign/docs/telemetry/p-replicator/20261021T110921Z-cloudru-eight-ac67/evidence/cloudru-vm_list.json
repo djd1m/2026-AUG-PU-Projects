@@ -1,0 +1,13 @@
+{
+  "jsonrpc": "2.0",
+  "id": 5,
+  "result": {
+    "content": [
+      {
+        "text": "{\n  \"count\": 4,\n  \"is_default_project\": true,\n  \"project_id\": \"480195d3-0028-487d-b2ac-731c8724da2b\",\n  \"vms\": [\n    {\n      \"flavor_id\": \"\",\n      \"id\": \"1e437567-94a1-4e4c-897a-61d47fd77b9d\",\n      \"name\": \"kaizen-proto-62c47952e424449aa946db95a7b28269\",\n      \"public_ip\": \"\",\n      \"state\": \"running\",\n      \"zone\": \"ru.AZ-1\"\n    },\n    {\n      \"flavor_id\": \"\",\n      \"id\": \"16139bf9-a7de-4a1c-8ff3-59285533d5c1\",\n      \"name\": \"kaizen-proto-6e2abe424e844e4885bf21feb8de79b2\",\n      \"public_ip\": \"\",\n      \"state\": \"running\",\n      \"zone\": \"ru.AZ-1\"\n    },\n    {\n      \"flavor_id\": \"\",\n      \"id\": \"06e42dd2-82c8-4c49-9b1a-d5b44668ba6d\",\n      \"name\": \"e2b-poc-20261009\",\n      \"public_ip\": \"\",\n      \"state\": \"running\",\n      \"zone\": \"ru.AZ-1\"\n    },\n    {\n      \"flavor_id\": \"\",\n      \"id\": \"0e5d6062-7473-40ed-8780-e759e00e3e9b\",\n      \"name\": \"kaizen-819-test\",\n      \"public_ip\": \"\",\n      \"state\": \"running\",\n      \"zone\": \"ru.AZ-1\"\n    }\n  ]\n}",
+        "type": "text"
+      }
+    ],
+    "isError": false
+  }
+}

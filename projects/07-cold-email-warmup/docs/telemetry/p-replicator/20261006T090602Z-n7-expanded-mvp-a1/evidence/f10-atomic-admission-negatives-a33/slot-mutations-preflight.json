@@ -1,0 +1,64 @@
+{
+  "utc": "2026-10-06T22:47:59.250896+00:00",
+  "DB": {
+    "utc": "2026-10-06T22:47:59.232Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 2,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 3,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 4,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 2,
+        "occupied": false
+      }
+    ]
+  },
+  "ownnodes": [],
+  "mutex": "held",
+  "runner_sha256": "745c6ab055adbce5d0f5fdac9c2a5b98db38e5cda583ab3df4c6c4e116510335",
+  "plan_sha256": "809fa04b6d380458a359525ce7a7b2abf4a49aa9d3486e1c712fc0b2c01425d2",
+  "guard_sha256": "69f957d905a8a4fa4271cebd24fe94418d657ce5bf69a51fc6aad4f8cb0a8c7d",
+  "command": [
+    "/tmp/n7-expanded-runtime-20261006/bin/node",
+    "/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/node_modules/tsx/dist/cli.mjs",
+    "--test",
+    "--test-concurrency=1",
+    "tests/atomic-slot-unit.test.ts"
+  ],
+  "shadow_inputs": {
+    "package.json": "1239d4d885dcad42201a27ed9324f8f0f760b78700d8db9ced39a511cffe7eae",
+    "src/errors.js": "960a11b1d06cc22ca03989ba183dfd16d1322b19cf9b8744874a9cd624fe9c4b",
+    "tests/atomic-slot-unit.test.ts": "2177fd57ac6011e9d71de5da248c32688fd63523eacb7e39ee8f0b9dd216a061",
+    "src/consent/transaction.js": "73a1c140d4c26fce559ea9c1f401362c743a0374dc5c177aa668df018a5cf6b9",
+    "src/mailboxes/transport-slots.js": "7b8581558d3374ae171bad99990449d4be106ed3723040ecb09e3500a9ffc701"
+  }
+}

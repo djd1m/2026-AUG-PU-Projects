@@ -1,0 +1,1020 @@
+{
+  "at": "2026-10-06T21:23:32.992Z",
+  "helper_origin_sha256": "4d6474d63521e3db1f2b55e59c156cebd8c703c7a6c2734e1cb6a7472d8b4922",
+  "source_revision": "d2a03eb0ee91409b59b65dc66808159db7975d7e",
+  "runtime_secret_files_available": 5,
+  "secret_variant_count": 65,
+  "fixture_marker_count": 25,
+  "marker_variant_count": 320,
+  "inventory": [
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/fairness-1791321623950.json",
+      "sha256": "d62f646c9b26e6e2c3ed6524967ccb2711108f92eafae09094f6b5fd4d99b678",
+      "bytes": 1775735
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2886643-1791321588414.json",
+      "sha256": "3d6cd0015281d3840f39ba4eb965088ca55ae2eef208042d542c950c66e03a53",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2886692-1791321588564.json",
+      "sha256": "152d3d71bf33cfdfcbd40ef411e2192a847941e029a1ef0d66001c026206f56c",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2886769-1791321588813.json",
+      "sha256": "3734ce363f5fff5f64315be807117a4f95a8e66b5f96ed65aa9dcf8d7a015c82",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2886882-1791321589388.json",
+      "sha256": "908f6092c77230999c212ee35fc46b8a453c5fb9c1e3774a2fa85d6e1d98d534",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2891685-1791321616279.json",
+      "sha256": "ec18a5a1bc29866d0016322e7749e3c60547b55ac4bdbae2d598ac5ce264e547",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2891697-1791321616440.json",
+      "sha256": "837124fdeefab427290a2c09c008481ca2a1f8bd9f4e93f932a5c0c74573f025",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2891714-1791321616690.json",
+      "sha256": "ad654b9f8026e9fb357cba34f4acc5631663f29f3a487ebf29d50067729184a5",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2892025-1791321617884.json",
+      "sha256": "0ee190bb3da8ec034ad9b4e6eda6f401d3566bf1517e4ff2e025397383f23b09",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2892033-1791321617935.json",
+      "sha256": "60fcd8d13ae1806250a192ace9592cfe31765a780744131407134a9e82dbef8e",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2892040-1791321617940.json",
+      "sha256": "c78ecb84e57c61abdb16a3186295d5dec3d573c903487073b1152a9cd2c4ea9b",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2892050-1791321618011.json",
+      "sha256": "c1649aadff9d53a7564e860551a9e2c233581c013fdbd941bfa68d8f69773299",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2892244-1791321618466.json",
+      "sha256": "96e5db44c1381b801876257754ea737988fbca1c57a7d087630d747b2317c350",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2892269-1791321618496.json",
+      "sha256": "86e8be7bceaeaea7b2761023f6a77f464437d5125a7eb9741db066ab275c766b",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2892279-1791321618537.json",
+      "sha256": "c1eea6ef8e2893ecb158d15f8987b08edb12967cc96132b7f63df307e632fa69",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2892285-1791321618565.json",
+      "sha256": "20558c7382d236d24f3ed3e6acdc889c2ccdc1c8a220bf5c6127ea6bbfef3e7f",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2893235-1791321624015.json",
+      "sha256": "cf36854d1f64947ac040890a73d803f1f711f1cb995fa8c9a373d4a5225095bc",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2893383-1791321624524.json",
+      "sha256": "e62d4b217974c89d7f305c8d25c2fb94d23897ad32872c8af421d5f325f9c426",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2893390-1791321624538.json",
+      "sha256": "fb1a5a6b25a1bc3ab30b3aa762637e5b465f56d89cd1bc9b3dd8dfc8e761deab",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2893392-1791321624545.json",
+      "sha256": "8dac31889e9c91449c87f65f423a70e6525fe7306d6e94598e91a29ce333e619",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2893403-1791321624555.json",
+      "sha256": "173500e69f6aef4c8641d86e475bc165412aeec4ea15a9bed7e369ca3d6f7907",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894341-1791321629816.json",
+      "sha256": "dc303aca41ea3b92eefe4e740bce04dc5573958208d63a1f067bafa572fd755e",
+      "bytes": 150
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894431-1791321630030.json",
+      "sha256": "94b6681f503df8482e99d6d1bc6243be076afaafc02be81e873266e77afec72d",
+      "bytes": 150
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894523-1791321630576.json",
+      "sha256": "539b474ef403027d219258c37adc69ff38654dffac10e0cbd11beb62fc3e42a2",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894529-1791321630585.json",
+      "sha256": "8a27603c646ce6cc262a85793e7297e2e279631d1e2501934439bb786647f443",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894537-1791321630619.json",
+      "sha256": "7b5bc3a962dc414e318d65864940247fabe94fc27d46239e745e5f399fff6022",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894538-1791321630653.json",
+      "sha256": "7301ce9f85fbc78ec579d9352ff3f0698c69a8f73eb08d2c846b98333a5a4774",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894569-1791321630779.json",
+      "sha256": "da060dc9c87ae4005b033e5852f50303eaf00b523b12553181438de37f4b47fb",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894600-1791321630959.json",
+      "sha256": "5ba91f0218bc169042fdb6d303e1e97f2cf2af4c04768f100dca3dd0c54dcd7c",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894633-1791321631148.json",
+      "sha256": "5532ce7120326f488e7d1e7d732b72a2921023b38b4aeb0423a7aa61afbb53a6",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894640-1791321631317.json",
+      "sha256": "add3019adf5bd62ab23607c8c8d7f2e4d023ddd402729d605ad29695d75f069c",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894648-1791321631503.json",
+      "sha256": "dce04b9c066c32b6aac2a25e24bbaa530f1d4f38b7d34c9c59a9465bc706da18",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894680-1791321631713.json",
+      "sha256": "37f816475aa32a5c424ec35efa22114c851178479bd23a6351b162357a9f81b0",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894736-1791321631935.json",
+      "sha256": "58ca35d1ed90e11b62b1fa79ef049bd225890e3269b700c411e91a7af173ade1",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894867-1791321632164.json",
+      "sha256": "2aed73517193016c67f1456ff590dc3125461256c7255cdf358f461c76cb78eb",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894919-1791321632440.json",
+      "sha256": "9b8c4fd60cbf76e7e95babeef9b4a2ea9d95bb3bc6521026d58b31bbeb06a4b3",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894948-1791321632634.json",
+      "sha256": "9a2075ee3a9f0ed809555eb0098681c79fd73932bedc90ea4fde535a3b35ca88",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894978-1791321632831.json",
+      "sha256": "105606454958dc17e3b4d2bde750038431f0f80fa8e02f81da1f5004a8ea86ed",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2894996-1791321633008.json",
+      "sha256": "34b9c645595039b1f827484389aa3a4e6b627b1654571e6c573ac4799a29315b",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2895051-1791321633194.json",
+      "sha256": "c5451fed6dfa04886c9503cf893bd8641769f796c0b93ceb2216077c3ca9e343",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2895132-1791321633442.json",
+      "sha256": "dc4b29d8152d5afb34ccd6094c81a5b05ee618561662e83b9e626f44dc3438cf",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2895192-1791321633663.json",
+      "sha256": "34451daebb95db50481bfe68e81636c6873ef6490c4790074275a6eabb804453",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2895218-1791321633852.json",
+      "sha256": "d91bd6566f1c21568f4cc7a69111be11b56e011372a4730cd847f12287456883",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2895500-1791321635767.json",
+      "sha256": "8fa5a5806df013054ebd08550d4e67a7750929eea595ebd19a9800900a95f1f6",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2895513-1791321635849.json",
+      "sha256": "71edefcd8373f4347eb0a4e7ca9184d75f8cc2db515f8bd67ee5bf31c4b564ce",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2895519-1791321635874.json",
+      "sha256": "cbc5d043e77f1c0f6c029d4fc65f6870860f29a63343d4d234b1e747a830acb5",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2896150-1791321639022.json",
+      "sha256": "ec3dd229443ac407babb43bd19ea2b1f7310ae2417bd59eb6b0cef4958478151",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2896472-1791321640929.json",
+      "sha256": "24c5205050ff7fe485c4109ac55f4f9aff3e9ebcdc0d08289f694b20d43d95a0",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2896481-1791321641024.json",
+      "sha256": "7170a8378f6b77e1eaa7cad3a68ab29593929260051b96673d5936fc0a64629a",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2896508-1791321641072.json",
+      "sha256": "a7e037642b3f5833e29bac8fae20d3fe56e3e5e210855ae28a43409bf416c1ae",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2897543-1791321644202.json",
+      "sha256": "4d01628e90395cee338ef965a09fb47fefb15c9f00e29fdd98b8a01808cbd2a8",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2898145-1791321646100.json",
+      "sha256": "f4eef38c0ac1b4c6080c7db1fcc6dd646e8afb78e6b59ccee726e4992c75ea78",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2898194-1791321646218.json",
+      "sha256": "5ab556ef8b02f601197168e5e3098adfdb24a34bbe10175253c45911af660524",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2898209-1791321646255.json",
+      "sha256": "d96179df8ac1a6420a22661ff27c3d71de6a55e042318f788699cb730b119b0d",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2899353-1791321649349.json",
+      "sha256": "dab57c79452dde8e44af14b607e3a37b1d2defac2c4296d0853d03979837d4f8",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2899850-1791321651256.json",
+      "sha256": "b7a7e34666b6725051674081419e2272e5e7ddf26600aedc8bc67a0c4be1f916",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2899882-1791321651374.json",
+      "sha256": "0a1806808258e83af04d42c99fed3bac7f1b4b6b4cc6e156bb104f499cf0ef15",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2899890-1791321651421.json",
+      "sha256": "8eb20634506c8869bf26666dac559a6a8b6bcc79c7d2319d6df772c04d10f89a",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2900776-1791321654502.json",
+      "sha256": "f7ae1c00f683a6626aed69155f762fe457f2e7763653957a225f1a828850872a",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2901320-1791321656420.json",
+      "sha256": "8b37caa2100a0edb1fc147f8700e16a95b50424eb7e240ea93c5b99dd8e85e6d",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2901361-1791321656530.json",
+      "sha256": "188c55d75fe3f6d4550708dd11f107c309f18654099720adcb34e3d5d917eb89",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2901374-1791321656575.json",
+      "sha256": "5ef9f1790183c1731904b22b41ea39cb62ec5cbfed86d562eedcfd9f8296938d",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2902553-1791321659661.json",
+      "sha256": "436242ae7fe9b664ce930df9d78c960c543844bd2e574b195d5d72cbb06d2f53",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2903138-1791321661558.json",
+      "sha256": "5858c319acf1da7030ce3360db61f786f94cc07454c079b79bbfaf25753513f5",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2903145-1791321661688.json",
+      "sha256": "f31a1731f7d587fc21251fec1eefc5eba13e2c30156a75b980f8d32bf836e73e",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2903153-1791321661776.json",
+      "sha256": "bfe5a8be335255a78e07cf26fcab854fa9708c24b2c51d683440b7dda3ebd64b",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2904112-1791321664830.json",
+      "sha256": "16bbec44a4a1d08c95d4442fc236d136e656d77cde78b64d30e84324dcd16684",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2904566-1791321666732.json",
+      "sha256": "bd181cb8e5b76c7ad861bb64e6462756c6f912801b87043612fc3a782bcdf6ee",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2904618-1791321666863.json",
+      "sha256": "46ea02b82c75e7bc97a306887838500693ce4e01da35fc6a3cde165d8b6ab7ce",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2904633-1791321666935.json",
+      "sha256": "82b32a66ff0deac552bbf7ae2cf261dd2af51fe484977a926ad5d258aac6e788",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2905727-1791321670013.json",
+      "sha256": "39714e33d99711d41015fd2b1332bd949551af4d19655f482a832e43a0a2691f",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2906325-1791321671904.json",
+      "sha256": "b4023882b10bb8fc2cb8626b8613fb3165324c1f7e867826b58e29dc10f47440",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2906352-1791321672029.json",
+      "sha256": "0a11598693bf123adb15b4c3795ae9e813b7d84b06163514c685a3c8f0f2e85e",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2906371-1791321672105.json",
+      "sha256": "e14f5a23efda9c307b45198b6ed5dfdb0fc96f095af21bd9ca31a66928f50c0a",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2907290-1791321675171.json",
+      "sha256": "cec40c99ddd108274336dc2aecc36fc06e915462f7520687521ea6711ea28142",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2907857-1791321677065.json",
+      "sha256": "22555fa33040c507ddea779b181d475e0eed3005e6c813c7fc13494505f280b8",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2907901-1791321677222.json",
+      "sha256": "95671e9ac8c0dc2a8b10ce073c2092231d0ecb37c56c0037a6dbdef678adc3d5",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2907918-1791321677266.json",
+      "sha256": "f5425882204e12b3547213b03c5c148d1cd834e0008525b9f1dbe199de32b1b6",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2909103-1791321680328.json",
+      "sha256": "9aa16fd8bf9457ac2019b8aa72b399c0c30ac331837844a1ed157ac3c3771db2",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2909583-1791321682223.json",
+      "sha256": "a773f9c0e1c8001d13dae874a16f578c9a1f8f9fdea0df5fdcd7938d009e8632",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2909615-1791321682405.json",
+      "sha256": "d07fb83202be242576cdabf71a46122d62fd8b4af853b3aa366a253a88639a1a",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2909628-1791321682444.json",
+      "sha256": "5ca005e1e4c52703f28812df8aab31123f193b5f4df2c8a0c2038bdb386bd0d0",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2910579-1791321685488.json",
+      "sha256": "b54c2b0e0a0806c5b58f66c9b23946fb8d15ce99b2a1e1437e8338d88db0db0f",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2911092-1791321687360.json",
+      "sha256": "5fe091d1542231024b34a149797401631a4adf2ba9bc0bda984f883d9e7ee73a",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2911135-1791321687586.json",
+      "sha256": "11ff3fbba65d52fdba82afd6292e04afa3c171b17351113c6300c5a6bb303f81",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2911145-1791321687632.json",
+      "sha256": "f4c65250b9bf592550c81d691f3ee284197f1359a7ba1fa94030436842606cf2",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2912365-1791321690639.json",
+      "sha256": "253459ea47764321ef3284a04b8e6da6664ae9628ed3a4945291674f543a97ad",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2912916-1791321692546.json",
+      "sha256": "09f855e2a5ca81756815dc68e026bde277cb4d2fef65f3712a827c0d0d147ea5",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2912961-1791321692732.json",
+      "sha256": "00602d200f42e062a22f84fa4a0125ca1edb4a5e781f7a7a6679833b38e87f0b",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2912968-1791321692794.json",
+      "sha256": "2774603b65501e6a9c24a24b32cf0b0c9e20ebd7bdc49c064406c3e8e855cef7",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2913906-1791321695816.json",
+      "sha256": "4f3c3e18b79f34ff3163b65de01e2eb551d42b4e729771b1ed31efae1d0be391",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2914395-1791321697694.json",
+      "sha256": "df202059e8e07c3c9d9d6c83d126d27b2873dd1c147efcc4735f4df56088da09",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2914460-1791321697901.json",
+      "sha256": "d9586d6142810a98d89a64d37e2c357ac82c8eb6a62f0deed0f27308b3590172",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2914513-1791321697989.json",
+      "sha256": "431a0416838ab331222472d625a410d0665a70e3cf0368f246e4ef77eec14d7f",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2915631-1791321700958.json",
+      "sha256": "e93aefdcab3734d9de2ebdf90d26ed09166aea6df8610f374062db099f7b0d56",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2916115-1791321702832.json",
+      "sha256": "134837580dc37a16e416d84891481da835f3d722aff5c6f2a2a40ae5a8daa0f7",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2916179-1791321703069.json",
+      "sha256": "c1acbb501f340a22d2db6cccceec022396c8ada04e6dc537e0da1e4c03d65ecc",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2916187-1791321703143.json",
+      "sha256": "4647b38d3278d963a7354bb47c72877f25ad86de563f2ccf171419abd715a2f5",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2916194-1791321703272.json",
+      "sha256": "a189137173fd405c17da8a49c202f6a97192122a8a2ff19732c1206c6fc106b8",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2916201-1791321703405.json",
+      "sha256": "f59b44d617c6bf29d31c929e598fbb1a5103c4deb8e7070504a0bd6f7c321b4a",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2916283-1791321703560.json",
+      "sha256": "343c10dc811edd6b404d1f4e1f7d4fb3f18f95eed6504cb7337c5be60a8c8740",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2916325-1791321703722.json",
+      "sha256": "3cc28f0cc9eb116f9a405350d6b3a0c7f74168d30a19bf251dc42adf13b3716a",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2916402-1791321703907.json",
+      "sha256": "dde8ca2c4a2634f7a556cfb04306fe83bb1579de5ec43259f1f14b1806df8033",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2916527-1791321704076.json",
+      "sha256": "2bf17834269b63bb3397ebc380d6f178fc521853a1d80b3a5d1ed569591d7ece",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2916617-1791321704282.json",
+      "sha256": "c4798d178112e7ae07ae9e895d8862b6ed3a04e8ed9eeaae56f57db3011bac16",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2916688-1791321704440.json",
+      "sha256": "0cfbcb9c0edd1393171871729ce0eef1a3a120fcd639083667749cb61af2e19b",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2916807-1791321704607.json",
+      "sha256": "1a45bd2cb16628ab44f3a8d797bf3e1fd099f63e8c967a923368927dfed103c5",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2916936-1791321704780.json",
+      "sha256": "661fc585b1ba8e55fd18f62695729da8635eec64a457cff7a19815410e228737",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2916965-1791321704927.json",
+      "sha256": "5bb2d664692f440d9cbfa6551b841bfa31b108da6472f0058b3bf3ab1c0f6f05",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917067-1791321705072.json",
+      "sha256": "49b1ee99bbb0f94c0a4e22a6a2228bdc1133dd4b3594473ecf7dfb09a36759ed",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917074-1791321705206.json",
+      "sha256": "3be18ea1a783f7c75318de95b1c40a805d2f95025b0b3b6875ba52e77f445f57",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917100-1791321705343.json",
+      "sha256": "322d9dc3a76a57ebab5de868f08cf2cef9e15dabaacbe81fb41ec86fc8aee499",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917128-1791321705475.json",
+      "sha256": "eb1990005f7b03492c0e1c39448bd5a6f48a0d46a591db6169efce6f5e6f51b8",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917154-1791321705624.json",
+      "sha256": "41206acf54d90c799e4efe0ca1f84384c307ab0bc7bec4c8ff201fa4d2eb0bd3",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917233-1791321705780.json",
+      "sha256": "f50deca7845bfeb53ce712a02190acc4b19cf5b0855c06f7dec3fb4de71aa00a",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917292-1791321705921.json",
+      "sha256": "f0f1f4be1c8f4145f4cca999b88b3b4123cfeef12e41719bf502c43944f4d462",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917385-1791321706068.json",
+      "sha256": "facb5cf1d88186667e4de21c7c0919cb40d69de82e643e4efc711ab414eff91a",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917425-1791321706155.json",
+      "sha256": "7aa02aa3af67a3feb37f6e8bc5475a6adf7c207e18db22de09dc93ba9bc01850",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917462-1791321706210.json",
+      "sha256": "94ab5787ed959e5cf4d62d25b420804a01f71ac477c4d44930ccca89fd33108a",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917523-1791321706357.json",
+      "sha256": "5c50917c4e74c7750a8e31400ee82fe15fac902c7b167be8b8dbd91056f0078b",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917612-1791321706525.json",
+      "sha256": "1dffa574161a750a5a7704366d6a10a02ba0ad8b99f996afd61b1e2fb8825678",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917672-1791321706689.json",
+      "sha256": "2755fcbce1422ef756c0f3f363433e79018ec18c0c136bc759df64d8ef1d490f",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917699-1791321706822.json",
+      "sha256": "e27f04dba20f134201b032252504ab6090842f24d3a0dda0da223c956d9190f3",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917725-1791321706961.json",
+      "sha256": "12fed46dcae3b186827116aa10d841f2b24caf58422fe56e51727ec3dea321bd",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917752-1791321707093.json",
+      "sha256": "28a62f90246afee02123ff12026f25422e1cac32d199161b10535defe12f42bc",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917759-1791321707223.json",
+      "sha256": "1e46f0a317b57c34c42985f3ed864f1e56d6bbe3ad016b17c1f5872d69aea976",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917767-1791321707357.json",
+      "sha256": "37543683684819f2f014c1c65409f527081237dfae4ab6763c8a901483880ba4",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917775-1791321707517.json",
+      "sha256": "f097c9586099193b9bae2890a4a5b7defec1963988a20ca5f9731cb5e30431d1",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917854-1791321707700.json",
+      "sha256": "07f1802120ab36d6b2b71c47e29d3dc0f762b42aed7b917c4a97287754daa7aa",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917924-1791321707855.json",
+      "sha256": "b52fd2e7add6360a4e4b94a559a22546a44ffd710068657423140a1099967c4b",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917991-1791321708011.json",
+      "sha256": "115525d3eb2422f6a08e62b4e8dd9236816d7454e89b9179a36883134e071cd3",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2917997-1791321708025.json",
+      "sha256": "e100608b749646a92aa269882b088c4ff7000f572be3f9ed703550f6bd3bf607",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2918090-1791321708217.json",
+      "sha256": "8affbceb663b6a574032a92bdc77daaef24fcd1ffccf78240769cc4c935fb485",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2918108-1791321708227.json",
+      "sha256": "cdfd23619e7943c9ae89b406671d7d0b2d0923e3398b4468f107524916f66e14",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2918151-1791321708376.json",
+      "sha256": "e60a1f9c12313e5f68a8b7d0ec5e4ec4e12f17d16ddc93be29eb09948fbd7ad6",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2918229-1791321708561.json",
+      "sha256": "99b9993ed487f954ecdda1caf3f7567a2fcd1c735db3d933675620986dc0258f",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2918314-1791321708732.json",
+      "sha256": "973ee7c8924b4a48cd14cc17c87d4ae3231143f0d3d56130e229413f127a3028",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2918340-1791321708879.json",
+      "sha256": "17b035364ff58af36bf76428b5268429563ce6df045fc185f1f652bea0844268",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2918409-1791321709040.json",
+      "sha256": "65488ee43d13305447ad48235963de3f4a343d34b1b184d5a3ff4f515fca4d6e",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2918454-1791321709199.json",
+      "sha256": "42ead7a4018ac1f026e60a198bfe4c1df3a78687cecd0c866a493937a88e3fb0",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2918499-1791321709371.json",
+      "sha256": "27696205add1050143af08e2cae275f87bb5c76710be3770d4d443a9860a7c04",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2919161-1791321711318.json",
+      "sha256": "80f396b4a6b079b7902eeb226dfbd00bbc47d1f49eff144f81b4c86375d69350",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2919625-1791321713169.json",
+      "sha256": "24ea8a80d2c0ee229377e56e6351b78777b8cf1a2f8f9e822981bc249f231d00",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2919699-1791321713367.json",
+      "sha256": "466dbebd980c4489378f95a96bc3997c6788ea1978c5bec220a3771e157ac8f2",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2919993-1791321714534.json",
+      "sha256": "14f872f6d57418ca377fe204bab4d9506129953d841b24c19fe5ad1854485e2a",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2920330-1791321716465.json",
+      "sha256": "6e0a20cff2dc8146e47ed8c576a334bdfe794f49af2a79a0972e38d95880c675",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2920611-1791321718345.json",
+      "sha256": "5b2a165dc45b17979270def4d6dc0c3684849021570ad862e37669a0a0eed4bc",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2920619-1791321718515.json",
+      "sha256": "d676faf9d448a5a48fd1c30a5fadd6e375148807923a9229955bd6cb4cfd986b",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2920890-1791321719684.json",
+      "sha256": "0e0c2a1b0cf3fa1603343052aa3aa263040e236b08f44b86b8aee20de5646108",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2921369-1791321721636.json",
+      "sha256": "8d7504761704a45d6a054df75cee804854a2aaaf6228074af86a31bfe5e07afa",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2921666-1791321723799.json",
+      "sha256": "e2c0bcba233b0c0de1ad71d7910be6b212d3e29de8968bed8ee725061296346c",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2921673-1791321723928.json",
+      "sha256": "d52a46543a5e7654f4ea565c3f8bedd1b286dbb6345c4f35e8bfbef5f39dc3d6",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2921680-1791321724059.json",
+      "sha256": "df78493a0702710d68bfa68be7fee306b6d6bfc63bde8dece8a841f30c424ff5",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2921730-1791321724223.json",
+      "sha256": "93f460d36ff2bade683c16238eeaa743ee8e3218da347001b1eb217492f8cb18",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2921781-1791321724365.json",
+      "sha256": "2dc6faadca83b07705240f2737a9fa616b9a9dace01728f965ed38664e7598ee",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2921850-1791321724549.json",
+      "sha256": "70217258375e07f8422580d9dca28f345c357e7c132b4962ad7660f3330ee2b5",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2921914-1791321724712.json",
+      "sha256": "a352667b0300a5c3f344f023dc79e6823316baa24297a7c3c2800ff22f8e5233",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2921921-1791321724830.json",
+      "sha256": "aeba5025a5ebe74c91cd30a1a981497a1d330c4ff13282691f60cbe59b9bf6d5",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2921927-1791321724857.json",
+      "sha256": "248375a31ef687d8203a1dfb1a715e1da01250a193e8838e7d6b10f23597f95d",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2921978-1791321725010.json",
+      "sha256": "944b6f1e960486c9bf4beb9fbf270c825c4b9d9fda81208730e4cd0cb51b85d5",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922011-1791321725153.json",
+      "sha256": "7009c83d9f5cf8459624761d578881dfa2a6afc51846bdb2efe76b71df6ff592",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922032-1791321725315.json",
+      "sha256": "8f8187f962da828149c42094814c54aaea99265ef1fd538c289a9f95b195089e",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922100-1791321725468.json",
+      "sha256": "1fb0bc742cc9a59aa41030a928505af8faf34fa456a4db388e18a3a24c279ade",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922153-1791321725616.json",
+      "sha256": "7a5112e9590f9330ae2f918e3e6648668e5ae1f0437f7fc0999b7ff71650f5f6",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922200-1791321725762.json",
+      "sha256": "22b28c9e0b7b4b83882ef369e3b367a80f48bbc12a574c738951d3e59fb0c3ee",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922207-1791321725919.json",
+      "sha256": "b855115f5a125df204d31719ab3cef3a20ce9737b23a56a6ecae2b5ded9528ae",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922252-1791321726073.json",
+      "sha256": "b33cd5f17bd92048c0273176c62404fe69610989f27ea352761e7e39f8bfb809",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922261-1791321726203.json",
+      "sha256": "3958627cc3a7781fd72101200e1b2fb3c1e942d6068964b71cec5bfac8f7e856",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922294-1791321726456.json",
+      "sha256": "4b8907f93aa07a2fc5fa1668166367cf2cfea34eba5c15ea52a52810d8daa57c",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922322-1791321726646.json",
+      "sha256": "68f8770ea8bcf68e3dc3d82cfb08ab97a12a404eb944172933ec0bb062f0ce92",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922407-1791321726950.json",
+      "sha256": "6b4ee29b953d2df589445eeca7c5e2d71aa8e18e773b992d624f6851e68c814e",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922414-1791321727127.json",
+      "sha256": "6dde7e8d28dc2535cc169a3095cabe581c6ec0f646e4b4719e9c6d951ffefdef",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922442-1791321727297.json",
+      "sha256": "f082d3ad5a6ee3813cb0961f51d7fb350855e2b87b209b745f2612ef2ee8b315",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922467-1791321727504.json",
+      "sha256": "f473be35e00b02c0d9035d26c1d641dcbf88a67621a36fc02455ab1b91592967",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922493-1791321727681.json",
+      "sha256": "db9a91e6815ecf0a66fe20e427ceec751c75919b2f26d417b7b53bcca744a4b8",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922520-1791321727876.json",
+      "sha256": "05a6cafe5b8322716a22e71ce7c448b7ab56520c0d57da8fc4b16471e02cb131",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922547-1791321728093.json",
+      "sha256": "a39fe39c9b2b23edc678cd25379eabea88ec39b757d3e5b8b08dbab54b9651a3",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922560-1791321728278.json",
+      "sha256": "741b970d95e7f56ce7eaa8411fb7ed4acbec0ea55a9897a7354f5636805779bf",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922605-1791321728470.json",
+      "sha256": "3102e2318e88a356e4cad90acdcc2ad902b13eab170b5832e64d5e5991ef2633",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922613-1791321728626.json",
+      "sha256": "64aa6e69ad6dded6cc5678e068dc7bdf4625911150408dcafe79caa3070a23be",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922786-1791321729351.json",
+      "sha256": "0f086b62b1c29af7e9d4a6afca045a5e05c9a5d4819fb84a390d8a99bcfce1e8",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922872-1791321729587.json",
+      "sha256": "b78d7ec9facb62f5866e3008ad196bd8b53a1cadb99b6257dc94adfc3b495236",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922956-1791321729771.json",
+      "sha256": "74741a9fa3d19baf6aee81c36c155ebe78dcf53bf7641ac25a56202ac9289722",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2922984-1791321729929.json",
+      "sha256": "18f5b621b6a6bb36c1762577e78af7a5ba301edf9f1886f0078e60faf1129266",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2923043-1791321730128.json",
+      "sha256": "d47aa6e5ae771727e4529aa10d25b185759029db23dee1eeaccb08a88d1686bb",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2923089-1791321730289.json",
+      "sha256": "3f2753db41a857eeccab1bdeca2efb2b695b2d9820ae0cb2fd82cb2da6bf2887",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2923102-1791321730466.json",
+      "sha256": "c9d72c22157dd2bd455cd225367ce18ecfffb52e1136fe5938a9df05b0524518",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2923156-1791321730652.json",
+      "sha256": "aff09838bba93efa8a6450c6df07df70c0b1e9c163fa0baefb88a458415454e1",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2923227-1791321730838.json",
+      "sha256": "12a6b02dc28d21edf1f6ebca9e1602a8748e69f1ab7396e686fea08d049f1d67",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2923255-1791321730984.json",
+      "sha256": "f6e1cfe6df023af83bce9a9ff930011456de340f3b64b1bce87689fa9648d0af",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2923291-1791321731125.json",
+      "sha256": "271af72499e0e182a20ef477be8d8d13b2e0554e4d26fb5316f4fadc51e6cb80",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2923324-1791321731448.json",
+      "sha256": "f6ba562654efc91d9f8975ab250c142b7635a28c4904e2f3d9169bef3e049e17",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2929710-1791321767071.json",
+      "sha256": "93a90cfe9073b8cfeaff9590d71d68514eed41b716bf833232212bcfd4d21f43",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/guard-2939885-1791321802323.json",
+      "sha256": "fe5998c8f218c3bfff7df17b6e1567bd675aa12e2af4754b831c1ce1f89c5017",
+      "bytes": 149
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/native-green-a26-launched.json",
+      "sha256": "2c3886cd96a3715165db251c8ed632a67e765c701c2ef86bf664e1129753dc9b",
+      "bytes": 127
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/native-green-a26-native-exit.json",
+      "sha256": "0fcf8cb5582a2341985890672a16d7be3e31a18f7936821164628d7134e23bbe",
+      "bytes": 264
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/native-green-a26-ready.json",
+      "sha256": "c668bd8c51bbef0636f2c9bc24c95ce53e1f2d91ca538ef84172789a4a8d64bc",
+      "bytes": 1602
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/native-green-a26-terminal.json",
+      "sha256": "8b4e1d35b0bbf3346a5c84a7f89c4d169e07ec9b6e31385b76eb58d51b3d3401",
+      "bytes": 499
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/native-green-a26.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/tmp/n7-f10-fixture-cleanup-a26/native-green-a26.tap",
+      "sha256": "1bc89ac3ab50d385eb81db967fcfbf35619d796e7a7157baac3133effe48c2cd",
+      "bytes": 1061
+    }
+  ],
+  "hit_count": 0,
+  "counts": [],
+  "values_never_exported": true,
+  "scope_gaps": [
+    "A26 runtime outputs only; prior A21 broader scan reused separately",
+    "uncaptured HTTP, trusted fixture/tool definitions, encrypted storage and TSX cache excluded",
+    "scanner result and later terminal metadata produced after scanning"
+  ],
+  "pass": true
+}

@@ -1,0 +1,19 @@
+TAP version 13
+# A36_FRESHNESS_COUNTS {"changed":false,"deltaMs":0}
+# A36_UID_COUNTS {"state":"scanning","snapshots":1,"fetches":0}
+# A36_HELD_COUNTS {"state":"rescan_incomplete","additionalVerbs":0}
+# Subtest: full poll captures a reset between snapshot and read and incomplete entry performs no IO
+ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO
+  ---
+  duration_ms: 3502.32431
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3963.731325

@@ -1,0 +1,12 @@
+{
+  "original_file": "drop-generation-negative.tap",
+  "original_sha256": "de81cb68ce8d3b6036f8bd0225d7e837d97fa405bb2211bf85192f115750944a",
+  "original_bytes": 1043,
+  "original_scratch_path": "/tmp/n7-f10-atomic-admission-negatives-a33/drop-generation-negative.tap",
+  "original_scratch_unchanged": true,
+  "export_archive": "drop-generation-negative.tap.gz",
+  "archive_sha256": "dbf67292caafa25e84c12cfc9e35972ecac175ecbd2c474cc9fb80f2cb8892b4",
+  "archive_bytes": 553,
+  "roundtrip_verified": true,
+  "reason": "Lossless export of immutable raw TAP whose whitespace-only diagnostic lines fail git diff --check; no source or raw test bytes normalized."
+}

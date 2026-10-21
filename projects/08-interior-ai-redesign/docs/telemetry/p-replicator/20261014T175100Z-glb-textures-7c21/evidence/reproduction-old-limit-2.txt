@@ -1,0 +1,22 @@
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+ ❯ tests/space/parser.test.ts (20 tests | 2 failed | 18 skipped) 2299ms
+   × supports real embedded 8192-square jpeg while standalone images remain20MP 1211ms
+   × supports real embedded 8192-square png while standalone images remain20MP 1085ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/space/parser.test.ts > supports real embedded 8192-square jpeg while standalone images remain20MP
+ FAIL  tests/space/parser.test.ts > supports real embedded 8192-square png while standalone images remain20MP
+DomainError: Input image exceeds pixel limit
+ ❯ ChildProcess.<anonymous> packages/adapters/src/asset-parser.ts:26:170
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 18 skipped (20)
+   Start at  17:52:22
+   Duration  2.66s (tests 92%, import 4%, transform 3%)

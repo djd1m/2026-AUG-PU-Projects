@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-06T18:23:50.718360+00:00",
+  "status": "ready",
+  "source": "a8d4b6b2 runtime readonly; F09 fixture/test authorized dirty SHA inventory",
+  "fixture_source_sha": "8c257e75d6d2dde2b0d00b4a27c25dcf843eb08efc6b34e6bac334c5b8c89dc5",
+  "guard_sha256": "0e40094d148dd350f2b007850093d75bd3f96e006d5f49a5cbe252a24b1d4e8b",
+  "guard_probes": "original IPC lost request proved; fixed receivedtrue validated1; same externalTCP/TLS/DNS/inherited child deny+missingfixture/string+Buffer realTLS all exit0",
+  "command": "NODE_OPTIONS=--import own guard-v3; node --import tsx /tmp/n7-f10-verify-a13/diagnose-v3.mjs",
+  "inputs": "same declared2active2tenants nativeTLS reset/fetchNO/restore/explicitretry/backoff/join/restart accelerated40s",
+  "effects": "ownedDB reset only; exactPG/numericloopback TLS; sanitized scratch childcopy instrumentation; no runtime edits",
+  "canonical330Pass": false,
+  "external_actions_executed": false
+}

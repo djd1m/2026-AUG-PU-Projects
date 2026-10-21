@@ -1,0 +1,144 @@
+{
+  "status": "completed",
+  "started_at": "2026-10-06T23:43:29Z",
+  "source_freeze": "2026-10-07T00:00:29Z",
+  "terminal": "2026-10-07T00:03:29Z",
+  "launch_sha256": "7d87134efbacacee1e94b795b265364a087acc85306f013ec58666c57460ea2d",
+  "actual_model": null,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "usage": null,
+  "missing_data": [
+    "host actual model and usage not exposed",
+    "mechanical router not materialized; substantive HIGH is retained",
+    "initial guard-a2 four denied sockets lack category/startticks; prior first-slice22 remain separate UNKNOWN",
+    "early runner shell PID/startticks unavailable; joined host session IDs retained; later guarded Node process PID/startticks/end are recorded",
+    "guard-a3 roles are shared env stage labels; native vs ordinary exact role only guard-a5 onward",
+    "per-heavy-build statvfs threshold passed; exact historical available byte values not logged",
+    "active time excludes unknown infrastructure wait durations; usage/cost unavailable",
+    "full integration/full protocol/traceability/scenario/criterion/review and independent HIGH F11 acceptance not executed in this partial slice"
+  ],
+  "route": "HIGH privacy/concurrency/schema/native protocol; mechanical lower bound unavailable exit127",
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "implementation; no E2E launched"
+  },
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-context-author-a2",
+  "verdict": "coherent_partial_not_F11_acceptance",
+  "accepted": false,
+  "finished_at": "2026-10-06T23:58:46.741297+00:00",
+  "elapsed_wall_ms": 917741,
+  "active_wall_ms": null,
+  "profile": "model-routing-econom",
+  "actual_effort": null,
+  "model_evidence": null,
+  "final_revision": "e10419a60a032bb39fd6e29afaca5a9b9585b9db",
+  "source_revision": "3b78670faad673711fd38b784c576243149b17f9",
+  "source_sha256": "a463af4781f85cb234a8a5f62e51196f843afe572140f71e905b117328a70b36",
+  "build_sha256": "d9f9ae93338af944bbadce0c19fa48ccab384cfaa6697414dc8047b16659d333",
+  "source_frozen_at": "2026-10-06T23:57:32.193321+00:00",
+  "checks": [
+    {
+      "name": "typecheck",
+      "command": "npm run typecheck",
+      "exit_code": 0,
+      "log": "typecheck-a7.log"
+    },
+    {
+      "name": "lint",
+      "command": "npm run lint",
+      "exit_code": 0,
+      "log": "lint-a6.log"
+    },
+    {
+      "name": "build",
+      "command": "npm run build",
+      "exit_code": 0,
+      "log": "build-a6.log"
+    },
+    {
+      "name": "full-unit",
+      "command": "npm test",
+      "exit_code": 0,
+      "passed": 67,
+      "total": 67,
+      "log": "all-unit-a7.log"
+    },
+    {
+      "name": "exact-parent-PG-nativeTLS",
+      "command": "node --import tsx --test --test-concurrency=1 tests/expanded-mvp-05.test.ts",
+      "exit_code": 0,
+      "passed": 18,
+      "total": 18,
+      "log": "parent-a7.log",
+      "note": "helper imports register original fixture suites as well; exact parent itself invokes meaningful nativeTLS and realPG, not constants"
+    },
+    {
+      "name": "affected-F09-IMAP",
+      "exit_code": 0,
+      "passed": 5,
+      "total": 5,
+      "log": "f09-a5.log"
+    },
+    {
+      "name": "affected-reply-PG",
+      "exit_code": 0,
+      "passed": 15,
+      "total": 15,
+      "log": "replies-a5.log"
+    },
+    {
+      "name": "negative-guard-probe",
+      "exit_code": 0,
+      "log": "guard-probe-a5.log"
+    },
+    {
+      "name": "final-DB-quiescence",
+      "exit_code": 0,
+      "log": "final-db-quiescence.log"
+    },
+    {
+      "name": "initial-PG-fixture-attempt",
+      "exit_code": 1,
+      "log": "pg-a2.log",
+      "diagnosis": "TRUNCATE tenant CASCADE removed physical slot rows; exact fixture reseeding corrected; subsequent PG and parent passed"
+    }
+  ],
+  "remaining_ac": [
+    "C1 runtime body kind/admission/fair progression inside existing finite IMAP lane; competing workers/all participants literal30s complete-poll and60s due-selection under body pressure; no runtime automatic body launch exists",
+    "Capture candidate classifier/rule SHA and body stop/suppression atomic seams need production integration; current native capture stores bounded encrypted text only, no AI/send authority",
+    "Complete current source/run/root/recipient/config race matrix and copy deadline/restart physical retention witnesses; stale pending intents need fresh authenticated origin continuation rather than staleproof reuse",
+    "Full integration/full protocol/traceability/scenario/criterion/review gates and fresh independent HIGH fork-none implementation acceptance remain coordinator-owned"
+  ],
+  "next_responsible_executor": "/root/n7_sol_coordinator",
+  "continuation": "coordinator must assign and verify next bounded writer/reviewer launch; no work is claimed running after this sealed attempt",
+  "owned_changed_paths": [
+    "projects/07-cold-email-warmup/db/016-inbound-context.sql",
+    "projects/07-cold-email-warmup/src/mailboxes/transport-authority.ts",
+    "projects/07-cold-email-warmup/src/mailboxes/transport-channel.ts",
+    "projects/07-cold-email-warmup/src/mailboxes/transport-child.ts",
+    "projects/07-cold-email-warmup/src/mailboxes/transport-lifetime.ts",
+    "projects/07-cold-email-warmup/src/mailboxes/transport-slots.ts",
+    "projects/07-cold-email-warmup/src/replies/adapter.ts",
+    "projects/07-cold-email-warmup/src/replies/context-store.ts",
+    "projects/07-cold-email-warmup/src/replies/store.ts",
+    "projects/07-cold-email-warmup/tests/expanded-mvp-05.test.ts",
+    "projects/07-cold-email-warmup/tests/f11-body-fixture.ts",
+    "projects/07-cold-email-warmup/tests/f11-body-protocol.test.ts",
+    "projects/07-cold-email-warmup/tests/f11-context-integration.test.ts"
+  ],
+  "guard_summary": "guard-summary.json",
+  "source_manifest": "source-manifest.json",
+  "build_manifest": "build-manifest.json",
+  "context_manifest": "context-manifest.json",
+  "context_inputs_seal": "context-inputs-seal.json",
+  "quiescence": {
+    "database": "n7f10_a2",
+    "other_sessions": 0,
+    "occupied_transport_operations": 0,
+    "runtime_claims": 0,
+    "matching_live_guarded_nodes": 0,
+    "heavy_mutex": "released at check-a7 process exit"
+  }
+}

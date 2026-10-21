@@ -1,0 +1,14 @@
+{
+  "exit_code": 0,
+  "script": "import {isPublicIp} from '/app/dist/mailboxes/network.js';\nconsole.log(JSON.stringify(Object.fromEntries(['2d00::1','3000::1','3800::1','3ffe::1','2606:4700:4700::1111'].map(a=>[a,isPublicIp(a)]))));\n",
+  "observed": {
+    "2d00::1": true,
+    "3000::1": true,
+    "3800::1": true,
+    "3ffe::1": true,
+    "2606:4700:4700::1111": true
+  },
+  "authority": "https://www.iana.org/assignments/ipv6-unicast-address-assignments",
+  "authority_last_updated": "2025-10-10",
+  "classification": "2d00::/8, 3000::/5, 3800::/6, and 3ffe::/16 are explicitly RESERVED in the IANA table; all are accepted by isPublicIp."
+}

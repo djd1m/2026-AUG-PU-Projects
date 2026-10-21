@@ -1,0 +1,47 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20261013T220722Z-design-5c13",
+  "batch_id": "20261013T202009Z-expanded-cjm-9f69",
+  "project": "projects/08-interior-ai-redesign",
+  "feature": "design",
+  "pipeline": "feature AUTO inherited accepted SPARC -> implementation -> independent review/anti-drift",
+  "tier": "XL",
+  "profile": "compact-quality-first-v2",
+  "baseline_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+  "started_at": "2026-10-13T22:07:22.339433+00:00",
+  "ended_at": "2026-10-14T01:47:20.491766+00:00",
+  "status": "accepted",
+  "actual_model": null,
+  "metrics": {
+    "wall_clock_seconds": 13198.152333,
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Host exact model/usage/billing unavailable; requested routes do not prove actual."
+  ],
+  "acceptance_evidence": [
+    "docs/features/design/review-report.md",
+    "docs/features/design/05_completion.md",
+    "docs/telemetry/p-replicator/20261013T202009Z-expanded-cjm-9f69/evidence/final-delivery-1.md"
+  ],
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 11,
+    "ac_total": 11,
+    "followup_status": "closed"
+  },
+  "spec_sha256": "b643c102b0b1c970627ec475db08ec16cb02b89ee976464d06769ae5e22fd3ff",
+  "risk_flags": [
+    "geometry immutable",
+    "paid admission caps and durable cost ledger",
+    "dispatch/refund/archive fencing",
+    "no provider autoretry after dispatch"
+  ],
+  "final_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+  "build_revision": "docker:sha256:3ac28e68ccef3576d428547f04bbbb9df3097bb8baf28823bdd87076611369cb",
+  "measurement_note": "Elapsed from feature record creation until final integrated acceptance, including queue/review/integration; not isolated agent runtime or summed model billing."
+}

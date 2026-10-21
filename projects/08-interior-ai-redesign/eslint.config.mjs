@@ -1,0 +1,2 @@
+import tseslint from 'typescript-eslint';
+export default tseslint.config({ignores:['**/node_modules/**','**/.next/**','docs/**','.claude/**','.runtime/**','**/next-env.d.ts']},...tseslint.configs.recommended,{files:['scripts/*.cjs'],rules:{'@typescript-eslint/no-require-imports':'off'}},{rules:{'@typescript-eslint/no-explicit-any':'error','@typescript-eslint/no-unused-vars':['error',{argsIgnorePattern:'^_',varsIgnorePattern:'^_'}]}});

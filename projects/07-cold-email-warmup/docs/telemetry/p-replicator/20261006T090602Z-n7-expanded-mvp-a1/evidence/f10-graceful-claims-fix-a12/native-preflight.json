@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-06T18:01:08.691923+00:00",
+  "status": "ready",
+  "source": "985151204592ba75b29db4275dd59622269aba2e",
+  "build_files": {
+    "dist/runtime/store.js": "bb973e791aa9a656b0b7eb5123680b7f6aaa659bf371f87b87763d5516924694",
+    "dist/runtime/loop.js": "5e0bc6a7ea96730b6f15da12c2d814eccc6b23dfd64486ae9a9173f028af2cac",
+    "dist/runtime/worker.js": "52fa0ce92d681198230df34423f6afb7d10040785f56de2654a53f6e869492c5"
+  },
+  "environment": "Node22; CPU2; owned n7f10_a2 PG at exact guarded IP; numeric-loopback native TLS fixture; inherited NODE_OPTIONS guard-v2; explicit runWorker fifth-argument fixture verified",
+  "test_command": "F10_EVIDENCE_DIR=/tmp/n7-f10-graceful-claims-fix-a12 node --import tsx --test --test-concurrency=1 tests/expanded-mvp-04.test.ts",
+  "inputs": "100 connected/30 active/3 tenants; immutable approved planner docs; explicit fixture operator retry labelled before restart",
+  "expected_effects": "Owned DB resets/fixture socket operations only;330s measured cadence with fault and restart; all30 postrestart first/full/censored deadline assertions",
+  "evidence_root": "/tmp/n7-f10-graceful-claims-fix-a12",
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

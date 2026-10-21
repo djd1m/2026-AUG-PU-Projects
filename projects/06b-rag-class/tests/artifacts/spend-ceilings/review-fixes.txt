@@ -1,0 +1,115 @@
+# Ответ на 08_review.md: мутации стражей F-1…F-6 (стек compose -p n6b-f02fix; первый блок — код 8dba8669,
+# второй блок F1-b, F3-b, F5-a — код 57da26ee; полный прогон — 57da26ee)
+# Каждая: дефект внесён → прогон в контейнере → git checkout; дерево после откатов чистое.
+# F1-b и F3-b первого прохода заменены (F1-b не собрался из-за недостижимого кода; F3-b был зелёным —
+# добавлен страж по исходнику 57da26ee), итоговые прогоны — во втором блоке.
+
+F1-a [packages/db/src/quota-keys.ts] exit=1
+    × обязательный набор ключей по виду вызова (08_review.md F-1, keySetViolation) > пропущен answer:global → отказ 15ms
+    × обязательный набор ключей по виду вызова (08_review.md F-1, keySetViolation) > пропущен answer:sandbox:global → отказ 1ms
+    Test Files  1 failed (1)
+    Tests  2 failed | 37 passed (39)
+F1-c [packages/rag/src/paid-call.ts] exit=1
+    ✓ конкурентность на настоящем Postgres (ADR-010, shared-resource-verification) > T-5d: 50 прогонов × 30 параллельных попыток на пересекающихся ключах — ни одного deadlock  2892ms
+    × дверь сама выводит набор ключей из вида вызова (08_review.md F-1) > F-1: произвольный ключ с огромным пределом вместо канала → отказ до резерва, провайдер 0 раз, журнала нет 25ms
+    Test Files  1 failed (1)
+    Tests  1 failed | 18 passed (19)
+F1-d [packages/rag/src/paid-call.ts] exit=1
+    ✓ конкурентность на настоящем Postgres (ADR-010, shared-resource-verification) > T-5d: 50 прогонов × 30 параллельных попыток на пересекающихся ключах — ни одного deadlock  2433ms
+    × дверь сама выводит набор ключей из вида вызова (08_review.md F-1) > F-1: заниженная оценка токенов батча → отказ до резерва; без оценки дверь берёт ⌈Σ длин / 4⌉ 87ms
+    Test Files  1 failed (1)
+    Tests  1 failed | 18 passed (19)
+F1-e [packages/rag/src/paid-call.ts] exit=1
+    × стражи по исходнику: боевое дерево чисто > порядок paid-call: резерв+START одной транзакцией, провайдер вне неё, без возвратов 12ms
+    Test Files  1 failed (1)
+    Tests  1 failed | 12 passed (13)
+F1-f [packages/rag/src/paid-call.ts] exit=1
+    ✓ конкурентность на настоящем Postgres (ADR-010, shared-resource-verification) > T-5d: 50 прогонов × 30 параллельных попыток на пересекающихся ключах — ни одного deadlock  2030ms
+    × дверь сама выводит набор ключей из вида вызова (08_review.md F-1) > F-1: пределы двери проверяются при создании — больше int4 или персональный > общего → ConfigError 11ms
+    Test Files  1 failed (1)
+    Tests  1 failed | 18 passed (19)
+F2-a [packages/rag/src/index.ts] exit=1
+    × стражи по исходнику: боевое дерево чисто > S-11: провайдер и дверь создаются только фабрикой, адрес — только в адаптере 16ms
+    × стражи умеют падать (guard-must-be-able-to-fail) > S-11 ловит провайдер и дверь вне фабрики, экспорт адаптера и адрес провайдера (F-2) 4ms
+    Test Files  1 failed (1)
+    Tests  2 failed | 11 passed (13)
+F2-b [apps/web/src/server/paid.ts] exit=1
+    × стражи по исходнику: боевое дерево чисто > S-11: провайдер и дверь создаются только фабрикой, адрес — только в адаптере 16ms
+    Test Files  1 failed (1)
+    Tests  1 failed | 12 passed (13)
+F2-c [packages/rag/tests/unit/guards.test.ts] exit=1
+    × стражи умеют падать (guard-must-be-able-to-fail) > S-9 ловит вызов порта и четыре обхода валидатора (F-2) 15ms
+    Test Files  1 failed (1)
+    Tests  1 failed | 12 passed (13)
+F2-d [packages/rag/tests/unit/guards.test.ts] exit=1
+    × стражи умеют падать (guard-must-be-able-to-fail) > S-9 ловит вызов порта и четыре обхода валидатора (F-2) 24ms
+    Test Files  1 failed (1)
+    Tests  1 failed | 12 passed (13)
+F2-e [packages/rag/tests/unit/guards.test.ts] exit=1
+    × стражи умеют падать (guard-must-be-able-to-fail) > S-11 ловит провайдер и дверь вне фабрики, экспорт адаптера и адрес провайдера (F-2) 9ms
+    Test Files  1 failed (1)
+    Tests  1 failed | 12 passed (13)
+F3-a [packages/db/src/boot-config.ts] exit=1
+    × Boot config check web (FR-n6b-16, NFR-n6b-3) > F-3 (08_review.md): LIMIT_ANSWER_VISITOR_DAY больше int4 → отказ при старте с именем, а не 503 при первом запросе 12ms
+    × Boot config check web (FR-n6b-16, NFR-n6b-3) > F-3 (08_review.md): LIMIT_ANSWER_BOT_DAY больше int4 → отказ при старте с именем, а не 503 при первом запросе 2ms
+    × Boot config check web (FR-n6b-16, NFR-n6b-3) > F-3 (08_review.md): LIMIT_ANSWER_GLOBAL_DAY больше int4 → отказ при старте с именем, а не 503 при первом запросе 2ms
+    × Boot config check web (FR-n6b-16, NFR-n6b-3) > F-3 (08_review.md): LIMIT_SANDBOX_ACCOUNT_DAY больше int4 → отказ при старте с именем, а не 503 при первом запросе 1ms
+    × Boot config check web (FR-n6b-16, NFR-n6b-3) > F-3 (08_review.md): LIMIT_SANDBOX_GLOBAL_DAY больше int4 → отказ при старте с именем, а не 503 при первом запросе 4ms
+    × Boot config check web (FR-n6b-16, NFR-n6b-3) > F-3 (08_review.md): LIMIT_EMBED_TOKENS_ACCOUNT_DAY больше int4 → отказ при старте с именем, а не 503 при первом запросе 1ms
+    × Boot config check web (FR-n6b-16, NFR-n6b-3) > F-3 (08_review.md): LIMIT_EMBED_TOKENS_GLOBAL_DAY больше int4 → отказ при старте с именем, а не 503 при первом запросе 1ms
+    × Boot config check web (FR-n6b-16, NFR-n6b-3) > F-3 (08_review.md): LIMIT_AUTH_ADDR_HOUR больше int4 → отказ при старте с именем, а не 503 при первом запросе 1ms
+    × worker: отказ старта без конфигурации > F-3 (08_review.md): предел больше int4 → exit 1 с именем при старте 354ms
+    Test Files  2 failed (2)
+    Tests  9 failed | 73 passed (82)
+F4-a [packages/db/src/spend-today.ts] exit=1
+    × где виден расход: spendToday (01_plan.md §6) > F-4: попытка, повисшая в 23:59 МСК, после полуночи остаётся «исход неизвестен»; старше 48 ч — нет 27ms
+    Test Files  1 failed (1)
+    Tests  1 failed | 12 passed (13)
+F6-a [packages/db/src/client-address.ts] exit=1
+    × ключ посетителя (N5 #20): /24 + bot_id, IP не хранится > соседи по /24 делят ключ; другой /24 или другой бот — другой ключ 17ms
+    × ключ посетителя (N5 #20): /24 + bot_id, IP не хранится > F-6 (08_review.md): IPv4-mapped IPv6 в любой записи — ключ того же IPv4 /24, не общий /64 нулей 2ms
+    × адрес клиента и ключ предела входа (FR-n6b-1) > IPv4 — адрес целиком (соседи по /24 не делят предел входа) 12ms
+    Test Files  2 failed (2)
+    Tests  3 failed | 46 passed (49)
+F1-b [packages/db/src/quota-keys.ts] exit=1
+    × обязательный набор ключей по виду вызова (08_review.md F-1, keySetViolation) > общий ключ с подменённым пределом → отказ 11ms
+    × обязательный набор ключей по виду вызова (08_review.md F-1, keySetViolation) > личный ключ с подменённым пределом → отказ 1ms
+    Test Files  1 failed (1)
+    Tests  2 failed | 37 passed (39)
+F3-b [apps/web/src/server/config.ts] exit=1
+    × Boot config check web (FR-n6b-16, NFR-n6b-3) > F-3: loadWebConfig разбирает всю связку пределов (limitsFrom) сразу после checkConfig — при старте 14ms
+    Test Files  1 failed (1)
+    Tests  1 failed | 77 passed (78)
+F5-a [packages/db/tests/int/helpers.ts] exit=1
+    ✓ конкурентность на настоящем Postgres (ADR-010, shared-resource-verification) > T-5d: 50 прогонов × 30 параллельных попыток на пересекающихся ключах — ни одного deadlock  2240ms
+    Test Files  2 passed (2)
+    Tests  32 passed (32)
+    × исчерпание: отказ ДО платного вызова (SC-US-016-1, T-7) > T-4: общий потолок исчерпан при свободном личном → личный и ботовый НЕ увеличены (откат всей транзакции) 39ms
+    × счёт по попыткам (SC-US-016-3, SC-US-005-4, T-8) > SC-US-016-3: исход timeout → ModelCallFailed (503), резерв остался списан, журнал failed 59ms
+    × счёт по попыткам (SC-US-016-3, SC-US-005-4, T-8) > SC-US-016-3: исход unavailable → ModelCallFailed (503), резерв остался списан, журнал failed 20ms
+    × счёт по попыткам (SC-US-016-3, SC-US-005-4, T-8) > SC-US-016-3: исход error-in-200 → ModelCallFailed (503), резерв остался списан, журнал failed 21ms
+    × счёт по попыткам (SC-US-016-3, SC-US-005-4, T-8) > SC-US-016-3: исход schema → ModelCallFailed (503), резерв остался списан, журнал failed 24ms
+    × конкурентность на настоящем Postgres (ADR-010, shared-resource-verification) > T-5a: остаток посетителя 3, 50 параллельных попыток → ровно 3 вызова, 47 отказов, used = 30 171ms
+    × конкурентность на настоящем Postgres (ADR-010, shared-resource-verification) > SC-US-016-4 (T-5b): общий потолок песочницы остаток 5, 20 аккаунтов → 5 вызовов; у 15 отказавших личный не увеличен 5ms
+    × конкурентность на настоящем Postgres (ADR-010, shared-resource-verification) > T-5c: embed:global остаток 1000 токенов, 10 батчей по 300 → проходят ровно 3, used ≤ предела 23ms
+    ✓ конкурентность на настоящем Postgres (ADR-010, shared-resource-verification) > T-5d: 50 прогонов × 30 параллельных попыток на пересекающихся ключах — ни одного deadlock  3140ms
+    × конкурентность на настоящем Postgres (ADR-010, shared-resource-verification) > T-6: 200 параллельных при пуле 10 — соединений ≤ 10, вызовы провайдера идут БЕЗ удержания соединения 642ms
+    × дверь сама выводит набор ключей из вида вызова (08_review.md F-1) > F-1: заниженная оценка токенов батча → отказ до резерва; без оценки дверь берёт ⌈Σ длин / 4⌉ 22ms
+    × reset-quota: один названный ключ, журнал в той же транзакции (OWN-06B-010) > отказ на ключе вне закрытого списка (шаблон) — ничего не меняется 13ms
+    × reset-quota: один названный ключ, журнал в той же транзакции (OWN-06B-010) > отказ на ключе вне закрытого списка (звёздочка) — ничего не меняется 15ms
+    × reset-quota: один названный ключ, журнал в той же транзакции (OWN-06B-010) > отказ на ключе вне закрытого списка (неизвестная форма) — ничего не меняется 21ms
+    × reset-quota: один названный ключ, журнал в той же транзакции (OWN-06B-010) > отказ на ключе вне закрытого списка (пробел в конце) — ничего не меняется 16ms
+    × reset-quota: один названный ключ, журнал в той же транзакции (OWN-06B-010) > отказ без оператора и на несуществующем счётчике; журнал не пишется 19ms
+    × reset-quota: один названный ключ, журнал в той же транзакции (OWN-06B-010) > CLI: коды 0/1/2, секрет строки подключения не печатается 12ms
+    × где виден расход: spendToday (01_plan.md §6) > F-4: попытка, повисшая в 23:59 МСК, после полуночи остаётся «исход неизвестен»; старше 48 ч — нет 22ms
+    Test Files  2 failed (2)
+    Tests  17 failed | 15 passed (32)
+
+# Полный прогон §5 на свежем стеке (typecheck + unit + int), exit=0:
+ Test Files  10 passed (10)
+      Tests  218 passed (218)
+ Test Files  8 passed (8)
+      Tests  97 passed (97)
+# Второй прогон интеграции на ТОМ ЖЕ стеке без down -v (F-5), exit=0:
+ Test Files  8 passed (8)
+      Tests  97 passed (97)

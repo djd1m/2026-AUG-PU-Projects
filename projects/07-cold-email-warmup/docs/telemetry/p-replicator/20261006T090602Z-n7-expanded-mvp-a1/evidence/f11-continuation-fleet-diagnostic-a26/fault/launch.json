@@ -1,0 +1,934 @@
+{
+  "mode": "fault",
+  "schema": "n7_a26_fault_261007040055",
+  "pid": 682283,
+  "startTicks": "126869647",
+  "launcher": {
+    "utc": "2026-10-07T04:01:26.862576+00:00",
+    "monotonic_ns": 1268696861988550
+  },
+  "disk_available_bytes": 2116124672,
+  "source": "b6b82cb83cdf7cb1d646784ad169af826e6c6852",
+  "trace_prelaunch_absent": true,
+  "native-runner.py_sha256": "443c090b4d0e5db28bfedc94fd03d703a137347e0ea043081fb582f5d54f320d",
+  "guard-a26.mjs_sha256": "96aaef9fddf9fd0d7c9a237508d1ead1a997b1e637c832081cab04c4d4b4d740",
+  "schema-setup.mjs_sha256": "bee71b146a9006dbdf0504eebd4bb39e1b2e56b0f74a8c13ead79c9455a53b9c",
+  "launch.sh_sha256": "d02409c091f68119123c6c64bd8df8d242aa77a8b7163d780a092cc93b08e283",
+  "source-before.json_sha256": "c31abfd26a49920a33157cc6e554d27f0eb2cb0203df0ed0cfb8b8dbf3d6f6d5",
+  "disk_budget_rationale": {
+    "estimated_new_output_bytes": 160000000,
+    "estimate_not_measurement": true,
+    "expected_compact_prior_bytes": 26872775,
+    "pg_wal_bytes": "unknown",
+    "available_below_2GiB_reconsidered": true,
+    "scope": "one directed fault, no build/copy/cleanup"
+  },
+  "setup_pid": 682445,
+  "setup_startTicks": "126869686",
+  "setup_started": {
+    "utc": "2026-10-07T04:01:26.864880+00:00",
+    "monotonic_ns": 1268696864282000
+  },
+  "setup_exit": 0,
+  "setup_join": {
+    "utc": "2026-10-07T04:01:28.088200+00:00",
+    "monotonic_ns": 1268698087616377
+  },
+  "before_heavy_disk_bytes": 2114224128,
+  "command": [
+    "/tmp/n7-expanded-runtime-20261006/bin/node",
+    "--test",
+    "--test-name-pattern",
+    "^F11 ALL30 finite native BODY fault recovers both2800ms phases full300s$",
+    "tests/f10-runtime-protocol.test.ts"
+  ],
+  "native_prework": {
+    "utc": "2026-10-07T04:01:28.089371+00:00",
+    "monotonic_ns": 1268698088769728
+  },
+  "native_pid": 682933,
+  "native_startTicks": "126869808",
+  "native_spawned": {
+    "utc": "2026-10-07T04:01:28.090479+00:00",
+    "monotonic_ns": 1268698089877298
+  },
+  "live_disk": [
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:01:28.091047+00:00",
+        "monotonic_ns": 1268698090441238
+      },
+      "available_bytes": 2114224128
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:01:30.092076+00:00",
+        "monotonic_ns": 1268700091488682
+      },
+      "available_bytes": 2113810432
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:01:32.093159+00:00",
+        "monotonic_ns": 1268702092570077
+      },
+      "available_bytes": 2113630208
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:01:34.095475+00:00",
+        "monotonic_ns": 1268704094888672
+      },
+      "available_bytes": 2113286144
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:01:36.096342+00:00",
+        "monotonic_ns": 1268706095754166
+      },
+      "available_bytes": 2113024000
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:01:38.097742+00:00",
+        "monotonic_ns": 1268708097151500
+      },
+      "available_bytes": 2112860160
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:01:40.101584+00:00",
+        "monotonic_ns": 1268710100991066
+      },
+      "available_bytes": 2112696320
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:01:42.102361+00:00",
+        "monotonic_ns": 1268712101772830
+      },
+      "available_bytes": 2112520192
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:01:44.103555+00:00",
+        "monotonic_ns": 1268714102969414
+      },
+      "available_bytes": 2112212992
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:01:46.104745+00:00",
+        "monotonic_ns": 1268716104157929
+      },
+      "available_bytes": 2111991808
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:01:48.105538+00:00",
+        "monotonic_ns": 1268718104950493
+      },
+      "available_bytes": 2111791104
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:01:50.106802+00:00",
+        "monotonic_ns": 1268720106211367
+      },
+      "available_bytes": 2110951424
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:01:52.107928+00:00",
+        "monotonic_ns": 1268722107338492
+      },
+      "available_bytes": 2110791680
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:01:54.109809+00:00",
+        "monotonic_ns": 1268724109241206
+      },
+      "available_bytes": 2110562304
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:01:56.111727+00:00",
+        "monotonic_ns": 1268726111138031
+      },
+      "available_bytes": 2109722624
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:01:58.112985+00:00",
+        "monotonic_ns": 1268728112397175
+      },
+      "available_bytes": 2109632512
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:00.114754+00:00",
+        "monotonic_ns": 1268730114168570
+      },
+      "available_bytes": 2109521920
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:02.115840+00:00",
+        "monotonic_ns": 1268732115254074
+      },
+      "available_bytes": 2109374464
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:04.116999+00:00",
+        "monotonic_ns": 1268734116409699
+      },
+      "available_bytes": 2109296640
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:06.118717+00:00",
+        "monotonic_ns": 1268736118126773
+      },
+      "available_bytes": 2109071360
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:08.119763+00:00",
+        "monotonic_ns": 1268738119177957
+      },
+      "available_bytes": 2108887040
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:10.122762+00:00",
+        "monotonic_ns": 1268740122230892
+      },
+      "available_bytes": 2108710912
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:12.124581+00:00",
+        "monotonic_ns": 1268742123991947
+      },
+      "available_bytes": 2108538880
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:14.126686+00:00",
+        "monotonic_ns": 1268744126095832
+      },
+      "available_bytes": 2108387328
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:16.127761+00:00",
+        "monotonic_ns": 1268746127172916
+      },
+      "available_bytes": 2108190720
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:18.129343+00:00",
+        "monotonic_ns": 1268748128756241
+      },
+      "available_bytes": 2108026880
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:20.133005+00:00",
+        "monotonic_ns": 1268750132414326
+      },
+      "available_bytes": 2107826176
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:22.137913+00:00",
+        "monotonic_ns": 1268752137326962
+      },
+      "available_bytes": 2107662336
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:24.139109+00:00",
+        "monotonic_ns": 1268754138519506
+      },
+      "available_bytes": 2107478016
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:26.140451+00:00",
+        "monotonic_ns": 1268756139862200
+      },
+      "available_bytes": 2107318272
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:28.141960+00:00",
+        "monotonic_ns": 1268758141368505
+      },
+      "available_bytes": 2107183104
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:30.143019+00:00",
+        "monotonic_ns": 1268760142432929
+      },
+      "available_bytes": 2107113472
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:32.144106+00:00",
+        "monotonic_ns": 1268762143518714
+      },
+      "available_bytes": 2106769408
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:34.145221+00:00",
+        "monotonic_ns": 1268764144632158
+      },
+      "available_bytes": 2106617856
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:36.149801+00:00",
+        "monotonic_ns": 1268766149208003
+      },
+      "available_bytes": 2106466304
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:38.152388+00:00",
+        "monotonic_ns": 1268768151796548
+      },
+      "available_bytes": 2106224640
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:40.153836+00:00",
+        "monotonic_ns": 1268770153246843
+      },
+      "available_bytes": 2106085376
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:42.155816+00:00",
+        "monotonic_ns": 1268772155227817
+      },
+      "available_bytes": 2105933824
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:44.157378+00:00",
+        "monotonic_ns": 1268774156790162
+      },
+      "available_bytes": 2105700352
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:46.158869+00:00",
+        "monotonic_ns": 1268776158283566
+      },
+      "available_bytes": 2105540608
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:48.160781+00:00",
+        "monotonic_ns": 1268778160193531
+      },
+      "available_bytes": 2105327616
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:50.162765+00:00",
+        "monotonic_ns": 1268780162176876
+      },
+      "available_bytes": 2105122816
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:52.167750+00:00",
+        "monotonic_ns": 1268782167164132
+      },
+      "available_bytes": 2104971264
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:54.169014+00:00",
+        "monotonic_ns": 1268784168425756
+      },
+      "available_bytes": 2104799232
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:56.173073+00:00",
+        "monotonic_ns": 1268786172484371
+      },
+      "available_bytes": 2104442880
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:02:58.174485+00:00",
+        "monotonic_ns": 1268788173891836
+      },
+      "available_bytes": 2104332288
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:00.177168+00:00",
+        "monotonic_ns": 1268790176577931
+      },
+      "available_bytes": 2104160256
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:02.178349+00:00",
+        "monotonic_ns": 1268792177759155
+      },
+      "available_bytes": 2104074240
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:04.179588+00:00",
+        "monotonic_ns": 1268794179039319
+      },
+      "available_bytes": 2103910400
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:06.181846+00:00",
+        "monotonic_ns": 1268796181255224
+      },
+      "available_bytes": 2103709696
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:08.184802+00:00",
+        "monotonic_ns": 1268798184212789
+      },
+      "available_bytes": 2103549952
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:10.186573+00:00",
+        "monotonic_ns": 1268800185985834
+      },
+      "available_bytes": 2103488512
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:12.190342+00:00",
+        "monotonic_ns": 1268802189753559
+      },
+      "available_bytes": 2103238656
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:14.191585+00:00",
+        "monotonic_ns": 1268804190997333
+      },
+      "available_bytes": 2103136256
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:16.193910+00:00",
+        "monotonic_ns": 1268806193320588
+      },
+      "available_bytes": 2102919168
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:18.195867+00:00",
+        "monotonic_ns": 1268808195283533
+      },
+      "available_bytes": 2102747136
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:20.197175+00:00",
+        "monotonic_ns": 1268810196580137
+      },
+      "available_bytes": 2102558720
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:22.198517+00:00",
+        "monotonic_ns": 1268812197925772
+      },
+      "available_bytes": 2102337536
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:24.200646+00:00",
+        "monotonic_ns": 1268814200061626
+      },
+      "available_bytes": 2102153216
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:26.202799+00:00",
+        "monotonic_ns": 1268816202210131
+      },
+      "available_bytes": 2101944320
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:28.208023+00:00",
+        "monotonic_ns": 1268818207436287
+      },
+      "available_bytes": 2101784576
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:30.209526+00:00",
+        "monotonic_ns": 1268820208948401
+      },
+      "available_bytes": 2101706752
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:32.211063+00:00",
+        "monotonic_ns": 1268822210558376
+      },
+      "available_bytes": 2101510144
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:34.214730+00:00",
+        "monotonic_ns": 1268824214143581
+      },
+      "available_bytes": 2101280768
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:36.215803+00:00",
+        "monotonic_ns": 1268826215215466
+      },
+      "available_bytes": 2100727808
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:38.217959+00:00",
+        "monotonic_ns": 1268828217367570
+      },
+      "available_bytes": 2100576256
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:40.219215+00:00",
+        "monotonic_ns": 1268830218625945
+      },
+      "available_bytes": 2100436992
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:42.220392+00:00",
+        "monotonic_ns": 1268832219802739
+      },
+      "available_bytes": 2100289536
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:44.222000+00:00",
+        "monotonic_ns": 1268834223216374
+      },
+      "available_bytes": 2100133888
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:46.226807+00:00",
+        "monotonic_ns": 1268836226218869
+      },
+      "available_bytes": 2099908608
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:48.230220+00:00",
+        "monotonic_ns": 1268838229629654
+      },
+      "available_bytes": 2099675136
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:50.234296+00:00",
+        "monotonic_ns": 1268840233705690
+      },
+      "available_bytes": 2099462144
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:52.236826+00:00",
+        "monotonic_ns": 1268842236237145
+      },
+      "available_bytes": 2099302400
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:54.240749+00:00",
+        "monotonic_ns": 1268844240158270
+      },
+      "available_bytes": 2099134464
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:56.242356+00:00",
+        "monotonic_ns": 1268846241770175
+      },
+      "available_bytes": 2098958336
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:03:58.244952+00:00",
+        "monotonic_ns": 1268848244364979
+      },
+      "available_bytes": 2098786304
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:00.250333+00:00",
+        "monotonic_ns": 1268850249743665
+      },
+      "available_bytes": 2098618368
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:02.251984+00:00",
+        "monotonic_ns": 1268852251397130
+      },
+      "available_bytes": 2098438144
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:04.254984+00:00",
+        "monotonic_ns": 1268854254389835
+      },
+      "available_bytes": 2098188288
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:06.257553+00:00",
+        "monotonic_ns": 1268856256961800
+      },
+      "available_bytes": 2098171904
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:08.259269+00:00",
+        "monotonic_ns": 1268858258682674
+      },
+      "available_bytes": 2097991680
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:10.264366+00:00",
+        "monotonic_ns": 1268860263779900
+      },
+      "available_bytes": 2097827840
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:12.268758+00:00",
+        "monotonic_ns": 1268862268173836
+      },
+      "available_bytes": 2097725440
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:14.270467+00:00",
+        "monotonic_ns": 1268864269878220
+      },
+      "available_bytes": 2097467392
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:16.271890+00:00",
+        "monotonic_ns": 1268866271302255
+      },
+      "available_bytes": 2097299456
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:18.273757+00:00",
+        "monotonic_ns": 1268868273196519
+      },
+      "available_bytes": 2096820224
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:20.277564+00:00",
+        "monotonic_ns": 1268870276970795
+      },
+      "available_bytes": 2096590848
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:22.279727+00:00",
+        "monotonic_ns": 1268872279137679
+      },
+      "available_bytes": 2096201728
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:24.281001+00:00",
+        "monotonic_ns": 1268874280413134
+      },
+      "available_bytes": 2096058368
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:26.283232+00:00",
+        "monotonic_ns": 1268876282645238
+      },
+      "available_bytes": 2095796224
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:28.285167+00:00",
+        "monotonic_ns": 1268878284578663
+      },
+      "available_bytes": 2095579136
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:30.287323+00:00",
+        "monotonic_ns": 1268880286745828
+      },
+      "available_bytes": 2095415296
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:32.288711+00:00",
+        "monotonic_ns": 1268882288121982
+      },
+      "available_bytes": 2095120384
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:34.290680+00:00",
+        "monotonic_ns": 1268884290095217
+      },
+      "available_bytes": 2094784512
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:36.292859+00:00",
+        "monotonic_ns": 1268886292300822
+      },
+      "available_bytes": 2094850048
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:38.294264+00:00",
+        "monotonic_ns": 1268888293677596
+      },
+      "available_bytes": 2094759936
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:40.296155+00:00",
+        "monotonic_ns": 1268890295561391
+      },
+      "available_bytes": 2094673920
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:42.297725+00:00",
+        "monotonic_ns": 1268892297139375
+      },
+      "available_bytes": 2094465024
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:44.299348+00:00",
+        "monotonic_ns": 1268894298757300
+      },
+      "available_bytes": 2093457408
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:46.301179+00:00",
+        "monotonic_ns": 1268896300673354
+      },
+      "available_bytes": 2093244416
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:48.303382+00:00",
+        "monotonic_ns": 1268898302793989
+      },
+      "available_bytes": 2092945408
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:50.307363+00:00",
+        "monotonic_ns": 1268900306776584
+      },
+      "available_bytes": 2092589056
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:52.310052+00:00",
+        "monotonic_ns": 1268902309463949
+      },
+      "available_bytes": 2092433408
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:54.317731+00:00",
+        "monotonic_ns": 1268904317142796
+      },
+      "available_bytes": 2092191744
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:56.322128+00:00",
+        "monotonic_ns": 1268906321542242
+      },
+      "available_bytes": 2091978752
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:04:58.324217+00:00",
+        "monotonic_ns": 1268908323630976
+      },
+      "available_bytes": 2091810816
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:00.325828+00:00",
+        "monotonic_ns": 1268910325236821
+      },
+      "available_bytes": 2091315200
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:02.327783+00:00",
+        "monotonic_ns": 1268912327198295
+      },
+      "available_bytes": 2091212800
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:04.329867+00:00",
+        "monotonic_ns": 1268914329281880
+      },
+      "available_bytes": 2091081728
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:06.331476+00:00",
+        "monotonic_ns": 1268916330889435
+      },
+      "available_bytes": 2090975232
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:08.333559+00:00",
+        "monotonic_ns": 1268918332988139
+      },
+      "available_bytes": 2090803200
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:10.339463+00:00",
+        "monotonic_ns": 1268920338876805
+      },
+      "available_bytes": 2090647552
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:12.341345+00:00",
+        "monotonic_ns": 1268922340756810
+      },
+      "available_bytes": 2090389504
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:14.343515+00:00",
+        "monotonic_ns": 1268924342928115
+      },
+      "available_bytes": 2090168320
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:16.346459+00:00",
+        "monotonic_ns": 1268926345871870
+      },
+      "available_bytes": 2090033152
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:18.352558+00:00",
+        "monotonic_ns": 1268928351966996
+      },
+      "available_bytes": 2089832448
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:20.355604+00:00",
+        "monotonic_ns": 1268930355032231
+      },
+      "available_bytes": 2089648128
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:22.356977+00:00",
+        "monotonic_ns": 1268932356389295
+      },
+      "available_bytes": 2089500672
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:24.358803+00:00",
+        "monotonic_ns": 1268934358215430
+      },
+      "available_bytes": 2089218048
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:26.360646+00:00",
+        "monotonic_ns": 1268936360056375
+      },
+      "available_bytes": 2089033728
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:28.362233+00:00",
+        "monotonic_ns": 1268938361640119
+      },
+      "available_bytes": 2088837120
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:30.363865+00:00",
+        "monotonic_ns": 1268940363278014
+      },
+      "available_bytes": 2088722432
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:32.366481+00:00",
+        "monotonic_ns": 1268942365891229
+      },
+      "available_bytes": 2088779776
+    },
+    {
+      "stamp": {
+        "utc": "2026-10-07T04:05:34.368040+00:00",
+        "monotonic_ns": 1268944367446303
+      },
+      "available_bytes": 2063376384
+    }
+  ],
+  "native_exit": 1,
+  "native_join": {
+    "utc": "2026-10-07T04:05:36.370273+00:00",
+    "monotonic_ns": 1268946369682608
+  },
+  "lock_released": {
+    "utc": "2026-10-07T04:05:36.372050+00:00",
+    "monotonic_ns": 1268946371443998
+  }
+}

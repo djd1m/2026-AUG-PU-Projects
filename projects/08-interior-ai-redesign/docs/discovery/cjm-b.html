@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>B · Дизайн в рамках суммы — CJM N8</title>
+<style>
+:root{--paper:#f3efe6;--sheet:#fffdf8;--ink:#272722;--muted:#6f6d63;--line:#d5cdbd;--accent:#9b4b32;--accent2:#4c6658;--wash:#e8e0d1;--warn:#9b5f16;--bad:#9a3434;--ok:#386447;--shadow:0 18px 55px #544b3b1c;--serif:Georgia,'Times New Roman',serif;--sans:'Trebuchet MS','Gill Sans',sans-serif}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 var(--sans)}
+
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+button:disabled{cursor:not-allowed;opacity:.45}
+a{color:var(--accent);text-underline-offset:3px}
+
+:focus-visible{outline:3px solid #1d6b74;outline-offset:3px}
+h1,h2,h3,p{margin-top:0}
+h1,h2,h3{font-family:var(--serif);font-weight:500}
+h1{font-size:clamp(2.2rem,5vw,5.6rem);line-height:.92;letter-spacing:-.045em}
+h2{font-size:clamp(1.8rem,3.2vw,3.2rem);line-height:1.05}
+h3{font-size:1.3rem}
+
+.demo-banner{position:sticky;top:0;z-index:20;padding:8px 20px;background:var(--ink);color:#fff;text-align:center;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+
+.mast{max-width:1480px;margin:auto;padding:28px 34px 16px;display:flex;justify-content:space-between;align-items:end;gap:24px;border-bottom:1px solid var(--line)}
+
+.brand{font-family:var(--serif);font-size:24px}
+.brand small{display:block;font:11px var(--sans);text-transform:uppercase;letter-spacing:.16em;color:var(--muted)}
+
+.variant-mark{text-align:right}
+.variant-mark b{font:46px/1 var(--serif);color:var(--accent)}
+.variant-mark span{display:block;max-width:360px;font-size:13px;color:var(--muted)}
+
+.layout{max-width:1480px;margin:auto;padding:26px 34px 60px;display:grid;grid-template-columns:250px minmax(0,1fr);gap:30px}
+
+.rail{position:sticky;top:55px;align-self:start;max-height:calc(100vh - 72px);overflow:auto;padding:5px}
+.rail-title{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+
+.step{display:grid;grid-template-columns:28px 1fr;gap:8px;width:100%;padding:10px 6px;border:0;border-bottom:1px solid var(--line);background:transparent;text-align:left}
+.step-num{font-family:var(--serif);color:var(--muted)}
+.step[aria-current=step]{color:var(--accent)}
+.step[aria-current=step] .step-num{color:var(--accent);font-weight:bold}
+.step small{display:block;color:var(--muted)}
+
+.rail-note{margin-top:18px;padding:14px;border:1px solid var(--line);font-size:12px;color:var(--muted)}
+
+.sheet{min-width:0;background:var(--sheet);border:1px solid var(--line);box-shadow:var(--shadow)}
+.stage-head{padding:24px 30px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;align-items:center}
+.kicker{margin:0;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+
+.status-chip,.demo-chip{display:inline-flex;align-items:center;border:1px solid currentColor;border-radius:999px;padding:5px 10px;font-size:11px}
+.status-chip.ok{color:var(--ok)}
+.status-chip.warn{color:var(--warn)}
+.demo-chip{color:var(--accent);background:#fff8f2}
+
+.screen{min-height:650px;padding:42px 5vw 30px;animation:arrive .35s ease both}
+@keyframes arrive{from{opacity:.4;transform:translateY(7px)}
+}
+.lede{font:20px/1.45 var(--serif);max-width:760px;color:#55534c}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:11px;color:var(--accent);font-weight:bold}
+
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.stack{display:grid;gap:14px}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.spread{justify-content:space-between}
+.card{border:1px solid var(--line);padding:22px;background:#fff}
+.card.soft{background:var(--wash)}
+.card.selected{border:2px solid var(--accent);padding:21px}
+.card h3{margin-bottom:8px}
+.rule{height:1px;background:var(--line);margin:20px 0}
+
+.action{border:1px solid var(--ink);background:transparent;padding:11px 17px;min-height:44px}
+.action.primary{background:var(--ink);color:#fff}
+.action.accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+.action.ghost{border-color:var(--line)}
+.action.tiny{padding:7px 11px;min-height:34px;font-size:12px}
+.action[aria-pressed=true]{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+
+label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid #aaa293;background:#fff;border-radius:0}
+input[type=checkbox],input[type=radio]{width:auto}
+textarea{min-height:90px;resize:vertical}
+.field{margin-bottom:15px}
+.error{color:var(--bad);font-weight:bold;font-size:13px}
+.notice{border-left:4px solid var(--warn);background:#fff7e7;padding:13px 15px}
+.success{border-left:4px solid var(--ok);background:#edf6ee;padding:13px 15px}
+
+.source-choice{min-height:170px}
+.source-choice strong{font-family:var(--serif);font-size:22px}
+.source-choice input{margin-right:8px}
+.drop{border:1px dashed var(--accent);padding:24px;background:#fbf6ed}
+.formula{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:13px;background:#242721;color:#f1eddf;padding:14px;overflow:auto}
+
+.room{position:relative;min-height:330px;overflow:hidden;background:#d9d0c0}
+.room svg{width:100%;height:100%;min-height:330px;display:block}
+.room-label{position:absolute;left:12px;bottom:12px;background:#fff;padding:7px 10px;font-size:11px;border:1px solid var(--ink)}
+.room.before svg{filter:grayscale(.85) contrast(.85)}
+
+.modebar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.modebar button{font-size:12px;padding:7px 10px;border:1px solid var(--line);background:#fff}
+.modebar button[aria-pressed=true]{background:var(--ink);color:#fff}
+.swatch{width:42px;height:42px;border-radius:50%;border:4px solid #fff;box-shadow:0 0 0 1px var(--line);display:inline-block}
+.style-choice{display:flex;align-items:center;gap:10px}
+.style-choice input{width:auto}
+
+.metric{font:42px/1 var(--serif);margin:4px 0}
+.meter{height:12px;background:var(--wash);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.budget-dock{border:1px solid var(--accent);padding:18px;margin-bottom:22px;background:#fff8ef}
+
+.product{display:grid;grid-template-columns:90px 1fr;gap:18px}
+.sample{aspect-ratio:1;background:repeating-linear-gradient(100deg,#aa8560 0 13px,#c6a17b 13px 25px,#8d6a4c 25px 28px);border:1px solid #70563f}
+.price{font:30px var(--serif)}
+
+.table-wrap{overflow:auto;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:620px}
+th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--wash);font-size:12px;text-transform:uppercase;letter-spacing:.07em}
+.unknown{color:var(--warn);font-weight:bold}
+.strike{text-decoration:line-through;color:var(--muted)}
+
+.timeline{border-left:1px solid var(--accent);padding-left:18px}
+.timeline li{margin-bottom:12px}
+.phases{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:12px;overflow:auto}
+.phase{border-top:4px solid var(--accent2);background:var(--wash);padding:16px;min-height:160px}
+.phase select{margin-top:12px}
+
+.footer-nav{padding:20px 30px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px}
+.live{min-height:22px;padding:0 30px 12px;color:var(--accent);font-size:13px}
+.modalish{border:2px solid var(--ink);padding:22px;margin-top:20px;background:#fff}
+.prototype-choice{margin-top:28px;padding:18px;border:1px dashed var(--accent);background:#fff9ef}
+
+[hidden]{display:none!important}
+.mobile-stage{display:none}
+
+@media(max-width:800px){.mast{padding:20px}
+.layout{display:block;padding:16px}
+.rail{position:static;display:flex;overflow:auto;gap:4px;margin-bottom:12px}
+.rail-title,.rail-note,.step span:last-child{display:none}
+.step{display:block;min-width:48px;border:1px solid var(--line);text-align:center}
+.step-num{display:block}
+.screen{padding:30px 20px}
+.grid,.grid.three{grid-template-columns:1fr}
+.stage-head,.footer-nav{padding:18px 20px}
+.variant-mark span{display:none}
+.room{min-height:260px}
+.room svg{min-height:260px}
+.phases{grid-template-columns:repeat(3,220px)}
+}
+
+@media(max-width:420px){h1{font-size:2.4rem}
+.mast{align-items:center}
+.brand{font-size:19px}
+.variant-mark b{font-size:32px}
+.layout{padding:10px}
+.screen{padding:24px 15px}
+.stage-head{align-items:flex-start}
+.footer-nav{display:grid;grid-template-columns:1fr 1fr}
+.footer-nav button{padding:9px}
+.product{grid-template-columns:1fr}
+.sample{width:90px}
+}
+
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+}
+
+
+@media(max-width:850px){.rail #steps{display:flex;gap:8px;overflow-x:auto;min-width:0;width:100%;}.rail .step{flex:0 0 130px;margin:0;}.rail .step span:last-child{display:block;font-size:11px}.rail-title,.rail-note{display:none}}
+</style>
+</head>
+<body>
+<div class="demo-banner">Интерактивный прототип · данные и действия демонстрационные</div>
+<header class="mast">
+ <div class="brand">Контур дома<small>CJM для ремонта собственной квартиры</small></div>
+ <div class="variant-mark"><b>B</b><span>Дизайн в рамках суммы · вариант для сравнения</span></div>
+</header>
+<main class="layout">
+ <nav class="rail" aria-label="Этапы пути"><p class="rail-title">Маршрут S0–S9</p><div id="steps"></div><p class="rail-note">Можно изучать любой экран. Просмотр не обходит проверки и не означает завершение этапа.</p></nav>
+ <article class="sheet">
+  <header class="stage-head"><p class="kicker" id="stageName"></p><span class="demo-chip">локальный demo</span></header>
+  <section class="screen" id="screen" aria-live="polite"></section>
+  <div class="live" id="live" role="status" aria-live="polite"></div>
+  <footer class="footer-nav"><button class="action ghost" id="back">← Назад</button><button class="action primary" id="next">Следующий этап →</button></footer>
+ </article>
+</main>
+<script>const CFG={"letter":"B","name":"Дизайн в рамках суммы","promise":"Лимит виден с самого начала, неизвестное не маскируется","accent":"#7c5332","secondary":"#3d6670","entry":"budget"};</script>
+<script>
+'use strict';
+
+const $=s=>document.querySelector(s);
+
+const stages=['Замысел','Основа','Обмеры','Референсы','Варианты','Согласование','Покупки','Бюджет','Пересмотр','Сохранить'];
+
+const state={step:0,source:'plan',w:6,l:3,h:2.7,verified:false,verifiedArea:null,changed:false,ref:'',file:'',pinDenied:false,style:'Тихий модернизм',view:'concept',before:false,design:'Светлый дуб',approved:false,version:1,history:['v1 · исходный концепт'],region:'Москва',regionStale:false,area:18,waste:8,pack:1.99,price:1600,delivery:'',labor:'',reserve:10,cap:60000,alt:false,out:false,exportOpen:false,paywall:false,share:false,shareMeasures:false,selected:false,phase:'Черновые работы',note:'',unknownItemCount:2};
+
+const fmt=n=>new Intl.NumberFormat('ru-RU').format(Math.round(n));
+
+function validNum(v,min=0,max=1e6){const n=Number(v);
+return Number.isFinite(n)&&n>min&&n<=max}
+function calc(){const ok=Number.isFinite(Number(state.area))&&state.area>0&&state.area<=10000&&Number.isFinite(Number(state.waste))&&state.waste>=0&&state.waste<=100&&Number.isFinite(Number(state.pack))&&state.pack>0&&state.pack<=100&&Number.isFinite(Number(state.price))&&state.price>0&&state.price<=10000000&&Number.isFinite(Number(state.reserve))&&state.reserve>=0&&state.reserve<=100;
+if(!ok)return {ok:false};
+const need=state.area*(1+state.waste/100),packs=Math.ceil(need/state.pack),floor=packs*state.price,delivery=state.delivery===''?null:Number(state.delivery),labor=state.labor===''?null:Number(state.labor);
+if((delivery!==null&&(!Number.isFinite(delivery)||delivery<0))||(labor!==null&&(!Number.isFinite(labor)||labor<0)))return {ok:false};
+const known=floor+(delivery||0)+(labor||0),scenario=known*(1+state.reserve/100);
+return {ok:true,need,packs,buy:packs*state.pack,floor,known,scenario,complete:delivery!==null&&labor!==null&&state.unknownItemCount===0}}
+function invalidateDesign(reason){state.approved=false;state.version++;state.history.push(`v${state.version} · ${reason}; требуется согласование`)}
+function status(){if(state.verified&&!state.changed)return '<span class="status-chip ok" data-testid="geometry-status">Контур подтверждён пользователем · demo</span>';
+if(state.changed)return '<span class="status-chip warn" data-testid="geometry-status">Основа изменилась · нужна повторная проверка</span>';
+return '<span class="status-chip warn" data-testid="geometry-status">Геометрия не подтверждена</span>'}
+function room(){const warm=state.style==='Тихий модернизм'?'#b98961':state.style==='Мягкий минимализм'?'#d0c5b5':'#657365';
+const label=state.view==='plan'?'Черновой план':state.view==='iso'?'Изометрическая схема':'AI-концепт';
+return `<div class="room ${state.before?'before':''}" data-testid="room-visual"><svg viewBox="0 0 700 400" role="img" aria-label="${label}: демонстрационная схема комнаты"><rect width="700" height="400" fill="#d8cfbf"/><polygon points="95,95 470,45 640,140 260,205" fill="#f6f0e3" stroke="#403d37" stroke-width="3"/><polygon points="95,95 260,205 260,360 95,240" fill="#e3d7c4" stroke="#403d37" stroke-width="3"/><polygon points="260,205 640,140 640,295 260,360" fill="#ece2d3" stroke="#403d37" stroke-width="3"/><polygon points="320,220 570,180 585,250 335,290" fill="${warm}" opacity=".88"/><rect x="125" y="135" width="85" height="125" fill="#a8b9b4" stroke="#403d37" stroke-width="3"/><path d="M410 184v-83h120v61" fill="none" stroke="#f8f4e9" stroke-width="12"/><circle cx="505" cy="255" r="38" fill="#f4ead7" stroke="#403d37"/><path d="M470 300h90M490 284v54M540 280v45" stroke="#403d37" stroke-width="7"/></svg><span class="room-label">${label} · ${state.before?'до':'после'}</span></div>`}
+function budgetDock(){if(CFG.entry!=='budget')return '';
+const c=calc(),used=c.ok?c.known:0,pct=Math.min(100,used/state.cap*100),delta=state.cap-used;
+return `<div class="budget-dock" data-testid="budget-dock"><div class="row spread"><div><span class="eyebrow">Лимит материалов · гипотеза B</span><p class="metric">${fmt(state.cap)} ₽</p></div><div><label for="cap">Изменить лимит</label><input id="cap" data-bind="cap" type="number" min="1" max="100000000" value="${state.cap}"></div></div><div class="meter"><i style="width:${pct}%"></i></div><p class="small">Известно сейчас: ${fmt(used)} ₽ · ${delta>=0?'запас по известной части '+fmt(delta):'дефицит по известной части '+fmt(-delta)} ₽. ${c.complete?'Состав заполнен, но цены demo.':'Доставка/работы и неподобранные позиции не позволяют подтвердить «уложились».'}</p></div>`}
+function s0(){return `<p class="eyebrow">Гипотеза пути ${CFG.letter}</p><h1>${CFG.name}</h1><p class="lede">${CFG.promise}. Один канон: измеренная комната и референс → образ → согласованный дизайн → реальные карточки товаров → бюджет → пересмотр.</p>${budgetDock()}<div class="grid"><div class="card soft"><h3>Что будет честно видно</h3><p>Где данные ваши, где состояние demo, а где цена, наличие, доставка и габариты пока неизвестны.</p></div><div class="card"><h3>Что останется за кадром</h3><p>Этот файл не импортирует 3D, не обращается к магазинам, не оплачивает и не отправляет сообщения.</p></div></div><button class="action primary" data-action="next">Начать с помещения →</button>`}
+function s1(){return `<p class="eyebrow">S1 · Основа пространства</p><h2>С чего начнём комнату?</h2><p class="lede">Выберите знакомый вам источник. Это фиксирует происхождение, а не доказывает точность.</p><div class="grid three">${[['plan','План','Размерная основа после ручной проверки'],['mesh','Mesh / облако точек','Можно использовать с контрольными размерами'],['splat','Gaussian splat','Только визуальный контекст, не размерная основа']].map(x=>`<label class="card source-choice ${state.source===x[0]?'selected':''}"><span><input name="source" type="radio" value="${x[0]}" ${state.source===x[0]?'checked':''}> <strong>${x[1]}</strong></span><p class="muted">${x[2]}</p></label>`).join('')}</div><div class="drop"><label for="spaceFile">Локальный файл плана / модели</label><input id="spaceFile" type="file" accept=".pdf,.png,.jpg,.jpeg,.glb,.obj,.ply"><p id="spaceFileName" class="small muted"></p></div>${state.source==='splat'?'<p class="notice">Splat не станет размерной основой. На S2 выберите план/mesh и введите контрольные размеры.</p>':''}`}
+function s2(){return `<p class="eyebrow">S2 · Контрольные размеры</p><h2>Проверьте контур до дизайна</h2><p class="lede">Одно расстояние калибрует масштаб, но не подтверждает весь scan. В demo вы подтверждаете контур и проёмы вручную.</p><div class="grid"><form id="measureForm" class="card" novalidate><div class="grid three"><div class="field"><label for="width">Ширина, м</label><input id="width" data-bind="w" type="number" min="0.1" max="50" step="0.01" required value="${state.w}"></div><div class="field"><label for="length">Длина, м</label><input id="length" data-bind="l" type="number" min="0.1" max="50" step="0.01" required value="${state.l}"></div><div class="field"><label for="height">Высота, м</label><input id="height" data-bind="h" type="number" min="0.1" max="10" step="0.01" required value="${state.h}"></div></div><button class="action accent" type="submit" data-testid="verify-dimensions">Подтвердить контур и проёмы · demo</button><p id="measureError" class="error" role="alert"></p></form><div class="card soft"><span class="eyebrow">Черновая площадь</span><p class="metric" data-testid="area-label">${validNum(state.w)&&validNum(state.l)?(state.w*state.l).toFixed(2):'—'} м²</p>${status()}<p class="small muted">Допуски реального продукта ещё не измерены. Подтверждение здесь — действие пользователя в макете.</p></div></div>${room()}<p class="small muted">Демонстрация проверки геометрии. Демонстрация состояния 3D;
+ реальная модель не импортируется.</p>`}
+function s3(){return `<p class="eyebrow">S3 · Референсы</p><h2>Сохраните источник вдохновения</h2><p class="lede">Ссылка остаётся источником даже при отказе Pinterest. Изображение можно выбрать локально.</p><div class="grid"><div class="card"><label for="refUrl">Ссылка Pinterest или сайта</label><input id="refUrl" type="url" value="https://ru.pinterest.com/pin/1117807570051119485/" readonly><p><a href="https://ru.pinterest.com/pin/1117807570051119485/" target="_blank" rel="noreferrer">Открыть источник Pinterest ↗</a></p><div class="row"><button class="action" data-action="save-ref">Сохранить пример ссылки</button><label><input id="pinDenied" type="checkbox" ${state.pinDenied?'checked':''}> Доступ запрещён</label></div><p id="refStatus" class="small muted"></p></div><div class="drop"><label for="refFile">Изображение пользователя — fallback</label><input id="refFile" type="file" accept="image/*"><p id="refFileName" class="small muted"></p></div></div><div class="rule"></div><h3>Постоянное стилевое направление</h3><div class="grid three">${[['Тихий модернизм','#b98961'],['Мягкий минимализм','#d0c5b5'],['Природный акцент','#657365']].map(x=>`<label class="card style-choice ${state.style===x[0]?'selected':''}"><input name="style" type="radio" value="${x[0]}" ${state.style===x[0]?'checked':''}><i class="swatch" style="background:${x[1]}"></i>${x[0]}</label>`).join('')}</div>`}
+function visualControls(){return `<div class="modebar" aria-label="Режим визуализации">${[['concept','AI-концепт'],['plan','План'],['iso','3D-схема']].map(x=>`<button data-action="view" data-view="${x[0]}" aria-pressed="${state.view===x[0]}">${x[1]}</button>`).join('')}<button data-action="before" aria-pressed="${state.before}">${state.before?'Показать после':'Показать до'}</button></div>`}
+function s4(){return `<p class="eyebrow">S4 · Варианты</p><h2>Узнаётся ли ваша комната?</h2><p class="lede">Стиль «${state.style}» сохранён. Концепт доступен для обсуждения даже до проверки, но закупочная готовность остаётся закрытой.</p>${visualControls()}<div class="grid"><div>${room()}<p class="small muted">${state.view==='concept'?'Образ, размеры не проверены как результат AI.':'Демонстрация состояния 3D, реальная модель не импортируется.'}</p></div><div class="stack">${['Светлый дуб','Тёплый орех','Зелёная ниша'].map((x,i)=>`<button class="card ${state.design===x?'selected':''}" data-action="design" data-design="${x}"><span class="eyebrow">Вариант 0${i+1}</span><h3>${x}</h3><span class="small">Стены и проёмы не меняются</span></button>`).join('')}<button class="action ghost" data-action="goto-ref">← Вернуться к референсам</button></div></div>`}
+function history(){return `<ol id="historyList" class="timeline"></ol>`}
+function s5(){return `<p class="eyebrow">S5 · Согласование</p><h2>${state.design} · версия ${state.version}</h2><div class="grid"><div>${visualControls()}${room()}</div><div class="card"><h3>Ограничения версии</h3><ul><li>Контур и проёмы не меняются</li><li>Габариты мебели пока неизвестны</li><li>Fit мебели не подтверждён</li></ul>${status()}<label for="designNote">Комментарий к версии</label><textarea id="designNote" placeholder="Например: сохранить кресло"></textarea><button class="action accent" data-action="approve" data-testid="approve-design">${state.approved?'Согласовано локально · demo':'Согласовать эту версию · demo'}</button><p id="approvalHelp" class="small muted"></p><details><summary>История версий</summary>${history()}</details><button class="action ghost" data-action="goto-ref">Изменить референс</button></div></div>`}
+function s6(){return `<p class="eyebrow">S6 · Покупки</p><h2>От элемента дизайна к товару</h2><p class="lede">Реальная карточка существует. Цена 1600 ₽/уп. — учебное значение, наличие и срок не подтверждены.</p>${!state.approved?'<p class="notice" data-testid="unapproved-design">Дизайн не согласован. Список предварительный: подтвердите текущую версию на S5.</p>':''}${state.changed||!state.verified?'<p class="notice" data-testid="stale-fit">Согласование и fit устарели: нужна повторная проверка размеров. Новая площадь уже передана в бюджет.</p>':''}<div class="row"><label for="region">Регион</label><select id="region" style="width:auto"><option>Москва</option><option>Московская область</option><option>Санкт-Петербург</option></select>${state.regionStale?'<span class="status-chip warn">Цена и остаток устарели для нового региона. Прежняя сумма остаётся снимком до перепроверки.</span>':''}</div><article class="card product"><div class="sample" aria-hidden="true"></div><div><span class="demo-chip">цена demo · остаток неизвестен</span><h3>Ламинат «Дуб Дон», 33 класс</h3><p>Лемана ПРО · артикул 89433614 · 1,99 м²/уп.</p><p class="price">1600 ₽ / уп. <small>DEMO</small></p><p><a href="https://lemanapro.ru/product/laminat-kreaforta-dub-don-33-klass-tolshchina-8-mm-s-faskoy-199-m-89433614/" target="_blank" rel="noreferrer">Официальная карточка товара ↗</a></p><p class="small muted">Источник карточки исследован 13.10.2026. Два пробных retailer-запроса вернули 401;
+ live-проверки здесь нет.</p><button class="action" data-action="alt">${state.alt?'Скрыть альтернативу':'Показать альтернативу при отсутствии'}</button></div></article>${state.alt?'<div class="card soft"><h3>Альтернатива · демонстрация</h3><p>Ламинат схожего тона · 1450 ₽/уп. demo · артикул и остаток не подобраны.</p><button class="action" data-action="choose-alt">Предварительно выбрать замену</button></div>':''}<div class="table-wrap"><table><thead><tr><th>Элемент</th><th>Статус</th><th>Что дальше</th></tr></thead><tbody><tr><td>Напольное покрытие</td><td>Карточка найдена;
+ наличие неизвестно</td><td>Перепроверить регион вручную</td></tr><tr><td>Кресло</td><td class="unknown">Не подобрано · габариты неизвестны</td><td>Не исчезает из бюджета</td></tr><tr><td>Светильник</td><td class="unknown">Не подобрано</td><td>Нужен товар и цена</td></tr></tbody></table></div>`}
+function s7(){const c=calc();
+return `<p class="eyebrow">S7 · Бюджет</p><h2>${c.ok&&c.complete?'Сценарная сумма':'Известная часть бюджета'}</h2>${budgetDock()}<div class="grid"><form id="budgetForm" class="card"><div class="grid"><div class="field"><label for="area">Площадь, м²</label><input id="area" data-bind="area" type="number" min="0.1" max="10000" step="0.01" value="${state.area}"></div><div class="field"><label for="waste">Запас материала, %</label><input id="waste" data-bind="waste" type="number" min="0" max="100" step="1" value="${state.waste}"></div><div class="field"><label for="pack">В упаковке, м²</label><input id="pack" data-bind="pack" type="number" min="0.01" max="100" step="0.01" value="${state.pack}"></div><div class="field"><label for="price">Цена упаковки, ₽ · demo</label><input id="price" data-bind="price" type="number" min="0.01" max="10000000" step="0.01" value="${state.price}"></div><div class="field"><label for="delivery">Доставка, ₽</label><input id="delivery" data-bind="delivery" type="number" min="0" max="10000000" placeholder="Неизвестно" value="${state.delivery}"></div><div class="field"><label for="labor">Работы, ₽</label><input id="labor" data-bind="labor" type="number" min="0" max="100000000" placeholder="Неизвестно" value="${state.labor}"></div><div class="field"><label for="reserve">Денежный резерв, % от известного</label><input id="reserve" data-bind="reserve" type="number" min="0" max="100" value="${state.reserve}"></div></div><button class="action" type="submit">Пересчитать</button><p id="budgetError" class="error" role="alert"></p></form><div class="card soft">${c.ok?`<p class="formula">${state.area} × ${(1+state.waste/100).toFixed(2)} / ${state.pack} = ${c.packs} уп.</p><p class="metric" data-testid="pack-count">${c.packs} упаковок</p><p>${c.buy.toFixed(2)} м² к покупке · <b>${fmt(c.floor)} ₽</b> за ламинат</p><p>Известная сумма: <b>${fmt(c.known)} ₽</b></p><p>С резервом ${state.reserve}%: <b>${fmt(c.scenario)} ₽</b></p>`:'<p class="error">Введите конечные положительные числа.</p>'}<p class="unknown">Кресло и светильник не подобраны. ${state.delivery===''?'Доставка неизвестна.':''} ${state.labor===''?'Работы неизвестны.':''}</p></div></div>${CFG.entry==='phases'?phases(c):''}`}
+function phases(c){const total=c.ok?c.known:0;
+return `<h3>Очередь закупок · вариант C</h3><p class="small muted">Перенос строки меняет этап, общая известная сумма остаётся ${fmt(total)} ₽.</p><div class="phases"><div class="phase"><b>1 · Черновые работы</b><p>${state.phase==='Черновые работы'?'Ламинат · '+fmt(c.floor)+' ₽':'Пока пусто'}</p></div><div class="phase"><b>2 · Чистовая отделка</b><p>${state.phase==='Чистовая отделка'?'Ламинат · '+fmt(c.floor)+' ₽':'Пока пусто'}</p></div><div class="phase"><b>3 · Мебель и свет</b><p>${state.phase==='Мебель и свет'?'Ламинат · '+fmt(c.floor)+' ₽':'Кресло и свет — не подобраны'}</p></div></div><label for="phaseMove">Перенести ламинат в этап</label><select id="phaseMove"><option>Черновые работы</option><option>Чистовая отделка</option><option>Мебель и свет</option></select>`}
+function s8(){const c=calc();
+return `<p class="eyebrow">S8 · Пересмотр</p><h2>Изменение — это новая версия</h2><p class="lede">Причина видна, прежняя версия сохранена, а дизайн и бюджет требуют повторного согласования.</p><div class="grid"><div class="card ${state.out?'selected':''}"><span class="eyebrow">Сигнал магазина · demo</span><h3>${state.out?'Товар отмечен как отсутствующий':'Смоделировать «товара нет»'}</h3><p>Никакой live-проверки не выполняется.</p><button class="action" data-action="out">${state.out?'Отменить demo-сигнал':'Товара нет · demo'}</button></div><div class="card"><h3>Что затронуто</h3><ul><li>Напольное покрытие и его сумма</li><li>Согласование дизайна</li><li>Региональная проверка наличия</li></ul>${state.out?'<div class="row"><button class="action accent" data-action="accept-alt">Согласовать замену · demo</button><button class="action" data-action="back-design">Вернуться к дизайну</button></div>':'<p class="muted">Сначала включите demo-сигнал.</p>'}</div></div><details open><summary>История и разница</summary>${history()}<p>Текущая строка пола: ${fmt(c.ok?c.floor:0)} ₽. ${state.version>1?'Предыдущая версия сохранена, изменение суммы видно в истории.':'Замена ещё не принята.'}</p></details>`}
+function s9(){const c=calc();
+return `<p class="eyebrow">S9 · Сохранить и обсудить</p><h2>Что именно уйдёт из макета?</h2><p class="lede">Все действия локальны. Экспорт содержит demo-статусы;
+ приватный просмотр не отправляет приглашение.</p><div class="row"><button class="action primary" data-action="export">${state.exportOpen?'Закрыть preview':'Открыть preview списка'}</button><button class="action" data-action="paywall">${state.paywall?'Закрыть тариф':'Посмотреть тарифную гипотезу'}</button><button class="action" data-action="share">${state.share?'Закрыть приглашение':'Приватный preview'}</button></div>${state.exportOpen?`<div class="modalish" data-testid="export-preview"><h3>Лист закупки · preview</h3><p>Ламинат 89433614 · ${c.ok?c.packs:'—'} уп. × ${fmt(state.price)} ₽ demo = ${c.ok?fmt(c.floor):'—'} ₽</p><p>Кресло · не подобрано · сумма неизвестна</p><p>Светильник · не подобран · сумма неизвестна</p><p class="small">Регион: ${state.region};
+ цена/остаток ${state.regionStale?'устарели':'не подтверждены live'}.</p><button class="action" data-action="download">Скачать .txt локально</button></div>`:''}${state.paywall?'<div class="modalish"><h3>Гипотеза тарифа</h3><p>Экспорт спецификации и история версий могут стать платной ценностью. Цена и состав не утверждены.</p><p class="small">Списания, checkout и аккаунта в прототипе нет.</p></div>':''}${state.share?`<div class="modalish"><h3>Приватный preview · сообщение не отправлено</h3><label><input id="shareMeasures" type="checkbox" ${state.shareMeasures?'checked':''}> Включить обмеры</label><p>${state.shareMeasures?'Обмеры будут видны в hypothetical preview.':'Обмеры выключены.'}</p><button class="action" data-action="revoke">Отозвать demo-доступ</button></div>`:''}<div class="prototype-choice"><h3>Это подходящий путь?</h3><p>Отметка сохранится только до закрытия страницы. Владелец уже выбрал путь A, ближайший к gist. Эта отметка не меняет выбор проекта.</p><button class="action accent" data-action="select-prototype" data-testid="select-prototype">${state.selected?'Предварительно отмечено локально':'Мне подходит этот вариант'}</button></div>`}
+const screens=[s0,s1,s2,s3,s4,s5,s6,s7,s8,s9];
+
+function render(){document.documentElement.style.setProperty('--accent',CFG.accent);
+document.documentElement.style.setProperty('--accent2',CFG.secondary);
+$('#steps').innerHTML=stages.map((x,i)=>`<button class="step" data-step="${i}" ${i===state.step?'aria-current="step"':''}><span class="step-num">${i}</span><span>${x}<small>${i<state.step?'просмотрено':'этап '+i}</small></span></button>`).join('');
+$('#stageName').textContent=`S${state.step} · ${stages[state.step]}`;
+$('#screen').innerHTML=screens[state.step]();
+$('#back').disabled=state.step===0;
+$('#next').disabled=state.step===9;
+$('#live').textContent='';
+bind();
+hydrateSafe()}
+function hydrateSafe(){const f=$('#spaceFileName');
+if(f)f.textContent=state.file?`Выбрано локально: ${state.file}. Файл никуда не отправлен.`:'Файл не выбран.';
+const rf=$('#refFileName');
+if(rf)rf.textContent=state.ref?`Локальное изображение: ${state.ref}`:'Изображение не выбрано.';
+const rs=$('#refStatus');
+if(rs)rs.textContent=state.pinDenied?'Источник сохранён, но доступ запрещён. Используйте своё изображение, это не означает, что pin отсутствует.':'Ссылка ещё не импортирована: сетевого запроса нет.';
+const note=$('#designNote');
+if(note)note.value=state.note;
+document.querySelectorAll('#historyList').forEach(list=>state.history.forEach(item=>{const li=document.createElement('li');
+li.textContent=item;
+list.appendChild(li)}));
+const region=$('#region');
+if(region)region.value=state.region;
+const phase=$('#phaseMove');
+if(phase)phase.value=state.phase}
+function say(t){$('#live').textContent=t}
+function bind(){document.querySelectorAll('[data-bind]').forEach(el=>el.addEventListener('change',()=>{state[el.dataset.bind]=el.value===''?'':Number(el.value);
+if(['w','l','h'].includes(el.dataset.bind)&&(state.verified||state.approved)){state.changed=true;
+state.verified=false;
+state.approved=false;
+state.area=validNum(state.w)&&validNum(state.l)?state.w*state.l:state.area;
+state.history.push(`v${state.version} · размеры изменены, согласование устарело`) }if(el.dataset.bind==='cap')render()}));
+document.querySelectorAll('input[name=source]').forEach(el=>el.addEventListener('change',()=>{if(state.verified||state.approved){state.changed=true;state.approved=false;state.history.push(`v${state.version} · источник размерной основы изменён, согласование устарело`)}state.source=el.value;
+state.verified=false;
+render()}));
+document.querySelectorAll('input[name=style]').forEach(el=>el.addEventListener('change',()=>{if(state.style!==el.value){state.style=el.value;invalidateDesign('Стиль изменён')}
+render()}));
+const sf=$('#spaceFile');
+if(sf)sf.addEventListener('change',e=>{state.file=e.target.files[0]?.name||'';
+hydrateSafe()});
+const rf=$('#refFile');
+if(rf)rf.addEventListener('change',e=>{state.ref=e.target.files[0]?.name||'';
+hydrateSafe()});
+const pd=$('#pinDenied');
+if(pd)pd.addEventListener('change',e=>{state.pinDenied=e.target.checked;
+hydrateSafe()});
+const note=$('#designNote');
+if(note)note.addEventListener('input',e=>state.note=e.target.value);
+const region=$('#region');
+if(region)region.addEventListener('change',e=>{state.region=e.target.value;
+state.regionStale=true;
+render()});
+const phase=$('#phaseMove');
+if(phase)phase.addEventListener('change',e=>{state.phase=e.target.value;
+render()});
+const share=$('#shareMeasures');
+if(share)share.addEventListener('change',e=>{state.shareMeasures=e.target.checked;
+render()});
+const mf=$('#measureForm');
+if(mf)mf.addEventListener('submit',e=>{e.preventDefault();
+if(state.source==='splat'){ $('#measureError').textContent='Splat не может быть размерной основой. Вернитесь на S1 и выберите план или mesh.';
+return}if(![state.w,state.l,state.h].every((v,i)=>validNum(v,.09,i===2?10:50))){$('#measureError').textContent='Введите конечные положительные размеры в допустимом диапазоне.';
+return}state.verified=true;
+state.changed=false;
+state.verifiedArea=state.w*state.l;
+state.area=state.verifiedArea;
+state.history.push(`v${state.version} · контур ${state.w} × ${state.l} м подтверждён пользователем (demo)`);
+render()});
+const bf=$('#budgetForm');
+if(bf)bf.addEventListener('submit',e=>{e.preventDefault();
+if(!calc().ok){$('#budgetError').textContent='Проверьте площадь, запас, упаковку и цену: нужны конечные числа.';
+return}render()})}
+function navigate(n){state.step=Math.max(0,Math.min(9,n));
+render();
+$('.sheet').scrollIntoView({block:'start'})}
+document.addEventListener('click',e=>{const step=e.target.closest('[data-step]');
+if(step){navigate(Number(step.dataset.step));
+return}const b=e.target.closest('[data-action]');
+if(!b)return;
+const a=b.dataset.action;
+if(a==='next')navigate(state.step+1);
+if(a==='back')navigate(state.step-1);
+if(a==='goto-ref')navigate(3);
+if(a==='back-design')navigate(4);
+if(a==='view'){state.view=b.dataset.view;
+render()}if(a==='before'){state.before=!state.before;
+render()}if(a==='design'){if(state.design!==b.dataset.design){state.design=b.dataset.design;invalidateDesign('Выбран другой дизайн')}
+render()}if(a==='save-ref'){say('Ссылка на источник сохранена локально. Импорт и проверка Pinterest не выполнялись.')}if(a==='approve'){if(!state.verified||state.changed){$('#approvalHelp').textContent='Сначала подтвердите актуальный контур на S2.'}else{state.approved=true;
+state.note=state.note.trim();
+state.history.push(`v${state.version} · ${state.design} согласован локально${state.note?' · комментарий: '+state.note:''}`);
+render()}}if(a==='alt'){state.alt=!state.alt;
+render()}if(a==='choose-alt'){state.alt=true;
+say('Замена предварительно выбрана, согласуйте её на S8.')}if(a==='out'){state.out=!state.out;
+render()}if(a==='accept-alt'){const old=calc();
+state.price=1450;
+state.version++;
+state.approved=false;
+state.regionStale=true;
+state.history.push(`v${state.version} · замена принята локально;
+ пол ${fmt(old.floor)} → ${fmt(calc().floor)} ₽ demo;
+ требуется согласование`);
+render()}if(a==='export'){state.exportOpen=!state.exportOpen;
+render()}if(a==='paywall'){state.paywall=!state.paywall;
+render()}if(a==='share'){state.share=!state.share;
+render()}if(a==='revoke'){state.share=false;
+state.shareMeasures=false;
+render();
+say('Demo-доступ отозван локально.')}if(a==='select-prototype'){state.selected=true;
+render();
+say('Отметка сделана локально. Владелец уже выбрал A; эта отметка не меняет выбранный путь проекта.')}if(a==='download'){const c=calc(),txt=`DEMO — не live-данные\nЛаминат 89433614: ${c.packs} уп. × ${state.price} ₽ = ${c.floor} ₽\nКресло: не подобрано\nСветильник: не подобран\nРегион: ${state.region};
+ наличие неизвестно.`;
+const url=URL.createObjectURL(new Blob([txt],{type:'text/plain;charset=utf-8'})),link=document.createElement('a');
+link.href=url;
+link.download=`cjm-${CFG.letter.toLowerCase()}-demo-list.txt`;
+link.click();
+setTimeout(()=>URL.revokeObjectURL(url),0);
+say('Локальный demo-файл подготовлен браузером.')}});
+
+$('#back').addEventListener('click',()=>navigate(state.step-1));
+$('#next').addEventListener('click',()=>navigate(state.step+1));
+render();
+</script>
+</body>
+</html>

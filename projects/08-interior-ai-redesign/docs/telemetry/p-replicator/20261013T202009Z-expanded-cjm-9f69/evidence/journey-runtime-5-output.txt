@@ -1,0 +1,33 @@
+PASS landing desktop + local hydration
+PASS register → authenticated dashboard
+PASS create private project persists
+PASS manual measured shell18m2 with opening + visibleplan
+PASS actualWebGL measured viewer
+PASS production malformedGLB returns typed422 before ready
+PASS production isolated image decode → owner normalized metadata
+PASS Pinterest deep link reference saves without fetch
+PASS 390px keyboard/accessibility overflow
+PASS manual design saved and explicitly approved before procurement
+PASS native RUB1600 price validity and server integer160000 minor
+PASS unmatched expected elements and explicit unknown works/delivery remain unknown
+PASS owner product selection and retained reasons persist in all six elements
+PASS exact10 packs plus works delivery reserve and live controlled budget limit
+PASS owner CSV stable money columns and phase recalc keep immutable history
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: {"error":{"code":"INVALID_EXPORT","message":"Обработка прервана"},"meta":{"requestId":"faaadbed-10b1-4741-9eff-06562e49adc4"}}
+    at activate (file:///home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/scripts/e2e.mjs:20:387)
+    at async file:///home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/scripts/e2e.mjs:46:435
+    at async checked (file:///home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/scripts/e2e.mjs:21:34)
+    at async file:///home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/scripts/e2e.mjs:46:2 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

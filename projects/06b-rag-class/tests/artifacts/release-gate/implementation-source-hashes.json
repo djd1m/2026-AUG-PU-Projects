@@ -1,0 +1,205 @@
+{
+  "run_id": "20261003T064351Z-release-gate",
+  "work_unit_id": "release-gate-implementation",
+  "attempt_id": "implementation-1",
+  "baseline_revision": "58b49da642298d991679241ce26c508b22392aee",
+  "build_revision": null,
+  "launch_sha256": "9de1fe0c84f691c244252aa06e68e472adf889d82568f0a2bc7777ee17c4d685",
+  "snapshot_at": "2026-10-03T07:06:52.842132+00:00",
+  "author_files": [
+    {
+      "path": "docs/calibration-report.md",
+      "sha256": "87b1aa8d17a396d1ede2eb841750c1dfd6cfb9f1863bc22154c2bed033be8caa",
+      "bytes": 5986,
+      "lines": 85
+    },
+    {
+      "path": "docs/features/release-gate/02_validation.md",
+      "sha256": "72aeda555dbdbf1a1586cccb2546043029e31212c257735f7bef120fdaa15449",
+      "bytes": 4706,
+      "lines": 56
+    },
+    {
+      "path": "docs/features/release-gate/05_completion.md",
+      "sha256": "8e18e7be9b45ece036c5d57acb766e70cca494ea2f391e62b448d3850afcd5e9",
+      "bytes": 5018,
+      "lines": 53
+    },
+    {
+      "path": "packages/rag/tests/unit/release-gate.test.ts",
+      "sha256": "4f4314d390828fd1725dda5ab9952c34ed3428a567c664699f23a659d8db096c",
+      "bytes": 13794,
+      "lines": 199
+    },
+    {
+      "path": "scripts/calibrate.ts",
+      "sha256": "8aaa45b1fcdddedd8af8ea676cf873184671a65575d65cfd70e2a262364183e3",
+      "bytes": 9390,
+      "lines": 156
+    },
+    {
+      "path": "scripts/calibration/evaluate.ts",
+      "sha256": "b3cd9b9352e0b10ea276260270f3b5b5fb1c0503a3022a02f983ef49ba3b7bd0",
+      "bytes": 5990,
+      "lines": 109
+    },
+    {
+      "path": "scripts/calibration/live-store.ts",
+      "sha256": "ec4e86139b3c1be5df27c170ea9317d359b13986160a808051a8307c4ae9676f",
+      "bytes": 4661,
+      "lines": 75
+    },
+    {
+      "path": "scripts/check-cjm.sh",
+      "sha256": "0ce20e75338e2f0caafd56b801162e11ea19b6a1f2e4c38f5e522889dfd6eed9",
+      "bytes": 276,
+      "lines": 8
+    },
+    {
+      "path": "scripts/check-cjm.ts",
+      "sha256": "9a99ba846654ed5289f423e2726668659d613b56bc5e1f652a32823c5bb7c209",
+      "bytes": 12919,
+      "lines": 212
+    },
+    {
+      "path": "tests/artifacts/release-gate/cjm-not-executed.txt",
+      "sha256": "77c9e0b28e7761fa2e2d40ee8f5c5378899af35e727acd8f8946db4e2a9f721c",
+      "bytes": 65,
+      "lines": 1
+    },
+    {
+      "path": "tests/artifacts/release-gate/focused-tests-initial.txt",
+      "sha256": "7aac725309331f4fe80f5278d4b0c86640e57b34feff17f57d6bbb99cefcdf43",
+      "bytes": 6639,
+      "lines": 95
+    },
+    {
+      "path": "tests/artifacts/release-gate/focused-tests.txt",
+      "sha256": "45871eb850284eb9b8eb748af05fa4e82e312d51b0ea98966b9954b898078e49",
+      "bytes": 1047,
+      "lines": 17
+    },
+    {
+      "path": "tests/artifacts/release-gate/mutation.txt",
+      "sha256": "5253f6d4b382f0f3e0c462539404e9c638b863fb4beb84e2de43b3b785ab3426",
+      "bytes": 5697,
+      "lines": 83
+    },
+    {
+      "path": "tests/artifacts/release-gate/native-cli.txt",
+      "sha256": "64d327fb0b54c8a065f452b89f5435074818b4b17d30c2de8ed1f87147625ce0",
+      "bytes": 658,
+      "lines": 12
+    },
+    {
+      "path": "tests/artifacts/release-gate/route-implementation.txt",
+      "sha256": "aa85818086f10fe26fdfe78669ef92b4a69d0325cb6021beda8bac4daadb7aa2",
+      "bytes": 601,
+      "lines": 8
+    },
+    {
+      "path": "tests/artifacts/release-gate/typecheck-initial.txt",
+      "sha256": "f2676b973a544251b7ed8472620f06ca79b9dfc7a3130c87a57577367a940281",
+      "bytes": 746,
+      "lines": 9
+    },
+    {
+      "path": "tests/artifacts/release-gate/typecheck.txt",
+      "sha256": "6c430cc6921daec9b23eabc76a5bfd546a1fb9db991bc8186c0cf609fee431ab",
+      "bytes": 169,
+      "lines": 8
+    },
+    {
+      "path": "tests/calibration/corpus.json",
+      "sha256": "61f9cf3f700c99d84a9187e777fd8e88810265f29e9043305a022ca7bb054bbf",
+      "bytes": 2684,
+      "lines": 62
+    },
+    {
+      "path": "tests/calibration/questions.json",
+      "sha256": "3f924f6a4e3ee8e332d60340473a697e3d9e8c470e2ee86a8dec3f54f17d3bd6",
+      "bytes": 10421,
+      "lines": 363
+    },
+    {
+      "path": "tests/calibration/site.html",
+      "sha256": "8f625bb45091a9782745da255c7b81b47e1cd1f892cb4408eba8f950de17a85f",
+      "bytes": 2182,
+      "lines": 14
+    }
+  ],
+  "unchanged_inputs": [
+    {
+      "path": "docs/features/release-gate/01_plan.md",
+      "sha256": "a0273754103fc9a75e0a7ddd7888dbbc904432c3d579a318d0f98dbf773e8e88",
+      "bytes": 6035,
+      "lines": 66
+    },
+    {
+      "path": "docs/Specification.md",
+      "sha256": "918e5d0e070d61f599d4cb5b7fc883adaee55a6c4c8c76c4c1cae21837018c82",
+      "bytes": 47745,
+      "lines": 342
+    },
+    {
+      "path": "docs/Architecture.md",
+      "sha256": "57f69d731dd73352ef01a7db957e739a7d5e6959b6381d9e6698da9b324d15e0",
+      "bytes": 24684,
+      "lines": 194
+    },
+    {
+      "path": "docs/ADR.md",
+      "sha256": "17dbcd8722295b2c87b61d574ab8061862d31e71a0cd0bffb75fefee917030ce",
+      "bytes": 19044,
+      "lines": 136
+    },
+    {
+      "path": "packages/rag/src/prompt.ts",
+      "sha256": "f10059ebe9049d0a0295e7051fed08048eec748f040b255714d186ed8ed13010",
+      "bytes": 1037,
+      "lines": 13
+    },
+    {
+      "path": "packages/rag/src/provider/openrouter.ts",
+      "sha256": "ba7bc9f7135aca7c3c30bc585182372cdc9604ec7958d94fab1825d9ff2e04a1",
+      "bytes": 5531,
+      "lines": 101
+    },
+    {
+      "path": "docs/telemetry/p-replicator/20261003T064351Z-release-gate/evidence/implementation-1-launch.json",
+      "sha256": "9de1fe0c84f691c244252aa06e68e472adf889d82568f0a2bc7777ee17c4d685",
+      "bytes": 587,
+      "lines": 19
+    }
+  ],
+  "excluded": [
+    "This manifest (self hashing impossible); digest reported in receipt",
+    "Coordinator-owned existing telemetry and plan are not author mutations",
+    "Terminal receipt will be overwritten by codex-o from full final answer",
+    "Ignored generated db/rag dist, built from unchanged baseline; live tool captures runtime JS hashes separately"
+  ],
+  "checks": {
+    "focused_unit": {
+      "exit_code": 0,
+      "passed": 37
+    },
+    "typecheck": {
+      "exit_code": 0,
+      "scope": "root TS graph including scripts imported by new test; web TS"
+    },
+    "mutation": {
+      "red_exit_code": 1,
+      "restored_green_exit_code": 0
+    },
+    "workspace_db_and_rag_build": {
+      "exit_code": 0
+    },
+    "native_cli_missing_prerequisites": {
+      "calibration": 2,
+      "cjm_ts": 2,
+      "cjm_shell": 2,
+      "shell_syntax": 0
+    }
+  },
+  "external_gates": "NOT_EXECUTED; coordinator owns full runtime/review/live/actual stand/browser/rollback; no F16 acceptance"
+}

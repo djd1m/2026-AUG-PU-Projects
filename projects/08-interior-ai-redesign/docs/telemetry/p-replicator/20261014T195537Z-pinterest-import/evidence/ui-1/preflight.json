@@ -1,0 +1,18 @@
+{
+  "status": "ready",
+  "at": "2026-10-14T20:08:36.728370+00:00",
+  "build": "sha256:c40f215ccfbe27b6b9b3e6de082402a2f75dc5b4a73e710cbe9df4fd67cd8774",
+  "source_hashes": {
+    "packages/adapters/src/pinterest.ts": "31f7eb57796af01d025c28d6c6b2b988fec6d8103615b6f810b5f85c6381ff79",
+    "apps/web/src/server/reference-pinterest.ts": "91576b70d4337b009efc80ff4993855ef0f16f62fac6d995aee2b23ecc5d498c",
+    "apps/web/src/components/DesignReferences.tsx": "4276520c9bcb1150b490c409fac83895356e647e7759b29cfa10e30ff464d11b",
+    "apps/web/src/components/DesignPanel.tsx": "1b5bc8081b40073ef2b0644adae24b9e209d07f9c874be78c843da5295c1a254",
+    "apps/web/src/server.ts": "77c1019ff13088bcd56ac3b8532bc46db533ceca19eeca651cd1223eae89d136"
+  },
+  "environment": "publicHTTPS ready200, originalDB, final deployed source matches",
+  "effects": "synthetic account/project, real public pin+ideas requests, private reference imports, palette drafts; one forced409 client-errorfixture, actual imports real; no AI/payment calls",
+  "inputs": "owner-provided public pin and saved ideas URL; no key/cookie sent to Pinterest",
+  "command": "node scripts/e2e-pinterest-import.mjs",
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

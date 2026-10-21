@@ -1,0 +1,37 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-operational-verifier-a11",
+  "profile": "model-routing-econom",
+  "started_at": "2026-10-07T01:32:29Z",
+  "requested_model": "gpt-6.1-sol",
+  "actual_model": null,
+  "usage": null,
+  "missing_data": [
+    "Host actualmodel/effort/usage/currencycost unavailable",
+    "Active wall interval not independently measured",
+    "F12 finding-reconciliation first-read clock unavailable"
+  ],
+  "status": "completed",
+  "stage": "F11_OPERATE",
+  "route": "XL local read-only immutable product and approved synthetic DB fixture effects; mandatory runtime/resource checks retained",
+  "ready_preflight": "runner executes owned DB checks immediately before load",
+  "freeze_sha256": "bc6e4f0f698aab2f1c640ca4547040ea88e29c80d39bf14b3dfeb3bd0a151e2a",
+  "distinct_F12": {
+    "stage": "VALIDATE",
+    "started_at": "2026-10-07T01:33:43Z",
+    "finished_at": "2026-10-07T01:36:45.185088Z",
+    "receipt": "f12-validation-receipt.json",
+    "verdict": "needs_literal_correction_and_accepted_F11_reconciliation",
+    "actual_model": null,
+    "usage": null
+  },
+  "finished_at": "2026-10-07T01:43:03.851100+00:00",
+  "elapsed_wall_ms": 634851,
+  "active_wall_ms": null,
+  "verdict": "healthy300_pass_F11_product_pending",
+  "native_exit": 0,
+  "source_build_unchanged": true,
+  "cost": null,
+  "owner_release": true,
+  "F12_finding_reconciliation": "f12-findings-reconciliation-receipt.json"
+}

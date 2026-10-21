@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-02T19:08:12.525964+00:00",
+  "ui_observed_revision": "e8e0b4ac7a61e473835ac75d4463b22281f65062",
+  "corrected_candidate": "9a51f8d5d0721b28d7ea5770ad17762645e5b098",
+  "integration_revision": "ec08bcc66d243b56a8555001a2b92d4f963f4573",
+  "unchanged_web_runtime_scopes": [
+    "apps/web",
+    "apps/widget",
+    "packages/db",
+    "packages/rag",
+    "package.json",
+    "package-lock.json",
+    "Dockerfile"
+  ],
+  "git_diff_empty": true,
+  "ui_image_id": "sha256:775633f60282d15da22a6c23fe14070604782ed7ff23c9af8936aae2909841e6",
+  "ui_report": "tests/artifacts/crawl-site-ui-e8e0b4ac/report.json",
+  "scope": "unchanged web runtime UI acceptance transferred by exact tree equality; worker fullregression verified separately",
+  "strict_companion_delivery_claim": false
+}

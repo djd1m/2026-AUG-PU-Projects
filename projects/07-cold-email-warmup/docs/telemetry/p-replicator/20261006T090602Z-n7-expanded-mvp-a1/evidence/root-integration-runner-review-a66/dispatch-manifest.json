@@ -1,0 +1,18 @@
+{
+  "runId": "20261006T090602Z-n7-expanded-mvp-a1",
+  "launchMs": 1791378445987.468,
+  "units": [
+    {
+      "workUnitId": "f11_a66_integration_runner_review",
+      "tracePath": "/tmp/n7-f11-integration-runner-review-a66-20261007/receipt.md"
+    }
+  ],
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "source_revision": "bf8a5373a409181a42d5dc06be06a2c6aca611e6",
+  "objective_sha256": "63371ec605934dfe43b589185e590363fb58bb89edb3287fc812f240cee52d21",
+  "trace_absent_before_dispatch": true,
+  "runtime_db_lease": false,
+  "context_policy": "clean HIGH actor; approvedplanner+frozenobjective only noA63codercontext; no freshfork claim"
+}

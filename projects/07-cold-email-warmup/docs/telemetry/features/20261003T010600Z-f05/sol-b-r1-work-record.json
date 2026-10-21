@@ -1,0 +1,252 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "implement",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261003T010600Z-f05",
+    "work_unit_id": "n7-f05b-sol-r1",
+    "current_attempt_id": "correct-b-r1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/features/20261003T010600Z-f05/sol-b-r1-run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/features/20261003T010600Z-f05/sol-b-r1-events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "79d48cf2243954679f3f6003ffa1add672ec35a1",
+    "current_revision": "c5f3e3d8306b3b0b7e5dabfeee8ec3515db42cda",
+    "build_revision": "c5f3e3d8306b3b0b7e5dabfeee8ec3515db42cda",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/features/f05-evidence-billing-growth/01-specification.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/features/f05-evidence-billing-growth/03-architecture.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "79d48cf2243954679f3f6003ffa1add672ec35a1",
+      "observed_revision": "c5f3e3d8306b3b0b7e5dabfeee8ec3515db42cda",
+      "reconciliation": {
+        "status": "completed",
+        "reason": "authorized exact F1/F2 correction committed; full required regressions pending own heavy gate",
+        "impact": "Only exact F1 enum boundary and F2 UUID replay production correction; required full regressions retained",
+        "decision": "Proceed with own source-bound corrections under existing owner autonomy",
+        "affected_checks": [
+          "type",
+          "lint",
+          "unit",
+          "build",
+          "fullPG",
+          "F1/F2 mutants",
+          "source-image"
+        ],
+        "rerun": [
+          "type0",
+          "lint0",
+          "unit27green",
+          "build0",
+          "fullPG109green",
+          "three mutantsRED",
+          "restored11green",
+          "source-image0",
+          "canary0"
+        ],
+        "pending": []
+      }
+    }
+  },
+  "prepare": {
+    "scope_revision": "f46fb91e7717f2a21237e56549ddfb2b8d831b792f130685c08d3a44297142b4",
+    "scope": [
+      "F1 primitive direction/kind enums: 400 and zero writes",
+      "F2 canonical UUID replay: same identity returns same result under concurrency, changed pair/kind 409"
+    ],
+    "exclusions": [
+      "A accepted code changes",
+      "F06 whole cabinet browser",
+      "real SMTP/IMAP/charges/LLM/deploy/shared proxy"
+    ],
+    "action_limits": [
+      "one writer no agents",
+      "CPU2 global flock ownstack18708 privatePG",
+      "freeze by02:25:11 final by02:30:11 hard02:32:11"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "F1",
+        "required": true
+      },
+      {
+        "id": "F2",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "docs/features/f05-evidence-billing-growth/implementation-a.md"
+          }
+        },
+        "provenance": "immutable candidate5f2f4a81, source binding79d48cf2243954679f3f6003ffa1add672ec35a1",
+        "useful_fragment": "existing check-f05b heavy/snapshot/canary scripts",
+        "compatibility": "compatible",
+        "decision": "adapt",
+        "reason": "adapt to new correction names; preserve previous evidence"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No forecast requested; hard900seconds is owner bound, not prediction",
+      "scope_revision": "f46fb91e7717f2a21237e56549ddfb2b8d831b792f130685c08d3a44297142b4",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [
+        "A accepted code changes",
+        "F06 whole cabinet browser",
+        "real SMTP/IMAP/charges/LLM/deploy/shared proxy"
+      ],
+      "external_expectations": [
+        "owner hard900seconds"
+      ],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "f46fb91e7717f2a21237e56549ddfb2b8d831b792f130685c08d3a44297142b4",
+      "tier": "XL",
+      "rationale": "Retain approved F05 XL authority; narrow F1 enum boundary and F2 durable UUID replay; no schema/auth/billing/consent/public projection changes; same owner autonomy",
+      "script": {
+        "input": "src/evidence/input.ts src/growth/reports.ts",
+        "exit_code": 1
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "f46fb91e7717f2a21237e56549ddfb2b8d831b792f130685c08d3a44297142b4",
+      "tier": "XL",
+      "rationale": "Repeat substantive XL ROUTE before exact productionfix: require primitive direction/kind strings; validate and lowercase UUIDs before report lookups and replay equality. Existing serialization and privacy unchanged; unit/HTTP zero-write negatives, case/concurrent retries, fullPG and focused mutants mandatory.",
+      "script": {
+        "input": "src/evidence/input.ts src/growth/reports.ts",
+        "exit_code": 1
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "required",
+    "reason": "XL owner approval, already covered by OWN-N7-002 and explicit work order",
+    "evidence": {
+      "id": "OWN-N7-002",
+      "path": {
+        "root": "project",
+        "path": "docs/decisions-owner.md"
+      },
+      "plan_revision": "f46fb91e7717f2a21237e56549ddfb2b8d831b792f130685c08d3a44297142b4",
+      "covers": [
+        "plan",
+        "team",
+        "roles",
+        "models",
+        "skills"
+      ],
+      "sha256": "3800e3324efbfafb84f14e78b2f20d8604f9fe9782e8fb08b0a51c62f4562ff0"
+    }
+  },
+  "preflight": {
+    "at": "2026-10-03T02:24:42.343427+00:00",
+    "status": "ready",
+    "source_revision": "c5f3e3d8306b3b0b7e5dabfeee8ec3515db42cda",
+    "build_revision": "c5f3e3d8306b3b0b7e5dabfeee8ec3515db42cda",
+    "source_sha256": "00a1e013a6e4fe1a241da9b23adb3654a3e9bbf6a3d0456736c22ecfed517f3e",
+    "image_id": "sha256:41a3d420d3265cf2d35e176564172459cdd47beae379e1f5f3735394648873f7",
+    "environment": "n7f05b loopback18708 privatePG",
+    "inputs": [
+      {
+        "name": "local_test provider",
+        "available": true
+      },
+      {
+        "name": "own existing random runtime secrets",
+        "available": true
+      },
+      {
+        "name": "migration011",
+        "available": true
+      }
+    ],
+    "test_command": "docker compose -p n7f05b exec -T web npm run test:integration",
+    "environment_available": true,
+    "evidence_root": {
+      "root": "project",
+      "path": "docs/telemetry/features/20261003T010600Z-f05"
+    },
+    "expected_effects": [
+      "local fixture payments and entitlements only",
+      "test tenant resets"
+    ],
+    "external_actions_executed": false,
+    "e2e_claim": null,
+    "build_sha256": "e12d1ad7e80b56be58c851c8a3ce5d964472621b5cc359a77fcb364e3892f14d"
+  },
+  "attempts": [
+    {
+      "id": "correct-b-r1",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "n7-f05b-sol-r1",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/telemetry/features/20261003T010600Z-f05/sol-b-r1-receipt.md"
+        },
+        {
+          "root": "project",
+          "path": "docs/features/f05-evidence-billing-growth/correction-b-r1.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [
+    {
+      "ac_id": "F1",
+      "outcome": "pass",
+      "command": "bash scripts/check-f05b-r1-heavy.sh",
+      "exit_code": 0,
+      "source_revision": "c5f3e3d8306b3b0b7e5dabfeee8ec3515db42cda",
+      "receipt_id": "sol-b-r1"
+    },
+    {
+      "ac_id": "F2",
+      "outcome": "pass",
+      "command": "bash scripts/check-f05b-r1-heavy.sh",
+      "exit_code": 0,
+      "source_revision": "c5f3e3d8306b3b0b7e5dabfeee8ec3515db42cda",
+      "receipt_id": "sol-b-r1"
+    }
+  ],
+  "receipts": [],
+  "delivery": null
+}

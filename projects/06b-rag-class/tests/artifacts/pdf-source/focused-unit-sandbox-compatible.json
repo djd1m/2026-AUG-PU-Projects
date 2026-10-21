@@ -1,0 +1,17 @@
+{
+  "command": [
+    "./node_modules/.bin/vitest",
+    "run",
+    "--config",
+    "vitest.config.ts",
+    "apps/web/tests/unit/pdf-handler.test.ts",
+    "apps/web/tests/unit/jobs-handler.test.ts",
+    "services/worker/tests/unit/pdf-extract.test.ts",
+    "services/worker/tests/unit/crawl-site-correction.test.ts",
+    "services/worker/tests/unit/job-guards.test.ts"
+  ],
+  "started_at": "2026-10-02T19:30:54.005204+00:00",
+  "elapsed_seconds": 2.941,
+  "exit_code": 0,
+  "reason": "Prior combined run exposed sandbox EPERM in unchanged crawl-rules child-process test; same source, run only focused suites supported here"
+}

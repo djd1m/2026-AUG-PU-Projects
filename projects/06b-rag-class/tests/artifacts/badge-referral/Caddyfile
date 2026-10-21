@@ -1,0 +1,11 @@
+{
+ auto_https disable_redirects
+}
+https://n6b-ui.test {
+ tls internal
+ reverse_proxy web:3000
+}
+https://referral-host.test {
+ tls internal
+ reverse_proxy host:3001
+}

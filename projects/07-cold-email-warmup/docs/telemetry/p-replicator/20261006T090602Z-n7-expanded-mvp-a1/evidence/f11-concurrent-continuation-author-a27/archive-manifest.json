@@ -1,0 +1,51 @@
+{
+  "files": [
+    {
+      "original_path": "/tmp/n7-f11-concurrent-continuation-author-a27/attempt.json",
+      "original_sha256": "27e781e2b388d1c677ba2234e926f0522a195f3c622a561fd163beba80760ba6",
+      "original_bytes": 1257,
+      "archive_path": "attempt.json",
+      "archive_sha256": "27e781e2b388d1c677ba2234e926f0522a195f3c622a561fd163beba80760ba6",
+      "archive_bytes": 1257,
+      "roundtrip_equal": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-concurrent-continuation-author-a27/exact-three-file-inventory.json",
+      "original_sha256": "ff0b9c20010c3992039086ec804f4a57b94b199038400e4160ddd6afd34804af",
+      "original_bytes": 1100,
+      "archive_path": "exact-three-file-inventory.json",
+      "archive_sha256": "ff0b9c20010c3992039086ec804f4a57b94b199038400e4160ddd6afd34804af",
+      "archive_bytes": 1100,
+      "roundtrip_equal": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-concurrent-continuation-author-a27/input-hash-verification.json",
+      "original_sha256": "09b115fcd1714e097a3003b64d70ecdfabab7dc822a6e0a6d89489d1f2ae3ad8",
+      "original_bytes": 85551,
+      "archive_path": "input-hash-verification.json.gz",
+      "archive_sha256": "b60fae53665b17ce2f1eb2dc342c530ee4c409b59cd7fb62b09cd42374d0b702",
+      "archive_bytes": 15413,
+      "roundtrip_equal": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-concurrent-continuation-author-a27/receipt.md",
+      "original_sha256": "060c0117f739b424307e91b00f44b923e09b5f2099ba2392a360c816cda76b6e",
+      "original_bytes": 2169,
+      "archive_path": "receipt.md",
+      "archive_sha256": "060c0117f739b424307e91b00f44b923e09b5f2099ba2392a360c816cda76b6e",
+      "archive_bytes": 2169,
+      "roundtrip_equal": true
+    },
+    {
+      "original_path": "/tmp/n7-f11-concurrent-continuation-author-a27/source-interface-facts.json",
+      "original_sha256": "eaf05972220aad9f9cc783c8e90ed8636cdc34a9f9edac1045b88e4da60dc525",
+      "original_bytes": 3812,
+      "archive_path": "source-interface-facts.json",
+      "archive_sha256": "eaf05972220aad9f9cc783c8e90ed8636cdc34a9f9edac1045b88e4da60dc525",
+      "archive_bytes": 3812,
+      "roundtrip_equal": true
+    }
+  ],
+  "originals_retained": true,
+  "per_process_guard_and_session_artifacts_retained_and_indexed_in_seal": true
+}

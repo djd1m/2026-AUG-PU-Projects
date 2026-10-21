@@ -1,0 +1,26 @@
+{
+  "review": "n8-main-merge-corrective-final",
+  "status": "approved",
+  "saved_progress_commit": "b54ae24a7ca5227813886d98e20ea46735a3b6c9",
+  "candidate": {
+    "base": "3e29d400e5cd7a6e54c1811e973e8474703f5166",
+    "merge_head": "b54ae24a7ca5227813886d98e20ea46735a3b6c9",
+    "unmerged_paths": 0,
+    "n8_paths_differing_from_saved_progress": 0,
+    "staged_paths_outside_n8_relative_to_origin_main": 0,
+    "unstaged_paths": 0,
+    "untracked_paths": 0
+  },
+  "checks": {
+    "lint": "passed",
+    "build": "passed",
+    "tests": "47 files passed; 300 tests passed"
+  },
+  "evidence": {
+    "caddyfile_matches_saved_worktree": true,
+    "caddyfile_sha256": "9e997a654174f7bc631e87e9c3f73f7583d0520ae0bde6e5bec4dd0e0498ff50",
+    "test_log": "/tmp/n8-main-merge-tests-db.log",
+    "build_log": "/tmp/n8-main-merge-build.log",
+    "lint_log": "/tmp/n8-main-merge-lint.log"
+  }
+}

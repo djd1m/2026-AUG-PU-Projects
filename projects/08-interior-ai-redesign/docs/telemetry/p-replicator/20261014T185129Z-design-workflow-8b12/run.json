@@ -1,0 +1,48 @@
+{
+  "run_id": "20261014T185129Z-design-workflow-8b12",
+  "started_at": "2026-10-14T18:51:29+00:00",
+  "status": "incomplete_at_user_time_limit",
+  "budget_minutes": 10,
+  "profile": "compact-quality-first-v2",
+  "tier": "M",
+  "source_revision": "2290070f23551aed36c73a106c69c1bde8788d43",
+  "scope": "Fix actual GLB material binding, palette edits showAfter; remove design variants logically preserving immutable content and budgethistory, revoke relatedshares; functional explicitlylocalpaletteproposal while liveOpenRouter blocked byBYOK metadata; complete prior journeyUIchecks.",
+  "ac": [
+    "GLB canvas pixels change on palette edit using internal glTFpointers",
+    "delete history/current variant hides it, clearscurrent pointers whenneeded, revokesits shares; contentretained",
+    "helper createsmeaningful new palette draft, selectedrefs retained, no fakeAI claims",
+    "live metadata remainsguarded unlessowner configcorrected",
+    "fullregression/type/lint/build/actualbrowser/independentreview"
+  ],
+  "models": [
+    {
+      "role": "coordinator",
+      "actual": null
+    }
+  ],
+  "tokens": null,
+  "cost": null,
+  "provider_preflight": {
+    "limit": 10,
+    "remaining": 10,
+    "reset": "weekly",
+    "include_byok_in_limit": false,
+    "inference_calls": 0
+  },
+  "reuse": "N8 existing reversible designstate/soft history, sceneprovider/consent/jobs; previous01-07 CRUD/restore patterns; Babylon installed loader primarysource AddPointerMetadata stores _internalMetadata. No newdependencies.",
+  "carryover": "Previous journeycontrolsdirty files preserved; do not discard. Native delete UI test needs awaitsave refresh.",
+  "ended_at": "2026-10-14T19:01:43.867802+00:00",
+  "checks": {
+    "full_suite": "264 passed",
+    "typecheck": "passed",
+    "lint": "passed",
+    "build": "passed",
+    "material_tests": "2 passed; mutation red as expected",
+    "browser": "4 journey checks passed; design checks blocked by palette locator timeout",
+    "review": "P2 corrected; browser closure not confirmed"
+  },
+  "measurement_gaps": [
+    "actual model, token and cost unavailable"
+  ],
+  "external_blocker": "OpenRouter include_byok_in_limit=false"
+}

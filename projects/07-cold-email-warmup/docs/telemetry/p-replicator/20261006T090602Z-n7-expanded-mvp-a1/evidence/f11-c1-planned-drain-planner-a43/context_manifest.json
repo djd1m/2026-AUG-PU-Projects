@@ -1,0 +1,198 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "A43",
+  "parent_manifest": {
+    "path": "/tmp/n7-f11-unstarted-admission-cancel-author-a42/context_manifest.json",
+    "sha256": "8bb9d5fd99619a99b0bc78017e42725a544675d7acd527e35922a9333d386f3b"
+  },
+  "source_root": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup",
+  "source_revision": "e6e7ef4406288f5674607ad7198b1665f328bfe9",
+  "actual_read_inputs": [
+    {
+      "path": "/tmp/n7-f11-unstarted-admission-cancel-author-a42/context_manifest.json",
+      "sha256": "8bb9d5fd99619a99b0bc78017e42725a544675d7acd527e35922a9333d386f3b",
+      "role": "clean handoff provenance"
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-planner-a38/plan.md",
+      "sha256": "bbbbcd847f0abf82bb58eca1a58e8b1b6b4c91425d295d6f82498ce63d62fb48",
+      "role": "approved normative plan/amendment"
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-scope-amendment-a40.json",
+      "sha256": "134202ac0a107a4d4c3b50a31a309ef6501ccb45f3328965b771d63114ec9139",
+      "role": "approved normative plan/amendment"
+    },
+    {
+      "path": "/tmp/n7-f11-unstarted-admission-cancel-a42-scope.json",
+      "sha256": "4a2f57b0078b508bdb6446fe01fe29a2abf24bb3d5249a3d62fa1bffef72ab82",
+      "role": "approved normative plan/amendment"
+    },
+    {
+      "path": "/tmp/n7-f11-unstarted-admission-cancel-author-a42/c1.raw",
+      "sha256": "edc01dcc043b9c2fc80ec71ad0557b9ce244a7fedc0a3828d8aa21e80aaee792",
+      "role": "objective raw evidence/inventory",
+      "expected_manifest_sha256": "edc01dcc043b9c2fc80ec71ad0557b9ce244a7fedc0a3828d8aa21e80aaee792"
+    },
+    {
+      "path": "/tmp/n7-f11-unstarted-admission-cancel-author-a42/c1/c1-native-diagnostic.json",
+      "sha256": "812284e444f9e8ac7ab49432dc21a5534e6d3f9bd601f7eb7bb27e22006d3b69",
+      "role": "objective raw evidence/inventory",
+      "expected_manifest_sha256": "812284e444f9e8ac7ab49432dc21a5534e6d3f9bd601f7eb7bb27e22006d3b69"
+    },
+    {
+      "path": "/tmp/n7-f11-post-ready-operational-verify-a41/material-gap-map.json",
+      "sha256": "d9df1b254a35eaaf9ec3068f55befbeb21d3a487b9c7bb9452bbc49f232db7b9",
+      "role": "objective raw evidence/inventory",
+      "expected_manifest_sha256": "d9df1b254a35eaaf9ec3068f55befbeb21d3a487b9c7bb9452bbc49f232db7b9"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/worker.ts",
+      "sha256": "4b99be4ceb9ae5e95b55cc884330e6092af86947595ceaa4755757345a104fa3",
+      "role": "direct source/test read",
+      "expected_manifest_sha256": "4b99be4ceb9ae5e95b55cc884330e6092af86947595ceaa4755757345a104fa3"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/store.ts",
+      "sha256": "7f0418c6af8aa36092f80352eb910fa4ee8b5fcfaddb67f285d0782c9804a0d0",
+      "role": "direct source/test read",
+      "expected_manifest_sha256": "7f0418c6af8aa36092f80352eb910fa4ee8b5fcfaddb67f285d0782c9804a0d0"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/fixture.ts",
+      "sha256": "738683ca7eec34d3d2a959593367035406d6c68d8909f751c90939911dabf0d7",
+      "role": "direct source/test read",
+      "expected_manifest_sha256": "738683ca7eec34d3d2a959593367035406d6c68d8909f751c90939911dabf0d7"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/context-store.ts",
+      "sha256": "7a6926bb6382ed12930785cba14c87efec8cfba7a05cbae4985bf9e6fcb5c45d",
+      "role": "direct source/test read",
+      "expected_manifest_sha256": "7a6926bb6382ed12930785cba14c87efec8cfba7a05cbae4985bf9e6fcb5c45d"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/mailboxes/transport-authority.ts",
+      "sha256": "0143e31bb23808b59a64f5dbfa4724ad849ecd3418fe84820c141c4aac291153",
+      "role": "direct source/test read",
+      "expected_manifest_sha256": "0143e31bb23808b59a64f5dbfa4724ad849ecd3418fe84820c141c4aac291153"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/mailboxes/transport-lifetime.ts",
+      "sha256": "be57cd516949baf7ca91b302105ceadd82cf7dbb39c82472e06affabee4ded06",
+      "role": "direct source/test read",
+      "expected_manifest_sha256": "be57cd516949baf7ca91b302105ceadd82cf7dbb39c82472e06affabee4ded06"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/mailboxes/transport-slots.ts",
+      "sha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903",
+      "role": "direct source/test read",
+      "expected_manifest_sha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/runtime/store.ts",
+      "sha256": "c8610f02fc71047ef7292917805ba71f568747c68f65d41ea78210a28a9038ae",
+      "role": "direct source/test read",
+      "expected_manifest_sha256": "c8610f02fc71047ef7292917805ba71f568747c68f65d41ea78210a28a9038ae"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/runtime/worker.ts",
+      "sha256": "222c79b1c750e27aa25cd8b04778e2590dda3e39fc1604f1758be104c995b303",
+      "role": "direct source/test read",
+      "expected_manifest_sha256": "222c79b1c750e27aa25cd8b04778e2590dda3e39fc1604f1758be104c995b303"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+      "sha256": "565969ceced9af6e5323302ec9d9154140dd311e84e7d1023eacb7cb0baa0c6a",
+      "role": "direct source/test read",
+      "expected_manifest_sha256": "565969ceced9af6e5323302ec9d9154140dd311e84e7d1023eacb7cb0baa0c6a"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts",
+      "sha256": "5b42f18b3460a3d587a65c64f2a2c64f3f1aa00a470b8d53f7d3a4a39f75dbb2",
+      "role": "direct source/test read",
+      "expected_manifest_sha256": "5b42f18b3460a3d587a65c64f2a2c64f3f1aa00a470b8d53f7d3a4a39f75dbb2"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f11-context-integration.test.ts",
+      "sha256": "d206a0c3d090f9fa5d049a8b605bb4cb9072d8d1fa417882f8e4b35d52f9cc85",
+      "role": "direct source/test read",
+      "expected_manifest_sha256": "d206a0c3d090f9fa5d049a8b605bb4cb9072d8d1fa417882f8e4b35d52f9cc85"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f11-body-fixture.ts",
+      "sha256": "e4f411cc33c3d8e5c02e4384fff7e73d77d33c5c5e629f87f13ae9bd24e56143",
+      "role": "direct source/test read",
+      "expected_manifest_sha256": null
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f09-transport-fixture.ts",
+      "sha256": "39ec6480b2a7d1c7ee084bd743922032906b6a4dbb0156c28f4f47f5479a2133",
+      "role": "direct source/test read",
+      "expected_manifest_sha256": null
+    },
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/CLAUDE.md",
+      "sha256": "c1669853c58eddd6994761d510f5f1a4d1b992b50e16f8ebedf18a10937144a2",
+      "role": "applicable local instructions"
+    },
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/rules/complexity-router.md",
+      "sha256": "422a1d1952f7755c1ea772b33e9e41e1bd78a239af8a0a490f03bc48eb4e0c70",
+      "role": "applicable local instructions"
+    },
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/docs/development/model-routing.md",
+      "sha256": "0ea43b745e8a5cf29e5484e8a5354f372d85fdfbca1713b5d2b8cfe37b29c7b2",
+      "role": "applicable local instructions"
+    },
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/docs/development/model-routing-telemetry.md",
+      "sha256": "22ba852701d2c78b372cb07ed9b53f4227799ff6f8dc9c57849c09d0c35829cd",
+      "role": "applicable local instructions"
+    },
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/docs/development/model-routing-econom.md",
+      "sha256": "4622c96c879baa08d548f99b4f48ec19e7f59bb0eb91b2a58de46db4a079ee09",
+      "role": "applicable local instructions"
+    },
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/rules/project-work-companion-local.md",
+      "sha256": "273c7cb0d069609ba2823786e98f914362bc1fb38d864e3e4f720d6f3ecddbc4",
+      "role": "applicable local instructions"
+    },
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/skills/project-work-companion/SKILL.md",
+      "sha256": "7d27b2e123cfab42ddb5d8930ac1a6fce3aaaeb3ceb626f77a9f2cad56858403",
+      "role": "applicable local instructions"
+    },
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/skills/project-work-companion/references/contract.md",
+      "sha256": "90c93e0b0d2bad96c7c67ffb6e09ef520278524303e7e7f0ff4c189a5e0188e9",
+      "role": "applicable local instructions"
+    },
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/skills/project-work-companion/references/verification.md",
+      "sha256": "42f1fc283deb6aec6cba6c9f2948487146a8594ea2f9ab08cd98aa483988776c",
+      "role": "applicable local instructions"
+    },
+    {
+      "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/scripts/complexity-router.sh",
+      "sha256": "bb2bcfdc299a5a9936019933d5211c898efd760f39bf1a25349d7cce16f4a7b5",
+      "role": "applicable local instructions"
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/package.json",
+      "sha256": "6baf9f1e19020eecc054eb76e1731b8f9336dc32bffe19a408d039baeac2eb83",
+      "role": "validation command discovery"
+    }
+  ],
+  "excluded": [
+    "author receipts",
+    "author reports",
+    "author chat",
+    "author working notes",
+    "precise-findings.json",
+    "coordinator accumulated narrative"
+  ],
+  "scope": "raw first; direct source independent; no DB/test execution"
+}

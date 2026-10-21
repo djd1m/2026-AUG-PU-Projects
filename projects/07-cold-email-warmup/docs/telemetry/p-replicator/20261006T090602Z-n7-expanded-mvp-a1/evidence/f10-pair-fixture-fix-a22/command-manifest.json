@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-06T20:39:11.720750+00:00",
+  "runner_sha256": "b196c7456d1feceaa54cbb18634a6f982105e8845f52e7630fe021835eb66e3a",
+  "prepare_sha256": "88ac3cd63ed0678c988afbb994e8d2758a2f78b54e53f8566e4187ea8a0c2a6b",
+  "launch_sha256": "56c41b1613290959f47e87509be617dd2dad81c1b5008b9df9cb43f9030911f7",
+  "expected_native_exits": [
+    0,
+    1,
+    0
+  ],
+  "only_candidate_write": "tests/f10-runtime-integration.test.ts",
+  "budget_s": 70,
+  "source_manifest_sha256": "0eac46781659afc4c9153e7c3493c7d774341aa50e2e37b8a86bbd139a7538cc"
+}

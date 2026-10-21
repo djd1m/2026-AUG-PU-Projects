@@ -1,0 +1,168 @@
+{
+  "scope_revision": "cloudru-seven-candidates-v1",
+  "status": "superseded-scope-correction-project07-source-found",
+  "created_at": "2026-10-21T11:22:01.337436+00:00",
+  "source_revision": "e2803308144336a58f6e6481a2cece56ce56c317",
+  "os": "Ubuntu24.04",
+  "zone": "ru.AZ-1",
+  "cpu_guarantee_percent": 10,
+  "plans": [
+    {
+      "project": "01",
+      "plan_id": "plan-2b2943bc258d",
+      "expires_at": "2026-10-21T11:50:05.465232622Z",
+      "name": "p01-testimonials-20261021",
+      "flavor": "lowcost10-2-4",
+      "vcpus": 2,
+      "ram_gb": 4,
+      "disk_ssd_gb": 40,
+      "engine_compute_and_disk_monthly_rub": 1185.98,
+      "public_ip_monthly_rub": "151.402",
+      "known_monthly_rub_exact": "1337.38433820",
+      "plan_evidence_sha256": "4583e5726b8be0fa426eb0d56ee348f2b1f003ae9486a85b00fe331501689fca"
+    },
+    {
+      "project": "02",
+      "plan_id": "plan-c34b5b2ad818",
+      "expires_at": "2026-10-21T11:50:07.836578626Z",
+      "name": "p02-review-qr-20261021",
+      "flavor": "lowcost10-2-4",
+      "vcpus": 2,
+      "ram_gb": 4,
+      "disk_ssd_gb": 30,
+      "engine_compute_and_disk_monthly_rub": 1070.2,
+      "public_ip_monthly_rub": "151.402",
+      "known_monthly_rub_exact": "1221.60633820",
+      "plan_evidence_sha256": "0c5a0f3006ea162b5e98ff08d35dacfcba838868b299caeee13eeaedfa0e5b5a"
+    },
+    {
+      "project": "03",
+      "plan_id": "plan-b779e4ce7ffa",
+      "expires_at": "2026-10-21T11:50:10.546076867Z",
+      "name": "p03-affiliate-20261021",
+      "flavor": "lowcost10-2-4",
+      "vcpus": 2,
+      "ram_gb": 4,
+      "disk_ssd_gb": 30,
+      "engine_compute_and_disk_monthly_rub": 1070.2,
+      "public_ip_monthly_rub": "151.402",
+      "known_monthly_rub_exact": "1221.60633820",
+      "plan_evidence_sha256": "744144fe1dc732b3703a1a7df7ca424da0ab46cd7879a1274bbb236b46763b2c"
+    },
+    {
+      "project": "04",
+      "plan_id": "plan-da68e0b78e68",
+      "expires_at": "2026-10-21T11:50:17.633097941Z",
+      "name": "p04-calorie-20261021",
+      "flavor": "lowcost10-2-4",
+      "vcpus": 2,
+      "ram_gb": 4,
+      "disk_ssd_gb": 40,
+      "engine_compute_and_disk_monthly_rub": 1185.98,
+      "public_ip_monthly_rub": "151.402",
+      "known_monthly_rub_exact": "1337.38433820",
+      "plan_evidence_sha256": "b395ce6f718a22b9e48af8527df9957323174fb2fb28eec9985e32b608a3c32f"
+    },
+    {
+      "project": "05",
+      "plan_id": "plan-e02bdd41c807",
+      "expires_at": "2026-10-21T11:50:20.550124612Z",
+      "name": "p05-podcast-20261021",
+      "flavor": "lowcost10-4-8",
+      "vcpus": 4,
+      "ram_gb": 8,
+      "disk_ssd_gb": 80,
+      "engine_compute_and_disk_monthly_rub": 2371.96,
+      "public_ip_monthly_rub": "151.402",
+      "known_monthly_rub_exact": "2523.36666180",
+      "plan_evidence_sha256": "0fd7f71000b5f6943b7f9995774ff4847f066c0f3be54417e2ac83b75f4b694d"
+    },
+    {
+      "project": "06",
+      "plan_id": "plan-14bd7fc4a7bd",
+      "expires_at": "2026-10-21T11:50:23.085753747Z",
+      "name": "p06-rag-sales-20261021",
+      "flavor": "lowcost10-4-8",
+      "vcpus": 4,
+      "ram_gb": 8,
+      "disk_ssd_gb": 80,
+      "engine_compute_and_disk_monthly_rub": 2371.96,
+      "public_ip_monthly_rub": "151.402",
+      "known_monthly_rub_exact": "2523.36666180",
+      "plan_evidence_sha256": "bc617b0eee4eb3d53dde6526be9e15dd50a3fccc592e962d0ba4893db3ff17e7"
+    },
+    {
+      "project": "08",
+      "plan_id": "plan-96ec06585337",
+      "expires_at": "2026-10-21T11:50:24.914242524Z",
+      "name": "p08-interior-20261021",
+      "flavor": "lowcost10-2-4",
+      "vcpus": 2,
+      "ram_gb": 4,
+      "disk_ssd_gb": 40,
+      "engine_compute_and_disk_monthly_rub": 1185.98,
+      "public_ip_monthly_rub": "151.402",
+      "known_monthly_rub_exact": "1337.38433820",
+      "plan_evidence_sha256": "12c85f6b351e38699d4982b0fbf25d872749bac3a4d07e7574c6dd5446f58b90"
+    }
+  ],
+  "totals": {
+    "vcpus": 18,
+    "ram_gb": 36,
+    "ssd_gb": 340,
+    "vm_count": 7,
+    "known_monthly_rub_exact": "11502.09901460",
+    "engine_compute_disk_rounded_subtotal_rub": "10442.26",
+    "public_ips_monthly_rub_exact": "1059.814"
+  },
+  "tariff": {
+    "url": "https://cdn.cloud.ru/docs/legal/tariffs/evolution/current-version/evolution-compute.pdf",
+    "version": "261014",
+    "vat": "included22percent",
+    "as_of": "2026-10-21",
+    "horizon_hours": 730,
+    "rows": [
+      36,
+      39,
+      85
+    ],
+    "sha256": "a459226e73c8db4dc650307f3f07d99d9f17be31e0e22cd65c7a360dc1685dc5",
+    "scope": "Public tariff estimate, not account-specific quote; IP charged separately"
+  },
+  "excludes": [
+    "traffic",
+    "backups",
+    "external AI/provider APIs",
+    "S3 object storage where needed",
+    "existing Cloud.ru resources",
+    "any extra network gateways"
+  ],
+  "security": {
+    "public_ports": [
+      80,
+      443
+    ],
+    "ssh": "Engine-managed key; restrict administration during setup",
+    "database_cache_object_storage_ports": "never published",
+    "shared_security_group_warning": "Hub SSH route opens80/443 on zone shared SG; no database ingress requested"
+  },
+  "not_claimed": [
+    "No VMs or cloud resources created",
+    "No app E2E or workload capacity check yet",
+    "No active site stopped or DNS switched"
+  ],
+  "blockers": {
+    "07": "Previous no-code blocker retracted: source exists in origin/main and dedicated07 branch; perform deploy configuration/source verification and add eighth VM plan",
+    "03": "Verify immutable known-good source/image and DB schema compatibility before deployment",
+    "quota": "org_quotas returns403 customer/organization scope unavailable; cannot assert available quota",
+    "app_readiness": "Resolve standalone ingress and P2/P4 configuration seams, verify images, backup/restore and critical flows before declaring delivered"
+  },
+  "rollout": [
+    "Prepare app deploy configs/build receipts while preserving current VPS",
+    "Start with N8 canary after exact budget/plan approval",
+    "Verify HTTPS, private database ports, state consistency and critical UI/worker flow",
+    "Deploy remaining projects individually; prevent duplicate bot/queue/payment consumers",
+    "Keep07 pending owner clarification; keep old VPS until acceptance"
+  ],
+  "scope_correction_evidence": "evidence/project07-branch-reconciliation.json"
+}

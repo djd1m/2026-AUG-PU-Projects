@@ -1,0 +1,5 @@
+{"at": "2026-10-14T17:50:56.222582+00:00", "stage": "plan", "tier": "M", "risk": "changing existing texture acceptance limits; untrusted native decode. Existing parser slot shared-resource concurrency tested, unchanged."}
+{"at": "2026-10-14T17:52:56.377885+00:00", "stage": "implement", "route": "M", "reproduction": "oldlimit2fail exact nativepixelmessage", "note": "first fixture-write attempt wrong cwd caused no edit, preserved emptytest log not a reproductionpass"}
+{"stage": "e2e", "attempt": "ui-1", "status": "failed", "reason": "premature DOM count0 during projectloading, no uploadattempted", "next": "ui-2 wait renderedpicker"}
+{"stage": "e2e", "attempt": "ui-2", "status": "failed_driver_contract", "result": "onepickerpass, real8K upload201", "reason": "driver wrongly expected internaltexture metadata in publicDTO"}
+{"at": "2026-10-14T18:02:22.027984+00:00", "stage": "delivery", "status": "passed", "source_image": "evidence/source-image.json", "review": "original P2closed byindependentreceipt", "owner_file_tested": false}

@@ -1,0 +1,14 @@
+{
+  "started_at": "2026-10-02T23:52:05.960Z",
+  "binding": "Production w.js/config/events; actual network proxy ask -> test-only real handler/PaidGateway/PG with deterministic FakeProvider; no request fulfillment, no paid calls",
+  "source": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+  "image": "sha256:82460803f628576175aac1dc260f8df39d8938d4f6defff683034100d3ccecc2",
+  "checks": [],
+  "screenshots": [
+    "collapsed-1440.png",
+    "answered-1440.png"
+  ],
+  "status": "failed",
+  "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(st.requests.some(r=>r.method==='OPTIONS'&&r.status===204&&r.acao===host))\n\n    at file:///opt/browser/n6b-f09-ui.mjs:23:54",
+  "finished_at": "2026-10-02T23:52:09.500Z"
+}

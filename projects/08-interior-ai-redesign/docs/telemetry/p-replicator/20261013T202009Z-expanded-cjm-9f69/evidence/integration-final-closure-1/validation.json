@@ -1,0 +1,186 @@
+{
+  "observed_at": "2026-10-14T01:23:21.686842+00:00",
+  "status": "passed",
+  "checks": {
+    "api_clients": {
+      "0": {
+        "warmup": 20,
+        "measured": 100
+      },
+      "1": {
+        "warmup": 20,
+        "measured": 100
+      },
+      "2": {
+        "warmup": 20,
+        "measured": 100
+      },
+      "3": {
+        "warmup": 20,
+        "measured": 100
+      },
+      "4": {
+        "warmup": 20,
+        "measured": 100
+      },
+      "5": {
+        "warmup": 20,
+        "measured": 100
+      },
+      "6": {
+        "warmup": 20,
+        "measured": 100
+      },
+      "7": {
+        "warmup": 20,
+        "measured": 100
+      },
+      "8": {
+        "warmup": 20,
+        "measured": 100
+      },
+      "9": {
+        "warmup": 20,
+        "measured": 100
+      }
+    },
+    "api_samples": 1000,
+    "api_warmup": 200,
+    "all_status_body_checks_passed": true,
+    "api_p95_ms": 47.754861999999775,
+    "pure_samples": 1000,
+    "pure_warmup": 50,
+    "pure_p95_ms": 7.60262000000148,
+    "hashes_matched_reported": 1000,
+    "hash_method_source_reviewed": true,
+    "literal_known_minor": 67090000,
+    "literal_reserve_minor": 6709000,
+    "unknown_total_is_null": true,
+    "restart_same_build": true,
+    "restart_snapshot_collections": {
+      "1b412593-5028-4c8d-b7d5-98184c86dc32/shells": 1,
+      "1b412593-5028-4c8d-b7d5-98184c86dc32/designs": 1,
+      "1b412593-5028-4c8d-b7d5-98184c86dc32/budgets": 3,
+      "1b412593-5028-4c8d-b7d5-98184c86dc32/assets": 2,
+      "714cabd8-fd87-4169-9daa-5929b3566ab3/shells": 1,
+      "714cabd8-fd87-4169-9daa-5929b3566ab3/designs": 0,
+      "714cabd8-fd87-4169-9daa-5929b3566ab3/budgets": 0,
+      "714cabd8-fd87-4169-9daa-5929b3566ab3/assets": 1
+    },
+    "original_asset_hashes": 2,
+    "restart_verify_uses_deep_equal": true,
+    "prior_six_storage_probe_sources_unchanged": true
+  },
+  "build_revision": "docker:sha256:e5be7120110b92ed9b15b163638e65e339c796b16a0b567e166f53e11d8d8d21",
+  "next_build": "W9tBOwFbU3PwZwa1-u6rr",
+  "runtime": [
+    {
+      "name": "/n8-interior-local-web-1",
+      "id": "de3287bf5b726276011f3ff99ed10b8bb7a7219ee57410336419db7e1f8f1d42",
+      "image": "sha256:e5be7120110b92ed9b15b163638e65e339c796b16a0b567e166f53e11d8d8d21",
+      "created": "2026-10-14T01:17:03.741563612Z",
+      "started_at": "2026-10-14T01:21:25.323374709Z",
+      "health": "healthy",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "3088"
+          }
+        ]
+      },
+      "mounts": [
+        {
+          "type": "volume",
+          "name": "n8-interior-local_assets",
+          "destination": "/app/.runtime/assets"
+        }
+      ]
+    },
+    {
+      "name": "/n8-interior-local-worker-1",
+      "id": "390281acdaff66a6ace3942ff8239596de1c6682f644ae71103266615230fba1",
+      "image": "sha256:e5be7120110b92ed9b15b163638e65e339c796b16a0b567e166f53e11d8d8d21",
+      "created": "2026-10-14T01:17:03.742502406Z",
+      "started_at": "2026-10-14T01:21:25.128858228Z",
+      "health": "healthy",
+      "ports": {},
+      "mounts": [
+        {
+          "type": "volume",
+          "name": "n8-interior-local_assets",
+          "destination": "/app/.runtime/assets"
+        }
+      ]
+    },
+    {
+      "name": "/n8-interior-local-db-1",
+      "id": "623227e203702a57e6abdfd73df2c8535d8e5d15d7960659ccbd26a9560b7b1b",
+      "image": "sha256:0ea6700a3b4f0ae6ce746519073558aed4d88a79d8d07622a9a644946c7319c4",
+      "created": "2026-10-13T22:59:07.809902442Z",
+      "started_at": "2026-10-13T22:59:08.858711666Z",
+      "health": "healthy",
+      "ports": {},
+      "mounts": [
+        {
+          "type": "bind",
+          "name": null,
+          "destination": "/docker-entrypoint-initdb.d/10-n8.sh"
+        },
+        {
+          "type": "volume",
+          "name": "n8-interior-local_database",
+          "destination": "/var/lib/postgresql/data"
+        }
+      ]
+    }
+  ],
+  "source_sha256": {
+    "apps/worker/src/index.ts": "ad36a63c704f9077d039d95c40898e188d7d3c52a35ff550bd834f93ecd2a64f",
+    "apps/worker/src/jobs.ts": "6cd5cf91ad9c7a7c03ec0677987cd9573e8434181b7a7c589e49e92d97d8f9f1",
+    "apps/worker/src/watchdog.ts": "91e061d4d6694f3a1d0b7ba1ff3c07304d75a25e4f4fe764d85b10325bf9e6a1",
+    "apps/worker/src/runtime.ts": "1b0870c88f16ada044dfc8592ea15e5833c971f4bde8ffc21adc3f33d31056b3",
+    "apps/web/src/server/config.ts": "673be7cf1abafea2740ba20fd6d0366473a4bf93e27ed013fd29e1f75e8d4614",
+    "apps/web/src/server/health.ts": "d3cce6e3f6932682f69c1943ff8a9aff40c680b847311d8edd485f38190c52d4",
+    "scripts/benchmark.ts": "ea14bdb32fd26b15eafc06da6092950a91cd56a47c60f2bc6984ddca1f83b334",
+    "scripts/restart-check.mjs": "bdae98916bfd878ad78402bd4dd0e78d70bae7a9e9e89846751e2e2831b1673c",
+    "tests/procurement/fixture.ts": "76295d792f60b69da41338907d39c8d46664aa0378ee8ad85f25f5566a7191f9",
+    "docs/features/integration/01_specification.md": "d3a3312c1f961101fa116247f1c918f29c4d0006c5d934932f1bf1b5ced5e161",
+    "Dockerfile": "94ad7e886baaa798de413084cc28eaffb0a6ae89868970cefd54d45ae166006b",
+    "docker-compose.yml": "ae15959a8885b53d4bcc744ea481a99286db3ec2cc2b56d4b1efd558b1bf4769",
+    "package-lock.json": "5e9634e16705c578747fdc3344c6b40a1a9751cc438b7ad346f9b51a5659707c",
+    "packages/domain/src/procurement/schemas.ts": "8a5fd0e11744f51b76347917dd0debd8bbebc6e42b02c81eafff9a51684e840d",
+    "packages/domain/src/procurement/calculator.ts": "a56e8894e98ce2ba019df4f2a38e90d011fae404b2da0793af98a8078cdf43ca",
+    "packages/domain/src/procurement/index.ts": "623096e7d5e5e6566093ff4fd199683d9438446dc1eb7c1ce55f5173d12cce4e",
+    "packages/domain/src/procurement/types.ts": "fbb12748095281ff1e8abfc241ce7a9b13240b029a7545c4482bf01e52c37da1",
+    "packages/domain/src/procurement/csv.ts": "7f0c99989be51810bb373845b25f8bda8c369edc8664a9190bac05c7c6b14904"
+  },
+  "image_source_sha256": {
+    "apps/worker/src/index.ts": "ad36a63c704f9077d039d95c40898e188d7d3c52a35ff550bd834f93ecd2a64f",
+    "apps/worker/src/jobs.ts": "6cd5cf91ad9c7a7c03ec0677987cd9573e8434181b7a7c589e49e92d97d8f9f1",
+    "apps/worker/src/watchdog.ts": "91e061d4d6694f3a1d0b7ba1ff3c07304d75a25e4f4fe764d85b10325bf9e6a1",
+    "apps/worker/src/runtime.ts": "1b0870c88f16ada044dfc8592ea15e5833c971f4bde8ffc21adc3f33d31056b3",
+    "apps/web/src/server/config.ts": "673be7cf1abafea2740ba20fd6d0366473a4bf93e27ed013fd29e1f75e8d4614",
+    "apps/web/src/server/health.ts": "d3cce6e3f6932682f69c1943ff8a9aff40c680b847311d8edd485f38190c52d4",
+    "scripts/benchmark.ts": "ea14bdb32fd26b15eafc06da6092950a91cd56a47c60f2bc6984ddca1f83b334",
+    "tests/procurement/fixture.ts": "76295d792f60b69da41338907d39c8d46664aa0378ee8ad85f25f5566a7191f9",
+    "package-lock.json": "5e9634e16705c578747fdc3344c6b40a1a9751cc438b7ad346f9b51a5659707c",
+    "packages/domain/src/procurement/schemas.ts": "8a5fd0e11744f51b76347917dd0debd8bbebc6e42b02c81eafff9a51684e840d",
+    "packages/domain/src/procurement/calculator.ts": "a56e8894e98ce2ba019df4f2a38e90d011fae404b2da0793af98a8078cdf43ca",
+    "packages/domain/src/procurement/index.ts": "623096e7d5e5e6566093ff4fd199683d9438446dc1eb7c1ce55f5173d12cce4e",
+    "packages/domain/src/procurement/types.ts": "fbb12748095281ff1e8abfc241ce7a9b13240b029a7545c4482bf01e52c37da1",
+    "packages/domain/src/procurement/csv.ts": "7f0c99989be51810bb373845b25f8bda8c369edc8664a9190bac05c7c6b14904"
+  },
+  "evidence_sha256": {
+    "final-benchmark-3.json": "1bc347b063d2980c6c8dd5892ab132e23c242cfb4b9ea73a65ad467a59e2a86e",
+    "restart-before-2.json": "bd0884731987822a8c4ba7f337abd92e99cf8b3f64bd46110538111ba968e803",
+    "restart-after-2.json": "d8eaa80d5183e7881a6268342f3f96653137032dae69ec5bc2712b9b6cebf9de",
+    "restart-containers-2.txt": "4088850dbd870df2ce7431bce01590646bd30810d18f9431e3b27b2f41fe4ace"
+  },
+  "limitations": [
+    "No benchmark or restart rerun by reviewer; numeric summaries recomputed from raw samples, body validation and canonical hash counting checked in exact image-bound driver source.",
+    "Private restart snapshot inspected for collection identities/counts and asset hashes; credentials not read or copied.",
+    "Pure benchmark result hashes retained as aggregate count, not 1000 separate hashes; exact source increments only on golden equality.",
+    "First read-only validation stopped because specification intentionally excluded from image; repeated with image-source comparisons limited to copied source files. No product test rerun."
+  ]
+}

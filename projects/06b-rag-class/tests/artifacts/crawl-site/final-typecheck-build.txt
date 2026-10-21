@@ -1,0 +1,77 @@
+ Container n6b-f05-crawl-db-1 Running 
+ Container n6b-f05-crawl-db-1 Waiting 
+ Container n6b-f05-crawl-db-1 Healthy 
+ Container n6b-f05-crawl-final-build Creating 
+ Container n6b-f05-crawl-final-build Created 
+
+> n6b-rag-class@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json && npm run typecheck --workspace @n6b/web
+
+
+> @n6b/web@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> n6b-rag-class@0.1.0 build
+> npm run build --workspace @n6b/db && npm run build --workspace @n6b/rag && npm run build --workspace @n6b/worker && npm run build --workspace @n6b/web
+
+
+> @n6b/db@0.1.0 build
+> tsc -p tsconfig.build.json
+
+
+> @n6b/rag@0.1.0 build
+> tsc -p tsconfig.build.json
+
+
+> @n6b/worker@0.1.0 build
+> tsc -p tsconfig.build.json
+
+
+> @n6b/web@0.1.0 build
+> next build
+
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+   ▲ Next.js 15.5.27
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 18.3s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/7) ...
+   Generating static pages (1/7) 
+   Generating static pages (3/7) 
+   Generating static pages (5/7) 
+ ✓ Generating static pages (7/7)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                      161 B         106 kB
+├ ○ /_not-found                            988 B         104 kB
+├ ƒ /api/auth/login                        142 B         103 kB
+├ ƒ /api/auth/logout                       142 B         103 kB
+├ ƒ /api/auth/register                     142 B         103 kB
+├ ƒ /api/bots                              142 B         103 kB
+├ ƒ /api/bots/[id]/sources                 142 B         103 kB
+├ ƒ /api/health                            142 B         103 kB
+├ ƒ /api/jobs/[id]                         142 B         103 kB
+├ ƒ /api/jobs/[id]/retry                   142 B         103 kB
+├ ƒ /cabinet                             2.58 kB         105 kB
+├ ○ /login                               1.36 kB         107 kB
+└ ○ /register                            1.36 kB         107 kB
++ First Load JS shared by all             103 kB
+  ├ chunks/18-25b11e3a132b87ef.js        46.5 kB
+  ├ chunks/87c73c54-24122e7b92478d00.js  54.2 kB
+  └ other shared chunks (total)          1.92 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+final-typecheck-build exit=0

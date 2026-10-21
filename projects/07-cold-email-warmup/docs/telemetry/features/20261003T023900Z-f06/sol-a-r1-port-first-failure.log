@@ -1,0 +1,17 @@
+R1only. Freeze4min; finalreceipt9min; hard10min. Heavygrantonready, no currentN7holder.
+03:23:45Z GRANTED afteryourREADY03:22:59. Freeze/hash/commit source beforebuild, executeheavyunderflock now. Finalreceiptby03:29 hard03:30. Publishactualacquire/release.
+== БД и хранилища не смотрят в интернет ==
+  ✅ ни одно хранилище не публикует порт наружу
+
+== За reverse-proxy приложение не публикуется ==
+  ✅ reverse-proxy в compose нет — проверка неприменима
+
+== Конфликты портов с уже занятым на этой машине ==
+  ❌ порт 18709 уже занят: контейнер n7f06a-web-1 — `docker compose up` упадёт с 'port is already allocated'
+
+Как чинить (в порядке предпочтения):
+  1. Вынести хостовые порты в .env  ->  ports: ["${WEB_PORT:-3000}:3000"]
+     и задать свободные значения в .env конкретной машины. Compose остаётся общим.
+  2. Если 80/443 заняты чужим reverse-proxy — не публиковать их из этого проекта,
+     а подключить сервис к сети существующего прокси.
+  3. Менять номер ВНУТРИ контейнера не нужно: конфликтует только хостовая часть.

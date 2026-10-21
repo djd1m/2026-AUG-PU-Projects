@@ -1,0 +1,53 @@
+{
+  "utc": "2026-10-06T23:18:38.910664+00:00",
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "source_head": "db50798a76a97fed75931544f24cd1181ff082d8",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "elapsed_seconds": 734.981702,
+  "finding": "F10-A35-001 / compositeAC007",
+  "unique_mechanisms_pass": 6,
+  "unique_mechanisms_required": 6,
+  "source_compiled_records": 12,
+  "additional_same_mechanism5_timestamp_records": 2,
+  "all_native_exits": "baseline0 / named material negative1 / restored0",
+  "timeouts_or_import_compile_failures_counted_caught": 0,
+  "source120_build73_sql15_unchanged": true,
+  "shadow183_restored": true,
+  "owned_nodes_joined": true,
+  "DB_slots_claims_sessions_zero": true,
+  "mutex_released": true,
+  "ownership_sha256": "132e81d5b04a731bc84ceebc2c5312a3c9738ba8c723600ae854d72078fc9010",
+  "reconciliation_sha256": "798542170ab885163ee2b35850682581513cf568d89cf734bc9d0f2e62b533cb",
+  "report_sha256": "8842ae6a91e88a8451bbd29e2baa26dadfb4edf3fe1349ce3d3b945b4584c6dc",
+  "canary_sha256": "4ec5b702ec638c193ff2663e312b04dba2af2bb68edfa21c8a38f2e6c430f3ba",
+  "canary": {
+    "authorized_secret_files_read_exact": 5,
+    "raw_or_nested_long_string_count": 6,
+    "bounded_variant_count": 25,
+    "file_count": 786,
+    "runtime_secret_variant_hits": 0,
+    "literal_marker_numeric_counts_outputs": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "private_PEM_numeric_counts_outputs": 0,
+    "runtime_canary_pass": true,
+    "generic_private_scan_pass": true,
+    "scope_gaps": [
+      "postscan receipt/context/artifactmanifest metadata unscanned",
+      "terminal tool transcripts outside ownregularartifacts are not a genericsecret/private scanner",
+      "runtime canary and generic privatePEM check are separate claims"
+    ]
+  },
+  "confirmed_source_defect": null,
+  "next_required_executor": "coordinator actually triggers same independent A35 finding-only reconciliation of frozen/raw six witnesses",
+  "product_acceptance": false
+}

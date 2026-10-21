@@ -1,0 +1,67 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-widget/projects/06b-rag-class
+
+ ❯ apps/web/tests/unit/widget-handler.test.ts (34 tests | 1 failed | 33 skipped) 37ms
+   ↓ WID-02/03 shared public gate > denies Origin null before answer/config/event with no CORS
+   ↓ WID-02/03 shared public gate > denies Origin  before answer/config/event with no CORS
+   ↓ WID-02/03 shared public gate > denies Origin null before answer/config/event with no CORS
+   × WID-02/03 shared public gate > denies Origin https://foreign.example before answer/config/event with no CORS 35ms
+     → expected 200 to be 403 // Object.is equality
+   ↓ WID-02/03 shared public gate > denies Origin https://www.shop.example/path before answer/config/event with no CORS
+   ↓ WID-02/03 shared public gate > denies Origin https://www.shop.example/ before answer/config/event with no CORS
+   ↓ WID-02/03 shared public gate > denies Origin https://www.shop.example?x=1 before answer/config/event with no CORS
+   ↓ WID-02/03 shared public gate > denies Origin https://www.shop.example#fragment before answer/config/event with no CORS
+   ↓ WID-02/03 shared public gate > denies Origin https://user@www.shop.example before answer/config/event with no CORS
+   ↓ WID-02/03 shared public gate > denies Origin https://www.shop.example:444 before answer/config/event with no CORS
+   ↓ WID-02/03 shared public gate > denies Origin https://www.shop.example\foo before answer/config/event with no CORS
+   ↓ WID-02/03 shared public gate > empty allowlist and unpublished/missing bots are closed
+   ↓ WID-02/03 shared public gate > query bot is bounded, singular and required even for preflight
+   ↓ WID-02/03 shared public gate > OPTIONS has no body/IP requirement and uses the same origin gate
+   ↓ WID-02/03 shared public gate > invalid body {} never reserves
+   ↓ WID-02/03 shared public gate > invalid body %j never reserves
+   ↓ WID-02/03 shared public gate > invalid body null never reserves
+   ↓ WID-02/03 shared public gate > invalid body {"question":""} never reserves
+   ↓ WID-02/03 shared public gate > invalid body {"question":"  "} never reserves
+   ↓ WID-02/03 shared public gate > invalid body {"question":1} never reserves
+   ↓ WID-02/03 shared public gate > invalid body {"question":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"} never reserves
+   ↓ WID-02/03 shared public gate > invalid body {"question":"ok","bot":"different_id"} never reserves
+   ↓ WID-02/03 shared public gate > invalid body "{bad" never reserves
+   ↓ WID-02/03 shared public gate > invalid body "\"too-large\"" never reserves
+   ↓ WID-02/03 shared public gate > bounds actual bytes and content type; absent/invalid trusted IP fails closed
+   ↓ WID-02/03 shared public gate > server derives owner/channel/HMAC from final XFF and internal bot; valid 500-char question
+   ↓ WID-02/03 shared public gate > preserves 429/contact/retry without install mark; next accepted attempt recovers
+   ↓ WID-02/03 shared public gate > preserves 503/contact/retry without install mark; next accepted attempt recovers
+   ↓ WID-02/03 shared public gate > database failures expose no internal detail
+   ↓ WID-04/05 policy and bounded events > SC-US-009-1/2: Free and every non-exact plan require badge even with active removal
+   ↓ WID-04/05 policy and bounded events > SC-US-008-4: server privacy, badge URL and default required badge in config
+   ↓ WID-04/05 policy and bounded events > only impression/tamper accepted; key/day cannot be selected by the client
+   ↓ WID-06 metric normalization/exclusions > one normalization for page/origin, exact preview boundaries and own host
+   ↓ WID-06 metric normalization/exclusions > mismatched/invalid page, excluded host and test/operator account do not write installs
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 33 skipped (34)
+   Start at  22:53:47
+   Duration  1.42s (transform 559ms, setup 0ms, collect 911ms, tests 37ms, environment 0ms, prepare 130ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/tests/unit/widget-handler.test.ts > WID-02/03 shared public gate > denies Origin https://foreign.example before answer/config/event with no CORS
+AssertionError: expected 200 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 200
+
+ ❯ apps/web/tests/unit/widget-handler.test.ts:37:31
+     35|     for (const kind of ['config', 'ask', 'event'] as const) {
+     36|       const response = await handler(kind)(request(kind, { kind: 'impr…
+     37|       expect(response.status).toBe(403); expect(response.headers.get('…
+       |                               ^
+     38|     }
+     39|     expect(m.answer).not.toHaveBeenCalled(); expect(m.config).not.toHa…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

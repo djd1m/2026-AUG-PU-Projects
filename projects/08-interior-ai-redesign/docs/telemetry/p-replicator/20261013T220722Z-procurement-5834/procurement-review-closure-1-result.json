@@ -1,0 +1,119 @@
+{
+  "run_id": "20261013T220722Z-procurement-5834",
+  "work_unit_id": "procurement-review-closure-1",
+  "attempt_id": "procurement-review-closure-1",
+  "stage": "REVIEW",
+  "status": "completed",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "fallback_reason": null,
+  "started_at": "2026-10-13T23:46:07.950989+00:00",
+  "finished_at": "2026-10-13T23:49:27.942424+00:00",
+  "elapsed_wall_ms": 199991,
+  "active_wall_ms": null,
+  "input_correction_receipt_sha256": "b0f7ecf3fa4282e42dd0990f958735ac3f5aee4d869a559a4835c777ae1090a5",
+  "launch_sha256": "8f4ec4ddbe3137ad21e38f8a4fced82fb85bce022076a63508c10a7d1515fd3f",
+  "source_files": [
+    {
+      "path": "packages/domain/src/procurement/calculator.ts",
+      "sha256": "a56e8894e98ce2ba019df4f2a38e90d011fae404b2da0793af98a8078cdf43ca"
+    },
+    {
+      "path": "packages/domain/src/procurement/schemas.ts",
+      "sha256": "17fd91137d70a529ee2df36e0c2d0ae9c3018fab79c6b41baea71473d328dbd4"
+    },
+    {
+      "path": "packages/domain/src/procurement/csv.ts",
+      "sha256": "7f0c99989be51810bb373845b25f8bda8c369edc8664a9190bac05c7c6b14904"
+    },
+    {
+      "path": "packages/db/src/procurement/repository.ts",
+      "sha256": "18d28c3df683791a4305a61f74e599b9f023a20b9e5f82e12c3ce904c9602ff3"
+    },
+    {
+      "path": "tests/procurement/calculator.test.ts",
+      "sha256": "fa0be9ed2fd07e62d0f83061dffaa4019ab4b5a7eadf72b19ca5bb29130863b8"
+    },
+    {
+      "path": "tests/procurement/repository.test.ts",
+      "sha256": "a01ea3966af88841b009ecfef283cd0d4df70f2f6b32bbefa277d7361caadbc9"
+    },
+    {
+      "path": "tests/procurement/http.test.ts",
+      "sha256": "3cb14ef50fc3cb73b560de544cdb608474a66337cab7f2b9c2bbc040aaa4896e"
+    }
+  ],
+  "source_hashes_matched": 7,
+  "original_review_sha256": "411d6c1aea34c7355279afbab4baf5f3c52274e642a176ce14c4bf2f1df5f68a",
+  "review_path": "docs/features/procurement/review.md",
+  "review_sha256": "05b5b1b162a1e8470c0f991f982e91b7bb640c94f3ca0dad89c5bc116d230d41",
+  "checks": {
+    "focused_suite": {
+      "exit_code": 0,
+      "files": 3,
+      "tests_passed": 30,
+      "started_at": "2026-10-13T23:46:33Z",
+      "runner_duration_seconds": 5.04
+    },
+    "closure_probe": {
+      "exit_code": 0,
+      "named_groups": 10,
+      "sha256": "5efa97ea40b3a3f9f95cc880267f0f8eedcfe99ecea4656b8d063e58851acda7"
+    },
+    "unchanged_transaction_probe": {
+      "exit_code": 0,
+      "observations": 5
+    },
+    "benchmark_arithmetic": {
+      "known": 67590000,
+      "reserve": 6759000,
+      "scenario": 74349000,
+      "golden_sha256": "68cc701bbef68ae50b85aee1eaccc0511a3e6f629ccd82f1b8dfee4bacc3108c",
+      "timing_measured_in_closure": false
+    }
+  },
+  "findings_closed": [
+    "PR-01",
+    "PR-02",
+    "PR-03",
+    "PR-04",
+    "PR-05",
+    "PR-06",
+    "PR-07",
+    "PR-08"
+  ],
+  "findings_remaining": [],
+  "ac": {
+    "core_met": 14,
+    "not_met": 0,
+    "browser_unverifiable": 1
+  },
+  "pending_gates": [
+    "native UI browser submission and controlled limit",
+    "whole journey",
+    "restart/recovery",
+    "final entity ownership matrix",
+    "integrated API/browser performance"
+  ],
+  "companion_preflight": {
+    "status": "not_applicable",
+    "reason": "No browser/service E2E performed in closure"
+  },
+  "usage": {
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "reasoning_tokens": null,
+    "cached_input_tokens": null,
+    "source": null
+  },
+  "cost": null,
+  "missing_data": [
+    "host actual model/effort metadata",
+    "host token/cost counters",
+    "separate active/wait timing"
+  ],
+  "known_defects_missed": null,
+  "regressions": null
+}

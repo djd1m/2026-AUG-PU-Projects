@@ -1,0 +1,23 @@
+{
+  "source_revision": "20417e604f43066639e62ea1c79cca85b951f45c",
+  "source_baseline": "3f2dac3af6b3f676f9e0d083199632e94c3216a0",
+  "reconciliation": "Candidate commit contains exact14 author source/test bytes; snapshot verified on host and inside immutable test image",
+  "source_snapshot_sha256": "48be0279b722c9827c2e7ba0515020cb0de4f948c29383c8c72b06cd73c1afbb",
+  "test_image_id": "sha256:596aad269deb9b1cacb2c717d8005be3811d08be53cef0f677afeddc42dea84a",
+  "checks": {
+    "typecheck": 0,
+    "unit": {
+      "passed": 353,
+      "exit": 0
+    },
+    "integration": {
+      "passed": 183,
+      "exit": 0
+    },
+    "build": 0,
+    "cap_mutation": "expected assertion red, restored green"
+  },
+  "full_log_sha256": "e630a5962629623d4b35decce04bdf6aa3604b886f8a38897870288e2ec14757",
+  "observed_at": "2026-10-02T19:52:15.846457+00:00",
+  "test_stack_cleanup": "removed own containers and network"
+}

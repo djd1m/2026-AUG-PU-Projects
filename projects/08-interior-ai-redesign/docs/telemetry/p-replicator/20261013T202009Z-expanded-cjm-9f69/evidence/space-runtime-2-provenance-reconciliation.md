@@ -1,0 +1,2 @@
+# Historical launch digest reconciliation
+Attempt2 launch reused the prior script hash despite changed password/heading selectors. This historical claim is retained and explicitly invalidated; it is not a matching source receipt. Failure evidence remains real: five passed checks then malformed GLB503. Attempt3 gets a fresh measured current script digest and image revision. No prior failure is turned into a pass.

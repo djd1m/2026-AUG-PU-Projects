@@ -1,0 +1,17 @@
+{
+  "status": "ready",
+  "at": "2026-10-14T19:32:52.686798+00:00",
+  "build": "sha256:daa54c497d1a9d45c3b3a836191daac30c540b925535ba07e59b30028cdc5fab",
+  "environment": "public HTTPS readiness200; source hashes match deployed image",
+  "source_hashes": {
+    "apps/web/src/components/DesignPanel.tsx": "d51ca1cc90a37616992e8e470702fe3242a75e25df1fdba84adade8f5523a211",
+    "apps/web/src/server/reference-design.ts": "3437f1a1171ca58af94c1bf0c6aa93d8e17d0b7345742cf3de7e5ba559944c19",
+    "packages/adapters/src/reference-palette.ts": "80fc6f78db4e5147dbdbe2ac70a1909be50d389ab3e61ee4813b57c128569aca"
+  },
+  "effects": "synthetic new account/project, two solid image assets, reference/manual drafts; no inference/payment calls",
+  "command": "node scripts/e2e-reference-design.mjs",
+  "inputs": "red/blue synthetic PNG fixtures",
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "retry_reason": "fixture permissions fixed; prior evidence retained"
+}

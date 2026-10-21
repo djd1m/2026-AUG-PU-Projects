@@ -1,0 +1,121 @@
+{
+  "preparedAt": "2026-10-07T04:20:22.405320+00:00",
+  "hypothesis": "native RuntimeStore poll admission owner_id equals newly acquired physical operation; all other claims use independent fresh UUID",
+  "source": {
+    "src/runtime/store.ts": {
+      "sha256": "e35949216a285ceecac9d8320627689dff640a627a3a642e1a96c860674f8a49"
+    },
+    "src/mailboxes/transport-slots.ts": {
+      "sha256": "9885bb07e68565a534c976f4bbd638c336151060da94055ce23ff691315bb903"
+    },
+    "src/mailboxes/transport-lifetime.ts": {
+      "sha256": "ef2963bffc4a99f2916ae01281c8c3f68e0f40f0dadd990dccf57a3342d659c7"
+    },
+    "src/replies/adapter.ts": {
+      "sha256": "003d8602faea1a38998ff85d797b1919cd6d59d970887462c17c2b0a6e7dfd1a"
+    },
+    "src/replies/worker.ts": {
+      "sha256": "96b20f37e885b57767355434ef9643eb64bedb845bc656e2fe0eb35835ab0a47"
+    }
+  },
+  "lifecycle": [
+    {
+      "path": "src/runtime/store.ts",
+      "startLine": 87,
+      "endLine": 115,
+      "observation": "FIRST transaction acquires optional slot then updates claim; occupied mailbox creates local busy admission with no slot"
+    },
+    {
+      "path": "src/runtime/store.ts",
+      "startLine": 117,
+      "endLine": 133,
+      "observation": "logical guard/cancel retain owner_id AND generation; cancellation clears only matching logical claim"
+    },
+    {
+      "path": "src/runtime/store.ts",
+      "startLine": 136,
+      "endLine": 158,
+      "observation": "finish binds owner/generation and current real complete proof; no manufactured completed_at"
+    },
+    {
+      "path": "src/mailboxes/transport-slots.ts",
+      "startLine": 28,
+      "endLine": 36,
+      "observation": "each physical acquisition creates fresh random operation and separate random physical owner, writes both once"
+    },
+    {
+      "path": "src/mailboxes/transport-slots.ts",
+      "startLine": 41,
+      "endLine": 57,
+      "observation": "private one-use child/closure maps plus exact release CAS remain authority"
+    },
+    {
+      "path": "src/mailboxes/transport-lifetime.ts",
+      "startLine": 16,
+      "endLine": 39,
+      "observation": "native child exit is joined before exact closure proof/release; delayed release retained separately"
+    },
+    {
+      "path": "src/replies/adapter.ts",
+      "startLine": 67,
+      "endLine": 76,
+      "observation": "native poll consumes preadmitted slot once then runs real child"
+    },
+    {
+      "path": "src/replies/worker.ts",
+      "startLine": 54,
+      "endLine": 62,
+      "observation": "independent poll source owner and current runtime guard combined; neither removed"
+    }
+  ],
+  "limits": [
+    "relation proves reservation lineage, not native child bind/process liveness",
+    "current owner_id remains a logical claim token protected by generation; never a physical close capability",
+    "no schema/heartbeat/registry/new runtime state"
+  ],
+  "cases": [
+    {
+      "case": "native admitted poll",
+      "ownerAssignment": "newly acquired slot.operation",
+      "binding": "atomic same FIRST commit",
+      "logicalGeneration": "increments normally"
+    },
+    {
+      "case": "transport_busy stale predecessor",
+      "ownerAssignment": "fresh independent randomUUID",
+      "binding": "cannot intentionally inherit occupied predecessor operation",
+      "negative": "never read t.operation to derive new owner"
+    },
+    {
+      "case": "authority_denied/local poll/nonpoll",
+      "ownerAssignment": "fresh independent randomUUID",
+      "binding": "none"
+    },
+    {
+      "case": "lease reclaim then stale physical remains",
+      "ownerAssignment": "replacement busy freshUUID",
+      "binding": "old equality invalidated by cleared/replaced owner and incremented generation; physical never reclaimed"
+    },
+    {
+      "case": "physical released before logical finish",
+      "binding": "operation=NULL so concurrency qualification stops; old logical guard still valid for current proof finish"
+    },
+    {
+      "case": "SQL rollback after physical update",
+      "binding": "physical update and logical binding roll back together"
+    },
+    {
+      "case": "legacy independent UUID claim",
+      "binding": "no equality, urgency remains fail closed"
+    },
+    {
+      "case": "child close proof forged from equal UUID",
+      "binding": "rejected; proof requires private registered slot/actual exit and physical owner/host CAS"
+    },
+    {
+      "case": "crash before child bind while unexpired",
+      "binding": "matching assignment may remain; equality is not native progress proof and cannot make product gate pass",
+      "safety": "physical still occupied, no TTL reclaim/close/authority bypass; liveness miss remains visible"
+    }
+  ]
+}

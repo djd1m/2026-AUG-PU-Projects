@@ -1,0 +1,67 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20261002T173314Z-n7-replicate-a1",
+  "batch_id": "n7-mvp-20261002",
+  "project": "projects/07-cold-email-warmup",
+  "feature": "replicate-discovery-cjm-sparc",
+  "pipeline": "replicate",
+  "tier": "XL",
+  "risk_flags": [
+    "explicit sending consent",
+    "credentials",
+    "public unsubscribe",
+    "future payment architecture"
+  ],
+  "profile": "compact-quality-first-v2",
+  "profile_overrides": [
+    "OpenAI only",
+    "gpt-6.1-sol high coder per owner",
+    "CJM self-selection explicitly authorized"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+  "final_revision": null,
+  "spec_sha256": "9faaacfa11f4c6351f936d26e1ee74839eadab6b47289a7d1890ba5878dd211c",
+  "policy_sha256": "cc958dec9cd12d0a83b0662fdb57d5a3f0874535f36bdf1d1e7b424f4660e1d9",
+  "host": "Codex API multi-agent",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-10-02T17:33:51Z",
+  "ended_at": null,
+  "status": "running",
+  "acceptance_evidence": [
+    "evidence/cjm-sol-receipt.md",
+    "evidence/cjm-browser-corrected/checks.json",
+    "evidence/cjm-copy-sol-receipt.md",
+    "evidence/cjm-copy-browser/checks.json"
+  ],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": 0,
+    "ac_total": null,
+    "confirmed_findings_by_severity": {},
+    "false_positive_findings": null,
+    "known_defects_missed": null,
+    "regressions": null,
+    "followup_status": "six design findings closed; runtime gates pending"
+  },
+  "metrics": {
+    "elapsed_wall_ms": 4459413,
+    "active_wall_ms": null,
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null,
+    "cost_basis": "unavailable"
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Host usage and billing metadata unavailable",
+    "Exact instruction-reading start unavailable; recording begins before product discovery",
+    "Coordinator model requested gpt-6-astra high per parent; independent host execution metadata unavailable",
+    "CJM source/browser checks exist, but serialized prelaunch launch digest was not provided to worker; do not claim companion delivered validation",
+    "No Claude learned-store source was discovered; root/project recall initially returned []"
+  ],
+  "intermediate_revision": "f806afc233c4a70a8b6e2dd81551d6f2d939f5f2",
+  "current_stage": "Design validation accepted; toolkit generation"
+}

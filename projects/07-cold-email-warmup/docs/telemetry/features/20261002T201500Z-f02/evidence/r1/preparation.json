@@ -1,0 +1,27 @@
+{
+  "run_id": "20261002T201500Z-f02",
+  "work_unit_id": "n7-f02-sol-r1",
+  "attempt_id": "correct-1",
+  "started_at": "2026-10-02T20:47:29Z",
+  "deadline": "2026-10-02T20:57:02Z",
+  "source_revision": "67aee9f8158ea0321bf800ba5cf3b35e75507f66",
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "tokens": null,
+  "cost": null,
+  "measurement_gap": "pending parent host evidence",
+  "route": {
+    "mechanical_tier": "M",
+    "exit_code": 0,
+    "substantive": "bounded correction under inherited authorized XL; no shared-resource change"
+  },
+  "changes": [
+    "src/mailboxes/network.ts",
+    "tests/mailboxes-unit.test.ts"
+  ],
+  "approval": "explicit user correction instruction",
+  "dependencies": "matching donor package-lock; read-only node_modules symlink; no donor mutation",
+  "launch_started_at": "2026-10-02T20:47:02.123032+00:00"
+}

@@ -1,0 +1,93 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f11-restart-post-ready-author-a39",
+  "status": "SEALED_PARTIAL_SCOPE_FINDING",
+  "product_accepted": false,
+  "stage": "IMPLEMENT_PREFLIGHT",
+  "profile": "model-routing-econom",
+  "risk": "XL",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gaps": [
+    "Host model/effort and token/cost counters are not exposed.",
+    "No native execution; phase timing and material counters not measured.",
+    "No current DB snapshot: no DB sessions or mutations were launched."
+  ],
+  "ack_utc": "2026-10-07T07:39:56Z",
+  "source_cutoff_utc": "2026-10-07T07:56:56Z",
+  "seal_cutoff_utc": "2026-10-07T07:59:56Z",
+  "sealed_at": "2026-10-07T07:42:13.929522+00:00",
+  "sealed_monotonic_ns": 1281943928964082,
+  "elapsed_wall_ms": 137929,
+  "overrun_ms": 0,
+  "baseline_source": "b6e8ae16e8feb6c67888eb2f006cfbb299b40197",
+  "code_commit_sha": null,
+  "frozen_source_sha": "b6e8ae16e8feb6c67888eb2f006cfbb299b40197",
+  "approved_plan": {
+    "path": "/tmp/n7-f11-restart-post-ready-planner-a38/plan.md",
+    "sha256": "bbbbcd847f0abf82bb58eca1a58e8b1b6b4c91425d295d6f82498ce63d62fb48",
+    "receipt_sha256": "9afc890bd81baf43a030c28fa4e70af0fcd2be391966c16deedf1e92c8d82fa7"
+  },
+  "completed": [
+    "Read exact approved plan and mandatory project instructions.",
+    "Verified baseline HEAD, eight-path ownership scope, existing status and disk >=2 GiB.",
+    "Located exact reason-propagation blocker before source edits.",
+    "Sealed unchanged source/dist inventories and parent finding."
+  ],
+  "failed_or_remaining": [
+    "Implement both additive amendments after MAIN decides ninth-file propagation scope.",
+    "All mandatory baselineRED/candidateGREEN/guard/material targeted native-PG tests.",
+    "Types/lint/build/diff and independent HIGH review.",
+    "Original ALL30 fault/healthy and separate legacy20page/native19 gates remain RED/unexecuted."
+  ],
+  "finding": {
+    "path": "src/runtime/loop.ts",
+    "line": 10,
+    "sha256": "6c21b6a9d8b659e28bb3f4380f837a3da61fd986df51b0b35162c40a29a38cb6",
+    "cause": "internal.abort() discards external typed shutdown reason; all body operations receive internal.signal",
+    "minimal_required_path_count": 9,
+    "proposed_fix_as_data": "internal.abort(externalSignal.reason)",
+    "no_unplanned_wrapper": "No additional signal authority registry or wrapper was introduced."
+  },
+  "editable_source_paths": [
+    "docs/features/f10-durable-runtime/02_pseudocode.md",
+    "docs/features/f10-durable-runtime/03_architecture.md",
+    "src/runtime/worker.ts",
+    "src/mailboxes/transport-lifetime.ts",
+    "src/replies/context-store.ts",
+    "src/replies/worker.ts",
+    "src/replies/store.ts",
+    "tests/f10-runtime-protocol.test.ts"
+  ],
+  "edited_paths": [],
+  "source_inventory_count": 496,
+  "dist_inventory_count": 76,
+  "helpers": [],
+  "children_launched": 0,
+  "owned_pid_joins": [],
+  "raw_exits": [
+    {
+      "phase": "sandbox_read",
+      "exit_code": 1,
+      "failure": "bwrap cannot mkdir workspace .codex before shell"
+    },
+    {
+      "phase": "narrow_escalated_reads",
+      "exit_code": 0
+    }
+  ],
+  "database": {
+    "sessions_launched": 0,
+    "mutations": 0,
+    "schema_created": null,
+    "public_preservation": "No database connection or mutation occurred; current public row SHA not remeasured."
+  },
+  "source_status": "?? projects/07-cold-email-warmup/node_modules\n",
+  "disk_available_bytes": 3699658752,
+  "responsible_next": "/root/n7_sol_coordinator",
+  "next_action": "MAIN decides expanded nine-file propagation plan; launch fresh bounded author continuation if approved."
+}

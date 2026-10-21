@@ -1,0 +1,11 @@
+--- src/replies/worker.ts
++++ src/replies/worker.ts
+@@ -16,7 +16,7 @@
+  async poll(tenant:string,mailbox:string) {
+   if(this.mode==='disabled') return {mode:this.mode,state:'disabled'};
+   if(this.mode==='live_provider'&&this.adapter.mode==='local_test')return {mode:this.mode,state:'paused'};
+-  let run=await this.store.status(tenant,mailbox);if(run?.state==='rescan_incomplete')return {mode:this.mode,state:run.state};let guard:TransactionGuard|undefined;let deadline=Date.now()+120000;
++  let run=await this.store.status(tenant,mailbox);if(run?.state==='rescan_incomplete')run=await this.store.retry(tenant,mailbox,identity(run));let guard:TransactionGuard|undefined;let deadline=Date.now()+120000;
+   const observe=async(owner:string)=>{const source=await observePoll(this.pool,tenant,mailbox,owner),transport=await this.adapter.fence?.(tenant,mailbox);return async(client:import('pg').PoolClient)=>{await source(client);await transport?.(client);};};
+   const operation=<T>(call:()=>Promise<T>)=>boundedOperation(call,Math.max(1,Math.min(30000,deadline-Date.now())));
+   try {

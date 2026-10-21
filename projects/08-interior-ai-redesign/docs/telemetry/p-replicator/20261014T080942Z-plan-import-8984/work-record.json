@@ -1,0 +1,364 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "delivered",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261014T080942Z-plan-import-8984",
+    "work_unit_id": "floorplan-import",
+    "current_attempt_id": "import-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T080942Z-plan-import-8984/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T080942Z-plan-import-8984/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+    "current_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+    "build_revision": "docker:sha256:181590da9bf545d69fb927e56abb5da50f52f5ead7bd3d0fdcca8a45d90058ee",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/features/floorplan-import/01_specification.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/features/floorplan-import/01_specification.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "observed_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "reconciliation": null
+    },
+    "input_sha256": "cdb8a9eb5a1d3f5a9f2dc6d00e25e242625952df9b7fb575c9d75b31ae58e231",
+    "working_tree_boundary": "Unchanged baseline;153 exact production files matched + exact separately bound read-only test runner; no false commit claim.",
+    "snapshot": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T080942Z-plan-import-8984/evidence/source-image-4.json"
+    }
+  },
+  "prepare": {
+    "scope_revision": "e4a1ed0ff6b6156f6f935d072debee3dd82ec1b0b48249965eadf43979ef65d7",
+    "scope": [
+      "Offlineprivateimage printed-dimensionsrecognition",
+      "Reviewedtransfer toexistingmanualroom+immutable imageprovenance",
+      "Clearupload/mobile/keyboard UX;furnitureoptional"
+    ],
+    "exclusions": [
+      "Wholeapartment/irregularroom automaticgeometry",
+      "Automaticdoors/windows/furnitureextraction",
+      "PDF/DWG/DXF nativeimport",
+      "Paidvision/autoAIactivation"
+    ],
+    "action_limits": [
+      "120minuteattemptbudget",
+      "Rootsoleproductwriter; max2readonlychildren",
+      "No DBrecreation/migration/publicstores/secretoutputs"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-P01",
+        "required": true
+      },
+      {
+        "id": "AC-P02",
+        "required": true
+      },
+      {
+        "id": "AC-P03",
+        "required": true
+      },
+      {
+        "id": "AC-P04",
+        "required": true
+      },
+      {
+        "id": "AC-P05",
+        "required": true
+      },
+      {
+        "id": "AC-P06",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "docs/telemetry/p-replicator/20261014T080942Z-plan-import-8984/evidence/plan-import-research-1.md"
+          }
+        },
+        "provenance": "Explicitlocalpaths+primaryGitHubcommit/license receipts; baseline3b84e9ef",
+        "useful_fragment": "N8privateasset/parser/manualeditor, N6boundedchild, nativeApache2Tesseract",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "No existingfloorplanOCR; unlicensedfloorplanrepos referenceonly"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No calibratedforecast;120minuteattemptbudget islimit notprediction",
+      "scope_revision": "e4a1ed0ff6b6156f6f935d072debee3dd82ec1b0b48249965eadf43979ef65d7",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [
+        "usage/cost unavailable"
+      ],
+      "external_expectations": [
+        "User requestsimplementation now"
+      ],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "phase": "plan",
+      "scope_revision": "e4a1ed0ff6b6156f6f935d072debee3dd82ec1b0b48249965eadf43979ef65d7",
+      "tier": "L",
+      "rationale": "New nativeuntrustedimageOCR processboundary, manualsourceownership/provenance, no paid/schemachange",
+      "script": {
+        "input": "packages/adapters/src/floorplan.ts apps/web/src/server/space.ts SpacePanel.tsx",
+        "exit_code": 0,
+        "mechanical_tier": "M"
+      }
+    },
+    {
+      "phase": "implementation",
+      "scope_revision": "e4a1ed0ff6b6156f6f935d072debee3dd82ec1b0b48249965eadf43979ef65d7",
+      "tier": "L",
+      "rationale": "New nativeuntrustedimageOCR processboundary, manualsourceownership/provenance, no paid/schemachange",
+      "script": {
+        "input": "packages/adapters/src/floorplan.ts apps/web/src/server/space.ts SpacePanel.tsx",
+        "exit_code": 0,
+        "mechanical_tier": "M"
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "User explicitly requests implementing dimensioned drawing import; existing publication authorization persists; no paidcalls"
+  },
+  "preflight": {
+    "status": "ready",
+    "recorded_at": "2026-10-14T09:18:53.498972+00:00",
+    "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+    "build_revision": "docker:sha256:181590da9bf545d69fb927e56abb5da50f52f5ead7bd3d0fdcca8a45d90058ee",
+    "test_image": "sha256:c16f3fc40392fc765ded5583538f398a47d55aaab348a6a078abab27a061ed41",
+    "runner_sha256": "8ccb8efcf24cf9a9d092bd1da052a56e44f05cd971c2ae435463000be7c4adcf",
+    "environment": "DedicatedDockerNode24Playwright1.60 3browsers/fonts/CA, verifiedpublicHTTPS;rotestrunner+evidence/privatefixtures,noDB/provider env",
+    "environment_available": true,
+    "test_command": "docker compose -f compose.e2e.yml run --rm playwright node scripts/floorplan-e2e.mjs",
+    "inputs": [
+      {
+        "name": "fresh evidence/UID1000 writable",
+        "available": true
+      },
+      {
+        "name": "realnativeOCR passed",
+        "available": true
+      },
+      {
+        "name": "deployed154filesource binding",
+        "available": true
+      },
+      {
+        "name": "synthetichorizontal/vertical/height PNG fixture",
+        "available": true
+      },
+      {
+        "name": "readyHTTPS200",
+        "available": true
+      },
+      {
+        "name": "Read-only driver readable by nonrootNode UID1000 after chmod0644; contenthash unchanged",
+        "available": true
+      }
+    ],
+    "expected_effects": [
+      "Synthetic privateaccounts/projects/images/shells per engine",
+      "Realkeyboard traversal/Enter transfer, fixed14pxmobilelabels, source-link separation",
+      "Fresh drawing-journey-3 output; no DB/provider secrets"
+    ],
+    "evidence_root": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T080942Z-plan-import-8984/evidence"
+    },
+    "external_actions_executed": false,
+    "e2e_claim": null,
+    "test_image_boundary": "Existing image c16f3fc contains unchanged native fixtures+browser dependencies; exact updated runner mounted read-only, actual public target is separately source-bound image above. Runner-only correction: close native select popup using Escape before Tab; product image unchanged. Runner waits up to5seconds for actual DOM focus after async commit; does not force focus. Target newbuild with result-effect focus;153 productfiles bound via source-image-4.json."
+  },
+  "attempts": [
+    {
+      "id": "import-1",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "floorplan-import",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/features/floorplan-import/01_specification.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [
+    {
+      "ac_id": "AC-P01",
+      "outcome": "pass",
+      "command": "Measured tests/native/browser commands and AC mapping in floorplan-import-final-1.md",
+      "exit_code": 0,
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "receipt_id": "floorplan-import-final-1"
+    },
+    {
+      "ac_id": "AC-P02",
+      "outcome": "pass",
+      "command": "Measured tests/native/browser commands and AC mapping in floorplan-import-final-1.md",
+      "exit_code": 0,
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "receipt_id": "floorplan-import-final-1"
+    },
+    {
+      "ac_id": "AC-P03",
+      "outcome": "pass",
+      "command": "Measured tests/native/browser commands and AC mapping in floorplan-import-final-1.md",
+      "exit_code": 0,
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "receipt_id": "floorplan-import-final-1"
+    },
+    {
+      "ac_id": "AC-P04",
+      "outcome": "pass",
+      "command": "Measured tests/native/browser commands and AC mapping in floorplan-import-final-1.md",
+      "exit_code": 0,
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "receipt_id": "floorplan-import-final-1"
+    },
+    {
+      "ac_id": "AC-P05",
+      "outcome": "pass",
+      "command": "Measured tests/native/browser commands and AC mapping in floorplan-import-final-1.md",
+      "exit_code": 0,
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "receipt_id": "floorplan-import-final-1"
+    },
+    {
+      "ac_id": "AC-P06",
+      "outcome": "pass",
+      "command": "Measured tests/native/browser commands and AC mapping in floorplan-import-final-1.md",
+      "exit_code": 0,
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "receipt_id": "floorplan-import-final-1"
+    }
+  ],
+  "receipts": [
+    {
+      "id": "floorplan-import-final-1",
+      "work_id": "floorplan-import",
+      "path": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261014T080942Z-plan-import-8984/evidence/floorplan-import-final-1.md"
+      },
+      "launch_path": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261014T080942Z-plan-import-8984/evidence/floorplan-import-final-1-launch.json"
+      },
+      "sha256": "825f5476762880d498042ec700ae974103b7e58de7240d9ff9fb52449755a9d4",
+      "launch_sha256": "ec43d6f2b2ada3df86f581a80bbe8b496dfdf6ebee8cfba9df56211b92dfd096"
+    }
+  ],
+  "delivery": {
+    "uri": "https://n8.77.83.87.178.sslip.io",
+    "scope": {
+      "included": [
+        "Offlineprivateimage printed-dimensionsrecognition",
+        "Reviewedtransfer toexistingmanualroom+immutable imageprovenance",
+        "Clearupload/mobile/keyboard UX;furnitureoptional"
+      ],
+      "excluded": [
+        "Wholeapartment/irregularroom automaticgeometry",
+        "Automaticdoors/windows/furnitureextraction",
+        "PDF/DWG/DXF nativeimport",
+        "Paidvision/autoAIactivation"
+      ]
+    },
+    "build": {
+      "source_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+      "build_revision": "docker:sha256:181590da9bf545d69fb927e56abb5da50f52f5ead7bd3d0fdcca8a45d90058ee"
+    },
+    "evidence": [
+      "floorplan-import-final-1"
+    ],
+    "pending": [
+      {
+        "item": "PDF/CAD/irregular geometry and automatic furniture recommendations",
+        "scope": "out_of_scope",
+        "reason": "Accepted initial scope is printed image dimensions for one human-confirmed rectangular room"
+      },
+      {
+        "item": "Real customer drawing OCR accuracy",
+        "scope": "out_of_scope",
+        "reason": "No customer sample supplied; only literal synthetic/native/browser evidence claimed"
+      }
+    ],
+    "e2e_claim": "pass"
+  },
+  "preflight_history": [
+    {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T080942Z-plan-import-8984/evidence/native-preflight-1.json"
+    },
+    {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T080942Z-plan-import-8984/evidence/drawing-journey-1-preflight.json"
+    },
+    {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T080942Z-plan-import-8984/evidence/drawing-journey-2-preflight.json"
+    },
+    {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T080942Z-plan-import-8984/evidence/drawing-journey-3-preflight.json"
+    },
+    {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T080942Z-plan-import-8984/evidence/drawing-journey-4-preflight.json"
+    },
+    {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T080942Z-plan-import-8984/evidence/drawing-journey-5-preflight.json"
+    },
+    {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261014T080942Z-plan-import-8984/evidence/drawing-journey-6-preflight.json"
+    }
+  ],
+  "record_index_boundary": "Preparednow from runstart+formalcriteria+actualnativepreflight; notbackdated."
+}

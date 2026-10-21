@@ -1,0 +1,14 @@
+{
+  "first_worker_actual_guard_exit_utc": "2026-10-07T02:01:25.829000+00:00",
+  "first_worker_elapsed_ms": 150251,
+  "test_runtime_begun_utc": "2026-10-07T01:58:55.506000+00:00",
+  "first_exit_ms_after_test_begun": 150323,
+  "last_sample_utc": "2026-10-07T02:01:25.760Z",
+  "first_exit_ms_after_last_sample": 69.0,
+  "fault_injection_utc": "2026-10-07T01:59:04.499Z",
+  "fault_exact_physical_release_utc": "2026-10-07T01:59:04.518Z",
+  "fault_ready_utc": "2026-10-07T01:59:11.712000+00:00",
+  "actual_failure_reason": null,
+  "missing_reason": "fixture sends failed/code via IPC but immutable test receiver does not record failed IPC; its error catch drops original error message/name/SQL code",
+  "restart_boundary_inference": "Guard exit is150323ms after test begun and69ms after final sample, consistent with requested150s SIGTERM; explicit signal-sent timestamp is absent so not claimed as direct cause."
+}

@@ -1,0 +1,15 @@
+node:internal/fs/promises:1345
+  return new FileHandle(await PromisePrototypeThen(
+                        ^
+
+Error: EACCES: permission denied, open '/fixtures/red.png'
+    at async open (node:internal/fs/promises:1345:25)
+    at async readFile (node:internal/fs/promises:1996:14)
+    at async file:///app/scripts/e2e-reference-design.mjs:12:69 {
+  errno: -13,
+  code: 'EACCES',
+  syscall: 'open',
+  path: '/fixtures/red.png'
+}
+
+Node.js v24.21.0

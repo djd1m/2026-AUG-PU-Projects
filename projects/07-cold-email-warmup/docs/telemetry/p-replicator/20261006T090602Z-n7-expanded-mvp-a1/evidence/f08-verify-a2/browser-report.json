@@ -1,0 +1,90 @@
+{
+  "testTitle": "separate diagnostic status persists and respects keyboard capacity consent",
+  "status": "pass",
+  "source": "7abaa2d283323a76063caa55e6bcdb3c0947d0e4eced6067df543764657817da",
+  "build": "25ae41625b7a1092811636b50c5c685a27c363367654e75ecc61945896baf49e",
+  "image": "sha256:3791cac50f5b6c2c87dd5cd3975f8141a1dd846b405361ca7456623121ec0b37",
+  "checks": [
+    {
+      "name": "SMTP fixture success 1440",
+      "pass": true
+    },
+    {
+      "name": "IMAP independent rejection 1440",
+      "pass": true
+    },
+    {
+      "name": "revoked authority unusable 1440",
+      "pass": true
+    },
+    {
+      "name": "capacity independent 1440",
+      "pass": true
+    },
+    {
+      "name": "unchecked separate consent 1440",
+      "pass": true
+    },
+    {
+      "name": "no horizontal overflow 1440",
+      "pass": true
+    },
+    {
+      "name": "SMTP fixture success 390",
+      "pass": true
+    },
+    {
+      "name": "IMAP independent rejection 390",
+      "pass": true
+    },
+    {
+      "name": "revoked authority unusable 390",
+      "pass": true
+    },
+    {
+      "name": "capacity independent 390",
+      "pass": true
+    },
+    {
+      "name": "unchecked separate consent 390",
+      "pass": true
+    },
+    {
+      "name": "no horizontal overflow 390",
+      "pass": true
+    },
+    {
+      "name": "actual PG pending snapshot renders unusable",
+      "pass": true
+    },
+    {
+      "name": "actual PG stale snapshot renders unusable",
+      "pass": true
+    },
+    {
+      "name": "keyboard busy state",
+      "pass": true
+    },
+    {
+      "name": "busy duplicate suppressed",
+      "pass": true
+    },
+    {
+      "name": "separate result persists on reload",
+      "pass": true
+    },
+    {
+      "name": "DOM canary absent",
+      "pass": true
+    },
+    {
+      "name": "session clears diagnostics",
+      "pass": true
+    },
+    {
+      "name": "no page errors",
+      "pass": true
+    }
+  ],
+  "pageErrors": []
+}

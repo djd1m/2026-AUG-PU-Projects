@@ -1,0 +1,271 @@
+TAP version 13
+# Subtest: B-R1 real fixture callbacks fenced by durable owner and source generation
+    # Subtest: first-success
+    ok 1 - first-success
+      ---
+      duration_ms: 334.7761
+      type: 'test'
+      ...
+    # Subtest: first-failure
+    not ok 2 - first-failure
+      ---
+      duration_ms: 310.525501
+      type: 'test'
+      location: '/app/tests/suppression-owner-integration.test.ts:3:376'
+      failureType: 'testCodeFailure'
+      error: |-
+        obsolete callback changed newer complete run/poll/timestamps/effects
+        + actual - expected
+        ... Skipped lines
+        
+          {
+            effects: null,
+            jobs: null,
+            messages: null,
+            observations: [
+        ...
+              poll_owner: '892d59a4-5eb2-4e93-9304-a23b8d1b4fb3',
+        +     scan_complete: false,
+        -     scan_complete: true,
+              uidvalidity: '3'
+            },
+            run: {
+              attempt: 1,
+              attempt_started_at: '2026-10-03T00:51:59.74+00:00',
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        run:
+          pages: 2
+          state: 'complete'
+          run_id: '69797d99-526a-4aac-b110-f0f3df89c062'
+          attempt: 1
+          tenant_id: 'd4dce476-f38c-4f3b-bd40-f31d68174cbd'
+          cursor_uid: 3
+          high_water: 3
+          mailbox_id: '982b93f9-682c-4a4c-adb9-f3fe2f3448a2'
+          provenance: 'local_fixture'
+          uidvalidity: '3'
+          tail_high_water: 3
+          attempt_started_at: '2026-10-03T00:51:59.74+00:00'
+        jobs: ~
+        poll:
+          cursor_uid: 3
+          mailbox_id: '982b93f9-682c-4a4c-adb9-f3fe2f3448a2'
+          poll_owner: '892d59a4-5eb2-4e93-9304-a23b8d1b4fb3'
+          uidvalidity: '3'
+          completed_at: '2026-10-03T00:51:59.758+00:00'
+          scan_complete: true
+        effects: ~
+        messages: ~
+        observations:
+          0:
+            uid: 3
+            tenant_id: 'd4dce476-f38c-4f3b-bd40-f31d68174cbd'
+            mailbox_id: '982b93f9-682c-4a4c-adb9-f3fe2f3448a2'
+            message_id: ~
+            uidvalidity: '3'
+      actual:
+        run:
+          pages: 2
+          state: 'complete'
+          run_id: '69797d99-526a-4aac-b110-f0f3df89c062'
+          attempt: 1
+          tenant_id: 'd4dce476-f38c-4f3b-bd40-f31d68174cbd'
+          cursor_uid: 3
+          high_water: 3
+          mailbox_id: '982b93f9-682c-4a4c-adb9-f3fe2f3448a2'
+          provenance: 'local_fixture'
+          uidvalidity: '3'
+          tail_high_water: 3
+          attempt_started_at: '2026-10-03T00:51:59.74+00:00'
+        jobs: ~
+        poll:
+          cursor_uid: 3
+          mailbox_id: '982b93f9-682c-4a4c-adb9-f3fe2f3448a2'
+          poll_owner: '892d59a4-5eb2-4e93-9304-a23b8d1b4fb3'
+          uidvalidity: '3'
+          completed_at: '2026-10-03T00:51:59.758+00:00'
+          scan_complete: false
+        effects: ~
+        messages: ~
+        observations:
+          0:
+            uid: 3
+            tenant_id: 'd4dce476-f38c-4f3b-bd40-f31d68174cbd'
+            mailbox_id: '982b93f9-682c-4a4c-adb9-f3fe2f3448a2'
+            message_id: ~
+            uidvalidity: '3'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (/app/tests/suppression-owner-integration.test.ts:46:37)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (/app/tests/suppression-owner-integration.test.ts:31:4)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: changed-tail-success
+    ok 3 - changed-tail-success
+      ---
+      duration_ms: 271.671737
+      type: 'test'
+      ...
+    # Subtest: same-validity-success
+    ok 4 - same-validity-success
+      ---
+      duration_ms: 294.536775
+      type: 'test'
+      ...
+    # Subtest: same-validity-failure
+    not ok 5 - same-validity-failure
+      ---
+      duration_ms: 242.306167
+      type: 'test'
+      location: '/app/tests/suppression-owner-integration.test.ts:3:376'
+      failureType: 'testCodeFailure'
+      error: |-
+        obsolete callback changed newer complete run/poll/timestamps/effects
+        + actual - expected
+        ... Skipped lines
+        
+          {
+            effects: null,
+            jobs: null,
+            messages: null,
+            observations: [
+        ...
+              poll_owner: '5a37c2f2-d208-4706-a96e-ca2eee7ca8a5',
+        +     scan_complete: false,
+        -     scan_complete: true,
+              uidvalidity: '1'
+            },
+            run: {
+              attempt: 1,
+              attempt_started_at: '2026-10-03T00:52:00.541+00:00',
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        run:
+          pages: 2
+          state: 'complete'
+          run_id: 'e1ee4d19-ab0c-45f2-8f58-55bad0f3b08c'
+          attempt: 1
+          tenant_id: '0d71dbc5-6114-487a-9a12-1158fc58dbbf'
+          cursor_uid: 3
+          high_water: 3
+          mailbox_id: '9e40c90d-2bd0-43be-b924-2bb2cd653a28'
+          provenance: 'local_fixture'
+          uidvalidity: '1'
+          tail_high_water: 3
+          attempt_started_at: '2026-10-03T00:52:00.541+00:00'
+        jobs: ~
+        poll:
+          cursor_uid: 3
+          mailbox_id: '9e40c90d-2bd0-43be-b924-2bb2cd653a28'
+          poll_owner: '5a37c2f2-d208-4706-a96e-ca2eee7ca8a5'
+          uidvalidity: '1'
+          completed_at: '2026-10-03T00:52:00.567+00:00'
+          scan_complete: true
+        effects: ~
+        messages: ~
+        observations:
+          0:
+            uid: 3
+            tenant_id: '0d71dbc5-6114-487a-9a12-1158fc58dbbf'
+            mailbox_id: '9e40c90d-2bd0-43be-b924-2bb2cd653a28'
+            message_id: ~
+            uidvalidity: '1'
+      actual:
+        run:
+          pages: 2
+          state: 'complete'
+          run_id: 'e1ee4d19-ab0c-45f2-8f58-55bad0f3b08c'
+          attempt: 1
+          tenant_id: '0d71dbc5-6114-487a-9a12-1158fc58dbbf'
+          cursor_uid: 3
+          high_water: 3
+          mailbox_id: '9e40c90d-2bd0-43be-b924-2bb2cd653a28'
+          provenance: 'local_fixture'
+          uidvalidity: '1'
+          tail_high_water: 3
+          attempt_started_at: '2026-10-03T00:52:00.541+00:00'
+        jobs: ~
+        poll:
+          cursor_uid: 3
+          mailbox_id: '9e40c90d-2bd0-43be-b924-2bb2cd653a28'
+          poll_owner: '5a37c2f2-d208-4706-a96e-ca2eee7ca8a5'
+          uidvalidity: '1'
+          completed_at: '2026-10-03T00:52:00.567+00:00'
+          scan_complete: false
+        effects: ~
+        messages: ~
+        observations:
+          0:
+            uid: 3
+            tenant_id: '0d71dbc5-6114-487a-9a12-1158fc58dbbf'
+            mailbox_id: '9e40c90d-2bd0-43be-b924-2bb2cd653a28'
+            message_id: ~
+            uidvalidity: '1'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (/app/tests/suppression-owner-integration.test.ts:46:37)
+        process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (/app/tests/suppression-owner-integration.test.ts:31:4)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: same-validity-owner-only
+    ok 6 - same-validity-owner-only
+      ---
+      duration_ms: 273.101187
+      type: 'test'
+      ...
+    # Subtest: generation alone fences capture
+    ok 7 - generation alone fences capture
+      ---
+      duration_ms: 307.200189
+      type: 'test'
+      ...
+    # Subtest: generation alone fences failure
+    ok 8 - generation alone fences failure
+      ---
+      duration_ms: 264.147714
+      type: 'test'
+      ...
+    # Subtest: current missing and failed fixture pause; current poll completes
+    ok 9 - current missing and failed fixture pause; current poll completes
+      ---
+      duration_ms: 303.745608
+      type: 'test'
+      ...
+    # Subtest: generation check and seed serialize on the shared lock
+    ok 10 - generation check and seed serialize on the shared lock
+      ---
+      duration_ms: 237.105244
+      type: 'test'
+      ...
+    1..10
+not ok 1 - B-R1 real fixture callbacks fenced by durable owner and source generation
+  ---
+  duration_ms: 2905.959237
+  type: 'test'
+  location: '/app/tests/suppression-owner-integration.test.ts:1:818'
+  failureType: 'subtestsFailed'
+  error: '2 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 11
+# suites 0
+# pass 8
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3502.13216
+
+Mutant exit: 1

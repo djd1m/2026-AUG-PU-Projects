@@ -1,0 +1,207 @@
+{
+  "ack_utc": "2026-10-06T22:58:02Z",
+  "source_analysis_freeze_utc": "2026-10-06T23:04:02Z",
+  "terminal_bound_utc": "2026-10-06T23:06:02Z",
+  "actual_model": null,
+  "actual_effort": null,
+  "actual_usage": null,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "fork_turns": "none",
+  "context_packet": {
+    "path": "/tmp/n7-f10-final-source-review-packet-20261006/context-sealed.json",
+    "sha256": "2fda3621a3f287c0bc93a8401a14d0a3cd7a0b3391b478b99db0e138b97ecebd"
+  },
+  "declared_inputs": {
+    "normative_inputs": [
+      {
+        "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/sol-coordinator-handoff-20261006/planner-only-review-packet.json",
+        "sha256": "c56fa1bef6b60a4f413320469fe4ee7314439e4aa5d1c48e5ea9328c5f4682e5",
+        "provenance": "Sealed planner-only 14 normative files from approved specification/AC/BDD/5roles/ADR/product decisions/provider policy; load exact git_revision blobs and verify hashes."
+      },
+      {
+        "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/docs/telemetry/p-replicator/20261006T090602Z-n7-expanded-mvp-a1/evidence/f10-uidreset-contract-plan-a14b-cli/receipt.md",
+        "sha256": "998aeeb0b4c89294d7f196650b759954f3a965f62dacfaf8313d1e5eaf749662",
+        "provenance": "Independent normative UID generation contract planner artifact."
+      },
+      {
+        "path": "/tmp/n7-f10-physical-admission-plan-a30/report.md",
+        "sha256": "ca524cdc4de1dc2fc20980a8b53871f1cfa00afbd244b0589e3e213901ef2cd6",
+        "provenance": "Fresh isolated HIGH planner normative atomic logicalclaim+physicalreservation seam; final correction excludes unsupported all-first-completions barrier."
+      }
+    ],
+    "current_owner_workflow_inputs": [
+      {
+        "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/AGENTS.md",
+        "sha256": "ca1b4cc25738f7d9d58f37da640c741d79befa45e2209364474bea6d097181d8",
+        "bytes": 7418,
+        "provenance": "Current approved repository/owner workflow constraints; overrides historical role-family routing in old candidate checkout."
+      },
+      {
+        "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/CLAUDE.md",
+        "sha256": "c1669853c58eddd6994761d510f5f1a4d1b992b50e16f8ebedf18a10937144a2",
+        "bytes": 13438,
+        "provenance": "Current approved repository/owner workflow constraints; overrides historical role-family routing in old candidate checkout."
+      },
+      {
+        "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/projects/07-cold-email-warmup/CLAUDE.md",
+        "sha256": "3b548fa6dea02c7639aa7fbdfdc3fa1f7bbf90b6726c406501d89cc2b3fe3ba0",
+        "bytes": 7533,
+        "provenance": "Current approved repository/owner workflow constraints; overrides historical role-family routing in old candidate checkout."
+      },
+      {
+        "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/.claude/rules/complexity-router.md",
+        "sha256": "422a1d1952f7755c1ea772b33e9e41e1bd78a239af8a0a490f03bc48eb4e0c70",
+        "bytes": 10185,
+        "provenance": "Current approved repository/owner workflow constraints; overrides historical role-family routing in old candidate checkout."
+      },
+      {
+        "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/.claude/rules/project-work-companion-local.md",
+        "sha256": "273c7cb0d069609ba2823786e98f914362bc1fb38d864e3e4f720d6f3ecddbc4",
+        "bytes": 799,
+        "provenance": "Current approved repository/owner workflow constraints; overrides historical role-family routing in old candidate checkout."
+      },
+      {
+        "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/docs/development/model-routing.md",
+        "sha256": "0ea43b745e8a5cf29e5484e8a5354f372d85fdfbca1713b5d2b8cfe37b29c7b2",
+        "bytes": 18367,
+        "provenance": "Current approved repository/owner workflow constraints; overrides historical role-family routing in old candidate checkout."
+      },
+      {
+        "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/docs/development/model-routing-econom.md",
+        "sha256": "4622c96c879baa08d548f99b4f48ec19e7f59bb0eb91b2a58de46db4a079ee09",
+        "bytes": 5589,
+        "provenance": "Current approved repository/owner workflow constraints; overrides historical role-family routing in old candidate checkout."
+      },
+      {
+        "path": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n7-replicate/docs/development/model-routing-telemetry.md",
+        "sha256": "22ba852701d2c78b372cb07ed9b53f4227799ff6f8dc9c57849c09d0c35829cd",
+        "bytes": 22063,
+        "provenance": "Current approved repository/owner workflow constraints; overrides historical role-family routing in old candidate checkout."
+      }
+    ],
+    "objective_inputs_prepared": [
+      {
+        "path": "/tmp/n7-f10-atomic-admission-a31/complete-source-build-sql-manifest-v2.json",
+        "sha256": "77cc744dfe793d599abd0300a9ab03d6060a7481d88091686a7a1bb79d88c536",
+        "provenance": "Legitimate frozen product artifact: exact120source/73build/15SQL inventory only; no author narrative."
+      },
+      {
+        "path": "/tmp/n7-f10-atomic-admission-verify-a32/results.json",
+        "provenance": "Fixed runner actual commands/native exits/joins; raw objective only.",
+        "sha256": "ed84800f586fd9ece212ef8b362fdfd35d99bba11cd55da396636c4b57400f55"
+      },
+      {
+        "path": "/tmp/n7-f10-atomic-admission-verify-a32/canonical-independent-reconciliation.json",
+        "provenance": "All30 denominator raw metric checks.",
+        "sha256": "7b8e6d704f5858134858c88896c8cd63e7e30e0b7acbaee004cea3771a1a3e31"
+      },
+      {
+        "path": "/tmp/n7-f10-atomic-admission-verify-a32/terminal-ownership.json",
+        "sha256": "375f7072c8816664bc38353432a565f2d7ab5810e85d4658cacc585f73b9a370",
+        "provenance": "Source/process/DB/legacy-original/mutex ownership proof."
+      },
+      {
+        "path": "/tmp/n7-f10-atomic-admission-verify-a32/native-independent-reconciliation.json",
+        "sha256": "19af8080ad486fbc5e22117b341461762b40c9c02bb3ee547017328085c3e961",
+        "provenance": "Current actual native five-slow-mailbox fairness raw observation checks; denominator/all20pages/5s/order/joins."
+      }
+    ],
+    "additional_objective_inputs": [
+      {
+        "path": "/tmp/n7-f10-atomic-admission-negatives-a33/input-inventory-a33.json",
+        "sha256": "216d0774b15019a0c137b3a32c6df841562574d1adee536de9badd3e21ecab4f",
+        "bytes": 21834,
+        "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+      },
+      {
+        "path": "/tmp/n7-f10-atomic-admission-negatives-a33/material-command-manifest-a33.json",
+        "sha256": "0df642c43f195017aa8e881577519d90fe4ab10de9872f941b4e0ae99fb5bc99",
+        "bytes": 759,
+        "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+      },
+      {
+        "path": "/tmp/n7-f10-atomic-admission-negatives-a33/material-results-a33.json",
+        "sha256": "9ea41e7584de2ee4a0a9215b7c9368350913f7bf112a7ded691a112acb52da09",
+        "bytes": 119680,
+        "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+      },
+      {
+        "path": "/tmp/n7-f10-atomic-admission-negatives-a33/slot-mutation-results.json",
+        "sha256": "2e41d75694c1bb4aeceaf23367ac85c25ed7d27d9243a3533343acd82d5cb9a9",
+        "bytes": 9681,
+        "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+      },
+      {
+        "path": "/tmp/n7-f10-atomic-admission-negatives-a33/short-remainder-results.json",
+        "sha256": "c2b9627e4b63900e42b74ddbfc013a1d6ad6d4219a2ec6a9bc757e3bbd7515aa",
+        "bytes": 5562,
+        "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+      },
+      {
+        "path": "/tmp/n7-f10-atomic-admission-negatives-a33/terminal-ownership-a33.json",
+        "sha256": "0ddbc1782dbe80322f6a7bf82bc9b40b7616b477501ec7f2192ed210da0e9e0d",
+        "bytes": 1707,
+        "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+      },
+      {
+        "path": "/tmp/n7-f10-atomic-admission-negatives-a33/canary-result-a33.json",
+        "sha256": "8a63d4e1c6b63bf5ef61441934e970e5fa900b83bc2f96e6bc1c893905b18464",
+        "bytes": 420375,
+        "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+      },
+      {
+        "path": "/tmp/n7-f10-cancel-diagnostic-a34/fence-command-manifest-a34.json",
+        "sha256": "bb7bb183fe83eac5af650bb708f9ba0f367ec16a596a21ec29e0b2ef7bf065e6",
+        "bytes": 2776,
+        "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+      },
+      {
+        "path": "/tmp/n7-f10-cancel-diagnostic-a34/fence-results-a34.json",
+        "sha256": "e67f8af8d63cf25e9d583e2550ff1201bee6d364f8937db10c74de523ec416fd",
+        "bytes": 24637,
+        "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+      },
+      {
+        "path": "/tmp/n7-f10-cancel-diagnostic-a34/cancel-probe-command-manifest-a34.json",
+        "sha256": "cf8bfe2e2c1c9e8eb6d84780a7202821c95a5786dd7f4d7c26beba28dbc715b2",
+        "bytes": 2063,
+        "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+      },
+      {
+        "path": "/tmp/n7-f10-cancel-diagnostic-a34/cancel-probe-results-a34.json",
+        "sha256": "fc68eef42cf485ef57e8cdc27a0664cc22d1971ed3a0f29c310919ea95fd440f",
+        "bytes": 22472,
+        "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+      },
+      {
+        "path": "/tmp/n7-f10-cancel-diagnostic-a34/diagnostic-reconciliation-a34.json",
+        "sha256": "c16ee26e99a423d248da96b160f42f8a9b1cff06e8d995aaef1cdba43408bdc2",
+        "bytes": 2382,
+        "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+      },
+      {
+        "path": "/tmp/n7-f10-cancel-diagnostic-a34/terminal-ownership-a34.json",
+        "sha256": "a767ebf74e7b60b4c7412b6be8affde39a886159b1d426947fb9aeab6dd13823",
+        "bytes": 1585,
+        "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+      },
+      {
+        "path": "/tmp/n7-f10-cancel-diagnostic-a34/canary-result-a34.json",
+        "sha256": "75bb05ab5a20377f40c3f31e7fc1fe66062fd3e501d3cda4cd91125ecd1d34b2",
+        "bytes": 148335,
+        "provenance": "Frozen legitimate raw test command/exit/assertion/counterproof/ownership artifact; inspect after independent normative source assessment. Do not read worker narrative receipts or chat."
+      }
+    ]
+  },
+  "candidate_root": "/tmp/n7-f10-restart-fix-20261006-a12",
+  "candidate_revision": "db50798a76a97fed75931544f24cd1181ff082d8",
+  "baseline_revision": "d50e05068636c56003d9708b4d374465fc0cd0bb",
+  "writes_allowed": "/tmp/n7-f10-final-source-review-a35",
+  "review_order": [
+    "normative_current_workflow",
+    "frozen_source_tests",
+    "raw_objective_reconciliation"
+  ],
+  "no_own_test_children_planned": true
+}

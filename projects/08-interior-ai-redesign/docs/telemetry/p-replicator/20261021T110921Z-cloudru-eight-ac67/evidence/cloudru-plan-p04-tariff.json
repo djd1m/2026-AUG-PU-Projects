@@ -1,0 +1,13 @@
+{
+  "jsonrpc": "2.0",
+  "id": 5,
+  "result": {
+    "content": [
+      {
+        "text": "{\n  \"compose_required\": false,\n  \"cost\": {\n    \"currency\": \"RUB\",\n    \"hourly_rub\": 0.99,\n    \"compute_monthly_rub\": 722.87,\n    \"disk_monthly_rub\": 463.11,\n    \"total_monthly_rub\": 1185.98,\n    \"source\": \"estimate: rate-card (flavor); not a billed price\"\n  },\n  \"expires_at\": \"2026-10-21T11:50:17.633097941Z\",\n  \"mode\": \"manual\",\n  \"network\": {\n    \"floating_ip\": true,\n    \"open_ports\": [\n      80,\n      443\n    ]\n  },\n  \"next\": \"Show this plan and its monthly cost to the captain. On explicit approval, call deploy_apply with this plan_id and confirmed=true.\",\n  \"plan_id\": \"plan-da68e0b78e68\",\n  \"product\": \"p04-calorie\",\n  \"ssh\": {\n    \"login\": \"user1\",\n    \"key_name\": \"ssh-key (deploy)\"\n  },\n  \"vm\": {\n    \"name\": \"p04-calorie-20261021\",\n    \"flavor\": {\n      \"id\": \"82d31572-23e0-4937-a6af-45ddae64ba87\",\n      \"name\": \"lowcost10-2-4\",\n      \"vcpus\": 2,\n      \"ram_gb\": 4\n    },\n    \"image\": {\n      \"id\": \"fe51a6e6-a5ad-410e-b441-1a195208a8cf\",\n      \"name\": \"Ubuntu-24.04\"\n    },\n    \"zone\": {\n      \"id\": \"7c99a597-8516-494f-a2c7-d7377048681e\",\n      \"name\": \"ru.AZ-1\"\n    },\n    \"disk\": {\n      \"size_gb\": 40,\n      \"type\": \"SSD\",\n      \"type_id\": \"a859e3dc-6b14-42a8-9bcc-890fde0ba6d0\"\n    }\n  },\n  \"warnings\": [\n    \"ports [80 443] will be opened (ingress, 0.0.0.0/0) on the shared security group of this zone \u2014 other VMs later placed in it would share those open ports\"\n  ]\n}",
+        "type": "text"
+      }
+    ],
+    "isError": false
+  }
+}

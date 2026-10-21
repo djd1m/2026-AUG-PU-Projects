@@ -1,0 +1,36 @@
+TRACE contour=project specification=projects/08-interior-ai-redesign/docs/Specification.md pseudocode=projects/08-interior-ai-redesign/docs/Pseudocode.md
+COUNT requirements=22 algorithms=22 missing-algorithm=0 orphan-algorithm=0
+PASS contour=project bidirectional traceability complete
+NOT-ESTABLISHED contour=project role=completion path=projects/08-interior-ai-redesign/docs/projects/08-interior-ai-redesign/docs/Completion.md missing or unreadable
+TRACE contour=billing specification=projects/08-interior-ai-redesign/docs/features/billing/01_specification.md pseudocode=projects/08-interior-ai-redesign/docs/features/billing/02_pseudocode.md
+COUNT requirements=8 algorithms=8 missing-algorithm=0 orphan-algorithm=0
+PASS contour=billing bidirectional traceability complete
+NOT-ESTABLISHED contour=billing completion Criterion coverage table missing or malformed detail=header
+TRACE contour=design specification=projects/08-interior-ai-redesign/docs/features/design/01_specification.md pseudocode=projects/08-interior-ai-redesign/docs/features/design/02_pseudocode.md
+COUNT requirements=16 algorithms=16 missing-algorithm=0 orphan-algorithm=0
+PASS contour=design bidirectional traceability complete
+NOT-ESTABLISHED contour=design completion Criterion coverage table missing or malformed detail=header
+TRACE contour=foundation specification=projects/08-interior-ai-redesign/docs/features/foundation/01_specification.md pseudocode=projects/08-interior-ai-redesign/docs/features/foundation/02_pseudocode.md
+COUNT requirements=15 algorithms=15 missing-algorithm=0 orphan-algorithm=0
+PASS contour=foundation bidirectional traceability complete
+NOT-ESTABLISHED contour=foundation completion Criterion coverage table missing or malformed detail=header
+TRACE contour=integration specification=projects/08-interior-ai-redesign/docs/features/integration/01_specification.md pseudocode=projects/08-interior-ai-redesign/docs/features/integration/02_pseudocode.md
+COUNT requirements=6 algorithms=6 missing-algorithm=0 orphan-algorithm=0
+PASS contour=integration bidirectional traceability complete
+NOT-ESTABLISHED contour=integration completion Criterion coverage table missing or malformed detail=header
+TRACE contour=procurement specification=projects/08-interior-ai-redesign/docs/features/procurement/01_specification.md pseudocode=projects/08-interior-ai-redesign/docs/features/procurement/02_pseudocode.md
+COUNT requirements=19 algorithms=19 missing-algorithm=0 orphan-algorithm=0
+PASS contour=procurement bidirectional traceability complete
+NOT-ESTABLISHED contour=procurement completion Criterion coverage table missing or malformed detail=header
+TRACE contour=sharing specification=projects/08-interior-ai-redesign/docs/features/sharing/01_specification.md pseudocode=projects/08-interior-ai-redesign/docs/features/sharing/02_pseudocode.md
+COUNT requirements=12 algorithms=12 missing-algorithm=0 orphan-algorithm=0
+PASS contour=sharing bidirectional traceability complete
+NOT-ESTABLISHED contour=sharing completion Criterion coverage table missing or malformed detail=header
+TRACE contour=space specification=projects/08-interior-ai-redesign/docs/features/space/01_specification.md pseudocode=projects/08-interior-ai-redesign/docs/features/space/02_pseudocode.md
+COUNT requirements=11 algorithms=11 missing-algorithm=0 orphan-algorithm=0
+PASS contour=space bidirectional traceability complete
+NOT-ESTABLISHED contour=space completion Criterion coverage table missing or malformed detail=header
+VERDICT traceability=PASS features=7 gaps=0 inconclusive=0
+VERDICT completion=NOT-ESTABLISHED features=7 gaps=0 inconclusive=8
+VERDICT report-revision=PASS features=7 gaps=0 inconclusive=0
+VERDICT criterion-scenarios=PASS features=7 gaps=0 inconclusive=0

@@ -1,0 +1,150 @@
+{
+  "timestamp": "2026-10-02T20:00:48.002162+00:00",
+  "status": "ready",
+  "source_revision": "e557c73bd87495ad099e66981c2a7ef4e61f713f",
+  "build": {
+    "source_revision": "f32ab9bedd7658a6afffcd2890f34950af6aa0bf",
+    "snapshot_sha256": "9596eaea1f3da13e9f5aba7ea24b4d0afea4f9cd2e040485b822fdeb8df00d7c",
+    "image": "sha256:6a77e7410ef8d66f032f6cbbbf1afd2631b9c53d033ebbc403b075b016db465f"
+  },
+  "input_hashes": {
+    "matched": 19,
+    "mismatches": [],
+    "file_sha256": {
+      "package.json": "be70876ec1bb6df1d868a436983f2fb1a6f2c63fe79f1dd6026662c8a18fa33e",
+      "package-lock.json": "49b300c360c2c1471596b225ced88d8b509bb57fcc2787a83c0dd5190089eb1a",
+      "tsconfig.json": "0fe3705422763f10ffc11ebc6cb3712acc7159b70c51b76ee487ba5cc625de78",
+      "tsconfig.build.json": "8604911ac658f73989bc22831fb4fe040b7285ea85575b3edefcc384674a6330",
+      "eslint.config.js": "613fe065d6896d4a08985ac678e967ec5c4aa7e95c30f4ca69159814de59e976",
+      "src/auth/password.ts": "f8b36c41d1022d2e21e6a080150f8c93f7485b2f98aa3f03771683d2a9748251",
+      "src/auth/service.ts": "eee97c44ef39becf6edce05dc0df1e3d764ee05a445cb9a3b3745005ea129628",
+      "src/auth/session.ts": "c5c6b26aff298e7f64b79648a72a61951a4399b3eff25a4a29b1893c1eea35a5",
+      "src/auth/store.ts": "d5be57fc9270cd8e12a95015b32ce115c2cd3687fc592e4e01cc226292f7d70d",
+      "src/config.ts": "4ea3f96e9cfb60dec7ca93846a9ef5dbc1d871a5966cf52a8d1dece0e6c0983e",
+      "src/db.ts": "5aad6147553fbac9993b978069b54bb6d87606d72e0003cee630450b3b97e672",
+      "src/errors.ts": "b2c4f5fbc7536791c64e69430426550d97ed2138a55033cfef5e1cd311fc5cd0",
+      "src/main.ts": "ecfba84e123b44de26946d5bd21daff3f3636eb2a11030163132d6b11da1467a",
+      "src/migrate.ts": "35c855b6c506aa4bf67cdf2b14413dc7d33f35ca398f4f70e172d22b018f3abb",
+      "src/server.ts": "9da079487d3cbbe1620d506f193819652f9cd59be8d26a8be5678fd6bfd72061",
+      "src/web/page.ts": "926bd9b4ea7cf0c5e14c8141f9e47d152064472a3efa044455cf1c57a8d9120e",
+      "tests/auth-integration.test.ts": "f2405349a9115bcae82b2ebd29ce872c5fd9b5ef892fec6d321ad78d0a879413",
+      "tests/auth-unit.test.ts": "ad9241a67db92069305546486bd11ffc6168dc760ba871d54d83c0f8a1de540c",
+      "db/001-init.sql": "6c6ca7cc74530a6bee78b2c60b5f08bbb1e6cb76b47ab35ffb4aac359a7948e7"
+    }
+  },
+  "source_drift": [
+    "projects/07-cold-email-warmup/docs/features/f01-foundation-auth/review-report.md",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/astra-review-launch.json",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/astra-review-manifest.json",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/astra-review-receipt.md",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/events.jsonl",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/astra-review-runtime.json",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/build-inputs.json",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/build.txt",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/checks.json",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/compose-ports.txt",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/db-readiness-fault.txt",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/dependency-audit.json",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/integration-after-log-fix.txt",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/integration.txt",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/lint.txt",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/node22.txt",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/runtime-logs.txt",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/runtime.txt",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/secret-scan.txt",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/sol-runtime.json",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/tenant-mutation-result.txt",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/tenant-mutation.txt",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/typecheck.txt",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/evidence/unit.txt",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/receipt-manifest.json",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/run.json",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/sol-events.jsonl",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/sol-launch.json",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/sol-receipt.md",
+    "projects/07-cold-email-warmup/docs/telemetry/features/20261002T192500Z-f01/sol-run.json"
+  ],
+  "containers": {
+    "n7f01-web-1": {
+      "id": "ba96a7871b5e161b2bcd13fbe3e6f8397806959a698ae1fb68e34892c4655896",
+      "image": "sha256:6a77e7410ef8d66f032f6cbbbf1afd2631b9c53d033ebbc403b075b016db465f",
+      "state": "running",
+      "health": "healthy",
+      "networks": [
+        "n7f01_network"
+      ],
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "18701"
+          }
+        ]
+      }
+    },
+    "n7f01-db-1": {
+      "id": "a882c7a6439ff555e088dc2d8ffd20ccc6449ceb3f69f31ead5f5d8a6903002f",
+      "image": "sha256:38471f330eb885e04de130b768d6db4e10469e2311879c7e5c699f6d2d8a1c74",
+      "state": "running",
+      "health": "healthy",
+      "networks": [
+        "n7f01_network"
+      ],
+      "ports": {
+        "5432/tcp": null
+      }
+    },
+    "codex-ui-playwright": {
+      "id": "80a744951e0c6e1cd5783020bd961ad27e951156bc1cd31c052f7393dfbf7d5b",
+      "image": "sha256:946e81a797724bdd61de7999c3685af00b00eb0ae68eeb919ca74b7827d1615c",
+      "state": "running",
+      "health": null,
+      "networks": [
+        "codex-ui-browser",
+        "n7f01_network"
+      ],
+      "ports": {
+        "9320/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "19320"
+          }
+        ]
+      }
+    }
+  },
+  "versions": {
+    "app_node": "v22.20.0",
+    "postgres": "postgres (PostgreSQL) 16.10 (Debian 16.10-1.pgdg12+1)",
+    "browser_runtime": "v24.20.0\n1.63.0"
+  },
+  "bridge_port": {
+    "address": "127.0.0.1:18701",
+    "status": "free",
+    "exit_code": 0
+  },
+  "app_origin": "http://127.0.0.1:18701",
+  "health": {
+    "/healthz": 200,
+    "/readyz": 200
+  },
+  "environment_availability": "Existing app/db/shared Playwright; no keys read; runtime env untouched",
+  "inputs": [
+    "Existing build-inputs.json 19hash snapshot",
+    "Fresh independent ACCEPT review",
+    "Unique local synthetic credentials generated only in memory"
+  ],
+  "test_command": "docker exec -e N7_UI_EVIDENCE=/opt/browser/n7-f01-ui-20261002/evidence codex-ui-playwright node /opt/browser/n7-f01-ui-20261002/f01-auth.mjs",
+  "expected_effects": "Two new local test accounts, two logins, four logouts, retained local fixtures/rate buckets; temporary loopback bridge and own contexts only",
+  "evidence_root": "docs/telemetry/features/20261002T192500Z-f01/evidence/ui-auth",
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "browser_endpoint": "ws://127.0.0.1:9320/",
+  "endpoint_reconciliation": {
+    "supplied_path": "/inside",
+    "supplied_path_status": 400,
+    "actual_root_endpoint_connected": true,
+    "chromium": "153.0.8010.12",
+    "shared_server_configuration_changed": false
+  }
+}

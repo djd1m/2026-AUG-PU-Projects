@@ -1,0 +1,123 @@
+{
+  "run_id": "20261002T223848Z-widget",
+  "work_unit_id": "widget-implementation",
+  "attempt_id": "implementation-1",
+  "profile": "compact-quality-first-v2",
+  "started_at": "2026-10-02T22:42:39.738494+00:00",
+  "handoff_recorded_at": "2026-10-02T23:01:01.288265+00:00",
+  "elapsed_wall_seconds": 1101.549771,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Native model/effort/usage/billing not exposed to this worker; coordinator reconciles native metadata.",
+    "Active wall time not separately instrumented.",
+    "No baseline comparison; savings not established."
+  ],
+  "source_snapshot_sha256": "68c3f4a92f6f814a70a31b6b1839994c324ceece2637a08fcd402f633c97cb48",
+  "checks": [
+    {
+      "name": "ROUTE",
+      "command": "bash scripts/complexity-router.sh <four paths in route.txt>",
+      "exit_code": 0,
+      "result": "mechanical M; substantive L with approved fresh-SPARC M exception",
+      "evidence": "route.txt"
+    },
+    {
+      "name": "Node22 typecheck",
+      "command": "npm run typecheck",
+      "exit_code": 0,
+      "evidence": "typecheck.txt"
+    },
+    {
+      "name": "focused units",
+      "command": "node node_modules/vitest/vitest.mjs run --config vitest.config.ts apps/web/tests/unit/widget-handler.test.ts apps/web/tests/unit/ask-handler.test.ts apps/web/tests/unit/publication-validation.test.ts apps/web/tests/unit/publish-bot-ui.test.ts packages/rag/tests/unit/guards.test.ts",
+      "exit_code": 0,
+      "result": "5 files / 128 tests passed; 34 new widget cases",
+      "evidence": "focused-unit.txt"
+    },
+    {
+      "name": "widget production-build hook",
+      "command": "node --input-type=module -e 'const {default:config}=await import(\"./apps/web/next.config.mjs\"); await config(\"phase-production-build\");'",
+      "exit_code": 0,
+      "evidence": "widget-build.txt"
+    },
+    {
+      "name": "production server config without TypeScript",
+      "command": "node --no-warnings --loader ./tests/artifacts/widget/deny-typescript-loader.mjs --input-type=module -e 'const {default:config}=await import(\"./apps/web/next.config.mjs\"); const result=await config(\"phase-production-server\"); if (!result.reactStrictMode) process.exit(1); console.log(\"production-server config resolves with TypeScript imports forbidden\");'",
+      "exit_code": 0,
+      "evidence": "production-runtime-config.txt"
+    },
+    {
+      "name": "gzip cap negative proof",
+      "command": "node scripts/build-widget.mjs (temporary deterministic 70,000-byte hex probe appended to widget; exact restore)",
+      "exit_code": 1,
+      "result": "expected rejection at 80,594 gzip bytes; stale output removed; restored source rebuilt",
+      "evidence": "widget-cap-rejection.json"
+    },
+    {
+      "name": "diff whitespace",
+      "command": "git diff --check",
+      "exit_code": 0,
+      "evidence": "diff-check.txt"
+    }
+  ],
+  "mutations": [
+    {
+      "guard": "origin",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--config",
+        "vitest.config.ts",
+        "apps/web/tests/unit/widget-handler.test.ts",
+        "-t",
+        "denies Origin https://foreign"
+      ],
+      "source": "apps/web/src/server/widget-handler.ts",
+      "original_sha256": "bd45ad818b385c6e4b7967c48496bfed61b51c52172c1fa98f15be09e88144ec",
+      "mutated_sha256": "8f2c64383ffc484d52f255ae729cd414e0586a09658c4a043e99711eae93e182",
+      "restored_sha256": "bd45ad818b385c6e4b7967c48496bfed61b51c52172c1fa98f15be09e88144ec",
+      "red_exit": 1,
+      "green_exit": 0,
+      "exact_restore": true
+    },
+    {
+      "guard": "badge",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--config",
+        "vitest.config.ts",
+        "apps/web/tests/unit/widget-handler.test.ts",
+        "-t",
+        "SC-US-009-1/2"
+      ],
+      "source": "apps/web/src/server/widget-policy.ts",
+      "original_sha256": "a993b4e0aee5430c988b261769ef9246e2ffcb91a6723e6d0dd801755d82a8cc",
+      "mutated_sha256": "b6075eb81892238f385addb45336d8d9c8c09f32883f7c1ec8c4908780b0473a",
+      "restored_sha256": "a993b4e0aee5430c988b261769ef9246e2ffcb91a6723e6d0dd801755d82a8cc",
+      "red_exit": 1,
+      "green_exit": 0,
+      "exact_restore": true
+    }
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Actual Docker/browser E2E is outside this bounded attempt and reserved for coordinator."
+  },
+  "pending": [
+    "Full frozen-source all-unit/all-real-PG/full production build",
+    "Actual foreign-origin restrictive CSP/hostile CSS UI, real OPTIONS/CORS, 390/1440",
+    "Independent Astra source review",
+    "Immutable Docker image/build-source receipt"
+  ],
+  "initial_correction": "Initial typecheck exit 2: moscowDay imported from wrong module; fixed to quota.ts. Final typecheck exit 0.",
+  "coordinator_telemetry_modified_by_worker": false,
+  "verdict": "bounded implementation handoff; not feature acceptance"
+}

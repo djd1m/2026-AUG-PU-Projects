@@ -1,0 +1,79 @@
+diff --git a/projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/implementation-a.md b/projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/implementation-a.md
+index b6b448ab..34db3d87 100644
+--- a/projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/implementation-a.md
++++ b/projects/07-cold-email-warmup/docs/features/f03-dispatch-pool-campaign/implementation-a.md
+@@ -10,6 +10,8 @@ PoolStore.aggregate returns only count/status, with fresh complete polls (0<=age
+ 
+ DispatchStore.claim uses the exact F02 eligibilityTransaction, whose first operation after BEGIN is lock(7,1), then SKIP LOCKED. Common queue reservation counts claimed/submitting/submitted/unknown jobs with reserved_day; quota=min(user,provider,30), default user10. Sender order rotates by last claim. Expired claimed leases requeue and clear their token before a new claim, under that same transaction. Submitting/unknown never recover. Lease is45s. Claim has no adapter reference and provides no transport authority.
+ 
++R1 correction: forward-only migration004 adds nullable send_job.claim_order and its owned bigint sequence. Every successful claim assigns nextval under the existing lock; selection uses each sender's maximum claim_order, independent of equal caller timestamps. Sequence gaps are harmless. Pre004 jobs have null order and receive ordering history on their next claim; historical timestamps are not rewritten. Reclaims advance order as well. claimed_at, lease and polling freshness still use the caller's real clock seam. F03b must use migration005 next and retain claim_order history during final state transitions.
++
+ Reservation accounting choice: transactionally derive reservations from send_job instead of a separate counter. Migration003 central release_cancelled_reservation trigger clears reservation and lease on every queued/claimed cancellation, including unchanged F02 mailbox/consent writers. Irreversible states retain conservative charges; future F03b final transition must move UTC-day tokens and preserve this rule.
+ 
+ Durable F04 seams: enrollment(id,tenant,campaign_version,recipient_hash,state), suppression(tenant,recipient_hash), mailbox_poll(completed_at,scan_complete,uidvalidity,cursor_uid), send_job.message_id. DispatchSeams.recordPoll/stopEnrollment/suppress serialize on lock(7,1); they are internal, never user routes. Only tests inject complete local polling evidence. Production has no IMAP poll producer yet and therefore remains blocked without genuine evidence.
+diff --git a/projects/07-cold-email-warmup/src/db.ts b/projects/07-cold-email-warmup/src/db.ts
+index 0c1ffc28..b6d74eab 100644
+--- a/projects/07-cold-email-warmup/src/db.ts
++++ b/projects/07-cold-email-warmup/src/db.ts
+@@ -15,9 +15,11 @@ export async function migrate(pool: pg.Pool) {
+     if(!second.rowCount) await client.query(await readFile(new URL('../db/002-mailboxes-consent.sql',import.meta.url),'utf8'));
+     const third=await client.query('SELECT version FROM schema_migration WHERE version=3');
+     if(!third.rowCount) await client.query(await readFile(new URL('../db/003-dispatch.sql',import.meta.url),'utf8'));
++    const fourth=await client.query('SELECT version FROM schema_migration WHERE version=4');
++    if(!fourth.rowCount) await client.query(await readFile(new URL('../db/004-claim-order.sql',import.meta.url),'utf8'));
+     await client.query('COMMIT');
+   } catch (error) { await client.query('ROLLBACK'); throw error; } finally { client.release(); }
+ }
+ export async function ready(pool: pg.Pool): Promise<boolean> {
+-  try { return (await pool.query('SELECT version FROM schema_migration WHERE version IN (1,2,3)')).rowCount === 3; } catch { return false; }
++  try { return (await pool.query('SELECT version FROM schema_migration WHERE version IN (1,2,3,4)')).rowCount === 4; } catch { return false; }
+ }
+diff --git a/projects/07-cold-email-warmup/src/dispatch/store.ts b/projects/07-cold-email-warmup/src/dispatch/store.ts
+index c3e7117c..99e5b051 100644
+--- a/projects/07-cold-email-warmup/src/dispatch/store.ts
++++ b/projects/07-cold-email-warmup/src/dispatch/store.ts
+@@ -17,11 +17,11 @@ export class DispatchStore {
+       AND s.scope='campaign' AND s.revoked_at IS NULL AND s.scope_version=c.content_version AND s.recipient_fingerprint=c.recipient_fingerprint
+       AND NOT EXISTS(SELECT 1 FROM suppression x WHERE x.tenant_id=e.tenant_id AND x.recipient_hash=e.recipient_hash))))
+     AND (SELECT count(*) FROM send_job q WHERE q.mailbox_id=m.id AND q.reserved_day=$2::date AND q.state IN ('claimed','submitting','submitted','unknown'))<LEAST(m.daily_limit,m.provider_limit,30)
+-    ORDER BY (SELECT max(q.claimed_at) FROM send_job q WHERE q.mailbox_id=m.id) NULLS FIRST,j.due_at,j.id
++    ORDER BY (SELECT max(q.claim_order) FROM send_job q WHERE q.mailbox_id=m.id) NULLS FIRST,j.due_at,j.id
+     FOR UPDATE OF j SKIP LOCKED LIMIT 1`,[now,day])).rows;
+    const candidate=candidates[0];if(!candidate) return null;
+    await client.query('SELECT id FROM mailbox WHERE id=$1 FOR UPDATE',[candidate.mailbox_id]);
+-   return (await client.query(`UPDATE send_job SET state='claimed',reserved_day=$2,lease_owner=$3,lease_until=$4::timestamptz+interval '45 seconds',claimed_at=$4 WHERE id=$1 AND state='queued' RETURNING *`,[candidate.id,day,owner,now])).rows[0]??null;
++   return (await client.query(`UPDATE send_job SET state='claimed',reserved_day=$2,lease_owner=$3,lease_until=$4::timestamptz+interval '45 seconds',claimed_at=$4,claim_order=nextval('send_job_claim_order_seq') WHERE id=$1 AND state='queued' RETURNING *`,[candidate.id,day,owner,now])).rows[0]??null;
+   });
+  }
+ }
+diff --git a/projects/07-cold-email-warmup/tests/dispatch-integration.test.ts b/projects/07-cold-email-warmup/tests/dispatch-integration.test.ts
+index 983ea0a0..1c41a0fc 100644
+--- a/projects/07-cold-email-warmup/tests/dispatch-integration.test.ts
++++ b/projects/07-cold-email-warmup/tests/dispatch-integration.test.ts
+@@ -106,14 +106,25 @@ test('F03a realPG campaign/pool/shared quota/lease seams without transport',asyn
+    await app.campaigns.pause(actors[0]!.tenant_id,campaign.id);
+    const third=(await app.mailboxes.save(actors[0]!.tenant_id,raw)).id;
+    await pool.query("UPDATE mailbox SET state='verified_test' WHERE id=$1",[third]);await poll(third,tickNow);
+-   const other=await app.consents.campaign(actors[0]!,{content:'Rotate',recipients:['a@example.test','b@example.test','c@example.test','d@example.test']});
++   const other=await app.consents.campaign(actors[0]!,{content:'Rotate',recipients:['a@example.test','b@example.test','c@example.test','d@example.test','e@example.test','f@example.test','g@example.test']});
+    for(const id of [boxes[0]!,third]) await app.consents.act(actors[0]!,id,{scope:'campaign',action:'grant',affirmative:true,scopeVersion:1,campaignId:other.id,recipientFingerprint:other.recipient_fingerprint});
+    await eligibilityTransaction(pool,async c=>{await c.query('INSERT INTO suppression(tenant_id,recipient_hash,reason) VALUES($1,$2,$3)',[actors[0]!.tenant_id,recipientDigest('b@example.test',config.recipientHashKey),'local fixture']);});
+    await app.campaigns.start(actors[0]!,other.id,{mailboxIds:[boxes[0],third]},tickNow);
++   // Both eligible senders have three queued jobs and spare quotas. Unequal due
++   // times must not defeat rotation once both have history at the same instant.
++   await pool.query('UPDATE send_job SET due_at=$2::timestamptz-CASE WHEN mailbox_id=$3 THEN interval \'2 seconds\' ELSE interval \'1 second\' END WHERE campaign_id=$1',[other.id,tickNow,third]);
+    const blocker=await pool.connect();await blocker.query('BEGIN');await blocker.query('SELECT pg_advisory_xact_lock(7,1)');let done=false;
+    const pending=app.dispatch.claim(randomUUID(),tickNow).finally(()=>{done=true;});await new Promise(r=>setTimeout(r,50));assert.equal(done,false);
+    assert.ok(Number((await pool.query("SELECT count(*) FROM pg_locks WHERE locktype='advisory' AND classid=7 AND objid=1 AND NOT granted")).rows[0].count)>0);
+    await blocker.query('ROLLBACK');blocker.release();const rotation1=await pending;const rotation2=await app.dispatch.claim(randomUUID(),tickNow);assert.ok(rotation1 && rotation2);assert.notEqual(rotation1.mailbox_id,rotation2.mailbox_id);
++   const rotations=[rotation1,rotation2];
++   for(let i=0;i<4;i++) {
++    const claim=await app.dispatch.claim(randomUUID(),tickNow);assert.ok(claim);
++    assert.equal(claim.mailbox_id,rotations[i]!.mailbox_id,'equal-clock claims must continue alternating after both senders have history');
++    rotations.push(claim);
++   }
++   assert.equal(new Set(rotations.map(j=>j.id)).size,6);
++   assert.ok(rotations.every(j=>j.claimed_at.getTime()===tickNow.getTime() && j.lease_until.getTime()===tickNow.getTime()+45000));
+    assert.equal((await pool.query('SELECT count(*) FROM send_job j JOIN enrollment e ON e.id=j.enrollment_id WHERE j.campaign_id=$1 AND e.recipient_hash=$2',[other.id,recipientDigest('b@example.test',config.recipientHashKey)])).rows[0].count,'0');
+    await app.campaigns.pause(actors[0]!.tenant_id,other.id);assert.equal((await pool.query("SELECT count(*) FROM send_job WHERE campaign_id=$1 AND state='claimed'",[other.id])).rows[0].count,'0');
+    assert.equal(calls,0);

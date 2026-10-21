@@ -1,0 +1,12 @@
+
+> n7-cold-email-warmup@0.1.0 typecheck
+> tsc --noEmit
+
+
+> n7-cold-email-warmup@0.1.0 lint
+> eslint src tests
+
+
+> n7-cold-email-warmup@0.1.0 build
+> tsc -p tsconfig.build.json
+

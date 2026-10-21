@@ -1,0 +1,25 @@
+{"requestId":"e6be8ac7-9395-405c-881c-ea14173b8a71","code":"INVALID_QUERY","latencyMs":2}
+{"requestId":"b00df6f9-da13-4559-86bf-c1fcf4a48336","code":"INVALID_QUERY","latencyMs":1}
+{"requestId":"9a34602b-925d-4aa1-859e-c74aa81e6d01","code":"INVALID_QUERY","latencyMs":1}
+{"requestId":"ac6dae08-f284-438e-8f86-044533e26bc9","code":"NOT_FOUND","latencyMs":2}
+{"requestId":"0c80fe75-be4a-424c-be53-e426a12bb16b","code":"NOT_FOUND","latencyMs":2}
+{"requestId":"dd2d4db6-29d7-41c7-b092-5ff311e6d796","code":"NOT_FOUND","latencyMs":5}
+{"requestId":"595d86e1-5e44-49e5-910a-dc869044ec43","code":"NOT_FOUND","latencyMs":4}
+{"requestId":"0711226b-8c13-4eb3-b151-c6391f4bf1c2","code":"NOT_FOUND","latencyMs":2}
+{"requestId":"d856448e-b282-42d3-997f-8c0caf76eb0d","code":"NOT_FOUND","latencyMs":2}
+{"requestId":"4114b069-158d-4f96-a7db-70d57b35f730","code":"NOT_FOUND","latencyMs":3}
+{"requestId":"28ae5dd8-18cb-4591-a3fd-b382c59d4a65","code":"INVALID_QUERY","latencyMs":1}
+{"requestId":"1dc0d299-c0ee-47ed-aeac-b102d7e00fa0","code":"INVALID_QUERY","latencyMs":1}
+{"requestId":"d580439a-216f-46f7-b2c0-2a4efc1d8b77","code":"INVALID_QUERY","latencyMs":1}
+{"requestId":"6b9024cf-8e04-4da8-a9b8-c5bf62a04984","code":"INVALID_QUERY","latencyMs":1}
+{"requestId":"f3aafac7-90a0-4888-b584-4c64fcf57e17","code":"INVALID_QUERY","latencyMs":1}
+{"requestId":"1a97ca4a-70b7-4159-b042-eba26508a8e3","code":"NOT_FOUND","latencyMs":1}
+{
+  "status": "passed",
+  "checks": [
+    "Catalog 100 entries traversed as exactly 50+50; terminal empty page and strict unknown/duplicate/malformed query statuses",
+    "51 current lines with tied created_at traverse as 50+1 with no omissions/duplicates; owned historical design remains readable; unfiltered 53-row history remains available",
+    "HTTP rejects foreign account/project/design, unknown design/cursor, same-project other-design cursor; strict query rejects duplicate/invalid/unknown keys",
+    "Actual allPages to HTTP/PG handler traverses 51 current lines, preserves designId on page two, forwards same cancellation signal"
+  ]
+}

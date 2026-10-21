@@ -1,0 +1,35 @@
+{
+  "checked_at": "2026-10-03T03:14:00.032312+00:00",
+  "source_revision": "d006c1dad03059c9dd73908f207e22985dd619e5",
+  "file_count": 92,
+  "current_equals_frozen": true,
+  "donor_equals_frozen": true,
+  "source_map_complete": true,
+  "aggregate_sha256": "9d8687754a8c85dada747898492e72f71f53582bcfb388bf981c7e3bbe7a3574",
+  "aggregate_matches": true,
+  "launch_sha256": "0be61a335a64b2a0a84475975d86a89d636fb8b2d0080a2f481f8353a84e740c",
+  "spec_concat_sha256": "27ff83346231163b7f7ef1ac50210ae779911bd9a25c233337cd78b627119bd6",
+  "spec_files": {
+    "01-specification.md": "72b44888ddab0405d955084d572130649fbdddc70b33d53a364db7dd80f05de5",
+    "02-pseudocode.md": "af2018debc1e46504b343b306711d90cdf2d3461792b0b9f1450572ecafc8bfc",
+    "03-architecture.md": "dda20e26a470e82f5172fd4f8a8d8a1b4531c18349fa79ed9c60a95ad383c962",
+    "04-refinement.md": "5850acd92c0b7717258966ff53455ed11a8a2c6c4b57f0f81f59334bef205792"
+  },
+  "cjm_sha256": "9e464965d558a6cfdc3d7e8f1a99aa9a0ff70937dd1876f165074f1a38cf1172",
+  "recorded_build_sha256": "b9a214109bef0d428a4609960962782d2631abcb2bb1d311d44084934a403e5a",
+  "recorded_image": "sha256:79c996d66355dbdd6d2d87b4fb5e0723d4d899651b798b1ce6d34a1d98b7ecf9",
+  "recorded_image_source_matches": true,
+  "historical_exits": {
+    "sol-a-build.exit": "0",
+    "sol-a-unit.exit": "0",
+    "sol-a-guard-final.exit": "0",
+    "sol-a-snapshot-final.exit": "0",
+    "sol-a-lint.exit": "0",
+    "sol-a-secrets.exit": "0",
+    "sol-a-type.exit": "0",
+    "sol-a-pg.exit": "0"
+  },
+  "runtime_or_tests_executed": false,
+  "check_command": "python3 inline hashlib + git show for 92 frozen entries; no build/test/runtime/network",
+  "exit_code": 0
+}

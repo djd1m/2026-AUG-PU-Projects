@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-03T17:23:20.453107+00:00",
+  "argv": [
+    "npm",
+    "--userconfig=/tmp/codex-cache-empty-cwd/user.npmrc",
+    "--globalconfig=/tmp/codex-cache-empty-cwd/global.npmrc",
+    "--cache=/root/.npm",
+    "--logs-dir=/dev/null",
+    "--logs-max=0",
+    "--timing=false",
+    "--update-notifier=false",
+    "cache",
+    "clean",
+    "--force"
+  ],
+  "plan_sha256": "d6fe204d1e9a12dd27330138d2e1c76d7dee70c825258c039ab331d52e903190",
+  "configs": [
+    {
+      "path": "/tmp/codex-cache-empty-cwd/user.npmrc",
+      "realpath": "/tmp/codex-cache-empty-cwd/user.npmrc",
+      "dev": 64769,
+      "inode": 194228,
+      "mode": "0600",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/codex-cache-empty-cwd/global.npmrc",
+      "realpath": "/tmp/codex-cache-empty-cwd/global.npmrc",
+      "dev": 64769,
+      "inode": 194229,
+      "mode": "0600",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "read_only_configuration_validation": {
+    "same_settings_command": "cache ls",
+    "exit_code": 0,
+    "stdout_discarded": true,
+    "credentials_logged": false
+  },
+  "mutation_executed": false
+}

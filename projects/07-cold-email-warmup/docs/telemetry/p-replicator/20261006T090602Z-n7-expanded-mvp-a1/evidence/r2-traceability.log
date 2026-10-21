@@ -1,0 +1,7 @@
+TRACE contour=project specification=/tmp/n7-expansion-gate-source-r2-20261006/docs/Specification.md pseudocode=/tmp/n7-expansion-gate-source-r2-20261006/docs/Pseudocode.md
+COUNT requirements=16 algorithms=16 missing-algorithm=0 orphan-algorithm=0
+PASS contour=project bidirectional traceability complete
+TRACE contour=expanded-mvp specification=/tmp/n7-expansion-gate-source-r2-20261006/docs/features/expanded-mvp/01_specification.md pseudocode=/tmp/n7-expansion-gate-source-r2-20261006/docs/features/expanded-mvp/02_pseudocode.md
+COUNT requirements=18 algorithms=18 missing-algorithm=0 orphan-algorithm=0
+PASS contour=expanded-mvp bidirectional traceability complete
+VERDICT traceability=PASS features=1 gaps=0 inconclusive=0

@@ -1,0 +1,39 @@
+{
+  "started_at": "2026-10-03T16:55:58.512406+00:00",
+  "profile": "bounded M operations, explicit three model critics",
+  "status": "complete",
+  "cost": null,
+  "coordinator_usage": null,
+  "missing": [
+    "Earlier inspection duration not included; start observed at 16:50:39 UTC",
+    "Monetary cost unavailable"
+  ],
+  "finished_at": "2026-10-03T17:30:06.690769+00:00",
+  "actual_models": {
+    "risk": "gpt-6-astra",
+    "execution": "gpt-6.1-sol",
+    "inventory": "gpt-6-luna"
+  },
+  "coordinator_model": "gpt-6.1-sol/medium per earlier host evidence",
+  "plan_sha256": "d6fe204d1e9a12dd27330138d2e1c76d7dee70c825258c039ab331d52e903190",
+  "candidates_sha256": "847cb5599aaf701de727bfcd05d37a45a72367ec5ac279bd0c2ed15f74799cbe",
+  "mutation_executed": true,
+  "final_status": "PASS",
+  "usage": {
+    "critic_cli_sum_deduplicated_by_thread": {
+      "input_tokens": 1213701,
+      "cached_input_tokens": 981504,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 13752,
+      "reasoning_output_tokens": 4033,
+      "total_tokens": 1227453
+    },
+    "unique_critic_threads": 9,
+    "note": "Same-thread delivery totals replace partial timeout counters, cached/reasoning are subsets; coordinator unavailable."
+  },
+  "initial_readonly_inspection_observed_at": "2026-10-03T16:50:39+00:00",
+  "available_bytes_after": 7776759808,
+  "recovered_bytes_phase_sum": 4828196864,
+  "duration_seconds_recorded": 2048.178363,
+  "duration_seconds_from_observed_inspection": 2367.690769
+}

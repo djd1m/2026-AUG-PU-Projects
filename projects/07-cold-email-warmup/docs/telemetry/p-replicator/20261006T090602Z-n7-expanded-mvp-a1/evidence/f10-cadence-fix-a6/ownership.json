@@ -1,0 +1,15 @@
+{
+  "source_revision": "6b1e464558283c1e0cfafd35344bb8b9e503f18d",
+  "project_root": "projects/07-cold-email-warmup",
+  "paths": [
+    "src/runtime/store.ts",
+    "src/runtime/loop.ts",
+    "tests/f10-runtime-integration.test.ts",
+    "tests/f10-runtime-unit.test.ts",
+    "tests/expanded-mvp-04.test.ts",
+    "tests/f10-runtime-process-fixture.ts",
+    "tests/f10-runtime-fixture.ts",
+    "tests/f10-runtime-protocol.test.ts"
+  ],
+  "constraints": "store/loop only proven cadence cause; no backoff/slot/tenant/stop/quota weakening; tests actual fixture loader and real fault only; long suite next stage"
+}

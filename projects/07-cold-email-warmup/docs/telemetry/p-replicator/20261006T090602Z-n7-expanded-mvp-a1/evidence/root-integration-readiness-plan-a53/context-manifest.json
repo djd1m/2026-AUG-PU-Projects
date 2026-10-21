@@ -1,0 +1,407 @@
+{
+  "source_revision": "7dee9b9a33b87359feeae4fb82b88331ca50d5de",
+  "measured_at": "2026-10-07T11:06:12.947523+00:00",
+  "context_origin": "Current immutable integration sources, A50 clean objective packet and root report; no author narrative; active A52 native fixture neither read nor hashed",
+  "inputs": [
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/CLAUDE.md",
+      "sha256": "c1669853c58eddd6994761d510f5f1a4d1b992b50e16f8ebedf18a10937144a2",
+      "bytes": 13438,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/CLAUDE.md",
+      "sha256": "3b548fa6dea02c7639aa7fbdfdc3fa1f7bbf90b6726c406501d89cc2b3fe3ba0",
+      "bytes": 7533,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/docs/development/model-routing-econom.md",
+      "sha256": "4622c96c879baa08d548f99b4f48ec19e7f59bb0eb91b2a58de46db4a079ee09",
+      "bytes": 5589,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/.claude/rules/complexity-router.md",
+      "sha256": "422a1d1952f7755c1ea772b33e9e41e1bd78a239af8a0a490f03bc48eb4e0c70",
+      "bytes": 10185,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/.claude/rules/project-work-companion-local.md",
+      "sha256": "273c7cb0d069609ba2823786e98f914362bc1fb38d864e3e4f720d6f3ecddbc4",
+      "bytes": 799,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/.claude/skills/project-work-companion/SKILL.md",
+      "sha256": "7d27b2e123cfab42ddb5d8930ac1a6fce3aaaeb3ceb626f77a9f2cad56858403",
+      "bytes": 6121,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/db.ts",
+      "sha256": "81141899c2f675759d7c79a0d97475dfdfe95f596bc2fd172a48c14a1a8902c0",
+      "bytes": 4720,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/db/017-transport-purpose.sql",
+      "sha256": "09bf04ae69e9b967762b6a68508e3a879281998df075010a6059891b1c6217e8",
+      "bytes": 657,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/package.json",
+      "sha256": "6baf9f1e19020eecc054eb76e1731b8f9336dc32bffe19a408d039baeac2eb83",
+      "bytes": 1156,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/guard-a50.mjs",
+      "sha256": "e9ee593a75f0119e24cdf33291d7b81b1533231b90ac735fbbb1adef19f6fd12",
+      "bytes": 5864,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/schema-setup-a50.mjs",
+      "sha256": "73f841b067b1160642678958d3c2e141d252f26db6d1e434bd2c5792b5583ba2",
+      "bytes": 4239,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/run-a50.sh",
+      "sha256": "61be95906bf4fd3296628a349914a685b8b0d0475bff7c5176e182a4a7b93e07",
+      "bytes": 1107,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/launch.py",
+      "sha256": "b6e262e8db77f30f943e71b2251a30897431f9c119f5d606af75bbba346216cf",
+      "bytes": 2327,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/snapshot-a50.mjs",
+      "sha256": "78d67976e562332af49404a523979ca9b671088cbbeb6b675ec2426665f354b4",
+      "bytes": 2842,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/report.md",
+      "sha256": "27982af66ddd8d1b41297810d91f3fc649013f5916ecab7904f72be9577f11d7",
+      "bytes": 7863,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/objective-packet.json",
+      "sha256": "61fb465e896a280f0cb07c4bd5b0ae07c8c7bb0bcf575e85da0df135bea726f8",
+      "bytes": 212413,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/context.raw",
+      "sha256": "60c2ce10e8cf1dda703d86aa6af25b3fb40a490b0a6db72a1ee837932d13d3f1",
+      "bytes": 16673,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/context-launch.json",
+      "sha256": "bebef6cc52ed38d0b8fcdcde76caba7e482bd2e6de394c8afaedd538e5bad0f3",
+      "bytes": 44785,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/context-exit.txt",
+      "sha256": "ca2ebdf97d7469496b1f4b78958f9dc8447efdcb623953fee7b6996b762f6fff",
+      "bytes": 4,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/context-joins.json",
+      "sha256": "db2c653bbcfb4884203c7b78f6b1ef2800f975f658353075233c7240abdf05d1",
+      "bytes": 95658,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/node-test-skip-support.raw",
+      "sha256": "9eececb9a457f5b61e3c3e9b5a4aefaa1f40bd4767efe49fdc1fa7123e2eb2ab",
+      "bytes": 176,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/db-observed.json",
+      "sha256": "8d3d04f3adc0b2c8a0f36d4e2cea4dc9ec27964123b37e506869e30396362d76",
+      "bytes": 28032,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/source-binding.json",
+      "sha256": "be6039dda636f250e3ea43b710b3b77de96371d02b6df1f647ab864d445d4d8d",
+      "bytes": 410,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/auth-integration.test.ts",
+      "sha256": "cba20b7dfb4bdfc5c2a0dc37b6973db623d3b33ed32d5f53299a0638d2eb9efa",
+      "bytes": 10984,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/billing-integration.test.ts",
+      "sha256": "5f9591e96337e41a06374c46c255e08961e5f0c266644542519b4eee891d3087",
+      "bytes": 15375,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/capacity-integration.test.ts",
+      "sha256": "b2ab38150bf0eafde9783d0b84036964c5b873999763745fefe69af0238f3a86",
+      "bytes": 17323,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/diagnostics-disconnect-integration.test.ts",
+      "sha256": "e9d0bfbe42ece08c9503bff6743eb06cf95b20747602f4877328961cacf9abaa",
+      "bytes": 3998,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/diagnostics-final-cancel-integration.test.ts",
+      "sha256": "d412dad9622659e21aabcb168021c01919dfad9366584635ef74929a63c7ad93",
+      "bytes": 6790,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/diagnostics-integration.test.ts",
+      "sha256": "27ba7b2d3652779f6888ce362d90053019a01e3950e13bb115c699433a2c84ba",
+      "bytes": 11106,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/diagnostics-ordered-integration.test.ts",
+      "sha256": "795225b1535dea4d7f3c570fed1961dc1f66a431026b0c60eb93f2f1a8b65871",
+      "bytes": 9706,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/dispatch-integration.test.ts",
+      "sha256": "78ad4012111d02e618a813f59247784e4e523ec79171e9b80576cd191e393f3b",
+      "bytes": 15290,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/evidence-integration.test.ts",
+      "sha256": "e8d4e30a27e2022787e2a86b8072d9d0558ab124e436be8839e93d59beab651b",
+      "bytes": 18959,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f09-transport-integration.test.ts",
+      "sha256": "a043d3d8044efb787d0b9b3dea70f92be0e56841b11918a0867c00e01ea1978c",
+      "bytes": 187,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-integration.test.ts",
+      "sha256": "2d79ea1b4a9d92f5dc390b40bf75b6f2ea5c05e58af14d3873360380bdd24536",
+      "bytes": 53709,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f11-context-integration.test.ts",
+      "sha256": "4e65a0d76ede8e3e9c76232cb4e45ce6f284c9e568241557145a493aee03a6f7",
+      "bytes": 48078,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/mailboxes-integration.test.ts",
+      "sha256": "c072c3a693cfc63d9e5e5a768de3cdead03564b6b197822d052e0a7567068e3a",
+      "bytes": 14337,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/replies-integration.test.ts",
+      "sha256": "3bdbec78c56cf0451ad8aba6567aefe2e3f2c098e10df699b9db25de89712e08",
+      "bytes": 22564,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/submission-integration.test.ts",
+      "sha256": "350b22220e81b829490ae47fbb4bdc30c1757217551da2c0410aafc3f11a2d1a",
+      "bytes": 23152,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/suppression-integration.test.ts",
+      "sha256": "26afb13cfc49b2a55a6b166c9a2f8a29a5e6ae67d12054aa4cf8d31289a9c8d4",
+      "bytes": 21841,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/suppression-owner-integration.test.ts",
+      "sha256": "eb1fe102d46d46ab359342d41cc1b6230f5c3f0b8d0be1b332df3a02a95544d1",
+      "bytes": 6184,
+      "regular_non_symlink": true
+    },
+    {
+      "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/web-integration.test.ts",
+      "sha256": "7ea40927de0644e4305d3a7ab6cf5b3928129575fc6e921ddd25e7b0e7d8683d",
+      "bytes": 8293,
+      "regular_non_symlink": true
+    }
+  ],
+  "objective_hash_checks": [
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/context-exit.txt",
+      "sha256": "ca2ebdf97d7469496b1f4b78958f9dc8447efdcb623953fee7b6996b762f6fff",
+      "match": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/context-joins.json",
+      "sha256": "db2c653bbcfb4884203c7b78f6b1ef2800f975f658353075233c7240abdf05d1",
+      "match": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/context-launch.json",
+      "sha256": "bebef6cc52ed38d0b8fcdcde76caba7e482bd2e6de394c8afaedd538e5bad0f3",
+      "match": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/context.raw",
+      "sha256": "60c2ce10e8cf1dda703d86aa6af25b3fb40a490b0a6db72a1ee837932d13d3f1",
+      "match": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/db-observed.json",
+      "sha256": "8d3d04f3adc0b2c8a0f36d4e2cea4dc9ec27964123b37e506869e30396362d76",
+      "match": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/guard-a50.mjs",
+      "sha256": "e9ee593a75f0119e24cdf33291d7b81b1533231b90ac735fbbb1adef19f6fd12",
+      "match": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/launch.py",
+      "sha256": "b6e262e8db77f30f943e71b2251a30897431f9c119f5d606af75bbba346216cf",
+      "match": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/node-test-skip-support.raw",
+      "sha256": "9eececb9a457f5b61e3c3e9b5a4aefaa1f40bd4767efe49fdc1fa7123e2eb2ab",
+      "match": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/run-a50.sh",
+      "sha256": "61be95906bf4fd3296628a349914a685b8b0d0475bff7c5176e182a4a7b93e07",
+      "match": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/schema-setup-a50.mjs",
+      "sha256": "73f841b067b1160642678958d3c2e141d252f26db6d1e434bd2c5792b5583ba2",
+      "match": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/snapshot-a50.mjs",
+      "sha256": "78d67976e562332af49404a523979ca9b671088cbbeb6b675ec2426665f354b4",
+      "match": true
+    },
+    {
+      "path": "/tmp/n7-f11-root-regression-a50-20261007/source-binding.json",
+      "sha256": "be6039dda636f250e3ea43b710b3b77de96371d02b6df1f647ab864d445d4d8d",
+      "match": true
+    }
+  ],
+  "immutable_integration_source_checks": [
+    {
+      "path": "tests/auth-integration.test.ts",
+      "sha256": "cba20b7dfb4bdfc5c2a0dc37b6973db623d3b33ed32d5f53299a0638d2eb9efa",
+      "matches_A50_frozen_source": true
+    },
+    {
+      "path": "tests/billing-integration.test.ts",
+      "sha256": "5f9591e96337e41a06374c46c255e08961e5f0c266644542519b4eee891d3087",
+      "matches_A50_frozen_source": true
+    },
+    {
+      "path": "tests/capacity-integration.test.ts",
+      "sha256": "b2ab38150bf0eafde9783d0b84036964c5b873999763745fefe69af0238f3a86",
+      "matches_A50_frozen_source": true
+    },
+    {
+      "path": "tests/diagnostics-disconnect-integration.test.ts",
+      "sha256": "e9d0bfbe42ece08c9503bff6743eb06cf95b20747602f4877328961cacf9abaa",
+      "matches_A50_frozen_source": true
+    },
+    {
+      "path": "tests/diagnostics-final-cancel-integration.test.ts",
+      "sha256": "d412dad9622659e21aabcb168021c01919dfad9366584635ef74929a63c7ad93",
+      "matches_A50_frozen_source": true
+    },
+    {
+      "path": "tests/diagnostics-integration.test.ts",
+      "sha256": "27ba7b2d3652779f6888ce362d90053019a01e3950e13bb115c699433a2c84ba",
+      "matches_A50_frozen_source": true
+    },
+    {
+      "path": "tests/diagnostics-ordered-integration.test.ts",
+      "sha256": "795225b1535dea4d7f3c570fed1961dc1f66a431026b0c60eb93f2f1a8b65871",
+      "matches_A50_frozen_source": true
+    },
+    {
+      "path": "tests/dispatch-integration.test.ts",
+      "sha256": "78ad4012111d02e618a813f59247784e4e523ec79171e9b80576cd191e393f3b",
+      "matches_A50_frozen_source": true
+    },
+    {
+      "path": "tests/evidence-integration.test.ts",
+      "sha256": "e8d4e30a27e2022787e2a86b8072d9d0558ab124e436be8839e93d59beab651b",
+      "matches_A50_frozen_source": true
+    },
+    {
+      "path": "tests/f09-transport-integration.test.ts",
+      "sha256": "a043d3d8044efb787d0b9b3dea70f92be0e56841b11918a0867c00e01ea1978c",
+      "matches_A50_frozen_source": true
+    },
+    {
+      "path": "tests/f10-runtime-integration.test.ts",
+      "sha256": "2d79ea1b4a9d92f5dc390b40bf75b6f2ea5c05e58af14d3873360380bdd24536",
+      "matches_A50_frozen_source": true
+    },
+    {
+      "path": "tests/f11-context-integration.test.ts",
+      "sha256": "4e65a0d76ede8e3e9c76232cb4e45ce6f284c9e568241557145a493aee03a6f7",
+      "matches_A50_frozen_source": true
+    },
+    {
+      "path": "tests/mailboxes-integration.test.ts",
+      "sha256": "c072c3a693cfc63d9e5e5a768de3cdead03564b6b197822d052e0a7567068e3a",
+      "matches_A50_frozen_source": true
+    },
+    {
+      "path": "tests/replies-integration.test.ts",
+      "sha256": "3bdbec78c56cf0451ad8aba6567aefe2e3f2c098e10df699b9db25de89712e08",
+      "matches_A50_frozen_source": true
+    },
+    {
+      "path": "tests/submission-integration.test.ts",
+      "sha256": "350b22220e81b829490ae47fbb4bdc30c1757217551da2c0410aafc3f11a2d1a",
+      "matches_A50_frozen_source": true
+    },
+    {
+      "path": "tests/suppression-integration.test.ts",
+      "sha256": "26afb13cfc49b2a55a6b166c9a2f8a29a5e6ae67d12054aa4cf8d31289a9c8d4",
+      "matches_A50_frozen_source": true
+    },
+    {
+      "path": "tests/suppression-owner-integration.test.ts",
+      "sha256": "eb1fe102d46d46ab359342d41cc1b6230f5c3f0b8d0be1b332df3a02a95544d1",
+      "matches_A50_frozen_source": true
+    },
+    {
+      "path": "tests/web-integration.test.ts",
+      "sha256": "7ea40927de0644e4305d3a7ab6cf5b3928129575fc6e921ddd25e7b0e7d8683d",
+      "matches_A50_frozen_source": true
+    }
+  ]
+}

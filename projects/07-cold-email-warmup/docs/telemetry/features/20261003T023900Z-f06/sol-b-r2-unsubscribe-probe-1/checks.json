@@ -1,0 +1,91 @@
+{
+  "status": "failed",
+  "source": "e9e78e47c349a0c23b3542dc68945d1f976f76c6edbb8bee61c817a3aebd084b",
+  "build": "455e80941dc8bc0c0dd7cca1a2f9b1388e1275b7f8b85fdf716993fdcb1ca27f",
+  "checks": [
+    {
+      "name": "1440 HTML policy same-origin",
+      "pass": true
+    },
+    {
+      "name": "1440 GET zero business effects",
+      "pass": true
+    },
+    {
+      "name": "1440 CSP preserved",
+      "pass": true
+    },
+    {
+      "name": "1440 cache no-store",
+      "pass": true
+    },
+    {
+      "name": "1440 denied null",
+      "pass": true
+    },
+    {
+      "name": "1440 denied zero business effects",
+      "pass": true
+    },
+    {
+      "name": "1440 denied https://forged.example",
+      "pass": true
+    },
+    {
+      "name": "1440 denied zero business effects",
+      "pass": true
+    },
+    {
+      "name": "1440 cross-origin referrer absent",
+      "pass": true
+    },
+    {
+      "name": "1440 native POST200",
+      "pass": false
+    }
+  ],
+  "http": [],
+  "console": [],
+  "page_errors": [],
+  "failures": [
+    {
+      "kind": "AssertionError",
+      "assertion": "1440 native POST200"
+    }
+  ],
+  "viewports": [],
+  "browser_version": "153.0.8010.12",
+  "requests": [
+    {
+      "method": "GET",
+      "origin_class": "absent",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "origin_class": "opaque-null",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "origin_class": "other",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "origin_class": "absent",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "origin_class": "configured",
+      "status": 200
+    }
+  ],
+  "cleanup": {
+    "contexts_closed": true,
+    "bridge_closed": true,
+    "sockets_destroyed": true,
+    "shared_browser_preserved": true
+  }
+}

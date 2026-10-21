@@ -1,0 +1,11 @@
+--- src/replies/store.ts
++++ src/replies/store.ts
+@@ -75,7 +75,7 @@
+   return eligibilityTransaction(this.pool,async c=>{
+    const run=await this.current(c,tenant,mailbox,identity);const now=this.now();
+    if(run.state!=='rescan_incomplete' || now.getTime()<run.attemptStartedAt.getTime()) throw stale();
+-   return view((await c.query("UPDATE reply_rescan SET state='scanning',attempt=attempt+1,pages=0,attempt_started_at=$3 WHERE tenant_id=$1 AND mailbox_id=$2 RETURNING *",[tenant,mailbox,now])).rows[0]);
++   return view((await c.query("UPDATE reply_rescan SET state='scanning',attempt=attempt+1,pages=0,attempt_started_at=$3,tail_high_water=NULL,cursor_uid=0 WHERE tenant_id=$1 AND mailbox_id=$2 RETURNING *",[tenant,mailbox,now])).rows[0]);
+   });
+  }
+  private async incomplete(c:PoolClient,tenant:string,mailbox:string) {

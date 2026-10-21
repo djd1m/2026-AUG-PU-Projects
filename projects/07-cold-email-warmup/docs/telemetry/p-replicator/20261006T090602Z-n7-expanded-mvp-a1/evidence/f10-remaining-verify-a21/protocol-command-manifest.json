@@ -1,0 +1,45 @@
+{
+  "at": "2026-10-06T20:18:06.724200+00:00",
+  "launch_sha256": "c7fa33a1f6229aedea147dfc5de17ea1433cfa0266910ec5e31e518cf6c41e46",
+  "source_manifest_sha256": "237ad9bb03ef3afafdfdde1a55dc3298163978e152c109c978f19e55936c54d2",
+  "prior_source_nodes": [],
+  "mutex": "free acquired/released",
+  "files": {
+    "guard-v1.mjs": "47c8b0b66df075a348520818750dd906e56e71a077cbe7b76b4b685486b8d9cf",
+    "suite-output-v2.mjs": "1350975c491623e2367f47ae39a0f96ca7e9e76a610fb60037e19d59115a12ac",
+    "pg-snapshot-v1.mjs": "9f829e4efe2dce6f3e8125996cd9fe9e83e4cdc12e6c25d7550ee0fbb1c40bf1",
+    "health-v1.mjs": "48b222f1e0a7a0d234d6af3461a4f4bb00990b11910b062e1736f43110cbbf4c",
+    "probes-v1.mjs": "f63dff8340a230fadce14c77080d6c064b7d6ef62c6502e15fe7eff4c7a658f4",
+    "probe-child.mjs": "5776bc1b781b48388d032b7e158ac5d9d16488273900d624aeb8e81eaceb12f8",
+    "run-protocols-v3.py": "60aec42585e5415f8f2e13e690ab467b40feed47dff30e4aa43f45599fe20546"
+  },
+  "protocol_titles_before_launch": [
+    "suspended transport owners retain physical slots across runtime restart",
+    "native ambiguous submission and UID recovery compose with runtime transport guards",
+    "compiled healthy polling completes twice without a TypeScript loader",
+    "explicit retry captures changed native UID proof in one quantum without old FETCH or freshness"
+  ],
+  "selected_titles": [
+    "native ambiguous submission and UID recovery compose with runtime transport guards",
+    "compiled healthy polling completes twice without a TypeScript loader",
+    "explicit retry captures changed native UID proof in one quantum without old FETCH or freshness"
+  ],
+  "selected_count": 3,
+  "excluded_physical_title": "suspended transport owners retain physical slots across runtime restart",
+  "excluded_count": 1,
+  "command": [
+    "node",
+    "node_modules/tsx/dist/cli.mjs",
+    "--test",
+    "--test-concurrency=1",
+    "--test-name-pattern=native\\ ambiguous\\ submission\\ and\\ UID\\ recovery\\ compose\\ with\\ runtime\\ transport\\ guards|compiled\\ healthy\\ polling\\ completes\\ twice\\ without\\ a\\ TypeScript\\ loader|explicit\\ retry\\ captures\\ changed\\ native\\ UID\\ proof\\ in\\ one\\ quantum\\ without\\ old\\ FETCH\\ or\\ freshness",
+    "tests/f10-runtime-protocol.test.ts"
+  ],
+  "fixtures": {
+    "tests/f10-runtime-protocol.test.ts": "adb0fbb7c219b433bca26767c6c79edea6aab62973e4cefdbd17eb22aeb5750a",
+    "tests/f10-runtime-fixture.ts": "654fb5e45e5dcc0f520bdae5906c5340baf68eb8fb0dd9a8e9d29b6d6a91aa2f",
+    "tests/f10-runtime-process-fixture.ts": "af3523f51274e34d420ca1e8cd01927e7c3e262cfeb229cbe0dc1535b66a6340",
+    "tests/f09-transport-fixture.ts": "984e6242be0a61880750c114dde53e5993588d9d3c82990c608e7e4db0eb5328"
+  },
+  "context": "same fixed actor from planner-only A20 context; no author/operational handoff supplied"
+}

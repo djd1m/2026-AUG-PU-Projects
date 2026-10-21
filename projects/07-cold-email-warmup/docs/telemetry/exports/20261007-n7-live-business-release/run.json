@@ -1,0 +1,200 @@
+{
+  "started_at": "2026-10-07T17:36:32.187188+00:00",
+  "status": "local live-capable billing/UI code and Docker E2E accepted; production activation blocked by external inputs",
+  "owner_request": "Real business effect: real email sending and ability to pay, beyond TEST preview",
+  "authorization_scope": "Prepare and implement requested live-capable release; no unspecified charges or external pilot executed",
+  "source_revision": "a0896402",
+  "preview_image": "sha256:3791cac50f5b6c2c87dd5cd3975f8141a1dd846b405361ca7456623121ec0b37",
+  "profile": "model-routing-econom",
+  "planner_requested_model": "gpt-6.1-sol",
+  "planner_requested_effort": "high",
+  "planner_agent": "/root/n7_live_business_release_plan",
+  "actual_model": null,
+  "usage": null,
+  "measurement_gaps": [
+    "Actual host model/effort/tokens/cost unavailable"
+  ],
+  "scope": [
+    "Real SMTP/IMAP release path",
+    "Real provider checkout and canonical entitlement verification"
+  ],
+  "observed_gaps": [
+    "Published F08 TEST preview, no reply worker/fixtures",
+    "Local-only billing provider and reconciliation joins local payment table",
+    "BillingService reconcile and entitlement are coupled to local_provider_payment; provider injection alone insufficient",
+    "Real Team tariff amount is not agreed; TEST100minorunits must not become real price by accident"
+  ],
+  "next": "Verify controlled mailbox credential availability; complete required off-host backup, then source-bound mail-worker rollout and controlled send/reply pilot. Billing credentials remain a separate activation input.",
+  "elapsed": null,
+  "updated_at": "2026-10-07T21:00:49.197370+00:00",
+  "plan": "docs/plans/live-business-release-20261007.md",
+  "planner_result": "bounded plan completed; nativehostusage unknown",
+  "owner_plan_checkpoint": "Latest owner response: давай делай",
+  "integrated_revision": "ba458df897304e8c6d51e1a2d678743069c36ee1",
+  "source_composition": [
+    {
+      "path": "projects/07-cold-email-warmup/db/016-live-billing.sql",
+      "byte_equal": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/live.ts",
+      "byte_equal": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/plans.ts",
+      "byte_equal": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/billing/provider.ts",
+      "byte_equal": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/src/db.ts",
+      "byte_equal": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/diagnostics-integration.test.ts",
+      "byte_equal": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/live-billing-integration.test.ts",
+      "byte_equal": true
+    },
+    {
+      "path": "projects/07-cold-email-warmup/tests/live-billing-unit.test.ts",
+      "byte_equal": true
+    }
+  ],
+  "checks": {
+    "unit_a1": "70/70 native0",
+    "diagnostics_and_canonical_a1": "14/14 native0",
+    "legacy_guarded": "38/38 native0 on separate RAMcluster",
+    "corrective_canonical": "10/10 author,8/8 independent",
+    "independent_review": "ACCEPT_LOCAL_CANONICAL_SLICE",
+    "typecheck_lint_build": "native0",
+    "gate_method": "Composite source-bound suites; initial all-integration failed guard/schema cases retained, not relabeled green",
+    "short_mail_protocol_regression": {
+      "tests": 14,
+      "native_exit": 0,
+      "source_revision": "cdffae297b9aae51ae4a921e88e659d324867e96",
+      "scope": "F09 TLS/protocol/recovery only, no F11/full-expanded-MVP claim"
+    }
+  },
+  "live_actions_executed": false,
+  "receipt_provenance_gap": "Corrective review launch manifest allocated by reviewer rather than root before checks; timing/provenance disclosed in review; no retroactive parent-prelaunch claim",
+  "payment_adapter_launch": "/tmp/n7-live-payment-adapter-author-a2-20261007/launch.json",
+  "application_plan_launch": "/tmp/n7-live-app-integration-plan-a3-20261007/launch.json",
+  "available_disk_bytes": 2221006848,
+  "adapter_review": "ACCEPT_BOUNDED_ADAPTER",
+  "application_plan": "docs/plans/live-app-integration-20261007.md",
+  "refund_plan": "docs/plans/live-refund-seam-20261007.md",
+  "source_files_byte_equal": 92,
+  "local_restore": "composite passed; all failed attempts preserved; offhost destination pending",
+  "dz_store_lesson": "teach:471eec1eed22220d",
+  "additional_provenance_gap": "Refund-seam clarification launch root allocated immediately after dispatch; recorded honestly, not prelaunch.",
+  "elapsed_wall_seconds": 6341.320173,
+  "compose_revision": "6b8dde67",
+  "backend_candidate_revision": "4e4f0359fac7a22701f350adbb20447ade5de741",
+  "backend_author_checks": "77/77 unit,52/52 affectedintegration,type/lint/build0; source-bound mutations red/restoregreen",
+  "backend_review_launch": "/tmp/n7-live-app-backend-review-a3-20261007/launch.json",
+  "mandatory_external_inputs_pending": [
+    "owner Team price",
+    "merchant file paths/live merchant configuration",
+    "controlled mail pilot identities/recipients",
+    "offhost encrypted backup destination"
+  ],
+  "owner_team_price_rub": 990,
+  "owner_team_price_minor": 99000,
+  "owner_team_duration_days": 30,
+  "merchant_credentials": "owner will add later; activation pending",
+  "mail_pilot_confirmed_address": "owner confirmed Gmail sender and second Yandex recipient/reply sender; exact addresses retained privately outside Git",
+  "backend_review": "ACCEPT_BACKEND_SLICE",
+  "backend_integrated_revision": "4c7441a8",
+  "ui_launch": "/tmp/n7-live-ui-author-a4-20261007/launch.json",
+  "backend_review_finished_at": "2026-10-07T19:27:00.457568+00:00",
+  "continuation_gap": "UI continuation was not started immediately after review; observed idle at19:45 and new writer launched with ACK at19:47. Not reported as active work during gap.",
+  "ui_review": {
+    "verdict": "ACCEPT_UI_SLICE",
+    "source_revision": "9d6a1d1ec7ba476c95cdf0ad3983550ce4d9ac0a",
+    "report": "ui-review-a4.md",
+    "units": 82,
+    "focused_ui": 15,
+    "native_exit": 0,
+    "actual_model": null
+  },
+  "general_regression": {
+    "source_revision": "4564ed662e7dc63d9b32512dabd1d77c848da4e1",
+    "tests": 170,
+    "native_exit": 0,
+    "excluded_live_files": "2 hardcoded namespace files covered separately by accepted source-bound A3 evidence",
+    "elapsed_seconds": 104.3968
+  },
+  "e2e_attempts": [
+    {
+      "evidence": "/tmp/n7-live-ui-e2e-a4-20261007",
+      "native_exit": 1,
+      "cause": "root omitted migration of owned fresh RAM database; fixed namespace schema17 before next attempt"
+    },
+    {
+      "evidence": "/tmp/n7-live-ui-e2e-a5-20261007",
+      "native_exit": 1,
+      "checks": 1,
+      "cause": "harness expected raw disabled instead of accepted localized отключено; specific correction running"
+    },
+    {
+      "evidence": "/tmp/n7-live-ui-e2e-a6-20261007",
+      "native_exit": 1,
+      "checks": 23,
+      "passed_checks": 22,
+      "confirmed_flows": [
+        "checkout",
+        "canonical success",
+        "fixed30dayteam",
+        "reload",
+        "history",
+        "outage",
+        "refundrevocation",
+        "cancel",
+        "foreign and forged return"
+      ],
+      "cause": "minute public_stop_bucket reached31 preventing provider hold; add pacing without reducing real limits",
+      "next": "fresh root-owned RAM namespace n7_live_ui_a7_20261007; old database retained"
+    },
+    {
+      "evidence": "docker-ui-a7",
+      "native_exit": 0,
+      "checks": 52,
+      "source_revision": "0a0890c47d8fa716a4ebd8f13888bd30d2a4dea2",
+      "image_id": "sha256:4ecf3a89a3a543e0464e18bfbc764e3b45a350e5a407d1da54e181bc2fd922c2",
+      "duration_seconds": 216.229,
+      "production_tls_proof": false,
+      "real_provider_calls": false,
+      "real_mail_sent": false,
+      "screenshots": 4
+    }
+  ],
+  "validation_deviation": "UI legacy web integration TRUNCATE tenant/auth_bucket on assigned disposable fake n7billing DB contrary namespace-only instruction; no production DB operations",
+  "published_head": "eae568f341841e165422c9d71c1030dcb4643480",
+  "external_blockers": [
+    "real merchant credentials owner will supply later",
+    "off-host encrypted backup destination required before production migration"
+  ],
+  "source_composition_a7_byte_equal_files": 233,
+  "e2e_evidence_review": "ACCEPT_LOCAL_E2E_EVIDENCE",
+  "elapsed_seconds_to_local_handoff": 11759.636224,
+  "dz_memory": {
+    "id": "teach:7aba4aa59aa52f05",
+    "project_store_only": true,
+    "no_mirror": true,
+    "native_exit": 0
+  },
+  "next_owner": "/root",
+  "background_work_claim": false,
+  "mail_pilot_inputs": {
+    "roles_confirmed": true,
+    "exact_addresses_in_git": false,
+    "mailbox_credentials_availability": "not yet verified",
+    "flow": "sender Gmail -> receiver Yandex -> normal reply -> sequence stop witness",
+    "sent": false
+  }
+}

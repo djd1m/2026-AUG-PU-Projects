@@ -1,0 +1,22 @@
+node:fs:621
+  return binding.open(
+                 ^
+
+Error: EACCES: permission denied, open '/app/scripts/e2e-glb-upload.mjs'
+    at Object.openSync (node:fs:621:18)
+    at Object.readFileSync (node:fs:487:35)
+    at getSourceSync (node:internal/modules/esm/load:41:17)
+    at defaultLoadSync (node:internal/modules/esm/load:156:34)
+    at #loadAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:806:12)
+    at #loadSync (node:internal/modules/esm/loader:838:53)
+    at ModuleLoader.load (node:internal/modules/esm/loader:787:26)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:498:31)
+    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:564:36)
+    at afterResolve (node:internal/modules/esm/loader:611:52) {
+  errno: -13,
+  code: 'EACCES',
+  syscall: 'open',
+  path: '/app/scripts/e2e-glb-upload.mjs'
+}
+
+Node.js v24.21.0

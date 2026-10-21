@@ -1,0 +1,111 @@
+{
+  "sealed_at": "2026-10-06T19:18:48.038895+00:00",
+  "source_revision": "eae17bbea36312ee5290adb8390e066b1f0d6c2a",
+  "changed_source_build": [],
+  "source_count": 120,
+  "build_count": 73,
+  "source_manifest_sha256": "39eb6cc84f603c73d12ee641604fbb0beaf4eb1fa0d3287faa80a9c806a5826a",
+  "guard_original_sha256": "9c2b899e9d7e173beb631415044e8b5106b257b006bb06cd2283500b528bd33f",
+  "guard_own_sha256": "0714d60b6627cc46ca5d57bf2bdb4b02e6ad4b209bbfd48548b3108bb99ed3fe",
+  "suite_output_sha256": "9b7232e3013f99db4fcc5ec8ff338b82d8d13662adea87a12dc8b21bce2b81f2",
+  "mutex_free_verified": true,
+  "currently_owned_guarded_processes": [],
+  "recorded_physical_process_identities_now": [
+    {
+      "pid": 1000729,
+      "recorded_startticks": "123695364",
+      "currently_exists": false
+    },
+    {
+      "pid": 1000730,
+      "recorded_startticks": "123695365",
+      "currently_exists": false
+    },
+    {
+      "pid": 1000783,
+      "recorded_startticks": "123695381",
+      "currently_exists": false
+    },
+    {
+      "pid": 1000808,
+      "recorded_startticks": "123695393",
+      "currently_exists": false
+    },
+    {
+      "pid": 1000881,
+      "recorded_startticks": "123695426",
+      "currently_exists": false
+    },
+    {
+      "pid": 1001404,
+      "recorded_startticks": "123695567",
+      "currently_exists": false
+    },
+    {
+      "pid": 1001473,
+      "recorded_startticks": "123695598",
+      "currently_exists": false
+    },
+    {
+      "pid": 1001480,
+      "recorded_startticks": "123695607",
+      "currently_exists": false
+    },
+    {
+      "pid": 1001553,
+      "recorded_startticks": "123695643",
+      "currently_exists": false
+    },
+    {
+      "pid": 1001685,
+      "recorded_startticks": "123695683",
+      "currently_exists": false
+    },
+    {
+      "pid": 1001892,
+      "recorded_startticks": "123695728",
+      "currently_exists": false
+    },
+    {
+      "pid": 1002075,
+      "recorded_startticks": "123695772",
+      "currently_exists": false
+    },
+    {
+      "pid": 1026801,
+      "recorded_startticks": "123706673",
+      "currently_exists": false
+    }
+  ],
+  "all_recorded_physical_PIDs_absent": true,
+  "terminals": {
+    "full330": {
+      "ended": "2026-10-06T19:08:09Z",
+      "wrapper_exit": 2,
+      "native_exit": null,
+      "native_exit_reason": "runner changed while bash awaited native; next command read offset invalid",
+      "TAP_pass": 1,
+      "TAP_fail": 0,
+      "owned_shell_pid": 842880,
+      "owned_shell_terminated": true,
+      "mutex": "released by shell termination",
+      "responsible_next": "n7_sol_coordinator"
+    },
+    "fullpg": {
+      "ended": "2026-10-06T19:11:39.756215+00:00",
+      "exit": 124,
+      "mutex": "released"
+    },
+    "physical": {
+      "ended": "2026-10-06T19:16:32.342235+00:00",
+      "exit": 0,
+      "mutex": "released"
+    }
+  },
+  "disk_available_bytes": 3266174976,
+  "pre_reset_PG_snapshot": null,
+  "prior_exited_child_startticks": null,
+  "actual_model": null,
+  "usage": null,
+  "cost": null
+}

@@ -1,0 +1,7 @@
+{
+  "build": "sha256:dd1b34cc97349ff36798390cb81bbc9cb49ef54c6d8a8ee2089975648f6d5a65",
+  "environment": "public production; synthetic account/project only",
+  "effects": "GLB fixtures, revisions, deletion; no provider or payment calls",
+  "web_worker": "healthy",
+  "db": "unchanged"
+}

@@ -1,0 +1,117 @@
+TAP version 13
+# Subtest: F11 A40 process drain metadata original window
+ok 1 - F11 A40 process drain metadata original window
+  ---
+  duration_ms: 13793.403474
+  type: 'test'
+  ...
+# Subtest: F11 A40 process drain text original window
+ok 2 - F11 A40 process drain text original window
+  ---
+  duration_ms: 17272.138396
+  type: 'test'
+  ...
+# Subtest: F11 A40 process drain generic original window
+ok 3 - F11 A40 process drain generic original window
+  ---
+  duration_ms: 6384.480069
+  type: 'test'
+  ...
+# Subtest: F11 A40 process drain forged original window
+ok 4 - F11 A40 process drain forged original window
+  ---
+  duration_ms: 6827.889747
+  type: 'test'
+  ...
+# Subtest: F11 A40 process drain revoke original window
+not ok 5 - F11 A40 process drain revoke original window
+  ---
+  duration_ms: 6801.672108
+  type: 'test'
+  location: '/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts:12:84121'
+  failureType: 'testCodeFailure'
+  error: 'new row for relation "transport_grant" violates check constraint "transport_grant_check"'
+  code: '23514'
+  name: 'error'
+  stack: |-
+    /tmp/n7-f08-dependency-fix-20261006/projects/07-cold-email-warmup/node_modules/pg-pool/index.js:45:11
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async TestContext.<anonymous> (/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts:453:22)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: F11 A40 process drain revision original window
+ok 6 - F11 A40 process drain revision original window
+  ---
+  duration_ms: 6527.08236
+  type: 'test'
+  ...
+# Subtest: F11 A40 process drain config original window
+ok 7 - F11 A40 process drain config original window
+  ---
+  duration_ms: 6159.557509
+  type: 'test'
+  ...
+# Subtest: F11 A40 process drain suppression original window
+ok 8 - F11 A40 process drain suppression original window
+  ---
+  duration_ms: 6561.957743
+  type: 'test'
+  ...
+# Subtest: F11 A40 process drain wrong_uid original window
+ok 9 - F11 A40 process drain wrong_uid original window
+  ---
+  duration_ms: 5983.191636
+  type: 'test'
+  ...
+# Subtest: F11 A40 process drain wrong_owner original window
+ok 10 - F11 A40 process drain wrong_owner original window
+  ---
+  duration_ms: 8366.251766
+  type: 'test'
+  ...
+# Subtest: F11 A40 process drain corrupt original window
+ok 11 - F11 A40 process drain corrupt original window
+  ---
+  duration_ms: 13774.615928
+  type: 'test'
+  ...
+# Subtest: F11 A40 process drain replay original window
+ok 12 - F11 A40 process drain replay original window
+  ---
+  duration_ms: 6380.077867
+  type: 'test'
+  ...
+# Subtest: F11 A40 process drain wrong_slot original window
+ok 13 - F11 A40 process drain wrong_slot original window
+  ---
+  duration_ms: 7160.423076
+  type: 'test'
+  ...
+# Subtest: F11 A40 process drain release_failure original window
+ok 14 - F11 A40 process drain release_failure original window
+  ---
+  duration_ms: 6133.50347
+  type: 'test'
+  ...
+# Subtest: F11 A40 ordinary HEADER-only READY empty tail needs no pending capture
+ok 15 - F11 A40 ordinary HEADER-only READY empty tail needs no pending capture
+  ---
+  duration_ms: 10852.920084
+  type: 'test'
+  ...
+# Subtest: F11 A40 runtime external reason and internal failure stay distinct
+ok 16 - F11 A40 runtime external reason and internal failure stay distinct
+  ---
+  duration_ms: 13.120085
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 15
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 129603.369426

@@ -1,0 +1,51 @@
+{
+  "started_at": "2026-10-07T17:02:00.341275+00:00",
+  "scope": "Add smtp.yandex.ru imap.yandex.ru imap.ya.ru to preview allowlist, cap30; preserve image/keys/database/modes; no mail or auth attempts",
+  "profile": "model-routing-econom",
+  "tier": "T configuration only",
+  "actual_model": null,
+  "usage": null,
+  "measurement_gap": "Host model/token metadata unavailable",
+  "authorization": "User requested enabling Yandex settings",
+  "status": "verified",
+  "finished_at": "2026-10-07T17:02:39.733916+00:00",
+  "allowed_hosts": {
+    "smtp.gmail.com": 30,
+    "imap.gmail.com": 30,
+    "smtp.yandex.ru": 30,
+    "imap.yandex.ru": 30,
+    "imap.ya.ru": 30
+  },
+  "image": "sha256:3791cac50f5b6c2c87dd5cd3975f8141a1dd846b405361ca7456623121ec0b37",
+  "checks": {
+    "readyz": true,
+    "same_image": true,
+    "same_mounts": true,
+    "same_other_environment": true,
+    "same_networks": true,
+    "yandex_public_dns_and_tls_policy": true,
+    "gmail_retained": true,
+    "unknown_host_denied": true,
+    "private_ip_denied": true,
+    "public_signin_http": 200,
+    "playwright_mobile_signin": {
+      "http": 200,
+      "form_visible": true,
+      "overflow": false,
+      "js_errors": 0
+    }
+  },
+  "rollback_container": "n7f06a-web-before-yandex-20261007",
+  "e2e_preflight": {
+    "at": "2026-10-07T17:03:26.727770+00:00",
+    "status": "ready",
+    "container": "codex-ui-playwright",
+    "image": "sha256:3791cac50f5b6c2c87dd5cd3975f8141a1dd846b405361ca7456623121ec0b37",
+    "scope": "anonymous signin only; no account/mail operations",
+    "e2e_claim": "pass: anonymous signin only"
+  },
+  "verified_at": "2026-10-07T17:03:45.072285+00:00",
+  "authentication_test": "not_run: no owner mailbox credentials; no SMTP/IMAP AUTH",
+  "deployment_scope": "Same F08 preview image, allowlist-only change; no newer source deploy",
+  "disk_available_bytes": 2014334976
+}

@@ -1,0 +1,1 @@
+../../../../.claude/rules/compose-hygiene.md

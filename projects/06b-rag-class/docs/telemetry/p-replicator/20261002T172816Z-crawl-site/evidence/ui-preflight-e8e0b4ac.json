@@ -1,0 +1,36 @@
+{
+  "status": "ready",
+  "at": "2026-10-02T18:25:57.486974+00:00",
+  "source_revision": "e8e0b4ac7a61e473835ac75d4463b22281f65062",
+  "build_revision": "sha256:775633f60282d15da22a6c23fe14070604782ed7ff23c9af8936aae2909841e6",
+  "environment": "isolated local TLS n6b-ui-e2e stack and shared codex-ui-playwright; no published app/DB ports; no worker/provider calls",
+  "environment_available": true,
+  "test_command": "docker exec codex-ui-playwright node /opt/browser/n6b-ui-e8e0b4ac/e2e.mjs --fixture <private fixture> --base https://n6b-ui.test --output /opt/browser/n6b-ui-e8e0b4ac/output --source e8e0b4ac7a61e473835ac75d4463b22281f65062 --image sha256:775633f60282d15da22a6c23fe14070604782ed7ff23c9af8936aae2909841e6",
+  "inputs": [
+    {
+      "name": "synthetic private generated credentials",
+      "available": true
+    },
+    {
+      "name": "isolated migrated Postgres",
+      "available": true
+    },
+    {
+      "name": "Docker browser + application production image",
+      "available": true
+    }
+  ],
+  "expected_effects": [
+    "synthetic registration/login/logout",
+    "private URL rejected422 and public literal IP202 new bot/source/job only",
+    "screenshots and JSON report; no indexing/provider calls"
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "tests/artifacts/crawl-site-ui-e8e0b4ac"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "script_sha256": "0839838a0aaed65e881798e9b8131596fa6dea6d2e2d272a49d76f9d0a8dd89b",
+  "limitation": "worker corrections pending; this exact-image UI observation is not final feature acceptance"
+}

@@ -1,0 +1,45 @@
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+ ✓ tests/sharing/review-probes/security.test.ts > independent SQL: every ready-export field stays frozen, including kind relabel, IDs, timestamps and keys 501ms
+ ✓ tests/sharing/review-probes/security.test.ts > independent SQL: share identity and TTL frozen; revocation cannot be cleared, moved or bypassed 445ms
+ ✓ tests/sharing/review-probes/security.test.ts > independent capacity boundary: 63 pending assets allow exactly one simultaneous export reservation 529ms
+stderr | tests/sharing/review-probes/security.test.ts > independent generic asset route denies free and paid frozen export through original and normalized paths
+{"requestId":"2b13f3aa-dad6-4cb0-8a62-72bfbe5e735a","code":"NOT_FOUND","latencyMs":6}
+
+stderr | tests/sharing/review-probes/security.test.ts > independent generic asset route denies free and paid frozen export through original and normalized paths
+{"requestId":"66a4a8c2-5b3e-4789-9896-4a1d8fc914fc","code":"NOT_FOUND","latencyMs":4}
+
+stderr | tests/sharing/review-probes/security.test.ts > independent generic asset route denies free and paid frozen export through original and normalized paths
+{"requestId":"4a7b6dd8-262e-427f-b324-68cc47e38d76","code":"NOT_FOUND","latencyMs":2}
+
+stderr | tests/sharing/review-probes/security.test.ts > independent generic asset route denies free and paid frozen export through original and normalized paths
+{"requestId":"7b339b17-f12e-45a7-94bb-f5d9ddd3a59e","code":"NOT_FOUND","latencyMs":2}
+
+ ✓ tests/sharing/review-probes/security.test.ts > independent generic asset route denies free and paid frozen export through original and normalized paths 400ms
+stderr | tests/sharing/review-probes/security.test.ts > independent archive and expired tokens return404/no-store/noindex on both public surfaces
+{"requestId":"51d87d7a-4976-46a4-8826-8e993f3d7978","code":"NOT_FOUND","latencyMs":5}
+
+stderr | tests/sharing/review-probes/security.test.ts > independent archive and expired tokens return404/no-store/noindex on both public surfaces
+{"requestId":"8fd1907d-7f54-4754-bc89-1f39f92a8eac","code":"NOT_FOUND","latencyMs":4}
+
+stderr | tests/sharing/review-probes/security.test.ts > independent archive and expired tokens return404/no-store/noindex on both public surfaces
+{"requestId":"7f7dfad1-9133-4404-ab5e-df31283acb0d","code":"NOT_FOUND","latencyMs":4}
+
+stderr | tests/sharing/review-probes/security.test.ts > independent archive and expired tokens return404/no-store/noindex on both public surfaces
+{"requestId":"6150d1f2-7112-4de8-aa65-1cde64a0a011","code":"NOT_FOUND","latencyMs":4}
+
+stderr | tests/sharing/review-probes/security.test.ts > independent archive and expired tokens return404/no-store/noindex on both public surfaces
+{"requestId":"6eae20a3-aab9-4ca2-9a0f-ee3d80cffc30","code":"NOT_FOUND","latencyMs":2}
+
+stderr | tests/sharing/review-probes/security.test.ts > independent archive and expired tokens return404/no-store/noindex on both public surfaces
+{"requestId":"2b9f0c32-b932-42a8-853a-0eff2938cf9c","code":"NOT_FOUND","latencyMs":6}
+
+ ✓ tests/sharing/review-probes/security.test.ts > independent archive and expired tokens return404/no-store/noindex on both public surfaces 360ms
+ ✓ tests/sharing/review-probes/security.test.ts > independent actual child deadline kills stalled decode and releases slot for next valid image 10432ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  00:01:13
+   Duration  13.21s (tests 97%, transform 1%, import 1%)
+

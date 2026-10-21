@@ -1,0 +1,651 @@
+{
+  "UTC": "2026-10-07T15:29:25.947725+00:00",
+  "path": "/tmp/n7-f11-accepted-runners-rebind-a83-20261007/fullfleet/full_fault/all30-body-1791386517827.json",
+  "bytes": 39911479,
+  "failure": "The expression evaluated to a falsy value:\n\n  assert.ok(times[0]!-begun<=30000)\n",
+  "cleanupFailure": null,
+  "begun": 1791386517827,
+  "ended": 1791386818770,
+  "elapsed_ms": 300943,
+  "connected_count": 100,
+  "participants_count": 30,
+  "ready_count": 30,
+  "children": [
+    {
+      "pid": 2427520,
+      "startTicks": "130952787"
+    },
+    {
+      "pid": 2428144,
+      "startTicks": "130952974"
+    },
+    {
+      "pid": 2469229,
+      "startTicks": "130967823"
+    }
+  ],
+  "joins": [
+    {
+      "code": 0,
+      "signal": null,
+      "drained": true,
+      "stderr": ""
+    },
+    {
+      "code": 0,
+      "signal": null,
+      "drained": true,
+      "stderr": ""
+    },
+    {
+      "code": 0,
+      "signal": null,
+      "drained": true,
+      "stderr": ""
+    }
+  ],
+  "occupied": 0,
+  "imapPeak": 4,
+  "bodyPeak": 3,
+  "smtpPeak": 2,
+  "signal_count": 3,
+  "signals": [
+    {
+      "pid": 2427520,
+      "startTicks": "130952787",
+      "signal": "SIGTERM",
+      "sent": true,
+      "utc": "2026-10-07T15:24:28.044Z",
+      "monotonicNs": "1309678043471110"
+    },
+    {
+      "pid": 2428144,
+      "startTicks": "130952974",
+      "signal": "SIGTERM",
+      "sent": true,
+      "utc": "2026-10-07T15:26:58.414Z",
+      "monotonicNs": "1309828413954499"
+    },
+    {
+      "pid": 2469229,
+      "startTicks": "130967823",
+      "signal": "SIGTERM",
+      "sent": true,
+      "utc": "2026-10-07T15:26:58.414Z",
+      "monotonicNs": "1309828413997239"
+    }
+  ],
+  "offending_first_completions": [
+    {
+      "mailbox": "a2ca8b4d-31d9-4038-8c1a-88d24ae4a50b",
+      "first_completion_offset_ms": 43008,
+      "completion_count": 23,
+      "first_selection": {
+        "at": "2026-10-07T15:22:06.628Z",
+        "event_id": "108",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 120
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:07.359Z",
+        "monotonicMs": 14862.792885,
+        "connection": 20
+      }
+    },
+    {
+      "mailbox": "3702d589-0e5c-4770-a998-5ba5e012d332",
+      "first_completion_offset_ms": 36964,
+      "completion_count": 24,
+      "first_selection": {
+        "at": "2026-10-07T15:22:03.685Z",
+        "event_id": "42",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 86
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:04.429Z",
+        "monotonicMs": 11933.116029,
+        "connection": 9
+      }
+    },
+    {
+      "mailbox": "65ef1dde-a45e-459d-94f3-cf5791ce1ddb",
+      "first_completion_offset_ms": 40568,
+      "completion_count": 23,
+      "first_selection": {
+        "at": "2026-10-07T15:22:05.278Z",
+        "event_id": "84",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 112
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:06.470Z",
+        "monotonicMs": 13974.262278,
+        "connection": 16
+      }
+    },
+    {
+      "mailbox": "80d33fce-544b-4cd3-b36b-cbdab4082c5b",
+      "first_completion_offset_ms": 40356,
+      "completion_count": 22,
+      "first_selection": {
+        "at": "2026-10-07T15:22:05.039Z",
+        "event_id": "72",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 108
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:05.882Z",
+        "monotonicMs": 13385.784118,
+        "connection": 14
+      }
+    },
+    {
+      "mailbox": "dad9354d-f4f6-4f38-ac69-b172143b76b6",
+      "first_completion_offset_ms": 44344,
+      "completion_count": 23,
+      "first_selection": {
+        "at": "2026-10-07T15:22:09.648Z",
+        "event_id": "150",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 158
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:10.515Z",
+        "monotonicMs": 18019.349302,
+        "connection": 26
+      }
+    },
+    {
+      "mailbox": "e66158c8-74be-4a5f-b830-669e9d9688d4",
+      "first_completion_offset_ms": 45125,
+      "completion_count": 23,
+      "first_selection": {
+        "at": "2026-10-07T15:22:09.692Z",
+        "event_id": "154",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 160
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:10.559Z",
+        "monotonicMs": 18062.761338,
+        "connection": 28
+      }
+    },
+    {
+      "mailbox": "8389a744-5943-4f35-95c1-38142cb262f2",
+      "first_completion_offset_ms": 41708,
+      "completion_count": 25,
+      "first_selection": {
+        "at": "2026-10-07T15:22:06.030Z",
+        "event_id": "93",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 114
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:06.769Z",
+        "monotonicMs": 14272.658405,
+        "connection": 17
+      }
+    },
+    {
+      "mailbox": "b43453d0-8bd7-4981-a37f-cc9d05f9a36e",
+      "first_completion_offset_ms": 44083,
+      "completion_count": 23,
+      "first_selection": {
+        "at": "2026-10-07T15:22:07.656Z",
+        "event_id": "132",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 136
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:08.550Z",
+        "monotonicMs": 16054.219801,
+        "connection": 24
+      }
+    },
+    {
+      "mailbox": "337be895-780c-4a5d-999b-26db03163d29",
+      "first_completion_offset_ms": 35367,
+      "completion_count": 22,
+      "first_selection": {
+        "at": "2026-10-07T15:22:02.644Z",
+        "event_id": "33",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 80
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:04.141Z",
+        "monotonicMs": 11645.282867,
+        "connection": 7
+      }
+    },
+    {
+      "mailbox": "bb528b5f-6e59-4212-92a8-e97a837b1deb",
+      "first_completion_offset_ms": 43072,
+      "completion_count": 23,
+      "first_selection": {
+        "at": "2026-10-07T15:22:07.309Z",
+        "event_id": "126",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 134
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:08.422Z",
+        "monotonicMs": 15926.150145,
+        "connection": 23
+      }
+    },
+    {
+      "mailbox": "4dd24166-bad3-4ee2-88a2-6b167228b44a",
+      "first_completion_offset_ms": 40409,
+      "completion_count": 26,
+      "first_selection": {
+        "at": "2026-10-07T15:22:05.253Z",
+        "event_id": "81",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 110
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:05.974Z",
+        "monotonicMs": 13478.242911,
+        "connection": 15
+      }
+    },
+    {
+      "mailbox": "7b135871-1100-4c1a-a60f-4905187d04eb",
+      "first_completion_offset_ms": 43062,
+      "completion_count": 22,
+      "first_selection": {
+        "at": "2026-10-07T15:22:07.264Z",
+        "event_id": "123",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 132
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:08.311Z",
+        "monotonicMs": 15815.200115,
+        "connection": 22
+      }
+    },
+    {
+      "mailbox": "ddbfa932-d315-4bbf-b0ca-68ade7fd7c71",
+      "first_completion_offset_ms": 44174,
+      "completion_count": 23,
+      "first_selection": {
+        "at": "2026-10-07T15:22:09.577Z",
+        "event_id": "145",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 156
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:10.528Z",
+        "monotonicMs": 18031.693047,
+        "connection": 27
+      }
+    },
+    {
+      "mailbox": "292ea9bc-4cce-45ff-9f28-17d542e13550",
+      "first_completion_offset_ms": 34755,
+      "completion_count": 23,
+      "first_selection": {
+        "at": "2026-10-07T15:22:02.501Z",
+        "event_id": "28",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 74
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:03.923Z",
+        "monotonicMs": 11427.206989,
+        "connection": 6
+      }
+    },
+    {
+      "mailbox": "a7a635b8-5ebe-40b0-8b08-05e016947872",
+      "first_completion_offset_ms": 44164,
+      "completion_count": 23,
+      "first_selection": {
+        "at": "2026-10-07T15:22:08.327Z",
+        "event_id": "138",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 146
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:09.022Z",
+        "monotonicMs": 16526.193979,
+        "connection": 25
+      }
+    },
+    {
+      "mailbox": "55ecdad2-27d3-49aa-904b-c72d52fa75e6",
+      "first_completion_offset_ms": 38329,
+      "completion_count": 24,
+      "first_selection": {
+        "at": "2026-10-07T15:22:04.268Z",
+        "event_id": "54",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 94
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:04.964Z",
+        "monotonicMs": 12468.355421,
+        "connection": 11
+      }
+    },
+    {
+      "mailbox": "8d189007-e0e3-443e-b646-8d574b1a92ce",
+      "first_completion_offset_ms": 42932,
+      "completion_count": 25,
+      "first_selection": {
+        "at": "2026-10-07T15:22:06.908Z",
+        "event_id": "114",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 122
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:07.862Z",
+        "monotonicMs": 15366.020555,
+        "connection": 21
+      }
+    },
+    {
+      "mailbox": "739e68e8-6486-4793-9f5a-c6a58e9a4464",
+      "first_completion_offset_ms": 41728,
+      "completion_count": 24,
+      "first_selection": {
+        "at": "2026-10-07T15:22:06.189Z",
+        "event_id": "102",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 118
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:06.963Z",
+        "monotonicMs": 14466.643514,
+        "connection": 19
+      }
+    },
+    {
+      "mailbox": "4dc9d942-63ca-4071-a49c-71c4b03f4882",
+      "first_completion_offset_ms": 34510,
+      "completion_count": 23,
+      "first_selection": {
+        "at": "2026-10-07T15:22:02.416Z",
+        "event_id": "20",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 70
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:03.122Z",
+        "monotonicMs": 10625.690203,
+        "connection": 5
+      }
+    },
+    {
+      "mailbox": "8bcb3482-fcb4-46a3-b495-44a68b932285",
+      "first_completion_offset_ms": 41720,
+      "completion_count": 23,
+      "first_selection": {
+        "at": "2026-10-07T15:22:06.095Z",
+        "event_id": "97",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 116
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:06.873Z",
+        "monotonicMs": 14377.129632,
+        "connection": 18
+      }
+    },
+    {
+      "mailbox": "1266dfc2-dfc4-4df9-bbdd-f65828afb46e",
+      "first_completion_offset_ms": 32540,
+      "completion_count": 21,
+      "first_selection": {
+        "at": "2026-10-07T15:22:00.477Z",
+        "event_id": "3",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 4
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:02.338Z",
+        "monotonicMs": 9841.582423,
+        "connection": 4
+      }
+    },
+    {
+      "mailbox": "ed370e19-8beb-4081-895f-6823911b072a",
+      "first_completion_offset_ms": 45606,
+      "completion_count": 24,
+      "first_selection": {
+        "at": "2026-10-07T15:22:09.723Z",
+        "event_id": "157",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 162
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:10.590Z",
+        "monotonicMs": 18093.701579,
+        "connection": 29
+      }
+    },
+    {
+      "mailbox": "24230d2c-3e16-4b84-8f8e-f2af78ab13b4",
+      "first_completion_offset_ms": 32744,
+      "completion_count": 23,
+      "first_selection": {
+        "at": "2026-10-07T15:22:00.577Z",
+        "event_id": "9",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 8
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:02.225Z",
+        "monotonicMs": 9729.093283,
+        "connection": 2
+      }
+    },
+    {
+      "mailbox": "4ee568a6-e8ce-4640-9fcf-605d679ab14e",
+      "first_completion_offset_ms": 39591,
+      "completion_count": 22,
+      "first_selection": {
+        "at": "2026-10-07T15:22:04.622Z",
+        "event_id": "66",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 98
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:05.436Z",
+        "monotonicMs": 12940.343819,
+        "connection": 13
+      }
+    },
+    {
+      "mailbox": "234c8cec-606c-4b59-88e0-1cb924c57b99",
+      "first_completion_offset_ms": 32563,
+      "completion_count": 23,
+      "first_selection": {
+        "at": "2026-10-07T15:22:00.529Z",
+        "event_id": "6",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 6
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:02.198Z",
+        "monotonicMs": 9702.233293,
+        "connection": 1
+      }
+    },
+    {
+      "mailbox": "fd4685db-7e2a-46c7-b002-fa1a676de59a",
+      "first_completion_offset_ms": 45736,
+      "completion_count": 22,
+      "first_selection": {
+        "at": "2026-10-07T15:22:10.803Z",
+        "event_id": "177",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 172
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:12.283Z",
+        "monotonicMs": 19787.270733,
+        "connection": 30
+      }
+    },
+    {
+      "mailbox": "14d22c64-ca16-4941-a9de-e2f19a2cb57c",
+      "first_completion_offset_ms": 33491,
+      "completion_count": 23,
+      "first_selection": {
+        "at": "2026-10-07T15:22:00.643Z",
+        "event_id": "12",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 10
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:02.319Z",
+        "monotonicMs": 9822.673816,
+        "connection": 3
+      }
+    },
+    {
+      "mailbox": "55d2ff5f-b492-47a5-8a2e-cee4f1017aa5",
+      "first_completion_offset_ms": 36186,
+      "completion_count": 24,
+      "first_selection": {
+        "at": "2026-10-07T15:22:02.695Z",
+        "event_id": "36",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 84
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:04.217Z",
+        "monotonicMs": 11721.079714,
+        "connection": 8
+      }
+    },
+    {
+      "mailbox": "40a96b11-27c3-480c-941b-f93d437765d7",
+      "first_completion_offset_ms": 38920,
+      "completion_count": 24,
+      "first_selection": {
+        "at": "2026-10-07T15:22:04.365Z",
+        "event_id": "60",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 96
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:05.024Z",
+        "monotonicMs": 12527.805012,
+        "connection": 12
+      }
+    },
+    {
+      "mailbox": "451caff9-58be-4e2e-ae4c-06fa7cd973c0",
+      "first_completion_offset_ms": 37540,
+      "completion_count": 24,
+      "first_selection": {
+        "at": "2026-10-07T15:22:04.040Z",
+        "event_id": "48",
+        "body": {
+          "kind": "poll",
+          "due_at": "2026-10-07T15:21:59.804+00:00",
+          "service_seq": 92
+        }
+      },
+      "first_native_authenticated": {
+        "utc": "2026-10-07T15:22:04.643Z",
+        "monotonicMs": 12146.566986,
+        "connection": 10
+      }
+    }
+  ],
+  "assertions_after_first_failure_not_accepted": true
+}

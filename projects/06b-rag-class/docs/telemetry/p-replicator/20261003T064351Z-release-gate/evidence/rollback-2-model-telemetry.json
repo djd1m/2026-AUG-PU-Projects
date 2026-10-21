@@ -1,0 +1,89 @@
+{
+  "recorded_at": "2026-10-03T18:02:39.934061+00:00",
+  "attempts": [
+    {
+      "attempt": "rollback-2-guard",
+      "thread_id": "01a102d1-91b2-7b10-9721-2f22a4ee9b90",
+      "actual_model": "gpt-6.1-sol",
+      "actual_effort": "high",
+      "usage": {
+        "input_tokens": 488747,
+        "cached_input_tokens": 435712,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 11903,
+        "reasoning_output_tokens": 1553
+      },
+      "last_exposed_rollout_total_usage": null,
+      "usage_incomplete": false,
+      "cost": null,
+      "exit_code": 0,
+      "verdict": "focused_checks_pass",
+      "raw_activity_local_path": "docs/telemetry/p-replicator/20261003T064351Z-release-gate/evidence/rollback-2-guard-activity.jsonl",
+      "raw_activity_sha256": "699fea894951dff6bea81335e11a6ee0c2497f702ed7865fd184552c2c8d3563"
+    },
+    {
+      "attempt": "rollback-2-guard-review",
+      "thread_id": "01a102d9-5c04-7dc2-bcf4-dde913d671c5",
+      "actual_model": "gpt-6-astra",
+      "actual_effort": "high",
+      "usage": {
+        "input_tokens": 262974,
+        "cached_input_tokens": 226048,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1716,
+        "reasoning_output_tokens": 359
+      },
+      "last_exposed_rollout_total_usage": null,
+      "usage_incomplete": false,
+      "cost": null,
+      "exit_code": 0,
+      "verdict": "REQUEST_CHANGES",
+      "raw_activity_local_path": "docs/telemetry/p-replicator/20261003T064351Z-release-gate/evidence/rollback-2-guard-review-activity.jsonl",
+      "raw_activity_sha256": "9be399fe4694749b544c9c3ae85486505031c19ac899101e3f3d8315203e1186"
+    },
+    {
+      "attempt": "rollback-2-floor-fix",
+      "thread_id": "01a102dc-713d-7812-955b-f9167e6212ff",
+      "actual_model": "gpt-6.1-sol",
+      "actual_effort": "high",
+      "usage": null,
+      "last_exposed_rollout_total_usage": {
+        "input_tokens": 304867,
+        "cached_input_tokens": 263424,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 8009,
+        "reasoning_output_tokens": 2138,
+        "total_tokens": 312876
+      },
+      "usage_incomplete": true,
+      "cost": null,
+      "exit_code": 124,
+      "verdict": "timeout_after_saved_checks",
+      "raw_activity_local_path": "docs/telemetry/p-replicator/20261003T064351Z-release-gate/evidence/rollback-2-floor-fix-activity.jsonl",
+      "raw_activity_sha256": "2de178e1cd4f3e3f3d0987fdaafc74184e0e6d137d3cd6d7cef8218b966a1686"
+    },
+    {
+      "attempt": "rollback-2-floor-review",
+      "thread_id": "01a102e3-30a2-7d20-b89b-d40133a7da9b",
+      "actual_model": "gpt-6-astra",
+      "actual_effort": "high",
+      "usage": {
+        "input_tokens": 281696,
+        "cached_input_tokens": 232448,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2262,
+        "reasoning_output_tokens": 337
+      },
+      "last_exposed_rollout_total_usage": null,
+      "usage_incomplete": false,
+      "cost": null,
+      "exit_code": 0,
+      "verdict": "ACCEPT",
+      "raw_activity_local_path": "docs/telemetry/p-replicator/20261003T064351Z-release-gate/evidence/rollback-2-floor-review-activity.jsonl",
+      "raw_activity_sha256": "28f2a16b71979a25d55da20188a6612f8ecd37d4baebd5684e53e6fdc5bdc45e"
+    }
+  ],
+  "coordinator_actual_model": null,
+  "coordinator_usage": null,
+  "cost": null
+}

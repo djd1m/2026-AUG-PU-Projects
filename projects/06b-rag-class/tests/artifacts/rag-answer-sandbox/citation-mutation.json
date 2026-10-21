@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/tmp/n6b-f06-node22/bin/node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "--config",
+    "vitest.config.ts",
+    "packages/rag/tests/unit/answer-citations.test.ts",
+    "-t",
+    "citation guard rejects every ID outside the above-threshold retrieval"
+  ],
+  "test_unchanged": true,
+  "guard": "  if (out.cited_ids.some((id) => !allowed.has(id))) return 'invalid_citation';",
+  "mutant_replacement": "  // Mutation: membership guard temporarily disabled.",
+  "expected_red_assertion": "expected null to be 'invalid_citation'",
+  "red_exit": 1,
+  "restored_exit": 0,
+  "source_before_sha256": "624b5ccfa9a475f8591089ee08a39d476ca9b399a39d728b302da4ed776e15c1",
+  "source_after_sha256": "624b5ccfa9a475f8591089ee08a39d476ca9b399a39d728b302da4ed776e15c1"
+}

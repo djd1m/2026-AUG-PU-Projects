@@ -1,0 +1,175 @@
+{
+  "utc": "2026-10-06T23:21:53.954194+00:00",
+  "computed_patch_bindings": [
+    {
+      "record": "uid-mismatch-as-error-source",
+      "patch": "uid-mismatch-as-error-source-imap.js.patch",
+      "target": "dist/replies/imap.js",
+      "computed_mutated_sha256": "58f6ed87664780e555445bdb05820aaa4cb2fa9863fd99b6fb72d055cc438407"
+    },
+    {
+      "record": "uid-mismatch-as-error-source",
+      "patch": "uid-mismatch-as-error-source-imap.ts.patch",
+      "target": "src/replies/imap.ts",
+      "computed_mutated_sha256": "210e5239ede254618476b2d33f4e82592209459c18a814fef0d316c18c9b9b9d"
+    },
+    {
+      "record": "uid-mismatch-as-error-compiled",
+      "patch": "uid-mismatch-as-error-compiled-imap.js.patch",
+      "target": "dist/replies/imap.js",
+      "computed_mutated_sha256": "58f6ed87664780e555445bdb05820aaa4cb2fa9863fd99b6fb72d055cc438407"
+    },
+    {
+      "record": "uid-mismatch-as-error-compiled",
+      "patch": "uid-mismatch-as-error-compiled-imap.ts.patch",
+      "target": "src/replies/imap.ts",
+      "computed_mutated_sha256": "210e5239ede254618476b2d33f4e82592209459c18a814fef0d316c18c9b9b9d"
+    },
+    {
+      "record": "uid-accept-old-fetch-relabel-source",
+      "patch": "uid-accept-old-fetch-relabel-source-imap.js.patch",
+      "target": "dist/replies/imap.js",
+      "computed_mutated_sha256": "9d9dfed9ef5c1011d176e80f39f6a8edc8cd087c1390a3f9e0f9ddde52826dbc"
+    },
+    {
+      "record": "uid-accept-old-fetch-relabel-source",
+      "patch": "uid-accept-old-fetch-relabel-source-imap.ts.patch",
+      "target": "src/replies/imap.ts",
+      "computed_mutated_sha256": "9a650f7d9334095474030796f66fcd3c3958091644d5b9fde8cc6d88805072f1"
+    },
+    {
+      "record": "uid-accept-old-fetch-relabel-compiled",
+      "patch": "uid-accept-old-fetch-relabel-compiled-imap.ts.patch",
+      "target": "src/replies/imap.ts",
+      "computed_mutated_sha256": "9a650f7d9334095474030796f66fcd3c3958091644d5b9fde8cc6d88805072f1"
+    },
+    {
+      "record": "uid-accept-old-fetch-relabel-compiled",
+      "patch": "uid-accept-old-fetch-relabel-compiled-imap.js.patch",
+      "target": "dist/replies/imap.js",
+      "computed_mutated_sha256": "9d9dfed9ef5c1011d176e80f39f6a8edc8cd087c1390a3f9e0f9ddde52826dbc"
+    },
+    {
+      "record": "uid-second-snapshot-source",
+      "patch": "uid-second-snapshot-source-worker.js.patch",
+      "target": "dist/replies/worker.js",
+      "computed_mutated_sha256": "7bf137194b84cd41ab62261fc65d930bdbdae2ae72a9955a0f056ba18ffc844d"
+    },
+    {
+      "record": "uid-second-snapshot-source",
+      "patch": "uid-second-snapshot-source-worker.ts.patch",
+      "target": "src/replies/worker.ts",
+      "computed_mutated_sha256": "8f54320e533c84cfaf9f66043ceaf21ff8c4678c037fed32802507e8f274fedf"
+    },
+    {
+      "record": "uid-second-snapshot-compiled",
+      "patch": "uid-second-snapshot-compiled-worker.ts.patch",
+      "target": "src/replies/worker.ts",
+      "computed_mutated_sha256": "8f54320e533c84cfaf9f66043ceaf21ff8c4678c037fed32802507e8f274fedf"
+    },
+    {
+      "record": "uid-second-snapshot-compiled",
+      "patch": "uid-second-snapshot-compiled-worker.js.patch",
+      "target": "dist/replies/worker.js",
+      "computed_mutated_sha256": "7bf137194b84cd41ab62261fc65d930bdbdae2ae72a9955a0f056ba18ffc844d"
+    },
+    {
+      "record": "uid-retry-tail-cursor-reset-source",
+      "patch": "uid-retry-tail-cursor-reset-source-store.js.patch",
+      "target": "dist/replies/store.js",
+      "computed_mutated_sha256": "85e94cc5a65509d0970be27fa8e2f30226ac45eefcec540b5cb3239b8df1f67d"
+    },
+    {
+      "record": "uid-retry-tail-cursor-reset-source",
+      "patch": "uid-retry-tail-cursor-reset-source-store.ts.patch",
+      "target": "src/replies/store.ts",
+      "computed_mutated_sha256": "d2d385b1c86959d676c4f8c4cd8371ccb6fae87efc0162e12fccb34262786887"
+    },
+    {
+      "record": "uid-retry-tail-cursor-reset-compiled",
+      "patch": "uid-retry-tail-cursor-reset-compiled-store.js.patch",
+      "target": "dist/replies/store.js",
+      "computed_mutated_sha256": "85e94cc5a65509d0970be27fa8e2f30226ac45eefcec540b5cb3239b8df1f67d"
+    },
+    {
+      "record": "uid-retry-tail-cursor-reset-compiled",
+      "patch": "uid-retry-tail-cursor-reset-compiled-store.ts.patch",
+      "target": "src/replies/store.ts",
+      "computed_mutated_sha256": "d2d385b1c86959d676c4f8c4cd8371ccb6fae87efc0162e12fccb34262786887"
+    },
+    {
+      "record": "uid-false-freshness-reset-success-source",
+      "patch": "uid-false-freshness-reset-success-source-store.ts.patch",
+      "target": "src/replies/store.ts",
+      "computed_mutated_sha256": "87162a9aa62e097563076be55dddcd880089b41350baa46ea9a1b49ad4e4a857"
+    },
+    {
+      "record": "uid-false-freshness-reset-success-source",
+      "patch": "uid-false-freshness-reset-success-source-store.js.patch",
+      "target": "dist/replies/store.js",
+      "computed_mutated_sha256": "8e57ef99f589b0f73cbb5e340fb5ca38fed0369b2337a5f7d2277b38a7c9c85e"
+    },
+    {
+      "record": "uid-false-freshness-reset-success-compiled",
+      "patch": "uid-false-freshness-reset-success-compiled-store.ts.patch",
+      "target": "src/replies/store.ts",
+      "computed_mutated_sha256": "87162a9aa62e097563076be55dddcd880089b41350baa46ea9a1b49ad4e4a857"
+    },
+    {
+      "record": "uid-false-freshness-reset-success-compiled",
+      "patch": "uid-false-freshness-reset-success-compiled-store.js.patch",
+      "target": "dist/replies/store.js",
+      "computed_mutated_sha256": "8e57ef99f589b0f73cbb5e340fb5ca38fed0369b2337a5f7d2277b38a7c9c85e"
+    },
+    {
+      "record": "uid-explicit-retry-bypass-source",
+      "patch": "uid-explicit-retry-bypass-source-worker.js.patch",
+      "target": "dist/replies/worker.js",
+      "computed_mutated_sha256": "75ecc35a5419c6678b9c2e8261882f78afb3e54912ebcc21c7a85341a27e80fa"
+    },
+    {
+      "record": "uid-explicit-retry-bypass-source",
+      "patch": "uid-explicit-retry-bypass-source-worker.ts.patch",
+      "target": "src/replies/worker.ts",
+      "computed_mutated_sha256": "9b48a5932511073e3ed0837b01ea99fb02e6bad9e15727d6fedcbc355e797bc7"
+    },
+    {
+      "record": "uid-explicit-retry-bypass-compiled",
+      "patch": "uid-explicit-retry-bypass-compiled-worker.js.patch",
+      "target": "dist/replies/worker.js",
+      "computed_mutated_sha256": "75ecc35a5419c6678b9c2e8261882f78afb3e54912ebcc21c7a85341a27e80fa"
+    },
+    {
+      "record": "uid-explicit-retry-bypass-compiled",
+      "patch": "uid-explicit-retry-bypass-compiled-worker.ts.patch",
+      "target": "src/replies/worker.ts",
+      "computed_mutated_sha256": "9b48a5932511073e3ed0837b01ea99fb02e6bad9e15727d6fedcbc355e797bc7"
+    },
+    {
+      "record": "uid-freshness-timestamp-source",
+      "target": "src/replies/store.ts",
+      "computed_mutated_sha256": "33a8330bb2f708e4271ec9ca95226e2af101490bb483cd7b58c40c12b5a9712e",
+      "mutation_manifest": "freshness-command-manifest-a36.json"
+    },
+    {
+      "record": "uid-freshness-timestamp-source",
+      "target": "dist/replies/store.js",
+      "computed_mutated_sha256": "0926353fc73b58ae04aeedaef31c9938e54891a76e82675964f5b35027d7f3f1",
+      "mutation_manifest": "freshness-command-manifest-a36.json"
+    },
+    {
+      "record": "uid-freshness-timestamp-compiled",
+      "target": "src/replies/store.ts",
+      "computed_mutated_sha256": "33a8330bb2f708e4271ec9ca95226e2af101490bb483cd7b58c40c12b5a9712e",
+      "mutation_manifest": "freshness-command-manifest-a36.json"
+    },
+    {
+      "record": "uid-freshness-timestamp-compiled",
+      "target": "dist/replies/store.js",
+      "computed_mutated_sha256": "0926353fc73b58ae04aeedaef31c9938e54891a76e82675964f5b35027d7f3f1",
+      "mutation_manifest": "freshness-command-manifest-a36.json"
+    }
+  ],
+  "compiled_tests_identical_except_direct_dist_imports": true,
+  "no_product_mutations": true
+}

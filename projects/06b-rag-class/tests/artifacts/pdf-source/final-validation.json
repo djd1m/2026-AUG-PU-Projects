@@ -1,0 +1,19 @@
+{
+  "source_revision": "795508ad15f8bbc0948dac4219c6d3dc0d4d1332",
+  "source_snapshot_sha256": "b8d3f01f1bc8856b543522ec0bdafb761afa85ee94dc36bbe1868ce9dd37cbe6",
+  "image_id": "sha256:51ea5fe2af329d986b56a1a6a3258108232fba241f063928e85d1b15a0df8ded",
+  "image_source_proof": {
+    "matched": 14,
+    "snapshot_sha256": "b8d3f01f1bc8856b543522ec0bdafb761afa85ee94dc36bbe1868ce9dd37cbe6"
+  },
+  "checks": {
+    "typecheck": 0,
+    "unit_passed": 353,
+    "integration_passed": 183,
+    "build": 0
+  },
+  "log_sha256": "a9d20638bafffaa2e4ae9cf4110b21c0728db9c4303a9c1370772e680a7fc1a2",
+  "observed_at": "2026-10-02T20:13:04.586392+00:00",
+  "reason": "Final source after independent P2 correction; no further product edits",
+  "cap_mutation": "Original guard unchanged; meaningful red/restored green evidence retained in coordinator-full-regression.txt"
+}

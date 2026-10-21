@@ -1,0 +1,75 @@
+{
+  "finished_at": "2026-10-02T17:44:06.412Z",
+  "browser": "Chromium via existing Playwright 1.63.0 server",
+  "viewport_widths": [
+    1440,
+    390
+  ],
+  "sources": [
+    {
+      "file": "cohort-desk.html",
+      "sha256": "ab2f3d2a831ffe791e030d6052703cb99a0cea3aefc89b660f28b32099cf73c1"
+    },
+    {
+      "file": "partner-studio.html",
+      "sha256": "24e5ac9ebde4e6f4dde26370bab78a6da05f21ac01756cf1008a4b2b3b2be8da"
+    },
+    {
+      "file": "operator-review.html",
+      "sha256": "b3e6785c60e373e4528819dc3a3ba8962940085b4c9eeb637dd3654c9040dd24"
+    }
+  ],
+  "results": [
+    {
+      "check": "static",
+      "status": "pass",
+      "detail": "cohort-desk.html: 54 unique IDs, labels/links/dependencies/syntax valid, SHA256=ab2f3d2a831ffe791e030d6052703cb99a0cea3aefc89b660f28b32099cf73c1"
+    },
+    {
+      "check": "static",
+      "status": "pass",
+      "detail": "partner-studio.html: 54 unique IDs, labels/links/dependencies/syntax valid, SHA256=24e5ac9ebde4e6f4dde26370bab78a6da05f21ac01756cf1008a4b2b3b2be8da"
+    },
+    {
+      "check": "static",
+      "status": "pass",
+      "detail": "operator-review.html: 54 unique IDs, labels/links/dependencies/syntax valid, SHA256=b3e6785c60e373e4528819dc3a3ba8962940085b4c9eeb637dd3654c9040dd24"
+    },
+    {
+      "check": "browser",
+      "status": "pass",
+      "detail": "cohort-desk.html 1440px: keyboard, consent boundaries, input/limits, escaped preview, reply/complaint/suppression, billing, no overflow/errors"
+    },
+    {
+      "check": "browser",
+      "status": "pass",
+      "detail": "cohort-desk.html 390px: keyboard, consent boundaries, input/limits, escaped preview, reply/complaint/suppression, billing, no overflow/errors"
+    },
+    {
+      "check": "browser",
+      "status": "pass",
+      "detail": "partner-studio.html 1440px: keyboard, consent boundaries, input/limits, escaped preview, reply/complaint/suppression, billing, no overflow/errors"
+    },
+    {
+      "check": "browser",
+      "status": "pass",
+      "detail": "partner-studio.html 390px: keyboard, consent boundaries, input/limits, escaped preview, reply/complaint/suppression, billing, no overflow/errors"
+    },
+    {
+      "check": "browser",
+      "status": "pass",
+      "detail": "operator-review.html 1440px: keyboard, consent boundaries, input/limits, escaped preview, reply/complaint/suppression, billing, no overflow/errors"
+    },
+    {
+      "check": "browser",
+      "status": "pass",
+      "detail": "operator-review.html 390px: keyboard, consent boundaries, input/limits, escaped preview, reply/complaint/suppression, billing, no overflow/errors"
+    },
+    {
+      "check": "mutation",
+      "status": "pass",
+      "detail": "Consent/limit gate bypass was detected by launch-disabled assertion"
+    }
+  ],
+  "mutationDetected": true
+}

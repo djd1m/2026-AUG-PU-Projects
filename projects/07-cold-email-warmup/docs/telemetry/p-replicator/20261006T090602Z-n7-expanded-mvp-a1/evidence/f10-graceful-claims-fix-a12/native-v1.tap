@@ -1,0 +1,29 @@
+TAP version 13
+# Subtest: persistent fair workers serve every eligible mailbox
+not ok 1 - persistent fair workers serve every eligible mailbox
+  ---
+  duration_ms: 333207.594847
+  type: 'test'
+  location: '/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/expanded-mvp-04.test.ts:1:459'
+  failureType: 'testCodeFailure'
+  error: 'c5b060bd-bb59-46bf-9d3d-134ef3a21517 postrestart completions missing completions/selections'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    checkWindow (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/expanded-mvp-04.test.ts:35:146)
+    TestContext.<anonymous> (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/expanded-mvp-04.test.ts:36:40)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 333861.38648

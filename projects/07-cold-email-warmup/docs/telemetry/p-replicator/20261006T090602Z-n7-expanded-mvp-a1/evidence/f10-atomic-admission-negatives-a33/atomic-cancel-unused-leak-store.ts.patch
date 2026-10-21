@@ -1,0 +1,11 @@
+--- src/runtime/store.ts
++++ src/runtime/store.ts
+@@ -118,7 +118,7 @@
+  // Called only before an operation starts or after its promise and cleanup settle.
+  // Cancellation consumes no additional turn and supplies no synthetic poll freshness.
+  async cancel(claim:RuntimeClaim,reason:RuntimeReason='ready'){
+-  await this.disposeUnusedAdmission(claim);
++  // mutant unused reservation disposal omitted
+   if(reason!=='ready')return this.finish(claim,reason);
+   return eligibilityTransaction(this.pool,async c=>{
+    const occupied="EXISTS(SELECT 1 FROM transport_operation t WHERE t.mailbox_id=runtime_due.mailbox_id AND t.protocol=$6 AND t.operation IS NOT NULL)";

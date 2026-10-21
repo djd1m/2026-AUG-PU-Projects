@@ -1,0 +1,23 @@
+[
+  {
+    "name": "direction",
+    "exit": 1,
+    "assertion": "F1 primitive direction",
+    "original_sha256": "2e0e6290219b06b15c7576024b00aab627612c1c7781eee4556758b3f914cacf",
+    "mutant_sha256": "ee03c16212ca6259aeebf974ae16b5854b2383741e5d2c0de23d61349c4972af"
+  },
+  {
+    "name": "kind",
+    "exit": 1,
+    "assertion": "F1 primitive kind",
+    "original_sha256": "6deef64d75606401dfb145c277b0f42a92da19573a8b2f58366db1094cf9d4b9",
+    "mutant_sha256": "c6f23e63eaee3d462e2a42a97bbcdf36611a6842676877e38cd5c60c570c439b"
+  },
+  {
+    "name": "uuid",
+    "exit": 1,
+    "assertion": "B3 concurrent explicit share",
+    "original_sha256": "2e0e6290219b06b15c7576024b00aab627612c1c7781eee4556758b3f914cacf",
+    "mutant_sha256": "34dd8c9b9121fc8fb25e05367672f5ad8fd14407b1f19d79952919e4d559d73b"
+  }
+]

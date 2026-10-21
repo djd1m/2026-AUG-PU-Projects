@@ -1,0 +1,79 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-pdf-source/projects/06b-rag-class
+
+ ✓ services/worker/tests/unit/job-guards.test.ts (9 tests) 47ms
+ ✓ services/worker/tests/unit/pdf-extract.test.ts (6 tests) 834ms
+   ✓ real pdfjs local bytes > 301 pages fail before writes, 300 pages are allowed and empty pages skipped  499ms
+ ✓ apps/web/tests/unit/jobs-handler.test.ts (11 tests) 102ms
+ ✓ services/worker/tests/unit/crawl-site-correction.test.ts (19 tests) 223ms
+ ✓ apps/web/tests/unit/pdf-handler.test.ts (6 tests) 488ms
+   ✓ PDF upload envelope and exact file boundaries > size wins over signature; exact size allowed; high-bit imitation is not a signature  329ms
+ ❯ services/worker/tests/unit/crawl-rules.test.ts (7 tests | 1 failed) 976ms
+   × RFC9309 robots > R1: adversarial wildcard finishes under external deadline and leaves heartbeat/ceiling responsive 916ms
+     → expected Error: spawnSync /tmp/n6b-f06-node22/bin/… { …(5) } to be undefined
+   ✓ RFC9309 robots > wildcard end anchoring accepts later terminal literals and empty trailing wildcard 7ms
+   ✓ RFC9309 robots > группы UA, объединение подходящих групп, самый длинный путь и Allow при равенстве 4ms
+   ✓ RFC9309 robots > звёздочка, $, регистр, проценты и UTF8 5ms
+   ✓ sitemap и текст > R3: nav/footer anchors are discovered while their text is excluded 25ms
+   ✓ sitemap и текст > только тот же host с www, XML entities запрещены 5ms
+   ✓ sitemap и текст > абзацы разделены, title сохранён, nav/footer/script/style удалены, links есть и для прежнего текста 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  services/worker/tests/unit/crawl-rules.test.ts > RFC9309 robots > R1: adversarial wildcard finishes under external deadline and leaves heartbeat/ceiling responsive
+AssertionError: expected Error: spawnSync /tmp/n6b-f06-node22/bin/… { …(5) } to be undefined
+
+- Expected: 
+undefined
+
++ Received: 
+Error {
+  "message": "spawnSync /tmp/n6b-f06-node22/bin/node EPERM",
+  "errno": -1,
+  "code": "EPERM",
+  "syscall": "spawnSync /tmp/n6b-f06-node22/bin/node",
+  "path": "/tmp/n6b-f06-node22/bin/node",
+  "spawnargs": [
+    "--import",
+    "tsx",
+    "--input-type=module",
+    "-e",
+    "
+      import { parseRobots } from \"file:///home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-pdf-source/projects/06b-rag-class/services/worker/src/crawl/robots.ts\";
+      import { setImmediate as yieldLoop } from 'node:timers/promises';
+      const rule = '/' + '*a'.repeat(25) + 'b$';
+      const allows = parseRobots('User-agent: *\\nDisallow: ' + rule);
+      const started = performance.now();
+      if (!allows('https://fixture.test/' + 'a'.repeat(100))) throw new Error('adversarial mismatch');
+      if (allows('https://fixture.test/' + 'a'.repeat(100) + 'b')) throw new Error('benign mismatch');
+      let heartbeats = 0, matches = 0;
+      const beat = setInterval(() => heartbeats++, 2);
+      const ceiling = AbortSignal.timeout(30);
+      while (!ceiling.aborted) {
+        allows('https://fixture.test/' + 'a'.repeat(100)); matches++;
+        await yieldLoop();
+      }
+      clearInterval(beat);
+      console.log(JSON.stringify({ heartbeats, matches, elapsedMs: performance.now() - started, ceiling: ceiling.aborted }));
+    ",
+  ],
+}
+
+ ❯ services/worker/tests/unit/crawl-rules.test.ts:29:39
+     27|     const child = spawnSync(process.execPath, ['--import', 'tsx', '--i…
+     28|       { timeout: 3000, encoding: 'utf8' });
+     29|     expect(child.error, child.stderr).toBeUndefined();
+       |                                       ^
+     30|     expect(child.status, child.stderr).toBe(0);
+     31|     const result = JSON.parse(child.stdout);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  1 failed | 57 passed (58)
+   Start at  19:30:04
+   Duration  3.97s (transform 2.74s, setup 0ms, collect 11.17s, tests 2.67s, environment 10ms, prepare 2.08s)
+
+
+Exit: 1

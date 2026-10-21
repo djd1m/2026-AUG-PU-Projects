@@ -1,0 +1,1 @@
+../../../../.claude/rules/skill-interface-protocol.md

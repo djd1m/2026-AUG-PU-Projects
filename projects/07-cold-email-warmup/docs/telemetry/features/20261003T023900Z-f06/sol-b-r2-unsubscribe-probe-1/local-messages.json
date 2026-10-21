@@ -1,0 +1,67 @@
+{
+  "messages": [
+    {
+      "job_id": "06a5356e-cf26-4759-9cad-d7c67723d016",
+      "scope": "campaign",
+      "message_id": "<83e7fb37-e5ce-4df5-ad42-27ef6d67aa7b@n7.local.test>",
+      "sender": "sender-f06b@example.test",
+      "recipient": "mobile-f06b@example.test",
+      "subject": "[N7 LOCAL TEST] F06B form",
+      "body": "N7 LOCAL TEST \u2014 NOT DELIVERY\n\nLocal TEST\n\nUnsubscribe: http://127.0.0.1:18709/unsubscribe/8zT2aM0_lfZZHFfvPfOPHbgrvslMPZopmYKu8EH6k_M",
+      "headers": {
+        "To": "mobile-f06b@example.test",
+        "From": "sender-f06b@example.test",
+        "Subject": "[N7 LOCAL TEST] F06B form",
+        "X-N7-Test": "local_test",
+        "Message-ID": "<83e7fb37-e5ce-4df5-ad42-27ef6d67aa7b@n7.local.test>",
+        "Content-Type": "text/plain; charset=utf-8",
+        "List-Unsubscribe": "<http://127.0.0.1:18709/unsubscribe/8zT2aM0_lfZZHFfvPfOPHbgrvslMPZopmYKu8EH6k_M>",
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click"
+      },
+      "test_label": "N7 LOCAL TEST \u2014 NOT DELIVERY",
+      "accepted_at": "2026-10-03T04:46:42.812Z"
+    },
+    {
+      "job_id": "28e1b70a-ab62-43d3-8ecf-5154003278af",
+      "scope": "campaign",
+      "message_id": "<ee0cc92b-ba8e-4564-abcc-818d7351078b@n7.local.test>",
+      "sender": "sender-f06b@example.test",
+      "recipient": "third-f06b@example.test",
+      "subject": "[N7 LOCAL TEST] F06B form",
+      "body": "N7 LOCAL TEST \u2014 NOT DELIVERY\n\nLocal TEST\n\nUnsubscribe: http://127.0.0.1:18709/unsubscribe/DtuhZUbM5z7CxdOTmi4TW5zQqbSJKR5Xyy5I0KIg2XY",
+      "headers": {
+        "To": "third-f06b@example.test",
+        "From": "sender-f06b@example.test",
+        "Subject": "[N7 LOCAL TEST] F06B form",
+        "X-N7-Test": "local_test",
+        "Message-ID": "<ee0cc92b-ba8e-4564-abcc-818d7351078b@n7.local.test>",
+        "Content-Type": "text/plain; charset=utf-8",
+        "List-Unsubscribe": "<http://127.0.0.1:18709/unsubscribe/DtuhZUbM5z7CxdOTmi4TW5zQqbSJKR5Xyy5I0KIg2XY>",
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click"
+      },
+      "test_label": "N7 LOCAL TEST \u2014 NOT DELIVERY",
+      "accepted_at": "2026-10-03T04:46:42.845Z"
+    },
+    {
+      "job_id": "a7ab605f-00f0-40ac-95de-3592b859c21b",
+      "scope": "campaign",
+      "message_id": "<a8cc8500-6ff7-4f6c-8d7a-0a003a613ccc@n7.local.test>",
+      "sender": "sender-f06b@example.test",
+      "recipient": "desktop-f06b@example.test",
+      "subject": "[N7 LOCAL TEST] F06B form",
+      "body": "N7 LOCAL TEST \u2014 NOT DELIVERY\n\nLocal TEST\n\nUnsubscribe: http://127.0.0.1:18709/unsubscribe/IvrdaJ8XD2BdtGH-T120wh1WAG2NU49u8VoBLRy-c8Y",
+      "headers": {
+        "To": "desktop-f06b@example.test",
+        "From": "sender-f06b@example.test",
+        "Subject": "[N7 LOCAL TEST] F06B form",
+        "X-N7-Test": "local_test",
+        "Message-ID": "<a8cc8500-6ff7-4f6c-8d7a-0a003a613ccc@n7.local.test>",
+        "Content-Type": "text/plain; charset=utf-8",
+        "List-Unsubscribe": "<http://127.0.0.1:18709/unsubscribe/IvrdaJ8XD2BdtGH-T120wh1WAG2NU49u8VoBLRy-c8Y>",
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click"
+      },
+      "test_label": "N7 LOCAL TEST \u2014 NOT DELIVERY",
+      "accepted_at": "2026-10-03T04:46:42.876Z"
+    }
+  ]
+}

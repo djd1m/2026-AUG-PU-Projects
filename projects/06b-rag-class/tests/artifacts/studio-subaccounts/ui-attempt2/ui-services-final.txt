@@ -1,0 +1,41 @@
+proxy-1  | {"level":"info","ts":1790999916.7623549,"msg":"maxprocs: Updating GOMAXPROCS=1: using minimum allowed GOMAXPROCS"}
+proxy-1  | {"level":"info","ts":1790999916.7629728,"msg":"GOMEMLIMIT is updated","package":"github.com/KimMachineGun/automemlimit/memlimit","GOMEMLIMIT":11286868377,"previous":9223372036854775807}
+proxy-1  | {"level":"info","ts":1790999916.7630336,"msg":"using config from file","file":"/etc/caddy/Caddyfile"}
+proxy-1  | {"level":"info","ts":1790999916.7646894,"msg":"adapted config to JSON","adapter":"caddyfile"}
+proxy-1  | {"level":"warn","ts":1790999916.7647197,"msg":"Caddyfile input is not formatted; run 'caddy fmt --overwrite' to fix inconsistencies","adapter":"caddyfile","file":"/etc/caddy/Caddyfile","line":2}
+proxy-1  | {"level":"info","ts":1790999916.7661686,"logger":"admin","msg":"admin endpoint started","address":"localhost:2019","enforce_origin":false,"origins":["//localhost:2019","//[::1]:2019","//127.0.0.1:2019"]}
+proxy-1  | {"level":"info","ts":1790999916.7862687,"logger":"tls.cache.maintenance","msg":"started background certificate maintenance","cache":"0xc000321900"}
+proxy-1  | {"level":"info","ts":1790999916.8495853,"logger":"http.auto_https","msg":"server is listening only on the HTTPS port but has no TLS connection policies; adding one to enable TLS","server_name":"srv0","https_port":443}
+proxy-1  | {"level":"info","ts":1790999916.849658,"logger":"http.auto_https","msg":"automatic HTTP->HTTPS redirects are disabled","server_name":"srv0"}
+proxy-1  | {"level":"warn","ts":1790999916.8502367,"logger":"pki.ca.local","msg":"installing root certificate (you might be prompted for password)","path":"storage:pki/authorities/local/root.crt"}
+proxy-1  | {"level":"info","ts":1790999916.8515277,"msg":"warning: \"certutil\" is not available, install \"certutil\" with \"apt install libnss3-tools\" or \"yum install nss-tools\" and try again"}
+proxy-1  | {"level":"info","ts":1790999916.8515549,"msg":"define JAVA_HOME environment variable to use the Java trust"}
+proxy-1  | {"level":"info","ts":1790999917.0657582,"msg":"certificate installed properly in linux trusts"}
+proxy-1  | {"level":"info","ts":1790999917.0662174,"logger":"http","msg":"enabling HTTP/3 listener","addr":":443"}
+proxy-1  | {"level":"info","ts":1790999917.0663903,"msg":"failed to sufficiently increase receive buffer size (was: 208 kiB, wanted: 7168 kiB, got: 416 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details."}
+proxy-1  | {"level":"info","ts":1790999917.0667102,"logger":"http.log","msg":"server running","name":"srv0","protocols":["h1","h2","h3"]}
+proxy-1  | {"level":"info","ts":1790999917.066736,"logger":"http","msg":"enabling automatic TLS certificate management","domains":["studio-fixture.test","n6b-ui.test"]}
+proxy-1  | {"level":"info","ts":1790999917.0700343,"msg":"autosaved config (load with --resume flag)","file":"/config/caddy/autosave.json"}
+proxy-1  | {"level":"info","ts":1790999917.0700786,"msg":"serving initial configuration"}
+proxy-1  | {"level":"info","ts":1790999917.0728962,"logger":"tls.obtain","msg":"acquiring lock","identifier":"studio-fixture.test"}
+proxy-1  | {"level":"info","ts":1790999917.073325,"logger":"tls","msg":"cleaning storage unit","storage":"FileStorage:/data/caddy"}
+proxy-1  | {"level":"info","ts":1790999917.0760388,"logger":"tls.obtain","msg":"acquiring lock","identifier":"n6b-ui.test"}
+proxy-1  | {"level":"info","ts":1790999917.07669,"logger":"tls.obtain","msg":"lock acquired","identifier":"studio-fixture.test"}
+proxy-1  | {"level":"info","ts":1790999917.0767708,"logger":"tls.obtain","msg":"obtaining certificate","identifier":"studio-fixture.test"}
+proxy-1  | {"level":"info","ts":1790999917.147526,"logger":"tls","msg":"finished cleaning storage units"}
+proxy-1  | {"level":"info","ts":1790999917.1649814,"logger":"tls.obtain","msg":"certificate obtained successfully","identifier":"studio-fixture.test","issuer":"local"}
+proxy-1  | {"level":"info","ts":1790999917.165178,"logger":"tls.obtain","msg":"releasing lock","identifier":"studio-fixture.test"}
+proxy-1  | {"level":"warn","ts":1790999917.1659606,"logger":"tls","msg":"stapling OCSP","identifiers":["studio-fixture.test"]}
+proxy-1  | {"level":"info","ts":1790999917.166018,"logger":"tls.obtain","msg":"lock acquired","identifier":"n6b-ui.test"}
+proxy-1  | {"level":"info","ts":1790999917.166078,"logger":"tls.obtain","msg":"obtaining certificate","identifier":"n6b-ui.test"}
+proxy-1  | {"level":"info","ts":1790999917.178155,"logger":"tls.obtain","msg":"certificate obtained successfully","identifier":"n6b-ui.test","issuer":"local"}
+proxy-1  | {"level":"info","ts":1790999917.178347,"logger":"tls.obtain","msg":"releasing lock","identifier":"n6b-ui.test"}
+proxy-1  | {"level":"warn","ts":1790999917.1794786,"logger":"tls","msg":"stapling OCSP","identifiers":["n6b-ui.test"]}
+web-1    |    ▲ Next.js 15.5.27
+web-1    |    - Local:        http://localhost:3000
+web-1    |    - Network:      http://192.168.192.3:3000
+web-1    | 
+web-1    |  ✓ Starting...
+web-1    |  ✓ Ready in 1678ms
+web-1    | (node:1) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+web-1    | (Use `node --trace-warnings ...` to show where the warning was created)

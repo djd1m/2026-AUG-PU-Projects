@@ -1,0 +1,26 @@
+
+ RUN  v3.2.7 /app
+
+ ✓ packages/rag/tests/unit/chunk.test.ts (12 tests) 16619ms
+   ✓ countTokens (js-tiktoken cl100k_base) > считает токены, а не символы: пустая строка — 0, русский текст дороже английского той же длины  674ms
+   ✓ splitIntoChunks > русский: каждая часть ≤ 500 токенов, tokens и sha256 точные, весь текст покрыт  735ms
+   ✓ splitIntoChunks > перекрытие: следующая часть начинается с хвоста предыдущей, хвост 1…80 токенов  391ms
+   ✓ splitIntoChunks > абзац без переносов режется по предложениям; сплошная строка 20 000 символов — окнами, быстро  4517ms
+   ✓ splitIntoChunks > F-1: один большой документ уступает таймеру внутри абзаца; async = sync, Unicode и cap  9843ms
+
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+   Start at  19:54:31
+   Duration  17.29s (transform 178ms, setup 0ms, collect 251ms, tests 16.62s, environment 0ms, prepare 131ms)
+
+
+ RUN  v3.2.7 /app
+
+ ✓ services/worker/tests/int/chunk-embed.int.test.ts (14 tests) 4384ms
+   ✓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > первый прогон: части ≤ 500 токенов записаны с vector(1536), резерв = точная оценка, батчи по размеру  2244ms
+   ✓ chunk-embed: нарезка → эмбеддинги через дверь → chunk > резерв = точная оценка js-tiktoken, а не ⌈длина/4⌉: русский текст не проходит под заниженным n  735ms
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  19:54:49
+   Duration  6.04s (transform 588ms, setup 0ms, collect 702ms, tests 4.38s, environment 0ms, prepare 123ms)

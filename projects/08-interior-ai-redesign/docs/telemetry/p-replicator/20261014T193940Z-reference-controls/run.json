@@ -1,0 +1,57 @@
+{
+  "run_id": "20261014T193940Z-reference-controls",
+  "started_at": "2026-10-14T19:39:40+00:00",
+  "status": "complete",
+  "profile": "compact-quality-first-v2",
+  "tier": "M",
+  "scope": "Selectable link references with inline image resolution; remove references in02 using lifecycle-only deletion preserving historical designs/jobs/assets",
+  "route": "M: existing reference contract, reversible schema column, authenticated routes; no new external call/table/role",
+  "source_revision": "a28e0d6e19014855c2c674496144f3de443d243c",
+  "models": [
+    {
+      "role": "coordinator",
+      "actual": null
+    }
+  ],
+  "tokens": null,
+  "cost": null,
+  "measurement_gaps": [
+    "actual model/effort, token and cost counters unavailable",
+    "initial diagnosis reading preceded first clock sample; elapsed reports instrumented portion only"
+  ],
+  "reuse": "N8 AssetUpload uploadPrivateAsset, existing reference/create and CAS lifecycle delete patterns; no newlibrary/external network; previous GitHub sharp provenance unchanged",
+  "ac": [
+    "link checkboxes selectable with explanation and inline image upload/useexisting",
+    "apply disabled until selectedlinks resolved; no fake linkanalysis",
+    "delete hides both used and unused references; immutable past designs/queued work preserved",
+    "origin/owner/CAS and tests/browser verified"
+  ],
+  "ended_at": "2026-10-14T19:46:47.763877+00:00",
+  "elapsed_seconds": 427.8,
+  "checks": {
+    "typecheck": "pass",
+    "lint": "pass",
+    "targeted": "5 tests pass (reference pixels and removal/history/CAS)",
+    "mutation": "no-op deletion fails meaningful guard as expected; source restored",
+    "full_suite": "271 tests / 42 files pass",
+    "independent_review": "pass, no blocking findings",
+    "build": "pass",
+    "migration007": "applied",
+    "browser": "7 scenarios pass; real link click, inline image upload, used/unused deletion, pixel changes, reload and preserved old scene",
+    "health": "web/worker healthy; public readiness200"
+  },
+  "build_revision": "sha256:39b18916efa56ba669905d5edaba83977587a41c07637fc863fb4ae3f7875e1d",
+  "inference_calls": 0,
+  "database": "original container unchanged; lifecycle column only",
+  "source_hashes": {
+    "apps/web/src/components/DesignReferences.tsx": "33e154ac4775ab3829489a490970e46e4a6cb21514ed8e8451254c8724cea043",
+    "apps/web/src/components/DesignPanel.tsx": "0d8b405a20223952a037d11d2f8bb5f603ebb240fd91c2879423682b0ebdab21",
+    "apps/web/src/components/ReferencesPanel.tsx": "845f6d66c5dc897fd7ba5effc3f8679c35e43d77bf08e9413f6116ea5023b68d",
+    "apps/web/src/server/space.ts": "d58cf40af2a04b6009a50e52ab4c5273f623bb723d10efd5ad39a575ef84c101",
+    "apps/web/src/server/reference-design.ts": "e1afe442ff8004b1c830814695b25f1ff8ab4caba517350af76b52cfff60d3ff",
+    "packages/db/src/space.ts": "e37a9c40a08425f0198b5d124f710988f736f0e24e55db94a0d8c9f1fd1af4e7",
+    "packages/db/src/design/revisions.ts": "f71b554df010530612b80c14376253fe4239720b283a72d262c1e3fc1a111221",
+    "packages/db/src/design/jobs.ts": "6efc844e71acea3586a79a13482943db77225759b1f79a1e618d4e78848ba1a8"
+  },
+  "route_note": "Mechanical L flags any migration; substantive M for nullable lifecycle column only, no new table/role/grant/external call or irreversible data migration"
+}

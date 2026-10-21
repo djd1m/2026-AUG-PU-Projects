@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "at": "2026-10-14T07:17:02.121Z",
+  "cases": [
+    {
+      "name": "missing-origin",
+      "status": 403,
+      "expected": 403,
+      "code": "ORIGIN_FORBIDDEN"
+    },
+    {
+      "name": "foreign-origin",
+      "status": 403,
+      "expected": 403,
+      "code": "ORIGIN_FORBIDDEN"
+    },
+    {
+      "name": "spoofed-client-overwritten",
+      "status": 422,
+      "expected": 422,
+      "code": "INVALID_CREDENTIALS"
+    },
+    {
+      "name": "public-securityheaders",
+      "status": 200,
+      "hsts": "max-age=15552000",
+      "robots": "noindex, nofollow"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+ Container n8-interior-ui-check-playwright-run-a89a2a113d7c Creating 
+ Container n8-interior-ui-check-playwright-run-a89a2a113d7c Created 
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.waitFor: Error: strict mode violation: getByRole('alert') resolved to 2 elements:
+    1) <p role="alert" class="error" tabindex="-1">Проверьте данные сметы</p> aka getByText('Проверьте данные сметы')
+    2) <div role="alert" aria-live="assertive" id="__next-route-announcer__"></div> aka locator('[id="__next-route-announcer__"]')
+
+Call log:
+  - waiting for getByRole('alert') to be visible
+
+    at /app/scripts/public-ui-audit.mjs:33:296
+
+Node.js v24.21.0
+

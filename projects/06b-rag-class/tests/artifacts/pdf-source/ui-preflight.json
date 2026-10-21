@@ -1,0 +1,29 @@
+{
+  "status": "ready",
+  "source_revision": "795508ad15f8bbc0948dac4219c6d3dc0d4d1332",
+  "build_revision": "sha256:92c1f98633b939717a789bc2b5fb484a1dcfe5ae7ba944aecf312c488c27d098",
+  "environment": "Isolated n6b-f06-ui Docker stack, no published DB ports, shared codex-ui-playwright attached to own network",
+  "test_command": "docker exec -w /opt/browser codex-ui-playwright node /opt/browser/n6b-f06-ui.mjs /opt/browser/n6b-f06-fixture.json /opt/browser/n6b-f06-output",
+  "inputs": [
+    {
+      "name": "Random private fixture and real two-page PDF",
+      "available": true
+    },
+    {
+      "name": "14 source/test bytes match implementation snapshot; full regression exit0",
+      "available": true
+    }
+  ],
+  "environment_available": true,
+  "expected_effects": [
+    "Create two temporary accounts and bots, reject bad/oversized PDF, persist accepted source/file/job in isolated DB",
+    "Save screenshots/report; remove own stack and private fixture"
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "tests/artifacts/pdf-source/ui-output/report.json"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "checked_at": "2026-10-02T20:15:22.943035+00:00"
+}

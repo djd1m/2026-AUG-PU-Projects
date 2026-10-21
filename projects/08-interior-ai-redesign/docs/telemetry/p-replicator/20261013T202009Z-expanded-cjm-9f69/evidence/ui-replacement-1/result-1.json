@@ -1,0 +1,50 @@
+{
+  "status": "passed",
+  "startedAt": "2026-10-14T01:08:11.955Z",
+  "finishedAt": "2026-10-14T01:08:14.988Z",
+  "image": "docker:sha256:a870f8779ea77c2aaad8aadbc6b67f97a71c6f2f2c797e965927b9297c4fbace",
+  "nextBuild": "wfhm1wAXdEYLGdlYzhuhc",
+  "checks": [
+    "synthetic owner login on final image6",
+    "isolated furniture fixture: approved box, two known-size products and complete 385000-minor budget",
+    "actual ProductsPanel confirmation displays 2000→2500 RUB and 0.5→0.6m width, then creates new draft",
+    "original immutable scene and 385000-minor budget preserved; only approval metadata superseded",
+    "UI explicitly reapproves replacement and recalculates 440000-minor total; both budgets remain"
+  ],
+  "projectId": "dce0f167-2334-436b-80ef-30e842ad1541",
+  "originalDesignId": "7a8ed9a7-ce0d-4552-90fd-bc8449802ee2",
+  "originalBudgetId": "1a7aff98-3521-407a-b23a-6cf354bbc6e1",
+  "replacement": {
+    "line": {
+      "id": "a074c745-9f8b-4e46-902b-cc7d4a308806",
+      "projectId": "dce0f167-2334-436b-80ef-30e842ad1541",
+      "designId": "41ec89dd-6c4b-42e2-af03-4de2ca945b3f",
+      "elementId": "5976a67e-fdb7-4cc4-a4c2-3e9287c0888e",
+      "selection": "matched",
+      "retainedReason": null,
+      "snapshotId": "032b890c-f5d9-49ce-94a7-54e61c89ab2c",
+      "quantitySource": "manual",
+      "sourceShellId": "9dfa4526-65ab-48ad-86c3-9c95b281ef67",
+      "quantityConfirmed": true,
+      "baseQuantity": "1",
+      "wastePct": "0",
+      "phase": "furnishing",
+      "fit": "bbox_checked",
+      "version": 1,
+      "createdAt": "2026-10-14T01:08:13.097Z"
+    },
+    "version": 11,
+    "newDesignId": "41ec89dd-6c4b-42e2-af03-4de2ca945b3f",
+    "approvalRequired": true,
+    "recalculateRequired": true,
+    "difference": {
+      "oldSnapshotId": "1632005f-d5ff-4f25-9497-0719e2490f25",
+      "newSnapshotId": "032b890c-f5d9-49ce-94a7-54e61c89ab2c",
+      "dimensionsChanged": true
+    }
+  },
+  "confirmation": "Было: Стул A · 2 000,00 ₽ · габариты 0.5 × 0.8 × 0.5 м\nСтало: Стул B · 2 500,00 ₽ · габариты 0.6 × 0.8 × 0.5 м\nЗамена создаст новый черновик. Проверьте внешний вид и размеры, согласуйте его и пересчитайте смету. Продолжить?",
+  "errors": [],
+  "outbound": [],
+  "liveCalls": 0
+}

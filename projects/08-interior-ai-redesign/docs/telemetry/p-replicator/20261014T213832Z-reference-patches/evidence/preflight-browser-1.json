@@ -1,0 +1,22 @@
+{
+  "status": "ready",
+  "at": "2026-10-14T21:57:33.997595+00:00",
+  "source_revision": "ea12532b + hashes",
+  "source_hashes": {
+    "packages/viewer/src/renderer.ts": "6fa68309a4b04af67819e2ef72d734777dc0e1eb4856600de82983187c38a6ba",
+    "packages/viewer/src/semantic-segmentation.ts": "59dbd6d332d5f62496bb0ceafb18745fe7be82185dcaf386f1372c32de9ef365",
+    "packages/adapters/src/openrouter.ts": "c8c821199b19a7dd9f6448ae752187d454f2302bea0dd24c87d686fd8393d32c",
+    "packages/db/src/design/jobs.ts": "51496247d3003ad801aa9243a3e6b00ca743268e2ec8fbdfbda1f6f3fefc7075",
+    "apps/web/src/server/config.ts": "abbf916bb30679327476db9da76cdec775ef83b147af1733455259c6e13769d2",
+    "apps/web/src/components/DesignPanel.tsx": "2f0a33ff81dd32f1c4a30c63e26bc7fbcf5e7ebc099885ce97d6d60b3242977b"
+  },
+  "image": "sha256:bda6707dffb72cff83cd2ae27fc86f1fd9e781cfd98b0a0dbb0b7010583da58b",
+  "readyHTTP": 200,
+  "runtime_proof": "runtime-budget-proof.json",
+  "inputs": "Synthetic zero-credit account; synthetic eligible and insufficient GLBs + role fixture. No owner/private files.",
+  "command": "Docker Playwright scripts/e2e-reference-repair.mjs",
+  "effects": "Own synthetic project/assets/designs, normal unpaid preview and no-credit rejection, renderedcolour/fallback checks; no paid inference",
+  "evidence": "/home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/docs/telemetry/p-replicator/20261014T213832Z-reference-patches/evidence/browser-1",
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

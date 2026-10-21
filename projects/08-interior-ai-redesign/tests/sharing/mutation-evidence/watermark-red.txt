@@ -1,0 +1,29 @@
+
+ RUN  v5.0.4 /tmp/n8-sharing-author-20261013/projects/08-interior-ai-redesign
+
+ ❯ tests/sharing/http.test.ts (8 tests | 1 failed | 7 skipped) 630ms
+   × AC-sharing-1 actual export strips EXIF, applies N8 pixels, discards raw upload, private PNG hash 627ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  23:53:36
+   Duration  1.12s (tests 66%, import 18%, transform 15%, worker 1%)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/sharing/http.test.ts > AC-sharing-1 actual export strips EXIF, applies N8 pixels, discards raw upload, private PNG hash
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/sharing/http.test.ts:22:171
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

@@ -1,0 +1,26 @@
+
+ RUN  v5.0.4 /tmp/n8-sharing-author-20261013/projects/08-interior-ai-redesign
+
+ ❯ tests/sharing/http.test.ts (8 tests | 1 failed | 7 skipped) 558ms
+   × AC-sharing-2 public HTML exposes only selected caption/image, escapes text, sets private attribution cookie; revoke denies page/image 556ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  23:53:39
+   Duration  1.05s (tests 63%, transform 18%, import 18%, worker 1%)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/sharing/http.test.ts > AC-sharing-2 public HTML exposes only selected caption/image, escapes text, sets private attribution cookie; revoke denies page/image
+AssertionError: expected '<!doctype html><html lang="ru"><head>…' not to contain '4ef314ef-94ee-4da9-a2c4-6a6fcfc86988'
+
+Expected: "4ef314ef-94ee-4da9-a2c4-6a6fcfc86988"
+Received: "<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Образ комнаты — N8</title></head><body><main><h1>Образ комнаты</h1><img src="/api/shared/8YgXI1HDzaAtIZGV4sbelYbOUx8K_ainF9INBaGaVCI/image" alt="Подготовленное изображение комнаты до и после" style="max-width:100%;height:auto"><p>Комната &lt;script&gt;private&lt;/script&gt; 4ef314ef-94ee-4da9-a2c4-6a6fcfc86988</p><a href="/dashboard?from=share">Начать свой проект</a></main></body></html>"
+
+ ❯ tests/sharing/http.test.ts:24:581
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

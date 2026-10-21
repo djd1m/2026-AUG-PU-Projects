@@ -1,0 +1,51 @@
+{
+  "status": "ready",
+  "recorded_at": "2026-10-14T07:10:21.320955+00:00",
+  "source_revision": "baseline3b84e9ef + exact145file hashes in public-source-image-1.json",
+  "build_revision": "sha256:7c488e9eef1afcbad315cf58751980bee8d7b33242f95392ed8d5a8c12930c74",
+  "test_image": "sha256:681b7ac38a2694c3b639f40e123a18e2e73d0b3684d20d65366e2884f427c064",
+  "environment": "Dedicated isolated Docker container -> verified public HTTPS n8.77.83.87.178.sslip.io; only evidence/privatefixture mounts; no DB/provider secrets",
+  "environment_available": true,
+  "test_command": "docker compose -f compose.e2e.yml run --rm playwright node scripts/public-ui-audit.mjs",
+  "inputs": [
+    {
+      "name": "locked Playwright1.60 ChromiumFirefoxWebKit+fonts",
+      "available": true
+    },
+    {
+      "name": "publichealthready200 verifiedTLS",
+      "available": true
+    },
+    {
+      "name": "evidence target absent",
+      "available": true
+    },
+    {
+      "name": "testcontainer evidenceUID1000 writable",
+      "available": true
+    },
+    {
+      "name": "fictional owner generated in driver",
+      "available": true
+    },
+    {
+      "name": "exactsourceimage match145files",
+      "available": true
+    },
+    {
+      "name": "Synthetic owner/fulljourney fixture from successfulpublic-journey-1",
+      "available": true
+    }
+  ],
+  "expected_effects": [
+    "Read only savedproject sixsteps in3browserengines, desktop1440+mobile390",
+    "WCAG2A/AA+2.1AA Axe checks and screenshots",
+    "Login3times creates SecureHttpOnlysessions; no paidexternalcalls"
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "docs/telemetry/p-replicator/20261014T064554Z-public-ui-53d8/evidence"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

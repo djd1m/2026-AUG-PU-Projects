@@ -1,0 +1,26 @@
+name: n8-interior-ui-check
+services:
+  playwright:
+    image: n8-interior-playwright:local
+    build:
+      context: .
+      dockerfile: Dockerfile.e2e
+      args:
+        N8_APP_IMAGE: ${N8_E2E_APP_IMAGE:-n8-interior-app:local}
+    init: true
+    environment:
+      N8_PUBLIC_ORIGIN: https://${N8_PUBLIC_HOST:?Set public host}
+      N8_E2E_PUBLIC: 'true'
+      N8_E2E_ATTEMPT: ${N8_E2E_ATTEMPT:?Fresh attempt required}
+      N8_E2E_EVIDENCE_DIR: ${N8_E2E_EVIDENCE_DIR:?Set project-relative evidence directory}
+      N8_BUILD_REVISION: ${N8_BUILD_REVISION:?Bind actual image}
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+    volumes:
+      - ./scripts/floorplan-e2e.mjs:/app/scripts/floorplan-e2e.mjs:ro
+      - ./scripts/public-ui-audit.mjs:/app/scripts/public-ui-audit.mjs:ro
+      - ${N8_E2E_HOST_EVIDENCE:?Set absolute evidence directory}:/app/${N8_E2E_EVIDENCE_DIR}
+      - ./.runtime/public-e2e:/app/.runtime/e2e
+    shm_size: 1g
+    mem_limit: 2g
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]

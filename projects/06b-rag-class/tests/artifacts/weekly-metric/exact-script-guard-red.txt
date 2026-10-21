@@ -1,0 +1,61 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-weekly-metric/projects/06b-rag-class
+
+ ❯ apps/web/tests/unit/metrics-verifier.test.ts (28 tests | 1 failed | 27 skipped) 33ms
+   ↓ MET-03 actual script predicate > accepts actual exact src/data-bot, absolute and URL-resolved, including valid base
+   ↓ MET-03 actual script predicate > rejects lookalike <!-- <script src="https://widget.example/w.js" data-bot="AbCdEf0123_-"></script> -->
+   ↓ MET-03 actual script predicate > rejects lookalike <script>const text = '<script src="https://widget.example/w.js" data-bot="AbCdEf0123_-"></script>';</script>
+   ↓ MET-03 actual script predicate > rejects lookalike <script src="https://widget.example/w.js" data-bot="WrongBot1234"></script>
+   ↓ MET-03 actual script predicate > rejects lookalike <script src="https://evil.example/w.js" data-bot="AbCdEf0123_-"></script>
+   ↓ MET-03 actual script predicate > rejects lookalike <script src="https://widget.example/other.js" data-bot="AbCdEf0123_-"></script>
+   ↓ MET-03 actual script predicate > rejects lookalike <script src="https://widget.example/w.js?x=1" data-bot="AbCdEf0123_-"></script>
+   ↓ MET-03 actual script predicate > rejects lookalike <script src="https://widget.example/w.js#x" data-bot="AbCdEf0123_-"></script>
+   ↓ MET-03 actual script predicate > rejects lookalike <template><script src="https://widget.example/w.js" data-bot="AbCdEf0123_-"></script></template>
+   ↓ MET-03 actual script predicate > rejects lookalike <noscript><script src="https://widget.example/w.js" data-bot="AbCdEf0123_-"></script></noscript>
+   ↓ MET-03 actual script predicate > rejects lookalike <script data-src="https://widget.example/w.js" data-bot="AbCdEf0123_-"></script>
+   ↓ MET-03 actual script predicate > rejects lookalike &lt;script src="https://widget.example/w.js" data-bot="AbCdEf0123_-"&gt;
+   × MET-03 actual script predicate > fixed guard assertion: a wrong bot script never verifies 28ms
+     → expected true to be false // Object.is equality
+   ↓ MET-02 canonical cumulative counts > counts bot × normalized host independently, excludes private/preview/own hosts
+   ↓ MET-02 canonical cumulative counts > zero-click no data and exact registration threshold n=0
+   ↓ MET-02 canonical cumulative counts > zero-click no data and exact registration threshold n=29
+   ↓ MET-02 canonical cumulative counts > zero-click no data and exact registration threshold n=30
+   ↓ MET-03/04 bounded sequential verifier > passes strict bounds, performs sequential requests and commits once
+   ↓ MET-03/04 bounded sequential verifier > does not verify invalid response
+   ↓ MET-03/04 bounded sequential verifier > does not verify invalid response
+   ↓ MET-03/04 bounded sequential verifier > does not verify invalid response
+   ↓ MET-03/04 bounded sequential verifier > does not verify invalid response
+   ↓ MET-03/04 bounded sequential verifier > does not verify invalid response
+   ↓ MET-03/04 bounded sequential verifier > does not verify invalid response
+   ↓ MET-03/04 bounded sequential verifier > network failure remains pending; expired batch and revoked actor do not fetch
+   ↓ MET-03/04 bounded sequential verifier > stops at the shared 60-second deadline, even with five selected rows
+   ↓ MET-03/04 bounded sequential verifier > rechecks session before write and rolls back database failures
+   ↓ MET-03/04 bounded sequential verifier > cannot write after the total deadline expires during session revalidation
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/tests/unit/metrics-verifier.test.ts > MET-03 actual script predicate > fixed guard assertion: a wrong bot script never verifies
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ apps/web/tests/unit/metrics-verifier.test.ts:39:108
+     37|   });
+     38|   it('fixed guard assertion: a wrong bot script never verifies', () =>…
+     39|     expect(hasMetricScript(SCRIPT.replace(PUBLIC, 'WrongBot1234'), 'ht…
+       |                                                                                                            ^
+     40|   });
+     41| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 27 skipped (28)
+   Start at  01:33:48
+   Duration  1.50s (transform 524ms, setup 0ms, collect 1.01s, tests 33ms, environment 1ms, prepare 118ms)
+

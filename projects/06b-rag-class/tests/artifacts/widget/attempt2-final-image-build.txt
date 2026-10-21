@@ -1,0 +1,60 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.44kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22.22-bookworm-slim
+#2 DONE 0.5s
+
+#3 [internal] load build context
+#3 transferring context: 251.02kB 0.1s done
+#3 DONE 0.1s
+
+#4 [ 1/11] FROM docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752
+#4 resolve docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752 0.1s done
+#4 DONE 0.1s
+
+#5 [ 6/11] COPY --chown=node:node apps/widget/package.json ./apps/widget/
+#5 CACHED
+
+#6 [ 5/11] COPY --chown=node:node apps/web/package.json ./apps/web/
+#6 CACHED
+
+#7 [ 8/11] COPY --chown=node:node packages/db/package.json ./packages/db/
+#7 CACHED
+
+#8 [ 7/11] COPY --chown=node:node services/worker/package.json ./services/worker/
+#8 CACHED
+
+#9 [ 3/11] RUN chown node:node /app
+#9 CACHED
+
+#10 [ 9/11] COPY --chown=node:node packages/rag/package.json ./packages/rag/
+#10 CACHED
+
+#11 [ 2/11] WORKDIR /app
+#11 CACHED
+
+#12 [ 4/11] COPY --chown=node:node package.json package-lock.json ./
+#12 CACHED
+
+#13 [10/11] RUN npm ci
+#13 CACHED
+
+#14 [11/11] COPY --chown=node:node . .
+#14 DONE 0.6s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 0.6s done
+#15 exporting manifest sha256:ee1ac050affaeb49da151987028fbd96899275700428f3698ef1d4a647279c61
+#15 exporting manifest sha256:ee1ac050affaeb49da151987028fbd96899275700428f3698ef1d4a647279c61 0.0s done
+#15 exporting config sha256:2eb8ee3d4d61b0cee30f8aac07d5e98e0c8b1cdeaa8616441e7a22fa9ce84d3a 0.0s done
+#15 exporting attestation manifest sha256:9647f097542e99e0af89395fba48e60c75f8ad22c15dd1210b63b98a2b471fdb 0.0s done
+#15 exporting manifest list sha256:74cd27e6d701107ba40034a908c57c6bb7a0234ac3a0e04512de1a1a3811ac46
+#15 exporting manifest list sha256:74cd27e6d701107ba40034a908c57c6bb7a0234ac3a0e04512de1a1a3811ac46 0.0s done
+#15 naming to docker.io/library/n6b-f09-widget-runner:final done
+#15 unpacking to docker.io/library/n6b-f09-widget-runner:final
+#15 unpacking to docker.io/library/n6b-f09-widget-runner:final 0.3s done
+#15 DONE 1.8s

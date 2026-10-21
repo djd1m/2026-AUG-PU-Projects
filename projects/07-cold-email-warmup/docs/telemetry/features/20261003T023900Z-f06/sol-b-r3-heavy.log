@@ -1,0 +1,322 @@
+Command: python3 scripts/check-f06b-r1-snapshot.py freeze
+9c6de2eb5ef20a354e49eac4e844697c1035e39733974cfd531d01769007f9fb
+
+Exit: 0
+Command: docker stop n7f06a-web-1
+n7f06a-web-1
+
+Exit: 0
+Command: bash /tmp/n7-f06b-r3/scripts/check-port-conflicts.sh /tmp/n7-f06b-r3/projects/07-cold-email-warmup
+== БД и хранилища не смотрят в интернет ==
+  ✅ ни одно хранилище не публикует порт наружу
+
+== За reverse-proxy приложение не публикуется ==
+  ✅ reverse-proxy в compose нет — проверка неприменима
+
+== Конфликты портов с уже занятым на этой машине ==
+  ✅ порт 18709 свободен
+
+Exit: 0
+Command: docker compose build --build-arg BUILDKIT_STEP_LOG_MAX_SIZE=1048576 web
+#1 [internal] load local bake definitions
+#1 reading from stdin 601B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 311B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:22.20.0-bookworm-slim
+#3 DONE 0.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 96B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 DONE 0.0s
+
+#6 [1/9] FROM docker.io/library/node:22.20.0-bookworm-slim@sha256:b21fe589dfbe5cc39365d0544b9be3f1f33f55f3c86c87a76ff65a02f8f5848e
+#6 resolve docker.io/library/node:22.20.0-bookworm-slim@sha256:b21fe589dfbe5cc39365d0544b9be3f1f33f55f3c86c87a76ff65a02f8f5848e 0.1s done
+#6 DONE 0.1s
+
+#5 [internal] load build context
+#5 transferring context: 537.03kB 0.0s done
+#5 DONE 0.1s
+
+#7 [2/9] WORKDIR /app
+#7 CACHED
+
+#8 [3/9] COPY package.json package-lock.json ./
+#8 DONE 0.1s
+
+#9 [4/9] RUN npm ci --no-audit --no-fund
+#9 7.178 npm warn deprecated eslint@9.39.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+#9 7.771 
+#9 7.771 added 145 packages in 7s
+#9 7.773 npm notice
+#9 7.773 npm notice New major version of npm available! 10.9.3 -> 12.2.0
+#9 7.773 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+#9 7.773 npm notice To update run: npm install -g npm@12.2.0
+#9 7.773 npm notice
+#9 DONE 8.2s
+
+#10 [5/9] COPY tsconfig*.json eslint.config.js ./
+#10 DONE 0.2s
+
+#11 [6/9] COPY src ./src
+#11 DONE 0.1s
+
+#12 [7/9] COPY db ./db
+#12 DONE 0.1s
+
+#13 [8/9] COPY tests ./tests
+#13 DONE 0.1s
+
+#14 [9/9] RUN npm run build
+#14 0.640 
+#14 0.640 > n7-cold-email-warmup@0.1.0 build
+#14 0.640 > tsc -p tsconfig.build.json
+#14 0.640 
+#14 DONE 4.9s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 5.8s done
+#15 exporting manifest sha256:5942882a5a5b160a320f3eb26b2840dcfc61f92b9e1ce3687c1594ff859920c4 0.0s done
+#15 exporting config sha256:1e1bab4e62f7021cbc3c1ee23fc1b9768308a2ce623380588b5896dc705a9abb 0.0s done
+#15 exporting attestation manifest sha256:d5816d379d047a16fb5cbbbbd1834a9cce92c3876c8a8c8cd7240f11a2e6decd 0.0s done
+#15 exporting manifest list sha256:d6d21dc33fe2d51e2fbdf48e991a42a0984a4d2d0a0d5b3df2f9c297e3167f05 0.0s done
+#15 naming to docker.io/library/n7f06a-web:latest done
+#15 unpacking to docker.io/library/n7f06a-web:latest
+#15 unpacking to docker.io/library/n7f06a-web:latest 1.8s done
+#15 DONE 7.8s
+
+#16 resolving provenance for metadata file
+#16 DONE 0.0s
+ Image n7f06a-web Building 
+ Image n7f06a-web Built 
+
+Exit: 0
+Command: python3 scripts/check-f06b-r1-snapshot.py preflight
+
+Exit: 0
+Command: docker compose up -d --no-deps web
+ Container n7f06a-web-1 Recreate 
+ Container n7f06a-web-1 Recreated 
+ Container n7f06a-web-1 Starting 
+ Container n7f06a-web-1 Started 
+
+Exit: 0
+Command: python3 scripts/check-f06b-r1-snapshot.py receipt
+Traceback (most recent call last):
+  File "/tmp/n7-f06b-r3/projects/07-cold-email-warmup/scripts/check-f06b-r1-snapshot.py", line 40, in <module>
+    assert web['NetworkSettings']['Ports']['3000/tcp'] == [{'HostIp': '127.0.0.1', 'HostPort': '18709'}]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: '3000/tcp'
+
+Exit: 1
+Command: python3 scripts/check-f06b-r1-snapshot.py freeze
+9c6de2eb5ef20a354e49eac4e844697c1035e39733974cfd531d01769007f9fb
+
+Exit: 0
+Command: docker stop n7f06a-web-1
+n7f06a-web-1
+
+Exit: 0
+Command: bash /tmp/n7-f06b-r3/scripts/check-port-conflicts.sh /tmp/n7-f06b-r3/projects/07-cold-email-warmup
+== БД и хранилища не смотрят в интернет ==
+  ✅ ни одно хранилище не публикует порт наружу
+
+== За reverse-proxy приложение не публикуется ==
+  ✅ reverse-proxy в compose нет — проверка неприменима
+
+== Конфликты портов с уже занятым на этой машине ==
+  ✅ порт 18709 свободен
+
+Exit: 0
+Command: docker compose build --build-arg BUILDKIT_STEP_LOG_MAX_SIZE=1048576 web
+#1 [internal] load local bake definitions
+#1 reading from stdin 601B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 311B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:22.20.0-bookworm-slim
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 96B done
+#4 DONE 0.0s
+
+#5 [1/9] FROM docker.io/library/node:22.20.0-bookworm-slim@sha256:b21fe589dfbe5cc39365d0544b9be3f1f33f55f3c86c87a76ff65a02f8f5848e
+#5 resolve docker.io/library/node:22.20.0-bookworm-slim@sha256:b21fe589dfbe5cc39365d0544b9be3f1f33f55f3c86c87a76ff65a02f8f5848e 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 4.34kB done
+#6 DONE 0.0s
+
+#7 [3/9] COPY package.json package-lock.json ./
+#7 CACHED
+
+#8 [4/9] RUN npm ci --no-audit --no-fund
+#8 CACHED
+
+#9 [6/9] COPY src ./src
+#9 CACHED
+
+#10 [8/9] COPY tests ./tests
+#10 CACHED
+
+#11 [2/9] WORKDIR /app
+#11 CACHED
+
+#12 [5/9] COPY tsconfig*.json eslint.config.js ./
+#12 CACHED
+
+#13 [7/9] COPY db ./db
+#13 CACHED
+
+#14 [9/9] RUN npm run build
+#14 CACHED
+
+#15 exporting to image
+#15 exporting layers 0.0s done
+#15 exporting manifest sha256:5942882a5a5b160a320f3eb26b2840dcfc61f92b9e1ce3687c1594ff859920c4 done
+#15 exporting config sha256:1e1bab4e62f7021cbc3c1ee23fc1b9768308a2ce623380588b5896dc705a9abb done
+#15 exporting attestation manifest sha256:79b6d9ef52e6bbac80967f6ad6fb7bab281d0fbe06fd5def6fd11513ebfe661e 0.0s done
+#15 exporting manifest list sha256:f92e8f8ba5619190a438ecf532fe46b8909b0409330068a3da1b65176b183592 0.0s done
+#15 naming to docker.io/library/n7f06a-web:latest done
+#15 unpacking to docker.io/library/n7f06a-web:latest 0.0s done
+#15 DONE 0.2s
+
+#16 resolving provenance for metadata file
+#16 DONE 0.0s
+ Image n7f06a-web Building 
+ Image n7f06a-web Built 
+
+Exit: 0
+Command: python3 scripts/check-f06b-r1-snapshot.py preflight
+
+Exit: 0
+Command: docker compose up -d --no-deps web
+ Container n7f06a-web-1 Recreate 
+ Container n7f06a-web-1 Recreated 
+ Container n7f06a-web-1 Starting 
+ Container n7f06a-web-1 Started 
+
+Exit: 0
+Command: python3 scripts/check-f06b-r1-snapshot.py receipt
+{"source_sha256": "9c6de2eb5ef20a354e49eac4e844697c1035e39733974cfd531d01769007f9fb", "build_sha256": "0f8714d1d893e11956f5d0a83a81df3f5b07d53f2fa2be450005054f35de4471", "image_id": "sha256:f92e8f8ba5619190a438ecf532fe46b8909b0409330068a3da1b65176b183592", "mode": "receipt"}
+
+Exit: 0
+Command: python3 scripts/check-f06b-r1-snapshot.py freeze
+1144c60cfff6a30ae94be77971274102d5239adbfc8b19f3ee7f7f47f7d98e6a
+
+Exit: 0
+Command: docker stop n7f06a-web-1
+n7f06a-web-1
+
+Exit: 0
+Command: bash /tmp/n7-f06b-r3/scripts/check-port-conflicts.sh /tmp/n7-f06b-r3/projects/07-cold-email-warmup
+== БД и хранилища не смотрят в интернет ==
+  ✅ ни одно хранилище не публикует порт наружу
+
+== За reverse-proxy приложение не публикуется ==
+  ✅ reverse-proxy в compose нет — проверка неприменима
+
+== Конфликты портов с уже занятым на этой машине ==
+  ✅ порт 18709 свободен
+
+Exit: 0
+Command: docker compose build --build-arg BUILDKIT_STEP_LOG_MAX_SIZE=1048576 web
+#1 [internal] load local bake definitions
+#1 reading from stdin 601B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 311B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:22.20.0-bookworm-slim
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 96B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 DONE 0.0s
+
+#6 [1/9] FROM docker.io/library/node:22.20.0-bookworm-slim@sha256:b21fe589dfbe5cc39365d0544b9be3f1f33f55f3c86c87a76ff65a02f8f5848e
+#6 resolve docker.io/library/node:22.20.0-bookworm-slim@sha256:b21fe589dfbe5cc39365d0544b9be3f1f33f55f3c86c87a76ff65a02f8f5848e 0.0s done
+#6 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 13.48kB 0.0s done
+#5 DONE 0.0s
+
+#7 [2/9] WORKDIR /app
+#7 CACHED
+
+#8 [3/9] COPY package.json package-lock.json ./
+#8 CACHED
+
+#9 [4/9] RUN npm ci --no-audit --no-fund
+#9 CACHED
+
+#10 [5/9] COPY tsconfig*.json eslint.config.js ./
+#10 CACHED
+
+#11 [6/9] COPY src ./src
+#11 DONE 0.1s
+
+#12 [7/9] COPY db ./db
+#12 DONE 0.1s
+
+#13 [8/9] COPY tests ./tests
+#13 DONE 0.1s
+
+#14 [9/9] RUN npm run build
+#14 0.730 
+#14 0.730 > n7-cold-email-warmup@0.1.0 build
+#14 0.730 > tsc -p tsconfig.build.json
+#14 0.730 
+#14 DONE 5.6s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 0.5s done
+#15 exporting manifest sha256:2bec0c87297284d02866148a0890ea1d232c929ce0525fd65339e5d0c336a309 0.0s done
+#15 exporting config sha256:5d2183cf0b060106c8b4ada0f2bc97cc16d7d092d3264e5013f874acd1bdeef9 0.0s done
+#15 exporting attestation manifest sha256:89eaf6193c1e83cab265c3c1f3a39020f73ea2fd4dff9ae2c82c669140f31386 0.0s done
+#15 exporting manifest list sha256:e04c5647ca2e18e97a104b8ee348a1fc5880c9310d3a102371504571e066aeeb
+#15 exporting manifest list sha256:e04c5647ca2e18e97a104b8ee348a1fc5880c9310d3a102371504571e066aeeb 0.0s done
+#15 naming to docker.io/library/n7f06a-web:latest done
+#15 unpacking to docker.io/library/n7f06a-web:latest
+#15 unpacking to docker.io/library/n7f06a-web:latest 0.3s done
+#15 DONE 1.0s
+
+#16 resolving provenance for metadata file
+#16 DONE 0.0s
+ Image n7f06a-web Building 
+ Image n7f06a-web Built 
+
+Exit: 0
+Command: python3 scripts/check-f06b-r1-snapshot.py preflight
+
+Exit: 0
+Command: docker compose up -d --no-deps web
+ Container n7f06a-web-1 Recreate 
+ Container n7f06a-web-1 Recreated 
+ Container n7f06a-web-1 Starting 
+ Container n7f06a-web-1 Started 
+
+Exit: 0
+Command: python3 scripts/check-f06b-r1-snapshot.py receipt
+{"source_sha256": "1144c60cfff6a30ae94be77971274102d5239adbfc8b19f3ee7f7f47f7d98e6a", "build_sha256": "2b5c0c6b974feff5774b064f1fe038a3ff4345e9eb520c089945987ed107774c", "image_id": "sha256:e04c5647ca2e18e97a104b8ee348a1fc5880c9310d3a102371504571e066aeeb", "mode": "receipt"}
+
+Exit: 0

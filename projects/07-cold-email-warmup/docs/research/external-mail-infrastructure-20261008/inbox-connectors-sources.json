@@ -1,0 +1,413 @@
+{
+  "research_date": "2026-10-08",
+  "scope": "N7 HTTPS inbox connector read-only research",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning_effort": "high",
+  "actual_model": null,
+  "actual_model_null_reason": "Execution metadata does not expose a trustworthy actual model identifier.",
+  "usage": {
+    "input_tokens": null,
+    "output_tokens": null,
+    "cost": null
+  },
+  "usage_null_reason": "No measured token or billing counters provided to this delegated agent.",
+  "bounded_attempt_minutes": 12,
+  "finished_at": "2026-10-08 06:33:43 UTC",
+  "started_at": null,
+  "started_at_null_reason": "Start timestamp was not recorded before first research call; do not reconstruct it from memory.",
+  "elapsed_seconds": null,
+  "provider_traffic": false,
+  "registrations": false,
+  "spend_authorized": false,
+  "code_changes": false,
+  "git_push": false,
+  "sources": [
+    {
+      "url": "https://learn.emailengine.app/docs/getting-started/introduction",
+      "title": "EmailEngine introduction",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://learn.emailengine.app/docs/accounts/oauth2-setup",
+      "title": "EmailEngine OAuth",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://developer.nylas.com/docs/provider-guides/imap/",
+      "title": "Nylas IMAP provider guide",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://developer.nylas.com/docs/v3/auth/imap/",
+      "title": "IMAP auth",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://docs.aurinko.io/unified-apis/email-api",
+      "title": "Aurinko Email API",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://docs.aurinko.io/llms.txt",
+      "title": "официальный индекс",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://www.yandex.com/support/yandex-360/customers/mail/en/mail-clients/others",
+      "title": "Yandex client setup",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://emailengine.app/",
+      "title": "EmailEngine pricing",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://developer.nylas.com/docs/v3/email/",
+      "title": "Nylas Email API",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://developer.nylas.com/docs/cookbook/use-cases/build/new-email-webhook/",
+      "title": "Nylas inbound recipe",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://docs.aurinko.io/unified-apis/webhooks-api.md",
+      "title": "Aurinko webhooks",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://developers.google.com/workspace/gmail/api/guides/sending",
+      "title": "Gmail send",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://developers.google.com/workspace/gmail/api/guides/push",
+      "title": "Gmail push",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/graph/api/user-sendmail?view=graph-rest-1.0",
+      "title": "Graph sendMail",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/graph/outlook-change-notifications-overview",
+      "title": "Outlook notifications",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/graph/change-notifications-overview",
+      "title": "subscription lifetime",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/graph/delta-query-messages",
+      "title": "delta",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/graph/change-notifications-lifecycle-events",
+      "title": "lifecycle",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://www.nylas.com/pricing/",
+      "title": "Nylas pricing",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://cli.nylas.com/guides/email-api-pricing-models",
+      "title": "Nylas pricing math",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://docs.aurinko.io/faq/how-does-aurinko-billing-work",
+      "title": "billing FAQ",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://www.aurinko.io/pricing/",
+      "title": "Marketing pricing",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://developer.nylas.com/docs/provider-guides/google/",
+      "title": "Google guide",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://developers.google.com/workspace/gmail/api/auth/scopes",
+      "title": "Google scopes",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://developers.google.com/identity/protocols/oauth2/production-readiness/restricted-scope-verification",
+      "title": "restricted verification",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://developers.google.com/workspace/workspace-api-user-data-developer-policy",
+      "title": "Google Workspace developer policy",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://docs.aurinko.io/faq/does-aurinko-provide-a-shared-verified-google-oauth-application",
+      "title": "Aurinko shared-app FAQ",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://docs.aurinko.io/authentication/google-oauth-setup",
+      "title": "Aurinko Google setup",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://developer.nylas.com/docs/provider-guides/google/shared-gcp-app/",
+      "title": "Nylas shared app",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/graph/permissions-reference",
+      "title": "Graph permissions",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/entra/identity-platform/publisher-verification-overview",
+      "title": "publisher verification",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/graph/api/resources/mail-api-overview?view=graph-rest-1.0",
+      "title": "Graph mailbox support",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://learn.microsoft.com/en-gb/graph/metered-api-overview",
+      "title": "Graph cost categories",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://developers.google.com/workspace/gmail/api/reference/quota",
+      "title": "Google quota, updated2026-09-10",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://knowledge.workspace.google.com/admin/gmail/gmail-sending-limits-in-google-workspace",
+      "title": "Workspace sending limits",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://developer.nylas.com/docs/dev-guide/platform/rate-limits/",
+      "title": "Nylas limits, updated2026-10-06",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/defender-office-365/outbound-spam-sending-limits-troubleshoot",
+      "title": "Microsoft outbound limits",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/office365/servicedescriptions/exchange-online-service-description/exchange-online-limits",
+      "title": "Exchange limits",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://yandex.com/support/yandex-360/business/mail/en/web/letter/create/send-many-letters",
+      "title": "Yandex requirements",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://www.nylas.com/legal/terms/",
+      "title": "Nylas Terms",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://www.aurinko.io/terms/",
+      "title": "Aurinko Terms",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://support.google.com/mail/answer/81126?hl=en",
+      "title": "Gmail sender guidelines",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://www.unipile.com/pricing-api/",
+      "title": "Unipile pricing",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://developer.unipile.com/docs/emails",
+      "title": "email docs",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://developer.unipile.com/docs/api-usage",
+      "title": "443 fallback",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    },
+    {
+      "url": "https://www.unipile.com/terms-of-use/",
+      "title": "Unipile Terms",
+      "source_type": "primary_official",
+      "accessed_on": "2026-10-08",
+      "status": "read_public_documentation",
+      "provider_api_tested": false
+    }
+  ],
+  "unknowns": [
+    "No explicit Yandex compatibility confirmation from EmailEngine/Nylas/Aurinko/Unipile found in official documents; generic IMAP interoperability inferred only.",
+    "Aurinko detailed IMAP configuration page was in llms.txt but failed to open; SMTP/auth specifics are not fully verified.",
+    "Aurinko marketing pricing and billing FAQ differ; specific billing FAQ used for cost estimates.",
+    "Nylas Google Shared App Accelerator add-on numeric price not found.",
+    "Unipile shared/custom Google OAuth commercial details not researched fully.",
+    "No measured PoC or production readiness evidence; network condition accepted as task input.",
+    "Gmail API future overage prices pending in cited official quota page."
+  ],
+  "key_findings": {
+    "emailengine_hosted": "Officially self-hosted, no vendor hosted API endpoint.",
+    "emailengine_same_vps": "IMAP/SMTP backend remains blocked; native Gmail API/Graph backend uses HTTPS.",
+    "gmail_policy": "Workspace developer policy explicitly excludes unsolicited commercial mail and multi-account abuse/limit circumvention.",
+    "nylas_policy": "Default Terms prohibit unsolicited advertising/email/solicitation; signed order terms can supersede default.",
+    "aurinko_pricing": "Billing FAQ: non-IMAP email $1.50 active account/month; IMAP-inclusive $2.",
+    "aurinko_oauth": "No shared verified Google OAuth application; customer owns app.",
+    "nylas_oauth": "Verified Google Shared App/Tier3 CASA option on specified paid add-on entitlement.",
+    "unipile_https443": "Official API Usage documents standard443 query-port fallback."
+  }
+}

@@ -1,0 +1,2 @@
+# Full journey1 — driver locator failure
+Image5 actual nine checks PASS including fixed production parser422, Sharp EXIF stripping/originalhash, Pinterest nofetch, measuredrealWebGL+390. Then exact Playwright getByLabel Palitra locator timed out; screenshot shows visible labelled select. Driver prefix selectors corrected for wrappedselects; no productbyte change, no application failure claim. Later steps not reached; freshjourney2 required.

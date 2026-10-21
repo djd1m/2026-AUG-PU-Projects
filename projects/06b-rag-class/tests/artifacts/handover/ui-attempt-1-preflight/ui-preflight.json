@@ -1,0 +1,33 @@
+{
+  "status": "ready",
+  "source_revision": "edf7d770f021831d115d347e1532cea102e1c098",
+  "build_revision": "sha256:3ed4f43381dc4acff4d74aba9155c187f89747d626d39f04a9018bd627cbb2d5",
+  "environment": "Isolated n6b-f14-ui Docker network; actual production Next/PG/Caddy, test-only owner observation/expiredtoken fixture; own contexts insharedbrowser, nopublishedports",
+  "test_command": "docker exec -w /opt/browser codex-ui-playwright node /opt/browser/n6b-f14-ui.mjs /opt/browser/n6b-f14-fixture.json /opt/browser/n6b-f14-output-1",
+  "inputs": [
+    {
+      "name": "Exact23host/image hashes, composite635unit/all293PG/type/build0, meaningfulDBguardmutation",
+      "available": true
+    },
+    {
+      "name": "Independent Astra F1closure ACCEPT report within240s; CLI terminalreceipt timedout124 separatelyrecorded, source review remains complete",
+      "available": true
+    },
+    {
+      "name": "Private completevalidated env, real existing studio registration and fixtureDB observations",
+      "available": true
+    }
+  ],
+  "environment_available": true,
+  "expected_effects": [
+    "Real1440/390 issue/copy/acceptbothkeepbranches/login/reload/409retry/replay410/unknown404/expired410/headercookie/DBstabledata; no provider or response mocks",
+    "Owncontexts/stack/privateenv cleanup, sharedbrowser retained"
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "tests/artifacts/handover/ui-output/report.json"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "checked_at": "2026-10-03T05:29:45.643847+00:00"
+}

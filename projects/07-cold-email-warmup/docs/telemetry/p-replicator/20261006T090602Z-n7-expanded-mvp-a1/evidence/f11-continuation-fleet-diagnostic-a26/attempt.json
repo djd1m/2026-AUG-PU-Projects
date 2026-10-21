@@ -1,0 +1,32 @@
+{
+  "started_at": "2026-10-07T03:59:49.371396Z",
+  "launch_cutoff": "2026-10-07T04:16:49.371396Z",
+  "seal_deadline": "2026-10-07T04:19:49.371396Z",
+  "stage": "VALIDATE",
+  "profile": "model-routing-econom",
+  "risk": "HIGH/inherited XL",
+  "actual_model": null,
+  "usage": null,
+  "missing_data": [
+    "Host actual model and exclusive usage not exposed"
+  ],
+  "scope": "single authorized directed full30 fault diagnostic; no acceptance",
+  "manifest": "b6b82cb83cdf7cb1d646784ad169af826e6c6852",
+  "build": "76",
+  "status": "completed",
+  "phase_boundaries": {
+    "native_join": {
+      "utc": "2026-10-07T04:05:36.370273+00:00",
+      "monotonic_ns": 1268946369682608
+    },
+    "cause_plan_start": "2026-10-07T04:05:48.531453+00:00",
+    "cause_plan_max_seconds": 360,
+    "seal_reserve_seconds": 120,
+    "cause_plan_end": "2026-10-07T04:12:27.485050+00:00",
+    "cause_plan_actual_seconds": 398.953597,
+    "cause_plan_overrun_seconds": 38.953597,
+    "overrun_reason": "Final concrete plan materialization exceeded intended 6-minute phase; no new test or source work; stopped at actual artifact write."
+  },
+  "result": "single directed diagnostic RED16/30; bounded compatible concurrent-header candidate sealed, product acceptance blocked",
+  "ended_at": "2026-10-07T04:12:27.485050+00:00"
+}

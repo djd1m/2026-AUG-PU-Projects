@@ -1,0 +1,10 @@
+{
+  "observed": "known Node guard exit ENOENT for wrong scratch output root",
+  "native_exit": 1,
+  "DB_actions": "read-only catalog/identity query only",
+  "process_pid": 3261175,
+  "process_joined": true,
+  "guard_file": "guard-a15.mjs",
+  "corrective_action": "new guard-a15-v2.mjs full root replacement; original preserved",
+  "utc_recorded": "2026-10-07T02:18:44.157021+00:00"
+}

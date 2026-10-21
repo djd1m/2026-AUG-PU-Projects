@@ -1,0 +1,15 @@
+{
+  "finishedAt": "2026-10-14T00:27:56.851Z",
+  "build": "docker:sha256:a5fc8e6e026202de422e86bad9004e48a943cc2d861120e30d10c8110a91a6d2",
+  "results": [
+    {
+      "name": "saved manual dimensions restored",
+      "pass": true
+    },
+    {
+      "name": "probe execution",
+      "pass": false,
+      "error": "Error: locator.evaluate: Error: strict mode violation: getByRole('alert') resolved to 2 elements:\n    1) <p role=\"alert\" class=\"error\" tabindex=\"-1\">Проверка: исправьте обмеры</p> aka getByText('Проверка: исправьте обмеры')\n    2) <div role=\"alert\" aria-live=\"assertive\" id=\"__next-route-announcer__\"></div> aka locator('[id=\"__next-route-announcer__\"]')\n\nCall log:\n\u001b[2m  - waiting for getByRole('alert')\u001b[22m\n"
+    }
+  ]
+}

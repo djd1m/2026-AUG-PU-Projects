@@ -1,0 +1,65 @@
+{
+  "utc": "2026-10-06T22:42:54.154204+00:00",
+  "native_exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 1.5210731329862028,
+  "pid": 4167872,
+  "startticks": "124958263",
+  "runner_pid": 4084682,
+  "PG": {
+    "at": "2026-10-06T22:42:53.979Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB_slots_claims_after_join": {
+    "utc": "2026-10-06T22:42:54.136Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 4,
+      "runtime_claims": 4,
+      "other_sessions": 0
+    },
+    "slots": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "occupied": true
+      },
+      {
+        "protocol": "imap",
+        "slot": 2,
+        "occupied": true
+      },
+      {
+        "protocol": "imap",
+        "slot": 3,
+        "occupied": true
+      },
+      {
+        "protocol": "imap",
+        "slot": 4,
+        "occupied": true
+      },
+      {
+        "protocol": "smtp",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 2,
+        "occupied": false
+      }
+    ]
+  },
+  "owned_nodes": [],
+  "assertion_failure": true,
+  "failure_titles": [
+    "not ok 1 - native poll claim reserves physical admission atomically across competing processes"
+  ],
+  "tap_sha256": "757768dfe0075b8967fe00f08a858f7915433d9d322eca9fcc59758d77e4f5ad",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

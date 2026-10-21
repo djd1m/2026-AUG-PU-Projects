@@ -1,0 +1,66 @@
+{
+  "utc": "2026-10-06T22:55:27.471006+00:00",
+  "native_exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 2.208295698976144,
+  "pid": 164918,
+  "startticks": "125033526",
+  "runner_pid": 164359,
+  "PG": {
+    "at": "2026-10-06T22:55:27.260Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB_slots_claims_after_join": {
+    "utc": "2026-10-06T22:55:27.449Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 2,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 3,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 4,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 2,
+        "occupied": false
+      }
+    ]
+  },
+  "owned_nodes": [],
+  "assertion_failure": true,
+  "failure_titles": [
+    "not ok 1 - A34 direct cancellation releases its never-started reservation",
+    "not ok 2 - A34 abort after committed native claim releases slots before any operation"
+  ],
+  "tap_sha256": "5b673a2d3463dca7ac6459bfb62d26f8fd79bf62daa27e88662bcff3e764c6cb",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

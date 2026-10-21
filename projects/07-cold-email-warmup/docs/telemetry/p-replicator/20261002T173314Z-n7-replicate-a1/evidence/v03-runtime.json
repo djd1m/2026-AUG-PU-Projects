@@ -1,0 +1,25 @@
+{
+  "thread_id": "01a0fe01-77ca-7e10-87b4-931287c0cc95",
+  "actual_model_contexts": [
+    {
+      "model": "gpt-6-astra",
+      "effort": "high"
+    }
+  ],
+  "usage": {
+    "input_tokens": 187537,
+    "cached_input_tokens": 156416,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 3639,
+    "reasoning_output_tokens": 279,
+    "total_tokens": 191176
+  },
+  "cost": null,
+  "process": {
+    "exit_code": 124,
+    "duration_seconds_process": 180.028,
+    "finished_at": "2026-10-02T19:08:04.048666+00:00"
+  },
+  "receipt_written_before_timeout": true,
+  "completion_basis": "substantive terminal source-bound receipt exists; CLI exit124 is not reported as exit0"
+}

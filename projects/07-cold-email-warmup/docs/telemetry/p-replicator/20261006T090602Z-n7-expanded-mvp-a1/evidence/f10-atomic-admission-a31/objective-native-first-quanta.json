@@ -1,0 +1,63 @@
+{
+  "revision": "db50798a76a97fed75931544f24cd1181ff082d8",
+  "raw_path": "/tmp/n7-f10-atomic-admission-a31/fairness-1791324289509.json",
+  "raw_sha": "1e1546cbcea3c0d8673e52495ace3b87057b71414bf87e12e9e8d1a65eda6d43",
+  "all_five_denominator": 5,
+  "first_five_selection_labels": [
+    "B",
+    "C",
+    "D",
+    "A",
+    "E"
+  ],
+  "first_native_quanta": [
+    {
+      "label": "A",
+      "mailbox": "b7461b9e-add7-45df-9851-592f8621bdac",
+      "started": 1791324290118,
+      "completed": 1791324295119,
+      "elapsedMs": 5001.606776,
+      "successful_fixture_response": true
+    },
+    {
+      "label": "B",
+      "mailbox": "0bddd606-9aa4-4ff7-b690-5d153929fea1",
+      "started": 1791324290081,
+      "completed": 1791324295082,
+      "elapsedMs": 5000.957855999999,
+      "successful_fixture_response": true
+    },
+    {
+      "label": "C",
+      "mailbox": "37125af3-4a9c-467f-b66e-881811321e79",
+      "started": 1791324290087,
+      "completed": 1791324295088,
+      "elapsedMs": 5000.388985,
+      "successful_fixture_response": true
+    },
+    {
+      "label": "D",
+      "mailbox": "843e7bd5-fbad-4b4b-98d1-ed035c3f7ebd",
+      "started": 1791324290106,
+      "completed": 1791324295107,
+      "elapsedMs": 5000.6491750000005,
+      "successful_fixture_response": true
+    }
+  ],
+  "first_E_completion_ms": 16903,
+  "E_fullpoll_max_gap_ms": 16269.0,
+  "all_four_pages": [
+    20,
+    20,
+    20,
+    20
+  ],
+  "native_exit": 0,
+  "all_join_codes": [
+    0,
+    0,
+    0
+  ],
+  "all_drained": true,
+  "max_sockets": 4
+}

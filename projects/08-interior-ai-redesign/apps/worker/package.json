@@ -1,0 +1,14 @@
+{
+  "name": "@n8/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@n8/domain": "0.1.0",
+    "@n8/db": "0.1.0",
+    "@n8/adapters": "0.1.0"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ../../tsconfig.json"
+  }
+}

@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 850" width="640" height="850" role="img" aria-labelledby="flow-title flow-desc" lang="ru">
+  <title id="flow-title">Круг: от рекомендации к учёту комиссии</title>
+  <desc id="flow-desc">Партнёр делится личной ссылкой или промокодом. Пришедший по рекомендации клиент оплачивает; подтверждённая оплата даёт начисление по правилам программы, видимое в кабинете партнёра. Если позже подтверждён возврат, отдельная коррекция отражается в том же кабинете. Возврат — возможное последующее событие, а не обязательный шаг каждой оплаты. Регистрация сама по себе не даёт комиссию. Все шаги видны без анимации; схема не обещает банковскую отправку.</desc>
+  <style>
+    svg { display:block; max-width:100%; height:auto; --bg:#eaf6ff; --card:#ffffff; --ink:#172f3f; --muted:#415d70; --line:#7793a7; --accent:#8a4b00; --soft:#fff0d6; color-scheme:light dark; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; }
+    .background { fill:var(--bg); }
+    .card { fill:var(--card); stroke:var(--line); stroke-width:1.5; }
+    .heading { fill:var(--ink); font-size:29px; font-weight:750; }
+    .label { fill:var(--ink); font-size:22px; font-weight:700; }
+    .copy { fill:var(--muted); font-size:19px; }
+    .number { fill:var(--accent); font-size:20px; font-weight:750; }
+    .badge { fill:var(--soft); }
+    .edge { fill:none; stroke:var(--line); stroke-width:2.5; stroke-linejoin:round; marker-end:url(#arrow); }
+    .arrow { fill:var(--line); }
+    .marker { fill:var(--accent); stroke:var(--bg); stroke-width:2; animation-duration:10s; animation-timing-function:linear; animation-iteration-count:infinite; }
+    #marker-link { transform:translate(183px,242px); animation-name:link-travel; }
+    #marker-payment { transform:translate(183px,382px); animation-name:payment-travel; }
+    #marker-commission { transform:translate(368px,425px); animation-name:commission-travel; }
+    #marker-refund { transform:translate(368px,605px); animation-name:refund-travel; }
+    @keyframes link-travel { 0% { transform:translate(183px,242px); opacity:1; } 19% { transform:translate(183px,260px); opacity:1; } 20%,100% { transform:translate(183px,260px); opacity:0; } }
+    @keyframes payment-travel { 0%,19% { transform:translate(183px,382px); opacity:0; } 20% { transform:translate(183px,382px); opacity:1; } 39% { transform:translate(183px,400px); opacity:1; } 40%,100% { transform:translate(183px,400px); opacity:0; } }
+    @keyframes commission-travel { 0%,39% { transform:translate(346px,455px); opacity:0; } 40% { transform:translate(346px,455px); opacity:1; } 43% { transform:translate(368px,455px); opacity:1; } 47% { transform:translate(368px,425px); opacity:1; } 49% { transform:translate(386px,425px); opacity:1; } 50% { transform:translate(386px,425px); opacity:0; } 51% { transform:translate(625px,425px); opacity:0; } 52% { transform:translate(625px,425px); opacity:1; } 62% { transform:translate(625px,700px); opacity:1; } 64% { transform:translate(580px,700px); opacity:1; } 64.9% { transform:translate(580px,712px); opacity:1; } 65%,100% { transform:translate(580px,712px); opacity:0; } }
+    @keyframes refund-travel { 0%,64% { transform:translate(346px,455px); opacity:0; } 65% { transform:translate(346px,455px); opacity:1; } 70% { transform:translate(368px,455px); opacity:1; } 83% { transform:translate(368px,605px); opacity:1; } 85% { transform:translate(386px,605px); opacity:1; } 86% { transform:translate(386px,605px); opacity:0; } 87% { transform:translate(503px,672px); opacity:0; } 88% { transform:translate(503px,672px); opacity:1; } 97% { transform:translate(503px,712px); opacity:1; } 98%,100% { transform:translate(503px,712px); opacity:0; } }
+    @media (prefers-color-scheme:dark) { svg { --bg:#172f3f; --card:#233f51; --ink:#eaf6ff; --muted:#c6dbe9; --line:#90adc1; --accent:#ffb547; --soft:#473d2c; } }
+    @media (prefers-reduced-motion:reduce) { .marker { animation:none !important; opacity:1; } }
+  </style>
+  <defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path class="arrow" d="M1 1 7 4 1 7Z"/></marker></defs>
+  <rect class="background" width="640" height="850" rx="24"/>
+  <text class="heading" x="28" y="49">Круг</text>
+  <text class="copy" x="28" y="83">Рекомендация → оплата → комиссия</text>
+  <g aria-hidden="true">
+    <path class="edge" d="M183 230V268"/>
+    <path class="edge" d="M183 370V408"/>
+    <path class="edge" d="M338 455H368V425H393"/>
+    <path class="edge" d="M612 425H625V700H580V718"/>
+    <path class="edge" d="M368 455V605H393"/>
+    <path class="edge" d="M503 660V718"/>
+  </g>
+  <rect class="card" x="28" y="130" width="310" height="100" rx="18"/>
+  <circle class="badge" cx="56" cy="160" r="16"/><text class="number" x="56" y="167" text-anchor="middle">1</text>
+  <text class="label" x="82" y="168">Личная ссылка</text>
+  <text class="copy" x="48" y="205">Или промокод партнёра</text>
+  <rect class="card" x="28" y="270" width="310" height="100" rx="18"/>
+  <circle class="badge" cx="56" cy="300" r="16"/><text class="number" x="56" y="307" text-anchor="middle">2</text>
+  <text class="label" x="82" y="308">Клиент приходит</text>
+  <text class="copy" x="48" y="345">По вашей рекомендации</text>
+  <rect class="card" x="28" y="410" width="310" height="100" rx="18"/>
+  <circle class="badge" cx="56" cy="440" r="16"/><text class="number" x="56" y="447" text-anchor="middle">3</text>
+  <text class="label" x="82" y="448">Оплата</text>
+  <text class="copy" x="48" y="485">Подтверждённое событие</text>
+  <rect class="card" x="395" y="370" width="217" height="110" rx="18"/>
+  <circle class="badge" cx="423" cy="400" r="16"/><text class="number" x="423" y="407" text-anchor="middle">4</text>
+  <text class="label" x="449" y="408">Комиссия</text>
+  <text class="copy" x="415" y="447">По правилам</text>
+  <rect class="card" x="395" y="550" width="217" height="110" rx="18"/>
+  <circle class="badge" cx="423" cy="580" r="16"/><text class="number" x="423" y="587" text-anchor="middle">5</text>
+  <text class="label" x="449" y="588">Возврат</text>
+  <text class="copy" x="415" y="627">Коррекция учёта</text>
+  <text class="copy" x="28" y="582">Если возврат</text>
+  <text class="copy" x="28" y="610">подтверждён позже</text>
+  <rect class="card" x="28" y="720" width="584" height="100" rx="18"/>
+  <circle class="badge" cx="56" cy="750" r="16"/><text class="number" x="56" y="757" text-anchor="middle">6</text>
+  <text class="label" x="82" y="758">Кабинет партнёра</text>
+  <text class="copy" x="48" y="795">Начисления и отдельные коррекции</text>
+  <g aria-hidden="true">
+    <g class="marker" id="marker-link"><circle r="6"/></g>
+    <g class="marker" id="marker-payment"><circle r="6"/></g>
+    <g class="marker" id="marker-commission"><circle r="6"/></g>
+    <g class="marker" id="marker-refund"><circle r="6"/></g>
+  </g>
+</svg>

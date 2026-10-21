@@ -1,0 +1,65 @@
+{
+  "purpose": "Fresh bounded source correction; approved normative packet + frozen source/build/helpers + objective A41 raw and precise finding only; no author chat/receipt/history",
+  "source_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
+  "source_root": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup",
+  "normative_inputs": [
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-planner-a38/plan.md",
+      "sha256": "bbbbcd847f0abf82bb58eca1a58e8b1b6b4c91425d295d6f82498ce63d62fb48",
+      "sealedreceipt_sha256": "9afc890bd81baf43a030c28fa4e70af0fcd2be391966c16deedf1e92c8d82fa7"
+    },
+    {
+      "path": "/tmp/n7-f11-restart-post-ready-scope-amendment-a40.json",
+      "sha256": "134202ac0a107a4d4c3b50a31a309ef6501ccb45f3328965b771d63114ec9139"
+    }
+  ],
+  "frozen_source": {
+    "docs/features/f10-durable-runtime/02_pseudocode.md": "26aab59387c62fe2256bbcf34980fd0cf606622c6d88fa56bce05c17db6c6f8d",
+    "docs/features/f10-durable-runtime/03_architecture.md": "30e63317588a1c46c7f3ae7a387204f0be8d0f40baf86d60433fcf3e1ad3ec07",
+    "src/runtime/worker.ts": "222c79b1c750e27aa25cd8b04778e2590dda3e39fc1604f1758be104c995b303",
+    "src/runtime/loop.ts": "56fa2795bf3a8d3fb0ae8756d3a2d9fdb3281880a1dcb3a96b7103157026af17",
+    "src/mailboxes/transport-lifetime.ts": "be57cd516949baf7ca91b302105ceadd82cf7dbb39c82472e06affabee4ded06",
+    "src/replies/context-store.ts": "0024911718a501dde619df373fe830642386ae4ce30f19abc39ddea6f0c67756",
+    "src/replies/worker.ts": "4b99be4ceb9ae5e95b55cc884330e6092af86947595ceaa4755757345a104fa3",
+    "src/replies/store.ts": "7f0418c6af8aa36092f80352eb910fa4ee8b5fcfaddb67f285d0782c9804a0d0",
+    "tests/f10-runtime-protocol.test.ts": "6e36e33dba7cd5d14dce460f8d56bfa1198cca6b51c65b74c7137388905f80e4"
+  },
+  "dist_inventory": {
+    "path": "/tmp/n7-f11-restart-post-ready-author-a40/dist-inventory.json",
+    "sha256": "fab2e544b0da8881f82dbc2e7311fc77111762ea5d3945ca5582392bb7729e62"
+  },
+  "frozen_helpers": {
+    "/tmp/n7-f11-restart-post-ready-author-a40/schema-setup.mjs": "6656c6a4348d93c3e5b85633bbe8044393ab67dcc66673f5630891463f019ee3",
+    "/tmp/n7-f11-restart-post-ready-author-a40/targeted.sh": "42a5a9b7a58bedd7bee0193944b540f4a8b2b43a426897cbb2a8ac55b11a203a",
+    "/tmp/n7-f11-restart-post-ready-author-a40/positives.sh": "d21b05cd9805f966c220e80d57df5e419391102e33c0b19be52cdbea9328de77",
+    "/tmp/n7-f11-restart-post-ready-author-a40/baseline.py": "eb0b3ba5efe5c6a092b38f01081343b1df6abe63ec613b3b62eba8c9bce15fc9",
+    "/tmp/n7-f11-restart-post-ready-author-a40/reset-own.mjs": "45c72fbd315a9a4569a766a95e93f6dbb636451b17de9bcc3dc98dd01af52eae",
+    "/tmp/n7-f11-restart-post-ready-author-a40/terminal-db-readonly.mjs": "e2e394b99a20b78472bb38601b7c85900926148a95e2638a98be0b347aa53ba2",
+    "/tmp/n7-f11-restart-post-ready-author-a40/guard-a40.mjs": "9c73dbd3049a22569a44269933077769645f6094fe3a88e1950cc60102851cf9"
+  },
+  "additional_frozen_input_hashes": {
+    "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/runtime/store.ts": "4f41e66dc1b9bd42c54f1079fd3126e9ce0d2e872be13c2c1254ffeb2a2d4efb",
+    "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f11-context-integration.test.ts": "6e3ee9927412d3613e4eb8a829a7cfc138d16dac5b8301defb95de1b708728a2",
+    "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts": "5b42f18b3460a3d587a65c64f2a2c64f3f1aa00a470b8d53f7d3a4a39f75dbb2"
+  },
+  "precise_finding": {
+    "path": "/tmp/n7-f11-post-ready-operational-verify-a41/precise-findings.json",
+    "sha256": "0bdf2c20a40aec1f5a7ca620b991f6a9e90da2d3b115820ba3f12f36218d5a02"
+  },
+  "raw_only_inputs": {
+    "/tmp/n7-f11-post-ready-operational-verify-a41/short.raw": "970e2f7a78851b52eff7ad2d2b978a1129342542f599718960294db54fd1819d",
+    "/tmp/n7-f11-post-ready-operational-verify-a41/short-exit.txt": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "/tmp/n7-f11-post-ready-operational-verify-a41/short/short-body-shutdown.json": "81930f9dc0e6a8a4e6e0b7d27f05967384e85e606587c11a8a18b6c95c751c0c",
+    "/tmp/n7-f11-post-ready-operational-verify-a41/short/unstarted-admission-counterexample.json": "d7aad56bbf295b191641bd1001101bba8348dad46329c93f6e601135b6e58ad3",
+    "/tmp/n7-f11-post-ready-operational-verify-a41/short/logical-residual-observations.json": "f17c4d6629e0d7aefee9ffb33310597f2b7ac38efd09ed94265d8eb0ce09eae1",
+    "/tmp/n7-f11-post-ready-operational-verify-a41/checks.raw": "9c448a7ab10dce4906f79002ce44eee71f8a1c2e913f8d2a8e9646e4b4c2fed4",
+    "/tmp/n7-f11-post-ready-operational-verify-a41/checks-exit.txt": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "/tmp/n7-f11-post-ready-operational-verify-a41/terminal-observation.json": "fa143bfd5fd01606a6460dcf3d6dcd9d95e2b5fdadcb4151955b552e57e7a481",
+    "/tmp/n7-f11-post-ready-operational-verify-a41/terminal-freeze-and-joins.json": "f2472df2fae0b7a32170e73bb834959d795e99501ae2675c882cc5a485fa36ca",
+    "/tmp/n7-f11-post-ready-operational-verify-a41/launch.json": "7a7eda55b5bfa7b0a661cd6001c95c66a715987d130f7163b2672aadfd35c9fb",
+    "/tmp/n7-f11-post-ready-operational-verify-a41/terminal-observe-launch.json": "f949573c054dc9b736d83a42b18da92032d093beec64b1eb3256df5c8447f9f8",
+    "/tmp/n7-f11-post-ready-operational-verify-a41/material-gap-map.json": "d9df1b254a35eaaf9ec3068f55befbeb21d3a487b9c7bb9452bbc49f232db7b9"
+  },
+  "no_author_report_or_chat": true,
+  "full_fleet_gate_unchanged": true
+}

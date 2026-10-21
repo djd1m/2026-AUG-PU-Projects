@@ -1,0 +1,366 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "delivered",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261003T031332Z-studio-subaccounts",
+    "work_unit_id": "studio-subaccounts-feature",
+    "current_attempt_id": "delivery-1"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261003T031332Z-studio-subaccounts/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261003T031332Z-studio-subaccounts/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "84cd6edad498ef040794a8a95443659592927269",
+    "current_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+    "build_revision": "sha256:efd01fdcbdc1e7105804b7c6b559ea39d36817353b40310094b0be3e5ee46cc2",
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/Specification.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/Pseudocode.md"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/Architecture.md"
+      },
+      {
+        "root": "project",
+        "path": "docs/ADR.md"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "observed_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "7f2160fd1319e1c2bf02805f164d3bf0480ec34c04d1ed2a835a813023026d31",
+    "scope": [
+      "STU01..08 existing studio model and actor/target separation"
+    ],
+    "exclusions": [
+      "Schema/grants/dependencies",
+      "Public deployment",
+      "N6 donor",
+      "F14 handover endpoints"
+    ],
+    "action_limits": [
+      "Author25min/reviewer8min",
+      "CPU2 serializedDocker",
+      "NoDBpublishedports",
+      "Rootownsmanifest/integration"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "STU-01",
+        "required": true
+      },
+      {
+        "id": "STU-02",
+        "required": true
+      },
+      {
+        "id": "STU-03",
+        "required": true
+      },
+      {
+        "id": "STU-04",
+        "required": true
+      },
+      {
+        "id": "STU-05",
+        "required": true
+      },
+      {
+        "id": "STU-06",
+        "required": true
+      },
+      {
+        "id": "STU-07",
+        "required": true
+      },
+      {
+        "id": "STU-08",
+        "required": true
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "none"
+        },
+        "provenance": "Accepted own N6b foundation/F10/F12",
+        "useful_fragment": "Existing RLS and referral/publication/job/answer seams",
+        "compatibility": "not_applicable",
+        "decision": "reject",
+        "reason": "External donors unnecessary, N6 forbidden"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No calibrated comparable studio authority feature; no numeric estimate",
+      "scope_revision": "7f2160fd1319e1c2bf02805f164d3bf0480ec34c04d1ed2a835a813023026d31",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "scope_revision": "7f2160fd1319e1c2bf02805f164d3bf0480ec34c04d1ed2a835a813023026d31",
+      "tier": "M",
+      "rationale": "Application realizes existing approved studio RLS matrix, no newroles/schema/grants/ownershipmatrix; full mandatorychecks",
+      "phase": "plan",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261003T031332Z-studio-subaccounts/evidence/route-plan.txt"
+      },
+      "script": {
+        "input": "Explicit studiohandler/route/DB/cabinet paths",
+        "exit_code": 0
+      }
+    },
+    {
+      "scope_revision": "7f2160fd1319e1c2bf02805f164d3bf0480ec34c04d1ed2a835a813023026d31",
+      "tier": "M",
+      "rationale": "Application realizes existing approved studio RLS matrix, no newroles/schema/grants/ownershipmatrix; full mandatorychecks",
+      "phase": "implementation",
+      "evidence": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261003T031332Z-studio-subaccounts/evidence/route-implementation.txt"
+      },
+      "script": {
+        "input": "Explicit studiohandler/route/DB/cabinet paths",
+        "exit_code": 0
+      }
+    }
+  ],
+  "approval": {
+    "requirement": "not_required",
+    "reason": "Existing owner/root explicitly authorized continuous wholeMVP and ownbranch pipeline; existing canonical studio matrix, no newpermissions/schema",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "ready",
+    "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+    "build_revision": "sha256:efd01fdcbdc1e7105804b7c6b559ea39d36817353b40310094b0be3e5ee46cc2",
+    "environment": "Isolated n6b-f13-ui Docker network; production web/PG/Caddy; isolated fixture provisioning/DB observation only; shared browser own contexts, no published ports",
+    "test_command": "docker exec -w /opt/browser codex-ui-playwright node /opt/browser/n6b-f13-ui.mjs /opt/browser/n6b-f13-fixture.json /opt/browser/n6b-f13-output-3",
+    "inputs": [
+      {
+        "name": "Exact22host and immutable runner hashes; full621unit/261PG plus type/build and capmutation0",
+        "available": true
+      },
+      {
+        "name": "Fresh Astra ACCEPT_WITH_CAVEATS, runtime gates close here; no production response mocks",
+        "available": true
+      },
+      {
+        "name": "Disposable real registered owners promoted to existing studio kind by isolated owner fixture; all product operations use actual Next routes",
+        "available": true
+      }
+    ],
+    "environment_available": true,
+    "expected_effects": [
+      "Browser1440/390 real registration/createclient/select/createbot202/publication/back/reload/sixth409/ordinary403/foreign404/revoked404; actual DB ownership and session observations, no mocks or paid calls",
+      "Screenshots and own context/stack/privateenv cleanup; sharedbrowser retained"
+    ],
+    "evidence_root": {
+      "root": "project",
+      "path": "tests/artifacts/studio-subaccounts/ui-output/report.json"
+    },
+    "external_actions_executed": false,
+    "e2e_claim": null,
+    "checked_at": "2026-10-03T04:18:34.052523+00:00"
+  },
+  "attempts": [
+    {
+      "id": "plan-1",
+      "status": "completed"
+    },
+    {
+      "id": "implementation-1",
+      "status": "completed"
+    },
+    {
+      "id": "review-1",
+      "status": "completed"
+    },
+    {
+      "id": "full-regression-1",
+      "status": "completed"
+    },
+    {
+      "id": "ui-1",
+      "status": "failed"
+    },
+    {
+      "id": "ui-2",
+      "status": "failed"
+    },
+    {
+      "id": "correction-1",
+      "status": "completed"
+    },
+    {
+      "id": "review-2",
+      "status": "completed"
+    },
+    {
+      "id": "full-regression-2",
+      "status": "completed"
+    },
+    {
+      "id": "ui-3",
+      "status": "completed"
+    },
+    {
+      "id": "delivery-1",
+      "status": "completed"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "studio-subaccounts-feature",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/features/studio-subaccounts/01_plan.md"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [
+    {
+      "ac_id": "STU-01",
+      "outcome": "pass",
+      "command": "Full621unit/261PG/type/build, fixed-oracle guard mutations, independent review, actual DockerUI/DB proof",
+      "exit_code": 0,
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "STU-02",
+      "outcome": "pass",
+      "command": "Full621unit/261PG/type/build, fixed-oracle guard mutations, independent review, actual DockerUI/DB proof",
+      "exit_code": 0,
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "STU-03",
+      "outcome": "pass",
+      "command": "Full621unit/261PG/type/build, fixed-oracle guard mutations, independent review, actual DockerUI/DB proof",
+      "exit_code": 0,
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "STU-04",
+      "outcome": "pass",
+      "command": "Full621unit/261PG/type/build, fixed-oracle guard mutations, independent review, actual DockerUI/DB proof",
+      "exit_code": 0,
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "STU-05",
+      "outcome": "pass",
+      "command": "Full621unit/261PG/type/build, fixed-oracle guard mutations, independent review, actual DockerUI/DB proof",
+      "exit_code": 0,
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "STU-06",
+      "outcome": "pass",
+      "command": "Full621unit/261PG/type/build, fixed-oracle guard mutations, independent review, actual DockerUI/DB proof",
+      "exit_code": 0,
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "STU-07",
+      "outcome": "pass",
+      "command": "Full621unit/261PG/type/build, fixed-oracle guard mutations, independent review, actual DockerUI/DB proof",
+      "exit_code": 0,
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "receipt_id": "delivery-1"
+    },
+    {
+      "ac_id": "STU-08",
+      "outcome": "pass",
+      "command": "Full621unit/261PG/type/build, fixed-oracle guard mutations, independent review, actual DockerUI/DB proof",
+      "exit_code": 0,
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "receipt_id": "delivery-1"
+    }
+  ],
+  "receipts": [
+    {
+      "id": "delivery-1",
+      "work_id": "studio-subaccounts-feature",
+      "path": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261003T031332Z-studio-subaccounts/evidence/delivery-1-receipt.md"
+      },
+      "launch_path": {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261003T031332Z-studio-subaccounts/evidence/delivery-1-launch.json"
+      },
+      "sha256": "e0d186721564a66c61d38142f90d2d43f6d40bd3cf99ad447873d3d5e8a79140",
+      "launch_sha256": "602bd82e0d70da0ce42df5e3fb6e2cc4292e007ece07d8db3293543f640a60c8"
+    }
+  ],
+  "delivery": {
+    "uri": "urn:project-work-companion:20261003T031332Z-studio-subaccounts:studio-subaccounts-feature",
+    "scope": {
+      "included": [
+        "STU01..08 studio subaccounts with actor/owner separation"
+      ],
+      "excluded": [
+        "F14 handover",
+        "Public deployment",
+        "Live paid calibration"
+      ]
+    },
+    "build": {
+      "source_revision": "fb44f18728326a92fad758df065772fb8bf343b4",
+      "build_revision": "sha256:efd01fdcbdc1e7105804b7c6b559ea39d36817353b40310094b0be3e5ee46cc2"
+    },
+    "evidence": [
+      "delivery-1"
+    ],
+    "pending": [
+      {
+        "item": "F14 lock compatibility and remainingMVP",
+        "scope": "out_of_scope",
+        "reason": "Separate authorized next roadmap stage"
+      }
+    ],
+    "e2e_claim": "pass"
+  },
+  "ownership": []
+}

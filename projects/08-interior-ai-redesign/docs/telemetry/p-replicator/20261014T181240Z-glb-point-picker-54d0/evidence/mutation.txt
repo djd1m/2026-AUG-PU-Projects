@@ -1,0 +1,23 @@
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+ ❯ tests/space/geometry.test.ts (20 tests | 1 failed | 19 skipped) 13ms
+   × native GLB scale requires explicit proof and never invents anchors 11ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 19 skipped (20)
+   Start at  18:21:39
+   Duration  331ms (transform 53%, import 34%, tests 9%, worker 4%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/space/geometry.test.ts > native GLB scale requires explicit proof and never invents anchors
+AssertionError: expected [Function] to throw an error
+ ❯ tests/space/geometry.test.ts:17:529
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+EXIT=1

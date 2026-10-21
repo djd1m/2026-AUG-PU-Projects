@@ -1,0 +1,19 @@
+{
+  "first": {
+    "runtime": "review-runtime.json",
+    "exit": 124,
+    "elapsed_seconds": 180.002124767052,
+    "delivery": "provisional_only"
+  },
+  "delivery": {
+    "runtime": "review-delivery-runtime.json",
+    "exit": 0,
+    "elapsed_seconds": 66.26735922601074,
+    "gate": "PASS",
+    "same_thread": true,
+    "usage_accounting": "Delivery runtime usage cumulative for resumed thread; use final cumulative once, not sum two files."
+  },
+  "verdict": "ACCEPT",
+  "R1": "CLOSED",
+  "B": "pending"
+}

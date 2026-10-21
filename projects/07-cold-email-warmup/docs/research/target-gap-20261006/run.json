@@ -1,0 +1,38 @@
+{
+  "record_created_at": "2026-10-06T08:47:57.529491+00:00",
+  "scope": "read-only N7 fit for unlimited accounts, automated warmup, AI reply under five minutes",
+  "baseline_product_sha": "243f04250d428e28e6869a1aef95bc5dbdab2f91",
+  "current_documentation_sha": "aa92db5e",
+  "status": "completed",
+  "roles": [
+    "N7 implementation auditor",
+    "official competitor benchmark researcher",
+    "product and SLO gap reviewer",
+    "root synthesis reviewer"
+  ],
+  "actual_models": null,
+  "actual_models_gap": "Native model metadata not exposed; no actual model switch claimed",
+  "token_usage": null,
+  "cost": null,
+  "operations": "No code change, installs, tests, live email, AI API calls, deployment, or media production; official competitor pages read-only.",
+  "finished_at": "2026-10-06T08:52:04.149826+00:00",
+  "known_contributor_seconds": {
+    "capabilities": 184,
+    "architecture_gap": 260
+  },
+  "root_elapsed_seconds": null,
+  "root_elapsed_gap": "Original task start not measured; run-record creation time excludes earlier work",
+  "checks": [
+    "Pinned source references",
+    "Free3/TESTteam10 capacity independently checked",
+    "One-shot dispatch and local-only modes independently checked",
+    "Pool pair/day starvation control flow inspected",
+    "Official Instantly under-five-minutes claim independently opened",
+    "No application src/DB/roadmap modifications"
+  ],
+  "files": {
+    "capabilities.md": "3f363ba44e51f204cf9fa0c515891993048f38b441c49d1628eeed0e8246e677",
+    "benchmark.md": "1a66579998748081bbc0391bead060a0d689d20eb76f9c090f3c824205e71049",
+    "target-gap.md": "5a71e138ef89b7173625729dae281debcb43c3c3ea63d308bfccaf29fb289436"
+  }
+}

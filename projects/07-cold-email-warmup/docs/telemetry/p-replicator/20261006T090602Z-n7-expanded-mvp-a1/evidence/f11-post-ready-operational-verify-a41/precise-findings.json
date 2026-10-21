@@ -1,0 +1,30 @@
+{
+  "source_revision": "406499792cc78c7339ff67cf0a4d1df112630ce3",
+  "confirmed_product_finding": {
+    "kind": "unstarted logical BODY preadmission survives process abort",
+    "raw_witness": "/tmp/n7-f11-post-ready-operational-verify-a41/short/unstarted-admission-counterexample.json",
+    "seam": [
+      "src/runtime/store.ts:29",
+      "src/runtime/loop.ts:19",
+      "src/replies/context-store.ts:75"
+    ],
+    "facts": "SIGTERM08:12:49.559; new admission opens08:12:49.566 eventa685174c owner85e9f6b2/gen1; no native BODY start; workerexit0/drained joined08:12:49.675; physical0 logicalclaimed1 remains",
+    "minimal_correction": "exact logical owner/generation cancellation CAS for unstarted preadmission disposal/entry-abort; never grant interrupted native recovery capability to unstarted operation"
+  },
+  "additional_fixture_finding": {
+    "title": "C1 actual native complete proof opens one window; two separate physical phases ready and no-body finish immediate",
+    "failure": "native_poll_not_complete at complete():180 and second call:187 after8 quanta",
+    "cause": "UNKNOWN; existing test preserves no native outcomes/wire/current poll/run/window/grant/config on failure",
+    "next_step": "add sanitized finally observations in existing f11-context-integration.test.ts, then one bounded targeted cause pass; no blind rerun"
+  },
+  "dependent_fixture_fallout": {
+    "title": "fixed expired window holds phase bytes and establishes earliest terminal clock without renewal",
+    "failure": "pending !== held at247",
+    "dependency": "no independent setup; reuses C1 event and assumes successful original window and wait beyond end; C1 failed before those obligations. No independent expiry product defect proven"
+  },
+  "typed_native_drain_distinction": "actual compiled fixture SIGTERM aborts generically; physically interrupted event8c638ed7 correctly terminalheld. Production main typed process drain plus actual closed/joined/released capability may allow pending under A38, but unstarted operation cannot receive that exception. Keep genericterminal and legitplannedpending cases distinct.",
+  "material_gap_map": "/tmp/n7-f11-post-ready-operational-verify-a41/material-gap-map.json",
+  "next_executor": "gpt-6.1-sol MEDIUM bounded scope per coordinator: runtime/store.ts,context-store.ts,loop.ts onlyifneeded,existing f10-runtime-protocol.test.ts,existing f11-context-integration.test.ts",
+  "old_SHORT_namespace_protection": "preserve n7_a41_short_261007081206 bodyclaim1; use fresh ABSENT owned namespace for continuation",
+  "fullfleet": "NOT_RUN; mandatory shortFAIL plus material gaps block original fault, healthy cannot run beforefaultPASS; legacy20pages real5s/native19 RED separateunwaived"
+}

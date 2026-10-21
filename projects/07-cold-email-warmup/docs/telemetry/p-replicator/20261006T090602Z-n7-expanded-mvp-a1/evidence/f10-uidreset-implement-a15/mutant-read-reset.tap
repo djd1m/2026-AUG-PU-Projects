@@ -1,0 +1,27 @@
+TAP version 13
+# Subtest: IMAP proves bounded read only UID range coverage
+not ok 1 - IMAP proves bounded read only UID range coverage
+  ---
+  duration_ms: 431.003054
+  type: 'test'
+  location: '/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f09-live-protocol.test.ts:1:1736'
+  failureType: 'testCodeFailure'
+  error: 'protocol_invalid'
+  code: 'protocol_invalid'
+  stack: |-
+    invalid (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/src/replies/imap.ts:6:19)
+    imapRead (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/src/replies/imap.ts:24:100)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async TestContext.<anonymous> (/tmp/n7-f10-restart-fix-20261006-a12/projects/07-cold-email-warmup/tests/f09-live-protocol.test.ts:12:722)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1169.412917

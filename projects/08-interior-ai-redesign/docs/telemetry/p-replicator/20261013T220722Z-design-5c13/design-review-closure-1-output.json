@@ -1,0 +1,67 @@
+{
+  "run_id": "20261013T220722Z-design-5c13",
+  "work_unit_id": "design-review-closure-1",
+  "status": "completed",
+  "profile": "compact-quality-first-v2",
+  "tier": "XL",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "missing_data": [
+    "Host authoritative actual model/effort and token/billing counters unavailable",
+    "Active/wait split unavailable"
+  ],
+  "started_at": "2026-10-13T23:49:47.915098+00:00",
+  "ended_at": "2026-10-13T23:53:22.408184+00:00",
+  "elapsed_wall_ms": 214493,
+  "source_commit": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+  "input_manifest_sha256": "555914c4cef15f72b8928d402340d58e269f33fa0a15bddf148c469e101de2be",
+  "launch_sha256": "f8495e5260a45050fff4e433869b8fc63050984f9106b13d6f20171f6199eaa7",
+  "prior_report_sha256": "34f53e0b5e65d220eaae52dfcf78aec99a51380bdde3c8646da0f39656928287",
+  "report_sha256": "f14ced764c53c39888aa3c8249b64736f6e78251d259392fc4cf4e058b7148b7",
+  "original_report_preserved_byte_for_byte": true,
+  "source_changes_during_closure": [
+    "docs/Pseudocode.md"
+  ],
+  "findings_closed": [
+    "DESIGN-R1",
+    "DESIGN-R2",
+    "DESIGN-R3",
+    "DESIGN-D1"
+  ],
+  "test_results": {
+    "tests": 21,
+    "passed": 21,
+    "exit_code": 0,
+    "duration_seconds": 10.81,
+    "independent_pg_probe_exit_code": 0
+  },
+  "required_gates_passed": false,
+  "browser_e2e": "pending coordinator",
+  "sha256": {
+    "packages/domain/src/design/provider.ts": "a8e02128852e11c4fc66ba19d98a14dfd03c4efac7b75d42c61e2bc08b9f9818",
+    "packages/domain/src/design/scene.ts": "0c049d707f7b6294beb5999453150a837e5e784a3b8eb4a9457c1990d7dae313",
+    "packages/db/src/design/lifecycle.ts": "521fffaedaf67ef500cbcab7b67a4ca7bfd885b1319ab771b913a47f276875d5",
+    "packages/db/src/design/ledger.ts": "db614727b92c80d2c498f72a982c9b94beb1a99b95233b28156b93b89d79db64",
+    "packages/viewer/src/types.ts": "4044472b6e734b6ccfabd386dfe6cccab3fece8bf2e39ae5b3672e0d7dd36ef6",
+    "packages/viewer/src/renderer.ts": "7ae61899b97a0e1e3a833a0096f5a54c336f66f666547b5e7267f385192a76b0",
+    "packages/viewer/src/index.tsx": "3c2eebfba5169923ba5f1b37477159bbf92805274bf6d8b2281403536996ba0d",
+    "tests/design/jobs.test.ts": "a2f074f962f92b95624015a7ac961ff02e690f9cca30f051a7ef5fa908a0958a",
+    "tests/design/scene.test.ts": "5956077d9b729e238cf28098a8dfbdca55132e4511bb680f2f1a551a7f36111b",
+    "tests/design/primitive.test.ts": "305b330a8146a365232bb4b905675efc173432f6f39ad9c1dcd83a15923bdd38",
+    "docs/Pseudocode.md": "b392a6218eed9ca257a1cc0d18f0a8d32d625f0d46ac68dd77681dbd4b3279f8",
+    "docs/canon.md": "70ae99506734ef86e0c6ac9474f48aa2d289b462cd801c155ccdcc4ee7e6a69d",
+    "docs/features/design/01_specification.md": "b643c102b0b1c970627ec475db08ec16cb02b89ee976464d06769ae5e22fd3ff",
+    "docs/features/design/review.md": "f14ced764c53c39888aa3c8249b64736f6e78251d259392fc4cf4e058b7148b7",
+    "apps/worker/src/jobs.ts": "6cd5cf91ad9c7a7c03ec0677987cd9573e8434181b7a7c589e49e92d97d8f9f1",
+    "apps/web/src/components/DesignPanel.tsx": "f4e19a8b68614c44500b1bcc28a28b8d7ccb540945ff4371e8538390e05a02e6",
+    "docs/source-versions.md": "e70470869ed8fef96cba5200d1f59b13ab5e820883c7f2d54884073c5f7c67d7",
+    "docs/anti-drift-decisions.md": "c20e1279e4c9de448e21957ac1b3511bffc92d3290ca21f55dfd9a9da292ad94",
+    "docs/features/design/02_pseudocode.md": "bebc2e2fd8225f38b7d45c55edbf8112bedf4837f298a2a9c95119361a469513",
+    "apps/web/src/server/design.ts": "c821cba61c4285b723d3b6332347c2872f6ad21a1006a6680d1a865690dadfeb",
+    "tests/design/artifact-manifest.json": "16487ecb6d6ea15b037917ad721e1be2c2a426d83e7f231cce49eed88ef19a9c"
+  }
+}

@@ -1,0 +1,62 @@
+TAP version 13
+# Subtest: complete proof becomes immediately eligible without resetting its selected fair turn
+not ok 1 - complete proof becomes immediately eligible without resetting its selected fair turn
+  ---
+  duration_ms: 565.129131
+  type: 'test'
+  location: '/tmp/n7-f10-remaining-verify-a21/compact-shadow-v1/tests/f10-runtime-integration.test.ts:2:14023'
+  failureType: 'testCodeFailure'
+  error: |-
+    failure cannot become successful readiness even with a satisfied flag
+    + actual - expected
+    
+    + 1791318298809
+    - 1791318298777
+                ^
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1791318298777
+  actual: 1791318298809
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/n7-f10-remaining-verify-a21/compact-shadow-v1/tests/f10-runtime-integration.test.ts:197:311)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: partial and held scans cannot manufacture successful polling readiness
+not ok 2 - partial and held scans cannot manufacture successful polling readiness
+  ---
+  duration_ms: 394.06075
+  type: 'test'
+  location: '/tmp/n7-f10-remaining-verify-a21/compact-shadow-v1/tests/f10-runtime-integration.test.ts:2:16568'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 1791318299212
+    - 1791318299177
+                ^
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1791318299177
+  actual: 1791318299212
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/n7-f10-remaining-verify-a21/compact-shadow-v1/tests/f10-runtime-integration.test.ts:201:634)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1457.49588

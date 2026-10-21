@@ -1,0 +1,32 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-capacity-fixture-fix-a19",
+  "launched_at": "2026-10-06T19:51:42.225992+00:00",
+  "freeze_at": "2026-10-06T20:08:42.225992+00:00",
+  "deadline": "2026-10-06T20:11:42.225992+00:00",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "baseline_revision": "eae17bbea36312ee5290adb8390e066b1f0d6c2a",
+  "allowed_tracked_files": [
+    "projects/07-cold-email-warmup/tests/capacity-integration.test.ts"
+  ],
+  "source_worktree": "/tmp/n7-f10-restart-fix-20261006-a12",
+  "allowed_scratch": [
+    "/tmp/n7-f10-capacity-fixture-fix-a19",
+    "/tmp/n7-f10-capacity-fixture-fix-a19-receipt.md"
+  ],
+  "own_test_database": "n7f10_a2",
+  "previous_terminal_receipt_sha256": "0388266462d0794175001b576c0f63f9655dc8d2ea477ca4c8ee06acd4731088",
+  "previous_owner_release_received_at": "2026-10-06T19:51:03.852282Z",
+  "disk_available_bytes": 3212124160,
+  "free_inodes": 4772075,
+  "AC": [
+    "Explicit deterministic target setup independent of either legal29/30race winner",
+    "Originalbaseline forced30wins RED at complaint waiting assertion",
+    "Correctedfixture forced29wins andforced30wins GREEN; no productionchange and complaint/rollback/tenant/global30assertions unchanged",
+    "Source/test-only commit, production/build productionSHA unchanged, exact native exits/ownedjoins/PGquiescence/guard/no externalproviders",
+    "FullF10 remains unaccepted; no330/physical/broad unchangedgreen reruns in thisattempt"
+  ]
+}

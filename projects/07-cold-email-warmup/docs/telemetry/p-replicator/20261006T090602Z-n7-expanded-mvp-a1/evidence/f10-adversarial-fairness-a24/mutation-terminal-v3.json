@@ -1,0 +1,27 @@
+{
+  "checks": [
+    {
+      "stage": "oldest-due-negative-v3",
+      "code": 1,
+      "named_assertion": true,
+      "ERR_ASSERTION": true,
+      "restored": false
+    },
+    {
+      "stage": "reset-yield-sequence-negative-v3",
+      "code": 1,
+      "named_assertion": true,
+      "ERR_ASSERTION": true,
+      "restored": false
+    },
+    {
+      "stage": "common-exact-restored-v3",
+      "code": 1,
+      "named_assertion": false,
+      "ERR_ASSERTION": false,
+      "restored": true
+    }
+  ],
+  "exact_restored": true,
+  "finished_at": "2026-10-06T21:05:07.495548+00:00"
+}

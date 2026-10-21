@@ -1,0 +1,28 @@
+{
+  "all_other_protocol_callback_bytes_unchanged": true,
+  "native45_callback_timeout_unchanged": true,
+  "default_helper_three_actors": true,
+  "default_distribution": [
+    10,
+    10,
+    10
+  ],
+  "semantic_distribution": [
+    8,
+    8,
+    7,
+    7
+  ],
+  "default100_mailboxes_30_campaigns_unchanged": true,
+  "negative_derivative_exact_omission": {
+    "path": "tests/f10-runtime-protocol.test.ts",
+    "replace_once": "mode==='new_uid_semantic_stop'?seedBodyPressureCohort(true):seedBodyPressureCohort()",
+    "with": "mode==='new_uid_semantic_stop'?seedBodyPressureCohort():seedBodyPressureCohort()",
+    "expected_native_exit": 1,
+    "expected_code": "plan_limit_reached",
+    "expected_target_active_campaigns": 10,
+    "production_limit": 10,
+    "real_negative_required": true
+  },
+  "runtime_measured": false
+}

@@ -1,0 +1,38 @@
+
+ RUN  v3.2.7 /home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/.claude/worktrees/n6b-studio-subaccounts/projects/06b-rag-class
+
+ ❯ apps/web/tests/unit/studio-handler.test.ts (5 tests | 1 failed) 39ms
+   × STU-01: authenticated same-origin child creation boundary > STU-01 origin guard refuses absent/foreign/null before authentication or creation 21ms
+     → expected 201 to be 403 // Object.is equality
+   ✓ STU-01: authenticated same-origin child creation boundary > missing/invalid/expired session refuses creation 4ms
+   ✓ STU-01: authenticated same-origin child creation boundary > STU-06 body authority/referral ignored; only validated cookie and authenticated actor passed 6ms
+   ✓ STU-01: authenticated same-origin child creation boundary > request bytes bounded and invalid envelopes rejected before DB 4ms
+   ✓ STU-01: authenticated same-origin child creation boundary > SC-US-013-2/3: exact cap message, forbidden and safe failure 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/tests/unit/studio-handler.test.ts > STU-01: authenticated same-origin child creation boundary > STU-01 origin guard refuses absent/foreign/null before authentication or creation
+AssertionError: expected 201 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 201
+
+ ❯ apps/web/tests/unit/studio-handler.test.ts:24:60
+     22|   it('STU-01 origin guard refuses absent/foreign/null before authentic…
+     23|     for (const origin of ['', 'null', 'https://foreign.test']) {
+     24|       expect((await handler(post({}, { origin }))).status).toBe(403);
+       |                                                            ^
+     25|     }
+     26|     const absent = post(); absent.headers.delete('origin');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  03:29:41
+   Duration  1.19s (transform 403ms, setup 0ms, collect 608ms, tests 39ms, environment 0ms, prepare 127ms)
+

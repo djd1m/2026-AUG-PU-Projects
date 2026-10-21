@@ -1,0 +1,27 @@
+TAP version 13
+# Subtest: transport grants are separate scoped expiring authority
+ok 1 - transport grants are separate scoped expiring authority
+  ---
+  duration_ms: 1084.685337
+  type: 'test'
+  ...
+# Subtest: final live submission preserves all eligibility fences
+not ok 2 - final live submission preserves all eligibility fences
+  ---
+  duration_ms: 1166.640316
+  type: 'test'
+  location: '/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/f09-live-transport.test.ts:1:1022'
+  failureType: 'testCodeFailure'
+  error: 'null == true'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: ~
+  operator: '=='
+  stack: |-
+    Object.claim (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/f09-transport-fixture.ts:81:93)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async finalFenceScenario (/tmp/n7-f10-implement-20261006/projects/07-cold-email-warmup/tests/f09-live-transport.test.ts:66:13)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...

@@ -1,0 +1,32 @@
+{
+  "run_id": "20261013T202009Z-expanded-cjm-9f69",
+  "work_unit_id": "budget-hydration-review-1",
+  "status": "completed",
+  "verdict": "pass",
+  "finished_at": "2026-10-14T01:19:00.462383+00:00",
+  "elapsed_wall_ms": 226336,
+  "active_wall_ms": null,
+  "profile": "compact-quality-first-v2",
+  "requested_model": "gpt-6-astra",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "cost_basis": "unavailable",
+  "retry_count": 0,
+  "model_switches": 0,
+  "source_sha256": "e79ebdac0a305444e6a893ad064759c3cc6ba0f15eee93eb35472fce5b06c932",
+  "source_drift_during_independent_probe": false,
+  "intentional_build_drift": "image7 RED → BudgetPanel capture/hydration guard → image8 GREEN",
+  "image_revision": "docker:sha256:e5be7120110b92ed9b15b163638e65e339c796b16a0b567e166f53e11d8d8d21",
+  "next_build_id": "W9tBOwFbU3PwZwa1-u6rr",
+  "parent_field_probe": "../budget-hydration-green-1.json",
+  "independent_probe": "add-row-result.json",
+  "launch_sha256": "8c42990e48ca4e562c3c93b815e6377a819e403edacd2813769a89f47bae5ed8",
+  "report_sha256": "5dc92439d2e6c5fff4530f29e4c881c06b7494516a982021e9d4cdc4fe944d68",
+  "measurement_gaps": [
+    "Host actual model/effort/token/cost counters unavailable",
+    "Full classified wait ledger unavailable; elapsed includes waits"
+  ]
+}

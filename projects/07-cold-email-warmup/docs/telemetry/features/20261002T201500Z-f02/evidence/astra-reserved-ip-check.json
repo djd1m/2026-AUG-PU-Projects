@@ -1,0 +1,38 @@
+{
+  "command": "docker exec -i n7f02-web-1 node --input-type=module (injected resolver and socket-free adapter)",
+  "exit_code": 0,
+  "source": "b20b45c5c0a326db64bf868d3ff64b2a4901e4e9",
+  "build": "48881646f7b94ea0aebacf67136da2971e0e7b7c",
+  "script": "import {isPublicIp,resolveEndpoint} from '/app/dist/mailboxes/network.js';\nimport {verifyTest} from '/app/dist/mailboxes/provider.js';\nconst settings={smtpHost:'smtp.example.com',smtpPort:587,imapHost:'imap.example.com',imapPort:993};\nconst allowlist=new Map([['smtp.example.com',10],['imap.example.com',10]]);\nconst credentials={smtpUsername:'fixture',smtpPassword:'fixture',imapUsername:'fixture',imapPassword:'fixture'};\nconst cases=[];\nfor(const records of [[{address:'3ffe::1',family:6}],[{address:'8.8.8.8',family:4},{address:'3ffe::1',family:6}]]) {\n let calls=0;const adapter={mode:'local_test',async connect(){calls++;}};let result;\n try {result=await verifyTest(settings,credentials,allowlist,adapter,async()=>records);}catch(e){result=e.code;}\n cases.push({records,result,adapter_calls:calls,expected:'unsafe_address with zero adapter calls'});\n}\nconsole.log(JSON.stringify({public_classification:isPublicIp('3ffe::1'),cases}));\n",
+  "observed": {
+    "public_classification": true,
+    "cases": [
+      {
+        "records": [
+          {
+            "address": "3ffe::1",
+            "family": 6
+          }
+        ],
+        "result": "verified_test",
+        "adapter_calls": 2,
+        "expected": "unsafe_address with zero adapter calls"
+      },
+      {
+        "records": [
+          {
+            "address": "8.8.8.8",
+            "family": 4
+          },
+          {
+            "address": "3ffe::1",
+            "family": 6
+          }
+        ],
+        "result": "verified_test",
+        "adapter_calls": 2,
+        "expected": "unsafe_address with zero adapter calls"
+      }
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+PASS landing desktop + local hydration
+PASS register → authenticated dashboard
+PASS create private project persists
+PASS manual measured shell18m2 with opening + visibleplan
+PASS actualWebGL measured viewer
+PASS production malformedGLB returns typed422 before ready
+PASS production isolated image decode → owner normalized metadata
+PASS Pinterest deep link reference saves without fetch
+PASS 390px keyboard/accessibility overflow
+PASS manual design saved and explicitly approved before procurement
+PASS native RUB1600 price validity and server integer160000 minor
+PASS unmatched expected elements and explicit unknown works/delivery remain unknown
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+5 !== 6
+
+    at file:///home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/scripts/e2e.mjs:42:1080
+    at async checked (file:///home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/scripts/e2e.mjs:21:34)
+    at async file:///home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/scripts/e2e.mjs:42:2 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 5,
+  expected: 6,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

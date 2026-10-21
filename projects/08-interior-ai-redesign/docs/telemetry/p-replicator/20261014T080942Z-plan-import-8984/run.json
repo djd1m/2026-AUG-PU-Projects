@@ -1,0 +1,51 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "compact-quality-first-v2",
+  "run_id": "20261014T080942Z-plan-import-8984",
+  "project": "projects/08-interior-ai-redesign",
+  "feature": "dimensioned-floorplan-import-and-reviewed-furniture-intent",
+  "profile": "compact-quality-first-v2",
+  "tier": "L",
+  "status": "accepted",
+  "started_at": "2026-10-14T08:09:42.967011+00:00",
+  "ended_at": "2026-10-14T09:22:40.428753+00:00",
+  "actual_model": null,
+  "metrics": {
+    "wall_clock_seconds": 4377.461742,
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null
+  },
+  "quality": {
+    "required_gates_passed": true
+  },
+  "missing_data": [
+    "Host actualmodel/usage/cost unavailable",
+    "Pre-creation instructionreading duration unavailable",
+    "Research dispatch preceded its formal receipt launch; gap disclosed"
+  ],
+  "authorization": "User authorized implementing image drawing dimensions and prior public release; optional format question not approval or blocker. Default PNG/JPG/WebP; paidproviders unchanged.",
+  "attempt_budget_minutes": 120,
+  "stop_condition": "Working sourceboundimportreview flow +browsersecuritychecks andindependentreview; no unsupported automaticgeometryclaim",
+  "scope": [
+    "Reuse01\u201307 then primaryGitHub",
+    "Recognize dimensions fromimage into editablecandidate; confirmbeforeimmutable save",
+    "Existing furniture optional; distinguishexistinglayoutfromdesignproposal",
+    "Preserveprivacy,boundedresourceuse,manualfallback,UI/UXclearupload"
+  ],
+  "scope_sha256": "e4a1ed0ff6b6156f6f935d072debee3dd82ec1b0b48249965eadf43979ef65d7",
+  "routes": [
+    {
+      "phase": "plan",
+      "tier": "L",
+      "mechanical_tier": "M",
+      "mechanical_exit_code": 0,
+      "rationale": "New nativeOCR childtrustboundary withuntrustedprivateimage; extendedmanualsourceownershipcontract; fullPLANVALIDATEIMPLEMENTREVIEW"
+    }
+  ],
+  "baseline_revision": "3b84e9ef5ce68fdbdcf34e0d1671bace8006aff4",
+  "requested_models": [
+    "gpt-6-astra/high",
+    "gpt-5.6-sol/high"
+  ]
+}

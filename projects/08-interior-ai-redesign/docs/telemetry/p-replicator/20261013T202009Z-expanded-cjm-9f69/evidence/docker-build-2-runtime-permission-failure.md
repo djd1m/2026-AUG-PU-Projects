@@ -1,0 +1,2 @@
+# Image2 runtime permission failure
+Production compile passed; migrate exited243 with EACCES reading /app/package.json as non-root node. Coordinator changed prior full chown to runtime-only without adapting COPY ownership. Host project files include0600; Docker preserved those modes underrootowner. Fix: every COPY uses --chown=node:node, keep bounded runtime-only chown. Reject running service asroot or widening privatehostsecrets. Fresh image3 rebuild/migrate/runtime checks required; image2 is not deliverable.

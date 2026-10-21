@@ -1,0 +1,282 @@
+{
+  "checks": {
+    "all5_denominator": true,
+    "first4distinctAD_andE5": true,
+    "all4_first_native_success_ge5000": true,
+    "all4pages20held": true,
+    "all5selectiongap_le60000": true,
+    "Ecompletegap_le30000": true,
+    "exactonce_turn_before_selection": true,
+    "3joins0drained": true,
+    "maxsocket4": true,
+    "unchanged_raw_inputs": true,
+    "all5eligible_before_first_selection": true,
+    "Estrictly_later_due": true,
+    "all4original_due_preserved": true,
+    "all4first_response_written_and_durable_page": true
+  },
+  "all_checks_pass": true,
+  "per_mailbox": [
+    {
+      "label": "A",
+      "id": "b7461b9e-add7-45df-9851-592f8621bdac",
+      "selection_count": 19,
+      "first_selection_at": "2026-10-06T22:04:49.920Z",
+      "selection_gap_ms": 5993.0,
+      "complete_count": 0,
+      "complete_gap_ms": 0,
+      "final_pages": 20,
+      "final_scan_state": "rescan_incomplete",
+      "first_scheduled_native_page": {
+        "label": "A",
+        "mailbox": "b7461b9e-add7-45df-9851-592f8621bdac",
+        "started": 1791324290118,
+        "beforeIO": {
+          "service_seq": "41924",
+          "owner_id": "47c5bdd7-e2b9-43ff-84c2-04fbeac92a7d",
+          "state": "claimed",
+          "due_at": "2026-10-06T22:02:49.508Z"
+        }
+      },
+      "first_scheduled_native_success": {
+        "label": "A",
+        "mailbox": "b7461b9e-add7-45df-9851-592f8621bdac",
+        "started": 1791324290118,
+        "completed": 1791324295119,
+        "elapsedMs": 5001.606776,
+        "command": "a4 UID FETCH 101:200 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+      },
+      "first_success_wire": {
+        "connection": 12,
+        "label": "A",
+        "mailbox": "b7461b9e-add7-45df-9851-592f8621bdac",
+        "phase": "response_written",
+        "verb": "FETCH",
+        "utc": "2026-10-06T22:04:55.119Z",
+        "monotonicMs": 12872.254035
+      },
+      "first_success_page_event": {
+        "event_id": "29",
+        "at": "2026-10-06T22:04:55.154Z",
+        "kind": "page",
+        "mailbox": "b7461b9e-add7-45df-9851-592f8621bdac",
+        "body": {
+          "pages": 2,
+          "state": "scanning",
+          "run_id": "11aa67ff-1392-425f-9417-4122aa1c82a4",
+          "attempt": 1,
+          "tenant_id": "b67f6ec2-ec78-46d7-acc3-0df60b113e29",
+          "cursor_uid": 200,
+          "high_water": 3000,
+          "mailbox_id": "b7461b9e-add7-45df-9851-592f8621bdac",
+          "provenance": "imap_headers",
+          "uidvalidity": "1",
+          "tail_high_water": null,
+          "attempt_started_at": "2026-10-06T22:04:43.875+00:00"
+        }
+      }
+    },
+    {
+      "label": "B",
+      "id": "0bddd606-9aa4-4ff7-b690-5d153929fea1",
+      "selection_count": 19,
+      "first_selection_at": "2026-10-06T22:04:49.836Z",
+      "selection_gap_ms": 5702.0,
+      "complete_count": 0,
+      "complete_gap_ms": 0,
+      "final_pages": 20,
+      "final_scan_state": "rescan_incomplete",
+      "first_scheduled_native_page": {
+        "label": "B",
+        "mailbox": "0bddd606-9aa4-4ff7-b690-5d153929fea1",
+        "started": 1791324290081,
+        "beforeIO": {
+          "service_seq": "41918",
+          "owner_id": "9336c3fc-1008-4f8b-b28e-80c1cd8d09c5",
+          "state": "claimed",
+          "due_at": "2026-10-06T22:02:49.508Z"
+        }
+      },
+      "first_scheduled_native_success": {
+        "label": "B",
+        "mailbox": "0bddd606-9aa4-4ff7-b690-5d153929fea1",
+        "started": 1791324290081,
+        "completed": 1791324295082,
+        "elapsedMs": 5000.957855999999,
+        "command": "a4 UID FETCH 101:200 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+      },
+      "first_success_wire": {
+        "connection": 9,
+        "label": "B",
+        "mailbox": "0bddd606-9aa4-4ff7-b690-5d153929fea1",
+        "phase": "response_written",
+        "verb": "FETCH",
+        "utc": "2026-10-06T22:04:55.083Z",
+        "monotonicMs": 12835.331822
+      },
+      "first_success_page_event": {
+        "event_id": "18",
+        "at": "2026-10-06T22:04:55.107Z",
+        "kind": "page",
+        "mailbox": "0bddd606-9aa4-4ff7-b690-5d153929fea1",
+        "body": {
+          "pages": 2,
+          "state": "scanning",
+          "run_id": "541ef660-1d37-4fcd-bff7-837f00d9bf04",
+          "attempt": 1,
+          "tenant_id": "b67f6ec2-ec78-46d7-acc3-0df60b113e29",
+          "cursor_uid": 200,
+          "high_water": 3000,
+          "mailbox_id": "0bddd606-9aa4-4ff7-b690-5d153929fea1",
+          "provenance": "imap_headers",
+          "uidvalidity": "1",
+          "tail_high_water": null,
+          "attempt_started_at": "2026-10-06T22:04:43.913+00:00"
+        }
+      }
+    },
+    {
+      "label": "C",
+      "id": "37125af3-4a9c-467f-b66e-881811321e79",
+      "selection_count": 19,
+      "first_selection_at": "2026-10-06T22:04:49.866Z",
+      "selection_gap_ms": 5691.0,
+      "complete_count": 0,
+      "complete_gap_ms": 0,
+      "final_pages": 20,
+      "final_scan_state": "rescan_incomplete",
+      "first_scheduled_native_page": {
+        "label": "C",
+        "mailbox": "37125af3-4a9c-467f-b66e-881811321e79",
+        "started": 1791324290087,
+        "beforeIO": {
+          "service_seq": "41920",
+          "owner_id": "9fc8ac88-161b-410a-871f-34d714a8826d",
+          "state": "claimed",
+          "due_at": "2026-10-06T22:02:49.508Z"
+        }
+      },
+      "first_scheduled_native_success": {
+        "label": "C",
+        "mailbox": "37125af3-4a9c-467f-b66e-881811321e79",
+        "started": 1791324290087,
+        "completed": 1791324295088,
+        "elapsedMs": 5000.388985,
+        "command": "a4 UID FETCH 101:200 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+      },
+      "first_success_wire": {
+        "connection": 10,
+        "label": "C",
+        "mailbox": "37125af3-4a9c-467f-b66e-881811321e79",
+        "phase": "response_written",
+        "verb": "FETCH",
+        "utc": "2026-10-06T22:04:55.088Z",
+        "monotonicMs": 12840.975284
+      },
+      "first_success_page_event": {
+        "event_id": "22",
+        "at": "2026-10-06T22:04:55.124Z",
+        "kind": "page",
+        "mailbox": "37125af3-4a9c-467f-b66e-881811321e79",
+        "body": {
+          "pages": 2,
+          "state": "scanning",
+          "run_id": "7ae0b454-56a5-4d83-b27a-5d195cb4494f",
+          "attempt": 1,
+          "tenant_id": "b67f6ec2-ec78-46d7-acc3-0df60b113e29",
+          "cursor_uid": 200,
+          "high_water": 3000,
+          "mailbox_id": "37125af3-4a9c-467f-b66e-881811321e79",
+          "provenance": "imap_headers",
+          "uidvalidity": "1",
+          "tail_high_water": null,
+          "attempt_started_at": "2026-10-06T22:04:43.935+00:00"
+        }
+      }
+    },
+    {
+      "label": "D",
+      "id": "843e7bd5-fbad-4b4b-98d1-ed035c3f7ebd",
+      "selection_count": 19,
+      "first_selection_at": "2026-10-06T22:04:49.889Z",
+      "selection_gap_ms": 5700.0,
+      "complete_count": 0,
+      "complete_gap_ms": 0,
+      "final_pages": 20,
+      "final_scan_state": "rescan_incomplete",
+      "first_scheduled_native_page": {
+        "label": "D",
+        "mailbox": "843e7bd5-fbad-4b4b-98d1-ed035c3f7ebd",
+        "started": 1791324290106,
+        "beforeIO": {
+          "service_seq": "41922",
+          "owner_id": "beb25432-8be5-4368-a0c2-8b4412556c7e",
+          "state": "claimed",
+          "due_at": "2026-10-06T22:02:49.508Z"
+        }
+      },
+      "first_scheduled_native_success": {
+        "label": "D",
+        "mailbox": "843e7bd5-fbad-4b4b-98d1-ed035c3f7ebd",
+        "started": 1791324290106,
+        "completed": 1791324295107,
+        "elapsedMs": 5000.6491750000005,
+        "command": "a4 UID FETCH 101:200 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+      },
+      "first_success_wire": {
+        "connection": 11,
+        "label": "D",
+        "mailbox": "843e7bd5-fbad-4b4b-98d1-ed035c3f7ebd",
+        "phase": "response_written",
+        "verb": "FETCH",
+        "utc": "2026-10-06T22:04:55.107Z",
+        "monotonicMs": 12860.02294
+      },
+      "first_success_page_event": {
+        "event_id": "27",
+        "at": "2026-10-06T22:04:55.146Z",
+        "kind": "page",
+        "mailbox": "843e7bd5-fbad-4b4b-98d1-ed035c3f7ebd",
+        "body": {
+          "pages": 2,
+          "state": "scanning",
+          "run_id": "15f216e7-91d1-406b-a5ed-6d859d0216f9",
+          "attempt": 1,
+          "tenant_id": "b67f6ec2-ec78-46d7-acc3-0df60b113e29",
+          "cursor_uid": 200,
+          "high_water": 3000,
+          "mailbox_id": "843e7bd5-fbad-4b4b-98d1-ed035c3f7ebd",
+          "provenance": "imap_headers",
+          "uidvalidity": "1",
+          "tail_high_water": null,
+          "attempt_started_at": "2026-10-06T22:04:43.898+00:00"
+        }
+      }
+    },
+    {
+      "label": "E",
+      "id": "53b0724b-cd5a-4933-b8ae-ca87d1d5ea91",
+      "selection_count": 26,
+      "first_selection_at": "2026-10-06T22:04:55.514Z",
+      "selection_gap_ms": 5564.0,
+      "complete_count": 8,
+      "complete_gap_ms": 16269.0,
+      "final_pages": 0,
+      "final_scan_state": "scanning",
+      "first_scheduled_native_page": null,
+      "first_scheduled_native_success": null
+    }
+  ],
+  "native_exit": {
+    "finished_at": "2026-10-06T22:06:32.836090+00:00",
+    "native_returncode": 0,
+    "timed_out": false,
+    "elapsed_ms": 110784.93068693206,
+    "started_at": "2026-10-06T22:04:42.051189+00:00",
+    "pid": 3561445,
+    "startticks": "124729205",
+    "runner_pid": 3561286
+  },
+  "excluded_inference": "all first children completed before E is not normative; traffic contains distinct response/completion fields; server-write not child-exit",
+  "reconciliation_correction": "Traffic records beforeIO and completed response are separate entries sharing mailbox+started; initial v1 selected beforeIO entry alone. v2 joins exact same-start completion rather than treating absent per-entry completion as operation failure."
+}

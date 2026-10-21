@@ -1,0 +1,129 @@
+{
+  "verdict": "LOCAL_FIXTURE_READINESS_ACCEPT",
+  "time": "2026-10-07T12:39:25.621682+00:00",
+  "source_revision": "1ca3c56a43df544d752a516afdd96d93f1bef1da",
+  "source_files": {
+    "tests/diagnostics-integration.test.ts": "4aa87dff90d39dff793214da7b6bb933ef8299380a90235c1214db8aa8b0aeda",
+    "tests/capacity-integration.test.ts": "f827634859d0a67e67247229698d8b344878fc37feb1162e8d36c2334173a5b4"
+  },
+  "objective_hashed_artifacts": 216,
+  "objective_mismatches": [],
+  "source_freeze_files": 227,
+  "accepted_guard_sha256": "125074670c455bdc126f9ecdb8a5e84f6ef41882085f752d3de1365396ac036f",
+  "unfiltered_callbacks": {
+    "diagnostics": {
+      "ok_count": 7,
+      "top_count": 2,
+      "nested_count": 5,
+      "skip": 0,
+      "exit": 0,
+      "actual_names": [
+        "    ok 1 - owner origin session and disabled authority precede decrypt DNS sockets",
+        "    ok 2 - AEAD and protocol error canaries never escape diagnostic sinks",
+        "    ok 3 - diagnostic revision fences replacement stop quarantine and newer attempt",
+        "    ok 4 - grant revoke orders before final publication and after publication invalidates projection",
+        "    ok 5 - authority and final persistence rollback leave no partial current result",
+        "ok 1 - diagnostic authority and tenant checks open no unauthorized sockets",
+        "ok 2 - real schema12 to13 upgrade preserves encrypted data without verified backfill"
+      ],
+      "argv": [
+        "timeout",
+        "--kill-after=15s",
+        "240s",
+        "bash",
+        "/tmp/n7-f11-integration-readiness-author-a58-20261007/run-a58.sh",
+        "diagnostics",
+        "diagnostics",
+        "--test",
+        "--test-concurrency=1",
+        "tests/diagnostics-integration.test.ts"
+      ],
+      "disk_available_bytes": 3338096640
+    },
+    "capacityfixed": {
+      "ok_count": 11,
+      "top_count": 1,
+      "nested_count": 10,
+      "skip": 0,
+      "exit": 0,
+      "actual_names": [
+        "    ok 1 - creates101st connected mailbox for free and expired TEST team without send",
+        "    ok 2 - tenant pages remain bounded and foreign capacity actions cause no side effects",
+        "    ok 3 - global30 admission serializes competing tenants and duplicate requests",
+        "    ok 4 - lease120 expiry release and stale renewal never resurrect stopped mailbox",
+        "    ok 5 - complaint quarantine immediately releases capacity for another tenant",
+        "    ok 6 - sender and pool recipient need active lease at scheduling claim and final fence",
+        "    ok 7 - capacity writers sample database time after shared lock and rollback admission",
+        "    ok 8 - strict own capacity API rejects auth origin malformed cursor and rate abuse",
+        "    ok 9 - real schema11 to12 upgrade preserves envelope states and has no automatic leases",
+        "    ok 10 - additive migration idempotency keeps records without implicit lease",
+        "ok 1 - F07 real PostgreSQL capacity boundaries and atomic safety"
+      ],
+      "argv": [
+        "timeout",
+        "--kill-after=15s",
+        "90s",
+        "bash",
+        "/tmp/n7-f11-integration-readiness-author-a58-20261007/run-a58.sh",
+        "capacityretry",
+        "capacityfixed",
+        "--test",
+        "--test-concurrency=1",
+        "tests/capacity-integration.test.ts"
+      ],
+      "disk_available_bytes": 3326001152
+    }
+  },
+  "corrected_control": {
+    "native_exit": 1,
+    "upgrade_denied_before_migration": true,
+    "genuine_token_replay_denied": {
+      "replayedGenuineTokenDenied": true,
+      "deniedBeforeIdentityOrChildQueries": true
+    },
+    "empty_children": [
+      "n7_f07_upgrade_12aa22da007545c7bf75c3f9c7349feb",
+      "n7_f07_upgrade_bcb4830ed5e9484083eaa96602944445"
+    ]
+  },
+  "negative_registration": {
+    "utc": "2026-10-07T12:23:28.409Z",
+    "pid": 4028582,
+    "fabricatedTokenDenied": true,
+    "unverifiedClientDenied": true,
+    "repeatedFabricatedTokenDenied": true,
+    "unregisteredChildConnectDenied": true,
+    "childSchema": "n7_f07_upgrade_098c64f5b7e64c58acaaf353b9779c83",
+    "dataQueries": 0
+  },
+  "positive_children_current17": [
+    "n7_f07_upgrade_098c64f5b7e64c58acaaf353b9779c83",
+    "n7_f07_upgrade_e961b534734c4ef2ab77b001d9940e09"
+  ],
+  "protected_original_schemas": 25,
+  "protected_original_full_tables": 1025,
+  "protected_whole_tables_equal": true,
+  "final_protected_schemas": 34,
+  "owned_all_zero_or_empty": true,
+  "recorded_processes": 22,
+  "fresh_PID_startTicks_live": [],
+  "network_DNS_IPC_prefix_preserved": true,
+  "ancestry_suffix_preserved": true,
+  "static_measurement": {
+    "utc": "2026-10-07T12:17:22.406029+00:00",
+    "guard_node_check_exit": 0,
+    "typecheck_raw": "typecheck.raw",
+    "lint_raw": "lint.raw",
+    "build_raw": "build.raw",
+    "combined_terminal_exit": 0,
+    "diff_check_exit": 0,
+    "standalone_exit_measurements": null,
+    "measurement_note": "sequential initial checks produced empty stdout/stderr; only combined terminal exit observed"
+  },
+  "reviewer_tests_rerun": false,
+  "actual_model": null,
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "context_policy": "Existing clean HIGH actor reused due threadlimit; no freshfork claim; no A58 author narrative read."
+}

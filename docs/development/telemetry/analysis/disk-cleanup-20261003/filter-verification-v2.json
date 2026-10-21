@@ -1,0 +1,61 @@
+{
+  "observed_at": "2026-10-03T11:07:58.693015+00:00",
+  "command": [
+    "docker",
+    "buildx",
+    "du",
+    "--builder",
+    "default",
+    "--filter",
+    "id~=\"^(79fh8lofoe1a5g9077d65lp5e|1zo1tfpshobn4lvv633uxynt3|ctkxp7f1x3e6oppc2xrnbgyv8|zcgt4q2xrwz9eu0ieji7si69u|382ilqq6w4qn8h5wh2mre2rzi|6j2hmj9tnhvki3k3mbrx5nwko|8g9vm6opbtmogh76b21gjqatx|exivpkyzpd0zb6zml4x4ik0wv|ht87xhl7ywm2b4tdt6sahavyd|ipr9ac8xe9klmjvxonyxlhm86|ndat5mk62s491qkpzheo1d2gh|e3dqtm3obepr5un3drxd2c8f7|tmulo5irvsa1s3asibn0ah1kv|ucnwhs60xhmewd4two8jeae7w|yr5zu7qen6zftz2nq44zx3vxc|cu8mbud1c4syq1erwc14sikkn|uxiy8dtyyeswfmx5f4jqrq5bv|q59fnt5hokot2oqnky2k83z4n|id28x1ryxdidw37qdu0r21avu|mvaxcuphit5syuhbs1zqh3ccj|1kuu5mrs79s2i0mp8cv311nyi|z2x72vhamb4j7zcl9qgesxa0y|0u11nu661fmfhzhko2fhr4u79|ae6me64nrqjqwpz7d7sir3zkh|1kromx5ae4c9ms0paupai0vfg|kva0mdsextv39kt2ixgfenb6p)$\",immutable,private",
+    "--filter",
+    "type=regular",
+    "--format",
+    "json"
+  ],
+  "returned_ids": [
+    "79fh8lofoe1a5g9077d65lp5e",
+    "1zo1tfpshobn4lvv633uxynt3",
+    "ctkxp7f1x3e6oppc2xrnbgyv8",
+    "zcgt4q2xrwz9eu0ieji7si69u",
+    "382ilqq6w4qn8h5wh2mre2rzi",
+    "6j2hmj9tnhvki3k3mbrx5nwko",
+    "8g9vm6opbtmogh76b21gjqatx",
+    "exivpkyzpd0zb6zml4x4ik0wv",
+    "ht87xhl7ywm2b4tdt6sahavyd",
+    "ipr9ac8xe9klmjvxonyxlhm86",
+    "ndat5mk62s491qkpzheo1d2gh",
+    "e3dqtm3obepr5un3drxd2c8f7",
+    "tmulo5irvsa1s3asibn0ah1kv",
+    "ucnwhs60xhmewd4two8jeae7w",
+    "yr5zu7qen6zftz2nq44zx3vxc",
+    "cu8mbud1c4syq1erwc14sikkn",
+    "uxiy8dtyyeswfmx5f4jqrq5bv",
+    "q59fnt5hokot2oqnky2k83z4n",
+    "id28x1ryxdidw37qdu0r21avu",
+    "mvaxcuphit5syuhbs1zqh3ccj",
+    "1kuu5mrs79s2i0mp8cv311nyi",
+    "z2x72vhamb4j7zcl9qgesxa0y",
+    "0u11nu661fmfhzhko2fhr4u79",
+    "ae6me64nrqjqwpz7d7sir3zkh",
+    "1kromx5ae4c9ms0paupai0vfg",
+    "kva0mdsextv39kt2ixgfenb6p"
+  ],
+  "negative_controls": {
+    "unrestricted_id_regex_with_immutable_private": {
+      "count": 125,
+      "shared": 0,
+      "mutable": 0
+    },
+    "private_only": {
+      "count": 134,
+      "mutable": 9
+    },
+    "immutable_only": {
+      "count": 207,
+      "shared": 82
+    }
+  },
+  "verdict": "PASS exactIDset AND mutation-time immutable/private compound predicates verified with positive/negative readonly controls",
+  "limitations": "No prune dry-run; backend shared filter adaptor and prune execution path verified in pinned upstream source; age runtime enforced by KeepDuration24h"
+}

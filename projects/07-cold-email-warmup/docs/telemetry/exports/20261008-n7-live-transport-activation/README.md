@@ -1,0 +1,11 @@
+# N7: transport activation and remaining network blocker
+
+2026-10-08 UTC. The deployed live runtime was running, but no mailbox had a transport grant, so its IMAP admission returned authority_denied. The coordinator published one bounded, owner-authorized SMTP+IMAP grant through the accepted private operator. No campaign was started and no consent, quota, freshness or TLS check was bypassed. Grant expires2026-10-09T04:43:20Z. The Gmail-configured example.test fixture was excluded: it is not the owner Gmail sender and has mismatched usernames.
+
+Actual subsequent runtime result: provider_backoff. Existing live diagnostics report SMTP and IMAP connection timeout before TLS/AUTH. Neither credentials validity nor successful delivery is established. No fresh full poll was manufactured. A read-only independent review confirms outbound mail SYN packets leave eth0 under host NAT, with zero SYNACK in the bounded witness; local Docker/firewall rules are not responsible for this observed timeout. The upstream filtering party is unknown. HTTPS control works. No local firewall opening is justified by these measurements.
+
+Next action: ask the VPS/network provider to diagnose outbound TCP465/587/993 toward configured Yandex/Gmail hosts. Do not claim an AdminVPS policy as fact without provider confirmation. After connectivity is restored, observe real TLS/AUTH and a worker full IMAP poll younger than60seconds; then the owner can start an approved campaign. Renew the bounded transport grant if expired. Merchant billing remains disabled pending credentials.
+
+Suggested support request: investigate outbound TCP465 and587 to smtp.yandex.ru and993 to imap.yandex.ru; Gmail SMTP465/IMAP993 controls also time out. SYN packets leave the VPS, no SYNACK arrives; local OUTPUT ACCEPT, Docker forwarding+NAT present. No credentials or private message content belong in the ticket.
+
+Profile model-routing-econom. Requested independent review gpt-6.1-sol high; actual model/effort/tokens/cost null because authoritative execution counters unavailable. Measured timeout bounds4s for connect-only witnesses,10s diagnostic connect phase; overall elapsed recorded separately when independent receipt arrives. Private mailbox identities, credential envelopes, keys and grant files excluded from export.

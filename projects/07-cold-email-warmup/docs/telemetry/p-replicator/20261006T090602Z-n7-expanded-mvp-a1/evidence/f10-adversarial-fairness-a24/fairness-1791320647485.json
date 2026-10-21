@@ -1,0 +1,1761 @@
+{
+  "begun": 1791320647485,
+  "ended": 1791320653999,
+  "failure": "fair E selection precedes ANY A-D second quantum after actual restart\n+ actual - expected\n\n+ '1747ba3f-87fd-4595-a142-d17e8af07105'\n- '5f6fe39b-494b-437f-b3cf-4addd1cdc4eb'\n",
+  "phases": [
+    {
+      "phase": "first_start",
+      "pid": 2650892,
+      "at": 1791320647757
+    },
+    {
+      "phase": "actual_first_join",
+      "at": 1791320653372,
+      "outcome": {
+        "pid": 2650892,
+        "code": 0,
+        "signal": null,
+        "stderr": "",
+        "drained": true,
+        "at": 1791320653372
+      }
+    },
+    {
+      "phase": "persisted_before_restart",
+      "at": 1791320653374,
+      "rows": [
+        {
+          "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+          "due_at": "2026-10-06T21:02:07.481Z",
+          "service_seq": "39124"
+        },
+        {
+          "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+          "due_at": "2026-10-06T21:02:07.482Z",
+          "service_seq": "39126"
+        },
+        {
+          "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+          "due_at": "2026-10-06T21:02:07.482Z",
+          "service_seq": "39128"
+        },
+        {
+          "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+          "due_at": "2026-10-06T21:02:07.482Z",
+          "service_seq": "39130"
+        },
+        {
+          "mailbox_id": "5f6fe39b-494b-437f-b3cf-4addd1cdc4eb",
+          "due_at": "2026-10-06T21:03:07.482Z",
+          "service_seq": "0"
+        }
+      ]
+    },
+    {
+      "phase": "competing_restart",
+      "at": 1791320653754
+    }
+  ],
+  "children": [
+    {
+      "pid": 2650892,
+      "startticks": "124365752"
+    },
+    {
+      "pid": 2652465,
+      "startticks": "124366337"
+    },
+    {
+      "pid": 2652492,
+      "startticks": "124366356"
+    }
+  ],
+  "joins": [
+    {
+      "pid": 2650892,
+      "code": 0,
+      "signal": null,
+      "stderr": "",
+      "drained": true,
+      "at": 1791320653372
+    },
+    {
+      "pid": 2652465,
+      "code": 0,
+      "signal": null,
+      "stderr": "",
+      "drained": true,
+      "at": 1791320653997
+    },
+    {
+      "pid": 2652492,
+      "code": 0,
+      "signal": null,
+      "stderr": "",
+      "drained": true,
+      "at": 1791320653970
+    }
+  ],
+  "firstECompletion": null,
+  "eligibility": {
+    "at": "2026-10-06T21:04:07.483Z",
+    "monotonicMs": 7106.304487,
+    "primed": [
+      {
+        "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+        "cursor_uid": "100",
+        "pages": 1,
+        "state": "scanning",
+        "high_water": "3000"
+      },
+      {
+        "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+        "cursor_uid": "100",
+        "pages": 1,
+        "state": "scanning",
+        "high_water": "3000"
+      },
+      {
+        "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+        "cursor_uid": "100",
+        "pages": 1,
+        "state": "scanning",
+        "high_water": "3000"
+      },
+      {
+        "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+        "cursor_uid": "100",
+        "pages": 1,
+        "state": "scanning",
+        "high_water": "3000"
+      }
+    ],
+    "rows": [
+      {
+        "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+        "due_at": "2026-10-06T21:02:07.481Z",
+        "next_check_at": "2026-10-06T21:04:07.481Z",
+        "service_seq": "0",
+        "state": "ready"
+      },
+      {
+        "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+        "due_at": "2026-10-06T21:02:07.482Z",
+        "next_check_at": "2026-10-06T21:04:07.482Z",
+        "service_seq": "0",
+        "state": "ready"
+      },
+      {
+        "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+        "due_at": "2026-10-06T21:02:07.482Z",
+        "next_check_at": "2026-10-06T21:04:07.482Z",
+        "service_seq": "0",
+        "state": "ready"
+      },
+      {
+        "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+        "due_at": "2026-10-06T21:02:07.482Z",
+        "next_check_at": "2026-10-06T21:04:07.482Z",
+        "service_seq": "0",
+        "state": "ready"
+      },
+      {
+        "mailbox_id": "5f6fe39b-494b-437f-b3cf-4addd1cdc4eb",
+        "due_at": "2026-10-06T21:03:07.482Z",
+        "next_check_at": "2026-10-06T21:04:07.482Z",
+        "service_seq": "0",
+        "state": "ready"
+      }
+    ]
+  },
+  "traffic": [
+    {
+      "label": "A",
+      "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+      "started": 1791320642199
+    },
+    {
+      "label": "D",
+      "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+      "started": 1791320642226
+    },
+    {
+      "label": "C",
+      "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+      "started": 1791320642234
+    },
+    {
+      "label": "B",
+      "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+      "started": 1791320642296
+    },
+    {
+      "label": "A",
+      "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+      "started": 1791320642199,
+      "completed": 1791320647203,
+      "elapsedMs": 5003.448966,
+      "command": "a4 UID FETCH 1:100 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "D",
+      "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+      "started": 1791320642226,
+      "completed": 1791320647229,
+      "elapsedMs": 5002.945436,
+      "command": "a4 UID FETCH 1:100 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+      "started": 1791320642234,
+      "completed": 1791320647234,
+      "elapsedMs": 5000.488025000001,
+      "command": "a4 UID FETCH 1:100 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "B",
+      "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+      "started": 1791320642296,
+      "completed": 1791320647297,
+      "elapsedMs": 5000.650305,
+      "command": "a4 UID FETCH 1:100 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "D",
+      "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+      "started": 1791320648249,
+      "beforeIO": {
+        "service_seq": "39124",
+        "owner_id": "37a79683-2d34-45fe-bd5d-3b5171bf273b",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:02:07.481Z"
+      }
+    },
+    {
+      "label": "A",
+      "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+      "started": 1791320648288,
+      "beforeIO": {
+        "service_seq": "39128",
+        "owner_id": "d74a4e2b-659b-4bca-bb70-1e3b7a201d3a",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:02:07.482Z"
+      }
+    },
+    {
+      "label": "C",
+      "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+      "started": 1791320648298,
+      "beforeIO": {
+        "service_seq": "39126",
+        "owner_id": "a52328ed-9357-4988-99e9-1a408cd2249a",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:02:07.482Z"
+      }
+    },
+    {
+      "label": "B",
+      "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+      "started": 1791320648309,
+      "beforeIO": {
+        "service_seq": "39130",
+        "owner_id": "40d0bbcc-eee1-4147-9967-8ade27de667e",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:02:07.482Z"
+      }
+    },
+    {
+      "label": "D",
+      "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+      "started": 1791320648249,
+      "completed": 1791320653250,
+      "elapsedMs": 5001.061586000001,
+      "command": "a4 UID FETCH 101:200 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "A",
+      "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+      "started": 1791320648288,
+      "completed": 1791320653289,
+      "elapsedMs": 5001.307086000001,
+      "command": "a4 UID FETCH 101:200 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "C",
+      "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+      "started": 1791320648298,
+      "completed": 1791320653298,
+      "elapsedMs": 5000.355985000001,
+      "command": "a4 UID FETCH 101:200 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    },
+    {
+      "label": "B",
+      "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+      "started": 1791320648309,
+      "completed": 1791320653309,
+      "elapsedMs": 5000.262105,
+      "command": "a4 UID FETCH 101:200 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])"
+    }
+  ],
+  "maxSockets": 4,
+  "events": [
+    {
+      "event_id": "1",
+      "at": "2026-10-06T21:04:07.928Z",
+      "kind": "turn",
+      "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:02:07.481469+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 0,
+        "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+        "lease_until": null,
+        "service_seq": 39124,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:07.481469+00:00",
+        "last_served_at": null
+      }
+    },
+    {
+      "event_id": "2",
+      "at": "2026-10-06T21:04:07.932Z",
+      "kind": "selection",
+      "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+      "body": {
+        "kind": "poll",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:02:07.481469+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": "37a79683-2d34-45fe-bd5d-3b5171bf273b",
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 1,
+        "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+        "lease_until": "2026-10-06T21:06:07.912+00:00",
+        "service_seq": 39124,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:07.481469+00:00",
+        "last_served_at": "2026-10-06T21:04:07.912+00:00"
+      }
+    },
+    {
+      "event_id": "3",
+      "at": "2026-10-06T21:04:07.947Z",
+      "kind": "turn",
+      "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:02:07.482356+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 0,
+        "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+        "lease_until": null,
+        "service_seq": 39126,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:07.482357+00:00",
+        "last_served_at": null
+      }
+    },
+    {
+      "event_id": "4",
+      "at": "2026-10-06T21:04:07.950Z",
+      "kind": "selection",
+      "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+      "body": {
+        "kind": "poll",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:02:07.482356+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": "a52328ed-9357-4988-99e9-1a408cd2249a",
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 1,
+        "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+        "lease_until": "2026-10-06T21:06:07.935+00:00",
+        "service_seq": 39126,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:07.482357+00:00",
+        "last_served_at": "2026-10-06T21:04:07.935+00:00"
+      }
+    },
+    {
+      "event_id": "5",
+      "at": "2026-10-06T21:04:07.968Z",
+      "kind": "turn",
+      "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:02:07.482377+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 0,
+        "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+        "lease_until": null,
+        "service_seq": 39128,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:07.482377+00:00",
+        "last_served_at": null
+      }
+    },
+    {
+      "event_id": "6",
+      "at": "2026-10-06T21:04:07.971Z",
+      "kind": "selection",
+      "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+      "body": {
+        "kind": "poll",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:02:07.482377+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": "d74a4e2b-659b-4bca-bb70-1e3b7a201d3a",
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 1,
+        "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+        "lease_until": "2026-10-06T21:06:07.954+00:00",
+        "service_seq": 39128,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:07.482377+00:00",
+        "last_served_at": "2026-10-06T21:04:07.954+00:00"
+      }
+    },
+    {
+      "event_id": "7",
+      "at": "2026-10-06T21:04:07.999Z",
+      "kind": "turn",
+      "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:02:07.482385+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 0,
+        "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+        "lease_until": null,
+        "service_seq": 39130,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:07.482385+00:00",
+        "last_served_at": null
+      }
+    },
+    {
+      "event_id": "8",
+      "at": "2026-10-06T21:04:08.002Z",
+      "kind": "selection",
+      "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+      "body": {
+        "kind": "poll",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:02:07.482385+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": "40d0bbcc-eee1-4147-9967-8ade27de667e",
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 1,
+        "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+        "lease_until": "2026-10-06T21:06:07.988+00:00",
+        "service_seq": 39130,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:07.482385+00:00",
+        "last_served_at": "2026-10-06T21:04:07.988+00:00"
+      }
+    },
+    {
+      "event_id": "9",
+      "at": "2026-10-06T21:04:08.017Z",
+      "kind": "poll",
+      "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+      "body": {
+        "cursor_uid": 100,
+        "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+        "poll_owner": "3dcbdd28-c123-4f2b-9454-e542e3e12402",
+        "uidvalidity": "1",
+        "completed_at": null,
+        "scan_complete": false
+      }
+    },
+    {
+      "event_id": "10",
+      "at": "2026-10-06T21:04:08.021Z",
+      "kind": "poll",
+      "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+      "body": {
+        "cursor_uid": 100,
+        "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+        "poll_owner": "59d9cfb3-f699-4031-8a7d-76d0b12cfb14",
+        "uidvalidity": "1",
+        "completed_at": null,
+        "scan_complete": false
+      }
+    },
+    {
+      "event_id": "11",
+      "at": "2026-10-06T21:04:08.028Z",
+      "kind": "poll",
+      "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+      "body": {
+        "cursor_uid": 100,
+        "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+        "poll_owner": "0344e515-ffb4-439c-9c2d-0ca0793d1587",
+        "uidvalidity": "1",
+        "completed_at": null,
+        "scan_complete": false
+      }
+    },
+    {
+      "event_id": "12",
+      "at": "2026-10-06T21:04:08.035Z",
+      "kind": "poll",
+      "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+      "body": {
+        "cursor_uid": 100,
+        "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+        "poll_owner": "16bd18a4-a045-4a1c-81ae-1bd2aa8648c1",
+        "uidvalidity": "1",
+        "completed_at": null,
+        "scan_complete": false
+      }
+    },
+    {
+      "event_id": "13",
+      "at": "2026-10-06T21:04:13.271Z",
+      "kind": "page",
+      "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+      "body": {
+        "pages": 2,
+        "state": "scanning",
+        "run_id": "70206f39-805c-48ec-b113-6ff1d48cf113",
+        "attempt": 1,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "cursor_uid": 200,
+        "high_water": 3000,
+        "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+        "provenance": "imap_headers",
+        "uidvalidity": "1",
+        "tail_high_water": null,
+        "attempt_started_at": "2026-10-06T21:04:01.844+00:00"
+      }
+    },
+    {
+      "event_id": "14",
+      "at": "2026-10-06T21:04:13.272Z",
+      "kind": "poll",
+      "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+      "body": {
+        "cursor_uid": 200,
+        "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+        "poll_owner": "3dcbdd28-c123-4f2b-9454-e542e3e12402",
+        "uidvalidity": "1",
+        "completed_at": null,
+        "scan_complete": false
+      }
+    },
+    {
+      "event_id": "15",
+      "at": "2026-10-06T21:04:13.274Z",
+      "kind": "yield",
+      "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:02:07.481469+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 1,
+        "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+        "lease_until": null,
+        "service_seq": 39124,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:13.274468+00:00",
+        "last_served_at": "2026-10-06T21:04:07.912+00:00"
+      }
+    },
+    {
+      "event_id": "16",
+      "at": "2026-10-06T21:04:13.310Z",
+      "kind": "page",
+      "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+      "body": {
+        "pages": 2,
+        "state": "scanning",
+        "run_id": "1035493f-3f1e-40f6-ad8a-179e69b25608",
+        "attempt": 1,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "cursor_uid": 200,
+        "high_water": 3000,
+        "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+        "provenance": "imap_headers",
+        "uidvalidity": "1",
+        "tail_high_water": null,
+        "attempt_started_at": "2026-10-06T21:04:01.793+00:00"
+      }
+    },
+    {
+      "event_id": "17",
+      "at": "2026-10-06T21:04:13.311Z",
+      "kind": "poll",
+      "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+      "body": {
+        "cursor_uid": 200,
+        "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+        "poll_owner": "0344e515-ffb4-439c-9c2d-0ca0793d1587",
+        "uidvalidity": "1",
+        "completed_at": null,
+        "scan_complete": false
+      }
+    },
+    {
+      "event_id": "18",
+      "at": "2026-10-06T21:04:13.315Z",
+      "kind": "yield",
+      "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:02:07.482377+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 1,
+        "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+        "lease_until": null,
+        "service_seq": 39128,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:13.315043+00:00",
+        "last_served_at": "2026-10-06T21:04:07.954+00:00"
+      }
+    },
+    {
+      "event_id": "19",
+      "at": "2026-10-06T21:04:13.325Z",
+      "kind": "page",
+      "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+      "body": {
+        "pages": 2,
+        "state": "scanning",
+        "run_id": "e71a7249-1e33-4681-b8e1-c44cc83c7077",
+        "attempt": 1,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "cursor_uid": 200,
+        "high_water": 3000,
+        "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+        "provenance": "imap_headers",
+        "uidvalidity": "1",
+        "tail_high_water": null,
+        "attempt_started_at": "2026-10-06T21:04:01.851+00:00"
+      }
+    },
+    {
+      "event_id": "20",
+      "at": "2026-10-06T21:04:13.326Z",
+      "kind": "poll",
+      "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+      "body": {
+        "cursor_uid": 200,
+        "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+        "poll_owner": "59d9cfb3-f699-4031-8a7d-76d0b12cfb14",
+        "uidvalidity": "1",
+        "completed_at": null,
+        "scan_complete": false
+      }
+    },
+    {
+      "event_id": "21",
+      "at": "2026-10-06T21:04:13.332Z",
+      "kind": "yield",
+      "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:02:07.482356+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 1,
+        "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+        "lease_until": null,
+        "service_seq": 39126,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:13.331507+00:00",
+        "last_served_at": "2026-10-06T21:04:07.935+00:00"
+      }
+    },
+    {
+      "event_id": "22",
+      "at": "2026-10-06T21:04:13.339Z",
+      "kind": "page",
+      "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+      "body": {
+        "pages": 2,
+        "state": "scanning",
+        "run_id": "76985991-61c8-4dc2-89d1-3ceb593a62ba",
+        "attempt": 1,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "cursor_uid": 200,
+        "high_water": 3000,
+        "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+        "provenance": "imap_headers",
+        "uidvalidity": "1",
+        "tail_high_water": null,
+        "attempt_started_at": "2026-10-06T21:04:01.904+00:00"
+      }
+    },
+    {
+      "event_id": "23",
+      "at": "2026-10-06T21:04:13.340Z",
+      "kind": "poll",
+      "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+      "body": {
+        "cursor_uid": 200,
+        "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+        "poll_owner": "16bd18a4-a045-4a1c-81ae-1bd2aa8648c1",
+        "uidvalidity": "1",
+        "completed_at": null,
+        "scan_complete": false
+      }
+    },
+    {
+      "event_id": "24",
+      "at": "2026-10-06T21:04:13.343Z",
+      "kind": "yield",
+      "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:02:07.482385+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 1,
+        "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+        "lease_until": null,
+        "service_seq": 39130,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:13.343603+00:00",
+        "last_served_at": "2026-10-06T21:04:07.988+00:00"
+      }
+    },
+    {
+      "event_id": "25",
+      "at": "2026-10-06T21:04:13.733Z",
+      "kind": "turn",
+      "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:02:07.481469+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 1,
+        "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+        "lease_until": null,
+        "service_seq": 39134,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:13.274468+00:00",
+        "last_served_at": "2026-10-06T21:04:07.912+00:00"
+      }
+    },
+    {
+      "event_id": "26",
+      "at": "2026-10-06T21:04:13.737Z",
+      "kind": "selection",
+      "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+      "body": {
+        "kind": "poll",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:02:07.481469+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": "96454814-2f2c-4eca-b5aa-d08b3a5dd95d",
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 2,
+        "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+        "lease_until": "2026-10-06T21:06:13.722+00:00",
+        "service_seq": 39134,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:13.274468+00:00",
+        "last_served_at": "2026-10-06T21:04:13.722+00:00"
+      }
+    },
+    {
+      "event_id": "27",
+      "at": "2026-10-06T21:04:13.758Z",
+      "kind": "turn",
+      "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:02:07.482356+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 1,
+        "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+        "lease_until": null,
+        "service_seq": 39136,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:13.331507+00:00",
+        "last_served_at": "2026-10-06T21:04:07.935+00:00"
+      }
+    },
+    {
+      "event_id": "28",
+      "at": "2026-10-06T21:04:13.761Z",
+      "kind": "selection",
+      "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+      "body": {
+        "kind": "poll",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:02:07.482356+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": "41f48952-75f2-4425-88c7-6c76bd01731f",
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 2,
+        "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+        "lease_until": "2026-10-06T21:06:13.747+00:00",
+        "service_seq": 39136,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:13.331507+00:00",
+        "last_served_at": "2026-10-06T21:04:13.747+00:00"
+      }
+    },
+    {
+      "event_id": "29",
+      "at": "2026-10-06T21:04:13.791Z",
+      "kind": "turn",
+      "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:02:07.482377+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 1,
+        "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+        "lease_until": null,
+        "service_seq": 39140,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:13.315043+00:00",
+        "last_served_at": "2026-10-06T21:04:07.954+00:00"
+      }
+    },
+    {
+      "event_id": "30",
+      "at": "2026-10-06T21:04:13.794Z",
+      "kind": "selection",
+      "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+      "body": {
+        "kind": "poll",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:02:07.482377+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": "88de62e7-1631-41d4-8180-2238adde5ab9",
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 2,
+        "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+        "lease_until": "2026-10-06T21:06:13.783+00:00",
+        "service_seq": 39140,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:13.315043+00:00",
+        "last_served_at": "2026-10-06T21:04:13.783+00:00"
+      }
+    },
+    {
+      "event_id": "31",
+      "at": "2026-10-06T21:04:13.817Z",
+      "kind": "turn",
+      "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:02:07.482385+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 1,
+        "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+        "lease_until": null,
+        "service_seq": 39142,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:13.343603+00:00",
+        "last_served_at": "2026-10-06T21:04:07.988+00:00"
+      }
+    },
+    {
+      "event_id": "32",
+      "at": "2026-10-06T21:04:13.819Z",
+      "kind": "selection",
+      "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+      "body": {
+        "kind": "poll",
+        "state": "claimed",
+        "due_at": "2026-10-06T21:02:07.482385+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": "edc4f4ca-7785-4537-ba25-bcec28f523c5",
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 2,
+        "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+        "lease_until": "2026-10-06T21:06:13.806+00:00",
+        "service_seq": 39142,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:13.343603+00:00",
+        "last_served_at": "2026-10-06T21:04:13.806+00:00"
+      }
+    },
+    {
+      "event_id": "33",
+      "at": "2026-10-06T21:04:13.824Z",
+      "kind": "poll",
+      "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+      "body": {
+        "cursor_uid": 200,
+        "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+        "poll_owner": "01103863-6c4b-436a-8ef1-512993c918b9",
+        "uidvalidity": "1",
+        "completed_at": null,
+        "scan_complete": false
+      }
+    },
+    {
+      "event_id": "34",
+      "at": "2026-10-06T21:04:13.827Z",
+      "kind": "poll",
+      "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+      "body": {
+        "cursor_uid": 200,
+        "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+        "poll_owner": "d5ee3fc7-d434-4e1a-8806-421b1a7a6165",
+        "uidvalidity": "1",
+        "completed_at": null,
+        "scan_complete": false
+      }
+    },
+    {
+      "event_id": "35",
+      "at": "2026-10-06T21:04:13.843Z",
+      "kind": "yield",
+      "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:02:07.482377+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 2,
+        "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+        "lease_until": null,
+        "service_seq": 39140,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:13.315043+00:00",
+        "last_served_at": "2026-10-06T21:04:13.783+00:00"
+      }
+    },
+    {
+      "event_id": "36",
+      "at": "2026-10-06T21:04:13.846Z",
+      "kind": "yield",
+      "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:02:07.482385+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 2,
+        "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+        "lease_until": null,
+        "service_seq": 39142,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:13.343603+00:00",
+        "last_served_at": "2026-10-06T21:04:13.806+00:00"
+      }
+    },
+    {
+      "event_id": "37",
+      "at": "2026-10-06T21:04:13.957Z",
+      "kind": "yield",
+      "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:02:07.481469+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 2,
+        "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+        "lease_until": null,
+        "service_seq": 39134,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:13.274468+00:00",
+        "last_served_at": "2026-10-06T21:04:13.722+00:00"
+      }
+    },
+    {
+      "event_id": "38",
+      "at": "2026-10-06T21:04:13.960Z",
+      "kind": "yield",
+      "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+      "body": {
+        "kind": "poll",
+        "state": "ready",
+        "due_at": "2026-10-06T21:02:07.482356+00:00",
+        "job_id": null,
+        "reason": "ready",
+        "owner_id": null,
+        "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+        "generation": 2,
+        "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+        "lease_until": null,
+        "service_seq": 39136,
+        "failure_count": 0,
+        "next_check_at": "2026-10-06T21:04:13.331507+00:00",
+        "last_served_at": "2026-10-06T21:04:13.747+00:00"
+      }
+    }
+  ],
+  "final": [],
+  "participants": [
+    {
+      "label": "A",
+      "id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+      "selections": [
+        {
+          "event_id": "6",
+          "at": "2026-10-06T21:04:07.971Z",
+          "kind": "selection",
+          "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+          "body": {
+            "kind": "poll",
+            "state": "claimed",
+            "due_at": "2026-10-06T21:02:07.482377+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": "d74a4e2b-659b-4bca-bb70-1e3b7a201d3a",
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 1,
+            "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+            "lease_until": "2026-10-06T21:06:07.954+00:00",
+            "service_seq": 39128,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:07.482377+00:00",
+            "last_served_at": "2026-10-06T21:04:07.954+00:00"
+          }
+        },
+        {
+          "event_id": "30",
+          "at": "2026-10-06T21:04:13.794Z",
+          "kind": "selection",
+          "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+          "body": {
+            "kind": "poll",
+            "state": "claimed",
+            "due_at": "2026-10-06T21:02:07.482377+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": "88de62e7-1631-41d4-8180-2238adde5ab9",
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 2,
+            "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+            "lease_until": "2026-10-06T21:06:13.783+00:00",
+            "service_seq": 39140,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:13.315043+00:00",
+            "last_served_at": "2026-10-06T21:04:13.783+00:00"
+          }
+        }
+      ],
+      "pages": [
+        {
+          "event_id": "16",
+          "at": "2026-10-06T21:04:13.310Z",
+          "kind": "page",
+          "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+          "body": {
+            "pages": 2,
+            "state": "scanning",
+            "run_id": "1035493f-3f1e-40f6-ad8a-179e69b25608",
+            "attempt": 1,
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "cursor_uid": 200,
+            "high_water": 3000,
+            "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+            "provenance": "imap_headers",
+            "uidvalidity": "1",
+            "tail_high_water": null,
+            "attempt_started_at": "2026-10-06T21:04:01.793+00:00"
+          }
+        }
+      ],
+      "fullPollCompletions": [],
+      "incomplete": [],
+      "ownership": [
+        {
+          "event_id": "6",
+          "at": "2026-10-06T21:04:07.971Z",
+          "kind": "selection",
+          "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+          "body": {
+            "kind": "poll",
+            "state": "claimed",
+            "due_at": "2026-10-06T21:02:07.482377+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": "d74a4e2b-659b-4bca-bb70-1e3b7a201d3a",
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 1,
+            "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+            "lease_until": "2026-10-06T21:06:07.954+00:00",
+            "service_seq": 39128,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:07.482377+00:00",
+            "last_served_at": "2026-10-06T21:04:07.954+00:00"
+          }
+        },
+        {
+          "event_id": "18",
+          "at": "2026-10-06T21:04:13.315Z",
+          "kind": "yield",
+          "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+          "body": {
+            "kind": "poll",
+            "state": "ready",
+            "due_at": "2026-10-06T21:02:07.482377+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": null,
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 1,
+            "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+            "lease_until": null,
+            "service_seq": 39128,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:13.315043+00:00",
+            "last_served_at": "2026-10-06T21:04:07.954+00:00"
+          }
+        },
+        {
+          "event_id": "30",
+          "at": "2026-10-06T21:04:13.794Z",
+          "kind": "selection",
+          "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+          "body": {
+            "kind": "poll",
+            "state": "claimed",
+            "due_at": "2026-10-06T21:02:07.482377+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": "88de62e7-1631-41d4-8180-2238adde5ab9",
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 2,
+            "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+            "lease_until": "2026-10-06T21:06:13.783+00:00",
+            "service_seq": 39140,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:13.315043+00:00",
+            "last_served_at": "2026-10-06T21:04:13.783+00:00"
+          }
+        },
+        {
+          "event_id": "35",
+          "at": "2026-10-06T21:04:13.843Z",
+          "kind": "yield",
+          "mailbox": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+          "body": {
+            "kind": "poll",
+            "state": "ready",
+            "due_at": "2026-10-06T21:02:07.482377+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": null,
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 2,
+            "mailbox_id": "5107d40d-1e49-421c-bee5-937de0f9cc54",
+            "lease_until": null,
+            "service_seq": 39140,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:13.315043+00:00",
+            "last_served_at": "2026-10-06T21:04:13.783+00:00"
+          }
+        }
+      ],
+      "ownershipDurationsMs": [
+        {
+          "selected": 1791320647971,
+          "released": 1791320653315
+        },
+        {
+          "selected": 1791320653794,
+          "released": 1791320653843
+        }
+      ]
+    },
+    {
+      "label": "B",
+      "id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+      "selections": [
+        {
+          "event_id": "8",
+          "at": "2026-10-06T21:04:08.002Z",
+          "kind": "selection",
+          "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+          "body": {
+            "kind": "poll",
+            "state": "claimed",
+            "due_at": "2026-10-06T21:02:07.482385+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": "40d0bbcc-eee1-4147-9967-8ade27de667e",
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 1,
+            "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+            "lease_until": "2026-10-06T21:06:07.988+00:00",
+            "service_seq": 39130,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:07.482385+00:00",
+            "last_served_at": "2026-10-06T21:04:07.988+00:00"
+          }
+        },
+        {
+          "event_id": "32",
+          "at": "2026-10-06T21:04:13.819Z",
+          "kind": "selection",
+          "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+          "body": {
+            "kind": "poll",
+            "state": "claimed",
+            "due_at": "2026-10-06T21:02:07.482385+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": "edc4f4ca-7785-4537-ba25-bcec28f523c5",
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 2,
+            "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+            "lease_until": "2026-10-06T21:06:13.806+00:00",
+            "service_seq": 39142,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:13.343603+00:00",
+            "last_served_at": "2026-10-06T21:04:13.806+00:00"
+          }
+        }
+      ],
+      "pages": [
+        {
+          "event_id": "22",
+          "at": "2026-10-06T21:04:13.339Z",
+          "kind": "page",
+          "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+          "body": {
+            "pages": 2,
+            "state": "scanning",
+            "run_id": "76985991-61c8-4dc2-89d1-3ceb593a62ba",
+            "attempt": 1,
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "cursor_uid": 200,
+            "high_water": 3000,
+            "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+            "provenance": "imap_headers",
+            "uidvalidity": "1",
+            "tail_high_water": null,
+            "attempt_started_at": "2026-10-06T21:04:01.904+00:00"
+          }
+        }
+      ],
+      "fullPollCompletions": [],
+      "incomplete": [],
+      "ownership": [
+        {
+          "event_id": "8",
+          "at": "2026-10-06T21:04:08.002Z",
+          "kind": "selection",
+          "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+          "body": {
+            "kind": "poll",
+            "state": "claimed",
+            "due_at": "2026-10-06T21:02:07.482385+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": "40d0bbcc-eee1-4147-9967-8ade27de667e",
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 1,
+            "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+            "lease_until": "2026-10-06T21:06:07.988+00:00",
+            "service_seq": 39130,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:07.482385+00:00",
+            "last_served_at": "2026-10-06T21:04:07.988+00:00"
+          }
+        },
+        {
+          "event_id": "24",
+          "at": "2026-10-06T21:04:13.343Z",
+          "kind": "yield",
+          "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+          "body": {
+            "kind": "poll",
+            "state": "ready",
+            "due_at": "2026-10-06T21:02:07.482385+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": null,
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 1,
+            "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+            "lease_until": null,
+            "service_seq": 39130,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:13.343603+00:00",
+            "last_served_at": "2026-10-06T21:04:07.988+00:00"
+          }
+        },
+        {
+          "event_id": "32",
+          "at": "2026-10-06T21:04:13.819Z",
+          "kind": "selection",
+          "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+          "body": {
+            "kind": "poll",
+            "state": "claimed",
+            "due_at": "2026-10-06T21:02:07.482385+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": "edc4f4ca-7785-4537-ba25-bcec28f523c5",
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 2,
+            "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+            "lease_until": "2026-10-06T21:06:13.806+00:00",
+            "service_seq": 39142,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:13.343603+00:00",
+            "last_served_at": "2026-10-06T21:04:13.806+00:00"
+          }
+        },
+        {
+          "event_id": "36",
+          "at": "2026-10-06T21:04:13.846Z",
+          "kind": "yield",
+          "mailbox": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+          "body": {
+            "kind": "poll",
+            "state": "ready",
+            "due_at": "2026-10-06T21:02:07.482385+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": null,
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 2,
+            "mailbox_id": "5ddbb209-9cf4-440d-a545-22f344980ab4",
+            "lease_until": null,
+            "service_seq": 39142,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:13.343603+00:00",
+            "last_served_at": "2026-10-06T21:04:13.806+00:00"
+          }
+        }
+      ],
+      "ownershipDurationsMs": [
+        {
+          "selected": 1791320648002,
+          "released": 1791320653343
+        },
+        {
+          "selected": 1791320653819,
+          "released": 1791320653846
+        }
+      ]
+    },
+    {
+      "label": "C",
+      "id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+      "selections": [
+        {
+          "event_id": "4",
+          "at": "2026-10-06T21:04:07.950Z",
+          "kind": "selection",
+          "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+          "body": {
+            "kind": "poll",
+            "state": "claimed",
+            "due_at": "2026-10-06T21:02:07.482356+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": "a52328ed-9357-4988-99e9-1a408cd2249a",
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 1,
+            "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+            "lease_until": "2026-10-06T21:06:07.935+00:00",
+            "service_seq": 39126,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:07.482357+00:00",
+            "last_served_at": "2026-10-06T21:04:07.935+00:00"
+          }
+        },
+        {
+          "event_id": "28",
+          "at": "2026-10-06T21:04:13.761Z",
+          "kind": "selection",
+          "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+          "body": {
+            "kind": "poll",
+            "state": "claimed",
+            "due_at": "2026-10-06T21:02:07.482356+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": "41f48952-75f2-4425-88c7-6c76bd01731f",
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 2,
+            "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+            "lease_until": "2026-10-06T21:06:13.747+00:00",
+            "service_seq": 39136,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:13.331507+00:00",
+            "last_served_at": "2026-10-06T21:04:13.747+00:00"
+          }
+        }
+      ],
+      "pages": [
+        {
+          "event_id": "19",
+          "at": "2026-10-06T21:04:13.325Z",
+          "kind": "page",
+          "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+          "body": {
+            "pages": 2,
+            "state": "scanning",
+            "run_id": "e71a7249-1e33-4681-b8e1-c44cc83c7077",
+            "attempt": 1,
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "cursor_uid": 200,
+            "high_water": 3000,
+            "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+            "provenance": "imap_headers",
+            "uidvalidity": "1",
+            "tail_high_water": null,
+            "attempt_started_at": "2026-10-06T21:04:01.851+00:00"
+          }
+        }
+      ],
+      "fullPollCompletions": [],
+      "incomplete": [],
+      "ownership": [
+        {
+          "event_id": "4",
+          "at": "2026-10-06T21:04:07.950Z",
+          "kind": "selection",
+          "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+          "body": {
+            "kind": "poll",
+            "state": "claimed",
+            "due_at": "2026-10-06T21:02:07.482356+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": "a52328ed-9357-4988-99e9-1a408cd2249a",
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 1,
+            "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+            "lease_until": "2026-10-06T21:06:07.935+00:00",
+            "service_seq": 39126,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:07.482357+00:00",
+            "last_served_at": "2026-10-06T21:04:07.935+00:00"
+          }
+        },
+        {
+          "event_id": "21",
+          "at": "2026-10-06T21:04:13.332Z",
+          "kind": "yield",
+          "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+          "body": {
+            "kind": "poll",
+            "state": "ready",
+            "due_at": "2026-10-06T21:02:07.482356+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": null,
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 1,
+            "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+            "lease_until": null,
+            "service_seq": 39126,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:13.331507+00:00",
+            "last_served_at": "2026-10-06T21:04:07.935+00:00"
+          }
+        },
+        {
+          "event_id": "28",
+          "at": "2026-10-06T21:04:13.761Z",
+          "kind": "selection",
+          "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+          "body": {
+            "kind": "poll",
+            "state": "claimed",
+            "due_at": "2026-10-06T21:02:07.482356+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": "41f48952-75f2-4425-88c7-6c76bd01731f",
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 2,
+            "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+            "lease_until": "2026-10-06T21:06:13.747+00:00",
+            "service_seq": 39136,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:13.331507+00:00",
+            "last_served_at": "2026-10-06T21:04:13.747+00:00"
+          }
+        },
+        {
+          "event_id": "38",
+          "at": "2026-10-06T21:04:13.960Z",
+          "kind": "yield",
+          "mailbox": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+          "body": {
+            "kind": "poll",
+            "state": "ready",
+            "due_at": "2026-10-06T21:02:07.482356+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": null,
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 2,
+            "mailbox_id": "1d434817-ca3e-4f2b-9aba-b68345d7ddc2",
+            "lease_until": null,
+            "service_seq": 39136,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:13.331507+00:00",
+            "last_served_at": "2026-10-06T21:04:13.747+00:00"
+          }
+        }
+      ],
+      "ownershipDurationsMs": [
+        {
+          "selected": 1791320647950,
+          "released": 1791320653332
+        },
+        {
+          "selected": 1791320653761,
+          "released": 1791320653960
+        }
+      ]
+    },
+    {
+      "label": "D",
+      "id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+      "selections": [
+        {
+          "event_id": "2",
+          "at": "2026-10-06T21:04:07.932Z",
+          "kind": "selection",
+          "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+          "body": {
+            "kind": "poll",
+            "state": "claimed",
+            "due_at": "2026-10-06T21:02:07.481469+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": "37a79683-2d34-45fe-bd5d-3b5171bf273b",
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 1,
+            "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+            "lease_until": "2026-10-06T21:06:07.912+00:00",
+            "service_seq": 39124,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:07.481469+00:00",
+            "last_served_at": "2026-10-06T21:04:07.912+00:00"
+          }
+        },
+        {
+          "event_id": "26",
+          "at": "2026-10-06T21:04:13.737Z",
+          "kind": "selection",
+          "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+          "body": {
+            "kind": "poll",
+            "state": "claimed",
+            "due_at": "2026-10-06T21:02:07.481469+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": "96454814-2f2c-4eca-b5aa-d08b3a5dd95d",
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 2,
+            "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+            "lease_until": "2026-10-06T21:06:13.722+00:00",
+            "service_seq": 39134,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:13.274468+00:00",
+            "last_served_at": "2026-10-06T21:04:13.722+00:00"
+          }
+        }
+      ],
+      "pages": [
+        {
+          "event_id": "13",
+          "at": "2026-10-06T21:04:13.271Z",
+          "kind": "page",
+          "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+          "body": {
+            "pages": 2,
+            "state": "scanning",
+            "run_id": "70206f39-805c-48ec-b113-6ff1d48cf113",
+            "attempt": 1,
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "cursor_uid": 200,
+            "high_water": 3000,
+            "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+            "provenance": "imap_headers",
+            "uidvalidity": "1",
+            "tail_high_water": null,
+            "attempt_started_at": "2026-10-06T21:04:01.844+00:00"
+          }
+        }
+      ],
+      "fullPollCompletions": [],
+      "incomplete": [],
+      "ownership": [
+        {
+          "event_id": "2",
+          "at": "2026-10-06T21:04:07.932Z",
+          "kind": "selection",
+          "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+          "body": {
+            "kind": "poll",
+            "state": "claimed",
+            "due_at": "2026-10-06T21:02:07.481469+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": "37a79683-2d34-45fe-bd5d-3b5171bf273b",
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 1,
+            "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+            "lease_until": "2026-10-06T21:06:07.912+00:00",
+            "service_seq": 39124,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:07.481469+00:00",
+            "last_served_at": "2026-10-06T21:04:07.912+00:00"
+          }
+        },
+        {
+          "event_id": "15",
+          "at": "2026-10-06T21:04:13.274Z",
+          "kind": "yield",
+          "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+          "body": {
+            "kind": "poll",
+            "state": "ready",
+            "due_at": "2026-10-06T21:02:07.481469+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": null,
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 1,
+            "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+            "lease_until": null,
+            "service_seq": 39124,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:13.274468+00:00",
+            "last_served_at": "2026-10-06T21:04:07.912+00:00"
+          }
+        },
+        {
+          "event_id": "26",
+          "at": "2026-10-06T21:04:13.737Z",
+          "kind": "selection",
+          "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+          "body": {
+            "kind": "poll",
+            "state": "claimed",
+            "due_at": "2026-10-06T21:02:07.481469+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": "96454814-2f2c-4eca-b5aa-d08b3a5dd95d",
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 2,
+            "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+            "lease_until": "2026-10-06T21:06:13.722+00:00",
+            "service_seq": 39134,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:13.274468+00:00",
+            "last_served_at": "2026-10-06T21:04:13.722+00:00"
+          }
+        },
+        {
+          "event_id": "37",
+          "at": "2026-10-06T21:04:13.957Z",
+          "kind": "yield",
+          "mailbox": "1747ba3f-87fd-4595-a142-d17e8af07105",
+          "body": {
+            "kind": "poll",
+            "state": "ready",
+            "due_at": "2026-10-06T21:02:07.481469+00:00",
+            "job_id": null,
+            "reason": "ready",
+            "owner_id": null,
+            "tenant_id": "4013c274-7994-4208-a84e-177c34ed9d6e",
+            "generation": 2,
+            "mailbox_id": "1747ba3f-87fd-4595-a142-d17e8af07105",
+            "lease_until": null,
+            "service_seq": 39134,
+            "failure_count": 0,
+            "next_check_at": "2026-10-06T21:04:13.274468+00:00",
+            "last_served_at": "2026-10-06T21:04:13.722+00:00"
+          }
+        }
+      ],
+      "ownershipDurationsMs": [
+        {
+          "selected": 1791320647932,
+          "released": 1791320653274
+        },
+        {
+          "selected": 1791320653737,
+          "released": 1791320653957
+        }
+      ]
+    },
+    {
+      "label": "E",
+      "id": "5f6fe39b-494b-437f-b3cf-4addd1cdc4eb",
+      "selections": [],
+      "pages": [],
+      "fullPollCompletions": [],
+      "incomplete": [],
+      "ownership": [],
+      "ownershipDurationsMs": []
+    }
+  ]
+}

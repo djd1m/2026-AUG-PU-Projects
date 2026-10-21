@@ -1,0 +1,60 @@
+{
+  "stage": "A30",
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "launch_utc": "2026-10-06T21:49:34.851646+00:00",
+  "bound_seconds": 480,
+  "freeze_seconds": 360,
+  "seal_seconds": 120,
+  "requested_model": "gpt-6.1-sol HIGH",
+  "actual_model": null,
+  "candidate": "/tmp/n7-f10-restart-fix-20261006-a12",
+  "source_head": "0f0653f010e40122532f6dd446fc1e16937656e8",
+  "packet_sha256": "c56fa1bef6b60a4f413320469fe4ee7314439e4aa5d1c48e5ea9328c5f4682e5",
+  "refinement04_sha256": "a28d4e29ae8e54ae487caaa285938059b67c215546443baa66e1d7b4c70e1300",
+  "uid_contract_sha256": "998aeeb0b4c89294d7f196650b759954f3a965f62dacfaf8313d1e5eaf749662",
+  "a29_raw_sha256": "0274319f69e7b2e1b36d6529d3b614811f178a26d6c7fa4ff0e24738c9ad34c2",
+  "a29_interval_sha256": "6b773568c8bedb014f58b2484817060dfb089f7877989e07995844624e49a0c0",
+  "writes": "own scratch only; no source DB network or mutex writes",
+  "freeze_utc": "2026-10-06T21:55:53.246211+00:00",
+  "source_sha256": {
+    "src/mailboxes/transport-slots.ts": "6621adc517b5808548fa23c20880aba57a3780ed7df93cf38089d05025fafbd6",
+    "src/mailboxes/transport-lifetime.ts": "287b7c4449da552a2bc2df511d81fe2cb2dfe481edcdaf5a5fe0e8a39c4e83f0",
+    "src/mailboxes/transport-authority.ts": "12ceabeab74af78d271cfe6dbbd6479bf3176713d9158b4dca9c130bcb8e0fab",
+    "src/runtime/store.ts": "33ac7a7b48c5dee3d4b1a7444957733ff0b02a4ead55750e022ff67f33a6ba3c",
+    "src/runtime/loop.ts": "96041a5d3f55a02ba6e55faeda69142a9f6826ea50ce988beceaa00a1b85edc6",
+    "src/runtime/worker.ts": "cb56a41c61e77350d24416443b31c2d55eecb352a2309753a6771b23deaf22e3",
+    "src/replies/adapter.ts": "8595571bda349274294a47fe08342383fd7d02b44650f00124d93aaab49ba112",
+    "src/replies/worker.ts": "1244cf48b69317b309019d1c16b6eac59ae2132f40fc66c75d2c406803023544",
+    "src/replies/imap.ts": "e84dfccb60b3236ab3004815b19ecb4eee6c2233e601e0e8cbbd14d117df0200",
+    "src/replies/store.ts": "041516f0fb492bd0e7d92567cf0b94bec23f770991f449fcc8343961d3e6363c",
+    "tests/f10-runtime-protocol.test.ts": "d660ef3bf5a3aba8ec842366c9284f7a5031c32596537ab596c5845be9e3a4bc",
+    "tests/f10-runtime-fixture.ts": "c42e2a6862249baecd05617d4cb8dd8c4f0cb0b5eb023e9c8254c0cd2cdaae95",
+    "dist/mailboxes/transport-slots.js": "50adabb94594c6d42ca0d884e371d4b9a5f3d78755dfe818c0eb13b06c52f1cb",
+    "dist/consent/transaction.js": "73a1c140d4c26fce559ea9c1f401362c743a0374dc5c177aa668df018a5cf6b9"
+  },
+  "observed_head": "0f0653f010e40122532f6dd446fc1e16937656e8",
+  "source_status": "unchanged tracked source; preexisting untracked node_modules",
+  "route": {
+    "mechanical_tier": "M",
+    "exit_code": 0,
+    "substantive_tier": "L within existing approved F10 safety contract",
+    "reason": "physical admission/ownership concurrency; independent HIGH review and affected native/PG/mutation suites mandatory"
+  },
+  "normative_packet_verified_files": 14,
+  "e2e_preflight": {
+    "status": "not_applicable",
+    "reason": "bounded read-only planner; no E2E invocation"
+  },
+  "actual_effort": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gaps": [
+    "Host actual model/effort and usage counters unavailable",
+    "instantaneous failed admission transaction unobserved",
+    "server closes do not directly prove per-child exit",
+    "19 versus20 assertion cause unknown"
+  ],
+  "correction_utc": "2026-10-06T21:56:51.245662+00:00",
+  "correction": "Removed proposed first-unserved barrier; authored completed-before-E assertion exceeds approved04 lines44/46 and must alone be corrected. Root clarification received before seal.",
+  "freeze_lateness_seconds": 18.394565
+}

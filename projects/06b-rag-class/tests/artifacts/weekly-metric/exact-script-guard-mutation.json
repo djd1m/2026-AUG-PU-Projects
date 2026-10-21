@@ -1,0 +1,19 @@
+{
+  "guard": "exact script data-bot equality",
+  "command": [
+    "/tmp/n6b-f06-node22/bin/node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "--config",
+    "vitest.config.ts",
+    "apps/web/tests/unit/metrics-verifier.test.ts",
+    "-t",
+    "fixed guard assertion: a wrong bot script never verifies"
+  ],
+  "test_unchanged": true,
+  "source_sha256_before": "aab7a0d066c940a7e561c0976fc673fd00460d0460a4f4438c4c13cf04b043e0",
+  "mutant_sha256": "e8f7c168ce9d6334cb8e35451851024f60da847fb1796225ab2568e8d016e34c",
+  "source_sha256_restored": "aab7a0d066c940a7e561c0976fc673fd00460d0460a4f4438c4c13cf04b043e0",
+  "red_exit_code": 1,
+  "restored_green_exit_code": 0
+}

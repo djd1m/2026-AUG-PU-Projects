@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "checked_at": "2026-10-03T02:07:47.360272+00:00",
+  "source_revision": "dbd68a6862e17bb1a01e7659d0d3686b8cd4cf05",
+  "image": "sha256:7779a9cbce2394b93ddf162714277ec3311fb3e55fd85ae1ab9129232e03c015",
+  "pending": {
+    "unverified": true,
+    "config": true,
+    "question": true,
+    "page_url": "https://source-verify.test/"
+  },
+  "seeded_verified_rows": 7,
+  "lease_released": true,
+  "scope": "Positive counts are seeded fixtures. Actual POST callback releases lease and does not certify private destination; no production transport bypass."
+}

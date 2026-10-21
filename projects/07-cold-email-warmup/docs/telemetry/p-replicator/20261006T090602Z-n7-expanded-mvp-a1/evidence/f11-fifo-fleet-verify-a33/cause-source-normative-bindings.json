@@ -1,0 +1,126 @@
+[
+  {
+    "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/runtime/store.ts",
+    "sha256": "2a9de6adf2afff535603b289d669d18deb7219e51161502e5eeae934ddb20d8a",
+    "lines": [
+      {
+        "line": 91,
+        "text": "  if(kind==='poll'&&this.nativePollAuthority&&!(await c.query(\"SELECT 1 FROM transport_operation WHERE protocol='imap' AND operation IS NULL LIMIT 1\")).rowCount)return null;"
+      },
+      {
+        "line": 92,
+        "text": "  const frontier=kind==='poll'&&this.nativePollAuthority&&this.captureConfig?await captureHeaderFrontierClient(c,this.captureConfig):[];"
+      },
+      {
+        "line": 93,
+        "text": "  let row=frontier.length?(await c.query(`SELECT d.* FROM runtime_due d JOIN runtime_tenant_turn t ON t.tenant_id=d.tenant_id AND t.kind=d.kind"
+      },
+      {
+        "line": 97,
+        "text": "   ORDER BY CASE WHEN p.completed_at IS NULL OR p.completed_at+interval '30 seconds'<=$2::timestamptz+interval '5 seconds' THEN 0"
+      },
+      {
+        "line": 98,
+        "text": "    WHEN EXISTS(SELECT 1 FROM unnest($3::uuid[],$4::uuid[]) f(tenant,mailbox) WHERE f.tenant=d.tenant_id AND f.mailbox=d.mailbox_id) THEN 1 ELSE 2 END,"
+      },
+      {
+        "line": 100,
+        "text": "   (await c.query(`SELECT d.* FROM runtime_due d JOIN runtime_tenant_turn t ON t.tenant_id=d.tenant_id AND t.kind=d.kind"
+      },
+      {
+        "line": 101,
+        "text": "   WHERE d.kind=$1 AND d.state='ready' AND d.next_check_at<=$2"
+      },
+      {
+        "line": 102,
+        "text": "   AND EXISTS(SELECT 1 FROM capacity_lease l WHERE l.mailbox_id=d.mailbox_id AND l.state='active' AND l.expires_at>$2)"
+      }
+    ]
+  },
+  {
+    "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/context-store.ts",
+    "sha256": "66fba06eac9b96eed500522239a27fe6f5132e0eb6f2ff93151dba9d71be5cfe",
+    "lines": [
+      {
+        "line": 165,
+        "text": "export async function captureHeaderFrontierClient(c:PoolClient,config:Config):Promise<{tenant:string;mailbox:string}[]> {"
+      },
+      {
+        "line": 166,
+        "text": " if(config.pollMode!=='live_provider')return [];"
+      },
+      {
+        "line": 167,
+        "text": " if((await c.query(\"SELECT 1 FROM incoming_ai_event WHERE window_end>clock_timestamp() AND capture_state='pending' AND next_attempt_at<=clock_timestamp() LIMIT 1\")).rowCount)return [];"
+      },
+      {
+        "line": 173,
+        "text": "  FROM transport_operation WHERE protocol='imap'`)).rows[0];"
+      },
+      {
+        "line": 174,
+        "text": " if(Number(capacity.windows)>=3||Number(capacity.reserved)!==1||Number(capacity.bodies)>=3||Number(capacity.free)===0)return [];"
+      }
+    ]
+  },
+  {
+    "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/02_pseudocode.md",
+    "sha256": "f5272a29a477e78f1f7ba94fa6f562f1a21bd01279b77ad9086879417796f91b",
+    "lines": [
+      {
+        "line": 36,
+        "text": "3. FIRST lock; filter eligible unclaimed rows by due_at<=post-lock now and next_check_at<=now; select tenant with minimum RuntimeTenantTurn.service_seq, then its mailbox ordered by RuntimeDue.service_seq ASC, due_at ASC, mailbox_id ASC using FOR UPDATE SKIP LOCKED LIMIT1. New rows initialize service_seq=0 only on INSERT. In the SAME claim transaction persist fresh PG nextval sequence for BOTH selected tenant and mailbox before any I/O, together with owner/generation120s and claimPoll owner. Every selected committed quantum consumes this turn, including later busy/failure; rollback starts no operation. Cross-check capacity and transport authority before leaving TX. Existing eligible but unserved mailbox therefore precedes any already-served continuation regardless of older continuation due_at."
+      },
+      {
+        "line": 38,
+        "text": "5. Only a successfully committed complete poll proof, matched to the current runtime owner/generation, starts the next poll opportunity: its FIRST-lock finish transaction sets due_at=next_check_at=post-lock DB now and retains the advanced tenant/mailbox service_seq. There is no added successful-poll sleep; the mailbox rejoins fair selection rather than running inline or overtaking unserved eligible peers.30s is the maximum ACTUAL gap between durable completed_at observations, not a start interval or an extra wait. Neither reply_rescan.attempt_started_at, per-quantum last_served_at nor original due_at is used as a poll-round clock; no new cadence timestamp/schema is required. Unsatisfied quanta retain original due_at; failure/authority/busy backoff and incomplete/cleanup holds take precedence and are never converted to successful readiness. Each lane joins operation and exact cleanup, yields asynchronously to the event loop, then makes another bounded claim; idle/no-data still sleeps cancellably<=1s. Restart preserves ready order and unresolved work; a crash after page completion but before finish may safely cause a fresh read, never synthetic freshness or erased overdue history. Measured completion gaps still fail if the fixed cohort/resources cannot meet30s; readiness itself is not acceptance. Reset/incomplete enters explicit retry path with current run identity: ReplyStore.retry resets only attempt/page budget, not cursor or scan_complete. Each attempt\u226420pages/120s; backoff between failed attempts. A restart of scanning resumes persisted cursor within original attempt budget or marks incomplete before retry."
+      },
+      {
+        "line": 124,
+        "text": "> Body executes only as an alternative quantum in the existing four IMAP jobs, with two SMTP jobs and existing pool/maintenance unchanged. There are at most three concurrently admitted capture windows globally and at most three physical body operations; at least one physical IMAP slot remains unavailable to body and all four remain usable by normal header polling. Pending captures wait in durable age/service order; newer arrivals and second phases cannot overtake older unserved capture turns. Pending queue age never resets. A capture window opens exactly once, only when an existing IMAP job has settled its header operation and exact cleanup, and a current owner/generation-fenced complete poll proof, authentic current native UID/header/root/recipient observation, current activity/authority/config and an available physical first-phase slot permit the same FIRST(7,1) transaction to finish header scheduling, claim the capture and acquire that slot. In that transaction header state becomes ready and due_at=next_check_at=T+12s, window_start=T, window_end=T+12s; selected tenant/mailbox service_seq remains unchanged. If those conditions are absent, successful finish remains due_at=next_check_at=T immediately. Unadmitted pending captures never receive a speculative12s header delay or a short expiring window while waiting for capacity."
+      },
+      {
+        "line": 126,
+        "text": "> Metadata and text are separate quanta. Each has its own native operation budget at most5s, shortened by remaining absolute window and inherited content deadline. Metadata must settle exact native closure before commit/yield; text reacquires its claim and physical slot under the same FIRST lock on a later existing-job turn. Active text/metadata continuations are selected by fixed window end then original capture service order, ahead of opening further windows; urgent actual header deadlines retain priority. Both phase commits must occur before the original window_end, and all current identity/stop/grant/config/source/run/UID/root/recipient/generation checks remain valid. No body admission occurs while that mailbox has actually due, claimed or incomplete header work. At end header becomes due independently of callbacks; no renewal, transfer, phase/retry/restart/replay extension or caller bypass is allowed. Native abort propagates; unconfirmed exact closure stays physically occupied/cleanup_blocked, and missed deadlines remain visible."
+      },
+      {
+        "line": 131,
+        "text": "A capture receives one absolute attempt deadline min(inherited content expiry, first durable authenticated queue eligibility+450s), never a window-start/restart/replay clock. The finite thirty-capture queue estimate is conditional; the mandatory positive native witness must make ALL30 both phases ready<=240s including two2800ms stages each, and continue full300s load evidence. Window/attempt expiry never renews same capture. This is not a relaxation of the later arrival-to-SMTP300s SLO. Unknown closure stays occupied. Current genuine source/UID/root/decrypted-recipient/grant/config/generation/stop fences, copy terminal24h/absolute7d and physical purge remain mandatory. Production entry may be implemented under current transport authority and disabled defaults, but candidate deployment/provider enablement and F11 acceptance remain closed until the mandatory witnesses and NEW independent source review pass."
+      },
+      {
+        "line": 136,
+        "text": "In the existing native F11 BODY context path only, when current enabled configuration and current transport grants authorize both HEADER and BODY for a real pending immutable-age imap_headers capture in the existing oldest-three unwindowed frontier, an existing IMAP lane may guide its next genuine HEADER quantum toward that frontier before general fair polling. The preference is recomputed under FIRST(7,1), creates no window, claim, physical reservation or evidence by itself, and is available only with fewer than three live admitted windows, no runnable admitted continuation, actual free nonreserved BODY capacity, BODY+UNKNOWN below three, and the exact single HEADER reservation retained. Among eligible HEADER candidates, actual urgent HEADER deadlines have first priority, then authorized frontier HEADER work, then ordinary HEADER work; each tier retains tenant turn then mailbox service_seq/due_at/id ordering and advances BOTH turns on every committed selection, including subsequent busy/failure. Urgency uses the existing actual completed_at+30s<=post-lock-now+5s predicate, treating missing completion as urgent; no deadline is renewed or fabricated. Once no authorized frontier preference is available, the original fair HEADER selection applies unchanged. Every quantum still joins exact cleanup and yields before another claim. No-body or denied admission remains due_at=next_check_at=post-lock DB NOW, with no phantom deferral. Only its same-mailbox current owner/generation-fenced completed genuine poll plus the unchanged full admission fences and an actually acquired first-phase slot may atomically open the single12s window and defer that mailbox's HEADER to its fixed end. Existing continuation fixed-end/service ordering, local due/claimed/incomplete rejection, reserved HEADER capacity and all30s actual HEADER/60s due selection/240s ALL30/full300s gates remain mandatory."
+      }
+    ]
+  },
+  {
+    "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/docs/features/f10-durable-runtime/03_architecture.md",
+    "sha256": "648a1a757394711349a3c39c4427fb2caa0145ebaf2c776fc493ef29847cb216",
+    "lines": [
+      {
+        "line": 45,
+        "text": "Index eligible-mailbox service ordering by(kind,tenant_id,service_seq,due_at,mailbox_id), with due_at<=now/next_check_at<=now and claim state as eligibility filters; retain a separate(kind,next_check_at) index for bounded wakeup lookup. Index tenant rotation by(kind,service_seq,tenant_id), and mailbox metadata by tenant/mailbox. RuntimeDue.service_seq starts0 only on INSERT; the same FIRST-lock selection transaction assigns fresh PG sequence values to tenant and selected mailbox before I/O, including turns later returning busy/failure. Completion and reconciliation preserve those values, so an older continuation cannot precede an unserved eligible mailbox solely by due_at. Bounded due SELECT uses SKIP LOCKED, but all eligibility mutations still acquire global(7,1) FIRST; SKIP LOCKED never replaces this serialization. Sequence gaps from rollbacks are harmless ordering tokens, not counts of delivered messages. Restart keeps original due_at and persisted service order; a heartbeat cannot reset starvation age."
+      },
+      {
+        "line": 69,
+        "text": "Successful complete poll proofs use existing runtime_due fields only: the owner/generation-fenced finish sets due_at and next_check_at to post-lock DB now, preserving service_seq. This is immediate eligibility for fair selection, not same-mailbox chaining or extra concurrency. Unfinished work retains original due age; failed/busy/held work follows unchanged backoff/hold rules. No poll-round timestamp or reply_rescan clock reuse is needed because cadence scheduling no longer uses a round-start+30 anchor. Awaited quantum/cleanup and an asynchronous event-loop yield precede the next claim; record CPU/RAM, operation counts and other lane progress under repeated successful empty polls. Existing durable completed_at remains the evidence of actual full proof, independent of scheduling timestamps."
+      },
+      {
+        "line": 101,
+        "text": "> Body executes only as an alternative quantum in the existing four IMAP jobs, with two SMTP jobs and existing pool/maintenance unchanged. There are at most three concurrently admitted capture windows globally and at most three physical body operations; at least one physical IMAP slot remains unavailable to body and all four remain usable by normal header polling. Pending captures wait in durable age/service order; newer arrivals and second phases cannot overtake older unserved capture turns. Pending queue age never resets. A capture window opens exactly once, only when an existing IMAP job has settled its header operation and exact cleanup, and a current owner/generation-fenced complete poll proof, authentic current native UID/header/root/recipient observation, current activity/authority/config and an available physical first-phase slot permit the same FIRST(7,1) transaction to finish header scheduling, claim the capture and acquire that slot. In that transaction header state becomes ready and due_at=next_check_at=T+12s, window_start=T, window_end=T+12s; selected tenant/mailbox service_seq remains unchanged. If those conditions are absent, successful finish remains due_at=next_check_at=T immediately. Unadmitted pending captures never receive a speculative12s header delay or a short expiring window while waiting for capacity."
+      },
+      {
+        "line": 103,
+        "text": "> Metadata and text are separate quanta. Each has its own native operation budget at most5s, shortened by remaining absolute window and inherited content deadline. Metadata must settle exact native closure before commit/yield; text reacquires its claim and physical slot under the same FIRST lock on a later existing-job turn. Active text/metadata continuations are selected by fixed window end then original capture service order, ahead of opening further windows; urgent actual header deadlines retain priority. Both phase commits must occur before the original window_end, and all current identity/stop/grant/config/source/run/UID/root/recipient/generation checks remain valid. No body admission occurs while that mailbox has actually due, claimed or incomplete header work. At end header becomes due independently of callbacks; no renewal, transfer, phase/retry/restart/replay extension or caller bypass is allowed. Native abort propagates; unconfirmed exact closure stays physically occupied/cleanup_blocked, and missed deadlines remain visible."
+      },
+      {
+        "line": 108,
+        "text": "A capture receives one absolute attempt deadline min(inherited content expiry, first durable authenticated queue eligibility+450s), never a window-start/restart/replay clock. The finite thirty-capture queue estimate is conditional; the mandatory positive native witness must make ALL30 both phases ready<=240s including two2800ms stages each, and continue full300s load evidence. Window/attempt expiry never renews same capture. This is not a relaxation of the later arrival-to-SMTP300s SLO. Unknown closure stays occupied. Current genuine source/UID/root/decrypted-recipient/grant/config/generation/stop fences, copy terminal24h/absolute7d and physical purge remain mandatory. Production entry may be implemented under current transport authority and disabled defaults, but candidate deployment/provider enablement and F11 acceptance remain closed until the mandatory witnesses and NEW independent source review pass."
+      },
+      {
+        "line": 113,
+        "text": "In the existing native F11 BODY context path only, when current enabled configuration and current transport grants authorize both HEADER and BODY for a real pending immutable-age imap_headers capture in the existing oldest-three unwindowed frontier, an existing IMAP lane may guide its next genuine HEADER quantum toward that frontier before general fair polling. The preference is recomputed under FIRST(7,1), creates no window, claim, physical reservation or evidence by itself, and is available only with fewer than three live admitted windows, no runnable admitted continuation, actual free nonreserved BODY capacity, BODY+UNKNOWN below three, and the exact single HEADER reservation retained. Among eligible HEADER candidates, actual urgent HEADER deadlines have first priority, then authorized frontier HEADER work, then ordinary HEADER work; each tier retains tenant turn then mailbox service_seq/due_at/id ordering and advances BOTH turns on every committed selection, including subsequent busy/failure. Urgency uses the existing actual completed_at+30s<=post-lock-now+5s predicate, treating missing completion as urgent; no deadline is renewed or fabricated. Once no authorized frontier preference is available, the original fair HEADER selection applies unchanged. Every quantum still joins exact cleanup and yields before another claim. No-body or denied admission remains due_at=next_check_at=post-lock DB NOW, with no phantom deferral. Only its same-mailbox current owner/generation-fenced completed genuine poll plus the unchanged full admission fences and an actually acquired first-phase slot may atomically open the single12s window and defer that mailbox's HEADER to its fixed end. Existing continuation fixed-end/service ordering, local due/claimed/incomplete rejection, reserved HEADER capacity and all30s actual HEADER/60s due selection/240s ALL30/full300s gates remain mandatory."
+      }
+    ]
+  }
+]

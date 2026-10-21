@@ -1,0 +1,38 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "created_at": "2026-10-07T01:41:37.685483+00:00",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "profile": "model-routing-econom",
+  "spawn_status": "native_thread_limit_no_actor",
+  "source": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup",
+  "revision": "b2bbbf533a74485f46986bb8c6520a63fc8c45a1",
+  "read_only_until_explicit_source_db_release": true,
+  "max_files": 5,
+  "files": [
+    "src/runtime/loop.ts",
+    "src/runtime/worker.ts",
+    "tests/f11-context-integration.test.ts",
+    "tests/f11-body-fixture.ts",
+    "tests/f10-runtime-protocol.test.ts"
+  ],
+  "attempt_minutes": 20,
+  "source_freeze_minutes": 17,
+  "terminal_seal_minutes": 3,
+  "ac": [
+    "actual normal/startup bounded physical purge, earliest expiry/terminal and no renewal",
+    "current authority mutation witnesses deny stale IO/result",
+    "finite native body fault ALL30 full300 additive witness preserving legal phase5/window12/ready240/header30/fair60/capacities/restart",
+    "author short useful counterproofs/staticchecks only; independentHIGH longexecution",
+    "native phase acquisition-to-exactclosure correlation; add minimal observer only if raw gap remains"
+  ],
+  "protected_database": "n7f10_a2",
+  "owned_database": "n7f11_a8",
+  "owned_database_owner": "n7",
+  "external_provider_calls": 0,
+  "healthy_baseline_native_exit": 0,
+  "healthy_baseline_source_binding": "b2bbbf; not automatically current after correction",
+  "mandatory_next": "Retry fresh native MEDIUM immediately after A11 terminal frees slot; no CLI bypass",
+  "source_writes": 0
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "run_id": "20261002T192500Z-f01",
+  "project": "projects/07-cold-email-warmup",
+  "feature": "f01-foundation-auth",
+  "pipeline": "feature",
+  "tier": "XL",
+  "profile": "compact-quality-first-v2",
+  "policy_version": "compact-quality-first-v2",
+  "baseline_revision": "4947df93a610f98a0bae34a263ae51fa35127aee",
+  "final_revision": "3b8763a1843da319b8114fa52e14db0385e19b35",
+  "spec_sha256": "8c8603677811889b7ce9fb1498d689820bdee0fdc14276c4e0949cdd252afc23",
+  "started_at": "2026-10-02T19:23:01.853875+00:00",
+  "ended_at": "2026-10-02T20:07:14.054391+00:00",
+  "status": "completed",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 6,
+    "ac_total": 6,
+    "confirmed_findings_by_severity": {},
+    "followup_status": "F02 next"
+  },
+  "missing_data": [
+    "Native coordinator model/usage unknown; child runtime collected separately",
+    "Per-process actual usage in three runtime receipts; no deduplicated run-total or coordinator usage available"
+  ],
+  "acceptance_evidence": [
+    "sol-receipt.md",
+    "evidence/checks.json",
+    "evidence/sol-runtime.json",
+    "astra-review-receipt.md",
+    "ui-sol-receipt.md",
+    "evidence/ui-auth/checks.json"
+  ],
+  "intermediate_revision": "b0f4a351f87b168aa497443ae715ade005e07ab8",
+  "current_stage": "F01 accepted: code review plus mandatory auth browser",
+  "metrics": {
+    "elapsed_wall_ms": 2652201,
+    "active_wall_ms": null,
+    "cost": null
+  }
+}

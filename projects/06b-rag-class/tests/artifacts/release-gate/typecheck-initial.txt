@@ -1,0 +1,9 @@
+
+> n6b-rag-class@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json && npm run typecheck --workspace @n6b/web
+
+packages/rag/tests/unit/release-gate.test.ts(52,51): error TS2540: Cannot assign to 'sim' because it is a read-only property.
+packages/rag/tests/unit/release-gate.test.ts(71,49): error TS2540: Cannot assign to 'sim' because it is a read-only property.
+packages/rag/tests/unit/release-gate.test.ts(80,27): error TS2540: Cannot assign to 'sim' because it is a read-only property.
+packages/rag/tests/unit/release-gate.test.ts(100,113): error TS2345: Argument of type '{ accountId: string; }' is not assignable to parameter of type 'CallOwner'.
+  Property 'botId' is missing in type '{ accountId: string; }' but required in type 'CallOwner'.

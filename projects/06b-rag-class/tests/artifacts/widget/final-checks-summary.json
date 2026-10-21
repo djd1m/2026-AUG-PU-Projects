@@ -1,0 +1,36 @@
+{
+  "all_required_passed": true,
+  "source_revision": "80b4e35c4dbab99316c633fa95c6d887f0b741a2",
+  "source_snapshot_sha256": "1f8de8e69a48755557fc8279848fafaa90d2e0eca45ef21c8aeac491097fd199",
+  "recorded_at": "2026-10-02T23:49:30.826788+00:00",
+  "unit": {
+    "passed": 515,
+    "evidence": "attempt1-final-full-regression.txt",
+    "binding": "Production/unit bytes unchanged; only test fixture contact default changed afterward"
+  },
+  "integration": {
+    "unique_tests": 216,
+    "full_attempt": {
+      "passed": 215,
+      "failed": 1,
+      "evidence": "attempt2-final-full-regression.txt",
+      "failure": "T9 subprocess missing compiled @n6b/db due coordinator skipped npmtest pretest prerequisite"
+    },
+    "affected_repeat": {
+      "passed": 19,
+      "exit_code": 0,
+      "evidence": "remaining-checks.txt",
+      "repair": "Build db/rag prerequisite before paid-call integration; no product source change"
+    },
+    "note": "Composite evidence for all216; no claim one monolithic green run"
+  },
+  "typecheck": {
+    "exit_code": 0,
+    "evidence": "attempt2-final-full-regression.txt"
+  },
+  "full_app_build": {
+    "exit_code": 0,
+    "evidence": "remaining-checks.txt"
+  },
+  "images": "Production web/migrate still building; immutable identity recorded separately"
+}

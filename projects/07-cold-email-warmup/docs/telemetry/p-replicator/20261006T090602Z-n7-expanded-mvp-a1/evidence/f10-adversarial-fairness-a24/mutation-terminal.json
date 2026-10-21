@@ -1,0 +1,20 @@
+{
+  "checks": [
+    {
+      "stage": "oldest-due-negative",
+      "code": 1,
+      "named_assertion": true,
+      "ERR_ASSERTION": true,
+      "restored": false
+    },
+    {
+      "stage": "oldest-due-restored",
+      "code": 1,
+      "named_assertion": false,
+      "ERR_ASSERTION": true,
+      "restored": true
+    }
+  ],
+  "exact_restored": true,
+  "finished_at": "2026-10-06T21:01:44.085681+00:00"
+}

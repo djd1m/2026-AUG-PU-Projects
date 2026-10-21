@@ -1,0 +1,23 @@
+
+ RUN  v5.0.4 /home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign
+
+ ❯ tests/design/appearance.test.ts (3 tests | 1 failed | 2 skipped) 20ms
+   × independent source roles preserve geometry, unknown colour, legacy scene and strict response guard 18ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 skipped (3)
+   Start at  20:45:45
+   Duration  626ms (import 47%, transform 46%, tests 5%, worker 2%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/design/appearance.test.ts > independent source roles preserve geometry, unknown colour, legacy scene and strict response guard
+AssertionError: expected [Function] to throw an error
+ ❯ tests/design/appearance.test.ts:13:622
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+Mutation exit: 1

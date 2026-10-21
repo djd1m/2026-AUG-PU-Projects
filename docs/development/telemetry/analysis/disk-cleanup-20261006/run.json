@@ -1,0 +1,41 @@
+{
+  "task": "Owner-requested separate swarm disk audit and safe cleanup",
+  "status": "completed",
+  "profile": "bounded ops; exact candidate safety review before deletion",
+  "started_at_observed": "2026-10-06T15:13:38Z",
+  "started_at_scope": "auditor first measured start; earlier coordination interval not measured",
+  "coordinator_model": null,
+  "auditor_requested_model": "gpt-6-astra/high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gaps": [
+    "Host actual model and usage not exposed",
+    "Concurrent N7 writes affect disk free delta"
+  ],
+  "baseline_available_bytes": 3028828160,
+  "baseline_display": "2.9 GiB available, 97% used; inode28%",
+  "protected": [
+    "active N7 worktrees and symlinked dependencies",
+    "all project DB/container/volume/network resources",
+    "course video sources/outputs and keys",
+    "all unique dirty/untracked evidence"
+  ],
+  "updated_at": "2026-10-06T15:16:44.813223+00:00",
+  "finished_at": "2026-10-06T15:25:25.016672+00:00",
+  "after_available_bytes": 3977453568,
+  "available_delta_bytes": 948625408,
+  "requested_roles": {
+    "inventory_safety": "gpt-6-astra/high",
+    "independent_execution_critic": "gpt-6.1-sol/high"
+  },
+  "actual_models": null,
+  "mutation_seconds": 35.12726163864136,
+  "checks": {
+    "exact_three_worktrees_removed": true,
+    "retained_branches": true,
+    "protected_roots_containers_unchanged": true,
+    "no_force_no_prune": true
+  },
+  "script_sha256": "6fb0ec706d1753f5491c26f2d3d28e57ea61046c4f6696edb542bd1410fae223"
+}

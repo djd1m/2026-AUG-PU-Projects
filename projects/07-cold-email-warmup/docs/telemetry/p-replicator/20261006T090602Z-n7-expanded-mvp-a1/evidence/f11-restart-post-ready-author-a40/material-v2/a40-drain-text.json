@@ -1,0 +1,1361 @@
+{
+  "records": [
+    {
+      "mode": "text",
+      "original": {
+        "id": "c308a946-410e-4c87-b9d4-e1fd8a7373b0",
+        "semantic_event_id": "fbc00bca-7bae-4ca9-9765-49c4a3aee10e",
+        "tenant_id": "25e4e8bb-37e6-4e64-9792-08fb1cd0403d",
+        "mailbox_id": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+        "enrollment_id": "5bbb3cdb-ae9f-461c-95d1-1ca4c37f9943",
+        "root_job_id": "b3d3bf92-36ea-4299-ba44-3f4f814b69ef",
+        "uidvalidity": "1",
+        "uid": "1",
+        "origin_run_id": "52c150a7-f863-46e4-9875-22fca0b33af7",
+        "origin_attempt": 1,
+        "source": "imap_headers",
+        "binding_version": 1,
+        "state": "pending",
+        "capture_state": "claimed",
+        "reason": "body_authority_required",
+        "arrival_at": null,
+        "arrival_source": null,
+        "eligible_at_arrival": null,
+        "policy_version": null,
+        "created_at": "2026-10-07T07:59:08.710Z",
+        "observed_at": "2026-10-07T07:59:08.714Z",
+        "captured_at": null,
+        "terminal_at": null,
+        "expires_at": "2026-10-14T07:59:08.710Z",
+        "metadata_expires_at": "2026-11-06T07:59:08.710Z",
+        "content_envelope": null,
+        "message_bytes": null,
+        "body_bytes": null,
+        "thread_message_count": null,
+        "intent_candidate": null,
+        "sender_binding": "410c081d760a57117cd2f6d867fafea45c24c66a1302ce01dec922d18027d141",
+        "rules_version": null,
+        "rules_hash": null,
+        "content_fingerprint": null,
+        "capture_phase": "metadata",
+        "phase_metadata": null,
+        "phase_revision": null,
+        "phase_mailbox_revision": null,
+        "authenticated_run_id": "52c150a7-f863-46e4-9875-22fca0b33af7",
+        "authenticated_attempt": 1,
+        "authenticated_at": "2026-10-07T07:59:08.714Z",
+        "authenticated_root_message_id": "<body-cohort-b3d3bf92-36ea-4299-ba44-3f4f814b69ef@example.test>",
+        "authenticated_recipient_hash": "ced617b2f13e7726f995e28c12111ba62e1b9c1477086b09b480e2821d68f9fe",
+        "queue_eligible_at": "2026-10-07T07:59:08.721Z",
+        "attempt_deadline": "2026-10-07T08:06:38.721Z",
+        "capture_service_seq": "23",
+        "window_start": "2026-10-07T07:59:09.771Z",
+        "window_end": "2026-10-07T07:59:21.771Z",
+        "window_completed_at": "2026-10-07T07:59:09.766Z",
+        "window_revision": "1",
+        "window_mailbox_revision": "0",
+        "owner_id": "445c275f-f70e-47ce-aac6-efd454acc86c",
+        "generation": "1",
+        "lease_until": "2026-10-07T07:59:21.771Z",
+        "next_attempt_at": "2026-10-07T07:59:09.771Z"
+      },
+      "prior": {
+        "id": "c308a946-410e-4c87-b9d4-e1fd8a7373b0",
+        "semantic_event_id": "fbc00bca-7bae-4ca9-9765-49c4a3aee10e",
+        "tenant_id": "25e4e8bb-37e6-4e64-9792-08fb1cd0403d",
+        "mailbox_id": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+        "enrollment_id": "5bbb3cdb-ae9f-461c-95d1-1ca4c37f9943",
+        "root_job_id": "b3d3bf92-36ea-4299-ba44-3f4f814b69ef",
+        "uidvalidity": "1",
+        "uid": "1",
+        "origin_run_id": "52c150a7-f863-46e4-9875-22fca0b33af7",
+        "origin_attempt": 1,
+        "source": "imap_headers",
+        "binding_version": 1,
+        "state": "pending",
+        "capture_state": "pending",
+        "reason": "body_authority_required",
+        "arrival_at": null,
+        "arrival_source": null,
+        "eligible_at_arrival": null,
+        "policy_version": null,
+        "created_at": "2026-10-07T07:59:08.710Z",
+        "observed_at": "2026-10-07T07:59:08.714Z",
+        "captured_at": null,
+        "terminal_at": null,
+        "expires_at": "2026-10-14T07:59:08.710Z",
+        "metadata_expires_at": "2026-11-06T07:59:08.710Z",
+        "content_envelope": null,
+        "message_bytes": null,
+        "body_bytes": null,
+        "thread_message_count": null,
+        "intent_candidate": null,
+        "sender_binding": "410c081d760a57117cd2f6d867fafea45c24c66a1302ce01dec922d18027d141",
+        "rules_version": null,
+        "rules_hash": null,
+        "content_fingerprint": null,
+        "capture_phase": "text",
+        "phase_metadata": {
+          "tag": "vpl3rJAEAfmVTbbdwa9L3w==",
+          "nonce": "8IQyFIArPBdfmVSx",
+          "version": "v1",
+          "ciphertext": "APDKNElyIe9E5jei5UbxSasui/J4u2P9hXKyU8Wp9pMJF/5y85G0nkwgnUOaTpvnmAYvrAEd/PXbcgCGeHCRwmDPGTv9zAVCpYbvtdT3x4mWIhPdLaGuegDniEq5osyM/0BnKb3wEkuua2DB"
+        },
+        "phase_revision": "1",
+        "phase_mailbox_revision": "0",
+        "authenticated_run_id": "52c150a7-f863-46e4-9875-22fca0b33af7",
+        "authenticated_attempt": 1,
+        "authenticated_at": "2026-10-07T07:59:08.714Z",
+        "authenticated_root_message_id": "<body-cohort-b3d3bf92-36ea-4299-ba44-3f4f814b69ef@example.test>",
+        "authenticated_recipient_hash": "ced617b2f13e7726f995e28c12111ba62e1b9c1477086b09b480e2821d68f9fe",
+        "queue_eligible_at": "2026-10-07T07:59:08.721Z",
+        "attempt_deadline": "2026-10-07T08:06:38.721Z",
+        "capture_service_seq": "23",
+        "window_start": "2026-10-07T07:59:09.771Z",
+        "window_end": "2026-10-07T07:59:21.771Z",
+        "window_completed_at": "2026-10-07T07:59:09.766Z",
+        "window_revision": "1",
+        "window_mailbox_revision": "0",
+        "owner_id": null,
+        "generation": "1",
+        "lease_until": null,
+        "next_attempt_at": "2026-10-07T07:59:13.145Z"
+      },
+      "interrupted": {
+        "id": "c308a946-410e-4c87-b9d4-e1fd8a7373b0",
+        "semantic_event_id": "fbc00bca-7bae-4ca9-9765-49c4a3aee10e",
+        "tenant_id": "25e4e8bb-37e6-4e64-9792-08fb1cd0403d",
+        "mailbox_id": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+        "enrollment_id": "5bbb3cdb-ae9f-461c-95d1-1ca4c37f9943",
+        "root_job_id": "b3d3bf92-36ea-4299-ba44-3f4f814b69ef",
+        "uidvalidity": "1",
+        "uid": "1",
+        "origin_run_id": "52c150a7-f863-46e4-9875-22fca0b33af7",
+        "origin_attempt": 1,
+        "source": "imap_headers",
+        "binding_version": 1,
+        "state": "pending",
+        "capture_state": "pending",
+        "reason": "body_authority_required",
+        "arrival_at": null,
+        "arrival_source": null,
+        "eligible_at_arrival": null,
+        "policy_version": null,
+        "created_at": "2026-10-07T07:59:08.710Z",
+        "observed_at": "2026-10-07T07:59:08.714Z",
+        "captured_at": null,
+        "terminal_at": null,
+        "expires_at": "2026-10-14T07:59:08.710Z",
+        "metadata_expires_at": "2026-11-06T07:59:08.710Z",
+        "content_envelope": null,
+        "message_bytes": null,
+        "body_bytes": null,
+        "thread_message_count": null,
+        "intent_candidate": null,
+        "sender_binding": "410c081d760a57117cd2f6d867fafea45c24c66a1302ce01dec922d18027d141",
+        "rules_version": null,
+        "rules_hash": null,
+        "content_fingerprint": null,
+        "capture_phase": "text",
+        "phase_metadata": {
+          "tag": "vpl3rJAEAfmVTbbdwa9L3w==",
+          "nonce": "8IQyFIArPBdfmVSx",
+          "version": "v1",
+          "ciphertext": "APDKNElyIe9E5jei5UbxSasui/J4u2P9hXKyU8Wp9pMJF/5y85G0nkwgnUOaTpvnmAYvrAEd/PXbcgCGeHCRwmDPGTv9zAVCpYbvtdT3x4mWIhPdLaGuegDniEq5osyM/0BnKb3wEkuua2DB"
+        },
+        "phase_revision": "1",
+        "phase_mailbox_revision": "0",
+        "authenticated_run_id": "52c150a7-f863-46e4-9875-22fca0b33af7",
+        "authenticated_attempt": 1,
+        "authenticated_at": "2026-10-07T07:59:08.714Z",
+        "authenticated_root_message_id": "<body-cohort-b3d3bf92-36ea-4299-ba44-3f4f814b69ef@example.test>",
+        "authenticated_recipient_hash": "ced617b2f13e7726f995e28c12111ba62e1b9c1477086b09b480e2821d68f9fe",
+        "queue_eligible_at": "2026-10-07T07:59:08.721Z",
+        "attempt_deadline": "2026-10-07T08:06:38.721Z",
+        "capture_service_seq": "23",
+        "window_start": "2026-10-07T07:59:09.771Z",
+        "window_end": "2026-10-07T07:59:21.771Z",
+        "window_completed_at": "2026-10-07T07:59:09.766Z",
+        "window_revision": "1",
+        "window_mailbox_revision": "0",
+        "owner_id": null,
+        "generation": "2",
+        "lease_until": null,
+        "next_attempt_at": "2026-10-07T07:59:17.480Z"
+      },
+      "occupied": [],
+      "wireAtJoin": [
+        {
+          "connection": 1,
+          "mailbox": "",
+          "phase": "socket_open",
+          "utc": "2026-10-07T07:59:08.005Z",
+          "monotonicMs": 18698.335885
+        },
+        {
+          "connection": 1,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a1 CAPABILITY",
+          "utc": "2026-10-07T07:59:08.009Z",
+          "monotonicMs": 18702.204066
+        },
+        {
+          "connection": 1,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a2 AUTHENTICATE PLAIN",
+          "utc": "2026-10-07T07:59:08.011Z",
+          "monotonicMs": 18704.041797
+        },
+        {
+          "connection": 1,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "authenticated",
+          "utc": "2026-10-07T07:59:08.012Z",
+          "monotonicMs": 18705.197447
+        },
+        {
+          "connection": 1,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a3 EXAMINE INBOX",
+          "utc": "2026-10-07T07:59:08.013Z",
+          "monotonicMs": 18705.764477
+        },
+        {
+          "connection": 1,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "socket_close",
+          "utc": "2026-10-07T07:59:08.018Z",
+          "monotonicMs": 18711.065689
+        },
+        {
+          "connection": 2,
+          "mailbox": "",
+          "phase": "socket_open",
+          "utc": "2026-10-07T07:59:08.614Z",
+          "monotonicMs": 19307.224962
+        },
+        {
+          "connection": 2,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a1 CAPABILITY",
+          "utc": "2026-10-07T07:59:08.621Z",
+          "monotonicMs": 19313.783824
+        },
+        {
+          "connection": 2,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a2 AUTHENTICATE PLAIN",
+          "utc": "2026-10-07T07:59:08.623Z",
+          "monotonicMs": 19315.761135
+        },
+        {
+          "connection": 2,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "authenticated",
+          "utc": "2026-10-07T07:59:08.624Z",
+          "monotonicMs": 19317.562306
+        },
+        {
+          "connection": 2,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a3 EXAMINE INBOX",
+          "utc": "2026-10-07T07:59:08.625Z",
+          "monotonicMs": 19318.555196
+        },
+        {
+          "connection": 2,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a4 UID FETCH 1:1 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])",
+          "utc": "2026-10-07T07:59:08.627Z",
+          "monotonicMs": 19320.570647
+        },
+        {
+          "connection": 2,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "socket_close",
+          "utc": "2026-10-07T07:59:08.676Z",
+          "monotonicMs": 19369.520794
+        },
+        {
+          "connection": 3,
+          "mailbox": "",
+          "phase": "socket_open",
+          "utc": "2026-10-07T07:59:09.213Z",
+          "monotonicMs": 19906.651236
+        },
+        {
+          "connection": 3,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a1 CAPABILITY",
+          "utc": "2026-10-07T07:59:09.216Z",
+          "monotonicMs": 19908.898977
+        },
+        {
+          "connection": 3,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a2 AUTHENTICATE PLAIN",
+          "utc": "2026-10-07T07:59:09.218Z",
+          "monotonicMs": 19911.391618
+        },
+        {
+          "connection": 3,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "authenticated",
+          "utc": "2026-10-07T07:59:09.220Z",
+          "monotonicMs": 19913.240438
+        },
+        {
+          "connection": 3,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a3 EXAMINE INBOX",
+          "utc": "2026-10-07T07:59:09.221Z",
+          "monotonicMs": 19914.655079
+        },
+        {
+          "connection": 3,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "socket_close",
+          "utc": "2026-10-07T07:59:09.225Z",
+          "monotonicMs": 19918.15081
+        },
+        {
+          "connection": 4,
+          "mailbox": "",
+          "phase": "socket_open",
+          "utc": "2026-10-07T07:59:09.721Z",
+          "monotonicMs": 20413.832877
+        },
+        {
+          "connection": 4,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a1 CAPABILITY",
+          "utc": "2026-10-07T07:59:09.723Z",
+          "monotonicMs": 20416.029208
+        },
+        {
+          "connection": 4,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a2 AUTHENTICATE PLAIN",
+          "utc": "2026-10-07T07:59:09.725Z",
+          "monotonicMs": 20417.759719
+        },
+        {
+          "connection": 4,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "authenticated",
+          "utc": "2026-10-07T07:59:09.725Z",
+          "monotonicMs": 20418.553919
+        },
+        {
+          "connection": 4,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a3 EXAMINE INBOX",
+          "utc": "2026-10-07T07:59:09.728Z",
+          "monotonicMs": 20421.23809
+        },
+        {
+          "connection": 4,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "socket_close",
+          "utc": "2026-10-07T07:59:09.730Z",
+          "monotonicMs": 20423.638311
+        },
+        {
+          "connection": 5,
+          "mailbox": "",
+          "phase": "socket_open",
+          "utc": "2026-10-07T07:59:10.250Z",
+          "monotonicMs": 20943.267496
+        },
+        {
+          "connection": 5,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a1 CAPABILITY",
+          "utc": "2026-10-07T07:59:10.253Z",
+          "monotonicMs": 20946.036737
+        },
+        {
+          "connection": 5,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a2 AUTHENTICATE PLAIN",
+          "utc": "2026-10-07T07:59:10.254Z",
+          "monotonicMs": 20947.220938
+        },
+        {
+          "connection": 5,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "authenticated",
+          "utc": "2026-10-07T07:59:10.255Z",
+          "monotonicMs": 20948.035718
+        },
+        {
+          "connection": 5,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a3 EXAMINE INBOX",
+          "utc": "2026-10-07T07:59:10.255Z",
+          "monotonicMs": 20948.497118
+        },
+        {
+          "connection": 5,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+          "utc": "2026-10-07T07:59:10.256Z",
+          "monotonicMs": 20949.277268
+        },
+        {
+          "connection": 5,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "phase_start",
+          "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+          "utc": "2026-10-07T07:59:10.256Z",
+          "monotonicMs": 20949.285228
+        },
+        {
+          "connection": 5,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "phase_response",
+          "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+          "utc": "2026-10-07T07:59:13.058Z",
+          "monotonicMs": 23751.663009
+        },
+        {
+          "connection": 5,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "socket_close",
+          "utc": "2026-10-07T07:59:13.102Z",
+          "monotonicMs": 23795.577114
+        },
+        {
+          "connection": 6,
+          "mailbox": "",
+          "phase": "socket_open",
+          "utc": "2026-10-07T07:59:17.108Z",
+          "monotonicMs": 27801.277944
+        },
+        {
+          "connection": 6,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a1 CAPABILITY",
+          "utc": "2026-10-07T07:59:17.111Z",
+          "monotonicMs": 27803.913295
+        },
+        {
+          "connection": 6,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a2 AUTHENTICATE PLAIN",
+          "utc": "2026-10-07T07:59:17.112Z",
+          "monotonicMs": 27805.222986
+        },
+        {
+          "connection": 6,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "authenticated",
+          "utc": "2026-10-07T07:59:17.113Z",
+          "monotonicMs": 27805.965156
+        },
+        {
+          "connection": 6,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a3 EXAMINE INBOX",
+          "utc": "2026-10-07T07:59:17.115Z",
+          "monotonicMs": 27808.383697
+        },
+        {
+          "connection": 6,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+          "utc": "2026-10-07T07:59:17.117Z",
+          "monotonicMs": 27810.145867
+        },
+        {
+          "connection": 6,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "phase_start",
+          "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+          "utc": "2026-10-07T07:59:17.117Z",
+          "monotonicMs": 27810.235587
+        },
+        {
+          "connection": 6,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "socket_close",
+          "utc": "2026-10-07T07:59:17.427Z",
+          "monotonicMs": 28120.243998
+        }
+      ],
+      "joined": {
+        "utc": "2026-10-07T07:59:17.487Z",
+        "monotonicNs": "1282967486465837"
+      }
+    },
+    {
+      "ready": {
+        "id": "c308a946-410e-4c87-b9d4-e1fd8a7373b0",
+        "semantic_event_id": "fbc00bca-7bae-4ca9-9765-49c4a3aee10e",
+        "tenant_id": "25e4e8bb-37e6-4e64-9792-08fb1cd0403d",
+        "mailbox_id": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+        "enrollment_id": "5bbb3cdb-ae9f-461c-95d1-1ca4c37f9943",
+        "root_job_id": "b3d3bf92-36ea-4299-ba44-3f4f814b69ef",
+        "uidvalidity": "1",
+        "uid": "1",
+        "origin_run_id": "52c150a7-f863-46e4-9875-22fca0b33af7",
+        "origin_attempt": 1,
+        "source": "imap_headers",
+        "binding_version": 1,
+        "state": "pending",
+        "capture_state": "ready",
+        "reason": "captured",
+        "arrival_at": null,
+        "arrival_source": null,
+        "eligible_at_arrival": null,
+        "policy_version": null,
+        "created_at": "2026-10-07T07:59:08.710Z",
+        "observed_at": "2026-10-07T07:59:08.714Z",
+        "captured_at": "2026-10-07T07:59:20.873Z",
+        "terminal_at": null,
+        "expires_at": "2026-10-14T07:59:08.710Z",
+        "metadata_expires_at": "2026-11-06T07:59:08.710Z",
+        "content_envelope": {
+          "tag": "eJEAspYb2gvqSqA+MaBU6Q==",
+          "nonce": "jrN8cqAWC02xF6JK",
+          "version": "v1",
+          "ciphertext": "W6T0RmuLJFwVpsiVSbw26mBgX1aZ2vKFKdWR2kI="
+        },
+        "message_bytes": [
+          25
+        ],
+        "body_bytes": 25,
+        "thread_message_count": 1,
+        "intent_candidate": "product_overview",
+        "sender_binding": "410c081d760a57117cd2f6d867fafea45c24c66a1302ce01dec922d18027d141",
+        "rules_version": "inbound-rules-v1",
+        "rules_hash": "7edc26df23181437ea87acfaa770dc6dd86b13d156f103f2161746c95d5def13",
+        "content_fingerprint": "55458ca7f6d1bd6393935143baa168dac4b73ede0f66aa6114294d73a3d537fd",
+        "capture_phase": "text",
+        "phase_metadata": null,
+        "phase_revision": null,
+        "phase_mailbox_revision": null,
+        "authenticated_run_id": "52c150a7-f863-46e4-9875-22fca0b33af7",
+        "authenticated_attempt": 1,
+        "authenticated_at": "2026-10-07T07:59:08.714Z",
+        "authenticated_root_message_id": "<body-cohort-b3d3bf92-36ea-4299-ba44-3f4f814b69ef@example.test>",
+        "authenticated_recipient_hash": "ced617b2f13e7726f995e28c12111ba62e1b9c1477086b09b480e2821d68f9fe",
+        "queue_eligible_at": "2026-10-07T07:59:08.721Z",
+        "attempt_deadline": "2026-10-07T08:06:38.721Z",
+        "capture_service_seq": "23",
+        "window_start": "2026-10-07T07:59:09.771Z",
+        "window_end": "2026-10-07T07:59:21.771Z",
+        "window_completed_at": "2026-10-07T07:59:09.766Z",
+        "window_revision": "1",
+        "window_mailbox_revision": "0",
+        "owner_id": null,
+        "generation": "3",
+        "lease_until": null,
+        "next_attempt_at": "2026-10-07T07:59:17.480Z"
+      },
+      "finished": {
+        "utc": "2026-10-07T07:59:20.895Z",
+        "monotonicNs": "1282970895224264"
+      },
+      "wire": [
+        {
+          "connection": 1,
+          "mailbox": "",
+          "phase": "socket_open",
+          "utc": "2026-10-07T07:59:08.005Z",
+          "monotonicMs": 18698.335885
+        },
+        {
+          "connection": 1,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a1 CAPABILITY",
+          "utc": "2026-10-07T07:59:08.009Z",
+          "monotonicMs": 18702.204066
+        },
+        {
+          "connection": 1,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a2 AUTHENTICATE PLAIN",
+          "utc": "2026-10-07T07:59:08.011Z",
+          "monotonicMs": 18704.041797
+        },
+        {
+          "connection": 1,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "authenticated",
+          "utc": "2026-10-07T07:59:08.012Z",
+          "monotonicMs": 18705.197447
+        },
+        {
+          "connection": 1,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a3 EXAMINE INBOX",
+          "utc": "2026-10-07T07:59:08.013Z",
+          "monotonicMs": 18705.764477
+        },
+        {
+          "connection": 1,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "socket_close",
+          "utc": "2026-10-07T07:59:08.018Z",
+          "monotonicMs": 18711.065689
+        },
+        {
+          "connection": 2,
+          "mailbox": "",
+          "phase": "socket_open",
+          "utc": "2026-10-07T07:59:08.614Z",
+          "monotonicMs": 19307.224962
+        },
+        {
+          "connection": 2,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a1 CAPABILITY",
+          "utc": "2026-10-07T07:59:08.621Z",
+          "monotonicMs": 19313.783824
+        },
+        {
+          "connection": 2,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a2 AUTHENTICATE PLAIN",
+          "utc": "2026-10-07T07:59:08.623Z",
+          "monotonicMs": 19315.761135
+        },
+        {
+          "connection": 2,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "authenticated",
+          "utc": "2026-10-07T07:59:08.624Z",
+          "monotonicMs": 19317.562306
+        },
+        {
+          "connection": 2,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a3 EXAMINE INBOX",
+          "utc": "2026-10-07T07:59:08.625Z",
+          "monotonicMs": 19318.555196
+        },
+        {
+          "connection": 2,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a4 UID FETCH 1:1 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])",
+          "utc": "2026-10-07T07:59:08.627Z",
+          "monotonicMs": 19320.570647
+        },
+        {
+          "connection": 2,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "socket_close",
+          "utc": "2026-10-07T07:59:08.676Z",
+          "monotonicMs": 19369.520794
+        },
+        {
+          "connection": 3,
+          "mailbox": "",
+          "phase": "socket_open",
+          "utc": "2026-10-07T07:59:09.213Z",
+          "monotonicMs": 19906.651236
+        },
+        {
+          "connection": 3,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a1 CAPABILITY",
+          "utc": "2026-10-07T07:59:09.216Z",
+          "monotonicMs": 19908.898977
+        },
+        {
+          "connection": 3,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a2 AUTHENTICATE PLAIN",
+          "utc": "2026-10-07T07:59:09.218Z",
+          "monotonicMs": 19911.391618
+        },
+        {
+          "connection": 3,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "authenticated",
+          "utc": "2026-10-07T07:59:09.220Z",
+          "monotonicMs": 19913.240438
+        },
+        {
+          "connection": 3,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a3 EXAMINE INBOX",
+          "utc": "2026-10-07T07:59:09.221Z",
+          "monotonicMs": 19914.655079
+        },
+        {
+          "connection": 3,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "socket_close",
+          "utc": "2026-10-07T07:59:09.225Z",
+          "monotonicMs": 19918.15081
+        },
+        {
+          "connection": 4,
+          "mailbox": "",
+          "phase": "socket_open",
+          "utc": "2026-10-07T07:59:09.721Z",
+          "monotonicMs": 20413.832877
+        },
+        {
+          "connection": 4,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a1 CAPABILITY",
+          "utc": "2026-10-07T07:59:09.723Z",
+          "monotonicMs": 20416.029208
+        },
+        {
+          "connection": 4,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a2 AUTHENTICATE PLAIN",
+          "utc": "2026-10-07T07:59:09.725Z",
+          "monotonicMs": 20417.759719
+        },
+        {
+          "connection": 4,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "authenticated",
+          "utc": "2026-10-07T07:59:09.725Z",
+          "monotonicMs": 20418.553919
+        },
+        {
+          "connection": 4,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a3 EXAMINE INBOX",
+          "utc": "2026-10-07T07:59:09.728Z",
+          "monotonicMs": 20421.23809
+        },
+        {
+          "connection": 4,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "socket_close",
+          "utc": "2026-10-07T07:59:09.730Z",
+          "monotonicMs": 20423.638311
+        },
+        {
+          "connection": 5,
+          "mailbox": "",
+          "phase": "socket_open",
+          "utc": "2026-10-07T07:59:10.250Z",
+          "monotonicMs": 20943.267496
+        },
+        {
+          "connection": 5,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a1 CAPABILITY",
+          "utc": "2026-10-07T07:59:10.253Z",
+          "monotonicMs": 20946.036737
+        },
+        {
+          "connection": 5,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a2 AUTHENTICATE PLAIN",
+          "utc": "2026-10-07T07:59:10.254Z",
+          "monotonicMs": 20947.220938
+        },
+        {
+          "connection": 5,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "authenticated",
+          "utc": "2026-10-07T07:59:10.255Z",
+          "monotonicMs": 20948.035718
+        },
+        {
+          "connection": 5,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a3 EXAMINE INBOX",
+          "utc": "2026-10-07T07:59:10.255Z",
+          "monotonicMs": 20948.497118
+        },
+        {
+          "connection": 5,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+          "utc": "2026-10-07T07:59:10.256Z",
+          "monotonicMs": 20949.277268
+        },
+        {
+          "connection": 5,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "phase_start",
+          "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+          "utc": "2026-10-07T07:59:10.256Z",
+          "monotonicMs": 20949.285228
+        },
+        {
+          "connection": 5,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "phase_response",
+          "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+          "utc": "2026-10-07T07:59:13.058Z",
+          "monotonicMs": 23751.663009
+        },
+        {
+          "connection": 5,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "socket_close",
+          "utc": "2026-10-07T07:59:13.102Z",
+          "monotonicMs": 23795.577114
+        },
+        {
+          "connection": 6,
+          "mailbox": "",
+          "phase": "socket_open",
+          "utc": "2026-10-07T07:59:17.108Z",
+          "monotonicMs": 27801.277944
+        },
+        {
+          "connection": 6,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a1 CAPABILITY",
+          "utc": "2026-10-07T07:59:17.111Z",
+          "monotonicMs": 27803.913295
+        },
+        {
+          "connection": 6,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a2 AUTHENTICATE PLAIN",
+          "utc": "2026-10-07T07:59:17.112Z",
+          "monotonicMs": 27805.222986
+        },
+        {
+          "connection": 6,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "authenticated",
+          "utc": "2026-10-07T07:59:17.113Z",
+          "monotonicMs": 27805.965156
+        },
+        {
+          "connection": 6,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a3 EXAMINE INBOX",
+          "utc": "2026-10-07T07:59:17.115Z",
+          "monotonicMs": 27808.383697
+        },
+        {
+          "connection": 6,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+          "utc": "2026-10-07T07:59:17.117Z",
+          "monotonicMs": 27810.145867
+        },
+        {
+          "connection": 6,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "phase_start",
+          "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+          "utc": "2026-10-07T07:59:17.117Z",
+          "monotonicMs": 27810.235587
+        },
+        {
+          "connection": 6,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "socket_close",
+          "utc": "2026-10-07T07:59:17.427Z",
+          "monotonicMs": 28120.243998
+        },
+        {
+          "connection": 7,
+          "mailbox": "",
+          "phase": "socket_open",
+          "utc": "2026-10-07T07:59:17.990Z",
+          "monotonicMs": 28682.769429
+        },
+        {
+          "connection": 7,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a1 CAPABILITY",
+          "utc": "2026-10-07T07:59:17.993Z",
+          "monotonicMs": 28686.23348
+        },
+        {
+          "connection": 7,
+          "mailbox": "",
+          "phase": "command_received",
+          "command": "a2 AUTHENTICATE PLAIN",
+          "utc": "2026-10-07T07:59:17.996Z",
+          "monotonicMs": 28688.861751
+        },
+        {
+          "connection": 7,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "authenticated",
+          "utc": "2026-10-07T07:59:17.996Z",
+          "monotonicMs": 28689.678931
+        },
+        {
+          "connection": 7,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a3 EXAMINE INBOX",
+          "utc": "2026-10-07T07:59:17.999Z",
+          "monotonicMs": 28692.144232
+        },
+        {
+          "connection": 7,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "command_received",
+          "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+          "utc": "2026-10-07T07:59:18.000Z",
+          "monotonicMs": 28693.666403
+        },
+        {
+          "connection": 7,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "phase_start",
+          "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+          "utc": "2026-10-07T07:59:18.000Z",
+          "monotonicMs": 28693.677263
+        },
+        {
+          "connection": 7,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "phase_response",
+          "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+          "utc": "2026-10-07T07:59:20.802Z",
+          "monotonicMs": 31495.036893
+        },
+        {
+          "connection": 7,
+          "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+          "phase": "socket_close",
+          "utc": "2026-10-07T07:59:20.847Z",
+          "monotonicMs": 31539.753019
+        }
+      ]
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "mailbox": "",
+      "phase": "socket_open",
+      "utc": "2026-10-07T07:59:08.005Z",
+      "monotonicMs": 18698.335885
+    },
+    {
+      "connection": 1,
+      "mailbox": "",
+      "phase": "command_received",
+      "command": "a1 CAPABILITY",
+      "utc": "2026-10-07T07:59:08.009Z",
+      "monotonicMs": 18702.204066
+    },
+    {
+      "connection": 1,
+      "mailbox": "",
+      "phase": "command_received",
+      "command": "a2 AUTHENTICATE PLAIN",
+      "utc": "2026-10-07T07:59:08.011Z",
+      "monotonicMs": 18704.041797
+    },
+    {
+      "connection": 1,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "authenticated",
+      "utc": "2026-10-07T07:59:08.012Z",
+      "monotonicMs": 18705.197447
+    },
+    {
+      "connection": 1,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "command_received",
+      "command": "a3 EXAMINE INBOX",
+      "utc": "2026-10-07T07:59:08.013Z",
+      "monotonicMs": 18705.764477
+    },
+    {
+      "connection": 1,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "socket_close",
+      "utc": "2026-10-07T07:59:08.018Z",
+      "monotonicMs": 18711.065689
+    },
+    {
+      "connection": 2,
+      "mailbox": "",
+      "phase": "socket_open",
+      "utc": "2026-10-07T07:59:08.614Z",
+      "monotonicMs": 19307.224962
+    },
+    {
+      "connection": 2,
+      "mailbox": "",
+      "phase": "command_received",
+      "command": "a1 CAPABILITY",
+      "utc": "2026-10-07T07:59:08.621Z",
+      "monotonicMs": 19313.783824
+    },
+    {
+      "connection": 2,
+      "mailbox": "",
+      "phase": "command_received",
+      "command": "a2 AUTHENTICATE PLAIN",
+      "utc": "2026-10-07T07:59:08.623Z",
+      "monotonicMs": 19315.761135
+    },
+    {
+      "connection": 2,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "authenticated",
+      "utc": "2026-10-07T07:59:08.624Z",
+      "monotonicMs": 19317.562306
+    },
+    {
+      "connection": 2,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "command_received",
+      "command": "a3 EXAMINE INBOX",
+      "utc": "2026-10-07T07:59:08.625Z",
+      "monotonicMs": 19318.555196
+    },
+    {
+      "connection": 2,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "command_received",
+      "command": "a4 UID FETCH 1:1 (UID BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID IN-REPLY-TO REFERENCES)])",
+      "utc": "2026-10-07T07:59:08.627Z",
+      "monotonicMs": 19320.570647
+    },
+    {
+      "connection": 2,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "socket_close",
+      "utc": "2026-10-07T07:59:08.676Z",
+      "monotonicMs": 19369.520794
+    },
+    {
+      "connection": 3,
+      "mailbox": "",
+      "phase": "socket_open",
+      "utc": "2026-10-07T07:59:09.213Z",
+      "monotonicMs": 19906.651236
+    },
+    {
+      "connection": 3,
+      "mailbox": "",
+      "phase": "command_received",
+      "command": "a1 CAPABILITY",
+      "utc": "2026-10-07T07:59:09.216Z",
+      "monotonicMs": 19908.898977
+    },
+    {
+      "connection": 3,
+      "mailbox": "",
+      "phase": "command_received",
+      "command": "a2 AUTHENTICATE PLAIN",
+      "utc": "2026-10-07T07:59:09.218Z",
+      "monotonicMs": 19911.391618
+    },
+    {
+      "connection": 3,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "authenticated",
+      "utc": "2026-10-07T07:59:09.220Z",
+      "monotonicMs": 19913.240438
+    },
+    {
+      "connection": 3,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "command_received",
+      "command": "a3 EXAMINE INBOX",
+      "utc": "2026-10-07T07:59:09.221Z",
+      "monotonicMs": 19914.655079
+    },
+    {
+      "connection": 3,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "socket_close",
+      "utc": "2026-10-07T07:59:09.225Z",
+      "monotonicMs": 19918.15081
+    },
+    {
+      "connection": 4,
+      "mailbox": "",
+      "phase": "socket_open",
+      "utc": "2026-10-07T07:59:09.721Z",
+      "monotonicMs": 20413.832877
+    },
+    {
+      "connection": 4,
+      "mailbox": "",
+      "phase": "command_received",
+      "command": "a1 CAPABILITY",
+      "utc": "2026-10-07T07:59:09.723Z",
+      "monotonicMs": 20416.029208
+    },
+    {
+      "connection": 4,
+      "mailbox": "",
+      "phase": "command_received",
+      "command": "a2 AUTHENTICATE PLAIN",
+      "utc": "2026-10-07T07:59:09.725Z",
+      "monotonicMs": 20417.759719
+    },
+    {
+      "connection": 4,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "authenticated",
+      "utc": "2026-10-07T07:59:09.725Z",
+      "monotonicMs": 20418.553919
+    },
+    {
+      "connection": 4,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "command_received",
+      "command": "a3 EXAMINE INBOX",
+      "utc": "2026-10-07T07:59:09.728Z",
+      "monotonicMs": 20421.23809
+    },
+    {
+      "connection": 4,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "socket_close",
+      "utc": "2026-10-07T07:59:09.730Z",
+      "monotonicMs": 20423.638311
+    },
+    {
+      "connection": 5,
+      "mailbox": "",
+      "phase": "socket_open",
+      "utc": "2026-10-07T07:59:10.250Z",
+      "monotonicMs": 20943.267496
+    },
+    {
+      "connection": 5,
+      "mailbox": "",
+      "phase": "command_received",
+      "command": "a1 CAPABILITY",
+      "utc": "2026-10-07T07:59:10.253Z",
+      "monotonicMs": 20946.036737
+    },
+    {
+      "connection": 5,
+      "mailbox": "",
+      "phase": "command_received",
+      "command": "a2 AUTHENTICATE PLAIN",
+      "utc": "2026-10-07T07:59:10.254Z",
+      "monotonicMs": 20947.220938
+    },
+    {
+      "connection": 5,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "authenticated",
+      "utc": "2026-10-07T07:59:10.255Z",
+      "monotonicMs": 20948.035718
+    },
+    {
+      "connection": 5,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "command_received",
+      "command": "a3 EXAMINE INBOX",
+      "utc": "2026-10-07T07:59:10.255Z",
+      "monotonicMs": 20948.497118
+    },
+    {
+      "connection": 5,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "command_received",
+      "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+      "utc": "2026-10-07T07:59:10.256Z",
+      "monotonicMs": 20949.277268
+    },
+    {
+      "connection": 5,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "phase_start",
+      "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+      "utc": "2026-10-07T07:59:10.256Z",
+      "monotonicMs": 20949.285228
+    },
+    {
+      "connection": 5,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "phase_response",
+      "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+      "utc": "2026-10-07T07:59:13.058Z",
+      "monotonicMs": 23751.663009
+    },
+    {
+      "connection": 5,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "socket_close",
+      "utc": "2026-10-07T07:59:13.102Z",
+      "monotonicMs": 23795.577114
+    },
+    {
+      "connection": 6,
+      "mailbox": "",
+      "phase": "socket_open",
+      "utc": "2026-10-07T07:59:17.108Z",
+      "monotonicMs": 27801.277944
+    },
+    {
+      "connection": 6,
+      "mailbox": "",
+      "phase": "command_received",
+      "command": "a1 CAPABILITY",
+      "utc": "2026-10-07T07:59:17.111Z",
+      "monotonicMs": 27803.913295
+    },
+    {
+      "connection": 6,
+      "mailbox": "",
+      "phase": "command_received",
+      "command": "a2 AUTHENTICATE PLAIN",
+      "utc": "2026-10-07T07:59:17.112Z",
+      "monotonicMs": 27805.222986
+    },
+    {
+      "connection": 6,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "authenticated",
+      "utc": "2026-10-07T07:59:17.113Z",
+      "monotonicMs": 27805.965156
+    },
+    {
+      "connection": 6,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "command_received",
+      "command": "a3 EXAMINE INBOX",
+      "utc": "2026-10-07T07:59:17.115Z",
+      "monotonicMs": 27808.383697
+    },
+    {
+      "connection": 6,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "command_received",
+      "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+      "utc": "2026-10-07T07:59:17.117Z",
+      "monotonicMs": 27810.145867
+    },
+    {
+      "connection": 6,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "phase_start",
+      "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+      "utc": "2026-10-07T07:59:17.117Z",
+      "monotonicMs": 27810.235587
+    },
+    {
+      "connection": 6,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "socket_close",
+      "utc": "2026-10-07T07:59:17.427Z",
+      "monotonicMs": 28120.243998
+    },
+    {
+      "connection": 7,
+      "mailbox": "",
+      "phase": "socket_open",
+      "utc": "2026-10-07T07:59:17.990Z",
+      "monotonicMs": 28682.769429
+    },
+    {
+      "connection": 7,
+      "mailbox": "",
+      "phase": "command_received",
+      "command": "a1 CAPABILITY",
+      "utc": "2026-10-07T07:59:17.993Z",
+      "monotonicMs": 28686.23348
+    },
+    {
+      "connection": 7,
+      "mailbox": "",
+      "phase": "command_received",
+      "command": "a2 AUTHENTICATE PLAIN",
+      "utc": "2026-10-07T07:59:17.996Z",
+      "monotonicMs": 28688.861751
+    },
+    {
+      "connection": 7,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "authenticated",
+      "utc": "2026-10-07T07:59:17.996Z",
+      "monotonicMs": 28689.678931
+    },
+    {
+      "connection": 7,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "command_received",
+      "command": "a3 EXAMINE INBOX",
+      "utc": "2026-10-07T07:59:17.999Z",
+      "monotonicMs": 28692.144232
+    },
+    {
+      "connection": 7,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "command_received",
+      "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+      "utc": "2026-10-07T07:59:18.000Z",
+      "monotonicMs": 28693.666403
+    },
+    {
+      "connection": 7,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "phase_start",
+      "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+      "utc": "2026-10-07T07:59:18.000Z",
+      "monotonicMs": 28693.677263
+    },
+    {
+      "connection": 7,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "phase_response",
+      "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+      "utc": "2026-10-07T07:59:20.802Z",
+      "monotonicMs": 31495.036893
+    },
+    {
+      "connection": 7,
+      "mailbox": "a01b9c6e-15c0-42b1-aa42-873d6b96131e",
+      "phase": "socket_close",
+      "utc": "2026-10-07T07:59:20.847Z",
+      "monotonicMs": 31539.753019
+    }
+  ]
+}

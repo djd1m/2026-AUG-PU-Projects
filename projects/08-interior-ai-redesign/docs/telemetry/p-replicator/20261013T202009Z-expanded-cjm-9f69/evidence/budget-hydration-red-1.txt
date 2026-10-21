@@ -1,0 +1,15 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Initial hydration overwrote active user input
+    at file:///home/2026-AUG-PU-Projects/projects/08-interior-ai-redesign/scripts/e2e-budget-hydration.mjs:7:1496 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

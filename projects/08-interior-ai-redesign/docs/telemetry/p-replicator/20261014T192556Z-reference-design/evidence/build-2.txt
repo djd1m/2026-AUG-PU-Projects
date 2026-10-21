@@ -1,0 +1,167 @@
+ Image n8-interior-app:local Building
+#1 [internal] load local bake definitions
+#1 reading from stdin 578B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.09kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 152B done
+#4 DONE 0.0s
+
+#5 [ 1/14] FROM docker.io/library/node:24-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20
+#5 resolve docker.io/library/node:24-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 30.67kB 0.0s done
+#6 DONE 0.0s
+
+#7 [ 9/14] COPY --chown=node:node packages/adapters/package.json packages/adapters/package.json
+#7 CACHED
+
+#8 [ 4/14] COPY --chown=node:node package.json package-lock.json ./
+#8 CACHED
+
+#9 [ 6/14] COPY --chown=node:node apps/worker/package.json apps/worker/package.json
+#9 CACHED
+
+#10 [ 7/14] COPY --chown=node:node packages/domain/package.json packages/domain/package.json
+#10 CACHED
+
+#11 [ 2/14] RUN apt-get update && apt-get install -y --no-install-recommends tesseract-ocr tesseract-ocr-eng tesseract-ocr-rus fonts-dejavu-core && rm -rf /var/lib/apt/lists/*
+#11 CACHED
+
+#12 [ 8/14] COPY --chown=node:node packages/db/package.json packages/db/package.json
+#12 CACHED
+
+#13 [ 3/14] WORKDIR /app
+#13 CACHED
+
+#14 [ 5/14] COPY --chown=node:node apps/web/package.json apps/web/package.json
+#14 CACHED
+
+#15 [10/14] COPY --chown=node:node packages/viewer/package.json packages/viewer/package.json
+#15 CACHED
+
+#16 [11/14] RUN npm ci --no-fund --no-audit
+#16 CACHED
+
+#17 [12/14] COPY --chown=node:node . .
+#17 DONE 0.1s
+
+#18 [13/14] RUN npm run build
+#18 0.445
+#18 0.445 > n8-interior-planner@0.1.0 build
+#18 0.445 > npm run typecheck && npm run build -w @n8/web
+#18 0.445
+#18 0.597
+#18 0.597 > n8-interior-planner@0.1.0 typecheck
+#18 0.597 > tsc --noEmit -p tsconfig.json
+#18 0.597
+#18 10.02
+#18 10.02 > @n8/web@0.1.0 build
+#18 10.02 > next build
+#18 10.02
+#18 10.95    ▲ Next.js 15.5.27
+#18 10.95    - Experiments (use with caution):
+#18 10.95      · cpus: 2
+#18 10.95
+#18 10.99    Creating an optimized production build ...
+#18 39.74  ✓ Compiled successfully in 28.3s
+#18 39.75    Linting and checking validity of types ...
+#18 41.78
+#18 41.78  ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
+#18 50.31    Collecting page data ...
+#18 54.78    Generating static pages (0/6) ...
+#18 55.39    Generating static pages (1/6)
+#18 55.39    Generating static pages (2/6)
+#18 55.39    Generating static pages (4/6)
+#18 55.39  ✓ Generating static pages (6/6)
+#18 56.41    Finalizing page optimization ...
+#18 56.41    Collecting build traces ...
+#18 65.44
+#18 65.44 Route (app)                                                     Size  First Load JS
+#18 65.44 ┌ ƒ /                                                          164 B         109 kB
+#18 65.44 ├ ƒ /_not-found                                                994 B         106 kB
+#18 65.44 ├ ƒ /api/assets/[assetId]                                      229 B         106 kB
+#18 65.44 ├ ƒ /api/auth/login                                            229 B         106 kB
+#18 65.44 ├ ƒ /api/auth/logout                                           229 B         106 kB
+#18 65.44 ├ ƒ /api/auth/register                                         229 B         106 kB
+#18 65.44 ├ ƒ /api/billing/checkout                                      229 B         106 kB
+#18 65.44 ├ ƒ /api/billing/offers                                        229 B         106 kB
+#18 65.44 ├ ƒ /api/billing/orders                                        229 B         106 kB
+#18 65.44 ├ ƒ /api/billing/orders/[id]                                   229 B         106 kB
+#18 65.44 ├ ƒ /api/billing/webhook                                       229 B         106 kB
+#18 65.44 ├ ƒ /api/jobs/[jobId]                                          229 B         106 kB
+#18 65.44 ├ ƒ /api/me                                                    229 B         106 kB
+#18 65.44 ├ ƒ /api/projects                                              229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]                                  229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/assets                           229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/budgets                          229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/budgets/[budgetId]/export        229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/catalog                          229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/designs                          229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/designs/[designId]               229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/designs/[designId]/approve       229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/designs/[designId]/restore       229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/designs/[designId]/view          229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/designs/from-references          229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/drawing                          229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/exports                          229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/exports/[assetId]                229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/jobs                             229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/jobs/preview                     229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/lines                            229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/lines/[lineId]                   229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/products                         229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/products/[snapshotId]/refresh    229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/references                       229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/shares                           229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/shares/[shareId]                 229 B         106 kB
+#18 65.44 ├ ƒ /api/projects/[projectId]/shells                           229 B         106 kB
+#18 65.44 ├ ƒ /api/shared/[token]/image                                  229 B         106 kB
+#18 65.44 ├ ƒ /billing                                                  1.6 kB         140 kB
+#18 65.44 ├ ƒ /dashboard                                               3.05 kB         112 kB
+#18 65.44 ├ ƒ /dashboard/[projectId]                                   29.4 kB         167 kB
+#18 65.44 ├ ƒ /health/live                                               229 B         106 kB
+#18 65.44 ├ ƒ /health/ready                                              229 B         106 kB
+#18 65.44 ├ ƒ /login                                                   1.98 kB         111 kB
+#18 65.44 └ ƒ /s/[token]                                                 229 B         106 kB
+#18 65.44 + First Load JS shared by all                                 105 kB
+#18 65.44   ├ chunks/18-bb7d85faaf08e91b.js                            46.9 kB
+#18 65.44   ├ chunks/87c73c54-09e1ba5c70e60a51.js                      54.2 kB
+#18 65.44   └ other shared chunks (total)                              4.34 kB
+#18 65.44
+#18 65.44
+#18 65.44 ƒ  (Dynamic)  server-rendered on demand
+#18 65.44
+#18 DONE 65.8s
+
+#19 [14/14] RUN mkdir -p /app/.runtime/assets && chown -R node:node /app/.runtime
+#19 DONE 0.3s
+
+#20 exporting to image
+#20 exporting layers
+#20 exporting layers 11.1s done
+#20 exporting manifest sha256:1b4db8d7aa8db2cc80f434c9024dfc5d54750037aa9277cf397318bb2e431478 0.1s done
+#20 exporting config sha256:75b38a3a5c80207b69457e34d46549408bc0bce15bdbbb4b3ac46998de7d85b1
+#20 exporting config sha256:75b38a3a5c80207b69457e34d46549408bc0bce15bdbbb4b3ac46998de7d85b1 0.2s done
+#20 exporting attestation manifest sha256:ae2d81ab4181c46a5e4ba4f42a893901078474278d8e21c24d180631de4af205
+#20 exporting attestation manifest sha256:ae2d81ab4181c46a5e4ba4f42a893901078474278d8e21c24d180631de4af205 0.1s done
+#20 exporting manifest list sha256:daa54c497d1a9d45c3b3a836191daac30c540b925535ba07e59b30028cdc5fab
+#20 exporting manifest list sha256:daa54c497d1a9d45c3b3a836191daac30c540b925535ba07e59b30028cdc5fab 0.1s done
+#20 naming to docker.io/library/n8-interior-app:local
+#20 naming to docker.io/library/n8-interior-app:local done
+#20 unpacking to docker.io/library/n8-interior-app:local
+#20 unpacking to docker.io/library/n8-interior-app:local 2.5s done
+#20 DONE 14.3s
+
+#21 resolving provenance for metadata file
+#21 DONE 0.0s
+ Image n8-interior-app:local Built

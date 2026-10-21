@@ -1,0 +1,1076 @@
+{
+  "engine": "webkit",
+  "message": "page.goto: Unacceptable TLS certificate\nCall log:\n  - navigating to \"https://n8.77.83.87.178.sslip.io/\", waiting until \"networkidle\"\n",
+  "results": [
+    "chromium/landing",
+    "chromium/login",
+    "chromium/dashboard",
+    "chromium/project-1440-01",
+    "chromium/project-1440-02",
+    "chromium/project-1440-03",
+    "chromium/project-1440-04",
+    "chromium/project-1440-05",
+    "chromium/project-1440-06",
+    "chromium/project-390-01",
+    "chromium/project-390-02",
+    "chromium/project-390-03",
+    "chromium/project-390-04",
+    "chromium/project-390-05",
+    "chromium/project-390-06",
+    "chromium/glb-mobile",
+    "chromium/billing-mobile",
+    "firefox/landing",
+    "firefox/login",
+    "firefox/dashboard",
+    "firefox/project-1440-01",
+    "firefox/project-1440-02",
+    "firefox/project-1440-03",
+    "firefox/project-1440-04",
+    "firefox/project-1440-05",
+    "firefox/project-1440-06",
+    "firefox/project-390-01",
+    "firefox/project-390-02",
+    "firefox/project-390-03",
+    "firefox/project-390-04",
+    "firefox/project-390-05",
+    "firefox/project-390-06",
+    "firefox/glb-mobile",
+    "firefox/billing-mobile"
+  ],
+  "violations": [
+    {
+      "engine": "chromium",
+      "page": "landing",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            "div:nth-child(1) > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".lead"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".quiet"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".journey > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "li:nth-child(1) > p"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "li:nth-child(2) > p"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "li:nth-child(3) > p"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "footer"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "page": "login",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            "section > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".lead"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "page": "dashboard",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            ".inline > .quiet"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "div > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".lead"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "page": "project-1440-01",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            "div > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".page-heading > div > .subtle"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(2)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(3)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(4)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(5)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(6)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".summary-strip > div:nth-child(1) > span"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "div:nth-child(2) > span"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".panel-stack > .quiet"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "page": "project-1440-02",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            "div > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "div > .subtle"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(1)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(3)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(4)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(5)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(6)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "section > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".lead"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "page": "project-1440-03",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            "div > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".page-heading > div > .subtle"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(1)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(2)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(4)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(5)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(6)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".panel-stack:nth-child(1) > .quiet"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "page": "project-1440-04",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            "div > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "div > .subtle"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(1)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(2)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(3)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(5)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(6)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "page": "project-1440-05",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            ".page-heading > div > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "div > .subtle"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(1)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(2)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(3)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(4)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(6)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "page": "project-1440-06",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            "div > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".subtle"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(1)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(2)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(3)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(4)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(5)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "page": "project-390-01",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            "div > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".page-heading > div > .subtle"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(2)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(3)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(4)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(5)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(6)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".summary-strip > div:nth-child(1) > span"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "div:nth-child(2) > span"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".panel-stack > .quiet"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "page": "project-390-02",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            "div > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "div > .subtle"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(1)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(3)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(4)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(5)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(6)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "section > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".lead"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "page": "project-390-03",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            "div > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".page-heading > div > .subtle"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(1)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(2)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(4)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(5)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(6)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".panel-stack:nth-child(1) > .quiet"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "page": "project-390-04",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            "div > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "div > .subtle"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(1)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(2)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(3)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(5)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(6)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "page": "project-390-05",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            ".page-heading > div > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "div > .subtle"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(1)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(2)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(3)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(4)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(6)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "page": "project-390-06",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            "div > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".subtle"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(1)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(2)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(3)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(4)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(5)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "page": "glb-mobile",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            "div > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".page-heading > div > .subtle"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(2)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(3)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(4)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(5)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(6)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".summary-strip > div:nth-child(1) > span"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "div:nth-child(2) > span"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".panel-stack > .quiet"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "firefox",
+      "page": "landing",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            "div:nth-child(1) > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".lead"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".quiet"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".journey > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "li:nth-child(1) > p"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "li:nth-child(2) > p"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "li:nth-child(3) > p"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "footer"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "firefox",
+      "page": "login",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            "section > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".lead"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "firefox",
+      "page": "dashboard",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            ".inline > .quiet"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "div > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".lead"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "engine": "firefox",
+      "page": "glb-mobile",
+      "id": "color-contrast",
+      "impact": "serious",
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            "div > .eyebrow"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".page-heading > div > .subtle"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(2)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(3)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(4)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(5)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "button[role=\"tab\"]:nth-child(6)"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".summary-strip > div:nth-child(1) > span"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            "div:nth-child(2) > span"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "target": [
+            ".panel-stack > .quiet"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.35 (foreground color: #667568, background color: #f5f2e9, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "outbound": []
+}

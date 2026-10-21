@@ -1,0 +1,383 @@
+{
+  "status": "pass",
+  "source": "e9e78e47c349a0c23b3542dc68945d1f976f76c6edbb8bee61c817a3aebd084b",
+  "build": "455e80941dc8bc0c0dd7cca1a2f9b1388e1275b7f8b85fdf716993fdcb1ca27f",
+  "checks": [
+    {
+      "name": "1440 HTML policy same-origin",
+      "pass": true
+    },
+    {
+      "name": "1440 GET zero business effects",
+      "pass": true
+    },
+    {
+      "name": "1440 CSP preserved",
+      "pass": true
+    },
+    {
+      "name": "1440 cache no-store",
+      "pass": true
+    },
+    {
+      "name": "1440 denied null",
+      "pass": true
+    },
+    {
+      "name": "1440 denied zero business effects",
+      "pass": true
+    },
+    {
+      "name": "1440 denied https://forged.example",
+      "pass": true
+    },
+    {
+      "name": "1440 denied zero business effects",
+      "pass": true
+    },
+    {
+      "name": "1440 cross-origin referrer absent",
+      "pass": true
+    },
+    {
+      "name": "1440 native POST200",
+      "pass": true
+    },
+    {
+      "name": "1440 native configured Origin",
+      "pass": true
+    },
+    {
+      "name": "1440 suppression added",
+      "pass": true
+    },
+    {
+      "name": "1440 queued future job cancelled",
+      "pass": true
+    },
+    {
+      "name": "1440 duplicate200",
+      "pass": true
+    },
+    {
+      "name": "1440 duplicate idempotent",
+      "pass": true
+    },
+    {
+      "name": "390 HTML policy same-origin",
+      "pass": true
+    },
+    {
+      "name": "390 GET zero business effects",
+      "pass": true
+    },
+    {
+      "name": "390 CSP preserved",
+      "pass": true
+    },
+    {
+      "name": "390 cache no-store",
+      "pass": true
+    },
+    {
+      "name": "390 denied null",
+      "pass": true
+    },
+    {
+      "name": "390 denied zero business effects",
+      "pass": true
+    },
+    {
+      "name": "390 denied https://forged.example",
+      "pass": true
+    },
+    {
+      "name": "390 denied zero business effects",
+      "pass": true
+    },
+    {
+      "name": "390 cross-origin referrer absent",
+      "pass": true
+    },
+    {
+      "name": "390 native POST200",
+      "pass": true
+    },
+    {
+      "name": "390 native configured Origin",
+      "pass": true
+    },
+    {
+      "name": "390 suppression added",
+      "pass": true
+    },
+    {
+      "name": "390 queued future job cancelled",
+      "pass": true
+    },
+    {
+      "name": "390 duplicate200",
+      "pass": true
+    },
+    {
+      "name": "390 duplicate idempotent",
+      "pass": true
+    }
+  ],
+  "http": [],
+  "console": [],
+  "page_errors": [],
+  "failures": [],
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 900,
+      "before": {
+        "suppression": [],
+        "enrollments": [
+          {
+            "id": "1fb42c15-a458-429d-828a-95805904be8d",
+            "state": "active"
+          },
+          {
+            "id": "4c3e255e-62f4-4435-b279-8fcbeea21c28",
+            "state": "active"
+          },
+          {
+            "id": "a89edf39-ad9a-4a9b-a1b0-eb19727a9f86",
+            "state": "active"
+          }
+        ],
+        "jobs": [
+          {
+            "state": "queued",
+            "count": 3
+          },
+          {
+            "state": "submitted",
+            "count": 3
+          }
+        ],
+        "consents": [
+          {
+            "scope": "campaign",
+            "revoked_at": null
+          }
+        ],
+        "grants": 0
+      },
+      "after": {
+        "suppression": [
+          {
+            "recipient_hash": "3e715f891eb477eb6a2ffe166942d961152e73fd9a0f22c979c20dbf77b1da65"
+          }
+        ],
+        "enrollments": [
+          {
+            "id": "1fb42c15-a458-429d-828a-95805904be8d",
+            "state": "active"
+          },
+          {
+            "id": "4c3e255e-62f4-4435-b279-8fcbeea21c28",
+            "state": "suppressed"
+          },
+          {
+            "id": "a89edf39-ad9a-4a9b-a1b0-eb19727a9f86",
+            "state": "active"
+          }
+        ],
+        "jobs": [
+          {
+            "state": "cancelled",
+            "count": 1
+          },
+          {
+            "state": "queued",
+            "count": 2
+          },
+          {
+            "state": "submitted",
+            "count": 3
+          }
+        ],
+        "consents": [
+          {
+            "scope": "campaign",
+            "revoked_at": null
+          }
+        ],
+        "grants": 0
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "before": {
+        "suppression": [
+          {
+            "recipient_hash": "3e715f891eb477eb6a2ffe166942d961152e73fd9a0f22c979c20dbf77b1da65"
+          }
+        ],
+        "enrollments": [
+          {
+            "id": "1fb42c15-a458-429d-828a-95805904be8d",
+            "state": "active"
+          },
+          {
+            "id": "4c3e255e-62f4-4435-b279-8fcbeea21c28",
+            "state": "suppressed"
+          },
+          {
+            "id": "a89edf39-ad9a-4a9b-a1b0-eb19727a9f86",
+            "state": "active"
+          }
+        ],
+        "jobs": [
+          {
+            "state": "cancelled",
+            "count": 1
+          },
+          {
+            "state": "queued",
+            "count": 2
+          },
+          {
+            "state": "submitted",
+            "count": 3
+          }
+        ],
+        "consents": [
+          {
+            "scope": "campaign",
+            "revoked_at": null
+          }
+        ],
+        "grants": 0
+      },
+      "after": {
+        "suppression": [
+          {
+            "recipient_hash": "1db50f9ede2b36e1664ff1f152f4a7113ae0a890cef03ad7b00d4490467d43db"
+          },
+          {
+            "recipient_hash": "3e715f891eb477eb6a2ffe166942d961152e73fd9a0f22c979c20dbf77b1da65"
+          }
+        ],
+        "enrollments": [
+          {
+            "id": "1fb42c15-a458-429d-828a-95805904be8d",
+            "state": "suppressed"
+          },
+          {
+            "id": "4c3e255e-62f4-4435-b279-8fcbeea21c28",
+            "state": "suppressed"
+          },
+          {
+            "id": "a89edf39-ad9a-4a9b-a1b0-eb19727a9f86",
+            "state": "active"
+          }
+        ],
+        "jobs": [
+          {
+            "state": "cancelled",
+            "count": 2
+          },
+          {
+            "state": "queued",
+            "count": 1
+          },
+          {
+            "state": "submitted",
+            "count": 3
+          }
+        ],
+        "consents": [
+          {
+            "scope": "campaign",
+            "revoked_at": null
+          }
+        ],
+        "grants": 0
+      }
+    }
+  ],
+  "browser_version": "153.0.8010.12",
+  "requests": [
+    {
+      "method": "GET",
+      "origin_class": "absent",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "origin_class": "opaque-null",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "origin_class": "other",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "origin_class": "absent",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "origin_class": "configured",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "origin_class": "absent",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "origin_class": "configured",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "origin_class": "absent",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "origin_class": "opaque-null",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "origin_class": "other",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "origin_class": "absent",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "origin_class": "configured",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "origin_class": "absent",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "origin_class": "configured",
+      "status": 200
+    }
+  ],
+  "cleanup": {
+    "contexts_closed": true,
+    "bridge_closed": true,
+    "sockets_destroyed": true,
+    "shared_browser_preserved": true
+  }
+}

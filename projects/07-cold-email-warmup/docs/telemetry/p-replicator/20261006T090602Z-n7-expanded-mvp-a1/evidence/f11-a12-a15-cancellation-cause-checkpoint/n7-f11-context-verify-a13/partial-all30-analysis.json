@@ -1,0 +1,260 @@
+{
+  "bodyFault": true,
+  "full300": false,
+  "measured_runtime_ms": 150688,
+  "denominator": 30,
+  "ready": 13,
+  "unfinished": 17,
+  "partial_max_header_gap_ms": 19798,
+  "partial_max_fair_due_ms": 14936.0,
+  "resource_peaks": {
+    "imap": 4,
+    "body": 3,
+    "smtp": 1,
+    "windows": 3
+  },
+  "smtp_DATA_N": 19,
+  "participants": [
+    {
+      "mailbox": "909fdb61-33af-445e-bcbf-79982d7cb727",
+      "ready": false,
+      "ready_ms_from_seed": null,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 15011,
+      "partial_max_fair_due_ms": 14561.0
+    },
+    {
+      "mailbox": "22904f79-4894-4fa1-9c33-34fd07e23f08",
+      "ready": true,
+      "ready_ms_from_seed": 16139,
+      "complete_header_count": 16,
+      "partial_max_header_gap_ms": 19760,
+      "partial_max_fair_due_ms": 11729.0
+    },
+    {
+      "mailbox": "c28605c5-cd1a-4789-acb1-23e40312a2a6",
+      "ready": false,
+      "ready_ms_from_seed": null,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 14922,
+      "partial_max_fair_due_ms": 14404.0
+    },
+    {
+      "mailbox": "2fe31b82-84f0-4059-b365-1a7b7c2092f3",
+      "ready": true,
+      "ready_ms_from_seed": 102185,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 16905,
+      "partial_max_fair_due_ms": 13719.0
+    },
+    {
+      "mailbox": "e929d383-175b-4f85-9cbc-bd1a24008194",
+      "ready": false,
+      "ready_ms_from_seed": null,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 14610,
+      "partial_max_fair_due_ms": 14247.0
+    },
+    {
+      "mailbox": "8927a5ef-1296-49d2-a56b-71f9a8949916",
+      "ready": false,
+      "ready_ms_from_seed": null,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 14659,
+      "partial_max_fair_due_ms": 14149.0
+    },
+    {
+      "mailbox": "7858d249-63df-471c-add1-7a8c7b1563a3",
+      "ready": false,
+      "ready_ms_from_seed": null,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 14796,
+      "partial_max_fair_due_ms": 14275.0
+    },
+    {
+      "mailbox": "86e86062-7f3d-422b-a83a-7f67c1301d72",
+      "ready": true,
+      "ready_ms_from_seed": 39213,
+      "complete_header_count": 15,
+      "partial_max_header_gap_ms": 19475,
+      "partial_max_fair_due_ms": 11536.0
+    },
+    {
+      "mailbox": "39f82834-b406-439e-a5f8-2f3e3ada0619",
+      "ready": true,
+      "ready_ms_from_seed": 40064,
+      "complete_header_count": 15,
+      "partial_max_header_gap_ms": 18875,
+      "partial_max_fair_due_ms": 12710.0
+    },
+    {
+      "mailbox": "4059991e-859a-46fa-95aa-e444d62c19f3",
+      "ready": true,
+      "ready_ms_from_seed": 40567,
+      "complete_header_count": 15,
+      "partial_max_header_gap_ms": 18905,
+      "partial_max_fair_due_ms": 12606.0
+    },
+    {
+      "mailbox": "90195886-f8a6-4b68-831d-330368cdb94b",
+      "ready": true,
+      "ready_ms_from_seed": 123128,
+      "complete_header_count": 12,
+      "partial_max_header_gap_ms": 17708,
+      "partial_max_fair_due_ms": 14082.0
+    },
+    {
+      "mailbox": "3d69c926-ff88-4bfa-bc55-e2b4c5a6f1eb",
+      "ready": true,
+      "ready_ms_from_seed": 80284,
+      "complete_header_count": 14,
+      "partial_max_header_gap_ms": 17355,
+      "partial_max_fair_due_ms": 13666.0
+    },
+    {
+      "mailbox": "fcf5824c-7ee0-40a7-ad92-0123a124dabf",
+      "ready": false,
+      "ready_ms_from_seed": null,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 15543,
+      "partial_max_fair_due_ms": 14936.0
+    },
+    {
+      "mailbox": "9e53dca1-f326-40ca-882d-98e5a5bf3fe3",
+      "ready": false,
+      "ready_ms_from_seed": null,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 13896,
+      "partial_max_fair_due_ms": 13605.0
+    },
+    {
+      "mailbox": "2e21da50-7104-4e06-9573-950659d7dee3",
+      "ready": true,
+      "ready_ms_from_seed": 79900,
+      "complete_header_count": 14,
+      "partial_max_header_gap_ms": 17398,
+      "partial_max_fair_due_ms": 13698.0
+    },
+    {
+      "mailbox": "6e05c294-122d-4550-a33d-6644fbf11ff0",
+      "ready": true,
+      "ready_ms_from_seed": 143260,
+      "complete_header_count": 12,
+      "partial_max_header_gap_ms": 14762,
+      "partial_max_fair_due_ms": 14440.0
+    },
+    {
+      "mailbox": "8e993a88-8287-4887-945e-116aae610d47",
+      "ready": false,
+      "ready_ms_from_seed": null,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 14226,
+      "partial_max_fair_due_ms": 13852.0
+    },
+    {
+      "mailbox": "fd7b4d4d-b1cb-4492-b94a-31ce77f4c9e8",
+      "ready": false,
+      "ready_ms_from_seed": null,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 15255,
+      "partial_max_fair_due_ms": 14718.0
+    },
+    {
+      "mailbox": "862ef17b-3385-4a7a-83fd-ed694ad997e0",
+      "ready": false,
+      "ready_ms_from_seed": null,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 14749,
+      "partial_max_fair_due_ms": 14282.0
+    },
+    {
+      "mailbox": "bbb7e806-772f-4b83-9878-d0a5be8b2778",
+      "ready": false,
+      "ready_ms_from_seed": null,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 14903,
+      "partial_max_fair_due_ms": 13613.0
+    },
+    {
+      "mailbox": "821d1baa-055d-45cc-94f6-46a518d3d863",
+      "ready": false,
+      "ready_ms_from_seed": null,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 14706,
+      "partial_max_fair_due_ms": 14391.0
+    },
+    {
+      "mailbox": "fdb36535-4bdb-4eed-861b-1f44e14f825d",
+      "ready": false,
+      "ready_ms_from_seed": null,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 15295,
+      "partial_max_fair_due_ms": 14715.0
+    },
+    {
+      "mailbox": "de76e787-49a4-47c7-adeb-99664e9590c0",
+      "ready": false,
+      "ready_ms_from_seed": null,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 14933,
+      "partial_max_fair_due_ms": 14150.0
+    },
+    {
+      "mailbox": "122f1516-8aee-43c1-a5c9-e019109dbd68",
+      "ready": true,
+      "ready_ms_from_seed": 28213,
+      "complete_header_count": 15,
+      "partial_max_header_gap_ms": 19423,
+      "partial_max_fair_due_ms": 12262.0
+    },
+    {
+      "mailbox": "1ee9522b-9da3-4678-a4fb-1da5c7874697",
+      "ready": true,
+      "ready_ms_from_seed": 28169,
+      "complete_header_count": 16,
+      "partial_max_header_gap_ms": 19279,
+      "partial_max_fair_due_ms": 12277.0
+    },
+    {
+      "mailbox": "0770c4e1-8f38-4088-a46b-8080cf168573",
+      "ready": true,
+      "ready_ms_from_seed": 16768,
+      "complete_header_count": 16,
+      "partial_max_header_gap_ms": 19798,
+      "partial_max_fair_due_ms": 11538.0
+    },
+    {
+      "mailbox": "ae2924fa-d031-426b-b72f-c2c8bb0b0564",
+      "ready": false,
+      "ready_ms_from_seed": null,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 14778,
+      "partial_max_fair_due_ms": 14076.0
+    },
+    {
+      "mailbox": "57862ee4-6000-449b-bdf4-14a30d2002f7",
+      "ready": true,
+      "ready_ms_from_seed": 80848,
+      "complete_header_count": 14,
+      "partial_max_header_gap_ms": 17230,
+      "partial_max_fair_due_ms": 14360.0
+    },
+    {
+      "mailbox": "f434aa42-cf56-467f-935a-c93f9517edcb",
+      "ready": false,
+      "ready_ms_from_seed": null,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 14979,
+      "partial_max_fair_due_ms": 14300.0
+    },
+    {
+      "mailbox": "c218b8a1-bd6e-41e2-9655-eb2a5b001f99",
+      "ready": false,
+      "ready_ms_from_seed": null,
+      "complete_header_count": 13,
+      "partial_max_header_gap_ms": 15156,
+      "partial_max_fair_due_ms": 14712.0
+    }
+  ],
+  "warning": "Partial intervals only; no full300 or240s ALL30 liveness claim"
+}

@@ -1,0 +1,267 @@
+{
+  "researched_at": "2026-10-08",
+  "started_at": "2026-10-08 06:33:46 UTC",
+  "finished_at": "2026-10-08 06:38:37 UTC",
+  "profile": "bounded_read_only_research",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning": "high",
+  "actual_model": null,
+  "actual_model_reason": "Execution metadata not exposed to subagent",
+  "input_tokens": null,
+  "output_tokens": null,
+  "cost_usd": null,
+  "usage_gap_reason": "Tool/session usage counters not exposed",
+  "e2e_status": "not_applicable",
+  "e2e_reason": "Policy and pricing research; no cloud account or deployment; no live endpoint connectivity proof",
+  "sources": [
+    {
+      "id": "do_smtp",
+      "url": "https://docs.digitalocean.com/support/why-is-smtp-blocked/",
+      "claim": "DO Droplet SMTP25/465/587 default block includes Reserved IP",
+      "type": "official_docs",
+      "source_date": "2026-07-13",
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "do_limits",
+      "url": "https://docs.digitalocean.com/products/droplets/details/limits/",
+      "claim": "DO all Droplet SMTP ports blocked; SMTPIPv6 restricted",
+      "type": "official_docs",
+      "source_date": "2026-08-19",
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "do_pricing",
+      "url": "https://www.digitalocean.com/pricing/droplets",
+      "claim": "DO512MiB1vCPU$4;1GiB$6",
+      "type": "official_pricing",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "do_app_pricing",
+      "url": "https://docs.digitalocean.com/products/app-platform/details/pricing/",
+      "claim": "DO App containers from$5, workers, no SMTP egress conclusion",
+      "type": "official_pricing",
+      "source_date": "2026-07-13",
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "do_app_limits",
+      "url": "https://docs.digitalocean.com/products/app-platform/details/limits/",
+      "claim": "Cannot open SMTP ports wording ambiguous; not outbound evidence",
+      "type": "official_docs",
+      "source_date": "2026-05-20",
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "do_network",
+      "url": "https://docs.digitalocean.com/support/networking/",
+      "claim": "Outbound80/443 metrics use",
+      "type": "official_docs",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "railway_outbound",
+      "url": "https://docs.railway.com/networking/outbound-networking",
+      "claim": "SMTPPro+;redeploy;25/465/587/2525diagnostic;IPv6opt-in",
+      "type": "official_docs",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "railway_pricing",
+      "url": "https://railway.com/pricing",
+      "claim": "Pro$20minimumusage includes$20credits",
+      "type": "official_pricing",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "railway_static",
+      "url": "https://docs.railway.com/networking/static-outbound-ips",
+      "claim": "Pro HA3IPs;may shared;regionchangesIP",
+      "type": "official_docs",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "railway_container",
+      "url": "https://docs.railway.com/platform/philosophy",
+      "claim": "StatefulDockercontainers, optionalServerless",
+      "type": "official_docs",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "railway_docker",
+      "url": "https://docs.railway.com/builds/dockerfiles",
+      "claim": "Dockerfilebuild support",
+      "type": "official_docs",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "railway_sleep",
+      "url": "https://docs.railway.com/deployments/serverless",
+      "claim": "Optionalsleep;needsdisabledalways-on",
+      "type": "official_docs",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "fly25",
+      "url": "https://community.fly.io/t/outbound-port-25-direct-to-mx-smtp-blocked-by-default-on-new-accounts/28537/4",
+      "claim": "flyio-support no peraccount port25block",
+      "type": "official_staff_forum",
+      "source_date": "2026-08-23",
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "fly587",
+      "url": "https://community.fly.io/t/request-to-unblock-outbound-smtp-port-587-for-app-rialma-api/27164/2",
+      "claim": "lillian outbound587notblocked",
+      "type": "official_staff_forum",
+      "source_date": "2026-02-19",
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "fly587_metadata",
+      "url": "https://community.fly.io/t/27164.json",
+      "claim": "post2 username=lillian staff/admin/moderator=true",
+      "type": "official_public_metadata",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "fly_staff_profile",
+      "url": "https://community.fly.io/u/lillian.json",
+      "claim": "admin=true moderator=true",
+      "type": "official_public_metadata",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "fly_troubleshooting",
+      "url": "https://docs.fly.io/getting-started/troubleshooting",
+      "claim": "Outboundsection ingressmix notvalidSMTPegressblockevidence",
+      "type": "official_docs",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "fly_machines",
+      "url": "https://docs.fly.io/machines/overview",
+      "claim": "VM container-image lifecycle",
+      "type": "official_docs",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "fly_config",
+      "url": "https://docs.fly.io/reference/configuration",
+      "claim": "auto_stop_machines off preventproxyautostop",
+      "type": "official_docs",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "fly_pricing",
+      "url": "https://docs.fly.io/about/pricing",
+      "claim": "Current$2.19/$3.69/$6.70iadewr;trial2h7days;egress$3.60",
+      "type": "official_pricing",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "fly_update",
+      "url": "https://fly.io/pricing-update/",
+      "claim": "1Oct2026pricing update",
+      "type": "official_pricing",
+      "source_date": "2026-10-01",
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "fly_egress",
+      "url": "https://docs.fly.io/networking/egress-ips",
+      "claim": "Unstableegress default;appstatic perregion survivesrecreation",
+      "type": "official_docs",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "render_smtp",
+      "url": "https://render.com/changelog/free-web-services-will-no-longer-allow-outbound-traffic-to-smtp-ports",
+      "claim": "Free25/465/587allregionsblocked;anypaidinstance allows",
+      "type": "official_changelog",
+      "source_date": "2025-09-16",
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "render_free",
+      "url": "https://render.com/docs/free",
+      "claim": "Paidcompute removesfreeSMTP limitation;workspaceupgrade insufficient;workersnofree",
+      "type": "official_docs",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "render_workers",
+      "url": "https://render.com/docs/background-workers",
+      "claim": "Continuous background service withnoingress",
+      "type": "official_docs",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "render_docker",
+      "url": "https://render.com/docs/docker",
+      "claim": "Dockerfileorprebuiltimage support",
+      "type": "official_docs",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "render_pricing",
+      "url": "https://render.com/pricing?trk=article-ssr-frontend-pulse_little-text-block",
+      "claim": "Hobbyworkspace$0+compute;worker512MB$7;2GB$25",
+      "type": "official_pricing",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    },
+    {
+      "id": "render_egress",
+      "url": "https://render.com/docs/outbound-ip-addresses",
+      "claim": "Sharedregionalranges;pre2022Oregonexception;optional dedicated",
+      "type": "official_docs",
+      "source_date": null,
+      "access_date": "2026-10-08"
+    }
+  ],
+  "port_993_status": "Explicit policy confirmation not found for any researched platform",
+  "fly_port_465_status": "Explicit policy confirmation not found",
+  "fly_staff_metadata": {
+    "username": "lillian",
+    "post_number": 2,
+    "staff": true,
+    "admin": true,
+    "moderator": true
+  },
+  "artifacts_checks": [
+    "JSON parsed successfully",
+    "report saved as UTF-8",
+    "only authorized /tmp directory written"
+  ],
+  "duration_seconds": 291,
+  "confidence": {
+    "do_droplet_block": "high_explicit_official_policy",
+    "railway_pro_requirement": "high_explicit_official_policy",
+    "render_paid_compute": "high_explicit_official_policy",
+    "fly_587_staff_statement": "high_verified_staff_narrow_statement",
+    "fly_587_any_account_region": "medium_not_live_tested",
+    "fly_465": "insufficient_evidence",
+    "imap_993_all": "insufficient_evidence",
+    "node22_childprocess_container_compatibility": "medium_architectural_inference_not_runtime_test"
+  }
+}

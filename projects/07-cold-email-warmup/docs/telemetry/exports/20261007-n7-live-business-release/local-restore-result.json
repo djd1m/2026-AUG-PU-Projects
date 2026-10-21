@@ -1,0 +1,30 @@
+{
+  "status": "completed_local_restore_composite",
+  "finished_at": "2026-10-07T18:56:47.458045+00:00",
+  "canary": {
+    "decryption_count": 2,
+    "successful": true
+  },
+  "module_hashes": {
+    "dist/mailboxes/crypto.js": "57da121f012021b88d6433abf7a90a6b823275586cd9739834011edb9b794a00",
+    "dist/errors.js": "960a11b1d06cc22ca03989ba183dfd16d1322b19cf9b8744874a9cd624fe9c4b"
+  },
+  "crypto_source_equal_main": true,
+  "source_database_mutated": false,
+  "provider_calls": false,
+  "backup_sha256": "c0847e4a8ebf3d21f55acb6e373661cfa7248ec45893f54dfccfab2ddd601c95",
+  "dump_sha256": "fd715e11aff073199357c52ef32f9d64a4c4f2cd9c36d2a18ae89dffe40e6055",
+  "backup_bytes": 31807,
+  "previous_attempt": "a6 failed at missing main dist module after snapshot-consistent table fingerprints, key equality, restore and constraint checks passed",
+  "table_data_fingerprints": "passed in a6 before canary step; same restored database and backup reused",
+  "constraints": {
+    "exact_equal": false,
+    "exception": "PostgreSQL dump/reparse flattens associative AND for reply_rescan_check only",
+    "atomic_predicates_identical": true,
+    "boundary_null_witnesses": 512,
+    "different_evaluations": 0
+  },
+  "key_files_equal": true,
+  "offhost_backup": "pending_destination",
+  "key_escrow": "private_local_only"
+}

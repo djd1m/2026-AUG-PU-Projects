@@ -1,0 +1,39 @@
+{
+  "stage": "F10 corrective mandatory native A\u2013D/E fairness witness",
+  "status": "launching",
+  "source_revision": "74766159b38c0e346832992c3be7b62851aad577",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "scope": "existing approved SC-F10-002/003 verification gap; no new product contract",
+  "allowed_product_files": [
+    "projects/07-cold-email-warmup/tests/f10-runtime-protocol.test.ts",
+    "projects/07-cold-email-warmup/tests/f10-runtime-process-fixture.ts",
+    "projects/07-cold-email-warmup/tests/f10-runtime-fixture.ts"
+  ],
+  "production_changes": false,
+  "normative_revision": "dfb3219e58a86dbf0a16b68e4fb6f26def99a4da",
+  "normative_clause": "docs/features/f10-durable-runtime/04_refinement.md lines44/46/58",
+  "AC": [
+    "same tenant A\u2013D older due_at enough successful5s native pagequanta exceed30s window",
+    "laterdue healthy E eligible before firstclaims",
+    "A\u2013D firstquantum each then E beforeany A\u2013D secondquantum",
+    "E actual healthycompletion<=30s/fairselection<=60s",
+    "competingworkers/restart preserveoriginaldueAt/persistedserviceSeq/no overlappingclaim",
+    "everyselectedquantum durableturn advancesonce beforeI/O; noextra physical lanes",
+    "20pages/120s cap and held explicitretry unchanged",
+    "ordering mutation oldestdue/resetseq yieldrestart produces named ASSERT RED; restore GREEN",
+    "all5 participants remain in raw selection/pagecompletion/fullpollcompletion/incomplete/ownership denominators; nocompleted-only filtering"
+  ],
+  "checks": "new exact existing protocoltitle only; localTLS/guarded ownDB/immutable runner/source hash/ownedjoin/PGmutex; existinggreen330/fullPG/physical reused by explicitdependency",
+  "budget_seconds": 1200,
+  "seal_reserve_seconds": 180,
+  "next": "freshcleanHIGHfocused independent reconciliation finalF10verdict; F11planvalidation next distinctstage",
+  "no_new_framework": true,
+  "started_at": "2026-10-06T20:49:05.366124+00:00",
+  "freeze_at": "2026-10-06T21:06:05.366124+00:00",
+  "deadline": "2026-10-06T21:09:05.366124+00:00",
+  "review_finding": "F10-A23-001 HIGH mandatory evidencegap; runtime defect not inferred",
+  "review_path": "/tmp/n7-f10-independent-review-a23/review.md",
+  "review_sha256": "833109353de9e01b1238dcb9d328982cae9cdd18ce8d0982ed5fda5a65a1ba05"
+}

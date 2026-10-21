@@ -1,0 +1,29 @@
+{
+  "status": "ready",
+  "source_revision": "094a13c7b1653ecac853f73a8d2e20c34ab16b93",
+  "build_revision": "sha256:ff4d0d287194a97b2ba53df83ac94cd0af42fd3b50100063a188c38c20b71053",
+  "environment": "Isolated n6b-f08-ui Docker stack, no published DB ports, shared codex-ui-playwright attached to own network",
+  "test_command": "docker exec -w /opt/browser codex-ui-playwright node /opt/browser/n6b-f08-ui.mjs /opt/browser/n6b-f08-fixture.json /opt/browser/n6b-f08-output",
+  "inputs": [
+    {
+      "name": "Random private fixture and real registration/session/publication API and PG",
+      "available": true
+    },
+    {
+      "name": "18 source/test bytes match implementation snapshot; full regression exit0",
+      "available": true
+    }
+  ],
+  "environment_available": true,
+  "expected_effects": [
+    "Create two temporary accounts and real site bots, publish via real authenticated PATCH, verify contact/origin/foreign ownership/persistence/code/pending/layout; real responses delayed200ms only to observe pending",
+    "Save screenshots/report; remove own stack and private fixture"
+  ],
+  "evidence_root": {
+    "root": "project",
+    "path": "tests/artifacts/publish-bot/ui-output/report.json"
+  },
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "checked_at": "2026-10-02T22:22:23.162780+00:00"
+}

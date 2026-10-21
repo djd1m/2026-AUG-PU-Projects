@@ -1,0 +1,44 @@
+{
+  "schema_version": "1",
+  "policy_version": "model-routing-econom-20261006",
+  "run_id": "20261007-svg-hero-03",
+  "batch_id": "20261007-svg-heroes",
+  "project": "projects/03-affiliate-rewardful",
+  "feature": "animated-svg-hero",
+  "pipeline": "planner-author-independent-review-browser",
+  "tier": "S",
+  "risk_flags": [],
+  "profile": "model-routing-econom",
+  "baseline_revision": "732df4cccca8cd03bdaa51eaafe49adac23f01ee",
+  "spec_sha256": "727f776124564d2de728763a92b17cde3159c20f28b71658a8fee056191b5bdd",
+  "started_at": "2026-10-07T21:47:56.085425+00:00",
+  "status": "completed",
+  "actual_model": null,
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 8,
+    "ac_total": 8,
+    "first_pass": false,
+    "confirmed_findings": 1,
+    "followup_status": "none required"
+  },
+  "metrics": {
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null,
+    "elapsed_wall_ms": 1025486
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "host actual model/usage/cost unavailable"
+  ],
+  "continuation": "Focused proof PASS; fresh independent narrow review launch",
+  "ended_at": "2026-10-07T22:05:01.571051+00:00",
+  "final_revision": "uncommitted SVG15291af0178a99424cbd076c13b5270b76634a9276292bc75adb8ab9745d4235",
+  "acceptance_evidence": [
+    "docs/features/svg-hero-20261007/review-a1.md",
+    "docs/features/svg-hero-20261007/review-a2.md",
+    "docs/features/svg-hero-20261007/browser-a1/report.json",
+    "docs/features/svg-hero-20261007/browser-a2/report.json"
+  ]
+}

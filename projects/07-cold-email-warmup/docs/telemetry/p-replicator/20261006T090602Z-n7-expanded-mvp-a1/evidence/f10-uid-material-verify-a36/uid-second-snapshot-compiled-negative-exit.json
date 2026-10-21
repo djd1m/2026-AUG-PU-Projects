@@ -1,0 +1,65 @@
+{
+  "utc": "2026-10-06T23:14:19.327044+00:00",
+  "native_exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 33.16867328993976,
+  "pid": 444870,
+  "startticks": "125143615",
+  "runner_pid": 397326,
+  "PG": {
+    "at": "2026-10-06T23:14:19.134Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB_slots_claims_after_join": {
+    "utc": "2026-10-06T23:14:19.310Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 2,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 3,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 4,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 2,
+        "occupied": false
+      }
+    ]
+  },
+  "owned_nodes": [],
+  "assertion_failure": true,
+  "failure_titles": [
+    "not ok 1 - explicit retry captures changed native UID proof in one quantum without old FETCH or freshness"
+  ],
+  "tap_sha256": "0c3c6a7b9b9db215eeda0e81d865d1b38bb179b5185e50ec17ee46a3b9e24366",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -1,0 +1,25 @@
+{
+  "versionPins": {
+    "imapflow": "2.2.6",
+    "nodemailer": "10.0.15"
+  },
+  "files": {
+    "node_modules/imapflow/package.json": "2eaee15a684970bc74d2fc7d520435ecc2510fd8dc7f7b4b871ff468c3debecd",
+    "node_modules/imapflow/dist/esm/types.d.ts": "4fb351c53e3151b147e71897c62d1ac8ab99271fec206b2a318804e1f24db6b4",
+    "node_modules/imapflow/dist/esm/imap-flow.js": "6a97b527bd05774874b0149f21883e9f022db089dfc5be8d298605ef5f55a55e",
+    "node_modules/imapflow/dist/esm/handler/imap-stream.js": "2e24457066fd4333b7a81e3da76040bff396e0b09aba3576c991c7090ba47be3",
+    "node_modules/nodemailer/package.json": "5fa4fd8866ae6b39faa90cc71d750ce44a96bbf4a0156e62ad80b43eb31f69e6",
+    "node_modules/nodemailer/dist/esm/smtp-connection/index.js": "f35b6dc75f1237d68235d65df2ef19c8058699651c4eb7e1fc376eae5e9c85c6"
+  },
+  "publicExports": [
+    "imapflow",
+    "nodemailer/lib/smtp-connection"
+  ],
+  "publicOptions": [
+    "maxLiteralSize",
+    "maxLineLength",
+    "maxResponseSize",
+    "stats()"
+  ],
+  "notUsed": "private parser/action hooks"
+}

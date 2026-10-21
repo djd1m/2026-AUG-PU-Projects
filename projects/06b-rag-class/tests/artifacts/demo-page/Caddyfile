@@ -1,0 +1,16 @@
+{
+ auto_https disable_redirects
+}
+https://n6b-ui.test {
+ tls internal
+ handle /api/demo/*/ask {
+  reverse_proxy bridge:3001
+ }
+ handle {
+  reverse_proxy web:3000
+ }
+}
+https://demo-host.test, https://demo-denied.test {
+ tls internal
+ reverse_proxy bridge:3001
+}

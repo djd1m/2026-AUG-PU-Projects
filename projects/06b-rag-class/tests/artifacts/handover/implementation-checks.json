@@ -1,0 +1,234 @@
+{
+  "run_id": "20261003T042338Z-handover",
+  "work_unit_id": "handover-implementation",
+  "attempt_id": "implementation-1",
+  "source_revision": "3890760ff1ea36440e938db70c58e21754f44aa4",
+  "build_revision": null,
+  "launch_sha256": "f2438a6b6361424078d9f65a57204a0123c74419b3417e04c48523c9233b5f84",
+  "source_snapshot": {
+    "path": "tests/artifacts/handover/implementation-source-hashes.json",
+    "sha256": "0c1ea7f83dedd9fd498141157982df546363ecf67b19ca325fad76dd76d1d4fe",
+    "count": 22,
+    "frozen_at": "2026-10-03T04:51:57.286799+00:00"
+  },
+  "limits": {
+    "budget_seconds": 1500,
+    "node_path": "/tmp/n6b-f06-node22/bin",
+    "no_children_agents": true,
+    "docker_runtime_authorized_to_author": false,
+    "files_under_500": {
+      "apps/web/next.config.mjs": 41,
+      "apps/web/src/app/api/handover/[token]/route.ts": 4,
+      "apps/web/src/app/api/studio/clients/[id]/handover/route.ts": 4,
+      "apps/web/src/app/cabinet/page.tsx": 77,
+      "apps/web/src/app/cabinet/studio-clients.tsx": 78,
+      "apps/web/src/app/globals.css": 83,
+      "apps/web/src/app/handover/[token]/handover-form.tsx": 41,
+      "apps/web/src/app/handover/[token]/page.tsx": 12,
+      "apps/web/src/middleware.ts": 18,
+      "apps/web/src/server/auth-handler.ts": 126,
+      "apps/web/src/server/auth.ts": 84,
+      "apps/web/src/server/handover-handler.ts": 93,
+      "apps/web/src/server/runtime.ts": 116,
+      "apps/web/tests/int/handover-fixture.ts": 77,
+      "apps/web/tests/int/handover-race.int.test.ts": 208,
+      "apps/web/tests/int/handover.int.test.ts": 173,
+      "apps/web/tests/unit/auth-handler.test.ts": 190,
+      "apps/web/tests/unit/handover-handler.test.ts": 122,
+      "apps/web/tests/unit/handover-ui.test.ts": 31,
+      "packages/db/src/handover.ts": 88,
+      "packages/db/src/index.ts": 21,
+      "tests/artifacts/handover/mutate-critical-guard.mjs": 62
+    },
+    "scope_check": "exact planned source/test/script allowlist"
+  },
+  "checks": [
+    {
+      "id": "route",
+      "command": "bash ../../scripts/complexity-router.sh packages/db/src/handover.ts apps/web/src/server/handover-handler.ts 'apps/web/src/app/api/handover/[token]/route.ts' 'apps/web/src/app/api/studio/clients/[id]/handover/route.ts'",
+      "exit": 0,
+      "mechanical_tier": "M",
+      "substantive_tier": "XL"
+    },
+    {
+      "id": "typecheck-initial",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH npm run typecheck",
+      "exit": 0,
+      "evidence": {
+        "path": "tests/artifacts/handover/typecheck.log",
+        "sha256": "6c430cc6921daec9b23eabc76a5bfd546a1fb9db991bc8186c0cf609fee431ab"
+      }
+    },
+    {
+      "id": "unit-initial",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH node node_modules/vitest/vitest.mjs run --config vitest.config.ts apps/web/tests/unit/handover-handler.test.ts apps/web/tests/unit/handover-ui.test.ts apps/web/tests/unit/auth-handler.test.ts apps/web/tests/unit/studio-handler.test.ts apps/web/tests/unit/studio-clients-ui.test.ts",
+      "exit": 1,
+      "passed": 34,
+      "failed": 5,
+      "reason": "fixture used X-Real-IP instead of existing X-Forwarded-For helper",
+      "evidence": {
+        "path": "tests/artifacts/handover/focused-unit.log",
+        "sha256": "216a2bd7bc73791e6c19071a234a77e762196e03145780a73db09eca4390fa5e"
+      }
+    },
+    {
+      "id": "unit-fixed",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH node node_modules/vitest/vitest.mjs run --config vitest.config.ts apps/web/tests/unit/handover-handler.test.ts apps/web/tests/unit/handover-ui.test.ts apps/web/tests/unit/auth-handler.test.ts apps/web/tests/unit/studio-handler.test.ts apps/web/tests/unit/studio-clients-ui.test.ts",
+      "exit": 0,
+      "passed": 39,
+      "failed": 0,
+      "evidence": {
+        "path": "tests/artifacts/handover/focused-unit-fixed.log",
+        "sha256": "7a8cc4aefa7e7cdbfe8b45b0a893f6fe75819db71a204866c3977df2d8ed7822"
+      }
+    },
+    {
+      "id": "typecheck-with-pg-tests",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH npm run typecheck",
+      "exit": 0,
+      "evidence": {
+        "path": "tests/artifacts/handover/typecheck-final.log",
+        "sha256": "6c430cc6921daec9b23eabc76a5bfd546a1fb9db991bc8186c0cf609fee431ab"
+      }
+    },
+    {
+      "id": "unit-mutation-red",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH node node_modules/vitest/vitest.mjs run --config vitest.config.ts apps/web/tests/unit/handover-handler.test.ts apps/web/tests/unit/handover-ui.test.ts apps/web/tests/unit/auth-handler.test.ts apps/web/tests/unit/studio-handler.test.ts apps/web/tests/unit/studio-clients-ui.test.ts",
+      "exit": 1,
+      "passed": 38,
+      "failed": 1,
+      "expected_failure": true,
+      "mutation": "accept Origin guard removed; fixed HAN-02 Origin test assertion failed",
+      "evidence": {
+        "path": "tests/artifacts/handover/unit-mutation-red.log",
+        "sha256": "2c00d0c1412930c0523e32b5435df04ba22ba367db775b06b4c9534ed26c1bcc"
+      }
+    },
+    {
+      "id": "unit-mutation-restored-green",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH node node_modules/vitest/vitest.mjs run --config vitest.config.ts apps/web/tests/unit/handover-handler.test.ts apps/web/tests/unit/handover-ui.test.ts apps/web/tests/unit/auth-handler.test.ts apps/web/tests/unit/studio-handler.test.ts apps/web/tests/unit/studio-clients-ui.test.ts",
+      "exit": 0,
+      "passed": 39,
+      "failed": 0,
+      "evidence": {
+        "path": "tests/artifacts/handover/unit-mutation-restored-green.log",
+        "sha256": "6dfb458f933a3e988ababab375ed70d4aad4b99efbc8eb03320c8c449e15a359"
+      },
+      "byte_exact_restore": true,
+      "detail": {
+        "path": "tests/artifacts/handover/unit-mutation-result.json",
+        "sha256": "4303613315072f3bef594e18491e4cc33bb500b8247c9700f3a48529e1862485"
+      }
+    },
+    {
+      "id": "typecheck-final",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH npm run typecheck",
+      "exit": 0,
+      "evidence": {
+        "path": "tests/artifacts/handover/typecheck-frozen-candidate.log",
+        "sha256": "6c430cc6921daec9b23eabc76a5bfd546a1fb9db991bc8186c0cf609fee431ab"
+      }
+    },
+    {
+      "id": "unit-final",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH node node_modules/vitest/vitest.mjs run --config vitest.config.ts apps/web/tests/unit/handover-handler.test.ts apps/web/tests/unit/handover-ui.test.ts apps/web/tests/unit/auth-handler.test.ts apps/web/tests/unit/studio-handler.test.ts apps/web/tests/unit/studio-clients-ui.test.ts",
+      "exit": 0,
+      "passed": 40,
+      "failed": 0,
+      "files_passed": 5,
+      "evidence": {
+        "path": "tests/artifacts/handover/focused-unit-final.log",
+        "sha256": "bdd8b34a767fba7fd0e31db5414e5f41f18bca128d79b88929163d3a864a7527"
+      },
+      "reason": "added session material regression after mutation; fixed Origin test/source unchanged"
+    },
+    {
+      "id": "mutation-script-syntax",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH node --check tests/artifacts/handover/mutate-critical-guard.mjs",
+      "exit": 0
+    },
+    {
+      "id": "diff",
+      "command": "git diff --check",
+      "exit": 0
+    },
+    {
+      "id": "scope-and-size",
+      "command": "local Python exact source allowlist equality + linecounts <500",
+      "exit": 0,
+      "source_count": 22
+    }
+  ],
+  "pending": [
+    {
+      "id": "focused-pg",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH node node_modules/vitest/vitest.mjs run --config vitest.int.config.ts apps/web/tests/int/handover.int.test.ts apps/web/tests/int/handover-race.int.test.ts",
+      "exit": null,
+      "reason": "author prohibited Docker/ports/network; coordinator real isolated PG runner required"
+    },
+    {
+      "id": "critical-pg-mutation",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH node tests/artifacts/handover/mutate-critical-guard.mjs",
+      "exit": null,
+      "reason": "requires TEST_DATABASE_URL_OWNER/TEST_TENANT_PASSWORD/TEST_SERVICE_PASSWORD and exclusive source ownership"
+    },
+    {
+      "id": "all-unit",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH npm test",
+      "exit": null,
+      "reason": "coordinator frozen candidate full gate"
+    },
+    {
+      "id": "all-pg",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH npm run test:int",
+      "exit": null,
+      "reason": "coordinator frozen candidate real isolated PG full gate"
+    },
+    {
+      "id": "production-build",
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH npm run build",
+      "exit": null,
+      "reason": "coordinator frozen candidate full gate"
+    },
+    {
+      "id": "independent-review",
+      "command": "fresh independent Astra high <=480s; docs/features/handover/08_review.md",
+      "exit": null,
+      "reason": "coordinator review owner; no author children"
+    },
+    {
+      "id": "runtime-ui",
+      "command": "coordinator author and run tests/e2e/handover.mjs in actual Docker runtime after ready preflight",
+      "exit": null,
+      "reason": "coordinator-owned UI script/runtime; 1440/390 both branches/cookie/headers/404409410/login/reload/access/console/overflow/logs"
+    }
+  ],
+  "model": {
+    "requested": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "actual": null,
+    "actual_effort": null,
+    "fallback": null,
+    "reason": "worker native metadata is reconciled by outer coordinator; self-report cannot confirm model"
+  },
+  "usage": {
+    "input_tokens": null,
+    "cached_input_tokens": null,
+    "output_tokens": null,
+    "cost": null,
+    "reason": "author native usage and billing unavailable"
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "author did not execute E2E/runtime; build none"
+  },
+  "verdict": "author implementation scope completed; feature acceptance pending mandatory coordinator gates",
+  "finished_at": "2026-10-03T04:53:35.260083+00:00",
+  "elapsed_wall_seconds": 1189.617101,
+  "active_wall_seconds": null,
+  "final_snapshot_verified": true,
+  "documents": {
+    "docs/features/handover/03_validation.md": "3f9de000a5cbe4b27229dfc60223fd4c8152fd2df62677d3910db0ea9c0ea9b2",
+    "docs/features/handover/05_completion.md": "5cc312c6c285f984d6b20537fad7f6a97b69f425a796cf2e21db66b9da12385f"
+  }
+}

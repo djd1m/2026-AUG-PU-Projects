@@ -1,0 +1,38 @@
+{
+  "ack": "2026-10-07T03:47:09.267Z",
+  "launchCutoff": "2026-10-07T03:56:09.267Z",
+  "sealCutoff": "2026-10-07T03:59:09.267Z",
+  "profile": "model-routing-econom",
+  "requested": "gpt-6.1-sol MEDIUM",
+  "actualModel": null,
+  "usage": null,
+  "measurementGap": "host metadata unavailable; telemetry recorded after prerequisite reads",
+  "risk": "inherited XL; two-file diagnostic only; no product repair",
+  "baseline": "fb6fff054701663104ab24607915c2ab52b5baae",
+  "end": "2026-10-07T03:55:43.769639+00:00",
+  "elapsedSeconds": 514.502639,
+  "status": "completed diagnostic; F11 UNACCEPTED",
+  "commit": "b6b82cb83cdf7cb1d646784ad169af826e6c6852",
+  "checks": {
+    "typecheck": 0,
+    "targetLint": 0,
+    "nativeFinal": 0,
+    "rawMutations": 6,
+    "preservedOriginalTests": 3,
+    "terminalDB": 0,
+    "ownedAlivePidTicks": 0,
+    "mutexFree": true
+  },
+  "attemptFailures": [
+    "20s observation killed metadata before 2800ms; preserved raw",
+    "PG bigint generation string rejected by new assertion; corrected preserving raw"
+  ],
+  "mechanicalRouteLate": {
+    "exit": 1,
+    "tier": "L",
+    "effectiveRisk": "inherited XL",
+    "preEditGapPreserved": true
+  },
+  "remainingAC": "old ALL30/240s and header30s failures unresolved; no product repair permission; new fresh HIGH cause planner/reviewer required",
+  "cost": null
+}

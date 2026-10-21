@@ -1,0 +1,52 @@
+{
+  "run_id": "20261014T190754Z-openrouter-credit-guard",
+  "started_at": "2026-10-14T19:07:54.411072+00:00",
+  "status": "complete",
+  "profile": "compact-quality-first-v2",
+  "tier": "M",
+  "route": {
+    "mechanical": "L, existing external endpoint keyword false positive",
+    "substantive": "Existing adapter only; fresh weekly specification and architecture cover boundary. Remove BYOK flag predicate explicitly authorized by owner; caps/period/remaining/dispatch/ledger unchanged. No new calls or container interfaces.",
+    "exit_code": 1
+  },
+  "source_revision": "2c1cb02f29cb36b54f0da4e0ce4632c31fc5641b",
+  "models": [
+    {
+      "role": "coordinator",
+      "actual": null
+    }
+  ],
+  "tokens": null,
+  "cost": null,
+  "measurement_gaps": [
+    "Runtime model identity and billing unavailable"
+  ],
+  "ac": [
+    "false/true/absent BYOK flag accepted for valid credit-backed weekly/daily cap",
+    "invalid period/cap/remaining still rejected",
+    "tests, mutation, full regression, build and deployed GET verification"
+  ],
+  "scope": "Remove unnecessary BYOK proof requirement only; no inference calls or payment/account mutations",
+  "reuse": "existing N8 adapter and HTTP fixture; no new implementation/dependency",
+  "e2e": "not_applicable: server predicate only; test real HTTP adapter and production GET key without inference",
+  "ended_at": "2026-10-14T19:11:51.448766+00:00",
+  "elapsed_seconds": 237.0,
+  "checks": {
+    "provider": "9 passed, includes six daily/weekly flag combinations",
+    "mutation": "reintroduced old predicate: test fails as expected",
+    "full_suite": "266 tests / 40 files passed",
+    "lint": "passed",
+    "build": "passed",
+    "independent_review": "pass, no findings; actual reviewer model unavailable",
+    "deployed_key_verification": "passed; actual key $10 weekly with BYOK false; GET only",
+    "health": "web/worker healthy, public readiness200"
+  },
+  "build_revision": "sha256:d3ca645afd6509b5970e76262a0924a6899e86424c51388943fa4e18b8cd2423",
+  "inference_calls": 0,
+  "runtime_ai_mode": "manual (unchanged; no live activation in this correction)",
+  "lesson": "teach:cbc89a15b10460b4",
+  "source_hashes": {
+    "projects/08-interior-ai-redesign/packages/adapters/src/openrouter.ts": "ddb347a36e8eb7c7c38fe6f4768cd9b4947ed223bb35c14b40c3056247fa0a75",
+    "projects/08-interior-ai-redesign/tests/design/provider.test.ts": "a59827ebc4709d030b5eafe0ecd60152b4c92e47eac925ecb62913ac7165cd1e"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-frozen-verify-a20",
+  "launched_at": "2026-10-06T20:00:11.322999+00:00",
+  "freeze_at": "2026-10-06T20:17:11.322999+00:00",
+  "deadline": "2026-10-06T20:20:11.322999+00:00",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "source_revision": "afb58dc9b26f814433b117a63e45994c71e7cbde",
+  "source_read_only": true,
+  "worktree": "/tmp/n7-f10-restart-fix-20261006-a12",
+  "source_build_manifest": "/tmp/n7-f10-capacity-fixture-fix-a19/final-manifest.json",
+  "source_build_manifest_sha256": "237ad9bb03ef3afafdfdde1a55dc3298163978e152c109c978f19e55936c54d2",
+  "source_database_manifest": "/tmp/n7-f10-capacity-fixture-fix-a19/database-source-manifest.json",
+  "allowed_writes": [
+    "/tmp/n7-f10-frozen-verify-a20",
+    "/tmp/n7-f10-frozen-verify-a20-receipt.md",
+    "isolated ownDB n7f10_a2"
+  ],
+  "disk_available_bytes": 3200241664,
+  "free_inodes": 4778337,
+  "context_rule": "freshHIGH fork-none, planneronly normative14/A14b/newdiagnosticplan +frozencode/manifests/objective raw; NOauthorreceipt/chat/reasoning/coordinatoroperationalhandoff",
+  "scope": [
+    "Specific connection/observer health measurement and prelaunch readiness; immutable existing diagnostic tools only",
+    "Canonical original330 only if measured ready; all30/fullwindow/fault/restart/resource/rawnativeexit",
+    "WholePG only after330 joined and PGquiescent; exact nativeexit/failurechronology",
+    "No physical/protocol/mutants/canary optional runs in thisattempt; unchanged physical/A15 sourcebound green retained; remaininggates notwaived"
+  ],
+  "no_gate_waiver": true
+}

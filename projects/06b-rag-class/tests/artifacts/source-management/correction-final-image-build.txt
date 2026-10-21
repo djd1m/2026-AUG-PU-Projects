@@ -1,0 +1,59 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.44kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22.22-bookworm-slim
+#2 DONE 0.7s
+
+#3 [ 1/11] FROM docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752
+#3 resolve docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752 0.1s done
+#3 DONE 0.1s
+
+#4 [internal] load build context
+#4 transferring context: 348.39kB 0.1s done
+#4 DONE 0.1s
+
+#5 [ 7/11] COPY --chown=node:node services/worker/package.json ./services/worker/
+#5 CACHED
+
+#6 [ 9/11] COPY --chown=node:node packages/rag/package.json ./packages/rag/
+#6 CACHED
+
+#7 [ 3/11] RUN chown node:node /app
+#7 CACHED
+
+#8 [ 5/11] COPY --chown=node:node apps/web/package.json ./apps/web/
+#8 CACHED
+
+#9 [ 4/11] COPY --chown=node:node package.json package-lock.json ./
+#9 CACHED
+
+#10 [ 6/11] COPY --chown=node:node apps/widget/package.json ./apps/widget/
+#10 CACHED
+
+#11 [ 2/11] WORKDIR /app
+#11 CACHED
+
+#12 [ 8/11] COPY --chown=node:node packages/db/package.json ./packages/db/
+#12 CACHED
+
+#13 [10/11] RUN npm ci
+#13 CACHED
+
+#14 [11/11] COPY --chown=node:node . .
+#14 DONE 1.5s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 1.0s done
+#15 exporting manifest sha256:be6c87516ab02782c6e20fbdd0cad668ec9606014ff73b7d07f6b5040b1f8ffd 0.0s done
+#15 exporting config sha256:373fe27c25d32f7c919db9514f36ccfd00b6a481a69950be9f4a7ee34e2c24da 0.0s done
+#15 exporting attestation manifest sha256:51a77c62435606ad6b4a86ec7c3e0d03efaf4591b8563821c19bfaae7d6a0f7c 0.0s done
+#15 exporting manifest list sha256:ff0c8692df9cfbaeae0d176d4c9de9a28cadb7fd9d5e9dae2725e99ee2fcb65f
+#15 exporting manifest list sha256:ff0c8692df9cfbaeae0d176d4c9de9a28cadb7fd9d5e9dae2725e99ee2fcb65f 0.0s done
+#15 naming to docker.io/library/n6b-f15-source-management-runner:corrected done
+#15 unpacking to docker.io/library/n6b-f15-source-management-runner:corrected
+#15 unpacking to docker.io/library/n6b-f15-source-management-runner:corrected 0.5s done
+#15 DONE 1.8s

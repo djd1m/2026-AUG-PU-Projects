@@ -1,0 +1,59 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.44kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22.22-bookworm-slim
+#2 DONE 0.6s
+
+#3 [ 1/11] FROM docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752
+#3 resolve docker.io/library/node:22.22-bookworm-slim@sha256:e21fc383b50d5347dc7a9f1cae45b8f4e2f0d39f7ade28e4eef7d2934522b752 0.0s done
+#3 DONE 0.1s
+
+#4 [internal] load build context
+#4 transferring context: 1.69MB 0.1s
+#4 transferring context: 7.38MB 0.3s done
+#4 DONE 0.3s
+
+#5 [ 2/11] WORKDIR /app
+#5 CACHED
+
+#6 [ 7/11] COPY --chown=node:node services/worker/package.json ./services/worker/
+#6 CACHED
+
+#7 [ 3/11] RUN chown node:node /app
+#7 CACHED
+
+#8 [ 4/11] COPY --chown=node:node package.json package-lock.json ./
+#8 CACHED
+
+#9 [ 6/11] COPY --chown=node:node apps/widget/package.json ./apps/widget/
+#9 CACHED
+
+#10 [ 8/11] COPY --chown=node:node packages/db/package.json ./packages/db/
+#10 CACHED
+
+#11 [ 9/11] COPY --chown=node:node packages/rag/package.json ./packages/rag/
+#11 CACHED
+
+#12 [ 5/11] COPY --chown=node:node apps/web/package.json ./apps/web/
+#12 CACHED
+
+#13 [10/11] RUN npm ci
+#13 CACHED
+
+#14 [11/11] COPY --chown=node:node . .
+#14 DONE 0.3s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 0.6s done
+#15 exporting manifest sha256:74b88bcf312103580e3cf79ad91a7bbd96c39b91a78bdf6a479be9bb8c7d37cd 0.0s done
+#15 exporting config sha256:ff40b4f4ce62cd37651f185669028e4f32fe9c627d2a3356fcd4d681678341b1 0.0s done
+#15 exporting attestation manifest sha256:c1e696ab65d1887e25434cbfacded0a1545655588bbbdd4db8869d9546806220 0.0s done
+#15 exporting manifest list sha256:ff3445451fd5a72668b4b361d2618baeca9e835432fc1ca3ca3a3d4afceeb71d 0.0s done
+#15 naming to docker.io/library/n6b-f11-metric-runner:final done
+#15 unpacking to docker.io/library/n6b-f11-metric-runner:final
+#15 unpacking to docker.io/library/n6b-f11-metric-runner:final 0.3s done
+#15 DONE 1.0s

@@ -1,0 +1,7 @@
+{"time": "2026-10-03T01:04:14.510032+00:00", "stage": "PLAN_VALIDATE", "source": "2becc5da3fff7d0b4177fe70eb7b209a03b5a8d6", "substantive_tier": "XL", "approval": "OWN-N7-002", "result": "ready", "actual_model": null}
+{"at": "2026-10-03T01:24:29.166432+00:00", "stage": "IMPLEMENT_A", "status": "delivered_pending_review", "source": "8dd916ba", "runtime": "sol-a-runtime.json"}
+{"at": "2026-10-03T01:31:14.774742+00:00", "stage": "REVIEW_A", "verdict": "ACCEPT", "ac_met": 6, "source": "e3b64627", "runtime": "astra-a-runtime.json"}
+{"at": "2026-10-03T02:05:11.929493+00:00", "stage": "IMPLEMENT_B", "status": "delivered_after_recovery_pending_review", "source": "389ab701", "runtime": ["sol-b-runtime.json", "sol-b-delivery-runtime.json"]}
+{"at": "2026-10-03T02:13:54.724515+00:00", "stage": "REVIEW_B", "verdict": "REQUEST_CHANGES", "findings": ["F1", "F2"], "runtime": "astra-b-runtime.json"}
+{"at": "2026-10-03T02:29:53.051172+00:00", "stage": "CORRECT_B", "source": "0b5954e2", "status": "delivered_pending_closure", "runtime": "sol-b-r1-runtime.json"}
+{"at": "2026-10-03T02:37:03.754344+00:00", "stage": "ACCEPT", "verdict": "ACCEPT", "ac_met": 12, "source": "f0fb8556536381c968973e992d5e06ac0416cd83", "runtime": "astra-b-r1-runtime.json", "next": "F06"}

@@ -1,0 +1,60 @@
+{
+  "captured_at": "2026-10-03T01:34:49.051582+00:00",
+  "elapsed_wall_seconds_at_snapshot": 909.254,
+  "profile": "compact-quality-first-v2",
+  "tier": "M (fresh SPARC exception to L)",
+  "mechanical_route": {
+    "tier": "S",
+    "exit_code": 0,
+    "reason": "lower bound only; new external GET determines substantive risk"
+  },
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "actual_model": null,
+  "actual_model_missing_reason": "Native model metadata is not exposed to this executor; coordinator reconciliation required.",
+  "input_tokens": null,
+  "output_tokens": null,
+  "cost": null,
+  "active_wall_seconds": null,
+  "checks": [
+    {
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH npm run typecheck",
+      "exit_code": 0
+    },
+    {
+      "command": "PATH=/tmp/n6b-f06-node22/bin:$PATH node node_modules/vitest/vitest.mjs run --config vitest.config.ts apps/web/tests/unit/metrics-verifier.test.ts apps/web/tests/unit/metrics-handler.test.ts",
+      "exit_code": 0,
+      "passed_tests": 37
+    },
+    {
+      "command": "exact-script fixed assertion against removed data-bot equality",
+      "exit_code": 1,
+      "expected_failure": true
+    },
+    {
+      "command": "same exact-script fixed assertion after exact source restoration",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    },
+    {
+      "command": "source/test line bounds",
+      "exit_code": 0,
+      "files": 10,
+      "limit_exclusive": 500
+    }
+  ],
+  "pending": [
+    "full unit regression including existing safe HTTP suite",
+    "all real PostgreSQL tests including 15 authored F11 cases",
+    "production builds and exact image hashes",
+    "independent Astra review",
+    "Docker UI 1440/390 operator page, ordinary 404, POST 202, refreshed seeded counts"
+  ],
+  "e2e_preflight": {
+    "status": "not_applicable",
+    "reason": "No E2E authorized in this bounded implementation attempt; coordinator performs fresh preflight before its later UI run."
+  }
+}

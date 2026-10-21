@@ -1,0 +1,7708 @@
+{
+  "status": "failed",
+  "started_at": "2026-10-03T05:01:42.368Z",
+  "source": "e9e78e47c349a0c23b3542dc68945d1f976f76c6edbb8bee61c817a3aebd084b",
+  "build": "455e80941dc8bc0c0dd7cca1a2f9b1388e1275b7f8b85fdf716993fdcb1ca27f",
+  "engines": [
+    {
+      "name": "chromium",
+      "width": 1440,
+      "height": 900,
+      "version": "153.0.8010.12"
+    },
+    {
+      "name": "chromium",
+      "width": 390,
+      "height": 844,
+      "version": "153.0.8010.12"
+    }
+  ],
+  "checks": [
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "name": "overview credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "name": "overview no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "name": "reduced motion",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "name": "100 samples ten concurrent no errors p95<500",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "name": "pool waiting honest",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "name": "empty-mailboxes credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "name": "empty-mailboxes no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "name": "default quota10",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "name": "Добавить ящик HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "name": "save no consent",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "name": "pool unchecked",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "name": "campaign unchecked",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "name": "edit credentials empty",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "name": "Сохранить подключение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "name": "Проверить локально · TEST HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "name": "actual accepted poll complete",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "name": "Подтвердить участие в пуле HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "name": "Отозвать участие в пуле HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "name": "mailbox-consents credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "name": "mailbox-consents no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "name": "Сохранить кампанию HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "name": "start blocked before grant",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "name": "campaign-blocked credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "name": "campaign-blocked no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "name": "Подтвердить отдельное согласие HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "name": "ready start enabled",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "name": "Запустить цепочку HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "name": "three local messages with headers",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "name": "actual reply stop",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "unsubscribe",
+      "name": "unsubscribe-confirm credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "unsubscribe",
+      "name": "unsubscribe-confirm no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "unsubscribe",
+      "name": "unsubscribe idempotent200",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "complaint",
+      "name": "Приостановить кампанию HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "complaint",
+      "name": "pause persists",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "complaint",
+      "name": "complaint quarantine UI",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "complaint",
+      "name": "quarantine credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "complaint",
+      "name": "quarantine no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "empty history",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "share initially blocked",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "manual verification default unchecked",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "manual verification default unchecked",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "two manual observations persisted",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "Сравнить выбранную пару HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "share eligible after real comparison",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "Создать публичный отчёт HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "public report origin only",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "public-report credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "public-report no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "evidence credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "evidence no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "report persists after reload",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "Отозвать ссылку HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "name": "public revoke404",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "name": "Создать мой код HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "name": "partner credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "name": "partner no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "name": "Отключить код HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "name": "Включить код HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "name": "Создать TEST checkout HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "name": "checkout pending",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "name": "real grant UI",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "name": "test-payment credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "name": "test-payment no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "name": "Создать мой код HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "name": "foreign private404 /api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "name": "foreign private404 /api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "name": "foreign private404 /api/evidence/compare",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "name": "foreign private404 /api/reports/e41c4846-71f9-4a29-8bc8-1e9a6424ca03/revoke",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "name": "foreign private404 /api/billing/intents/1a633897-0f64-447e-a4b3-fa1bbff4c525",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "name": "no foreign DOM",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "name": "foreign mutation404",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "name": "denied mutation zero effects",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "name": "Создать TEST checkout HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "name": "explicit foreign partner accepted",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "name": "passive signin preserves unsaved form",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "name": "passive app no invalidation echo",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "name": "unsaved-two-tab credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "name": "unsaved-two-tab no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "name": "loading state visible",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "name": "loading credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "name": "loading no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "name": "real response held",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "name": "Выйти HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "name": "true logout invalidates other tab",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "name": "late response no private DOM",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "name": "logout credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "name": "logout no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "name": "old cookie revoked401",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "name": "explicit real login200",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "name": "explicit login invalidates private draft",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "name": "expired401 clears cabinet",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "invalid-input",
+      "name": "native invalid form",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "invalid-input",
+      "name": "invalid-cleared credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "invalid-input",
+      "name": "invalid-cleared no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "name": "overview credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "name": "overview no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "name": "reduced motion",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "name": "100 samples ten concurrent no errors p95<500",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "name": "pool waiting honest",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "name": "empty-mailboxes credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "name": "empty-mailboxes no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "name": "default quota10",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "name": "Добавить ящик HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "name": "save no consent",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "name": "pool unchecked",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "name": "campaign unchecked",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "name": "edit credentials empty",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "name": "Сохранить подключение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "name": "Проверить локально · TEST HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "name": "actual accepted poll complete",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "name": "Подтвердить участие в пуле HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "name": "Отозвать участие в пуле HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "name": "mailbox-consents credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "name": "mailbox-consents no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "name": "Сохранить кампанию HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "name": "start blocked before grant",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "name": "campaign-blocked credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "name": "campaign-blocked no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "name": "Подтвердить отдельное согласие HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "name": "ready start enabled",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "name": "Запустить цепочку HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "name": "three local messages with headers",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "name": "actual reply stop",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "unsubscribe",
+      "name": "unsubscribe-confirm credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "unsubscribe",
+      "name": "unsubscribe-confirm no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "unsubscribe",
+      "name": "unsubscribe idempotent200",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "complaint",
+      "name": "Приостановить кампанию HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "complaint",
+      "name": "pause persists",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "complaint",
+      "name": "complaint quarantine UI",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "complaint",
+      "name": "quarantine credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "complaint",
+      "name": "quarantine no overflow",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "name": "empty history",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "name": "share initially blocked",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "name": "manual verification default unchecked",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "name": "manual verification default unchecked",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "name": "Сохранить наблюдение HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "name": "two manual observations persisted",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "name": "Сравнить выбранную пару HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "name": "share eligible after real comparison",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "name": "Создать публичный отчёт HTTP success",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "name": "public report origin only",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "name": "public-report credential fields clear",
+      "pass": true
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "name": "public-report no overflow",
+      "pass": false
+    }
+  ],
+  "http": [
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/register",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/reply-status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+      "status": 200,
+      "method": "PUT"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/reply-status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/verify-test",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/reply-status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/reply-status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/reply-status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/campaigns",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d/preview",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/reply-status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/reply-status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/reply-status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d/start",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "campaign",
+      "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "unsubscribe",
+      "path": "/unsubscribe/_bzf2vE_Qj0_mrt2WcJPVGM_XHcUYxDjOeQI97Po8O8",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "unsubscribe",
+      "path": "/unsubscribe/_bzf2vE_Qj0_mrt2WcJPVGM_XHcUYxDjOeQI97Po8O8",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "unsubscribe",
+      "path": "/unsubscribe/_bzf2vE_Qj0_mrt2WcJPVGM_XHcUYxDjOeQI97Po8O8",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "complaint",
+      "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d/pause",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "complaint",
+      "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "complaint",
+      "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "complaint",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "complaint",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "complaint",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "complaint",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/evidence/compare",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/reports/e41c4846-71f9-4a29-8bc8-1e9a6424ca03/events",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/reports/e41c4846-71f9-4a29-8bc8-1e9a6424ca03/revoke",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "path": "/reports/NTLmFVQdXgrCZRDZcCwe-mWE1I-WWS_G0qyDXl3H2po",
+      "status": 404,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/partner",
+      "status": 404,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/partner",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/partner",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/partner",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/partner",
+      "status": 200,
+      "method": "PATCH"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/partner",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/partner",
+      "status": 200,
+      "method": "PATCH"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/partner",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/billing/status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/billing/checkout",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/billing/intents/1a633897-0f64-447e-a4b3-fa1bbff4c525",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "path": "/api/billing/intents/1a633897-0f64-447e-a4b3-fa1bbff4c525",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/auth/register",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/partner",
+      "status": 404,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/partner",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/partner",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/partner",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+      "status": 404,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d",
+      "status": 404,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/evidence/compare",
+      "status": 404,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/reports/e41c4846-71f9-4a29-8bc8-1e9a6424ca03/revoke",
+      "status": 404,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/billing/intents/1a633897-0f64-447e-a4b3-fa1bbff4c525",
+      "status": 404,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "status": 404,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/billing/status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/billing/checkout",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "path": "/api/billing/intents/bdee5761-78ba-4fb3-86fe-5ecb00495f50",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "R1-two-tab-passive",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/api/auth/logout",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/api/auth/login",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/api/auth/login",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "explicit-login-broadcast",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/api/app",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/signin",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/auth.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/auth/register",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/assets/cabinet.css",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/assets/app.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/assets/dom.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/assets/mailboxes.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/assets/campaigns.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/assets/billing.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/assets/evidence.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/assets/client.js",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "performance",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/reply-status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee",
+      "status": 200,
+      "method": "PUT"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/reply-status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/verify-test",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/reply-status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/reply-status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "mailbox",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/reply-status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/campaigns",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/campaigns/c5b0b853-1619-4d72-927c-27554296f46d",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/campaigns/c5b0b853-1619-4d72-927c-27554296f46d/preview",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/reply-status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/reply-status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/reply-status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/campaigns/c5b0b853-1619-4d72-927c-27554296f46d/start",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "campaign",
+      "path": "/api/campaigns/c5b0b853-1619-4d72-927c-27554296f46d",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "unsubscribe",
+      "path": "/unsubscribe/F80xf6eaLmGG42F_91YNR6eqc_bid7I1i_M4GRExgBU",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "unsubscribe",
+      "path": "/unsubscribe/F80xf6eaLmGG42F_91YNR6eqc_bid7I1i_M4GRExgBU",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "unsubscribe",
+      "path": "/unsubscribe/F80xf6eaLmGG42F_91YNR6eqc_bid7I1i_M4GRExgBU",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "complaint",
+      "path": "/api/campaigns/c5b0b853-1619-4d72-927c-27554296f46d/pause",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "complaint",
+      "path": "/api/campaigns/c5b0b853-1619-4d72-927c-27554296f46d",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "complaint",
+      "path": "/api/campaigns/c5b0b853-1619-4d72-927c-27554296f46d",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "complaint",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "complaint",
+      "path": "/api/mailboxes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "complaint",
+      "path": "/api/campaigns",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "complaint",
+      "path": "/api/pool",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/app",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence/compare",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/evidence",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/growth/events",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "path": "/api/reports/1c218672-5522-4f20-9bfa-a3dd840bac77/events",
+      "status": 200,
+      "method": "POST"
+    }
+  ],
+  "console": [
+    {
+      "engine": "chromium-1440",
+      "phase": "auth",
+      "url": "http://127.0.0.1:18709/api/auth/me",
+      "http_status": "401",
+      "kind": "error"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "manual-evidence",
+      "url": "http://127.0.0.1:18709/reports/NTLmFVQdXgrCZRDZcCwe-mWE1I-WWS_G0qyDXl3H2po",
+      "http_status": "404",
+      "kind": "error"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "partner-checkout",
+      "url": "http://127.0.0.1:18709/api/partner",
+      "http_status": "404",
+      "kind": "error"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "url": "http://127.0.0.1:18709/api/auth/me",
+      "http_status": "401",
+      "kind": "error"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "url": "http://127.0.0.1:18709/api/partner",
+      "http_status": "404",
+      "kind": "error"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "url": "http://127.0.0.1:18709/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+      "http_status": "404",
+      "kind": "error"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "url": "http://127.0.0.1:18709/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d",
+      "http_status": "404",
+      "kind": "error"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "url": "http://127.0.0.1:18709/api/evidence/compare",
+      "http_status": "404",
+      "kind": "error"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "url": "http://127.0.0.1:18709/api/reports/e41c4846-71f9-4a29-8bc8-1e9a6424ca03/revoke",
+      "http_status": "404",
+      "kind": "error"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "url": "http://127.0.0.1:18709/api/billing/intents/1a633897-0f64-447e-a4b3-fa1bbff4c525",
+      "http_status": "404",
+      "kind": "error"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "tenant-boundaries",
+      "url": "http://127.0.0.1:18709/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "http_status": "404",
+      "kind": "error"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "url": "http://127.0.0.1:18709/api/auth/me",
+      "http_status": "401",
+      "kind": "error"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "url": "http://127.0.0.1:18709/api/auth/me",
+      "http_status": "401",
+      "kind": "error"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "url": "http://127.0.0.1:18709/api/auth/me",
+      "http_status": "401",
+      "kind": "error"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "url": "http://127.0.0.1:18709/api/auth/me",
+      "http_status": "401",
+      "kind": "error"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "url": "http://127.0.0.1:18709/api/app",
+      "http_status": "401",
+      "kind": "error"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "url": "http://127.0.0.1:18709/api/auth/me",
+      "http_status": "401",
+      "kind": "error"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "auth",
+      "url": "http://127.0.0.1:18709/api/auth/me",
+      "http_status": "401",
+      "kind": "error"
+    }
+  ],
+  "page_errors": [],
+  "screenshots": [
+    "chromium-1440-overview.png",
+    "chromium-1440-empty-mailboxes.png",
+    "chromium-1440-mailbox-consents.png",
+    "chromium-1440-campaign-blocked.png",
+    "chromium-1440-unsubscribe-confirm.png",
+    "chromium-1440-quarantine.png",
+    "chromium-1440-public-report.png",
+    "chromium-1440-evidence.png",
+    "chromium-1440-partner.png",
+    "chromium-1440-test-payment.png",
+    "chromium-1440-unsaved-two-tab.png",
+    "chromium-1440-loading.png",
+    "chromium-1440-logout.png",
+    "chromium-1440-invalid-cleared.png",
+    "chromium-390-overview.png",
+    "chromium-390-empty-mailboxes.png",
+    "chromium-390-mailbox-consents.png",
+    "chromium-390-campaign-blocked.png",
+    "chromium-390-unsubscribe-confirm.png",
+    "chromium-390-quarantine.png",
+    "chromium-390-public-report.png"
+  ],
+  "failures": [
+    {
+      "engine": "chromium-1440",
+      "phase": "late-real-response-logout",
+      "kind": "requestfailed",
+      "path": "/api/evidence",
+      "reason": "net::ERR_ABORTED"
+    },
+    {
+      "engine": "chromium-1440",
+      "phase": "expired401",
+      "kind": "requestfailed",
+      "path": "/api/app",
+      "reason": "net::ERR_ABORTED"
+    },
+    {
+      "engine": "chromium-390",
+      "phase": "manual-evidence",
+      "kind": "AssertionError",
+      "assertion": "public-report no overflow"
+    }
+  ],
+  "cleanup": {
+    "own_contexts_closed": true,
+    "bridge_closed": true,
+    "sockets_destroyed": true,
+    "shared_browser_server_preserved": true
+  },
+  "bridge_requests": [
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/register",
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "POST"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/reply-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+      "method": "PUT"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/reply-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/verify-test",
+      "method": "POST"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/reply-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "method": "POST"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/reply-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "method": "POST"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/reply-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "POST"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d/preview",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/reply-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "method": "POST"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/reply-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/reply-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d/start",
+      "method": "POST"
+    },
+    {
+      "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d",
+      "method": "GET"
+    },
+    {
+      "path": "/unsubscribe/_bzf2vE_Qj0_mrt2WcJPVGM_XHcUYxDjOeQI97Po8O8",
+      "method": "GET"
+    },
+    {
+      "path": "/unsubscribe/_bzf2vE_Qj0_mrt2WcJPVGM_XHcUYxDjOeQI97Po8O8",
+      "method": "POST"
+    },
+    {
+      "path": "/unsubscribe/_bzf2vE_Qj0_mrt2WcJPVGM_XHcUYxDjOeQI97Po8O8",
+      "method": "POST"
+    },
+    {
+      "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d/pause",
+      "method": "POST"
+    },
+    {
+      "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence/compare",
+      "method": "POST"
+    },
+    {
+      "path": "/api/reports",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports/e41c4846-71f9-4a29-8bc8-1e9a6424ca03/events",
+      "method": "POST"
+    },
+    {
+      "path": "/reports/NTLmFVQdXgrCZRDZcCwe-mWE1I-WWS_G0qyDXl3H2po",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports/e41c4846-71f9-4a29-8bc8-1e9a6424ca03/revoke",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/reports/NTLmFVQdXgrCZRDZcCwe-mWE1I-WWS_G0qyDXl3H2po",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/partner",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/partner",
+      "method": "POST"
+    },
+    {
+      "path": "/api/partner",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/partner",
+      "method": "GET"
+    },
+    {
+      "path": "/api/partner",
+      "method": "PATCH"
+    },
+    {
+      "path": "/api/partner",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/partner",
+      "method": "PATCH"
+    },
+    {
+      "path": "/api/partner",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/billing/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/billing/checkout",
+      "method": "POST"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/billing/intents/1a633897-0f64-447e-a4b3-fa1bbff4c525",
+      "method": "GET"
+    },
+    {
+      "path": "/api/billing/intents/1a633897-0f64-447e-a4b3-fa1bbff4c525",
+      "method": "GET"
+    },
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/register",
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/partner",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/partner",
+      "method": "POST"
+    },
+    {
+      "path": "/api/partner",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/partner",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns/d3ec2d70-b9d4-487d-bdbf-6b0fc3d8557d",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence/compare",
+      "method": "POST"
+    },
+    {
+      "path": "/api/reports/e41c4846-71f9-4a29-8bc8-1e9a6424ca03/revoke",
+      "method": "POST"
+    },
+    {
+      "path": "/api/billing/intents/1a633897-0f64-447e-a4b3-fa1bbff4c525",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "method": "POST"
+    },
+    {
+      "path": "/api/mailboxes/abe5401c-5bca-447d-a147-1a6d36ff88fc/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/billing/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/billing/checkout",
+      "method": "POST"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/billing/intents/bdee5761-78ba-4fb3-86fe-5ecb00495f50",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/logout",
+      "method": "POST"
+    },
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/signin",
+      "method": "GET"
+    },
+    {
+      "path": "/auth.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/register",
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/app",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/cabinet.css",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/dom.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/mailboxes.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/campaigns.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/evidence.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/billing.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/client.js",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "POST"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/reply-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee",
+      "method": "PUT"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/reply-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/verify-test",
+      "method": "POST"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/reply-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "method": "POST"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/reply-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "method": "POST"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/reply-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "POST"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns/c5b0b853-1619-4d72-927c-27554296f46d",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns/c5b0b853-1619-4d72-927c-27554296f46d/preview",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/reply-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "method": "POST"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/reply-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/consents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes/365b245a-f8bc-4b7c-adad-59a37636dfee/reply-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns/c5b0b853-1619-4d72-927c-27554296f46d/start",
+      "method": "POST"
+    },
+    {
+      "path": "/api/campaigns/c5b0b853-1619-4d72-927c-27554296f46d",
+      "method": "GET"
+    },
+    {
+      "path": "/unsubscribe/F80xf6eaLmGG42F_91YNR6eqc_bid7I1i_M4GRExgBU",
+      "method": "GET"
+    },
+    {
+      "path": "/unsubscribe/F80xf6eaLmGG42F_91YNR6eqc_bid7I1i_M4GRExgBU",
+      "method": "POST"
+    },
+    {
+      "path": "/unsubscribe/F80xf6eaLmGG42F_91YNR6eqc_bid7I1i_M4GRExgBU",
+      "method": "POST"
+    },
+    {
+      "path": "/api/campaigns/c5b0b853-1619-4d72-927c-27554296f46d/pause",
+      "method": "POST"
+    },
+    {
+      "path": "/api/campaigns/c5b0b853-1619-4d72-927c-27554296f46d",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns/c5b0b853-1619-4d72-927c-27554296f46d",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/mailboxes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/campaigns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/pool",
+      "method": "GET"
+    },
+    {
+      "path": "/api/app",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/evidence/compare",
+      "method": "POST"
+    },
+    {
+      "path": "/api/reports",
+      "method": "POST"
+    },
+    {
+      "path": "/api/evidence",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/growth/events",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports",
+      "method": "GET"
+    },
+    {
+      "path": "/api/reports/1c218672-5522-4f20-9bfa-a3dd840bac77/events",
+      "method": "POST"
+    },
+    {
+      "path": "/reports/Hgzqhs2Rqb02xuSLgGKmEI1LgWMMZqjkydL8jQqAWvU",
+      "method": "GET"
+    }
+  ],
+  "failure_dom": "К содержимому\nN7\nВыйти\n\nВАШЕ ПРОСТРАНСТВО\n\nОбзор\nЯщики\nКампании\nНаблюдения\nТариф\nПартнёр\n\nРежимы сервера: отправка local_test; опрос local_test; оплата local_test. Live не активирован.\n\nCOHORT DESK\n\nНаблюдения\n\nДанные обновлены.\n\nНаблюдения\n\nРучные данные, подтверждённые вами. Ни число участников, ни принятие SMTP не доказывают доставку во входящие. Репутация: unknown\n\nURL источника · приватный\nСсылка / обозначение документа · приватное\nНаблюдение · UTC, YYYY-MM-DDTHH:mm:ss.sssZ\nПериод и показатель\nЯ вручную проверил источник, период и значения\nСохранить наблюдение\nИстория · последние 100\nСравнение и публикация\nИсходное наблюдение\nВыберите запись\n2026-10-03T04:02:13.063Z · inbox_placement · 20/40\n2026-10-02T04:02:13.063Z · inbox_placement · 10/40\nПоследнее наблюдение\nВыберите запись\n2026-10-03T04:02:13.063Z · inbox_placement · 20/40\n2026-10-02T04:02:13.063Z · inbox_placement · 10/40\n\nПоследнее ≤7 дней; исходное ≤28 дней до него. Источник, показатель, направление и длительность совпадают. Периоды не пересекаются. При n<30 показываем числа, при обоих n≥30 — доли. Причинная связь с прогревом не заявляется.\n\nСравнить выбранную пару\n\nВ публичном отчёте будут даты, числа и только origin источника. Приватный путь URL и обозначение документа не публикуются. Создание ссылки — отдельное явное действие.\n\nСоздать публичный отчёт\nМои ссылки · последние 100\n\n2026-10-03T05:02:14.085Z · доступен\n\nОткрыть публичный отчётСкопировать ссылкуОтозвать ссылку\nИстория явных действий · последние 100\nЛокальный MVP. TEST не подтверждает реальную доставляемость. Отправки и тариф определяет сервер.",
+  "finished_at": "2026-10-03T05:02:14.987Z"
+}

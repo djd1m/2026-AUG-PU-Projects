@@ -1,0 +1,1 @@
+../../../../.claude/agents/doc-validator.md

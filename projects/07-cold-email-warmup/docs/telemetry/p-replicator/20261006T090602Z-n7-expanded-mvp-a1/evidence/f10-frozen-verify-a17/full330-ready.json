@@ -1,0 +1,54 @@
+{
+  "at": "2026-10-06T19:24:06.892070+00:00",
+  "status": "ready",
+  "run_id": "20261006T090602Z-n7-expanded-mvp-a1",
+  "work_unit_id": "f10-frozen-verify-a17",
+  "source_revision": "eae17bbea36312ee5290adb8390e066b1f0d6c2a",
+  "manifest_sha256": "39eb6cc84f603c73d12ee641604fbb0beaf4eb1fa0d3287faa80a9c806a5826a",
+  "source_count": 120,
+  "build_count": 73,
+  "runner_path": "/tmp/n7-f10-frozen-verify-a17/run-full330-v1.py",
+  "runner_sha256": "3b6b8fd65e3fa057c6864ad5a52b8135cdbe4be891f3b69ad276b612a23d9e4d",
+  "preloads": {
+    "guard-v1.mjs": "a7a740d2bb5bdfa9bd0e87d0b2a9f54625f578a3684a110ea4513408136e345b",
+    "suite-output-v1.mjs": "6e22a72b02f0f3f0cc920303298489dd3028981091652e0b788ad35951fb7bb3",
+    "pg-snapshot-v1.mjs": "9f829e4efe2dce6f3e8125996cd9fe9e83e4cdc12e6c25d7550ee0fbb1c40bf1"
+  },
+  "fixtures": {
+    "tests/diagnostics-fixture.ts": "889f428735c251a33c18a026d3afbdd761bc3e4b9d7e965ab6848ac788740017",
+    "tests/f09-transport-fixture.ts": "984e6242be0a61880750c114dde53e5993588d9d3c82990c608e7e4db0eb5328",
+    "tests/f10-runtime-fixture.ts": "654fb5e45e5dcc0f520bdae5906c5340baf68eb8fb0dd9a8e9d29b6d6a91aa2f",
+    "tests/f10-runtime-process-fixture.ts": "af3523f51274e34d420ca1e8cd01927e7c3e262cfeb229cbe0dc1535b66a6340"
+  },
+  "environment": {
+    "DATABASE_NAME": "n7f10_a2",
+    "TMPDIR": "/tmp/n7-f10-frozen-verify-a17",
+    "NODE_OPTIONS": "--import /tmp/n7-f10-frozen-verify-a17/guard-v1.mjs --import /tmp/n7-f10-frozen-verify-a17/suite-output-v1.mjs",
+    "credentials": "available; values omitted"
+  },
+  "DB_assertion": {
+    "at": "2026-10-06T19:24:06.865Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "command": [
+    "node",
+    "node_modules/tsx/dist/cli.mjs",
+    "--test",
+    "--test-concurrency=1",
+    "tests/expanded-mvp-04.test.ts"
+  ],
+  "budget_s": 420,
+  "disk": {
+    "available_bytes": 3260489728,
+    "free_inodes": 4784428
+  },
+  "sideeffects": [
+    "own scratch",
+    "n7f10_a2",
+    "numeric local TLS"
+  ],
+  "source_build_readonly": true
+}

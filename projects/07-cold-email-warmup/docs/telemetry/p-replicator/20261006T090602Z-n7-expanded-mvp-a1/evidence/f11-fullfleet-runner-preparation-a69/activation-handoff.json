@@ -1,0 +1,115 @@
+{
+  "status": "PREPARED_NOT_AUTHORIZED_RUNTIME",
+  "source_revision": "e7f03164549f011b0adef80f1e2d6df3d734487a",
+  "future_executor": "root_designated_HIGH after independent review and actual fresh exclusive lease",
+  "required_baseline_refresh": [
+    "A68 ALL PID/startTicks/socket/pool joins and actual final0otherDBsessions",
+    "ALL37prior plus EVERY new A68 namespace/fulltable/currentclaimclassification retained in immutable latest baseline; copy as own db-protected.json",
+    "source-binding protectedSchemas exact latest baseline keys; preserve WHOLE existing savedPublicRowId/SHA/public-before contract; futureA68BaselineRequired=false only after verified refresh",
+    "verify old37 fulltables unchanged versus db-protected-a65-placeholder.json; no reset/drop/expire/reopen protected namespace"
+  ],
+  "runtime_lease_required_fields": [
+    "database n7f11_a8",
+    "owner_role n7",
+    "source_revision e7f03164549f011b0adef80f1e2d6df3d734487a",
+    "runtime_authorized true",
+    "actor_role root_designated_HIGH",
+    "source_cut_utc and equal deadline_utc from ACTUAL future lease start+17min, separate seal_cut_utc start+20min",
+    "source_binding_sha256 and protected_baseline_sha256",
+    "protected_schemas and exact schemas mapping",
+    "includes_final_joined_A68_schemas true",
+    "helper_binding exact sealed helper dictionary",
+    "remaining_setup_snapshot_join_budget_seconds nonnegative explicit root budget reconciled with actual clock"
+  ],
+  "commands_order": [
+    "full_fault330",
+    "full_healthy330",
+    "legacy145"
+  ],
+  "prior_case_required": "exit0 AND ALLjoins; failure stops for root concrete diagnosis/fresh continuation, no next blind run",
+  "per_case_operations": [
+    {
+      "key": "full_fault",
+      "setup": [
+        "setup_full_fault",
+        30,
+        "setup",
+        "full_fault"
+      ],
+      "pre": [
+        "pre_full_fault",
+        30,
+        "terminal",
+        "pre_full_fault",
+        "protected"
+      ],
+      "post": [
+        "post_full_fault",
+        30,
+        "terminal",
+        "post_full_fault",
+        "pre_full_fault"
+      ]
+    },
+    {
+      "key": "full_healthy",
+      "setup": [
+        "setup_full_healthy",
+        30,
+        "setup",
+        "full_healthy"
+      ],
+      "pre": [
+        "pre_full_healthy",
+        30,
+        "terminal",
+        "pre_full_healthy",
+        "post_full_fault"
+      ],
+      "post": [
+        "post_full_healthy",
+        30,
+        "terminal",
+        "post_full_healthy",
+        "pre_full_healthy"
+      ]
+    },
+    {
+      "key": "legacy",
+      "setup": [
+        "setup_legacy",
+        30,
+        "setup",
+        "legacy"
+      ],
+      "pre": [
+        "pre_legacy",
+        30,
+        "terminal",
+        "pre_legacy",
+        "post_full_healthy"
+      ],
+      "post": [
+        "post_legacy",
+        30,
+        "terminal",
+        "post_legacy",
+        "pre_legacy"
+      ]
+    }
+  ],
+  "required_preflight": "each exactcommand/source/build/helper/dependency/lease/namespace absent underFIRST7,1/n7DBroleowner/current0sessions/disk>=2GiB/freshtrace and checkpointjournal; all oldschema fulltables unchanged before/after; joins before next setup",
+  "source_bound_denominators": [
+    "exact1 matched callback actualPASS and nativeexit0 with unchanged original assertions",
+    "ALL30/100connected observed participants; fault full300 then healthy full300; original150000SIGTERM",
+    "both real>=2800ms phases/window12000/queue450000/phase5/FIRST7,1",
+    "HEADERgap30s/selection60s/IMAP4 with3normal+BODYcapacity/SMTP2/global1mailbox; unchanged source authority",
+    "legacyliteral20pages real5000ms/native19; every actual native page denominator observed"
+  ],
+  "no_mutations": [
+    "F11_FORCEshort env",
+    "source/protocol/product/producer/heldrow reopen/window/timing/denominator changes",
+    "DB grants/general whitelist/new engine/global permissions"
+  ],
+  "no_current_runtime_or_DB_claim": "preparation ran Python AST/bash syntax/source reads only; placeholder baseline is historical and cannot prove live zero sessions"
+}

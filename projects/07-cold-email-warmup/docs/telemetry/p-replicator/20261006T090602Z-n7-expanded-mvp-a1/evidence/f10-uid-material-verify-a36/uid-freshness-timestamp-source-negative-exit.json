@@ -1,0 +1,65 @@
+{
+  "utc": "2026-10-06T23:16:21.954442+00:00",
+  "native_exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 3.234792404808104,
+  "pid": 486593,
+  "startticks": "125158871",
+  "runner_pid": 484722,
+  "PG": {
+    "at": "2026-10-06T23:16:21.774Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB_slots_claims_after_join": {
+    "utc": "2026-10-06T23:16:21.936Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 0,
+      "other_sessions": 0
+    },
+    "slots": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 2,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 3,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 4,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 2,
+        "occupied": false
+      }
+    ]
+  },
+  "owned_nodes": [],
+  "assertion_failure": true,
+  "failure_titles": [
+    "not ok 1 - full poll captures a reset between snapshot and read and incomplete entry performs no IO"
+  ],
+  "tap_sha256": "995bb99bbf47e2e78a8adc39a52cbbd8a6f0f1ad749edd1a94be89154263a484",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -1,0 +1,29 @@
+{
+  "attempt": "A88",
+  "status": "CLOSED_OPERATIONAL_DRIVER_PREPARED_NOT_EXECUTED",
+  "sealed_utc": "2026-10-07T15:14:28.316280+00:00",
+  "ack_utc": "2026-10-07T15:12:05Z",
+  "codecut_utc": "2026-10-07T15:14:05Z",
+  "sealcut_utc": "2026-10-07T15:15:05Z",
+  "elapsed_seconds": 143.31628,
+  "artifacts": {
+    "handoff.json": {
+      "sha256": "fa06ba6a9c8168cf825cc88fe996ce50ee2e604933ccbc79440882759fd495e0",
+      "bytes": 2219
+    },
+    "driver.py": {
+      "sha256": "0bcfc86778142fc17455539517472fc040a04acf157d4dcf8ff63ba117fd89de",
+      "bytes": 4172
+    },
+    "syntax.json": {
+      "sha256": "b47e47bd2db6328bb9913085517ad729cd9c5e7fa3f771f4121e9e2f815b3731",
+      "bytes": 135
+    }
+  },
+  "accepted_helper_dictionary_unchanged": true,
+  "DB_Node_tests_runtime_executed": false,
+  "actual_model": null,
+  "actual_effort": null,
+  "actual_usage": null,
+  "actual_cost": null
+}

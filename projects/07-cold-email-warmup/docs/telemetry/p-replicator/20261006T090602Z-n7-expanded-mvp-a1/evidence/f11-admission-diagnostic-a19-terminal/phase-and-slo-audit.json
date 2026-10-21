@@ -1,0 +1,632 @@
+{
+  "phaseCount": 25,
+  "missing": [],
+  "phases": [
+    {
+      "phase": {
+        "connection": 96,
+        "mailbox": "1dc84fb8-7a72-47d4-87d2-adfdbb19c62a",
+        "phase": "fault_injected",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+        "utc": "2026-10-07T02:54:00.375Z",
+        "monotonicMs": 19971.215919
+      },
+      "operation": "d8bd6d7e-20b2-4383-87e3-bae9aa45fbef",
+      "owner": "71264678-e3b1-48ca-a443-ee9c5135547b",
+      "acquired": "2026-10-07T02:53:59.940Z",
+      "closed": "2026-10-07T02:54:00.375Z",
+      "released": "2026-10-07T02:54:00.678Z",
+      "lifetimeMs": 738.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 107,
+        "mailbox": "1dc84fb8-7a72-47d4-87d2-adfdbb19c62a",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+        "utc": "2026-10-07T02:54:02.935Z",
+        "monotonicMs": 22531.765044
+      },
+      "operation": "26fb3528-99a3-4203-8210-bff753cd143e",
+      "owner": "301d3017-fd3b-48a2-885f-5f5263db7ff9",
+      "acquired": "2026-10-07T02:54:02.501Z",
+      "closed": "2026-10-07T02:54:05.779Z",
+      "released": "2026-10-07T02:54:05.808Z",
+      "lifetimeMs": 3307.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 128,
+        "mailbox": "1dc84fb8-7a72-47d4-87d2-adfdbb19c62a",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+        "utc": "2026-10-07T02:54:06.317Z",
+        "monotonicMs": 25913.521441
+      },
+      "operation": "4b7fe32a-3f38-456e-9e6c-9be02653d234",
+      "owner": "c0326dca-9022-42dc-8bc7-3fa89044337d",
+      "acquired": "2026-10-07T02:54:05.848Z",
+      "closed": "2026-10-07T02:54:09.159Z",
+      "released": "2026-10-07T02:54:09.188Z",
+      "lifetimeMs": 3340.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 218,
+        "mailbox": "1498669e-2088-41d0-bc36-c7778e91dffe",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+        "utc": "2026-10-07T02:54:22.153Z",
+        "monotonicMs": 41749.108124
+      },
+      "operation": "e2cebf6c-89d1-457f-adc6-0ed66332e823",
+      "owner": "4b8e0e28-1567-4811-9cd3-a334eb77a60c",
+      "acquired": "2026-10-07T02:54:21.543Z",
+      "closed": "2026-10-07T02:54:24.997Z",
+      "released": "2026-10-07T02:54:25.024Z",
+      "lifetimeMs": 3481.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 231,
+        "mailbox": "1498669e-2088-41d0-bc36-c7778e91dffe",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+        "utc": "2026-10-07T02:54:25.534Z",
+        "monotonicMs": 45130.839401
+      },
+      "operation": "5c29d422-c3a0-4e18-9bc4-a105897c43fa",
+      "owner": "047e486a-1f5a-4754-a09c-773ffe67de95",
+      "acquired": "2026-10-07T02:54:25.072Z",
+      "closed": "2026-10-07T02:54:28.381Z",
+      "released": "2026-10-07T02:54:28.424Z",
+      "lifetimeMs": 3352.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 339,
+        "mailbox": "007b8a1d-47b6-434f-b878-991b15c01858",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+        "utc": "2026-10-07T02:54:44.299Z",
+        "monotonicMs": 63895.280779
+      },
+      "operation": "d1fcee91-256e-4edc-951f-98dc1c9a3a0c",
+      "owner": "4e0d86f8-e246-4ea6-94be-d577ae7a46f6",
+      "acquired": "2026-10-07T02:54:43.886Z",
+      "closed": "2026-10-07T02:54:47.145Z",
+      "released": "2026-10-07T02:54:47.196Z",
+      "lifetimeMs": 3310.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 354,
+        "mailbox": "007b8a1d-47b6-434f-b878-991b15c01858",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+        "utc": "2026-10-07T02:54:48.245Z",
+        "monotonicMs": 67841.152618
+      },
+      "operation": "50d44d4e-88c6-4165-80d6-ecb4a0902465",
+      "owner": "12720d8c-e4a5-4aae-aadf-d257dc0e97bd",
+      "acquired": "2026-10-07T02:54:47.704Z",
+      "closed": "2026-10-07T02:54:51.088Z",
+      "released": "2026-10-07T02:54:51.121Z",
+      "lifetimeMs": 3417.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 457,
+        "mailbox": "079dd00c-4ea4-4500-99d9-87d41194a1e1",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+        "utc": "2026-10-07T02:55:06.336Z",
+        "monotonicMs": 85932.192556
+      },
+      "operation": "931b10cf-52cd-4f69-b2a9-bc46368fc6b3",
+      "owner": "73784820-1f8d-44f3-8279-0072ca55f81d",
+      "acquired": "2026-10-07T02:55:05.783Z",
+      "closed": "2026-10-07T02:55:09.180Z",
+      "released": "2026-10-07T02:55:09.778Z",
+      "lifetimeMs": 3995.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 461,
+        "mailbox": "528e4f1d-5fd0-46f7-bb73-11b6a06cde8c",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+        "utc": "2026-10-07T02:55:06.867Z",
+        "monotonicMs": 86463.176696
+      },
+      "operation": "091d1923-b9d3-42e1-91ac-215642cb4947",
+      "owner": "a04a993d-e03d-4764-8b78-56dcbc1f4014",
+      "acquired": "2026-10-07T02:55:06.420Z",
+      "closed": "2026-10-07T02:55:09.710Z",
+      "released": "2026-10-07T02:55:09.806Z",
+      "lifetimeMs": 3386.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 462,
+        "mailbox": "2f0a1d90-e259-42ba-bf45-3d1e4ea29c22",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+        "utc": "2026-10-07T02:55:06.927Z",
+        "monotonicMs": 86523.408277
+      },
+      "operation": "c2a753b5-93e7-42fd-bbe4-d2d62e0d6028",
+      "owner": "9050e883-2cb7-43bd-9035-df25abdb7c7b",
+      "acquired": "2026-10-07T02:55:06.495Z",
+      "closed": "2026-10-07T02:55:09.772Z",
+      "released": "2026-10-07T02:55:09.874Z",
+      "lifetimeMs": 3379.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 472,
+        "mailbox": "079dd00c-4ea4-4500-99d9-87d41194a1e1",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+        "utc": "2026-10-07T02:55:11.364Z",
+        "monotonicMs": 90959.967891
+      },
+      "operation": "a298cda7-bcc0-49b1-8fad-61e922b39b02",
+      "owner": "3f842871-ab53-42cf-910e-ed0777ff5402",
+      "acquired": "2026-10-07T02:55:10.772Z",
+      "closed": "2026-10-07T02:55:14.208Z",
+      "released": "2026-10-07T02:55:14.230Z",
+      "lifetimeMs": 3458.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 473,
+        "mailbox": "528e4f1d-5fd0-46f7-bb73-11b6a06cde8c",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+        "utc": "2026-10-07T02:55:11.468Z",
+        "monotonicMs": 91064.441708
+      },
+      "operation": "cfb403c1-ceca-4a87-ae2d-5b62be3ab029",
+      "owner": "300c3622-d213-4045-bd80-8c31b6558ce9",
+      "acquired": "2026-10-07T02:55:10.968Z",
+      "closed": "2026-10-07T02:55:14.311Z",
+      "released": "2026-10-07T02:55:14.340Z",
+      "lifetimeMs": 3372.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 474,
+        "mailbox": "2f0a1d90-e259-42ba-bf45-3d1e4ea29c22",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+        "utc": "2026-10-07T02:55:11.487Z",
+        "monotonicMs": 91083.470655
+      },
+      "operation": "f540d1d1-57f5-4be5-a67e-02d66a5745b9",
+      "owner": "96169d7c-1f98-40e1-859a-c97b69033110",
+      "acquired": "2026-10-07T02:55:10.991Z",
+      "closed": "2026-10-07T02:55:14.333Z",
+      "released": "2026-10-07T02:55:14.358Z",
+      "lifetimeMs": 3367.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 587,
+        "mailbox": "19d3decc-d1c3-490f-96be-cac92f723933",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+        "utc": "2026-10-07T02:55:35.173Z",
+        "monotonicMs": 114769.03236
+      },
+      "operation": "e6f74f23-7e4b-4300-9224-8694ecc6d4c8",
+      "owner": "01f9183d-3cc9-4729-acf5-ab3176448341",
+      "acquired": "2026-10-07T02:55:34.660Z",
+      "closed": "2026-10-07T02:55:38.015Z",
+      "released": "2026-10-07T02:55:38.037Z",
+      "lifetimeMs": 3377.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 605,
+        "mailbox": "19d3decc-d1c3-490f-96be-cac92f723933",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+        "utc": "2026-10-07T02:55:39.356Z",
+        "monotonicMs": 118952.790754
+      },
+      "operation": "5090a2bc-306e-4124-bb3c-0b0bef54cbc5",
+      "owner": "41882507-5459-47fd-a743-f5bc7f6dc402",
+      "acquired": "2026-10-07T02:55:38.925Z",
+      "closed": "2026-10-07T02:55:42.201Z",
+      "released": "2026-10-07T02:55:42.235Z",
+      "lifetimeMs": 3310.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 712,
+        "mailbox": "44bbe4c2-4437-4e86-8642-78ab409f1f9f",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+        "utc": "2026-10-07T02:55:57.106Z",
+        "monotonicMs": 136702.79041
+      },
+      "operation": "065701dc-a84a-4114-96e7-c5b185a2e8af",
+      "owner": "8e0089f1-1b1b-432a-914b-ca60caef472a",
+      "acquired": "2026-10-07T02:55:56.682Z",
+      "closed": "2026-10-07T02:55:59.955Z",
+      "released": "2026-10-07T02:56:00.019Z",
+      "lifetimeMs": 3337.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 733,
+        "mailbox": "44bbe4c2-4437-4e86-8642-78ab409f1f9f",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+        "utc": "2026-10-07T02:56:00.520Z",
+        "monotonicMs": 140116.914379
+      },
+      "operation": "ee4b8fef-a302-4631-a647-9a9995a64163",
+      "owner": "1b619b87-cdbe-4387-ab80-d61c718ea7c6",
+      "acquired": "2026-10-07T02:56:00.126Z",
+      "closed": "2026-10-07T02:56:03.365Z",
+      "released": "2026-10-07T02:56:03.395Z",
+      "lifetimeMs": 3269.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 821,
+        "mailbox": "2a10cc87-04ce-4e24-bb1d-22afb3cdbef2",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+        "utc": "2026-10-07T02:56:16.728Z",
+        "monotonicMs": 156324.448764
+      },
+      "operation": "115ee8f3-826c-457f-b3c7-f841d195ab96",
+      "owner": "b4941fac-9da2-4ab2-9997-e2bf9094be4f",
+      "acquired": "2026-10-07T02:56:16.281Z",
+      "closed": "2026-10-07T02:56:19.574Z",
+      "released": "2026-10-07T02:56:19.598Z",
+      "lifetimeMs": 3317.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 826,
+        "mailbox": "3a98c1f8-ddc2-41af-abbb-6461d7e79635",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+        "utc": "2026-10-07T02:56:17.447Z",
+        "monotonicMs": 157043.152031
+      },
+      "operation": "ebeaac32-4fcd-4174-be34-3ae38f68c68c",
+      "owner": "955e79ab-2dce-4897-a6fb-69f77c5e2a69",
+      "acquired": "2026-10-07T02:56:16.964Z",
+      "closed": "2026-10-07T02:56:20.298Z",
+      "released": "2026-10-07T02:56:20.360Z",
+      "lifetimeMs": 3396.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 838,
+        "mailbox": "2a10cc87-04ce-4e24-bb1d-22afb3cdbef2",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+        "utc": "2026-10-07T02:56:20.584Z",
+        "monotonicMs": 160180.305721
+      },
+      "operation": "ed39a88b-779a-4d5e-9518-4c8ae09a6436",
+      "owner": "592a068f-2702-48ef-919e-273046047d2a",
+      "acquired": "2026-10-07T02:56:20.151Z",
+      "closed": "2026-10-07T02:56:23.428Z",
+      "released": "2026-10-07T02:56:23.506Z",
+      "lifetimeMs": 3355.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 842,
+        "mailbox": "3a98c1f8-ddc2-41af-abbb-6461d7e79635",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+        "utc": "2026-10-07T02:56:21.053Z",
+        "monotonicMs": 160649.521348
+      },
+      "operation": "4c576f56-bce5-42b1-8571-91046deaa36a",
+      "owner": "fcd5ed6f-6257-435e-bbd0-40562f8c7931",
+      "acquired": "2026-10-07T02:56:20.680Z",
+      "closed": "2026-10-07T02:56:23.896Z",
+      "released": "2026-10-07T02:56:23.922Z",
+      "lifetimeMs": 3242.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 1071,
+        "mailbox": "54ca2f97-e102-47b7-a0d2-76603fbd9f1a",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+        "utc": "2026-10-07T02:56:59.806Z",
+        "monotonicMs": 199402.885102
+      },
+      "operation": "585284cc-219a-4a48-bf4e-2a85aa8b6c19",
+      "owner": "3815d65d-e6b2-4d20-9bff-34e16ce0f722",
+      "acquired": "2026-10-07T02:56:59.348Z",
+      "closed": "2026-10-07T02:57:02.653Z",
+      "released": "2026-10-07T02:57:02.674Z",
+      "lifetimeMs": 3326.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 1078,
+        "mailbox": "5a086d47-3d8a-4952-aee5-3106e49bf94c",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+        "utc": "2026-10-07T02:57:00.729Z",
+        "monotonicMs": 200325.436972
+      },
+      "operation": "5d7d45bb-f5cf-4eb2-8b05-df7f2fd985c7",
+      "owner": "9e618ae6-ce2a-488d-9735-0d5e664a45d2",
+      "acquired": "2026-10-07T02:57:00.333Z",
+      "closed": "2026-10-07T02:57:03.575Z",
+      "released": "2026-10-07T02:57:03.614Z",
+      "lifetimeMs": 3281.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 1089,
+        "mailbox": "54ca2f97-e102-47b7-a0d2-76603fbd9f1a",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+        "utc": "2026-10-07T02:57:03.831Z",
+        "monotonicMs": 203427.489349
+      },
+      "operation": "b4abb3e5-b6b0-44b5-99b7-ecf9375e6c22",
+      "owner": "35ba419f-7a9e-4d3f-9e3a-0f4a99029537",
+      "acquired": "2026-10-07T02:57:03.351Z",
+      "closed": "2026-10-07T02:57:06.676Z",
+      "released": "2026-10-07T02:57:06.817Z",
+      "lifetimeMs": 3466.0,
+      "closeBeforeRelease": true
+    },
+    {
+      "phase": {
+        "connection": 1093,
+        "mailbox": "5a086d47-3d8a-4952-aee5-3106e49bf94c",
+        "phase": "phase_start",
+        "command": "a4 UID FETCH 1 (UID BODY.PEEK[TEXT]<0.32769>)",
+        "utc": "2026-10-07T02:57:04.486Z",
+        "monotonicMs": 204082.541003
+      },
+      "operation": "8818c4fb-8262-4178-a798-5bb7b969c800",
+      "owner": "ef0ec2e9-ddb0-4b89-810e-d168affe405e",
+      "acquired": "2026-10-07T02:57:04.069Z",
+      "closed": "2026-10-07T02:57:07.333Z",
+      "released": "2026-10-07T02:57:07.363Z",
+      "lifetimeMs": 3294.0,
+      "closeBeforeRelease": true
+    }
+  ],
+  "allPhysicalPhaseWithin5s": true,
+  "maxPhaseLifetimeMs": 3995.0,
+  "fault": {
+    "phase": {
+      "connection": 96,
+      "mailbox": "1dc84fb8-7a72-47d4-87d2-adfdbb19c62a",
+      "phase": "fault_injected",
+      "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+      "utc": "2026-10-07T02:54:00.375Z",
+      "monotonicMs": 19971.215919
+    },
+    "operation": "d8bd6d7e-20b2-4383-87e3-bae9aa45fbef",
+    "owner": "71264678-e3b1-48ca-a443-ee9c5135547b",
+    "acquired": "2026-10-07T02:53:59.940Z",
+    "closed": "2026-10-07T02:54:00.375Z",
+    "released": "2026-10-07T02:54:00.678Z",
+    "lifetimeMs": 738.0,
+    "closeBeforeRelease": true
+  },
+  "recovery": {
+    "phase": {
+      "connection": 107,
+      "mailbox": "1dc84fb8-7a72-47d4-87d2-adfdbb19c62a",
+      "phase": "phase_start",
+      "command": "a4 UID FETCH 1 (UID BODY.PEEK[HEADER.FIELDS (CONTENT-TYPE CONTENT-TRANSFER-ENCODING CONTENT-DISPOSITION AUTO-SUBMITTED PRECEDENCE LIST-ID RETURN-PATH SUBJECT)])",
+      "utc": "2026-10-07T02:54:02.935Z",
+      "monotonicMs": 22531.765044
+    },
+    "operation": "26fb3528-99a3-4203-8210-bff753cd143e",
+    "owner": "301d3017-fd3b-48a2-885f-5f5263db7ff9",
+    "acquired": "2026-10-07T02:54:02.501Z",
+    "closed": "2026-10-07T02:54:05.779Z",
+    "released": "2026-10-07T02:54:05.808Z",
+    "lifetimeMs": 3307.0,
+    "closeBeforeRelease": true
+  },
+  "recoveryAfterExactRelease": true,
+  "all30HeaderGaps": [
+    {
+      "mailbox": "2a10cc87-04ce-4e24-bb1d-22afb3cdbef2",
+      "completions": 11,
+      "maxGapMs": 28528
+    },
+    {
+      "mailbox": "8301de9f-67b5-46fa-8e3c-457a353d1529",
+      "completions": 10,
+      "maxGapMs": 25179
+    },
+    {
+      "mailbox": "528e4f1d-5fd0-46f7-bb73-11b6a06cde8c",
+      "completions": 13,
+      "maxGapMs": 24175
+    },
+    {
+      "mailbox": "4ccd237d-47cd-4b51-aabd-a831a9f9ac94",
+      "completions": 10,
+      "maxGapMs": 25926
+    },
+    {
+      "mailbox": "2f0a1d90-e259-42ba-bf45-3d1e4ea29c22",
+      "completions": 13,
+      "maxGapMs": 24255
+    },
+    {
+      "mailbox": "7e641b2c-d499-444c-8858-538a2d4c9f61",
+      "completions": 10,
+      "maxGapMs": 25373
+    },
+    {
+      "mailbox": "44bbe4c2-4437-4e86-8642-78ab409f1f9f",
+      "completions": 12,
+      "maxGapMs": 25778
+    },
+    {
+      "mailbox": "007b8a1d-47b6-434f-b878-991b15c01858",
+      "completions": 13,
+      "maxGapMs": 26003
+    },
+    {
+      "mailbox": "e8b78ff6-e217-43b5-ba66-c7e1f1b09565",
+      "completions": 10,
+      "maxGapMs": 27503
+    },
+    {
+      "mailbox": "977fe771-8f98-45c4-839f-04fe12a10434",
+      "completions": 10,
+      "maxGapMs": 27316
+    },
+    {
+      "mailbox": "079dd00c-4ea4-4500-99d9-87d41194a1e1",
+      "completions": 13,
+      "maxGapMs": 24513
+    },
+    {
+      "mailbox": "5a086d47-3d8a-4952-aee5-3106e49bf94c",
+      "completions": 11,
+      "maxGapMs": 25543
+    },
+    {
+      "mailbox": "c455e9b7-a1bb-4b7d-b4d3-14548609f0db",
+      "completions": 10,
+      "maxGapMs": 26974
+    },
+    {
+      "mailbox": "75d13ec0-452e-4d4f-bbdb-b33ed203935b",
+      "completions": 10,
+      "maxGapMs": 28269
+    },
+    {
+      "mailbox": "c2fa9944-9356-4dff-ae63-86640bdba05e",
+      "completions": 10,
+      "maxGapMs": 27010
+    },
+    {
+      "mailbox": "7d8bae15-c7a2-4a0e-b092-05f3f7690c7a",
+      "completions": 10,
+      "maxGapMs": 25186
+    },
+    {
+      "mailbox": "f4f6e14c-92f4-40cd-be6c-96421a4d483b",
+      "completions": 10,
+      "maxGapMs": 26539
+    },
+    {
+      "mailbox": "5a720190-bdac-4480-b3a2-d38a2970db6e",
+      "completions": 10,
+      "maxGapMs": 25679
+    },
+    {
+      "mailbox": "826e67a8-cc6d-46c8-bbe9-79ec20ae53af",
+      "completions": 10,
+      "maxGapMs": 25964
+    },
+    {
+      "mailbox": "3a98c1f8-ddc2-41af-abbb-6461d7e79635",
+      "completions": 11,
+      "maxGapMs": 26995
+    },
+    {
+      "mailbox": "1dc84fb8-7a72-47d4-87d2-adfdbb19c62a",
+      "completions": 13,
+      "maxGapMs": 22386
+    },
+    {
+      "mailbox": "1498669e-2088-41d0-bc36-c7778e91dffe",
+      "completions": 13,
+      "maxGapMs": 22992
+    },
+    {
+      "mailbox": "957c4915-b212-4272-a467-97ec2a99c65a",
+      "completions": 10,
+      "maxGapMs": 25850
+    },
+    {
+      "mailbox": "f1ef966e-04ec-4bbd-b360-e4000d8c85da",
+      "completions": 10,
+      "maxGapMs": 26713
+    },
+    {
+      "mailbox": "d84846e1-2cd8-49d5-afa2-c8e597c188cf",
+      "completions": 10,
+      "maxGapMs": 27256
+    },
+    {
+      "mailbox": "ee2d29b0-ea85-4669-a623-c0061ded690d",
+      "completions": 10,
+      "maxGapMs": 26424
+    },
+    {
+      "mailbox": "8eae6a37-9df1-4ba4-b595-41f8331587d0",
+      "completions": 10,
+      "maxGapMs": 26055
+    },
+    {
+      "mailbox": "19d3decc-d1c3-490f-96be-cac92f723933",
+      "completions": 12,
+      "maxGapMs": 28877
+    },
+    {
+      "mailbox": "50769261-2e58-427e-ac6a-daad9a79b09d",
+      "completions": 10,
+      "maxGapMs": 24499
+    },
+    {
+      "mailbox": "54ca2f97-e102-47b7-a0d2-76603fbd9f1a",
+      "completions": 11,
+      "maxGapMs": 27499
+    }
+  ],
+  "headerMaxGapMs": 28877,
+  "all30FairMaxDelayMs": 28066.0,
+  "peaks": {
+    "imap": 4,
+    "body": 3,
+    "smtp": 1
+  },
+  "measurementStart": "2026-10-07T02:53:43.553000+00:00",
+  "runtimeMs": 240363,
+  "ready": 12,
+  "denominator": 30,
+  "full300Completed": false
+}

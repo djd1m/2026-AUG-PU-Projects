@@ -1,0 +1,327 @@
+
+ RUN  v5.0.4 /tmp/n8-billing-author-20261013/projects/08-interior-ai-redesign
+
+stderr | tests/foundation/integration.test.ts > actual PG foundation acceptance > FND-R1 malformed cursor timestamps return400 before SQL while microsecond cursor remains valid
+{"requestId":"176668b7-8e7b-4299-904d-e16519959d6e","code":"INVALID_CURSOR","latencyMs":3}
+
+stderr | tests/foundation/integration.test.ts > actual PG foundation acceptance > FND-R1 malformed cursor timestamps return400 before SQL while microsecond cursor remains valid
+{"requestId":"24ad1ecb-d7ad-4a90-8a85-7a115bf56bcc","code":"INVALID_CURSOR","latencyMs":2}
+
+stderr | tests/foundation/integration.test.ts > actual PG foundation acceptance > FND-R1 malformed cursor timestamps return400 before SQL while microsecond cursor remains valid
+{"requestId":"9516fc0a-7d06-4665-8b21-26909dc32d54","code":"INVALID_CURSOR","latencyMs":1}
+
+stderr | tests/foundation/integration.test.ts > actual PG foundation acceptance > FND-R1 malformed cursor timestamps return400 before SQL while microsecond cursor remains valid
+{"requestId":"322a4817-92bf-479e-8891-db4e23bb1bee","code":"INVALID_CURSOR","latencyMs":2}
+
+stderr | tests/foundation/integration.test.ts > actual PG foundation acceptance > FND-R1 malformed cursor timestamps return400 before SQL while microsecond cursor remains valid
+{"requestId":"1bd1857f-7b9a-4f11-aca3-2e8b0f5eeb46","code":"INVALID_CURSOR","latencyMs":1}
+
+ ✓ tests/foundation/integration.test.ts > actual PG foundation acceptance > FND-R1 malformed cursor timestamps return400 before SQL while microsecond cursor remains valid 57ms
+ ✓ tests/foundation/integration.test.ts > actual PG foundation acceptance > SC-US-001-1/2 registration duplicate neutral dummy token; login/logout/expiry/disabled persisted 381ms
+ ✓ tests/foundation/integration.test.ts > actual PG foundation acceptance > SC-US-002-1 and SC-US-020-2 owned SQL/HTML text roundtrips; projects isolated and DTO excludes account/private fields 19ms
+ ✓ tests/foundation/integration.test.ts > actual PG foundation acceptance > SC-US-002-2/019-1 foreign and missing resources same404; ownership/CAS persists through races 83ms
+stderr | tests/foundation/integration.test.ts > actual PG foundation acceptance > SC-US-016-3 route mutation saves, envelope camelCase, me private response safe; foreign HTTP read404
+{"requestId":"8ada08ec-18d4-4259-af6c-9a77b4d63c7f","code":"NOT_FOUND","latencyMs":1}
+
+ ✓ tests/foundation/integration.test.ts > actual PG foundation acceptance > SC-US-016-2 atomic PG 59 attempts then 20 concurrent admits exactly one; rejected attempts counted 113ms
+ ✓ tests/foundation/integration.test.ts > actual PG foundation acceptance > SC-US-020-1 invalid JSON counts before parse with no retained pool client; exact Origin failures count too 7ms
+ ✓ tests/foundation/integration.test.ts > actual PG foundation acceptance > SC-US-016-3 route mutation saves, envelope camelCase, me private response safe; foreign HTTP read404 26ms
+ ✓ tests/foundation/integration.test.ts > actual PG foundation acceptance > bounded cursor survives PostgreSQL microseconds and quota20 is atomic at concurrency edge 164ms
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"86788013-373e-46f9-907b-0a2c22f1d40d","code":"RATE_LIMITED","latencyMs":7}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"b15139c1-95fd-49ea-a63a-64a4c5541ee7","code":"RATE_LIMITED","latencyMs":6}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"7b8bdb79-4a1e-4813-add9-b2023a28a466","code":"RATE_LIMITED","latencyMs":7}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"1b6b9c78-e544-4435-a6e3-d818e77f26de","code":"RATE_LIMITED","latencyMs":9}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"a9c90724-f541-40a8-9b99-f89c98f6beef","code":"RATE_LIMITED","latencyMs":9}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"5e394c03-7148-429f-8726-088940281ef3","code":"RATE_LIMITED","latencyMs":9}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"76c092fd-473f-4653-b38e-fca82906df6d","code":"RATE_LIMITED","latencyMs":10}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"95eef70b-31b9-435f-9639-9e5b4ab3de79","code":"RATE_LIMITED","latencyMs":12}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"9fd58f0c-9f6a-4853-bc0a-df9e1a8043a5","code":"RATE_LIMITED","latencyMs":12}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"c88e4c1c-ed49-4dcc-a9a7-75ab3eac11de","code":"RATE_LIMITED","latencyMs":14}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"e8328b3b-36ae-49ae-a5f8-197a79120a24","code":"RATE_LIMITED","latencyMs":14}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"85935400-3ab6-4267-9ec3-22e5e99c0878","code":"RATE_LIMITED","latencyMs":14}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"27752996-cb9d-4a84-a4a3-967e266c6a98","code":"RATE_LIMITED","latencyMs":15}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"5fdbff1e-a524-4a1d-9f72-afdd12fdf2b1","code":"RATE_LIMITED","latencyMs":14}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"4860fe4a-088c-4539-abb2-23805c58580c","code":"RATE_LIMITED","latencyMs":14}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"c3a6ba26-19d4-4f4b-9777-d9c027d751b2","code":"RATE_LIMITED","latencyMs":17}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"361730e2-f347-400f-81db-09b8418876f7","code":"RATE_LIMITED","latencyMs":20}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"61448747-ab93-4941-a1c5-fe222e746ad0","code":"RATE_LIMITED","latencyMs":20}
+
+stderr | tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected
+{"requestId":"599c0ae0-5ea4-4eaf-b2b5-6c862f747505","code":"RATE_LIMITED","latencyMs":23}
+
+ ✓ tests/foundation/integration.test.ts > actual PG foundation acceptance > SC-US-001-1 real auth HTTP register neutral201 + login cookie then logout204 revokes 149ms
+ ✓ tests/foundation/integration.test.ts > archive dispatch ordering and readiness > archive revokes links, releases predispatch origin-day reservations/credits once, retains dispatched uncertain holds 44ms
+ ✓ tests/foundation/integration.test.ts > archive dispatch ordering and readiness > SC-US-016-2 HTTP concurrent edge returns one200 nineteen429 Retry-After and no body reads rejected 85ms
+ ✓ tests/design/jobs.test.ts > exact consent + replay before archive, caps, credit and version, with mismatched replay rejected 414ms
+ ✓ tests/design/jobs.test.ts > admission count races across connections reserve exactly five account jobs 543ms
+ ✓ tests/design/jobs.test.ts > day boundary retains old holds and releases against origin day exactly once 367ms
+ ✓ tests/design/jobs.test.ts > single claim dispatch known cost and stale completion fence 362ms
+ ✓ tests/design/jobs.test.ts > late same-shell output creates detached draft and preserves newer manual pointer/budget 379ms
+ ✓ tests/design/jobs.test.ts > malicious definite response releases credit but records known provider spend 358ms
+ ✓ tests/design/jobs.test.ts > pre-dispatch crashes retry max three leases, live third lease survives sweep then expires 366ms
+ ✓ tests/design/jobs.test.ts > post-dispatch crash stays uncertain with holds, never automatic redispatch 338ms
+ ✓ tests/design/jobs.test.ts > operator reconcile exact-once evidence, full overrun and no guessed credit outcome 368ms
+ ✓ tests/design/jobs.test.ts > unknown successful cost can settle later without creating another design or consuming another credit 387ms
+ ✓ tests/design/jobs.test.ts > manual mode makes no provider request; demo is explicit fixture without credits or spend 341ms
+ ✓ tests/design/jobs.test.ts > provider hard-limit verification fails before mark and releases without POST 364ms
+ ✓ tests/design/jobs.test.ts > database admission snapshot immutable while lifecycle fields remain writable 421ms
+ ✓ tests/design/jobs.test.ts > changed live config is rejected before outbound and overrun blocks another account 329ms
+ ✓ tests/design/jobs.test.ts > DESIGN-R2 increased input rate and caps cannot dispatch above immutable original reservation 312ms
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-2 parallel same-key checkout has one durable order and provider id; client prices rejected 519ms
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > provider blocked outside DB transaction; intent already durable; timeout replay keeps same remote key 305ms
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > stale unknown remote outcome cannot charge again after provider 24h idempotence horizon 321ms
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-3 verified concurrent delivery grants exactly one package and one event; return GET is read-only 392ms
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-4 merchant/test/amount/currency/paid/status/metadata/bound-id negatives leave ledger empty 309ms
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > notification amount/status/merchant fields are ignored; only refetched object grants 314ms
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > AC-billing-5 verification outage occupies no event key; later retry grants once 325ms
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > database failure rolls back event/order/credits together and leaves retry possible 327ms
+ ✓ tests/billing/repository.test.ts > BILLING immutable checkout and verified ledger > owned order reads hide foreign IDs and history cursor returns all 53 orders without overlap 467ms
+ ✓ tests/billing/repository.test.ts > DDL immutable intent and bound identity survive direct SQL; refund state cannot be restored by late write 413ms
+ ✓ tests/billing/repository.test.ts > verified webhook can arrive before create response persistence; later bind never downgrades succeeded state 320ms
+ ✓ tests/space/repository.test.ts > SC-US-003-1 shell hash stable, old shell immutable, update creates new revision 412ms
+ ✓ tests/space/repository.test.ts > same-version concurrent shell writes have exactly one winner on real PostgreSQL 390ms
+ ✓ tests/space/repository.test.ts > parallel upload reservations include pending retained bytes and release quota 453ms
+ ✓ tests/space/repository.test.ts > account quota serializes reservations across different projects 407ms
+ ✓ tests/space/repository.test.ts > 64 assets hard cap, unsupported ordinary share_image and missing rights refuse 390ms
+ ✓ tests/space/repository.test.ts > SC-US-004-3 owner and same-project checks reject known foreign assets, pending never served 342ms
+ ✓ tests/space/repository.test.ts > SC-US-005-1/3 stores exact owner pin and reference provenance, no asset/source mixing 314ms
+ ✓ tests/space/repository.test.ts > CAS rechecked after parsing; lost reservation cannot become ready 298ms
+ ✓ tests/space/repository.test.ts > stale pending and old orphan cleanup preserve ready and young files 334ms
+ ✓ tests/space/repository.test.ts > 20 reference cap rejects the 21st and preserves the existing list 353ms
+ ✓ tests/space/repository.test.ts > 100 combined immutable revision cap rejects new shell without bumping project 304ms
+ ✓ tests/space/repository.test.ts > paginated private assets expose all64 exactly once; forged foreign cursor404 382ms
+ ✓ tests/billing/refund.test.ts > AC-billing-6 partial refund distinct object verified via payment_id; replay cannot restore export or new billing 457ms
+ ✓ tests/billing/refund.test.ts > refund before late payment succeeds is monotonic; success audited ignored with zero credits 410ms
+ ✓ tests/billing/refund.test.ts > parallel success/refund always ends in durable hold, never duplicate credits 407ms
+ ✓ tests/billing/refund.test.ts > refund rejects nonpositive/excess/currency/unpaid/original-link proofs without occupying ledger 317ms
+ ✓ tests/billing/refund.test.ts > refund atomically revokes existing unwatermarked shares while watermarked snapshot remains; failure rolls back hold/revoke/event 335ms
+ ✓ tests/billing/refund.test.ts > refund before actual PgJobs dispatch mark releases held admission and prevents external dispatch 380ms
+ ✓ tests/billing/refund.test.ts > refund after dispatch mark leaves in-flight held job visible; no false cancellation or inline spend-lock settlement 370ms
+stderr | tests/billing/http.test.ts > AC-billing-1 default off checkout503 webhook404 before body; offers honest empty and no external calls
+{"requestId":"5885c4e6-1f0d-41a1-ae93-46e813c1f9ed","code":"PAYMENTS_DISABLED","latencyMs":7}
+
+stderr | tests/billing/http.test.ts > AC-billing-1 default off checkout503 webhook404 before body; offers honest empty and no external calls
+{"requestId":"cfbc2570-8949-4bbe-9b1b-ef1ee4d6fab0","code":"NOT_FOUND","latencyMs":0}
+
+ ✓ tests/billing/http.test.ts > AC-billing-1 default off checkout503 webhook404 before body; offers honest empty and no external calls 478ms
+ ✓ tests/billing/http.test.ts > live startup requires explicit merchant/test/SKU and HTTPS origin; public offers expose whitelist only 331ms
+stderr | tests/billing/http.test.ts > checkout pre-body authentication, exact Origin and atomic rate guard; no project CAS needed
+{"requestId":"babb9868-def5-4c2c-b93a-9f52cc03c170","code":"UNAUTHENTICATED","latencyMs":0}
+
+stderr | tests/billing/http.test.ts > checkout pre-body authentication, exact Origin and atomic rate guard; no project CAS needed
+{"requestId":"b1fe0e7c-79f1-403b-b2b7-3043b9923ea4","code":"ORIGIN_FORBIDDEN","latencyMs":4}
+
+stderr | tests/billing/http.test.ts > checkout pre-body authentication, exact Origin and atomic rate guard; no project CAS needed
+{"requestId":"94a93c35-e202-47c0-914e-93ecc3677ba0","code":"ORIGIN_FORBIDDEN","latencyMs":3}
+
+stderr | tests/billing/http.test.ts > checkout pre-body authentication, exact Origin and atomic rate guard; no project CAS needed
+{"requestId":"d9bb8ea8-fac4-4a2d-9ad2-ca00ded8ae7c","code":"RATE_LIMITED","latencyMs":4}
+
+ ✓ tests/billing/http.test.ts > checkout pre-body authentication, exact Origin and atomic rate guard; no project CAS needed 387ms
+stderr | tests/billing/http.test.ts > billing HTTP rejects JSON size/schema/key and never creates orders for malformed inputs
+{"requestId":"a0ccc92a-3255-46fe-a4ab-82af5fe064b1","code":"INVALID_JSON","latencyMs":5}
+
+stderr | tests/billing/http.test.ts > billing HTTP rejects JSON size/schema/key and never creates orders for malformed inputs
+{"requestId":"a1df7406-6ef2-4702-a835-c6a6eda90b76","code":"BODY_TOO_LARGE","latencyMs":5}
+
+stderr | tests/billing/http.test.ts > billing HTTP rejects JSON size/schema/key and never creates orders for malformed inputs
+{"requestId":"ae0fe8a3-2388-449d-8542-a88ae6f41b90","code":"INVALID_INPUT","latencyMs":5}
+
+stderr | tests/billing/http.test.ts > billing HTTP rejects JSON size/schema/key and never creates orders for malformed inputs
+{"requestId":"d5a6287f-870e-48b9-89ec-3721a0e5685e","code":"IDEMPOTENCY_REQUIRED","latencyMs":3}
+
+stderr | tests/billing/http.test.ts > billing HTTP rejects JSON size/schema/key and never creates orders for malformed inputs
+{"requestId":"b34a3e22-c97e-4064-9c3d-2a24961517cd","code":"UNKNOWN_SKU","latencyMs":3}
+
+ ✓ tests/billing/http.test.ts > billing HTTP rejects JSON size/schema/key and never creates orders for malformed inputs 345ms
+stderr | tests/billing/http.test.ts > webhook source rejected before bounded body; XFF cannot restore identity; mapped official peer accepted
+{"requestId":"ca68bed6-0923-4e6a-a830-2c80b6592cf9","code":"PAYMENT_SOURCE_FORBIDDEN","latencyMs":1}
+
+stderr | tests/billing/http.test.ts > webhook source rejected before bounded body; XFF cannot restore identity; mapped official peer accepted
+{"requestId":"c587d2bd-9b04-4967-a08e-bc53ef86fc5e","code":"PAYMENT_SOURCE_FORBIDDEN","latencyMs":0}
+
+stderr | tests/billing/http.test.ts > webhook source rejected before bounded body; XFF cannot restore identity; mapped official peer accepted
+{"requestId":"db98fab9-6d90-4ef7-b5e6-2b1fbc17e0a7","code":"PAYMENT_SOURCE_FORBIDDEN","latencyMs":7}
+
+stderr | tests/billing/http.test.ts > webhook source rejected before bounded body; XFF cannot restore identity; mapped official peer accepted
+{"requestId":"c8b53664-d61f-4c3e-a124-e100922cb27c","code":"INVALID_PEER","latencyMs":0}
+
+stderr | tests/billing/http.test.ts > webhook source rejected before bounded body; XFF cannot restore identity; mapped official peer accepted
+{"requestId":"cf9a30e6-1346-4bd7-b53f-351583297a78","code":"INVALID_PEER","latencyMs":0}
+
+ ✓ tests/billing/http.test.ts > webhook source rejected before bounded body; XFF cannot restore identity; mapped official peer accepted 693ms
+stderr | tests/billing/http.test.ts > actual HTTP listener overwrites spoofed source headers from loopback socket before webhook; no parsing/grant
+{"requestId":"ddbb0eb7-de89-4216-9511-dbb43d83a59b","code":"PAYMENT_SOURCE_FORBIDDEN","latencyMs":0}
+
+ ✓ tests/billing/http.test.ts > actual HTTP listener overwrites spoofed source headers from loopback socket before webhook; no parsing/grant 358ms
+stderr | tests/billing/http.test.ts > webhook malformed/oversized body and rate failure never invoke provider or occupy event
+{"requestId":"1d0f3966-65ae-4c3a-a713-7ac2b66847ec","code":"INVALID_JSON","latencyMs":3}
+
+stderr | tests/billing/http.test.ts > webhook malformed/oversized body and rate failure never invoke provider or occupy event
+{"requestId":"e26171e0-7d9f-439e-a04a-2418828329ba","code":"BODY_TOO_LARGE","latencyMs":1}
+
+stderr | tests/billing/http.test.ts > webhook malformed/oversized body and rate failure never invoke provider or occupy event
+{"requestId":"f961fbae-dedf-4cd5-9a51-c93662ca0b90","code":"PAYMENT_PROOF_INVALID","latencyMs":2}
+
+stderr | tests/billing/http.test.ts > webhook malformed/oversized body and rate failure never invoke provider or occupy event
+{"requestId":"86648230-6100-4db0-b056-86599cd7c752","code":"RATE_LIMITED","latencyMs":3}
+
+ ✓ tests/billing/http.test.ts > webhook malformed/oversized body and rate failure never invoke provider or occupy event 305ms
+stderr | tests/billing/http.test.ts > owned return/history GET never grants credits; foreign ID404; DTO omits merchant/remote/account
+{"requestId":"b22b8f67-0eb1-4713-8085-dd115dc81401","code":"NOT_FOUND","latencyMs":1}
+
+ ✓ tests/billing/http.test.ts > owned return/history GET never grants credits; foreign ID404; DTO omits merchant/remote/account 366ms
+ ✓ tests/billing/http.test.ts > provider/source test injection is forbidden under production; no fake runtime config accepted 339ms
+ ✓ tests/foundation/http.test.ts > SC-US-016/020 bounded pre-body HTTP > SC-US-016-1 exact Origin required after atomic rate and before body; foreign owner returns404 without parsing 18ms
+ ✓ tests/foundation/http.test.ts > SC-US-016/020 bounded pre-body HTTP > SC-US-016-3 correct Origin/owner/If-Match passes with actor; missing/invalid version denied 3ms
+ ✓ tests/foundation/http.test.ts > SC-US-016/020 bounded pre-body HTTP > SC-US-020-1 malformed/oversized/slow body is counted and bounded before parse 29ms
+ ✓ tests/foundation/http.test.ts > SC-US-016/020 bounded pre-body HTTP > SC-US-021-1 error envelope/log only allowlisted code/requestId/latency, never secret exception payload 3ms
+ ✓ tests/foundation/http.test.ts > SC-US-016/020 bounded pre-body HTTP > cookies have HttpOnly/SameSite/Secure HTTPS/TTL; duplicate session fails closed 1ms
+ ✓ tests/foundation/http.test.ts > custom Node peer boundary > strips duplicated forwarded/reserved attacker headers and replaces peer from socket, normalizes mapped IPv4 9ms
+ ✓ tests/foundation/http.test.ts > custom Node peer boundary > missing peer cannot fall back to XFF; duplicate security header rejected 2ms
+ ✓ tests/foundation/http.test.ts > actual loopback socket overwrites raw spoofed duplicate forwarding before application reads 16ms
+ ✓ tests/foundation/http.test.ts > runtime bundle copies preserve branded typed errors; structural secret lookalike stays redacted 1ms
+ ✓ tests/billing/provider.test.ts > offline HTTP adapter creates exact RUB intent with Basic merchant auth and order UUID idempotence; retries same remote ID 49ms
+ ✓ tests/billing/provider.test.ts > offline HTTP adapter gets payment and distinct partial refund payment_id, exact decimal and safe HTTPS 14ms
+ ✓ tests/billing/provider.test.ts > adapter rejects wrong merchant/test/currency/object ID/metadata/decimal before trusting provider object 22ms
+ ✓ tests/billing/provider.test.ts > provider HTTP redirect/error/content-type/invalid JSON/oversized declared and streamed bodies fail bounded with redacted503 18ms
+ ✓ tests/billing/provider.test.ts > deadline covers both response headers and endless response body; no unbounded text allocation 65ms
+ ✓ tests/billing/provider.test.ts > closed official source networks support IPv4-mapped peers; loopback, gateway, missing and unknown never allowed 1ms
+ ✓ tests/billing/provider.test.ts > production cannot inject test transport or endpoint; secrets stay server-only constructor 1ms
+ ✓ tests/design/provider.test.ts > real HTTP fixture validates fixed endpoint, strict schema, no redirects, exact body and known cost 44ms
+ ✓ tests/design/provider.test.ts > missing unknown cost remains null, malformed scene remains definite result for semantic rejection 10ms
+ ✓ tests/design/provider.test.ts > provider key unknown/unlimited/weekly/BYOK excluded/insufficient remaining fails closed 20ms
+ ✓ tests/design/provider.test.ts > redirect, oversized response and transport deadline rejected by actual HTTP adapter 66ms
+ ✓ tests/design/provider.test.ts > request byte ceiling includes schema and overhead, no guessed pricing and no production fixture injection 3ms
+ ✓ tests/design/provider.test.ts > offline HTTP fixture runs complete real-PG worker path once and reconciles both ledgers 434ms
+ ✓ tests/space/parser.test.ts > SC-US-004-1 decodes image, strips EXIF, preserves original hash and correct orientation 245ms
+ ✓ tests/space/parser.test.ts > SC-US-004-1 validates actual embedded GLB, never fabricates normalized image 182ms
+ ✓ tests/space/parser.test.ts > SC-US-004-2 rejects prohibited GLB uri before resource fetch 158ms
+ ✓ tests/space/parser.test.ts > SC-US-004-2 rejects prohibited GLB data-uri before resource fetch 152ms
+ ✓ tests/space/parser.test.ts > SC-US-004-2 rejects prohibited GLB animation before resource fetch 164ms
+ ✓ tests/space/parser.test.ts > SC-US-004-2 rejects prohibited GLB skin before resource fetch 156ms
+ ✓ tests/space/parser.test.ts > SC-US-004-2 rejects prohibited GLB extension before resource fetch 164ms
+ ✓ tests/space/parser.test.ts > SC-US-004-2 rejects prohibited GLB vertices before resource fetch 166ms
+ ✓ tests/space/parser.test.ts > SC-US-004-2 rejects prohibited GLB nodes before resource fetch 163ms
+ ✓ tests/space/parser.test.ts > SC-US-004-2 rejects prohibited GLB sparse before resource fetch 180ms
+ ✓ tests/space/parser.test.ts > SC-US-004-2 rejects prohibited GLB mode before resource fetch 161ms
+ ✓ tests/space/parser.test.ts > rejects malformed GLB, corrupt image and decoded pixels >20 MP 733ms
+ ✓ tests/space/parser.test.ts > bounds actual body bytes without Content-Length and body deadline 63ms
+ ✓ tests/space/parser.test.ts > terminates a stuck decoder and rejects a concurrent parser without queue 161ms
+ ✓ tests/space/parser.test.ts > releases reservation and both files after finish/CAS failure 367ms
+ ✓ tests/space/parser.test.ts > Khronos validator rejects accessor bounds inconsistent with actual original mesh 214ms
+ ✓ tests/foundation/auth.test.ts > SC-US-001 auth ports and password boundary > SC-US-001-3 permits 72 UTF8 bytes, rejects 73/multibyte suffix before hashing for register/login 12ms
+ ✓ tests/foundation/auth.test.ts > SC-US-001 auth ports and password boundary > SC-US-001-2 missing/wrong/disabled accounts have same failure and dummy compare is performed 3ms
+ ✓ tests/foundation/auth.test.ts > SC-US-001 auth ports and password boundary > SC-US-001-1 real bcrypt10, token32/HMAC and seven-day session; hash completes before store 133ms
+ ✓ tests/foundation/auth.test.ts > SC-US-001 auth ports and password boundary > mutation guard rejects domain dependency contamination and persistence bcrypt work 2ms
+stderr | tests/space/http.test.ts > pre-body guard refuses Origin/ownership/version before sole upload body getter
+{"requestId":"774e2e0b-0ca0-48a7-91a3-1efd36645401","code":"ORIGIN_FORBIDDEN","latencyMs":5}
+
+stderr | tests/space/http.test.ts > pre-body guard refuses Origin/ownership/version before sole upload body getter
+{"requestId":"f852b132-f6ce-4f98-96ee-5ef53f98657a","code":"VERSION_REQUIRED","latencyMs":5}
+
+stderr | tests/space/http.test.ts > pre-body guard refuses Origin/ownership/version before sole upload body getter
+{"requestId":"40d0a05f-2bce-4b5f-9ded-8cef7a7b63ac","code":"NOT_FOUND","latencyMs":3}
+
+ ✓ tests/space/http.test.ts > pre-body guard refuses Origin/ownership/version before sole upload body getter 387ms
+ ✓ tests/space/http.test.ts > raw private upload round-trip serves fixed normalized MIME/nosniff, safe DTO and version 546ms
+stderr | tests/space/http.test.ts > SC-US-005-2 Pinterest import disabled with useful alternative and no write
+{"requestId":"23072968-3243-4e98-8ab8-b3b1cbf31f0f","code":"CAPABILITY_DISABLED","latencyMs":5}
+
+ ✓ tests/space/http.test.ts > SC-US-005-2 Pinterest import disabled with useful alternative and no write 328ms
+ ✓ tests/design/races.test.ts > archive commits before mark authorization: zero dispatch 401ms
+ ✓ tests/design/races.test.ts > refund commits before mark authorization: zero dispatch 421ms
+ ✓ tests/design/races.test.ts > archive after mark keeps in-flight authorization but suppresses scene application 634ms
+ ✓ tests/design/races.test.ts > refund after mark keeps in-flight authorization but suppresses scene application 480ms
+ ✓ tests/design/races.test.ts > global twenty admissions cap across independent accounts under contention 773ms
+ ✓ tests/space/geometry.test.ts > SC-US-003-1 / SC-US-003-2 exact measured shell > derives 18m² and 10.26m² wall, stable canonical geometry independent of decimal representation 6ms
+ ✓ tests/space/geometry.test.ts > SC-US-003-1 / SC-US-003-2 exact measured shell > rejects invalid dimension 0 1ms
+ ✓ tests/space/geometry.test.ts > SC-US-003-1 / SC-US-003-2 exact measured shell > rejects invalid dimension -1 0ms
+ ✓ tests/space/geometry.test.ts > SC-US-003-1 / SC-US-003-2 exact measured shell > rejects invalid dimension NaN 0ms
+ ✓ tests/space/geometry.test.ts > SC-US-003-1 / SC-US-003-2 exact measured shell > rejects invalid dimension Infinity 1ms
+ ✓ tests/space/geometry.test.ts > SC-US-003-1 / SC-US-003-2 exact measured shell > rejects invalid dimension 50.000000000001 1ms
+ ✓ tests/space/geometry.test.ts > SC-US-003-1 / SC-US-003-2 exact measured shell > rejects invalid dimension 0.499999999999 0ms
+ ✓ tests/space/geometry.test.ts > SC-US-003-1 / SC-US-003-2 exact measured shell > rejects invalid dimension 4.5 1ms
+ ✓ tests/space/geometry.test.ts > SC-US-003-1 / SC-US-003-2 exact measured shell > rejects invalid dimension  0ms
+ ✓ tests/space/geometry.test.ts > SC-US-003-1 / SC-US-003-2 exact measured shell > rejects invalid dimension 1e2 1ms
+ ✓ tests/space/geometry.test.ts > SC-US-003-1 / SC-US-003-2 exact measured shell > accepts exact bounds, touching openings, rejects overlap/outside/duplicate IDs 2ms
+ ✓ tests/space/geometry.test.ts > SC-US-003-1 / SC-US-003-2 exact measured shell > calibrates one uniform scale, unknown floor area, explicit check tolerance 5ms
+ ✓ tests/space/geometry.test.ts > SC-US-005-1/2/3 reference contract > preserves deep URL and text as data without fetching 1ms
+ ✓ tests/space/geometry.test.ts > SC-US-005-1/2/3 reference contract > rejects dangerous URL javascript:alert(1) 0ms
+ ✓ tests/space/geometry.test.ts > SC-US-005-1/2/3 reference contract > rejects dangerous URL http://pinterest.com 0ms
+ ✓ tests/space/geometry.test.ts > SC-US-005-1/2/3 reference contract > rejects dangerous URL https://u:p@example.com/a 0ms
+ ✓ tests/space/geometry.test.ts > SC-US-005-1/2/3 reference contract > rejects dangerous URL https://example.com/
+foo 0ms
+ ✓ tests/space/geometry.test.ts > SC-US-005-1/2/3 reference contract > rejects dangerous URL https:\example.com 0ms
+ ✓ tests/space/geometry.test.ts > SC-US-005-1/2/3 reference contract > rejects both/neither source, missing rights, invalid tags and oversized note 2ms
+ ✓ tests/foundation/config.test.ts > SC-US-017-2 runtime fail closed without provider calls > defaults apply only absent; rejects blank/unknown modes and missing base config 7ms
+ ✓ tests/foundation/config.test.ts > SC-US-017-2 runtime fail closed without provider calls > all live key/cap/rate/model/output/guardrail fields mandatory; ordered integer caps; no egress 4ms
+ ✓ tests/foundation/config.test.ts > SC-US-017-2 runtime fail closed without provider calls > payment live requires HTTPS/merchant/testflag/server SKU; fake never runtime mode 7ms
+ ✓ tests/design/revisions.test.ts > ownership, concurrent CAS, immutable approval and restore new draft 435ms
+ ✓ tests/design/revisions.test.ts > catalog server UUID, exact immutable dimensions and same-project snapshot guard 327ms
+ ✓ tests/design/revisions.test.ts > combined 100 revision capacity under competing connections 325ms
+ ✓ tests/design/revisions.test.ts > history pagination does not drop equal timestamps 314ms
+ ✓ tests/design/scene.test.ts > strict measured scene > preserves measured shell and exact catalog dimensions 4ms
+ ✓ tests/design/scene.test.ts > strict measured scene > rejects shell edits, URI, changed dimensions and foreign surfaces 3ms
+ ✓ tests/design/scene.test.ts > strict measured scene > rotated AABB room bounds, opening clearance, object collisions 1ms
+ ✓ tests/design/scene.test.ts > strict measured scene > GLB fit stays unconfirmed and never invents floor semantics 1ms
+ ✓ tests/design/scene.test.ts > DESIGN-R1 GLB provider advertises immutable mesh IDs that its response validator accepts 2ms
+ ✓ tests/space/viewer.test.ts > manual wall mesh panels cut real openings, retain measured net area 8ms
+ ✓ tests/space/viewer.test.ts > 2D plan renders known dimensions and escapes object labels, decimal catalog sizes supported 13ms
+stdout | tests/design/primitive.test.ts > DESIGN-R3 actualcylinder mesh andplan preserve catalog width/height/depth instead of box corners
+BJS - [23:26:33]: Babylon.js v9.30.0 - Null engine
+
+ ✓ tests/design/primitive.test.ts > DESIGN-R3 actualcylinder mesh andplan preserve catalog width/height/depth instead of box corners 27ms
+stderr | tests/design/http.test.ts > job submit checks owner before body without rejecting archived idempotent replay at guard
+{"requestId":"d60485ca-fecb-46ce-af31-c82a61feab2c","code":"NOT_FOUND","latencyMs":2}
+
+stderr | tests/design/http.test.ts > job submit checks owner before body without rejecting archived idempotent replay at guard
+{"requestId":"c83c7d72-91d1-4620-9638-2d1c56d887ca","code":"INVALID_JSON","latencyMs":1}
+
+ ✓ tests/design/http.test.ts > job submit checks owner before body without rejecting archived idempotent replay at guard 36ms
+ ✓ tests/space/ui.test.ts > SPACE-R1 measured plan remains visible alongside loading or available3D, independent of WebGLfailure 20ms
+ ✓ tests/foundation/health.test.ts > SC-US-017 readiness > actual schema and private storage ready; schema drift/missing storage refuses without network 12ms
+
+ Test Files  22 passed (22)
+      Tests  152 passed (152)
+   Start at  23:25:54
+   Duration  39.61s (tests 90%, import 8%, transform 2%)
+
+    Isolate  22 workers spawned · ~148ms startup each (spawn + environment, per file)
+             at least ~3.11s faster with isolate: false — reuses workers across files instead of one per file
+

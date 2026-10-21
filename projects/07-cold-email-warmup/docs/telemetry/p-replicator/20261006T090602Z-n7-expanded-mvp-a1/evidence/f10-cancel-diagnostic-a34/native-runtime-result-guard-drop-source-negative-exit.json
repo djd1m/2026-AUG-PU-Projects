@@ -1,0 +1,65 @@
+{
+  "utc": "2026-10-06T22:53:12.777701+00:00",
+  "native_exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 2.5340689138974994,
+  "pid": 129666,
+  "startticks": "125020024",
+  "runner_pid": 127134,
+  "PG": {
+    "at": "2026-10-06T22:53:12.546Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "rows": [],
+    "quiescent": true
+  },
+  "DB_slots_claims_after_join": {
+    "utc": "2026-10-06T22:53:12.756Z",
+    "database": "n7f10_a2",
+    "reset": false,
+    "counts": {
+      "occupied_slots": 0,
+      "runtime_claims": 1,
+      "other_sessions": 0
+    },
+    "slots": [
+      {
+        "protocol": "imap",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 2,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 3,
+        "occupied": false
+      },
+      {
+        "protocol": "imap",
+        "slot": 4,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 1,
+        "occupied": false
+      },
+      {
+        "protocol": "smtp",
+        "slot": 2,
+        "occupied": false
+      }
+    ]
+  },
+  "owned_nodes": [],
+  "assertion_failure": true,
+  "failure_titles": [
+    "not ok 1 - settled native UID reset proof cannot bypass runtime poll source run grant or mailbox fences"
+  ],
+  "tap_sha256": "46b63212610d4e16f438b98ba83117643955cb74ad51a88d5057c4bfbec4970a",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

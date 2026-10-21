@@ -1,0 +1,57 @@
+{
+  "at": "2026-10-03T03:22:59.890570+00:00",
+  "reuse_authorized": true,
+  "donor_worktree": "/tmp/n7-f06a-sol/projects/07-cold-email-warmup",
+  "current_build_source": "/tmp/n7-f06a-r1/projects/07-cold-email-warmup",
+  "containers": [
+    {
+      "id": "5f996536f41f2d7a03fe17e0bb9fea8af587e64a6c3ce57fb8d49495fd0d9bc4",
+      "image": "sha256:79c996d66355dbdd6d2d87b4fb5e0723d4d899651b798b1ce6d34a1d98b7ecf9",
+      "labels": {
+        "com.docker.compose.config-hash": "1925cc473ed516ae9cdd73901c7f8bf3d541846a362cb6e098584f9c4e2ed7da",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "db:service_healthy:false",
+        "com.docker.compose.image": "sha256:79c996d66355dbdd6d2d87b4fb5e0723d4d899651b798b1ce6d34a1d98b7ecf9",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "n7f06a",
+        "com.docker.compose.project.config_files": "/tmp/n7-f06a-sol/projects/07-cold-email-warmup/docker-compose.yml",
+        "com.docker.compose.project.working_dir": "/tmp/n7-f06a-sol/projects/07-cold-email-warmup",
+        "com.docker.compose.service": "web",
+        "com.docker.compose.version": "5.5.1"
+      },
+      "nano_cpus": 2000000000,
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "18709"
+          }
+        ]
+      }
+    },
+    {
+      "id": "a87e442ea1e90b3d1e27552a4fc7d51ead7f55b19c5599bf15f3483aeeae8d83",
+      "image": "sha256:38471f330eb885e04de130b768d6db4e10469e2311879c7e5c699f6d2d8a1c74",
+      "labels": {
+        "com.docker.compose.config-hash": "6f458e593b97fc162739ba1aece4623faaf64bc7ebbe0d5f5bee064a346b6a2b",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:94f23d40fdaf5e60cb2fd8a98c22f02a7b8724949f310d95a0ddf075e8c8b208",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "n7f06a",
+        "com.docker.compose.project.config_files": "/tmp/n7-f06a-sol/projects/07-cold-email-warmup/docker-compose.yml",
+        "com.docker.compose.project.working_dir": "/tmp/n7-f06a-sol/projects/07-cold-email-warmup",
+        "com.docker.compose.service": "db",
+        "com.docker.compose.version": "5.5.1"
+      },
+      "nano_cpus": 2000000000,
+      "ports": {
+        "5432/tcp": null
+      }
+    }
+  ],
+  "before_build_source_verified": true,
+  "donor_source_sha256": "9d8687754a8c85dada747898492e72f71f53582bcfb388bf981c7e3bbe7a3574",
+  "verified_image_source_files": 91,
+  "source_checked_at": "2026-10-03T03:24:20.029358+00:00"
+}

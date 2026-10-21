@@ -1,0 +1,32 @@
+{
+  "run_id": "20261002T213130Z-publish-bot",
+  "work_unit_id": "publish-bot-implementation",
+  "attempt_id": "implementation-1",
+  "source_revision": "7b82dffc9d84a5e64b16d59a103a65e678a93bbb",
+  "build_revision": null,
+  "launch_sha256": "e15ef0e239848fbe61fd75cdfe16043d7c538d79e1d593b6d4bccf2971f905ed",
+  "captured_at": "2026-10-02T21:49:14.934582+00:00",
+  "snapshot_sha256": "13a3a5f48e5725ec091c87eed22aa30b16bce18f940c26224a90103335993a21",
+  "snapshot_method": "SHA256 of UTF-8 JSON files map with sort_keys=True and separators=(comma,colon); paths project-relative; file digests from exact bytes. Includes changed tracked and untracked production/test files.",
+  "tracked_diff_sha256": "58bb0d81a4d84c99711f9cfbbafa131f40abff4ecbb7d8e4e662096f76a10e42",
+  "files": {
+    "apps/web/src/app/api/bots/[id]/publish/route.ts": "464e48fee7a1061c4c64d71d68597f4d79fd8e17963fa793e377eb4a4aa4a788",
+    "apps/web/src/app/cabinet/page.tsx": "33cc5aca51fef8c2a0e4cccc3c48a6f71ec933ed99deeee857361ba2a166191c",
+    "apps/web/src/app/cabinet/publish-bot.tsx": "2b6fa4983d6f5f3393e5822c05a075ec0db65c2500e6486267ff7a12e8924021",
+    "apps/web/src/app/cabinet/sandbox.tsx": "a95f017b4c4a06591ba30ffd0263970ab20b18c49bcece1ab713157afacbacc2",
+    "apps/web/src/app/globals.css": "1eabbd157d40cf03b03609d5f746e0ec14bc2fd11e7ac572b8027a0233180756",
+    "apps/web/src/server/auth-handler.ts": "f1ee8af09da9d4c230a801a66151a6655997482e12a54a3541161c57bf68e2bd",
+    "apps/web/src/server/contact.ts": "4ca974eeea270b3537168c234d66f55c5bf5049f0e7e517262f588af9f91c131",
+    "apps/web/src/server/origin.ts": "b1fc8472f3503c7e7fddf0a4bda807b91499e9f632d75339bcc92763544add40",
+    "apps/web/src/server/publish-handler.ts": "864d4903514eccb8fa776c02c432c1925d668d7705cdd6b2d941fd7f238a89a3",
+    "apps/web/src/server/runtime.ts": "4f94ed0f2d0525708b7ffd61144ed21cc62167b42fdcec75a634b7bcb19cbafe",
+    "apps/web/tests/int/publish.int.test.ts": "cdc725654c55156e5ef8f3ea1f1cd0fbeb70253e69a238894748fdae5d0a658a",
+    "apps/web/tests/unit/publication-guard.test.ts": "d575a38f65a0aea7b10bf9485f2824c7da1fc93e2113e636262b5f9d5d5419c0",
+    "apps/web/tests/unit/publication-validation.test.ts": "1135c451608a5c1f6e2a0c3b6d459fbeb6fcbc45d704248b6254af6aec9dabd5",
+    "apps/web/tests/unit/publish-bot-ui.test.ts": "168c204c74d19429f4d1124b8539f09f5b86a3c0d82f460ac7edc75d364f2a21",
+    "apps/web/tests/unit/publish-handler.test.ts": "99a2f6c56aca01cbbfa77c9edf5d75941a4307dabc96c4783a26a20c931d605c",
+    "packages/db/src/cabinet.ts": "2a44f74d0f97892adf774df31dcb9acf51b5c1503b8301872aac0e9f4bbe5272",
+    "packages/db/src/index.ts": "f2ba71a026c4889330c296c339c241b052cc8c206440ce49c3099aa0b7b507e5",
+    "packages/db/src/publish.ts": "3ffd4a60c8b63ac38bbb0dee3982d25ec299b614e25afe89c751dbea8c8e3fb8"
+  }
+}

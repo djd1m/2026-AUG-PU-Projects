@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "record_kind": "project-work-companion/work-record",
+  "stage": "plan",
+  "roots": {
+    "project": "."
+  },
+  "identity": {
+    "run_id": "20261021T110921Z-cloudru-eight-ac67",
+    "work_unit_id": "cloudru-eight-coordination",
+    "current_attempt_id": "prepare-plan-01"
+  },
+  "telemetry": {
+    "run": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261021T110921Z-cloudru-eight-ac67/run.json"
+    },
+    "events": {
+      "root": "project",
+      "path": "docs/telemetry/p-replicator/20261021T110921Z-cloudru-eight-ac67/events.jsonl"
+    }
+  },
+  "source": {
+    "baseline_revision": "e2803308144336a58f6e6481a2cece56ce56c317",
+    "current_revision": "e2803308144336a58f6e6481a2cece56ce56c317",
+    "build_revision": null,
+    "requirements": [
+      {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261021T110921Z-cloudru-eight-ac67/run.json"
+      }
+    ],
+    "architecture": [
+      {
+        "root": "project",
+        "path": "docs/telemetry/p-replicator/20261021T110921Z-cloudru-eight-ac67/deployment-plan.json"
+      }
+    ],
+    "continuity": {
+      "expected_revision": "e2803308144336a58f6e6481a2cece56ce56c317",
+      "observed_revision": "e2803308144336a58f6e6481a2cece56ce56c317",
+      "reconciliation": null
+    }
+  },
+  "prepare": {
+    "scope_revision": "cloudru-seven-candidates-v1",
+    "scope": [
+      "Install nativeCodex CloudruHub",
+      "Prepare separate VM plan for every deployable numbered app; original8 scope pending07source",
+      "Launch and verify apps after specific cost approval"
+    ],
+    "exclusions": [
+      "Stop existing VPS",
+      "Publish database/cache/storage ports",
+      "Replace07 with unsolicited placeholder"
+    ],
+    "action_limits": [
+      "Read-only Cloud inspection and persisted plans now; paidapply pendingownerreview",
+      "No source-data quiescence or DNS cutover yet"
+    ],
+    "acceptance_criteria": [
+      {
+        "id": "AC-01",
+        "required": true,
+        "description": "Hub installed and configured forCodex"
+      },
+      {
+        "id": "AC-02",
+        "required": true,
+        "description": "Inventory and priced plan reconciled against officialtariff"
+      },
+      {
+        "id": "AC-03",
+        "required": true,
+        "description": "Original8 app deployment scope resolved with owner"
+      },
+      {
+        "id": "AC-04",
+        "required": true,
+        "description": "All accepted apps pass critical UI/worker/state and privateDB networking checks on target"
+      }
+    ],
+    "donors": [
+      {
+        "source": {
+          "kind": "local",
+          "path": {
+            "root": "project",
+            "path": "docker-compose.yml"
+          }
+        },
+        "provenance": "e2803308144336a58f6e6481a2cece56ce56c317",
+        "useful_fragment": "Existing N8 standalonecontainer boundaries; own app manifests retained for otherprojects",
+        "compatibility": "partial",
+        "decision": "adapt",
+        "reason": "Existing dirty Caddy includes unrelated Shino upstream; preserve original and scope newedgeconfig"
+      }
+    ],
+    "forecast": {
+      "status": "insufficient_data",
+      "method": "No comparable8app migration measurements; no completion estimate claimed",
+      "scope_revision": "cloudru-seven-candidates-v1",
+      "calibration": "not_applicable",
+      "comparable_run_ids": [],
+      "exclusions": [
+        "Unknown quotas",
+        "Appsource readiness",
+        "Owner cost decision"
+      ],
+      "external_expectations": [],
+      "range": null,
+      "usage": null,
+      "cost": null
+    }
+  },
+  "routes": [
+    {
+      "stage": "plan",
+      "scope_revision": "cloudru-seven-candidates-v1",
+      "tier": "L",
+      "rationale": "NewCloudAPI, paidresources, publicingress and container/data migration require PLAN VALIDATE IMPLEMENT REVIEW; mechanicalconfigS is onlylowerbound",
+      "script_input": ".codex/config.toml",
+      "script_exit_code": 0
+    }
+  ],
+  "approval": {
+    "requirement": "required",
+    "reason": "CloudruHub vm-deploy requires explicit review of persisted exact VM plans and monthlycost before deploy_apply; prior~9800choice waspreliminary",
+    "evidence": null
+  },
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Infrastructure planning only; no actual app E2E run yet"
+  },
+  "attempts": [
+    {
+      "id": "prepare-plan-01",
+      "status": "running"
+    }
+  ],
+  "work_units": [
+    {
+      "id": "cloudru-eight-coordination",
+      "paths": [
+        {
+          "root": "project",
+          "path": "docs/telemetry/p-replicator/20261021T110921Z-cloudru-eight-ac67/deployment-plan.json"
+        }
+      ]
+    }
+  ],
+  "pause": null,
+  "checks": [],
+  "receipts": [],
+  "delivery": null
+}

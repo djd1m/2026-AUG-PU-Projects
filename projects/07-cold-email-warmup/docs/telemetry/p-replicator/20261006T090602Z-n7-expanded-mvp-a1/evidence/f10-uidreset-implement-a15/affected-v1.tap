@@ -1,0 +1,313 @@
+TAP version 13
+# Subtest: pinned SMTP accepts only the final DATA completion
+ok 1 - pinned SMTP accepts only the final DATA completion
+  ---
+  duration_ms: 701.480081
+  type: 'test'
+  ...
+# Subtest: post DATA uncertainty never retries or releases quota
+ok 2 - post DATA uncertainty never retries or releases quota
+  ---
+  duration_ms: 1281.682248
+  type: 'test'
+  ...
+# Subtest: IMAP proves bounded read only UID range coverage
+ok 3 - IMAP proves bounded read only UID range coverage
+  ---
+  duration_ms: 521.110236
+  type: 'test'
+  ...
+# Subtest: hostile framing and cancellation release bounded resources
+ok 4 - hostile framing and cancellation release bounded resources
+  ---
+  duration_ms: 1283.001508
+  type: 'test'
+  ...
+# Subtest: transport secrets and fixture authority remain isolated
+ok 5 - transport secrets and fixture authority remain isolated
+  ---
+  duration_ms: 556.680188
+  type: 'test'
+  ...
+# Subtest: fragmented literals numeric gaps empty tails and exact byte bounds fail closed
+ok 6 - fragmented literals numeric gaps empty tails and exact byte bounds fail closed
+  ---
+  duration_ms: 3367.705083
+  type: 'test'
+  ...
+# Subtest: write drain TLS hostname receive limits and cleanup use actual sockets
+ok 7 - write drain TLS hostname receive limits and cleanup use actual sockets
+  ---
+  duration_ms: 1249.950196
+  type: 'test'
+  ...
+# Subtest: pre DATA proof post DATA truncated final and acceptance before close remain distinct
+ok 8 - pre DATA proof post DATA truncated final and acceptance before close remain distinct
+  ---
+  duration_ms: 1789.841039
+  type: 'test'
+  ...
+# Subtest: receive line bound rejects8193 bytes before peer text is accepted
+ok 9 - receive line bound rejects8193 bytes before peer text is accepted
+  ---
+  duration_ms: 554.091438
+  type: 'test'
+  ...
+# {"phase":"EHLO","elapsedMs":10012.847055,"outcome":"pre_data_transient","commands":["EHLO"]}
+# Subtest: whole SMTP EHLO challenge phase expires once at ten seconds
+ok 10 - whole SMTP EHLO challenge phase expires once at ten seconds
+  ---
+  duration_ms: 10241.492706
+  type: 'test'
+  ...
+# {"phase":"AUTH","elapsedMs":10014.069165,"outcome":"pre_data_transient","commands":["EHLO","AUTH","AUTH_RESPONSE"]}
+# Subtest: whole SMTP AUTH challenge phase expires once at ten seconds
+ok 11 - whole SMTP AUTH challenge phase expires once at ten seconds
+  ---
+  duration_ms: 10338.148951
+  type: 'test'
+  ...
+# Subtest: same UID coverage remains fixed while a smaller declared horizon fails
+ok 12 - same UID coverage remains fixed while a smaller declared horizon fails
+  ---
+  duration_ms: 512.457303
+  type: 'test'
+  ...
+# Subtest: F09 real PG child transport ambiguity reset and semantic replay
+ok 13 - F09 real PG child transport ambiguity reset and semantic replay
+  ---
+  duration_ms: 7512.518961
+  type: 'test'
+  ...
+# Subtest: overload backoff preserves due age and independent tenant progress
+ok 14 - overload backoff preserves due age and independent tenant progress
+  ---
+  duration_ms: 648.648542
+  type: 'test'
+  ...
+# Subtest: durable runtime drains and recovers without replaying uncertain sends
+ok 15 - durable runtime drains and recovers without replaying uncertain sends
+  ---
+  duration_ms: 1390.447546
+  type: 'test'
+  ...
+# Subtest: fair polling serves thirty active mailboxes and preserves activity intent
+ok 16 - fair polling serves thirty active mailboxes and preserves activity intent
+  ---
+  duration_ms: 2941.21005
+  type: 'test'
+  ...
+# Subtest: poll quanta persist the fixed tail before yielding and never retry incomplete scans
+ok 17 - poll quanta persist the fixed tail before yielding and never retry incomplete scans
+  ---
+  duration_ms: 1199.884379
+  type: 'test'
+  ...
+# Subtest: automatic pool allocation skips pair conflicts and remains idempotent
+ok 18 - automatic pool allocation skips pair conflicts and remains idempotent
+  ---
+  duration_ms: 2102.981471
+  type: 'test'
+  ...
+# Subtest: paced dispatch preserves current day quota and every stop fence
+ok 19 - paced dispatch preserves current day quota and every stop fence
+  ---
+  duration_ms: 812.83776
+  type: 'test'
+  ...
+# Subtest: persisted keyset reconciliation advances beyond first hundred without recreating activity
+ok 20 - persisted keyset reconciliation advances beyond first hundred without recreating activity
+  ---
+  duration_ms: 3548.742617
+  type: 'test'
+  ...
+# Subtest: actual dispatch job age survives restart backoff pacing quota and an empty queue
+ok 21 - actual dispatch job age survives restart backoff pacing quota and an empty queue
+  ---
+  duration_ms: 1010.20913
+  type: 'test'
+  ...
+# Subtest: actual database failure during a poll quantum propagates without provider backoff writes
+ok 22 - actual database failure during a poll quantum propagates without provider backoff writes
+  ---
+  duration_ms: 519.010996
+  type: 'test'
+  ...
+# Subtest: denied live submission returns typed authority outcome before acquiring a physical slot
+ok 23 - denied live submission returns typed authority outcome before acquiring a physical slot
+  ---
+  duration_ms: 760.516861
+  type: 'test'
+  ...
+# Subtest: projection recovers expired logical claims without self quota deadlock and holds fresh owners
+ok 24 - projection recovers expired logical claims without self quota deadlock and holds fresh owners
+  ---
+  duration_ms: 762.363202
+  type: 'test'
+  ...
+# Subtest: new and proved completed jobs reset backoff while the same failed job retains original age
+ok 25 - new and proved completed jobs reset backoff while the same failed job retains original age
+  ---
+  duration_ms: 1151.962891
+  type: 'test'
+  ...
+# Subtest: expired claimed reservation is recovered before quota projection independently of a fresh hold
+ok 26 - expired claimed reservation is recovered before quota projection independently of a fresh hold
+  ---
+  duration_ms: 957.681952
+  type: 'test'
+  ...
+# Subtest: a new oldest logical job clears prior backoff independently of terminal history
+ok 27 - a new oldest logical job clears prior backoff independently of terminal history
+  ---
+  duration_ms: 943.652567
+  type: 'test'
+  ...
+# Subtest: a fresh logical owner holds the sender even when another queued job is older
+ok 28 - a fresh logical owner holds the sender even when another queued job is older
+  ---
+  duration_ms: 801.363516
+  type: 'test'
+  ...
+# Subtest: complete proof becomes immediately eligible without resetting its selected fair turn
+ok 29 - complete proof becomes immediately eligible without resetting its selected fair turn
+  ---
+  duration_ms: 850.213283
+  type: 'test'
+  ...
+# Subtest: partial and held scans cannot manufacture successful polling readiness
+ok 30 - partial and held scans cannot manufacture successful polling readiness
+  ---
+  duration_ms: 583.646329
+  type: 'test'
+  ...
+# Subtest: dispatch claims project only one sender and rotate deferred candidates
+ok 31 - dispatch claims project only one sender and rotate deferred candidates
+  ---
+  duration_ms: 1440.190074
+  type: 'test'
+  ...
+# Subtest: graceful stop after committed claim releases logical owners before lease expiry
+ok 32 - graceful stop after committed claim releases logical owners before lease expiry
+  ---
+  duration_ms: 971.132076
+  type: 'test'
+  ...
+# Subtest: inflight graceful drain joins cleanup and retains explicit holds and fairness
+ok 33 - inflight graceful drain joins cleanup and retains explicit holds and fairness
+  ---
+  duration_ms: 1413.371275
+  type: 'test'
+  ...
+# Subtest: cancel scopes occupied cleanup to its own protocol without releasing physical ownership
+ok 34 - cancel scopes occupied cleanup to its own protocol without releasing physical ownership
+  ---
+  duration_ms: 711.638754
+  type: 'test'
+  ...
+# Subtest: reset capture fences expected identity provenance tenant holds and transaction rollback
+ok 35 - reset capture fences expected identity provenance tenant holds and transaction rollback
+  ---
+  duration_ms: 825.698325
+  type: 'test'
+  ...
+# Subtest: F04a real PG reply matching, durable rescan, crash atomicity and stop serialization
+    # Subtest: A1 exact sender + own tenant/mailbox references; no/malformed/reused IDs
+    ok 1 - A1 exact sender + own tenant/mailbox references; no/malformed/reused IDs
+      ---
+      duration_ms: 1483.88913
+      type: 'test'
+      ...
+    # Subtest: A2/A3/A5 SC-US-006-3 R1/S0 → R1/S1 crash before COMMIT
+    ok 2 - A2/A3/A5 SC-US-006-3 R1/S0 → R1/S1 crash before COMMIT
+      ---
+      duration_ms: 907.438523
+      type: 'test'
+      ...
+    # Subtest: A2/A3/A5 SC-US-006-3 R1/S0 → R1/S1 crash after COMMIT
+    ok 3 - A2/A3/A5 SC-US-006-3 R1/S0 → R1/S1 crash after COMMIT
+      ---
+      duration_ms: 741.239814
+      type: 'test'
+      ...
+    # Subtest: A2 concurrent duplicate page/effect has no partial writes or budget advance
+    ok 4 - A2 concurrent duplicate page/effect has no partial writes or budget advance
+      ---
+      duration_ms: 657.400935
+      type: 'test'
+      ...
+    # Subtest: A3 sparse/expunged and initial empty trusted fixture coverage; no unquarantine
+    ok 5 - A3 sparse/expunged and initial empty trusted fixture coverage; no unquarantine
+      ---
+      duration_ms: 678.047682
+      type: 'test'
+      ...
+    # Subtest: A3 stale page/tail and second validity reset cannot complete current run
+    ok 6 - A3 stale page/tail and second validity reset cannot complete current run
+      ---
+      duration_ms: 765.982764
+      type: 'test'
+      ...
+    # Subtest: A4 exact twenty pages, explicit retry preserves H/run/cursor; crash restart same attempt
+    ok 7 - A4 exact twenty pages, explicit retry preserves H/run/cursor; crash restart same attempt
+      ---
+      duration_ms: 985.531122
+      type: 'test'
+      ...
+    # Subtest: A4 post-lock exact120s, future clock, failed/future/slow tail fail closed
+    ok 8 - A4 post-lock exact120s, future clock, failed/future/slow tail fail closed
+      ---
+      duration_ms: 3889.062959
+      type: 'test'
+      ...
+    # Subtest: A4 successful tail completion timestamp samples actual post-lock clock
+    ok 9 - A4 successful tail completion timestamp samples actual post-lock clock
+      ---
+      duration_ms: 1332.624045
+      type: 'test'
+      ...
+    # Subtest: R1 P1 101 tail headers: first100 stays paused S0 and dispatch/submission calls0; last coverage S1 completes
+    ok 10 - R1 P1 101 tail headers: first100 stays paused S0 and dispatch/submission calls0; last coverage S1 completes
+      ---
+      duration_ms: 1551.126983
+      type: 'test'
+      ...
+    # Subtest: R1 empty/sparse tail prefix stays paused; immutable snapshot survives failure/retry and rejects changed horizon/epoch
+    ok 11 - R1 empty/sparse tail prefix stays paused; immutable snapshot survives failure/retry and rejects changed horizon/epoch
+      ---
+      duration_ms: 1637.079774
+      type: 'test'
+      ...
+    # Subtest: A6 header display/body/credential canaries never enter durable reply data
+    ok 12 - A6 header display/body/credential canaries never enter durable reply data
+      ---
+      duration_ms: 807.617558
+      type: 'test'
+      ...
+    # Subtest: A5 production ingestion stop before final submitting: calls 0, later0
+    ok 13 - A5 production ingestion stop before final submitting: calls 0, later0
+      ---
+      duration_ms: 1085.190068
+      type: 'test'
+      ...
+    # Subtest: A5 production ingestion stop after final submitting: calls 1, later0
+    ok 14 - A5 production ingestion stop after final submitting: calls 1, later0
+      ---
+      duration_ms: 781.879729
+      type: 'test'
+      ...
+    1..14
+ok 36 - F04a real PG reply matching, durable rescan, crash atomicity and stop serialization
+  ---
+  duration_ms: 17694.769326
+  type: 'test'
+  ...
+1..36
+# tests 50
+# suites 0
+# pass 50
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 86166.034949

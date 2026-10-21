@@ -1,0 +1,36 @@
+{
+  "kind": "specific connection/observer diagnosis before another330; existing tools only",
+  "planner": "coordinator requestedSol6.1HIGH",
+  "production_contract_unchanged": {
+    "pool_max": 6,
+    "connection_timeout_ms": 2000,
+    "idle_timeout_ms": 10000,
+    "statement_timeout_ms": 3000
+  },
+  "objective_basis": {
+    "revision": "eae17bbea36312ee5290adb8390e066b1f0d6c2a",
+    "last_sampler_success": "2026-10-06T19:26:10.956Z",
+    "last_sampler_state": "7 idleClientRead rows/no blockers; not proof at failure",
+    "sampler_timeouts": [
+      "2026-10-06T19:26:18.980073Z",
+      "2026-10-06T19:27:12.853308Z"
+    ],
+    "native_exit_at": "2026-10-06T19:28:04.710871Z",
+    "native_exit": 1,
+    "native_error": "Connection terminated due to connection timeout on resource slot-count query",
+    "cause": "UNKNOWN; host pressure correlation only"
+  },
+  "after_A19_joins_only": true,
+  "steps": [
+    "Current frozen source/build/runner/preload hashes; own priorPID/startticks joins/mutexfree/PGquiescent before any reset",
+    "Record scopedPG connect counts/max_connections/waits/queryHASH, current hostCPU/load/PSI/MemAvailable/disk; no secret values",
+    "Short read-only health probe using unchanged pool6/connect2s/statement3s: warmSELECT1 and exact slot-count queries; elapsedconnect/query/event-loopdelay +pooltotal/idle/waiting/nativeexit. Readiness RED if any connection failure or unknown live orphan",
+    "Existing diagnostic sampler replaced by single guarded persistent max1 connection/fixed5s queries rather than repeated subprocess connections. Bound nonoverlapping queries; logobserver connect/query/poll time/errors",
+    "Passive preload attachesPG pool events and logs querysettlement SQLhash/duration/counters while returning originalpromises unchanged; buffer compact events; freeze SHA before launch, no runtime source modification",
+    "Only after short health/measurement readiness, run exact original canonical330 with unchanged source/nativeexit; all30 fullwindow/fault/restart/resources +realpool/wait/host chronology. A new timeout ends this attempt with exactcauseunknown and concrete diagnosis, no blindrepeat",
+    "FullPG afteronefilefixture repair seal; sourceboundunchangedgreenphysical/A15 checks reused. Remainingprotocols/materialmutants/canary/freshHIGHreview mandatory"
+  ],
+  "no_timeout_relaxation": true,
+  "no_new_validator": true,
+  "new_bounded_HIGH_attempt_required": true
+}

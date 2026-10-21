@@ -1,0 +1,16 @@
+ Container n8-interior-ui-check-playwright-run-18733b8f9d8a Creating 
+ Container n8-interior-ui-check-playwright-run-18733b8f9d8a Created 
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.goto: Unacceptable TLS certificate
+Call log:
+  - navigating to "https://n8.77.83.87.178.sslip.io/", waiting until "networkidle"
+
+    at /app/scripts/public-ui-audit.mjs:22:28 {
+  name: 'Error'
+}
+
+Node.js v24.21.0
+

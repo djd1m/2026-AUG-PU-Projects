@@ -1,0 +1,11 @@
+[
+  {
+    "source": "replies/context-store",
+    "path": "/tmp/n7-f11-context-20261006-a1/projects/07-cold-email-warmup/src/replies/context-store.ts",
+    "line": 76,
+    "sourceSha256": "09aafd96228ea0b7767bbcc1a85c914ec5cdb8ba608c8d74eff96744f8a54010",
+    "querySha256": "4d889c59ce224a825a468f43b9cc548a57bc841e7567f69266ae62c43f83c544",
+    "sql": "SELECT e.* FROM incoming_ai_event e JOIN reply_rescan r ON r.tenant_id=e.tenant_id AND r.mailbox_id=e.mailbox_id\n    WHERE e.source='imap_headers' AND e.next_attempt_at<=clock_timestamp() AND e.expires_at>clock_timestamp() AND e.window_end>clock_timestamp() AND e.attempt_deadline>clock_timestamp()\n    AND (e.capture_state='pending' OR (e.capture_state='claimed' AND e.lease_until<=clock_timestamp()))\n    AND r.state='complete' AND r.run_id=e.authenticated_run_id AND r.attempt=e.authenticated_attempt AND r.uidvalidity=e.uidvalidity AND r.provenance=e.source AND r.state='complete'\n    AND EXISTS(SELECT 1 FROM capacity_lease l WHERE l.mailbox_id=e.mailbox_id AND l.state='active' AND l.expires_at>clock_timestamp())\n    AND NOT EXISTS(SELECT 1 FROM runtime_due d WHERE d.mailbox_id=e.mailbox_id AND d.kind='poll' AND (d.state='claimed' OR d.due_at<=clock_timestamp()))\n    AND EXISTS(SELECT 1 FROM mailbox_poll p WHERE p.mailbox_id=e.mailbox_id AND p.scan_complete AND p.completed_at=e.window_completed_at)\n    AND NOT EXISTS(SELECT 1 FROM suppression s WHERE s.tenant_id=e.tenant_id AND s.recipient_hash=e.authenticated_recipient_hash)\n    AND NOT EXISTS(SELECT 1 FROM runtime_due urgent JOIN mailbox_poll hp ON hp.mailbox_id=urgent.mailbox_id WHERE urgent.kind='poll' AND urgent.state='ready' AND urgent.next_check_at<=clock_timestamp() AND hp.completed_at+interval '30 seconds'<=clock_timestamp()+interval '5 seconds')\n    AND NOT EXISTS(SELECT 1 FROM transport_operation t WHERE t.protocol='imap' AND t.mailbox_id=e.mailbox_id AND t.operation IS NOT NULL)\n    ORDER BY e.window_end,e.capture_service_seq,e.id FOR UPDATE OF e SKIP LOCKED LIMIT 1",
+    "astSha256": "d21eb101642b3585b6edc07bce86ff9e18b2650aa4bd5e672ab7b5078768902e"
+  }
+]

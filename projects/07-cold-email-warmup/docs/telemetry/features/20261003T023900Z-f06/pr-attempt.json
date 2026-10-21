@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-03T06:22:39.069156+00:00",
+  "operation": "GitHub connector create_pull_request",
+  "repository": "djd1m/2026-AUG-PU-Projects",
+  "head": "feature/07-cold-email-warmup",
+  "base": "claude/install-npm-packages-n7l3m5",
+  "source_revision": "224508e81ddfbc734241ebdb8c7cdaf4e99931c7",
+  "status": "blocked_external",
+  "http_status": 403,
+  "error": "Resource not accessible by integration",
+  "error_code": "FORBIDDEN",
+  "pr_url": null,
+  "compare_url": "https://github.com/djd1m/2026-AUG-PU-Projects/compare/claude/install-npm-packages-n7l3m5...feature/07-cold-email-warmup?expand=1",
+  "draft": "docs/pr-draft.md",
+  "next_allowed_action": "Create the prepared PR when an authorized GitHub integration with pull-request write access is available; no permission expansion attempted."
+}

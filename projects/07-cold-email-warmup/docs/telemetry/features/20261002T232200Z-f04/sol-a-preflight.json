@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-02T23:39:04.508771+00:00",
+  "status": "ready",
+  "source_revision": "c666af20",
+  "build": "sha256:fdd7aedcce0d2b8d3e207f38fb7a9a555b70f48275e4c60d7a1a493616a40923",
+  "environment": "isolated n7f04a network/volume; loopback18705; no DB ports",
+  "inputs": "trusted local fixtures and runtime key files; no live IO",
+  "test_command": "bash scripts/check-f04a-heavy.sh",
+  "expected_effects": "own PG migrations/fixture rows, own image/container",
+  "evidence_root": "/tmp/n7-f04a-sol/projects/07-cold-email-warmup/docs/telemetry/features/20261002T232200Z-f04",
+  "external_actions_executed": false,
+  "e2e_claim": "pass: local trusted store/PG only; no browser or real IMAP",
+  "grant": "actual grant present23:37:41"
+}
