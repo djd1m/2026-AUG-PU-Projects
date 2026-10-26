@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-10-26T21:01:43.433572+00:00",
+  "scope_exception": "ownerapprovedselectedsourcebound snapshot",
+  "source_revision": "325f1f53ed090ad3325230fe29ad4156b636a9d0",
+  "snapshot": "/tmp/n5-scoped-gates-20261026/phase3-foundation-325/snapshot",
+  "copied_actual_file_sha256": {
+    "docs/features/cloudru-provider-foundation/01_specification.md": "4a7c7594632d791d694fb632c3f1dabd0f2363f3490ecb96a4ac38f643fe5459",
+    "docs/features/cloudru-provider-foundation/02_pseudocode.md": "de573ae4cace1ec4bf665d458be876193d52aae13a3d5195634f40fffeac2604",
+    "docs/features/cloudru-provider-foundation/03_architecture.md": "95c32557f4920b0e0d43470f0998e2ad8203097e0a6d3301d215dcf227f9ce29",
+    "docs/features/cloudru-provider-foundation/04_refinement.md": "cf3e0e8041fa8a7dd97c578ac1ffcac02c5ebe62948f834e9e4ccc2cc153e5ff",
+    "docs/features/cloudru-provider-foundation/05_completion.md": "4e7999a0755a86d3fb68145bf6def623e1c507b7197119fb7b95e63a09ea26c3",
+    "docs/features/cloudru-provider-foundation/validation-report.md": "834333e69611465bd3e566ee2a303be2f9473c06735a66a9e0e9069bb3aeb120",
+    "tests/cloudru-provider.test.ts": "334d6ae4ada551d8f0d14ed53b692bc44bc2770a6b36d3d589c09a7dff09f4c5",
+    "tests/selection.integration.test.ts": "f41729df275b5df22db98cc54fe3ca32d577bd30f848335f59db0cd916ec2d36",
+    "tests/s3-public-endpoint.test.ts": "06e2f6e602e8a02d5a27bbc3adf7268e921c222e99c189a4e7e01b5b4618db1c"
+  },
+  "command": [
+    "bash",
+    "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+    "/tmp/n5-scoped-gates-20261026/phase3-foundation-325/snapshot",
+    "--completion",
+    "--role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/commands/feature.md",
+    "--project-role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/skills/sparc-prd-mini/SKILL.md"
+  ],
+  "exit_code": 0,
+  "proof": "Native criterion->realtestfile/title mapping; not a runtime test pass"
+}
