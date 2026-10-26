@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ANALYTICS_STORAGE_KEY, approvedCampaign, availableClip, confirmedPayment, counterId, createAcquisitionAnalytics, routeCategory, type Metrika } from '../apps/web/src/lib/acquisition-analytics';
+import { ANALYTICS_STORAGE_KEY, approvedCampaign, availableClip, confirmedPayment, counterId, createAcquisitionAnalytics, routeCategory, validSdkCall, type Metrika } from '../apps/web/src/lib/acquisition-analytics';
 const campaign = '?utm_source=telegram&utm_medium=community&utm_campaign=n5_pilot&utm_content=demo_a';
 function fixture(throwingStorage = false) {
   let now = 1800000000000, ready: ((sdk: Metrika) => void) | undefined, loads = 0;
@@ -127,4 +127,19 @@ describe('optional closed acquisition observations', () => {
     expect(confirmedPayment('A', { intent_id: 'A', status: 'succeeded', account_plan: 'free' })).toBe(true);
     for (const data of [null, {}, { intent_id: 'B', status: 'succeeded' }, { intent_id: 'A', status: 'pending', account_plan: 'paid' }, { intent_id: 'A', status: 'canceled' }, { intent_id: 'A', status: true }]) expect(confirmedPayment('A', data)).toBe(false);
   });
+});
+
+
+it('admits only closed sanitized SDK bridge calls and rejects injected fields', () => {
+  const f = fixture(); f.adapter.configure(123, true, '/', campaign); f.loaded(); f.adapter.goal('n5_signup_success');
+  for (const call of f.calls) expect(validSdkCall(call)).toBe(true);
+  const init = f.calls[0]!; expect(validSdkCall([init[0], init[1], { ...init[2] as object, webvisor: true }])).toBe(false);
+  expect(validSdkCall([123, 'hit', 'https://localhost/private?email=PII', {}])).toBe(false);
+  expect(validSdkCall([123, 'reachGoal', 'form://auth', {}])).toBe(false);
+  const goal = f.calls.find(call => call[1] === 'reachGoal')!;
+  expect(validSdkCall([123, 'reachGoal', goal[2], { ...goal[3] as object, email: 'PII' }])).toBe(false);
+  expect(validSdkCall([123, 'reachGoal', goal[2], { ...goal[3] as object, utm_source: 'injected' }])).toBe(false);
+  expect(validSdkCall([123, 'userParams', { email: 'PII' }])).toBe(false);
+  expect(validSdkCall(['123', 'destruct'])).toBe(false);
+  expect(validSdkCall([123, 'destruct'])).toBe(true);
 });

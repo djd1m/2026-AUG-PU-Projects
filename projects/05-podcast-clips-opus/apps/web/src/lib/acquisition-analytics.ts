@@ -30,6 +30,29 @@ export function confirmedPayment(requested: string, data: unknown): boolean {
 export function availableClip(clips: readonly { status: string; available: boolean }[]): boolean {
   return clips.some(clip => clip.status === 'done' && clip.available === true);
 }
+/** Closed bridge wire schema; also serialized into the isolated SDK document. */
+export function validSdkCall(value: unknown): boolean {
+  const object = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
+  const routes = ['landing', 'dashboard', 'video', 'upgrade', 'payment_return'];
+  const goals = ['n5_visit', 'n5_signup_success', 'n5_first_clip_ready', 'n5_payment_confirmed'];
+  const url = (v: unknown) => typeof v === 'string' && routes.some(route => v === `https://clipmkr.ru/analytics/${route}`);
+  const direct = 'https://clipmkr.ru/analytics/direct';
+  const payload = (v: unknown, goal?: unknown) => {
+    if (!object(v) || v.schema_version !== 1 || v.pilot !== 'n5_pilot' || typeof v.route !== 'string' || !routes.includes(v.route)) return false;
+    if (goal ? v.event !== goal : 'event' in v) return false;
+    const tuple: Record<string, string> = { utm_source: 'telegram', utm_medium: 'community', utm_campaign: 'n5_pilot', utm_content: 'demo_a' };
+    const keys = Object.keys(v), hasUtm = keys.some(key => key.startsWith('utm_'));
+    return keys.every(key => ['schema_version', 'pilot', 'route', ...(goal ? ['event'] : []), ...Object.keys(tuple)].includes(key)) && (!hasUtm || Object.entries(tuple).every(([key, expected]) => v[key] === expected));
+  };
+  if (!Array.isArray(value) || !Number.isSafeInteger(value[0]) || value[0] <= 0) return false;
+  const [, method, arg, options] = value;
+  if (method === 'destruct') return value.length === 2;
+  if (method === 'reachGoal') return value.length === 4 && goals.includes(arg) && payload(options, arg);
+  if (method === 'hit') return value.length === 4 && url(arg) && object(options) && Object.keys(options).length === 3 && options.referer === direct && options.title === 'N5' && payload(options.params);
+  if (method !== 'init' || value.length !== 3 || !object(arg)) return false;
+  const disabled = ['webvisor', 'clickmap', 'trackLinks', 'trackHash', 'sendTitle', 'ecommerce', 'accurateTrackBounce', 'triggerEvent', 'childIframe'];
+  return url(arg.url) && arg.referrer === direct && arg.defer === true && arg.disableYtm === true && disabled.every(key => arg[key] === false) && Object.keys(arg).length === disabled.length + 4;
+}
 type State = { expires: number; campaign: boolean; captured: boolean; signup: boolean; ready: boolean; visit: number; payments: { id: string; at: number }[] };
 type Storage = Pick<globalThis.Storage, 'getItem' | 'setItem' | 'removeItem'>;
 type Dependencies = { storage: () => Storage; now: () => number; load: (ready: (sdk: Metrika) => void) => () => void };
@@ -106,7 +129,7 @@ export function createAcquisitionAnalytics(deps: Dependencies) {
         if (current !== generation || !consent || !id || !route) return;
         sdk = loaded;
         // Even with defer, SDK sends an initialization nohit request; sanitize its URL/referrer too.
-        safe(() => sdk!(id!, 'init', { url: `https://clipmkr.ru/analytics/${route}`, referrer: 'https://clipmkr.ru/analytics/direct', defer: true, webvisor: false, clickmap: false, trackLinks: false, trackHash: false, sendTitle: false, ecommerce: false, accurateTrackBounce: false, triggerEvent: false, childIframe: false }));
+        safe(() => sdk!(id!, 'init', { url: `https://clipmkr.ru/analytics/${route}`, referrer: 'https://clipmkr.ru/analytics/direct', defer: true, webvisor: false, clickmap: false, trackLinks: false, trackHash: false, sendTitle: false, ecommerce: false, accurateTrackBounce: false, triggerEvent: false, childIframe: false, disableYtm: true }));
         const pending = queue; queue = []; pending.forEach(fn => safe(fn));
       }); } catch { queue = []; stopLoad = () => {}; }
       hit();
@@ -116,25 +139,40 @@ export function createAcquisitionAnalytics(deps: Dependencies) {
   }
   return { configure, goal, activity: () => activity(), stop: () => stop(false), withdraw: () => { consent = false; stop(true); } };
 }
+let bridgeGeneration = 0;
 let browserAdapter: ReturnType<typeof createAcquisitionAnalytics> | undefined;
 export function browserAnalytics() {
   if (!browserAdapter) browserAdapter = createAcquisitionAnalytics({
     storage: () => window.localStorage, now: Date.now,
     load: ready => {
-      const win = window as unknown as { ym?: Metrika };
-      const script = document.createElement('script');
-      script.src = 'https://mc.yandex.ru/metrika/tag.js'; script.async = true; script.referrerPolicy = 'no-referrer';
-      let stopped = false;
-      const timer = setTimeout(() => { stopped = true; script.remove(); }, 8000);
-      script.onload = () => { clearTimeout(timer); if (!stopped && win.ym) ready(win.ym); };
-      script.onerror = () => { clearTimeout(timer); script.remove(); };
-      // Official SDK expects the queue function created by the embed snippet.
-      if (!win.ym) {
-        const queued = ((...args: unknown[]) => { if (queued.a.length >= 20) queued.a.shift(); queued.a.push(args); }) as Metrika & { a: unknown[][]; l: number };
-        queued.a = []; queued.l = Date.now(); win.ym = queued;
-      }
-      document.head.appendChild(script);
-      return () => { stopped = true; clearTimeout(timer); script.onload = null; script.onerror = null; script.remove(); };
+      // Opaque origin prevents the SDK from observing product forms, DOM or URL.
+      const frame = document.createElement('iframe');
+      frame.hidden = true; frame.tabIndex = -1; frame.title = 'Аналитика';
+      frame.setAttribute('sandbox', 'allow-scripts'); frame.referrerPolicy = 'no-referrer';
+      const token = [...crypto.getRandomValues(new Uint32Array(4))].map(n => n.toString(16)).join('');
+      const generation = ++bridgeGeneration;
+      let active = true, initialized = false;
+      const dispose = () => { active = false; clearTimeout(timer); window.removeEventListener('message', receive); frame.remove(); };
+      const receive = (event: MessageEvent) => {
+        const data = event.data;
+        if (!active || initialized || event.source !== frame.contentWindow || !data || data.type !== 'n5-sdk-ready' || data.token !== token || data.generation !== generation) return;
+        initialized = true; clearTimeout(timer);
+        ready((...call) => { if (active && validSdkCall(call)) frame.contentWindow?.postMessage({ type: 'n5-sdk-call', token, generation, call }, '*'); });
+      };
+      const timer = setTimeout(dispose, 8000);
+      window.addEventListener('message', receive);
+      // All interpolation is executor-generated hex/integer/function source, never user content.
+      frame.srcdoc = `<!doctype html><meta name="referrer" content="no-referrer"><title>N5</title><script>
+        const token=${JSON.stringify(token)}, generation=${generation}, valid=${validSdkCall.toString()};
+        let counter=null;
+        window.ym=function(){if(window.ym.a.length>=20)window.ym.a.shift();window.ym.a.push(Array.from(arguments))};window.ym.a=[];window.ym.l=Date.now();
+        addEventListener('message',event=>{const d=event.data;if(event.source!==parent||!d||d.type!=='n5-sdk-call'||d.token!==token||d.generation!==generation||!valid(d.call))return;
+          if(d.call[1]==='init'&&counter===null)counter=d.call[0];if(d.call[0]!==counter)return;window.ym(...d.call)});
+        const script=document.createElement('script');script.src='https://mc.yandex.ru/metrika/tag.js';script.async=true;script.referrerPolicy='no-referrer';
+        script.onload=()=>parent.postMessage({type:'n5-sdk-ready',token,generation},'*');document.head.appendChild(script);
+      <\/script>`;
+      document.body.appendChild(frame);
+      return dispose;
     },
   });
   return browserAdapter;
