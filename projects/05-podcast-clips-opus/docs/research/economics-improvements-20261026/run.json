@@ -1,0 +1,70 @@
+{
+  "started_at": "2026-10-26T15:19:58.624382+00:00",
+  "profile": "model-routing-econom",
+  "scope": "N5 evidence-based unit economics improvements: freemium packaging, marginal processing, pricing and cohorts; weekly versus daily use; Russian competitors with ruble prices",
+  "baseline": "990RUB/30days;free andpaidcurrentlydailyquotas;onehour/week/activeuser;CloudFMWhisper+DeepSeek;singleVM;S3",
+  "ac": [
+    "officialcurrentprimarysourcesandclearrecommendationvsfact",
+    "quantifyimpactagainst35RUB/hour+2973.384RUBfixed/month",
+    "differentiateone-timefreecohortsfromrecurringMAU",
+    "respectexistingfreeforeverpromiseandexplicitquotaapproval",
+    "prioritizeminimalchangesandvalidation,notblanketsavings",
+    "no paidAPI/usercontent/deploy/productchanges"
+  ],
+  "requested_research_model": "gpt-6.1-sol high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "status": "research_complete",
+  "stages": [
+    {
+      "stage": "parallel_research",
+      "status": "complete",
+      "agents": [
+        "n5_freemium_market",
+        "n5_processing_efficiency",
+        "n5_freemium_sensitivity"
+      ],
+      "requested_model": "gpt-6.1-sol",
+      "requested_reasoning": "high",
+      "actual_model": null,
+      "usage": null
+    },
+    {
+      "stage": "synthesis_review",
+      "status": "pass",
+      "agent": "n5_economics_final_review",
+      "requested_model": "gpt-6.1-sol",
+      "requested_reasoning": "high",
+      "actual_model": null,
+      "usage": null
+    }
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Docs-only economics research; no application changes or E2E claim."
+  },
+  "limitations": [
+    "No Cloud.ru paid calls or actual bills; workload/model assumptions remain unvalidated",
+    "Runtime model metadata and usage not exposed",
+    "Single VM capacity and paid conversion not measured",
+    "Tax/CAC/support and storage after first month excluded"
+  ],
+  "finished_at": "2026-10-26T15:36:13.653477+00:00",
+  "duration_seconds": 975.029095,
+  "checks": {
+    "decimal_identities": "pass",
+    "scenario_rows": 144,
+    "json_parse": "pass",
+    "summary_local_links": "pass",
+    "known_secret_pattern_matches": 0,
+    "git_diff_check": "pass",
+    "independent_semantic_review": "pass",
+    "application_build": "not_applicable_docs_only",
+    "e2e": "not_applicable_docs_only"
+  },
+  "review": "review.md",
+  "baseline_source_revision": "732df4cccca8cd03bdaa51eaafe49adac23f01ee",
+  "delivery_branch": "docs/n5-unit-economics-20261026",
+  "measurement_gap_reason": "Requested model selection not exposed as independently confirmed runtime metadata; API usage/cost not provided by orchestration tools."
+}

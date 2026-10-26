@@ -1,0 +1,153 @@
+{
+  "checked_at": "2026-10-26",
+  "scope": "Official public pages; no signup, authenticated use, API calls, purchases or product changes",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning": "high",
+  "actual_model": null,
+  "usage": null,
+  "elapsed_seconds": null,
+  "measurement_gaps": "Runtime actual model and usage counters unavailable; full dispatch-to-completion wall time not measured",
+  "sources": [
+    {
+      "id": "opus_pricing",
+      "url": "https://www.opus.pro/pricing",
+      "observation": "Free60/month;Starter15/150;Pro29/300;annual174;watermark/export/storage",
+      "status": "confirmed",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "opus_credits",
+      "url": "https://help.opus.pro/docs/article/how-are-credits-consumed",
+      "observation": "Input minute;expiry;refresh/packs",
+      "status": "confirmed",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "opus_plans",
+      "url": "https://help.opus.pro/docs/article/plans-and-credits",
+      "observation": "Freeforever60;topups;Propack300",
+      "status": "confirmed",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "opus_failed",
+      "url": "https://help.opus.pro/docs/article/why-did-my-project-fail",
+      "observation": "Failed or>90minprocessing credit reimburse",
+      "status": "confirmed",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "opus_project_refund",
+      "url": "https://help.opus.pro/docs/article/can-i-reprocess-a-project",
+      "observation": "Pro14days before any clip download",
+      "status": "confirmed",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "opus_duration",
+      "url": "https://help.opus.pro/docs/article/video-length",
+      "observation": "Only navigation returned;maximum input duration unverified",
+      "status": "unknown",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "vizard_pricing",
+      "url": "https://vizard.ai/pricing",
+      "observation": "Free60/month;paidfrom600;duration/filelimits;prices0placeholder",
+      "status": "partial",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "vizard_free",
+      "url": "https://help.vizard.ai/en/articles/8767572-what-does-the-free-plan-for-vizard-offer",
+      "observation": "Foreverfree watermark3day",
+      "status": "confirmed",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "vizard_units",
+      "url": "https://help.vizard.ai/en/articles/12017624-how-credits-are-used-for-ai-processing",
+      "observation": "Input1min1credit;no clipping+transcription doublecharge",
+      "status": "confirmed",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "vizard_renewal",
+      "url": "https://help.vizard.ai/en/articles/8767574-how-does-the-pricing-plan-work",
+      "observation": "Monthly renewal/carryover;maximum rollover unknown",
+      "status": "partial",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "vizard_refund",
+      "url": "https://help.vizard.ai/en/articles/8766984-can-i-request-a-refund",
+      "observation": "Cash refund7days unused or billing error",
+      "status": "confirmed",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "vizard_edit",
+      "url": "https://help.vizard.ai/en/articles/16658532-what-is-ai-edit",
+      "observation": "AIEditfailure creditrefund;distinct feature",
+      "status": "confirmed",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "vizard_enhance",
+      "url": "https://help.vizard.ai/en/articles/16317508-how-to-enhance-video-quality-with-ai-enhance",
+      "observation": "AIEnhancefailure creditrefund;distinctfeature",
+      "status": "confirmed",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "klap_pricing",
+      "url": "https://klap.app/pricing",
+      "observation": "100/300/1000outputclips;14/39/94 annualequivalent;monthlyunknown",
+      "status": "partial",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "klap_home",
+      "url": "https://klap.app/",
+      "observation": "Onevideo free;recurring not stated",
+      "status": "confirmed",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "klap_embed",
+      "url": "https://embed.klap.app/pricing",
+      "observation": "Different price/uploadlimits than main;do not merge",
+      "status": "conflict",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "descript_pricing",
+      "url": "https://www.descript.com/pricing",
+      "observation": "Monthly media+AIbuckets;pricepairs;topups;watermark",
+      "status": "price_assignment_inferred_from_annual_discount",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "descript_free",
+      "url": "https://feedback.descript.com/changelog/release-roundupseptember-24th-2025",
+      "observation": "60media/minmonth plus100lifetimeAIcredits",
+      "status": "confirmed",
+      "checked_at": "2026-10-26"
+    }
+  ],
+  "planning_inputs_from_coordinator": {
+    "variable_rub_per_input_hour": 35,
+    "pilot_vm_rub_per_month": 2973,
+    "paid_rub_per_30days": 990,
+    "capacity_measured": false,
+    "payment_fee_fraction": 0.0427
+  },
+  "baseline_reconciliation": {
+    "computed_weekly_loss_before_fee_rub": 8073.0,
+    "payment_fee_rub": 422.73,
+    "computed_weekly_loss_after_fee_rub": 8495.73,
+    "new_140h_profit_after_fee_rounded_cost_rub": 1604.27,
+    "new_140h_profit_full_cost_as_reported_by_coordinator_rub": 1603.886,
+    "note": "Prior difference explained by4.27%paymentfee;0.384RUBnewscenario difference attributed to coordinator full unrounded cost,not independently reconstructed"
+  }
+}
