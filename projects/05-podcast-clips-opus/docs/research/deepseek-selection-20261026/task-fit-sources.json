@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-26",
+  "source_revision": "732df4cccca8cd03bdaa51eaafe49adac23f01ee",
+  "local_sources": [
+    {
+      "path": "projects/05-podcast-clips-opus/apps/worker/src/llm/prompts/selection.ts",
+      "sha256": "c0c11919a52939ee0fc7a44b670f9f483778feaf022444c8b777fe7ea397d42e"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/worker/src/llm/provider.ts",
+      "sha256": "f2506d124cce9774d34f55de68a43b6a6721ae40d823a43bc3517ce7d2da5134"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/packages/shared/src/fragments.ts",
+      "sha256": "42aaed57c3520b8b9a65b66c6d9bf20d261907f42716b795f8d0b44296069ea1"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/packages/shared/src/fragments-schema.json",
+      "sha256": "3b3f983d3a03df0d688510cf65aea2292e4411054c21b392f0a8d44efb557cb2"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/packages/shared/src/transcript.ts",
+      "sha256": "2471bb6ddd58e5b12003fd2b96c461449cf2f0c9ec0092c36153379ee034c2ab"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/packages/shared/src/config.ts",
+      "sha256": "2f40fc0bc0d14526a157c08f07666abbf76655cd7e5d8a08bc32ca17f15ec6d8"
+    }
+  ],
+  "official_web_sources": [
+    {
+      "url": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "accessed_date": "2026-10-26",
+      "live_api_verified": false
+    },
+    {
+      "url": "https://api-docs.deepseek.com/api/create-chat-completion/",
+      "accessed_date": "2026-10-26",
+      "live_api_verified": false
+    },
+    {
+      "url": "https://api-docs.deepseek.com/guides/json_mode/",
+      "accessed_date": "2026-10-26",
+      "live_api_verified": false
+    },
+    {
+      "url": "https://api-docs.deepseek.com/guides/tool_calls/",
+      "accessed_date": "2026-10-26",
+      "live_api_verified": false
+    },
+    {
+      "url": "https://api-docs.deepseek.com/api/create-response/",
+      "accessed_date": "2026-10-26",
+      "live_api_verified": false
+    },
+    {
+      "url": "https://api-docs.deepseek.com/guides/responses_api/",
+      "accessed_date": "2026-10-26",
+      "live_api_verified": false
+    },
+    {
+      "url": "https://api-docs.deepseek.com/guides/thinking_mode/",
+      "accessed_date": "2026-10-26",
+      "live_api_verified": false
+    },
+    {
+      "url": "https://api-docs.deepseek.com/quick_start/token_usage/",
+      "accessed_date": "2026-10-26",
+      "live_api_verified": false
+    }
+  ],
+  "research_execution": {
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "high",
+    "actual_model": null,
+    "actual_model_reason": "No authoritative execution model metadata available to child agent",
+    "tokens": null,
+    "cost_usd": null,
+    "paid_api_calls": 0,
+    "product_changes": false,
+    "e2e": "not_applicable: read-only research"
+  },
+  "limitations": [
+    "Documentation claims were read, not proven by paid endpoint/schema calls.",
+    "Direct DeepSeek capability does not establish OpenRouter route capability.",
+    "No human quality or latency/cost parity experiment performed.",
+    "Historical transcript token estimates are not DeepSeek tokenizer measurements."
+  ]
+}

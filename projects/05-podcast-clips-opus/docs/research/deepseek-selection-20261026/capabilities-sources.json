@@ -1,0 +1,223 @@
+{
+  "as_of": "2026-10-26",
+  "fetched_at_utc": "2026-10-26T14:19:11.663669+00:00",
+  "profile": "econom",
+  "requested_model": "GPT-6.1 Sol",
+  "requested_reasoning_effort": "high",
+  "actual_model": null,
+  "usage": null,
+  "spend": null,
+  "measurement_gap": "Execution metadata and usage unavailable; no inference run.",
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "title": "Models & Pricing",
+      "facts": "Current direct model IDs deepseek-flash and deepseek-v4-pro; versions V4.1-Flash-1017 and V4-Pro-0813; both thinking/non-thinking; 1M context and 384K max output. Flash cheaper than Pro. Old Flash IDs route to latest Flash."
+    },
+    {
+      "id": "S2",
+      "url": "https://api-docs.deepseek.com/api/list-models/",
+      "title": "Lists Models",
+      "facts": "Documented metadata example gives context_window=1048576 and max_output_tokens=393216 for both current models. Not a live authenticated account availability check."
+    },
+    {
+      "id": "S3",
+      "url": "https://api-docs.deepseek.com/updates/",
+      "title": "Change Log",
+      "facts": "2026-10-17 updates Flash to 1017 through unchanged deepseek-flash ID. September10 entry explicitly continues V4 Pro service after September14, contradicting retirement wording in launch news. Legacy deepseek-chat/reasoner were scheduled discontinued July24."
+    },
+    {
+      "id": "S4",
+      "url": "https://api-docs.deepseek.com/guides/thinking_mode/",
+      "title": "Thinking Mode",
+      "facts": "Default thinking enabled, high effort. ChatCompletions thinking enabled/disabled plus reasoning_effort low/high/max. Responses reasoning.effort none/low/high/max. Temperature ignored in thinking mode."
+    },
+    {
+      "id": "S5",
+      "url": "https://api-docs.deepseek.com/api/create-chat-completion/",
+      "title": "Chat Completions API",
+      "facts": "response_format documents json_object, no json_schema. max_tokens cap393216; defaults nonthinking8192, thinking65536, thinking max131072. Total input+generated tokens bounded by context."
+    },
+    {
+      "id": "S6",
+      "url": "https://api-docs.deepseek.com/guides/json_mode/",
+      "title": "JSON Output",
+      "facts": "Guarantees JSON syntax, requires json in prompt and adequate output budget; occasionally empty content. JSON object mode is not exact schema enforcement."
+    },
+    {
+      "id": "S7",
+      "url": "https://api-docs.deepseek.com/api/create-response/",
+      "title": "Responses API",
+      "facts": "text.format type json_schema with required name/schema documented as conforming to schema; both current IDs accepted. No strict flag or supported subset specified there. reasoning effort none/low/high/max. max_output_tokens includes reasoning and visible tokens."
+    },
+    {
+      "id": "S8",
+      "url": "https://api-docs.deepseek.com/guides/tool_calls/",
+      "title": "Tool Calls strict Beta",
+      "facts": "Beta base_url /beta plus function.strict=true enforces supported function schema in both modes. All object properties required; additionalProperties=false. minItems/maxItems and minLength/maxLength unsupported. Numeric minimum/maximum supported."
+    },
+    {
+      "id": "S9",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash",
+      "title": "Official DeepSeek V4.1 Flash model card",
+      "facts": "Base-model LongBench-V2 EM: V4.1Flash45.2, V4Pro51.5, V4Flash44.7; internal same evaluation setup. Instruct comparison excludes Sonnet5 and mainly tests STEM/coding/agents; max effort used. No Russian editorial selection, standalone clips, chronology, scoring calibration or N5 JSON compliance evaluation found."
+    },
+    {
+      "id": "S10",
+      "url": "https://www.deepseek.com/en/news/deepseek-v4-1-flash/",
+      "title": "September10 Flash announcement",
+      "facts": "Broad claim V4.1Flash surpasses V4Pro on performance/cost/speed/runtime; old Pro rerouting statement contradicted by current docs/changelog. Broad agent claim does not prove N5 parity."
+    },
+    {
+      "id": "S11",
+      "url": "https://openrouter.ai/deepseek/deepseek-v4.1-flash-1017",
+      "title": "OpenRouter Flash1017 catalog",
+      "facts": "Exact OpenRouter ID deepseek/deepseek-v4.1-flash-1017; October17 snapshot. Model FAQ says393216 output and JSON without schema enforcement, while providers FAQ says131072 and schema. Resolve against provider endpoint metadata."
+    },
+    {
+      "id": "S12",
+      "url": "https://openrouter.ai/api/v1/models/deepseek/deepseek-v4.1-flash-1017/endpoints",
+      "title": "OpenRouter public provider capability catalog",
+      "facts": "Read-only unauthenticated GET: DeepSeek provider1048576 context393216 output, response_format but no structured_outputs. DeepInfra1048576/131072 with structured_outputs+response_format. BaseTen1048576/262144 without response_format. Flags are catalog claims, not successful inference proof."
+    },
+    {
+      "id": "S13",
+      "url": "https://openrouter.ai/deepseek/deepseek-v4-pro-0813",
+      "title": "OpenRouter V4 Pro0813 catalog",
+      "facts": "Exact OpenRouter candidate ID deepseek/deepseek-v4-pro-0813."
+    },
+    {
+      "id": "S14",
+      "url": "https://openrouter.ai/deepseek/deepseek-v4.1-flash",
+      "title": "OpenRouter older V4.1 Flash catalog",
+      "facts": "Separate older September10 V4.1Flash ID deepseek/deepseek-v4.1-flash exists; prefer explicit1017 snapshot for current evaluation."
+    }
+  ],
+  "selected_live_openrouter_endpoints": [
+    {
+      "name": "DeepInfra | deepseek/deepseek-v4.1-flash-20261017",
+      "provider_name": "DeepInfra",
+      "context_length": 1048576,
+      "max_completion_tokens": 131072,
+      "supported_parameters": [
+        "reasoning",
+        "include_reasoning",
+        "max_tokens",
+        "temperature",
+        "top_p",
+        "stop",
+        "frequency_penalty",
+        "presence_penalty",
+        "repetition_penalty",
+        "top_k",
+        "seed",
+        "min_p",
+        "logit_bias",
+        "response_format",
+        "structured_outputs",
+        "tools",
+        "tool_choice",
+        "reasoning_effort"
+      ],
+      "status": 0
+    },
+    {
+      "name": "DeepInfra | deepseek/deepseek-v4.1-flash-20261017",
+      "provider_name": "DeepInfra",
+      "context_length": 1048576,
+      "max_completion_tokens": 131072,
+      "supported_parameters": [
+        "reasoning",
+        "include_reasoning",
+        "max_tokens",
+        "temperature",
+        "top_p",
+        "stop",
+        "frequency_penalty",
+        "presence_penalty",
+        "repetition_penalty",
+        "top_k",
+        "seed",
+        "min_p",
+        "logit_bias",
+        "response_format",
+        "structured_outputs",
+        "tools",
+        "tool_choice",
+        "reasoning_effort"
+      ],
+      "status": 0
+    },
+    {
+      "name": "DeepInfra | deepseek/deepseek-v4.1-flash-20261017",
+      "provider_name": "DeepInfra",
+      "context_length": 1048576,
+      "max_completion_tokens": 131072,
+      "supported_parameters": [
+        "reasoning",
+        "include_reasoning",
+        "max_tokens",
+        "temperature",
+        "top_p",
+        "stop",
+        "frequency_penalty",
+        "presence_penalty",
+        "repetition_penalty",
+        "top_k",
+        "seed",
+        "min_p",
+        "logit_bias",
+        "response_format",
+        "structured_outputs",
+        "tools",
+        "tool_choice",
+        "reasoning_effort"
+      ],
+      "status": 0
+    },
+    {
+      "name": "DeepSeek | deepseek/deepseek-v4.1-flash-20261017",
+      "provider_name": "DeepSeek",
+      "context_length": 1048576,
+      "max_completion_tokens": 393216,
+      "supported_parameters": [
+        "reasoning",
+        "include_reasoning",
+        "max_tokens",
+        "temperature",
+        "top_p",
+        "stop",
+        "frequency_penalty",
+        "presence_penalty",
+        "logprobs",
+        "top_logprobs",
+        "tools",
+        "tool_choice",
+        "response_format",
+        "reasoning_effort"
+      ],
+      "status": 0
+    },
+    {
+      "name": "BaseTen | deepseek/deepseek-v4.1-flash-20261017",
+      "provider_name": "BaseTen",
+      "context_length": 1048576,
+      "max_completion_tokens": 262144,
+      "supported_parameters": [
+        "reasoning",
+        "include_reasoning",
+        "max_tokens",
+        "temperature",
+        "top_p",
+        "stop",
+        "frequency_penalty",
+        "presence_penalty",
+        "tools",
+        "tool_choice",
+        "reasoning_effort"
+      ],
+      "status": 0
+    }
+  ]
+}

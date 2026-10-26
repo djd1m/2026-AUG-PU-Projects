@@ -1,0 +1,39 @@
+{
+  "started_at": "2026-10-26T14:14:53.282911+00:00",
+  "profile": "model-routing-econom",
+  "task": "Read-only research DeepSeek replacement for Sonnet5 inN5 clip selection",
+  "ac": [
+    "Current official DeepSeek candidates and exact API identifiers",
+    "Distinguish vendor benchmarks from actualN5 quality equivalence",
+    "OpenRouter and Cloud.ru exact model/deployment pricing",
+    "Strict JSON schema, Russian long transcript, timing and completion constraints",
+    "Explicit shortlist and bounded futureblindA/B protocol; no paidcalls/userdata transfer"
+  ],
+  "source_revision": "732df4cccca8cd03bdaa51eaafe49adac23f01ee",
+  "requested_model": "gpt-6.1-sol high",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "status": "research_complete",
+  "limits": "3 researchers, bounded8min each; no productedits/deploy/modelcalls/spend/secretreads",
+  "completed_at": "2026-10-26T14:21:50.506938+00:00",
+  "artifact_reports": [
+    "capabilities.md",
+    "pricing.md",
+    "task-fit.md"
+  ],
+  "requested_agents": [
+    "n5_deepseek_capabilities",
+    "n5_deepseek_pricing",
+    "n5_deepseek_task_review"
+  ],
+  "model_inference": "not_run",
+  "application_changes": "none",
+  "source_contract_notes": [
+    "segmentsonly;wordsnappedlocally",
+    "240sselectiondeadline",
+    "publicORendpointmetadataisproviderdependent"
+  ],
+  "publication_branch": "docs/n5-deepseek-research-20261026",
+  "measured_elapsed_seconds": 417.224027
+}
