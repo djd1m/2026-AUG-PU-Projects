@@ -1,0 +1,62 @@
+{
+  "mode": "on",
+  "evidence": "fully intercepted synthetic SDK requests; NOT live goal receipt or report ingestion",
+  "checks": [
+    "visit/login/ready/payment/reload/excluded route/withdrawal"
+  ],
+  "transport": [],
+  "consoleErrors": [
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    }
+  ],
+  "screenshots": [
+    "/tmp/n5-acquisition-e2e/on-chromium-dark-360.png",
+    "/tmp/n5-acquisition-e2e/on-chromium-dark-900.png",
+    "/tmp/n5-acquisition-e2e/on-chromium-light-360.png",
+    "/tmp/n5-acquisition-e2e/on-chromium-light-900.png"
+  ],
+  "status": "failed",
+  "error": "AssertionError [ERR_ASSERTION]: Browser errors (main)\n+ actual - expected\n\n+ [\n+   \"Failed to read the 'serviceWorker' property from 'Navigator': Service worker is disabled because the context is sandboxed and lacks the 'allow-same-origin' flag.\",\n+   \"Failed to read the 'serviceWorker' property from 'Navigator': Service worker is disabled because the context is sandboxed and lacks the 'allow-same-origin' flag.\",\n+   \"Failed to read the 'serviceWorker' property from 'Navigator': Service worker is disabled because the context is sandboxed and lacks the 'allow-same-origin' flag.\",\n+   \"Failed to"
+}

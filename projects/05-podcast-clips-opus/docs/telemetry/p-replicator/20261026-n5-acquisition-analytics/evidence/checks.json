@@ -1,0 +1,252 @@
+{
+  "source_revision": "0394ff99",
+  "checks": [
+    {
+      "check": "build-final",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 47.444,
+      "log": "build-final.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "683232a15ef8b272aa1ecd9d1ba0976f5cab6273ef7ca7166b33343b3103141b",
+      "acceptance": "final gate"
+    },
+    {
+      "check": "build-privacy",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 47.096,
+      "log": "build-privacy.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "a0bf00a25fe7af74d5928ba74cd360316cf24f211160728f520cfe42378fea23",
+      "acceptance": "prior attempt; history retained, does not replace final gate"
+    },
+    {
+      "check": "build-production-privacy",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 63.555,
+      "log": "build-production-privacy.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "f091e251961d0cb1c1a41daf16cd49ebc5a626d5944c2a8f2edd786f3c8284b3",
+      "acceptance": "prior attempt; history retained, does not replace final gate"
+    },
+    {
+      "check": "build-sandbox",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 61.206,
+      "log": "build-sandbox.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "4a92f3600fc9c53699df4313dab704fe3477946f6685d41c5159b9dfbd975662",
+      "acceptance": "prior attempt; history retained, does not replace final gate"
+    },
+    {
+      "check": "build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 42.32,
+      "log": "build.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "121000f72403c73fe1d6160cb093050092f8ba8904e06b6f3ac5fb2d464cad52",
+      "acceptance": "prior attempt; history retained, does not replace final gate"
+    },
+    {
+      "check": "full-tests-2",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 417.159,
+      "log": "full-tests-2.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "4e765c44db25463cc59ab2268b4556986c75080485d825d7d27a2a2d96b9c151",
+      "acceptance": "prior attempt; history retained, does not replace final gate"
+    },
+    {
+      "check": "full-tests-final",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 456.465,
+      "log": "full-tests-final.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "d94774b05afd057a5fe292729914d207d69607594b97a9a0ed554a91edaa0b07",
+      "acceptance": "final gate",
+      "passed_tests": 1067,
+      "test_files": 115,
+      "source_revision": "0394ff99",
+      "terminal_output": [
+        "",
+        " Test Files  115 passed (115)",
+        "      Tests  1067 passed (1067)",
+        "   Start at  19:15:56",
+        "   Duration  455.25s (transform 4.38s, setup 0ms, collect 27.39s, tests 387.14s, environment 37ms, prepare 13.16s)",
+        ""
+      ]
+    },
+    {
+      "check": "full-tests-privacy",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 467.737,
+      "log": "full-tests-privacy.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "30e97ea0fb089cf6bbc99477136e4b38a4fbe20c2bfbcf34a8a4560b55559330",
+      "acceptance": "prior attempt; history retained, does not replace final gate"
+    },
+    {
+      "check": "full-tests-sandbox",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 459.155,
+      "log": "full-tests-sandbox.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "f2c2e6ccd1814275fb3f22977afa01c6b9d23a05b664af7f94969231ba5989d2",
+      "acceptance": "prior attempt; history retained, does not replace final gate"
+    },
+    {
+      "check": "full-tests",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 242.777,
+      "log": "full-tests.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "ac6984f2db68ed3df422c7829bb4b6913e78b6d9d139c32c7d5c773968c0cb76",
+      "acceptance": "prior attempt; history retained, does not replace final gate"
+    },
+    {
+      "check": "lint-final",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.668,
+      "log": "lint-final.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "03d26c6ef0841b6eac1a8fb620e782e15d97a1f4467dc4566747082c86361443",
+      "acceptance": "final gate"
+    },
+    {
+      "check": "lint",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.908,
+      "log": "lint.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "03d26c6ef0841b6eac1a8fb620e782e15d97a1f4467dc4566747082c86361443",
+      "acceptance": "prior attempt; history retained, does not replace final gate"
+    },
+    {
+      "check": "typecheck-2",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 31.416,
+      "log": "typecheck-2.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "1b4b658aae5b9ff1fab2830785a99fb6149f6727dcfc8485f493c745a36ffc13",
+      "acceptance": "prior attempt; history retained, does not replace final gate"
+    },
+    {
+      "check": "typecheck-final",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 38.193,
+      "log": "typecheck-final.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "1b4b658aae5b9ff1fab2830785a99fb6149f6727dcfc8485f493c745a36ffc13",
+      "acceptance": "final gate"
+    },
+    {
+      "check": "typecheck-sandbox",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 46.123,
+      "log": "typecheck-sandbox.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "1b4b658aae5b9ff1fab2830785a99fb6149f6727dcfc8485f493c745a36ffc13",
+      "acceptance": "prior attempt; history retained, does not replace final gate"
+    },
+    {
+      "check": "typecheck",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 2,
+      "elapsed_seconds": 35.756,
+      "log": "typecheck.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "9e28f0caacbd7097960426da6b7a0357f7725e4dafcb962abcfcc0da358a2bbe",
+      "acceptance": "prior attempt; history retained, does not replace final gate"
+    }
+  ],
+  "log_note": "Raw sanitized logs remain in local plan/checks; hashes bind this summary. No test credentials or actual env exported."
+}

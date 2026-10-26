@@ -1,0 +1,16 @@
+{
+  "mode": "off",
+  "evidence": "fully intercepted synthetic SDK requests; NOT live goal receipt or report ingestion",
+  "checks": [
+    "disabled runtime: landing healthy, no SDK/provider requests/consent UI"
+  ],
+  "transport": [],
+  "consoleErrors": [
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    }
+  ],
+  "screenshots": [],
+  "status": "passed"
+}

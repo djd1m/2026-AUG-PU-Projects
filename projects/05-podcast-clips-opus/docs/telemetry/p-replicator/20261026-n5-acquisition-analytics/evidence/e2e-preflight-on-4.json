@@ -1,0 +1,37 @@
+{
+  "status": "inconclusive",
+  "run_id": "20261026-n5-acquisition-analytics",
+  "timestamp": "2026-10-26T18:45:40.808009+00:00",
+  "source_revision": "5172578f",
+  "source_files_sha256": {
+    "apps/web/src/lib/acquisition-analytics.ts": "cb050ea114db86993514b500cfc36e7f11f4dcb9ef5c1d912c65da7ed0ad64c0",
+    "apps/web/src/app/AcquisitionAnalytics.tsx": "909a62a6a7aa3e9ee47c26673b4ba263b10a3e8039ecb5c1e4200ed0c0af1fc7",
+    "apps/web/src/app/layout.tsx": "f8b85435758cb1c650ac87ac56576ddbe046ecc5b0f8006682e4663261ed90ea",
+    "apps/web/src/app/AuthForm.tsx": "9cb15785d53a773f39277585aa28405044506f83f2c7cce830f7a3663788be14",
+    "apps/web/src/app/videos/[videoId]/VideoDetail.tsx": "fd2503df6cb9871e6741446d19c1016882fb82ee33625e12c7135c4097f4afc4",
+    "apps/web/src/app/upgrade/return/ReturnScreen.tsx": "0a7ad4a85705c237913d4cb8cb6662d6618105430298f73076411fa38af990c1",
+    "apps/web/src/server/environment.ts": "989fdc371b80ca2efa1cbce1b554fdf574482442c8b0e5a8c44df21c72262697",
+    "docker-compose.yml": "0b0c079c812841d612c408defe1983abf68888082c15718337ca048a5d7b6c4d"
+  },
+  "build_id": "_NtINa99LXtL1DHwo3otS",
+  "build_command": "npm run build under Node22.22.3,production NODE_ENV,NEXT_TELEMETRY_DISABLED=1",
+  "browser": "existing codex-ui-playwright Docker;Playwright1.63;serviceworkers blocked;HTTPS localhost proxy",
+  "application": "private Node22 Next production build;isolated *_test DB and Redis15;synthetic ready fixture;no workers",
+  "counter": "123456 synthetic test value;official SDK cached readonly;all provider event requests intercepted;never real delivery",
+  "external_fetch": "backend external fetch blocked;browser external requests intercepted or blocked",
+  "payment_fixture": "synthetic merchant config only;no checkout POST;only intercepted status scenarios;no real payment",
+  "inputs": "synthetic generated emails/passwords/video/clip/intent;no customer data",
+  "evidence_destination": "docs/features/acquisition-analytics/browser-evidence/",
+  "expected_effects": [
+    "test accounts only in separate test DB",
+    "browser consent/local storage only in disposable contexts",
+    "screenshots and redacted request summaries",
+    "no production configuration/deployment/traffic/account creation"
+  ],
+  "e2e_claim": "Diagnostic attempt only: inherited adapter hash stale; excluded from final acceptance",
+  "live_owner_receipt": "planned later on Cloud.ru RF",
+  "attempt": "browser-on-4",
+  "checked_at": "2026-10-26T18:59:30.344843+00:00",
+  "fixture_correction": "Single test proxy supplies client + one proxy; N5_TRUSTED_PROXY_HOPS=1 only for isolated backend. Production unchanged. First attempt failed closed before login.",
+  "privacy_correction": "Static SDK init URL/referrer; every-request raw-context assertions retained; all SDK network still intercepted."
+}

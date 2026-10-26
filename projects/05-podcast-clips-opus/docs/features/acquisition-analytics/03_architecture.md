@@ -3,7 +3,8 @@
 Источник: [пакет планировщика](analytics-plan.md), baseline4d5b0e26.
 
 Server runtime config → numeric public counter prop → client consent host → small
-typed analytics adapter → official Metrika SDK. Default disabled. No new npm
+typed analytics adapter → closed postMessage bridge → official Metrika SDK
+in an empty sandbox iframe (allow-scripts, without allow-same-origin). Default disabled. No new npm
 dependencies, backend API, DB migration, queue service or payment-provider call.
 
 События наблюдаются в существующих AuthForm, VideoDetail и ReturnScreen.
@@ -21,8 +22,13 @@ title, transcript, prompt, referrer/query/hash или подписанные с�
 Согласие guest publication не используется как согласие на аналитику. Host
 показывает компактный доступный выбор аналитики только при настроенном ID,
 позволяет отказ/отзыв. SDK destruct при отзыве и переходе на исключённый путь.
-SDK иногда может собирать поля вне явного payload: проверять реальные запросы,
-а не только типы TypeScript. Сбой аналитики не должен ломать N5.
+Фактический SDK собирал raw init URL/referrer и автоматический form:// goal.
+Поэтому init/hit получают статические URL, а SDK не получает доступ к DOM
+приложения: iframe пустой, origin непривилегированный, referrerPolicy=no-referrer,
+а статический base исключает наследование document.baseURI родителя.
+Bridge принимает только заданные команды с source/token/generation проверкой;
+удаление frame завершает SDK вместе с его listeners/timers. Проверять реальные
+запросы, а не только типы TypeScript. Сбой аналитики не должен ломать N5.
 
 ## Владение файлами
 

@@ -1,0 +1,238 @@
+{
+  "status": "completed",
+  "prepared_at_utc": "2026-10-26",
+  "model": {
+    "requested": "gpt-6.1-sol",
+    "requested_reasoning": "high",
+    "actual": null,
+    "usage": null,
+    "cost": null
+  },
+  "provenance": {
+    "type": "owner_provided_copied_report",
+    "relayed_by": "root coordinator",
+    "vendor": "Similarweb",
+    "report_url": null,
+    "independently_verified_export": false,
+    "original_file_available_to_executor": false,
+    "measurement_type": "vendor_estimates_not_first_party_actual_analytics",
+    "limitations": [
+      "No original screenshots or export available to this executor",
+      "Copied table formatting may omit labels and filters",
+      "No uncertainty interval supplied"
+    ],
+    "coordinator_correction": "Outgoing domain labels and organic term spacing restored directly from original owner message; percentages unchanged."
+  },
+  "scope": {
+    "domain": "mnogo-reels.ru",
+    "period_start": "2026-07",
+    "period_end": "2026-09",
+    "geography": "Worldwide",
+    "include_subdomains": true,
+    "device_scope": "desktop and mobile reported; per-section filters not independently verified"
+  },
+  "traffic_and_engagement": {
+    "total_visits": 22053,
+    "monthly_visits": 7351,
+    "monthly_unique_visitors": 3609,
+    "deduplicated_audience": 3170,
+    "average_visit_duration_reported": "3:28",
+    "average_visit_duration_seconds": 208,
+    "pages_per_visit": 3.24,
+    "bounce_rate_percent": 39.78
+  },
+  "device_share_percent": {
+    "desktop": 67.95,
+    "mobile": 32.05
+  },
+  "country_share_percent": {
+    "Russia": 54.97,
+    "Brazil": 23.69,
+    "Turkey": 4.68,
+    "Vietnam": 4.66,
+    "Netherlands": 4.37
+  },
+  "channel_shares": {
+    "unit": "percent",
+    "organic_search": 16.09,
+    "referrals": 15.08,
+    "social": 5.92,
+    "paid_search": {
+      "operator": "less_than",
+      "value": 1
+    },
+    "direct": null,
+    "email": null,
+    "display": null,
+    "other_channels": null,
+    "derived_known_exact_share_sum": 37.09,
+    "derived_residual_after_three_exact_shares": 62.91,
+    "residual_includes_paid_search": true,
+    "residual_is_direct": false,
+    "arithmetic_assumption": "The three exact shares refer to the same scope; per-table filters not independently verified",
+    "largest_reported_exact_channel": "organic_search",
+    "primary_channel_overall": null,
+    "paid_social_activity": null,
+    "interpretation_limits": [
+      "Social is not necessarily unpaid",
+      "Referrals can include purchased integrations",
+      "Paid search below 1 percent does not measure total ad spend"
+    ]
+  },
+  "top_referrers_copied_table": {
+    "domains_raw": [
+      "webcatalog.io",
+      "opusclip.tech",
+      "ailist.ru",
+      "yandex.ru"
+    ],
+    "shares_percent_raw": [
+      47.08,
+      30.62,
+      6.67,
+      6.27,
+      6.05
+    ],
+    "mapping": null,
+    "mapping_status": "ambiguous_four_domains_five_shares",
+    "denominator": "unverified_from_copied_table",
+    "must_not_assign_shares_by_position": true,
+    "public_listing_verified": [
+      {
+        "domain": "ailist.ru",
+        "url": "https://ailist.ru/tools/mnogoreels/",
+        "page_updated_at": "2026-07-22",
+        "checked_at": "2026-10-26",
+        "proves": "MnogoReels listing presence",
+        "does_not_prove": "Traffic volume, any specific share, paid listing or resulting sales"
+      }
+    ]
+  },
+  "outgoing_copied_table": {
+    "labels_are_incomplete_domain_labels_from_owner_relay": false,
+    "rows": [
+      {
+        "reported_label": "accounts.google.com",
+        "share_percent": 81.33
+      },
+      {
+        "reported_label": "yoomoney.ru",
+        "share_percent": 11.09
+      },
+      {
+        "reported_label": "id.vk.ru",
+        "share_percent": 3.93
+      },
+      {
+        "reported_label": "tiktok.com",
+        "share_percent": 2.11
+      },
+      {
+        "reported_label": "oauth.yandex.ru",
+        "share_percent": 1.12
+      }
+    ],
+    "denominator": "unverified_from_copied_table",
+    "represents_purchases_or_conversion": false,
+    "possible_link_purposes": "Authentication, payment routing and social integrations are hypotheses based on labels",
+    "payment_conversion_rate": null,
+    "signup_conversion_rate": null,
+    "revenue": null
+  },
+  "organic_terms": {
+    "period": "2026-09",
+    "reported_filter": "non-branded",
+    "raw_terms_preserve_coordinator_copy_format": false,
+    "denominator": "keyword_table_share_not_confirmed_as_sitewide_share",
+    "rows": [
+      {
+        "term_raw": "рилс ру",
+        "share_percent": 20.35
+      },
+      {
+        "term_raw": "ты можешь сделать привю",
+        "share_percent": 15.93
+      },
+      {
+        "term_raw": "мартин кольхаузер",
+        "share_percent": 14.16
+      },
+      {
+        "term_raw": "mnogo-reels.ru articles",
+        "share_percent": 12.39
+      },
+      {
+        "term_raw": "превью для видео ии",
+        "share_percent": 9.73
+      }
+    ],
+    "usable_as_n5_clip_keyword_plan": false,
+    "limits": "Mixed or unclear intent, thumbnail terms, domain-like term despite reported non-branded filter; screenshot/export unavailable",
+    "raw_terms_verified_against_owner_message": true
+  },
+  "reported_growth": [
+    {
+      "label": "organic MoM",
+      "change_percent": 67,
+      "comparison_period": null,
+      "base_volume": null,
+      "filter_scope_verified": false
+    },
+    {
+      "label": "Russia MoM",
+      "change_percent": 92,
+      "comparison_period": null,
+      "base_volume": null,
+      "filter_scope_verified": false
+    }
+  ],
+  "decision": {
+    "keep_first_telegram_pilot": true,
+    "classification": "N5 experimental choice, not proof of competitor primary channel",
+    "segment": "Russian-language recurring video podcast creator without an editor",
+    "channel": "Organic thematic Telegram communities",
+    "offer": "3-8 vertical clips with Russian captions from one recording",
+    "target_action": "First available clip observed (n5_first_clip_ready); browser scope, not completed download",
+    "reason": "Measure narrow-segment activation with a real result and explicit demand before channel scaling; competitor visit share contains no CAC or conversion evidence",
+    "next_candidate_after_activation": "Bounded directory/referral or single SEO landing test",
+    "spend_authorized_or_incurred": false,
+    "messages_or_publications_sent": false,
+    "runtime_changes": false,
+    "future_measurement_hypothesis": "First successful download; not instrumented by the current four-goal observer"
+  },
+  "methodology_sources_checked_at": "2026-10-26",
+  "methodology_sources": [
+    {
+      "topic": "Vendor estimates and rounding",
+      "url": "https://support.similarweb.com/hc/en-us/articles/5083358615313-Similarweb-Data-Methodology-FAQs"
+    },
+    {
+      "topic": "Monthly visits and sessions",
+      "url": "https://support.similarweb.com/hc/en-us/articles/115000501465-Monthly-Visits"
+    },
+    {
+      "topic": "Unique visitors",
+      "url": "https://support.similarweb.com/hc/en-us/articles/4558942036113-Unique-Visitors"
+    },
+    {
+      "topic": "Cross-device deduplicated monthly audience",
+      "url": "https://developers.similarweb.com/reference/deduplicated-audience"
+    },
+    {
+      "topic": "Referral traffic can include media buying",
+      "url": "https://support.similarweb.com/hc/en-us/articles/212849049-Referral-Traffic"
+    },
+    {
+      "topic": "Channels and social traffic",
+      "url": "https://support.similarweb.com/hc/en-us/articles/6092440668445-Using-Similarweb-Extension"
+    },
+    {
+      "topic": "Incoming traffic and search domains as referrals",
+      "url": "https://support.similarweb.com/hc/en-us/articles/360006548198-Incoming-Traffic"
+    },
+    {
+      "topic": "Outgoing traffic is referral links to other domains",
+      "url": "https://support.similarweb.com/hc/en-us/articles/360006953237-Outgoing-Traffic-Insights"
+    }
+  ]
+}

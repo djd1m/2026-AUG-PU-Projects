@@ -42,6 +42,8 @@ services:
       UV_THREADPOOL_SIZE: "8"
       N5_TRUSTED_PROXY_HOPS: ${N5_TRUSTED_PROXY_HOPS:-2}
       SESSION_SECRET: ${SESSION_SECRET:?секрет сессий не задан}
+      # Публичный ID Метрики задаётся при запуске в Cloud.ru. Пусто — аналитика выключена.
+      N5_METRIKA_COUNTER_ID: ${N5_METRIKA_COUNTER_ID:-}
       # Оплата ЮKassa (фича 30, ADR-019). Дефис БЕЗ двоеточия: не задана → off (экран интереса); явно ПУСТАЯ строка
       # доезжает до web и валит старт (honest-configuration CFG-I2), а не превращается в off молча.
       N5_PAYMENTS_MODE: ${N5_PAYMENTS_MODE-off}

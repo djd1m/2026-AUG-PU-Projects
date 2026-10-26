@@ -1,0 +1,45 @@
+{
+  "status": "ready",
+  "run_id": "20261026-n5-acquisition-analytics",
+  "attempt": "browser-off-1",
+  "timestamp": "2026-10-26T19:23:20.538610+00:00",
+  "source_revision": "0394ff992449b242c1b08c8bc6b2c48a407c2baa",
+  "source_files_sha256": {
+    "apps/web/src/lib/acquisition-analytics.ts": "0661870d10960e52d636de9168fd3bc393f0e5e517d53896ee70c67f0094e51c",
+    "apps/web/src/app/AcquisitionAnalytics.tsx": "909a62a6a7aa3e9ee47c26673b4ba263b10a3e8039ecb5c1e4200ed0c0af1fc7",
+    "apps/web/src/app/layout.tsx": "f8b85435758cb1c650ac87ac56576ddbe046ecc5b0f8006682e4663261ed90ea",
+    "apps/web/src/app/AuthForm.tsx": "9cb15785d53a773f39277585aa28405044506f83f2c7cce830f7a3663788be14",
+    "apps/web/src/app/videos/[videoId]/VideoDetail.tsx": "fd2503df6cb9871e6741446d19c1016882fb82ee33625e12c7135c4097f4afc4",
+    "apps/web/src/app/upgrade/return/ReturnScreen.tsx": "0a7ad4a85705c237913d4cb8cb6662d6618105430298f73076411fa38af990c1",
+    "apps/web/src/server/environment.ts": "989fdc371b80ca2efa1cbce1b554fdf574482442c8b0e5a8c44df21c72262697",
+    "docker-compose.yml": "0b0c079c812841d612c408defe1983abf68888082c15718337ca048a5d7b6c4d"
+  },
+  "build_id": "hxEK12n0eBPDX-JWDz55D",
+  "build_receipt": "build-final.json",
+  "environment": "Existing Docker codex-ui-playwright; Playwright1.63; HTTPS localhost proxy/private test backend; separate *_test DB and Redis15; no workers",
+  "inputs": {
+    "fixture": "Synthetic ready clip/account; private fixture not committed",
+    "helper_sha256": "70e4c7001db9b2683e28b8c83b4eb1e826a13790bda91a3e2261668cee4f67eb",
+    "sdk_sha256": "af15fdd8daecef9573eaf27eb55b88b80ced02505531ba67d1d571f1ec64f553"
+  },
+  "test_command": [
+    "docker",
+    "exec",
+    "codex-ui-playwright",
+    "node",
+    "/tmp/n5-acquisition-e2e/browser-check.cjs",
+    "off"
+  ],
+  "expected_effects": [
+    "Landing healthy",
+    "No consent UI",
+    "No SDK/provider requests",
+    "No production/user/payment mutation"
+  ],
+  "external_actions_executed": false,
+  "evidence_root": "docs/telemetry/p-replicator/20261026-n5-acquisition-analytics/evidence",
+  "e2e_claim": null,
+  "live_owner_receipt": "planned Cloud.ru; not a local acceptance claim",
+  "fixture_correction": "Playwright serviceWorkers block injection removed after empty-frame reproduction. Native sandbox SW denial + context.serviceWorkers()===0 asserted; all privacy guards unchanged.",
+  "runtime_counter": "unset"
+}

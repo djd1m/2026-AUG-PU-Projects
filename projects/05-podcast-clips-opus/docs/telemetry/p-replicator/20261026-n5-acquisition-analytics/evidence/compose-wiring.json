@@ -1,0 +1,22 @@
+{
+  "source_revision": "5172578f",
+  "compose_sha256": "0b0c079c812841d612c408defe1983abf68888082c15718337ca048a5d7b6c4d",
+  "checked_at": "2026-10-26T19:04:00.787908+00:00",
+  "environment": "All required interpolation values synthetic; no containers launched",
+  "checks": [
+    {
+      "counter": "empty/default off",
+      "exposed_to_services": [
+        "web"
+      ],
+      "exit_code": 0
+    },
+    {
+      "counter": "synthetic runtime ID",
+      "exposed_to_services": [
+        "web"
+      ],
+      "exit_code": 0
+    }
+  ]
+}

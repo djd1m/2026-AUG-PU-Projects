@@ -1,0 +1,20 @@
+{
+  "time": "2026-10-26T19:13:20.682981+00:00",
+  "preflight": "ready",
+  "attempt": "2",
+  "source": "0394ff992449b242c1b08c8bc6b2c48a407c2baa",
+  "build": "hxEK12n0eBPDX-JWDz55D",
+  "target": "https://localhost inside existing codex-ui-playwright; FINALready confirmed by coordinator, no build/source/mode mutation until termination",
+  "fixture": "existing synthetic *_test account/video now3done clips; synthetic shortlink/sentguestpack; credentials private",
+  "command": "docker exec -w /tmp/n5-acquisition-responsive-20261026-attempt2 codex-ui-playwright node runner.mjs",
+  "effects": "local auth sessions and synthetic link_view/guest_opened only; no workers/models/payment/usercontent; local screenshots/reports",
+  "adaptation": "unchanged stock validator; local TLS exception only inside localhost+external-network-isolated contexts; SDK fully intercepted if requested; existing Playwright1.63 plus copied local axe dependencies",
+  "hashes": {
+    "scripts/check-responsive.mjs": "ec9a3fa946ee7b6c6103a5a73fe1c375ff620aab9efbdfbc17a3b8f520c9ff4a",
+    "scripts/responsive/input.mjs": "1a6945031738a61bbb67f247231efcb8d69a8bba722582bd9b491c39a0c43b75",
+    "scripts/responsive/rules.mjs": "54c49ce205127c06ccd63226325935932fc42ab1fbaccc2b14e11df7f1179783",
+    "apps/web/src/app/globals.css": "691c0411c98c79185affbae40e5fc62d4e14b9f2e87c2058e85e2dd39fe9c8ea",
+    "apps/web/src/server/guest-page.ts": "a346fc6148d56e71c75f4cda4fa664852ed1f65c920de39036333552656f8142",
+    "apps/web/src/server/short-link-handler.ts": "97379ed6158d3310f9f46a9417e8b12b527ac3e8dcd30130d67a8975f91dd6c3"
+  }
+}

@@ -20,7 +20,8 @@
 
 Тестовые sentinel email, title, filename, transcript/prompt, query/hash/referral,
 dynamic IDs и sensitive referrer не должны попасть в actual SDK requests.
-SDK загрузка без отправки goals не доказывает воронку. Requests interception
+Дополнительно: SDK не видит родительские формы/DOM; автоматические form://
+и посторонние цели запрещены. SDK загрузка без отправки goals не доказывает воронку. Requests interception
 проверяет сериализацию, не получение целей настоящим owner counter.
 
 Negative guards испытать точечной мутацией с красным тестом, затем восстановить.
