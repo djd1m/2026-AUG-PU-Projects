@@ -4,7 +4,7 @@ Status: IMPLEMENTED; independent review and coordinator acceptance pending. Foun
 
 ## Criterion coverage
 
-The planned titles below are implemented verbatim. Focused isolated tests pass; the coordinator owns the scoped native Phase 3 completion gate and independent review. Source-bound implementation evidence is summarized below.
+The planned titles below are implemented verbatim. Focused and full isolated tests pass; the coordinator owns the scoped native Phase 3 completion gate and independent review. Source-bound implementation evidence is summarized below.
 
 | Criterion | Test file | Test title |
 |---|---|---|
@@ -27,7 +27,12 @@ Checks (fresh redacted receipts: `/tmp/n5-acquisition-analytics-20261026-plan/ch
 - `cloud-build-1`: full workspace build, exit 0.
 - `cloud-typecheck-2`: exit 0 after local workspace outputs were built. Earlier `cloud-typecheck-1` failed because the fresh worktree lacked dependency dist outputs; retained as failed evidence.
 - `cloud-lint-1`: exit 0, including the 500-line limit.
-- Final full suite and mutation controls: pending at this checkpoint; no final pass claim yet.
+- `cloud-full-suite-2`: 116/116 files, 1092/1092 tests, no skips, exit 0; 430.775 seconds. Mandatory acceptance skip reporter remained enabled. Validated code/test revision: `325f1f53ed090ad3325230fe29ad4156b636a9d0`.
+- `cloud-mutations-3`: all 21 mutations red=1 / restored green=0, exit 0; 116.976 seconds. Includes existing six selection guards plus selected-key/backend, STT refusal, fixed endpoint, JSON-object mode, prompt schema, truncation, body timeout, SQL/ledger/fake attribution and actual secret/selector entrypoint projections. Fresh raw evidence: `checks/cloud-mutations-3-artifacts/`.
+- `cloud-typecheck-3`: exit 0 on the corrected shared fixture; `cloud-fixture-regression-1`: previously failing wiring tests plus config/Cloud.ru tests pass.
+- Synthetic `scripts/check-env-complete.sh`: exit 0 (21 required variables); `scripts/check-env-wiring.sh`: exit 0; actual values were synthetic. `cloud-model-cost-1`: exit 0.
+
+`cloud-full-suite-1` found three fixture-based wiring assertions: the shared synthetic `environment()` lacked the newly projected backend selectors and FM key. The allowed fixture now includes synthetic values, and absent-selector controls explicitly remove the selectors. The known-failing first suite was stopped after diagnosis (exit -15; 330.134 seconds), its partial/failing evidence retained, and the complete unchanged test set rerun successfully on the committed correction. No runtime behavior was weakened.
 
 The first mutation run (`cloud-mutations-1`) deliberately filtered tests with `-t` but inherited `N5_ACCEPTANCE=1`, so restored controls correctly failed on intentional skips. The runner now disables that full-suite flag only for its explicitly filtered mutation subprocesses. Mandatory full-suite skip reporting remains enabled. Failed logs are preserved; fresh subsequent runs use an optional output path to avoid overwriting historical artifacts.
 
@@ -47,7 +52,7 @@ PLAN gate observed 2026-10-26: this contour has 14/14 matching keys and no missi
 
 ### Pre-Deployment checklist
 
-- [ ] All six AC implemented and mandatory tests/build/typecheck/lint/mutations green, bound to exact source/build.
+- [x] All six AC implemented and mandatory tests/build/typecheck/lint/mutations green, bound to exact source/build; independent acceptance remains separate.
 - [ ] Independent review complete, no unresolved blocker/high findings; secret exposure and external-dispatch safety reviewed.
 - [ ] Targeted provider descriptions/REPRODUCE/model-cost docs updated; canonical economics remains estimates.
 - [ ] Rollback config/code revision and compatibility verified in existing isolated environment.
@@ -82,5 +87,7 @@ Preserve existing levels/retention/aggregation and attempt/outcome records; neve
 ## Handoff
 
 Development: fixed baseline and feature allowlist, environment canon, no arbitrary endpoints/dependencies, requirements validation before code. QA: synthetic keys/fixtures, existing isolated DB/Redis/MinIO only, concurrency and mutation evidence, no paid inference or real user content. Operations: target server/keys/bucket/CORS and release authority remain separate prerequisites; live STT and storage status remain unverified. Coordinator owns continuation after bounded attempts, remaining AC and next executor; no claim that background work runs when stopped.
+
+Implementation evidence is complete; independent review, native scoped completion gate and coordinator acceptance remain required before integration. Optional candidate-branch push was rejected by automatic approval review because the private source destination was unverified; no retry or remote publication occurred. Local commits are available for the coordinator's separately authorized delivery gate.
 
 Required terminal receipts distinguish PLAN complete, implementation pass, actual integration pass and release. Source-bound fresh receipts are substantive regular non-symlink files, never a narrative substitute. No future expense/time estimate is presented as measured usage.
