@@ -97,5 +97,62 @@
   ],
   "queue_quotas": "Current20globalLLMcalls/day and2000globalminutes/day insufficientfor1000weeklyusers(~143calls/day8571min/dayaverage) andmayblock100-userweeklybursts; changesmusthaveapprovedcostcaps",
   "privacy": "CloudpartnerrouteisnotprovedRFresidency; maincaseuseslocalPropricebutcontractstillrequiresvalidation",
-  "real_payments": "off inobservedruntime; thesearehypotheticalfuturerevenue scenarios"
+  "real_payments": "off inobservedruntime; thesearehypotheticalfuturerevenue scenarios",
+  "primary_freemium_100_active": [
+    {
+      "active_paying": 10,
+      "active_free": 90,
+      "hours_per_all_active_user_per30days": 4.285714285714286,
+      "revenue_RUB": 9900.0,
+      "cloud_RUB": 17973.384,
+      "payment_fee_scenario_RUB": 422.73,
+      "balance_before_tax_CAC_support_RUB": -8496.114
+    },
+    {
+      "active_paying": 19,
+      "active_free": 81,
+      "hours_per_all_active_user_per30days": 4.285714285714286,
+      "revenue_RUB": 18810.0,
+      "cloud_RUB": 17973.384,
+      "payment_fee_scenario_RUB": 803.187,
+      "balance_before_tax_CAC_support_RUB": 33.429
+    },
+    {
+      "active_paying": 20,
+      "active_free": 80,
+      "hours_per_all_active_user_per30days": 4.285714285714286,
+      "revenue_RUB": 19800.0,
+      "cloud_RUB": 17973.384,
+      "payment_fee_scenario_RUB": 845.46,
+      "balance_before_tax_CAC_support_RUB": 981.156
+    },
+    {
+      "active_paying": 25,
+      "active_free": 75,
+      "hours_per_all_active_user_per30days": 4.285714285714286,
+      "revenue_RUB": 24750.0,
+      "cloud_RUB": 17973.384,
+      "payment_fee_scenario_RUB": 1056.825,
+      "balance_before_tax_CAC_support_RUB": 5719.791
+    },
+    {
+      "active_paying": 50,
+      "active_free": 50,
+      "hours_per_all_active_user_per30days": 4.285714285714286,
+      "revenue_RUB": 49500.0,
+      "cloud_RUB": 17973.384,
+      "payment_fee_scenario_RUB": 2113.65,
+      "balance_before_tax_CAC_support_RUB": 29412.966
+    },
+    {
+      "active_paying": 100,
+      "active_free": 0,
+      "hours_per_all_active_user_per30days": 4.285714285714286,
+      "revenue_RUB": 99000.0,
+      "cloud_RUB": 17973.384,
+      "payment_fee_scenario_RUB": 4227.3,
+      "balance_before_tax_CAC_support_RUB": 76799.316
+    }
+  ],
+  "freemium_warning": "User clarified free tier mustbeincluded: mainallpayingfigures areupperillustration, notforecast. Conversionandfreeusagedistributionunmeasured."
 }
