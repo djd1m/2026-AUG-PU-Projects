@@ -105,7 +105,8 @@ export function createAcquisitionAnalytics(deps: Dependencies) {
       try { stopLoad = deps.load(loaded => {
         if (current !== generation || !consent || !id || !route) return;
         sdk = loaded;
-        safe(() => sdk!(id!, 'init', { defer: true, webvisor: false, clickmap: false, trackLinks: false, trackHash: false, sendTitle: false, ecommerce: false, accurateTrackBounce: false, triggerEvent: false, childIframe: false }));
+        // Even with defer, SDK sends an initialization nohit request; sanitize its URL/referrer too.
+        safe(() => sdk!(id!, 'init', { url: `https://clipmkr.ru/analytics/${route}`, referrer: 'https://clipmkr.ru/analytics/direct', defer: true, webvisor: false, clickmap: false, trackLinks: false, trackHash: false, sendTitle: false, ecommerce: false, accurateTrackBounce: false, triggerEvent: false, childIframe: false }));
         const pending = queue; queue = []; pending.forEach(fn => safe(fn));
       }); } catch { queue = []; stopLoad = () => {}; }
       hit();

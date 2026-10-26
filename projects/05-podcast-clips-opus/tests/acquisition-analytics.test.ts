@@ -37,7 +37,7 @@ describe('optional closed acquisition observations', () => {
   });
   it('initializes with collection disabled and sends only static sanitized data', () => {
     const f = fixture(); f.adapter.configure(123, true, '/', campaign + '&email=PII#SECRET'); f.loaded();
-    expect(f.calls[0]).toEqual([123, 'init', expect.objectContaining({ defer: true, webvisor: false, clickmap: false, trackLinks: false, trackHash: false, sendTitle: false, ecommerce: false })]);
+    expect(f.calls[0]).toEqual([123, 'init', expect.objectContaining({ url: 'https://clipmkr.ru/analytics/landing', referrer: 'https://clipmkr.ru/analytics/direct', defer: true, webvisor: false, clickmap: false, trackLinks: false, trackHash: false, sendTitle: false, ecommerce: false })]);
     expect(f.calls[1]).toEqual([123, 'hit', 'https://clipmkr.ru/analytics/landing', { referer: 'https://clipmkr.ru/analytics/direct', title: 'N5', params: expect.objectContaining({ route: 'landing', utm_source: 'telegram' }) }]);
     expect(JSON.stringify(f.calls)).not.toMatch(/PII|SECRET|email=/);
     expect(goals(f).map(c => c[2])).toEqual(['n5_visit']);
