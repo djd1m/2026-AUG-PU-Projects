@@ -162,7 +162,7 @@ export function browserAnalytics() {
       const timer = setTimeout(dispose, 8000);
       window.addEventListener('message', receive);
       // All interpolation is executor-generated hex/integer/function source, never user content.
-      frame.srcdoc = `<!doctype html><meta name="referrer" content="no-referrer"><title>N5</title><script>
+      frame.srcdoc = `<!doctype html><meta name="referrer" content="no-referrer"><title>N5</title><base href="https://clipmkr.ru/analytics/"><script>
         const token=${JSON.stringify(token)}, generation=${generation}, valid=${validSdkCall.toString()};
         let counter=null;
         window.ym=function(){if(window.ym.a.length>=20)window.ym.a.shift();window.ym.a.push(Array.from(arguments))};window.ym.a=[];window.ym.l=Date.now();

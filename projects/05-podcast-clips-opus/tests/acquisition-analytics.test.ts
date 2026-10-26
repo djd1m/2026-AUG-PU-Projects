@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { ANALYTICS_STORAGE_KEY, approvedCampaign, availableClip, confirmedPayment, counterId, createAcquisitionAnalytics, routeCategory, validSdkCall, type Metrika } from '../apps/web/src/lib/acquisition-analytics';
 const campaign = '?utm_source=telegram&utm_medium=community&utm_campaign=n5_pilot&utm_content=demo_a';
@@ -142,4 +143,12 @@ it('admits only closed sanitized SDK bridge calls and rejects injected fields', 
   expect(validSdkCall([123, 'userParams', { email: 'PII' }])).toBe(false);
   expect(validSdkCall(['123', 'destruct'])).toBe(false);
   expect(validSdkCall([123, 'destruct'])).toBe(true);
+});
+
+
+it('pins the isolated SDK document base before scripts to prevent inherited parent URLs', () => {
+  const source = readFileSync('apps/web/src/lib/acquisition-analytics.ts', 'utf8');
+  const document = source.slice(source.indexOf('frame.srcdoc ='));
+  expect(document).toMatch(/<base href="https:\/\/clipmkr\.ru\/analytics\/">/);
+  expect(document.indexOf('<base ')).toBeLessThan(document.indexOf('<script>'));
 });
