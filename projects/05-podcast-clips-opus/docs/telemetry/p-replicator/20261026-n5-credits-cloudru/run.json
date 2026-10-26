@@ -9,8 +9,8 @@
   "source_revision": "c559673649460fa5d8ef1e5e3c86bf7053ebbb69",
   "started_at": "2026-10-26T19:54:40.997894+00:00",
   "ended_at": null,
-  "status": "running",
-  "current_stage": "PLAN_GATE_SCOPE_DECISION",
+  "status": "blocked",
+  "current_stage": "AWAITING_REQUIRED_SCOPE_DECISION",
   "owner_instruction": "Implement credit packages and signup bonus, Cloud.ru FM/ObjectStorage, then real Metrika counter and4goal receipt",
   "acceptance_scope": "Code and local tests here; deployment/provider capability acceptance and actual analytics on Cloud.ru RF when credentials/account available",
   "route": {
@@ -81,5 +81,31 @@
     "Cloudru Whisper request/timestamps evidence before STT transport implementation"
   ],
   "implementation_started": false,
-  "actual_background_implementation": false
+  "actual_background_implementation": false,
+  "checkpoint_revision": "a025c4ca9245e1a185662a345ca969e0d66017c5",
+  "approval_requested_at": "2026-10-26T20:25:17.021649+00:00",
+  "not_a_voluntary_pause": true,
+  "continuation": "Root resumes same RUN_ID after owner gate-scope answer; recheck source, scoped trace gate if explicitly permitted, then cold-context requirements validation. No current coder/background run.",
+  "handoff": {
+    "ready_files": [
+      "docs/cloudru-launch-plan.md",
+      "docs/features/credit-packages/01_specification.md",
+      "docs/features/credit-packages/owner-decisions.md",
+      "docs/features/cloudru-provider-foundation/01_specification.md",
+      "docs/features/credits-cloudru-plan-gate.md"
+    ],
+    "owner_approved": [
+      "per-second1credit=60s",
+      "addon30daysfrompurchase withpaidfunctions throughout"
+    ],
+    "owner_pending": [
+      "gate-scope exception",
+      "immediateupgrade vsnextperiod",
+      "financialproposal finalapproval afterPLANVALIDATE"
+    ],
+    "missing_provider_evidence": [
+      "Cloud.ru Whisper actualrequest and wordtimestamps contract"
+    ],
+    "actual_background_implementation": false
+  }
 }
