@@ -25,8 +25,8 @@
   "host_version": null,
   "billing_mode": "unknown",
   "started_at": "2026-10-26T17:56:30.585751+00:00",
-  "ended_at": null,
-  "status": "running",
+  "ended_at": "2026-10-26T19:29:19.433002+00:00",
+  "status": "accepted",
   "acceptance_evidence": [
     "docs/research/acquisition-20261026/README.md",
     "docs/features/acquisition-analytics/05_completion.md",
@@ -167,7 +167,7 @@
     "reception_in_owner_dashboard": "planned_on_CloudRu_not_claimed_pass"
   },
   "deployment_context": "Code on current VPS; production launch and owner-counter reception check deferred to Cloud.ru RF by owner clarification",
-  "current_stage": "DELIVERY",
+  "current_stage": "DELIVERED",
   "planner_packet": {
     "path": "docs/features/acquisition-analytics/analytics-plan.md",
     "sha256": "8ef3b9cf796a21492aee67ec622bfbcbbcff9627a7fdba42fb0e06ab658b975d",
@@ -193,14 +193,19 @@
   },
   "delivery": {
     "branch": "feature/n5-acquisition-analytics-20261026",
-    "status": "pending_push",
+    "status": "pushed",
     "production_activation": false,
-    "pull_request": false
+    "pull_request": false,
+    "content_revision": "a2c7ac424ae6963ca172eba18a12b4740ab2e6b1",
+    "uri": "https://github.com/djd1m/2026-AUG-PU-Projects/tree/feature/n5-acquisition-analytics-20261026/projects/05-podcast-clips-opus/docs/research/acquisition-20261026",
+    "push_verified": "git push exit0 c6cc0096..a2c7ac42; final telemetry-only commit follows",
+    "test_processes": "Owned test backend and localhost proxy stopped; no production change"
   },
   "dz_memory": {
     "lesson_id": "teach:40c56df55effa00c",
     "backend": "local .dz memory",
     "readback": "lexical recall confirmed",
     "contents": "SDK data boundaries and stable responsive build lesson; no credentials"
-  }
+  },
+  "elapsed_seconds_recorded": 5568.847
 }
