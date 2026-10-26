@@ -273,4 +273,20 @@ describe.skipIf(!url)('credit packages on isolated PostgreSQL',()=>{
     }finally{await oldPool.query(`DROP SCHEMA IF EXISTS ${oldSchema} CASCADE`);await oldPool.end();await rm(directory,{recursive:true,force:true});}
   });
 
+  it('one verified provider payment cannot be rebound to a second intent or account',async()=>{
+    const a=await account(),b=await account(),first=await buy(a,'addon_v1'),second=await buy(b,'addon_v1');
+    expect(await applyVerifiedPayment(pool,first.p)).toMatchObject({applied:true});
+    expect(await applyVerifiedPayment(pool,{...second.p,payment:{...second.p.payment,id:first.p.payment.id}})).toEqual({applied:false,reason:'duplicate'});
+    expect((await pool.query("SELECT count(*)::int n FROM credit_grant WHERE account_id=$1 AND source='payment'",[b])).rows[0].n).toBe(0);
+    expect((await pool.query('SELECT status FROM payment_intent WHERE id=$1',[second.i.intent.id])).rows[0].status).toBe('created');
+  });
+  it('failed credit signup rolls back account, trial and session together',async()=>{
+    const store=new PgAuthStore(pool,'credits_v1'),first=`${key()}@test.invalid`,second=`${key()}@test.invalid`;
+    const session={hash:randomBytes(32).toString('hex'),ipPrefix:'198.51.100.0/24',expiresAt:new Date(Date.now()+day)};
+    await store.register(first,'hash',session);await expect(store.register(second,'hash',session)).rejects.toThrow();
+    expect((await pool.query('SELECT count(*)::int n FROM account WHERE email=$1',[second])).rows[0].n).toBe(0);
+    expect((await pool.query('SELECT count(*)::int n FROM session WHERE cookie_token_hash=$1',[session.hash])).rows[0].n).toBe(1);
+    expect((await pool.query('SELECT count(*)::int n FROM credit_grant g JOIN account a ON a.id=g.account_id WHERE a.email=$1',[first])).rows[0].n).toBe(1);
+  });
+
 });

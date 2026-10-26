@@ -21,6 +21,7 @@ try {
     ['protected-cohort','packages/db/src/credits.ts',"if (!owner || owner.plan !== 'free') return false;","if (!owner) return false;",'explicit opt-in protects'],
     ['partial-settle','packages/db/src/credits.ts',"if (!charge || (!video.done && video.status!=='failed')) return;","if (!charge || video.status!=='failed') return;",'first usable partial output'],
     ['immediate-upgrade','apps/web/src/server/billing-handler.ts',"return fail(422,'upgrade_unavailable'","return fail(200,'upgrade_unavailable'",'credit checkout rejects immediate'],
+    ['provider-payment-once','packages/db/src/payments.ts',"if (prior?.status === 'succeeded')","if (false)",'one verified provider payment'],
     ['provider-retry-customer','packages/db/src/transcription.ts',"if (previous > 0) {","if (previous > 0) { await tx.query('UPDATE credit_grant SET remaining_seconds=remaining_seconds-1 WHERE account_id=$1 AND remaining_seconds>0',[row.account_id]);",'trusted probe seconds'],
   ];
   for(const [id,file,before,after,title] of mutations){

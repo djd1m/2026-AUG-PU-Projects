@@ -94,6 +94,8 @@ export function applyVerifiedPayment(pool: Pool, input: PaymentEvent): Promise<A
     const prior = (await tx.query<{ status: string }>(`SELECT status FROM payment WHERE provider = $1 AND provider_payment_id = $2`,
       [input.provider, payment.id])).rows[0];
     if (prior?.status === 'refunded') return { applied: false, reason: 'refunded' } as const;
+    // One provider payment is one financial fact, including a payload rebound to another order.
+    if (prior?.status === 'succeeded') return { applied: false, reason: 'duplicate' } as const;
     const paidAt = payment.paidAt ?? new Date().toISOString();
     const record = (intentId: string | null, accountId: string | null, review: string | null) => tx.query(`INSERT INTO payment
         (intent_id, account_id, provider, provider_payment_id, amount_minor, fee_minor, needs_review, review_reason, paid_at)
