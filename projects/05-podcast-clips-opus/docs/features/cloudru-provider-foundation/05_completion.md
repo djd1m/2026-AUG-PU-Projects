@@ -1,6 +1,6 @@
 # Cloud.ru provider foundation — Completion
 
-Status: IMPLEMENTED; independent review and coordinator acceptance pending. Foundation success does not complete full Cloud.ru migration. All paths are project-relative unless noted. No live provider calls or deployment were performed.
+Status: FOUNDATION CODE ACCEPTED by coordinator after independent review and required local checks. Foundation success does not complete full Cloud.ru migration. All paths are project-relative unless noted. No live provider calls or deployment were performed.
 
 ## Criterion coverage
 
@@ -53,8 +53,8 @@ PLAN gate observed 2026-10-26: this contour has 14/14 matching keys and no missi
 ### Pre-Deployment checklist
 
 - [x] All six AC implemented and mandatory tests/build/typecheck/lint/mutations green, bound to exact source/build; independent acceptance remains separate.
-- [ ] Independent review complete, no unresolved blocker/high findings; secret exposure and external-dispatch safety reviewed.
-- [ ] Targeted provider descriptions/REPRODUCE/model-cost docs updated; canonical economics remains estimates.
+- [x] Independent source review and native review contract complete; no unresolved blocker/high finding. Live-provider acceptance remains separate.
+- [x] Targeted provider description/configuration and launch overlay updated: [cloudru-launch-plan.md](../../cloudru-launch-plan.md). Existing REPRODUCE remains the baseline; canonical economics remains estimates.
 - [ ] Rollback config/code revision and compatibility verified in existing isolated environment.
 - [ ] Actual target capability work authorized separately; credentials alone do not authorize paid tests or deployment.
 
@@ -88,7 +88,7 @@ Preserve existing levels/retention/aggregation and attempt/outcome records; neve
 
 Development: fixed baseline and feature allowlist, environment canon, no arbitrary endpoints/dependencies, requirements validation before code. QA: synthetic keys/fixtures, existing isolated DB/Redis/MinIO only, concurrency and mutation evidence, no paid inference or real user content. Operations: target server/keys/bucket/CORS and release authority remain separate prerequisites; live STT and storage status remain unverified. Coordinator owns continuation after bounded attempts, remaining AC and next executor; no claim that background work runs when stopped.
 
-Implementation evidence is complete; independent review, native scoped completion gate and coordinator acceptance remain required before integration. Optional candidate-branch push was rejected by automatic approval review because the private source destination was unverified; no retry or remote publication occurred. Local commits are available for the coordinator's separately authorized delivery gate.
+Implementation evidence, independent source review, native scoped completion gate and coordinator acceptance are complete. An earlier optional candidate-branch push was rejected because the destination was unverified; no candidate push retry occurred. Root separately verified the owner-authorized original repository/existing delivery branch, scanned credentials and pushed the accepted integration55f53a41 there. No main/release/production publication occurred.
 
 Required terminal receipts distinguish PLAN complete, implementation pass, actual integration pass and release. Source-bound fresh receipts are substantive regular non-symlink files, never a narrative substitute. No future expense/time estimate is presented as measured usage.
 

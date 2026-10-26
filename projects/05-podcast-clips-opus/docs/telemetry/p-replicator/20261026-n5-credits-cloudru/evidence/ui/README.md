@@ -1,0 +1,16 @@
+# N5 credit UI evidence — source-bound local execution
+
+Source: `5b306f1646efb75494b67da1e0f234c3c94e2790`. Functional/browser runtime: ordinary Next development server on isolated byte-equal application/packages source. Independent accepted production build `uLxK8pbNbskoqHNaI5loo` remained unchanged; this is not a production-runtime/deployment receipt.
+
+- Actual billing pass:30signup→330afterStart→930afteraddon; duplicate webhook unchanged; scheduled Pro grant unavailable early; immediate operation refused with no extra intent; exact SQL audit3fulfilled intents/1signup/1future grant/55800available seconds/0reserved. Actual application fake provider generated notifications; real existing webhook verification and SQL fulfillment ran. All34billingviews and pre-payment date/button/caveat checks passed.
+- Unchanged stock validator: exit0,206pages,0execution errors,0error-severity findings under stock rules,714R4warnings explicitly retained.170core pages plus36existingR9first-screen pages. Warnings do not mean zero accessibility issues; see qualification and original rule fields in sanitized report.
+- Actual synthetic layout media decoded in Chromium/WebKit: three25s320x568clips and posters. Layout-only seeded ready rows/media do not prove upload/processing/render pipeline. Existing MinIO rejected bucket CORS configuration501; no global policy/trust changes were made.
+- Actual shortage pass: existing single1801sMP3/account/video resumed with exact source HTTP202 contract after helper's false200 assertion; actual multipart PUT200/complete202 and frozen trusted probe refused credit balance before provider dispatch. Available30/reserved0; provider/HTTP/spend0; no charge/hold. Browser fileinput preview30.02credits/1801seconds and0duplicate uploadPOST; actual360x900refusal/upgrade/noreset/nooverflow verified. This is one-owned-direct-probe integration, not whole queue delivery proof.
+
+Root-allocated caller-known launch digests bind stock/shortage terminal traces. Earlier billing caller-known prelaunch digest was not captured; its measurement gap is explicit and was not retrofitted. Failed readiness/partial-stock/HTTP-helper receipts remain preserved outside this compact packet and failed terminal traces are included.
+
+Cleanup: all five verified owned app/proxy/bridge PIDs stopped; host38811/38812/38813/9444and browserloopback9443/9444ports free. Only exact stale owned waiting STTjob removed; no queue flush, financial SQL edits, source/build change or production/test infrastructure shutdown. Existing browser/test services remain running. Private owned DB/bucket7objects/env/fixtures/devcheckout are handed to root for final review/reproduction and cleanup; no background application work remains.
+
+Four original PNGs were visually checked for credentials/capability URLs; none visible. They are unmodified evidence. Other raw screenshots remain outside Git in the owned browser tmp. No private env/fixture/password/key/signed URL or verbose backend log is included. Requested model gpt-6.1-sol medium; actual model/effort/token usage/cost unavailable(null), no estimates.
+
+Root owns final documentation, warning acceptance, required gates, secret review and authorized branch delivery. Real bank/model/Cloud provider/production launch and broader accessibility work remain separately scoped.

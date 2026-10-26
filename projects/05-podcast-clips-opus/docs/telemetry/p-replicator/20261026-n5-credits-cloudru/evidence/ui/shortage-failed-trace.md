@@ -1,0 +1,15 @@
+# credit-ui-shortage-1
+RUN_ID:20261026-n5-credits-cloudru
+WORK_UNIT_ID:credit-ui-shortage-1
+Launch-SHA256:ab3cedd2f1d49a70651c38d7cdea3f25cabab38417fe3a32b26f0a6393fa9a84
+Started-At:2026-10-26T22:46:43.271867+00:00
+Source:5b306f1646efb75494b67da1e0f234c3c94e2790
+Runtime:ordinaryNextdevfrontend+actualfrozenbuiltworker directsingleownedprobe;productionbuilduLxK8pbNbskoqHNaI5loo separate
+Requested:gpt-6.1-sol/medium; actualmodel/effort/usage/cost:null unavailablehostmetadata.
+Stockterminalprecedesthisunit; no fixturemutationsduringstock. No realbank/model/cloudcalls or SQLpaid/grantmutations authorized.
+
+Freshactualreadiness:READY; /tmp/n5-credit-shortage-harness-20261026/execution-1-final-ready.json sha256:c4442c960f75f9adf94ab6eabc67aeee140d8f09424920a47ce701905497447d; source/buildartifactsunchanged,actualSTTconsumers0,privateHTTPShealth200withownCA. Commandactualhelperonce2flags, expectedonlyownedrealinput/creditrefusal/provider0; no replayafterpartial.
+
+Finished-At:2026-10-26T22:53:53.325719+00:00
+Actualhelperexit1 atmultipartstage:helperexpected200butfrozenAPIcreate/completeuse202. Actualcreate202successpersistedoneownedupload, MinIOparts0;noPUTattempt/provider/charge. Sourceunchanged. Originalonce-onlymarker/privatefixturepreserved. Freshrootresumecontractsameinput15minallocatedtosameagent; exactnextstepresumehelperwithsameidempotency, no newaccount/input.
+Status: failed

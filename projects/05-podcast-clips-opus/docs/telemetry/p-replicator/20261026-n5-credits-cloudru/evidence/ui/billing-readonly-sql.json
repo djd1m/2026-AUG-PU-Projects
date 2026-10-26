@@ -1,0 +1,44 @@
+{
+  "source": "5b306f1646efb75494b67da1e0f234c3c94e2790",
+  "kind": "readonly actual test SQL after browser purchase",
+  "intents": [
+    {
+      "sku": "addon_v1",
+      "status": "succeeded",
+      "count": 1
+    },
+    {
+      "sku": "pro_v1",
+      "status": "succeeded",
+      "count": 1
+    },
+    {
+      "sku": "start_v1",
+      "status": "succeeded",
+      "count": 1
+    }
+  ],
+  "grants": [
+    {
+      "source": "payment",
+      "count": 3,
+      "total_seconds": 162000,
+      "reserved_seconds": 0,
+      "future_grants": 1
+    },
+    {
+      "source": "signup",
+      "count": 1,
+      "total_seconds": 1800,
+      "reserved_seconds": 0,
+      "future_grants": 0
+    }
+  ],
+  "balance": {
+    "available_seconds": 55800,
+    "reserved_seconds": 0
+  },
+  "immediate_upgrade_extra_intents": 0,
+  "status": "passed",
+  "timestamp": "2026-10-26T22:34:47.501Z"
+}

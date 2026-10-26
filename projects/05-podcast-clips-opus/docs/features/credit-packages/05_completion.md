@@ -1,7 +1,7 @@
-# Credit packages — Completion Plan
+# Credit packages — Completion
 
-Status: implementation candidate behind default-legacy mode. Actual criterion coverage is indexed below; final local checks, independent review closure and root-owned browser acceptance determine delivery. Historical planning and Phase 1 evidence below remain preserved; deployment is not performed.
-Source revision: c559673649460fa5d8ef1e5e3c86bf7053ebbb69.
+Status: CREDIT CODE ACCEPTED locally by coordinator: mandatory suite, build/typecheck/lint, mutations, cold source review and actual Docker browser gates passed. Default remains legacy. No production deployment or real-bank acceptance.
+Plan baseline: c559673649460fa5d8ef1e5e3c86bf7053ebbb69. Frozen verified code:5b306f1646efb75494b67da1e0f234c3c94e2790; integrated byte-equivalent source301681ee39531fa652d2930533cbe01df8f3fd9e.
 
 ## Deployment Plan
 Pre-deployment requirements:
@@ -21,18 +21,49 @@ Rollback: before sales, disable activation and restore compatible legacy route w
 ## CI/CD and Required Checks
 Planned pipeline: `test → build → deploy`; commands `npm test`, `npm run lint`, `npm run typecheck`, `npm run build`, existing authorized deployment procedure. No new deploy.sh or runtime hook is created by this plan. Full suite uses mandatory skip reporter; infrastructure skips are not acceptance. Detailed tests in [04_refinement.md](04_refinement.md).
 
-## Planned AC Evidence
-| Criterion | Planned evidence | Current result |
-|---|---|---|
-| AC-credit-packages-1 | Real registration/migration SQL race and no replenishment | pending |
-| AC-credit-packages-2 | Exact SKU fulfillment, independent addon rights+retention boundaries | pending |
-| AC-credit-packages-3 | Seconds precision, lastbalance race, zero refused-provider calls | pending |
-| AC-credit-packages-4 | Retry/provider split and output/failure race | pending |
-| AC-credit-packages-5 | Reject immediate20RUBupgrade without provider/intent; full-price next-period Pro/manual renewal | pending tests |
-| AC-credit-packages-6 | Cohort migration and old invoice preservation | pending |
-| AC-credit-packages-7 | Payment identity/security and mobile balance/return | pending |
-| AC-credit-packages-8 |24hrecovery and erasure/finalization races | pending tests |
-The exact machine `## Criterion coverage` table is intentionally absent until real implementation test files/titles exist. Phase3 must add one row per declared AC with project-relative real test file and verbatim test title; no invented future coverage may pass the completion gate. Phase2 validation-report must bind spec SHA256 and map every AC to named BDD scenario.
+## Actual local verification
+
+- Complete suite:1116/1116 tests,118/118 files,zero skips,405.807 seconds.
+  Actual isolated PostgreSQL/Redis15/MinIO and localFFmpeg; remote models/payments fake.
+-15/15 mutation cases: each red exit1 and restored green exit0;106.907 seconds.
+- Full production build45.017 seconds, typecheck32.756 seconds, lint/diff exit0.
+  Preserved production buildID:uLxK8pbNbskoqHNaI5loo.
+- Cold planner-context review: [review-report.md](review-report.md), all8AC source
+  conformance met, earlier missing pre-payment date finding closed. Reviewer did
+  not receive coder conversations, receipts or test logs. Runtime evidence is
+  separately checked by root; source review alone is not runtime acceptance.
+- Unchanged official checker on frozen selected scope: completion exit0;
+  native review-contract exit0,8criteria. Original aggregate legacy failure retained.
+- Actual billing browser passed signup30→Start330→addon930, duplicate notification,
+  future Pro scheduling, pre-payment dates, final return and refused immediate
+  upgrade;34 engine/theme/device/width views. Ordinary Next dev on frozen isolated
+  source, actual fake-provider verification/webhook/SQL; not production-bundle or bank proof.
+- Stock responsive:206 completed pages, exit0, no execution errors or error-severity
+  findings under unchanged rules.714 warnings remain:340contrast,238video-caption,
+ 34heading,102landmark. Compared with646baseline, every non-caption normalized
+  selector/rule/scenario row is identical;68extra warnings are video-caption.
+  Axe incomplete items are unresolved warnings, not proof of no accessibility issue.
+- Actual media probe:both engines loaded3/3 synthetic25second clips and posters.
+  Fixture rows/media are layout-only, not a claim of real model/render execution.
+- Actual input:API multipart→own MinIO PUT200→complete202→real ffprobe1801seconds
+  →actual SQL-fenced probe rejects credit balance before STT.30credits remain,
+  reserved0, provider/network/spend calls0; no charge row. Same account/video was
+  resumed after a helper incorrectly expected200 instead of the actual202 offer.
+- Mobile360×900:actual file picker shows30.02credits/1801seconds without a duplicate
+  upload; actual failure page shows required volume,30available/0reserved, package
+  action, no midnight credit-reset promise and no horizontal overflow.
+
+[Qualified warning comparison](../../telemetry/p-replicator/20261026-n5-credits-cloudru/evidence/root-stock-warning-comparison.json).
+No full unchanged suite was rerun for harness-only fixes. The production build
+remained frozen; ordinary Next dev avoids weakening the production fake-provider
+refusal. Test transport uses own loopback TLS/CA only, no global trust changes.
+
+
+Source-bound raw logs are preserved compressed with SHA256 manifests in
+[telemetry evidence](../../telemetry/p-replicator/20261026-n5-credits-cloudru/evidence/credit-check-artifacts.json).
+[Candidate/build binding](../../telemetry/p-replicator/20261026-n5-credits-cloudru/evidence/credit-candidate-binding.json).
+The generic helper's environment label is historical shorthand; actual fake-payment
+fixture coverage is stated in the source-bound receipt, not inferred from that label.
 
 ## Monitoring and Logging
 | Signal | Source | Action |
@@ -73,4 +104,10 @@ This table references actual test files/titles and maps coverage; it does not by
 ### Before-payment date disclosure correction
 Independent P2-1 review on13680516 identified missing checkout dates. The server now reads the same next-base scheduling rule used by serialized fulfillment: latest committed base end/protected legacy payment end, excluding addon windows. The checkout displays prospective base and addon dates before redirect, distinguishes later base start and concurrent-purchase/payment-time uncertainty, and retains authoritative final dates on return. A fixed-clock real PostgreSQL fixture fulfills Start+Pro+Pro, asserts the fourth period is1April–1May2030 in SSR, and separately checks addon exclusion and protected legacy end. No quote/proration engine or immediate-upgrade branch was added.
 
-Source-bound local check commands/outcomes are recorded in `/tmp/n5-credit-packages-impl-1-20261026.md` (failed/partial historical attempt) and `/tmp/n5-credit-packages-fix-2-20261026.md` (continuation). Root owns selected-snapshot native coverage validation, browser/preflight/responsive acceptance and final independent review. No production activation, real bank/model request, new service or push is authorized here.
+Original attempts are retained in telemetry evidence: first implementation ended
+failed/partial, continuation fixed the concreteP2 finding and completed mandatory
+local checks. Root accepted native coverage, cold source review and the qualified local browser
+results above. Full deployed long-job/provider receipts remain target-server gates. Agent termination/budget did not stop the parent task.
+No current production activation, real-bank/model request or VM launch occurred.
+Publication uses only the owner-authorized verified source-project feature branch;
+this completion document does not authorize another destination or release.

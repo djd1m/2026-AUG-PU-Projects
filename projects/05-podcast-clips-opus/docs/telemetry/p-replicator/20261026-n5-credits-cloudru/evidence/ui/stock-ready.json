@@ -1,0 +1,37 @@
+{
+  "status": "ready",
+  "timestamp": "2026-10-26T22:30:17.596795+00:00",
+  "work_unit_id": "credit-ui-stock-2",
+  "launch_sha256": "97545386c65995cb5cd0bca1e311fce583cef46248d0492d9dec3a714a673931",
+  "source_revision": "5b306f1646efb75494b67da1e0f234c3c94e2790",
+  "runtime": "ordinary Nextdev isolatedsource, nohybridcache",
+  "production_build_separately_preserved": "uLxK8pbNbskoqHNaI5loo",
+  "source_generated_changes": [],
+  "environment": "sameownDB/Redis15/ownMinIObucket; browser+hostTLSlocalhost9444 preservingHost; backendNode_EXTRA_CA_CERTS owncertificateonly",
+  "own_CA_sha256": "147d20b830a34f3215821435bdb7363026c3723f95447545e65fa674603bd83f",
+  "owned_ports_pids": {
+    "38811": 1480300,
+    "38812": 1480300,
+    "38813": 1336847,
+    "9444": 1466153
+  },
+  "fixture_sha256": "c892390b88525356e66db722d9f878d3cab4f575ad6813a55ed721a4af8af81a",
+  "assets": {
+    "layout.mp4": "253f1361fa18d0988aa844f5b75f7d0d3f77c65af2852554d3e349603e301d44",
+    "layout.jpg": "d7e59eeb7949fd3238abe22fa773d33bcbfbe1ef30b35c25ec63d0a71a8fa7b3"
+  },
+  "input_checker_manifest_sha256": "12fb32cfbbf1d75c7f6c1df35e89023b7ed6cc6b35cc0b49672018cfef26fcdd",
+  "commands_as_data": [
+    "stock-responsive-wrapper unchangedfullmatrix --out stock-execution-2",
+    "media-probe.mjs actualmedia.load()/posters bothengines"
+  ],
+  "effects": [
+    "actualtestlogin/sameownfixtureviews/syntheticmedia reads/private reports/screenshots"
+  ],
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "limitations": [
+    "layout-only, notprocessing/bank/cloud",
+    "MinIObucketCORSconfigurationunsupported501; no globalpolicychanges"
+  ]
+}

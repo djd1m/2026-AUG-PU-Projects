@@ -1,0 +1,7 @@
+TRACE contour=cloudru-provider-foundation specification=/tmp/n5-scoped-gates-20261026/final-scoped-trace/snapshot/docs/features/cloudru-provider-foundation/01_specification.md pseudocode=/tmp/n5-scoped-gates-20261026/final-scoped-trace/snapshot/docs/features/cloudru-provider-foundation/02_pseudocode.md
+COUNT requirements=14 algorithms=14 missing-algorithm=0 orphan-algorithm=0
+PASS contour=cloudru-provider-foundation bidirectional traceability complete
+TRACE contour=credit-packages specification=/tmp/n5-scoped-gates-20261026/final-scoped-trace/snapshot/docs/features/credit-packages/01_specification.md pseudocode=/tmp/n5-scoped-gates-20261026/final-scoped-trace/snapshot/docs/features/credit-packages/02_pseudocode.md
+COUNT requirements=21 algorithms=21 missing-algorithm=0 orphan-algorithm=0
+PASS contour=credit-packages bidirectional traceability complete
+VERDICT traceability=PASS features=2 gaps=0 inconclusive=0

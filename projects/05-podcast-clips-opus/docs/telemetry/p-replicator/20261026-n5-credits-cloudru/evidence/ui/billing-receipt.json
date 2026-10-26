@@ -1,0 +1,265 @@
+{
+  "candidate_sha": "5b306f1646efb75494b67da1e0f234c3c94e2790",
+  "started_at": "2026-10-26T22:18:10.578Z",
+  "provider": "actual app fake",
+  "checks": [
+    "actual signup:1800seconds",
+    "catalog exact price/credits/hours",
+    "pre-payment initial dates",
+    "Start webhook+SQL+UI return;duplicate idempotence",
+    "pre-payment scheduled base dates",
+    "Addon600credits/30day window",
+    "pre-payment scheduled base dates",
+    "Scheduled Pro grant/date+UI",
+    "Immediate upgrade zero provider side effects"
+  ],
+  "views": [
+    {
+      "engine": "chromium",
+      "theme": "dark",
+      "width": 412,
+      "scenario": "Pixel 7",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "chromium",
+      "theme": "dark",
+      "width": 320,
+      "scenario": "width-320",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "chromium",
+      "theme": "dark",
+      "width": 360,
+      "scenario": "width-360",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "chromium",
+      "theme": "dark",
+      "width": 390,
+      "scenario": "width-390",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "chromium",
+      "theme": "dark",
+      "width": 414,
+      "scenario": "width-414",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "chromium",
+      "theme": "dark",
+      "width": 768,
+      "scenario": "width-768",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "chromium",
+      "theme": "dark",
+      "width": 1024,
+      "scenario": "width-1024",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "chromium",
+      "theme": "dark",
+      "width": 1440,
+      "scenario": "width-1440",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "chromium",
+      "theme": "light",
+      "width": 412,
+      "scenario": "Pixel 7",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "chromium",
+      "theme": "light",
+      "width": 320,
+      "scenario": "width-320",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "chromium",
+      "theme": "light",
+      "width": 360,
+      "scenario": "width-360",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "chromium",
+      "theme": "light",
+      "width": 390,
+      "scenario": "width-390",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "chromium",
+      "theme": "light",
+      "width": 414,
+      "scenario": "width-414",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "chromium",
+      "theme": "light",
+      "width": 768,
+      "scenario": "width-768",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "chromium",
+      "theme": "light",
+      "width": 1024,
+      "scenario": "width-1024",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "chromium",
+      "theme": "light",
+      "width": 1440,
+      "scenario": "width-1440",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "dark",
+      "width": 390,
+      "scenario": "iPhone 13",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "dark",
+      "width": 320,
+      "scenario": "iPhone SE",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "dark",
+      "width": 320,
+      "scenario": "width-320",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "dark",
+      "width": 360,
+      "scenario": "width-360",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "dark",
+      "width": 390,
+      "scenario": "width-390",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "dark",
+      "width": 414,
+      "scenario": "width-414",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "dark",
+      "width": 768,
+      "scenario": "width-768",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "dark",
+      "width": 1024,
+      "scenario": "width-1024",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "dark",
+      "width": 1440,
+      "scenario": "width-1440",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "light",
+      "width": 390,
+      "scenario": "iPhone 13",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "light",
+      "width": 320,
+      "scenario": "iPhone SE",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "light",
+      "width": 320,
+      "scenario": "width-320",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "light",
+      "width": 360,
+      "scenario": "width-360",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "light",
+      "width": 390,
+      "scenario": "width-390",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "light",
+      "width": 414,
+      "scenario": "width-414",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "light",
+      "width": 768,
+      "scenario": "width-768",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "light",
+      "width": 1024,
+      "scenario": "width-1024",
+      "route": "/upgrade"
+    },
+    {
+      "engine": "webkit",
+      "theme": "light",
+      "width": 1440,
+      "scenario": "width-1440",
+      "route": "/upgrade"
+    }
+  ],
+  "limitations": [
+    "No real bank/merchant acceptance",
+    "No upload/model/render pipeline execution",
+    "No simulated expiry or SQL-paid flags",
+    "Low-balance/shortage/expiry UI requires owned real input/time mechanisms after separate readiness",
+    "Stock responsive validator and three real rendered clips remain coordinator-owned"
+  ],
+  "status": "passed",
+  "finished_at": "2026-10-26T22:19:52.804Z"
+}

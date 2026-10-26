@@ -1,0 +1,164 @@
+{
+  "categories": [
+    {
+      "rule": "R4",
+      "axeRule": "color-contrast",
+      "severity": "warning",
+      "count": 340
+    },
+    {
+      "rule": "R4",
+      "axeRule": "video-caption",
+      "severity": "warning",
+      "count": 238
+    },
+    {
+      "rule": "R4",
+      "axeRule": "page-has-heading-one",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "landmark-unique",
+      "severity": "warning",
+      "count": 102
+    }
+  ],
+  "exact_selector_groups": [
+    {
+      "rule": "R4",
+      "axeRule": "color-contrast",
+      "selector": "html:nth-of-type(1) > body:nth-of-type(1) > nav:nth-of-type(1) > a:nth-of-type(1) > span:nth-of-type(1)",
+      "severity": "warning",
+      "count": 102
+    },
+    {
+      "rule": "R4",
+      "axeRule": "video-caption",
+      "selector": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(1) > figure:nth-of-type(1) > video:nth-of-type(1)",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "video-caption",
+      "selector": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > article:nth-of-type(1) > video:nth-of-type(1)",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "video-caption",
+      "selector": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > article:nth-of-type(2) > video:nth-of-type(1)",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "video-caption",
+      "selector": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > div:nth-of-type(1) > article:nth-of-type(3) > video:nth-of-type(1)",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "page-has-heading-one",
+      "selector": "html:nth-of-type(1)",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "color-contrast",
+      "selector": "#upload-cta-kind",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "color-contrast",
+      "selector": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(5) > div:nth-of-type(1) > a:nth-of-type(1) > span:nth-of-type(1)",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "landmark-unique",
+      "selector": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(2) > div:nth-of-type(2) > article:nth-of-type(1) > div:nth-of-type(2) > section:nth-of-type(1)",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "landmark-unique",
+      "selector": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(2) > div:nth-of-type(2) > article:nth-of-type(1) > div:nth-of-type(2) > section:nth-of-type(2)",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "landmark-unique",
+      "selector": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(2) > div:nth-of-type(2) > article:nth-of-type(1) > div:nth-of-type(2) > section:nth-of-type(3)",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "color-contrast",
+      "selector": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(1) > p:nth-of-type(1) > span:nth-of-type(1)",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "color-contrast",
+      "selector": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(2) > div:nth-of-type(2) > article:nth-of-type(1) > div:nth-of-type(2) > section:nth-of-type(2) > label:nth-of-type(1) > select:nth-of-type(1)",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "color-contrast",
+      "selector": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(2) > div:nth-of-type(2) > article:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(2) > label:nth-of-type(1) > select:nth-of-type(1)",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "color-contrast",
+      "selector": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(2) > div:nth-of-type(2) > article:nth-of-type(3) > div:nth-of-type(2) > section:nth-of-type(2) > label:nth-of-type(1) > select:nth-of-type(1)",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "color-contrast",
+      "selector": "#video-cta-kind",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "video-caption",
+      "selector": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(2) > div:nth-of-type(2) > article:nth-of-type(1) > div:nth-of-type(1) > video:nth-of-type(1)",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "video-caption",
+      "selector": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(2) > div:nth-of-type(2) > article:nth-of-type(2) > div:nth-of-type(1) > video:nth-of-type(1)",
+      "severity": "warning",
+      "count": 34
+    },
+    {
+      "rule": "R4",
+      "axeRule": "video-caption",
+      "selector": "html:nth-of-type(1) > body:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(2) > div:nth-of-type(2) > article:nth-of-type(3) > div:nth-of-type(1) > video:nth-of-type(1)",
+      "severity": "warning",
+      "count": 34
+    }
+  ],
+  "baseline_comparison": "pending exact matching source fixture report; no assertion all warnings unchanged"
+}

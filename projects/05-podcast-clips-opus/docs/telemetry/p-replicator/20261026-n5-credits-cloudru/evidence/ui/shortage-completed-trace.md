@@ -1,0 +1,24 @@
+# credit-ui-shortage-resume-2
+RUN_ID:20261026-n5-credits-cloudru
+WORK_UNIT_ID:credit-ui-shortage-resume-2
+Launch-SHA256:8d31bac3328b08cbe97cd5cc6c9109bd7b2055e97ad1fd8e55f2e37805cf19f0
+Started-At:2026-10-26T22:53:53.325543+00:00
+Source:5b306f1646efb75494b67da1e0f234c3c94e2790
+OrdinaryNextdev+actualfrozenworkerone-ownedprobe;separateprodbuilduLxK8pbNbskoqHNaI5loo
+Requested:gpt-6.1-sol/medium;actualmodel/effort/usage/cost:null unavailablehostmetadata.
+Retryonlysameaccount/video/idempotency/input; actual202HTTPcontractcorrection, no sourcebug/newregistration/replay.
+
+Freshreadiness:READY; /tmp/n5-credit-shortage-harness-20261026/resume-execution-2-final-ready.json sha256:3cc8539ca27ed2057d540e25ad9ba1c378a7f5a3cfa2c26257e1cbf08bc1daf5; originalrealinputdigestbound, sameaccount/video/idempotency, noSTTconsumers, actualhealth200, source/buildunchanged, disk>2147483648bytes.
+
+Actualhostcontinuationexit0/PUT200/complete202; trusted+billable1801seconds/refused_credit_balance;balance1800/reserved0/providerCalls0/networkCalls0/spendRecords0. Originalsameidentityreused. Browserfreshreadiness:/tmp/n5-credit-shortage-harness-20261026/resume-browser-ready.json sha256:711c66a01beb1f1aae4652ab47e10c0a188794a49e4cbe37fcb4bf7456963928; localmetadata preview only/no duplicate submit, thenactualmobilefailedrecord.
+
+Finished-At:2026-10-26T23:03:02.514668+00:00
+Actualsame-inputresumehostexit0;actualmobilebrowserexit0. Trusted1801seconds→refused_credit_balance;available1800seconds/reserved0/charge0/providerfactorycalls0/providerHTTPcalls0/spendrecords0. Sameaccount/video/idempotency reusedafter202-helperassertionfix, no newregistration/input.
+Actualbrowserfilepreview30.02credits/1801seconds withduplicate_upload_posts0; actual360x900failedrecordshowsrequiredcharge/upgrade/noreset/nooverflow;30available/0reserved.
+Evidence:/tmp/n5-credit-shortage-harness-20261026/resume-execution-2-result.json sha256:dbb93e1179be470ff706d39739d92ee3d2fcf0b5a82f47e5eae383b5b169bd80; mobile:/tmp/n5-credit-shortage-harness-20261026/mobile-execution-2/receipt.json sha256:cf0d3e1aea98dc45dc3f7b1a79623599d5edff4bb0e7941293fce2e8be1858fd
+Cleanup:exactownwaitingSTTjobremovedonlyafterverifiedcurrentfailedownedattempt; no queuewide/financialSQLchange. Allfiveverifiedownserver/proxyPIDsstopped; host38811/38812/38813/9444andbrowser9443/9444LISTENportsverifiedfree; existingbrowser/testinfrauntouched. Cleanup/sourcefile:/tmp/n5-credit-ui-harness-20261026/final-cleanup-source-verification.json sha256:5007c83651964713243061de79f7780a5261ef8151fc7bce4f9aa887b23508fb
+Allruntimeapplication/packagesbytesandboundbuiltartifactsunchanged5b306f; independentproductionBUILD_IDunchangeduLxK8pbNbskoqHNaI5loo. Ordinarydev+directownedprobeexplicit, no wholequeue/model/Cloud/bank/production-runtimeproof.
+Actualmodel/effort/usage/costnull, unavailablehostcounters; actualtimestamps retained, no usageestimate.
+Exactnextowner/action:root finaldocs/gates/secretguard/acceptedbranchdelivery. PrivateowntestDB/bucket7objects/env/fixtures andgenerateddevcheckout handedtorootforfinalreview/repro+cleanup; no server/backgroundworkrunning. Originalfailedstageandreadinessreceiptsretained. Rootownsallremainingrelease/Cloud/accessibilityscope; stock714R4warnings notzeroissues.
+Verdict:actualownedAPI/multipart/trustedprobe creditrefusal+mobilepreview/refusal PASS, allauthorizedUIunitworkandownedprocesscleanupcomplete.
+Status: completed

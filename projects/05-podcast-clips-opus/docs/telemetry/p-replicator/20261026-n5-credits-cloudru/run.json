@@ -9,8 +9,8 @@
   "source_revision": "301681ee39531fa652d2930533cbe01df8f3fd9e",
   "started_at": "2026-10-26T19:54:40.997894+00:00",
   "ended_at": null,
-  "status": "running",
-  "current_stage": "CREDIT_DOCKER_BROWSER_BILLING_RUNNING",
+  "status": "delivery_ready_external_acceptance_blocked",
+  "current_stage": "ACCEPTED_LOCAL_DELIVERY_READY",
   "owner_instruction": "Implement credit packages and signup bonus, Cloud.ru FM/ObjectStorage, then real Metrika counter and4goal receipt",
   "acceptance_scope": "Code and local tests here; deployment/provider capability acceptance and actual analytics on Cloud.ru RF when credentials/account available",
   "route": {
@@ -60,7 +60,7 @@
     "One initial VM on targetCloud.ru; no mandatory secondVM",
     "Review agent receives planner context, never coder context"
   ],
-  "next_step": "Resolve explicit test-runtime boundary; execute actual Docker billing/mobile/responsive on frozen source; integrate reviewed evidence and publish to verified existing branch",
+  "next_step": "Finishcurrentauthorizedcodepublication; continue fullCloudmigration whenactualwordcontract+target prerequisites available; no independentcodegate remains",
   "responsible": "root",
   "branch": "feature/n5-credits-cloudru-20261026",
   "plan_result": {
@@ -94,10 +94,11 @@
   "autonomy_boundary": "Code and isolated tests authorized. No currentproduction update/newspend/liveprovidercontent calls; targetCloudru activation requires credentials and evidence. Unanswered immediate upgrade stays disabled; preserve purchased rights.",
   "disk_policy": {
     "min_free_gib": 2,
-    "current_free_gib": 2.319,
+    "current_free_gib": 2.472,
     "action": "Reuse dependencies/browser; clean onlyowned disposable caches before build if needed",
-    "observed_at": "2026-10-26T22:12:53.337883+00:00",
-    "last_cleanup": "175MiB own obsolete analytics generated.next removed; no livecheckout processes"
+    "observed_at": "2026-10-26T23:07:44.537364+00:00",
+    "last_cleanup": "175MiB own obsolete analytics generated.next removed; no livecheckout processes",
+    "cleanup": "onlyownobsoletegeneratedbuild,cleancompletedplancheckout,completeddevcheckout; no userdata/container/volume prune"
   },
   "implementation_strategy": "sequential isolated coding units; no simultaneous source writers",
   "scope_gate_status": {
@@ -106,7 +107,14 @@
     "phase2_foundation_scenarios": 0,
     "phase1_credit": 0,
     "phase3_credit_completion": 0,
-    "credit_review_contract": 0
+    "credit_review_contract": 0,
+    "phase3_foundation_completion": 0,
+    "final_traceability": 0,
+    "final_report_revision": 0,
+    "final_criterion_scenarios": 0,
+    "final_completion": 0,
+    "foundation_review_contract": 0,
+    "rebuild_docs": 0
   },
   "foundation_validation": {
     "verdict": "READY",
@@ -114,11 +122,8 @@
     "report": "docs/features/cloudru-provider-foundation/validation-report.md"
   },
   "active_unit": {
-    "agent": "n5_cloudru_foundation_coder",
-    "state": "actual ordinaryNextdev browser billing running, sourcebound isolated worktree; finalproductionbuild preserved",
-    "source_candidate": "5b306f1646efb75494b67da1e0f234c3c94e2790",
-    "build": "uLxK8pbNbskoqHNaI5loo",
-    "trace": "/tmp/n5-credit-ui-harness-20261026/credit-ui-execution-1.md"
+    "agent": "root",
+    "state": "final credential/scope guard and exactexistingbranch publication; no application workers active"
   },
   "credit_validation": {
     "verdict": "READY_WITH_CAVEATS offlineimplementation",
@@ -177,7 +182,7 @@
   "credit_source_review": {
     "status": "PASSall8ACsourceconformance",
     "P2AC7": "closed",
-    "runtime_browser_acceptance": "pendingroot"
+    "runtime_browser_acceptance": "passedqualified; realbank/deployedprovider acceptance notclaimed"
   },
   "historical_handoff_before_owner_answer": {
     "ready_files": [
@@ -207,5 +212,67 @@
       "testscope": "Separate n5_acq_20261026_test database; Redis15; MinIO; existingcodex-ui-playwright; no currentproduction change"
     }
   },
-  "browser_mode": "development-mode AppRouter+actualwebhook+SQL/fakeprovider, productionbuild separatelyverified; no runtimeinjection orsecurityguardchange"
+  "browser_mode": "development-mode AppRouter+actualwebhook+SQL/fakeprovider, productionbuild separatelyverified; no runtimeinjection orsecurityguardchange",
+  "memory": {
+    "cli_version": "0.8.44",
+    "lesson_id": "teach:3b947281e308859d",
+    "store": "originalsourceworktree/.dz",
+    "readback": "dz recall lexical --no-semantic, observed lesson returned",
+    "secret_values": "none"
+  },
+  "credit_runtime_result": {
+    "stock_pages": 206,
+    "stock_exit": 0,
+    "stock_execution_errors": 0,
+    "stock_error_findings": 0,
+    "stock_warnings": 714,
+    "warning_comparison": "non-caption normalizedselectormultisets exactlyunchanged vs646baseline;68additionalvideocaptionwarnings",
+    "billing_views": 34,
+    "real_input_seconds": 1801,
+    "shortage_balance_seconds": 1800,
+    "shortage_reserved_seconds": 0,
+    "provider_dispatches": 0,
+    "shortage_http_put": 200,
+    "shortage_api_complete": 202,
+    "shortage_browser": "passed360x900 actualfilepreview+failure+balance+upgrade/noreset/nooverflow",
+    "duplicate_upload_posts": 0
+  },
+  "credit_result": {
+    "status": "accepted_code_and_local_tests",
+    "candidate": "5b306f1646efb75494b67da1e0f234c3c94e2790",
+    "code_integration_revision": "301681ee39531fa652d2930533cbe01df8f3fd9e",
+    "tests": 1116,
+    "files": 118,
+    "skipped": 0,
+    "mutations": 15,
+    "billing_views": 34,
+    "stock_pages": 206,
+    "stock_warnings": 714,
+    "input_seconds": 1801,
+    "provider_calls_for_shortage": 0,
+    "source_changes_for_harness_fixes": 0
+  },
+  "remaining_external": [
+    "Cloud.ru Whisper documentedwordtimestampscontract and allowedcapabilityprobe",
+    "RFtargetserver/environment/keys/bucket and realendtoend provider/S3 acceptance",
+    "OwnerMetrika counter and4goal dashboardreceipts afterpreviousstages"
+  ],
+  "local_acceptance_completed_at": "2026-10-26T23:07:44.537364+00:00",
+  "current_source_revision": "addd52841e97b0629a8a7233e28ee50f8ae66e1a",
+  "browser_evidence": "docs/telemetry/p-replicator/20261026-n5-credits-cloudru/evidence/ui/manifest.json",
+  "stopped_test_application_processes": true,
+  "real_provider_checks": {
+    "cloudru_stt": "wordtimestampcontractunconfirmed;startuprefused",
+    "cloudru_s3": "offlineSigV4andMinIO only;targetcompatibilitypending",
+    "yookassa_live": "notrun",
+    "webhook_live_contract": "exit2no-provider retained",
+    "deployed_long_job": "exit2not-deployed retained",
+    "metrika_real_counter": "notconfigured, aftertargetCloudstages"
+  },
+  "measured_local_acceptance_wall_seconds": 11583.53947,
+  "measurement_limits": [
+    "Initialplanningdelegatesbeforepassport exactlaunch time unavailable",
+    "Actual host model/token/cost counters unavailable;requestedhigh/mediumroutingonly",
+    "Billing caller-known prelaunchdigest missing, actualsource/build/readiness/HTTP/SQL/browserreceipt retained; not retrofitted"
+  ]
 }

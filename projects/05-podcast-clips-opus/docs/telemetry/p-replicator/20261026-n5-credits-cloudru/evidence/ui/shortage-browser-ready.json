@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-10-26T22:56:55.766786+00:00",
+  "status": "ready",
+  "work_unit_id": "credit-ui-shortage-resume-2",
+  "source": "5b306f1646efb75494b67da1e0f234c3c94e2790",
+  "input_sha256": "16c443ecba079ec689a2a02c442e7b72a308ca9ace3bb23f1e24dc90bb989476",
+  "actual_probe_receipt_sha256": "ccdadd675d679e5d3005b4c4a9341c054429f40e0c4bd588cd39cc8619dd3f0d",
+  "browser_helper_sha256": "0ce194f255d4e7983b0a36be19ab65d29990c2f61c02dd6b648297dacedcfae9",
+  "evidence": "actual1801trustedseconds/refused_credit_balance/30available/0reserved/0provider beforebrowser",
+  "command_as_data": "verify-mobile.mjs --execute-after-root-preflight 5b306f...",
+  "expected_effects": [
+    "login ownaccount",
+    "actualsamefilelocalmetadata >30credits, NO duplicatePOST",
+    "actualfailedrecord/balance/upgrade/noreset/overflow checks",
+    "two private screenshots/receipt"
+  ],
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

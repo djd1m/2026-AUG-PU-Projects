@@ -1,0 +1,21 @@
+{
+  "stock_exit": 0,
+  "pages": 206,
+  "execution_errors": 0,
+  "stock_error_severity_findings": 0,
+  "warnings": 714,
+  "warning_categories": {
+    "color-contrast": 340,
+    "video-caption": 238,
+    "page-has-heading-one": 34,
+    "landmark-unique": 102
+  },
+  "root_comparison": "Coordinator computed source-aware normalized comparison vs646baseline; non-video-caption multisets exactly equal, 0newnoncaptionrows; video-caption170\u2192238 on layoutmediafixture",
+  "do_not_claim": [
+    "zero critical/accessibility issues",
+    "all warnings unchanged",
+    "actual processing/queue delivery or Cloud/bank acceptance",
+    "production Next runtime exercised"
+  ],
+  "incomplete_note": "Coordinator identified current contrast/caption axe findings as INCOMPLETE with serious/critical impacts; warning classification is stock-rule behavior, not confirmation of no issue."
+}

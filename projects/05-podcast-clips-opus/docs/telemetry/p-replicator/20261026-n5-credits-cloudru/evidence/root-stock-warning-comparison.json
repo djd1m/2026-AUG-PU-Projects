@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-10-26T22:44:06.853922+00:00",
+  "candidate": "5b306f1646efb75494b67da1e0f234c3c94e2790",
+  "baseline_report_sha256": "0cfda287d1e48b68ceabab06b19bb1a30f5959848d25c2c946126b258706e845",
+  "current_report_sha256": "3c25bd4a7e6b319d1b1a60b5e4107a792506b6d844b890fd1a6ee08902312a0c",
+  "baseline_pages": 206,
+  "current_pages": 206,
+  "baseline_warnings": 646,
+  "current_warnings": 714,
+  "current_execution_errors": 0,
+  "current_error_findings": 0,
+  "categories": {
+    "color-contrast": {
+      "baseline": 340,
+      "current": 340
+    },
+    "landmark-unique": {
+      "baseline": 102,
+      "current": 102
+    },
+    "page-has-heading-one": {
+      "baseline": 34,
+      "current": 34
+    },
+    "video-caption": {
+      "baseline": 170,
+      "current": 238
+    }
+  },
+  "non_caption_normalized_selector_multisets_equal": true,
+  "new_non_caption_selector_rows": 0,
+  "old_non_caption_selector_rows_removed": 0,
+  "interpretation": "68additional warnings are video-caption; other rule counts unchanged. Synthetic layout-only silent media have no texttrack; warnings not hidden/waived. Separate real target captions/a11y gate remains. Stock policy unchanged exit0; this is not zerofindings.",
+  "classification": {
+    "('color-contrast', True, 'serious')": 340,
+    "('video-caption', True, 'critical')": 238,
+    "('page-has-heading-one', False, 'moderate')": 34,
+    "('landmark-unique', False, 'moderate')": 102
+  }
+}
