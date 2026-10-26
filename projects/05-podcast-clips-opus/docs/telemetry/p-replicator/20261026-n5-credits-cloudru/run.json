@@ -1,0 +1,85 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "run_id": "20261026-n5-credits-cloudru",
+  "project": "projects/05-podcast-clips-opus",
+  "profile": "model-routing-econom",
+  "tier": "XL",
+  "scope": "Implement accepted credit packages and once30signup bonus plus Cloud.ru FM/ObjectStorage adapters/config; actual Metrika owner-goal reception afterward on Cloud.ru RF",
+  "baseline_revision": "c559673649460fa5d8ef1e5e3c86bf7053ebbb69",
+  "source_revision": "c559673649460fa5d8ef1e5e3c86bf7053ebbb69",
+  "started_at": "2026-10-26T19:54:40.997894+00:00",
+  "ended_at": null,
+  "status": "running",
+  "current_stage": "PLAN_GATE_SCOPE_DECISION",
+  "owner_instruction": "Implement credit packages and signup bonus, Cloud.ru FM/ObjectStorage, then real Metrika counter and4goal receipt",
+  "acceptance_scope": "Code and local tests here; deployment/provider capability acceptance and actual analytics on Cloud.ru RF when credentials/account available",
+  "route": {
+    "substantive": "XL: money, quotas, credit ledger and provider replacement; concrete reviewed plan before unspecified financial semantics"
+  },
+  "stages": [
+    {
+      "stage": "credits_plan",
+      "agent": "n5_credits_implementation_plan",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "actual_model": null,
+      "status": "plan_written_aggregate_gate_failed"
+    },
+    {
+      "stage": "cloudru_plan",
+      "agent": "n5_cloudru_integration_plan",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "actual_model": null,
+      "status": "plan_written_aggregate_gate_failed"
+    },
+    {
+      "stage": "process_gate_audit",
+      "agent": "n5_workflow_gate_resolution",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "actual_model": null,
+      "status": "completed",
+      "decision": "No supported local gate invocation; explicit scopeexception required"
+    }
+  ],
+  "metrics": {
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Actual model/usage metadata unavailable",
+    "Two planning delegates launched shortly before passport write; exact launch timestamps unavailable"
+  ],
+  "constraints": [
+    "No new spend, live payments, real model inference or real usercontent upload without concrete allowed test",
+    "No current production activation or userDB mutation",
+    "Secrets never printed or committed",
+    "One initial VM on targetCloud.ru; no mandatory secondVM",
+    "Review agent receives planner context, never coder context"
+  ],
+  "next_step": "Resolve scope gate; independent requirements validation, then approved coding medium with cold-context high review",
+  "responsible": "root",
+  "branch": "feature/n5-credits-cloudru-20261026",
+  "plan_result": {
+    "credit_packages": "contour PASS21/21;15SC",
+    "cloudru_provider_foundation": "contour PASS14/14;6SC",
+    "aggregate_traceability_exit_code": 1,
+    "aggregate_features": 33,
+    "gaps": 11,
+    "inconclusive": 30,
+    "cause": "Unchanged historical root and feature documentation; no supported feature-local CLI",
+    "proposal": "docs/features/credits-cloudru-plan-gate.md",
+    "independent_process_audit": "docs/telemetry/p-replicator/20261026-n5-credits-cloudru/evidence/n5-workflow-gate-resolution-20261026.md"
+  },
+  "awaiting": [
+    "Explicit owner gate-scope exception or authorized legacy/harness repair",
+    "Owner immediateupgrade vsnextperiod answer",
+    "Final reviewablefinancialcontract approval after PLAN validation",
+    "Cloudru Whisper request/timestamps evidence before STT transport implementation"
+  ],
+  "implementation_started": false,
+  "actual_background_implementation": false
+}
