@@ -1,0 +1,11 @@
+{
+  "scope": "N5 plans plus byte-identical missingpre-shippedhook",
+  "local_links": "pass; renderer local file:line syntax supported",
+  "json": "pass",
+  "textfiles_under500lines": true,
+  "runtime_tests": "not applicable; implementation not started",
+  "aggregate_traceability": "failed exit1 retained; no phase advancement",
+  "source_baseline": "c5596736",
+  "files": 29,
+  "prior_validator_false_positive": "First ad-hoc local link check treated :line suffix as filename; repaired matcher, no source or guard assertions weakened"
+}
