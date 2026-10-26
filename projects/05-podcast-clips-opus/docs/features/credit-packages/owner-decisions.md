@@ -1,35 +1,36 @@
-# Credit packages — Owner decisions
+# Credit packages — Authority and implementation decisions
 
-2026-10-26; approval ledger for this plan only. Root coordinator integrates actual owner replies and binds final plan revision before implementation. “Recommended” does not mean approved.
+Version: credits_v1-code-plan-20261026-v2. Finite first code release under owner-authorized autonomous work. This ledger distinguishes direct owner replies from delegated coordinator decisions; it does not assert production-approved terms or authorize current live activation.
 
-## Approved direct owner requirements
-| ID | Actual direction | Status |
+## Direct owner answers
+| ID | Actual direction | Authority |
 |---|---|---|
-| D01 | Ordinary1credit=60seconds; per-second billing, no whole-minute rounding | APPROVED; owner: «Посекундно:1кредит=60секунд,безокруглениядоцелойминуты» |
-| D02 | Add-on1490RUB/600credits/10h valid30days from purchase WITH paid features throughout that window; independent of base expiry | APPROVED, direct owner reply relayed by coordinator |
-| D00 | Exactly30registration credits once, no monthly renewal; keep Start990/300/5h, Pro3990/1800/30h and visible ordinary hours | APPROVED; canonical pricing-decisions.md and credits-record.json |
+| D00 | Exactly30registration credits once, no monthly renewal; Start990/300credits/5h, Pro3990/1800credits/30h; hours visible | Direct owner decision in canonical pricing-decisions.md / credits-record.json |
+| D01 |1credit=60seconds, billed per second without whole-minute rounding | Owner: «Посекундно:1кредит=60секунд,безокруглениядоцелойминуты» |
+| D02 | Add-on1490RUB/600credits/10h valid30days from purchase WITH paid features throughout its independent window | Direct owner answer relayed by coordinator |
 
-## Pending decision table — concrete recommendations
-| ID | Choice / recommended concrete contract | Status / approval needed |
+## COORDINATOR IMPLEMENTATION CHOICES under autonomy
+These finite code choices permit implementation without fabricating unanswered owner preferences. They are not direct owner answers or a production activation approval.
+| ID | Selected first-release contract | Scope |
 |---|---|---|
-| D03 | Recommend immediate Start→Pro with ALL current-period eligible purchases credited: Start+2addons3970RUB/1500credits →20RUB+300credits, original base end unchanged; alternative next-period-only | PENDING async owner answer; do not assume deferral or immediate mode approved |
-| D04 | Meter canonical integer seconds: ceil(trusted durationSeconds) once; persist it; no whole-minute rounding or fractional credit truncation. Probe subsecond handling is implementationprecision proposal, not owner-approved1msbilling | PENDING explicit plan approval; per-second principle itself APPROVED |
-| D05 | Signup30credits never expire | PENDING plan approval |
-| D06 | Existing free gets one30credit migration_trial; one lifetime partial unique index across signup/migration sources; historical consumption not inferred | PENDING plan approval |
-| D07 | Start/Pro credits available only during30day base period; unused included credits expire, no rollover; active holds remain valid | PENDING plan approval |
-| D08 | Manual one-time payments only, no auto-debit. Base renewal/switch scheduled after current committed base periods/legacy protection; future grant unavailable before start | PENDING plan approval |
-| D09 | Settle full input on first usable ready clip; zero-result technical failure releases once; retries reuse settled/reserved identity, released retry reserves again | PENDING plan approval |
-| D10 | If source grant expired, restore ONLY returned units for24h, once per released allocation; pin original source paid-render entitlement to recovery job, no new paid storage period/fullpackage | PENDING plan approval; minimal fair retry window, no silent post-expiry loss |
-| D11 | Existing music/CTA rerenders cost zero customer credits but retain operational quotas; no other priced modes; insufficient trial balance rejects full input, never silent30mincut | PENDING plan approval |
-| D12 | For immediate mode, eligible purchases=Start+all succeeded non-refunded addons bought in active base interval and linked at purchase; existing addon seconds/expiry/paidwindow unchanged; new delta ends at original base end; freeze incompatible purchases while quote awaiting provider truth | PENDING alongside D03; excludes prior-period/standalone addons and unsettled refunds, must be disclosed |
-| D13 | Existing paid daily terms protected to original expiry; operator/pre021 indefinite unchanged until opt-in; in-flight old jobs and old pending990invoices stay legacy | PENDING plan approval; preserves paid terms, no involuntary downgrade |
-| D14 | Earliest expiry spent first, no-expiry last. Active reserved job pins source entitlement across expiry. Paid retention follows actual union end+existing72h; recovery pins rendering only | PENDING plan approval |
-| D15 | Cash refunds retain OWN019 operator review; no automatic negative balance, collateral grant clawback or speculative refund. Block quote if eligible purchase refund is unresolved | PENDING plan approval |
+| D03 | Immediate upgrade DISABLED because owner answer absent; reject before payment intent/provider; offer full-price next-period base switch/manual renewal and addon now | No quote/delta/proration implementation |
+| D04 | Canonical integer seconds=ceil(trusted probe seconds), computed/persisted once;1second=1/60credit, no whole-minute rounding or fractionalcredit loss | Implementation precision under per-second principle |
+| D05 |30signup credits have no expiry | Credit-mode registrations only |
+| D06 | Schema migration gifts/converts no existing account; only explicit audited effective-free operator opt-in in enabled credits_v1 may grant migration_trial; at most one lifetime trial across signup/migration | Require no active legacy entitlement or unresolved legacy intent; no historical usage guess |
+| D07 | Base Start/Pro grants last30days, unused included credits expire; active holds remain valid | No rollover |
+| D08 | One-time payments only; base renewal/switch starts after current committed periods; future credits unavailable before start | No auto-debit/card-save subscription engine |
+| D09 | Settle full input on first usable accepted clip; zero-clip technical failure releases once; retries reuse video identity, released retry re-reserves | Separate customer input and provider attempt expense |
+| D10 | Expired refund returns ONLY released units as a once-only24h recovery grant; pin original-source paid-render authorization to recovery job | No full package reissue or unrelated paid storage renewal |
+| D11 | Music/CTA rerenders cost zero extra customer credits and retain current operational quotas | No new priced modes; no silent trial truncation |
+| D12 | Future immediate-upgrade eligibility/credit formula remains proposal only, outside code release/mandatory current AC | Never auto-enable from config or missing answer |
+| D13 | Legacy paid daily terms preserved through old term; operator/pre021 rights unchanged; old pending intents/in-flight jobs stay legacy | No involuntary cutover; future enrollment flag never reprices historical purchases |
+| D14 | Earliest expiry first, no-expiry last; overlapping paid windows form union; spending addon credits does not end its30day paid rights; active job pins source entitlement | Retention follows actual entitlement union end+existing72h; recovery is job-scoped |
+| D15 | Cash refunds retain OWN019 operator review; no automatic negative balance/collateral clawback/cash refund | Existing operator review semantics |
+| D16 | N5_BILLING_MODE=legacy|credits_v1; undefined→legacy, empty/unknown fail startup; integration owner owns shared config/compose/env/tests | Gates new credit enrollments/sales; pinned old credit jobs/intents remain honored after enrollment disable; no production activation |
 
-## Immediate upgrade arithmetic if selected
-Let C be full originally purchased eligible capacity, M eligible money, U already settled usage and R active holds. Target Pro1800credits/3990RUB; added credit=1800−C; cash=3990−M. Available after upgrade is (C−U−R)+(1800−C)=1800−U−R for still-live eligible grants; do not recreate credits already expired. Preserve each addon's independent expiry, so aggregate formula applies at quote time only to still-live eligible capacities. If prior eligible addon expired before quote, exclude it from automatic conversion and offer next-period/manual review rather than issuing an unexpected replacement volume.
-Example Start+2addons: C1500,M3970,U100,R0 →cash20,delta300,total remaining1700. U1000,R100 →available700,not1800. Addons keep their original30day windows; delta grant ends at base period end. Processing after quote may change U/R but not C/M or invoice.
-If M>3990 or C>1800, no automatic conversion/removal/refund; show Pro next period. One completed upgrade/period, unique delta source per upgrade intent. Do not call zero-money transitions paid provider payments. Separate quote revision and purchase freeze prevent a later addon silently invalidating an already paid20RUBinvoice.
+## Future immediate-upgrade proposal — NOT current release AC
+Owner has not answered immediate-vs-next-period preference. Preserve discussion example: Start+2addons3970RUB/1500credits could upgrade to3990RUB/1800credits by20RUB+300credits; never1800new credits. Candidate formula cash=3990−eligible money, delta=1800−eligible full purchased capacity; consumed U and holds R remain deducted, base end unchanged, each addon keeps its independent expiry/paid window. Example U100,R0 would leave1700credits; U1000,R100 would leave700available.
+If eligible money or capacity exceeds Pro target, offer next period; no destructive conversion/automatic refund. Future design must explicitly settle which period addons belong to, partial refunds, expired grants, quote changes/payment lateness and duplicate financial credit. None of this formula/quote machinery is implemented or required by release1; tests instead prove immediate requests are rejected with zero payment side effects.
 
-## Approval gate
-Before IMPLEMENT root must record D03 answer, accepted/rejected values for all pending financial proposals and immutable spec digest. General implementation instruction authorizes preparation and approved work; it does not authorize guessed money/expiry rules. Unanswered branches remain disabled/pending. XL owner plan gate comes from root `.claude/rules/complexity-router.md`; no new approval rule is invented here.
+## Process and activation boundaries
+Owner explicitly authorized selected-scope traceability exception and seven-hour autonomous work. Root coordinator may integrate this finite code plan, run official frozen selected-snapshot gate, cold validation, implementation and independent review. Existing aggregate gate failure remains disclosed, not relabeled PASS. No extra owner D03 answer is required to implement the disabled branch. Production activation, VM spend and real provider/payment actions retain their separate authorization/evidence gates.

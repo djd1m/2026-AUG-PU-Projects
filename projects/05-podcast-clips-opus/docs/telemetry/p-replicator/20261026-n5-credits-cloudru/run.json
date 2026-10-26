@@ -9,8 +9,8 @@
   "source_revision": "c559673649460fa5d8ef1e5e3c86bf7053ebbb69",
   "started_at": "2026-10-26T19:54:40.997894+00:00",
   "ended_at": null,
-  "status": "blocked",
-  "current_stage": "AWAITING_REQUIRED_SCOPE_DECISION",
+  "status": "running",
+  "current_stage": "FOUNDATION_VALIDATED_CREDITS_VALIDATION_PENDING",
   "owner_instruction": "Implement credit packages and signup bonus, Cloud.ru FM/ObjectStorage, then real Metrika counter and4goal receipt",
   "acceptance_scope": "Code and local tests here; deployment/provider capability acceptance and actual analytics on Cloud.ru RF when credentials/account available",
   "route": {
@@ -60,7 +60,7 @@
     "One initial VM on targetCloud.ru; no mandatory secondVM",
     "Review agent receives planner context, never coder context"
   ],
-  "next_step": "Resolve scope gate; independent requirements validation, then approved coding medium with cold-context high review",
+  "next_step": "Validate Cloudru foundation while adapting credit plan to bounded autonomous implementation choices; implement both in isolated worktrees usingmedium coder and coldhigh reviewer",
   "responsible": "root",
   "branch": "feature/n5-credits-cloudru-20261026",
   "plan_result": {
@@ -75,10 +75,9 @@
     "independent_process_audit": "docs/telemetry/p-replicator/20261026-n5-credits-cloudru/evidence/n5-workflow-gate-resolution-20261026.md"
   },
   "awaiting": [
-    "Explicit owner gate-scope exception or authorized legacy/harness repair",
-    "Owner immediateupgrade vsnextperiod answer",
-    "Final reviewablefinancialcontract approval after PLAN validation",
-    "Cloudru Whisper request/timestamps evidence before STT transport implementation"
+    "Cold requirements validation credit contract",
+    "CloudruWhisper wire/timestamp evidence before its implementation",
+    "Targetcredentials before liveCloudru/Metrika acceptance"
   ],
   "implementation_started": false,
   "actual_background_implementation": false,
@@ -107,5 +106,29 @@
       "Cloud.ru Whisper actualrequest and wordtimestamps contract"
     ],
     "actual_background_implementation": false
+  },
+  "owner_autonomy_approved_at": "2026-10-26T20:35:27.248981+00:00",
+  "gate_scope_exception": {
+    "status": "approved",
+    "owner_answer": "да, давай, работай в автономном режиме - я спать на7часов",
+    "scope": "Two new feature contours with immutable official checker on hash-bound snapshots; fullruntimegates preserved"
+  },
+  "autonomy_boundary": "Code and isolated tests authorized. No currentproduction update/newspend/liveprovidercontent calls; targetCloudru activation requires credentials and evidence. Unanswered immediate upgrade stays disabled; preserve purchased rights.",
+  "disk_policy": {
+    "min_free_gib": 2,
+    "current_free_gib": 2.9,
+    "action": "Reuse dependencies/browser; clean onlyowned disposable caches before build if needed"
+  },
+  "implementation_strategy": "sequential isolated coding units; no simultaneous source writers",
+  "scope_gate_status": {
+    "phase1_foundation": 0,
+    "phase2_foundation_revision": 0,
+    "phase2_foundation_scenarios": 0,
+    "phase1_credit": 0
+  },
+  "foundation_validation": {
+    "verdict": "READY",
+    "score": 93.8,
+    "report": "docs/features/cloudru-provider-foundation/validation-report.md"
   }
 }
