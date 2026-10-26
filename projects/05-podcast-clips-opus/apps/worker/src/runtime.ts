@@ -73,6 +73,7 @@ export async function startWorker(role: Exclude<ServiceRole, 'web'>, env: Enviro
       const attempt = row.rows[0];
       if (!attempt) throw new Error('Попытка отсутствует в БД');
       await selectFragments(attempt, { pool, limits: config.limits, selector, model: llmConfig.model,
+        provider: llmConfig.mode === 'fake' ? 'fake' : llmConfig.provider,
         spendPath, enqueue: transport.enqueue });
     }, { connection, concurrency: 2, maxStalledCount: 1 });
   } else if (role === 'worker-video' && directory && storage && 'publicOrigin' in config) {

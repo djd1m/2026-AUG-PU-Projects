@@ -1,10 +1,10 @@
-# Cloud.ru provider foundation — Completion plan
+# Cloud.ru provider foundation — Completion
 
-Status: PLAN ONLY. No implementation, tests, model calls or deployment have passed by creating this document. Foundation success does not complete full Cloud.ru migration. All paths are project-relative unless noted.
+Status: IMPLEMENTED; independent review and coordinator acceptance pending. Foundation success does not complete full Cloud.ru migration. All paths are project-relative unless noted. No live provider calls or deployment were performed.
 
 ## Criterion coverage
 
-This is a Phase 1 planned mapping. Test titles below must be implemented verbatim and verified by the packaged completion gate during Phase 3; no coverage-pass claim is made now.
+The planned titles below are implemented verbatim. Focused isolated tests pass; the coordinator owns the scoped native Phase 3 completion gate and independent review. Source-bound implementation evidence is summarized below.
 
 | Criterion | Test file | Test title |
 |---|---|---|
@@ -14,6 +14,26 @@ This is a Phase 1 planned mapping. Test titles below must be implemented verbati
 | AC-cloudru-provider-foundation-4 | tests/cloudru-provider.test.ts | rejects invalid Cloud.ru output without repair or provider fallback |
 | AC-cloudru-provider-foundation-5 | tests/selection.integration.test.ts | records actual provider before one exclusively claimed dispatch |
 | AC-cloudru-provider-foundation-6 | tests/s3-public-endpoint.test.ts | signs Cloud.ru configuration offline with compound credentials |
+
+## Implementation evidence (2026-10-26)
+
+Scope: optional fixed Cloud.ru JSON-object chat endpoint/model, schema in system prompt and unchanged local validation; closed backend configuration; startup refusal for unsupported STT; actual chat provider/model attribution; generic S3 signing verified offline. The FM key is forwarded only to worker-llm. Synthetic compose resolution and execution of transpiled entrypoint projections test actual configuration delivery, including selected-key rejection.
+
+Provider attribution uses the existing conditional dispatch claim and quota transaction. The worker requires an explicit execution provider; runtime derives fake from execution mode. The existing direct DB authorization API retains its backward-compatible OpenRouter default for legacy callers; the worker always passes the provider explicitly. Existing history is unchanged.
+
+Checks (fresh redacted receipts: `/tmp/n5-acquisition-analytics-20261026-plan/checks/`):
+
+- `cloud-focused-1`: 117/117; `cloud-focused-2`: 55/55, including all provider races, quota refusal, timeout accounting and independent compound-key SigV4 checks.
+- `cloud-build-1`: full workspace build, exit 0.
+- `cloud-typecheck-2`: exit 0 after local workspace outputs were built. Earlier `cloud-typecheck-1` failed because the fresh worktree lacked dependency dist outputs; retained as failed evidence.
+- `cloud-lint-1`: exit 0, including the 500-line limit.
+- Final full suite and mutation controls: pending at this checkpoint; no final pass claim yet.
+
+The first mutation run (`cloud-mutations-1`) deliberately filtered tests with `-t` but inherited `N5_ACCEPTANCE=1`, so restored controls correctly failed on intentional skips. The runner now disables that full-suite flag only for its explicitly filtered mutation subprocesses. Mandatory full-suite skip reporting remains enabled. Failed logs are preserved; fresh subsequent runs use an optional output path to avoid overwriting historical artifacts.
+
+The mechanical implementation route is M (timeouts); substantive profile remains L for a new external-provider trust boundary, per approved plan. Requested model: gpt-6.1-sol medium; actual model/effort and token/cost counters are null because execution metadata was unavailable. No savings claim is made. Initial/final file hashes and exact source/validation binding are in `/tmp/n5-cloudru-foundation-impl-1-20261026.md`.
+
+The owner-approved scoped Phase 1/2 boundary uses immutable feature snapshots; parent receipts preserve native exit 0 and aggregate legacy exit 1 separately. The historical blocker paragraph below describes the earlier observation and is not a current claim that aggregate legacy checks passed.
 
 ## Required checks
 

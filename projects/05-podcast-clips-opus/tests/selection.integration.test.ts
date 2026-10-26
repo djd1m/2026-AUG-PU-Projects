@@ -10,6 +10,7 @@ import { authorizeSelection, acceptSelection } from '../packages/db/src/selectio
 import { loadLimits } from '../packages/shared/src/config';
 import { moscowDay } from '../packages/shared/src/upload';
 import { validateFragments } from '../packages/shared/src/fragments';
+import { SelectionProviderError } from '../apps/worker/src/llm/provider';
 import { selectFragments } from '../apps/worker/src/workers/select';
 import { createFakeSelector, fakeFragment } from '../apps/worker/src/llm/fake';
 import { VideoRetryService } from '../apps/web/src/server/video-retry';
@@ -61,6 +62,48 @@ describe.skipIf(!url)('Selection PostgreSQL concurrency and persistence', () => 
     expect(results.filter(Boolean)).toHaveLength(1);
     expect((await pool.query('SELECT * FROM clip')).rowCount).toBe(1);
     expect((await pool.query('SELECT * FROM clip_link')).rowCount).toBe(1);
+  });
+  it.each(['cloudru', 'openrouter', 'fake'] as const)('records actual provider before one exclusively claimed dispatch', async provider => {
+    const f = await fixture(), dir = await mkdtemp(join(tmpdir(), 'n5-cloudru-dispatch-'));
+    const spendPath = join(dir, 'model-spend.jsonl');
+    const actualModel = provider === 'cloudru' ? 'deepseek-ai/DeepSeek-V4-Pro' : model;
+    const selector = { select: vi.fn(async () => {
+      expect(await used(f.account)).toBe(1);
+      expect((await pool.query('SELECT provider,model,unit_count,llm_dispatched FROM job_attempt WHERE video_id=$1 AND fence=$2',
+        [f.video, f.attempt.fence])).rows[0]).toEqual({ provider, model: actualModel, unit_count: 1, llm_dispatched: true });
+      expect(JSON.parse((await readFile(spendPath, 'utf8')).trim())).toMatchObject({ provider, model: actualModel, phase: 'attempt' });
+      return { fragments: [fakeFragment()] };
+    }) };
+    try {
+      await Promise.all([1, 2].map(() => selectFragments(f.attempt, { pool, limits, selector, provider, model: actualModel,
+        spendPath, enqueue: async () => {} })));
+      expect(selector.select).toHaveBeenCalledOnce(); expect(await used(f.account)).toBe(1);
+      const ledger = (await readFile(spendPath, 'utf8')).trim().split('\n').map(line => JSON.parse(line));
+      expect(ledger).toEqual([expect.objectContaining({ provider, model: actualModel, phase: 'attempt' }),
+        expect.objectContaining({ provider, model: actualModel, phase: 'outcome', result: 'success' })]);
+    } finally { await rm(dir, { recursive: true, force: true }); }
+  });
+  it.each(['user_llm', 'global_llm'])('Cloud.ru refusal %s dispatches zero requests and no ledger event', async scope => {
+    const f = await fixture();
+    await pool.query('INSERT INTO quota_counter(scope,scope_key,day,used) VALUES ($1,$2,$3,$4)',
+      [scope, scope === 'user_llm' ? f.account : 'all', moscowDay(new Date()), scope === 'user_llm' ? 2 : 20]);
+    const selector = { select: vi.fn() }, spend = vi.fn();
+    await selectFragments(f.attempt, { pool, limits, selector, provider: 'cloudru', model: 'deepseek-ai/DeepSeek-V4-Pro',
+      spendPath: '/unused', spend, enqueue: vi.fn() });
+    expect(selector.select).not.toHaveBeenCalled(); expect(spend).not.toHaveBeenCalled();
+  });
+  it('Cloud.ru timeout remains charged with actual attribution', async () => {
+    const f = await fixture(), spend = vi.fn();
+    const selector = { select: vi.fn(async () => { throw new SelectionProviderError('timeout'); }) };
+    await expect(selectFragments(f.attempt, { pool, limits, selector, provider: 'cloudru', model: 'deepseek-ai/DeepSeek-V4-Pro',
+      spendPath: '/unused', spend, enqueue: vi.fn() })).rejects.toMatchObject({ outcome: 'timeout' });
+    expect(await used(f.account)).toBe(1); expect(selector.select).toHaveBeenCalledOnce();
+    expect((await pool.query('SELECT provider,model,status,unit_count FROM job_attempt WHERE video_id=$1 AND fence=$2',
+      [f.video, f.attempt.fence])).rows[0]).toEqual({ provider: 'cloudru', model: 'deepseek-ai/DeepSeek-V4-Pro', status: 'failed', unit_count: 1 });
+    expect(spend.mock.calls.map(call => call[1])).toEqual([
+      expect.objectContaining({ provider: 'cloudru', phase: 'attempt' }),
+      expect.objectContaining({ provider: 'cloudru', phase: 'outcome', result: 'timeout' }),
+    ]);
   });
   it('one strong fragment is persisted as the honest count', async () => {
     const f = await fixture();
@@ -131,7 +174,7 @@ describe.skipIf(!url)('Selection PostgreSQL concurrency and persistence', () => 
         expect(JSON.parse((await readFile(spendPath, 'utf8')).trim()).phase).toBe('attempt');
         return fake.select(...args);
       }) };
-      await selectFragments(f.attempt, { pool, limits, selector, model, spendPath, enqueue: async next => {
+      await selectFragments(f.attempt, { pool, limits, selector, model, provider: 'fake', spendPath, enqueue: async next => {
         expect(next.stage).toBe('render');
         expect((await pool.query('SELECT clips_total,status FROM video WHERE id=$1', [f.video])).rows[0]).toEqual({ clips_total: 2, status: 'rendering' });
         expect((await pool.query('SELECT * FROM clip_link')).rowCount).toBe(2);
@@ -144,7 +187,7 @@ describe.skipIf(!url)('Selection PostgreSQL concurrency and persistence', () => 
     const f = await fixture(), original = new Error('attempt disk full');
     const selector = { select: vi.fn(createFakeSelector('valid').select) }, enqueue = vi.fn();
     const spend = vi.fn().mockRejectedValue(new Error('outcome disk full')).mockRejectedValueOnce(original);
-    await expect(selectFragments(f.attempt, { pool, limits, selector, model, spendPath: '/unused', spend, enqueue }))
+    await expect(selectFragments(f.attempt, { pool, limits, selector, model, provider: 'fake', spendPath: '/unused', spend, enqueue }))
       .rejects.toBe(original);
     expect(selector.select).not.toHaveBeenCalled(); expect(enqueue).not.toHaveBeenCalled();
     expect(spend.mock.calls.map(call => call[1].phase)).toEqual(['attempt', 'outcome']);

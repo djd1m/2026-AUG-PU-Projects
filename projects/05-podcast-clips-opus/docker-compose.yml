@@ -1,6 +1,7 @@
 # N5 «КлипМейкер» — Docker Compose. Канон §6: ровно 7 сервисов в боевом профиле (web, три воркера,
 # db, redis, proxy) + minio и test в профиле `test`. Хранилища НЕ публикуют портов (Правило №0).
-# Хостовые порты — только ${VAR:-default}; секреты и потолки — ${VAR:?…} без значений по умолчанию.
+# Хостовые порты — только ${VAR:-default}; потолки — ${VAR:?…} без дефолтов.
+# Ключи моделей проверяются при старте только выбранного live-поставщика.
 name: ${N5_COMPOSE_PROJECT:-n5-clipmaker}
 
 x-app-env: &app-env
@@ -72,7 +73,8 @@ services:
     command: ["node", "dist/apps/worker/workers/stt.js"]
     environment:
       <<: [*app-env, *quota-env, *s3-env]
-      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?ключ OpenRouter не задан — транскрипция невозможна}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-} # selected-key validation at worker startup
+      N5_STT_PROVIDER: ${N5_STT_PROVIDER-openrouter}
       N5_PUBLIC_ORIGIN: ${N5_PUBLIC_ORIGIN:?публичный origin не задан — платная обработка не должна начинаться без пригодной метки}
       N5_MODEL_PROVIDER: live
       N5_WORK_DIR: /work
@@ -95,7 +97,9 @@ services:
     command: ["node", "dist/apps/worker/workers/select.js"]
     environment:
       <<: [*app-env, *quota-env]
-      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?ключ OpenRouter не задан — выделение фрагментов невозможно}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-} # required only for selected OpenRouter
+      CLOUDRU_FM_API_KEY: ${CLOUDRU_FM_API_KEY:-}
+      N5_LLM_PROVIDER: ${N5_LLM_PROVIDER-openrouter}
       N5_PUBLIC_ORIGIN: ${N5_PUBLIC_ORIGIN:?публичный origin не задан — платная обработка не должна начинаться без пригодной метки}
       N5_MODEL_PROVIDER: live
       N5_LLM_MODEL: ${N5_LLM_MODEL:?модель выделения не задана}

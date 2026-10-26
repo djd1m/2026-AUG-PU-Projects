@@ -1,6 +1,6 @@
 import { createClipLink } from './clip-link.js';
 import type { Pool, PoolClient } from 'pg';
-import type { Limits } from '@clipmaker/shared/config';
+import type { Limits, ExecutionProvider } from '@clipmaker/shared/config';
 import type { VideoFailureReason } from '@clipmaker/shared/enums';
 import { validateFragments, type Fragment } from '@clipmaker/shared/fragments';
 import { parseTranscript, TranscriptError, type TranscriptResult } from '@clipmaker/shared/transcript';
@@ -33,7 +33,7 @@ async function readTranscript(tx: PoolClient, video: string, duration: number): 
 }
 // A committed dispatch claim cannot be replayed for free after a crash or a
 // duplicate queue delivery. Owner retry opens a new series; no automatic LLM retry.
-export async function authorizeSelection(pool: Pool, attempt: Attempt, limits: Limits, model: string, now = new Date()) {
+export async function authorizeSelection(pool: Pool, attempt: Attempt, limits: Limits, model: string, now = new Date(), provider: ExecutionProvider = 'openrouter') {
   return transaction(pool, async tx => {
     const row = await lockCurrent(tx, attempt);
     if (!row) { auditAttempt('stale_attempt_result', attempt); return null; }
@@ -59,8 +59,8 @@ export async function authorizeSelection(pool: Pool, attempt: Attempt, limits: L
         await failTx(tx, attempt, quota.scope === 'user_llm' ? 'refused_user_llm' : 'refused_global_llm', now); return null;
       }
     } else if (claim.unit_count !== 1) throw new Error('Непригодный резерв вызова');
-    await tx.query(`UPDATE job_attempt SET unit_count=1,provider='openrouter',model=$3
-      WHERE video_id=$1 AND fence=$2`, [attempt.video_id, attempt.fence, model]);
+    await tx.query(`UPDATE job_attempt SET unit_count=1,provider=$4,model=$3
+      WHERE video_id=$1 AND fence=$2`, [attempt.video_id, attempt.fence, model, provider]);
     await tx.query('UPDATE video SET updated_at=$3 WHERE id=$1 AND fence=$2', [attempt.video_id, attempt.fence, now]);
     return { transcript, duration };
   });

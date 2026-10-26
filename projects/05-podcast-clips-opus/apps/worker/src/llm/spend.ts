@@ -1,6 +1,7 @@
+import type { ExecutionProvider } from '@clipmaker/shared/config';
 import { open } from 'node:fs/promises';
 export interface SelectionSpend {
-  video_id: string; fence: number; series_no: number; model: string; provider: 'openrouter';
+  video_id: string; fence: number; series_no: number; model: string; provider: ExecutionProvider;
   stage: 'select'; unit: 'calls'; quantity: 1; phase: 'attempt' | 'outcome';
   result: 'started' | 'success' | 'timeout' | 'provider_error' | 'schema_violation' | 'no_fragments';
 }
