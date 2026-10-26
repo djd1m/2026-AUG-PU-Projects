@@ -1,0 +1,164 @@
+{
+  "as_of": "2026-10-26",
+  "generated_at_utc": "2026-10-26T14:47:45.113876+00:00",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning": "high",
+  "actual_model": null,
+  "usage": null,
+  "sources": [
+    {
+      "id": "compute",
+      "url": "https://cloud.ru/documents/tariffs/evolution/evolution-compute",
+      "verified": "2026-10-26"
+    },
+    {
+      "id": "compute_pdf",
+      "url": "https://cdn.cloud.ru/docs/legal/tariffs/evolution/current-version/evolution-compute.pdf",
+      "verified": "2026-10-26"
+    },
+    {
+      "id": "s3",
+      "url": "https://cloud.ru/documents/tariffs/evolution/object-storage",
+      "verified": "2026-10-26"
+    },
+    {
+      "id": "s3_pdf",
+      "url": "https://cdn.cloud.ru/docs/legal/tariffs/evolution/current-version/object-storage.pdf",
+      "verified": "2026-10-26"
+    },
+    {
+      "id": "vm_billing",
+      "url": "https://cloud.ru/docs/virtual-machines/ug/topics/pricing",
+      "verified": "2026-10-26"
+    },
+    {
+      "id": "ip_billing",
+      "url": "https://cloud.ru/docs/public-ip/ug/topics/pricing",
+      "verified": "2026-10-26"
+    },
+    {
+      "id": "cpu_guarantee",
+      "url": "https://cloud.ru/docs/virtual-machines/ug/topics/concepts__overcommitment",
+      "verified": "2026-10-26"
+    },
+    {
+      "id": "vm_traffic",
+      "url": "https://cloud.ru/docs/virtual-machines/ug/topics/faq__traffic-tariff",
+      "verified": "2026-10-26"
+    },
+    {
+      "id": "s3_free_tier",
+      "url": "https://cloud.ru/docs/s3e/ug/topics/overview__free-tier",
+      "verified": "2026-10-26"
+    },
+    {
+      "id": "free_tier_legal",
+      "url": "https://cloud.ru/documents/promotions/active/evolution-free-tier",
+      "verified": "2026-10-26"
+    },
+    {
+      "id": "s3_billing",
+      "url": "https://cloud.ru/docs/s3e/ug/topics/pricing?source-platform=Evolution",
+      "verified": "2026-10-26"
+    },
+    {
+      "id": "s3_topology",
+      "url": "https://cloud.ru/documents/contracts/terms-of-service/evolution/object-storage/description-object-storage",
+      "verified": "2026-10-26"
+    },
+    {
+      "id": "offers",
+      "url": "https://cloud.ru/offers",
+      "verified": "2026-10-26"
+    }
+  ],
+  "compute_version": "261014",
+  "compute_effective_date": "2026-10-14",
+  "s3_version": "260918",
+  "s3_effective_date": "2026-09-28",
+  "rates": {
+    "currency": "RUB",
+    "vat_included": true,
+    "vat_percent": 22,
+    "cpu_guarantee_percent": 100,
+    "vm_2vcpu_4gb_rub_hour": 2.9707,
+    "vm_4vcpu_8gb_rub_hour": 5.9414,
+    "vm_8vcpu_16gb_rub_hour": 11.8828,
+    "ssd_nvme_rub_gb_hour": 0.01586,
+    "public_ip_rub_hour": 0.2074,
+    "snat_gateway_rub_hour": 0.2074,
+    "vm_outbound_tariff_rub_mb": 0.00366,
+    "vm_traffic_currently_exempt": true,
+    "s3_standard_rub_gb_month": 1.83915,
+    "s3_singlezone_rub_gb_month": 1.1346,
+    "s3_get_head_rub_1000_ops": 0.03294,
+    "s3_put_post_list_rub_1000_ops": 0.1098,
+    "s3_outbound_rub_gb": 1.1712
+  },
+  "configs": [
+    {
+      "name": "minimum_4_8_80",
+      "compute_rub_hour": 5.9414,
+      "ssd_gb": 80,
+      "public_ips": 1,
+      "ssd_rub_hour": 1.2688,
+      "ip_rub_hour": 0.2074,
+      "total_rub_hour": 7.4176,
+      "rub_720_hours": 5340.672,
+      "rub_730_hours": 5414.848
+    },
+    {
+      "name": "optimal_8_16_120",
+      "compute_rub_hour": 11.8828,
+      "ssd_gb": 120,
+      "public_ips": 1,
+      "ssd_rub_hour": 1.9032,
+      "ip_rub_hour": 0.2074,
+      "total_rub_hour": 13.9934,
+      "rub_720_hours": 10075.248,
+      "rub_730_hours": 10215.182
+    },
+    {
+      "name": "split_2_4_40_plus_4_8_80",
+      "compute_rub_hour": 8.9121,
+      "ssd_gb": 120,
+      "public_ips": 2,
+      "ssd_rub_hour": 1.9032,
+      "ip_rub_hour": 0.4148,
+      "total_rub_hour": 11.2301,
+      "rub_720_hours": 8085.672,
+      "rub_730_hours": 8197.973
+    }
+  ],
+  "free_tier": {
+    "scope": "organization across all buckets, not per project or bucket",
+    "egress_gb_month": 10000,
+    "egress_classes": "all",
+    "standard_storage_gb": 15,
+    "get_head_ops_conservative_group": 1000000,
+    "put_post_list_ops_conservative_group": 100000,
+    "singlezone_free_storage_or_operations": false,
+    "eligibility": [
+      "RFregistered individual/IP/legalentity",
+      "acceptedcontract",
+      "100RUBorbonusbalance",
+      "FreeTierconsoleform",
+      "noarrears"
+    ],
+    "campaign_end_date": "2026-12-31",
+    "docs_describe_indefinite_use": true,
+    "provider_can_change_or_withdraw": true,
+    "account_verified": false
+  },
+  "unknowns": [
+    "Account free-tier eligibility and remaining organization allowance unverified.",
+    "Operation free-tier wording does not unequivocally settle per-method versus combined-group pooling. Use combined groups conservatively.",
+    "S3 hourly guide divides traffic and operation rates by month-hours but monthly example uses full rates; monthly budget uses tariff full rates.",
+    "VM paid egress tariff exists while FAQ and legal clause5.1 exempt it; exemption is temporary and may change.",
+    "Public-IP tariff has rental and attachment labels; service billing guide models one rental. Actual billing itemization unverified.",
+    "No generic current50%CPU Compute promotion verified; no promotion deducted.",
+    "VM availability and ffmpeg throughput untested; CPU generation not pinned.",
+    "Root disk capacities scenario assumptions, temporary-space needs unmeasured.",
+    "Actual execution model and usage counters unavailable(null); requestedgpt-6.1-sol/high."
+  ]
+}

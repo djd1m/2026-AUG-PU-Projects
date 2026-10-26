@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "audit_date": "2026-10-26",
+  "captured_at_utc": "2026-10-26T14:48:57.199766+00:00",
+  "repository_root": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects",
+  "project": "projects/05-podcast-clips-opus",
+  "source_revision": "732df4cccca8cd03bdaa51eaafe49adac23f01ee",
+  "worktree_build_equals_deployed": null,
+  "scope": "read-only workload/VM/media sizing; only requested tmp outputs written",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning": "high",
+  "actual_model": null,
+  "actual_model_reason": "runtime model metadata unavailable to worker",
+  "usage_tokens": null,
+  "usage_cost": null,
+  "usage_reason": "no usage counters supplied",
+  "files": [
+    {
+      "path": "projects/05-podcast-clips-opus/docs/measurements/2026-09-23-first-long-recording.md",
+      "sha256": "81ed9d320c6a78d6d4dd6988513d3e7cace3ee2cff176c521d0030bfe1d89359",
+      "purpose": "single historical long recording, stage timestamps and output lengths"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/docker-compose.yml",
+      "sha256": "39f582715dbaae94f72522a150cd8117184a17f432bcf2f2574789ada5edde21",
+      "purpose": "external model variables, separate work volumes, no CPU/RAM limits"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/worker/src/runtime.ts",
+      "sha256": "e295bd1c064b7196cf4841fb50794adcf34ecaabf5f8174cb76d12172eb26b0d",
+      "purpose": "STT/select concurrency=2"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/worker/src/workers/render.ts",
+      "sha256": "edb48ae12d515440c0e094a744b75b9f56541f1c32c2df1f4db47e87b48b3ffd",
+      "purpose": "render concurrency=1, withSource per clip, full source download"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/worker/src/media/download.ts",
+      "sha256": "de8a67ec163e477bef692ad0baae1db5b24f9cb35c95e6b9211bf6d50daee774",
+      "purpose": "3x source-byte disk guard, process-local reservation, finally cleanup"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/worker/src/workers/stt.ts",
+      "sha256": "0a8e42b89555d2f6bcdf19a4e00318138710b234bf8e5e7ef3f282d7c873e3da",
+      "purpose": "sequential STT chunks per job, initial download reuse"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/worker/src/stt/extract.ts",
+      "sha256": "bb01907c2996b64eaad21dec86eafc5c5be6d563d6596f0d84e02bd27878ae12",
+      "purpose": "64 kbit/s mono MP3, 16kHz"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/worker/src/render/ffmpeg.ts",
+      "sha256": "9a0d8a32a043726a2f33cefbf4915e77412fbed170006da1693cf6eeca2205e9",
+      "purpose": "CPU x264 fast/CRF23, AAC128k, effects/filter chain, no explicit thread cap"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/worker/src/render/faces.ts",
+      "sha256": "a557399d9cc4550b5ddbb277707114439d8571ac421f887e8ee6e54c07933fea",
+      "purpose": "0.5s sample, optional detector60s timeout"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/worker/assets/scripts/detect_faces.py",
+      "sha256": "e13b51a438f332ba3b9887478941be1a22e453b948972d6f291c81c0c96dc8e0",
+      "purpose": "raw source frames streamed, resize to640 for YuNet"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/packages/shared/src/formats.ts",
+      "sha256": "f2a93e74f6cfcda9c7481166126be9d00c86ad09ee6e137516586fec82bb5177",
+      "purpose": "1080x1920 output"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/packages/shared/src/upload.ts",
+      "sha256": "95192199f0e5cbca8978fcb0eb3a8b9a243008e8ab76d4d64be36c3159f131b6",
+      "purpose": "2,000,000,000-byte upload maximum"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/packages/db/src/probe.ts",
+      "sha256": "57e3c9b27fd85507cbaec74fb2d27c6405ef0e336dee648e9b553a7a85c82f64",
+      "purpose": "120..5400-second accepted duration"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/server/retention.ts",
+      "sha256": "7af9a98c309de988fccf58f8500ce21456b390a7106971753169483fe9f223a1",
+      "purpose": "free clip purge and original deletion during account erasure"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/packages/db/src/plan.ts",
+      "sha256": "8a242c720d057a4f6b87d56e0f3dd3f18c529919f2b92c81eddea0821476914e",
+      "purpose": "paid retention and 72h tail"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/app/upgrade/UpgradeScreen.tsx",
+      "sha256": "6d0ce5e6f0ed3014b1ce7ebe2b48346bde6a58345724a9fdd51030d28c2504a4",
+      "purpose": "270min per DAY wording, paid while active plus3days"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/docs/REPRODUCE.md",
+      "sha256": "60d756002ede39ba3b8f0135d5469958c168c30f4b6793f00cc682866c8bc039",
+      "purpose": "bucket lifecycle and provider migration caveats"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/docs/canon.md",
+      "sha256": "98bdfd43287ef6f508f77e4603892c4c6d32fc757deee6cd876b44495e699849",
+      "purpose": "canonical workload quotas/pricing/effects"
+    }
+  ],
+  "observations": {
+    "historical": {
+      "source_seconds": 5305.9,
+      "source_bytes_approx": 252000000,
+      "clips": 7,
+      "clip_seconds_sum": 386,
+      "active_stage_seconds": 759,
+      "timestamp_elapsed_seconds": 1196,
+      "sample_count": 1,
+      "p95_proven": false
+    },
+    "database_aggregates": {
+      "read_only": true,
+      "statement_timeout_ms": 5000,
+      "video_count": 20,
+      "probed_count": 7,
+      "input_seconds_sum": 11691,
+      "input_bytes_sum": 793718581,
+      "video_buckets": {
+        "under10min": 5,
+        "10to30min": 0,
+        "30to60min": 0,
+        "60plus": 2
+      },
+      "clip_count": 39,
+      "clip_bytes_sum": 377045106,
+      "clip_duration_known": 27,
+      "clip_seconds_sum": 1154.87,
+      "clip_bytes_with_duration": 307350412,
+      "clip_current_key_count": 1,
+      "clip_expiry_marker_count": 38,
+      "smallest_positive_clip_bytes": 691596,
+      "largest_clip_bytes": 23104302
+    },
+    "docker_idle_mib": {
+      "web": 98.04,
+      "stt": 37.42,
+      "llm": 35.88,
+      "video": 36.99,
+      "db": 107.6,
+      "redis": 5.445
+    },
+    "runtime_allowlisted_limits": {
+      "paid_minutes_per_day": 270,
+      "free_minutes_per_day": 900,
+      "uploads_per_day": 6,
+      "llm_per_day": 6,
+      "global_minutes_per_day": 2000,
+      "global_llm_per_day": 20,
+      "rerenders_per_day": 20,
+      "payments_mode": "off"
+    },
+    "container_limits": {
+      "web_memory_bytes": 0,
+      "worker_memory_bytes": 0,
+      "web_nanocpus": 0,
+      "worker_nanocpus": 0
+    },
+    "live_image_digests": {
+      "web": "sha256:7b89eb3a496a3f4ebd33e2dc5ec18dc224e63a133c7cb8e684e918f53c6903b3",
+      "stt": "sha256:17c1c29d64804adfaa6bebb1a5fb8cac6c368cce9c73aa1622947e770655befa",
+      "llm": "sha256:d7585e22f9732520da2fdbc380807edb21557290c85a10e61164cc00ee10fa13",
+      "video": "sha256:a7bffb36c95063b96163d570d2c9872818534b0b524e86b500c891d8b5d14174"
+    }
+  },
+  "estimates_not_benchmarks": {
+    "minimum": {
+      "vcpu": 4,
+      "ram_gib": 8,
+      "ssd_gb": 80
+    },
+    "preferred": {
+      "vcpu": 8,
+      "ram_gib": 16,
+      "ssd_gb": 120
+    },
+    "split": {
+      "app": {
+        "vcpu": 2,
+        "ram_gib": 4,
+        "ssd_gb": 40
+      },
+      "worker": {
+        "vcpu": 4,
+        "ram_gib": 8,
+        "ssd_gb": 80
+      }
+    },
+    "output_total_mbps_range": [
+      2,
+      6
+    ]
+  },
+  "unknowns": [
+    "current loaded peakRSS/CPU/disk",
+    "p95 latency",
+    "customer input distribution",
+    "actual S3 inventory/lifecycle/provider transfer class",
+    "fixed original TTL",
+    "CloudFM compatibility/rates",
+    "usage/cost"
+  ]
+}

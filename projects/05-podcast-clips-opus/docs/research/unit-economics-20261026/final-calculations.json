@@ -1,0 +1,101 @@
+{
+  "supersedes": "Earlier twoVM and4.5h/month examples; owner selectedoneVM, weekly1h/user, growth100to1000over2months",
+  "date": "2026-10-26",
+  "source_calculation": "calculate.py and preliminary calculations.json retained as initial audit; final conclusions use these parameters",
+  "input_hours_per_user_per30days": 4.285714285714286,
+  "revenue_per_used_hour_if_all_pay_RUB": 231.0,
+  "single_vm_fixed_RUB_per30days": {
+    "pilot_2vCPU_4GB_60GB": 2973.384,
+    "next_4vCPU_8GB_80GB": 5340.672,
+    "growth_8vCPU_16GB_120GB": 10075.248
+  },
+  "sizing_evidence": "Allconfigurations engineeringhypotheses;2/4pilotneedsmeasuredmemoryandqueueacceptance. No100or1000usercapacitybenchmark",
+  "primary_model": "Cloud.ru localDeepSeekV4Pro day +Whisper; avoid partnerFlashRFresidencyassumption",
+  "variable_primary_RUB_exact": 34.106865,
+  "variable_planning_primary_RUB": 35,
+  "variable_flash_alternative_RUB_exact": 29.02908592,
+  "storage": "1GBoriginal +0.1GBoutputs for30days. Currentoriginalretentionnotlimited, renewedpaidclipretentionindefinite. Notlifetimecost.",
+  "rows": [
+    {
+      "active_users": 10,
+      "input_hours_per_30days": 42.857142857142854,
+      "all_pay_revenue_RUB": 9900,
+      "payment_fees_RUB": 422.73,
+      "scenario_balance_before_tax_CAC_wages_and_free_users": {
+        "pilot_2vCPU_4GB_60GB": 5003.886,
+        "next_4vCPU_8GB_80GB": 2636.598,
+        "growth_8vCPU_16GB_120GB": -2097.978
+      },
+      "full_cost_per_input_hour_35unit": {
+        "pilot_2vCPU_4GB_60GB": 104.37896,
+        "next_4vCPU_8GB_80GB": 159.61568,
+        "growth_8vCPU_16GB_120GB": 270.08912
+      }
+    },
+    {
+      "active_users": 25,
+      "input_hours_per_30days": 107.14285714285714,
+      "all_pay_revenue_RUB": 24750,
+      "payment_fees_RUB": 1056.825,
+      "scenario_balance_before_tax_CAC_wages_and_free_users": {
+        "pilot_2vCPU_4GB_60GB": 16969.791,
+        "next_4vCPU_8GB_80GB": 14602.503,
+        "growth_8vCPU_16GB_120GB": 9867.927
+      },
+      "full_cost_per_input_hour_35unit": {
+        "pilot_2vCPU_4GB_60GB": 62.751584,
+        "next_4vCPU_8GB_80GB": 84.846272,
+        "growth_8vCPU_16GB_120GB": 129.035648
+      }
+    },
+    {
+      "active_users": 100,
+      "input_hours_per_30days": 428.57142857142856,
+      "all_pay_revenue_RUB": 99000,
+      "payment_fees_RUB": 4227.3,
+      "scenario_balance_before_tax_CAC_wages_and_free_users": {
+        "pilot_2vCPU_4GB_60GB": 76799.316,
+        "next_4vCPU_8GB_80GB": 74432.028,
+        "growth_8vCPU_16GB_120GB": 69697.452
+      },
+      "full_cost_per_input_hour_35unit": {
+        "pilot_2vCPU_4GB_60GB": 41.937896,
+        "next_4vCPU_8GB_80GB": 47.461568,
+        "growth_8vCPU_16GB_120GB": 58.508912
+      }
+    },
+    {
+      "active_users": 1000,
+      "input_hours_per_30days": 4285.714285714285,
+      "all_pay_revenue_RUB": 990000,
+      "payment_fees_RUB": 42273.0,
+      "scenario_balance_before_tax_CAC_wages_and_free_users": {
+        "pilot_2vCPU_4GB_60GB": 794753.616,
+        "next_4vCPU_8GB_80GB": 792386.328,
+        "growth_8vCPU_16GB_120GB": 787651.752
+      },
+      "full_cost_per_input_hour_35unit": {
+        "pilot_2vCPU_4GB_60GB": 35.6937896,
+        "next_4vCPU_8GB_80GB": 36.2461568,
+        "growth_8vCPU_16GB_120GB": 37.3508912
+      }
+    }
+  ],
+  "fee_assumption": {
+    "rate": 0.0427,
+    "basis": "YooKassapublicbase3.5pctplusVAT22oncommission; actualcontractandmethodunknown"
+  },
+  "income_tax": "excluded, unknownregime; optional6pctrevenueillustrationnotrecommendation",
+  "excluded": [
+    "CAC/support/wages",
+    "newfree-userprocessing",
+    "backupcomputeandS3beyondassumedcapacity",
+    "egressifbilled",
+    "retentionbeyond30days",
+    "reasoningtokensabove2koutputscenario",
+    "rerenders/retriesbeyond10pctreserve"
+  ],
+  "queue_quotas": "Current20globalLLMcalls/day and2000globalminutes/day insufficientfor1000weeklyusers(~143calls/day8571min/dayaverage) andmayblock100-userweeklybursts; changesmusthaveapprovedcostcaps",
+  "privacy": "CloudpartnerrouteisnotprovedRFresidency; maincaseuseslocalPropricebutcontractstillrequiresvalidation",
+  "real_payments": "off inobservedruntime; thesearehypotheticalfuturerevenue scenarios"
+}
