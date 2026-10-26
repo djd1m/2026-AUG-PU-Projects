@@ -85,9 +85,16 @@ export function createAcquisitionAnalytics(deps: Dependencies) {
     sdk = null; if (stopLoad) safe(stopLoad); stopLoad = null;
     if (clearState) clear();
   }
+  // Only timestamps are observed; no event targets, keys, coordinates or content.
+  function activity(force = false) {
+    if (!consent || !id || !route) return;
+    const s = read(), now = deps.now();
+    // Once expired, the next landing observation starts a new visit.
+    if (s.visit > now - VISIT_TTL && (force || now - s.visit >= 1000)) { s.visit = now; save(); }
+  }
   function configure(value: number | null, allowed: boolean, path: string, search = '') {
     const nextRoute = routeCategory(path);
-    if (id !== value || !allowed || !nextRoute) stop(!allowed || !nextRoute);
+    if (id !== value || !allowed || !nextRoute) stop(!allowed);
     id = value; consent = allowed; const changed = nextRoute !== route; route = nextRoute;
     if (!id || !consent || !route) return;
     const s = read();
@@ -104,8 +111,9 @@ export function createAcquisitionAnalytics(deps: Dependencies) {
       hit();
     } else if (changed) hit();
     if (route === 'landing') goal('n5_visit');
+    else activity(true);
   }
-  return { configure, goal, stop: () => stop(false), withdraw: () => { consent = false; stop(true); } };
+  return { configure, goal, activity: () => activity(), stop: () => stop(false), withdraw: () => { consent = false; stop(true); } };
 }
 let browserAdapter: ReturnType<typeof createAcquisitionAnalytics> | undefined;
 export function browserAnalytics() {

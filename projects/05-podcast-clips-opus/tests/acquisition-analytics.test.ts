@@ -70,13 +70,37 @@ describe('optional closed acquisition observations', () => {
     f.advance(31 * 60000); f.adapter.configure(123, true, '/');
     expect(goals(f)).toHaveLength(2);
   });
-  it('destroys loaded SDK and clears state when consent is withdrawn or SPA route excluded', () => {
+  it('destroys loaded SDK on withdrawal/exclusion, clearing persistent state only on withdrawal', () => {
     for (const excluded of [false, true]) {
       const f = fixture(); f.adapter.configure(123, true, '/', campaign); f.loaded();
       if (excluded) f.adapter.configure(123, true, '/g/SECRET'); else f.adapter.withdraw();
       const count = f.calls.length; f.adapter.goal('n5_signup_success');
-      expect(f.calls.at(-1)).toEqual([123, 'destruct']); expect(f.calls.length).toBe(count); expect(f.values.size).toBe(0);
+      expect(f.calls.at(-1)).toEqual([123, 'destruct']); expect(f.calls.length).toBe(count); expect(f.values.size).toBe(excluded ? 1 : 0);
     }
+  });
+  it('preserves consented attribution and success dedupe across an excluded route roundtrip', () => {
+    const f = fixture(); f.adapter.configure(123, true, '/', campaign); f.loaded();
+    f.adapter.goal('n5_signup_success'); f.adapter.goal('n5_first_clip_ready'); f.adapter.goal('n5_payment_confirmed', 'LOCAL');
+    f.adapter.configure(123, true, '/g/SECRET');
+    const count = f.calls.length; f.adapter.goal('n5_payment_confirmed', 'OTHER'); f.adapter.activity();
+    expect(f.calls.length).toBe(count);
+    f.adapter.configure(123, true, '/dashboard/videos/LOCAL'); f.loaded();
+    f.adapter.goal('n5_signup_success'); f.adapter.goal('n5_first_clip_ready'); f.adapter.goal('n5_payment_confirmed', 'LOCAL');
+    for (const name of ['n5_signup_success', 'n5_first_clip_ready', 'n5_payment_confirmed']) expect(goals(f).filter(c => c[2] === name)).toHaveLength(1);
+    expect(JSON.parse(f.values.get(ANALYTICS_STORAGE_KEY)!).campaign).toBe(true);
+    f.adapter.withdraw(); expect(f.values.size).toBe(0);
+  });
+  it('counts inactivity from the latest allowed route or tab activity, not the last landing', () => {
+    const f = fixture(); f.adapter.configure(123, true, '/'); f.loaded();
+    f.advance(20 * 60000); f.adapter.configure(123, true, '/dashboard');
+    f.advance(11 * 60000); f.adapter.configure(123, true, '/');
+    expect(goals(f).filter(c => c[2] === 'n5_visit')).toHaveLength(1);
+    f.advance(20 * 60000); f.adapter.activity();
+    f.advance(20 * 60000); f.adapter.configure(123, true, '/');
+    expect(goals(f).filter(c => c[2] === 'n5_visit')).toHaveLength(1);
+    f.advance(31 * 60000); f.adapter.configure(123, true, '/dashboard');
+    f.advance(60000); f.adapter.configure(123, true, '/');
+    expect(goals(f).filter(c => c[2] === 'n5_visit')).toHaveLength(2);
   });
   it('drops late SDK callbacks and bounded pending goals after withdrawal', () => {
     const f = fixture(); f.adapter.configure(123, true, '/dashboard');

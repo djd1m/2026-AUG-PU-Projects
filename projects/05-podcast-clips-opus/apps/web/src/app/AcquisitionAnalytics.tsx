@@ -15,8 +15,21 @@ export function AcquisitionAnalytics({ counter }: { counter: number | null }) {
     if (!hydrated) return;
     const adapter = browserAnalytics();
     adapter.configure(counter, consent === 'yes', pathname, window.location.search);
-    if (counter && consent === 'yes' && routeCategory(pathname)) window.dispatchEvent(new Event(ANALYTICS_READY));
-    return () => adapter.stop();
+    const active = !!counter && consent === 'yes' && !!routeCategory(pathname);
+    const activity = () => adapter.activity();
+    const visible = () => { if (document.visibilityState === 'visible') activity(); };
+    if (active) {
+      window.dispatchEvent(new Event(ANALYTICS_READY));
+      window.addEventListener('pointerdown', activity, { passive: true });
+      window.addEventListener('keydown', activity);
+      document.addEventListener('visibilitychange', visible);
+    }
+    return () => {
+      window.removeEventListener('pointerdown', activity);
+      window.removeEventListener('keydown', activity);
+      document.removeEventListener('visibilitychange', visible);
+      adapter.stop();
+    };
   }, [counter, consent, pathname, hydrated]);
   function choose(next: 'yes' | 'no') {
     if (next === 'no') browserAnalytics().withdraw();
