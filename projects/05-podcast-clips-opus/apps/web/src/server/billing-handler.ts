@@ -14,7 +14,8 @@
 import { createHash } from 'node:crypto';
 import type { ApplyPaymentOutcome, CreateIntentResult, IntentView, PaymentEvent } from '@clipmaker/db';
 import type { PaymentProviderName } from '@clipmaker/shared/enums';
-import { PAID_PLAN_TITLE, PAID_PLAN_DAYS, PAID_PRICE_MINOR, effectivePlan } from '@clipmaker/shared/tariff';
+import type { BillingMode } from '@clipmaker/shared/config';
+import { CREDIT_SKUS,isCreditSku,type CreditSku, PAID_PLAN_TITLE, PAID_PLAN_DAYS, PAID_PRICE_MINOR, effectivePlan } from '@clipmaker/shared/tariff';
 import { readSessionCookie } from './auth-handler';
 import { clientIp } from './ip';
 import { verifyYooKassaOrigin } from './payments/origin';
@@ -27,6 +28,8 @@ const INTENT_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}
 export const PAYMENT_DESCRIPTION = `КлипМейкер: тариф ${PAID_PLAN_TITLE} на ${PAID_PLAN_DAYS} дней`;
 
 export interface BillingDependencies {
+  billingMode?: BillingMode;
+  billingPolicy?: (accountId:string)=>Promise<string|null>;
   publicOrigin: string;
   trustedProxyHops: number;
   authenticate: (token: string) => Promise<{ account_id: string } | null>;
@@ -34,7 +37,7 @@ export interface BillingDependencies {
   allowRead: (ip: string, account?: string) => Promise<boolean>;
   // null — оплата выключена (N5_PAYMENTS_MODE не задан или off): все маршруты оплаты — 404.
   provider: PaymentProvider | null;
-  createIntent: (input: { accountId: string; priceMinor: number; idempotencyKey: string }) => Promise<CreateIntentResult>;
+  createIntent: (input: { accountId: string; priceMinor: number; idempotencyKey: string; sku?: CreditSku; billingMode?: BillingMode }) => Promise<CreateIntentResult>;
   // false — у намерения уже ДРУГОЙ платёж: второй платёж по одному намерению — отказ, а не молчание.
   setIntentPayment: (intentId: string, providerPaymentId: string) => Promise<boolean>;
   readIntent: (intentId: string, accountId: string) => Promise<IntentView | null>;
@@ -99,13 +102,18 @@ export function createCheckoutHandler(deps: BillingDependencies) {
     const raw = await readRawBody(request, MAX_CHECKOUT_BYTES);
     let body: unknown;
     try { body = raw ? JSON.parse(Buffer.from(raw).toString('utf8')) : null; } catch { body = null; }
+    const credit = await deps.billingPolicy?.(entry.accountId) === 'credits_v1';
+    if (body && typeof body==='object' && ('operation' in body || 'upgrade' in body)) return fail(422,'upgrade_unavailable','Немедленный переход недоступен. Выберите Про на следующий период или дополнительный пакет сейчас.');
     // Закрытое тело: ровно один ключ. Цена и план НЕ читаются из запроса — только из кода (fail-closed-defaults п.3).
-    if (!body || typeof body !== 'object' || Array.isArray(body) || Object.keys(body).join() !== 'idempotency_key') {
+    if (!body || typeof body !== 'object' || Array.isArray(body) || (credit ? Object.keys(body).sort().join() !== 'idempotency_key,sku' : Object.keys(body).join() !== 'idempotency_key')) {
       return fail(422, 'invalid_body', 'Нужен только ключ повтора idempotency_key');
     }
     const key = (body as { idempotency_key: unknown }).idempotency_key;
     if (typeof key !== 'string' || !IDEMPOTENCY_KEY.test(key)) return fail(422, 'idempotency_key_required', 'Нужен ключ повтора: 8–128 латинских букв, цифр, «-» или «_»');
-    const created = await deps.createIntent({ accountId: entry.accountId, priceMinor: PAID_PRICE_MINOR, idempotencyKey: key });
+    const sku=credit ? (body as {sku:unknown}).sku : undefined;
+    if (credit && (!isCreditSku(sku) || deps.billingMode!=='credits_v1')) return fail(422,'credit_sale_unavailable','Покупка этого пакета недоступна');
+    const created = await deps.createIntent({ accountId: entry.accountId, priceMinor: isCreditSku(sku)?CREDIT_SKUS[sku].priceMinor:PAID_PRICE_MINOR,
+      idempotencyKey: key,...(isCreditSku(sku)?{sku,billingMode:deps.billingMode}:{}) });
     if (created.kind === 'account_inactive') return fail(401, 'unauthorized', 'Войдите, чтобы оплатить тариф');
     if (created.kind === 'conflict') return fail(409, 'idempotency_conflict', 'Этот ключ уже использован. Обновите страницу');
     const intent = created.intent;
@@ -125,7 +133,7 @@ export function createCheckoutHandler(deps: BillingDependencies) {
       const payment = await provider.createPayment({
         orderId: intent.id, amountMinor: intent.price_minor,
         returnUrl: new URL(`/upgrade/return?intent=${intent.id}`, deps.publicOrigin).href,
-        description: PAYMENT_DESCRIPTION,
+        description: isCreditSku(intent.sku) ? `КлипМейкер: ${CREDIT_SKUS[intent.sku].title}, ${CREDIT_SKUS[intent.sku].credits} кредитов, 30 дней` : PAYMENT_DESCRIPTION,
       });
       if (!payment.confirmationUrl) return fail(503, 'payment_provider_failed', 'Платёжный сервис не выдал форму оплаты. Повторите позже');
       if (!await deps.setIntentPayment(intent.id, payment.id)) {
@@ -170,8 +178,8 @@ export function createCheckoutStatusHandler(deps: BillingDependencies) {
       }
     }
     // План — ДЕЙСТВУЮЩИЙ (AC-10): старое успешное намерение при истёкшем или снятом плане — не «включено».
-    const plan = effectivePlan(view.account_plan, view.plan_source, view.plan_paid_until, (deps.clock ?? (() => new Date()))());
-    return json({ data: { intent_id: view.id, status, account_plan: plan, plan_paid_until: plan === 'paid' ? view.plan_paid_until : null } });
+    const plan = view.effective_plan ?? effectivePlan(view.account_plan, view.plan_source, view.plan_paid_until, (deps.clock ?? (() => new Date()))());
+    return json({ data: { ...(isCreditSku(view.sku)?{sku:view.sku,package_title:CREDIT_SKUS[view.sku].title,grant_seconds:view.grant_seconds,period_start:view.period_start,period_end:view.period_end}:{}),intent_id: view.id, status, account_plan: plan, plan_paid_until: plan === 'paid' ? view.plan_paid_until : null } });
   });
 }
 

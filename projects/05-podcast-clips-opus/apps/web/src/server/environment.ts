@@ -25,6 +25,7 @@ export function readEnvironment() {
     REDIS_URL: process.env.REDIS_URL,
     SESSION_SECRET: process.env.SESSION_SECRET,
     // Оплата ЮKassa (фича 30): режим и ключи магазина читает только web.
+    N5_BILLING_MODE: process.env.N5_BILLING_MODE,
     N5_PAYMENTS_MODE: process.env.N5_PAYMENTS_MODE,
     YOOKASSA_SHOP_ID: process.env.YOOKASSA_SHOP_ID,
     YOOKASSA_SECRET_KEY: process.env.YOOKASSA_SECRET_KEY,

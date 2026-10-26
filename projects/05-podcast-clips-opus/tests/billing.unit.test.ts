@@ -81,10 +81,10 @@ describe('цена и действующий план (OWN-019, AC-11)', () => {
     for (const source of ['PAYMENT', '', null, 'gift']) expect(effectivePlan('paid', source, '2099-01-01T00:00:00Z', now), String(source)).toBe('free');
   });
   it('SQL-зеркало: сравнение на равенство, срок только у payment, время — параметр или now()', () => {
-    expect(effectivePlanSql('a')).toBe("(CASE WHEN a.plan='paid' AND (a.plan_source IN ('none','operator') OR (a.plan_source='payment' AND a.plan_paid_until > now())) THEN 'paid' ELSE 'free' END)");
+    expect(effectivePlanSql('a')).toBe("(CASE WHEN a.plan='paid' AND (a.plan_source IN ('none','operator') OR (a.plan_source='payment' AND a.plan_paid_until > now())) OR EXISTS (SELECT 1 FROM credit_grant cg WHERE cg.account_id=a.id AND cg.source='payment' AND cg.entitlement_start<=now() AND cg.entitlement_end>now()) THEN 'paid' ELSE 'free' END)");
     expect(effectivePlanSql('a', '$4')).toContain('plan_paid_until > $4');
     expect(() => effectivePlanSql('a; DROP', 'now()')).toThrow(); expect(() => effectivePlanSql('a', 'now() OR true')).toThrow();
-    expect(retentionFromSql('v', 'a')).toContain('GREATEST(v.finished_at, a.plan_paid_until)');
+    expect(retentionFromSql('v', 'a')).toContain('GREATEST(v.finished_at, a.plan_paid_until, (SELECT max(cg.entitlement_end)');
   });
   it('срок хранения: от готовности, но не раньше конца оплаты; явный expires_at сильнее', () => {
     const finished = new Date('2026-09-01T00:00:00Z');

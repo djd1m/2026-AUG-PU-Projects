@@ -16,3 +16,5 @@ export * from './selection.js';
 export * from './render.js';
 export * from './plan.js';
 export * from './payments.js';
+
+export * from './credits.js';

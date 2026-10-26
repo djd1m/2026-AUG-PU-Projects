@@ -15,7 +15,7 @@ function createRuntime() {
     enableOfflineQueue: false, retryStrategy: () => null });
   redis.on('error', () => console.error('Redis недоступен: запросы будут отклонены ограничителем'));
   // payments: null — оплата выключена (off); иначе провайдер по уже проверенной конфигурации (фича 30).
-  return { config, pool, redis, auth: new AuthService(new PgAuthStore(pool), config.sessionSecret), payments: selectPaymentProvider(config.payments) };
+  return { config, pool, redis, auth: new AuthService(new PgAuthStore(pool, config.billingMode), config.sessionSecret), payments: selectPaymentProvider(config.payments) };
 }
 // Next может загрузить instrumentation и обработчики отдельными бандлами: кеш общий для процесса.
 const runtimeGlobal = globalThis as typeof globalThis & { n5Runtime?: ReturnType<typeof createRuntime> };

@@ -6,6 +6,12 @@ export const LIMIT_NAMES = [
 ] as const;
 export type LimitName = typeof LIMIT_NAMES[number];
 export type Limits = Readonly<Record<LimitName, number>>;
+export type BillingMode = 'legacy' | 'credits_v1';
+export function loadBillingMode(env: Environment): BillingMode {
+  if (env.N5_BILLING_MODE === undefined) return 'legacy';
+  if (env.N5_BILLING_MODE !== 'legacy' && env.N5_BILLING_MODE !== 'credits_v1') throw new Error('N5_BILLING_MODE: нужно legacy или credits_v1');
+  return env.N5_BILLING_MODE;
+}
 export type Environment = Readonly<Record<string, string | undefined>>;
 export type ServiceRole = 'web' | 'worker-stt' | 'worker-llm' | 'worker-video';
 const consequences: Record<LimitName, string> = {
@@ -85,7 +91,7 @@ export function loadWebConfig(env: Environment) {
   if (Buffer.byteLength(sessionSecret) < 32 || sessionSecret !== sessionSecret.trim()) {
     throw new Error('SESSION_SECRET непригодно: короткий секрет ослабляет защиту сессий; нужно не менее 32 байт без краевых пробелов');
   }
-  return Object.freeze({ ...connections, limits, publicOrigin, sessionSecret,
+  return Object.freeze({ ...connections, limits, publicOrigin, sessionSecret, billingMode: loadBillingMode(env),
     s3: Object.freeze({ ...loadS3Config(env), publicEndpoint: loadS3PublicEndpoint(env) }),
     trustedProxyHops: loadTrustedProxyHops(env), payments: loadPaymentsConfig(env) });
 }
@@ -95,8 +101,8 @@ export function loadWorkerConfig(role: Exclude<ServiceRole, 'web'>, env: Environ
   const connections = loadConnectionConfig(env);
   const publicOrigin = loadRenderOrigin(env);
   return role === 'worker-video'
-    ? Object.freeze({ ...connections, publicOrigin, role })
-    : Object.freeze({ ...connections, limits: loadLimits(env), publicOrigin, role });
+    ? Object.freeze({ ...connections, publicOrigin, role, billingMode: loadBillingMode(env) })
+    : Object.freeze({ ...connections, limits: loadLimits(env), publicOrigin, role, billingMode: loadBillingMode(env) });
 }
 
 export function loadS3Config(env: Environment) {

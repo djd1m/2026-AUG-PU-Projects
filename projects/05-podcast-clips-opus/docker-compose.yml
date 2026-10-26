@@ -5,6 +5,7 @@
 name: ${N5_COMPOSE_PROJECT:-n5-clipmaker}
 
 x-app-env: &app-env
+  N5_BILLING_MODE: ${N5_BILLING_MODE-legacy}
   NODE_ENV: production
   DATABASE_URL: postgresql://n5:${N5_DB_APP_PASSWORD:?пароль приложения к БД не задан}@db:5432/n5
   REDIS_URL: redis://:${REDIS_PASSWORD:?пароль Redis не задан — очередь без пароля не поднимается}@redis:6379
@@ -205,6 +206,7 @@ services:
     command: ["sh", "-c", "node scripts/test-db.mjs && npm test -- --run"]
     environment:
       <<: [*app-env, *quota-env]
+      N5_BILLING_MODE: ${N5_BILLING_MODE-legacy}
       NODE_ENV: test
       N5_ACCEPTANCE: "1"
       DATABASE_URL: postgresql://n5:${N5_DB_APP_PASSWORD:?пароль БД не задан}@db:5432/n5_test

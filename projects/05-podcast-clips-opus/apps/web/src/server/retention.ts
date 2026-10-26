@@ -1,4 +1,4 @@
-import { clipAliveSql, transaction, type Pool } from '@clipmaker/db';
+import { creditAccountLock, clipAliveSql, transaction, type Pool } from '@clipmaker/db';
 export interface RetentionStorage { delete(key: string): Promise<void>; erasePrefix(prefix: string): Promise<void>; eraseClipPrefix(prefix: string): Promise<void> }
 export const RETENTION_INTERVAL_MS = 3600_000;
 // One hour lets already-issued part URLs and bounded in-flight storage writes settle.
@@ -12,6 +12,10 @@ export async function eraseAccount(pool: Pool, storage: RetentionStorage, accoun
   await transaction(pool, async tx => {
     const locked = await tx.query("SELECT id FROM account WHERE id=$1 AND status='erasing' FOR UPDATE", [account]);
     if (!locked.rowCount) return;
+    await tx.query('SELECT id FROM video WHERE account_id=$1 ORDER BY id FOR UPDATE',[account]);
+    await creditAccountLock(tx,account);
+    await tx.query('DELETE FROM video_credit_charge WHERE video_id IN (SELECT id FROM video WHERE account_id=$1)',[account]);
+    await tx.query('DELETE FROM credit_grant WHERE account_id=$1',[account]);
     // Preserve aggregates, remove identifying links AND network prefixes, including guest events.
     await tx.query(`UPDATE growth_event SET account_id=NULL,video_id=NULL,clip_id=NULL,clip_link_id=NULL,
       guest_pack_id=NULL,partner_code_id=NULL,ip_prefix=NULL WHERE account_id=$1

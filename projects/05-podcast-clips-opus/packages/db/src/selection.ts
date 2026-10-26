@@ -1,3 +1,4 @@
+import { lockCreditAccountForVideo, finalizeVideoCreditsTx } from './credits.js';
 import { createClipLink } from './clip-link.js';
 import type { Pool, PoolClient } from 'pg';
 import type { Limits, ExecutionProvider } from '@clipmaker/shared/config';
@@ -9,7 +10,8 @@ import { auditAttempt, leaseAttemptTx, type Attempt } from './attempts.js';
 import { effectivePlanSql } from './plan.js';
 interface Current { account_id: string; plan: string; duration_seconds: string; unit_count: number; llm_dispatched: boolean; started_at: Date }
 async function lockCurrent(tx: PoolClient, attempt: Attempt): Promise<Current | undefined> {
-  const result = await tx.query<Current>(`SELECT v.account_id,${effectivePlanSql('a')} AS plan,v.duration_seconds,j.unit_count,j.llm_dispatched,j.started_at
+  await lockCreditAccountForVideo(tx,attempt.video_id);
+  const result = await tx.query<Current>(`SELECT v.account_id,CASE WHEN EXISTS (SELECT 1 FROM video_credit_charge cc WHERE cc.video_id=v.id AND cc.state IN ('reserved','settled') AND cc.paid_render) THEN 'paid' ELSE ${effectivePlanSql('a')} END AS plan,v.duration_seconds,j.unit_count,j.llm_dispatched,j.started_at
     FROM video v JOIN account a ON a.id=v.account_id JOIN job_attempt j ON j.video_id=v.id AND j.fence=$2
     WHERE v.id=$1 AND v.fence=$2 AND v.status='selecting' AND v.deleted_at IS NULL AND a.status='active'
       AND j.stage='select' AND j.status='running' FOR UPDATE OF v`, [attempt.video_id, attempt.fence]);
@@ -20,6 +22,7 @@ async function failTx(tx: PoolClient, attempt: Attempt, reason: VideoFailureReas
     [attempt.video_id, attempt.fence, reason, now]);
   await tx.query(`UPDATE job_attempt SET status='failed',failure_reason=$3,finished_at=$4 WHERE video_id=$1 AND fence=$2`,
     [attempt.video_id, attempt.fence, reason, now]);
+  await finalizeVideoCreditsTx(tx,attempt.video_id,now);
 }
 export async function failSelection(pool: Pool, attempt: Attempt, reason: VideoFailureReason, now = new Date()) {
   return transaction(pool, async tx => {

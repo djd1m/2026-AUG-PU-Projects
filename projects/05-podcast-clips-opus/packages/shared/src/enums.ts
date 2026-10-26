@@ -10,7 +10,7 @@ export type VideoStatus = typeof VIDEO_STATUS[number];
 export const VIDEO_FAILURE_REASON = [
   'too_large', 'not_media', 'no_audio', 'too_short', 'too_long', 'probe_timeout',
   'stt_failed', 'no_timestamps', 'no_fragments', 'schema_violation', 'refused_user_uploads',
-  'refused_user_minutes', 'refused_global_minutes', 'refused_user_llm', 'refused_global_llm',
+  'refused_credit_balance', 'refused_user_minutes', 'refused_global_minutes', 'refused_user_llm', 'refused_global_llm',
   'stalled', 'render_failed',
 ] as const;
 export type VideoFailureReason = typeof VIDEO_FAILURE_REASON[number];
@@ -44,8 +44,8 @@ export const PAYMENT_INTENT_STATUS = ['created', 'succeeded', 'canceled'] as con
 export const PAYMENT_PROVIDER = ['yookassa', 'fake'] as const;
 export type PaymentProviderName = typeof PAYMENT_PROVIDER[number];
 export const PAYMENT_STATUS = ['succeeded', 'refunded'] as const;
-export const PAYMENT_REVIEW_REASON = ['amount_mismatch', 'refund', 'unknown_intent', 'account_erasing'] as const;
-export const OPERATOR_ACTION = ['set_plan'] as const;
+export const PAYMENT_REVIEW_REASON = ['amount_mismatch', 'refund', 'unknown_intent', 'account_erasing','intent_already_fulfilled','payment_identity_mismatch'] as const;
+export const OPERATOR_ACTION = ['set_plan','credit_opt_in'] as const;
 
 export function isEnumValue<T extends string>(values: readonly T[], value: unknown): value is T {
   return typeof value === 'string' && values.includes(value as T);
@@ -66,7 +66,15 @@ export const readCtaKind = (v: unknown): CtaKind => closed(CTA_KIND, 'none', v);
 export function readEnum<T extends string>(values: readonly T[], value: unknown): T | null {
   return isEnumValue(values, value) ? value : null;
 }
+export const BILLING_POLICY = ['legacy_daily_v1','credits_v1'] as const;
+export const CREDIT_INTENT_SKU = ['legacy_pro990_v1','start_v1','pro_v1','addon_v1'] as const;
+export const CREDIT_GRANT_SOURCE = ['signup','migration_trial','payment','recovery'] as const;
+export const CREDIT_BASE_SKU = ['start_v1','pro_v1'] as const;
+export const CREDIT_CHARGE_STATE = ['reserved','settled','released'] as const;
 export const SQL_ENUMS = {
+  'account.billing_policy': BILLING_POLICY,'video.billing_policy':BILLING_POLICY,
+  'payment_intent.sku': CREDIT_INTENT_SKU,'credit_grant.source':CREDIT_GRANT_SOURCE,
+  'credit_grant.base_sku':CREDIT_BASE_SKU,'video_credit_charge.state':CREDIT_CHARGE_STATE,
   'account.plan': ACCOUNT_PLAN, 'account.status': ACCOUNT_STATUS,
   'video.source': VIDEO_SOURCE, 'video.status': VIDEO_STATUS, 'video.failure_reason': VIDEO_FAILURE_REASON,
   'clip.status': CLIP_STATUS, 'clip.failure_reason': CLIP_FAILURE_REASON,

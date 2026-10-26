@@ -15,5 +15,6 @@ export function resetLabel(at: string): string {
     day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })} МСК`;
 }
 export interface RemainingLimits {
+  credits?: { available_seconds: number; reserved_seconds: number; recovery_seconds?: number; next_expiry: string | null };
   uploads: number; minutes: number; selections: number; resets_at: string;
 }

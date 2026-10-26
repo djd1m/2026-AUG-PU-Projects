@@ -1,3 +1,4 @@
+import { lockCreditAccountForVideo, finalizeVideoCreditsTx, reserveVideoCreditsTx } from './credits.js';
 import type { Pool, PoolClient } from 'pg';
 import type { Limits } from '@clipmaker/shared/config';
 import type { VideoFailureReason } from '@clipmaker/shared/enums';
@@ -13,6 +14,7 @@ export async function getProbeSource(pool: Pool, attempt: Attempt): Promise<Prob
   return rows.rows[0] ?? null;
 }
 async function lockProbe(tx: PoolClient, attempt: Attempt, allowTranscribing = false): Promise<ProbeSourceRow | null> {
+  await lockCreditAccountForVideo(tx, attempt.video_id);
   const rows = await tx.query<ProbeSourceRow>(`SELECT v.*, v.upload_day::text FROM video v JOIN account a ON a.id=v.account_id
     JOIN job_attempt j ON j.video_id=v.id AND j.fence=$2
     WHERE v.id=$1 AND v.fence=$2 AND v.status = ANY($3::text[]) AND v.deleted_at IS NULL AND a.status='active'
@@ -26,6 +28,7 @@ async function failProbeTx(tx: PoolClient, attempt: Attempt, row: ProbeSourceRow
   await tx.query(`UPDATE job_attempt SET status='failed', wait_reason=NULL, failure_reason=$3, finished_at=$4
     WHERE video_id=$1 AND fence=$2`, [attempt.video_id, attempt.fence, reason, now]);
   await refundUploadSlot(tx, limits, row.account_id, row.upload_day, reason, now);
+  await finalizeVideoCreditsTx(tx,attempt.video_id,now);
 }
 export async function failProbe(pool: Pool, attempt: Attempt, limits: Limits, reason: VideoFailureReason,
   now = new Date(), audit: Audit = auditAttempt): Promise<boolean> {
@@ -52,9 +55,17 @@ export async function acceptProbe(pool: Pool, attempt: Attempt, limits: Limits, 
   if (!Number.isFinite(duration) || duration < 120 || duration > 5400) throw new Error('Непригодная длительность');
   const result = await transaction(pool, async tx => {
     const row = await lockProbe(tx, attempt); if (!row) return 'stale' as const;
+    await tx.query('SAVEPOINT credit_probe');
+    const reservation=await reserveVideoCreditsTx(tx,attempt.video_id,duration,now);
+    if (reservation==='shortage') {
+      await tx.query('UPDATE video SET duration_seconds=$2 WHERE id=$1',[attempt.video_id,duration]);
+      await failProbeTx(tx,attempt,row,limits,'refused_credit_balance',now);
+      return 'failed' as const;
+    }
     const minutes = Math.ceil(duration / 60);
     const quota = await checkAndConsumeQuota(tx, limits, row.account_id, 'minutes', minutes, now);
     if (!quota.granted) {
+      await tx.query('ROLLBACK TO SAVEPOINT credit_probe');
       await failProbeTx(tx, attempt, row, limits,
         quota.scope === 'user_minutes' ? 'refused_user_minutes' : 'refused_global_minutes', now);
       return 'failed' as const;

@@ -3,6 +3,7 @@ import { z } from 'zod';
 import type { VideoStatus, VideoFailureReason, ClipStatus, CtaKind } from '@clipmaker/shared/enums';
 
 export const failureMessages = {
+  refused_credit_balance: 'Недостаточно кредитов для этой записи. Выберите пакет и повторите обработку.',
   too_large: 'Файл больше 2 ГБ.', not_media: 'Формат файла не поддерживается.',
   no_audio: 'В записи нет звуковой дорожки.', too_short: 'Запись короче двух минут.',
   too_long: 'Запись длиннее 90 минут.', probe_timeout: 'Не удалось прочитать свойства файла.',
@@ -16,6 +17,7 @@ export const failureMessages = {
 /** Стадия ленты экрана записи (фича 29): закрытый набор из четырёх. */
 export type RibbonStage = 'upload' | 'transcribe' | 'select' | 'render';
 export interface VideoScreen {
+  credit_charge_seconds?: number;
   video_id: string; status: VideoStatus; created_at: string; updated_at: string;
   duration_seconds: number | null; user_state: 'выполняется' | 'успех' | 'отказ';
   stage_label: string; stage_progress: number | null; clips_done: number; clips_total: number;

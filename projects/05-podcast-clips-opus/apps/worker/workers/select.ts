@@ -3,7 +3,7 @@ import { quotaEnvironment } from '../src/quota-environment';
 import { startWorker } from '../src/runtime';
 void startWorker('worker-llm', { ...quotaEnvironment(), DATABASE_URL: process.env.DATABASE_URL, REDIS_URL: process.env.REDIS_URL,
   N5_PUBLIC_ORIGIN: process.env.N5_PUBLIC_ORIGIN, N5_SHORT_CODE_LENGTH: process.env.N5_SHORT_CODE_LENGTH,
-  NODE_ENV: process.env.NODE_ENV, N5_MODEL_PROVIDER: process.env.N5_MODEL_PROVIDER, N5_LLM_MODEL: process.env.N5_LLM_MODEL,
+  NODE_ENV: process.env.NODE_ENV, N5_BILLING_MODE: process.env.N5_BILLING_MODE, N5_MODEL_PROVIDER: process.env.N5_MODEL_PROVIDER, N5_LLM_MODEL: process.env.N5_LLM_MODEL,
   N5_LLM_PROVIDER: process.env.N5_LLM_PROVIDER, CLOUDRU_FM_API_KEY: process.env.CLOUDRU_FM_API_KEY,
   OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY, N5_WORK_DIR: process.env.N5_WORK_DIR,
 }).catch(error => { console.error('Воркер не запущен:', renderErrorMessage(error)); process.exitCode = 1; });

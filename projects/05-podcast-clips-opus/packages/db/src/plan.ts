@@ -17,7 +17,7 @@ function clock(now: string): string {
 /** `(… 'paid' | 'free')` для строки account с псевдонимом `a`. `now` — `now()` или номер параметра с моментом. */
 export function effectivePlanSql(a = 'a', now = 'now()'): string {
   const t = ident(a), at = clock(now);
-  return `(CASE WHEN ${t}.plan='paid' AND (${t}.plan_source IN ('none','operator') OR (${t}.plan_source='payment' AND ${t}.plan_paid_until > ${at})) THEN 'paid' ELSE 'free' END)`;
+  return `(CASE WHEN ${t}.plan='paid' AND (${t}.plan_source IN ('none','operator') OR (${t}.plan_source='payment' AND ${t}.plan_paid_until > ${at})) OR EXISTS (SELECT 1 FROM credit_grant cg WHERE cg.account_id=${t}.id AND cg.source='payment' AND cg.entitlement_start<=${at} AND cg.entitlement_end>${at}) THEN 'paid' ELSE 'free' END)`;
 }
 /**
  * От какого момента считается срок хранения клипа бесплатного тарифа (FR-TARIFF-003, AC-12): от готовности записи,
@@ -27,7 +27,7 @@ export function effectivePlanSql(a = 'a', now = 'now()'): string {
  */
 export function retentionFromSql(v = 'v', a = 'a'): string {
   const video = ident(v), account = ident(a);
-  return `(CASE WHEN ${video}.finished_at IS NULL THEN NULL ELSE GREATEST(${video}.finished_at, ${account}.plan_paid_until) END)`;
+  return `(CASE WHEN ${video}.finished_at IS NULL THEN NULL ELSE GREATEST(${video}.finished_at, ${account}.plan_paid_until, (SELECT max(cg.entitlement_end) FROM credit_grant cg WHERE cg.account_id=${account}.id AND cg.source='payment' AND cg.entitlement_start<=now())) END)`;
 }
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 /**

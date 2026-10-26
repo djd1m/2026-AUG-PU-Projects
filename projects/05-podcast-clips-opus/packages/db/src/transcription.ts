@@ -1,3 +1,4 @@
+import { lockCreditAccountForVideo, finalizeVideoCreditsTx } from './credits.js';
 import type { Pool, PoolClient } from 'pg';
 import type { Limits } from '@clipmaker/shared/config';
 import type { VideoFailureReason } from '@clipmaker/shared/enums';
@@ -6,6 +7,7 @@ import { transaction, checkAndConsumeQuota } from './quota.js';
 import { auditAttempt, leaseAttemptTx, type Attempt } from './attempts.js';
 interface Current { account_id: string; duration_seconds: string; minutes_charged: number; started_at: Date }
 async function lockCurrent(tx: PoolClient, attempt: Attempt): Promise<Current | undefined> {
+  await lockCreditAccountForVideo(tx, attempt.video_id);
   const result = await tx.query<Current>(`SELECT v.account_id,v.duration_seconds,v.minutes_charged,j.started_at
     FROM video v JOIN account a ON a.id=v.account_id JOIN job_attempt j ON j.video_id=v.id AND j.fence=$2
     WHERE v.id=$1 AND v.fence=$2 AND v.status='transcribing' AND v.deleted_at IS NULL AND a.status='active'
@@ -17,6 +19,7 @@ async function failTx(tx: PoolClient, attempt: Attempt, reason: VideoFailureReas
     [attempt.video_id, attempt.fence, reason, now]);
   await tx.query(`UPDATE job_attempt SET status='failed',failure_reason=$3,wait_reason=NULL,finished_at=$4 WHERE video_id=$1 AND fence=$2`,
     [attempt.video_id, attempt.fence, reason, now]);
+  await finalizeVideoCreditsTx(tx,attempt.video_id,now);
 }
 export async function failTranscription(pool: Pool, attempt: Attempt, reason: VideoFailureReason, now = new Date()) {
   return transaction(pool, async tx => {

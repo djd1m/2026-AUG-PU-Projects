@@ -11,6 +11,19 @@ export function LimitsPanel({ remaining }: { remaining: RemainingLimits }) {
     window.addEventListener('focus', refresh);
     return () => { clearInterval(timer); window.removeEventListener('focus', refresh); };
   }, [router]);
+  if (remaining.credits) {
+    const c=remaining.credits, credit=(n:number)=>(n/60).toLocaleString('ru-RU',{maximumFractionDigits:2});
+    return <section className="limits-panel" aria-label="Баланс кредитов"><h2>Баланс кредитов</h2>
+      <dl className="partner-counters"><div><dt>Доступно кредитов</dt><dd>{credit(c.available_seconds)}</dd></div>
+      <div><dt>Часов обычной записи</dt><dd>{(c.available_seconds/3600).toLocaleString('ru-RU',{maximumFractionDigits:2})}</dd></div>
+      <div><dt>Зарезервировано кредитов</dt><dd>{credit(c.reserved_seconds)}</dd></div></dl>
+      {!!c.recovery_seconds && <p>Ещё {credit(c.recovery_seconds)} кредитов восстановлено на 24 часа только для повтора исходной записи.</p>}
+      <p>1 кредит = 60 секунд исходной записи. Списание посекундное, за запись один раз.</p>
+      <p>{c.next_expiry ? `Ближайшее окончание пакета: ${resetLabel(c.next_expiry)}.` : 'Бонусные кредиты не сгорают.'}</p>
+      <p className="muted">Операционные ограничения: загрузок {remaining.uploads}, минут обработки {remaining.minutes}, выделений {remaining.selections} на сегодня.
+      {' '}Эти ограничения обновятся {resetLabel(remaining.resets_at)}. Кредиты автоматически не пополняются.</p>
+      <a className="button secondary" href="/upgrade?from=partner_dashboard">Выбрать пакет</a></section>;
+  }
   return <section className="limits-panel" aria-label="Остатки на сегодня"><h2>Осталось на сегодня</h2>
     <dl className="partner-counters">
       <div><dt>Загрузок</dt><dd>{remaining.uploads}</dd></div>

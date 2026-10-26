@@ -11,6 +11,10 @@ const date = (iso: string) => new Date(iso).toLocaleDateString('ru-RU', { day: '
 
 export function ReturnView({ state }: { state: ReturnState }) {
   switch (state.kind) {
+    case 'package': return <div data-state="package"><h1>Пакет {state.title} оплачен</h1>
+      <p role="status" className="notice">{state.credits} кредитов · {(state.credits/60).toLocaleString('ru-RU')} ч обычной записи.
+      {' '}{state.scheduled?'Начнётся':'Период'} {date(state.start)} — {date(state.end)}. {state.scheduled?'До начала периода эти кредиты недоступны.':'Платные функции действуют до конца этого окна.'}</p>
+      <a className="button" href="/dashboard">В кабинет</a></div>;
     case 'waiting': return <div data-state="waiting" aria-busy="true">
       <h1>Ждём подтверждения оплаты</h1>
       <p role="status">Банк подтверждает платёж. Обычно это несколько секунд. Проверка {Math.min(state.attempts + 1, RETURN_MAX_ATTEMPTS)} из {RETURN_MAX_ATTEMPTS}.</p>

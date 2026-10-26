@@ -10,7 +10,7 @@ export function getBillingDependencies(): BillingDependencies {
   return billingGlobal.n5Billing ??= (() => {
     const { pool, redis, auth, config, payments } = getRuntime();
     return createBillingDependencies({
-      pool, publicOrigin: config.publicOrigin, trustedProxyHops: config.trustedProxyHops, provider: payments,
+      pool,billingMode:config.billingMode, publicOrigin: config.publicOrigin, trustedProxyHops: config.trustedProxyHops, provider: payments,
       allowMutation: (ip, account) => allowMutation(redis, ip, config.sessionSecret, account),
       allowRead: (ip, account) => allowRead(redis, ip, config.sessionSecret, account),
       authenticate: (token) => auth.authenticate(token),

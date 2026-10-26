@@ -4,11 +4,13 @@
 // план и срок идут по НАСТОЯЩЕМУ SQL.
 import { applyVerifiedPayment, createPaymentIntent, markIntentCanceled, readPaymentIntent, recordVerifiedRefund,
   setIntentProviderPayment, type Pool } from '@clipmaker/db';
+import type { BillingMode } from '@clipmaker/shared/config';
 import type { BillingDependencies } from './billing-handler';
 import type { PaymentProvider } from './payments/provider';
 
 export interface BillingWiring {
   pool: Pool;
+  billingMode?: BillingMode;
   publicOrigin: string;
   trustedProxyHops: number;
   provider: PaymentProvider | null;
@@ -21,6 +23,8 @@ export interface BillingWiring {
 export function createBillingDependencies(w: BillingWiring): BillingDependencies {
   const { pool } = w;
   return {
+    billingMode:w.billingMode ?? 'legacy',
+    billingPolicy: async accountId => (await pool.query<{billing_policy:string}>(`SELECT billing_policy FROM account WHERE id=$1 AND status='active'`,[accountId])).rows[0]?.billing_policy ?? null,
     publicOrigin: w.publicOrigin, trustedProxyHops: w.trustedProxyHops, authenticate: w.authenticate,
     allowMutation: w.allowMutation, allowRead: w.allowRead, provider: w.provider, log: w.log,
     createIntent: (input) => createPaymentIntent(pool, input),
