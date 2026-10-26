@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { resetLabel } from '../../../lib/limits-contract';
+import { ANALYTICS_READY, observeClips } from '../../../lib/acquisition-analytics';
 import { rpc } from '../../../lib/rpc';
 import type { VideoScreen, ClipScreen } from '../../../lib/screen-contract';
 import { ribbonOf, STEP_STATE_TEXT, type RibbonStep, type StepView } from '../../../lib/progress-ribbon';
@@ -55,6 +56,11 @@ export function VideoDetail({ videoId, initialVideo, initialClips, initialPacks 
   const [error, setError] = useState<string | null>(null), [busy, setBusy] = useState(false);
   const [now, setNow] = useState(() => Date.now());
   const [guestPreselect, setGuestPreselect] = useState<GuestPreselect | null>(null);
+  useEffect(() => {
+    const observe = () => observeClips(clips);
+    observe(); window.addEventListener(ANALYTICS_READY, observe);
+    return () => window.removeEventListener(ANALYTICS_READY, observe);
+  }, [clips]);
   // «Гостю» on a card only marks the clip in the guest form; the form stays the one place where consent is given.
   const sendToGuest = consentHash ? (clipId: string) => setGuestPreselect(p => ({ clip_id: clipId, nonce: (p?.nonce ?? 0) + 1 })) : undefined;
   useEffect(() => {

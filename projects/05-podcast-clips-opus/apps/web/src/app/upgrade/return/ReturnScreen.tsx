@@ -3,6 +3,7 @@
 // AC-10): тексты N5, один тариф. Состояния — decideReturnState (lib/payment-return.ts): выполняется, успех,
 // оплачено-но-не-действует, отказ, не подтверждено за отведённое время, не найдено — у каждого СВОЙ блок с data-state
 // (long-running-job: два неразличимых на экране состояния — одно состояние). Опрос — GET /api/checkout/{intent_id}.
+import { observePayment } from '../../../lib/acquisition-analytics';
 import { useEffect, useState } from 'react';
 import { RETURN_FETCH_TIMEOUT_MS, RETURN_MAX_ATTEMPTS, RETURN_POLL_INTERVAL_MS, decideReturnState, type CheckoutSnapshot, type ReturnState } from '../../../lib/payment-return';
 
@@ -53,7 +54,11 @@ export function ReturnScreen({ intentId }: { intentId: string }) {
       try {
         const response = await fetch(`/api/checkout/${encodeURIComponent(intentId)}`, { cache: 'no-store', signal: AbortSignal.timeout(RETURN_FETCH_TIMEOUT_MS) });
         if (response.status === 404) snapshot = 'not_found';
-        else if (response.ok) snapshot = ((await response.json()) as { data?: CheckoutSnapshot }).data ?? null;
+        else if (response.ok) {
+          const raw = (await response.json()) as { data?: unknown };
+          if (!stopped) observePayment(intentId, raw.data);
+          snapshot = (raw.data as CheckoutSnapshot | undefined) ?? null;
+        }
       } catch { snapshot = null; /* сбой опроса — не отказ оплаты */ }
       if (stopped) return;
       attempts += 1;
