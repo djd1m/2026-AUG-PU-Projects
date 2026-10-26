@@ -5,7 +5,7 @@
 import { cookies } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
-import { readAccountBilling } from '@clipmaker/db';
+import { readAccountBilling,readCreditPurchaseWindows } from '@clipmaker/db';
 import { PAID_PLAN_DAYS, PAID_PLAN_TITLE, PAID_PRICE_MINOR, effectivePlan, formatRubles } from '@clipmaker/shared/tariff';
 import { readUpgradeFrom } from '../../lib/payment-return';
 import { getRuntime } from '../../server/runtime';
@@ -23,8 +23,9 @@ export default async function UpgradePage({ searchParams }: { searchParams: Prom
   if (!session) redirect(login);
   const billing = await readAccountBilling(pool, session.account_id);
   if (!billing) redirect(login);
+  const purchaseWindows=billing.billing_policy==='credits_v1' ? await readCreditPurchaseWindows(pool,session.account_id) : null;
   const plan = billing.effective_plan ?? effectivePlan(billing.plan, billing.plan_source, billing.plan_paid_until, new Date());
   return <><nav className="navigation"><Link className="brand" href="/dashboard"><span>◧</span> КлипМейкер</Link><Link href="/dashboard">Мои записи</Link><ThemeToggle initial={await requestTheme()} /></nav>
-    <main className="container"><UpgradeScreen creditMode={billing.billing_policy==='credits_v1'} salesEnabled={config.billingMode==='credits_v1'} title={PAID_PLAN_TITLE} price={formatRubles(PAID_PRICE_MINOR)} days={PAID_PLAN_DAYS}
+    <main className="container"><UpgradeScreen purchaseWindows={purchaseWindows ?? undefined} creditMode={billing.billing_policy==='credits_v1'} salesEnabled={config.billingMode==='credits_v1'} title={PAID_PLAN_TITLE} price={formatRubles(PAID_PRICE_MINOR)} days={PAID_PLAN_DAYS}
       paidMinutes={config.limits.N5_LIMIT_PAID_USER_MINUTES} current={{ plan, plan_source: billing.plan_source, plan_paid_until: billing.plan_paid_until }} /></main></>;
 }

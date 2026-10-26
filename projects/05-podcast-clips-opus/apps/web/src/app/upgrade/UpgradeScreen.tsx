@@ -5,10 +5,10 @@
 // Ключ повтора создаётся ОДИН раз на экран: двойной клик и повтор после сбоя попадают в то же намерение (long-running-job),
 // кнопка гаснет, пока запрос жив («третья копия» исключена).
 import { useState } from 'react';
-import { CREDIT_SKUS,formatRubles,type CreditSku } from '@clipmaker/shared/tariff';
+import { CREDIT_SKUS,formatRubles,type CreditSku,type CreditPurchaseWindows } from '@clipmaker/shared/tariff';
 
 export interface UpgradeCurrent { plan: 'free' | 'paid'; plan_source: string; plan_paid_until: string | null }
-export interface UpgradeProps { creditMode?: boolean; salesEnabled?: boolean; title: string; price: string; days: number; paidMinutes: number; current: UpgradeCurrent }
+export interface UpgradeProps { purchaseWindows?: CreditPurchaseWindows; creditMode?: boolean; salesEnabled?: boolean; title: string; price: string; days: number; paidMinutes: number; current: UpgradeCurrent }
 
 function newKey(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
@@ -51,7 +51,12 @@ export function UpgradeScreen(p: UpgradeProps) {
     {(Object.keys(CREDIT_SKUS) as CreditSku[]).map(sku=>{const offer=CREDIT_SKUS[sku];return <section key={sku} className="notice" aria-label={offer.title}>
       <h2>{offer.title}</h2><p><strong>{formatRubles(offer.priceMinor)}</strong> · {offer.credits} кредитов · {offer.hours} ч записи · 30 дней</p>
       <p>{offer.kind==='addon'?'Действует сразу после оплаты. Платные функции сохраняются все 30 дней, даже если кредиты закончились.':'Полная цена за следующий базовый период. Если оплаченного базового периода нет — действует с оплаты.'}</p>
-      <button disabled={busy || !p.salesEnabled} onClick={()=>void pay(sku)}>{busy?'Переходим к оплате…':offer.kind==='addon'?'Купить сейчас':`Купить ${offer.title} на следующий период`}</button></section>;})}
+      {p.purchaseWindows && <p data-state="prospective-period">При оплате сейчас: <time dateTime={offer.kind==='base'?p.purchaseWindows.baseStart:p.purchaseWindows.addonStart}>{date(offer.kind==='base'?p.purchaseWindows.baseStart:p.purchaseWindows.addonStart)}</time>
+        {' '}— <time dateTime={offer.kind==='base'?p.purchaseWindows.baseEnd:p.purchaseWindows.addonEnd}>{date(offer.kind==='base'?p.purchaseWindows.baseEnd:p.purchaseWindows.addonEnd)}</time>.
+        {offer.kind==='base' && p.purchaseWindows.scheduled && ' Начнётся позже, после уже оплаченных базовых периодов.'}</p>}
+      <button disabled={busy || !p.salesEnabled || !p.purchaseWindows} onClick={()=>void pay(sku)}>{busy?'Переходим к оплате…':offer.kind==='addon'?'Купить сейчас':`Купить ${offer.title} на следующий период`}</button></section>;})}
+    <p>Даты предварительные: другая покупка до подтверждения оплаты может сдвинуть базовый период, а время оплаты — начало дополнительного пакета. Итоговые даты покажем после подтверждения оплаты.</p>
+    {!p.purchaseWindows && <p role="status">Не удалось определить даты пакетов. Обновите страницу перед оплатой.</p>}
     <p>Во время оплаченного периода новые клипы без метки; хранение — до конца оплаченного окна и ещё 3 дня. Немедленный переход с зачётом прошлых покупок пока недоступен: доступны Про на следующий период и дополнительный пакет сейчас.</p>
     {!p.salesEnabled && <p role="status">Продажа новых пакетов временно выключена. Ранее приобретённые кредиты сохраняются.</p>}
     {error && <p role="alert">{error}</p>}<a className="button secondary" href="/dashboard">В кабинет</a></section>;

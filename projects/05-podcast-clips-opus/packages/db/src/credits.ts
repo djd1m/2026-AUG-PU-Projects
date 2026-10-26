@@ -1,6 +1,6 @@
 import type { Pool, PoolClient } from 'pg';
 import type { BillingMode } from '@clipmaker/shared/config';
-import { CREDIT_TRIAL_SECONDS, CREDIT_SKUS, inputCreditSeconds, type CreditSku } from '@clipmaker/shared/tariff';
+import { CREDIT_TRIAL_SECONDS, CREDIT_SKUS, inputCreditSeconds, type CreditSku, type CreditPurchaseWindows } from '@clipmaker/shared/tariff';
 import { transaction } from './quota.js';
 import { effectivePlanSql } from './plan.js';
 
@@ -103,13 +103,28 @@ export async function finalizeVideoCreditsTx(tx: PoolClient, videoId: string, no
 export async function fulfillCreditIntentTx(tx: PoolClient, input: { id: string; account_id: string; sku: CreditSku; grant_seconds: number }, now: Date): Promise<{ start: Date; end: Date }> {
   await creditAccountLock(tx,input.account_id);
   const sku=CREDIT_SKUS[input.sku];
-  const start=sku.kind==='addon' ? now : (await tx.query<{ start: Date }>(`SELECT GREATEST($2::timestamptz,
-    (SELECT max(entitlement_end) FROM credit_grant WHERE account_id=$1 AND base_sku IS NOT NULL),
-    (SELECT plan_paid_until FROM account WHERE id=$1 AND plan_source='payment')) AS start`,[input.account_id,now])).rows[0]!.start;
+  const start=sku.kind==='addon' ? now : await nextCreditBaseStart(tx,input.account_id,now);
   const end=new Date(start.getTime()+sku.days*86_400_000);
   await tx.query(`INSERT INTO credit_grant(account_id,source,source_key,total_seconds,remaining_seconds,available_at,expires_at,
     entitlement_start,entitlement_end,payment_ref,base_sku) VALUES($1,'payment',$2,$3,$3,$4,$5,$4,$5,$6,$7)`,
     [input.account_id,`intent:${input.id}`,input.grant_seconds,start,end,input.id,sku.kind==='base'?input.sku:null]);
   await tx.query('UPDATE payment_intent SET fulfilled_at=$2,period_start=$3,period_end=$4,status=\'succeeded\' WHERE id=$1',[input.id,now,start,end]);
   return {start,end};
+}
+
+// Read-only estimate and serialized fulfillment share the scheduling rule. Add-on
+// windows never postpone the next base; a concurrent purchase can change this estimate.
+async function nextCreditBaseStart(db: Pool | PoolClient, accountId: string, now: Date): Promise<Date> {
+  return (await db.query<{ start: Date }>(`SELECT GREATEST($2::timestamptz,
+    (SELECT max(entitlement_end) FROM credit_grant WHERE account_id=$1 AND base_sku IS NOT NULL),
+    (SELECT plan_paid_until FROM account WHERE id=$1 AND plan_source='payment')) AS start`,[accountId,now])).rows[0]!.start;
+}
+export async function readCreditPurchaseWindows(pool: Pool, accountId: string, now = new Date()): Promise<CreditPurchaseWindows | null> {
+  const active=await pool.query("SELECT id FROM account WHERE id=$1 AND status='active' AND billing_policy='credits_v1'",[accountId]);
+  if(!active.rowCount) return null;
+  const baseStart=await nextCreditBaseStart(pool,accountId,now);
+  return {asOf:now.toISOString(),baseStart:baseStart.toISOString(),
+    baseEnd:new Date(baseStart.getTime()+CREDIT_SKUS.start_v1.days*86_400_000).toISOString(),
+    addonStart:now.toISOString(),addonEnd:new Date(now.getTime()+CREDIT_SKUS.addon_v1.days*86_400_000).toISOString(),
+    scheduled:baseStart.getTime()>now.getTime()};
 }

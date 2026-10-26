@@ -17,6 +17,9 @@ export const CREDIT_SKUS = Object.freeze({
   addon_v1: Object.freeze({ title: 'Дополнительный пакет', priceMinor: 149_000, seconds: 36_000, credits: 600, hours: 10, days: 30, kind: 'addon' as const }),
 });
 export type CreditSku = keyof typeof CREDIT_SKUS;
+export interface CreditPurchaseWindows {
+  asOf: string; baseStart: string; baseEnd: string; addonStart: string; addonEnd: string; scheduled: boolean;
+}
 export const isCreditSku = (sku: unknown): sku is CreditSku => typeof sku === 'string' && Object.hasOwn(CREDIT_SKUS, sku);
 export function inputCreditSeconds(duration: number): number {
   if (!Number.isFinite(duration) || duration <= 0 || duration > 5400) throw new Error('Непригодная длительность');

@@ -289,4 +289,23 @@ describe.skipIf(!url)('credit packages on isolated PostgreSQL',()=>{
     expect((await pool.query('SELECT count(*)::int n FROM credit_grant g JOIN account a ON a.id=g.account_id WHERE a.email=$1',[first])).rows[0].n).toBe(1);
   });
 
+  it('multiple committed future base periods show server-derived prospective dates before payment and exclude addon windows',async()=>{
+    const {readCreditPurchaseWindows}=await import('../packages/db/src/credits');
+    const {createElement}=await import('react');const {renderToStaticMarkup}=await import('react-dom/server');
+    const {UpgradeScreen}=await import('../apps/web/src/app/upgrade/UpgradeScreen');
+    const id=await account();
+    for(const sku of ['start_v1','pro_v1','pro_v1'] as const){const purchase=await buy(id,sku);await applyVerifiedPayment(pool,purchase.p);}
+    const windows=await readCreditPurchaseWindows(pool,id,now);
+    expect(windows).toEqual({asOf:'2030-01-01T00:00:00.000Z',baseStart:'2030-04-01T00:00:00.000Z',baseEnd:'2030-05-01T00:00:00.000Z',addonStart:'2030-01-01T00:00:00.000Z',addonEnd:'2030-01-31T00:00:00.000Z',scheduled:true});
+    const html=renderToStaticMarkup(createElement(UpgradeScreen,{purchaseWindows:windows!,creditMode:true,salesEnabled:true,title:'Pro',price:'990 ₽',days:30,paidMinutes:270,current:{plan:'free',plan_source:'none',plan_paid_until:null}}));
+    expect(html.match(/dateTime="2030-04-01T00:00:00.000Z"/g)).toHaveLength(2);
+    expect(html.match(/dateTime="2030-05-01T00:00:00.000Z"/g)).toHaveLength(2);
+    expect(html).toContain('1 апреля 2030');expect(html).toContain('1 мая 2030');
+    expect(html).toContain('Начнётся позже');expect(html).toContain('Даты предварительные');expect(html).toContain('Итоговые даты покажем после подтверждения оплаты');
+    const addonOnly=await account(),addon=await buy(addonOnly,'addon_v1');await applyVerifiedPayment(pool,addon.p);
+    expect(await readCreditPurchaseWindows(pool,addonOnly,now)).toMatchObject({baseStart:now.toISOString(),scheduled:false});
+    await pool.query("UPDATE account SET plan='paid',plan_source='payment',plan_paid_until='2030-02-15T00:00:00Z' WHERE id=$1",[addonOnly]);
+    expect(await readCreditPurchaseWindows(pool,addonOnly,now)).toMatchObject({baseStart:'2030-02-15T00:00:00.000Z',baseEnd:'2030-03-17T00:00:00.000Z',scheduled:true});
+  });
+
 });
