@@ -21,8 +21,8 @@ afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); });
 describe('Cloud.ru configuration boundary', () => {
   it('resolves selected provider and rejects invalid configuration before HTTP', () => {
     expect(config()).toMatchObject({ provider: 'cloudru', model, apiKey: 'synthetic-fm-key' });
-    expect(loadLlmConfig(environment()).provider).toBe('openrouter');
-    expect(loadSttConfig(environment()).provider).toBe('openrouter');
+    expect(loadLlmConfig({ ...environment(), N5_LLM_PROVIDER: undefined }).provider).toBe('openrouter');
+    expect(loadSttConfig({ ...environment(), N5_STT_PROVIDER: undefined }).provider).toBe('openrouter');
     expect(loadSttConfig({ ...environment(), N5_MODEL_PROVIDER: 'live', CLOUDRU_FM_API_KEY: undefined }).apiKey).toBe('unused-test-key');
   });
   it('invalid selector, wrong model and missing selected key fail without substituting credentials', () => {
