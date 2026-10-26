@@ -1,0 +1,89 @@
+{
+  "candidate": "5b306f1646efb75494b67da1e0f234c3c94e2790",
+  "build": "uLxK8pbNbskoqHNaI5loo",
+  "changed_file_hashes": {
+    "projects/05-podcast-clips-opus/.env.example": "9479962300cc5bc0879ab519c82f30eac73717de82c1a1e02653a4935023698f",
+    "projects/05-podcast-clips-opus/apps/web/src/app/Landing.tsx": "20d74d3cfa4f289f55757d10dcab366d9e9f5a66e9cb056e4e68e100a6aa8c8b",
+    "projects/05-podcast-clips-opus/apps/web/src/app/clips/ClipCard.tsx": "66b05025970cc8574a28a548df404689e4b4ddac6e7c629c43bf3024bd868098",
+    "projects/05-podcast-clips-opus/apps/web/src/app/dashboard/LimitsPanel.tsx": "79ec900a4dddcce43c11de27085f442f70cee8e0b9943cae3a161a334842dc18",
+    "projects/05-podcast-clips-opus/apps/web/src/app/dashboard/ProInterest.tsx": "18ad9c8eec45d5314ce6d2e93005990d4420b43e8ef224911e45ef82686dc6f0",
+    "projects/05-podcast-clips-opus/apps/web/src/app/dashboard/page.tsx": "7f2c7151c4a2e3c1708b6f78bda717fad654fb6bab263dc0d602b6ab9fb9236e",
+    "projects/05-podcast-clips-opus/apps/web/src/app/dashboard/videos/[videoId]/page.tsx": "de1ae96777509837579071af0505aeb75d6672c54797b3c7f6210c486b3dc2c3",
+    "projects/05-podcast-clips-opus/apps/web/src/app/g/[guest_code]/route.ts": "302b0d1e5ef73887c53c52f7f31a26b6a027174fc00da8389cea807f16d36d7f",
+    "projects/05-podcast-clips-opus/apps/web/src/app/page.tsx": "2e8485f47b56a77acb7271becac92b187194005561064d6278f5e9a06050481a",
+    "projects/05-podcast-clips-opus/apps/web/src/app/upgrade/UpgradeScreen.tsx": "00c511a095ce773fae4ff4907e42f695233ae14b27bd048ae9f2ca5a778bfff7",
+    "projects/05-podcast-clips-opus/apps/web/src/app/upgrade/page.tsx": "b8d9f2848638f2570ede171ccbcb998349ae111877cd6a2f67f2a937ae7328b1",
+    "projects/05-podcast-clips-opus/apps/web/src/app/upgrade/return/ReturnScreen.tsx": "45315b8c1687e852dbe5b2978cba780ab7f72b1d7e32c055dd99d4ed3340c109",
+    "projects/05-podcast-clips-opus/apps/web/src/app/upload/Uploader.tsx": "d9c0de858c01a63fbc1f419c11e3c213e0ae4545f781b518e24b2d4fc1465d34",
+    "projects/05-podcast-clips-opus/apps/web/src/app/videos/[videoId]/VideoDetail.tsx": "8ebd525ede21ce29a210dcb806f339ebffda5999f04b11f14ac95dff2a884723",
+    "projects/05-podcast-clips-opus/apps/web/src/lib/limits-contract.ts": "f5dd2fe70b8106bafd0269e2f448652e760fadbd2c4839e62333ada7af7b6201",
+    "projects/05-podcast-clips-opus/apps/web/src/lib/payment-return.ts": "5c9bf31bd3918e0c08d1d0bd0c9d35b7041993faf355265aa571d531d9223268",
+    "projects/05-podcast-clips-opus/apps/web/src/lib/screen-contract.ts": "5e104855ad7cb25bb4f56ff1ea88a6dfb1eec2340dcea42dd20abe91e122c746",
+    "projects/05-podcast-clips-opus/apps/web/src/server/auth-store.ts": "84744406a808cefddf657f7a1be607517888e5ae7ecd85743e2c5b86e0821d8f",
+    "projects/05-podcast-clips-opus/apps/web/src/server/billing-deps.ts": "21d0491af11a30fb21498d2fef9d7a962dff6363784a2e0345733e710ed8e2c6",
+    "projects/05-podcast-clips-opus/apps/web/src/server/billing-handler.ts": "8ebcfe23ad4e69e086fe451a7ab6ad7696da4c07b0ceb15b6e1de3b9dcb075f3",
+    "projects/05-podcast-clips-opus/apps/web/src/server/billing-runtime.ts": "afd263c98c21a8fbd67dbcd6a0aab3dc9d2fcb17bbde4eb8808cca9827fd4193",
+    "projects/05-podcast-clips-opus/apps/web/src/server/environment.ts": "5bcc90e371700dc17aa5173a10e7069f42deabcf9470fe6fc1aaf15e36c4b609",
+    "projects/05-podcast-clips-opus/apps/web/src/server/guest-page.ts": "702fcb94ac738effed05a58fa6368670023794b3dd172dc2018d3cf6339eac36",
+    "projects/05-podcast-clips-opus/apps/web/src/server/limits.ts": "be7c3f2d6e0867fbc8583e957443a4ec4f8edb3b0ed4d334a424d67f72714de4",
+    "projects/05-podcast-clips-opus/apps/web/src/server/retention.ts": "89f1fadda1893e7f9a8750c1c4b97097c45c3313c9868af76b9208f6fd543d7f",
+    "projects/05-podcast-clips-opus/apps/web/src/server/runtime.ts": "7fb83c668529c90d2543492658647e30942458de989fa7ed823d98ce8c690bfb",
+    "projects/05-podcast-clips-opus/apps/web/src/server/screen.ts": "94d45a23144e22663319c9eb19c1c35c362e5de90edc8d861e71f19cfca2ab87",
+    "projects/05-podcast-clips-opus/apps/web/src/server/video-retry.ts": "877a14356712af4f6e312b0e3ed9d831f1ee19f9de5bc9564d7008dc7c74d977",
+    "projects/05-podcast-clips-opus/apps/web/src/server/watchdog.ts": "654ec86dd88a33db30f1be7a836adc22f92b8d03e4f69af8ef9e4493c4f390a2",
+    "projects/05-podcast-clips-opus/apps/worker/src/retry.ts": "6c14eb3460ffdb9a5128e40d5f2917e8e0080ea4eb5b18295507852fdceb1bb1",
+    "projects/05-podcast-clips-opus/apps/worker/workers/render.ts": "9038bc39da29e31f56be59e524eb2b080029c66b104132dded73018155955590",
+    "projects/05-podcast-clips-opus/apps/worker/workers/select.ts": "1ed280150550a858928cfad9d38cbe86cbe21c6791c9cc3d3254901f8c7f7aaa",
+    "projects/05-podcast-clips-opus/apps/worker/workers/stt.ts": "60a5916c1611a32e962245aec30946ca05b758ffbac82307b2b8cce1122f933b",
+    "projects/05-podcast-clips-opus/docker-compose.yml": "c3522ab8624a8eb6c2dcd3204d1c41a6c331df8fe6ce050afa59c15e0cd6c768",
+    "projects/05-podcast-clips-opus/docs/features/credit-packages/05_completion.md": "f04a85552542288b84596adf692c2edf3c39ae081973e0d70d9da91c6625e38c",
+    "projects/05-podcast-clips-opus/packages/db/migrations/022_credit_packages.sql": "60896c2ab95d9c882bc1ec02d86ef162937fdc57c1a152c3f0b9f8de2d49a786",
+    "projects/05-podcast-clips-opus/packages/db/src/credits.ts": "8c474393178685c4b617911d5331ad86568fe07f8e4fa97656b5c25dec2f2e35",
+    "projects/05-podcast-clips-opus/packages/db/src/index.ts": "8892af6b647cb742efa49b29c43f8edbc2792c6bd839b284fc0921858b0e1fef",
+    "projects/05-podcast-clips-opus/packages/db/src/payments.ts": "4c9ee8bd52a84e5b31007bd0426d7d2649fe3d549f8246921100597aa6a3354c",
+    "projects/05-podcast-clips-opus/packages/db/src/plan.ts": "1b05e11aff36b1be2d504eddec5db854ec9915e4aa1c4bc9aca824e19982ad24",
+    "projects/05-podcast-clips-opus/packages/db/src/probe.ts": "176d389a806542d34e93e57a873bf3f513c5f0cd4246947015466ba7e595f757",
+    "projects/05-podcast-clips-opus/packages/db/src/render.ts": "9c4c5cf8f31887188f46f8412e1aeab2b184bbbf2173e29baffc0438863bd5a5",
+    "projects/05-podcast-clips-opus/packages/db/src/selection.ts": "a3d57395186256d8e6581df946a3c0f06f2e2043a36e62db91b6b2faad24adab",
+    "projects/05-podcast-clips-opus/packages/db/src/transcription.ts": "d8e13db5b83685deccfcdb816dfdd01b88bc225a7ac5e368bd41d8c3817512ed",
+    "projects/05-podcast-clips-opus/packages/shared/src/config.ts": "f6a27c24d0be3f1a8d69d5ee5b8ff9e7c4f7170c17425bc1d3f9f21d2533fad7",
+    "projects/05-podcast-clips-opus/packages/shared/src/enums.ts": "4c08116a566d7b1713c5b16ce741848c77064406bff71af63b69012d437f403e",
+    "projects/05-podcast-clips-opus/packages/shared/src/tariff.ts": "9b35dcf59994ef4596d0fc7229b9e1a4d7646ba6791436f4492f49039d8385fb",
+    "projects/05-podcast-clips-opus/scripts/test-credit-mutations.mjs": "0311d7a05373210d65f06d4c5f537ac58401efc07c3002077a2ffd6b616a8f49",
+    "projects/05-podcast-clips-opus/tests/billing.unit.test.ts": "78d6b792a6168dbcee9d2728e9ebac3d7727e121576ea0f50a1308c1a4e238bd",
+    "projects/05-podcast-clips-opus/tests/credit-packages-ui.test.ts": "b033d57d2d84f583dab4b9ff647c4ea6cf4272fc232eef9a03dc6aded7b7e078",
+    "projects/05-podcast-clips-opus/tests/credit-packages.integration.test.ts": "5a94fbbc93ec56226824c00b785e3f1cc79ee576ece2a05fc0b14ddd8686084e",
+    "projects/05-podcast-clips-opus/tests/database.integration.test.ts": "fa4b351b4892135d13603cad809b4380715ce096b7747a8d97f2c72e15273950",
+    "projects/05-podcast-clips-opus/tests/fixtures/environment.ts": "c3984aad9711f6fca4ed4b028ad40834985be13665b9616f9e9ef2614d6a4b53"
+  },
+  "checks": {
+    "fix2_credit_fullsuite": {
+      "exit_code": 0,
+      "elapsed_seconds": 405.807,
+      "log_sha256": "c230d4238f18c7373aad655fa79497e1fb8593ed46af43f1cd619a723004f00e"
+    },
+    "fix2_credit_build": {
+      "exit_code": 0,
+      "elapsed_seconds": 45.017,
+      "log_sha256": "be5ac67545d329fff12233cfad19bd03c73193b9c5b39a3a97cae62d1cab8453"
+    },
+    "fix2_credit_typecheck": {
+      "exit_code": 0,
+      "elapsed_seconds": 32.756,
+      "log_sha256": "1b4b658aae5b9ff1fab2830785a99fb6149f6727dcfc8485f493c745a36ffc13"
+    },
+    "fix2_credit_mutations": {
+      "exit_code": 0,
+      "elapsed_seconds": 106.907,
+      "log_sha256": "dea912ff78dc6f34db59e75fb32465096e50adceaa0679456938fa6aec20b664"
+    },
+    "fix2_credit_multiperiod": {
+      "exit_code": 0,
+      "elapsed_seconds": 14.4,
+      "log_sha256": "00ac7a463324b2e401ca8e207813ad7e2552a4befd101c52b2f19f8f43076044"
+    }
+  },
+  "known_private_matches": 0,
+  "maximum_new_file_lines": "all below500",
+  "root_verification": "regular terminal receipts and unchanged clean frozen source"
+}

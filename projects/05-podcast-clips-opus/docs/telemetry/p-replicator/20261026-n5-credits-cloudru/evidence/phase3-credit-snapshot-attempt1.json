@@ -1,0 +1,8 @@
+{
+  "result": "snapshot preparation failed before native checker",
+  "cause": "adapter scanned historical planned table as well as actual coverage; rejected non-test path",
+  "native_checker_executed": false,
+  "combined_shell_exit_code": 0,
+  "combined_shell_exit_not_gate_result": true,
+  "correction": "read only exact Criterion coverage section; unchanged official checker"
+}
