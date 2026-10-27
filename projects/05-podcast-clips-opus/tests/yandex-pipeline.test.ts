@@ -41,7 +41,7 @@ it('offline >180s synthetic speech: pause-aware MP3 chunks → Yandex actual fie
         rpcCount++;
         const call = new EventEmitter() as ClientDuplexStream<object, unknown>;
         call.write = () => true; call.cancel = vi.fn();
-        call.end = (() => { queueMicrotask(() => {
+        call.end = (() => { call.emit('finish'); queueMicrotask(() => {
           call.emit('data', { Event: 'final', channel_tag: '0', audio_cursors: { final_index: '0' }, final: { alternatives: [{
             text: `Реальный контекст чанка ${chunk.index}`, start_time_ms: String(Math.round((words[0]!.start - chunk.offsetSeconds) * 1000)),
             end_time_ms: String(Math.round((words.at(-1)!.end - chunk.offsetSeconds) * 1000)), languages: [],

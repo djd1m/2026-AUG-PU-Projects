@@ -94,9 +94,11 @@ export function createYandexTranscriber(apiKey: string, open: YandexConnect = co
     return await new Promise<TranscriptResult>((resolve, reject) => {
       const finals = new YandexFinals();
       let settled = false, cancelled = false, ended = false, succeeded = false;
+      let inputComplete = false;
       const cancel = () => { if (!cancelled) { cancelled = true; call.cancel(); } };
       const finish = (error?: unknown) => {
         if (settled) return;
+        if (!error && !inputComplete) error = new ProviderError(false, 'provider_error');
         let result: TranscriptResult | undefined;
         if (!error) { try { result = finals.finish(duration); } catch (cause) { error = cause; } }
         settled = true;
@@ -110,11 +112,14 @@ export function createYandexTranscriber(apiKey: string, open: YandexConnect = co
       signal.addEventListener('abort', abort, { once: true });
       call.on('error', (error: { code?: number }) => finish(transportError(error.code)));
       call.on('data', value => { if (!settled) { try { finals.add(value); } catch (error) { finish(error); } } });
-      call.on('end', () => { ended = true; if (succeeded) finish(); });
+      // Writable finish follows grpc-js _final/halfClose after queued writes.
+      call.on('finish', () => { inputComplete = true; });
+      const complete = () => { if (ended && succeeded) finish(); };
+      call.on('end', () => { ended = true; complete(); });
       call.on('status', result => {
         if (settled) return;
         if (result.code !== status.OK) finish(transportError(result.code));
-        else { succeeded = true; if (ended) finish(); }
+        else { succeeded = true; complete(); }
       });
       if (signal.aborted) { abort(); return; }
       // A drain listener continues the same bounded upload; no queue of writes.

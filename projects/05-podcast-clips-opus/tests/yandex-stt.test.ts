@@ -11,7 +11,7 @@ import { loadLlmConfig, loadSttConfig } from '../packages/shared/src/config';
 import { createTranscriber } from '../apps/worker/src/stt/client';
 import { environment } from './fixtures/environment';
 const golden = JSON.parse(readFileSync('tests/fixtures/yandex-official-golden.json', 'utf8')) as {
-  method_path: string; request_hex: string; responses: { event?: string; hex: string }[];
+  method_path: string; request_hex: string; audio_chunk_golden: { data_hex: string; request_hex: string }; responses: { event?: string; hex: string }[];
 };
 const frames = () => golden.responses.map(frame => yandexMethod.responseDeserialize(Buffer.from(frame.hex, 'hex')));
 const final = () => structuredClone(frames().find(value => (value as { Event: string }).Event === 'final')) as Record<string, unknown>;
@@ -19,7 +19,7 @@ class Rpc extends EventEmitter {
   writes: object[] = [];
   cancel = vi.fn();
   write = vi.fn((data: object) => { this.writes.push(data); return true; });
-  end = vi.fn();
+  end = vi.fn(() => { this.emit('finish'); });
 }
 let directory: string, path: string;
 beforeEach(async () => { directory = await mkdtemp(join(tmpdir(), 'n5-yandex-')); path = join(directory, 'audio.mp3'); await writeFile(path, 'actual mp3 bytes'); });
@@ -41,6 +41,10 @@ describe('Yandex official protocol and strict finals', () => {
     expect(YANDEX_HOST).toBe('stt.api.cloud.yandex.net:443');
     expect(yandexMethod.path).toBe(golden.method_path); expect(YANDEX_METHOD).toBe(golden.method_path);
     expect(yandexMethod.requestSerialize(yandexSession).toString('hex')).toBe(golden.request_hex);
+    expect(yandexMethod.requestSerialize({ chunk: { data: Buffer.from(golden.audio_chunk_golden.data_hex, 'hex') } }).toString('hex')).toBe(golden.audio_chunk_golden.request_hex);
+    const indices = frames().filter(value => (value as { Event?: string }).Event === 'final')
+      .map(value => (value as { audio_cursors: { final_index: string } }).audio_cursors.final_index);
+    expect(indices).toEqual(['0', '1']);
     const collector = new YandexFinals(); frames().forEach(frame => collector.add(frame));
     const result = collector.finish(6);
     expect(result.language).toBe('ru'); expect(result.words).toHaveLength(10); expect(result.segments).toHaveLength(2);
@@ -138,6 +142,21 @@ describe('Yandex one-call transport lifecycle', () => {
     h.call.emit('status', { code: status.OK }); expect((await promise).words).toHaveLength(10);
     expect(h.close).toHaveBeenCalledOnce(); expect(h.call.cancel).not.toHaveBeenCalled();
   });
+  it.each(['options', 'audio', 'half-close'])('refuses remote success before producer half-close during %s backpressure', async phase => {
+    const h = harness(); h.call.write.mockImplementation(data => {
+      h.call.writes.push(data); return phase === 'options' ? false : phase === 'audio' ? !('chunk' in data) : true;
+    });
+    if (phase === 'half-close') h.call.end.mockImplementation(() => {});
+    const { promise } = await started(h);
+    const rejected = expect(promise).rejects.toMatchObject({ retryable: false, outcome: 'provider_error' });
+    if (phase === 'half-close') expect(h.call.end).toHaveBeenCalledOnce(); else expect(h.call.end).not.toHaveBeenCalled();
+    h.success(); await rejected;
+    const writes = h.call.writes.length;
+    h.call.emit('drain'); h.success();
+    if (phase === 'half-close') expect(h.call.end).toHaveBeenCalledOnce(); else expect(h.call.end).not.toHaveBeenCalled();
+    expect(h.call.writes).toHaveLength(writes);
+    expect(h.call.cancel).toHaveBeenCalledOnce(); expect(h.close).toHaveBeenCalledOnce();
+  });
   it('honors write backpressure before half-close', async () => {
     const h = harness(); h.call.write.mockImplementationOnce(data => { h.call.writes.push(data); return false; });
     const { promise } = await started(h); expect(h.call.end).not.toHaveBeenCalled(); expect(h.call.writes).toHaveLength(1);
@@ -193,4 +212,11 @@ it('pins TLS credentials and disables transparent gRPC retries in shipped transp
   const source = readFileSync('apps/worker/src/stt/yandex.ts', 'utf8');
   expect(source).toContain('new Client(YANDEX_HOST, credentials.createSsl()');
   expect(source).toContain("'grpc.enable_retries': 0");
+});
+
+it('keeps live qualification partial without claiming completed migration', () => {
+  const current = readFileSync('docs/features/cloudru-provider-foundation/05_completion.md', 'utf8').split('# v1 historical')[0]!;
+  expect(current).toContain('PARTIAL');
+  expect(current).toContain('does not claim natural Russian speech quality');
+  expect(current).toContain('or completed migration');
 });

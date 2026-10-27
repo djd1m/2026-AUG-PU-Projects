@@ -1,12 +1,34 @@
 # Cloud.ru provider foundation — Completion
 
-Status: **v4 IMPLEMENTATION CHECKED; independent review pending**, 2026-10-27. Frozen Specification SHA256 `e1afae2ceaddef35d421700ad75b7e256f407e40bebeea0782b997d10690c16e`; implementation input `3c51e71e9cffd2f636864fb6513058907984c1c4`. Native lifecycle gates, independent cold review and source integration remain coordinator-owned. Historical v1 receipts below remain unchanged and are not v4 evidence.
+Status: **v4 CORRECTION IMPLEMENTED; final verdict in source-bound terminal receipt**, 2026-10-27. Frozen Specification SHA256 `e1afae2ceaddef35d421700ad75b7e256f407e40bebeea0782b997d10690c16e`; implementation input `3c51e71e9cffd2f636864fb6513058907984c1c4`. Native lifecycle gates, independent cold review and source integration remain coordinator-owned. Historical v1 receipt body is preserved below as archived data; its coverage header is explicitly demoted so only v4 has an active canonical table. It is not v4 evidence.
+
+## Cold-review correction 1 (2026-10-27)
+
+Bounded correction input: `a826387db43d50f1703a8233f94714a6853dc1a8`; frozen Specification hash remains unchanged. Successful remote status/readable end now requires producer Writable `finish`, which grpc-js emits after `_final` half-closes the RPC and all queued audio writes complete. Remote success during options/audio backpressure or before writable finish fails, cancels once and cannot accept late events. The independent full-official-schema fixture adds the three-byte audio frame; tests explicitly assert final indices 0 and 1. The canonical table below has all nine v4 criteria; the v1 table is an explicitly archived historical record.
+
+This pass uses fresh `yandex-fix1-*` receipts under `/tmp/n5-acquisition-analytics-20261026-plan/checks/`. Final source/check/commit binding and verdict are in `/tmp/n5-yandex-stt-fix-review1-trace-20261027.md`. The prior implementation results below describe the earlier attempt and do not substitute for correction checks or independent review. The correction performs no paid call, production change or full-migration acceptance.
+
+## Criterion coverage
+
+One active canonical v4 table. These rows name existing executable tests; AC-9 checks honest partial qualification, not completed live migration. Historical v1 coverage below is archived data.
+
+| Criterion | Test file | Test title |
+|---|---|---|
+| AC-cloudru-provider-foundation-1 | tests/yandex-stt.test.ts | keeps independent closed selectors and selected-key-only live requirements |
+| AC-cloudru-provider-foundation-2 | tests/yandex-stt.test.ts | interoperates with independently complete official-schema golden including zero final index |
+| AC-cloudru-provider-foundation-3 | tests/cloudru-provider.test.ts | sends documented Cloud.ru JSON-object request with prompt schema |
+| AC-cloudru-provider-foundation-4 | tests/cloudru-provider.test.ts | rejects invalid Cloud.ru output without repair or provider fallback |
+| AC-cloudru-provider-foundation-5 | tests/selection.integration.test.ts | records actual provider before one exclusively claimed dispatch |
+| AC-cloudru-provider-foundation-6 | tests/s3-public-endpoint.test.ts | signs Cloud.ru configuration offline with compound credentials |
+| AC-cloudru-provider-foundation-7 | tests/transcription.integration.test.ts | actual %s attribution is committed and fsynced before exclusive dispatch |
+| AC-cloudru-provider-foundation-8 | tests/yandex-stt.test.ts | refuses remote success before producer half-close during %s backpressure |
+| AC-cloudru-provider-foundation-9 | tests/yandex-stt.test.ts | keeps live qualification partial without claiming completed migration |
 
 ## v4 implementation and executable coverage
 
 Explicit `yandex` selects one TLS SpeechKit v3 streaming RPC with fixed `general`, MP3, FULL_DATA, WHITELIST ru-RU and normalization disabled. OpenRouter remains the default; Cloud.ru STT retains its exact startup refusal. The new key is projected only to worker-stt. No customer-credit engine, shared parser/chunker/merge, SQL schema, LLM or S3 production logic changed.
 
-| Criterion | Executable evidence | Current result |
+| Criterion | Executable evidence | Prior implementation result |
 |---|---|---|
 | AC-cloudru-provider-foundation-1 | `tests/yandex-stt.test.ts`: independent selectors/selected keys/fake; `tests/cloudru-provider.test.ts`: actual entrypoint and synthetic compose isolation, existing Cloud refusal | Focused pass |
 | AC-cloudru-provider-foundation-2 | `tests/yandex-stt.test.ts`: full-official-schema golden, actual words/phrases, index zero, dedup/conflicts, strict safe signed int64/shape/context/language checks, mixed silence and all-empty rejection | Focused pass |
@@ -18,7 +40,7 @@ Explicit `yandex` selects one TLS SpeechKit v3 streaming RPC with fixed `general
 | AC-cloudru-provider-foundation-8 | `tests/yandex-input.test.ts`: separate stat/read guards; `tests/yandex-stt.test.ts`: exact 10MB/300s, complete status/deadline/cancel/backpressure; `tests/yandex-pipeline.test.ts`: real 220s speech MP3 extraction/chunk/merge/segment selection/word snap/chronological subtitles/FFmpeg render | Focused offline pipeline pass |
 | AC-cloudru-provider-foundation-9 | Root's separately supplied short actual protocol receipt; implementation makes no live call | PARTIAL; natural quality and target/browser/storage qualification remain coordinator-owned |
 
-The independent golden is `tests/fixtures/yandex-official-golden.json`, SHA256 `8d7a2f539e0eff0fc881b516f25deb78cc9ea971aa84313094b21c99f1005314`. It was re-encoded with the complete pinned official schema, not this projection and not original network frames. The embedded descriptor ships inside compiled JS and passes a smoke test under Docker's `dist/apps/worker/src/stt/` layout; no new build asset path is needed. Dependencies are exactly @grpc/grpc-js 1.14.6 and @grpc/proto-loader 0.8.1.
+The independent golden is `tests/fixtures/yandex-official-golden.json`. Its original session/response bytes (original fixture SHA256 `8d7a2f539e0eff0fc881b516f25deb78cc9ea971aa84313094b21c99f1005314`) are preserved; the correction adds independently full-schema encoded audio bytes `007fff` → request frame `12050a03007fff`. Tests assert both audio field numbers and exact decoded final indices `[0,1]`. It was re-encoded with the complete pinned official schema, not this projection and not original network frames. The embedded descriptor ships inside compiled JS and passes a smoke test under Docker's `dist/apps/worker/src/stt/` layout; no new build asset path is needed. Dependencies are exactly @grpc/grpc-js 1.14.6 and @grpc/proto-loader 0.8.1.
 
 The small own synthetic Russian fixture is `tests/fixtures/yandex-synthetic-ru.mp3`, SHA256 `4970a2d1ac36b3e304ff392a8e77786011a6ea3376ea6c748544c396d59f7c4f`; provenance is adjacent. Its repeated speech plus an inserted pause drives the offline 220-second media test. Injected word fields prove integration, not recognition quality.
 
@@ -55,7 +77,7 @@ Profile: model-routing-econom. Requested implementation model/effort: gpt-6.1-so
 
 Status: FOUNDATION CODE ACCEPTED by coordinator after independent review and required local checks. Foundation success does not complete full Cloud.ru migration. All paths are project-relative unless noted. No live provider calls or deployment were performed.
 
-## Criterion coverage
+## ARCHIVE — v1 criterion coverage (historical data; inactive)
 
 The planned titles below are implemented verbatim. Focused and full isolated tests pass; the coordinator owns the scoped native Phase 3 completion gate and independent review. Source-bound implementation evidence is summarized below.
 
