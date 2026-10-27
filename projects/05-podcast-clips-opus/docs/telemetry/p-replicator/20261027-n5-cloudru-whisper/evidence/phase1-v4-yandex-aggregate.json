@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-27T22:45:15.862374+00:00",
+  "command": [
+    "bash",
+    "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+    "/tmp/n5-acquisition-analytics-20261026/projects/05-podcast-clips-opus",
+    "--traceability",
+    "--role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/commands/feature.md",
+    "--project-role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/skills/sparc-prd-mini/SKILL.md"
+  ],
+  "source_head": "0e37bcb99653bf347950f1f4d04a73c83a9db610",
+  "checker_sha256": "06e3dae22c533a81732b9870ae42d6b80b6e8419b3c90e11e1910e2a46888be8",
+  "exit_code": 1,
+  "scope": "entire actual N5; legacy gaps not converted to pass",
+  "historical_scope_exception": "continued selected cloudru-provider-foundation scope separately checked"
+}

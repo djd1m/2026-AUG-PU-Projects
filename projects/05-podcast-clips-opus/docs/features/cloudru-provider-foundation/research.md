@@ -1,5 +1,13 @@
 # Cloud.ru foundation — Research and decisions
 
+Historical research snapshot from 2026-10-26. Subsequent implementation and
+the [v4 specification](01_specification.md) supersede the runtime/scope statements
+below: Cloud.ru DeepSeek/S3 foundation is implemented; explicit Yandex SpeechKit
+v3 STT is the selected next adapter, while Cloud.ru STT remains refused. The
+current estimated variable-cost budget is 57 RUB/hour (stress 62), not the old
+35 RUB/hour scenario; see [current economics](../../research/unit-economics-20261026/unit-economics-summary.md).
+Original findings and earlier gate limitations remain below as dated history.
+
 Checked 2026-10-26 against baseline `c559673649460fa5d8ef1e5e3c86bf7053ebbb69`. Earlier bounded research artifact: `/tmp/n5-cloudru-plan-20261026.md`, SHA256 `afb591fc2efcd420f9b6b3d136ecaa8943b6de86f7cc0f1d3f709c7b22a40f36`. This file preserves the feature-relevant conclusions; temporary artifact is not a runtime dependency.
 
 ## Product Brief and solution
