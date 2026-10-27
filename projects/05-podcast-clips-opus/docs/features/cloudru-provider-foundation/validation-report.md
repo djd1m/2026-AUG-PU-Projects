@@ -1,203 +1,202 @@
 # Requirements Testability Analysis
-Spec revision: sha256:4a7c7594632d791d694fb632c3f1dabd0f2363f3490ecb96a4ac38f643fe5459
+Spec revision: sha256:e1afae2ceaddef35d421700ad75b7e256f407e40bebeea0782b997d10690c16e
 
-Verdict: READY
-Profile: L; Phase 2 VALIDATE, full plan review only.
-Source HEAD: 9ba7a6fa19a3e8abee24eb4b10cbff4b8dea71e5
-Implementation baseline: c559673649460fa5d8ef1e5e3c86bf7053ebbb69
-Requested model/effort: gpt-6.1-sol / high. Actual model/effort metadata: null / null; no execution metadata supplied to this reviewer.
-Usage tokens/cost: null / null; unavailable counters, not estimated. Elapsed duration: null; no instrumented start timestamp.
+Verdict: **READY for bounded v4 implementation of AC-1–8**, with the live-qualification caveats below. **AC-9 overall live acceptance is PARTIAL; full migration is not complete.** No concrete blocker, high, medium or low requirements defect established.
 
-## Summary
+Source revision: `0e37bcb99653bf347950f1f4d04a73c83a9db610`.
+Run: `20261027-n5-cloudru-whisper`; work unit: `yandex-validate-v4`.
+Launch SHA256: `e78273f630addf292294eaef2e8b319d82a1cb4b78ffcb20a440ede20a1af8ac`.
 
-Three user stories and six acceptance requirements analyzed. Mean base score: 93.8/100. Blocked requirements: none. Every Testable, Completeness and Traceability floor is nonzero and justified by the quoted AC text below and this report's Criterion scenarios table. READY follows `/feature` Phase 2's >=70 average and no blocked items; it is not an implementation, live-capability or release pass.
+## Scope and evidence limits
 
-Inputs read: all five SPARC documents plus research.md, root/project CLAUDE.md, requirements-validator and its scoring/report contracts, parent feature Phase2, companion preparation/handoff instructions, selected scoped Phase1 receipt, and relevant immutable baseline config/DB definitions. No coder receipts/chats or new implementation outputs were read. No code, deployment, provider configuration, keys, history, toolkit or project documents were changed.
+Independent requirements validation of only the current six planner files under `projects/05-podcast-clips-opus/docs/features/cloudru-provider-foundation/`: numbered SPARC roles 01–05 plus `research-whisper-donor-20261027.md`. The six files match immutable git source above; specification matches the expected digest. Applicable instructions and requirements-validator/report/scoring contracts were applied. Previously read root/project/validator instructions were confirmed unchanged. No implementation source needed inspection.
+
+No existing validation/review report, coder context, author conversation, root telemetry, probe execution log, private environment or external receipt was read for this pass. The requested current completion source contains a clearly labeled historical v1 tail; its old test/build/mutation/gate assertions are history and are not a v4 pass. The current planner sources also describe root's short Yandex result; this report evaluates their stated provenance and limits, without independently opening its response/receipt files. No network, dependency install, runtime, inference, git mutation or application edit occurred.
+
+Root owns official native gates. This report supplies a semantic testability verdict and traceability artifact, not a native gate result, executable coverage or implementation acceptance.
+
+## INVEST, SMART and scoring
+
+Five stories / nine acceptance criteria / nine named acceptance scenarios. Each story has explicit user/operator value, a bounded existing seam and pass/fail AC. Existing provider defaults, financial/source invariants and fixed wire/security requirements are legitimate constraints; packaging and bounded implementation remain negotiable. No new public route, schema, credit engine, async job store or service is needed. Dependency/lockfile ownership and permitted files are explicit.
+
+| Story | INVEST /50 | SMART /30 | Quality /20 | Base score | Security adjustment | Status |
+|---|---:|---:|---:|---:|---|---|
+| US-001: independent provider config and Yandex mapping | 50 | 30 | 20 | 100/100 | +5, capped at 100 | READY |
+| US-002: preserved Cloud chat and local validation | 50 | 30 | 20 | 100/100 | +5, capped at 100 | READY |
+| US-003: existing actual attribution and offline S3 | 50 | 30 | 20 | 100/100 | +5, capped at 100 | READY |
+| US-004: bounded STT authorization and pipeline | 50 | 30 | 20 | 100/100 | +5, capped at 100 | READY |
+| US-005: accurate reporting of partial live qualification | 50 | 30 | 20 | 100/100 | +5, capped at 100 | READY as reporting requirement; qualification remains PARTIAL |
+
+INVEST component points per story: Independent 8, Negotiable 8, Valuable 10, Estimable 8, Small 8, Testable 8. SMART points: Specific 6, Measurable 8, Achievable 6, Relevant 5, Time-bound 5. Quality: Traceability 10, Completeness 10. The rubric saturates on this explicit technical contract; 100 measures stated testability, not provider quality, test adequacy, a live pass or implementation perfection. US-005 requires honest classification at readiness reporting, not an unbounded promise to achieve every deferred capability within this code slice.
+
+Timing context is explicit: startup failure before network, authorization/fsync before RPC, successful complete status before acceptance, 120000-ms full RPC/caller deadline, three worker attempts and 30-minute job budget; chat retains 240000 ms and S3 retains 900-second expiry. Size/time limits and boundary tests are numerical. Deferred quality/journey work is explicitly pending and does not acquire an invented SLA.
+
+The blocking floor is satisfied: Testable and Completeness are supported by actual AC quotations below; Traceability is supported by the exact Criterion scenarios table. Security acceptance specifies selected-key isolation, fixed verified TLS destination, no endpoint override/fallback, existing tenant/quota/fence checks and bound SQL. Growth traceability is not applicable to this STT/provider change: no acquisition/adoption requirement is introduced (+0); project-wide growth was not audited.
 
 ## Criterion scenarios
 
 | Criterion | Scenario |
-|-----------|----------|
-| AC-cloudru-provider-foundation-1 | Selected provider configuration and startup rejection |
-| AC-cloudru-provider-foundation-2 | Deferred Cloud.ru STT fails closed before construction |
-| AC-cloudru-provider-foundation-3 | One documented Cloud.ru JSON-object request and locally valid candidate |
-| AC-cloudru-provider-foundation-4 | Invalid output, cancellation and stalled body never trigger weaker mode |
-| AC-cloudru-provider-foundation-5 | Actual provider attribution on one exclusively claimed dispatch |
-| AC-cloudru-provider-foundation-6 | Offline Cloud.ru S3 signing under both addressing styles |
+|---|---|
+| AC-cloudru-provider-foundation-1 | Closed independent provider configuration |
+| AC-cloudru-provider-foundation-2 | Word-timed gRPC protocol and strict response mapping |
+| AC-cloudru-provider-foundation-3 | Cloud.ru request and valid candidate |
+| AC-cloudru-provider-foundation-4 | Invalid response and failure paths |
+| AC-cloudru-provider-foundation-5 | Actual attribution and exclusive dispatch |
+| AC-cloudru-provider-foundation-6 | Offline S3 configuration safety |
+| AC-cloudru-provider-foundation-7 | Exclusive attributed STT dispatch |
+| AC-cloudru-provider-foundation-8 | Provider limits, cancellation and pipeline regression |
+| AC-cloudru-provider-foundation-9 | Bounded actual protocol proof with honest remaining qualification |
 
-## Scoring and floors
+## Actual acceptance criteria supporting the score
 
-Scores use the installed rubric: INVEST 50 + SMART 30 + Quality 20. Each row scores one requirement with its named AC and applicable inherited FR/NFR constraints. Security adjustment is reported separately and does not hide a floor failure.
+Document: `01_specification.md`; each excerpt is from its corresponding `### AC-cloudru-provider-foundation-N` heading.
 
-| Requirement / AC suffix | INVEST I/N/V/E/S/T | SMART S/M/A/R/T | Quality trace/completeness | Base score | Floors T/C/Trace | Status |
-|---|---|---|---|---|---|---|
-| 1 — provider configuration | 8/8/10/8/8/8 = 50 | 6/4/6/5/5 = 26 | 10/10 = 20 | 96 | 8/10/10 | READY |
-| 2 — STT refusal | 8/8/10/8/8/8 = 50 | 6/4/6/5/5 = 26 | 10/10 = 20 | 96 | 8/10/10 | READY |
-| 3 — chat request | 0/8/10/8/8/8 = 42 | 6/8/6/5/5 = 30 | 10/10 = 20 | 92 | 8/10/10 | READY |
-| 4 — response acceptance | 0/8/10/8/8/8 = 42 | 6/8/6/5/5 = 30 | 10/10 = 20 | 92 | 8/10/10 | READY |
-| 5 — dispatch attribution | 0/8/10/8/8/8 = 42 | 6/8/6/5/5 = 30 | 10/10 = 20 | 92 | 8/10/10 | READY |
-| 6 — offline S3 safety | 8/8/10/8/8/8 = 50 | 6/8/6/5/0 = 25 | 10/10 = 20 | 95 | 8/10/10 | READY |
+| Criterion | Actual quotation | Completeness evidence |
+|---|---|---|
+| AC-1 | “Missing selected key, blank/unknown selector or yandex LLM fails before network.” | Selected keys, exact legacy Cloud STT refusal, absent-selector defaults, production fake rejection and test fake identity. |
+| AC-2 | “Byte/field-number compatibility is checked against the independent golden, not just our projection.” | Fixed successful two-final/10-word mapping; partial/refinement noise, exact/conflicting duplicates, missing times, malformed/unsafe int64s and no repair/fallback. |
+| AC-3 | “Returned content must pass existing `validateFragments` before persistence.” | Fixed Cloud chat request, schema prompt, valid fixture and OpenRouter control; errors belong to AC-4. |
+| AC-4 | “rejected shapes never reach acceptSelection; there is no fallback or extra request.” | Malformed/refused/truncated/extra-field fixtures, candidate filtering and 240000-ms body timeout. |
+| AC-5 | “at most one dispatch occurs, quota and durable attempt logging precede it, and DB plus ledger record actual provider/model.” | Real concurrent handlers, quota refusal, timeout counted and fake identity; ledger means existing JSONL. |
+| AC-6 | “expire after 900 seconds and retain filename disposition; zero external requests occur.” | Independent GET/multipart PUT signing, both path styles, intended host/region/credentials and unchanged storage regressions. |
+| AC-7 | “Format/conflicting-final rejection never advances a retry ordinal.” | Real DB race, identity/fsync-before-RPC, zero refused/stale calls, retry ceiling and idempotent credits across stale/redelivery. |
+| AC-8 | “A stalled upload/result/status exceeds neither 120000 ms nor caller deadline, cancels once and cannot accept late events; error status after finals still fails.” | Empty/oversize/overduration zero-RPC checks, exact valid limits, pause/overlap synthetic pipeline and explicit offline-only claim. |
+| AC-9 | “mark short Yandex protocol/timed-word receipt proven and overall live acceptance partial.” | Lists natural speech/origin, full chunk, >180-second journey, target/browser/storage and economics as pending; additional paid calls require concrete authority. |
 
-Rationale: 3–5 deliberately lose independence because config, selector and worker/DB attribution have integration dependencies; explicit interfaces and sequential ownership make these estimable without pretending they are standalone features. Configuration/refusal metrics are categorical rather than throughput/latency metrics (Measurable 4). AC6's 900 seconds is URL validity, not a signing execution-time bound (Time-bound 0); absence of an invented latency target is not a floor failure. Other timing credit is tied to startup-before-network, one dispatch, and the inherited 240000 ms body-inclusive timeout. Implementation choices remain negotiable inside protocol/security invariants. The producer/operator value, fixed file scope and offline fixtures support Value, Estimable and Small.
+Happy paths, errors and edges are specified across each story and adjacent FR/pseudocode/refinement. No future test filename/title is claimed as existing coverage.
 
-Completeness is evaluated across each AC and its explicitly paired FR/NFR plus the generated scenario variants below: successful current backend, configured refusal, malformed/network output, quota/fence concurrency, and S3 transport/isolation regression cases. Nonzero Testable/Completeness relies on the following actual AC quotations, not a prospective test-coverage claim. Traceability is the exact six-row table above. Security criteria are specific (+5 outside base score, capped at 100 if an adjusted score is displayed; none is used to determine this verdict). Growth adjustment: +0, not applicable to this foundation scope; no acquisition/adoption objective is added here. Parent analytics work is separate.
+## Generated BDD scenarios
 
-## Acceptance criteria evidence
-
-### AC-cloudru-provider-foundation-1 — quoted acceptance criterion
-
-Source: `docs/features/cloudru-provider-foundation/01_specification.md`, heading `AC-cloudru-provider-foundation-1`.
-
-> [SC-US-001-1] Selected provider configuration
-> Given live mode, an explicit Cloud.ru LLM selector, exact DeepSeek model and a synthetic Cloud.ru key, when configuration loads, then it resolves Cloud.ru without requiring an OpenRouter key. Unknown/empty selector, missing selected key or wrong model fails before network access. Existing absent selectors still resolve OpenRouter; production fake fails.
-
-### AC-cloudru-provider-foundation-2 — quoted acceptance criterion
-
-Source: `docs/features/cloudru-provider-foundation/01_specification.md`, heading `AC-cloudru-provider-foundation-2`.
-
-> [SC-US-001-2] Deferred STT fails closed
-> Given `N5_STT_PROVIDER=cloudru`, when STT configuration loads, then it throws `Cloud.ru STT не поддерживается: контракт таймкодов слов не подтверждён` and dispatch count is zero. Word-timestamp rejection tests remain green for OpenRouter.
-
-### AC-cloudru-provider-foundation-3 — quoted acceptance criterion
-
-Source: `docs/features/cloudru-provider-foundation/01_specification.md`, heading `AC-cloudru-provider-foundation-3`.
-
-> [SC-US-002-1] Cloud.ru request and valid candidate
-> Given an injected fetch and a valid candidate fixture, when selection runs, then exactly one request has the fixed Cloud.ru URL, required JSON-object body and serialized FRAGMENTS_SCHEMA in the prompt, without OpenRouter provider extensions. Returned content must pass existing `validateFragments` before persistence. The OpenRouter request contract remains unchanged.
-
-### AC-cloudru-provider-foundation-4 — quoted acceptance criterion
-
-Source: `docs/features/cloudru-provider-foundation/01_specification.md`, heading `AC-cloudru-provider-foundation-4`.
-
-> [SC-US-002-2] Invalid response and failure paths
-> Given malformed/refused/truncated/extra-field fixtures, out-of-range candidates and a stalled body, when selection runs, then the existing local rejection/filtering rules and timeout error apply; rejected shapes never reach acceptSelection; there is no fallback or extra request. A body timeout remains bounded by existing 240000 ms selection timeout.
-
-### AC-cloudru-provider-foundation-5 — quoted acceptance criterion
-
-Source: `docs/features/cloudru-provider-foundation/01_specification.md`, heading `AC-cloudru-provider-foundation-5`.
-
-> [SC-US-003-1] Actual attribution and exclusive dispatch
-> Given selected provider and two competing handlers for the same attempt, when authorization/selection executes in the existing isolated integration environment, then at most one dispatch occurs, quota and durable attempt logging precede it, and DB plus ledger record actual provider/model. Quota refusal yields zero requests; timeout remains counted. Fake dispatch records fake.
-
-### AC-cloudru-provider-foundation-6 — quoted acceptance criterion
-
-Source: `docs/features/cloudru-provider-foundation/01_specification.md`, heading `AC-cloudru-provider-foundation-6`.
-
-> [SC-US-003-2] Offline S3 configuration safety
-> Given synthetic `<tenant_id>:<key_id>` credentials and Cloud.ru endpoint configuration, when signing GET and multipart PUT under both addressing styles with an injected request handler, then signatures bind the intended host/region/credential, expire after 900 seconds and retain filename disposition; zero external requests occur. Existing S3 multipart/render/retention regressions pass.
-
-## BDD scenarios and variants
+These are validation scenarios, not executed tests.
 
 ```gherkin
-Scenario: Selected provider configuration and startup rejection
-  Given live LLM mode with cloudru selected, DeepSeek-V4-Pro and a synthetic FM key
-  And the LLM environment contains no OpenRouter key
-  When the LLM configuration loads
-  Then its backend is cloudru and no network request has occurred
-  And only the selected component's key is required
-  When an empty or unknown selector, missing selected key or wrong provider-model pair is supplied
-  Then startup rejects it before any request
-  And absent selectors preserve existing OpenRouter selection
-  And fake outside NODE_ENV=test is rejected
+Scenario: Closed independent provider configuration
+  Given separate Cloud.ru LLM and Yandex STT selections with synthetic selected keys
+  When each worker loads its role-specific config
+  Then each selected live backend requires only its own worker-scoped key
+  And unknown or blank selectors, missing selected key and Yandex LLM fail before network
+  And Cloud.ru STT retains its exact existing startup refusal in every mode
+  And absent selectors retain OpenRouter and fake remains test-only with fake identity
 
-Scenario: Deferred Cloud.ru STT fails closed before construction
-  Given N5_STT_PROVIDER=cloudru in live or test fake mode
-  When the STT configuration loads
-  Then the exact unconfirmed-word-timestamp error in AC2 is thrown
-  And no transcriber, audio dispatch or fabricated word timings are produced
-  Given the existing OpenRouter STT mode
-  Then actual-word-timestamp rejection and existing retry behavior remain regression requirements
+Scenario: Word-timed gRPC protocol and strict response mapping
+  Given injected TLS gRPC and the independently full-schema-encoded pinned golden
+  When the Yandex adapter sends session options, actual MP3 chunks and input half-close
+  Then exactly one fixed general FULL_DATA MP3 ru-RU normalization-disabled RPC is used
+  And request bytes match the independent golden and official response bytes decode correctly
+  And successful complete status permits exact millisecond-to-second mapping of actual words and phrases
+  And zero indices and protocol-defined scalar zeros remain valid
+  And partials and refinements add no transcript words and exact duplicate finals add nothing
+  And conflicting duplicate payloads, multiple channels, missing timing or malformed int64s fail without repair or fallback
+  And existing OpenRouter and fake controls retain their behavior
 
-Scenario: One documented Cloud.ru JSON-object request and locally valid candidate
-  Given an authorized selection, timestamped transcript and injected fetch
-  When a valid Cloud.ru fixture is returned
-  Then exactly one POST targets the fixed HTTPS chat endpoint
-  And the Bearer key, exact DeepSeek model, stream false and json_object are present
-  And serialized FRAGMENTS_SCHEMA occurs in the system prompt
-  And OpenRouter routing fields are absent
-  And validateFragments precedes acceptSelection
-  Given explicit OpenRouter selection
-  Then its existing strict-schema request and provider pins remain unchanged
+Scenario: Cloud.ru request and valid candidate
+  Given injected fetch and a valid Cloud chat candidate
+  When selection runs
+  Then one fixed nonstreaming JSON-object request includes the exact fragment schema in the prompt
+  And existing validateFragments runs before persistence
+  And the existing OpenRouter request remains unchanged
 
-Scenario: Invalid output, cancellation and stalled body never trigger weaker mode
-  Given each of malformed envelope, invalid JSON, refusal, missing or nonstring content,
-    empty content, extra fields and finish_reason length
-  When selection consumes that fixture
-  Then its schema/provider error occurs and rejected shapes cannot reach acceptSelection
-  And fetch has been invoked once with no repair, fallback, alternate model or format
-  Given candidates with invalid times, scores or overlap alongside valid candidates
-  Then existing semantic filtering and word snapping apply without broadening acceptance
-  Given a 429 or 5xx response, a redirect, caller abort or stalled response body
-  Then the request is rejected or aborted under the existing failure contract
-  And the 240000 ms budget covers body reads as well as response headers
-  And the existing attempt remains counted
+Scenario: Invalid response and failure paths
+  Given malformed, refused, truncated, extra-field and out-of-range chat fixtures
+  When selection consumes them or its response body stalls
+  Then existing shape rejection or semantic filtering applies before acceptance
+  And the complete body remains bounded by 240000 milliseconds
+  And no repair, alternate provider or extra request occurs
 
-Scenario: Actual provider attribution on one exclusively claimed dispatch
-  Given two handlers share the same video fence and selection attempt
-  When existing transaction and conditional claim authorization run
-  Then at most one handler may dispatch
-  And quota or existing reservation, provider-model DB attribution and durable attempt event precede HTTP
-  And DB and JSONL describe the actual cloudru, openrouter or fake execution
-  Given per-user or global quota refusal
-  Then no HTTP or unauthorized attempt spend event occurs
-  Given a timeout, provider error or schema failure after authorization
-  Then the one counted attempt remains and its outcome retains provider-model identity
-  Given a stale fence
-  Then no result is accepted through the current fence
+Scenario: Actual attribution and exclusive dispatch
+  Given two isolated-DB handlers competing for one fenced selection attempt
+  When authorization executes
+  Then at most one dispatch follows quota and fsynced attempt logging
+  And DB and existing JSONL record the actual provider and model
+  And quota refusal sends zero requests while timeout remains counted
+  And fake execution records fake
 
-Scenario: Offline Cloud.ru S3 signing under both addressing styles
-  Given synthetic compound tenant:key credentials, ru-central-1 and the Cloud.ru endpoint
-  When GET and multipart PUT URLs are signed under path and virtual-host addressing
-  Then independently verified signatures bind the intended host, region and credential
-  And expiry is 900 seconds and the intended filename disposition is retained
-  And zero external requests occur
-  Given distinct public-signing and internal-transport origins
-  Then the original isolation remains and URLs are not rewritten after signing
-  And existing multipart, render and retention success/failure regressions remain required
+Scenario: Offline S3 configuration safety
+  Given synthetic compound credentials and injected SDK transport
+  When GET and multipart PUT are signed with both addressing styles
+  Then independent signature checks verify intended host, region and credential
+  And expiry is 900 seconds with filename disposition preserved
+  And existing multipart, render and retention regressions hold without external requests
 
-Scenario: Authentication bypass attempt
-  Given a missing Cloud.ru selected key and a present OpenRouter key
-  When Cloud.ru LLM startup is attempted
-  Then the missing selected key rejects startup without credential substitution or a request
+Scenario: Exclusive attributed STT dispatch
+  Given competing handlers for one fenced STT ordinal in the existing isolated DB
+  When Yandex, OpenRouter and fake variants request authorization
+  Then only one claim can dispatch after actual identity is stored and the attempt is fsynced
+  And refused or stale claims open no RPC
+  And classified transient failures remain counted within the existing three-call ceiling
+  And format or conflicting-final failure cannot advance the retry ordinal
+  And retries, refusal, stale results and redelivery preserve idempotent customer finalization
 
-Scenario: Input injection remains data and parameterized SQL
-  Given transcript text containing instructions, SQL-like strings or script markup
-  When it enters the timestamped user-data prompt and provider attribution path
-  Then it remains data and provider-model SQL uses bound closed values
-  And local schema and semantic checks remain the only fragment acceptance boundary
+Scenario: Provider limits, cancellation and pipeline regression
+  Given actual synthetic audio spanning a pause-aware cut and two-second overlap
+  And injected Yandex-shaped finals for the existing extraction, merge, select and render path
+  When offline processing runs
+  Then the unchanged target 180 seconds plus or minus 20 seconds and measured offsets are preserved
+  And deduplication, real segment prompts, word snapping and chronological subtitles remain correct
+  And empty, over 10000000 byte or over 300 second Yandex input causes zero RPCs
+  And exact valid limits are tested without changing shared chunk or video-upload limits
+  And stalled upload, backpressure, missing status or caller abort cancels once within the effective deadline
+  And a terminal error after finals or late event cannot produce acceptance
 
-Scenario: Cross-tenant dispatch attempt
-  Given another account's video identifier or a nonexistent identifier
-  When existing ownership authorization runs
-  Then the same existing 404 behavior and zero unauthorized dispatch remain
+Scenario: Bounded actual protocol proof with honest remaining qualification
+  Given the planner's source-bound short Yandex protocol receipt references
+  When root verifies those receipts and reports readiness
+  Then the short two-final timed-word protocol result is classified as proven
+  And overall live acceptance remains partial
+  And natural speech, timing origin, representative chunk under 120 seconds and overlap-render journey remain pending
+  And target, browser, storage and separately assigned economics acceptance remain pending
+  And additional paid calls require concrete fixture, budget and target authority
+  And Cloud STT stays refused without GigaASR or any hidden fallback
 ```
 
-No auth endpoint is added; brute-force endpoint testing is not applicable. Existing rate/quota controls remain mandatory regressions. These security variants do not manufacture new machine AC IDs or change the frozen root specification.
+## Security and additional edge scenarios
 
-## Compatibility and external dependency assessment
+```gherkin
+Scenario: Authentication bypass through another provider key
+  Given selected Yandex STT has no selected key but another model key exists
+  When the worker loads live config
+  Then startup fails without selecting the other provider or making an RPC
 
-1. Environment canon is internally consistent: N5_MODEL_PROVIDER is execution live/fake, while N5_LLM_PROVIDER/N5_STT_PROVIDER are backend selectors. Absent selectors preserve OpenRouter; empty values fail. N5_LLM_MODEL is checked against the selected backend, not the presence of keys. LLM Cloud.ru can start without an OpenRouter key in its own role; the separate live OpenRouter STT role still needs its own key. Config failure cannot silently select another provider.
-2. The FM key belongs only in worker-llm for this foundation. NFR1's phrase “STT/LLM worker environment wiring as needed” does not authorize sending it to worker-stt: Cloud.ru STT is unsupported and has no need for this key. Pseudocode's keys-as-needed and architecture's worker scoping must be implemented under that narrower interpretation. No new Cloud environment name is needed.
-3. Immutable baseline config already has live/fake and the two named OpenRouter models. Baseline job_attempt.provider/model are nullable text in migration 001_init.sql, without an OpenRouter-only CHECK; fake/openrouter/cloudru therefore do not conflict with that SQL storage shape. Unrelated payment-provider constraints apply to other tables. Extend the application union and bind SQL values; do not migrate or relabel historical rows.
-4. Baseline authorizeSelection has a conditional llm_dispatched claim, quota/reservation handling and provider-model update inside the transaction. The plan preserves those operations and adds actual provider identity; it does not propose a second claim. Durable/fsynced attempt event must still precede selector invocation, including error/timeout paths. These are future DB/concurrency checks, not facts established by this report.
-5. JSON-object generation plus schema in prompt and existing strict LOCAL validation is explicit. There is no claim that Cloud.ru enforces strict schema generation. One request, no repair/fallback and abort/body-inclusive timeout avoid a silently weaker mode. OpenRouter's existing strict-generation branch remains explicit and unchanged.
-6. Public documentation rechecked read-only during validation: the [FM OpenAPI](https://cloud.ru/docs/api/specs/foundation-models/ug/_downloads/f2949c1237d79b17b2df8e523e02a89a/openapi__foundation-models.yaml?source-platform=Evolution) lists chat POST, bearer auth and a response_format type enum containing text/json_object; its separate json_schema property does not establish strict-generation support. The [model catalogue](https://cloud.ru/docs/foundation-models/ug/topics/overview__available__models) lists the exact DeepSeek model and Whisper, but that does not establish Whisper request encoding or word timing. The [S3 SDK guide](https://cloud.ru/docs/s3e/ug/topics/tools__sdk-python) supports the documented compound-key/endpoint/region configuration. These are documented capabilities, never tenant/live acceptance evidence.
-7. UNCONFIRMED capability-dependent work is excluded: CloudWhisper transport/word timestamps, strict provider schema generation, model output ceiling/quality/latency, and actual Cloud.ru S3/browser/target-server acceptance. AC2 tests refusal and AC6 tests offline generic S3 signing, so neither depends on pretending those capabilities are confirmed. Full migration remains incomplete after foundation delivery.
-8. Billing/config integration: coordinator clarified that N5_BILLING_MODE is a later separate credit-feature change after foundation config handoff. It is outside the current closed canon and must not be added by this feature. Shared config/DB selection ownership is sequential with SHA handoff; no simultaneous writer is authorized.
+Scenario: Input injection remains untrusted data
+  Given transcript text contains instruction-like or SQL-like content
+  When segment prompts and provider attribution are built
+  Then transcript remains data, SQL identity fields remain bound parameters
+  And model output still crosses existing local fragment validation
 
-## Findings and concrete delivery notes
+Scenario: Cross-tenant dispatch attempt
+  Given another account's video or an absent video
+  When existing ownership and fence authorization runs
+  Then existing indistinguishable 404 behavior is retained
+  And no unauthorized provider dispatch occurs
 
-No blocking requirement and no mandatory specification rewrite identified. Two nonblocking reconciliation notes:
+Scenario: Malformed time representation and legitimate zero
+  Given exact valid zero values and fractional, exponent, whitespace or unsafe int64 representations
+  When official-shaped finals are decoded and mapped
+  Then protocol-defined valid zeros map without loss
+  And malformed representations fail without inventing zero or coercing units
+```
 
-- Keep CLOUDRU_FM_API_KEY out of worker-stt as well as web/video/browser; explicitly assert only worker-llm receives it in synthetic wiring checks. This is the selected-provider rule already required by the accepted scope, not an added key-access permission.
-- Completion/research contain historical prose saying aggregate legacy exit1 blocks advancement. The owner subsequently approved a scoped gate boundary using the unchanged checker on an immutable selected-feature snapshot. Preserve those historical observations and attach the new scoped approval/receipt; do not report the real-project aggregate as passing or weaken runtime gates. No unrelated legacy repair belongs in this feature.
+No authentication endpoint is added, so a new brute-force/rate-limit mechanism is not applicable. Existing rate, account, quota, source and fence controls remain mandatory regressions. Concurrent same-ordinal DB tests remain required; sequential mocks cannot substitute.
 
-Reviewed scoped Phase1 evidence: docs/telemetry/p-replicator/20261026-n5-credits-cloudru/evidence/phase1-foundation-scoped.json binds the unchanged checker digest, HEAD and the six source-file digests, snapshot_matches_before_after=true and exit_code=0. Requirement/algorithm traceability is 14/14 per coordinator and scoped receipt/log; aggregate project exit1 is preserved separately. Phase2 native report-revision/scenario gate is still for the coordinator to run after copying this report; this validator does not claim its result.
+## Consistency and provenance assessment
 
-Implementation/delivery remains conditional on all six executable AC mappings; full tests with mandatory skip reporter; build/typecheck/lint; selection mutations, synthetic env wiring, isolated real-DB dispatch concurrency and attribution; existing S3/render/retention regressions; and independent code review bound to exact source. No runtime test was run by this plan reviewer. No new expense, resource, key access, deployment, provider call or historical mutation is authorized.
+The six documents agree on explicit Yandex STT selection, retained exact Cloud STT refusal, unchanged OpenRouter default and preserved Cloud chat/S3. Backend selection is narrower than the expanded audit identity union. Secrets are role-specific; neither key presence nor error handling selects another provider. Actual yandex/general identity extends the existing DB ordinal claim and existing fsynced JSONL only; no new financial, credit, ledger or schema semantics are introduced.
 
-## Terminal result
+The protocol boundary is concrete: fixed TLS method/options, top-level channel identity, numeric final-index ordering, exact duplicate versus conflicting-final policy, first alternative, strict actual word/phrase timings, language-empty fallback and successful terminal status. Legitimate protobuf zeros are distinguished from arbitrary malformed/missing decoded values. An independently full-official-schema golden is required in both encoding and decoding directions, with explicit field-number/enum mutation checks and actual built-worker packaging smoke. This is meaningfully stronger than a subset self-roundtrip.
 
-Requirements validation complete: READY, no blocked requirements. Native Phase2 gate pending coordinator execution; implementation and live capability acceptance remain unverified. This artifact is the bounded VALIDATE result, not a terminal success claim for the owner's whole task. Parent coordinator owns the next implementation step and source-bound shared-file handoff.
+Input constraints are compatible: common 25000000-byte guard remains, Yandex adds 10000000-byte/300-second limits; actual pause-aware chunks remain target 180 ±20 seconds with two-second overlap. The 120000-ms deadline is a client bound, not evidence that a representative chunk will complete. Closed transient-status classification, disabled client retry and existing worker attempts retain existing spend accounting and cancellation ownership.
 
-Status: completed
+The research note pins official cloudapi revision `b5702253b8216fa5cdac9f70509ed608eb0f17f5`, protocol-source hashes, the golden hash `8d7a2f539e0eff0fc881b516f25deb78cc9ea971aa84313094b21c99f1005314`, and redacted short-receipt hashes. Its old Gitverse donor is explicitly historical; disabled-TLS/retry/chunking patterns are not adopted. Re-encoded golden bytes are expressly not original network frames. This provenance is reproducible as a requirement input; this validator did not open those external files or independently verify the probe execution.
+
+## Caveats and continuation
+
+There is no concrete requirements finding requiring a rewrite before bounded coding. The following remain explicit acceptance boundaries, not newly discovered defects:
+
+- Root must make the pinned independent golden/protocol provenance available to the coder and verify its source hashes; this validator did not access files outside the permitted planner set.
+- The short synthetic protocol claim is documented but not independently runtime-revalidated here. It proves neither natural recognition quality nor full chunk latency. Receipt verification remains root-owned.
+- AC-9 overall acceptance remains partial. Natural Russian speech and word origin, representative 160–200-second chunk within the existing 120-second request bound, >180-second overlap/render journey, RF target/browser/storage and the separately assigned economics update remain accepted pending work.
+- All AC-1–8 implementation results are pending. Official native Phase 2 contracts, focused protocol/failure/concurrent DB/pipeline tests, complete no-skip suite, build/typecheck/lint, relevant red/restored-green mutations, env/model-cost checks and independent source review remain mandatory. No v1 result or historical completion row establishes a v4 pass.
+
+Root retains continuation ownership after this bounded validation. No additional inference, fallback, deployment or expense is authorized by this report. If the specification changes, its digest/report binding must be renewed through the affected native contracts.
+
+Profile: model-routing-econom. Requested validator: gpt-6.1-sol/high. Actual model/effort: null (host execution metadata unavailable to this agent); tokens/cost: null. No savings claim. Measured duration, exact per-file hashes and terminal status are in `/tmp/n5-yandex-stt-validation-trace-20261027.md`.
