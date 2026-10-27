@@ -1,16 +1,13 @@
 # Cloud.ru provider foundation — Pseudocode
 
-v3 PLAN, 2026-10-27; v1 algorithms are frozen at source `0c42dfb1acd7f5085517ddde57f11d1f04781e66`. Baseline and closed names: `01_specification.md`. Only this document owns logical data structures. No new public API routes.
+v4 PLAN, 2026-10-27; closed names and authority: 01_specification.md. Preserve v1 chat/S3 algorithms and existing parser/chunker/merge. No new public route or asynchronous provider job.
 
 ## Data Structures
 
-`Backend = openrouter | cloudru`; `Mode = live | fake`; `ExecutionProvider = openrouter | cloudru | fake`.
-`LlmConfig = {mode, provider: Backend, baseUrl, model, apiKey: string|null}`; baseUrl/model follow specification's exact provider mapping.
-`SttConfig = {mode, provider: Backend, baseUrl, model, apiKey: string|null}`; exact provider URLs/key mapping and fixed Whisper model follow specification. `TranscriptionDependencies` adds explicit executionProvider/model; existing SpendEvent adds these fields without changing attempt identity or unit semantics.
-`Selector.select(TranscriptResult,duration,AbortSignal) -> unknown`; `TranscriptResult` retains language, real words and segments.
-`SelectionDependencies` carries actual executionProvider, model, selector, limits, spendPath, pool and enqueue.
-`SelectionSpend` retains existing attempt/outcome/result fields; provider becomes ExecutionProvider. No historical mutation.
-DB `job_attempt.provider` and `.model` remain nullable text; current attempt is filled when dispatch is authorized. Logical provider values are the closed ExecutionProvider set. Fake derives from execution mode, never from a missing secret.
+`LlmBackend = openrouter | cloudru`; operational `SttBackend = openrouter | yandex`; selector cloudru retains the existing refusal. `Mode = live | fake`.
+`ExecutionProvider = openrouter | cloudru | yandex | fake`; use narrower LLM/STT selections at config/dispatch boundaries so extending identity cannot select Yandex chat.
+`SttConfig` is immutable mode/provider/fixed model/selected apiKey and fixed transport; Yandex general/TLS host/mode are constants. `TranscriptionDependencies` carries actual provider/model; SpendEvent retains current identity/seconds/phase/result and adds these fields. Existing job_attempt nullable text columns hold attempt identity, no migration.
+`FinalKey = (channel_tag, final_index)` with protocol-safe int64 index; `FinalPayload` retains first alternative actual words/text/times/languages. Map exists for one RPC only, not cross-job memory coordination. `TranscriptResult` remains unchanged language/words/segments.
 
 ## Core Algorithms
 
@@ -20,26 +17,29 @@ REQUIREMENT: `FR-cloudru-provider-foundation-1`
 REQUIREMENT: `AC-cloudru-provider-foundation-1`
 REQUIREMENT: `NFR-cloudru-provider-foundation-1`
 REALISES: SC-US-001-1
+INPUT: role-specific environment.
+OUTPUT: immutable selected config or startup error before network.
 
-1. Parse existing live/fake mode; reject fake outside test. Read each selector; absent means openrouter, blank/unknown throws before runtime workers start.
-2. Validate selected model against provider-specific closed allowlist. Pin endpoint; do not read arbitrary base URL.
-3. For live require the selected key only; fake has apiKey null and executionProvider fake. Never infer provider from available keys.
-4. Entry points forward exact config names; compose supplies optional key strings without unconditional OpenRouter-required expansion. Runtime is authoritative for selected-key validity. Keys are absent from web/video wiring.
+1. Parse current live/fake mode and separate closed LLM/STT selectors; absent alone defaults to OpenRouter, blank/unknown fails. Preserve exact Cloud.ru STT refusal before construction in all modes. Yandex LLM fails.
+2. Keep existing LLM model mapping. Pin Yandex general, TLS stt.api.cloud.yandex.net:443, FULL_DATA/MP3/ru-RU/normalization-disabled; no endpoint/model variable.
+3. In live require selected component key only. Fake only in test, key null and actual identity fake. Never choose provider from available secrets.
+4. Project Yandex key only through actual STT entrypoint/compose/runtime; FM key remains LLM-only. No model key in web/video/other role. RETURN config; no startup probe.
+COMPLEXITY: O(1).
 
-### Algorithm: Dispatch optional strict STT
+### Algorithm: Transcribe Yandex final events strictly
 
 REQUIREMENT: `FR-cloudru-provider-foundation-2`
 REQUIREMENT: `AC-cloudru-provider-foundation-2`
 REALISES: SC-US-001-2
-INPUT: validated SttConfig, existing MP3 path, measured duration, caller signal.
-OUTPUT: strict TranscriptResult or nonretryable format/timing error / classified ProviderError.
+INPUT: selected config, MP3 path/measured duration, caller signal and injected typed gRPC seam.
+OUTPUT: unchanged TranscriptResult or sanitized nonretryable TranscriptError/classified ProviderError.
 
-1. Test-only fake returns existing fixture; actual identity is fake. For live branch retain common pre/post-read nonempty 25_000_000-byte guards.
-2. OpenRouter keeps its existing JSON/base64/verbose_json/Together-only body byte semantics. Cloud.ru creates FormData with real MP3 Blob, fixed filename/content type, model, response_format=verbose_json, temperature=0, language=ru, then append literal timestamp_granularities[] twice with word and segment. No manual multipart Content-Type, routing extension or other timestamp option. This accepted request returned words:null live; synthetic valid fixtures prove only adapter compatibility.
-3. Combine caller signal and existing 120000 ms timeout; POST once to fixed selected endpoint with Bearer key and redirect=error. Keep timeout active through response-body read/JSON parse. Non-2xx cancels body; only existing 429/5xx, transport and timeout classifications are retryable by the worker. Invalid JSON/object shape/timing is nonretryable.
-4. Cloud.ru alone maps an absent language field to requested ru; present malformed/empty values fail. Require segments array, at least one entry and nonblank text context; never manufacture segments from text/words. This is local conservative policy, not provider-contract evidence.
-5. Pass actual words and all provided timing through unchanged parseTranscript(duration); do not coerce strings/units, unwrap guessed envelopes or fill timestamps. Worker/persistence validate again. Normalize JSON syntax and unusable-segment failures to existing TranscriptError, without logging body/keys. RETURN parsed transcript; schema failure returns no successful result.
-COMPLEXITY: O(bytes + words + segments); existing bounded input memory, no SDK/model dependency.
+1. Preserve current fake and OpenRouter branch. For Yandex perform input/deadline checks from bounded pipeline algorithm; no Cloud.ru request branch.
+2. Open fixed TLS client and create one RecognizeStreaming call at /speechkit.stt.v3.Recognizer/RecognizeStreaming with Api-Key metadata and retries disabled. Write exact session options, then bounded actual bytes honoring writable backpressure; half-close only input after bytes. No SDK retry/pacing experiment/fallback.
+3. On each final read actual top-level channel_tag and audio_cursors.final_index, including zero. Require one consistent mono channel and valid nonnegative integral index. Keep first alternative. Canonical identical payload for an existing key is ignored; conflicting payload for that key throws TranscriptError and cancels the RPC. Ignore partial/refinement/EOU/status-only transcript content; never append both final and normalized refinement.
+4. On successful complete RPC only, order retained finals by numeric final index for the selected channel. Validate decoded int64 timing as exact safe integral milliseconds before division by 1000; no parseFloat, exponent/whitespace coercion, fabricated zero or unit guessing. Respect legitimate protobuf-defined zero defaults. Copy actual word text/times and actual phrase text/times to N5 structures; no phrase-derived word timing.
+5. Use the first valid nonblank language_code in final-index order when supplied; if every languages array is empty use request-derived ru. Malformed present language arrays/items fail. Require actual nonempty words and at least one usable actual text segment; pass through unchanged parseTranscript(duration). Worker/persistence parse again. RETURN only validated result after RPC success; partial data is discarded on error/cancel.
+COMPLEXITY: O(input bytes + final words/segments); bounded per-call collection, no general event engine.
 
 ### Algorithm: Request documented chat and validate result
 
@@ -50,91 +50,95 @@ REQUIREMENT: `AC-cloudru-provider-foundation-4`
 REQUIREMENT: `NFR-cloudru-provider-foundation-2`
 REALISES: SC-US-002-1
 REALISES: SC-US-002-2
+INPUT: existing timestamped transcript segments/duration/caller signal.
+OUTPUT: unknown candidate for existing local validation.
 
-1. Build existing system prompt and user timestamped-segment payload. For Cloud.ru add exact serialized FRAGMENTS_SCHEMA to system instructions and response_format json_object, stream false; omit OpenRouter routing extensions. For OpenRouter retain existing strict json_schema/provider pin body without Cloud.ru additions.
-2. Combine caller signal with 240000 ms timeout, POST once to selected fixed endpoint, reject redirects. Do not repair/retry on rejection.
-3. Non-2xx cancels body and throws SelectionProviderError. Timeout remains active while body is consumed. Parse choices[0].message.content; reject invalid envelope, refusal, nonstring/empty content, explicit finish_reason length and invalid JSON as FragmentSchemaError.
-4. Return unknown to existing select worker, which calls validateFragments before acceptSelection. Shape failure rejects all; existing semantic candidate filtering preserves valid candidates and removes invalid ones. Snapping uses actual transcript words; no acceptance directly from model JSON.
-5. Schema/provider/timeouts do not trigger another mode or model. A zero-fragment valid result follows current no_fragments behavior.
+1. Preserve Cloud.ru JSON-object chat with exact FRAGMENTS_SCHEMA in prompt and no OR routing; preserve OpenRouter strict json_schema and provider pin unchanged.
+2. One fixed selected HTTPS POST under 240000 ms including body read; reject redirects, malformed/refused/truncated envelope/JSON and never repair/retry/fallback.
+3. Return unknown to validateFragments before acceptSelection. Keep existing candidate filtering, real-word snapping and all score/time/overlap rules. Zero fragments follow existing outcome.
+4. Yandex adds only STT identity/client: fixed dependencies/protocol and bounded transport policy apply to that branch without changing chat. No client retry or new model request on failure.
+COMPLEXITY: existing segment prompt/local validator behavior.
 
-### Algorithm: Authorize and attribute a dispatch
+### Algorithm: Authorize and attribute a chat dispatch
 
 REQUIREMENT: `FR-cloudru-provider-foundation-5`
 REQUIREMENT: `AC-cloudru-provider-foundation-5`
 REALISES: SC-US-003-1
+INPUT: current attempt/selector/model/actual execution identity.
+OUTPUT: exclusive current claim and existing selection outcome.
 
-1. Runtime derives executionProvider = fake for fake execution, selected backend for live; supply provider and model explicitly with selector.
-2. In authorizeSelection retain current lock, current-fence check, llm_dispatched conditional claim and quota/reservation semantics. Bind provider/model as SQL parameters to the authorized job_attempt update; no SQL interpolation or second claim.
-3. If authorization refused, return without spend event/HTTP. Otherwise append and fsync attempt event with actual provider/model BEFORE selector dispatch.
-4. Call selector once; strict local validation precedes acceptSelection. Outcomes append success/no_fragments/provider_error/timeout/schema_violation with same provider/model and attempt identity. Failure never erases attempt count; stale attempt results remain fenced.
-5. Concurrent handlers have at most one successful dispatch claim. No DB migration or old-row relabeling.
+1. Keep existing authorizeSelection lock/fence/llm_dispatched/quota transaction and explicit actual provider/model parameters.
+2. Refused claim returns before HTTP; accepted claim fsyncs current attempt record before selector. Local validation precedes fenced acceptSelection.
+3. Preserve actual success/no_fragments/error outcomes, no history rewrite, no migration or replay. Competing handlers yield at most one dispatch.
+COMPLEXITY: existing transaction + local validation.
 
 ### Algorithm: Verify reusable storage configuration offline
 
 REQUIREMENT: `FR-cloudru-provider-foundation-6`
 REQUIREMENT: `AC-cloudru-provider-foundation-6`
 REALISES: SC-US-003-2
+INPUT: existing S3 config/synthetic compound credential/injected SDK handler.
+OUTPUT: offline signatures/regression evidence only.
 
-1. Load existing S3Config with synthetic compound credential and Cloud.ru origin/region. Do not create buckets or call service.
-2. Use existing createS3Client/signParts/generateDownloadUrl; independently verify GET/PUT host, SigV4 region/credential, 900-second expiry, Unicode filename disposition and both path styles. Inject SDK handler for transport assertions.
-3. Existing public signing client remains separate from internal transport. Retain multipart/list/complete/abort/render/retention checks; no provider-specific S3 branch.
-4. Record offline-only verdict; actual RF-server/S3 capability acceptance remains pending.
+1. Keep existing S3 clients/signParts/download signing, Cloud.ru endpoint/region/compound key, both path styles, 900-second expiry and filename disposition.
+2. Preserve public signing/internal transport separation and multipart/render/retention regressions. No new Yandex bucket or storage driver.
+3. Actual storage/browser acceptance remains a separate coordinator receipt; no live S3 request in offline checks.
+COMPLEXITY: existing implementation.
 
 ### Algorithm: Authorize and attribute STT call
 
 REQUIREMENT: `FR-cloudru-provider-foundation-7`
 REQUIREMENT: `AC-cloudru-provider-foundation-7`
 REALISES: SC-US-004-1
-INPUT: existing fenced attempt/chunk/expectedPrevious, explicit actual provider/model and existing limits.
-OUTPUT: claimed ordinal or null, then existing attempt/outcome events.
+INPUT: existing fenced attempt/chunk/expectedPrevious, actual provider/model and limits.
+OUTPUT: claimed ordinal or null, then current spend outcomes.
 
-1. Runtime derives actual identity from mode/backend, passes it to TranscriptionDependencies; the worker never infers it from secret presence.
-2. Extend authorizeSttCall with identity metadata using bound parameters in its existing conditional job_attempt UPDATE alongside stt_calls; retain lockCurrent, deadline, initial-minute check, expectedPrevious comparison, savepoint and retry-quota transaction. Legacy direct callers may retain an explicit backward-compatible OpenRouter/model default; production worker always passes identity, including fake. No second DB claim or migration.
-3. On null RETURN with no HTTP. On claim, append/fsync existing attempt event with provider/model and ordinal before transcriber dispatch. Retryable failures alone may request previousCall=call, at most three calls; refusal/format failure never produces an extra call.
-4. Outcome copies the exact event identity. Current job_attempt stores attempt-level selected provider/model; per-call history remains existing JSONL. Preserve credit reservation/finalization and initial whole-video quota; do not add a customer debit per chunk/retry. Crashes remain started/unknown and require current fenced recovery, never a free replay.
-COMPLEXITY: existing bounded transaction + O(1) event append per call.
+1. Runtime passes actual yandex/general (or OR/fake) explicitly; production worker never infers identity from keys. Fake identity is fake.
+2. In existing authorizeSttCall conditional stt_calls UPDATE bind provider/model alongside ordinal under current lock/deadline/savepoint/initial-minute and retry-quota transaction. Preserve positional expectedPrevious and old-call compatibility only where required; production always passes identity. No second claim or DB migration.
+3. Null => zero RPCs. Claim => append/fsync existing attributed attempt before opening/dispatching RPC. Only transient ProviderError may advance previousCall; at most three existing worker attempts. Format/conflicting-final/auth/config failures never retry; statuses/events are not extra billable attempt records.
+4. Outcomes copy exact identity. Preserve initial whole-video quota/credit reservation and current retry-minute consumption without another customer debit. Keep fence acceptance and finalizeVideoCreditsTx; crashes remain started/unknown, never a free replay.
+COMPLEXITY: current bounded transaction plus one event append per actual attempt.
 
-### Algorithm: Verify bounded STT pipeline offline
+### Algorithm: Bound transport and verify STT pipeline
 
 REQUIREMENT: `FR-cloudru-provider-foundation-8`
 REQUIREMENT: `AC-cloudru-provider-foundation-8`
 REALISES: SC-US-004-2
-INPUT: synthetic MP3 >180 seconds with overlap speech and injected timed responses.
-OUTPUT: offline chunk/selection/render assertions, never provider capability proof.
+INPUT: common MP3 chunk/measured duration, caller/job signal; offline >180-second pipeline fixture.
+OUTPUT: bounded validated result or failure with no late persistence.
 
-1. Exercise zero-fetch empty/oversize cases; simulated fetch/body stalls, caller abort, redirects, malformed JSON and provider errors with fake timers/injected transport. Assert exact existing timeout and worker retry ceiling.
-2. Run unchanged extraction/chunker/merge with 180-second chunks and 2-second overlap, measured MP3 duration and chunk-relative timings; verify offsets, duplicate removal and timing-clamp diagnostics. No hardcoded new tolerance.
-3. Require nonempty segment text in selectionMessage, validateFragments word snapping and chronological rendered subtitle output with existing media tools/tests. Verify stale acceptance cannot enqueue selection and source/customer-credit invariants remain unchanged. RETURN separate offline evidence.
-COMPLEXITY: existing media pipeline; no new service/aligner/GPU.
+1. Retain common 25_000_000-byte guard. Before Yandex RPC stat/read bytes must be nonempty <=10_000_000 and duration finite >0 <=300. Existing mono extraction/pause-aware 180-second target/2-second overlap stay unchanged; no video-upload limit change.
+2. Whole RPC uses 120000-ms deadline combined with caller/job abort. Cancel call and close owned client once on timeout, caller abort or terminal failure; remove listeners/timer, stop writes and reject late events. Wait for complete success status, not first final/end alone.
+3. Retryable mapping is the closed transient set UNAVAILABLE, DEADLINE_EXCEEDED, RESOURCE_EXHAUSTED plus equivalent preclassified connection failures; caller cancellation/auth/config/INVALID_ARGUMENT and format conflicts are nonretryable. Do not broadly retry every gRPC error or create a client retry policy. Worker owns any allowed retry and quota.
+4. Inject full-official-schema golden events plus adversarial duplicates/partials/errors to check cancellation and mapping; run unchanged extraction/chunk/merge/select/render on >180-second synthetic audio with overlap speech. Check offsets/deduplication, actual segment prompt, word snapping, chronological subtitles and current credit/source/fence controls. RETURN separate offline evidence.
+COMPLEXITY: existing media pipeline and bounded one-call stream; no asynchronous job store.
 
-### Algorithm: Preserve actual incompatibility and qualification boundary
+### Algorithm: Preserve protocol evidence and remaining qualification
 
 REQUIREMENT: `FR-cloudru-provider-foundation-9`
 REQUIREMENT: `AC-cloudru-provider-foundation-9`
 REALISES: SC-US-005-1
-INPUT: coordinator's five Whisper probe results, raw evidence SHA256 `2eb9e243634471f4fe34487defb5aea6b10dd0652e8d954a4d259b987e616739`.
-OUTPUT: AC-9 not passed; explicit production restriction and pending long migration.
+INPUT: root's source-bound Yandex short receipt and old incompatible Cloud probes.
+OUTPUT: short protocol proven, migration/quality/long journey pending.
 
-1. Record actual fixture duration 5.26175 seconds: JSON yielded text/usage; four verbose bracketed/bare word+segment and word-only variants yielded one segment from 0 to 4.66 and words:null. HTTP acceptance does not satisfy unchanged actual-word parsing.
-2. Do not dispatch another unchanged probe, infer missing words, add upstream flags, repair timestamps or switch provider. AC-1–8 operate with injected fixtures only and cannot convert this live incompatibility into a pass.
-3. Operator must not enable N5_STT_PROVIDER=cloudru for real users until a selected provider has a separately authorized actual word+usable-segment pass. Any new supported request requires new source evidence/authority and read-only companion readiness, never discovery at runtime.
-4. Preserve GigaChat/GigaASR empty-text HTTP-200 result as research only. No GigaASR selector/code or Yandex/T-Bank dependency is added. Root owns the other RF-STT choice and separately authorized long-fixture chunk/subtitle journey; no Cloud coding starts before root's Yandex v3 FULL_DATA qualification result. Full migration remains pending.
-COMPLEXITY: evidence inspection only; zero new inference calls in this scope.
+1. Verify ready/result/response/proto-manifest hashes from research note; retain 5.26175-second own synthetic fixture, gRPC0, 0.5605392-second duration, two finals/10 words. Natural recognition is imperfect; do not turn one short elapsed value into a bound/SLA.
+2. Preserve Cloud Whisper words:null and GigaASR empty result as historical negative controls; retain Cloud STT startup refusal, no new Cloud transport or automatic fallback.
+3. Separate implementation checks from natural speech, full pause-aware chunk <=120 seconds, >180-second overlap/render and target/browser/storage receipts. Unit-economics update is separately assigned and required by owner; unknown bills/counters stay null.
+4. No new paid request by planner/coder without root's concrete authority. Coordinator continues pending work after bounded handoff; only fresh accepted receipts can close remaining migration AC.
+COMPLEXITY: source/evidence inspection, zero new inference in PLAN.
 
 ## API and Data Flow
 
-Existing select job → fenced DB authorization/quota → fsynced attempt event → selected Selector → unknown response → existing strict local validator → fenced acceptSelection/enqueue. Errors → current failed state and outcome event. No schema mode negotiation, automatic discovery or live startup probe.
-
-STT job → existing measured source/probe quota → fenced call-ordinal/provider claim → fsynced attributed attempt → fixed selected Transcriber → strict actual-word/usable-segment acceptance → unchanged chunk offsets/merge → fenced acceptTranscript → selection. No new public API route.
+Existing STT quota/ordinal/provider claim → fsynced attempt → selected Transcriber (Yandex one TLS bidi call) → complete success plus strict final mapping → unchanged chunk merge → fenced acceptTranscript → segment-only selection → word snapping/render. No REST audio endpoint or async job/poll state is added. Chat/S3 flow remains v1.
 
 ## Scenario Coverage
 
-Scenarios in `01_specification.md`: 9 · claimed by an algorithm: 9. FR-9/AC-9 preserves actual incompatibility and remains not passed; it is not a live-pass claim.
+Scenarios in 01_specification.md: 9 · claimed by an algorithm: 9. Naming coverage is not semantic or runtime proof.
 
 Not claimed by any algorithm:
 
 none
 
-Claimed by an algorithm but absent from Specification.md:
+Claimed by an algorithm but absent from Specification:
 
 none

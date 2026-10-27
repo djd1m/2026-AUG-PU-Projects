@@ -1,36 +1,44 @@
 # Cloud.ru provider foundation — Completion
 
-Status: **v3 PLAN ONLY**, 2026-10-27. No v3 implementation, native completion gate, full suite, build, lint, typecheck, mutation or deployment is claimed passed. Coordinator short live probes were executed and did not qualify Whisper words. Source baseline `125b655d17e36a5c65754f33471cefe8a4e3eeab`, author input `8cdf42c0586fc32bdce627e3b8d0d23ccd528ea8`; current specification bytes must be hashed in the fresh validator receipt. The accepted v1 receipt is preserved below as history, including 1092 tests and 21 mutations; those are not v3 evidence.
+Status: **v4 PLAN ONLY**, 2026-10-27; input source ff80cdd07311c98e3d5f0fd2bfbf42deea5ecee7. No v4 implementation/full suite/build/typecheck/lint/mutation/native completion gate or deployment has passed. Root's separate Yandex short protocol proof is real and limited as below. Historical v1 1092 tests/21 mutations remain preserved below; they are not v4 evidence.
 
-## v3 authority, scope and pending acceptance
+## v4 authority and current acceptance map
 
-Owner request on 2026-10-27 and pinned Gitverse reference supersede v1's blanket STT refusal only for the new explicit conditional strict adapter. Existing selected-Cloud-contour scope exception is preserved; official phase order, gates and thresholds are unchanged. Coordinator performs fresh cold VALIDATE before code and independent REVIEW after frozen implementation. Historical validation-report.md/review-report.md must not be reused as current v3 approvals.
+Owner chose RF word-timed STT, supplied YANDEX_SPEECHKIT_API_KEY and requested unit-economics updates. This version replaces v2/v3 proposed Cloud Whisper transport with explicit Yandex v3 general/FULL_DATA/MP3/ru-RU/normalization-disabled TLS gRPC. Cloud STT startup refusal remains; GigaASR stays research only. Existing selected-contour evidence boundary and official lifecycle/gate thresholds remain unchanged. Root performs cold VALIDATE before coder and cold REVIEW against frozen source afterward; historical reports cannot approve v4.
 
-| Active criterion | Current result | Evidence required after implementation |
+| Criterion | Current result | Required fresh evidence |
 |---|---|---|
-| AC-cloudru-provider-foundation-1 | pending v3 regression | Actual closed-config/key/fake checks |
-| AC-cloudru-provider-foundation-2 | pending; v1 refusal explicitly superseded | Actual multipart and strict rejection tests, never donor/mock capability claim |
-| AC-cloudru-provider-foundation-3 | pending v3 regression | Unchanged Cloud.ru chat request/local validation checks |
-| AC-cloudru-provider-foundation-4 | pending v3 regression | Chat failure/timeout/no-fallback checks |
-| AC-cloudru-provider-foundation-5 | pending v3 regression | Exclusive actual chat attribution checks |
-| AC-cloudru-provider-foundation-6 | pending v3 regression | Existing offline S3 signing/regressions |
-| AC-cloudru-provider-foundation-7 | pending | Exclusive STT identity/quota/fsync/credits integration checks |
-| AC-cloudru-provider-foundation-8 | pending | Input/body/cancel bounds and offline chunk/selection/render checks |
-| AC-cloudru-provider-foundation-9 | NOT PASSED: actual Whisper responses lack words | Preserve incompatibility digest; future qualified-provider word+segment evidence and separate long-fixture acceptance |
+| AC-cloudru-provider-foundation-1 | Pending implementation/regression | Separate selectors/selected keys, Cloud STT refusal, fake and actual secret projection |
+| AC-cloudru-provider-foundation-2 | Short provider protocol shown; project adapter pending | Independent official golden, strict final mapping and failure/no-fallback tests |
+| AC-cloudru-provider-foundation-3 | Pending v4 regression | Existing Cloud.ru chat body/local validation |
+| AC-cloudru-provider-foundation-4 | Pending v4 regression | Existing chat malformed/refusal/truncation/timeout controls |
+| AC-cloudru-provider-foundation-5 | Pending v4 regression | Exclusive actual chat attribution |
+| AC-cloudru-provider-foundation-6 | Pending v4 regression | Existing offline Cloud.ru S3 signing/regressions |
+| AC-cloudru-provider-foundation-7 | Pending implementation/integration | STT identity/claim/quota/fsync/customer-credit concurrency |
+| AC-cloudru-provider-foundation-8 | Pending implementation/integration | 10MB/300s limits, complete RPC status/deadline/cancel and actual offline chunk/select/render |
+| AC-cloudru-provider-foundation-9 | PARTIAL: short Yandex protocol proof only | Natural speech, full chunk<=120s, >180s overlap/render, target/browser/storage and economics receipts remain pending |
 
-This is a plan table, not native executable coverage: add exact existing test paths/titles only after tests exist and are inspected. No future test title is fabricated. Offline code acceptance (AC-1–8) and unmet real compatibility/full migration (AC-9 plus long fixture) are separate verdicts; remaining accepted live work stays coordinator-owned rather than declared complete.
+This is a PLAN map, not native executable coverage. Future completion must inspect real test paths/titles and fresh receipts; no planned title is counted as an existing test. Offline code acceptance and actual full migration are separate verdicts. Pending accepted work remains root-owned.
 
-## v3 checks and handoff contract
+## Actual short protocol receipt (not this planner's execution)
 
-This documentation attempt permits `git diff --check` and document-structure inspection only. Root owns native traceability/validation/completion/review gates against immutable six-file/source hashes. No runtime checks are executed by the planner. E2E readiness is `not_applicable`: docs-only, no v3 build or authorized inference.
+Root performed one authorized 5.26175-second/43245-byte own synthetic Russian MP3 request using fixed Yandex v3 TLS/general/FULL_DATA/MP3/WHITELIST ru-RU/normalization disabled. gRPC status0, elapsed0.5605392s, two finals/10 words with real int64 ms strings; language arrays empty. Recognition is imperfect, so no natural-speech quality/SLA claim. Actual charge null.
 
-Implementation requires fresh meaningful focused unit/concurrent DB/pipeline checks, full tests with no-skip reporter, build/typecheck/lint, relevant red/restored-green mutations, synthetic env complete/wiring and existing model-cost guard. Retain source/credits/quota/fence/OpenRouter/chat/S3 regressions. Existing native traceability/report-revision/criterion-scenarios/completion/review contracts remain as documented in the v1 command section below; only fresh v3-bound receipts advance v3. No official utility or historical report is edited by this attempt.
+Safe local proof /tmp/n5-yandex-speechkit-probe-20261027: ready.json SHA256 `430debc25a87c19b8868c12c7726b097acf5e27f78657ed81b3f532745d42d55`; result-private.json `7d1d0ae86902593f0c3aabe1e3c4adf96282bccf44a3549dda501570f944bc7e`; response-private.json `f4e38ddb339d44aafaff0f30004e991a62a91c18d297f5830a613e60bb372ecd`; proto-source-manifest.json `8915da2d95628f1a6654c3f8c500cd687ab866712867cd3f81fb0aced86c660a`. Keys/private environment were not read by the planner. Root's independent offline full-schema golden SHA256 `8d7a2f539e0eff0fc881b516f25deb78cc9ea971aa84313094b21c99f1005314` is re-encoded protocol test data, not original network bytes.
 
-Release remains excluded: no production/current-VPS deployment, additional paid call, support message, new service/resource or purchase. The owner supplied a key and the coordinator completed five authorized Whisper probes (5.26175-second fixture): JSON text/usage; four verbose bracketed/bare word+segment and word-only shapes returned one segment from 0 to 4.66 and words:null. Raw SHA256 `2eb9e243634471f4fe34487defb5aea6b10dd0652e8d954a4d259b987e616739`. AC-9 is NOT PASSED; no unchanged reprobe or speculative timing flags. The optional offline transport uses the tested verbose_json and literal timestamp_granularities[] word/segment request. Operators must not enable N5_STT_PROVIDER=cloudru for real users before a qualified provider passes actual word+segment acceptance. A sixth GigaChat/GigaASR probe returned HTTP 200 with empty text/no timings and is research only; no code/env selector is added. The owner chose other RF-STT research; root owns Yandex/T-Bank qualification/selection outside this scope, now with an owner-supplied Yandex STT key; no Cloud coding starts before its v3 FULL_DATA probe result. Missing/empty segments are rejected by explicit conservative coordinator policy; only absent language may inherit request ru. No guessed time, alignment model or silent provider fallback.
+## v4 checks and handoff
 
-Rollback: select the existing OpenRouter backend with its own key, or revert the v3 code/config revision after review. Never switch after a dispatch or replay an unknown outcome; retain provider/model JSONL/DB history and current fenced recovery. No schema rollback exists.
+This planner may run git diff --check and read-only document structure/identity checks only; no v4 code/runtime/native-gate pass is asserted. E2E preflight not_applicable: docs-only, no v4 build. Root owns native traceability/report-revision/criterion-scenarios gates, fresh cold validation, completion/review contracts and integration of this exact six-file snapshot.
 
-Next owner: coordinator/root, for source-bound cold VALIDATE, bounded coder, full required checks, cold review and the separate qualified-provider/long-fixture decision. Bounded planner completion does not pause the eight-hour autonomous task or assert background execution. Profile model-routing-econom; requested planner gpt-6.1-sol high, actual runtime model/effort/usage/cost null unless host evidence supplies them.
+Before code acceptance require focused meaningful protocol/unit/concurrent DB/offline pipeline checks, full no-skip suite, build/typecheck/lint, red/restored-green mutations, synthetic env completeness/wiring and existing model-cost checks. Preserve all source/quota/credit/fence/Cloud.ru LLM/S3/OpenRouter invariants. Protocol package/build/container smoke must use the actual shipped projection/descriptor; root owns dependency/lockfile changes. Any browser receipt retains existing fresh Docker/browser requirements.
+
+Cloud Whisper five probes lacked words (raw SHA2562eb9e243634471f4fe34487defb5aea6b10dd0652e8d954a4d259b987e616739); GigaASR returned empty text/no timing. Retain these historical negatives and startup refusal; do not retry them automatically, build their transport, downgrade to phrase-only mode or fabricate word times.
+
+No production/current-VPS deployment, new service/bucket/VM/GPU, support message or additional paid call is authorized by this PLAN author. Root assigns concrete future natural/long-fixture budgets/targets separately. Unit-economics update has its own author; no prices/customer-credit contract is changed here. Missing actual bill, runtime model/effort/usage/cost stay null.
+
+Rollback after review: explicitly select existing OpenRouter STT with its own key or revert the v4 adapter/config revision; never switch provider within a dispatched attempt or replay unknown outcomes. Preserve DB/JSONL provider/model/ordinal history; no schema rollback. Cloud.ru chat/S3 remain the existing contour.
+
+Next owner root: verify source/launch/spec/per-file hashes, cold-validate planner context only, launch bounded coder, integrate root-owned manifests/lockfile, collect mandatory checks, cold review and pending real qualification/economics. Bounded planner completion does not pause the original autonomous task or claim background work. Profile model-routing-econom; requested planner Sol/high, actual host metadata/counters unavailable/null.
 
 ---
 

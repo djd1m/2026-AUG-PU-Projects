@@ -1,49 +1,48 @@
 # Cloud.ru provider foundation — Specification
 
-Status: v3 PLAN, 2026-10-27; offline implementation pending; tested Cloud.ru Whisper is not production-qualified. Source baseline: `125b655d17e36a5c65754f33471cefe8a4e3eeab`; author worktree input: `8cdf42c0586fc32bdce627e3b8d0d23ccd528ea8`. v1 plan baseline was `c559673649460fa5d8ef1e5e3c86bf7053ebbb69`.
-Feature slug: `cloudru-provider-foundation`. Parent approved the technical decision: documented chat JSON-object generation, schema in prompt, strict existing local schema and semantic validation. This is not strict schema generation supplied by Cloud.ru.
+Status: **v4 PLAN**, 2026-10-27; Yandex STT implementation pending. Source baseline `ff80cdd07311c98e3d5f0fd2bfbf42deea5ecee7` (coordinator counterpart `081d2860`). Feature slug: `cloudru-provider-foundation`. Existing Cloud.ru DeepSeek chat and S3 remain the v1 regression contour.
 
 ## Executive Summary
 
-Prepare an optional Cloud.ru chat provider without changing the podcast-to-clips product or claiming the whole Cloud.ru migration is complete. Existing OpenRouter behavior remains the default. v3 adds an explicitly selected, conditional Cloud.ru STT adapter using the coordinator-tested verbose multipart request shape; it accepts only real timed words and usable segments. Five authorized Whisper probes found text-only JSON or verbose segments with `words:null`; none qualifies for N5. AC-1–8 define offline compatibility only. Operators must not enable `N5_STT_PROVIDER=cloudru` for real users until the selected provider is qualified under AC-9. Existing S3 transport is reused. No deployment, paid calls, resource creation or real content access is authorized by this feature's implementation.
+Add an explicitly selected Yandex SpeechKit v3 word-timed Transcriber in the existing worker. Preserve the default OpenRouter path, Cloud.ru chat/S3, strict transcript acceptance and existing financial/source invariants. Cloud.ru STT retains its existing startup refusal: five Whisper probes returned no usable words; GigaASR's empty result is not an approved fallback. The proposed Cloud.ru STT transport is withdrawn in v4.
 
-Mode 2: project PRD/CLAUDE and scaffold are inputs, not generated outputs. Explore is skipped because the coordinator supplied product brief, research and solution decision. Parent order is credit packages/bonus → this foundation → later capability/target launch → actual four Metrika goals. Only this foundation and its requested optional STT extension are described here.
+Owner selected another RF STT with real word timing, supplied `YANDEX_SPEECHKIT_API_KEY`, and requested unit-economics updates if SpeechKit is adopted. Coordinator's separately authorized short v3 FULL_DATA probe returned two finals/10 actual timed words; this is protocol evidence only. Natural-speech quality, a full pause-aware chunk under 120 seconds, overlap/render journey and target rollout remain unqualified. Economics documents have a separate assigned author; this planner edits only the existing five SPARC roles plus research note.
 
-## Version and authority boundary
+## Version, authority and role map
 
-The owner explicitly requested the Cloud.ru Whisper adapter on 2026-10-27, supplied `https://gitverse.ru/dzhechkov/stt-rag-app`, and authorized eight hours of autonomous continuation. The coordinator authorizes this finite v3 contract; autonomy does not authorize purchases, new resources, production, support messages or unspecified inference spend. The owner-approved selected-Cloud-contour evidence boundary remains; the official lifecycle and native gate thresholds are unchanged and owned by the coordinator.
+The 2026-10-27 owner instructions and eight-hour autonomy authorize this finite v4 plan without another approval request. They do not authorize unspecified paid calls, production, new resources or a hidden fallback. v4 supersedes v2/v3 optional Cloud.ru Whisper transport plans: FR-2/AC-2 now describe Yandex; the old Cloud.ru refusal is retained under FR-1/AC-1. v1 LLM/S3 requirements and historical completion receipts remain frozen at `0c42dfb1acd7f5085517ddde57f11d1f04781e66`; old 1092-test/21-mutation results are not v4 evidence. Prior validation/review reports remain historical until freshly rebound.
 
-v1 LLM/S3 code and its receipts are immutable history at baseline `0c42dfb1acd7f5085517ddde57f11d1f04781e66`. v3 explicitly supersedes **only** the old FR-2/AC-2 blanket Cloud.ru STT startup refusal with the conditional strict adapter below. Old AC-2 test results prove v1 refusal only. v1 FR-1/3/4/5/6 and all financial/source invariants remain required regressions; none of their old results establishes a v3 pass. Existing validation/review reports are historical until freshly rebound.
-
-Research is [research-whisper-donor-20261027.md](research-whisper-donor-20261027.md). The donor is implementation evidence, not the provider's contract. Offline adapter behavior is implementable without assuming the service returns timing. FR-9/AC-9 is not passed: actual authorized responses now demonstrate incompatibility with strict word acceptance for the tested requests. Offline mock success cannot enter Phase 3 as established live provider capability. Full migration remains pending.
+Mode 2 /feature: `specification=01_specification.md`, `pseudocode=02_pseudocode.md`, `architecture=03_architecture.md`, `refinement=04_refinement.md`, `completion=05_completion.md`; target is this existing folder. Explore/research inputs are supplied; no new feature folder/scaffold. Existing owner-approved selected-contour evidence boundary and official gates/thresholds stay unchanged. Root owns cold VALIDATE, native gates, source integration and cold REVIEW; no coder exists at this PLAN handoff.
 
 ## Inherited constraints
 
-Read project `CLAUDE.md`, `docs/PRD.md`, `docs/REPRODUCE.md`, `docs/Specification.md`, `docs/Architecture.md`, `docs/model-cost-contract.md` and ADR-003/006 before implementation. Local word timestamps, quota-before-spend, dispatch fence and local fragment validation remain required. Root Architecture's older model table is superseded by its implementation reconciliation and REPRODUCE. Frozen root Specification is not edited in this scope.
+Apply project CLAUDE, PRD/REPRODUCE, root Specification/Architecture reconciliation, model-cost contract and ADR-003/006. Do not edit the frozen root product spec, shared transcript parser, extractor/chunker/merge, credit engine or old receipts. Actual words remain mandatory before select. Quota/claim/fsync precede paid RPC; stale results cannot persist/enqueue. Existing attempt retry, source ownership, all eight limits and customer-credit finalization remain required.
 
 ## User Stories with Acceptance Criteria
 
-US-001: As the operator, I want to select a documented provider at worker startup so that invalid configuration cannot silently dispatch to a different service.
+US-001: As the operator, I want explicit typed provider selection so invalid config cannot silently spend elsewhere.
 
 ### FR-cloudru-provider-foundation-1
 
-Load typed, validated provider configuration using the closed environment canon below. Absent backend selectors retain existing OpenRouter behavior; an empty or unknown selector is invalid. Existing live/fake mode retains its semantics; fake remains test-only. A live provider requires only its own secret. Unsupported model/provider pairs fail at startup.
+Keep LLM backend allowlist `openrouter|cloudru`; add operational STT backend `openrouter|yandex`. Recognize `N5_STT_PROVIDER=cloudru` only to retain the exact existing unsupported-word-contract startup error in all modes, before a transcriber/network is created. Absent selectors default to OpenRouter; blank/unknown selectors fail. Fake remains test-only and never makes a live call. Each live worker requires only its selected provider's key. Yandex is not a valid LLM backend, and key presence never selects a provider.
 
 ### AC-cloudru-provider-foundation-1
 
-[SC-US-001-1] Selected provider configuration
-Given live mode, an explicit Cloud.ru LLM selector, exact DeepSeek model and a synthetic Cloud.ru key, when configuration loads, then it resolves Cloud.ru without requiring an OpenRouter key. Unknown/empty selector, missing selected key or wrong model fails before network access. Existing absent selectors still resolve OpenRouter; production fake fails.
+[SC-US-001-1] Closed independent provider configuration
+Given Cloud.ru LLM with exact DeepSeek model and synthetic FM key, and/or explicit yandex STT with synthetic Yandex key, when each worker loads its own config, then selected keys alone suffice and secrets remain worker-scoped. Missing selected key, blank/unknown selector or yandex LLM fails before network. Cloud.ru STT retains `Cloud.ru STT не поддерживается: контракт таймкодов слов не подтверждён` with zero dispatch. Absent selectors still select OpenRouter; production fake fails and test fake records fake.
 
 ### FR-cloudru-provider-foundation-2
 
-For explicit `N5_STT_PROVIDER=cloudru`, construct the optional adapter with fixed model `openai/whisper-large-v3`, fixed `https://foundation-models.api.cloud.ru/v1/audio/transcriptions`, Bearer FM key, multipart real MP3 (fixed filename `audio.mp3`, `audio/mpeg`), fields `model`, `response_format=verbose_json`, `temperature=0`, `language=ru`, and two entries with the literal multipart name `timestamp_granularities[]`: `word` and `segment`. Let FormData generate the boundary; omit OpenRouter JSON/base64/routing fields and all other timestamp/provider flags. This exact verbose bracketed request was accepted in the coordinator probe but returned `words:null`; request acceptance is not word-capability qualification. JSON is known text-only for the tested input and is not the timing request. No SDK/dependency, URL override or provider negotiation.
+For explicit yandex STT create only TLS gRPC `/speechkit.stt.v3.Recognizer/RecognizeStreaming` at fixed `stt.api.cloud.yandex.net:443`. Fixed options: model `general`, audio container `MP3`, mono input from existing 16-kHz/64-kbit extraction, `FULL_DATA`, language WHITELIST `[ru-RU]`, `TEXT_NORMALIZATION_DISABLED`. Send `authorization: Api-Key <selected key>` metadata; no URL/model override, fallback, async operations, new bucket, diarization, LLM postprocessing or local model.
 
-Accept only an object with actual nonempty words through unchanged `parseTranscript` at adapter, worker and persistence boundaries. Absent language may become the explicitly requested `ru`; a present malformed/blank language is rejected. Cloud.ru additionally requires nonempty segments with some nonblank text because selection sends only segments. Missing/empty/malformed segments fail; no segment/text/timing synthesis. This conservative adapter policy is coordinator-approved, not a claimed Cloud.ru response requirement.
+Send session options once, then bounded actual audio-byte chunks with backpressure, then half-close input; collect final events until successful RPC completion. Key finals by actual top-level channel_tag and audio_cursors.final_index; valid index zero must be preserved. Ignore partial/refinement/EOU/status-only events for transcript text; exact duplicate finals deduplicate, conflicting duplicates fail nonretryably. Select first alternative deterministically. Preserve only one consistent mono channel; do not concatenate several channels or hypotheses.
+
+Map actual word text/start_time_ms/end_time_ms and actual phrase text/start_time_ms/end_time_ms to word/segment seconds by checked int64 milliseconds /1000, then unchanged parseTranscript at adapter/worker/persistence. Require nonempty actual words and usable actual segment text. Empty languages arrays, as observed live, may use request-derived `ru`; malformed present language/timing structures fail. Never infer timestamps from words, phrase boundaries or text. Protocol-defined scalar zero is valid; an arbitrary missing/malformed decoded field is not permission to insert zero.
 
 ### AC-cloudru-provider-foundation-2
 
-[SC-US-001-2] Optional transcription fails closed on unusable output
-Given explicit Cloud.ru STT and a synthetic selected FM key, when a real temporary MP3 is dispatched through injected fetch, then exactly one fixed multipart verbose-JSON request with literal bracketed word and segment entries is made; valid synthetic timed-word/segment fixtures pass unchanged parsing and absent language alone maps to ru. Text-only, segment-only, missing/empty words, missing/nonfinite word times, malformed JSON/envelope/language or unusable segments fail before acceptTranscript/select. No fallback, invented timing, repair request or schema-error retry occurs. Default OpenRouter request and test-only fake semantics remain unchanged.
+[SC-US-001-2] Word-timed gRPC protocol and strict response mapping
+Given injected gRPC and the pinned full-official-schema golden, when Yandex transcribes a real temporary MP3, then one fixed TLS RPC carries exact options/audio and maps the two-final/10-word proof to seconds and usable segments. Byte/field-number compatibility is checked against the independent golden, not just our projection. Partial/refinement events never duplicate words; exact duplicate finals add nothing; conflicting indices, missing words/times, malformed int64s, unsafe values, bad envelopes or empty context fail before acceptTranscript/select without repair/retry/fallback. OpenRouter/fake controls retain their existing behavior.
 
 US-002: As a producer, I want candidate fragments from the selected chat provider to pass the same local validation so that an invalid model response cannot become a rendered clip.
 
@@ -85,78 +84,71 @@ Reuse `packages/s3` without a new transport. Document the Cloud.ru key format an
 [SC-US-003-2] Offline S3 configuration safety
 Given synthetic `<tenant_id>:<key_id>` credentials and Cloud.ru endpoint configuration, when signing GET and multipart PUT under both addressing styles with an injected request handler, then signatures bind the intended host/region/credential, expire after 900 seconds and retain filename disposition; zero external requests occur. Existing S3 multipart/render/retention regressions pass.
 
-US-004: As the operator, I want STT execution attributed and bounded by the existing attempt machinery so that selecting Cloud.ru cannot bypass quotas or charge the customer twice.
+US-004: As the operator, I want STT attributed and bounded by existing attempt machinery so a new backend cannot bypass quotas or charge the customer twice.
 
 ### FR-cloudru-provider-foundation-7
 
-Runtime supplies explicit actual STT provider (`openrouter|cloudru|fake`) and fixed model to worker dependencies, `authorizeSttCall` and existing SpendEvent. Fill existing `job_attempt.provider/model` with bound SQL parameters in the same conditional call-ordinal update and transaction; enrich current JSONL attempt/outcome events without new tables/ledgers/services. Fake records fake. Preserve current call identity, fsync-before-HTTP, quota/fence/savepoint/retry/credit-finalization behavior and historical rows. Initial video minutes are not recharged per initial chunk; retry minutes remain counted by the existing quota path. Provider-attempt accounting does not create another customer-credit debit.
+Runtime supplies actual STT provider `openrouter|yandex|fake` and fixed selected model (`general` for Yandex) to worker dependencies, authorizeSttCall and current SpendEvent. Fill existing job_attempt.provider/model with bound parameters in the same successful call-ordinal UPDATE/transaction; enrich existing JSONL attempt/outcome events, with no migration, new paid ledger or backfill. Fake records fake. Initial whole-video minutes/credit reservation stay once per current contract; retries consume existing retry quota without another customer-credit debit. Preserve locks/savepoints/fences/ordinal ownership and finalizeVideoCreditsTx behavior.
 
 ### AC-cloudru-provider-foundation-7
 
 [SC-US-004-1] Exclusive attributed STT dispatch
-Given two handlers for the same fenced call ordinal, when Cloud.ru/fake/OpenRouter fixtures execute against the existing isolated DB, then only one claim can dispatch, actual provider/model is stored before HTTP and JSONL attempt fsync precedes HTTP. Quota refusal or stale claim gives zero requests; retryable timeout/429/5xx attempts remain counted up to the existing three-call maximum. Format/timing rejection never advances a retry ordinal. Existing customer reservation/finalization stays idempotent across retry, refusal and redelivery.
+Given competing handlers for one fenced ordinal, when Yandex/fake/OpenRouter fixtures run in the existing isolated DB, then only one claim dispatches; actual provider/model is stored and attempt event fsynced before RPC. Quota refusal/stale claim has zero RPCs; retryable transport failure/timeout remains counted up to the existing three-call maximum. Format/conflicting-final rejection never advances a retry ordinal. Customer reservation/finalization remains idempotent across retry, refusal, stale result and redelivery.
 
 ### FR-cloudru-provider-foundation-8
 
-Retain 25_000_000-byte nonempty MP3 ceiling checked before/after read, 120000 ms request timeout including complete response-body parsing, caller/job cancellation and rejected redirects. No adapter retry loop; the worker owns current retry policy and 30-minute job deadline. Unchanged 180-second chunks, 2-second overlap, measured MP3 offsets/deduplication and existing timing-clamp diagnostics must feed usable segment prompts, word-snapped selection and rendered subtitles.
+Retain common nonempty STT MP3 input ceiling 25_000_000 bytes and unchanged extraction/chunking: 180-second target, pause-aware cuts within target ±20 seconds, 2-second overlap. Yandex additionally checks <=10_000_000 bytes (conservative decimal interpretation of documented 10 MB), finite measured chunk duration >0 and <=300 seconds before RPC; both stat and read size are checked. Do not turn this into a new original-video size limit or change shared constants/chunker to 300 seconds.
+
+Keep 120000 ms request deadline through upload, all result events and final status; caller/job abort cancels the RPC, closes resources and prevents late acceptance. No adapter retry loop or gRPC transparent retry policy; existing worker owns three attempts and 30-minute job deadline. Retry only classified transient transport statuses; malformed response/timing, configuration/auth and conflicting finals are nonretryable. Complete only on normal RPC success plus validated actual transcript, never on the first final/event/end alone. Current offsets/deduplication/clamp diagnostics, word snapping and subtitle rendering remain unchanged.
 
 ### AC-cloudru-provider-foundation-8
 
-[SC-US-004-2] Bounded transport and pipeline regression
-Given injected valid Cloud.ru-shaped responses for a fixture longer than 180 seconds with speech across overlap, when the existing extraction/chunk/merge/select/render pipeline runs offline, then offsets, deduplication, chronological subtitle timing and usable segment context are preserved. Empty/oversize input yields zero fetch calls; a stalled body times out within 120000 ms; redirects and invalid formats fail without fallback. Actual Cloud.ru output quality is not inferred from this synthetic integration.
+[SC-US-004-2] Provider limits, cancellation and pipeline regression
+Given Yandex-shaped injected finals for >180-second synthetic audio with speech across a pause/overlap, when existing extraction/chunk/merge/select/render runs offline, then offsets/deduplication, actual segment context, word snapping and chronological subtitles remain correct. Empty/>10MB/>300s Yandex input causes zero RPCs; exact valid limits are covered. A stalled upload/result/status exceeds neither 120000 ms nor caller deadline, cancels once and cannot accept late events; error status after finals still fails. This is offline pipeline proof, not natural-speech quality or a live long-file pass.
 
-US-005: As the operator, I want separately evidenced real compatibility so that offline implementation is never represented as completed migration.
+US-005: As the operator, I want live evidence separated from implementation results so successful protocol work is never reported as completed migration.
 
 ### FR-cloudru-provider-foundation-9
 
-Live qualification remains unmet despite key availability and completed authorized probes. The coordinator observed five requests using a 5.26175-second Russian fixture: JSON returned text/usage; four verbose bracketed/bare word+segment and word-only variants returned the same single segment (`start:0`, `end:4.66`) and `words:null`. Raw evidence SHA256: `2eb9e243634471f4fe34487defb5aea6b10dd0652e8d954a4d259b987e616739`. These results establish incompatibility with N5 word acceptance for the tested shapes, not universal service non-support. Do not repeat these unchanged probes or add speculative flags. A sixth officially cataloged `GigaChat/GigaASR` probe returned HTTP 200 with empty text and no words/segments; it is research only and not a passing alternative.
+Coordinator short protocol evidence is available: own synthetic Russian MP3, 5.26175 seconds/43245 bytes, fixed Yandex general/FULL_DATA/MP3/ru-RU/normalization-disabled request; gRPC status 0, 0.5605392 seconds elapsed, two finals and 10 words with int64 millisecond strings. Output recognition is imperfect. Response SHA256 `f4e38ddb339d44aafaff0f30004e991a62a91c18d297f5830a613e60bb372ecd`; source manifest pins official cloudapi `b5702253b8216fa5cdac9f70509ed608eb0f17f5`. This proves a short protocol path only; no N5 build, natural-speech quality, latency SLA, long chunk or full user journey is accepted by it.
 
 ### AC-cloudru-provider-foundation-9
 
-[SC-US-005-1] Actual word capability remains unqualified
-Given the coordinator's source-bound redacted probe evidence, when readiness is reported, then retain the actual incompatible outcome and AC-9 **NOT PASSED**; no live pass follows from HTTP 200, segments, mocks or implementation completion. Record fixture duration, request shape, raw evidence digest and unavailable usage/billing values as null. Any future different-provider/request qualification needs concrete authority and new evidence of actual nonempty words plus usable segments through unchanged parsing; a separately authorized long-fixture chunk/render journey is also required for full migration. Operators must not enable Cloud.ru STT for real users. Root owns the owner's separate RF-STT choice; Yandex/T-Bank research and GigaASR implementation are outside this guarded Whisper transport scope; root now has an owner-supplied Yandex STT key and will qualify v3 FULL_DATA before selecting any implementation scope.
+[SC-US-005-1] Bounded actual protocol proof with honest remaining qualification
+Given the source-bound short receipt, when readiness is reported, then mark short Yandex protocol/timed-word receipt proven and overall live acceptance partial. Keep natural Russian speech/word-origin checks, representative pause-aware chunk within the unchanged 120-second deadline, >180-second overlap/render journey, target/server/browser/storage acceptance and unit-economics update explicitly pending until their own measured receipts. Do not resubmit unchanged probes or infer natural-speech quality from espeak. Additional paid calls require root's concrete fixture/budget/target authority; this PLAN author makes none. Cloud.ru STT remains refused; neither GigaASR nor another provider is a hidden fallback. Full migration is not complete.
 
 ## Non-Functional Requirements
 
 ### NFR-cloudru-provider-foundation-1
 
-Security: new FM key appears only in STT/LLM worker environment wiring as needed, never web/video/browser, logs, fixtures or receipts. Fixed HTTPS chat/STT endpoints, redirects rejected, existing account isolation/quota/fences retained. Synthetic fixture secrets only. Production fake is forbidden. No arbitrary base-URL option is added.
+Worker-only secrets: YANDEX_SPEECHKIT_API_KEY only worker-stt, CLOUDRU_FM_API_KEY only selected worker-llm, no model secrets in web/video/browser/logs/fixtures/receipts. Keep fixed TLS host, standard certificate verification and no untrusted authority/redirect/endpoint override. Preserve ownership/quota/fence/public-origin/production-fake guards. No global settings, VM/GPU/service, support message or automatic discovery.
 
 ### NFR-cloudru-provider-foundation-2
 
-Bounded behavior: preserve one LLM dispatch per authorized attempt, 240000 ms selection timeout covering body reads, existing 120000 ms STT request timeout through response-body parsing and three worker-owned STT attempts. Add no repair loop, alternate-provider call or retry on schema failure. No new cache/index/background process, performance promise or provider SLA is introduced.
+Bounded behavior: one authorized RPC per STT worker attempt, no retry in adapter/client; 120000-ms STT deadline and three worker attempts, existing 240000-ms chat timeout and no repair/fallback. Use only pinned @grpc/grpc-js 1.14.6 and @grpc/proto-loader 0.8.1 plus a readable bounded official protocol projection/descriptor, each file <500 lines. No full SDK/proto repository copy or hand-written generic protocol engine. Root owns lockfile integration. Preserve current memory/disk/source/credit budgets; no unmeasured performance or cost-saving claim.
 
 ## Closed environment canon
 
 | Name | Allowed values / rule |
 |---|---|
-| N5_MODEL_PROVIDER | Existing live or fake; fake only NODE_ENV=test |
-| N5_LLM_PROVIDER | openrouter or cloudru; absent defaults openrouter; empty invalid |
-| N5_STT_PROVIDER | openrouter or cloudru; absent defaults openrouter; explicit cloudru selects the conditional strict multipart adapter for offline compatibility; do not enable for real users before AC-9 qualification |
-| N5_LLM_MODEL | OpenRouter: existing anthropic/claude-sonnet-5 or google/gemini-3.8-flash; Cloud.ru: deepseek-ai/DeepSeek-V4-Pro |
-| OPENROUTER_API_KEY | Required for selected live OpenRouter component only |
-| CLOUDRU_FM_API_KEY | Required for each selected live Cloud.ru worker only; Foundation Models API-key Key Secret |
-| S3_ENDPOINT / S3_PUBLIC_ENDPOINT | Existing origin settings; Cloud.ru example https://s3.cloud.ru for both |
-| S3_REGION / S3_BUCKET | ru-central-1 example / operator-approved bucket name |
-| S3_ACCESS_KEY / S3_SECRET_KEY | `<tenant_id>:<key_id>` / Key Secret; examples only |
-| S3_FORCE_PATH_STYLE | Existing true or false, matched to bucket naming; template false retained |
+| N5_MODEL_PROVIDER | Existing live/fake; fake only NODE_ENV=test |
+| N5_LLM_PROVIDER | openrouter/cloudru; absent OpenRouter; blank/unknown/yandex invalid |
+| N5_STT_PROVIDER | openrouter/yandex; absent OpenRouter; cloudru recognized only for existing startup refusal; other/blank invalid |
+| N5_LLM_MODEL | Existing OpenRouter anthropic/claude-sonnet-5 or google/gemini-3.8-flash; Cloud.ru deepseek-ai/DeepSeek-V4-Pro |
+| OPENROUTER_API_KEY | Required only by selected live OpenRouter component |
+| CLOUDRU_FM_API_KEY | Required only by selected live Cloud.ru LLM; not STT |
+| YANDEX_SPEECHKIT_API_KEY | Required only by selected live Yandex STT; service-account SpeechKit key; no aliases or credential auto-discovery |
+| S3_ENDPOINT / S3_PUBLIC_ENDPOINT | Existing configuration, Cloud.ru https://s3.cloud.ru example |
+| S3_REGION / S3_BUCKET | Existing ru-central-1 example / operator-owned bucket |
+| S3_ACCESS_KEY / S3_SECRET_KEY | Existing compound tenant_id:key_id / Key Secret |
+| S3_FORCE_PATH_STYLE | Existing true/false configuration |
 
-No new model, endpoint, schema-mode, fallback, billing or analytics environment names are permitted. Existing DB/Redis/limits/origin variables stay under their existing contracts. Constants: Cloud.ru base `https://foundation-models.api.cloud.ru/v1`, chat `/chat/completions` nonstreaming `stream:false`; STT `/audio/transcriptions`, fixed `openai/whisper-large-v3`. No STT model selector is added.
+No STT model, endpoint, protocol-mode, fallback or extra billing environment names. Yandex RPC/model/mode are constants. Existing limits/origin/DB/Redis/billing variables retain current contracts. New vendor cost description belongs to the separately assigned unit-economics author, not a new spending gate or customer charge.
 
-## Feature Matrix
+## Feature Matrix and Success Metrics
 
-| Foundation scope | Later capability/launch scope | Excluded |
+| v4 implementation scope | Qualification still pending | Excluded |
 |---|---|---|
-| v1 chat/S3 preserved; v3 optional strict multipart STT, actual attribution and offline pipeline checks | AC-9 NOT PASSED: tested Whisper words:null; future qualified-provider evidence, authorized long RF-server journey and S3 acceptance | Current-VPS rollout, paid calls, new resources, purchases, model fallback, finance changes, Metrika verification |
+| Explicit Yandex adapter, protocol golden, strict mapping, actual STT attribution, offline pipeline; v1 LLM/S3 regressions | Natural-speech/long-chunk/full journey, unit-economics update, RF target and live storage receipts | Cloud.ru/GigaASR STT adapter, async jobs/new bucket, new paid ledger, automatic fallback, current-VPS/production release |
 
-## Success Metrics
-
-| Metric | Target at foundation handoff | Source |
-|---|---|---|
-| AC covered by executable checks | Active AC-1–8 after fresh implementation; AC-9 not passed on actual probe evidence | ручное измерение: packaged completion gate and fresh test receipts |
-| HTTP dispatches for one accepted mock selection | 1; 0 on quota refusal | наш журнал |
-| Provider mismatch between dispatch and stored record | 0 in focused fixtures | наша БД |
-| External calls during offline suite | 0 | ручное измерение: injected fetch/SDK handler assertions |
-| Actual model cost, target latency, live S3 pass | Unknown, not an acceptance claim for this feature | ручное измерение: later authorized RF-server receipt |
-
-Full Cloud.ru migration remains incomplete after foundation delivery. Unknown external capabilities cannot be promoted by configuration or mock results.
+AC-1–8 require fresh executable checks; AC-9 has short protocol evidence only. Provider mismatch/duplicate customer debit target zero in DB/spend integration fixtures (source: наша БД/наш журнал). Offline external dispatch target zero (source: injected transport assertions). Actual bill and N5 production latency/quality remain unknown (source: later authorized measurements). Full migration remains incomplete until the accepted remaining work is delivered.

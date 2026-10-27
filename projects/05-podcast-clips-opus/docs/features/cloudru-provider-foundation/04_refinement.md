@@ -1,105 +1,80 @@
 # Cloud.ru provider foundation — Refinement
 
-v3 PLAN, 2026-10-27; this planner executes documentation checks only; coordinator live evidence is recorded separately. v1 observations remain in the historical completion section.
+v4 PLAN, 2026-10-27. Planner runs document checks only. Root's short Yandex protocol proof is distinct from implementation/offline integration and pending natural/long/target acceptance.
 
 ## Edge Cases Matrix
 
-| Scenario | Input | Expected | Handling |
+| Scenario | Input | Expected | Enforcement |
 |---|---|---|---|
-| Empty input | Blank provider/key/model or missing response content | Configuration/schema error before dispatch or persistence | No default on blank; absent selectors alone preserve OpenRouter |
-| Max size | Existing 25 MB STT ceiling / long transcript | Existing limits retained; no new chunk/output assumptions | Strict conditional Cloud.ru request; nonempty bytes <=25_000_000 before HTTP |
-| Concurrent access | Two select handlers share attempt | At most one claim/dispatch | Existing transaction/fence and quota, real isolated DB test |
-| Network failure | 429/5xx, abort, stalled response body | Provider/timeout outcome, one attempt remains counted | No repair/fallback/new retry |
-| Shape error | Refusal, invalid JSON, extra fields, truncated finish_reason | Local schema failure; no persisted fragment | Existing strict validator plus envelope checks |
-| Semantic error | Invalid score/time/language/overlap among valid candidates | Existing candidate filtering and word snapping | No broadening validator rules |
-| Explicit optional STT | Cloud.ru selected, valid key; output lacks words/segments | Conditional request allowed; untimed/unusable output rejected | No fabricated timing, empty context, alternate format or fallback |
-| Secret mixing | Cloud.ru LLM with no OpenRouter key | Works with selected Cloud.ru synthetic key | No inference from which key exists |
-| Fake execution | Test fake with Cloud.ru LLM backend | No external request; actual provider recorded fake | Never allowed in production |
-| Storage host | Public signing origin differs from internal endpoint | Signed URLs bind public origin, transport internal | Independent SigV4 assertion; no host rewrite after signing |
+| Provider config | Missing/blank/unknown selector or selected key | Startup fail, zero external work | Separate closed selectors; absent alone defaults OR |
+| Withdrawn Cloud STT | cloudru STT in live or fake | Existing exact unsupported startup error | No transcriber/network construction |
+| Wrong secret scope | Only another provider key exists | Selected live backend fails | Actual entrypoint+compose projection; no key inference |
+| Yandex size/duration | Empty/>10MB/>300s/nonfinite input | Zero RPCs | Stat/read guards plus measured duration; common25MB preserved |
+| Protocol drift | Field number/enum/method differs | Interoperability test fails | Complete-official-schema golden independent of production projection |
+| Finals | Partial/refinement or repeated final | Only finals; exact duplicate once, conflicting key fails | Key actual top-level channel + final_index; zero valid |
+| Bad words | Missing/empty words, blank word, invalid/unsafe ms | Nonretryable TranscriptError | Typed decoded boundary then unchanged strict parser |
+| No context/language | Empty phrase text; empty languages arrays | Empty context fails; empty languages alone derives requested ru | No segment/time generation or malformed-language fallback |
+| Cancellation/status | Stall/abort/error after final/late event | No success/persistence, RPC cancelled/closed | 120s/caller/job deadline through final status |
+| Race/quota | Two handlers/same ordinal; refusal/stale | One authorized dispatch or zero | Existing real DB transaction/fence/quota and fsync-before-RPC |
+| History/credits | Timeout/retry/redelivery | Attempt remains counted; customer finalized once | Existing quota and reservation/finalization controls |
+| Chat/S3 | Selected Yandex STT | v1 LLM/S3 behavior unaffected | Full existing regression suites |
 
 ## Testing Strategy
 
-Unit: new `tests/cloudru-provider.test.ts` uses injected fetch and mocked SDK handlers, synthetic keys and transcript fixtures. Cover every closed selector/model combination, strict optional STT multipart request/response policy, documented Cloud.ru chat body and prompt schema, unchanged OpenRouter body, strict local shape/semantics, refusal/truncation/body timeout/no retry, provider identity and no real requests.
+Unit tests use synthetic keys, injected gRPC and actual temporary MP3 files; no network. Verify fixed TLS host/method/model/MP3/FULL_DATA/WHITELIST/ru-RU/normalization-disabled, options-first/chunks/half-close, backpressure and actual bytes. Preserve OR request/fake behavior and Cloud startup refusal. No private environment or live keys are test inputs.
 
-Integration: existing isolated PostgreSQL/Redis/MinIO suite validates actual provider stored on an exclusively claimed attempt, per-user/global refusal before dispatch, timeout attempt attribution and stale fencing. Run on existing authorized test environment only; no container/image creation authorized by PLAN. Offline S3 signing is not a Cloud.ru integration pass.
+Protocol interoperability uses root's official-protocol-golden.json SHA256 `8d7a2f539e0eff0fc881b516f25deb78cc9ea971aa84313094b21c99f1005314`, generated with full official pinned schema. Compare production request encoding to golden and decode official response bytes into expected two finals/10 words. Do not merely encode/decode the project's own subset. Keep source manifest/provenance and distinguish re-encoded synthetic fixture from network capture. Build/import smoke must prove chosen protocol packaging works from built worker/container paths.
 
-E2E: fake-provider regression journey in existing isolated test environment preserves upload → processing → ready/refusal semantics. Actual RF target/long-fixture and real S3/browser journeys remain pending. AC-9 is not passed: completed short Cloud.ru Whisper probes returned no words; do not enable Cloud.ru STT for real users or report synthetic pipeline success as live qualification. Immediately before any actual E2E, companion read-only preflight binds source/build/inputs/allowed environment/receipt; no preflight in this docs-only stage.
+Response tests cover indices0/1, phrase/word time0, int64 millisecond strings, precise /1000 conversion, fractional/exponent/whitespace/unsafe malformed representations, duplicates/conflicts, wrong channel, partial/refinement noise, no-final/wordless/textless output and empty languages->ru. Existing parser timing-clamp/order diagnostics remain unchanged. No shape repair, inferred timing, punctuation alignment or new threshold.
 
-Performance/benchmark: deterministic count benchmark asserts exactly one mocked HTTP call per accepted LLM attempt, zero on refused quota and zero fallback calls on failure. Simulated body stalls hit existing 240000 ms timeout using fake timers rather than waiting. No latency percentile or token-price target is invented. Actual model token usage, billing, CPU and target latency remain null until measured in separately authorized work.
+Cancellation tests simulate stalled upload, write backpressure, readable events with no terminal status, status error after valid finals, caller abort before/during call, 120000-ms deadline and late final/status. Successful first final/end alone must not resolve. Check one cleanup/cancel for owned resources and no late accept/enqueue. Classify closed transient statuses only; UNAVAILABLE/DEADLINE_EXCEEDED/RESOURCE_EXHAUSTED can reach existing worker retry logic, while auth/config/format/conflicting-final and caller cancellation cannot. No client retry config.
+
+Integration uses existing isolated PostgreSQL/Redis/MinIO environment: exclusive same-ordinal claims, yandex/general stored before RPC, matching fsynced event identity, quota/stale refusal before dispatch, timeout counting, max3 attempts, no retry on missing timing, and idempotent customer credits/source/fence behavior. Sequential mocks do not replace the required concurrent DB race. Existing chat/S3/credit/selection tests remain required.
+
+Offline pipeline: own >180-second synthetic audio with speech across pause/overlap, current extraction/chunker/merge, injected official-shaped finals, actual segment-only selection input, word snapping and rendered karaoke/subtitle chronology. Pause-aware target180s means non-final lengths160..200s; do not assert hard180s chunks or change existing ±20s rule. This proves code integration, not model quality/long-file latency.
 
 ## Test Cases
 
 ```gherkin
-Scenario: Selected Cloud.ru LLM configuration
-  Given live mode, cloudru LLM and synthetic CLOUDRU_FM_API_KEY
-  And exact deepseek-ai/DeepSeek-V4-Pro model and no OpenRouter key
-  When configuration loads and a mocked selection is authorized
-  Then one Cloud.ru JSON-object request includes the exact schema in its prompt
-  And strict local validation precedes fragment persistence
+Scenario: Explicit RF STT with preserved Cloud chat
+  Given live yandex STT with a synthetic selected key and Cloud.ru DeepSeek LLM
+  When config loads and injected protocol finals complete with successful RPC status
+  Then real word and phrase milliseconds map to strict N5 seconds
+  And only worker-stt receives the Yandex key and chat/S3 remain unchanged
 
-Scenario: Conditional transcription and invalid response
-  Given Cloud.ru STT is explicitly selected with a synthetic FM key
-  When injected fetch returns text-only or missing actual word timestamps
-  Then transcript acceptance and select enqueue are refused without schema retry
-  Given a refused, truncated or structurally invalid Cloud.ru chat response
-  When selection runs
-  Then no invalid fragment is persisted and no fallback request occurs
+Scenario: Conflicting final and late failure
+  Given two different final payloads share one channel and final index
+  When the second arrives, or terminal RPC error follows a valid final
+  Then transcription is refused without format retry or late persistence
 
-Scenario: Authentication bypass attempt
-  Given live Cloud.ru mode with missing selected key and an OpenRouter key
-  When worker starts
-  Then startup fails without using the other provider's credentials
+Scenario: Legacy provider prohibition
+  Given cloudru STT is selected in any mode
+  When startup configuration loads
+  Then the exact existing unsupported error occurs before any request
 
-Scenario: Input injection
-  Given transcript text contains commands or SQL-like strings
-  When the existing data prompt and provider attribution are processed
-  Then transcript remains user data and SQL values remain bound parameters
-
-Scenario: Cross-tenant dispatch attempt
-  Given an account requests another account's existing or absent video
-  When existing ownership/fence authorization runs
-  Then existing indistinguishable 404 behavior and zero external dispatch remain
+Scenario: Shared financial ownership
+  Given two handlers compete for one fenced STT ordinal
+  When existing authorization and fsynced spend run before injected RPC
+  Then at most one dispatch occurs with yandex/general identity
+  And retry/refusal/redelivery cannot debit the customer a second time
 ```
 
-Rate-limit/brute-force: no auth endpoint is added; existing rate/quotas are regression-tested, not replaced. Security scenarios above supplement nine acceptance scenarios in Specification; they do not introduce machine AC IDs.
+These supplement the nine named Specification scenarios; planned prose is not future executable test-title coverage.
 
-## Guard mutation and regression sequence
+## Guard mutations and mandatory regression
 
-One implementation pass → independent requirements/code review → fixes for concrete findings. Mutate Cloud.ru request route/prompt schema, hardcode provider to OpenRouter and bypass local validation; focused guard must turn red, restore and prove green. Keep existing OpenRouter provider pin guard scoped to its branch. Shared dispatch requires concurrent DB test. Do not change a production constant merely to make timing tests pass.
+One implementation pass → independent review → corrections for concrete findings. Each new guard needs red/restored-green proof. Mutate fixed host/model/FULL_DATA/MP3/normalization, protocol field numbers/enums against independent golden, selected-key/entrypoint projection, missing-word/segment acceptance, conflicting-final dedupe, timeout-before-final-status, cancel/late acceptance and provider/model/fsync/ordinal behavior. Restore exact source before green control; preserve existing source/quota/customer-credit mutants. No new generic validator or invented benchmarks.
 
-After affected changes run focused tests, then required complete build/typecheck/lint/test + existing selection mutations and env wiring with synthetic fixture. No repeated unchanged green runs without new findings. Completion gate validates actual test file/title, not this planned table.
+After relevant changes run focused tests, full npm test with mandatory no-skip reporter, workspace build/typecheck/lint, existing relevant mutation runners and synthetic env completeness/wiring/model-cost checks. Root owns lockfile/manifests; dependency install is implementation work under assigned authority, not this PLAN. No unchanged successful suite repeated without new cause. All <500-line guards apply.
 
-## Performance Optimizations
+## Performance, security and accessibility
 
-Reuse segment-only prompt, existing indexes/claims and one dispatch. No additional caches, validation engine, output repair loop or benchmark framework.
+No model quality/SLA/savings target is invented from 0.5605392s short probe. Current 120s RPC/30-min job/time/size/disk ceilings remain. No unbounded gRPC receive/output configuration, extra cache, repair loop, async job, service, GPU or aligner. Request/response bodies/keys are absent from operational receipts. Standard TLS verifies fixed endpoint; no arbitrary authority override. Existing account isolation/404/quota/fence/origin checks remain.
 
-## Security Hardening
+No UI change planned. Any browser/UI acceptance used later still requires the existing fresh Docker/browser setup; HTTP checks are not a replacement. E2E companion preflight is not_applicable for this docs-only stage and required immediately before actual E2E.
 
-No keys in error messages/receipts; no URL override; HTTPS fixed transport and redirects rejected. Account ownership, parameterized SQL, quota-before-spend, fsynced attempts and fence acceptance preserved. Test requests use synthetic credentials only and never reach internet.
+## Live qualification and economics
 
-## Accessibility
+Short own 5.26175s/43245-byte MP3 protocol proof passed: grpc0, two finals/10 actual timed words, imperfect recognition, actual charge unknown. It does not pass natural speech, actual full 160..200s chunk within120s, >180s overlap/subtitle journey, target rollout or live S3/browser. Additional paid requests remain root-owned with explicit fixture/budget/environment authority; do not repeat unchanged tests for reassurance.
 
-No interface change; existing responsive/WCAG/keyboard behavior is unchanged. New configuration errors are operator-facing diagnostics, not product UI or a new interaction.
-
-## Technical Debt
-
-Pending: a qualified RF provider and actual word/segment evidence after the observed Cloud.ru Whisper incompatibility; official Whisper timing schema, DeepSeek output ceiling and target quality, actual Cloud.ru storage acceptance and target-server launch. Strict generation capability is deliberately unused, not implemented speculatively. Keep deferred items visible without blocking unrelated offline foundation implementation.
-
-## v3 meaningful acceptance and mutations
-
-New checks are planned, not test-title/coverage receipts. Reuse existing suites; do not create a validator engine or tests that merely restate an implementation expression.
-
-| Property | Meaningful check / failure injection | Existing seam |
-|---|---|---|
-| Cloud.ru request | Decode received multipart and compare actual MP3 bytes/filename/fixed Whisper model/verbose_json/temp0/ru; literal timestamp_granularities[] has word and segment, no routing/other timestamp flags; OR control retains existing wire | cloudru-provider / transcription tests |
-| Selected credentials | Execute actual STT entrypoint projection + resolved synthetic compose; missing selected FM key fails, unrelated key does not substitute; fake records fake | config/env/provider tests |
-| Parser/metadata | Real numeric word+segment fixtures pass; observed words:null with segment 0–4.66, text-only, segment-only, [] words, absent/string/nonfinite times, malformed JSON/language, absent/empty/textless segments fail; absent language alone becomes ru | transcription tests; parser source unchanged |
-| Bound/cancel | Empty and >25_000_000-byte file gets no fetch; stalled body hits 120000 ms, caller abort cancels, redirect cannot forward key; no alternate-format request | injected transport, fake timers |
-| Financial/dispatch | Two real DB handlers compete same ordinal: one call; identity present in DB before fetch; fsync attempt before dispatch; refusal/stale zero calls; retry/quota/credit finalization controls | transcription integration/order/quota + credit packages |
-| Downstream | >180-second synthetic audio with overlap speech: merge once, nonempty segment prompt, word snapping and rendered subtitle timing | existing merge/select/render media suites |
-
-Mutate one guard at a time, restore bytes and retain red/restored-green evidence: select wrong multipart route/format/body; leak the wrong selected key or omit STT entrypoint projection; bypass actual-word/usable-segment validation; end timeout before body read; hardcode DB/JSONL provider; remove fsync-before-call or ordinal condition. Existing quotas, source ownership, parser timing clamps and customer-credit guards remain mandatory. Only modify existing mutation runner where this is enough; coordinator owns any exact runner allocation. No changes to constants to ease tests.
-
-After concrete affected changes: focused unit/integration checks; full `npm test` with mandatory no-skip reporter, `npm run build`, `npm run typecheck`, `npm run lint`; relevant existing mutation runners; synthetic env completeness/wiring and model-cost source guard. Preserve v1 LLM/S3 tests, existing concurrency/credits/source invariants and all eight limits. No UI changes planned. If a browser/UI receipt is used for acceptance, its existing required Docker/browser setup and fresh build remain required; an HTTP request cannot replace it.
-
-Live AC-9 is **NOT PASSED**, not blocked by a missing key: the owner supplied one and the coordinator completed five Whisper probes using a 5.26175-second fixture. JSON returned text/usage; four verbose bracketed/bare word+segment and word-only requests returned identical segment 0–4.66 and words:null (raw SHA256 `2eb9e243634471f4fe34487defb5aea6b10dd0652e8d954a4d259b987e616739`). Retain this incompatible fixture as a nonretryable rejection control; no automatic/unchanged paid reprobe. The selected offline adapter serializes the accepted verbose bracketed shape only, without assuming live words. GigaChat/GigaASR's sixth HTTP-200 result had empty text/no timing and is research only. Root owns the owner's different RF-STT choice outside this scope; the owner has supplied a Yandex STT key and root will qualify v3 FULL_DATA before any Cloud coding. A future qualified response and separately authorized >180-second fixture with independently checked timing/origin remain required for full migration. No guessed wall time, charge or runtime pass.
+Owner requested updated unit economics; a separate author owns those files. Include real sent chunk seconds, overlap, per-request 15s rounding and retried attempts in future calculations; do not equate one-hour input with exactly one-hour billed audio. Keep actual usage/bill versus tariff arithmetic distinct. No customer tariff/credit engine change follows automatically from provider cost.
