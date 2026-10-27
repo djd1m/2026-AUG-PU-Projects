@@ -1,36 +1,36 @@
 # Cloud.ru provider foundation — Completion
 
-Status: **v2 PLAN ONLY**, 2026-10-27. No v2 implementation, native completion gate, full suite, build, lint, typecheck, mutation, live provider call or deployment is claimed passed. Source baseline `0c42dfb1acd7f5085517ddde57f11d1f04781e66`; current specification bytes must be hashed in the fresh validator receipt. The accepted v1 receipt is preserved below as history, including 1092 tests and 21 mutations; those are not v2 evidence.
+Status: **v3 PLAN ONLY**, 2026-10-27. No v3 implementation, native completion gate, full suite, build, lint, typecheck, mutation or deployment is claimed passed. Coordinator short live probes were executed and did not qualify Whisper words. Source baseline `125b655d17e36a5c65754f33471cefe8a4e3eeab`, author input `8cdf42c0586fc32bdce627e3b8d0d23ccd528ea8`; current specification bytes must be hashed in the fresh validator receipt. The accepted v1 receipt is preserved below as history, including 1092 tests and 21 mutations; those are not v3 evidence.
 
-## v2 authority, scope and pending acceptance
+## v3 authority, scope and pending acceptance
 
-Owner request on 2026-10-27 and pinned Gitverse reference supersede v1's blanket STT refusal only for the new explicit conditional strict adapter. Existing selected-Cloud-contour scope exception is preserved; official phase order, gates and thresholds are unchanged. Coordinator performs fresh cold VALIDATE before code and independent REVIEW after frozen implementation. Historical validation-report.md/review-report.md must not be reused as current v2 approvals.
+Owner request on 2026-10-27 and pinned Gitverse reference supersede v1's blanket STT refusal only for the new explicit conditional strict adapter. Existing selected-Cloud-contour scope exception is preserved; official phase order, gates and thresholds are unchanged. Coordinator performs fresh cold VALIDATE before code and independent REVIEW after frozen implementation. Historical validation-report.md/review-report.md must not be reused as current v3 approvals.
 
 | Active criterion | Current result | Evidence required after implementation |
 |---|---|---|
-| AC-cloudru-provider-foundation-1 | pending v2 regression | Actual closed-config/key/fake checks |
+| AC-cloudru-provider-foundation-1 | pending v3 regression | Actual closed-config/key/fake checks |
 | AC-cloudru-provider-foundation-2 | pending; v1 refusal explicitly superseded | Actual multipart and strict rejection tests, never donor/mock capability claim |
-| AC-cloudru-provider-foundation-3 | pending v2 regression | Unchanged Cloud.ru chat request/local validation checks |
-| AC-cloudru-provider-foundation-4 | pending v2 regression | Chat failure/timeout/no-fallback checks |
-| AC-cloudru-provider-foundation-5 | pending v2 regression | Exclusive actual chat attribution checks |
-| AC-cloudru-provider-foundation-6 | pending v2 regression | Existing offline S3 signing/regressions |
+| AC-cloudru-provider-foundation-3 | pending v3 regression | Unchanged Cloud.ru chat request/local validation checks |
+| AC-cloudru-provider-foundation-4 | pending v3 regression | Chat failure/timeout/no-fallback checks |
+| AC-cloudru-provider-foundation-5 | pending v3 regression | Exclusive actual chat attribution checks |
+| AC-cloudru-provider-foundation-6 | pending v3 regression | Existing offline S3 signing/regressions |
 | AC-cloudru-provider-foundation-7 | pending | Exclusive STT identity/quota/fsync/credits integration checks |
 | AC-cloudru-provider-foundation-8 | pending | Input/body/cancel bounds and offline chunk/selection/render checks |
-| AC-cloudru-provider-foundation-9 | deferred live; key/budget absent | Authorized actual word+segment receipt, then separate long-fixture acceptance |
+| AC-cloudru-provider-foundation-9 | NOT PASSED: actual Whisper responses lack words | Preserve incompatibility digest; future qualified-provider word+segment evidence and separate long-fixture acceptance |
 
-This is a plan table, not native executable coverage: add exact existing test paths/titles only after tests exist and are inspected. No future test title is fabricated. Offline code acceptance (AC-1–8) and real compatibility/full migration (AC-9 plus long fixture) are separate verdicts; remaining accepted live work stays coordinator-owned rather than declared complete.
+This is a plan table, not native executable coverage: add exact existing test paths/titles only after tests exist and are inspected. No future test title is fabricated. Offline code acceptance (AC-1–8) and unmet real compatibility/full migration (AC-9 plus long fixture) are separate verdicts; remaining accepted live work stays coordinator-owned rather than declared complete.
 
-## v2 checks and handoff contract
+## v3 checks and handoff contract
 
-This documentation attempt permits `git diff --check` and document-structure inspection only. Root owns native traceability/validation/completion/review gates against immutable six-file/source hashes. No runtime checks are executed by the planner. E2E readiness is `not_applicable`: docs-only, no v2 build or authorized inference.
+This documentation attempt permits `git diff --check` and document-structure inspection only. Root owns native traceability/validation/completion/review gates against immutable six-file/source hashes. No runtime checks are executed by the planner. E2E readiness is `not_applicable`: docs-only, no v3 build or authorized inference.
 
-Implementation requires fresh meaningful focused unit/concurrent DB/pipeline checks, full tests with no-skip reporter, build/typecheck/lint, relevant red/restored-green mutations, synthetic env complete/wiring and existing model-cost guard. Retain source/credits/quota/fence/OpenRouter/chat/S3 regressions. Existing native traceability/report-revision/criterion-scenarios/completion/review contracts remain as documented in the v1 command section below; only fresh v2-bound receipts advance v2. No official utility or historical report is edited by this attempt.
+Implementation requires fresh meaningful focused unit/concurrent DB/pipeline checks, full tests with no-skip reporter, build/typecheck/lint, relevant red/restored-green mutations, synthetic env complete/wiring and existing model-cost guard. Retain source/credits/quota/fence/OpenRouter/chat/S3 regressions. Existing native traceability/report-revision/criterion-scenarios/completion/review contracts remain as documented in the v1 command section below; only fresh v3-bound receipts advance v3. No official utility or historical report is edited by this attempt.
 
-Release remains excluded: no production/current-VPS deployment, paid call, support message, new service/resource or purchase. Optional probe requires private key plus concrete one-request budget/environment/rights-cleared fixture authority, with readiness and redacted evidence; key presence alone does not authorize spend. Unknown actual word timing remains UNCONFIRMED. Missing/empty segments are rejected by explicit conservative coordinator policy; only absent language may inherit request ru. No guessed time, alignment model or silent provider fallback.
+Release remains excluded: no production/current-VPS deployment, additional paid call, support message, new service/resource or purchase. The owner supplied a key and the coordinator completed five authorized Whisper probes (5.26175-second fixture): JSON text/usage; four verbose bracketed/bare word+segment and word-only shapes returned one segment from 0 to 4.66 and words:null. Raw SHA256 `2eb9e243634471f4fe34487defb5aea6b10dd0652e8d954a4d259b987e616739`. AC-9 is NOT PASSED; no unchanged reprobe or speculative timing flags. The optional offline transport uses the tested verbose_json and literal timestamp_granularities[] word/segment request. Operators must not enable N5_STT_PROVIDER=cloudru for real users before a qualified provider passes actual word+segment acceptance. A sixth GigaChat/GigaASR probe returned HTTP 200 with empty text/no timings and is research only; no code/env selector is added. The owner chose other RF-STT research; root owns Yandex/T-Bank qualification/selection outside this scope, now with an owner-supplied Yandex STT key; no Cloud coding starts before its v3 FULL_DATA probe result. Missing/empty segments are rejected by explicit conservative coordinator policy; only absent language may inherit request ru. No guessed time, alignment model or silent provider fallback.
 
-Rollback: select the existing OpenRouter backend with its own key, or revert the v2 code/config revision after review. Never switch after a dispatch or replay an unknown outcome; retain provider/model JSONL/DB history and current fenced recovery. No schema rollback exists.
+Rollback: select the existing OpenRouter backend with its own key, or revert the v3 code/config revision after review. Never switch after a dispatch or replay an unknown outcome; retain provider/model JSONL/DB history and current fenced recovery. No schema rollback exists.
 
-Next owner: coordinator/root, for source-bound cold VALIDATE, bounded coder, full required checks, cold review and missing live prerequisites. Bounded planner completion does not pause the eight-hour autonomous task or assert background execution. Profile model-routing-econom; requested planner gpt-6.1-sol high, actual runtime model/effort/usage/cost null unless host evidence supplies them.
+Next owner: coordinator/root, for source-bound cold VALIDATE, bounded coder, full required checks, cold review and the separate qualified-provider/long-fixture decision. Bounded planner completion does not pause the eight-hour autonomous task or assert background execution. Profile model-routing-econom; requested planner gpt-6.1-sol high, actual runtime model/effort/usage/cost null unless host evidence supplies them.
 
 ---
 

@@ -1,6 +1,6 @@
 # Cloud.ru Whisper reference: bounded donor and primary evidence
 
-Date: 2026-10-27 UTC. Status: research complete; real provider word timing **UNCONFIRMED**. No donor code executed, keys read, inference request, support message, install or production action.
+Date: 2026-10-27 UTC. Status: v3 research correction; tested Cloud.ru Whisper is **NOT QUALIFIED** for N5 words. This planner executed no donor code, key read, inference, support message, install or production action; coordinator-authorized live observations are recorded below.
 
 ## Objective and provenance
 
@@ -25,11 +25,11 @@ The fresh bounded primary research is `/tmp/n5-cloudru-whisper-primary-evidence-
 - [Official FM contents](https://cloud.ru/docs/foundation-models/ug/doc-contents), linked release notes, quickstart and troubleshooting yielded no dedicated timing contract. Public GETs `/v1/openapi.json`, `/v1/docs`, `/openapi.yaml` at the FM API host returned 404. These are bounded documentation-location observations only.
 - Prior provider-console-code research on 2026-10-26 found multipart `/audio/transcriptions`, ru and response_format text in [published FM UI bundle](https://console.cloud.ru/sources/ml-foundation-models/cloudplatform-ml-foundation-models.js), decoded-content SHA256 `b53636333ccd4a2f99a6d30cea8db3739892a8bf956ef4e6e4df7791ea3cd8a7`. It is primary implementation evidence, below an API schema; not re-searched in the fresh run. It does not establish json enum, words, units or timestamp options.
 
-Confidence: high in exact inspected request/source facts; insufficient evidence for live word/segment capability. No primary statement of non-support found. Generic OpenAI/NVIDIA schemas and a donor mock do not establish Cloud.ru deployment behavior.
+Confidence: high in exact inspected request/source facts. Public documentation alone did not establish word support; actual coordinator probes below now demonstrate failure to meet N5 word acceptance for the tested requests. This bounded result is not a universal claim of service non-support. Generic OpenAI/NVIDIA schemas and donor mocks do not establish Cloud.ru deployment behavior.
 
 ## Bounded adaptation decision
 
-Adapt only the reference's fixed multipart/json/temp0/ru request concept into existing Node fetch/FormData; no SDK install or donor code copy is needed. Retain N5's existing input/time caps, quota/credit/fence/retry ownership, chunker, merge and strict parser. For actual provider output require real nonempty words with numeric start/end and usable timed segments. Absent language alone may inherit explicitly requested ru; malformed language and missing/empty segments fail. This is coordinator policy, not the provider's documented schema.
+Adapt only fixed multipart transport into existing Node fetch/FormData, with the coordinator-tested verbose_json/temp0/ru and literal timestamp_granularities[] entries word and segment. The donor JSON default is superseded because the actual JSON response was text/usage only. The verbose request was accepted but did not return words; it defines offline serialization, not provider qualification. No SDK install or donor code copy is needed. Retain N5's existing input/time caps, quota/credit/fence/retry ownership, chunker, merge and strict parser. For actual provider output require real nonempty words with numeric start/end and usable timed segments. Absent language alone may inherit explicitly requested ru; malformed language and missing/empty segments fail. This is coordinator policy, not the provider's documented schema.
 
 The existing segment-only chat prompt makes empty segments a real integration failure, even if a parser would allow []. Do not fabricate segments/word timing, guess units, divide text evenly, use a model/aligner/GPU or silently change provider/format.
 
@@ -37,4 +37,12 @@ The existing segment-only chat prompt makes empty segments a real integration fa
 
 Primary research checked current linked API/schema/collection, visible docs navigation and bounded public documentation locations, avoiding repeated console-bundle searches. Coordinator independently retrieved/pinned donor and inspected the service/mocks/empty how-to. Planner inspected request handling and N5's stt/client, worker retry/spend, authorizeSttCall and segment-only chat seam.
 
-Next owner is root. Cold-validate the v2 five-role plan, implement/test the conditional adapter offline, then resolve private key and concrete probe authority. Only an actual authorized short response can establish strict compatibility; long-fixture chunk/render acceptance remains separately required. No actual key or concrete paid probe budget is present at this PLAN handoff. No false background claim: planner terminates on receipt; coordinator continues the autonomous task.
+## Actual coordinator evidence and v3 decision
+
+The owner supplied a private key; root performed five authorized Whisper probes on a 5.26175-second fixture. JSON returned text/usage. Four verbose variants (bracketed/bare word+segment and word-only) returned identical single segment with start 0, end 4.66, and words:null. Raw evidence SHA256: `2eb9e243634471f4fe34487defb5aea6b10dd0652e8d954a4d259b987e616739`. This is coordinator-supplied actual response evidence, distinct from donor tests and this planner's read-only documentation work. Actual charge/billing values are not supplied here and remain null.
+
+The fixed optional request is verbose_json with literal multipart timestamp_granularities[] appended for word and segment. No upstream-only alternatives, SDK retry, phrase mode, fabricated times, fallback or model selector are added. Do not repeat unchanged probes. Actual words are missing, so AC-9 is NOT PASSED and operators must not enable N5_STT_PROVIDER=cloudru for real users. AC-1–8 can still verify a guarded transport offline with synthetic valid timing fixtures; that is compatibility foundation only, not a live success or full migration.
+
+A sixth probe for officially cataloged GigaChat/GigaASR returned HTTP 200, empty text and no words/segments. It is research only, not an approved model/code/env addition. The owner's other RF-STT choice remains root-owned outside this plan. Root now has an owner-supplied Yandex STT key and will qualify v3 FULL_DATA; TTS voice/role settings are irrelevant to STT. No new provider dependency or implementation scope follows.
+
+Next owner is root: preserve this v3 research/guarded-transport snapshot, qualify Yandex v3 FULL_DATA first, then choose and validate implementation scope. No Cloud-only coding starts before that result; this document does not authorize Yandex code/dependencies. Future real provider qualification requires new concrete authority/evidence and a separately authorized long-fixture chunk/render journey; current short probes failed N5 timing acceptance. Full migration remains pending. Planner completion does not pause the autonomous task or assert background execution.

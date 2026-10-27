@@ -1,6 +1,6 @@
 # Cloud.ru provider foundation — Pseudocode
 
-v2 PLAN, 2026-10-27; v1 algorithms are frozen at source `0c42dfb1acd7f5085517ddde57f11d1f04781e66`. Baseline and closed names: `01_specification.md`. Only this document owns logical data structures. No new public API routes.
+v3 PLAN, 2026-10-27; v1 algorithms are frozen at source `0c42dfb1acd7f5085517ddde57f11d1f04781e66`. Baseline and closed names: `01_specification.md`. Only this document owns logical data structures. No new public API routes.
 
 ## Data Structures
 
@@ -35,7 +35,7 @@ INPUT: validated SttConfig, existing MP3 path, measured duration, caller signal.
 OUTPUT: strict TranscriptResult or nonretryable format/timing error / classified ProviderError.
 
 1. Test-only fake returns existing fixture; actual identity is fake. For live branch retain common pre/post-read nonempty 25_000_000-byte guards.
-2. OpenRouter keeps its existing JSON/base64/verbose_json/Together-only body byte semantics. Cloud.ru creates FormData with real MP3 Blob, fixed filename/content type, model, response_format=json, temperature=0, language=ru; no manual multipart Content-Type, routing extension or timestamp option.
+2. OpenRouter keeps its existing JSON/base64/verbose_json/Together-only body byte semantics. Cloud.ru creates FormData with real MP3 Blob, fixed filename/content type, model, response_format=verbose_json, temperature=0, language=ru, then append literal timestamp_granularities[] twice with word and segment. No manual multipart Content-Type, routing extension or other timestamp option. This accepted request returned words:null live; synthetic valid fixtures prove only adapter compatibility.
 3. Combine caller signal and existing 120000 ms timeout; POST once to fixed selected endpoint with Bearer key and redirect=error. Keep timeout active through response-body read/JSON parse. Non-2xx cancels body; only existing 429/5xx, transport and timeout classifications are retryable by the worker. Invalid JSON/object shape/timing is nonretryable.
 4. Cloud.ru alone maps an absent language field to requested ru; present malformed/empty values fail. Require segments array, at least one entry and nonblank text context; never manufacture segments from text/words. This is local conservative policy, not provider-contract evidence.
 5. Pass actual words and all provided timing through unchanged parseTranscript(duration); do not coerce strings/units, unwrap guessed envelopes or fill timestamps. Worker/persistence validate again. Normalize JSON syntax and unusable-segment failures to existing TranscriptError, without logging body/keys. RETURN parsed transcript; schema failure returns no successful result.
@@ -107,19 +107,19 @@ OUTPUT: offline chunk/selection/render assertions, never provider capability pro
 3. Require nonempty segment text in selectionMessage, validateFragments word snapping and chronological rendered subtitle output with existing media tools/tests. Verify stale acceptance cannot enqueue selection and source/customer-credit invariants remain unchanged. RETURN separate offline evidence.
 COMPLEXITY: existing media pipeline; no new service/aligner/GPU.
 
-### Algorithm: Qualify live timing only after authorization (deferred)
+### Algorithm: Preserve actual incompatibility and qualification boundary
 
 REQUIREMENT: `FR-cloudru-provider-foundation-9`
 REQUIREMENT: `AC-cloudru-provider-foundation-9`
 REALISES: SC-US-005-1
-INPUT: source-bound exact request, authorized target/synthetic fixture/key and one-request spend cap.
-OUTPUT: redacted actual capability receipt or pending prerequisites.
+INPUT: coordinator's five Whisper probe results, raw evidence SHA256 `2eb9e243634471f4fe34487defb5aea6b10dd0652e8d954a4d259b987e616739`.
+OUTPUT: AC-9 not passed; explicit production restriction and pending long migration.
 
-1. IF private key or explicit concrete budget/environment/fixture authority absent, RETURN pending with zero dispatch. Key presence alone is insufficient.
-2. After read-only companion readiness, dispatch at most one short request using FR-2 JSON multipart format; disable automatic retry in the probe only. Do not alter runtime worker retry semantics or try alternate flags/formats.
-3. Record redacted actual status/body evidence, measured fixture duration, actual timing schema/units/origin and strict parser result; actual usage/billing remains null where unavailable. A mock is never a live receipt.
-4. IF real timed words/usable segments missing or format incompatible, RETURN explicit failure; no normalization beyond FR-2. IF successful, short capability alone passes; long-fixture chunk/subtitle acceptance and full migration stay pending until separately authorized/passed.
-COMPLEXITY: <=1 paid request for this separately authorized probe; no background continuation asserted.
+1. Record actual fixture duration 5.26175 seconds: JSON yielded text/usage; four verbose bracketed/bare word+segment and word-only variants yielded one segment from 0 to 4.66 and words:null. HTTP acceptance does not satisfy unchanged actual-word parsing.
+2. Do not dispatch another unchanged probe, infer missing words, add upstream flags, repair timestamps or switch provider. AC-1–8 operate with injected fixtures only and cannot convert this live incompatibility into a pass.
+3. Operator must not enable N5_STT_PROVIDER=cloudru for real users until a selected provider has a separately authorized actual word+usable-segment pass. Any new supported request requires new source evidence/authority and read-only companion readiness, never discovery at runtime.
+4. Preserve GigaChat/GigaASR empty-text HTTP-200 result as research only. No GigaASR selector/code or Yandex/T-Bank dependency is added. Root owns the other RF-STT choice and separately authorized long-fixture chunk/subtitle journey; no Cloud coding starts before root's Yandex v3 FULL_DATA qualification result. Full migration remains pending.
+COMPLEXITY: evidence inspection only; zero new inference calls in this scope.
 
 ## API and Data Flow
 
@@ -129,7 +129,7 @@ STT job → existing measured source/probe quota → fenced call-ordinal/provide
 
 ## Scenario Coverage
 
-Scenarios in `01_specification.md`: 9 · claimed by an algorithm: 9. FR-9/AC-9 algorithm is deferred, not an implementation or live pass.
+Scenarios in `01_specification.md`: 9 · claimed by an algorithm: 9. FR-9/AC-9 preserves actual incompatibility and remains not passed; it is not a live-pass claim.
 
 Not claimed by any algorithm:
 

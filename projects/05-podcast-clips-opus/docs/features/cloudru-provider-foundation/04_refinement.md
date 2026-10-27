@@ -1,6 +1,6 @@
 # Cloud.ru provider foundation — Refinement
 
-v2 PLAN, 2026-10-27; no new checks executed. v1 observations remain in the historical completion section.
+v3 PLAN, 2026-10-27; this planner executes documentation checks only; coordinator live evidence is recorded separately. v1 observations remain in the historical completion section.
 
 ## Edge Cases Matrix
 
@@ -23,7 +23,7 @@ Unit: new `tests/cloudru-provider.test.ts` uses injected fetch and mocked SDK ha
 
 Integration: existing isolated PostgreSQL/Redis/MinIO suite validates actual provider stored on an exclusively claimed attempt, per-user/global refusal before dispatch, timeout attempt attribution and stale fencing. Run on existing authorized test environment only; no container/image creation authorized by PLAN. Offline S3 signing is not a Cloud.ru integration pass.
 
-E2E: fake-provider regression journey in existing isolated test environment preserves upload → processing → ready/refusal semantics. Actual RF Cloud.ru server, Whisper word/segment capabilities (AC-9) and real S3/browser journey are deferred and must not be reported passed. Immediately before any actual E2E, companion read-only preflight binds source/build/inputs/allowed environment/receipt; no preflight in this docs-only stage.
+E2E: fake-provider regression journey in existing isolated test environment preserves upload → processing → ready/refusal semantics. Actual RF target/long-fixture and real S3/browser journeys remain pending. AC-9 is not passed: completed short Cloud.ru Whisper probes returned no words; do not enable Cloud.ru STT for real users or report synthetic pipeline success as live qualification. Immediately before any actual E2E, companion read-only preflight binds source/build/inputs/allowed environment/receipt; no preflight in this docs-only stage.
 
 Performance/benchmark: deterministic count benchmark asserts exactly one mocked HTTP call per accepted LLM attempt, zero on refused quota and zero fallback calls on failure. Simulated body stalls hit existing 240000 ms timeout using fake timers rather than waiting. No latency percentile or token-price target is invented. Actual model token usage, billing, CPU and target latency remain null until measured in separately authorized work.
 
@@ -83,17 +83,17 @@ No interface change; existing responsive/WCAG/keyboard behavior is unchanged. Ne
 
 ## Technical Debt
 
-Deferred: official Whisper timing schema and AC-9 actual word/segment receipt, DeepSeek output ceiling and target quality, actual Cloud.ru storage acceptance and target-server launch. Strict generation capability is deliberately unused, not implemented speculatively. Keep deferred items visible without blocking unrelated offline foundation implementation.
+Pending: a qualified RF provider and actual word/segment evidence after the observed Cloud.ru Whisper incompatibility; official Whisper timing schema, DeepSeek output ceiling and target quality, actual Cloud.ru storage acceptance and target-server launch. Strict generation capability is deliberately unused, not implemented speculatively. Keep deferred items visible without blocking unrelated offline foundation implementation.
 
-## v2 meaningful acceptance and mutations
+## v3 meaningful acceptance and mutations
 
 New checks are planned, not test-title/coverage receipts. Reuse existing suites; do not create a validator engine or tests that merely restate an implementation expression.
 
 | Property | Meaningful check / failure injection | Existing seam |
 |---|---|---|
-| Cloud.ru request | Decode received multipart and compare actual MP3 bytes/filename/model/json/temp0/ru; no routing/timestamp flags; OR control retains existing wire | cloudru-provider / transcription tests |
+| Cloud.ru request | Decode received multipart and compare actual MP3 bytes/filename/fixed Whisper model/verbose_json/temp0/ru; literal timestamp_granularities[] has word and segment, no routing/other timestamp flags; OR control retains existing wire | cloudru-provider / transcription tests |
 | Selected credentials | Execute actual STT entrypoint projection + resolved synthetic compose; missing selected FM key fails, unrelated key does not substitute; fake records fake | config/env/provider tests |
-| Parser/metadata | Real numeric word+segment fixtures pass; text-only, segment-only, [] words, absent/string/nonfinite times, malformed JSON/language, absent/empty/textless segments fail; absent language alone becomes ru | transcription tests; parser source unchanged |
+| Parser/metadata | Real numeric word+segment fixtures pass; observed words:null with segment 0–4.66, text-only, segment-only, [] words, absent/string/nonfinite times, malformed JSON/language, absent/empty/textless segments fail; absent language alone becomes ru | transcription tests; parser source unchanged |
 | Bound/cancel | Empty and >25_000_000-byte file gets no fetch; stalled body hits 120000 ms, caller abort cancels, redirect cannot forward key; no alternate-format request | injected transport, fake timers |
 | Financial/dispatch | Two real DB handlers compete same ordinal: one call; identity present in DB before fetch; fsync attempt before dispatch; refusal/stale zero calls; retry/quota/credit finalization controls | transcription integration/order/quota + credit packages |
 | Downstream | >180-second synthetic audio with overlap speech: merge once, nonempty segment prompt, word snapping and rendered subtitle timing | existing merge/select/render media suites |
@@ -102,4 +102,4 @@ Mutate one guard at a time, restore bytes and retain red/restored-green evidence
 
 After concrete affected changes: focused unit/integration checks; full `npm test` with mandatory no-skip reporter, `npm run build`, `npm run typecheck`, `npm run lint`; relevant existing mutation runners; synthetic env completeness/wiring and model-cost source guard. Preserve v1 LLM/S3 tests, existing concurrency/credits/source invariants and all eight limits. No UI changes planned. If a browser/UI receipt is used for acceptance, its existing required Docker/browser setup and fresh build remain required; an HTTP request cannot replace it.
 
-Live AC-9: blocked by absent private key and concrete authorized probe budget. Coordinator continues offline implementation; after prerequisites, read-only companion preflight names source/build/fixture/target and one-request cap. Probe does not inherit worker retry loop, tries only JSON multipart and records actual redacted response. Short success does not prove chunk origin/units, long-recording quality or render journey. Require separately authorized >180-second fixture with independently checked timing/origin for full migration. No guessed wall time, charge, cost or successful runtime check.
+Live AC-9 is **NOT PASSED**, not blocked by a missing key: the owner supplied one and the coordinator completed five Whisper probes using a 5.26175-second fixture. JSON returned text/usage; four verbose bracketed/bare word+segment and word-only requests returned identical segment 0–4.66 and words:null (raw SHA256 `2eb9e243634471f4fe34487defb5aea6b10dd0652e8d954a4d259b987e616739`). Retain this incompatible fixture as a nonretryable rejection control; no automatic/unchanged paid reprobe. The selected offline adapter serializes the accepted verbose bracketed shape only, without assuming live words. GigaChat/GigaASR's sixth HTTP-200 result had empty text/no timing and is research only. Root owns the owner's different RF-STT choice outside this scope; the owner has supplied a Yandex STT key and root will qualify v3 FULL_DATA before any Cloud coding. A future qualified response and separately authorized >180-second fixture with independently checked timing/origin remain required for full migration. No guessed wall time, charge or runtime pass.

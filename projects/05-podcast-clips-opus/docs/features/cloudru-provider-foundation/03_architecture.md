@@ -1,10 +1,10 @@
 # Cloud.ru provider foundation — Architecture
 
-v2 PLAN, 2026-10-27. v1 chat/S3 architecture and accepted checks are historical at source `0c42dfb1acd7f5085517ddde57f11d1f04781e66`; only optional STT extension below is new.
+v3 PLAN, 2026-10-27. v1 chat/S3 architecture and accepted checks are historical at source `0c42dfb1acd7f5085517ddde57f11d1f04781e66`; only optional STT extension below is new.
 
 ## Architecture Overview
 
-Style: existing distributed monolith. Seven production compose services remain; MinIO/test profile is unchanged. v1 adds an optional chat adapter to worker-llm; v2 adds a selected strict Cloud.ru branch in the existing STT adapter and extends existing attribution plumbing. No service, route, table, model deployment or new storage abstraction.
+Style: existing distributed monolith. Seven production compose services remain; MinIO/test profile is unchanged. v1 adds an optional chat adapter to worker-llm; v3 adds a selected strict Cloud.ru branch in the existing STT adapter and extends existing attribution plumbing. No service, route, table, model deployment or new storage abstraction.
 
 ```mermaid
 flowchart LR
@@ -39,7 +39,7 @@ Shared config owns typed provider selection, model allowlists and startup refusa
 
 ## External Dependencies
 
-Primary-source evidence was opened during read-only research on 2026-10-26. CONFIRMED describes documented capability, not a successful tenant/live test. Short quotes below are deliberately limited. There are no authorized live probes in this PLAN; FR-9 is deferred until its explicit prerequisites.
+Primary-source evidence was opened during read-only research on 2026-10-26. CONFIRMED describes documented capability, not a successful tenant/live test. Short quotes below are deliberately limited. This documentation attempt makes no live calls. The coordinator has supplied actual authorized probe results; tested Whisper remains unqualified under FR-9.
 
 | Capability needed | Provider / API | Evidence | Verdict | Requirements relying on it |
 |---|---|---|---|---|
@@ -49,14 +49,14 @@ Primary-source evidence was opened during read-only research on 2026-10-26. CONF
 | Exact internal DeepSeek model availability in documented catalogue | Cloud.ru FM | [Model overview](https://cloud.ru/docs/foundation-models/ug/topics/overview__available__models), checked 2026-10-26: “deepseek-ai/DeepSeek-V4-Pro”, “Внутренняя”, “1 048 576” | CONFIRMED | FR-cloudru-provider-foundation-3 |
 | Strict schema generation on this model | Cloud.ru FM | Same OpenAPI has a json_schema field but type enum excludes json_schema; catalogue feature label does not resolve this. No supporting quotation for strict generation | UNCONFIRMED | None: removed from foundation; local strict validation remains FR-cloudru-provider-foundation-4 |
 | Multipart audio request endpoint | Cloud.ru FM published console code | [Public console bundle](https://console.cloud.ru/sources/ml-foundation-models/cloudplatform-ml-foundation-models.js), checked 2026-10-26: `{{completionsLink}}/audio/transcriptions`, `"response_format": "text"`; provider-code evidence and hash in research note; not published audio schema | UNCONFIRMED | No provider timing promise; bounded owner-reference transport in FR-cloudru-provider-foundation-2 is conditional/offline |
-| JSON-format request used by reference implementation | Owner-supplied donor, not provider docs | Pinned [Gitverse donor](https://gitverse.ru/dzhechkov/stt-rag-app), revision a2cbf2791e94404951055fd3ca190ee820dfa74d, inspected 2026-10-27: `"response_format": response_format`, default `"json"`; not primary capability evidence | UNCONFIRMED | FR-cloudru-provider-foundation-2 tests only our serialization/rejection; actual service qualification deferred to FR-cloudru-provider-foundation-9 |
-| Real nonempty words/start/end, usable segments, seconds and chunk-relative origin | Cloud.ru FM Whisper | [Current official OpenAPI](https://cloud.ru/docs/api/specs/foundation-models/ug/_downloads/f2949c1237d79b17b2df8e523e02a89a/openapi__foundation-models.yaml?source-platform=Evolution), checked 2026-10-27: `- GET /v1/models`, `- POST /v1/chat/completions`; its limited scope does not specify audio. Donor defaults missing words to [] and its timing fixture is mocked | UNCONFIRMED | FR-cloudru-provider-foundation-9 / AC-cloudru-provider-foundation-9 deferred; blocks live compatibility/full migration, not pure conditional adapter tests |
+| Accepted verbose multipart request, not word qualification | Coordinator actual Cloud.ru probe, 2026-10-27 | Fixed Whisper model, verbose_json, literal timestamp_granularities[] entries word and segment; HTTP accepted but words:null. Raw evidence SHA256 `2eb9e243634471f4fe34487defb5aea6b10dd0652e8d954a4d259b987e616739`; JSON control was text/usage only | OBSERVED REQUEST ACCEPTANCE ONLY | FR-cloudru-provider-foundation-2 offline serialization/rejection; FR-cloudru-provider-foundation-9 remains not passed |
+| Real nonempty words/start/end, usable segments, seconds and chunk-relative origin | Cloud.ru FM Whisper | [Current official OpenAPI](https://cloud.ru/docs/api/specs/foundation-models/ug/_downloads/f2949c1237d79b17b2df8e523e02a89a/openapi__foundation-models.yaml?source-platform=Evolution), checked 2026-10-27: `- GET /v1/models`, `- POST /v1/chat/completions`; its limited scope does not specify audio. Donor timing fixture is mocked; five actual 5.26175-second probes produced no words, with verbose segment 0–4.66 and words:null | NOT QUALIFIED for tested requests | FR-cloudru-provider-foundation-9 / AC-cloudru-provider-foundation-9 not passed; blocks production STT/full migration, not offline conditional adapter tests |
 | Per-model output-token ceiling and N5 quality/latency | Cloud.ru FM DeepSeek | Public model context is not output ceiling; no capability receipt | UNCONFIRMED | None: no throughput/quality/SLA claim in foundation |
 | Compound S3 key, endpoint and region | Cloud.ru Evolution Object Storage | [SDK docs](https://cloud.ru/docs/s3e/ug/topics/tools__sdk-python), checked 2026-10-26: “aws_access_key_id=<tenant_id>:<key_id>”, “region=ru-central-1”, “https://s3.cloud.ru” | CONFIRMED | FR-cloudru-provider-foundation-6 |
 | Multipart completion and part enumeration | Cloud.ru S3 | [ListParts](https://cloud.ru/docs/s3e/ug/topics/api__listparts), checked 2026-10-26: “Возвращает список частей объекта с их ETag”; [CompleteMultipartUpload](https://cloud.ru/docs/s3e/ug/topics/api__completemultipartupload): “Завершает multipart-загрузку” | CONFIRMED | FR-cloudru-provider-foundation-6 |
 | CORS configuration | Cloud.ru S3 | [CORS](https://cloud.ru/docs/s3e/ug/topics/guides__cors), checked 2026-10-26: “укажите разрешенные домены, методы и заголовки запросов” | CONFIRMED | FR-cloudru-provider-foundation-6; actual browser acceptance later |
 
-No requirement promising an UNCONFIRMED external capability enters implementation. FR-9 remains deferred. The existing owner-approved selected-Cloud-contour exception permits bounded reference-derived offline serialization/strict rejection in FR-2; it does not relabel these rows, waive an official gate, or establish live timing. Coordinator owns fresh Phase 2/gates and the cold validation before code. JSON-object is an explicitly approved generation mode; successful local validation is required independently of any provider guarantee. No generated JSON is persisted as a fragment without local validation.
+No requirement promising an UNCONFIRMED external capability enters implementation. FR-9 is not passed on the observed incompatibility. The existing owner-approved selected-Cloud-contour exception permits bounded tested-request offline serialization/strict rejection in FR-2; it does not relabel these rows, waive an official gate, or establish live timing. Coordinator owns fresh Phase 2/gates and the cold validation before code. JSON-object is an explicitly approved generation mode; successful local validation is required independently of any provider guarantee. No generated JSON is persisted as a fragment without local validation.
 
 ## Data Architecture
 
@@ -64,7 +64,7 @@ Logical structures are in `02_pseudocode.md`. Configuration maps to immutable in
 
 ## Security Architecture
 
-Selected live key is required and scoped to worker environment; Cloud.ru Key Secret is not interchangeable with S3 key pair. Fixed HTTPS endpoints and redirect rejection prevent credential forwarding to arbitrary hosts. Missing selected key or invalid selector/model fails startup before external work. Explicit Cloud.ru STT config is allowed in v2; malformed/untimed output fails before transcript acceptance. Quota claim and durable attempt logging still precede paid dispatch. No runtime live probes, new RBAC or browser secrets.
+Selected live key is required and scoped to worker environment; Cloud.ru Key Secret is not interchangeable with S3 key pair. Fixed HTTPS endpoints and redirect rejection prevent credential forwarding to arbitrary hosts. Missing selected key or invalid selector/model fails startup before external work. Explicit Cloud.ru STT config exists for guarded offline compatibility in v3; operators must not enable it for real users before actual word/segment qualification. Malformed/untimed output fails before transcript acceptance. Quota claim and durable attempt logging still precede paid dispatch. No runtime live probes, new RBAC or browser secrets.
 
 ## Implementation file allowlist
 
@@ -80,19 +80,19 @@ Only these project-relative paths may change after separate validation; unexpect
 * `scripts/test-selection-mutations.mjs` (only adapting provider guard/new attribution mutant)
 * Feature five documents, `research.md`, later `validation-report.md`/`review-report.md`; targeted `docs/REPRODUCE.md`, `docs/model-cost-contract.md`, `CLAUDE.md` provider-description updates during delivery.
 
-v2 adds only these implementation paths to the prior allowlist: `apps/worker/src/stt/client.ts`, `apps/worker/src/stt/spend.ts`, `apps/worker/src/workers/stt.ts`, `packages/db/src/transcription.ts`; focused existing `tests/transcription.test.ts`, `tests/transcription.integration.test.ts`, `tests/transcription-order.test.ts`, `tests/transcription-quota.test.ts`, `tests/transcription-merge.test.ts`, `tests/transcription-word-order.test.ts`, `tests/render-media.test.ts`, `tests/credit-packages.integration.test.ts` where a new seam actually needs coverage. Existing config/runtime/entrypoint/compose/env/provider-test/mutation paths above remain applicable. Add no general validator or independent billing/probe service. A minimal bounded probe command, if later needed, requires coordinator allocation and exact authority first; it is not a live startup check.
+v3 adds only these implementation paths to the prior allowlist: `apps/worker/src/stt/client.ts`, `apps/worker/src/stt/spend.ts`, `apps/worker/src/workers/stt.ts`, `packages/db/src/transcription.ts`; focused existing `tests/transcription.test.ts`, `tests/transcription.integration.test.ts`, `tests/transcription-order.test.ts`, `tests/transcription-quota.test.ts`, `tests/transcription-merge.test.ts`, `tests/transcription-word-order.test.ts`, `tests/render-media.test.ts`, `tests/credit-packages.integration.test.ts` where a new seam actually needs coverage. Existing config/runtime/entrypoint/compose/env/provider-test/mutation paths above remain applicable. Add no general validator or independent billing/probe service. A minimal bounded probe command, if later needed, requires coordinator allocation and exact authority first; it is not a live startup check.
 
 No changes to packages/s3 transport, shared transcript parser, chunker/merge production code, migrations, manifests/lockfiles, root toolkit, finance logic, global settings or analytics. v1 LLM/S3 implementation remains a regression boundary. This PLAN agent writes only its five existing role documents and the requested research note; later delivery documentation is coordinator-owned.
 
 ## Reconciliation with Pseudocode
 
-Расхождений с `02_pseudocode.md` не найдено. Сверены сущности: Backend, Mode, ExecutionProvider, LlmConfig, SttConfig, SelectionDependencies, SelectionSpend, job_attempt.provider/model; алгоритмы: Resolve provider configuration, Dispatch optional strict STT, Request documented chat and validate result, Authorize and attribute a dispatch, Verify reusable storage configuration offline. v2 adds Authorize and attribute STT call, Verify bounded STT pipeline offline and deferred Qualify live timing. Text DB columns admit the closed logical enum; application validation enforces it, no storage constraint conflict.
+Расхождений с `02_pseudocode.md` не найдено. Сверены сущности: Backend, Mode, ExecutionProvider, LlmConfig, SttConfig, SelectionDependencies, SelectionSpend, job_attempt.provider/model; алгоритмы: Resolve provider configuration, Dispatch optional strict STT, Request documented chat and validate result, Authorize and attribute a dispatch, Verify reusable storage configuration offline. v3 adds Authorize and attribute STT call, Verify bounded STT pipeline offline and Preserve actual incompatibility and qualification boundary. Text DB columns admit the closed logical enum; application validation enforces it, no storage constraint conflict.
 
 ## Scalability Considerations
 
 Preserve worker concurrency, one dispatch claim and segment-only prompt. No horizontal scaling/change in queue semantics. No token-cost or latency improvement is asserted before authorized measurements. Fixed 240000 ms timeout bounds requests but is not a Cloud.ru performance promise.
 
-## v2 STT seams and conservative response policy
+## v3 STT seams and conservative response policy
 
 `stt/client.ts` already owns input bytes, timeout, redirects and strict parse; use a provider-specific body branch there without a new SDK. `runtime.ts` currently constructs STT config inline: retain config to pass actual provider/model to the worker. `workers/stt.ts` owns retry ordinal, before-dispatch spend and repeated parse. Its format errors are nonretryable; JSON parse errors must not become transport retries.
 
@@ -101,3 +101,5 @@ Preserve worker concurrency, one dispatch claim and segment-only prompt. No hori
 `selectionMessage` serializes segments only. Therefore first-release Cloud.ru acceptance requires a nonempty segment array with usable text in addition to actual timed words. Absent language alone may normalize to the requested ru. Do not normalize malformed language, missing segments or missing time values; empty context must fail before select. These are coordinator-approved adapter policies, not claims about the provider schema. A real response may require a separate bounded plan revision; do not silently add alignment, fabricated segments or unit conversion.
 
 FM key is projected to worker-stt when this backend is selected and remains available to selected worker-llm; no web/video/browser leakage. Compose may project an optional value into the model-worker environment; runtime requires it only for selected live Cloud.ru. Never infer identity from availability of keys.
+
+The selected request uses verbose_json and literal multipart timestamp_granularities[] entries word and segment. Its actual accepted response had words:null; no production capability follows. GigaChat/GigaASR is research only (HTTP 200, empty text/no timings); no model selector, new provider implementation, Yandex/T-Bank dependency or speculative flags enter this allowlist. Root owns the separate RF-STT decision.

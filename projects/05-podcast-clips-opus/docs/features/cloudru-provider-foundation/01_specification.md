@@ -1,21 +1,21 @@
 # Cloud.ru provider foundation — Specification
 
-Status: v2 PLAN, 2026-10-27; implementation and live compatibility pending. Source baseline: `0c42dfb1acd7f5085517ddde57f11d1f04781e66`. v1 plan baseline was `c559673649460fa5d8ef1e5e3c86bf7053ebbb69`.
+Status: v3 PLAN, 2026-10-27; offline implementation pending; tested Cloud.ru Whisper is not production-qualified. Source baseline: `125b655d17e36a5c65754f33471cefe8a4e3eeab`; author worktree input: `8cdf42c0586fc32bdce627e3b8d0d23ccd528ea8`. v1 plan baseline was `c559673649460fa5d8ef1e5e3c86bf7053ebbb69`.
 Feature slug: `cloudru-provider-foundation`. Parent approved the technical decision: documented chat JSON-object generation, schema in prompt, strict existing local schema and semantic validation. This is not strict schema generation supplied by Cloud.ru.
 
 ## Executive Summary
 
-Prepare an optional Cloud.ru chat provider without changing the podcast-to-clips product or claiming the whole Cloud.ru migration is complete. Existing OpenRouter behavior remains the default. v2 adds an explicitly selected, conditional Cloud.ru STT adapter using the owner-provided donor request shape; it accepts only real timed words and usable segments. Actual Cloud.ru word timing remains unconfirmed. Existing S3 transport is reused. No deployment, paid calls, resource creation or real content access is authorized by this feature's implementation.
+Prepare an optional Cloud.ru chat provider without changing the podcast-to-clips product or claiming the whole Cloud.ru migration is complete. Existing OpenRouter behavior remains the default. v3 adds an explicitly selected, conditional Cloud.ru STT adapter using the coordinator-tested verbose multipart request shape; it accepts only real timed words and usable segments. Five authorized Whisper probes found text-only JSON or verbose segments with `words:null`; none qualifies for N5. AC-1–8 define offline compatibility only. Operators must not enable `N5_STT_PROVIDER=cloudru` for real users until the selected provider is qualified under AC-9. Existing S3 transport is reused. No deployment, paid calls, resource creation or real content access is authorized by this feature's implementation.
 
 Mode 2: project PRD/CLAUDE and scaffold are inputs, not generated outputs. Explore is skipped because the coordinator supplied product brief, research and solution decision. Parent order is credit packages/bonus → this foundation → later capability/target launch → actual four Metrika goals. Only this foundation and its requested optional STT extension are described here.
 
 ## Version and authority boundary
 
-The owner explicitly requested the Cloud.ru Whisper adapter on 2026-10-27, supplied `https://gitverse.ru/dzhechkov/stt-rag-app`, and authorized eight hours of autonomous continuation. The coordinator authorizes this finite v2 contract; autonomy does not authorize purchases, new resources, production, support messages or unspecified inference spend. The owner-approved selected-Cloud-contour evidence boundary remains; the official lifecycle and native gate thresholds are unchanged and owned by the coordinator.
+The owner explicitly requested the Cloud.ru Whisper adapter on 2026-10-27, supplied `https://gitverse.ru/dzhechkov/stt-rag-app`, and authorized eight hours of autonomous continuation. The coordinator authorizes this finite v3 contract; autonomy does not authorize purchases, new resources, production, support messages or unspecified inference spend. The owner-approved selected-Cloud-contour evidence boundary remains; the official lifecycle and native gate thresholds are unchanged and owned by the coordinator.
 
-v1 LLM/S3 code and its receipts are immutable history at baseline `0c42dfb1acd7f5085517ddde57f11d1f04781e66`. v2 explicitly supersedes **only** the old FR-2/AC-2 blanket Cloud.ru STT startup refusal with the conditional strict adapter below. Old AC-2 test results prove v1 refusal only. v1 FR-1/3/4/5/6 and all financial/source invariants remain required regressions; none of their old results establishes a v2 pass. Existing validation/review reports are historical until freshly rebound.
+v1 LLM/S3 code and its receipts are immutable history at baseline `0c42dfb1acd7f5085517ddde57f11d1f04781e66`. v3 explicitly supersedes **only** the old FR-2/AC-2 blanket Cloud.ru STT startup refusal with the conditional strict adapter below. Old AC-2 test results prove v1 refusal only. v1 FR-1/3/4/5/6 and all financial/source invariants remain required regressions; none of their old results establishes a v3 pass. Existing validation/review reports are historical until freshly rebound.
 
-Research is [research-whisper-donor-20261027.md](research-whisper-donor-20261027.md). The donor is implementation evidence, not the provider's contract. Offline adapter behavior is implementable without assuming the service returns timing. FR-9/AC-9 live compatibility is deferred until an actual authorized response; it cannot enter Phase 3 as an established provider capability. Full migration remains pending.
+Research is [research-whisper-donor-20261027.md](research-whisper-donor-20261027.md). The donor is implementation evidence, not the provider's contract. Offline adapter behavior is implementable without assuming the service returns timing. FR-9/AC-9 is not passed: actual authorized responses now demonstrate incompatibility with strict word acceptance for the tested requests. Offline mock success cannot enter Phase 3 as established live provider capability. Full migration remains pending.
 
 ## Inherited constraints
 
@@ -36,14 +36,14 @@ Given live mode, an explicit Cloud.ru LLM selector, exact DeepSeek model and a s
 
 ### FR-cloudru-provider-foundation-2
 
-For explicit `N5_STT_PROVIDER=cloudru`, construct the optional adapter with fixed model `openai/whisper-large-v3`, fixed `https://foundation-models.api.cloud.ru/v1/audio/transcriptions`, Bearer FM key, multipart real MP3 (fixed filename `audio.mp3`, `audio/mpeg`), fields `model`, `response_format=json`, `temperature=0`, `language=ru`. Let FormData generate the boundary; omit OpenRouter JSON/base64/routing fields, `verbose_json` and timestamp flags. This is the owner-reference-derived request choice, not primary confirmation of a JSON timing schema. No SDK/dependency, URL override or provider negotiation.
+For explicit `N5_STT_PROVIDER=cloudru`, construct the optional adapter with fixed model `openai/whisper-large-v3`, fixed `https://foundation-models.api.cloud.ru/v1/audio/transcriptions`, Bearer FM key, multipart real MP3 (fixed filename `audio.mp3`, `audio/mpeg`), fields `model`, `response_format=verbose_json`, `temperature=0`, `language=ru`, and two entries with the literal multipart name `timestamp_granularities[]`: `word` and `segment`. Let FormData generate the boundary; omit OpenRouter JSON/base64/routing fields and all other timestamp/provider flags. This exact verbose bracketed request was accepted in the coordinator probe but returned `words:null`; request acceptance is not word-capability qualification. JSON is known text-only for the tested input and is not the timing request. No SDK/dependency, URL override or provider negotiation.
 
 Accept only an object with actual nonempty words through unchanged `parseTranscript` at adapter, worker and persistence boundaries. Absent language may become the explicitly requested `ru`; a present malformed/blank language is rejected. Cloud.ru additionally requires nonempty segments with some nonblank text because selection sends only segments. Missing/empty/malformed segments fail; no segment/text/timing synthesis. This conservative adapter policy is coordinator-approved, not a claimed Cloud.ru response requirement.
 
 ### AC-cloudru-provider-foundation-2
 
 [SC-US-001-2] Optional transcription fails closed on unusable output
-Given explicit Cloud.ru STT and a synthetic selected FM key, when a real temporary MP3 is dispatched through injected fetch, then exactly one fixed multipart JSON-format request is made; valid synthetic timed-word/segment fixtures pass unchanged parsing and absent language alone maps to ru. Text-only, segment-only, missing/empty words, missing/nonfinite word times, malformed JSON/envelope/language or unusable segments fail before acceptTranscript/select. No fallback, invented timing, repair request or schema-error retry occurs. Default OpenRouter request and test-only fake semantics remain unchanged.
+Given explicit Cloud.ru STT and a synthetic selected FM key, when a real temporary MP3 is dispatched through injected fetch, then exactly one fixed multipart verbose-JSON request with literal bracketed word and segment entries is made; valid synthetic timed-word/segment fixtures pass unchanged parsing and absent language alone maps to ru. Text-only, segment-only, missing/empty words, missing/nonfinite word times, malformed JSON/envelope/language or unusable segments fail before acceptTranscript/select. No fallback, invented timing, repair request or schema-error retry occurs. Default OpenRouter request and test-only fake semantics remain unchanged.
 
 US-002: As a producer, I want candidate fragments from the selected chat provider to pass the same local validation so that an invalid model response cannot become a rendered clip.
 
@@ -109,12 +109,12 @@ US-005: As the operator, I want separately evidenced real compatibility so that 
 
 ### FR-cloudru-provider-foundation-9
 
-Deferred live qualification: only after a private FM key and concrete authorized one-request budget/fixture/environment are available, a bounded probe may send one short synthetic Russian MP3 with the exact FR-2 request. The owner reference authorizes this request choice; no undocumented timing flags or alternate-format trial. Credentials alone do not authorize dispatch. Missing key currently blocks this step while offline work continues. A real strict word+segment response and a separately authorized long-fixture chunk/render journey are required for full migration.
+Live qualification remains unmet despite key availability and completed authorized probes. The coordinator observed five requests using a 5.26175-second Russian fixture: JSON returned text/usage; four verbose bracketed/bare word+segment and word-only variants returned the same single segment (`start:0`, `end:4.66`) and `words:null`. Raw evidence SHA256: `2eb9e243634471f4fe34487defb5aea6b10dd0652e8d954a4d259b987e616739`. These results establish incompatibility with N5 word acceptance for the tested shapes, not universal service non-support. Do not repeat these unchanged probes or add speculative flags. A sixth officially cataloged `GigaChat/GigaASR` probe returned HTTP 200 with empty text and no words/segments; it is research only and not a passing alternative.
 
 ### AC-cloudru-provider-foundation-9
 
-[SC-US-005-1] Honest live-capability receipt (deferred)
-Given explicit key/environment/fixture/spend authorization, when at most one short probe executes, then a redacted source/request/response receipt records status, duration, real words and segments, numeric timing units/origin evidence, actual returned usage and billing evidence if available; unknown values remain null. Success requires unchanged strict parsing and usable segment context, with no invented word timings. Failure/text-only output preserves an explicit incompatibility result and zero automatic retries; long-fixture acceptance remains pending until separately authorized and passed. Without prerequisites, dispatch count is zero and live acceptance is pending.
+[SC-US-005-1] Actual word capability remains unqualified
+Given the coordinator's source-bound redacted probe evidence, when readiness is reported, then retain the actual incompatible outcome and AC-9 **NOT PASSED**; no live pass follows from HTTP 200, segments, mocks or implementation completion. Record fixture duration, request shape, raw evidence digest and unavailable usage/billing values as null. Any future different-provider/request qualification needs concrete authority and new evidence of actual nonempty words plus usable segments through unchanged parsing; a separately authorized long-fixture chunk/render journey is also required for full migration. Operators must not enable Cloud.ru STT for real users. Root owns the owner's separate RF-STT choice; Yandex/T-Bank research and GigaASR implementation are outside this guarded Whisper transport scope; root now has an owner-supplied Yandex STT key and will qualify v3 FULL_DATA before selecting any implementation scope.
 
 ## Non-Functional Requirements
 
@@ -132,7 +132,7 @@ Bounded behavior: preserve one LLM dispatch per authorized attempt, 240000 ms se
 |---|---|
 | N5_MODEL_PROVIDER | Existing live or fake; fake only NODE_ENV=test |
 | N5_LLM_PROVIDER | openrouter or cloudru; absent defaults openrouter; empty invalid |
-| N5_STT_PROVIDER | openrouter or cloudru; absent defaults openrouter; explicit cloudru selects the conditional strict multipart adapter |
+| N5_STT_PROVIDER | openrouter or cloudru; absent defaults openrouter; explicit cloudru selects the conditional strict multipart adapter for offline compatibility; do not enable for real users before AC-9 qualification |
 | N5_LLM_MODEL | OpenRouter: existing anthropic/claude-sonnet-5 or google/gemini-3.8-flash; Cloud.ru: deepseek-ai/DeepSeek-V4-Pro |
 | OPENROUTER_API_KEY | Required for selected live OpenRouter component only |
 | CLOUDRU_FM_API_KEY | Required for each selected live Cloud.ru worker only; Foundation Models API-key Key Secret |
@@ -147,13 +147,13 @@ No new model, endpoint, schema-mode, fallback, billing or analytics environment 
 
 | Foundation scope | Later capability/launch scope | Excluded |
 |---|---|---|
-| v1 chat/S3 preserved; v2 optional strict multipart STT, actual attribution and offline pipeline checks | AC-9 actual word/segment compatibility; authorized long RF-server journey and S3 acceptance | Current-VPS rollout, paid calls, new resources, purchases, model fallback, finance changes, Metrika verification |
+| v1 chat/S3 preserved; v3 optional strict multipart STT, actual attribution and offline pipeline checks | AC-9 NOT PASSED: tested Whisper words:null; future qualified-provider evidence, authorized long RF-server journey and S3 acceptance | Current-VPS rollout, paid calls, new resources, purchases, model fallback, finance changes, Metrika verification |
 
 ## Success Metrics
 
 | Metric | Target at foundation handoff | Source |
 |---|---|---|
-| AC covered by executable checks | Active AC-1–8 after fresh implementation; AC-9 deferred live qualification | ручное измерение: packaged completion gate and fresh test receipts |
+| AC covered by executable checks | Active AC-1–8 after fresh implementation; AC-9 not passed on actual probe evidence | ручное измерение: packaged completion gate and fresh test receipts |
 | HTTP dispatches for one accepted mock selection | 1; 0 on quota refusal | наш журнал |
 | Provider mismatch between dispatch and stored record | 0 in focused fixtures | наша БД |
 | External calls during offline suite | 0 | ручное измерение: injected fetch/SDK handler assertions |
