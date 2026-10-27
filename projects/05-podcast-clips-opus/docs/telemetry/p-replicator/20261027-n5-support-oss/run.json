@@ -1,0 +1,32 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "run_id": "20261027-n5-support-oss",
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "support-oss-research",
+  "pipeline": "boundedread-onlyresearch; implementationnotauthorizedbyresearchalone",
+  "profile": "model-routing-econom",
+  "tier": "researchonly; adminimplementationfutureL/XLROUTErequired",
+  "source_revision": "f60215a5199584c5025b65b14b00bfabeacdd003",
+  "started_at": "2026-10-27T23:07:48.254742+00:00",
+  "status": "running",
+  "current_stage": "RESEARCH",
+  "responsible": "root",
+  "owner_request": "find OSS adminandticketintegrationbestfitforN5,minimizebespokecode",
+  "constraints": [
+    "no install/containers/deploy/code/production/privateenv/paidcalls/supportcommunications",
+    "allprimarysources,currentlicense/corevscommercial/hardwareverified",
+    "existingSTTimplementationcontinuesseparately",
+    "oneVMtarget2vCPU4GB60GBplanningnotcapacityproof; currentdisk3.2GiB>=2GiBfloor"
+  ],
+  "metrics": {
+    "input_tokens": null,
+    "cached_tokens": null,
+    "output_tokens": null,
+    "cost_usd": null
+  },
+  "actual_model": null,
+  "missing_data": [
+    "runtime model/token/cost unavailable"
+  ],
+  "next_step": "twoindependentboundedresearchunits thencoordinaterecommendationanddocumentonGitHub"
+}
