@@ -1,5 +1,41 @@
 # Cloud.ru provider foundation — Completion
 
+Status: **v2 PLAN ONLY**, 2026-10-27. No v2 implementation, native completion gate, full suite, build, lint, typecheck, mutation, live provider call or deployment is claimed passed. Source baseline `0c42dfb1acd7f5085517ddde57f11d1f04781e66`; current specification bytes must be hashed in the fresh validator receipt. The accepted v1 receipt is preserved below as history, including 1092 tests and 21 mutations; those are not v2 evidence.
+
+## v2 authority, scope and pending acceptance
+
+Owner request on 2026-10-27 and pinned Gitverse reference supersede v1's blanket STT refusal only for the new explicit conditional strict adapter. Existing selected-Cloud-contour scope exception is preserved; official phase order, gates and thresholds are unchanged. Coordinator performs fresh cold VALIDATE before code and independent REVIEW after frozen implementation. Historical validation-report.md/review-report.md must not be reused as current v2 approvals.
+
+| Active criterion | Current result | Evidence required after implementation |
+|---|---|---|
+| AC-cloudru-provider-foundation-1 | pending v2 regression | Actual closed-config/key/fake checks |
+| AC-cloudru-provider-foundation-2 | pending; v1 refusal explicitly superseded | Actual multipart and strict rejection tests, never donor/mock capability claim |
+| AC-cloudru-provider-foundation-3 | pending v2 regression | Unchanged Cloud.ru chat request/local validation checks |
+| AC-cloudru-provider-foundation-4 | pending v2 regression | Chat failure/timeout/no-fallback checks |
+| AC-cloudru-provider-foundation-5 | pending v2 regression | Exclusive actual chat attribution checks |
+| AC-cloudru-provider-foundation-6 | pending v2 regression | Existing offline S3 signing/regressions |
+| AC-cloudru-provider-foundation-7 | pending | Exclusive STT identity/quota/fsync/credits integration checks |
+| AC-cloudru-provider-foundation-8 | pending | Input/body/cancel bounds and offline chunk/selection/render checks |
+| AC-cloudru-provider-foundation-9 | deferred live; key/budget absent | Authorized actual word+segment receipt, then separate long-fixture acceptance |
+
+This is a plan table, not native executable coverage: add exact existing test paths/titles only after tests exist and are inspected. No future test title is fabricated. Offline code acceptance (AC-1–8) and real compatibility/full migration (AC-9 plus long fixture) are separate verdicts; remaining accepted live work stays coordinator-owned rather than declared complete.
+
+## v2 checks and handoff contract
+
+This documentation attempt permits `git diff --check` and document-structure inspection only. Root owns native traceability/validation/completion/review gates against immutable six-file/source hashes. No runtime checks are executed by the planner. E2E readiness is `not_applicable`: docs-only, no v2 build or authorized inference.
+
+Implementation requires fresh meaningful focused unit/concurrent DB/pipeline checks, full tests with no-skip reporter, build/typecheck/lint, relevant red/restored-green mutations, synthetic env complete/wiring and existing model-cost guard. Retain source/credits/quota/fence/OpenRouter/chat/S3 regressions. Existing native traceability/report-revision/criterion-scenarios/completion/review contracts remain as documented in the v1 command section below; only fresh v2-bound receipts advance v2. No official utility or historical report is edited by this attempt.
+
+Release remains excluded: no production/current-VPS deployment, paid call, support message, new service/resource or purchase. Optional probe requires private key plus concrete one-request budget/environment/rights-cleared fixture authority, with readiness and redacted evidence; key presence alone does not authorize spend. Unknown actual word timing remains UNCONFIRMED. Missing/empty segments are rejected by explicit conservative coordinator policy; only absent language may inherit request ru. No guessed time, alignment model or silent provider fallback.
+
+Rollback: select the existing OpenRouter backend with its own key, or revert the v2 code/config revision after review. Never switch after a dispatch or replay an unknown outcome; retain provider/model JSONL/DB history and current fenced recovery. No schema rollback exists.
+
+Next owner: coordinator/root, for source-bound cold VALIDATE, bounded coder, full required checks, cold review and missing live prerequisites. Bounded planner completion does not pause the eight-hour autonomous task or assert background execution. Profile model-routing-econom; requested planner gpt-6.1-sol high, actual runtime model/effort/usage/cost null unless host evidence supplies them.
+
+---
+
+# v1 historical completion receipt (unchanged claims below)
+
 Status: FOUNDATION CODE ACCEPTED by coordinator after independent review and required local checks. Foundation success does not complete full Cloud.ru migration. All paths are project-relative unless noted. No live provider calls or deployment were performed.
 
 ## Criterion coverage

@@ -1,12 +1,12 @@
 # Cloud.ru provider foundation — Pseudocode
 
-Baseline and closed names: `01_specification.md`. Only this document owns logical data structures. No new public API routes.
+v2 PLAN, 2026-10-27; v1 algorithms are frozen at source `0c42dfb1acd7f5085517ddde57f11d1f04781e66`. Baseline and closed names: `01_specification.md`. Only this document owns logical data structures. No new public API routes.
 
 ## Data Structures
 
 `Backend = openrouter | cloudru`; `Mode = live | fake`; `ExecutionProvider = openrouter | cloudru | fake`.
 `LlmConfig = {mode, provider: Backend, baseUrl, model, apiKey: string|null}`; baseUrl/model follow specification's exact provider mapping.
-`SttConfig` retains existing OpenRouter fields plus provider; no usable Cloud.ru STT config exists yet.
+`SttConfig = {mode, provider: Backend, baseUrl, model, apiKey: string|null}`; exact provider URLs/key mapping and fixed Whisper model follow specification. `TranscriptionDependencies` adds explicit executionProvider/model; existing SpendEvent adds these fields without changing attempt identity or unit semantics.
 `Selector.select(TranscriptResult,duration,AbortSignal) -> unknown`; `TranscriptResult` retains language, real words and segments.
 `SelectionDependencies` carries actual executionProvider, model, selector, limits, spendPath, pool and enqueue.
 `SelectionSpend` retains existing attempt/outcome/result fields; provider becomes ExecutionProvider. No historical mutation.
@@ -26,14 +26,20 @@ REALISES: SC-US-001-1
 3. For live require the selected key only; fake has apiKey null and executionProvider fake. Never infer provider from available keys.
 4. Entry points forward exact config names; compose supplies optional key strings without unconditional OpenRouter-required expansion. Runtime is authoritative for selected-key validity. Keys are absent from web/video wiring.
 
-### Algorithm: Refuse deferred STT
+### Algorithm: Dispatch optional strict STT
 
 REQUIREMENT: `FR-cloudru-provider-foundation-2`
 REQUIREMENT: `AC-cloudru-provider-foundation-2`
 REALISES: SC-US-001-2
+INPUT: validated SttConfig, existing MP3 path, measured duration, caller signal.
+OUTPUT: strict TranscriptResult or nonretryable format/timing error / classified ProviderError.
 
-1. If STT backend is cloudru, throw the exact unsupported error from specification before constructing a transcriber, reading a chunk or making any request; this also applies in fake tests.
-2. Otherwise keep existing OpenRouter JSON/base64 contract, Together pin, actual-word parser, retry ceiling and no fallback unchanged.
+1. Test-only fake returns existing fixture; actual identity is fake. For live branch retain common pre/post-read nonempty 25_000_000-byte guards.
+2. OpenRouter keeps its existing JSON/base64/verbose_json/Together-only body byte semantics. Cloud.ru creates FormData with real MP3 Blob, fixed filename/content type, model, response_format=json, temperature=0, language=ru; no manual multipart Content-Type, routing extension or timestamp option.
+3. Combine caller signal and existing 120000 ms timeout; POST once to fixed selected endpoint with Bearer key and redirect=error. Keep timeout active through response-body read/JSON parse. Non-2xx cancels body; only existing 429/5xx, transport and timeout classifications are retryable by the worker. Invalid JSON/object shape/timing is nonretryable.
+4. Cloud.ru alone maps an absent language field to requested ru; present malformed/empty values fail. Require segments array, at least one entry and nonblank text context; never manufacture segments from text/words. This is local conservative policy, not provider-contract evidence.
+5. Pass actual words and all provided timing through unchanged parseTranscript(duration); do not coerce strings/units, unwrap guessed envelopes or fill timestamps. Worker/persistence validate again. Normalize JSON syntax and unusable-segment failures to existing TranscriptError, without logging body/keys. RETURN parsed transcript; schema failure returns no successful result.
+COMPLEXITY: O(bytes + words + segments); existing bounded input memory, no SDK/model dependency.
 
 ### Algorithm: Request documented chat and validate result
 
@@ -74,13 +80,56 @@ REALISES: SC-US-003-2
 3. Existing public signing client remains separate from internal transport. Retain multipart/list/complete/abort/render/retention checks; no provider-specific S3 branch.
 4. Record offline-only verdict; actual RF-server/S3 capability acceptance remains pending.
 
+### Algorithm: Authorize and attribute STT call
+
+REQUIREMENT: `FR-cloudru-provider-foundation-7`
+REQUIREMENT: `AC-cloudru-provider-foundation-7`
+REALISES: SC-US-004-1
+INPUT: existing fenced attempt/chunk/expectedPrevious, explicit actual provider/model and existing limits.
+OUTPUT: claimed ordinal or null, then existing attempt/outcome events.
+
+1. Runtime derives actual identity from mode/backend, passes it to TranscriptionDependencies; the worker never infers it from secret presence.
+2. Extend authorizeSttCall with identity metadata using bound parameters in its existing conditional job_attempt UPDATE alongside stt_calls; retain lockCurrent, deadline, initial-minute check, expectedPrevious comparison, savepoint and retry-quota transaction. Legacy direct callers may retain an explicit backward-compatible OpenRouter/model default; production worker always passes identity, including fake. No second DB claim or migration.
+3. On null RETURN with no HTTP. On claim, append/fsync existing attempt event with provider/model and ordinal before transcriber dispatch. Retryable failures alone may request previousCall=call, at most three calls; refusal/format failure never produces an extra call.
+4. Outcome copies the exact event identity. Current job_attempt stores attempt-level selected provider/model; per-call history remains existing JSONL. Preserve credit reservation/finalization and initial whole-video quota; do not add a customer debit per chunk/retry. Crashes remain started/unknown and require current fenced recovery, never a free replay.
+COMPLEXITY: existing bounded transaction + O(1) event append per call.
+
+### Algorithm: Verify bounded STT pipeline offline
+
+REQUIREMENT: `FR-cloudru-provider-foundation-8`
+REQUIREMENT: `AC-cloudru-provider-foundation-8`
+REALISES: SC-US-004-2
+INPUT: synthetic MP3 >180 seconds with overlap speech and injected timed responses.
+OUTPUT: offline chunk/selection/render assertions, never provider capability proof.
+
+1. Exercise zero-fetch empty/oversize cases; simulated fetch/body stalls, caller abort, redirects, malformed JSON and provider errors with fake timers/injected transport. Assert exact existing timeout and worker retry ceiling.
+2. Run unchanged extraction/chunker/merge with 180-second chunks and 2-second overlap, measured MP3 duration and chunk-relative timings; verify offsets, duplicate removal and timing-clamp diagnostics. No hardcoded new tolerance.
+3. Require nonempty segment text in selectionMessage, validateFragments word snapping and chronological rendered subtitle output with existing media tools/tests. Verify stale acceptance cannot enqueue selection and source/customer-credit invariants remain unchanged. RETURN separate offline evidence.
+COMPLEXITY: existing media pipeline; no new service/aligner/GPU.
+
+### Algorithm: Qualify live timing only after authorization (deferred)
+
+REQUIREMENT: `FR-cloudru-provider-foundation-9`
+REQUIREMENT: `AC-cloudru-provider-foundation-9`
+REALISES: SC-US-005-1
+INPUT: source-bound exact request, authorized target/synthetic fixture/key and one-request spend cap.
+OUTPUT: redacted actual capability receipt or pending prerequisites.
+
+1. IF private key or explicit concrete budget/environment/fixture authority absent, RETURN pending with zero dispatch. Key presence alone is insufficient.
+2. After read-only companion readiness, dispatch at most one short request using FR-2 JSON multipart format; disable automatic retry in the probe only. Do not alter runtime worker retry semantics or try alternate flags/formats.
+3. Record redacted actual status/body evidence, measured fixture duration, actual timing schema/units/origin and strict parser result; actual usage/billing remains null where unavailable. A mock is never a live receipt.
+4. IF real timed words/usable segments missing or format incompatible, RETURN explicit failure; no normalization beyond FR-2. IF successful, short capability alone passes; long-fixture chunk/subtitle acceptance and full migration stay pending until separately authorized/passed.
+COMPLEXITY: <=1 paid request for this separately authorized probe; no background continuation asserted.
+
 ## API and Data Flow
 
 Existing select job → fenced DB authorization/quota → fsynced attempt event → selected Selector → unknown response → existing strict local validator → fenced acceptSelection/enqueue. Errors → current failed state and outcome event. No schema mode negotiation, automatic discovery or live startup probe.
 
+STT job → existing measured source/probe quota → fenced call-ordinal/provider claim → fsynced attributed attempt → fixed selected Transcriber → strict actual-word/usable-segment acceptance → unchanged chunk offsets/merge → fenced acceptTranscript → selection. No new public API route.
+
 ## Scenario Coverage
 
-Scenarios in `01_specification.md`: 6 · claimed by an algorithm: 6.
+Scenarios in `01_specification.md`: 9 · claimed by an algorithm: 9. FR-9/AC-9 algorithm is deferred, not an implementation or live pass.
 
 Not claimed by any algorithm:
 
