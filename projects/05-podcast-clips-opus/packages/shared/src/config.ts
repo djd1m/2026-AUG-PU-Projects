@@ -137,19 +137,21 @@ export function loadS3PublicEndpoint(env: Environment): string {
 
 export type ModelBackend = 'openrouter' | 'cloudru';
 export type ExecutionProvider = ModelBackend | 'fake';
+export type SttExecutionProvider = 'openrouter' | 'yandex' | 'fake';
 function loadBackend(env: Environment, name: 'N5_STT_PROVIDER' | 'N5_LLM_PROVIDER'): ModelBackend {
   const backend = env[name] === undefined ? 'openrouter' : env[name];
   if (backend !== 'openrouter' && backend !== 'cloudru') throw new Error(`${name}: нужно openrouter или cloudru`);
   return backend;
 }
 export function loadSttConfig(env: Environment) {
-  const provider = loadBackend(env, 'N5_STT_PROVIDER');
+  const provider = env.N5_STT_PROVIDER === undefined ? 'openrouter' : env.N5_STT_PROVIDER;
+  if (provider !== 'openrouter' && provider !== 'cloudru' && provider !== 'yandex') throw new Error('N5_STT_PROVIDER: нужно openrouter или yandex');
   if (provider === 'cloudru') throw new Error('Cloud.ru STT не поддерживается: контракт таймкодов слов не подтверждён');
   const mode = required(env, 'N5_MODEL_PROVIDER', 'режим поставщика STT не определён');
   if (mode !== 'live' && mode !== 'fake') throw new Error('N5_MODEL_PROVIDER: нужно live или fake');
   if (mode === 'fake' && env.NODE_ENV !== 'test') throw new Error('Фейк STT разрешён только в тестах');
-  return Object.freeze({ mode, provider, baseUrl: 'https://openrouter.ai/api/v1', model: 'openai/whisper-large-v3',
-    apiKey: mode === 'live' ? required(env, 'OPENROUTER_API_KEY', 'транскрипция невозможна') : null });
+  return Object.freeze({ mode, provider, baseUrl: 'https://openrouter.ai/api/v1', model: provider === 'yandex' ? 'general' : 'openai/whisper-large-v3',
+    apiKey: mode === 'live' ? required(env, provider === 'yandex' ? 'YANDEX_SPEECHKIT_API_KEY' : 'OPENROUTER_API_KEY', 'транскрипция невозможна') : null });
 }
 export type SttConfig = ReturnType<typeof loadSttConfig>;
 

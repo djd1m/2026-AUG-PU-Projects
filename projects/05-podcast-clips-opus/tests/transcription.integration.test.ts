@@ -46,6 +46,33 @@ describe.skipIf(!url)('Transcription PostgreSQL 16 integration', () => {
       [f.video, f.attempt.fence])).rows[0].stt_calls).toEqual({ '0': 1 });
     expect(await used(f.account)).toBe(2); expect(await used('all', 'global_minutes')).toBe(2);
   });
+  it.each(['openrouter', 'yandex', 'fake'] as const)('actual %s attribution is committed and fsynced before exclusive dispatch', async provider => {
+    const f = await fixture(), dir = await mkdtemp(join(tmpdir(), 'n5-stt-identity-'));
+    const model = provider === 'yandex' ? 'general' : 'openai/whisper-large-v3';
+    const spendPath = join(dir, 'model-spend.jsonl');
+    const transcribe = vi.fn(async () => {
+      const row = (await pool.query('SELECT provider,model,stt_calls FROM job_attempt WHERE video_id=$1 AND fence=$2', [f.video, f.attempt.fence])).rows[0];
+      expect(row).toMatchObject({ provider, model, stt_calls: { '0': 1 } });
+      const events = (await readFile(spendPath, 'utf8')).trim().split('\n').map(line => JSON.parse(line));
+      expect(events).toEqual([expect.objectContaining({ provider, model, phase: 'attempt', result: 'started', attempt: 1 })]);
+      expect(await used(f.account)).toBe(2);
+      return valid;
+    });
+    try {
+      await Promise.all([0, 1].map(index => transcribeSource(join(dir, `source-${index}`), 120, f.attempt, {
+        pool, limits, provider, model, transcriber: { transcribe }, spendPath,
+        extract: async () => ({ path: join(dir, `audio-${index}`), pauses: [] }),
+        probeAudio: async () => ({ durationSec: 120, hasAudio: true }),
+        chunks: async function* () { const path = join(dir, `chunk-${index}`); await writeFile(path, 'fake');
+          yield { path, offsetSeconds: 0, durationSeconds: 120, hardCut: false, index: 0 }; },
+        enqueue: async () => {},
+      })));
+      expect(transcribe).toHaveBeenCalledOnce();
+      const events = (await readFile(spendPath, 'utf8')).trim().split('\n').map(line => JSON.parse(line));
+      expect(events).toHaveLength(2); expect(events[1]).toMatchObject({ provider, model, phase: 'outcome', result: 'success' });
+      expect(await used(f.account)).toBe(2);
+    } finally { await rm(dir, { recursive: true, force: true }); }
+  });
   it('RM-004 concurrent FIRST dispatch: authorized calls equal charged units with ample quota', async () => {
     const f = await fixture(), blocker = await pool.connect();
     const beforeUser = await used(f.account), beforeGlobal = await used('all', 'global_minutes');

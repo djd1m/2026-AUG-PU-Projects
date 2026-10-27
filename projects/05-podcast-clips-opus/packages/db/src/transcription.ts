@@ -1,6 +1,6 @@
 import { lockCreditAccountForVideo, finalizeVideoCreditsTx } from './credits.js';
 import type { Pool, PoolClient } from 'pg';
-import type { Limits } from '@clipmaker/shared/config';
+import type { SttExecutionProvider, Limits } from '@clipmaker/shared/config';
 import type { VideoFailureReason } from '@clipmaker/shared/enums';
 import { parseTranscript, STT_JOB_TIMEOUT_MS, STT_MAX_ATTEMPTS, type TranscriptResult } from '@clipmaker/shared/transcript';
 import { transaction, checkAndConsumeQuota } from './quota.js';
@@ -38,7 +38,8 @@ export async function transcriptionDeadline(pool: Pool, attempt: Attempt): Promi
 // the worker that observed a retryable provider failure requests the next call.
 // Unknown outcomes after a crash require a new fenced attempt, never a free replay.
 export async function authorizeSttCall(pool: Pool, attempt: Attempt, limits: Limits, chunkIndex: number,
-  duration: number, now = new Date(), expectedPrevious = 0): Promise<number | null> {
+  duration: number, now = new Date(), expectedPrevious = 0, provider: SttExecutionProvider = 'openrouter', model = 'openai/whisper-large-v3'): Promise<number | null> {
+  if (!['openrouter', 'yandex', 'fake'].includes(provider) || typeof model !== 'string' || !model.trim()) throw new Error('Непригодный поставщик STT');
   if (!Number.isSafeInteger(chunkIndex) || chunkIndex < 0 || !Number.isFinite(duration) || duration <= 0 || duration > 5400) throw new Error('Непригодный чанк');
   if (!Number.isSafeInteger(expectedPrevious) || expectedPrevious < 0 || expectedPrevious > STT_MAX_ATTEMPTS) throw new Error('Непригодный номер вызова');
   return transaction(pool, async tx => {
@@ -57,10 +58,10 @@ export async function authorizeSttCall(pool: Pool, attempt: Attempt, limits: Lim
     if (previous >= STT_MAX_ATTEMPTS) { await failTx(tx, attempt, 'stt_failed', now); return null; }
     await tx.query('SAVEPOINT stt_dispatch');
     const claimed = await tx.query(`UPDATE job_attempt
-      SET stt_calls=jsonb_set(stt_calls,ARRAY[$3::text],to_jsonb($4::int + 1)),status='running',wait_reason=NULL
+      SET stt_calls=jsonb_set(stt_calls,ARRAY[$3::text],to_jsonb($4::int + 1)),status='running',wait_reason=NULL,provider=$6,model=$7
       WHERE video_id=$1 AND fence=$2 AND stage='stt' AND status IN ('running','deferred')
         AND COALESCE((stt_calls->>$3::text)::int,0)=$4::int AND $4::int < $5
-      RETURNING stt_calls`, [attempt.video_id, attempt.fence, String(chunkIndex), previous, STT_MAX_ATTEMPTS]);
+      RETURNING stt_calls`, [attempt.video_id, attempt.fence, String(chunkIndex), previous, STT_MAX_ATTEMPTS, provider, model]);
     if (!claimed.rowCount) return null;
     const minutes = Math.ceil(duration / 60);
     if (previous > 0) {

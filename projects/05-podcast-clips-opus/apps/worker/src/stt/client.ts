@@ -2,6 +2,7 @@
 import { readFile, stat } from 'node:fs/promises';
 import type { SttConfig } from '@clipmaker/shared/config';
 import { parseTranscript, STT_MAX_BYTES, STT_TIMEOUT_MS, type TranscriptResult } from '@clipmaker/shared/transcript';
+import { createYandexTranscriber } from './yandex.js';
 export interface Transcriber { transcribe(path: string, duration: number, signal: AbortSignal): Promise<TranscriptResult> }
 export class ProviderError extends Error {
   constructor(public readonly retryable: boolean, public readonly outcome: 'timeout' | 'provider_error') { super('Поставщик STT не завершил запрос'); }
@@ -11,6 +12,7 @@ export function createTranscriber(config: SttConfig, request: typeof fetch = fet
     signal.throwIfAborted();
     return { language: 'ru', words: [{ word: 'Проверка', start: 0, end: Math.min(1, duration) }], segments: [] };
   } };
+  if (config.provider === 'yandex') return createYandexTranscriber(config.apiKey!);
   return { async transcribe(path, duration, signal) {
     if ((await stat(path)).size > STT_MAX_BYTES) throw new Error('Чанк превышает лимит');
     const data = await readFile(path);

@@ -57,19 +57,23 @@ function projectEntrypoint(name: 'stt' | 'select', env: NodeJS.ProcessEnv) {
 }
 
 it('synthetic compose and actual entrypoints deliver selected config and isolate FM key', () => {
-  const env = { ...cloud(), PATH: process.env.PATH, N5_DB_APP_PASSWORD: 'synthetic-db', REDIS_PASSWORD: 'synthetic-redis',
+  const env = { ...cloud(), N5_STT_PROVIDER: 'yandex', YANDEX_SPEECHKIT_API_KEY: 'synthetic-yandex-key', PATH: process.env.PATH, N5_DB_APP_PASSWORD: 'synthetic-db', REDIS_PASSWORD: 'synthetic-redis',
     MINIO_ROOT_USER: 'synthetic-minio', MINIO_ROOT_PASSWORD: 'synthetic-minio-secret' };
   const result = spawnSync('docker', ['compose', '--env-file', '/dev/null', '--project-directory', '.', '--profile', 'test', 'config', '--format', 'json'],
     { env, encoding: 'utf8', timeout: 10000 });
   expect(result.status, 'synthetic compose config must run').toBe(0);
   const services = JSON.parse(result.stdout).services as Record<string, { environment: NodeJS.ProcessEnv }>;
   for (const [name, service] of Object.entries(services)) {
+    expect(service.environment.YANDEX_SPEECHKIT_API_KEY, name).toBe(name === 'worker-stt' ? 'synthetic-yandex-key' : undefined);
     expect(service.environment.CLOUDRU_FM_API_KEY, name).toBe(name === 'worker-llm' ? 'synthetic-fm-key' : undefined);
   }
   const projected = projectEntrypoint('select', services['worker-llm']!.environment);
   expect(loadLlmConfig(projected)).toMatchObject({ provider: 'cloudru', model, apiKey: 'synthetic-fm-key' });
   delete projected.CLOUDRU_FM_API_KEY;
   expect(() => loadLlmConfig(projected)).toThrow('CLOUDRU_FM_API_KEY');
+  const yandex = projectEntrypoint('stt', services['worker-stt']!.environment);
+  expect(loadSttConfig(yandex)).toMatchObject({ provider: 'yandex', model: 'general', apiKey: 'synthetic-yandex-key' });
+  expect(projected.YANDEX_SPEECHKIT_API_KEY).toBeUndefined();
   const stt = projectEntrypoint('stt', { ...services['worker-stt']!.environment, N5_STT_PROVIDER: 'cloudru' });
   expect(stt.CLOUDRU_FM_API_KEY).toBeUndefined();
   expect(() => loadSttConfig(stt)).toThrow('Cloud.ru STT не поддерживается');

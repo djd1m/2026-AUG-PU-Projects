@@ -1,5 +1,5 @@
 import { acceptProbe, deferProbe, failProbe, getProbeSource, auditAttempt, heartbeatTranscription, type Attempt, type Pool } from '@clipmaker/db';
-import type { Limits } from '@clipmaker/shared/config';
+import type { SttExecutionProvider, Limits } from '@clipmaker/shared/config';
 import type { VideoFailureReason } from '@clipmaker/shared/enums';
 import { withSource, type Download, freeBytes } from '../media/download.js';
 import { probeFile, ProbeError, PROBE_TIMEOUT_MS, type ProbeResult } from '../media/probe.js';
@@ -20,6 +20,7 @@ export function fileFailure(probe: ProbeResult): VideoFailureReason | null {
 }
 
 export interface TranscriptionDependencies {
+  provider?: SttExecutionProvider; model?: string;
   pool: Pool; limits: Limits; transcriber: Transcriber; spendPath: string;
   enqueue: (attempt: Attempt) => Promise<void>;
   extract?: typeof extractAudio; chunks?: typeof splitAudio; spend?: typeof recordModelSpend;
@@ -55,10 +56,10 @@ export async function transcribeSource(file: string, duration: number, attempt: 
         let previousCall = 0;
         for (;;) {
           signal.throwIfAborted();
-          const call = await authorizeSttCall(deps.pool, attempt, deps.limits, chunk.index, chunk.durationSeconds, clock(), previousCall);
+          const call = await authorizeSttCall(deps.pool, attempt, deps.limits, chunk.index, chunk.durationSeconds, clock(), previousCall, deps.provider ?? 'openrouter', deps.model ?? 'openai/whisper-large-v3');
           if (call === null) return;
           const event: SpendEvent = { video_id: attempt.video_id, fence: attempt.fence, stage: 'stt', chunk_index: chunk.index,
-            attempt: call, unit: 'seconds', quantity: chunk.durationSeconds, result: 'started', phase: 'attempt' };
+            attempt: call, provider: deps.provider ?? 'openrouter', model: deps.model ?? 'openai/whisper-large-v3', unit: 'seconds', quantity: chunk.durationSeconds, result: 'started', phase: 'attempt' };
           const spend = deps.spend ?? recordModelSpend;
           await spend(deps.spendPath, event);
           let result: TranscriptResult;

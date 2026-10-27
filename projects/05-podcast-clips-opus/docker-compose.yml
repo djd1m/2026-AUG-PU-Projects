@@ -75,6 +75,7 @@ services:
     environment:
       <<: [*app-env, *quota-env, *s3-env]
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-} # selected-key validation at worker startup
+      YANDEX_SPEECHKIT_API_KEY: ${YANDEX_SPEECHKIT_API_KEY:-}
       N5_STT_PROVIDER: ${N5_STT_PROVIDER-openrouter}
       N5_PUBLIC_ORIGIN: ${N5_PUBLIC_ORIGIN:?публичный origin не задан — платная обработка не должна начинаться без пригодной метки}
       N5_MODEL_PROVIDER: live
