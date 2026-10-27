@@ -1,0 +1,142 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "owner model-routing-econom override",
+  "run_id": "20261027-n5-cloudru-whisper",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "cloudru-whisper-stt",
+  "pipeline": "p-replicator /feature Mode2",
+  "tier": "XL mechanical; substantiveROUTE beforeimplementation",
+  "risk_flags": [
+    "newexternalSTTprovider",
+    "wordtimestamp/outputboundary",
+    "billableattempts existingquota/fence mustremain",
+    "containersecretprojection"
+  ],
+  "profile": "model-routing-econom",
+  "profile_overrides": [
+    "ownerexplicit gpt-6.1-sol high PLAN/REVIEW,medium IMPLEMENT",
+    "reviewer fresh plannercontext, no coder conversations"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "0c42dfb1acd7f5085517ddde57f11d1f04781e66",
+  "final_revision": null,
+  "spec_sha256": null,
+  "policy_sha256": "0ea43b745e8a5cf29e5484e8a5354f372d85fdfbca1713b5d2b8cfe37b29c7b2",
+  "host": "Codexnativecollaboration",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-10-27T21:29:53.859971+00:00",
+  "ended_at": null,
+  "status": "running",
+  "current_stage": "YANDEX_STT_PLAN_AND_ECONOMICS",
+  "acceptance_evidence": [],
+  "quality": {
+    "required_gates_passed": false,
+    "ac_met": null,
+    "ac_total": null,
+    "known_defects_missed": null,
+    "followup_status": "pending"
+  },
+  "metrics": {
+    "input_tokens": null,
+    "cached_tokens": null,
+    "output_tokens": null,
+    "reasoning_tokens": null,
+    "cost_usd": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Actualmodel/token/cost metadata unavailable",
+    "initialreadonlytool/research started beforepassport; observedclock21:27:43UTC, prepassport intervalnotreconstructed"
+  ],
+  "owner_request": "Confirm Cloud.ru Whisper wordtimestamps and implementadapter; use https://gitverse.ru/dzhechkov/stt-rag-app asreference",
+  "constraints": [
+    "no currentproduction deployment",
+    "no privateenv/key/rawusercontent output",
+    "no fabricatedwordtimes or hiddenproviderfallback",
+    "no new resources/globalconfig",
+    "ownerexistingkeyandboundedshortSTTvalidationauthorized; no newaccount/purchase/productiondeploy"
+  ],
+  "disk_policy": {
+    "minimum_free_gib": 2,
+    "current_free_gib": 3.650890350341797
+  },
+  "responsible": "root",
+  "next_step": "awaitboundedv4planthenfreshcoldvalidation, mediumimplementation; economicsdocauthorparallel",
+  "actual_background_implementation": false,
+  "owner_autonomy_hours": 8,
+  "owner_authorization": "explicit STT adapter request + donor +8h autonomousplan27.10.2026",
+  "work_plan": "docs/features/cloudru-whisper-work-plan-20261027.md",
+  "active_research_launch_sha256": "387960fe4734bf8f07a402ba21e9f9d6780c9d652333f7eea26012235dbc7a30",
+  "toolkit_verify": "pre-shipped contractOK with9existingpostreplicatehints",
+  "forecast": {
+    "type": "8hbudgetallocation;notcalibrateddurationforecast",
+    "comparable_run": "20261026-n5-credits-cloudru",
+    "limits": "previouscredits/UIrunisnotmatchedSTTsample; insufficientdata for statisticallygroundedestimate",
+    "cost": null
+  },
+  "active_unit": "rootintegration; highplanner; higheconomicsdocauthor",
+  "provider_capability": "CloudWhispersegmenttimingsconfirmed,wordsnull5cases; independentdocsandwireauditscompleted; GigaChat/GigaASR officialcatalogcandidate",
+  "credential_presence": "ownerprovided; authenticatedcatalogHTTP200; secret0600ignoredfile; no value output",
+  "approval_review_timeout": {
+    "action": "read-only ffmpegflitecapabilitycheck",
+    "result": "automaticreviewtimedout, notunsafejudgment",
+    "permitted_single_retry": "succeeded; flitefilterabsent",
+    "unresolved_permission_block": false
+  },
+  "owner_scope_update": "ownerchose RFwordSTT and addedYANDEX_SPEECHKIT_API_KEY tosameprivatefile; shortrealvalidationauthorized",
+  "live_discovery": {
+    "authenticated_catalog": "HTTP200 whisperpresent",
+    "inference_requests": 5,
+    "input_seconds_each": 5.26175,
+    "all_http_status": 200,
+    "json_top_keys": [
+      "text",
+      "usage"
+    ],
+    "verbose_top_keys": [
+      "duration",
+      "language",
+      "segments",
+      "text",
+      "words"
+    ],
+    "verbose_segments": 1,
+    "verbose_words": null,
+    "conclusion": "segmenttimestampsobserved; wordtimestampsnotreturnedinfivetestedrequestvariants; notglobalproofunsupported",
+    "actual_cost": null,
+    "provider_usage_observed": {
+      "json_seconds": 6
+    },
+    "new_inference": "none duringindependentresearch",
+    "gigaasr": {
+      "http_status": 200,
+      "input_seconds": 5.26175,
+      "text_empty": true,
+      "words": null,
+      "segments": null,
+      "usage_seconds": 5.4,
+      "actual_cost": null,
+      "conclusion": "notqualified; no guessedparameter/codec retries"
+    },
+    "yandex_v3": {
+      "grpc_status": 0,
+      "mode": "FULL_DATA",
+      "input_seconds": 5.26175,
+      "elapsed_seconds": 0.5605391999999999,
+      "word_count": 10,
+      "final_count": 2,
+      "time_unit": "milliseconds int64 strings",
+      "word_capability": "confirmed on ownsyntheticfixture; qualitynotqualified",
+      "actual_cost": null
+    }
+  },
+  "updated_at": "2026-10-27T22:36:01.352971+00:00",
+  "owner_economics_request": "updateunitcosts,marginandbreakevenforactualSpeechKitv3mode; agreedproductpricesandoneVMunchanged",
+  "offline_protocol_fixture": {
+    "sha256": "8d7a2f539e0eff0fc881b516f25deb78cc9ea971aa84313094b21c99f1005314",
+    "path": "evidence/official-yandex-protocol-golden.json",
+    "scope": "reencodedwithfullpinnedproviderprotobufnotN5schema; nopaidcalls"
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "provenance": "Re-encoded from own synthetic live response using COMPLETE pinned official provider schema, not original network frame bytes and not N5 projected schema",
+  "source_manifest": {
+    "repo": "https://github.com/yandex-cloud/cloudapi",
+    "commit": "b5702253b8216fa5cdac9f70509ed608eb0f17f5",
+    "files": [
+      {
+        "path": "yandex/cloud/ai/stt/v3/stt_service.proto",
+        "url": "https://raw.githubusercontent.com/yandex-cloud/cloudapi/b5702253b8216fa5cdac9f70509ed608eb0f17f5/yandex/cloud/ai/stt/v3/stt_service.proto",
+        "sha256": "621a4e895b359564f648f3c977c196f40e53ccc8b220cf25095117525a689651"
+      },
+      {
+        "path": "google/api/annotations.proto",
+        "url": "https://raw.githubusercontent.com/googleapis/googleapis/ff625463db4983f3811d549fd4cd97e64180dc4e/google/api/annotations.proto",
+        "sha256": "e79ea741cb605a65e78ca322174764a4af9fde1962c1631e12b84c4934ba9a6c"
+      },
+      {
+        "path": "yandex/cloud/ai/stt/v3/stt.proto",
+        "url": "https://raw.githubusercontent.com/yandex-cloud/cloudapi/b5702253b8216fa5cdac9f70509ed608eb0f17f5/yandex/cloud/ai/stt/v3/stt.proto",
+        "sha256": "c01bf84436ffd5525b79fb41ac214cb243e856d775e9812535c12778b5fed45f"
+      },
+      {
+        "path": "yandex/cloud/api/operation.proto",
+        "url": "https://raw.githubusercontent.com/yandex-cloud/cloudapi/b5702253b8216fa5cdac9f70509ed608eb0f17f5/yandex/cloud/api/operation.proto",
+        "sha256": "80aa538e09d722c59c303f8eb46d76cacfb99d0d693eb2c89e07b2e716e6d2f8"
+      },
+      {
+        "path": "yandex/cloud/operation/operation.proto",
+        "url": "https://raw.githubusercontent.com/yandex-cloud/cloudapi/b5702253b8216fa5cdac9f70509ed608eb0f17f5/yandex/cloud/operation/operation.proto",
+        "sha256": "8c5fb2e09f42ad9f6f09b1e9074a7041a4706e9936efa0a3d0d3fdb38f2abc3f"
+      },
+      {
+        "path": "yandex/cloud/validation.proto",
+        "url": "https://raw.githubusercontent.com/yandex-cloud/cloudapi/b5702253b8216fa5cdac9f70509ed608eb0f17f5/yandex/cloud/validation.proto",
+        "sha256": "f784c86efd98821ce34f32bf5a0129b729d1d5c826114702b2cdf6116add703d"
+      },
+      {
+        "path": "google/api/http.proto",
+        "url": "https://raw.githubusercontent.com/googleapis/googleapis/ff625463db4983f3811d549fd4cd97e64180dc4e/google/api/http.proto",
+        "sha256": "ead99129aa15dd5f6233942030c72eec33bc0d7b1c7c260dc143293ef66c5b78"
+      },
+      {
+        "path": "google/rpc/status.proto",
+        "url": "https://raw.githubusercontent.com/googleapis/googleapis/ff625463db4983f3811d549fd4cd97e64180dc4e/google/rpc/status.proto",
+        "sha256": "f5bfd262e6705c7ae73f32e0ad8ee20ce8c0a2578df8c4f76ebf76b572f295ed"
+      }
+    ],
+    "googleapis_commit": "ff625463db4983f3811d549fd4cd97e64180dc4e"
+  },
+  "method_path": "/speechkit.stt.v3.Recognizer/RecognizeStreaming",
+  "request_hex": "0a220a200a0767656e6572616c1204120208031a02080222090801120572752d52552802",
+  "request_expected": {
+    "session_options": {
+      "recognition_model": {
+        "model": "general",
+        "audio_format": {
+          "container_audio": {
+            "container_audio_type": "MP3"
+          }
+        },
+        "text_normalization": {
+          "text_normalization": "TEXT_NORMALIZATION_DISABLED"
+        },
+        "language_restriction": {
+          "restriction_type": "WHITELIST",
+          "language_code": [
+            "ru-RU"
+          ]
+        },
+        "audio_processing_type": "FULL_DATA"
+      }
+    }
+  },
+  "responses": [
+    {
+      "index": 0,
+      "event": "status_code",
+      "hex": "0a300a2331326232306162382d62653466663464652d34386165333162382d35663062323463661209756e646566696e6564120c08001000180020002800300018004204080112004a00"
+    },
+    {
+      "index": 1,
+      "event": "status_code",
+      "hex": "0a300a2331326232306162382d62653466663464652d34386165333162382d35663062323463661209756e646566696e6564120c08001000180020002800300018004204080112004a0130"
+    },
+    {
+      "index": 2,
+      "event": "final",
+      "hex": "0a300a2331326232306162382d62653466663464652d34386165333162382d35663062323463661209756e646566696e6564120f0888271000189707209707280030001889012a7a0a750a160a0ed0b0d0bcd0b5d180d0b8d0bad0b010fc021888040a220a1ad180d0b0d181d0bfd0bed0b7d0bdd0b0d0b2d0b0d0bdd0b8d0b51093051897071229d0b0d0bcd0b5d180d0b8d0bad0b020d180d0b0d181d0bfd0bed0b7d0bdd0b0d0b2d0b0d0bdd0b8d0b518002097072900000000000000001201304a0130"
+    },
+    {
+      "index": 3,
+      "event": "eou_update",
+      "hex": "0a300a2331326232306162382d62653466663464652d34386165333162382d35663062323463661209756e646566696e6564121008882710001897072097072800309707188a0132031097074a0130"
+    },
+    {
+      "index": 4,
+      "event": "final",
+      "hex": "0a300a2331326232306162382d62653466663464652d34386165333162382d35663062323463661209756e646566696e65641210088827100018882720d0232801309707188a012a8e020a88020a100a08d180d0b5d187d0b810d01918a01a0a160a0ed0b2d181d182d180d0b5d187d0b010e81b189c1d0a180a10d0bdd0b0d187d0bdd0b5d182d181d18f10b01d18cf1e0a0a0a02d18110e31e18f71e0a180a10d0bcd0b0d181d182d0b5d180d0bed0bc108c1f18e8200a0a0a02d0b210902118a3210a140a0cd0b4d0b5d0b2d18fd182d18c10b72118b0220a120a0ad187d0b0d181d0bed0b210c42218d0231257d180d0b5d187d0b820d0b2d181d182d180d0b5d187d0b020d0bdd0b0d187d0bdd0b5d182d181d18f20d18120d0bcd0b0d181d182d0b5d180d0bed0bc20d0b220d0b4d0b5d0b2d18fd182d18c20d187d0b0d181d0bed0b218970720d0232900000000000000001201304a0130"
+    },
+    {
+      "index": 5,
+      "event": "eou_update",
+      "hex": "0a300a2331326232306162382d62653466663464652d34386165333162382d35663062323463661209756e646566696e65641210088827100018882720d023280130d023188a01320310d0234a0130"
+    },
+    {
+      "index": 6,
+      "event": "status_code",
+      "hex": "0a300a2331326232306162382d62653466663464652d34386165333162382d35663062323463661209756e646566696e65641210088827100018882720d023280230d023188a014204080312004a0130"
+    },
+    {
+      "index": 7,
+      "hex": "0a300a2331326232306162382d62653466663464652d34386165333162382d35663062323463661209756e646566696e6564120c0800100018002000280030001894014a00"
+    }
+  ],
+  "expected": {
+    "final_count": 2,
+    "word_count": 10,
+    "first_word": {
+      "text": "америка",
+      "start_time_ms": "380",
+      "end_time_ms": "520"
+    },
+    "final_indices": [
+      "0",
+      "1"
+    ],
+    "channel_tag": "0"
+  },
+  "created_at": "2026-10-27T22:33:40.971Z"
+}

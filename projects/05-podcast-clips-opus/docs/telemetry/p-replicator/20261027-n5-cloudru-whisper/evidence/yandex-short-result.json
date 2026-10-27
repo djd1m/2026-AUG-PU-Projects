@@ -1,0 +1,92 @@
+{
+  "status": {
+    "code": 0,
+    "details": ""
+  },
+  "error": null,
+  "elapsed_seconds": 0.5605391999999999,
+  "event_count": 8,
+  "final_count": 2,
+  "word_count": 10,
+  "finals": [
+    {
+      "final_index": "0",
+      "channel_tag": "0",
+      "alternative": {
+        "words": [
+          {
+            "text": "америка",
+            "start_time_ms": "380",
+            "end_time_ms": "520"
+          },
+          {
+            "text": "распознавание",
+            "start_time_ms": "659",
+            "end_time_ms": "919"
+          }
+        ],
+        "languages": [],
+        "text": "америка распознавание",
+        "start_time_ms": "0",
+        "end_time_ms": "919",
+        "confidence": 0
+      }
+    },
+    {
+      "final_index": "1",
+      "channel_tag": "0",
+      "alternative": {
+        "words": [
+          {
+            "text": "речи",
+            "start_time_ms": "3280",
+            "end_time_ms": "3360"
+          },
+          {
+            "text": "встреча",
+            "start_time_ms": "3560",
+            "end_time_ms": "3740"
+          },
+          {
+            "text": "начнется",
+            "start_time_ms": "3760",
+            "end_time_ms": "3919"
+          },
+          {
+            "text": "с",
+            "start_time_ms": "3939",
+            "end_time_ms": "3959"
+          },
+          {
+            "text": "мастером",
+            "start_time_ms": "3980",
+            "end_time_ms": "4200"
+          },
+          {
+            "text": "в",
+            "start_time_ms": "4240",
+            "end_time_ms": "4259"
+          },
+          {
+            "text": "девять",
+            "start_time_ms": "4279",
+            "end_time_ms": "4400"
+          },
+          {
+            "text": "часов",
+            "start_time_ms": "4420",
+            "end_time_ms": "4560"
+          }
+        ],
+        "languages": [],
+        "text": "речи встреча начнется с мастером в девять часов",
+        "start_time_ms": "919",
+        "end_time_ms": "4560",
+        "confidence": 0
+      }
+    }
+  ],
+  "response_sha256": "f4e38ddb339d44aafaff0f30004e991a62a91c18d297f5830a613e60bb372ecd",
+  "actual_cost": null,
+  "retries": 0
+}
