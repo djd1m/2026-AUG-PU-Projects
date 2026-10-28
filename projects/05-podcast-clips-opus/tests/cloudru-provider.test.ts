@@ -132,12 +132,107 @@ describe('Cloud.ru one-request chat contract', () => {
     } })));
     // Keep the native timeout semantics but advance its clock deterministically.
     const timeout = vi.spyOn(AbortSignal, 'timeout').mockImplementation(ms => {
-      expect(ms).toBe(240000); const clock = new AbortController(); setTimeout(() => clock.abort(), ms); return clock.signal;
+      expect(ms).toBe(600000); const clock = new AbortController(); setTimeout(() => clock.abort(), ms); return clock.signal;
     });
     const pending = createSelector(config(), request).select(transcript, 360, controller.signal);
     const rejection = expect(pending).rejects.toMatchObject({ outcome: 'timeout' });
     await Promise.resolve();
-    if (callerAbort) controller.abort(); else await vi.advanceTimersByTimeAsync(SELECT_TIMEOUT_MS);
+    if (callerAbort) controller.abort(); else await vi.advanceTimersByTimeAsync(600000);
     await rejection; expect(timeout).toHaveBeenCalledOnce(); expect(request).toHaveBeenCalledOnce();
+  });
+});
+
+describe('provider-specific selection deadlines', () => {
+  const providers = ['cloudru', 'openrouter'] as const;
+  const selectedConfig = (provider: typeof providers[number]) => provider === 'cloudru' ? config() :
+    loadLlmConfig({ ...environment(), N5_MODEL_PROVIDER: 'live' });
+  function fakeDeadline() {
+    vi.useFakeTimers();
+    return vi.spyOn(AbortSignal, 'timeout').mockImplementation(ms => {
+      const controller = new AbortController();
+      setTimeout(() => controller.abort(), ms);
+      return controller.signal;
+    });
+  }
+  it.each(providers)('%s aborts pending headers and body at its own cap', async provider => {
+    for (const phase of ['headers', 'body']) {
+      const timeout = fakeDeadline();
+      const cap = provider === 'cloudru' ? 600000 : 240000;
+      let transport!: AbortSignal;
+      const request = vi.fn<typeof fetch>(async (_url, init) => {
+        transport = init!.signal!;
+        if (phase === 'headers') return new Promise<Response>((_resolve, reject) => {
+          transport.addEventListener('abort', () => reject(new Error('aborted')), { once: true });
+        });
+        return new Response(new ReadableStream({ start(stream) {
+          transport.addEventListener('abort', () => stream.error(new Error('aborted')), { once: true });
+        } }));
+      });
+      const pending = createSelector(selectedConfig(provider), request).select(transcript, 360, new AbortController().signal);
+      const rejected = expect(pending).rejects.toMatchObject({ outcome: 'timeout' });
+      await vi.advanceTimersByTimeAsync(provider === 'cloudru' ? 240001 : cap - 1);
+      expect(transport.aborted).toBe(false);
+      if (provider === 'cloudru') await vi.advanceTimersByTimeAsync(cap - 240002);
+      expect(transport.aborted).toBe(false);
+      await vi.advanceTimersByTimeAsync(1);
+      await rejected;
+      expect(transport.aborted).toBe(true);
+      expect(timeout).toHaveBeenLastCalledWith(cap);
+      expect(request).toHaveBeenCalledOnce();
+      vi.restoreAllMocks(); vi.useRealTimers();
+    }
+    expect(SELECT_TIMEOUT_MS).toBe(240000);
+  });
+  it.each(providers)('%s handles a response after four minutes under its deadline', async provider => {
+    fakeDeadline();
+    const request = vi.fn<typeof fetch>(async (_url, init) => new Promise<Response>((resolve, reject) => {
+      const timer = setTimeout(() => resolve(Response.json(envelope())), 300000);
+      init!.signal!.addEventListener('abort', () => { clearTimeout(timer); reject(new Error('aborted')); }, { once: true });
+    }));
+    const pending = createSelector(selectedConfig(provider), request).select(transcript, 360, new AbortController().signal);
+    const result = provider === 'cloudru' ? expect(pending).resolves.toEqual({ fragments: [fakeFragment()] }) :
+      expect(pending).rejects.toMatchObject({ outcome: 'timeout' });
+    await vi.advanceTimersByTimeAsync(300000);
+    await result;
+    expect(request).toHaveBeenCalledOnce();
+  });
+  it.each(providers)('%s honors caller cancellation during headers and body', async provider => {
+    for (const phase of ['headers', 'body']) {
+      fakeDeadline();
+      const caller = new AbortController();
+      let transport!: AbortSignal;
+      const request = vi.fn<typeof fetch>(async (_url, init) => {
+        transport = init!.signal!;
+        if (phase === 'headers') return new Promise<Response>((_resolve, reject) => {
+          transport.addEventListener('abort', () => reject(new Error('aborted')), { once: true });
+        });
+        return new Response(new ReadableStream({ start(stream) {
+          transport.addEventListener('abort', () => stream.error(new Error('aborted')), { once: true });
+        } }));
+      });
+      const pending = createSelector(selectedConfig(provider), request).select(transcript, 360, caller.signal);
+      const rejected = expect(pending).rejects.toMatchObject({ outcome: 'timeout' });
+      await vi.advanceTimersByTimeAsync(1);
+      caller.abort();
+      expect(transport.aborted).toBe(true);
+      await rejected;
+      expect(request).toHaveBeenCalledOnce();
+      vi.restoreAllMocks(); vi.useRealTimers();
+    }
+  });
+  it.each(providers)('%s refuses JSON resolving after caller cancellation', async provider => {
+    fakeDeadline();
+    const caller = new AbortController();
+    let finish!: (body: unknown) => void;
+    const request = vi.fn<typeof fetch>(async () => ({ ok: true,
+      json: () => new Promise(resolve => { finish = resolve; }),
+    }) as Response);
+    const pending = createSelector(selectedConfig(provider), request).select(transcript, 360, caller.signal);
+    const rejected = expect(pending).rejects.toMatchObject({ outcome: 'timeout' });
+    await vi.advanceTimersByTimeAsync(1);
+    caller.abort();
+    finish(envelope());
+    await rejected;
+    expect(request).toHaveBeenCalledOnce();
   });
 });

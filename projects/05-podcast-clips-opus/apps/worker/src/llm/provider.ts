@@ -7,11 +7,12 @@ export interface Selector { select(transcript: TranscriptResult, duration: numbe
 export class SelectionProviderError extends Error {
   constructor(public readonly outcome: 'timeout' | 'provider_error') { super('Поставщик выделения не завершил запрос'); }
 }
+const CLOUDRU_SELECT_TIMEOUT_MS = 600000;
 export function createSelector(config: LlmConfig, request: typeof fetch = fetch): Selector {
   return { async select(transcript, duration, signal) {
-    const combined = AbortSignal.any([signal, AbortSignal.timeout(SELECT_TIMEOUT_MS)]);
+    const cloudru = config.provider === 'cloudru';
+    const combined = AbortSignal.any([signal, AbortSignal.timeout(cloudru ? CLOUDRU_SELECT_TIMEOUT_MS : SELECT_TIMEOUT_MS)]);
     try {
-      const cloudru = config.provider === 'cloudru';
       const response = await request(cloudru ? 'https://foundation-models.api.cloud.ru/v1/chat/completions' :
         'https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST', redirect: 'error', signal: combined,
@@ -25,8 +26,10 @@ export function createSelector(config: LlmConfig, request: typeof fetch = fetch)
           }),
         }),
       });
+      combined.throwIfAborted();
       if (!response.ok) { await response.body?.cancel(); throw new SelectionProviderError('provider_error'); }
       const body: unknown = await response.json();
+      combined.throwIfAborted();
       if (!body || typeof body !== 'object' || !('choices' in body) || !Array.isArray(body.choices)) throw new FragmentSchemaError();
       const choice: unknown = body.choices[0];
       if (!choice || typeof choice !== 'object' || ('finish_reason' in choice && choice.finish_reason === 'length') || !('message' in choice) ||
