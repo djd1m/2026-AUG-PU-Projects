@@ -60,7 +60,8 @@ assert d.is_absolute()
 d.mkdir(mode=0o700, parents=True, exist_ok=True)
 assert d.stat().st_uid == 0 and d.stat().st_mode & 0o077 == 0
 recipe = pathlib.Path(os.environ["N5_HELPDESK_RECIPE_DIR"])
-db, redis, key, system = (secrets.token_hex(n) for n in (24, 24, 16, 24))
+db, redis, key = (secrets.token_hex(n) for n in (24, 24, 16))
+system = "Aa1_" + secrets.token_hex(24)
 config = (recipe / "config.toml.example").read_text()
 for token, value in (("REPLACE_WITH_PRIVATE_DB_PASSWORD", db),
                      ("REPLACE_WITH_PRIVATE_REDIS_PASSWORD", redis),
