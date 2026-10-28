@@ -1,0 +1,85 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "run_id": "20261028-n5-support-implementation",
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "support-access",
+  "pipeline": "p-replicator /feature Mode2",
+  "profile": "model-routing-econom",
+  "started_at": "2026-10-28T00:10:23.161812+00:00",
+  "updated_at": "2026-10-28T00:15:57.976720+00:00",
+  "status": "running",
+  "current_stage": "PLAN_WITH_INDEPENDENT_GATE_AUDIT",
+  "baseline_revision": "1f0befb75bd193c5282b273a6007f3997733cab5",
+  "responsible": "root",
+  "owner_authorization": "explicit continue28.10.2026 after6-10h support implementation estimate; demo in12h; watch SSD",
+  "scope": [
+    "N1/N3 email proof and reset reuse",
+    "N6b/N4 read-only staff admin reuse",
+    "Libredesk bridge and deployment handoff",
+    "independent review, full tests and existing-Docker browser E2E"
+  ],
+  "exclusions": [
+    "no current production deployment",
+    "no new subscription/resources or support messages to third parties",
+    "no generic balance editing or payment state changes",
+    "no wholesale auth replacement"
+  ],
+  "requested_models": {
+    "plan": "gpt-6.1-sol high",
+    "code": "gpt-6.1-sol medium",
+    "review": "gpt-6.1-sol high fresh planner-only context"
+  },
+  "actual_model": null,
+  "metrics": {
+    "input_tokens": null,
+    "cached_tokens": null,
+    "output_tokens": null,
+    "cost_usd": null
+  },
+  "missing_data": [
+    "actual execution model/usage metadata not exposed"
+  ],
+  "constraints": {
+    "minimum_free_disk_gib": 2,
+    "free_disk_gib": 3.2150230407714844,
+    "deadline_hours": 12,
+    "browser_container": "codex-ui-playwright"
+  },
+  "next_step": "planner freezes five-role contract; independent validator; root confirms browser and reusable test resources",
+  "actual_background_implementation": false,
+  "actual_background_planning": true,
+  "launches": [
+    {
+      "path": "evidence/plan-launch.json",
+      "sha256": "a82925b5ec920f27c4014340208295d856131aa9f7818afc1fb545e12a7a819c"
+    },
+    {
+      "path": "evidence/process-audit-launch.json",
+      "sha256": "34ae93c489085dbf9059915e98f5a4c1320ec94fd20ba6970a16d4ce0e8b0028"
+    }
+  ],
+  "browser_readiness": {
+    "container": "codex-ui-playwright",
+    "actual_launch": true,
+    "browser_version": "153.0.8010.12",
+    "title": "N5 browser readiness",
+    "qualification": "browsertoolavailable; notapplicationE2Epass",
+    "webkit_actual_launch": true,
+    "webkit_version": "26.6",
+    "private_network_gateway": "192.168.128.1"
+  },
+  "disk_cleanup": {
+    "removed": "/tmp/n5-yandex-stt-code-20261027/projects/05-podcast-clips-opus/apps/web/.next/cache",
+    "scope": "own completed code attempt cache only; code, build and receipts preserved",
+    "du_before_kib": 172088,
+    "observed_free_after_gib": 3.2150230407714844
+  },
+  "workflow_gate_discovery": {
+    "installed_checker": "1.13.4; officiallatest1.13.5samechecker",
+    "feature_filter": false,
+    "historical_aggregate": "exit1 retained;11rootduplicatekeys and30legacyfeaturefolderslackingmachinekeys",
+    "previous_scope_exception": "explicitlycredit-packages+cloudru-provider-foundation,notnew-support",
+    "next_step": "concrete support plan before narrow scope-exception decision; dependentcode notstarted",
+    "audit_receipt": "evidence/gate-audit-trace.md"
+  }
+}

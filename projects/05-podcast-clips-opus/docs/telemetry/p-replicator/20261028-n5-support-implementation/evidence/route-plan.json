@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-28T00:10:58.470555+00:00",
+  "exit_code": 1,
+  "command": [
+    "bash",
+    "scripts/complexity-router.sh",
+    "projects/05-podcast-clips-opus/packages/db/migrations/023_support_access.sql",
+    "projects/05-podcast-clips-opus/apps/web/src/app/api/auth/verify/route.ts",
+    "projects/05-podcast-clips-opus/apps/web/src/app/admin/page.tsx"
+  ],
+  "mechanical_tier": "L",
+  "substantive_tier": "XL: new staff authority and account recovery boundary; no money writes",
+  "scope_authorization": "owner explicitly approved implementation after concrete reuse plan and ETA; continue28.10.2026; applies AUTO no repetitive checkpoint",
+  "required_checks": [
+    "independent plan validation",
+    "atomic single-use/revocation/concurrency tests",
+    "negative staff/history/tenant tests",
+    "mutation guards",
+    "full test/typecheck/lint/build",
+    "Docker Playwright UI/E2E",
+    "independent fresh-context review"
+  ]
+}
