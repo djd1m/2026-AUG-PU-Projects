@@ -6,9 +6,9 @@
   "pipeline": "p-replicator /feature Mode2",
   "profile": "model-routing-econom",
   "started_at": "2026-10-28T00:10:23.161812+00:00",
-  "updated_at": "2026-10-28T03:32:10.513353+00:00",
-  "status": "running",
-  "current_stage": "LOCAL_ACCEPTED_DELIVERY_PENDING",
+  "updated_at": "2026-10-28T03:34:35.023116+00:00",
+  "status": "completed",
+  "current_stage": "DONE_LOCAL_SCOPE_DELIVERED",
   "baseline_revision": "1f0befb75bd193c5282b273a6007f3997733cab5",
   "responsible": "root",
   "owner_authorization": "explicit continue28.10.2026 after6-10h support implementation estimate; demo in12h; watch SSD",
@@ -34,18 +34,19 @@
     "input_tokens": null,
     "cached_tokens": null,
     "output_tokens": null,
-    "cost_usd": null
+    "cost_usd": null,
+    "elapsed_wall_seconds": 12251.861
   },
   "missing_data": [
     "actual execution model/usage metadata not exposed"
   ],
   "constraints": {
     "minimum_free_disk_gib": 2,
-    "free_disk_gib": 2.557,
+    "free_disk_gib": 2.556,
     "deadline_hours": 12,
     "browser_container": "codex-ui-playwright"
   },
-  "next_step": "root commit finaldocs/evidence, featurepush and verifyremote; then closuretelemetry",
+  "next_step": "acceptedlocalwork complete; external runtime items belong to targetlaunchplan",
   "actual_background_implementation": false,
   "actual_background_planning": false,
   "launches": [
@@ -287,7 +288,7 @@
   "local_acceptance_finished_at": "2026-10-28T03:32:10.513353+00:00",
   "local_acceptance_elapsed_seconds": 12107.352,
   "delivery": {
-    "state": "pending",
+    "state": "pushed_verified",
     "authorized_branch": "feature/n5-credits-cloudru-20261026",
     "application_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
     "uri": "https://github.com/djd1m/2026-AUG-PU-Projects/tree/feature/n5-credits-cloudru-20261026/projects/05-podcast-clips-opus",
@@ -295,6 +296,28 @@
       "realSMTPinboxdelivery",
       "realLibredeskpilot/history/replies/retention/revocation/deletion",
       "RFtargetdeploy andrealstorage/payment/analyticsacceptance"
+    ],
+    "documentation_revision": "c4e962fe0a9d0df6b7adaf2f8a1e8a6b3def41b1",
+    "last_verified_remote_revision": "c4e962fe0a9d0df6b7adaf2f8a1e8a6b3def41b1",
+    "verified_at": "2026-10-28T03:34:35.023116+00:00",
+    "closure": "this metadata-only closure commit follows verified application/docs delivery",
+    "pending": [
+      {
+        "item": "real SMTP delivery",
+        "scope": "out_of_scope",
+        "reason": "requires authorized target sender/domain and actual receipt in mailbox"
+      },
+      {
+        "item": "real Libredesk pilot, history/replies/revocation/retention/deletion",
+        "scope": "out_of_scope",
+        "reason": "local SDK fixture proves adapter boundary only; real tenant/operator policy not configured"
+      },
+      {
+        "item": "Russian target deployment and live storage/payment/analytics acceptance",
+        "scope": "out_of_scope",
+        "reason": "owner scope is local code/preparation; target environment and real integrations separate"
+      }
     ]
-  }
+  },
+  "finished_at": "2026-10-28T03:34:35.023116+00:00"
 }
