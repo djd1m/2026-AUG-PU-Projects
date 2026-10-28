@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { clearSupportIdentity, loadSupportWidget, type PublicSupport, type WidgetAPI } from '../apps/web/src/lib/support-client';
+import { clearSupportIdentity, openAnonymousSupport, loadSupportWidget, type PublicSupport, type WidgetAPI } from '../apps/web/src/lib/support-client';
 import { SupportPanel } from '../apps/web/src/app/support/SupportPanel';
 vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
 type FakeBrowser = { Libredesk?: WidgetAPI; LibredeskSettings?: object; dispatchEvent?: ReturnType<typeof vi.fn> };
@@ -39,5 +39,30 @@ describe('official widget API-shaped synthetic fixture', () => {
     const fetch = vi.fn(); vi.stubGlobal('fetch', fetch);
     const html = renderToStaticMarkup(createElement(SupportPanel, { support: settings, account: { id: 'synthetic-A', email: 'a@example.test', verified: true } }));
     expect(fetch).not.toHaveBeenCalled(); expect(html).toContain('СИНТЕТИЧЕСКИЙ СТЕНД'); expect(html).not.toContain('checked=""'); expect(html).not.toContain('<script'); expect(html).toContain('10 часов'); expect(html).toContain('Представить аккаунт в чате');
+  });
+});
+
+describe('identified to anonymous transition', () => {
+  it('logs out identified A, clears opt-in and then shows anonymous without requesting JWT', async () => {
+    const calls: string[] = [], epoch = { current: 0 }; let identity: string | null = 'A', optedIn = true;
+    const api: WidgetAPI = { setUser: vi.fn(), logout: () => { calls.push('logout'); identity = null; }, show: () => { calls.push('show'); expect(identity).toBeNull(); } };
+    const browser: FakeBrowser = { Libredesk: api, LibredeskSettings: {}, dispatchEvent: vi.fn(() => { epoch.current++; optedIn = false; }) };
+    const fetch = vi.fn(); vi.stubGlobal('window', browser); vi.stubGlobal('fetch', fetch);
+    expect(await openAnonymousSupport(settings, epoch)).toBe(true);
+    expect(calls).toEqual(['logout', 'show']); expect(optedIn).toBe(false); expect(browser.LibredeskSettings).toBeUndefined(); expect(fetch).not.toHaveBeenCalled();
+  });
+  it('refuses show and success after an asynchronous logout failure', async () => {
+    const show = vi.fn(), epoch = { current: 0 };
+    const browser: FakeBrowser = { Libredesk: { setUser: vi.fn(), logout: () => Promise.reject(new Error('vendor cleanup failed')), show }, LibredeskSettings: {}, dispatchEvent: vi.fn(() => { epoch.current++; }) };
+    vi.stubGlobal('window', browser);
+    await expect(openAnonymousSupport(settings, epoch)).rejects.toThrow('Не удалось очистить чат');
+    expect(show).not.toHaveBeenCalled(); expect(browser.LibredeskSettings).toBeUndefined();
+  });
+  it('cancels when another authority event occurs while official logout is pending', async () => {
+    let finish: (() => void) | undefined; const epoch = { current: 0 }, show = vi.fn();
+    const cleanup = new Promise<void>(resolve => { finish = resolve; });
+    vi.stubGlobal('window', { Libredesk: { setUser: vi.fn(), logout: () => cleanup, show }, dispatchEvent: () => { epoch.current++; } });
+    const opening = openAnonymousSupport(settings, epoch); epoch.current++; finish?.();
+    expect(await opening).toBe(false); expect(show).not.toHaveBeenCalled();
   });
 });

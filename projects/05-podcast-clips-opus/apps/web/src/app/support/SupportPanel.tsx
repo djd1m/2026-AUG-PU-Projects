@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { clearSupportIdentity, loadSupportWidget, supportRequest, type PublicSupport, type SupportAccount, type SafeContext } from '../../lib/support-client';
+import { clearSupportIdentity, openAnonymousSupport, loadSupportWidget, supportRequest, type PublicSupport, type SupportAccount, type SafeContext } from '../../lib/support-client';
 export function SupportPanel({ support, account, videoId }: { support: PublicSupport; account: SupportAccount; videoId?: string }) {
   const router = useRouter(), epoch = useRef(0);
   const [busy, setBusy] = useState(false), [error, setError] = useState(''), [message, setMessage] = useState('');
@@ -17,6 +17,10 @@ export function SupportPanel({ support, account, videoId }: { support: PublicSup
   async function open(identified: boolean) {
     if (busy || disabled) return; setBusy(true); setError(''); setMessage(''); const version = epoch.current;
     try {
+      if (!identified) {
+        if (await openAnonymousSupport(support, epoch)) setMessage('Чат открыт без передачи почты аккаунта.');
+        return;
+      }
       const widget = await loadSupportWidget(support);
       if (epoch.current !== version) return;
       if (identified) {
@@ -24,7 +28,7 @@ export function SupportPanel({ support, account, videoId }: { support: PublicSup
         if (epoch.current !== version) return;
         if (response.mode !== 'verified' || !response.jwt) { clearSupportIdentity(); throw new Error('Для представления аккаунта нужна подтверждённая почта и действующий вход.'); }
         widget.setUser(response.jwt); setMessage('Аккаунт представлен в чате.');
-      } else setMessage('Чат открыт без передачи почты аккаунта.');
+      }
       widget.show();
     } catch (cause) { clearSupportIdentity(); setError(cause instanceof Error ? cause.message : 'Чат временно недоступен.'); }
     finally { setBusy(false); }

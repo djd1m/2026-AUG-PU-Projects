@@ -21,7 +21,7 @@ export async function main(args, { contextOptions = {} } = {}) {
     config = options(args);
     if (contextOptions.ignoreHTTPSErrors && !privateFixtureOrigin(config.base)) throw new Error();
     const f = JSON.parse(await readFile(config.fixture, 'utf8')), s = f.support;
-    if (f.synthetic !== true || !s || !s.accountA || !s.accountB || !s.operator || !s.verifyToken || !s.resetToken || !s.newPassword || !s.videoId || !s.foreignVideoId) throw new Error();
+    if (f.synthetic !== true || !s || !s.accountA?.id || !s.accountB?.id || s.accountA.id === s.accountB.id || !s.operator || !s.verifyToken || !s.resetToken || !s.newPassword || !s.videoId || !s.foreignVideoId) throw new Error();
     const { chromium } = await import('playwright'); browser = await chromium.launch({ headless: true });
     await mkdir(config.out, { recursive: true });
     async function context() { return browser.newContext(contextOptions); }
@@ -95,7 +95,18 @@ export async function main(args, { contextOptions = {} } = {}) {
       await page.getByRole('button', { name: 'Представить аккаунт в чате' }).click();
       check('explicit identified session', (await identity).status() === 200 && sessions === 1);
       await page.getByText('Аккаунт представлен в чате.', { exact: true }).waitFor();
-      check('fixture receives immutable A identity', widgetEvents.some(e => e.method === 'setUser' && e.accountId === preview.accountId));
+      check('fixture receives immutable A identity', widgetEvents.some(e => e.method === 'setUser' && e.accountId === s.accountA.id));
+      const beforeAnonymous = widgetEvents.length, beforeAnonymousSessions = sessions;
+      await page.getByRole('button', { name: 'Открыть анонимный чат' }).click();
+      await page.getByText('Чат открыт без передачи почты аккаунта.', { exact: true }).waitFor();
+      const anonymousEvents = widgetEvents.slice(beforeAnonymous);
+      check('identified A to anonymous logs out before show', anonymousEvents[0]?.method === 'logout' && anonymousEvents[1]?.method === 'show');
+      check('anonymous transition requests no JWT and clears opt-in', sessions === beforeAnonymousSessions && !await page.getByLabel('Разрешаю представить мой аккаунт', { exact: false }).isChecked());
+      await page.getByLabel('Разрешаю представить мой аккаунт', { exact: false }).check();
+      await page.getByRole('button', { name: 'Представить аккаунт в чате' }).click();
+      await page.getByText('Аккаунт представлен в чате.', { exact: true }).waitFor();
+      check('A re-identification obtains fresh explicit session', sessions === 2);
+
     } else await page.getByText('Чат поддержки пока не подключён.', { exact: true }).waitFor();
     const beforeLogout = widgetEvents.length;
     await page.getByRole('button', { name: 'Выйти из аккаунта' }).click(); await page.waitForURL('**/#auth');
@@ -105,9 +116,9 @@ export async function main(args, { contextOptions = {} } = {}) {
     if (s.widgetMode === 'test') {
       await page.getByLabel('Разрешаю представить мой аккаунт', { exact: false }).check();
       await page.getByRole('button', { name: 'Представить аккаунт в чате' }).click(); await page.getByText('Аккаунт представлен в чате.', { exact: true }).waitFor();
-      check('second account obtains separate explicit session', sessions === 2);
+      check('second account obtains separate explicit session', sessions === 3);
       const identities = widgetEvents.filter(e => e.method === 'setUser');
-      check('synthetic second identity differs from A', identities.length === 2 && identities[1].accountId !== identities[0].accountId);
+      check('synthetic second identity differs from A', identities.length === 3 && identities[0].accountId === s.accountA.id && identities[1].accountId === s.accountA.id && identities[2].accountId === s.accountB.id);
       await page.goto(config.base + '/support');
       await page.route('https://support.test/widget.js', route => route.abort());
       await page.getByRole('button', { name: 'Открыть анонимный чат' }).click();
@@ -123,7 +134,21 @@ export async function main(args, { contextOptions = {} } = {}) {
     await staff.getByRole('button', { name: 'Найти', exact: true }).click(); const searched = await search;
     check('staff exact search uses POST body', searched.method() === 'POST' && JSON.parse(searched.postData()).query === s.accountA.email && !new URL(staff.url()).search);
     await staff.getByRole('link', { name: s.accountA.email, exact: true }).click(); await staff.getByRole('heading', { name: 'Баланс', exact: true }).waitFor();
-    check('staff diagnostics read-only', await staff.getByRole('button').count() === 0); await operator.close();
+    check('staff diagnostics read-only', await staff.getByRole('button').count() === 0);
+    for (const width of [360, 1440]) for (const theme of ['dark', 'light']) {
+      await staff.setViewportSize({ width, height: 900 });
+      await operator.clearCookies({ name: 'n5_theme' });
+      if (theme === 'light') await operator.addCookies([{ name: 'n5_theme', value: 'light', url: config.base }]);
+      for (const [kind, route] of [['list', '/admin/support/accounts'], ['card', '/admin/support/accounts/' + s.accountA.id]]) {
+        await staff.goto(config.base + route);
+        if (kind === 'card') await staff.getByRole('heading', { name: 'Баланс', exact: true }).waitFor();
+        else await staff.locator('.support-records').waitFor();
+        check(`staff theme ${theme} ${width} ${kind}`, await staff.locator('html').getAttribute('data-theme') === theme);
+        report.findings.push(...(await domRules(staff)).map(x => ({ ...x, route, width, theme })), ...(await axeRule(staff)).map(x => ({ ...x, route, width, theme })));
+        await staff.screenshot({ path: resolve(config.out, `staff-${kind}-${theme}-${width}.png`), fullPage: true });
+      }
+    }
+    await operator.close();
     const reset = await context(), resetPage = await reset.newPage();
     await resetPage.goto(config.base + '/reset#token=' + s.resetToken); await resetPage.locator('input[name=password]').fill(s.newPassword);
     await resetPage.locator('input[name=repeat]').fill(s.newPassword);

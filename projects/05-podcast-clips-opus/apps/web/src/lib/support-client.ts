@@ -24,12 +24,23 @@ export function takeFragmentToken(location: Pick<Location, 'hash' | 'pathname' |
   return /^[A-Za-z0-9_-]{43}$/.test(token) ? token : '';
 }
 export const validPassword = (password: string) => password.length >= 8 && new TextEncoder().encode(password).length <= 72;
-export function clearSupportIdentity() {
-  if (typeof window === 'undefined') return;
-  try { window.Libredesk?.logout(); } catch { window.n5SupportUnavailable = true; try { window.Libredesk?.destroy?.(); } catch {} delete window.Libredesk; } finally {
+export function clearSupportIdentity(): Promise<boolean> {
+  if (typeof window === 'undefined') return Promise.resolve(true);
+  const failed = () => {
+    window.n5SupportUnavailable = true;
+    try { window.Libredesk?.destroy?.(); } catch {}
+    delete window.Libredesk;
+    return false;
+  };
+  let cleanup: void;
+  try { cleanup = window.Libredesk?.logout(); }
+  catch { failed(); }
+  finally {
     delete window.LibredeskSettings;
     window.dispatchEvent(new Event('n5:support-clear'));
   }
+  // Official SDKs may return a promise even though older APIs declare logout as void.
+  return Promise.resolve(cleanup).then(() => !window.n5SupportUnavailable, failed);
 }
 export function loadSupportWidget(settings: PublicSupport): Promise<WidgetAPI> {
   if (settings.mode === 'disabled' || !settings.baseURL || !settings.inboxID) return Promise.reject(new Error('Чат поддержки пока не подключён.'));
@@ -44,4 +55,17 @@ export function loadSupportWidget(settings: PublicSupport): Promise<WidgetAPI> {
     script.onload = () => { clearTimeout(timer); if (window.Libredesk) resolve(window.Libredesk); else fail(); };
     script.onerror = fail; document.head.append(script);
   });
+}
+
+// Shared anonymous transition, also exercised by the widget regression fixture.
+export async function openAnonymousSupport(settings: PublicSupport, epoch: { current: number }): Promise<boolean> {
+  const cleanup = clearSupportIdentity();
+  // The synchronous clear event resets opt-in and advances the epoch intentionally.
+  const version = epoch.current;
+  if (!await cleanup) throw new Error('Не удалось очистить чат. Перезагрузите страницу перед новым обращением.');
+  if (epoch.current !== version) return false;
+  const widget = await loadSupportWidget(settings);
+  if (epoch.current !== version) return false;
+  widget.show();
+  return true;
 }
