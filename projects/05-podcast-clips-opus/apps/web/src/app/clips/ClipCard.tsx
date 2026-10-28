@@ -7,8 +7,8 @@ import type { ClipScreen } from '../../lib/screen-contract';
 import { useClipDownload } from './useClipDownload';
 /** `onSendToGuest` is passed only while the guest form is on screen (consent text hash present); without it «Гостю» is disabled.
  *  The card never creates a guest pack: consent is given only in the form (ADR-008). */
-export function ClipCard({ clip, onMusicQueued, onSendToGuest, paymentsOn = false, creditMode=false }: {
-  clip: ClipScreen; onMusicQueued?: (track: string) => void; onSendToGuest?: (clipId: string) => void; paymentsOn?: boolean; creditMode?:boolean;
+export function ClipCard({ clip, onMusicQueued, onSendToGuest, paymentsOn = false, creditMode=false, actionsFirst = false }: {
+  clip: ClipScreen; onMusicQueued?: (track: string) => void; onSendToGuest?: (clipId: string) => void; paymentsOn?: boolean; creditMode?:boolean; actionsFirst?: boolean;
 }) {
   const { download, downloadingId, error } = useClipDownload();
   const [copying, setCopying] = useState(false);
@@ -27,21 +27,24 @@ export function ClipCard({ clip, onMusicQueued, onSendToGuest, paymentsOn = fals
   const expired = !!clip.expires_at && Date.parse(clip.expires_at) <= Date.now();
   const scored = clip.score !== undefined && clip.components && clip.explanations ? { score: clip.score, components: clip.components, explanations: clip.explanations } : null;
   const downloadIdle = clip.available && !downloadingId;
-  // Order (feature 26): frame with score plate → actions → title → components and «why» → retention → music → Pro.
-  return <article className="clip-card">
-    <div className="clip-preview">{clip.available ? <video key={fileVersion} controls playsInline preload="none"
-      poster={`/api/clips/${clip.clip_id}/thumbnail?v=${fileVersion}`} src={`/api/clips/${clip.clip_id}/file?v=${fileVersion}`} aria-label={clip.title} />
-      : <p>{expired ? 'Срок хранения истёк' : clip.status === 'failed' ? 'Не удалось собрать клип' : 'Собираем клип…'}</p>}
-      {scored && <span className="score-badge" aria-hidden="true">{scored.score}</span>}</div>
-    <div className="clip-body">
-      <div className="clip-actions" role="group" aria-label="Действия с клипом">
+  const actions = <div className="clip-actions" role="group" aria-label="Действия с клипом">
         <button disabled={!clip.available || downloadingId !== null} aria-label={downloadIdle ? 'Скачать клип' : undefined} onClick={() => void download(clip.clip_id, clip.title)}>
           {downloadingId ? 'Открываем файл…' : clip.available ? '↓ Скачать' : expired ? 'Срок хранения истёк' : clip.status === 'failed' ? 'Не удалось собрать' : 'Собираем…'}</button>
         <button className="secondary" disabled={copying} aria-label={copying ? undefined : 'Ссылка на клип — скопировать'} onClick={() => void copyLink()}>
           {copying ? 'Получаем ссылку…' : 'Ссылка'}</button>
         <button type="button" className="secondary" disabled={!clip.available || !onSendToGuest} aria-label="Отправить клип гостю"
           onClick={() => onSendToGuest?.(clip.clip_id)}>Гостю</button>
-      </div>
+      </div>;
+  // Partial render keeps usable actions ahead of the preview; other cards retain feature 26 order.
+  // Order (feature 26): frame with score plate → actions → title → components and «why» → retention → music → Pro.
+  return <article className="clip-card">
+    {actionsFirst && actions}
+    <div className="clip-preview">{clip.available ? <video key={fileVersion} controls playsInline preload="none"
+      poster={`/api/clips/${clip.clip_id}/thumbnail?v=${fileVersion}`} src={`/api/clips/${clip.clip_id}/file?v=${fileVersion}`} aria-label={clip.title} />
+      : <p>{expired ? 'Срок хранения истёк' : clip.status === 'failed' ? 'Не удалось собрать клип' : 'Собираем клип…'}</p>}
+      {scored && <span className="score-badge" aria-hidden="true">{scored.score}</span>}</div>
+    <div className="clip-body">
+      {!actionsFirst && actions}
       {copyMessage && <p role="status" className="video-id">{copyMessage}</p>}
       {error && <p role="alert">{error}</p>}
       <div className="eyebrow">ФРАГМЕНТ {String(clip.index).padStart(2, '0')} · {(clip.duration_seconds == null ? clip.end - clip.start : Number(clip.duration_seconds)).toFixed(1)} с</div>
