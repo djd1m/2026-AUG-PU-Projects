@@ -3,6 +3,7 @@ import type { BillingMode } from '@clipmaker/shared/config';
 import { CREDIT_TRIAL_SECONDS, CREDIT_SKUS, inputCreditSeconds, type CreditSku, type CreditPurchaseWindows } from '@clipmaker/shared/tariff';
 import { transaction } from './quota.js';
 import { effectivePlanSql } from './plan.js';
+import { hasOwnerUnlimited } from './owner-entitlement.js';
 
 export async function creditAccountLock(tx: PoolClient, accountId: string): Promise<void> {
   await tx.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))', [`credits:${accountId}`]);
@@ -49,13 +50,14 @@ export async function readCreditBalance(pool: Pick<Pool, 'query'>, accountId: st
 }
 interface Charge { id: string; state: 'reserved' | 'settled' | 'released'; billable_seconds: number; paid_render: boolean; cycle: number }
 // Caller holds account SHARE then video lock. No helper locks account after video.
-export async function reserveVideoCreditsTx(tx: PoolClient, videoId: string, duration: number, now: Date): Promise<'legacy' | 'reserved' | 'shortage'> {
+export async function reserveVideoCreditsTx(tx: PoolClient, videoId: string, duration: number, now: Date): Promise<'legacy' | 'reserved' | 'shortage' | 'owner_exempt'> {
   const video = (await tx.query<{ account_id: string; billing_policy: string; billable_seconds: number | null; plan: string }>(`SELECT v.account_id,v.billing_policy,v.billable_seconds,
     ${effectivePlanSql('a','$2')} AS plan FROM video v JOIN account a ON a.id=v.account_id WHERE v.id=$1 AND a.status='active' AND v.deleted_at IS NULL`,[videoId,now])).rows[0];
   if (!video || video.billing_policy !== 'credits_v1') return 'legacy';
   await creditAccountLock(tx,video.account_id);
   const charge = (await tx.query<Charge>('SELECT * FROM video_credit_charge WHERE video_id=$1 ORDER BY cycle DESC LIMIT 1',[videoId])).rows[0];
   if (charge && charge.state !== 'released') return 'reserved';
+  if (await hasOwnerUnlimited(tx,video.account_id)) return 'owner_exempt';
   const seconds = video.billable_seconds ?? inputCreditSeconds(duration);
   await tx.query('UPDATE video SET billable_seconds=$2 WHERE id=$1',[videoId,seconds]);
   const grants = (await tx.query<{ id: string; remaining_seconds: number; recovery_video_id: string | null; entitlement_end: Date | null }>(`SELECT * FROM credit_grant WHERE account_id=$1

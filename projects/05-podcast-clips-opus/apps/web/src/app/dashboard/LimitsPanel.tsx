@@ -11,6 +11,9 @@ export function LimitsPanel({ remaining }: { remaining: RemainingLimits }) {
     window.addEventListener('focus', refresh);
     return () => { clearInterval(timer); window.removeEventListener('focus', refresh); };
   }, [router]);
+  if (remaining.owner_unlimited === true) return <section className="limits-panel" aria-label="Без лимитов"><h2>Без лимитов</h2>
+    <p>Загрузки, минуты обработки, выделения и пересборки — без дневных лимитов и списания кредитов.</p>
+    <p className="muted">Доступны возможности Pro. Сохраняются ограничения размера и длительности файла, очередь обработки и доступность сервиса.</p></section>;
   if (remaining.credits) {
     const c=remaining.credits, credit=(n:number)=>(n/60).toLocaleString('ru-RU',{maximumFractionDigits:2});
     return <section className="limits-panel" aria-label="Баланс кредитов"><h2>Баланс кредитов</h2>

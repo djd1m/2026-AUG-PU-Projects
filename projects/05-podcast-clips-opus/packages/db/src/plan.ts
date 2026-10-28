@@ -17,7 +17,7 @@ function clock(now: string): string {
 /** `(… 'paid' | 'free')` для строки account с псевдонимом `a`. `now` — `now()` или номер параметра с моментом. */
 export function effectivePlanSql(a = 'a', now = 'now()'): string {
   const t = ident(a), at = clock(now);
-  return `(CASE WHEN ${t}.plan='paid' AND (${t}.plan_source IN ('none','operator') OR (${t}.plan_source='payment' AND ${t}.plan_paid_until > ${at})) OR EXISTS (SELECT 1 FROM credit_grant cg WHERE cg.account_id=${t}.id AND cg.source='payment' AND cg.entitlement_start<=${at} AND cg.entitlement_end>${at}) THEN 'paid' ELSE 'free' END)`;
+  return `(CASE WHEN (${t}.owner_unlimited=true AND ${t}.status='active') OR (${t}.plan='paid' AND (${t}.plan_source IN ('none','operator') OR (${t}.plan_source='payment' AND ${t}.plan_paid_until > ${at})) OR EXISTS (SELECT 1 FROM credit_grant cg WHERE cg.account_id=${t}.id AND cg.source='payment' AND cg.entitlement_start<=${at} AND cg.entitlement_end>${at})) THEN 'paid' ELSE 'free' END)`;
 }
 /**
  * От какого момента считается срок хранения клипа бесплатного тарифа (FR-TARIFF-003, AC-12): от готовности записи,

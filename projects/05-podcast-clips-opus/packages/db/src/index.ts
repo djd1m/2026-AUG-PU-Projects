@@ -21,3 +21,5 @@ export * from './credits.js';
 
 export * from './support-email.js';
 export * from './support-admin.js';
+
+export * from './owner-entitlement.js';
