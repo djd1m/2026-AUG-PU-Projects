@@ -1,0 +1,28 @@
+{
+  "check": "owner-pricing-contracts-01",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "tests/enums.test.ts",
+    "tests/billing.unit.test.ts",
+    "tests/limits.integration.test.ts",
+    "tests/upload-guards.test.ts",
+    "tests/owner-unlimited.integration.test.ts",
+    "tests/limits.test.ts",
+    "tests/credit-packages.integration.test.ts",
+    "tests/transcription-quota.test.ts",
+    "tests/billing.integration.test.ts",
+    "tests/upload.integration.test.ts",
+    "tests/payments-guards.test.ts"
+  ],
+  "source_revision": "009b4799899f4a5ab9df70c32107a4f0d209f081",
+  "started_at": "2026-10-28T16:44:55.110791+00:00",
+  "elapsed_seconds": 42.043,
+  "exit_code": 0,
+  "stopped_reason": null,
+  "node": "22.22.3",
+  "environment": "isolated *_test DB, Redis15/testMinIO, fake models, payments off",
+  "log": "/tmp/n5-thumbnail-checks-20261028/owner-pricing-contracts-01.log",
+  "free_disk_gib": 2.812
+}

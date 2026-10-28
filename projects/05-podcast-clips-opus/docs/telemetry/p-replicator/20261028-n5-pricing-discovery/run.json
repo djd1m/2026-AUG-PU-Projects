@@ -1,0 +1,37 @@
+{
+  "run_id": "20261028-n5-pricing-discovery",
+  "started_at": "2026-10-28T15:53:17.693725+00:00",
+  "source_revision": "3f76ddd24298b8bfe5d4f536f29e40044e932518",
+  "stage": "accepted_delivery_documentation_and_git_sync",
+  "status": "accepted",
+  "risk": "L existingcatalogresponsechange; financialwritesexcluded",
+  "mechanical_route_exit": 1,
+  "profile": "model-routing-econom",
+  "requested_models": {
+    "code": "gpt-6.1-sol medium",
+    "review": "gpt-6.1-sol high freshplanner"
+  },
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "owner_authorization": "видимыйпродажныйпутькабинет→тарифы; actualuserlatestmessages",
+  "responsible": "root",
+  "updated_at": "2026-10-28T17:07:21.063614+00:00",
+  "scope_code": "ownerDB/centralquotas/credits/limitsUI; pricingcatalogpresentation/authcheckoutgates",
+  "process_gap": "Independentplanvalidationnotseparatelyrunbeforeimplementation; coldplan+codereviewperformedafterward; nofakeearliergate claim",
+  "app_source_revision": "009b4799899f4a5ab9df70c32107a4f0d209f081",
+  "production_rollout_at": "2026-10-28T16:51:50.054937+00:00",
+  "delivery_uri": "https://clipmkr.ru/upgrade",
+  "qualification": {
+    "historical_full": "1345/1349,4closedcontractfailures; retainedfailedreceipt",
+    "final_affected": "134/134 across11files pass on009b",
+    "build": "72781122 PASS; only2enumartifactdelta to009b independentlyverified",
+    "typecheck": "009bPASS",
+    "lint": "727PASS,sourcebodyunchangedexceptmetadata",
+    "independent_review": "PASS009b;OPERATOR_ACTIONnoapplicationadmissionconsumer",
+    "product_browser": "23checksPASS;cabinetcatalogue+4playbacks+logoutrelogin"
+  },
+  "no_fresh_full_pass_claim": true,
+  "finished_at": "2026-10-28T17:11:37.106600+00:00",
+  "elapsed_seconds": 4699.4
+}

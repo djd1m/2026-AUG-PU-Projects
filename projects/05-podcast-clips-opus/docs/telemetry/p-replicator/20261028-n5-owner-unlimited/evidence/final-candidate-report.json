@@ -1,0 +1,132 @@
+{
+  "source_revision": "009b4799899f4a5ab9df70c32107a4f0d209f081",
+  "repository_revision": "009b4799899f4a5ab9df70c32107a4f0d209f081",
+  "manifest_sha256": "1f10c687993383daf4a2896f851fed592a233b4272199d19c250e47308da3d09",
+  "patch_base_manifest_sha256": "0adcbcd8b2af769ace97e262c1f5a97afa074445b6e6b508bc8dfd16d480bf62",
+  "started_at": 1793205850.7357407,
+  "images": [
+    {
+      "source_revision": "009b4799899f4a5ab9df70c32107a4f0d209f081",
+      "repository_revision": "009b4799899f4a5ab9df70c32107a4f0d209f081",
+      "manifest_sha256": "1f10c687993383daf4a2896f851fed592a233b4272199d19c250e47308da3d09",
+      "patch_base_manifest_sha256": "0adcbcd8b2af769ace97e262c1f5a97afa074445b6e6b508bc8dfd16d480bf62",
+      "role": "web",
+      "base_image": "sha256:1ef0e4b19fe192735607e0e15bc7a36700648bdbd3bbf1a09b4340c2bcda85f0",
+      "payload_bytes": 16584,
+      "tag": "n5-owner-pricing-final-web:009b4799-20261028",
+      "image_id": "sha256:7586fd0fb4503b44b672fd249f10cfc5ddce6a9b4b83410105ac8255f79e5eee",
+      "build_exit": 0,
+      "modulecheck": {
+        "exit_code": 0,
+        "stdout": "DB shared S3 nodemailer migration025 ownerCLI PASS",
+        "network": "none",
+        "read_only": true,
+        "host_ports": false,
+        "app_entrypoint": false
+      },
+      "image_size_bytes": 1281700226
+    },
+    {
+      "source_revision": "009b4799899f4a5ab9df70c32107a4f0d209f081",
+      "repository_revision": "009b4799899f4a5ab9df70c32107a4f0d209f081",
+      "manifest_sha256": "1f10c687993383daf4a2896f851fed592a233b4272199d19c250e47308da3d09",
+      "patch_base_manifest_sha256": "0adcbcd8b2af769ace97e262c1f5a97afa074445b6e6b508bc8dfd16d480bf62",
+      "role": "worker-llm",
+      "base_image": "sha256:8eb4daf5167023d172c14914763b72e441e8b6ddacfa33dc33c6ddc826b670a6",
+      "payload_bytes": 16584,
+      "tag": "n5-owner-pricing-final-worker-llm:009b4799-20261028",
+      "image_id": "sha256:d8d0b7d129bc00ac0713de34adf41131d12e372532212f87c52a739204740dbf",
+      "build_exit": 0,
+      "modulecheck": {
+        "exit_code": 0,
+        "stdout": "DB shared S3 Agent Undici7.30.1 selector grpc migration025 ownerCLI PASS",
+        "network": "none",
+        "read_only": true,
+        "host_ports": false,
+        "app_entrypoint": false
+      },
+      "image_size_bytes": 1960829739
+    },
+    {
+      "source_revision": "009b4799899f4a5ab9df70c32107a4f0d209f081",
+      "repository_revision": "009b4799899f4a5ab9df70c32107a4f0d209f081",
+      "manifest_sha256": "1f10c687993383daf4a2896f851fed592a233b4272199d19c250e47308da3d09",
+      "patch_base_manifest_sha256": "0adcbcd8b2af769ace97e262c1f5a97afa074445b6e6b508bc8dfd16d480bf62",
+      "role": "worker-stt",
+      "base_image": "sha256:cdf9d28d511d46fe091cd471fbda55b972344321a0e263116dd99460e4850c8a",
+      "payload_bytes": 16584,
+      "tag": "n5-owner-pricing-final-worker-stt:009b4799-20261028",
+      "image_id": "sha256:2a5e16804226626910696df346c03c85ab2e837164111fdf63cbe4944bba29f7",
+      "build_exit": 0,
+      "modulecheck": {
+        "exit_code": 0,
+        "stdout": "DB shared S3 Agent Undici7.30.1 selector grpc migration025 ownerCLI PASS",
+        "network": "none",
+        "read_only": true,
+        "host_ports": false,
+        "app_entrypoint": false
+      },
+      "image_size_bytes": 1955461321
+    },
+    {
+      "source_revision": "009b4799899f4a5ab9df70c32107a4f0d209f081",
+      "repository_revision": "009b4799899f4a5ab9df70c32107a4f0d209f081",
+      "manifest_sha256": "1f10c687993383daf4a2896f851fed592a233b4272199d19c250e47308da3d09",
+      "patch_base_manifest_sha256": "0adcbcd8b2af769ace97e262c1f5a97afa074445b6e6b508bc8dfd16d480bf62",
+      "role": "worker-video",
+      "base_image": "sha256:987bb0e65c9a3a419982d47d037dcf1121e552e9d753755e2950046ce29cfcd9",
+      "payload_bytes": 16584,
+      "tag": "n5-owner-pricing-final-worker-video:009b4799-20261028",
+      "image_id": "sha256:31ee340c784d4b440b83201ee20a302142829d1cc8b7fe7d64bf723276bb6514",
+      "build_exit": 0,
+      "modulecheck": {
+        "exit_code": 0,
+        "stdout": "DB shared S3 Agent Undici7.30.1 selector grpc migration025 ownerCLI PASS",
+        "network": "none",
+        "read_only": true,
+        "host_ports": false,
+        "app_entrypoint": false
+      },
+      "image_size_bytes": 1955461404
+    }
+  ],
+  "disk_low_water": 3019460608,
+  "full_regression": "No fresh full PASS claimed: prior full 1345/1349; root reports affected 73+64 pass after metadata correction and ordinary-ceiling mutant killed; independent review retained by root.",
+  "recovery": {
+    "reason": "STT Docker client timed out50s at COPY; no final tag/image existed, label layer cached",
+    "accepted_roles": [
+      "web",
+      "worker-llm"
+    ],
+    "next_step": "retry STT from cached label then build video NO RUN; 90s per image",
+    "executor": "n5_owner_pricing_delivery_ops",
+    "started_at": 1793206007.6509707
+  },
+  "builds_finished_at": 1793206047.4248931,
+  "modulechecks_finished_at": 1793206096.2634223,
+  "disk_free_after_checks": 3019624448,
+  "build_elapsed_seconds": 196.68915247917175,
+  "build_and_checks_elapsed_seconds": 245.5276815891266,
+  "artifact_verification": {
+    "all_previous_manifest_files_checked": true,
+    "unexpected_new_artifacts": [],
+    "only_changed_destinations": [
+      "/app/packages/shared/dist/enums.js",
+      "/app/packages/shared/dist/enums.d.ts"
+    ],
+    "source_commit_diff_paths": [
+      "packages/shared/src/enums.ts",
+      "tests/billing.unit.test.ts",
+      "tests/limits.integration.test.ts",
+      "tests/upload-guards.test.ts"
+    ]
+  },
+  "additional_module_assertions": [
+    "OPERATOR_ACTION includes set_owner_unlimited",
+    "runtime manifest source009b4799899f4a5ab9df70c32107a4f0d209f081",
+    "runtime manifest SHA256 matches new patch manifest"
+  ],
+  "usage": null,
+  "usage_missing_reason": "No execution usage counters exposed",
+  "handoff_state": "all four final source-bound metadata patches and modulechecks PASS; root retains independent review, full-regression limitation evaluation and deployment gates"
+}

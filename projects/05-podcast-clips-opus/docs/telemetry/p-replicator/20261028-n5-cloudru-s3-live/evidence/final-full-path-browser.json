@@ -1,0 +1,127 @@
+{
+  "source_revision": "009b4799899f4a5ab9df70c32107a4f0d209f081",
+  "started_at": "2026-10-28T16:56:57.536Z",
+  "checks": [
+    {
+      "name": "cabinet_visible_tariffs_link",
+      "pass": true
+    },
+    {
+      "name": "authenticated_catalogue_available_even_payments_off",
+      "pass": true
+    },
+    {
+      "name": "three_packages",
+      "pass": true
+    },
+    {
+      "name": "offer_990₽",
+      "pass": true
+    },
+    {
+      "name": "offer_3990₽",
+      "pass": true
+    },
+    {
+      "name": "offer_1490₽",
+      "pass": true
+    },
+    {
+      "name": "no_fake_checkout_when_off",
+      "pass": true
+    },
+    {
+      "name": "catalogue_360_dark_no_overflow",
+      "pass": true
+    },
+    {
+      "name": "catalogue_360_dark_three_cards",
+      "pass": true
+    },
+    {
+      "name": "catalogue_360_light_no_overflow",
+      "pass": true
+    },
+    {
+      "name": "catalogue_360_light_three_cards",
+      "pass": true
+    },
+    {
+      "name": "catalogue_900_dark_no_overflow",
+      "pass": true
+    },
+    {
+      "name": "catalogue_900_dark_three_cards",
+      "pass": true
+    },
+    {
+      "name": "catalogue_900_light_no_overflow",
+      "pass": true
+    },
+    {
+      "name": "catalogue_900_light_three_cards",
+      "pass": true
+    },
+    {
+      "name": "four_ready_clips",
+      "pass": true
+    },
+    {
+      "name": "clip_1_plays_vertical",
+      "pass": true
+    },
+    {
+      "name": "clip_2_plays_vertical",
+      "pass": true
+    },
+    {
+      "name": "clip_3_plays_vertical",
+      "pass": true
+    },
+    {
+      "name": "clip_4_plays_vertical",
+      "pass": true
+    },
+    {
+      "name": "signout_cookie_cleared",
+      "pass": true
+    },
+    {
+      "name": "all_four_retained_after_relogin",
+      "pass": true
+    },
+    {
+      "name": "no_checkout_was_triggered",
+      "pass": true
+    }
+  ],
+  "playback": [
+    {
+      "width": 1080,
+      "height": 1920,
+      "duration": 55.84,
+      "advanced": true
+    },
+    {
+      "width": 1080,
+      "height": 1920,
+      "duration": 24.68,
+      "advanced": true
+    },
+    {
+      "width": 1080,
+      "height": 1920,
+      "duration": 59.6,
+      "advanced": true
+    },
+    {
+      "width": 1080,
+      "height": 1920,
+      "duration": 33.56,
+      "advanced": true
+    }
+  ],
+  "checkout_requests": 0,
+  "finished_at": "2026-10-28T16:57:05.876Z",
+  "exit_code": 0
+}

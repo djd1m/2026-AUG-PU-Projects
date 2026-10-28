@@ -6,8 +6,8 @@
   "record_created_at": "2026-10-28T06:33:28.172516+00:00",
   "baseline_revision": "cc6e66e57bd47e7a403612a4964dae059da66195",
   "profile": "model-routing-econom",
-  "status": "blocked",
-  "stage": "LIVE_VIDEO_REQUIRES_TRANSPORT_DIAGNOSTIC_AND_NEW_AUTHORIZED_SELECT_ATTEMPT",
+  "status": "accepted",
+  "stage": "ACTUAL_FULL_USER_PATH_ACCEPTED_4_CLIPS",
   "responsible": "root",
   "owner_authorization": "connect actual Object Storage here and complete user journey before later moving to Cloud.ru VM; explicit productionupdates and real tickets afterchecks in latestowner messages",
   "scope": [
@@ -44,29 +44,26 @@
     "Cloudru_CORS": "minimalexactclipmkroriginconfigured; actualbrowseruploaddownloadverified",
     "plan_review": "changes_required: 022/023 checkpoint vs narrow config branch, 60–90minute final gate, explicit logout AC"
   },
-  "next_step": "Root owns followup: local delayed-response transport analogue plus per-request transport review; then native retry only when daily2calladmissionpermits. No quota reset or extra paidcalls. Resend resumes only after ownerdomainready.",
-  "updated_at": "2026-10-28T14:42:21.041354+00:00",
+  "next_step": "RFVMmigration/realmerchant/Resendlive/Metrikaexternalconditions; performanceoptimizeperclipdownloads",
+  "updated_at": "2026-10-28T17:07:21.063614+00:00",
   "production_source": "4c386745a248215a7c50b718533765400f1d515d",
   "full_video_e2e": {
-    "upload": "actual25partCloudS3completed",
-    "stt": "Yandexsucceeded; wordtranscriptpreserved",
-    "initial_select": "timeout240s",
-    "single_authorized_retry": "actualUI202; provider_error301.112s mappedstalled; NOT600sdeadline or30minwatchdog",
-    "select_dispatch_total": 2,
-    "extra_stt_calls": 0,
-    "clips_ready": false,
-    "usage": null,
-    "cost": null,
-    "underlying_cause": "unconfirmed; actualNode22 nativefetch300sheaders/bodydefaults are plausible; mapperdiscardsHTTPstatus/cause; app600s/watch30min not hit"
+    "upload": "actualCloudS3multipart",
+    "stt": "Yandexv3succeeded;30chunksonce",
+    "select": "CloudDeepSeekV4Pro599.565soneauthorizedcontrol;3attemptstotal",
+    "render": "4/4done",
+    "ui": "all4play1080x1920;durations55.84,24.68,59.60,33.56;firstdownloadffprobe;ownreloginretains4",
+    "model_tokens": null,
+    "provider_cost": null
   },
   "resend_live": "paused_by_owner_domainsetup",
   "production_payments": "off; livekeysneeded",
   "actual_background_implementation": false,
   "remaining_scope": {
-    "video": "notaccepted; sourcesandYandextranscriptpreserved",
-    "resend": "ownerpausedliveuntildomainready",
-    "realpayments": "requiresrealmerchantkeys; testmerchantactualE2Epassed",
-    "compactfooter": "deployed31913b55;192browserchecksPASS",
-    "background_work": "none after boundedreadonlydiagnosis; not claiming processingcontinues"
+    "resend": "ownerpauseduntilverifieddomain",
+    "livepayments": "realmerchantkeys/activationneeded;testshopalreadyPASS",
+    "RF": "targetVMmigrationpending",
+    "Metrika": "realcounterand4goalsafterRF",
+    "performance": "sourcecurrentlydownloadedperclip;0.5MB/sobservedonNLVPS;p95notqualified"
   }
 }

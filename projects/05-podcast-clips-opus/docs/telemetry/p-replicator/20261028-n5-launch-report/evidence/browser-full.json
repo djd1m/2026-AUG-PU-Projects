@@ -1,0 +1,938 @@
+{
+  "preflight": {
+    "state": "ready",
+    "time": "2026-10-28T16:30:09.052280+00:00",
+    "source": "/tmp/n5-acquisition-analytics-20261026/projects/05-podcast-clips-opus/docs/reports/launch-readiness-20261028/index.html",
+    "sha256": "d9f46672e27906c55fab80bb344c2323598156b6404dfaebec0e90be3f307d5e",
+    "head": "8b5ad10a2222387b1e798b8d453e92cf63fe0e11",
+    "environment": "existing codex-ui-playwright; file:// copy only; no app/API/provider access",
+    "allowed_effects": "own /tmp evidence and screenshots only",
+    "command": "docker exec codex-ui-playwright node /tmp/n5-report-independent/browser.cjs",
+    "missing_local_links": [],
+    "external_assets": false
+  },
+  "checks": [
+    {
+      "name": "chromium/360/dark no overflow",
+      "passed": true,
+      "detail": {
+        "width": 360,
+        "scroll": 360
+      }
+    },
+    {
+      "name": "chromium/360/dark default residual",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/dark 7 chapters",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/dark visible pricing links",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/dark keyboard journey 0",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/dark keyboard journey 1",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/dark keyboard journey 2",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/dark keyboard journey 3",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/dark keyboard journey 4",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/dark keyboard journey 5",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/dark keyboard journey 6",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/dark foreign unknown",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/dark foreign explicit cost",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/dark zero signups",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/dark zero paid",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/dark usage zero",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/light no overflow",
+      "passed": true,
+      "detail": {
+        "width": 360,
+        "scroll": 360
+      }
+    },
+    {
+      "name": "chromium/360/light default residual",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/light 7 chapters",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/light visible pricing links",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/light keyboard journey 0",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/light keyboard journey 1",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/light keyboard journey 2",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/light keyboard journey 3",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/light keyboard journey 4",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/light keyboard journey 5",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/light keyboard journey 6",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/light foreign unknown",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/light foreign explicit cost",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/light zero signups",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/light zero paid",
+      "passed": true
+    },
+    {
+      "name": "chromium/360/light usage zero",
+      "passed": true
+    },
+    {
+      "name": "chromium/360 math exact",
+      "passed": true,
+      "detail": {
+        "main": {
+          "paid": 20,
+          "revenue": 19800,
+          "fees": 845.4599999999999,
+          "processing": 5700,
+          "contribution": 662.7270000000001,
+          "trials": 5800,
+          "acquisition": 8000,
+          "fixed": 3000,
+          "residual": -3545.459999999999,
+          "cac": 400,
+          "cacTrial": 690,
+          "threshold": 12.674902335350751
+        },
+        "pro": {
+          "paid": 20,
+          "revenue": 79800,
+          "fees": 3407.4599999999996,
+          "processing": 34200,
+          "contribution": 2109.627,
+          "trials": 5800,
+          "acquisition": 8000,
+          "fixed": 3000,
+          "residual": 25392.539999999994,
+          "cac": 400,
+          "cacTrial": 690,
+          "threshold": 3.981746536236027
+        },
+        "invalid": {
+          "paid": 0,
+          "revenue": 0,
+          "fees": 0,
+          "processing": 0,
+          "contribution": 705,
+          "trials": 0,
+          "acquisition": 0,
+          "fixed": 3000,
+          "residual": -3000,
+          "cac": null,
+          "cacTrial": null,
+          "threshold": null
+        },
+        "bounds": {
+          "paid": 0,
+          "revenue": 0,
+          "fees": 0,
+          "processing": 0,
+          "contribution": 947.7270000000001,
+          "trials": 0,
+          "acquisition": 0,
+          "fixed": 3000,
+          "residual": -3000,
+          "cac": null,
+          "cacTrial": null,
+          "threshold": null
+        },
+        "foreign": null,
+        "foreignInvalid": null,
+        "foreignZero": 3000
+      }
+    },
+    {
+      "name": "chromium/360 finite bounds and unknown",
+      "passed": true
+    },
+    {
+      "name": "chromium/360 reduced motion",
+      "passed": true
+    },
+    {
+      "name": "chromium/360 print details",
+      "passed": true
+    },
+    {
+      "name": "chromium/360 no runtime errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "chromium/360 no external requests",
+      "passed": true,
+      "detail": [
+        "file:///tmp/n5-report-independent/index.html"
+      ]
+    },
+    {
+      "name": "chromium/900/dark no overflow",
+      "passed": true,
+      "detail": {
+        "width": 900,
+        "scroll": 900
+      }
+    },
+    {
+      "name": "chromium/900/dark default residual",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/dark 7 chapters",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/dark visible pricing links",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/dark keyboard journey 0",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/dark keyboard journey 1",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/dark keyboard journey 2",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/dark keyboard journey 3",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/dark keyboard journey 4",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/dark keyboard journey 5",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/dark keyboard journey 6",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/dark foreign unknown",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/dark foreign explicit cost",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/dark zero signups",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/dark zero paid",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/dark usage zero",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/light no overflow",
+      "passed": true,
+      "detail": {
+        "width": 900,
+        "scroll": 900
+      }
+    },
+    {
+      "name": "chromium/900/light default residual",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/light 7 chapters",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/light visible pricing links",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/light keyboard journey 0",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/light keyboard journey 1",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/light keyboard journey 2",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/light keyboard journey 3",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/light keyboard journey 4",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/light keyboard journey 5",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/light keyboard journey 6",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/light foreign unknown",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/light foreign explicit cost",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/light zero signups",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/light zero paid",
+      "passed": true
+    },
+    {
+      "name": "chromium/900/light usage zero",
+      "passed": true
+    },
+    {
+      "name": "chromium/900 math exact",
+      "passed": true,
+      "detail": {
+        "main": {
+          "paid": 20,
+          "revenue": 19800,
+          "fees": 845.4599999999999,
+          "processing": 5700,
+          "contribution": 662.7270000000001,
+          "trials": 5800,
+          "acquisition": 8000,
+          "fixed": 3000,
+          "residual": -3545.459999999999,
+          "cac": 400,
+          "cacTrial": 690,
+          "threshold": 12.674902335350751
+        },
+        "pro": {
+          "paid": 20,
+          "revenue": 79800,
+          "fees": 3407.4599999999996,
+          "processing": 34200,
+          "contribution": 2109.627,
+          "trials": 5800,
+          "acquisition": 8000,
+          "fixed": 3000,
+          "residual": 25392.539999999994,
+          "cac": 400,
+          "cacTrial": 690,
+          "threshold": 3.981746536236027
+        },
+        "invalid": {
+          "paid": 0,
+          "revenue": 0,
+          "fees": 0,
+          "processing": 0,
+          "contribution": 705,
+          "trials": 0,
+          "acquisition": 0,
+          "fixed": 3000,
+          "residual": -3000,
+          "cac": null,
+          "cacTrial": null,
+          "threshold": null
+        },
+        "bounds": {
+          "paid": 0,
+          "revenue": 0,
+          "fees": 0,
+          "processing": 0,
+          "contribution": 947.7270000000001,
+          "trials": 0,
+          "acquisition": 0,
+          "fixed": 3000,
+          "residual": -3000,
+          "cac": null,
+          "cacTrial": null,
+          "threshold": null
+        },
+        "foreign": null,
+        "foreignInvalid": null,
+        "foreignZero": 3000
+      }
+    },
+    {
+      "name": "chromium/900 finite bounds and unknown",
+      "passed": true
+    },
+    {
+      "name": "chromium/900 reduced motion",
+      "passed": true
+    },
+    {
+      "name": "chromium/900 print details",
+      "passed": true
+    },
+    {
+      "name": "chromium/900 no runtime errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "chromium/900 no external requests",
+      "passed": true,
+      "detail": [
+        "file:///tmp/n5-report-independent/index.html"
+      ]
+    },
+    {
+      "name": "webkit/360/dark no overflow",
+      "passed": true,
+      "detail": {
+        "width": 360,
+        "scroll": 360
+      }
+    },
+    {
+      "name": "webkit/360/dark default residual",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/dark 7 chapters",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/dark visible pricing links",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/dark keyboard journey 0",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/dark keyboard journey 1",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/dark keyboard journey 2",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/dark keyboard journey 3",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/dark keyboard journey 4",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/dark keyboard journey 5",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/dark keyboard journey 6",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/dark foreign unknown",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/dark foreign explicit cost",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/dark zero signups",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/dark zero paid",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/dark usage zero",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/light no overflow",
+      "passed": true,
+      "detail": {
+        "width": 360,
+        "scroll": 360
+      }
+    },
+    {
+      "name": "webkit/360/light default residual",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/light 7 chapters",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/light visible pricing links",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/light keyboard journey 0",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/light keyboard journey 1",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/light keyboard journey 2",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/light keyboard journey 3",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/light keyboard journey 4",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/light keyboard journey 5",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/light keyboard journey 6",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/light foreign unknown",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/light foreign explicit cost",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/light zero signups",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/light zero paid",
+      "passed": true
+    },
+    {
+      "name": "webkit/360/light usage zero",
+      "passed": true
+    },
+    {
+      "name": "webkit/360 math exact",
+      "passed": true,
+      "detail": {
+        "main": {
+          "paid": 20,
+          "revenue": 19800,
+          "fees": 845.4599999999999,
+          "processing": 5700,
+          "contribution": 662.7270000000001,
+          "trials": 5800,
+          "acquisition": 8000,
+          "fixed": 3000,
+          "residual": -3545.459999999999,
+          "cac": 400,
+          "cacTrial": 690,
+          "threshold": 12.674902335350751
+        },
+        "pro": {
+          "paid": 20,
+          "revenue": 79800,
+          "fees": 3407.4599999999996,
+          "processing": 34200,
+          "contribution": 2109.627,
+          "trials": 5800,
+          "acquisition": 8000,
+          "fixed": 3000,
+          "residual": 25392.539999999994,
+          "cac": 400,
+          "cacTrial": 690,
+          "threshold": 3.981746536236027
+        },
+        "invalid": {
+          "paid": 0,
+          "revenue": 0,
+          "fees": 0,
+          "processing": 0,
+          "contribution": 705,
+          "trials": 0,
+          "acquisition": 0,
+          "fixed": 3000,
+          "residual": -3000,
+          "cac": null,
+          "cacTrial": null,
+          "threshold": null
+        },
+        "bounds": {
+          "paid": 0,
+          "revenue": 0,
+          "fees": 0,
+          "processing": 0,
+          "contribution": 947.7270000000001,
+          "trials": 0,
+          "acquisition": 0,
+          "fixed": 3000,
+          "residual": -3000,
+          "cac": null,
+          "cacTrial": null,
+          "threshold": null
+        },
+        "foreign": null,
+        "foreignInvalid": null,
+        "foreignZero": 3000
+      }
+    },
+    {
+      "name": "webkit/360 finite bounds and unknown",
+      "passed": true
+    },
+    {
+      "name": "webkit/360 reduced motion",
+      "passed": true
+    },
+    {
+      "name": "webkit/360 print details",
+      "passed": true
+    },
+    {
+      "name": "webkit/360 no runtime errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "webkit/360 no external requests",
+      "passed": true,
+      "detail": [
+        "file:///tmp/n5-report-independent/index.html"
+      ]
+    },
+    {
+      "name": "webkit/900/dark no overflow",
+      "passed": true,
+      "detail": {
+        "width": 900,
+        "scroll": 900
+      }
+    },
+    {
+      "name": "webkit/900/dark default residual",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/dark 7 chapters",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/dark visible pricing links",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/dark keyboard journey 0",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/dark keyboard journey 1",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/dark keyboard journey 2",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/dark keyboard journey 3",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/dark keyboard journey 4",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/dark keyboard journey 5",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/dark keyboard journey 6",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/dark foreign unknown",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/dark foreign explicit cost",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/dark zero signups",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/dark zero paid",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/dark usage zero",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/light no overflow",
+      "passed": true,
+      "detail": {
+        "width": 900,
+        "scroll": 900
+      }
+    },
+    {
+      "name": "webkit/900/light default residual",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/light 7 chapters",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/light visible pricing links",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/light keyboard journey 0",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/light keyboard journey 1",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/light keyboard journey 2",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/light keyboard journey 3",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/light keyboard journey 4",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/light keyboard journey 5",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/light keyboard journey 6",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/light foreign unknown",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/light foreign explicit cost",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/light zero signups",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/light zero paid",
+      "passed": true
+    },
+    {
+      "name": "webkit/900/light usage zero",
+      "passed": true
+    },
+    {
+      "name": "webkit/900 math exact",
+      "passed": true,
+      "detail": {
+        "main": {
+          "paid": 20,
+          "revenue": 19800,
+          "fees": 845.4599999999999,
+          "processing": 5700,
+          "contribution": 662.7270000000001,
+          "trials": 5800,
+          "acquisition": 8000,
+          "fixed": 3000,
+          "residual": -3545.459999999999,
+          "cac": 400,
+          "cacTrial": 690,
+          "threshold": 12.674902335350751
+        },
+        "pro": {
+          "paid": 20,
+          "revenue": 79800,
+          "fees": 3407.4599999999996,
+          "processing": 34200,
+          "contribution": 2109.627,
+          "trials": 5800,
+          "acquisition": 8000,
+          "fixed": 3000,
+          "residual": 25392.539999999994,
+          "cac": 400,
+          "cacTrial": 690,
+          "threshold": 3.981746536236027
+        },
+        "invalid": {
+          "paid": 0,
+          "revenue": 0,
+          "fees": 0,
+          "processing": 0,
+          "contribution": 705,
+          "trials": 0,
+          "acquisition": 0,
+          "fixed": 3000,
+          "residual": -3000,
+          "cac": null,
+          "cacTrial": null,
+          "threshold": null
+        },
+        "bounds": {
+          "paid": 0,
+          "revenue": 0,
+          "fees": 0,
+          "processing": 0,
+          "contribution": 947.7270000000001,
+          "trials": 0,
+          "acquisition": 0,
+          "fixed": 3000,
+          "residual": -3000,
+          "cac": null,
+          "cacTrial": null,
+          "threshold": null
+        },
+        "foreign": null,
+        "foreignInvalid": null,
+        "foreignZero": 3000
+      }
+    },
+    {
+      "name": "webkit/900 finite bounds and unknown",
+      "passed": true
+    },
+    {
+      "name": "webkit/900 reduced motion",
+      "passed": true
+    },
+    {
+      "name": "webkit/900 print details",
+      "passed": true
+    },
+    {
+      "name": "webkit/900 no runtime errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "webkit/900 no external requests",
+      "passed": true,
+      "detail": [
+        "file:///tmp/n5-report-independent/index.html"
+      ]
+    }
+  ],
+  "failures": [],
+  "limitations": [
+    "Public external links were inspected as source references, not fetched; no production app was accessed.",
+    "Final coordinator status reconciliation requires source SHA rebinding."
+  ],
+  "model": "GPT-6.1 Sol high (assigned); usage unavailable",
+  "source_review": {
+    "verdict": "pass",
+    "blockers": [],
+    "checked": [
+      "Default residual -3545.46; Start 662.727, Pro 2109.627 and addon 856.377 contribution; C57/C62 and trial29/31 agree canonical summary.",
+      "Hours/30d/one-time registration bonus and per-second accounting agree pricing addendum; no monthly bonus.",
+      "Fee4.27% is scenario not merchant contract; tax/labor/support/refund exclusions explicit.",
+      "RF split8085.67 not foreign; foreign offer is unknown and additional costs disclosed.",
+      "Status is time-bounded candidate/partial E2E, payments OFF, test990 not revenue, Resend pending; no false full acceptance.",
+      "Visible full GitHub pricing links; all repository-relative links resolve in actual source tree.",
+      "No external assets/network requests; emails UUID and common key markers absent.",
+      "Seven chapters connect client need to status and launch pilot; distinct square grid/dark green editorial design, not generic app dashboard."
+    ],
+    "limitation": "Source review uses supplied current runtime receipts from coordinator and canonical docs; it does not independently qualify production app."
+  },
+  "completed_at": "2026-10-28T16:31:08.771549+00:00"
+}

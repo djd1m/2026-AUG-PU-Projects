@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-28T16:51:50.054937+00:00",
+  "source_revision": "009b4799899f4a5ab9df70c32107a4f0d209f081",
+  "images": {
+    "web": "sha256:7586fd0fb4503b44b672fd249f10cfc5ddce6a9b4b83410105ac8255f79e5eee",
+    "worker-llm": "sha256:d8d0b7d129bc00ac0713de34adf41131d12e372532212f87c52a739204740dbf",
+    "worker-stt": "sha256:2a5e16804226626910696df346c03c85ab2e837164111fdf63cbe4944bba29f7",
+    "worker-video": "sha256:31ee340c784d4b440b83201ee20a302142829d1cc8b7fe7d64bf723276bb6514"
+  },
+  "test_shop_migration": "PASS isolated n5_referral_paytest_test",
+  "production_migration": "025 applied, additive",
+  "health": 200,
+  "owner": {
+    "owner_enabled": true,
+    "enabled_accounts": 1,
+    "target_legacy": true
+  },
+  "owner_identity": "privately resolved existing personal account; identifier omitted",
+  "ordinary_user_llm_limit_restored": 2,
+  "mail": "disabled by owner pause",
+  "payments": "off until real merchant keys",
+  "support_origin": "https://support.clipmkr.ru",
+  "no_media_deleted": true,
+  "fresh_full_regression_claim": false,
+  "qualification": "full1345/1349 plus corrected affected contracts/current typecheck and independently reviewed metadata-only source delta",
+  "free_disk_bytes": 3033600000
+}
