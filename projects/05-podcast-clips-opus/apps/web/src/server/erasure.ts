@@ -16,6 +16,9 @@ export class ErasureService {
       if (row.status !== 'active') throw new UploadError('conflict', 'Удаление уже запущено', 409);
       const deadline = new Date(now.getTime() + 72 * 3600_000);
       await tx.query("UPDATE account SET status='erasing',deletion_requested_at=$2,erase_deadline=$3,updated_at=$2 WHERE id=$1", [account, now, deadline]);
+      await tx.query('UPDATE support_email_token SET used_at=COALESCE(used_at,clock_timestamp()) WHERE account_id=$1', [account]);
+      await tx.query('UPDATE account SET email_verified_at=NULL WHERE id=$1', [account]);
+      await tx.query('UPDATE support_operator SET revoked_at=COALESCE(revoked_at,clock_timestamp()) WHERE account_id=$1', [account]);
       await tx.query('UPDATE session SET revoked_at=COALESCE(revoked_at,$2) WHERE account_id=$1', [account, now]);
       await tx.query('UPDATE guest_pack SET revoked_at=COALESCE(revoked_at,$2) WHERE account_id=$1', [account, now]);
       await tx.query(`UPDATE clip_link SET revoked_at=COALESCE(revoked_at,$2)

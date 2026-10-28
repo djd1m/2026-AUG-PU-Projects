@@ -49,6 +49,20 @@ services:
       # Оплата ЮKassa (фича 30, ADR-019). Дефис БЕЗ двоеточия: не задана → off (экран интереса); явно ПУСТАЯ строка
       # доезжает до web и валит старт (honest-configuration CFG-I2), а не превращается в off молча.
       N5_PAYMENTS_MODE: ${N5_PAYMENTS_MODE-off}
+      N5_MAIL_MODE: ${N5_MAIL_MODE-disabled}
+      N5_MAIL_FROM: ${N5_MAIL_FROM-}
+      N5_SMTP_HOST: ${N5_SMTP_HOST-}
+      N5_SMTP_PORT: ${N5_SMTP_PORT-}
+      N5_SMTP_USER: ${N5_SMTP_USER-}
+      N5_SMTP_PASSWORD: ${N5_SMTP_PASSWORD-}
+      N5_SMTP_SECURE: ${N5_SMTP_SECURE-}
+      N5_SUPPORT_MODE: ${N5_SUPPORT_MODE-disabled}
+      N5_SUPPORT_BASE_URL: ${N5_SUPPORT_BASE_URL-}
+      N5_SUPPORT_INBOX_ID: ${N5_SUPPORT_INBOX_ID-}
+      N5_SUPPORT_IDENTIFIED: ${N5_SUPPORT_IDENTIFIED-false}
+      N5_SUPPORT_JWT_SECRET: ${N5_SUPPORT_JWT_SECRET-}
+      N5_SUPPORT_CONTACT_EMAIL: ${N5_SUPPORT_CONTACT_EMAIL-}
+      N5_MAIL_TEST_CAPTURE_FILE: ${N5_MAIL_TEST_CAPTURE_FILE-}
       # Ключи магазина нужны только при live; web сам откажет стартовать, если при live их нет.
       YOOKASSA_SHOP_ID: ${YOOKASSA_SHOP_ID-}
       YOOKASSA_SECRET_KEY: ${YOOKASSA_SECRET_KEY-}

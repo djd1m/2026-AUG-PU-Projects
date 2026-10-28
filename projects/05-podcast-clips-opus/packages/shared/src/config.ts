@@ -1,5 +1,6 @@
 import { assertWatermarkFits } from './watermark.js';
 import { loadPaymentsConfig } from './tariff.js';
+import { loadSupportConfig, loadMailConfig } from './support-config.js';
 export const LIMIT_NAMES = [
   'N5_LIMIT_USER_MINUTES', 'N5_LIMIT_PAID_USER_MINUTES', 'N5_LIMIT_USER_UPLOADS', 'N5_LIMIT_USER_UPLOAD_REFUNDS',
   'N5_LIMIT_USER_RERENDERS', 'N5_LIMIT_USER_LLM', 'N5_LIMIT_GLOBAL_MINUTES', 'N5_LIMIT_GLOBAL_LLM',
@@ -93,6 +94,7 @@ export function loadWebConfig(env: Environment) {
   }
   return Object.freeze({ ...connections, limits, publicOrigin, sessionSecret, billingMode: loadBillingMode(env),
     s3: Object.freeze({ ...loadS3Config(env), publicEndpoint: loadS3PublicEndpoint(env) }),
+    support: loadSupportConfig(env), mail: loadMailConfig(env),
     trustedProxyHops: loadTrustedProxyHops(env), payments: loadPaymentsConfig(env) });
 }
 export type WebConfig = ReturnType<typeof loadWebConfig>;
