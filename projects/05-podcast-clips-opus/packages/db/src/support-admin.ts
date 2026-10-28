@@ -30,12 +30,12 @@ export class SupportAdminStore {
     const after=decodeCursor(cursor);
     return transaction(this.pool,async tx=>{
       const actor=await supportOperator(tx,hash);
-      const rows=(await tx.query<{id:string;created_at:Date;email:string;status:string;verified:boolean;plan:string}>(`SELECT ${projection},a.created_at FROM account a
+      const rows=(await tx.query<{id:string;cursor_at:string;email:string;status:string;verified:boolean;plan:string}>(`SELECT ${projection},a.created_at::text AS cursor_at FROM account a
         WHERE ($1::timestamptz IS NULL OR (a.created_at,a.id)<($1::timestamptz,$2::uuid))
         AND ($3::text IS NULL OR a.email=$3 OR a.id::text=$3) ORDER BY a.created_at DESC,a.id DESC LIMIT 25`,[after?.[0]??null,after?.[1]??null,query??null])).rows;
       await tx.query('INSERT INTO support_audit(actor,action) VALUES($1,$2)',[actor,query?'search':'list']);
       const last=rows.at(-1);
-      return {items:rows.map(({created_at:_at,...row})=>row),nextCursor:rows.length===25&&last?Buffer.from(JSON.stringify([last.created_at.toISOString(),last.id])).toString('base64url'):null};
+      return {items:rows.map(({cursor_at:_cursor,...row})=>row),nextCursor:rows.length===25&&last?Buffer.from(JSON.stringify([last.cursor_at,last.id])).toString('base64url'):null};
     });
   }
   async card(hash:string,id:string) {
@@ -45,11 +45,19 @@ export class SupportAdminStore {
       if(!account)throw new StaffNotFound();
       const now=(await tx.query<{now:Date}>('SELECT clock_timestamp() AS now')).rows[0]!.now;
       const credits=await readCreditBalance(tx,id,now);
-      const ledger=(await tx.query(`SELECT id,source,total_seconds,remaining_seconds,reserved_seconds,created_at,expires_at
-        FROM credit_grant WHERE account_id=$1 ORDER BY created_at DESC,id DESC LIMIT 20`,[id])).rows;
+      const ledger=(await tx.query(`SELECT id,kind,delta,status,at,source,video_id FROM (
+        SELECT g.id,'grant'::text AS kind,g.total_seconds AS delta,'granted'::text AS status,g.created_at AS at,
+          g.source,NULL::uuid AS video_id FROM credit_grant g WHERE g.account_id=$1
+        UNION ALL
+        SELECT c.id,'charge'::text AS kind,CASE WHEN c.state='settled' THEN -c.billable_seconds ELSE 0 END AS delta,
+          c.state AS status,COALESCE(c.finished_at,c.created_at) AS at,NULL::text AS source,v.id AS video_id
+          FROM video_credit_charge c JOIN video v ON v.id=c.video_id WHERE v.account_id=$1
+        ) history ORDER BY at DESC,id DESC LIMIT 20`,[id])).rows;
       const payments=(await tx.query('SELECT id,status,amount_minor FROM payment WHERE account_id=$1 ORDER BY created_at DESC,id DESC LIMIT 20',[id])).rows;
-      const jobs=(await tx.query(`SELECT id,status,failure_reason AS "failureCode",stage_progress,created_at,updated_at,finished_at
-        FROM video WHERE account_id=$1 ORDER BY created_at DESC,id DESC LIMIT 20`,[id])).rows;
+      const jobs=(await tx.query(`SELECT v.id,v.status,v.failure_reason AS "failureCode",
+        (SELECT j.stage FROM job_attempt j WHERE j.video_id=v.id ORDER BY j.fence DESC,j.created_at DESC,j.id DESC LIMIT 1) AS stage,
+        v.stage_progress,v.created_at,v.updated_at,v.finished_at
+        FROM video v WHERE v.account_id=$1 ORDER BY v.created_at DESC,v.id DESC LIMIT 20`,[id])).rows;
       await tx.query("INSERT INTO support_audit(actor,target,action) VALUES($1,$2,'card')",[actor,id]);
       return {account,credits,ledger,payments,jobs};
     });

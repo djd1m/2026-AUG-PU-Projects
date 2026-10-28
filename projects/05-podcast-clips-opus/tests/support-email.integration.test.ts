@@ -22,6 +22,8 @@ describe.skipIf(!databaseUrl)('support PostgreSQL authority',()=>{
  afterAll(async()=>{if(pool){await pool.query(`DROP SCHEMA ${schema} CASCADE`);await pool.end();}});
  async function account(){const email=`${randomUUID()}@example.test`;const token=await auth.register(email,'password123','192.0.2.0/24');
   const id=(await auth.authenticate(token))!.account_id;return {email,token,id,authority:{accountId:id,sessionHash:auth.tokenHash(token)}};}
+ async function staff(){const a=await account();await pool.query('UPDATE account SET email_verified_at=clock_timestamp() WHERE id=$1',[a.id]);
+  await setSupportOperator(pool,{accountId:a.id,action:'grant',actor:'test',reason:'diagnostic fixture'});return {...a,admin:new SupportAdminStore(pool)};}
  it('24h proof permits same-account other device, is one-use and preserves signup credits',async()=>{
   const a=await account(),other=await auth.login(a.email,'password123','192.0.2.0/24');
   const issued=await store.issue('verify',a.email,randomUUID(),randomUUID(),a.authority);expect(issued).not.toBeNull();
@@ -67,6 +69,54 @@ describe.skipIf(!databaseUrl)('support PostgreSQL authority',()=>{
   expect(card.ledger.length).toBeLessThanOrEqual(20);expect(card.jobs.length).toBeLessThanOrEqual(20);
   await setSupportOperator(pool,{accountId:a.id,action:'revoke',actor:'test',reason:'fixture revoke'});
   await expect(admin.card(a.authority.sessionHash,a.id)).rejects.toBeInstanceOf(StaffNotFound);
+ });
+ it('staff jobs expose latest owned attempt stage rather than progress or another video',async()=>{
+  const a=await staff(),foreign=await account();
+  const video=(await pool.query("INSERT INTO video(account_id,idempotency_key,source,declared_bytes,status,stage_progress) VALUES($1,'stage','upload',1,'failed',50) RETURNING id",[a.id])).rows[0].id;
+  const other=(await pool.query("INSERT INTO video(account_id,idempotency_key,source,declared_bytes,status) VALUES($1,'foreign-stage','upload',1,'failed') RETURNING id",[foreign.id])).rows[0].id;
+  await pool.query("INSERT INTO job_attempt(video_id,stage,attempt_no,fence,status,unit,unit_count,started_at) VALUES($1,'select',1,1,'failed','none',0,clock_timestamp()),($2,'stt',1,99,'failed','none',0,clock_timestamp())",[video,other]);
+  expect((await a.admin.card(a.authority.sessionHash,a.id)).jobs.find(row=>row.id===video)?.stage).toBe('select');
+  const clip=(await pool.query(`INSERT INTO clip(video_id,"index",start_seconds,end_seconds,title,status,watermarked)
+    VALUES($1,1,0,25,'synthetic','failed',true) RETURNING id`,[video])).rows[0].id;
+  await pool.query('INSERT INTO clip_link(clip_id,code) VALUES($1,$2)',[clip,randomUUID()]);
+  await pool.query("INSERT INTO job_attempt(video_id,clip_id,stage,attempt_no,fence,status,unit,unit_count,started_at) VALUES($1,$2,'render',1,2,'failed','none',0,clock_timestamp())",[video,clip]);
+  const card=await a.admin.card(a.authority.sessionHash,a.id);
+  expect(card.jobs.find(row=>row.id===video)).toMatchObject({stage:'render',stage_progress:50});
+  expect(card.jobs.some(row=>row.id===other)).toBe(false);expect(card.jobs.length).toBeLessThanOrEqual(20);
+ });
+ it('staff keyset cursor preserves equal PostgreSQL microseconds across more than25 rows',async()=>{
+  const a=await staff();
+  await pool.query(`INSERT INTO account(email,password_hash,created_at) SELECT $1||i||'@example.test','synthetic',
+    '2035-01-01T00:00:00.123456Z'::timestamptz FROM generate_series(1,57) i`,[randomUUID()]);
+  const expected=(await pool.query<{id:string}>('SELECT id FROM account ORDER BY created_at DESC,id DESC')).rows.map(row=>row.id);
+  const visited:string[]=[];let cursor:string|undefined;
+  for(let page=0;page<10;page++){
+   const result=await a.admin.list(a.authority.sessionHash,cursor);expect(result.items.length).toBeLessThanOrEqual(25);
+   expect(result.items.every(row=>Object.keys(row).sort().join(',')==='email,id,plan,status,verified')).toBe(true);
+   visited.push(...result.items.map(row=>row.id));
+   if(page===0)expect(JSON.parse(Buffer.from(result.nextCursor!,'base64url').toString())[0]).toContain('.123456');
+   if(!result.nextCursor)break;cursor=result.nextCursor;
+  }
+  expect(visited).toEqual(expected);expect(new Set(visited).size).toBe(expected.length);
+ });
+ it('staff ledger includes owned grants and settled300s debit and caps combined history at20',async()=>{
+  const a=await staff(),foreign=await account();
+  const video=(await pool.query("INSERT INTO video(account_id,idempotency_key,source,declared_bytes,status) VALUES($1,'charge','upload',1,'done') RETURNING id",[a.id])).rows[0].id;
+  const other=(await pool.query("INSERT INTO video(account_id,idempotency_key,source,declared_bytes,status) VALUES($1,'foreign-charge','upload',1,'done') RETURNING id",[foreign.id])).rows[0].id;
+  const charge=(await pool.query(`INSERT INTO video_credit_charge(video_id,cycle,billable_seconds,state,paid_render,finished_at)
+    VALUES($1,1,300,'settled',false,clock_timestamp()) RETURNING id`,[video])).rows[0].id;
+  const foreignCharge=(await pool.query(`INSERT INTO video_credit_charge(video_id,cycle,billable_seconds,state,paid_render,finished_at)
+    VALUES($1,1,900,'settled',false,clock_timestamp()) RETURNING id`,[other])).rows[0].id;
+  const ledger=(await a.admin.card(a.authority.sessionHash,a.id)).ledger;
+  expect(ledger).toEqual(expect.arrayContaining([expect.objectContaining({id:charge,kind:'charge',delta:-300,status:'settled',video_id:video}),expect.objectContaining({kind:'grant',delta:1800,source:'signup'})]));
+  expect(ledger.some(row=>row.id===foreignCharge||row.video_id===other)).toBe(false);
+  await pool.query(`WITH videos AS (INSERT INTO video(account_id,idempotency_key,source,declared_bytes,status,created_at)
+    SELECT $1,'history-'||i,'upload',1,'done','2036-01-01'::timestamptz+i*interval '1 second' FROM generate_series(1,25) i RETURNING id,created_at)
+    INSERT INTO video_credit_charge(video_id,cycle,billable_seconds,state,paid_render,created_at,finished_at)
+    SELECT id,1,1,'settled',false,created_at,created_at FROM videos`,[a.id]);
+  const bounded=(await a.admin.card(a.authority.sessionHash,a.id)).ledger;expect(bounded).toHaveLength(20);
+  expect(bounded.every(row=>row.kind==='charge'&&row.delta===-1)).toBe(true);
+  expect(JSON.stringify(bounded)).not.toMatch(/object_key|password_hash|cookie_token_hash|digest|source_url/);
  });
  it('proof expiry and issuing session expiry are rechecked after an account-lock wait',async()=>{
   for(const expired of ['token','issuer']) {
