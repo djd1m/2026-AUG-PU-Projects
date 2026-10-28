@@ -1,0 +1,21 @@
+{
+  "run_id": "20261028-n5-cloudru-s3-live",
+  "work_unit_id": "published-logout-diagnosis",
+  "attempt_id": "published-logout-01",
+  "source_revision": "cc6e66e57bd47e7a403612a4964dae059da66195",
+  "build_revision": "sha256:7b89eb3a496a3f4ebd33e2dc5ec18dc224e63a133c7cb8e684e918f53c6903b3",
+  "status": "ready",
+  "checked_at": "2026-10-28T06:56:27.856241+00:00",
+  "environment": "existing public https://clipmkr.ru; existing codex-ui-playwright1.63",
+  "inputs": "one new reserved synthetic@example.org account with generated password kept only private",
+  "expected_effects": [
+    "register only designated synthetic identity",
+    "create/revoke its own sessions",
+    "read its own empty dashboard"
+  ],
+  "command_as_data": "docker exec codex-ui-playwright node /tmp/n5-s3-logout-20261028/diagnose.cjs",
+  "evidence_destination": "private /tmp/n5-cloudru-s3-live-private-20261028/logout-01 and sanitized project evidence",
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "owner_data_effects": "none; no owner session/user/media mutation"
+}

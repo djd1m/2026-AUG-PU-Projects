@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-28T14:12:21.938535+00:00",
+  "source_revision": "4c386745a248215a7c50b718533765400f1d515d",
+  "images": {
+    "web": "sha256:ad3ac94d1de449f3d4375685ce406cfdca48de0c92657df112ad9d0b402e5875",
+    "worker-llm": "sha256:6d987d6220655b59b6d8c9085da381bcc73c57f29d0b443617ecb09f4e51d87a"
+  },
+  "public_health": 200,
+  "pages": {
+    "/legal/privacy": 200,
+    "/legal/terms": 200,
+    "/support": 200
+  },
+  "schema_changes": false,
+  "resend_live": "paused_by_owner;maildisabled",
+  "realpayments": "off",
+  "worker_llm_cloud_deadline_ms": 600000,
+  "free_disk_bytes": 2741231616
+}

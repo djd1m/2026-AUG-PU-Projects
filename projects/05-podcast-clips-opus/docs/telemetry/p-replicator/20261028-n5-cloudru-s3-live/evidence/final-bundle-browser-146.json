@@ -1,0 +1,602 @@
+{
+  "source_revision": "4c386745a248215a7c50b718533765400f1d515d",
+  "started_at": "2026-10-28T14:13:33.845Z",
+  "checks": [
+    {
+      "name": "chromium/legal/privacy/360/dark200",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacy/360/darkfooter",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacy/360/darkrequisites",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacy/360/darknooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacyallparagraphs",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacy/360/light200",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacy/360/lightfooter",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacy/360/lightrequisites",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacy/360/lightnooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacyallparagraphs",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacy/900/dark200",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacy/900/darkfooter",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacy/900/darkrequisites",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacy/900/darknooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacyallparagraphs",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacy/900/light200",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacy/900/lightfooter",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacy/900/lightrequisites",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacy/900/lightnooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/privacyallparagraphs",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/terms/360/dark200",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/terms/360/darkfooter",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/terms/360/darkrequisites",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/terms/360/darknooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/termsallparagraphs",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/terms/360/light200",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/terms/360/lightfooter",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/terms/360/lightrequisites",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/terms/360/lightnooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/termsallparagraphs",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/terms/900/dark200",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/terms/900/darkfooter",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/terms/900/darkrequisites",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/terms/900/darknooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/termsallparagraphs",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/terms/900/light200",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/terms/900/lightfooter",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/terms/900/lightrequisites",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/terms/900/lightnooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium/legal/termsallparagraphs",
+      "pass": true
+    },
+    {
+      "name": "chromium/support/360/dark200",
+      "pass": true
+    },
+    {
+      "name": "chromium/support/360/darkfooter",
+      "pass": true
+    },
+    {
+      "name": "chromium/support/360/darkrequisites",
+      "pass": true
+    },
+    {
+      "name": "chromium/support/360/darknooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium/support/360/light200",
+      "pass": true
+    },
+    {
+      "name": "chromium/support/360/lightfooter",
+      "pass": true
+    },
+    {
+      "name": "chromium/support/360/lightrequisites",
+      "pass": true
+    },
+    {
+      "name": "chromium/support/360/lightnooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium/support/900/dark200",
+      "pass": true
+    },
+    {
+      "name": "chromium/support/900/darkfooter",
+      "pass": true
+    },
+    {
+      "name": "chromium/support/900/darkrequisites",
+      "pass": true
+    },
+    {
+      "name": "chromium/support/900/darknooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium/support/900/light200",
+      "pass": true
+    },
+    {
+      "name": "chromium/support/900/lightfooter",
+      "pass": true
+    },
+    {
+      "name": "chromium/support/900/lightrequisites",
+      "pass": true
+    },
+    {
+      "name": "chromium/support/900/lightnooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium//360/dark200",
+      "pass": true
+    },
+    {
+      "name": "chromium//360/darkfooter",
+      "pass": true
+    },
+    {
+      "name": "chromium//360/darkrequisites",
+      "pass": true
+    },
+    {
+      "name": "chromium//360/darknooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium//360/light200",
+      "pass": true
+    },
+    {
+      "name": "chromium//360/lightfooter",
+      "pass": true
+    },
+    {
+      "name": "chromium//360/lightrequisites",
+      "pass": true
+    },
+    {
+      "name": "chromium//360/lightnooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium//900/dark200",
+      "pass": true
+    },
+    {
+      "name": "chromium//900/darkfooter",
+      "pass": true
+    },
+    {
+      "name": "chromium//900/darkrequisites",
+      "pass": true
+    },
+    {
+      "name": "chromium//900/darknooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium//900/light200",
+      "pass": true
+    },
+    {
+      "name": "chromium//900/lightfooter",
+      "pass": true
+    },
+    {
+      "name": "chromium//900/lightrequisites",
+      "pass": true
+    },
+    {
+      "name": "chromium//900/lightnooverflow",
+      "pass": true
+    },
+    {
+      "name": "first_click_real_widget_visible",
+      "pass": true
+    },
+    {
+      "name": "real_widget_has_dimensions",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacy/360/dark200",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacy/360/darkfooter",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacy/360/darkrequisites",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacy/360/darknooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacyallparagraphs",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacy/360/light200",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacy/360/lightfooter",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacy/360/lightrequisites",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacy/360/lightnooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacyallparagraphs",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacy/900/dark200",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacy/900/darkfooter",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacy/900/darkrequisites",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacy/900/darknooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacyallparagraphs",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacy/900/light200",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacy/900/lightfooter",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacy/900/lightrequisites",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacy/900/lightnooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/privacyallparagraphs",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/terms/360/dark200",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/terms/360/darkfooter",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/terms/360/darkrequisites",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/terms/360/darknooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/termsallparagraphs",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/terms/360/light200",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/terms/360/lightfooter",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/terms/360/lightrequisites",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/terms/360/lightnooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/termsallparagraphs",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/terms/900/dark200",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/terms/900/darkfooter",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/terms/900/darkrequisites",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/terms/900/darknooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/termsallparagraphs",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/terms/900/light200",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/terms/900/lightfooter",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/terms/900/lightrequisites",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/terms/900/lightnooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit/legal/termsallparagraphs",
+      "pass": true
+    },
+    {
+      "name": "webkit/support/360/dark200",
+      "pass": true
+    },
+    {
+      "name": "webkit/support/360/darkfooter",
+      "pass": true
+    },
+    {
+      "name": "webkit/support/360/darkrequisites",
+      "pass": true
+    },
+    {
+      "name": "webkit/support/360/darknooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit/support/360/light200",
+      "pass": true
+    },
+    {
+      "name": "webkit/support/360/lightfooter",
+      "pass": true
+    },
+    {
+      "name": "webkit/support/360/lightrequisites",
+      "pass": true
+    },
+    {
+      "name": "webkit/support/360/lightnooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit/support/900/dark200",
+      "pass": true
+    },
+    {
+      "name": "webkit/support/900/darkfooter",
+      "pass": true
+    },
+    {
+      "name": "webkit/support/900/darkrequisites",
+      "pass": true
+    },
+    {
+      "name": "webkit/support/900/darknooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit/support/900/light200",
+      "pass": true
+    },
+    {
+      "name": "webkit/support/900/lightfooter",
+      "pass": true
+    },
+    {
+      "name": "webkit/support/900/lightrequisites",
+      "pass": true
+    },
+    {
+      "name": "webkit/support/900/lightnooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit//360/dark200",
+      "pass": true
+    },
+    {
+      "name": "webkit//360/darkfooter",
+      "pass": true
+    },
+    {
+      "name": "webkit//360/darkrequisites",
+      "pass": true
+    },
+    {
+      "name": "webkit//360/darknooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit//360/light200",
+      "pass": true
+    },
+    {
+      "name": "webkit//360/lightfooter",
+      "pass": true
+    },
+    {
+      "name": "webkit//360/lightrequisites",
+      "pass": true
+    },
+    {
+      "name": "webkit//360/lightnooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit//900/dark200",
+      "pass": true
+    },
+    {
+      "name": "webkit//900/darkfooter",
+      "pass": true
+    },
+    {
+      "name": "webkit//900/darkrequisites",
+      "pass": true
+    },
+    {
+      "name": "webkit//900/darknooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit//900/light200",
+      "pass": true
+    },
+    {
+      "name": "webkit//900/lightfooter",
+      "pass": true
+    },
+    {
+      "name": "webkit//900/lightrequisites",
+      "pass": true
+    },
+    {
+      "name": "webkit//900/lightnooverflow",
+      "pass": true
+    }
+  ],
+  "engines": [
+    {
+      "name": "chromium",
+      "version": "153.0.8010.12"
+    },
+    {
+      "name": "webkit",
+      "version": "26.6"
+    }
+  ],
+  "finished_at": "2026-10-28T14:13:45.733Z",
+  "exit_code": 0
+}

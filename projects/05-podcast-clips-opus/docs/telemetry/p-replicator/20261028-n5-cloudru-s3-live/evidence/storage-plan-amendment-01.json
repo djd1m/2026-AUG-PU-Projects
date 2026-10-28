@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-28T06:59:26.837542+00:00",
+  "decision": "scratch qualification proceeds; production cutover remains gated",
+  "plan_corrections": {
+    "migration": "do not run022/023 until source-bound candidate/backup and exact checkpoint; config-only branch no schema updates",
+    "long_file": "200s is smoke only;60–90min gate remains",
+    "logout": "published UI and server logout/relogin diagnostic now included; own synthetic identity only"
+  },
+  "cors_authorization": "owner explicitly requests connecting real Object Storage here and full browser journey; exact-origin minimum bucket CORS is necessary configuration",
+  "cors_existing": "NoSuchCORSConfiguration404 confirmed, reread before mutation; preserve if owner added rules concurrently",
+  "cors_addition": {
+    "AllowedOrigins": [
+      "https://clipmkr.ru"
+    ],
+    "AllowedMethods": [
+      "GET",
+      "HEAD",
+      "PUT"
+    ],
+    "AllowedHeaders": [
+      "content-type",
+      "range",
+      "x-amz-*"
+    ],
+    "ExposeHeaders": [
+      "ETag",
+      "Content-Range",
+      "Accept-Ranges",
+      "Content-Length",
+      "Content-Disposition"
+    ],
+    "MaxAgeSeconds": 600
+  },
+  "unchanged": [
+    "bucket ACL/policy",
+    "versioning",
+    "lifecycle",
+    "production application configuration",
+    "accounts/media"
+  ]
+}

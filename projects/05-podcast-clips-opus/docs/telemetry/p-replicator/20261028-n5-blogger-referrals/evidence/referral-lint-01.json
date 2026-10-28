@@ -1,0 +1,17 @@
+{
+  "check": "referral-lint-01",
+  "command": [
+    "npm",
+    "run",
+    "lint"
+  ],
+  "source_revision": "11510d283d8c16b528b83d8017ae984d3c486a30",
+  "started_at": "2026-10-28T12:46:59.098534+00:00",
+  "elapsed_seconds": 3.004,
+  "exit_code": 0,
+  "stopped_reason": null,
+  "node": "22.22.3",
+  "environment": "isolated *_test DB, Redis15/testMinIO, fake models, payments off",
+  "log": "/tmp/n5-thumbnail-checks-20261028/referral-lint-01.log",
+  "free_disk_gib": 2.566
+}

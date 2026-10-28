@@ -1,0 +1,17 @@
+{
+  "check": "referral-final-build-01",
+  "command": [
+    "npm",
+    "run",
+    "build"
+  ],
+  "source_revision": "c4556fac9a73cb080ec7dbc01e9d4536a0d1d7c1",
+  "started_at": "2026-10-28T13:00:52.558710+00:00",
+  "elapsed_seconds": 73.046,
+  "exit_code": 0,
+  "stopped_reason": null,
+  "node": "22.22.3",
+  "environment": "isolated *_test DB, Redis15/testMinIO, fake models, payments off",
+  "log": "/tmp/n5-thumbnail-checks-20261028/referral-final-build-01.log",
+  "free_disk_gib": 2.4
+}

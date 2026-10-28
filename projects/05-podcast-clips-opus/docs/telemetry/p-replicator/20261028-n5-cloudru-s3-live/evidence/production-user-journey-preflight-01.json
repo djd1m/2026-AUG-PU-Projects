@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-28T07:36:56.738811+00:00",
+  "run_id": "20261028-n5-cloudru-s3-live",
+  "work_unit_id": "production-user-journey",
+  "attempt_id": "production-user-journey-01",
+  "status": "ready",
+  "source_revision": "cc6e66e57bd47e7a403612a4964dae059da66195",
+  "build": "four exact images matched in production deployment receipt; Next1fd6AEs1ou568VDuf1v9u",
+  "environment": "https://clipmkr.ru live; yandex/general and cloudru/deepseek-ai/DeepSeek-V4-Pro; real Cloud.ru bucket",
+  "browser": "existing codex-ui-playwright1.63/Chromium",
+  "input": "explicitly authorized existing natural88.4min252814186bytes, private media; SHA256 checked against preservedsource",
+  "account": "own synthetic legacy account created via old published UI beforemigration; no ownercredentials/reset",
+  "owner_approval": "Да, разрешаю использовать эту запись для E2E",
+  "expected_effects": [
+    "ownsessioncreate/revoke",
+    "actual UI multipart upload and real bounded STT+LLM+render ofone88.4minrecording",
+    "retain own generatedjob/clips privately",
+    "deletebrowsertemporarysource immediately afteruploadcomplete"
+  ],
+  "privacy": "no media,transcript,titles,screenshots,signedURLs,credentials inpublicevidence",
+  "command_as_data": "docker exec codex-ui-playwright node /tmp/n5-prod-userjourney-20261028/journey.cjs",
+  "driver_sha256": "c31488f1cdc3ecce806b78ca9034bc39788eb0bbbafa9386ee11de425536a8df",
+  "disk_free_bytes": 2688585728,
+  "minimum_free_bytes": 2147483648,
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

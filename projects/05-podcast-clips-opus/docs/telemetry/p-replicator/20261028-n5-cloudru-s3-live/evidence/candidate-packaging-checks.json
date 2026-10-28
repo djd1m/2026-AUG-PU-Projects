@@ -1,0 +1,80 @@
+{
+  "source_revision": "cc6e66e57bd47e7a403612a4964dae059da66195",
+  "images": [
+    {
+      "role": "web",
+      "image_id": "sha256:2d6be092134094c6300c5fff2b9fbe35b0e27d424bd3e4affc7e07a8167f4fdc",
+      "module_exit": 0,
+      "result": {
+        "role": "web",
+        "source": "cc6e66e57bd47e7a403612a4964dae059da66195",
+        "node": "v22.22.3",
+        "abi": "127",
+        "versions": {
+          "nodemailer": "10.2.1"
+        },
+        "migrations": 24,
+        "bcrypt": true
+      },
+      "web_artifacts_exit": 0,
+      "web_artifacts": {
+        "next_build_id": "1fd6AEs1ou568VDuf1v9u"
+      }
+    },
+    {
+      "role": "worker-stt",
+      "image_id": "sha256:b030a959933af7ed35e30c9e040d792e0d51c902637f273e764ffbf4e49270c1",
+      "module_exit": 0,
+      "result": {
+        "role": "worker-stt",
+        "source": "cc6e66e57bd47e7a403612a4964dae059da66195",
+        "node": "v22.22.3",
+        "abi": "127",
+        "versions": {
+          "@grpc/grpc-js": "1.14.6",
+          "@grpc/proto-loader": "0.8.1"
+        },
+        "migrations": 24,
+        "bcrypt": true
+      },
+      "media_tools_exit": 0
+    },
+    {
+      "role": "worker-llm",
+      "image_id": "sha256:7426b8325ead59acb40f0d82db46292d8e77b62dec8198e51024c2560bef172d",
+      "module_exit": 0,
+      "result": {
+        "role": "worker-llm",
+        "source": "cc6e66e57bd47e7a403612a4964dae059da66195",
+        "node": "v22.22.3",
+        "abi": "127",
+        "versions": {
+          "@grpc/grpc-js": "1.14.6",
+          "@grpc/proto-loader": "0.8.1"
+        },
+        "migrations": 24,
+        "bcrypt": true
+      },
+      "media_tools_exit": 0
+    },
+    {
+      "role": "worker-video",
+      "image_id": "sha256:49dc21e59ab50800e53d5b5891772429c518f7d1e99e51dab0d9dbe26a44821f",
+      "module_exit": 0,
+      "result": {
+        "role": "worker-video",
+        "source": "cc6e66e57bd47e7a403612a4964dae059da66195",
+        "node": "v22.22.3",
+        "abi": "127",
+        "versions": {
+          "@grpc/grpc-js": "1.14.6",
+          "@grpc/proto-loader": "0.8.1"
+        },
+        "migrations": 24,
+        "bcrypt": true
+      },
+      "media_tools_exit": 0
+    }
+  ],
+  "at": 1793171429.7908607
+}

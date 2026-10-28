@@ -1,0 +1,16 @@
+{
+  "check": "final-combined-full-01",
+  "command": [
+    "npm",
+    "test"
+  ],
+  "source_revision": "63d035e81109e288e019367c5d2256690414d949",
+  "started_at": "2026-10-28T13:51:27.475727+00:00",
+  "elapsed_seconds": 561.278,
+  "exit_code": 1,
+  "stopped_reason": null,
+  "node": "22.22.3",
+  "environment": "isolated *_test DB, Redis15/testMinIO, fake models, payments off",
+  "log": "/tmp/n5-thumbnail-checks-20261028/final-combined-full-01.log",
+  "free_disk_gib": 2.661
+}

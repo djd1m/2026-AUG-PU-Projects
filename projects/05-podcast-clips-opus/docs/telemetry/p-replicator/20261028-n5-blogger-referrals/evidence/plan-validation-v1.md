@@ -1,0 +1,34 @@
+# Independent N5 referral plan validation
+
+Verdict: BLOCKED pending one bounded plan correction. The six-AC implementation is otherwise viable with existing entities; no new referral/payment engine is justified.
+
+Plan: `/tmp/n5-referral-plan-20261028.md`
+Plan SHA256: `6639566a2d6872cebdc4a2f5ec9f334ab066e6ebd095b6c61fa50928844d7691`
+Source: `/tmp/n5-acquisition-analytics-20261026`, HEAD verified `3b48d0ff4697d96f6b7e2de8f89a16f61ea1fbc1`.
+Project: `projects/05-podcast-clips-opus`.
+Review performed by source reading; no tests, DB queries/mutations, credentials, provider/network calls, installs or source writes.
+
+## Required correction H1: current-code assignment cutoff
+
+`apps/web/src/server/partner.ts:62–67` INSERT defaults `attribution.created_at`; replacement UPDATE changes `partner_code_id`, `source`, status and activation but leaves `created_at` untouched. Thus AC5 is insufficient: cookie A applied at t1, package purchased at t2, explicit B applied at t3. Both planned `intent.created_at >= attribution.created_at` and `paid_at >= attribution.created_at` accept t2 for B. Late webhook for an intent between t1 and t3 also incorrectly qualifies.
+
+Minimal correction: define a current-assignment cutoff separately from original attribution creation, advance it atomically whenever partner-code assignment changes, and compare both payment_intent.created_at and payment.paid_at to that cutoff. Preserve existing replacement matrix, rejection/self handling and original registration semantics. A small additive attribution timestamp in migration 024 with the existing UPDATE maintaining it is sufficient; expand that migration's allowlist explicitly. An equivalent correctly retained existing timestamp is acceptable, but do not use unchanged created_at alone. Historical initialization must account for existing replacements (latest matching current-code code_applied event where available); do not silently label original creation as a proven assignment date when replacement evidence says otherwise. No historical payout ledger is required.
+
+Add deterministic regressions: cookie A → successful package → explicit B excludes B purchase; cookie A → old intent → explicit B → late successful webhook excludes B; intent/payment created after B assignment includes B; normal original attribution still includes later purchases. Prove removal of assignment cutoff turns targeted test red.
+
+## Remaining AC assessment and concrete implementation constraints
+
+1. Campaign creation is viable with existing partner/partner_code tables. Own-account identity must come solely from session. Serialize create on partner/account ownership, use DB UNIQUE for code collisions, repeat same-owned code idempotently, generic conflict for foreign code. Explicitly reject creation of a fresh active campaign when an owned code is antifraud-blocked; blocked-code repeat must retain its blocked status. Test blocked owner → different new campaign, not only repeated blocked code. Preserve GuestPack ensurePartnerCode behavior. The plan already states the no-bypass invariant; make it executable.
+2. Canonical URL/copy/filter/empty state fit existing dashboard; existing ownership check deliberately returns the same 403 for foreign/nonexistent code IDs and malformed UUID is rejected at tRPC. Preserve that project exception, with no customer/payment PII.
+3. `/r/` is compatible with existing short-link route/auth/IP/rate-limit/cookie donors. Keep limiter before lookup/write, validate exact path code, active owner and code, no self event/cookie, fixed same-origin landing redirect, no-store on every response. Existing referralCookie supplies unchanged first-touch, guest priority and secure 14-day HMAC cookie. No change to existing `/c/` required.
+4. Existing apply SQL already serializes account then code and preserves explicit/guest/cookie priority plus 50-account burst block. New timestamp maintenance must not change that matrix. Registration count derives one UNIQUE-account attribution, not number of apply events.
+5. Payment schema supports the aggregate without payment-store mutation. Read payment once, JOIN attribution by account and payment_intent by intent_id with matching intent/account/provider_payment_id identity; filter yookassa, succeeded, needs_review=false, intent succeeded/fulfilled_at non-NULL, three package SKUs and amount_minor=intent.price_minor. Use current-assignment cutoff from H1. `payment_intent` has no provider column: payment.provider and matching provider_payment_id are the applicable identity fields. Avoid growth_event/video/clip joins. COUNT financial payment rows once and SUM amount_minor, not fee-adjusted amounts; existing payment UNIQUE(provider,provider_payment_id) and intent identity prevent event/intent multiplication. Existing refund code marks entire payment refunded/needs_review even for partial refund, so filters remove both count/revenue. Fake, unknown intent, unfulfilled, mismatched, duplicate identity and operator grants are excluded.
+6. All focused/concurrent/ownership/financial tests, mutation proof, full project gates, mobile and isolated browser evidence remain mandatory and are implementation-stage work, not validation passes. Actual test-shop E2E remains distinct from verified fixture E2E. Private key availability is owner-reported and was not inspected here.
+
+Migration 024 is free at reviewed baseline (023 support access exists). Proposed partial UNIQUE direct-view index is correct because original clip-link index does not deduplicate NULL clip_link_id. Use the same partial predicate for conflict handling. Precheck collisions and stop with reported rows/count; never DELETE duplicates, silently skip index creation or rewrite clip/guest indexes. Integration owner reconciles migration ID against ongoing work.
+
+Test-shop isolation is mandatory: payment stores no test/live bit, so `provider='yookassa'` would count test money if mixed into production DB. Use a separate DB and isolated Redis/storage/origin, then provider staging only through root's existing authorization. No production DB, bucket, deployment or git writes were performed.
+
+## Policy and handoff
+
+Substantive XL is appropriate; frozen plan records owner's implementation authority. Fresh E2E readiness is not applicable for read-only plan validation and must run just before E2E. Existing source/plan ownership and independent REVIEW gates remain. Profile should be corrected from planner's inherited `compact-balanced-v1` label to active `model-routing-econom` (plan/high, code/medium explicit override, validation/review/high); actual model/effort and token/cost metadata unavailable here, recorded null, not inferred from prose. Root should bind this report and corrected frozen plan revision to the existing run before coding. No extra research round is needed: incorporate H1 and the blocked-campaign test, then proceed.

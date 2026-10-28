@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-28T07:17:05.469775+00:00",
+  "owner_approval_text": "как закончишь - давай развернем апдейты в проде?",
+  "approval_coverage": "current accepted updates deployment including necessary022/023 schema, existing retained accounts/media preserve; existing credits feature already ownerapproved",
+  "approved_source": "cc6e66e57bd47e7a403612a4964dae059da66195",
+  "team_roles_models": "rootops; Solhigh planner andindependentreview; Solmedium codeonlyifneeded; project-work-companion readiness andtelemetry",
+  "required_migration_effects": [
+    "022 adds account/video billingpolicydefaultlegacy, creditledger/schema and paymentoffersnapshots/triggers; backfill existing successfulpayment fulfilledtimestamp",
+    "023 adds emailverification/operator/mailtokens/audit tables"
+  ],
+  "safety": [
+    "restorablebackup beforecutover",
+    "testrestoresnapshot andcandidate migrate first",
+    "no existing account optin/creditgrant/plan reset",
+    "payments stayconfiguredcurrentmode",
+    "Metrika staysdisabled",
+    "SMTP/identifiedhelpdesk disableduntilrealinputs"
+  ],
+  "registration_mode": "credits_v1 for newregistrations only after switch; preserved legacy accounts use existingpolicy",
+  "rollback": "exactoldimage IDs andoldenv retained; existingMinio untouched; test backwardcompatagainst migratedclonedDB; do not restoredumpovernewactivity",
+  "long_recording": "88.4min existing natural source identified privately, finalgate remains mandatory",
+  "deployment_not_yet_started": true
+}

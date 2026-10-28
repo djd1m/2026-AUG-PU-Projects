@@ -1,0 +1,53 @@
+{
+  "source_revision": "cc6e66e57bd47e7a403612a4964dae059da66195",
+  "manifest_sha256": "9656b631414affacf4597e848a543d4393695115f5206c59c0514cf0737e6450",
+  "started_at": 1793171124.646477,
+  "disk_low_water": 2838179840,
+  "images": [
+    {
+      "source_revision": "cc6e66e57bd47e7a403612a4964dae059da66195",
+      "manifest_sha256": "9656b631414affacf4597e848a543d4393695115f5206c59c0514cf0737e6450",
+      "role": "web",
+      "base_image": "sha256:7b89eb3a496a3f4ebd33e2dc5ec18dc224e63a133c7cb8e684e918f53c6903b3",
+      "selected_files": 550,
+      "payload_bytes": 12083816,
+      "tag": "n5-accepted-web:cc6e66e57-20261028",
+      "image_id": "sha256:2d6be092134094c6300c5fff2b9fbe35b0e27d424bd3e4affc7e07a8167f4fdc",
+      "build_exit": 0
+    },
+    {
+      "source_revision": "cc6e66e57bd47e7a403612a4964dae059da66195",
+      "manifest_sha256": "9656b631414affacf4597e848a543d4393695115f5206c59c0514cf0737e6450",
+      "role": "worker-stt",
+      "base_image": "sha256:17c1c29d64804adfaa6bebb1a5fb8cac6c368cce9c73aa1622947e770655befa",
+      "selected_files": 1336,
+      "payload_bytes": 10107146,
+      "tag": "n5-accepted-worker-stt:cc6e66e57-20261028",
+      "image_id": "sha256:b030a959933af7ed35e30c9e040d792e0d51c902637f273e764ffbf4e49270c1",
+      "build_exit": 0
+    },
+    {
+      "source_revision": "cc6e66e57bd47e7a403612a4964dae059da66195",
+      "manifest_sha256": "9656b631414affacf4597e848a543d4393695115f5206c59c0514cf0737e6450",
+      "role": "worker-llm",
+      "base_image": "sha256:d7585e22f9732520da2fdbc380807edb21557290c85a10e61164cc00ee10fa13",
+      "selected_files": 1336,
+      "payload_bytes": 10107146,
+      "tag": "n5-accepted-worker-llm:cc6e66e57-20261028",
+      "image_id": "sha256:7426b8325ead59acb40f0d82db46292d8e77b62dec8198e51024c2560bef172d",
+      "build_exit": 0
+    },
+    {
+      "source_revision": "cc6e66e57bd47e7a403612a4964dae059da66195",
+      "manifest_sha256": "9656b631414affacf4597e848a543d4393695115f5206c59c0514cf0737e6450",
+      "role": "worker-video",
+      "base_image": "sha256:a7bffb36c95063b96163d570d2c9872818534b0b524e86b500c891d8b5d14174",
+      "selected_files": 1336,
+      "payload_bytes": 10107146,
+      "tag": "n5-accepted-worker-video:cc6e66e57-20261028",
+      "image_id": "sha256:49dc21e59ab50800e53d5b5891772429c518f7d1e99e51dab0d9dbe26a44821f",
+      "build_exit": 0
+    }
+  ],
+  "finished_at": 1793171233.884012
+}

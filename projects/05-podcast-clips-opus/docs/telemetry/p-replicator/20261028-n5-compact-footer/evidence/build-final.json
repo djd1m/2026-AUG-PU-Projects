@@ -1,0 +1,17 @@
+{
+  "check": "compact-footer-build-02",
+  "command": [
+    "npm",
+    "run",
+    "build"
+  ],
+  "source_revision": "31913b552a94a70dbb5258092ed9a241e3cec38a",
+  "started_at": "2026-10-28T14:33:06.965681+00:00",
+  "elapsed_seconds": 70.048,
+  "exit_code": 0,
+  "stopped_reason": null,
+  "node": "22.22.3",
+  "environment": "isolated *_test DB, Redis15/testMinIO, fake models, payments off",
+  "log": "/tmp/n5-thumbnail-checks-20261028/compact-footer-build-02.log",
+  "free_disk_gib": 2.22
+}
