@@ -78,6 +78,31 @@ describe.skipIf(!databaseUrl)('support PostgreSQL authority',()=>{
    expect(await pending).toBe(false);
   }
  });
+ it.each(['issuer','confirming'])('proof rejects %s session expiring while token row is locked',async expired=>{
+  const a=await account(),secondToken=await auth.login(a.email,'password123','192.0.2.0/24');
+  const confirming={accountId:a.id,sessionHash:auth.tokenHash(secondToken!)};
+  const issued=await store.issue('verify',a.email,randomUUID(),randomUUID(),a.authority);
+  const target=expired==='issuer'?a.authority.sessionHash:confirming.sessionHash;
+  const blocker=await pool.connect();let pending:Promise<boolean>|undefined,result:boolean|undefined;
+  try {
+   await blocker.query('BEGIN');await blocker.query('SELECT id FROM support_email_token WHERE id=$1 FOR UPDATE',[issued!.id]);
+   await pool.query("UPDATE session SET expires_at=clock_timestamp()+interval '1500 milliseconds' WHERE cookie_token_hash=$1",[target]);
+   pending=store.confirm(issued!.token,confirming);
+   let waiting=false;const deadline=Date.now()+1200;
+   while(Date.now()<deadline) {
+    const blocked=await pool.query(`SELECT 1 FROM pg_stat_activity WHERE application_name=$1 AND wait_event_type='Lock' AND query=$2`,
+      [schema,'SELECT id FROM support_email_token WHERE digest=$1 FOR UPDATE']);
+    if(blocked.rowCount){waiting=true;break;}await new Promise(resolve=>setTimeout(resolve,10));
+   }
+   expect(waiting).toBe(true);
+   await pool.query(`SELECT pg_sleep(GREATEST(EXTRACT(EPOCH FROM expires_at-clock_timestamp()),0)::double precision+0.05)
+     FROM session WHERE cookie_token_hash=$1`,[target]);
+   await blocker.query('COMMIT');result=await pending;
+  }finally{await blocker.query('ROLLBACK');blocker.release();if(pending)await pending.catch(()=>{});}
+  expect(result).toBe(false);
+  expect((await pool.query('SELECT email_verified_at FROM account WHERE id=$1',[a.id])).rows[0].email_verified_at).toBeNull();
+  expect((await pool.query('SELECT used_at FROM support_email_token WHERE id=$1',[issued!.id])).rows[0].used_at).toBeNull();
+ });
  it('supersession/current-email binding and password reset preserve existing proof, membership and credits',async()=>{
   const a=await account(),first=await store.issue('verify',a.email,randomUUID(),randomUUID(),a.authority);
   const second=await store.issue('verify',a.email,randomUUID(),randomUUID(),a.authority);

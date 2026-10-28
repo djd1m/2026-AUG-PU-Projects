@@ -65,8 +65,13 @@ export class SupportEmailStore {
     if (!hint || hint.account_id!==authority.accountId || !hint.issuing_session_hash) return false;
     return transaction(this.pool,async tx => {
       const account=await this.account(tx,hint.account_id);
-      if (!account || account.status!=='active' || !await this.sessions(tx,account.id,[hint.issuing_session_hash!,authority.sessionHash])) return false;
+      const hashes=[...new Set([hint.issuing_session_hash!,authority.sessionHash])];
+      if (!account || account.status!=='active' || !await this.sessions(tx,account.id,hashes)) return false;
       await tx.query('SELECT id FROM support_email_token WHERE digest=$1 FOR UPDATE',[emailDigest(token)]);
+      // Session rows are already locked; token-lock waiting can still cross their expiry.
+      const active=await tx.query(`SELECT 1 FROM session WHERE account_id=$1 AND cookie_token_hash=ANY($2::text[])
+        AND revoked_at IS NULL AND expires_at>clock_timestamp()`,[account.id,hashes]);
+      if (active.rowCount!==hashes.length) return false;
       const used=await tx.query(`UPDATE support_email_token SET used_at=clock_timestamp() WHERE digest=$1 AND purpose='verify'
         AND account_id=$2 AND email=$3 AND used_at IS NULL AND expires_at>clock_timestamp() RETURNING id`,[emailDigest(token),account.id,account.email]);
       if (used.rowCount!==1) return false;
