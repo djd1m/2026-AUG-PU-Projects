@@ -45,15 +45,39 @@ export function clearSupportIdentity(): Promise<boolean> {
 export function loadSupportWidget(settings: PublicSupport): Promise<WidgetAPI> {
   if (settings.mode === 'disabled' || !settings.baseURL || !settings.inboxID) return Promise.reject(new Error('Чат поддержки пока не подключён.'));
   if (window.n5SupportUnavailable) return Promise.reject(new Error('Не удалось очистить чат. Перезагрузите страницу перед новым обращением.'));
-  if (window.Libredesk) return Promise.resolve(window.Libredesk);
   return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    const fail = () => { clearTimeout(timer); script.remove(); delete window.LibredeskSettings; reject(new Error('Не удалось загрузить чат. Используйте доступный способ связи ниже.')); };
+    const script = window.Libredesk ? null : document.createElement('script');
+    const baseURL = new URL(settings.baseURL!);
+    let settled = false;
+    const cleanup = () => {
+      clearTimeout(timer); observer.disconnect();
+      if (script) { script.onload = null; script.onerror = null; }
+    };
+    const fail = () => {
+      if (settled) return; settled = true; cleanup();
+      script?.remove(); delete window.LibredeskSettings;
+      reject(new Error('Не удалось загрузить чат. Используйте доступный способ связи ниже.'));
+    };
+    const ready = () => {
+      if (settled) return;
+      const api = window.Libredesk, frame = document.getElementById(`libredesk-widget-${settings.inboxID}`);
+      if (!api || typeof api.show !== 'function' || typeof api.setUser !== 'function' || typeof api.logout !== 'function'
+        || frame?.tagName !== 'IFRAME' || !frame.isConnected) return;
+      // The SDK creates its iframe asynchronously after loading widget.js; show() is a no-op before that.
+      let source: URL;
+      try { source = new URL((frame as HTMLIFrameElement).src); } catch { return; }
+      if (source.origin !== baseURL.origin || source.pathname !== '/widget' || source.searchParams.get('inbox_id') !== settings.inboxID) return;
+      settled = true; cleanup(); resolve(api);
+    };
+    const observer = new MutationObserver(ready);
     const timer = setTimeout(fail, 8000);
-    window.LibredeskSettings = { baseURL: settings.baseURL!, inboxID: settings.inboxID!, hideLauncher: true };
-    script.src = new URL('/widget.js', settings.baseURL!).href; script.async = true; script.referrerPolicy = 'no-referrer';
-    script.onload = () => { clearTimeout(timer); if (window.Libredesk) resolve(window.Libredesk); else fail(); };
-    script.onerror = fail; document.head.append(script);
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+    ready();
+    if (script && !settled) {
+      window.LibredeskSettings = { baseURL: settings.baseURL!, inboxID: settings.inboxID!, hideLauncher: true };
+      script.src = new URL('/widget.js', settings.baseURL!).href; script.async = true; script.referrerPolicy = 'no-referrer';
+      script.onload = ready; script.onerror = fail; document.head.append(script);
+    }
   });
 }
 
