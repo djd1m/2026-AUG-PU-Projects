@@ -73,7 +73,8 @@ export function buildCompactionGraph(plan: Segment[], start: number, videoIndex:
   const filters: string[] = [];
   plan.forEach(([s, e], i) => {
     const trim = `${ms(s - start)}:${ms(e - start)}`;
-    if (videoIndex !== null) filters.push(`[0:${videoIndex}]trim=${trim},setpts=PTS-STARTPTS,fps=${COMPACT_FPS},format=yuv420p,settb=AVTB[v${i}]`);
+    // Normalize before trimming so low-FPS frames cover the 25-fps cut boundaries.
+    if (videoIndex !== null) filters.push(`[0:${videoIndex}]fps=${COMPACT_FPS},trim=${trim},setpts=PTS-STARTPTS,format=yuv420p,settb=AVTB[v${i}]`);
     filters.push(`[0:a:0]atrim=${trim},asetpts=PTS-STARTPTS,aformat=sample_rates=44100:channel_layouts=stereo[a${i}]`);
   });
   let elapsed = plan[0]![1] - plan[0]![0];

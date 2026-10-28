@@ -4,6 +4,7 @@ import { promisify } from 'node:util';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { buildCutPlan, buildCompactionGraph, mapTime, planDuration } from '../apps/worker/src/render/compaction';
 import { measureEnvelope, envelopeMedian } from '../apps/worker/src/render/envelope';
+import { generateThumbnail } from '../apps/worker/src/render/exec';
 import { probeDuration } from '../apps/worker/src/render/probe';
 import { escapeFFmpegPath } from '../apps/worker/src/render/escape';
 import { SUBTITLE_FONTS } from '../apps/worker/src/render/watermark';
@@ -79,3 +80,51 @@ it('real audio-only mp3 compacts through renderClip and returns format duration'
     expect(result.duration_seconds).toBe(measured); expect(Math.abs(measured - planDuration(plan))).toBeLessThanOrEqual(.05);
   } finally { await rm(dir, { recursive: true, force: true }); }
 }, 90000);
+
+
+it('real 5-fps nonzero cut plan preserves video duration, final frame and quarter JPEG', async () => {
+  const dir = await mkdtemp('/tmp/compact-low-fps-');
+  try {
+    const input = `${dir}/in.mp4`, output = `${dir}/out.mp4`, thumbnail = `${dir}/thumb.jpg`;
+    // Captured third selection: all ten pieces use the 25-fps planning grid.
+    const plan: [number, number][] = [[60, 62.8], [63.12, 65], [65.28, 68.04], [68.36, 70.28],
+      [70.56, 73.32], [73.64, 75.52], [75.8, 78.56], [78.88, 80.8], [81.12, 83.84], [84.16, 85]];
+    const duration = planDuration(plan), frame = 1 / 25;
+    expect(duration).toBe(21.52);
+    await exec('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i', 'testsrc2=s=64x114:r=5:d=86',
+      '-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=44100:duration=86',
+      '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'aac', input]);
+    // Match production input seeking and use the actual production compaction graph.
+    await exec('ffmpeg', ['-v', 'error', '-y', '-ss', '60', '-t', '25', '-i', input,
+      '-filter_complex_threads', '1', '-filter_complex', buildCompactionGraph(plan, 60, 0),
+      '-map', '[vc]', '-map', '[ac]', '-t', String(duration),
+      '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'aac', output]);
+    const probe = JSON.parse((await exec('ffprobe', ['-v', 'error', '-count_frames',
+      '-show_entries', 'stream=codec_type,duration,nb_read_frames:format=duration', '-of', 'json', output])).stdout) as {
+      streams: { codec_type: string; duration: string; nb_read_frames: string }[]; format: { duration: string };
+    };
+    const video = probe.streams.find(s => s.codec_type === 'video')!;
+    const audio = probe.streams.find(s => s.codec_type === 'audio')!;
+    console.log({ duration, videoDuration: video.duration, videoFrames: video.nb_read_frames,
+      audioDuration: audio.duration, formatDuration: probe.format.duration });
+    // Soft assertions let the old graph also demonstrate the thumbnail failure.
+    expect.soft(Math.abs(Number(video.duration) - duration)).toBeLessThanOrEqual(frame + 1e-6);
+    expect.soft(Math.abs(Number(video.nb_read_frames) - duration * 25)).toBeLessThanOrEqual(1);
+    expect.soft(Math.abs(Number(audio.duration) - duration)).toBeLessThanOrEqual(frame + 1e-6);
+    expect.soft(Math.abs(Number(probe.format.duration) - duration)).toBeLessThanOrEqual(frame + 1e-6);
+    const finalFrame = (await exec('ffmpeg', ['-v', 'error', '-ss', String(duration - 2 * frame),
+      '-i', output, '-frames:v', '1', '-pix_fmt', 'rgb24', '-f', 'rawvideo', '-'],
+      { encoding: 'buffer' })).stdout;
+    expect.soft(finalFrame.length).toBe(64 * 114 * 3);
+    await generateThumbnail(output, thumbnail, duration * .25);
+    expect((await exec('file', ['--brief', '--mime-type', thumbnail])).stdout.trim()).toBe('image/jpeg');
+    const jpeg = JSON.parse((await exec('ffprobe', ['-v', 'error', '-select_streams', 'v:0',
+      '-show_entries', 'stream=codec_name,width,height', '-of', 'json', thumbnail])).stdout) as {
+      streams: { codec_name: string; width: number; height: number }[];
+    };
+    expect(jpeg.streams[0]).toEqual({ codec_name: 'mjpeg', width: 360, height: 641 });
+    const decoded = (await exec('ffmpeg', ['-v', 'error', '-i', thumbnail, '-frames:v', '1',
+      '-pix_fmt', 'rgb24', '-f', 'rawvideo', '-'], { encoding: 'buffer', maxBuffer: 1_000_000 })).stdout;
+    expect(decoded.length).toBe(360 * 641 * 3);
+  } finally { await rm(dir, { recursive: true, force: true }); }
+}, 60000);
