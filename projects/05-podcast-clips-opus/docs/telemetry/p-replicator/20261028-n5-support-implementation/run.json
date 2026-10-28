@@ -6,9 +6,9 @@
   "pipeline": "p-replicator /feature Mode2",
   "profile": "model-routing-econom",
   "started_at": "2026-10-28T00:10:23.161812+00:00",
-  "updated_at": "2026-10-28T00:15:57.976720+00:00",
+  "updated_at": "2026-10-28T00:22:38.263406+00:00",
   "status": "running",
-  "current_stage": "PLAN_WITH_INDEPENDENT_GATE_AUDIT",
+  "current_stage": "CONCRETE_PLAN_COMPLETE_NATIVE_SCOPE_APPROVAL_PENDING",
   "baseline_revision": "1f0befb75bd193c5282b273a6007f3997733cab5",
   "responsible": "root",
   "owner_authorization": "explicit continue28.10.2026 after6-10h support implementation estimate; demo in12h; watch SSD",
@@ -45,9 +45,9 @@
     "deadline_hours": 12,
     "browser_container": "codex-ui-playwright"
   },
-  "next_step": "planner freezes five-role contract; independent validator; root confirms browser and reusable test resources",
+  "next_step": "run native aggregate PLAN diagnostic; publish concrete plan; await owner scope decision before dependentstage/code",
   "actual_background_implementation": false,
-  "actual_background_planning": true,
+  "actual_background_planning": false,
   "launches": [
     {
       "path": "evidence/plan-launch.json",
@@ -81,5 +81,29 @@
     "previous_scope_exception": "explicitlycredit-packages+cloudru-provider-foundation,notnew-support",
     "next_step": "concrete support plan before narrow scope-exception decision; dependentcode notstarted",
     "audit_receipt": "evidence/gate-audit-trace.md"
+  },
+  "scope_decision": {
+    "status": "requested_async_not_answered",
+    "requested_at": "2026-10-28T00:18:15+00:00",
+    "proposal_revision": "733fcf049290a2ed388a713dbf3e92e5df660039",
+    "proposal_path": "docs/features/support-access-gate-scope.md",
+    "proposal_sha256": "b11550013202f7a6c180c1608d2845560a2d88fb7dd68550a2c9cd649deca748",
+    "reason": "native feature command explicitly forbids advancement on aggregate exit1; oldexception is explicitlytwofeatures only",
+    "independent_allowed_work": "planner contract completion and validation-preparation, existing browser and test-resource readiness"
+  },
+  "spec_sha256": "ef2525b933e75661ae3ee0965741933555b4387da321a7b40547e184f4f41edf",
+  "plan_artifacts": {
+    "projects/05-podcast-clips-opus/docs/features/support-access/01_specification.md": "ef2525b933e75661ae3ee0965741933555b4387da321a7b40547e184f4f41edf",
+    "projects/05-podcast-clips-opus/docs/features/support-access/02_pseudocode.md": "f7c095b56042ba30e24cf534189edf3bf1504c512c3d0f6a8782b0d287fa1a66",
+    "projects/05-podcast-clips-opus/docs/features/support-access/03_architecture.md": "0ee76c591870305c54e03162b662bbe50c8cd2ab5215c9632242ec24c3a1276c",
+    "projects/05-podcast-clips-opus/docs/features/support-access/04_refinement.md": "16e9f534616c53b84c5dd99a0ac5b8179cd38219d3ae14333b82ebe2b53aef5e",
+    "projects/05-podcast-clips-opus/docs/features/support-access/05_completion.md": "eca7b0a4fcfa485977e08a98973acb01c2f37f7f82ebfdaf4f112de7cb3f141c",
+    "projects/05-podcast-clips-opus/docs/features/support-access/research.md": "8c4b9d20e4589db634a4a1b94c21fb2a7d0c64d9343f7104c88b7c79c1ed438d"
+  },
+  "plan_checks": {
+    "terminal_receipt_verified": true,
+    "six_source_hashes_verified": true,
+    "native_gates": "pending; aggregate diagnostic runs independently",
+    "launch_digest_limit": "planner was not supplied manifest digest; actual tool-call assignment, run/work/source/path and source hashes checked, no structural-companion PASS claimed"
   }
 }
