@@ -1,0 +1,22 @@
+{
+  "run_id": "20261028-n5-support-implementation",
+  "work_unit_id": "support-plan-validation",
+  "role": "fresh requirements validator",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning": "high",
+  "actual_model": null,
+  "source_revision": "01db46886c9e8b29f0f1fa199f136d8a026f6fd1",
+  "planner_files_sha256": {
+    "03_architecture.md": "0ee76c591870305c54e03162b662bbe50c8cd2ab5215c9632242ec24c3a1276c",
+    "05_completion.md": "eca7b0a4fcfa485977e08a98973acb01c2f37f7f82ebfdaf4f112de7cb3f141c",
+    "01_specification.md": "ef2525b933e75661ae3ee0965741933555b4387da321a7b40547e184f4f41edf",
+    "research.md": "8c4b9d20e4589db634a4a1b94c21fb2a7d0c64d9343f7104c88b7c79c1ed438d",
+    "04_refinement.md": "16e9f534616c53b84c5dd99a0ac5b8179cd38219d3ae14333b82ebe2b53aef5e",
+    "02_pseudocode.md": "f7c095b56042ba30e24cf534189edf3bf1504c512c3d0f6a8782b0d287fa1a66"
+  },
+  "report_path": "/tmp/n5-support-validation-20261028-report.md",
+  "trace_path": "/tmp/n5-support-validation-20261028-trace.md",
+  "timebox_minutes": 12,
+  "created_at": "2026-10-28T00:29:19.294405+00:00",
+  "scope": "read-only independent requirements validation, no coding history, no implementation or deploy"
+}
