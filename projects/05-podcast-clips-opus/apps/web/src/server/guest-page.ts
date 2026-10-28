@@ -1,3 +1,4 @@
+import { LEGAL_FOOTER_CSS, legalFooterHtml } from '../lib/legal-footer';
 import { THEME_COLOR, themeFromCookie, type Theme } from '../lib/theme';
 import { PAID_PLAN_DAYS, PAID_PLAN_TITLE, PAID_PRICE_MINOR, formatRubles } from '@clipmaker/shared/tariff';
 import { pluralRu } from '../lib/plural-ru';
@@ -41,7 +42,7 @@ main,nav{padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem
 button,.download,.cta{min-height:2.75rem;min-width:2.75rem}
 video{max-height:min(70svh,31.25rem);object-fit:contain}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
-</style></head><body><main>
+${LEGAL_FOOTER_CSS}</style></head><body><main>
 <a href="/">КлипМейкер</a><h1>${escapeHtml(pack.guest_name)}, ${pluralRu(pack.clips.length, ['ваш', 'ваши', 'ваши'])} ${pack.clips.length} ${pluralRu(pack.clips.length, ['момент', 'момента', 'моментов'])} из выпуска</h1>
 <p>Ведущий отметил эти клипы для вас. Скачайте и опубликуйте их у себя.</p>
 <p>Ссылка действует до ${escapeHtml(pack.expires_at!.toLocaleDateString('ru-RU', { timeZone: 'Europe/Moscow' }))}. Файлы могут стать недоступны раньше по сроку хранения.</p>
@@ -73,7 +74,7 @@ const url=URL.createObjectURL(await response.blob());const a=document.createElem
 document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
 status.textContent='Скачивание начато. Если браузер заблокировал несколько файлов, используйте кнопки на клипах.';
 }catch{status.textContent='Не удалось скачать все файлы. Попробуйте кнопки на отдельных клипах.';}finally{this.disabled=false;}});</script>
-</main></body></html>`;
+</main>${legalFooterHtml()}</body></html>`;
 }
 export function createGuestPageHandler(deps: Dependencies) {
   return async (request: Request, code: string): Promise<Response> => {

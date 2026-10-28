@@ -1,3 +1,4 @@
+import { LEGAL_FOOTER_CSS, legalFooterHtml } from '../lib/legal-footer';
 import { THEME_COLOR, themeFromCookie, type Theme } from '../lib/theme';
 import { referralCookie } from '../lib/partner-referral';
 import type { AuthService } from './auth';
@@ -51,12 +52,12 @@ video{max-height:min(70svh,31.25rem);object-fit:contain}
 .cta{display:inline-flex;align-items:center}h1{margin-top:0}
 .author-cta{margin-bottom:0.75rem}.cta-host{margin:0.5rem 0 0;font-size:0.875rem;overflow-wrap:anywhere}.cta-host span{font-weight:650}
 .secondary-link{display:inline-flex;align-items:center;min-height:2.75rem;min-width:2.75rem;padding:0.625rem 1.25rem;border:0.0625rem solid var(--green);border-radius:0.625rem;color:var(--green);text-decoration:none;font-weight:650}
-</style></head><body><nav><a href="/">◧ КлипМейкер</a></nav><main>
+${LEGAL_FOOTER_CSS}</style></head><body><nav><a href="/">◧ КлипМейкер</a></nav><main>
 
 <section><h1>${escapeHtml(title)}</h1>${actions(cta)}<p>Этот фрагмент создан в КлипМейкере.</p>
 <p>Превратите свой подкаст или вебинар в короткие вертикальные клипы с субтитрами — готовые к публикации.</p>
 </section><section class="preview" aria-label="Превью клипа">${preview ? `<img src="${escapeHtml(preview)}" alt="${escapeHtml(title)}" referrerpolicy="no-referrer">`
-    : `<p>${expired ? 'Срок хранения клипа истёк. Файл больше недоступен, но вы можете сделать свои клипы.' : 'Превью этого клипа пока недоступно. Попробуйте сделать свои клипы.'}</p>`}</section></main></body></html>`;
+    : `<p>${expired ? 'Срок хранения клипа истёк. Файл больше недоступен, но вы можете сделать свои клипы.' : 'Превью этого клипа пока недоступно. Попробуйте сделать свои клипы.'}</p>`}</section></main>${legalFooterHtml()}</body></html>`;
 }
 export function createShortLinkHandler(deps: Dependencies) {
   return async (request: Request, code: string): Promise<Response> => {
