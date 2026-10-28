@@ -5,7 +5,7 @@ import { expect, it, vi } from 'vitest';
 import { privacyDocument, termsDocument, legalOperator } from '../apps/web/src/lib/legal-documents';
 import { LegalDocument } from '../apps/web/src/app/legal/LegalDocument';
 import { SupportLauncher } from '../apps/web/src/app/SupportLauncher';
-import { legalFooterHtml } from '../apps/web/src/lib/legal-footer';
+import { LEGAL_FOOTER_CSS, legalFooterHtml } from '../apps/web/src/lib/legal-footer';
 import { createShortLinkHandler } from '../apps/web/src/server/short-link-handler';
 import { createGuestPageHandler } from '../apps/web/src/server/guest-page';
 const fixture = JSON.parse(readFileSync('tests/artifacts/legal-pages/document-content.json', 'utf8')) as Record<string, { docx_sha256: string; paragraphs: [string, string][] }>;
@@ -34,13 +34,23 @@ it('escapes legal document text as React nodes', () => {
 function assertFooter(html: string) {
   expect(html.match(/aria-label="Документы и реквизиты"/g)).toHaveLength(1);
   for (const href of ['/legal/privacy', '/legal/terms', '/support', `mailto:${legalOperator.email}`]) expect(html).toContain(`href="${href}"`);
-  for (const value of Object.values(legalOperator)) expect(html).toContain(value);
+  const details = html.match(/<details([^>]*)>([\s\S]*?)<\/details>/);
+  expect(details, 'requisites use native disclosure').not.toBeNull();
+  expect(details![1]).not.toMatch(/\bopen(?:\s|=|$)/);
+  expect(details![2]).toMatch(/^<summary>Реквизиты<\/summary>/);
+  for (const value of Object.values(legalOperator)) expect(details![2]).toContain(value);
+  const nav = html.match(/<nav aria-label="Документы и поддержка">([\s\S]*?)<\/nav>/)!;
+  expect(html.indexOf(nav[0])).toBeLessThan(html.indexOf(details![0]));
+  for (const href of ['/legal/privacy', '/legal/terms', '/support']) expect(nav[1]).toContain(`href="${href}"`);
 }
 it('renders one global footer with every exact requisite and both legal links', () => {
   assertFooter(renderToStaticMarkup(createElement(SupportLauncher)));
   assertFooter(legalFooterHtml());
   const html = legalFooterHtml({ ...legalOperator, name: '<script>"&', email: '" onmouseover="attack' });
   expect(html).toContain('&lt;script&gt;&quot;&amp;'); expect(html).not.toContain('<script>'); expect(html).not.toContain('href="mailto:" onmouseover=');
+});
+it('shares the footer styles across React and standalone pages', () => {
+  expect(readFileSync('apps/web/src/app/globals.css', 'utf8')).toContain(LEGAL_FOOTER_CSS);
 });
 it('standalone clip and guest HTML include legal footer while retaining original actions', async () => {
   const common = { referralSecret: 'test-secret', trustedProxyHops: 1, allowRead: async () => true, auth: { authenticate: vi.fn() } };
