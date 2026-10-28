@@ -73,7 +73,7 @@ it('cabinet exposes pricing and authenticated upgrade keeps catalogue open witho
   expect(source).toContain("salesEnabled={!!payments && config.billingMode==='credits_v1' && billing.billing_policy==='credits_v1'}");
 });
 it('payment outage keeps credit catalogue visible with every purchase disabled',()=>{
-  const html=renderToStaticMarkup(createElement(UpgradeScreen,{creditMode:true,salesEnabled:false,purchaseWindows:{baseStart:'2030-01-01T00:00:00Z',baseEnd:'2030-01-31T00:00:00Z',addonStart:'2030-01-01T00:00:00Z',addonEnd:'2030-01-31T00:00:00Z',scheduled:false},title:'Pro',price:'990 ₽',days:30,paidMinutes:270,current:{plan:'free',plan_source:'none',plan_paid_until:null}}));
+  const html=renderToStaticMarkup(createElement(UpgradeScreen,{creditMode:true,salesEnabled:false,purchaseWindows:{asOf:'2030-01-01T00:00:00Z',baseStart:'2030-01-01T00:00:00Z',baseEnd:'2030-01-31T00:00:00Z',addonStart:'2030-01-01T00:00:00Z',addonEnd:'2030-01-31T00:00:00Z',scheduled:false},title:'Pro',price:'990 ₽',days:30,paidMinutes:270,current:{plan:'free',plan_source:'none',plan_paid_until:null}}));
   expect((html.match(/<button disabled=""/g)??[])).toHaveLength(3);
   expect(html).toContain('Продажа новых пакетов временно выключена');
 });
