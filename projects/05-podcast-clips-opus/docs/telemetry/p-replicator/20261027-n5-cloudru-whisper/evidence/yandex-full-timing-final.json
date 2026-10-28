@@ -1,0 +1,14 @@
+{
+  "check": "yandex-full-timing-final",
+  "command": [
+    "env",
+    "N5_ACCEPTANCE=1",
+    "npm",
+    "test"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 407.204,
+  "log": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-full-timing-final.log",
+  "node": "22.22.3",
+  "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off"
+}

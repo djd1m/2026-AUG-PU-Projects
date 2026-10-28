@@ -1,0 +1,93 @@
+{
+  "source_commit": "c25a290ffc6722175c890fe7958fc5ab8ce9df8c",
+  "source_baseline": "a826387db43d50f1703a8233f94714a6853dc1a8",
+  "spec_sha256": "e1afae2ceaddef35d421700ad75b7e256f407e40bebeea0782b997d10690c16e",
+  "source_manifest": "/tmp/n5-yandex-fix1-source-final-20261027.json",
+  "source_manifest_sha256": "db8a247abf9e4af4ce94b4e1adecd2ac1de8c3901d9ee0541e9f4e4e9c3a5c55",
+  "checks": [
+    {
+      "name": "yandex-fix1-full",
+      "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-fix1-full.json",
+      "sha256": "457727c8ff12ad71386a178c346362a4892be3270fc5147775c97574b679157d",
+      "log_sha256": "1d609d218243cf3ee816fb151cdfcf94f995552ed2865a9629bcff5f76d31ebb",
+      "exit_code": 0,
+      "elapsed_seconds": 433.862
+    },
+    {
+      "name": "yandex-fix1-build",
+      "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-fix1-build.json",
+      "sha256": "4fa616d918b82c36d24ca859eb22344739f3e2ac391aa37c25b54dbf6a29e264",
+      "log_sha256": "e901bf4b738258ce8072854b93dbc47fc5e760259789d2cc52e0d725939a1114",
+      "exit_code": 0,
+      "elapsed_seconds": 49.902
+    },
+    {
+      "name": "yandex-fix1-typecheck",
+      "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-fix1-typecheck.json",
+      "sha256": "70159b77af7f9ca6257c16f9ba838e6f31b948dd43bc65d75194173f15bba527",
+      "log_sha256": "1b4b658aae5b9ff1fab2830785a99fb6149f6727dcfc8485f493c745a36ffc13",
+      "exit_code": 0,
+      "elapsed_seconds": 35.085
+    },
+    {
+      "name": "yandex-fix1-lint",
+      "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-fix1-lint.json",
+      "sha256": "c85dcb637131c62ce569174dc34c78c78f9f6f62ae44b57adcc59608cdd1106e",
+      "log_sha256": "03d26c6ef0841b6eac1a8fb620e782e15d97a1f4467dc4566747082c86361443",
+      "exit_code": 0,
+      "elapsed_seconds": 1.991
+    },
+    {
+      "name": "yandex-fix1-packaging",
+      "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-fix1-packaging.json",
+      "sha256": "193b8fc8e93324d893332a9da4dafc6a108bf6c76215949d8e79768bfd064647",
+      "log_sha256": "63c38472bb2c555be2c5553e43df76a3f852c1c32a4ceab28d4e4767e06a2c70",
+      "exit_code": 0,
+      "elapsed_seconds": 0.534
+    },
+    {
+      "name": "yandex-fix1-focused-final",
+      "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-fix1-focused-final.json",
+      "sha256": "aa26bedca0d82607fb48a16f30f7b0a2653ce25909af189ac07056cdbd85733b",
+      "log_sha256": "24cacb6c2fabef1edd153a57bb9a252855c7d0b94c0e23fcdb476243d5f370ab",
+      "exit_code": 0,
+      "elapsed_seconds": 12.67
+    }
+  ],
+  "mutants": [
+    {
+      "name": "fix1-half-close-final",
+      "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-fix1-half-close-final.json",
+      "sha256": "621565ccf7e9b2369f01f93eae83082f28c3ba4022a85468c5d20a67f1136c36",
+      "exit_code": 1,
+      "restored_green": "yandex-fix1-full"
+    },
+    {
+      "name": "fix1-chunk-field",
+      "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-fix1-chunk-field.json",
+      "sha256": "124cdd398624c75bf1ba6cb1095919581ba6eae70b9fec673f86c74eb9e59504",
+      "exit_code": 1,
+      "restored_green": "yandex-fix1-full"
+    },
+    {
+      "name": "fix1-data-field",
+      "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-fix1-data-field.json",
+      "sha256": "fc3d3c93c2e10985447979cc41e2f2f73b72ee4871d614e5ef981ebd286320fe",
+      "exit_code": 1,
+      "restored_green": "yandex-fix1-full"
+    },
+    {
+      "name": "fix1-final-index",
+      "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-fix1-final-index.json",
+      "sha256": "21f8064ceda5b11e8486892226773c347ce92c5d6567924abb28d8cc98e11479",
+      "exit_code": 1,
+      "restored_green": "yandex-fix1-full"
+    }
+  ],
+  "native_completion": {
+    "owner": "root",
+    "exit_code": 0,
+    "receipt_reference": "evidence/phase3-yandex-fix1-export2.json",
+    "basis": "Root reported selected native completion PASS on the same frozen five-file hash manifest; no root telemetry read by leaf"
+  }
+}

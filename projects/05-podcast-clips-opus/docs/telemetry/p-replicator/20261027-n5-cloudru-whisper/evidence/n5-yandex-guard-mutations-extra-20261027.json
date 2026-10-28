@@ -1,0 +1,74 @@
+[
+  {
+    "name": "wire-model",
+    "file": "apps/worker/src/stt/yandex-protocol.ts",
+    "original_sha256": "136b27cc9958bde6ba7c0ea0d60e1b4b3680a9c704a60b7f406d35275a94dac8",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-wire-model.json"
+  },
+  {
+    "name": "wire-full-data",
+    "file": "apps/worker/src/stt/yandex-protocol.ts",
+    "original_sha256": "136b27cc9958bde6ba7c0ea0d60e1b4b3680a9c704a60b7f406d35275a94dac8",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-wire-full-data.json"
+  },
+  {
+    "name": "wire-normalization",
+    "file": "apps/worker/src/stt/yandex-protocol.ts",
+    "original_sha256": "136b27cc9958bde6ba7c0ea0d60e1b4b3680a9c704a60b7f406d35275a94dac8",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-wire-normalization.json"
+  },
+  {
+    "name": "wire-field",
+    "file": "apps/worker/src/stt/yandex-protocol.ts",
+    "original_sha256": "136b27cc9958bde6ba7c0ea0d60e1b4b3680a9c704a60b7f406d35275a94dac8",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-wire-field.json"
+  },
+  {
+    "name": "missing-time-zero",
+    "file": "apps/worker/src/stt/yandex.ts",
+    "original_sha256": "bb79cde61a656c234eccb387e30132f740755539b0e713b66f1990a58b31ec29",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-missing-time-zero.json"
+  },
+  {
+    "name": "empty-context",
+    "file": "apps/worker/src/stt/yandex.ts",
+    "original_sha256": "bb79cde61a656c234eccb387e30132f740755539b0e713b66f1990a58b31ec29",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-empty-context.json"
+  },
+  {
+    "name": "unsafe-integer",
+    "file": "apps/worker/src/stt/yandex.ts",
+    "original_sha256": "bb79cde61a656c234eccb387e30132f740755539b0e713b66f1990a58b31ec29",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-unsafe-integer.json"
+  },
+  {
+    "name": "entrypoint-key",
+    "file": "apps/worker/workers/stt.ts",
+    "original_sha256": "6dac10410d7f12f4778e30c513cecb89706c1eaa76fbe5815e7aa3009dbaa733",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-entrypoint-key.json"
+  },
+  {
+    "name": "compose-key",
+    "file": "docker-compose.yml",
+    "original_sha256": "5632e692c2e58aa13d0e6bdf31a591ca76d68871a48318b97944e617557a3838",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-compose-key.json"
+  }
+]

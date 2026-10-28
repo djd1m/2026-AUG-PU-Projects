@@ -1,0 +1,13 @@
+{
+  "check": "yandex-typecheck-timing-final",
+  "command": [
+    "npm",
+    "run",
+    "typecheck"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 33.255,
+  "log": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-typecheck-timing-final.log",
+  "node": "22.22.3",
+  "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off"
+}

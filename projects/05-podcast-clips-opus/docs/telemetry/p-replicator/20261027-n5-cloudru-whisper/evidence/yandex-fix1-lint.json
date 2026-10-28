@@ -1,0 +1,13 @@
+{
+  "check": "yandex-fix1-lint",
+  "command": [
+    "npm",
+    "run",
+    "lint"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 1.991,
+  "log": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-fix1-lint.log",
+  "node": "22.22.3",
+  "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off"
+}

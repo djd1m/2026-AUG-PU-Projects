@@ -1,0 +1,50 @@
+[
+  {
+    "unit": "admin",
+    "launch": {
+      "run_id": "20261027-n5-support-oss",
+      "work_unit_id": "admin-integration-researcher",
+      "role": "admin-integration-researcher",
+      "requested_model": "gpt-6.1-sol",
+      "requested_reasoning": "high",
+      "source_revision": "f60215a5199584c5025b65b14b00bfabeacdd003",
+      "project_root": "/tmp/n5-acquisition-analytics-20261026/projects/05-podcast-clips-opus",
+      "report_path": "/tmp/n5-admin-oss-research-20261027-report.md",
+      "trace_path": "/tmp/n5-admin-oss-research-20261027-trace.md",
+      "timebox_minutes": 20,
+      "scope": "adminOSSandN5integrationonly; helpdeskcomparisonotheragent",
+      "created_at": "2026-10-27T23:07:48.254742+00:00",
+      "restrictions": [
+        "no install/containers/deploy/code/production/privateenv/paidcalls/supportcommunications",
+        "allprimarysources,currentlicense/corevscommercial/hardwareverified"
+      ]
+    },
+    "launch_sha256": "ea2823afa44312cc84574f112aab4ca769406ec004644c34cc010ae219e883f8",
+    "report_sha256": "71079e87c428d4142ce9fb976ecbee910c7e71ae005e719dc938cb5eb14b9ada",
+    "trace_sha256": "fbac21fa6c89e49d235cf8b93a55a848ac2f925475087445e2b90119e84cf936"
+  },
+  {
+    "unit": "helpdesk",
+    "launch": {
+      "run_id": "20261027-n5-support-oss",
+      "work_unit_id": "helpdesk-researcher",
+      "role": "helpdesk-researcher",
+      "requested_model": "gpt-6.1-sol",
+      "requested_reasoning": "high",
+      "source_revision": "f60215a5199584c5025b65b14b00bfabeacdd003",
+      "project_root": "/tmp/n5-acquisition-analytics-20261026/projects/05-podcast-clips-opus",
+      "report_path": "/tmp/n5-helpdesk-oss-research-20261027-report.md",
+      "trace_path": "/tmp/n5-helpdesk-oss-research-20261027-trace.md",
+      "timebox_minutes": 20,
+      "scope": "ticketsOSSonly; admincomparisonotheragent",
+      "created_at": "2026-10-27T23:07:48.254742+00:00",
+      "restrictions": [
+        "no install/containers/deploy/code/production/privateenv/paidcalls/supportcommunications",
+        "allprimarysources,currentlicense/corevscommercial/hardwareverified"
+      ]
+    },
+    "launch_sha256": "df8b3fa3ed543f90f283cae4455b7faced8634bb518d3f7110200de01aa6fab2",
+    "report_sha256": "05ec71d6a9e1a4618b69e0696f1d4c6b19aea0facf06b0619c1825832b0dd3fc",
+    "trace_sha256": "3c409af01c9fda3e6097977e980fcd08a3d157c47240844440bf98753eabf281"
+  }
+]

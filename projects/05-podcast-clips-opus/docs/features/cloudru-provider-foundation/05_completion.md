@@ -1,5 +1,35 @@
 # Cloud.ru provider foundation — Completion
 
+## Coordinator acceptance v4 — 27.10.2026
+
+Bounded Yandex STT implementation accepted at coder revision
+`c25a290ffc6722175c890fe7958fc5ab8ce9df8c` after independent cold review and its
+specific fixes. Spec SHA remains unchanged. The earlier a826 review with two
+MEDIUM findings is retained as history, not relabeled PASS.
+
+- Fresh corrected acceptance: **1179 tests,121 files,zero skips**, exit0;
+  build/typecheck/lint/packaging pass. Four correction mutants fail red and the
+  restored full suite passes. Earlier28 guard mutations remain separately bound
+  to their actual attempts; they are not falsely claimed rerun on this commit.
+- Selected unchanged native completion gate passes9AC rows; final independent
+  review contract passes9rows. The historical whole-project traceability failure
+  remains recorded under the previously approved selected-contour boundary.
+- Actual **built N5 createTranscriber**, fixed live Yandex/general configuration:
+  one own200s synthetic MP3,83words/16usable segments,5.452730277s elapsed,
+  finite in-source second intervals,zero automatic retries. This is the compiled
+  adapter path, distinct from the earlier standalone provider tests. Actual bill
+  is unknown; key values/user recordings were not published or used.
+- Natural-speech accuracy, hour-scale p95, target Cloud.ru storage/browser and
+  production rollout are **not accepted** by these synthetic receipts. AC-9
+  remains partial live qualification; full migration is not complete.
+
+Source/check/review/probe receipts:
+`docs/telemetry/p-replicator/20261027-n5-cloudru-whisper/evidence/`.
+Current VPS was not deployed. Its existing stand occupies default port4181;
+the port-conflict preflight is retained as a failed deployment check, separate
+from passing offline application checks. Original v1 completion bytes are preserved
+in Git0c42dfb1 and `foundation-v1-completion-original.md.gz` in the same evidence folder.
+
 Status: **v4 CORRECTION IMPLEMENTED; final verdict in source-bound terminal receipt**, 2026-10-27. Frozen Specification SHA256 `e1afae2ceaddef35d421700ad75b7e256f407e40bebeea0782b997d10690c16e`; implementation input `3c51e71e9cffd2f636864fb6513058907984c1c4`. Native lifecycle gates, independent cold review and source integration remain coordinator-owned. Historical v1 receipt body is preserved below as archived data; its coverage header is explicitly demoted so only v4 has an active canonical table. It is not v4 evidence.
 
 ## Cold-review correction 1 (2026-10-27)

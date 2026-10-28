@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-10-27T23:37:00.979011+00:00",
+  "owner_scope_exception": "continued owner-approved selected foundation scope from 2026-10-26; unchanged checker, hash-bound source; aggregate failure retained",
+  "scope": [
+    "cloudru-provider-foundation"
+  ],
+  "mode": "--completion",
+  "aggregate_project_result": "historical exit1 retained separately, not pass",
+  "checker": "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+  "checker_sha256": "06e3dae22c533a81732b9870ae42d6b80b6e8419b3c90e11e1910e2a46888be8",
+  "source_head": "a826387db43d50f1703a8233f94714a6853dc1a8",
+  "source_files_sha256": {
+    "docs/features/cloudru-provider-foundation/review-report.md": "322e94879a7e454f2a1e7b4e2158f4ee3d5ac9a4484307c1707873507268f052",
+    "docs/features/cloudru-provider-foundation/03_architecture.md": "295ec95b94f0fd5b8c9184f989bb447aa6e2e315003cf7dafb34f80de941fd4b",
+    "docs/features/cloudru-provider-foundation/05_completion.md": "43e0889245973ad12898276b2ea2a44ae887cf748b48502cd80c6f05069a41ae",
+    "docs/features/cloudru-provider-foundation/01_specification.md": "e1afae2ceaddef35d421700ad75b7e256f407e40bebeea0782b997d10690c16e",
+    "docs/features/cloudru-provider-foundation/research.md": "55305080b88a202b8fecdcebc5c5727d06bd2c82969839ed602e642acee78399",
+    "docs/features/cloudru-provider-foundation/04_refinement.md": "1a6f3e81ae9a679ca74284cc72cc483a454c18c11a70d9b5b558606f89f8456e",
+    "docs/features/cloudru-provider-foundation/validation-report.md": "d19ac301da69ad068f9c5d63ea3230641d663198d8dfc30beb93b773da5744c5",
+    "docs/features/cloudru-provider-foundation/02_pseudocode.md": "1827e9d8f3b99fc8ce2290be3325793b245460d62f7714619b7c228732a02ab4",
+    "docs/features/cloudru-provider-foundation/research-whisper-donor-20261027.md": "c18c6b2a851032299b64d0ffce2202d63479e14b12acbdfc7b2d341973ae0080",
+    "tests/yandex-stt.test.ts": "14d8dece2d06ae21d9e2b37e03d0e9d6d3aac2fa8338e0d88f40f3d34e96bf1b",
+    "tests/selection.integration.test.ts": "f41729df275b5df22db98cc54fe3ca32d577bd30f848335f59db0cd916ec2d36",
+    "tests/s3-public-endpoint.test.ts": "06e2f6e602e8a02d5a27bbc3adf7268e921c222e99c189a4e7e01b5b4618db1c",
+    "tests/cloudru-provider.test.ts": "b66ff425b9160ece6e1457a0c9d40f34625d79f4603b3b1ed34b8764c2af5c96",
+    "tests/transcription.integration.test.ts": "16c1452506df5041f5f9c2bf8788a689565494115ca4a4ae03b093f3bed974f6"
+  },
+  "snapshot_matches_before_after": true,
+  "command": [
+    "bash",
+    "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+    "/tmp/n5-stt-scoped-gates-20261027/phase3-yandex-fix1-export2/snapshot",
+    "--completion",
+    "--role-map-source",
+    "/tmp/n5-yandex-stt-code-20261027/.claude/commands/feature.md",
+    "--project-role-map-source",
+    "/tmp/n5-yandex-stt-code-20261027/.claude/skills/sparc-prd-mini/SKILL.md"
+  ],
+  "exit_code": 0
+}

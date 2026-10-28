@@ -1,0 +1,32 @@
+{
+  "run_id": "20261027-n5-cloudru-whisper",
+  "work_unit_id": "built-n5-yandex-200s",
+  "readiness": "ready",
+  "source_revision": "c25a290ffc6722175c890fe7958fc5ab8ce9df8c",
+  "build_files_sha256": {
+    "/tmp/n5-yandex-stt-code-20261027/projects/05-podcast-clips-opus/apps/worker/dist/src/stt/client.js": "4ffc63c84cbb62464ae4f708ef746011dcdfdddbaa6389e34499ed0f683b0fe0",
+    "/tmp/n5-yandex-stt-code-20261027/projects/05-podcast-clips-opus/apps/worker/dist/src/stt/yandex.js": "23cdc4d699f8301a8979e8d7126d21b240794e82f3d739f493635d2d907f4ec4",
+    "/tmp/n5-yandex-stt-code-20261027/projects/05-podcast-clips-opus/apps/worker/dist/src/stt/yandex-protocol.js": "611d437449ac4180b0c39a914830f08d3629a458813c693cf1655be214376041",
+    "/tmp/n5-yandex-stt-code-20261027/projects/05-podcast-clips-opus/packages/shared/dist/config.js": "e964feceece9db0e636eeee14436b3af960cc2cabb7c698622e8d7669b700f47",
+    "/tmp/n5-yandex-stt-code-20261027/projects/05-podcast-clips-opus/packages/shared/dist/transcript.js": "0c427a26928d59e449b303e7d9f643ea08c9be65a832fd4c5f18e7b9e0a99911"
+  },
+  "probe_sha256": "6fa55d42762bd09723b25e7a60e9bfe6563b430f8b6a21fa7d99bd582658b9c6",
+  "input_path": "/tmp/n5-yandex-long-fixture-20261027/synthetic-ru-200s.mp3",
+  "input_sha256": "066809cc13c5baae8c8c151aadf177033f841715aaf872999a23055e7c1d62c5",
+  "input_bytes": 1601037,
+  "input_seconds": 200,
+  "input_class": "own repeated synthetic Russian speech",
+  "provider": "yandex",
+  "model": "general",
+  "endpoint": "stt.api.cloud.yandex.net:443",
+  "max_requests": 1,
+  "automatic_retries": 0,
+  "request_deadline_ms": 120000,
+  "credential_availability": "present private0600; value omitted",
+  "authorization": "ownerselectedRFwordSTT,providedkey,authorizedautonomousadapterqualification; one source-bound built-adapter request",
+  "expected_effect": "one potentially billable200sRPC; no productionDB/customerdata mutation",
+  "purpose": "qualify ACTUAL BUILT N5adapter after independent fixes, distinct from prior standalone official-client probe; no natural-speech quality/S3/browser/fullmigration claim",
+  "published_price_scenario_RUB": "2.2764",
+  "actual_cost": null,
+  "created_at": "2026-10-27T23:46:07.209Z"
+}

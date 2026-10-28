@@ -1,0 +1,44 @@
+{
+  "observed_at": "2026-10-28T00:00:26.485832+00:00",
+  "accepted_code_revision": "4546af003d43e6fd066e04400cb1d3c188993f1d",
+  "coder_revision": "c25a290ffc6722175c890fe7958fc5ab8ce9df8c",
+  "application_source_equivalent": true,
+  "verified_final_receipts_and_logs": [
+    "yandex-fix1-full",
+    "yandex-fix1-build",
+    "yandex-fix1-typecheck",
+    "yandex-fix1-lint",
+    "yandex-fix1-packaging",
+    "yandex-fix1-focused-final"
+  ],
+  "verified_final_mutants": 4,
+  "native_scoped_completion_exit_code": 0,
+  "native_scoped_source_hashes_match": true,
+  "native_review_contract": {
+    "exit_code": 0,
+    "ac_ids": 9,
+    "rows": 9,
+    "evidence_type": "coordinator_observed_tool_result",
+    "observation": "Already executed before finalization; no unchanged repeat",
+    "elapsed_seconds": null
+  },
+  "model_cost_guard": {
+    "exit_code": 0,
+    "log_sha256": "98ef06406ba6d255449147f544a4a6dc98038fe62d6bfd62f27bd4343450f47d",
+    "scope": "declared numerical limits; enforcement covered by separate execution evidence"
+  },
+  "support_docs": {
+    "files": 5,
+    "local_links": 6,
+    "web_links": 193,
+    "local_link_errors": 0,
+    "trailing_whitespace_errors": 0
+  },
+  "git_diff_check_exit_code": 0,
+  "aggregate_project_gate": "historical exit 1 retained, never promoted to pass",
+  "no_current_production_deployment": true,
+  "full_migration_complete": false,
+  "actual_model": null,
+  "usage": null,
+  "actual_cost": null
+}
