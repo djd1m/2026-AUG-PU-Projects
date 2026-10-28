@@ -1,6 +1,7 @@
 import { createHash, randomBytes } from 'node:crypto';
+import type { SupportEmailPurpose, SupportEmailDeliveryState } from '@clipmaker/shared/enums';
 import { transaction, type Pool, type PoolClient } from './index.js';
-export type MailPurpose = 'verify'|'reset';
+export type MailPurpose = SupportEmailPurpose;
 export const emailDigest = (token: string) => createHash('sha256').update(token).digest('hex');
 export interface EmailAuthority { accountId: string; sessionHash: string }
 export class SupportEmailStore {
@@ -90,7 +91,7 @@ export class SupportEmailStore {
       return true;
     });
   }
-  async delivery(id: string, state: 'accepted'|'failed'|'unknown') {
+  async delivery(id: string, state: Exclude<SupportEmailDeliveryState,'pending'>) {
     await this.pool.query('UPDATE support_email_token SET delivery_state=$2 WHERE id=$1',[id,state]);
   }
 }

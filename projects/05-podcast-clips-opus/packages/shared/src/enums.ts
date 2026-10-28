@@ -71,7 +71,17 @@ export const CREDIT_INTENT_SKU = ['legacy_pro990_v1','start_v1','pro_v1','addon_
 export const CREDIT_GRANT_SOURCE = ['signup','migration_trial','payment','recovery'] as const;
 export const CREDIT_BASE_SKU = ['start_v1','pro_v1'] as const;
 export const CREDIT_CHARGE_STATE = ['reserved','settled','released'] as const;
+export const SUPPORT_EMAIL_PURPOSE = ['verify','reset'] as const;
+export type SupportEmailPurpose = typeof SUPPORT_EMAIL_PURPOSE[number];
+export const SUPPORT_EMAIL_DELIVERY_STATE = ['pending','accepted','failed','unknown'] as const;
+export type SupportEmailDeliveryState = typeof SUPPORT_EMAIL_DELIVERY_STATE[number];
+export const SUPPORT_AUDIT_ACTION = ['grant','revoke','list','search','card'] as const;
+export type SupportAuditAction = typeof SUPPORT_AUDIT_ACTION[number];
 export const SQL_ENUMS = {
+  'support_email_token.purpose': SUPPORT_EMAIL_PURPOSE,
+  'support_email_token.delivery_state': SUPPORT_EMAIL_DELIVERY_STATE,
+  'support_mail_admission.purpose': SUPPORT_EMAIL_PURPOSE,
+  'support_audit.action': SUPPORT_AUDIT_ACTION,
   'account.billing_policy': BILLING_POLICY,'video.billing_policy':BILLING_POLICY,
   'payment_intent.sku': CREDIT_INTENT_SKU,'credit_grant.source':CREDIT_GRANT_SOURCE,
   'credit_grant.base_sku':CREDIT_BASE_SKU,'video_credit_charge.state':CREDIT_CHARGE_STATE,
