@@ -12,7 +12,7 @@ describe('support runtime isolation and wiring',()=>{
   }
   expect(loadMailConfig({NODE_ENV:'test',DATABASE_URL:'postgresql://synthetic@localhost/n5_test',N5_MAIL_MODE:'test'}).mode).toBe('test');
  });
- it('runtime NODE_ENV alias remains visible to the environment wiring guard',()=>{
+ it('runtime NODE_ENV Reflect.get remains visible to the environment wiring guard',()=>{
   expect(collectEnvironment(['apps/web/src/server/environment.ts'],process.cwd()).has('NODE_ENV')).toBe(true);
  });
  it('const aliases still reject computed/dynamic env access',async()=>{
@@ -20,6 +20,10 @@ describe('support runtime isolation and wiring',()=>{
   try {
    await writeFile(path.join(directory,'ok.ts'),'const runtime=process.env; export const mode=runtime.NODE_ENV;');
    expect([...collectEnvironment(['ok.ts'],directory)]).toEqual(['NODE_ENV']);
+   await writeFile(path.join(directory,'reflect.ts'),"export const mode=Reflect.get(process.env,'NODE_ENV');");
+   expect([...collectEnvironment(['reflect.ts'],directory)]).toEqual(['NODE_ENV']);
+   await writeFile(path.join(directory,'reflect-bad.ts'),"const key='NODE_ENV'; export const mode=Reflect.get(process.env,key);");
+   expect(()=>collectEnvironment(['reflect-bad.ts'],directory)).toThrow('Динамическое');
    await writeFile(path.join(directory,'bad.ts'),'const runtime=process.env; const key="NODE_ENV"; export const mode=runtime[key];');
    expect(()=>collectEnvironment(['bad.ts'],directory)).toThrow('Динамическое');
   }finally{await rm(directory,{recursive:true,force:true});}

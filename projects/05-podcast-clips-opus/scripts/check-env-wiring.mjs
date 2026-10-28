@@ -45,7 +45,9 @@ export function collectEnvironment(entrypoints, projectRoot) {
         let name;
         if (ts.isVariableDeclaration(parent) && parent.initializer === node && ts.isIdentifier(parent.name) &&
           parent.parent.flags & ts.NodeFlags.Const) { aliases.add(parent.name.text); return; }
-        if (ts.isPropertyAccessExpression(parent) && parent.expression === node) name = parent.name.text;
+        if (ts.isCallExpression(parent) && parent.expression.getText(tree) === 'Reflect.get' &&
+          parent.arguments.length === 2 && parent.arguments[0] === node && ts.isStringLiteral(parent.arguments[1])) name = parent.arguments[1].text;
+        else if (ts.isPropertyAccessExpression(parent) && parent.expression === node) name = parent.name.text;
         else if (ts.isElementAccessExpression(parent) && parent.expression === node && ts.isStringLiteral(parent.argumentExpression)) name = parent.argumentExpression.text;
         else throw new Error(`Динамическое чтение process.env не проверяется: ${path.relative(projectRoot, file)}`);
         if (!/^[A-Z][A-Z0-9_]*$/.test(name)) throw new Error('Непригодное имя переменной');
