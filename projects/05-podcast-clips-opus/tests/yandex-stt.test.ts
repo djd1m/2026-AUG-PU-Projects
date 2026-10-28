@@ -204,8 +204,21 @@ it('keeps independent closed selectors and selected-key-only live requirements',
   expect(loadSttConfig(env)).toMatchObject({ provider: 'yandex', model: 'general', apiKey: 'synthetic' });
   expect(() => loadSttConfig({ ...env, YANDEX_SPEECHKIT_API_KEY: undefined })).toThrow('YANDEX_SPEECHKIT_API_KEY');
   expect(() => loadLlmConfig({ ...environment(), N5_LLM_PROVIDER: 'yandex' })).toThrow();
-  const fake = createTranscriber(loadSttConfig({ ...env, NODE_ENV: 'test', N5_MODEL_PROVIDER: 'fake' }));
-  expect((await fake.transcribe('unused', 6, new AbortController().signal)).words).toHaveLength(1);
+  const request = vi.fn<typeof fetch>(async () => { throw new Error('Unexpected fake provider request'); });
+  const fakeConfig = loadSttConfig({ ...env, NODE_ENV: 'test', N5_MODEL_PROVIDER: 'fake',
+    YANDEX_SPEECHKIT_API_KEY: undefined, OPENROUTER_API_KEY: undefined });
+  expect(fakeConfig.apiKey).toBeNull();
+  const transcript = await createTranscriber(fakeConfig, request).transcribe('unused', 6, new AbortController().signal);
+  const { parseTranscript } = await import('../packages/shared/src/transcript');
+  expect(parseTranscript(transcript, 6)).toEqual(transcript);
+  expect(transcript.words.length).toBeGreaterThan(0);
+  for (const word of transcript.words) {
+    expect(word.start).toBeGreaterThanOrEqual(0);
+    expect(word.end).toBeGreaterThan(word.start);
+    expect(word.end).toBeLessThanOrEqual(6);
+  }
+  expect(transcript.words.at(-1)?.end).toBe(6);
+  expect(request).not.toHaveBeenCalled();
 });
 
 it('pins TLS credentials and disables transparent gRPC retries in shipped transport', () => {
