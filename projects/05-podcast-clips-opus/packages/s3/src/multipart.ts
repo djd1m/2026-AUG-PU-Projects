@@ -40,15 +40,23 @@ export async function listUploadedParts(ctx: StorageContext, key: string, upload
 // Склейка до 2 ГБ / 100 частей может занимать минуты. 5 минут на команду,
 // включая до 3 попыток SDK и чтение тела после 200 headers; не SLA Cloud.ru.
 export const COMPLETE_REQUEST_TIMEOUT_MS = 5 * 60_000;
+// ETag — непрозрачное значение; только одна внешняя пара кавычек различается у провайдеров.
+function comparableEtag(etag: string): string {
+  return etag.length >= 2 && etag.startsWith('"') && etag.endsWith('"') ? etag.slice(1, -1) : etag;
+}
 export async function completeMultipartUpload(ctx: StorageContext, key: string, uploadId: string, parts: CompletedPart[]): Promise<void> {
   const sorted = [...parts].sort((a, b) => a.part_number - b.part_number);
   if (!sorted.length || sorted.some((p, i) => p.part_number !== i + 1 || !p.etag)) throw new Error('Непригодный список частей');
-  const listed = new Map((await listUploadedParts(ctx, key, uploadId)).map((p) => [p.part_number, p]));
-  if (listed.size !== sorted.length || sorted.some((p) => listed.get(p.part_number)?.etag !== p.etag)) {
+  const serverParts = await listUploadedParts(ctx, key, uploadId);
+  const listed = new Map(serverParts.map((p) => [p.part_number, p]));
+  if (listed.size !== sorted.length || sorted.some((p) => {
+    const serverTag = listed.get(p.part_number)?.etag;
+    return !serverTag || !comparableEtag(p.etag) || comparableEtag(serverTag) !== comparableEtag(p.etag);
+  })) {
     throw new Error('Список частей не совпадает с хранилищем');
   }
   await ctx.client.send(new CompleteMultipartUploadCommand({ Bucket: ctx.bucket, Key: key, UploadId: uploadId,
-    MultipartUpload: { Parts: sorted.map((p) => ({ PartNumber: p.part_number, ETag: p.etag })) } }),
+    MultipartUpload: { Parts: serverParts.map((p) => ({ PartNumber: p.part_number, ETag: p.etag })) } }),
     { requestTimeout: COMPLETE_REQUEST_TIMEOUT_MS, abortSignal: AbortSignal.timeout(COMPLETE_REQUEST_TIMEOUT_MS) });
 }
 export async function abortMultipartUpload(ctx: StorageContext, key: string, uploadId: string): Promise<void> {
