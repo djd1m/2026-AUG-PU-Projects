@@ -1,3 +1,6 @@
 import { staffRoute } from '../../../../../../server/support/routes';
 export const runtime = 'nodejs';
-export const GET = staffRoute('card');
+const card = staffRoute('card');
+export function GET(request: Request, context: { params: Promise<{ accountId: string }> }) {
+  return card(request, context);
+}
