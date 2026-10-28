@@ -1,0 +1,65 @@
+{
+  "run_id": "20261028-n5-support-implementation",
+  "work_unit_id": "support-ui",
+  "attempt": "first-screen-fix-01",
+  "source_revision": "9c24a448c5accdd3d44b45dde619962b35aa606e",
+  "base_revision": "47929fc1e3972ff77e5dc2fb252ed418632b5eb8",
+  "diagnostic_integrated_revision": "420affeb",
+  "spec_sha256": "ef2525b933e75661ae3ee0965741933555b4387da321a7b40547e184f4f41edf",
+  "canon_sha256": "560c11ea0d182d6078a3ae285b3475bbae97f2643066e83a26026f91b6644f3a",
+  "launch_sha256": "c59953141cfeab8654e5e071bb674aedb3763d1c9077f322c9ca46881a499fde",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning": "medium",
+  "actual_model": null,
+  "tokens": null,
+  "cost": null,
+  "start_observed": "2026-10-28T02:53:53Z",
+  "finished_at": "2026-10-28T02:57:35.094100+00:00",
+  "elapsed_seconds": 222.0941,
+  "checks": {
+    "baseline_report": "342pages;12R9errors,0executionerrors; exact report and example screenshot read/viewed",
+    "render_regression_red": "exit1,1failed16passed",
+    "render_and_theme_green": "exit0,47/47PASS",
+    "focused_types": "exit0,projectbase preserved and local workspace aliases only",
+    "lint": "exit0",
+    "diff": "clean",
+    "actual_browser": "root will rebuild/rerun; not run here"
+  },
+  "source_hashes": {
+    "apps/web/src/app/clips/ClipCard.tsx": "0c268185f53c213e457d63f70d3ab855656b595c5fce847516e3dc79d7c12293",
+    "apps/web/src/app/videos/[videoId]/VideoDetail.tsx": "cc55c854dddc211be6a233f68b71e88be622f93ea827f797b609589164b529c1",
+    "apps/web/src/app/globals.css": "0b716f974ff9a378f7a13dbfc0d52db628be6ab63a2840d29b80bee3d3c74abb",
+    "tests/clip-card.test.ts": "be54b94c1a25844a3a225086defd0f86d053d3fdda1f6ae915b3d3294f64fece"
+  },
+  "evidence": [
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/first-screen-fix-01.red.log",
+      "sha256": "6ade44fecab70ef1d111d9794c9a226cf78b64fb43c72d2fd13630db76e4aaf5"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/first-screen-fix-01.green.log",
+      "sha256": "8648b3f6c1a205a70d9fc6923524a267805cf672ebca745a3334a4998fa1346a"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/first-screen-fix-01.types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/first-screen-fix-01.tsconfig.json",
+      "sha256": "43730d69057d43997296b44e65e0a3d9aca7428a2e7e4edcdc4fc5175ba8c78b"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/first-screen-fix-01.lint.log",
+      "sha256": "f8eca02ed8232ddb53b69d0c6a65f11eccaf2fc4932451829f4edf3b43ad830b"
+    },
+    {
+      "path": "/tmp/n5-acquisition-analytics-20261026/projects/05-podcast-clips-opus/.responsive-artifacts/support-responsive-01/report.json",
+      "sha256": "c2b45c43a9f54632b027f16dce4ffc1b49625972ce355a589be32cd39e362bf7"
+    },
+    {
+      "path": "/tmp/n5-acquisition-analytics-20261026/projects/05-podcast-clips-opus/.responsive-artifacts/support-responsive-01/webkit-light-first-screen-360x740-341.png",
+      "sha256": "9e5dfef7f8ef2fc89df7763507ede5b74803c41536a631eae7c851bbca373a85"
+    }
+  ]
+}

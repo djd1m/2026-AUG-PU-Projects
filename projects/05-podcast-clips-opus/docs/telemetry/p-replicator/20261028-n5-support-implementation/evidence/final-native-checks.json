@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-28T03:28:50.584710+00:00",
+  "application_source_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+  "checks": [
+    {
+      "command": [
+        "node",
+        ".claude/hooks/check-review-contract.cjs",
+        "projects/05-podcast-clips-opus",
+        "support-access"
+      ],
+      "exit_code": 0,
+      "output": "PASS review-contract feature=support-access AC-ids=11 rows=11\n"
+    },
+    {
+      "command": [
+        "node",
+        ".claude/hooks/check-canon.cjs",
+        "projects/05-podcast-clips-opus"
+      ],
+      "exit_code": 0,
+      "output": "✅ канон зафиксирован и цел: docs/features/support-access/interface-contract.md (sha256 совпал), 61 параллельных пишущих единиц\n   Проверено внутри канона: порядковые номера различимы у соседей (5 заголовков), перечни держат своё число (0)\n   Ограничение: совпавший хеш доказывает, что канон НЕ МЕНЯЛСЯ, — но не то, что он перечислил все разделяемые выборы. Полнота канона остаётся суждением координатора (слой 3).\n"
+    },
+    {
+      "command": [
+        "node",
+        ".claude/hooks/check-file-ownership.cjs",
+        "projects/05-podcast-clips-opus"
+      ],
+      "exit_code": 0,
+      "output": "✅ владение тотально и однозначно: 58 файл(ов), 2 единиц(ы), координатор пишет и назван\n   Разрезов: 0 (объявлено «нет»)\n   Ограничение: это проверка ДЕКЛАРАЦИИ. Координатор, правящий чужой файл в обход протокола, оставляет план неизменным и эту проверку зелёной; полной проверки слоя 1 здесь не существует без атрибуции записи.\n"
+    },
+    {
+      "command": [
+        "node",
+        ".claude/hooks/check-source-version.cjs",
+        "projects/05-podcast-clips-opus"
+      ],
+      "exit_code": 0,
+      "output": "✅ 2 объявлени(й) сверено с диском: 0 правк(и), 2 вывод(ов) — каждый источник на месте и не изменился с момента чтения\n   Ограничение: совпавший хеш доказывает, что почва НЕ СДВИНУЛАСЬ, — но не то, что вывод из неё следует и не то, что кто-то действительно перечитал файл. Это остаётся слоем 3.\n"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/check-rebuild-docs.mjs",
+        "projects/05-podcast-clips-opus"
+      ],
+      "exit_code": 0,
+      "output": "✅ projects/05-podcast-clips-opus: R1–R5 пройдены (фич в индексе: 34)\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": ""
+    }
+  ],
+  "scope_check": {
+    "baseline": "1f0befb75bd193c5282b273a6007f3997733cab5",
+    "all_paths_within_N5": true,
+    "changed_paths": 269
+  },
+  "native_scope": "owner-approved support-access only; historical aggregate exit1 preserved",
+  "canon_count_limit": "vendor checker labels ownership table rows as writers; actual launch fanout2coding owners, no vendor modification"
+}

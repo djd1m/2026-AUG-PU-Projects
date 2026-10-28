@@ -1,0 +1,17 @@
+{
+  "check": "integrated-typecheck-04",
+  "command": [
+    "npm",
+    "run",
+    "typecheck"
+  ],
+  "source_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+  "started_at": "2026-10-28T03:03:37.239296+00:00",
+  "elapsed_seconds": 44.036,
+  "exit_code": 0,
+  "stopped_reason": null,
+  "node": "22.22.3",
+  "environment": "isolated *_test DB, Redis15/testMinIO, fake models, payments off",
+  "log": "/tmp/n5-support-integration-checks-20261028/integrated-typecheck-04.log",
+  "free_disk_gib": 2.577
+}

@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-28T03:03:26.472556+00:00",
+  "run_id": "20261028-n5-support-implementation",
+  "work_unit_id": "responsive-02",
+  "readiness": "ready",
+  "source_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+  "build_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+  "build_id_sha256": "503fbdcd3748e3326094d808b2c2cd89b5eba6217c94724560626364a9c246fc",
+  "fixture_sha256": "72697e344750aea1880f10e383cd4c632e772eb31efd41c42a3e1817bddc6bc1",
+  "browser_container": "codex-ui-playwright",
+  "fresh_engine_probes": [
+    {
+      "name": "chromium",
+      "version": "153.0.8010.12",
+      "status": 200
+    },
+    {
+      "name": "webkit",
+      "version": "26.6",
+      "status": 200
+    }
+  ],
+  "base": "https://localhost:4435",
+  "TLS": "local private self-signed only",
+  "expected_effects": "isolated synthetic account sessions/guest counters; no paid services/mail",
+  "free_disk_gib": 2.501,
+  "command_as_data": [
+    "bash",
+    "scripts/check-responsive.sh",
+    "--base",
+    "https://localhost:4435",
+    "--fixture",
+    ".responsive-fixture/support-e2e-20261028.json",
+    "--out",
+    ".responsive-artifacts/support-responsive-02"
+  ]
+}

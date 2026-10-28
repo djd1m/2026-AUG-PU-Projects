@@ -6,9 +6,9 @@
   "pipeline": "p-replicator /feature Mode2",
   "profile": "model-routing-econom",
   "started_at": "2026-10-28T00:10:23.161812+00:00",
-  "updated_at": "2026-10-28T02:56:12.829911+00:00",
+  "updated_at": "2026-10-28T03:32:10.513353+00:00",
   "status": "running",
-  "current_stage": "REVIEW_CORRECTIONS_IN_PROGRESS",
+  "current_stage": "LOCAL_ACCEPTED_DELIVERY_PENDING",
   "baseline_revision": "1f0befb75bd193c5282b273a6007f3997733cab5",
   "responsible": "root",
   "owner_authorization": "explicit continue28.10.2026 after6-10h support implementation estimate; demo in12h; watch SSD",
@@ -41,12 +41,12 @@
   ],
   "constraints": {
     "minimum_free_disk_gib": 2,
-    "free_disk_gib": 2.626,
+    "free_disk_gib": 2.557,
     "deadline_hours": 12,
     "browser_container": "codex-ui-playwright"
   },
-  "next_step": "boundedadminstage+cursor+ledger andpartialclipfirstscreen fixes; then build, finalregression, browserjourney, independentdeltareview",
-  "actual_background_implementation": true,
+  "next_step": "root commit finaldocs/evidence, featurepush and verifyremote; then closuretelemetry",
+  "actual_background_implementation": false,
   "actual_background_planning": false,
   "launches": [
     {
@@ -72,6 +72,10 @@
     {
       "path": "evidence/review-launch.json",
       "sha256": "1a64753597b22c8c58263174c17d7495aa892af0bbf077fa0c1ad5b61598552e"
+    },
+    {
+      "path": "evidence/review-delta-launch.json",
+      "sha256": "3c410f7d5dfb9e8894a579c108225a581e91be797632139cc55d7309e83a4a82"
     }
   ],
   "browser_readiness": {
@@ -95,7 +99,7 @@
     "feature_filter": false,
     "historical_aggregate": "exit1 retained;11rootduplicatekeys and30legacyfeaturefolderslackingmachinekeys",
     "previous_scope_exception": "explicitlycredit-packages+cloudru-provider-foundation,notnew-support",
-    "next_step": "concrete support plan before narrow scope-exception decision; dependentcode notstarted",
+    "next_step": "resolved explicitowner scope; no globalcheckerchanges",
     "audit_receipt": "evidence/gate-audit-trace.md"
   },
   "scope_decision": {
@@ -122,7 +126,7 @@
   "plan_checks": {
     "terminal_receipt_verified": true,
     "six_source_hashes_verified": true,
-    "native_gates": "pending; aggregate diagnostic runs independently",
+    "native_gates": "approved scopedPLAN/VALIDATE andfinalcompletionPASS; aggregatehistoricalexit1notPASS",
     "launch_digest_limit": "planner was not supplied manifest digest; actual tool-call assignment, run/work/source/path and source hashes checked, no structural-companion PASS claimed"
   },
   "validation": {
@@ -136,33 +140,7 @@
     ],
     "actual_model": null
   },
-  "active_agents": [
-    {
-      "agent": "/root/n5_support_cold_reviewer",
-      "role": "independent source/security review",
-      "requested_model": "gpt-6.1-sol",
-      "reasoning": "high",
-      "actual_model": null,
-      "state": "running",
-      "context": "planner sources only; fresh snapshot, no coder history"
-    },
-    {
-      "agent": "/root/n5_support_ui_coder",
-      "requested_model": "gpt-6.1-sol",
-      "reasoning": "medium",
-      "actual_model": null,
-      "state": "running correctiveanonymousflow",
-      "trace": "/tmp/n5-support-ui-anonymous-fix-20261028-trace.md"
-    },
-    {
-      "agent": "/root/n5_support_backend_coder",
-      "requested_model": "gpt-6.1-sol",
-      "reasoning": "medium",
-      "actual_model": null,
-      "state": "running correctivecontextprojection",
-      "trace": "/tmp/n5-support-backend-context-fix-20261028-trace.md"
-    }
-  ],
+  "active_agents": [],
   "ui": {
     "source_commits": [
       "52d85156",
@@ -171,7 +149,7 @@
     ],
     "integrated_head": "5ef18d27c243732e84e916f8d41b2e20241b72ea",
     "receipt_hashes_verified": true,
-    "full_browser_acceptance": false,
+    "full_browser_acceptance": true,
     "responsive_baseline": {
       "source": "420affeb",
       "pages": 342,
@@ -196,7 +174,7 @@
     "final_focus_files": 14,
     "final_guard_mutations_verified": 16,
     "mutation_binding": "topreceipt sourceRevision is pre-finalcommit base71402216; EACH final sourceSha256/testSha256 verified against integrated18b3b629; no metadata rewrite",
-    "full_feature_acceptance": false
+    "full_feature_acceptance": "accepted local scope; external runtime excluded"
   },
   "integration_diagnostics": {
     "build01": "failed generated Next card GET optionalcontext",
@@ -215,18 +193,28 @@
     }
   ],
   "accepted_local_checks": {
-    "full_test_source_revision": "68a2943a3cf6b7329b44c714f63e26be402b5e1e",
-    "full_tests": 1248,
+    "application_source_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+    "build_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+    "full_tests": 1258,
     "full_test_files": 131,
     "full_skip_count": 0,
     "build_exit": 0,
     "types_exit": 0,
     "lint_exit": 0,
-    "limits": "candidatepriorreviewcorrections; fullsuitepassed, finalcorrectionsrequireaffectedchecks"
+    "responsive_pages": 342,
+    "responsive_exit": 0,
+    "responsive_warnings": 646,
+    "support_journey_checks": 51,
+    "support_journey_exit": 0,
+    "post_reset_http_sql_exit": 0,
+    "native_completion_exit": 0,
+    "review_contract_exit": 0,
+    "source_review": "clear",
+    "limits": "synthetic local runtime only; actualSMTP/vendor/RFdeployment separatelyoutofscope"
   },
   "runtime_readiness": {
-    "state": "ready",
-    "web_build_source": "420affeb425eb0b5ddac5ee3d910d9eda4dcaf94",
+    "state": "stopped_after_acceptance",
+    "web_build_source": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
     "candidate_web_input_closure_unchanged": true,
     "actual_compiled_SSR": 200,
     "production_refuses_test_mode": true,
@@ -265,7 +253,7 @@
       "models": "explicit fake; real FFmpeg, SQL, S3 and queue path"
     }
   },
-  "source_revision": "2a9e41b1c6441430ecccf50ec483c7ca934011a0",
+  "source_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
   "review": {
     "initial_source": "68a2943a",
     "verdict": "changes_required",
@@ -273,13 +261,40 @@
     "integrated_fixes": [
       "anonymouschatcleanup",
       "contextprojection",
-      "proofposttokenlockexpiry"
-    ],
-    "pending_fixes": [
+      "proofposttokenlockexpiry",
       "jobstage",
       "cursorprecision",
       "debitledger"
     ],
-    "fresh_delta_review": "pending"
+    "pending_fixes": [],
+    "fresh_delta_review": "source_review_clear",
+    "delta_source_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+    "runtime_qualification": "independent source verdict only; root full tests/browser still separate"
+  },
+  "memory": {
+    "teach_id": "teach:74dc974e32a1a793",
+    "store": "originalproject/.dz",
+    "backend": "@dzhechkov/memory",
+    "recall": "SQLiteFTS5 lexical hit confirmed; no semantic call",
+    "lesson": "PostgreSQL exact timestamp keyset precision"
+  },
+  "permission_review_retry": {
+    "count": 1,
+    "action": "read-only config/receipt inspection",
+    "first": "automatic permission review timed out; command not executed",
+    "retry": "allowed once and completed; no unresolvedapprovalblock"
+  },
+  "local_acceptance_finished_at": "2026-10-28T03:32:10.513353+00:00",
+  "local_acceptance_elapsed_seconds": 12107.352,
+  "delivery": {
+    "state": "pending",
+    "authorized_branch": "feature/n5-credits-cloudru-20261026",
+    "application_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+    "uri": "https://github.com/djd1m/2026-AUG-PU-Projects/tree/feature/n5-credits-cloudru-20261026/projects/05-podcast-clips-opus",
+    "pending_out_of_scope": [
+      "realSMTPinboxdelivery",
+      "realLibredeskpilot/history/replies/retention/revocation/deletion",
+      "RFtargetdeploy andrealstorage/payment/analyticsacceptance"
+    ]
   }
 }

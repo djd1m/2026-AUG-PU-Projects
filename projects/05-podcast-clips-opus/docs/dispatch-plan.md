@@ -80,6 +80,8 @@ Owner approved support-access native scope28.10.2026; all other checks preserved
 | docs/BACKLOG.md | координатор |
 | docs/cloudru-launch-plan.md | координатор |
 | docs/features/README.md | координатор |
+| docs/pipeline-walkthrough.md | координатор |
+| .claude/feature-roadmap.json | координатор |
 
 A newly needed path must get one owner before creation. No wildcard is permission to touch another named owner.
 Existing unrelated regression test changes require a concrete source finding and root ownership assignment.
