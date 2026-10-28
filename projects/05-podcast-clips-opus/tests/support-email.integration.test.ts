@@ -105,6 +105,19 @@ describe.skipIf(!databaseUrl)('support PostgreSQL authority',()=>{
   await store.issue('reset','missing@example.test',randomUUID(),email);
   expect((await pool.query('SELECT count(*) AS n FROM support_mail_admission WHERE email_hash=$1',[email])).rows[0].n).toBe('5');
  });
+ it('owner video context never exposes account UUID before or after current email proof',async()=>{
+  const a=await account();
+  const video=(await pool.query("INSERT INTO video(account_id,idempotency_key,source,declared_bytes,status,failure_reason) VALUES($1,'own-context','upload',1,'failed','stt_failed') RETURNING id",[a.id])).rows[0].id;
+  const unverified=await supportContext(pool,a.authority.sessionHash,video);
+  expect(unverified.context).not.toHaveProperty('accountId');
+  expect(Object.keys(unverified.context).sort()).toEqual(['at','failureCode','status','videoId']);
+  expect(unverified.context).toMatchObject({videoId:video,status:'failed',failureCode:'stt_failed'});
+  expect(JSON.stringify(unverified)).not.toContain(a.id);
+  await pool.query('UPDATE account SET email_verified_at=clock_timestamp() WHERE id=$1',[a.id]);
+  const verified=await supportContext(pool,a.authority.sessionHash,video);
+  expect(verified.context).not.toHaveProperty('accountId');expect(verified).toEqual(unverified);
+  expect((await supportContext(pool,null)).context).not.toHaveProperty('accountId');
+ });
  it('widget signs only current verified UUID/email and foreign/missing context are identical',async()=>{
   const a=await account();const config={mode:'test' as const,baseURL:'http://support.test',inboxID:randomUUID(),identifiedEnabled:true,contactEmail:null,synthetic:true,secret:randomBytes(32).toString('hex')};
   expect((await widgetSession(pool,config,a.authority.sessionHash)).mode).toBe('anonymous');
