@@ -4,7 +4,7 @@
   "planning_launch_at": null,
   "measurement_gap": "plannerlaunchedimmediatelybeforepassportcreation; noearliertimestampreconstructed",
   "source_revision": "3f76ddd24298b8bfe5d4f536f29e40044e932518",
-  "stage": "accepted_delivery_documentation_and_git_sync",
+  "stage": "DELIVERED",
   "status": "accepted",
   "profile": "model-routing-econom",
   "risk": "XL ownercreditentitlement/productquotaboundary",
@@ -46,5 +46,8 @@
   },
   "no_fresh_full_pass_claim": true,
   "finished_at": "2026-10-28T17:11:37.106600+00:00",
-  "elapsed_seconds": 5350.7
+  "elapsed_seconds": 5350.7,
+  "git_delivery_uri": "https://github.com/djd1m/2026-AUG-PU-Projects/tree/feature/n5-credits-cloudru-20261026",
+  "pending": "Owner elected to create PR manually from prepared comparison link",
+  "delivery_updated_at": "2026-10-28T17:14:58.583635+00:00"
 }

@@ -2,7 +2,7 @@
   "run_id": "20261028-n5-pricing-discovery",
   "started_at": "2026-10-28T15:53:17.693725+00:00",
   "source_revision": "3f76ddd24298b8bfe5d4f536f29e40044e932518",
-  "stage": "accepted_delivery_documentation_and_git_sync",
+  "stage": "DELIVERED",
   "status": "accepted",
   "risk": "L existingcatalogresponsechange; financialwritesexcluded",
   "mechanical_route_exit": 1,
@@ -33,5 +33,8 @@
   },
   "no_fresh_full_pass_claim": true,
   "finished_at": "2026-10-28T17:11:37.106600+00:00",
-  "elapsed_seconds": 4699.4
+  "elapsed_seconds": 4699.4,
+  "git_delivery_uri": "https://github.com/djd1m/2026-AUG-PU-Projects/tree/feature/n5-credits-cloudru-20261026",
+  "pending": "Owner elected to create PR manually from prepared comparison link",
+  "delivery_updated_at": "2026-10-28T17:14:58.583635+00:00"
 }
