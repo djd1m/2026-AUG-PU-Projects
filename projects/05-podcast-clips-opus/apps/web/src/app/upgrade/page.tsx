@@ -1,9 +1,6 @@
-// /upgrade?from=clip_card|partner_dashboard|guest_page — оформление тарифа Pro (фича 30 payments, ADR-019, OWN-019).
-// Донор — N6 apps/web/src/app/upgrade/page.tsx, адаптировано. Оплата выключена (N5_PAYMENTS_MODE не задан или off) —
-// страницы НЕТ (404): карточки при off показывают прежний экран интереса (AC-1). Вход обязателен: намерение без владельца
-// никому не принадлежит; без сессии — на вход с возвратом сюда (только закрытый набор `from`).
+// Authenticated catalogue remains visible while checkout is unavailable.
 import { cookies } from 'next/headers';
-import { notFound, redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { readAccountBilling,readCreditPurchaseWindows } from '@clipmaker/db';
 import { PAID_PLAN_DAYS, PAID_PLAN_TITLE, PAID_PRICE_MINOR, effectivePlan, formatRubles } from '@clipmaker/shared/tariff';
@@ -15,7 +12,6 @@ import { UpgradeScreen } from './UpgradeScreen';
 export const dynamic = 'force-dynamic';
 export default async function UpgradePage({ searchParams }: { searchParams: Promise<{ from?: string }> }) {
   const { config, pool, auth, payments } = getRuntime();
-  if (!payments) notFound();
   const from = readUpgradeFrom((await searchParams).from);
   const login = from ? `/?next=${encodeURIComponent(`/upgrade?from=${from}`)}#auth` : '/#auth';
   const token = (await cookies()).get('__Host-n5_session')?.value;
@@ -26,6 +22,6 @@ export default async function UpgradePage({ searchParams }: { searchParams: Prom
   const purchaseWindows=billing.billing_policy==='credits_v1' ? await readCreditPurchaseWindows(pool,session.account_id) : null;
   const plan = billing.effective_plan ?? effectivePlan(billing.plan, billing.plan_source, billing.plan_paid_until, new Date());
   return <><nav className="navigation"><Link className="brand" href="/dashboard"><span>◧</span> КлипМейкер</Link><Link href="/dashboard">Мои записи</Link><ThemeToggle initial={await requestTheme()} /></nav>
-    <main className="container"><UpgradeScreen purchaseWindows={purchaseWindows ?? undefined} creditMode={billing.billing_policy==='credits_v1'} salesEnabled={config.billingMode==='credits_v1'} title={PAID_PLAN_TITLE} price={formatRubles(PAID_PRICE_MINOR)} days={PAID_PLAN_DAYS}
+    <main className="container"><UpgradeScreen purchaseWindows={purchaseWindows ?? undefined} creditMode={true} catalogOnly={billing.billing_policy!=='credits_v1'} salesEnabled={!!payments && config.billingMode==='credits_v1' && billing.billing_policy==='credits_v1'} title={PAID_PLAN_TITLE} price={formatRubles(PAID_PRICE_MINOR)} days={PAID_PLAN_DAYS}
       paidMinutes={config.limits.N5_LIMIT_PAID_USER_MINUTES} current={{ plan, plan_source: billing.plan_source, plan_paid_until: billing.plan_paid_until }} /></main></>;
 }

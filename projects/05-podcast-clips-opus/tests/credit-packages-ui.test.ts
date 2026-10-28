@@ -54,3 +54,26 @@ it('synthetic compose and actual web/worker projections preserve explicit billin
   }
   delete config.services.web!.environment.N5_BILLING_MODE;expect(checkWiring(config)).toContain('web: N5_BILLING_MODE');
 });
+it('legacy catalogue shows all canonical packages with disabled checkout and preserves conditions',()=>{
+  const html=renderToStaticMarkup(createElement(UpgradeScreen,{creditMode:true,catalogOnly:true,salesEnabled:false,title:'Pro',price:'990 ₽',days:30,paidMinutes:270,current:{plan:'free',plan_source:'none',plan_paid_until:null}}));
+  for(const text of ['Старт','Про','300 кредитов','1800 кредитов','600 кредитов','Ваши текущие условия сохраняются','один раз','Ежемесячного пополнения нет'])expect(html).toContain(text);
+  expect((html.match(/<button disabled=""/g)??[])).toHaveLength(3);
+  expect(html).not.toContain('Не удалось определить даты');
+  expect(html).not.toContain('Тариф Pro');
+});
+it('cabinet exposes pricing and authenticated upgrade keeps catalogue open without a payment provider',()=>{
+  const layout=readFileSync('apps/web/src/app/dashboard/layout.tsx','utf8');
+  expect(layout).toMatch(/<Link href="\/upgrade\?from=partner_dashboard">Тарифы<\/Link>/);
+  expect(readFileSync('apps/web/src/app/dashboard/page.tsx','utf8')).toContain('<ProInterest creditMode={true}');
+  const source=readFileSync('apps/web/src/app/upgrade/page.tsx','utf8');
+  expect(source).not.toContain('notFound');
+  expect(source).toContain('if (!session) redirect(login)');
+  expect(source).toContain('creditMode={true}');
+  expect(source).toContain("catalogOnly={billing.billing_policy!=='credits_v1'}");
+  expect(source).toContain("salesEnabled={!!payments && config.billingMode==='credits_v1' && billing.billing_policy==='credits_v1'}");
+});
+it('payment outage keeps credit catalogue visible with every purchase disabled',()=>{
+  const html=renderToStaticMarkup(createElement(UpgradeScreen,{creditMode:true,salesEnabled:false,purchaseWindows:{baseStart:'2030-01-01T00:00:00Z',baseEnd:'2030-01-31T00:00:00Z',addonStart:'2030-01-01T00:00:00Z',addonEnd:'2030-01-31T00:00:00Z',scheduled:false},title:'Pro',price:'990 ₽',days:30,paidMinutes:270,current:{plan:'free',plan_source:'none',plan_paid_until:null}}));
+  expect((html.match(/<button disabled=""/g)??[])).toHaveLength(3);
+  expect(html).toContain('Продажа новых пакетов временно выключена');
+});
