@@ -9,9 +9,9 @@ import type { VideoService } from './video';
 import type { ScreenService } from './screen';
 import type { ShortLinkService } from './short-link';
 import type { GuestPackService } from './guest-pack';
-import type { PartnerService } from './partner';
+import { createPartnerCodeSchema, type PartnerService } from './partner';
 import { createVideoSchema, UploadError } from './upload-contract';
-interface Context { cta?: Pick<VideoCtaService, 'setCta'>; music?: Pick<ClipMusicService, 'setMusic'>; referralCookie?: string; erasure?: ErasureService; interest?: Pick<InterestService, 'create'>; partners?: Pick<PartnerService, 'apply' | 'dashboard'>; ipPrefix?: string; account: string; idempotencyKey: string | null; requestId: string; video: Pick<VideoService, 'create'>; retry?: Pick<VideoRetryService, 'retry'>; screen?: ScreenService; links?: Pick<ShortLinkService, 'copy'>; guests?: Pick<GuestPackService, 'create' | 'send' | 'revoke'> }
+interface Context { cta?: Pick<VideoCtaService, 'setCta'>; music?: Pick<ClipMusicService, 'setMusic'>; referralCookie?: string; erasure?: ErasureService; interest?: Pick<InterestService, 'create'>; partners?: Pick<PartnerService, 'apply' | 'dashboard' | 'createCode'>; ipPrefix?: string; account: string; idempotencyKey: string | null; requestId: string; video: Pick<VideoService, 'create'>; retry?: Pick<VideoRetryService, 'retry'>; screen?: ScreenService; links?: Pick<ShortLinkService, 'copy'>; guests?: Pick<GuestPackService, 'create' | 'send' | 'revoke'> }
 const t = initTRPC.context<Context>().create({ errorFormatter({ shape, error }) {
   const cause = error.cause;
   return { ...shape, data: { ...shape.data, ...(cause instanceof UploadError ? { upload: { code: cause.code, message: cause.message, ...cause.details } } : {}) } };
@@ -81,6 +81,8 @@ export const appRouter = t.router({
     return s.apply(ctx.account, input, ctx.ipPrefix, ctx.referralCookie);
   })),
 partner: t.router({
+  createCode: validatedProcedure.input(createPartnerCodeSchema)
+    .mutation(({ ctx, input }) => partnerResult(ctx, s => s.createCode(ctx.account, input))),
   dashboard: validatedProcedure.input(z.object({ code_id: z.string().uuid().optional() }).strict())
     .query(({ ctx, input }) => partnerResult(ctx, s => s.dashboard(ctx.account, input.code_id))),
 }), video: t.router({

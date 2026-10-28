@@ -3,6 +3,7 @@ import { randomBytes, randomUUID } from 'node:crypto';
 import { createPool, type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { ensureTestDatabase } from '../scripts/test-db.mjs';
+import { PartnerLandingService } from '../apps/web/src/server/partner-landing';
 import { PartnerService } from '../apps/web/src/server/partner';
 import { ensurePartnerCode } from '../apps/web/src/server/partner-code';
 import { ipPrefix } from '../apps/web/src/server/ip';
@@ -221,8 +222,8 @@ describe.skipIf(!url)('PostgreSQL partner attribution', () => {
     await pool.query('INSERT INTO clip_link(id,clip_id,code,unique_view_count) VALUES($1,$2,$3,2)', [link, clip, '23456789AB']);
     await pool.query(`INSERT INTO growth_event(type,clip_link_id,partner_code_id,ip_prefix,day)
       VALUES('link_view',$1,$2,'192.0.2.0/24','2026-09-23'),('link_view',$1,$2,'198.51.100.0/24','2026-09-23')`, [link, codeId]);
-    expect((await service.dashboard(owner)).counters).toEqual({ visits: 2, registrations: 1, uploaded: 1, shared: 1, guests: 0 });
-    expect((await service.dashboard(other)).counters).toEqual({ visits: 0, registrations: 0, uploaded: 0, shared: 0, guests: 0 });
+    expect((await service.dashboard(owner)).counters).toEqual({ visits: 2, registrations: 1, uploaded: 1, shared: 1, guests: 0, purchases: 0, revenue_minor: 0 });
+    expect((await service.dashboard(other)).counters).toEqual({ visits: 0, registrations: 0, uploaded: 0, shared: 0, guests: 0, purchases: 0, revenue_minor: 0 });
   });
   it('personal code creation is serialized and blocked code is never regenerated', async () => {
     const create = async () => {
@@ -234,4 +235,73 @@ describe.skipIf(!url)('PostgreSQL partner attribution', () => {
     await pool.query("UPDATE partner_code SET status='blocked' WHERE id=$1", [results[0]!.id]);
     expect(await create()).toEqual(results[0]);
   });
+  it('campaign creation is owned, idempotent, concurrent and cannot escape blocked codes', async () => {
+    const results = await Promise.all(Array.from({ length: 12 }, () => service.createCode(visitor, { code: 'BLOGGER1' })));
+    expect(new Set(results.map(r => r.id)).size).toBe(1);
+    await expect(service.createCode(other, { code: 'BLOGGER1' })).rejects.toMatchObject({ status: 409, message: 'Код недоступен' });
+    await expect(service.dashboard(other, results[0]!.id)).rejects.toMatchObject({ status: 403 });
+    await pool.query("UPDATE partner_code SET status='blocked' WHERE id=$1", [results[0]!.id]);
+    expect(await service.createCode(visitor, { code: 'BLOGGER1' })).toMatchObject({ status: 'blocked' });
+    await expect(service.createCode(visitor, { code: 'BLOGGER2' })).rejects.toMatchObject({ status: 409 });
+    await pool.query("UPDATE account SET status='erasing' WHERE id=$1", [visitor]);
+    await expect(service.createCode(visitor, { code: 'BLOGGER1' })).rejects.toMatchObject({ status: 404 });
+  });
+  it('direct landing deduplicates concurrent prefixes/day/code and excludes self', async () => {
+    const landing = new PartnerLandingService(pool, () => now), link = await landing.find('CODE123');
+    await Promise.all(Array.from({ length: 24 }, () => landing.recordView(link, null, prefix)));
+    await landing.recordView(link, owner, '198.51.100.0/24');
+    expect((await service.dashboard(owner)).counters.visits).toBe(1);
+    await landing.recordView(link, null, '198.51.100.0/24');
+    now = new Date('2026-09-23T21:00:00Z');
+    await landing.recordView(link, null, prefix);
+    expect((await service.dashboard(owner)).counters.visits).toBe(3);
+    await pool.query("UPDATE partner_code SET status='blocked' WHERE id=$1", [codeId]);
+    await expect(landing.find('CODE123')).rejects.toMatchObject({ status: 404 });
+    await expect(landing.find('bad')).rejects.toMatchObject({ status: 404 });
+    await pool.query("UPDATE partner_code SET status='active' WHERE id=$1", [codeId]);
+    await pool.query("UPDATE account SET status='erasing' WHERE id=$1", [owner]);
+    await expect(landing.find('CODE123')).rejects.toMatchObject({ status: 404 });
+  });
+  it('accepted package sales exclude fake/refund/review/identity/old-intent and survive no join multiplication', async () => {
+    await seed('cookie');
+    await pool.query("UPDATE attribution SET assigned_at='2026-09-20T00:00:00Z' WHERE account_id=$1", [visitor]);
+    const pay = async (options: { provider?: string; status?: string; review?: boolean; old?: boolean; identity?: boolean; fulfilled?: boolean; amount?: number; paidOld?: boolean; intentStatus?: string } = {}) => {
+      const intent = randomUUID(), providerId = randomUUID(), amount = options.amount ?? 99000;
+      await pool.query(`INSERT INTO payment_intent(id,account_id,price_minor,idempotency_key,provider_payment_id,status,sku,offer_version,grant_seconds,fulfilled_at,created_at)
+        VALUES($1::uuid,$2,99000,$1::text,$3,$6,'start_v1','credits_v1_d00',18000,$4,$5)`,
+      [intent, visitor, providerId, options.fulfilled === false ? null : new Date('2026-09-22'), new Date(options.old ? '2026-09-19' : '2026-09-21'), options.intentStatus ?? 'succeeded']);
+      await pool.query(`INSERT INTO payment(intent_id,account_id,provider,provider_payment_id,amount_minor,status,needs_review,review_reason,paid_at)
+        VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)`, [intent, visitor, options.provider ?? 'yookassa', options.identity === false ? randomUUID() : providerId,
+        amount, options.status ?? 'succeeded', options.review ?? false, options.review ? 'amount_mismatch' : null, new Date(options.paidOld ? '2026-09-19' : '2026-09-22')]);
+      return intent;
+    };
+    const first = await pay(); await pay();
+    for (const options of [{ provider: 'fake' }, { status: 'refunded' }, { review: true }, { old: true }, { identity: false }, { fulfilled: false }, { amount: 123 }, { paidOld: true }, { intentStatus: 'canceled' }]) await pay(options);
+    expect((await service.dashboard(other)).counters).toMatchObject({ purchases: 2, revenue_minor: 198000 });
+    expect((await service.dashboard(owner)).counters).toMatchObject({ purchases: 0, revenue_minor: 0 });
+    await pool.query("UPDATE payment SET status='refunded' WHERE intent_id=$1", [first]);
+    expect((await service.dashboard(other)).counters).toMatchObject({ purchases: 1, revenue_minor: 99000 });
+    // Changing code resets current financial assignment while preserving registration history.
+    const before = await attribution(); await apply(); const after = await attribution();
+    expect(after.created_at).toEqual(before.created_at); expect(after.assigned_at.getTime()).toBeGreaterThan(before.assigned_at.getTime());
+    expect((await service.dashboard(owner)).counters).toMatchObject({ purchases: 0, revenue_minor: 0 });
+    const fresh = randomUUID(), providerId = randomUUID();
+    await pool.query(`INSERT INTO payment_intent(id,account_id,price_minor,idempotency_key,provider_payment_id,status,sku,offer_version,grant_seconds,fulfilled_at,created_at)
+      VALUES($1::uuid,$2,399000,$1::text,$3,'succeeded','pro_v1','credits_v1_d00',108000,clock_timestamp(),clock_timestamp())`, [fresh, visitor, providerId]);
+    await pool.query(`INSERT INTO payment(intent_id,account_id,provider,provider_payment_id,amount_minor,paid_at)
+      VALUES($1,$2,'yookassa',$3,399000,clock_timestamp())`, [fresh, visitor, providerId]);
+    expect((await service.dashboard(owner, codeId)).counters).toMatchObject({ purchases: 1, revenue_minor: 399000 });
+    const addon = randomUUID(), addonProviderId = randomUUID();
+    await pool.query(`INSERT INTO payment_intent(id,account_id,price_minor,idempotency_key,provider_payment_id,status,sku,offer_version,grant_seconds,fulfilled_at,created_at)
+      VALUES($1::uuid,$2,149000,$1::text,$3,'succeeded','addon_v1','credits_v1_d00',36000,clock_timestamp(),clock_timestamp())`, [addon, visitor, addonProviderId]);
+    await pool.query(`INSERT INTO payment(intent_id,account_id,provider,provider_payment_id,amount_minor,paid_at)
+      VALUES($1,$2,'yookassa',$3,149000,clock_timestamp())`, [addon, visitor, addonProviderId]);
+    expect((await service.dashboard(owner)).counters).toMatchObject({ purchases: 2, revenue_minor: 548000 });
+  });
+  it('same code source promotion preserves assigned cutoff', async () => {
+    await apply('CODE123', 'cookie'); const before = await attribution();
+    await apply('CODE123', 'explicit');
+    expect((await attribution()).assigned_at).toEqual(before.assigned_at);
+  });
+
 });
