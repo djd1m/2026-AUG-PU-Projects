@@ -1,6 +1,7 @@
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { privateFixtureOrigin } from './responsive/container-run.mjs';
 import { parseArgs, loadFixture, preflight, exitCode } from './responsive/input.mjs';
 import { domRules, textZoomRule, axeRule, lintCSS, FIRST_SCREEN_VIEWPORTS, firstScreenSelectors, firstScreenRule } from './responsive/rules.mjs';
 
@@ -15,8 +16,8 @@ async function navigate(page, url) {
   if (!response || response.status() >= 400) throw new Error(`Маршрут недоступен: HTTP ${response?.status() ?? 'нет ответа'}`);
   if (new URL(page.url()).pathname !== new URL(url).pathname) throw new Error('Неожиданное перенаправление маршрута');
 }
-export async function login(browser, base, fixture) {
-  const context = await browser.newContext();
+export async function login(browser, base, fixture, contextOptions = {}) {
+  const context = await browser.newContext(contextOptions);
   try {
     const page = await context.newPage();
     for (let attempt = 0; attempt < 2; attempt++) {
@@ -61,11 +62,12 @@ export function summary(report) {
     report.errors.map(e => `НЕ ВЫПОЛНЕНО: ${e}\n`).join('') + '\n' + rows.map(f => `- ${f.severity} ${f.rule}${f.axeRule ? '/' + f.axeRule : ''} ${f.route ?? 'CSS'} ${f.engine ?? ''} ${f.theme ?? ''} ${f.width ?? ''} ${f.selector}: ${f.message} ${JSON.stringify(f.size ?? null)}`).join('\n') +
     '\n\nR2/axe target-size с одинаковым селектором объединены только в summary. Скриншоты — улики, не ассерт.\nОткрытие /c/ пишет link_view (не чаще раза в сутки на префикс); /g/ пишет guest_opened.\nR5 не проверяет input[type=file], checkbox, radio, hidden.\n';
 }
-export async function main(args, { launchOptions = {} } = {}) {
+export async function main(args, { launchOptions = {}, contextOptions = {} } = {}) {
   const report = { startedAt: new Date().toISOString(), pages: [], findings: [], errors: [] };
   let options, fixture;
   try {
     options = parseArgs(args);
+    if (contextOptions.ignoreHTTPSErrors && !privateFixtureOrigin(options.base)) throw new Error('TLS exception requires private fixture');
     report.configuration = { base: options.base, engines: options.engines, widths: options.widths, themes: THEMES };
     fixture = await loadFixture(options.fixture, options.base);
     await mkdir(options.out, { recursive: true });
@@ -75,9 +77,9 @@ export async function main(args, { launchOptions = {} } = {}) {
     for (const engine of options.engines) {
       const browser = await playwright[engine].launch({ headless: true, ...launchOptions });
       try {
-        const storageState = await login(browser, options.base, fixture);
+        const storageState = await login(browser, options.base, fixture, contextOptions);
         for (const theme of THEMES) {
-          const probe = await themedContext(browser, {}, theme, options.base);
+          const probe = await themedContext(browser, { ...contextOptions }, theme, options.base);
           try {
             const page = await probe.newPage();
             await navigate(page, options.base + '/');
@@ -88,7 +90,7 @@ export async function main(args, { launchOptions = {} } = {}) {
           } finally { await probe.close(); }
           for (const scenario of scenarios(engine, playwright.devices, options.widths)) {
             for (const route of fixture.routes) {
-              const context = await themedContext(browser, { ...scenario.options, ...(route.startsWith('/dashboard') ? { storageState } : {}) }, theme, options.base);
+              const context = await themedContext(browser, { ...contextOptions, ...scenario.options, ...(route.startsWith('/dashboard') ? { storageState } : {}) }, theme, options.base);
               const meta = { engine, theme, scenario: scenario.name, route, width: scenario.options.viewport.width, height: scenario.options.viewport.height };
               try {
                 const page = await context.newPage();
@@ -114,7 +116,7 @@ export async function main(args, { launchOptions = {} } = {}) {
               const scenario = `first-screen-${w}x${h}`;
               const meta = { engine, theme, scenario, route, width: w, height: h };
               // Экран записи — под входом (фича 29): без storageState прогон упёрся бы в форму входа.
-              const context = await themedContext(browser, { viewport: { width: w, height: h }, isMobile: true, hasTouch: true,
+              const context = await themedContext(browser, { ...contextOptions, viewport: { width: w, height: h }, isMobile: true, hasTouch: true,
                 ...(route.startsWith('/dashboard') ? { storageState } : {}) }, theme, options.base);
               try {
                 const page = await context.newPage();

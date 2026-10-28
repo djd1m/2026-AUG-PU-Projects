@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { observeSignup } from '../lib/acquisition-analytics';
+import { clearSupportIdentity } from '../lib/support-client';
 import { rpc } from '../lib/rpc';
 import { safeNextPath } from '../lib/payment-return';
 // Фича 30: после входа — на оформление тарифа, если пришли с /upgrade (только закрытый набор адресов, не открытый редирект).
@@ -23,6 +24,7 @@ export function AuthForm() {
     const form = new FormData(e.currentTarget);
     try {
       if (!signedIn) {
+        clearSupportIdentity();
         const response = await fetch(`/api/auth/${register ? 'register' : 'login'}`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: form.get('email'), password: form.get('password') }) });
         const body = await response.json(); if (!response.ok) throw new Error(body.error ?? 'Не удалось войти');
@@ -44,5 +46,6 @@ export function AuthForm() {
       try { await rpc('code.apply', { discard_referral: true }, true); if (pendingRegistration.current) { observeSignup(); pendingRegistration.current = false; } router.push(afterLogin()); router.refresh(); }
       catch { setError('Не удалось продолжить. Повторите позже'); } finally { setBusy(false); }
     }}>Продолжить без применения кода</button>}
+    <nav className="support-links" aria-label="Помощь со входом"><a href="/forgot">Забыли пароль?</a><a href="/support">Поддержка</a></nav>
     {error && <p role="alert">{error}</p>}</form>;
 }

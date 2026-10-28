@@ -1,0 +1,47 @@
+export type PublicSupport = { mode: 'disabled' | 'test' | 'libredesk'; baseURL: string | null; inboxID: string | null; identifiedEnabled: boolean; contactEmail: string | null; synthetic: boolean };
+export type SupportAccount = { id: string; email: string; verified: boolean } | null;
+export type SafeContext = { accountId?: string; videoId?: string; status?: string; failureCode?: string; at: string };
+export type WidgetAPI = { show(): void; setUser(jwt: string): void; logout(): void; destroy?(): void };
+declare global { interface Window { Libredesk?: WidgetAPI; n5SupportUnavailable?: boolean; LibredeskSettings?: { baseURL: string; inboxID: string; hideLauncher: boolean }; } }
+export class SupportError extends Error {
+  constructor(public status: number, public code: string, message: string) { super(message); }
+}
+export async function supportRequest<T>(path: string, body?: object): Promise<T> {
+  let response: Response;
+  try { response = await fetch(path, { method: body === undefined ? 'GET' : 'POST', credentials: 'same-origin', cache: 'no-store',
+    headers: body === undefined ? undefined : { 'Content-Type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body) }); }
+  catch { throw new SupportError(0, 'network', 'Нет связи с сервером. Повторите позже.'); }
+  const value = await response.json().catch(() => null);
+  if (!response.ok) throw new SupportError(response.status, value?.error?.code ?? 'unavailable',
+    response.status === 404 ? 'Данные недоступны.' : response.status === 401 ? 'Войдите в аккаунт и повторите действие.' : value?.error?.message ?? 'Сервис временно недоступен.');
+  return value as T;
+}
+// Only the fragment is read. Clear it before any asynchronous work, never persist it.
+export function takeFragmentToken(location: Pick<Location, 'hash' | 'pathname' | 'search'>, history: Pick<History, 'replaceState'>): string {
+  const fragment = location.hash;
+  if (fragment) history.replaceState(null, '', location.pathname + location.search);
+  const token = new URLSearchParams(fragment.replace(/^#/, '')).get('token') ?? '';
+  return /^[A-Za-z0-9_-]{43}$/.test(token) ? token : '';
+}
+export const validPassword = (password: string) => password.length >= 8 && new TextEncoder().encode(password).length <= 72;
+export function clearSupportIdentity() {
+  if (typeof window === 'undefined') return;
+  try { window.Libredesk?.logout(); } catch { window.n5SupportUnavailable = true; try { window.Libredesk?.destroy?.(); } catch {} delete window.Libredesk; } finally {
+    delete window.LibredeskSettings;
+    window.dispatchEvent(new Event('n5:support-clear'));
+  }
+}
+export function loadSupportWidget(settings: PublicSupport): Promise<WidgetAPI> {
+  if (settings.mode === 'disabled' || !settings.baseURL || !settings.inboxID) return Promise.reject(new Error('Чат поддержки пока не подключён.'));
+  if (window.n5SupportUnavailable) return Promise.reject(new Error('Не удалось очистить чат. Перезагрузите страницу перед новым обращением.'));
+  if (window.Libredesk) return Promise.resolve(window.Libredesk);
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    const fail = () => { clearTimeout(timer); script.remove(); delete window.LibredeskSettings; reject(new Error('Не удалось загрузить чат. Используйте доступный способ связи ниже.')); };
+    const timer = setTimeout(fail, 8000);
+    window.LibredeskSettings = { baseURL: settings.baseURL!, inboxID: settings.inboxID!, hideLauncher: true };
+    script.src = new URL('/widget.js', settings.baseURL!).href; script.async = true; script.referrerPolicy = 'no-referrer';
+    script.onload = () => { clearTimeout(timer); if (window.Libredesk) resolve(window.Libredesk); else fail(); };
+    script.onerror = fail; document.head.append(script);
+  });
+}

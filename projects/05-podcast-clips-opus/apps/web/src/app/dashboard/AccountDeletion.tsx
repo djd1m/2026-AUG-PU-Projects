@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { clearSupportIdentity } from '../../lib/support-client';
 import { rpc } from '../../lib/rpc';
 export function ErasureStatus({ status, deadline }: { status: 'erasing' | 'deleted'; deadline: string }) {
   const router = useRouter(), [now, setNow] = useState<number | null>(null);
@@ -28,6 +29,7 @@ export function AccountDeletion() {
     if (!confirm || busy) return;
     setBusy(true); setError('');
     try {
+      clearSupportIdentity();
       const result = await rpc<{ accepted: true; erase_deadline: string }>('account.delete', { confirm: true }, true);
       setDeadline(result.erase_deadline); router.refresh();
     } catch (cause) { setError(cause instanceof Error ? cause.message : 'Не удалось запросить удаление'); }

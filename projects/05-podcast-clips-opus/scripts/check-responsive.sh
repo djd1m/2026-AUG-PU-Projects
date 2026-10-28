@@ -2,6 +2,9 @@
 # Run from the project root. Fixture/output paths must be inside the mounted project.
 set -uo pipefail
 cd "$(dirname "$0")/.." || exit 2
+if [[ -n "${N5_PLAYWRIGHT_CONTAINER:-}" && "${1:-}" != --test ]]; then
+  exec node scripts/responsive/container-run.mjs responsive "$@"
+fi
 if [[ "${1:-}" == --test ]]; then
   shift
   command=(node node_modules/vitest/vitest.mjs run --config vitest.browser.config.ts "$@")

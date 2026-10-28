@@ -16,5 +16,5 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
   const { screen, pool, config } = getScreenRuntime();
   const [result, remaining] = await Promise.all([screen.list(account, { cursor: cursor.success ? cursor.data : undefined }),
     remainingLimits(pool, config.limits, account)]);
-  return <><VideoUploader creditMode={!!remaining.credits} /><LimitsPanel remaining={remaining} /><ProInterest creditMode={!!remaining.credits} source="partner_dashboard" paymentsOn={config.payments.mode !== 'off'} /><PartnerPanel /><VideoList videos={result.videos} nextCursor={result.next_cursor} /><AccountDeletion /></>;
+  return <><nav className="support-links" aria-label="Помощь"><a href="/verify-email">Подтвердить почту</a><a href="/support">Поддержка</a></nav><VideoUploader creditMode={!!remaining.credits} /><LimitsPanel remaining={remaining} /><ProInterest creditMode={!!remaining.credits} source="partner_dashboard" paymentsOn={config.payments.mode !== 'off'} /><PartnerPanel /><VideoList videos={result.videos} nextCursor={result.next_cursor} /><AccountDeletion /></>;
 }
