@@ -186,10 +186,10 @@ export async function expirePaidPlans(pool: Pool, batch: number): Promise<number
   return expired.rowCount ?? 0;
 }
 
-export interface AccountBilling { billing_policy?: string; effective_plan?: 'free'|'paid'; plan: string; plan_source: string; plan_paid_until: string | null }
+export interface AccountBilling { owner_unlimited?: boolean; billing_policy?: string; effective_plan?: 'free'|'paid'; plan: string; plan_source: string; plan_paid_until: string | null }
 export async function readAccountBilling(pool: Pool, accountId: string): Promise<AccountBilling | null> {
   if (!isUuid(accountId)) return null;
-  const row = (await pool.query<{ billing_policy: string; effective_plan: 'free'|'paid'; plan: string; plan_source: string; plan_paid_until: Date | null }>(`SELECT a.plan,a.plan_source,a.plan_paid_until,a.billing_policy,${effectivePlanSql('a')} AS effective_plan
+  const row = (await pool.query<{ owner_unlimited: boolean; billing_policy: string; effective_plan: 'free'|'paid'; plan: string; plan_source: string; plan_paid_until: Date | null }>(`SELECT a.owner_unlimited,a.plan,a.plan_source,a.plan_paid_until,a.billing_policy,${effectivePlanSql('a')} AS effective_plan
     FROM account a WHERE id = $1 AND status = 'active'`, [accountId])).rows[0];
   return row ? { ...row,plan: row.plan, plan_source: row.plan_source, plan_paid_until: row.plan_paid_until?.toISOString() ?? null } : null;
 }

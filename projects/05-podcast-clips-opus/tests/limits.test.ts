@@ -11,6 +11,7 @@ import { failureMessages } from '../apps/web/src/lib/screen-contract';
 import { remainingLimits } from '../apps/web/src/server/limits';
 import { InterestService } from '../apps/web/src/server/interest';
 import { LimitsPanel } from '../apps/web/src/app/dashboard/LimitsPanel';
+import { UpgradeScreen } from '../apps/web/src/app/upgrade/UpgradeScreen';
 import { ProInterest } from '../apps/web/src/app/dashboard/ProInterest';
 vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
 const now = new Date('2026-09-23T20:59:59Z');
@@ -90,4 +91,13 @@ it('interest atomically records existing event and rolls back if event storage f
 it('owner unlimited UI precedes zero credit balance without fabricated credits or purchase',()=>{
   const html=renderToStaticMarkup(createElement(LimitsPanel,{remaining:{owner_unlimited:true,uploads:0,minutes:0,selections:0,resets_at:now.toISOString(),credits:{available_seconds:0,reserved_seconds:0,next_expiry:null}}}));
   expect(html).toContain('Без лимитов');expect(html).not.toMatch(/Выбрать пакет|Infinity|Доступно кредитов/);
+});
+
+it('owner catalog keeps prices but disables purchases and hides unavailable legacy/date notices',()=>{
+  const html=renderToStaticMarkup(createElement(UpgradeScreen,{ownerUnlimited:true,creditMode:true,catalogOnly:true,salesEnabled:true,
+    title:'Pro',price:'990 ₽',days:30,paidMinutes:270,current:{plan:'paid',plan_source:'none',plan_paid_until:null}}));
+  expect(html).toContain('Доступ владельца: без лимитов, покупать пакет не нужно');
+  for(const price of ['990','3990','1490']) expect(html.replaceAll(' ','')).toContain(price);
+  expect((html.match(/disabled=""/g)??[])).toHaveLength(3);
+  expect(html).not.toMatch(/Не удалось определить даты|Ваши текущие условия сохраняются|Продажа новых пакетов временно/);
 });

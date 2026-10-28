@@ -1,7 +1,7 @@
 import { afterAll,beforeAll,describe,it,expect } from 'vitest';
 import { randomBytes,randomUUID } from 'node:crypto';
 import { createPool,transaction,setOwnerUnlimited,hasOwnerUnlimited,checkAndConsumeQuota,refundUploadSlot,
-  reserveVideoCreditsTx,finalizeVideoCreditsTx,lockCreditAccountForVideo,effectivePlanSql,type Pool } from '../packages/db/src/index';
+  reserveVideoCreditsTx,finalizeVideoCreditsTx,lockCreditAccountForVideo,effectivePlanSql,readAccountBilling,type Pool } from '../packages/db/src/index';
 import { migrate } from '../packages/db/src/migrate';
 import { loadLimits } from '../packages/shared/src/config';
 import { environment } from './fixtures/environment';
@@ -26,9 +26,25 @@ describe.skipIf(!url)('private owner entitlement on PostgreSQL',()=>{
       .toEqual({plan:'free',plan_source:'none',effective:'paid'});
     const audit=(await pool.query(`SELECT plan_before,plan_after,reason FROM operator_action WHERE account_id=$1`,[id])).rows;
     expect(audit).toEqual([{plan_before:'free',plan_after:'free',reason:'owner_unlimited:false->true; owner test'}]);
+    expect((await readAccountBilling(pool,id))?.owner_unlimited).toBe(true);
     await set(id,false);expect(await hasOwnerUnlimited(pool,id)).toBe(false);
     await pool.query("UPDATE account SET status='erasing',owner_unlimited=true WHERE id=$1",[id]);
     expect(await hasOwnerUnlimited(pool,id)).toBe(false);expect(await set(id,true)).toEqual({kind:'not_found'});
+  });
+  it('audit INSERT failure rolls back entitlement and leaves no audit row',async()=>{
+    const id=await account();
+    await pool.query(`CREATE FUNCTION reject_owner_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN RAISE EXCEPTION 'owner audit unavailable'; END $$`);
+    await pool.query(`CREATE TRIGGER reject_owner_audit BEFORE INSERT ON operator_action FOR EACH ROW EXECUTE FUNCTION reject_owner_audit()`);
+    try {
+      await expect(set(id,true)).rejects.toThrow('owner audit unavailable');
+      expect(await hasOwnerUnlimited(pool,id)).toBe(false);
+      expect((await pool.query('SELECT id FROM operator_action WHERE account_id=$1',[id])).rows).toHaveLength(0);
+    } finally {
+      await pool.query('DROP TRIGGER reject_owner_audit ON operator_action');
+      await pool.query('DROP FUNCTION reject_owner_audit()');
+    }
+    expect(await set(id,true)).toMatchObject({kind:'updated',before:false,after:true});
   });
   it('owner records all personal usage above ceilings, never consumes global pool; ordinary still refuses',async()=>{
     const owner=await account(),ordinary=await account();await set(owner,true);
