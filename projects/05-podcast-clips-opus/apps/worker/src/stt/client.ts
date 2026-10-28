@@ -10,7 +10,12 @@ export class ProviderError extends Error {
 export function createTranscriber(config: SttConfig, request: typeof fetch = fetch): Transcriber {
   if (config.mode === 'fake') return { async transcribe(_path, duration, signal) {
     signal.throwIfAborted();
-    return { language: 'ru', words: [{ word: 'Проверка', start: 0, end: Math.min(1, duration) }], segments: [] };
+    // Explicit fake mode only: these words/times are synthetic, not recognized speech.
+    if (!Number.isFinite(duration) || duration <= 0) return parseTranscript({}, duration);
+    const words = Array.from({ length: Math.ceil(duration) }, (_, start) => ({
+      word: 'Тест', start, end: Math.min(start + 1, duration),
+    }));
+    return { language: 'ru', words, segments: [{ text: words.map(word => word.word).join(' '), start: 0, end: duration }] };
   } };
   if (config.provider === 'yandex') return createYandexTranscriber(config.apiKey!);
   return { async transcribe(path, duration, signal) {
