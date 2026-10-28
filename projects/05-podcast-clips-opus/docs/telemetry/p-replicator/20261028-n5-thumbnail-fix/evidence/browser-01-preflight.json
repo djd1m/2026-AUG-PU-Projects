@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-28T05:20:01.386944+00:00",
+  "run_id": "20261028-n5-thumbnail-fix",
+  "work_unit_id": "browser-01",
+  "readiness": "ready",
+  "source_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+  "build_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+  "fixture_sha256": "22a166ba5c9558976c8378f865a6daec91b63a117be68786df355bec30490074",
+  "driver_sha256": "e92751dba920a06b6f00e9ef2f5553f42337ae0674702713ee53f81456ea15c4",
+  "actual_SQL_clip_statuses": [
+    "done",
+    "done",
+    "done"
+  ],
+  "browser_container": "codex-ui-playwright",
+  "fresh_probe": {
+    "engine": "chromium",
+    "version": "153.0.8010.12",
+    "status": 200
+  },
+  "TLS": "explicit private self-signed only",
+  "expected_effects": "synthetic login/session and actual download event on test account; no realusers/providerrequests",
+  "free_disk_gib": 2.924
+}

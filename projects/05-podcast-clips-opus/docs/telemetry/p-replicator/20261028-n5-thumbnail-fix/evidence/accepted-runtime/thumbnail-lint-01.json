@@ -1,0 +1,17 @@
+{
+  "check": "thumbnail-lint-01",
+  "command": [
+    "npm",
+    "run",
+    "lint"
+  ],
+  "source_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+  "started_at": "2026-10-28T05:10:26.109222+00:00",
+  "elapsed_seconds": 3.004,
+  "exit_code": 0,
+  "stopped_reason": null,
+  "node": "22.22.3",
+  "environment": "isolated *_test DB, Redis15/testMinIO, fake models, payments off",
+  "log": "/tmp/n5-thumbnail-checks-20261028/thumbnail-lint-01.log",
+  "free_disk_gib": 2.819
+}

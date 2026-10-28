@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-28T04:54:24.881875+00:00",
+  "cleanup": "only completed clean redundant own worktrees; no database/media/live dependency deletion",
+  "removed": [
+    {
+      "path": "/tmp/n5-support-ui-20261028",
+      "head": "9c24a448c5accdd3d44b45dde619962b35aa606e",
+      "all_branch_patches_integrated": true,
+      "tracked_and_untracked_clean": true,
+      "live_dependency_or_mount_or_cwd_refs": false,
+      "logical_bytes_before": 90953240,
+      "observed_available_change_bytes": 110260224,
+      "branch_and_commits_preserved_in_common_git": true
+    },
+    {
+      "path": "/tmp/n5-yandex-stt-code-20261027",
+      "head": "c25a290ffc6722175c890fe7958fc5ab8ce9df8c",
+      "all_branch_patches_integrated": true,
+      "tracked_and_untracked_clean": true,
+      "live_dependency_or_mount_or_cwd_refs": false,
+      "logical_bytes_before": 98399527,
+      "observed_available_change_bytes": 119091200,
+      "branch_and_commits_preserved_in_common_git": true
+    },
+    {
+      "path": "/tmp/n5-cloudru-foundation-code-20261026",
+      "head": "74742a64e6e6c36313bcff5ed23fb044b3a21e67",
+      "all_branch_patches_integrated": true,
+      "tracked_and_untracked_clean": true,
+      "live_dependency_or_mount_or_cwd_refs": false,
+      "logical_bytes_before": 97509740,
+      "observed_available_change_bytes": 117563392,
+      "branch_and_commits_preserved_in_common_git": true
+    }
+  ],
+  "available_after_bytes": 3086151680
+}

@@ -1,0 +1,82 @@
+{
+  "at": "2026-10-28T05:30:17.869424+00:00",
+  "source_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+  "build_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+  "accepted_AC": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "full_tests": 1259,
+  "test_files": 131,
+  "skips": 0,
+  "SQL_done_clips": 3,
+  "full_resolution_MP4s_with_near_end_frame": 3,
+  "JPEGs_with_full_decode": 3,
+  "browser_checks": 91,
+  "browser_screenshots": 8,
+  "browser_errors": 0,
+  "actual_browsers": [
+    {
+      "name": "chromium",
+      "version": "153.0.8010.12"
+    },
+    {
+      "name": "webkit",
+      "version": "26.6"
+    }
+  ],
+  "widths": [
+    360,
+    900
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "UI_clicked_download_byte_equal": true,
+  "models": "explicit synthetic fake only",
+  "pipeline_wall_seconds": 40.879,
+  "limits": [
+    "local self-signed private TLS",
+    "Linux headless browser not physicaliPhone",
+    "single synthetic case not p95/liveSTTquality/productiondeployment",
+    "previous failedtestattempts retained"
+  ],
+  "receipts": {
+    "thumbnail-build-01": {
+      "path": "docs/telemetry/p-replicator/20261028-n5-thumbnail-fix/evidence/accepted-runtime/thumbnail-build-01.json",
+      "sha256": "4feeba84191abd90529eb207ddd8ded3e55cd2faff354a32585ef76210a55845"
+    },
+    "thumbnail-full-test-01": {
+      "path": "docs/telemetry/p-replicator/20261028-n5-thumbnail-fix/evidence/accepted-runtime/thumbnail-full-test-01.json",
+      "sha256": "0fb9c20438d84bb88e766596c00fc7e91135f0add82e6779ceba2b382d4f8583"
+    },
+    "thumbnail-types-01": {
+      "path": "docs/telemetry/p-replicator/20261028-n5-thumbnail-fix/evidence/accepted-runtime/thumbnail-types-01.json",
+      "sha256": "ddfdd861f5c574e8aea27b633402fae41e385c3c86f038b70a8609611795fbff"
+    },
+    "thumbnail-lint-01": {
+      "path": "docs/telemetry/p-replicator/20261028-n5-thumbnail-fix/evidence/accepted-runtime/thumbnail-lint-01.json",
+      "sha256": "32dbd103011480c274e6b3f0625da74516dea3cafdbca6d620c7f86323d5edbb"
+    },
+    "pipeline03": {
+      "path": "docs/telemetry/p-replicator/20261028-n5-thumbnail-fix/evidence/accepted-runtime/pipeline-03.json",
+      "sha256": "7f7cbd7c248977be09bad9f94fe799740d1ac9e9eaead8317dab01507a355115"
+    },
+    "media": {
+      "path": "docs/telemetry/p-replicator/20261028-n5-thumbnail-fix/evidence/accepted-runtime/media-verification.json",
+      "sha256": "a5092a1148bb18ea4f2bf545ea9af0aa4f20094852437f3969cf7fa68350c6c4"
+    },
+    "browser03": {
+      "path": "docs/telemetry/p-replicator/20261028-n5-thumbnail-fix/evidence/accepted-runtime/browser-03-terminal.json",
+      "sha256": "5b0ea2a918450dcbd5d9c511397b1304153a0cf990cc5c775434bdc92ead8922"
+    },
+    "browser_report": {
+      "path": "docs/telemetry/p-replicator/20261028-n5-thumbnail-fix/evidence/accepted-runtime/browser-03-report.json",
+      "sha256": "f14d5a87376b9962d95cc63e878d0b6c885e0d26702d1e2dad519e2461b80a99"
+    }
+  }
+}

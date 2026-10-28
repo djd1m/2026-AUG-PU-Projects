@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-28T05:14:39.872169+00:00",
+  "run_id": "20261028-n5-thumbnail-fix",
+  "work_unit_id": "full-pipeline-02",
+  "readiness": "ready",
+  "source_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+  "build_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+  "worker_compaction_js_sha256": "1b543ad4fe3a193300128d419d1db6afcc743e501961e591573d7ea1d1b94fda",
+  "worker_entry_sha256": "0da810313064f6c3e66cc16ef4ee9f3bd63723cb425003b9f08d02faff8fa95f",
+  "web_build_id_sha256": "1abc3fc5b001d15cde54f6c073ad7bca05f84daf06b94bf6d19dd15e015ef201",
+  "synthetic_input_sha256": "2ca072cf7af3641d5e544b39e5c2be911560e0b98daf941a0e9afdee57bb5ebb",
+  "initial_private_fixture_sha256": "63348d6c42d42333ccc0255d59c5e34cc8a0c13011821b0264e445bde57580ea",
+  "environment": "isolated n5_support_e2e_test/Redis14/local dedicated MinIO bucket; explicit fake models/payment off",
+  "fresh_browser_probes": [
+    {
+      "engine": "chromium",
+      "version": "153.0.8010.12",
+      "status": 200
+    },
+    {
+      "engine": "webkit",
+      "version": "26.6",
+      "status": 200
+    }
+  ],
+  "workers_alive": 3,
+  "TLS": "private self-signed only; no production claim",
+  "expected_effects": "synthetic video/jobs/clips/S3/creditcharge only; no realusers or paid calls",
+  "command_as_data": [
+    "node",
+    "scripts/seed-ui-fixture.mjs",
+    "/tmp/n5-support-e2e-20261028/synthetic-source-200s.mp4",
+    "/tmp/n5-thumbnail-e2e-20261028/ui-fixture-private.json"
+  ],
+  "free_disk_gib": 2.91
+}
