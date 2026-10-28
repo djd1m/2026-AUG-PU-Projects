@@ -110,6 +110,13 @@ export async function textZoomRule(page) {
   });
 }
 
+/**
+ * Portable public result type: do not infer a path into an overlaid axe-core installation.
+ * @typedef {{ rule: string, axeRule: string, selector: string, severity: string,
+ * impact: import('axe-core').ImpactValue | undefined, incomplete: boolean, message: string,
+ * size: { width: number, height: number } | null }} AxeFinding
+ */
+/** @returns {Promise<AxeFinding[]>} */
 export async function axeRule(page) {
   const { default: AxeBuilder } = await import('@axe-core/playwright');
   const result = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])

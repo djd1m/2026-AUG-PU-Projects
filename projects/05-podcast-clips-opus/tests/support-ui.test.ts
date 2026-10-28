@@ -34,7 +34,8 @@ describe('support recovery boundaries', () => {
     const fetch = vi.fn().mockResolvedValue({ ok: false, status: 401, json: async () => ({ error: { code: 'unauthorized', message: 'safe' } }) });
     vi.stubGlobal('fetch', fetch);
     await expect(supportRequest('/api/auth/email/confirm', { token: 'A'.repeat(43) })).rejects.toMatchObject({ status: 401, code: 'unauthorized' });
-    expect(fetch.mock.calls[0][1]).toMatchObject({ method: 'POST', credentials: 'same-origin', cache: 'no-store', body: JSON.stringify({ token: 'A'.repeat(43) }) });
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch.mock.calls[0]![1]).toMatchObject({ method: 'POST', credentials: 'same-origin', cache: 'no-store', body: JSON.stringify({ token: 'A'.repeat(43) }) });
   });
   it('sanitizes network errors without echoing URLs or tokens', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('https://private/#token=secret')));
