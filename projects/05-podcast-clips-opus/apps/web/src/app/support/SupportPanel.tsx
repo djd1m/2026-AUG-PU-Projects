@@ -31,7 +31,10 @@ export function SupportPanel({ support, account, videoId }: { support: PublicSup
     try {
       if (!identified) {
         if (anonymousReady.current && window.Libredesk) { window.Libredesk.show(); setOpened(true); }
-        else if (await openAnonymousSupport(support, epoch)) { anonymousReady.current = true; setOpened(true); }
+        else {
+          if (!await openAnonymousSupport(support, epoch)) return;
+          anonymousReady.current = true; setOpened(true);
+        }
         setMessage('Чат открыт без передачи почты аккаунта.');
         return;
       }
