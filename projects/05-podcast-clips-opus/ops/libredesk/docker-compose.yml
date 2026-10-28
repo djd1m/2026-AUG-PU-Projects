@@ -1,0 +1,109 @@
+name: n5-helpdesk
+
+x-logging: &bounded-logging
+  driver: json-file
+  options:
+    max-size: "5m"
+    max-file: "2"
+
+services:
+  app:
+    image: libredesk/libredesk:v2.9.0@sha256:e7aa3bac149323d21e8e130adc8d9dd83b2c4fc85f83bb3b08b544ffa3c7d201
+    platform: linux/amd64
+    restart: unless-stopped
+    command: ["./libredesk", "--config", "/libredesk/config.toml"]
+    mem_limit: 768m
+    logging: *bounded-logging
+    expose: ["9000"]
+    volumes:
+      - ${N5_HELPDESK_CONFIG_PATH:?set absolute private config path}:/libredesk/config.toml:ro
+      - uploads:/libredesk/uploads
+    networks: [edge, backend]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  proxy:
+    # Deployment must provide a verified already-local immutable Caddy image ID.
+    image: ${N5_HELPDESK_PROXY_IMAGE:?set verified local Caddy image ID}
+    restart: unless-stopped
+    command: ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
+    mem_limit: 64m
+    logging: *bounded-logging
+    ports:
+      - "127.0.0.1:${N5_HELPDESK_PORT:-4191}:8080"
+    configs:
+      - source: caddyfile
+        target: /etc/caddy/Caddyfile
+    networks: [edge]
+    depends_on: [app]
+
+  db:
+    image: ${N5_HELPDESK_PG_IMAGE:-postgres:16.4-alpine}
+    restart: unless-stopped
+    mem_limit: 256m
+    logging: *bounded-logging
+    environment:
+      POSTGRES_DB: n5_helpdesk
+      POSTGRES_USER: n5_helpdesk
+      POSTGRES_PASSWORD: ${N5_HELPDESK_DB_PASSWORD:?set dedicated random DB password}
+    expose: ["5432"]
+    volumes:
+      - pg:/var/lib/postgresql/data
+    networks: [backend]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n5_helpdesk -d n5_helpdesk"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  redis:
+    image: ${N5_HELPDESK_REDIS_IMAGE:-redis:7.4-alpine}
+    restart: unless-stopped
+    mem_limit: 128m
+    logging: *bounded-logging
+    environment:
+      REDIS_PASSWORD: ${N5_HELPDESK_REDIS_PASSWORD:?set dedicated random Redis password}
+    command:
+      - sh
+      - -ec
+      - exec redis-server --appendonly yes --maxmemory 64mb --maxmemory-policy noeviction --requirepass "$$REDIS_PASSWORD"
+    expose: ["6379"]
+    volumes:
+      - redis:/data
+    networks: [backend]
+    healthcheck:
+      test: ["CMD-SHELL", 'REDISCLI_AUTH="$$REDIS_PASSWORD" redis-cli ping | grep -qx PONG']
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+configs:
+  caddyfile:
+    content: |
+      {
+        admin off
+        auto_https off
+      }
+      :8080 {
+        reverse_proxy app:9000 {
+          header_up X-Client-IP {http.request.header.X-Real-IP}
+        }
+      }
+
+networks:
+  edge:
+    name: n5-helpdesk-edge
+  backend:
+    name: n5-helpdesk-backend
+    internal: true
+
+volumes:
+  pg:
+    name: n5-helpdesk-pg
+  redis:
+    name: n5-helpdesk-redis
+  uploads:
+    name: n5-helpdesk-uploads
