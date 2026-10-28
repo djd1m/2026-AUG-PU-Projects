@@ -25,6 +25,9 @@ Owner approved support-access native scope28.10.2026; all other checks preserved
 | Файл | Владелец |
 |---|---|
 | packages/** | support-backend |
+| apps/worker/src/stt/client.ts | support-backend |
+| tests/support-fake-pipeline.test.ts | support-backend |
+| tests/yandex-stt.test.ts | support-backend |
 | apps/web/src/server/** | support-backend |
 | apps/web/src/app/api/** | support-backend |
 | apps/web/src/preflight.ts | support-backend |
@@ -58,12 +61,17 @@ Owner approved support-access native scope28.10.2026; all other checks preserved
 | apps/web/src/app/videos/** | support-ui |
 | apps/web/src/app/upload/** | support-ui |
 | apps/web/src/lib/support-client.ts | support-ui |
+| apps/web/src/app/clips/ClipCard.tsx | support-ui |
+| tests/clip-card.test.ts | support-ui |
 | tests/support-ui*.test.ts | support-ui |
 | tests/support-widget-ui*.test.ts | support-ui |
 | tests/support-responsive*.test.ts | support-ui |
 | tests/browser/support*.test.ts | support-ui |
 | scripts/check-support.mjs | support-ui |
 | scripts/check-responsive.sh | support-ui |
+| scripts/check-responsive.mjs | support-ui |
+| scripts/responsive/input.mjs | support-ui |
+| scripts/responsive/rules.mjs | support-ui |
 | scripts/responsive/container*.mjs | support-ui |
 | docs/dispatch-plan.md | координатор |
 | docs/source-versions.md | координатор |

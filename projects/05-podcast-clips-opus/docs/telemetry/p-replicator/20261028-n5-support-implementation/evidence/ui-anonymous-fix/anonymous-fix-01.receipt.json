@@ -1,0 +1,59 @@
+{
+  "run_id": "20261028-n5-support-implementation",
+  "work_unit_id": "support-ui",
+  "attempt": "anonymous-fix-01",
+  "base_revision": "c0fda1fa41fad39a0ca89ce39af5a5317936bb32",
+  "integrated_review_revision": "68a2943a",
+  "source_revision": "47929fc1e3972ff77e5dc2fb252ed418632b5eb8",
+  "spec_sha256": "ef2525b933e75661ae3ee0965741933555b4387da321a7b40547e184f4f41edf",
+  "canon_sha256": "560c11ea0d182d6078a3ae285b3475bbae97f2643066e83a26026f91b6644f3a",
+  "launch_sha256": "c59953141cfeab8654e5e071bb674aedb3763d1c9077f322c9ca46881a499fde",
+  "profile": "model-routing-econom",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning": "medium",
+  "actual_model": null,
+  "tokens": null,
+  "cost": null,
+  "started_observed": "2026-10-28T02:46:01Z",
+  "finished_at": "2026-10-28T02:49:40.618814+00:00",
+  "elapsed_seconds": 219.618814,
+  "checks": {
+    "old_behavior_regression": "exit1:2 failed/6passed, helper temporarily preserved old open(false) semantics",
+    "fixed_widget_regression": "exit0:8/8",
+    "related_recovery_widget": "exit0:13/13",
+    "focused_types": "exit0 with strict,noUncheckedIndexedAccess,declaration",
+    "lint": "exit0",
+    "script_syntax": "exit0",
+    "diff_check": "exit0",
+    "integrated_build_browser": "root pending; not run here"
+  },
+  "source_hashes": {
+    "apps/web/src/lib/support-client.ts": "32488952338c72c92b579bf01cac976f10d7e59def366483b8fdb03baf3f3126",
+    "apps/web/src/app/support/SupportPanel.tsx": "535d5f5f0b889167ef8f246e06be7868872a60d67b9f9695a156104c774b0e93",
+    "tests/support-widget-ui.test.ts": "ec3c97799a9a5e8c1b4c5e42ef3d247c79bbeb73d4c0b2c16a56f54415184ccc",
+    "scripts/check-support.mjs": "8fc3c57599563bbd0583d8936730ef5dcf08f5d5e255cad242ab89d0fb8b27a7"
+  },
+  "evidence": [
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/anonymous-fix-01.red.log",
+      "sha256": "7cfb7d87c118323ee389bc4dd6fb4a5e51ccb5b9b5c2c9e9b9a169d9058f2afc"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/anonymous-fix-01.green.log",
+      "sha256": "e6780b9512554484aae2a984d3915eb97b1b839f95ef7c8b3c76974d8479f1de"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/anonymous-fix-01.types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/anonymous-fix-01.lint.log",
+      "sha256": "f8eca02ed8232ddb53b69d0c6a65f11eccaf2fc4932451829f4edf3b43ad830b"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/anonymous-fix-01.related.log",
+      "sha256": "46f7c8dc8abe297389d4cc8fb6cd4aa98a9bfeff94fca2cec86babe18780247f"
+    }
+  ],
+  "measurement_gaps": "Actual host model/token/cost unavailable. Red intermediate helper extraction source was not snapshotted; red test log is retained, final source hashes are exact. Elapsed measured from first observed UTC tool timestamp."
+}

@@ -1,0 +1,65 @@
+{
+  "run_id": "20261028-n5-support-implementation",
+  "work_unit_id": "support-ui",
+  "attempt": "type-portability-fix",
+  "base_revision": "64f1b438556e7615e3c4b3400f765eadf98bd9cd",
+  "source_revision": "c0fda1fa41fad39a0ca89ce39af5a5317936bb32",
+  "spec_sha256": "ef2525b933e75661ae3ee0965741933555b4387da321a7b40547e184f4f41edf",
+  "canon_sha256": "560c11ea0d182d6078a3ae285b3475bbae97f2643066e83a26026f91b6644f3a",
+  "launch_sha256": "c59953141cfeab8654e5e071bb674aedb3763d1c9077f322c9ca46881a499fde",
+  "actual_model": null,
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning": "medium",
+  "usage": null,
+  "cost": null,
+  "start_observed": "2026-10-28T00:57:59Z",
+  "finished_at": "2026-10-28T00:59:52.664189+00:00",
+  "elapsed_seconds": 113.664189,
+  "source_hashes": {
+    "scripts/responsive/rules.mjs": "f63884d194f10bf52143865458a073f4de9892269cf1a19e7d12eacdf8da830a",
+    "tests/support-ui.test.ts": "510e5aea272938e320581ced51410061598dba11f936558f3a8eae02043a8adc"
+  },
+  "checks": {
+    "narrow_declaration_before": 1,
+    "narrow_declaration_after": 0,
+    "focused_types_base_flags": 0,
+    "focused_runtime_tests": "5/5 PASS",
+    "lint": 0,
+    "runtime_equal": true,
+    "whole_app_types": "NOT PASSED in UI isolated tree; root integrated check pending"
+  },
+  "evidence": [
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/declaration-before.log",
+      "sha256": "b40a2edea3f8d0f56a365b69df4be8ed81ccbb4ee1073f2746eda900bb278d4c"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/declaration-after.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/type-fix-focused-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/type-fix-test.log",
+      "sha256": "f0d5ab02756408f9de306ffdefc9f068af75bae016294faec9f189e68c8af562"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/type-fix-runtime-equality.json",
+      "sha256": "66f44157af2ff1171ad4e7c357b18045a58428368e2f9dbe1f05b8d14264b724"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/type-fix-lint.log",
+      "sha256": "f8eca02ed8232ddb53b69d0c6a65f11eccaf2fc4932451829f4edf3b43ad830b"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/type-fix-before.log",
+      "sha256": "4b8fb10348a26d209a9ac53892d0b48784f2d8e0ca5a2818184c225722b7d053"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/type-portability-after/rules.d.mts",
+      "sha256": "f61f49d23fa79ceb4078d99f0d16d8c28c52004b6f97af9184d965d1b22ce926"
+    }
+  ]
+}

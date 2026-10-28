@@ -1,0 +1,50 @@
+{
+  "results": [
+    {
+      "command": "npm",
+      "args": [
+        "run",
+        "build",
+        "--workspace",
+        "packages/shared"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": "npm",
+      "args": [
+        "run",
+        "build",
+        "--workspace",
+        "packages/db"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": "/tmp/n5-acquisition-node22/node-v22.22.3-linux-x64/bin/node",
+      "args": [
+        "scripts/test.mjs",
+        "tests/enums.test.ts",
+        "tests/support-backend-boundary.test.ts",
+        "tests/support-email.integration.test.ts"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": "npm",
+      "args": [
+        "run",
+        "lint"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0
+    }
+  ]
+}

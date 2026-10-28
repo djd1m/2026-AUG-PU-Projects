@@ -1,0 +1,29 @@
+{
+  "results": [
+    {
+      "label": "old-red",
+      "args": [
+        "scripts/test.mjs",
+        "tests/support-fake-pipeline.test.ts"
+      ],
+      "exit": 1,
+      "log": "/tmp/n5-support-backend-checks-20261028/fake-pipeline-old-red-01.log",
+      "sha256": "ba46535daff4a65ee85e8e20c248c04fd3517817e701a491e998765da672bbfc"
+    },
+    {
+      "label": "fixed-green",
+      "args": [
+        "scripts/test.mjs",
+        "tests/support-fake-pipeline.test.ts",
+        "tests/selection.test.ts",
+        "tests/config.test.ts"
+      ],
+      "exit": 0,
+      "log": "/tmp/n5-support-backend-checks-20261028/fake-pipeline-fixed-green-01.log",
+      "sha256": "b929078d53150646d89789566aaf5ff9d422b9178663fb75d714b0c8345460a4"
+    }
+  ],
+  "sourceSha256": "7eaa49ccffcb4aa7a5aa83c4b694885ce51db93c8e9b33401c28777748a49385",
+  "liveBranchesUnchanged": true,
+  "liveBranchSha256": "c36147df6e987708c7efa16102574836d288bc232e2bf0bf7d1a8c1118d8935b"
+}

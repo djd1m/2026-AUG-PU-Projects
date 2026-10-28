@@ -1,30 +1,78 @@
-# Support access — planned completion receipt
-Status: PLANNED — no implementation or acceptance checks have passed in this document.
-Source baseline: `1f0befb75bd193c5282b273a6007f3997733cab5`.
-This is the Phase1 completion role, not a Phase3 PASS. Root must replace planned evidence
-with exact regular test paths/titles and measured source/build-bound receipts after coding.
+# Support access — implementation checkpoint
+
+Status: IMPLEMENTED CANDIDATE; browser/responsive acceptance and independent cold review PENDING.
+This is not final feature acceptance or a production deployment receipt.
+Spec revision: sha256:ef2525b933e75661ae3ee0965741933555b4387da321a7b40547e184f4f41edf
+Baseline:ba993ac2. Web build input:420affeb; current worker/test correction:4c012d4f.
+The original Phase1 planned receipt is preserved byte-for-byte in telemetry evidence.
+
 ## Criterion coverage
+
 | Criterion | Test file | Test title |
 |-----------|-----------|------------|
-| AC-support-access-1 | PENDING | compatibility and trial grant |
-| AC-support-access-2 | PENDING | closed mail modes and bounded SMTP |
-| AC-support-access-3 | PENDING | explicit cross-device same-account proof |
-| AC-support-access-4 | PENDING | reset revokes all N5 sessions without login |
-| AC-support-access-5 | PENDING | concurrent admission and one-use tokens |
-| AC-support-access-6 | PENDING | SSR API DB staff authority and privileged bootstrap |
-| AC-support-access-7 | PENDING | bounded read-only staff DTO |
-| AC-support-access-8 | PENDING | verified immutable widget identity and disabled mode |
-| AC-support-access-9 | PENDING | owned safe context and guarded deep link |
-| AC-support-access-10 | PENDING | widget identity clearing and local erasure |
-| AC-support-access-11 | PENDING | mobile support and recovery journey |
-Required local gates: fresh independent plan validation with matching spec SHA, native
-traceability/report-revision/criterion-scenarios; full npm test/lint/typecheck/build; real
-PostgreSQL token/admission/race tests; listed red/green mutations; env/port seams;
-existing responsive verifier via existing-container adapter; source-bound Playwright demo;
-native completion and independent review conformance gates. Exit2 never counts as pass.
-Runtime deployment checklist: actual SMTP sender/domain/TLS/SPF/DKIM/DMARC and inbox receive;
-pinned Libredesk two-account/legacy contact/anonymous/reply/session/delete+backup pilot;
-RU same-VM load+restore and SSD>=2GiB. These are excluded from current local acceptance.
-Telemetry lives at `docs/telemetry/p-replicator/20261028-n5-support-implementation/`.
-Requested plan/review Sol high; coding medium; actual model/usage/cost unavailable unless
-runtime evidence supplies them (null, never estimate). Final root report supplies elapsed.
+| AC-support-access-1 | tests/support-email.integration.test.ts | 24h proof permits same-account other device, is one-use and preserves signup credits |
+| AC-support-access-2 | tests/support-mail-tls.test.ts | four actual TLS sends stop at total 8000ms despite trickle traffic; fifth fails fast and sockets close |
+| AC-support-access-3 | tests/support-email.integration.test.ts | issuer logout and foreign account invalidate proof |
+| AC-support-access-4 | tests/support-email.integration.test.ts | supersession/current-email binding and password reset preserve existing proof, membership and credits |
+| AC-support-access-5 | tests/support-email.integration.test.ts | literal10000 storage bounds refuse uniformly and expired pruning removes at most100 |
+| AC-support-access-6 | tests/support-email.integration.test.ts | fresh staff guard rejects browser-like claims, grants only verified accounts, revokes immediately |
+| AC-support-access-7 | tests/support-email.integration.test.ts | fresh staff guard rejects browser-like claims, grants only verified accounts, revokes immediately |
+| AC-support-access-8 | tests/support-email.integration.test.ts | widget signs only current verified UUID/email and foreign/missing context are identical |
+| AC-support-access-9 | tests/support-email.integration.test.ts | widget signs only current verified UUID/email and foreign/missing context are identical |
+| AC-support-access-10 | tests/support-widget-ui.test.ts | vendor logout exception still clears local identity and broadcasts invalidation |
+| AC-support-access-11 | tests/support-ui.test.ts | renders labelled recovery forms, honest disabled mail and no GET consumption |
+
+The table identifies primary executable anchors, not exhaustive semantic proof of every clause.
+AC7 bounded DTO fields/paging and staff revocation are asserted inside its primary integration case.
+AC10 also uses local-erasure and reset SQL tests; AC11 additionally requires actual Docker journeys.
+
+## Verified local evidence
+
+- Native PLAN and VALIDATE passed on the explicitly approved support-only source snapshot.
+- Full integrated suite passed1232/1232 in130files onb7557e82; worker fake correction has a new full run pending.
+- All-workspace build, test-wide typecheck and lint passed on their recorded source revisions.
+- Sixteen red/green backend guards and UI password guard preserved with source/test hashes.
+- Actual built Next instrumentation rejects test mail/support under runtime production.
+- Actual rebuilt app answers HTTPS200 inside existingDocker with isolated runtime test and *_test DB.
+- Real local SMTP/TLS acceptance, untrusted cert, auth failure, total8000ms/socket cleanup and shared4-send cap were tested.
+- SQL/operator bootstrap and B/operator proof ran through actual APIs and privileged CLI on synthetic accounts.
+- Canonical upload/render/guest fixture passed after the explicitly fake-only timeline correction; no realmodel call or natural-STT quality claim.
+- Port/env/model-cost static checks passed; first missing offline compose env results remain NOT-ESTABLISHED history.
+- Full diagnostics retained: Next route-type failures; missingffmpeg runner interruption; missingSQL_ENUMS; compiledNODE_ENV alias; initialfake timeline no_fragments.
+- Browser journey/responsive and cold review are PENDING at this checkpoint.
+
+## Deployment plan
+
+### Pre-deployment checklist
+
+- [ ] Final local UI/responsive and cold review accepted with exact source/build receipts.
+- [ ] Real SMTP sender/domain/TLS and inbox delivery verified; SPF/DKIM/DMARC configured.
+- [ ] Pinned Libredesk pilot validates two accounts/legacy contact/history, replies and independent sessions.
+- [ ] Contact owner/hours, retention/deletion, attachments/indexes/backups and restore are decided/tested.
+- [ ] Target Russian VM, protected data transfer, real billing/storage/analytics checks completed.
+
+### Deployment sequence
+
+1. Build/migrate the target using REPRODUCE.md and cloudru-launch-plan.md; disabled mail/support defaults remain explicit.
+2. Bootstrap verified staff through ops:support-operator; configure authorized SMTP and pinned helpdesk only after runtime acceptance.
+3. Exercise the real target journey and monitor failures, queue/runtime costs and SSD before traffic.
+
+### Rollback procedure
+
+Current VPS was not deployed. Stop a future rollout before traffic when preflight fails; retain additive023 schema and audit history.
+Use compatible code/forward-fix after password/reset state changes; never resurrect revoked sessions or drop credit/audit data.
+Disable new mail/widget integrations with their explicit modes while diagnosing; vendor sessions require separate vendor procedures.
+
+## CI/CD and operational limits
+
+Local required sequence: npm test, npm run typecheck, npm run lint, npm run build, native gates and existingDocker E2E.
+Publishing remains the previously authorized feature-branch Git delivery; no release/main/production promotion is implied.
+Runtime logs use controlled codes and private/no-store responses; tokens/passwords/cookies/SMTP credentials are excluded.
+Response p99/error/CPU alert integrations are not configured by this feature; helpdesk capacity and operator labor are unmeasured.
+Keep SSD>=2GiB; delete only proven own regenerated caches, not databases/media/evidence.
+
+## Handoff
+
+Telemetry: docs/telemetry/p-replicator/20261028-n5-support-implementation/.
+Profile:model-routing-econom; requested Sol/high PLAN/VALIDATE/REVIEW, Sol/medium CODE.
+Actual model/usage/cost are unavailable/null. Root owns remaining runtime/browser/review checks and Git delivery.

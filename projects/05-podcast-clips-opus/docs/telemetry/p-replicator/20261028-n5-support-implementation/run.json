@@ -6,9 +6,9 @@
   "pipeline": "p-replicator /feature Mode2",
   "profile": "model-routing-econom",
   "started_at": "2026-10-28T00:10:23.161812+00:00",
-  "updated_at": "2026-10-28T00:39:02.944932+00:00",
+  "updated_at": "2026-10-28T02:56:12.829911+00:00",
   "status": "running",
-  "current_stage": "IMPLEMENT_DISPATCH_READY",
+  "current_stage": "REVIEW_CORRECTIONS_IN_PROGRESS",
   "baseline_revision": "1f0befb75bd193c5282b273a6007f3997733cab5",
   "responsible": "root",
   "owner_authorization": "explicit continue28.10.2026 after6-10h support implementation estimate; demo in12h; watch SSD",
@@ -41,12 +41,12 @@
   ],
   "constraints": {
     "minimum_free_disk_gib": 2,
-    "free_disk_gib": 3.0012893676757812,
+    "free_disk_gib": 2.626,
     "deadline_hours": 12,
     "browser_container": "codex-ui-playwright"
   },
-  "next_step": "two isolated Solmedium coding units, focused checks and namedreceipts, then integratedfullchecks and independentcoldreview",
-  "actual_background_implementation": false,
+  "next_step": "boundedadminstage+cursor+ledger andpartialclipfirstscreen fixes; then build, finalregression, browserjourney, independentdeltareview",
+  "actual_background_implementation": true,
   "actual_background_planning": false,
   "launches": [
     {
@@ -60,6 +60,18 @@
     {
       "path": "evidence/validation-launch.json",
       "sha256": "bb0071872cd0b5b3b81f9efc85e161d6df9bd649725e487f1748b1958f628b03"
+    },
+    {
+      "path": "evidence/coding-backend-launch.json",
+      "sha256": "f5b949d88177aee59e4140136c97d3b9d8d147d32376fc68975cb9f67c5f6631"
+    },
+    {
+      "path": "evidence/coding-ui-launch.json",
+      "sha256": "c59953141cfeab8654e5e071bb674aedb3763d1c9077f322c9ca46881a499fde"
+    },
+    {
+      "path": "evidence/review-launch.json",
+      "sha256": "1a64753597b22c8c58263174c17d7495aa892af0bbf077fa0c1ad5b61598552e"
     }
   ],
   "browser_readiness": {
@@ -123,5 +135,151 @@
       "automatic widget open remains anonymous; identified call only explicitopt-in"
     ],
     "actual_model": null
+  },
+  "active_agents": [
+    {
+      "agent": "/root/n5_support_cold_reviewer",
+      "role": "independent source/security review",
+      "requested_model": "gpt-6.1-sol",
+      "reasoning": "high",
+      "actual_model": null,
+      "state": "running",
+      "context": "planner sources only; fresh snapshot, no coder history"
+    },
+    {
+      "agent": "/root/n5_support_ui_coder",
+      "requested_model": "gpt-6.1-sol",
+      "reasoning": "medium",
+      "actual_model": null,
+      "state": "running correctiveanonymousflow",
+      "trace": "/tmp/n5-support-ui-anonymous-fix-20261028-trace.md"
+    },
+    {
+      "agent": "/root/n5_support_backend_coder",
+      "requested_model": "gpt-6.1-sol",
+      "reasoning": "medium",
+      "actual_model": null,
+      "state": "running correctivecontextprojection",
+      "trace": "/tmp/n5-support-backend-context-fix-20261028-trace.md"
+    }
+  ],
+  "ui": {
+    "source_commits": [
+      "52d85156",
+      "64f1b438",
+      "c0fda1fa"
+    ],
+    "integrated_head": "5ef18d27c243732e84e916f8d41b2e20241b72ea",
+    "receipt_hashes_verified": true,
+    "full_browser_acceptance": false,
+    "responsive_baseline": {
+      "source": "420affeb",
+      "pages": 342,
+      "engines": [
+        "chromium",
+        "webkit"
+      ],
+      "exit_code": 1,
+      "execution_errors": 0,
+      "blockers": "12R9partialclipactionbelowfirstscreen",
+      "warnings": 646
+    }
+  },
+  "active_checks": [],
+  "backend": {
+    "source_commits": [
+      "71402216",
+      "be9073a9"
+    ],
+    "source_hashes_verified": 42,
+    "final_focused_tests": 141,
+    "final_focus_files": 14,
+    "final_guard_mutations_verified": 16,
+    "mutation_binding": "topreceipt sourceRevision is pre-finalcommit base71402216; EACH final sourceSha256/testSha256 verified against integrated18b3b629; no metadata rewrite",
+    "full_feature_acceptance": false
+  },
+  "integration_diagnostics": {
+    "build01": "failed generated Next card GET optionalcontext",
+    "build02": "failed samefactory optionalcontext on accounts GET; batchfix assigned",
+    "fulltest01": "stopped byroot due missingffmpeg inrootrunnerPATH, mediafailures/skips, exit-15 notPASS",
+    "runner_fix": "existingffmpeg8.1.2+ffprobe preflightverified; no installation/no sourceguardweakening",
+    "fulltest05": "1247pass/1fail/zero skips: old incidental fake count in Yandex testcase; test-only correction verified and integrated"
+  },
+  "disk_cleanups": [
+    {
+      "path": "/tmp/n5-acquisition-analytics-20261026/projects/05-podcast-clips-opus/apps/web/.next/cache",
+      "reason": "own completed build cache only; executable .next build preserved",
+      "du_kib": 199348,
+      "observed_free_before_gib": 2.53289794921875,
+      "observed_free_after_gib": 2.723011016845703
+    }
+  ],
+  "accepted_local_checks": {
+    "full_test_source_revision": "68a2943a3cf6b7329b44c714f63e26be402b5e1e",
+    "full_tests": 1248,
+    "full_test_files": 131,
+    "full_skip_count": 0,
+    "build_exit": 0,
+    "types_exit": 0,
+    "lint_exit": 0,
+    "limits": "candidatepriorreviewcorrections; fullsuitepassed, finalcorrectionsrequireaffectedchecks"
+  },
+  "runtime_readiness": {
+    "state": "ready",
+    "web_build_source": "420affeb425eb0b5ddac5ee3d910d9eda4dcaf94",
+    "candidate_web_input_closure_unchanged": true,
+    "actual_compiled_SSR": 200,
+    "production_refuses_test_mode": true,
+    "private_proxies": "running, no production changes"
+  },
+  "forecasts": [
+    {
+      "created_at": "2026-10-28T00:10:23.161812+00:00",
+      "hours": [
+        6,
+        10
+      ],
+      "scope": "localimplementationchecks; noexternalruntime"
+    },
+    {
+      "created_at": "2026-10-28T01:55:55.868531+00:00",
+      "remaining_hours": [
+        2,
+        4
+      ],
+      "method": "engineeringremainingdecomposition, notcalibratedhistoricalforecast",
+      "basis": "codeintegrated/full1231pass; runtimeenvregression,browserandcoldreviewremain",
+      "external_exclusions": "realmail/Libredeskpilot/RFdeployment keys+runtimepending"
+    }
+  ],
+  "ui_fixture_diagnostic": {
+    "canonical_upload": "actual200ssynthetic,realSQL/S3/queues,explicitfake models",
+    "failure_reason": "no_fragments",
+    "cause": "existingfakeSTTonlyone1sword disagreeswithvalidFakeSelector25sfragments; productionword-snap rejects correctly",
+    "correction": "fake-only compatible timed words integrated4c012d4f; test-only stale assertion integrated68a2943a",
+    "remaining_scope": "AC11 reproduciblelocaldemo, notnaturalSTTquality",
+    "canonical_retry": {
+      "exit_code": 0,
+      "elapsed_seconds": 50.871,
+      "clips": 3,
+      "models": "explicit fake; real FFmpeg, SQL, S3 and queue path"
+    }
+  },
+  "source_revision": "2a9e41b1c6441430ecccf50ec483c7ca934011a0",
+  "review": {
+    "initial_source": "68a2943a",
+    "verdict": "changes_required",
+    "confirmed_findings": 6,
+    "integrated_fixes": [
+      "anonymouschatcleanup",
+      "contextprojection",
+      "proofposttokenlockexpiry"
+    ],
+    "pending_fixes": [
+      "jobstage",
+      "cursorprecision",
+      "debitledger"
+    ],
+    "fresh_delta_review": "pending"
   }
 }

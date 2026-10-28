@@ -1,0 +1,101 @@
+{
+  "runId": "20261028-n5-support-implementation",
+  "workUnitId": "support-backend",
+  "sourceRevision": "be9073a99c86c19364f2feea974e7f0f01b5734d",
+  "checks": [
+    {
+      "label": "build-shared",
+      "command": "npm",
+      "args": [
+        "run",
+        "build",
+        "--workspace",
+        "packages/shared"
+      ],
+      "sourceRevision": "be9073a99c86c19364f2feea974e7f0f01b5734d",
+      "startedAt": "2026-10-28T01:05:03.892Z",
+      "finishedAt": "2026-10-28T01:05:06.395Z",
+      "exitCode": 0,
+      "signal": null,
+      "log": "/tmp/n5-support-backend-checks-20261028/final-build-shared-01.log",
+      "logSha256": "976bb5e3e663f87a05ad3f199dcf580683975802c224c6504241f01257f6b427"
+    },
+    {
+      "label": "build-db",
+      "command": "npm",
+      "args": [
+        "run",
+        "build",
+        "--workspace",
+        "packages/db"
+      ],
+      "sourceRevision": "be9073a99c86c19364f2feea974e7f0f01b5734d",
+      "startedAt": "2026-10-28T01:05:06.397Z",
+      "finishedAt": "2026-10-28T01:05:09.063Z",
+      "exitCode": 0,
+      "signal": null,
+      "log": "/tmp/n5-support-backend-checks-20261028/final-build-db-01.log",
+      "logSha256": "b6cd0e886c8b67fa4867b7bda87be7f3610fb61a49915369fbf74d02838f46c8"
+    },
+    {
+      "label": "typecheck-web",
+      "command": "npm",
+      "args": [
+        "run",
+        "typecheck",
+        "--workspace",
+        "apps/web"
+      ],
+      "sourceRevision": "be9073a99c86c19364f2feea974e7f0f01b5734d",
+      "startedAt": "2026-10-28T01:05:09.064Z",
+      "finishedAt": "2026-10-28T01:05:13.242Z",
+      "exitCode": 0,
+      "signal": null,
+      "log": "/tmp/n5-support-backend-checks-20261028/final-typecheck-web-01.log",
+      "logSha256": "21816b8bb0da431db3d8625137867318323f36f496a7258c4bb734a5d5266882"
+    },
+    {
+      "label": "lint",
+      "command": "npm",
+      "args": [
+        "run",
+        "lint"
+      ],
+      "sourceRevision": "be9073a99c86c19364f2feea974e7f0f01b5734d",
+      "startedAt": "2026-10-28T01:05:13.242Z",
+      "finishedAt": "2026-10-28T01:05:14.779Z",
+      "exitCode": 0,
+      "signal": null,
+      "log": "/tmp/n5-support-backend-checks-20261028/final-lint-01.log",
+      "logSha256": "03d26c6ef0841b6eac1a8fb620e782e15d97a1f4467dc4566747082c86361443"
+    },
+    {
+      "label": "focused",
+      "command": "/tmp/n5-acquisition-node22/node-v22.22.3-linux-x64/bin/node",
+      "args": [
+        "scripts/test.mjs",
+        "tests/support-email.integration.test.ts",
+        "tests/support-email-handler.test.ts",
+        "tests/support-backend-boundary.test.ts",
+        "tests/support-backend-environment.test.ts",
+        "tests/support-backend-page-state.test.ts",
+        "tests/support-mail-tls.test.ts",
+        "tests/auth.test.ts",
+        "tests/database.integration.test.ts",
+        "tests/config.test.ts",
+        "tests/wiring.test.ts",
+        "tests/retention.test.ts",
+        "tests/retention-route.test.ts",
+        "tests/retention.integration.test.ts",
+        "tests/retention-storage.test.ts"
+      ],
+      "sourceRevision": "be9073a99c86c19364f2feea974e7f0f01b5734d",
+      "startedAt": "2026-10-28T01:05:14.780Z",
+      "finishedAt": "2026-10-28T01:05:57.252Z",
+      "exitCode": 0,
+      "signal": null,
+      "log": "/tmp/n5-support-backend-checks-20261028/final-focused-01.log",
+      "logSha256": "abe15dbdc8dba374e92f50cc62ad447862a938a3cb9f10e2bef57292fd945cc0"
+    }
+  ]
+}

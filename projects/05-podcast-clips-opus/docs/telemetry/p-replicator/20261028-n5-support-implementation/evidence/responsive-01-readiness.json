@@ -1,0 +1,40 @@
+{
+  "at": "2026-10-28T02:36:29.652559+00:00",
+  "run_id": "20261028-n5-support-implementation",
+  "work_unit_id": "responsive-01",
+  "readiness": "ready",
+  "source_revision": "4c012d4f9c74e429537e5e86ea0183c18213190b",
+  "web_build_source": "420affeb425eb0b5ddac5ee3d910d9eda4dcaf94",
+  "web_input_closure_unchanged": true,
+  "build_id_sha256": "abbe2802d8312eb87773045ae612cce150a081c86721c5a81e34b9f610741eb3",
+  "fixture_sha256": "72697e344750aea1880f10e383cd4c632e772eb31efd41c42a3e1817bddc6bc1",
+  "fixture_class": "synthetic accounts/media only; credentials private ignored file",
+  "browser_container": "codex-ui-playwright",
+  "fresh_engine_probes": [
+    {
+      "name": "chromium",
+      "version": "153.0.8010.12",
+      "status": 200
+    },
+    {
+      "name": "webkit",
+      "version": "26.6",
+      "status": 200
+    }
+  ],
+  "base": "https://localhost:4435",
+  "TLS": "explicit local self-signed opt-in; no production TLS claim",
+  "storage": "separate localMinIO bucket via localhost TLS fixture",
+  "side_effects": "synthetic login/session/link/guest counters only",
+  "free_disk_gib": 2.699443817138672,
+  "command_as_data": [
+    "bash",
+    "scripts/check-responsive.sh",
+    "--base",
+    "https://localhost:4435",
+    "--fixture",
+    ".responsive-fixture/support-e2e-20261028.json",
+    "--out",
+    ".responsive-artifacts/support-responsive-01"
+  ]
+}

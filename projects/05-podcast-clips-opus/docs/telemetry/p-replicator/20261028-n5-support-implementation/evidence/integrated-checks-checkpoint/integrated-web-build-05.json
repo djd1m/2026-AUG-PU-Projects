@@ -1,0 +1,19 @@
+{
+  "check": "integrated-web-build-05",
+  "command": [
+    "npm",
+    "run",
+    "build",
+    "--workspace",
+    "apps/web"
+  ],
+  "source_revision": "420affeb425eb0b5ddac5ee3d910d9eda4dcaf94",
+  "started_at": "2026-10-28T01:56:30.077203+00:00",
+  "elapsed_seconds": 40.024,
+  "exit_code": 0,
+  "stopped_reason": null,
+  "node": "22.22.3",
+  "environment": "isolated *_test DB, Redis15/testMinIO, fake models, payments off",
+  "log": "/tmp/n5-support-integration-checks-20261028/integrated-web-build-05.log",
+  "free_disk_gib": 2.552
+}
