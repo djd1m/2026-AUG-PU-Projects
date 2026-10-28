@@ -13,7 +13,7 @@ export function environment(): NodeJS.ProcessEnv {
     N5_GLOSSARY: '', N5_SHORT_CODE_LENGTH: '6', N5_PUBLIC_ORIGIN: 'https://test.invalid', DATABASE_URL: 'postgresql://test@localhost/test',
     REDIS_URL: 'redis://localhost:6379', SESSION_SECRET: randomBytes(32).toString('hex'),
     // Фича 30: оплата выключена — как на стенде, где N5_PAYMENTS_MODE не задан (compose пробрасывает off).
-    N5_MAIL_MODE: 'disabled', N5_MAIL_FROM: '', N5_SMTP_HOST: '', N5_SMTP_PORT: '', N5_SMTP_USER: '', N5_SMTP_PASSWORD: '', N5_SMTP_SECURE: '',
+    N5_MAIL_MODE: 'disabled', N5_RESEND_API_KEY: '', N5_MAIL_FROM: '', N5_SMTP_HOST: '', N5_SMTP_PORT: '', N5_SMTP_USER: '', N5_SMTP_PASSWORD: '', N5_SMTP_SECURE: '',
     N5_MAIL_TEST_CAPTURE_FILE: '', N5_SUPPORT_MODE: 'disabled', N5_SUPPORT_BASE_URL: '', N5_SUPPORT_INBOX_ID: '',
     N5_SUPPORT_IDENTIFIED: 'false', N5_SUPPORT_JWT_SECRET: '', N5_SUPPORT_CONTACT_EMAIL: '',
     N5_BILLING_MODE: 'legacy', N5_PAYMENTS_MODE: 'off', YOOKASSA_SHOP_ID: '', YOOKASSA_SECRET_KEY: '', YOOKASSA_TEST_MODE: '',
