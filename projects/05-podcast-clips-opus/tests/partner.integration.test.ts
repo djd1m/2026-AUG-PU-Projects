@@ -246,6 +246,34 @@ describe.skipIf(!url)('PostgreSQL partner attribution', () => {
     await pool.query("UPDATE account SET status='erasing' WHERE id=$1", [visitor]);
     await expect(service.createCode(visitor, { code: 'BLOGGER1' })).rejects.toMatchObject({ status: 404 });
   });
+  it('campaign waits for concurrent code block and rejects after commit', async () => {
+    const blocker = await pool.connect();
+    let creation: Promise<{ error?: { status?: number }; value?: unknown }> | undefined;
+    try {
+      await blocker.query('BEGIN');
+      const pid = Number((await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid);
+      await blocker.query("UPDATE partner_code SET status='blocked' WHERE id=$1", [codeId]);
+      let settled = false;
+      creation = service.createCode(owner, { code: 'FRESH123' }).then(
+        value => { settled = true; return { value }; },
+        error => { settled = true; return { error }; });
+      let waiting = false;
+      const deadline = Date.now() + 2000;
+      while (!settled && Date.now() < deadline) {
+        waiting = Boolean((await pool.query('SELECT 1 FROM pg_stat_activity WHERE $1::integer=ANY(pg_blocking_pids(pid))', [pid])).rowCount);
+        if (waiting) break;
+        await new Promise(resolve => setTimeout(resolve, 10));
+      }
+      expect(waiting).toBe(true);
+      expect(settled).toBe(false);
+      await blocker.query('COMMIT');
+      expect(await creation).toMatchObject({ error: { status: 409 } });
+      expect((await pool.query("SELECT count(*) FROM partner_code WHERE code='FRESH123'")).rows[0].count).toBe('0');
+    } finally {
+      await blocker.query('ROLLBACK'); blocker.release();
+      if (creation) await creation;
+    }
+  });
   it('direct landing deduplicates concurrent prefixes/day/code and excludes self', async () => {
     const landing = new PartnerLandingService(pool, () => now), link = await landing.find('CODE123');
     await Promise.all(Array.from({ length: 24 }, () => landing.recordView(link, null, prefix)));
