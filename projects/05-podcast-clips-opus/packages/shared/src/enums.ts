@@ -45,7 +45,7 @@ export const PAYMENT_PROVIDER = ['yookassa', 'fake'] as const;
 export type PaymentProviderName = typeof PAYMENT_PROVIDER[number];
 export const PAYMENT_STATUS = ['succeeded', 'refunded'] as const;
 export const PAYMENT_REVIEW_REASON = ['amount_mismatch', 'refund', 'unknown_intent', 'account_erasing','intent_already_fulfilled','payment_identity_mismatch'] as const;
-export const OPERATOR_ACTION = ['set_plan','credit_opt_in'] as const;
+export const OPERATOR_ACTION = ['set_plan','credit_opt_in','set_owner_unlimited'] as const;
 
 export function isEnumValue<T extends string>(values: readonly T[], value: unknown): value is T {
   return typeof value === 'string' && values.includes(value as T);

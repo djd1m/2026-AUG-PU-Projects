@@ -8,7 +8,9 @@ describe('upload source guards', () => {
     const source = readFileSync(path.join(sourceRoot, 'packages/db/src/quota.ts'), 'utf8');
     expect(source).toMatch(/VALUES \(\$1, \$2, \$3, 0\)\s+ON CONFLICT \(scope, scope_key, day\) DO NOTHING/);
     expect(source).toMatch(/UPDATE quota_counter SET used = used \+ \$4/);
-    expect(source).toMatch(/used::bigint \+ \$4 <= \$5 RETURNING used/);
+    expect(source).toMatch(/AND \(\$6::boolean OR used::bigint \+ \$4 <= \$5\) RETURNING used/);
+    expect(source).toContain("const exempt = ownerUnlimited && scope !== 'user_upload_refunds';");
+    expect(source).toContain('[...args, exempt]');
     expect(source).not.toMatch(/DO UPDATE/);
   });
   it('upload quota precedes initiation', () => {
