@@ -49,6 +49,63 @@ describe('адаптер январского клона', () => {
     await expect(completeMultipartUpload(ctx, 'key', 'u', [{ part_number: 1, etag: 'wrong' }])).rejects.toThrow();
     expect(send).toHaveBeenCalledTimes(1); ctx.client.destroy();
   });
+  it.each([
+    ['"CaseSensitiveOpaque-1"', 'CaseSensitiveOpaque-1'],
+    ['CaseSensitiveOpaque-1', '"CaseSensitiveOpaque-1"'],
+    ['CaseSensitiveOpaque-1', 'CaseSensitiveOpaque-1'],
+    ['"CaseSensitiveOpaque-1"', '"CaseSensitiveOpaque-1"'],
+    ['""nested""', '""nested""'],
+    ['" spaced "', ' spaced '],
+  ])('ETag %s сверяется с %s, Complete получает исходный ListParts', async (clientTag, serverTag) => {
+    const ctx = context(); const send = mockSend(ctx)
+      .mockResolvedValueOnce({ IsTruncated: true, NextPartNumberMarker: '1', Parts: [{ PartNumber: 1, ETag: serverTag, Size: 12 }] })
+      .mockResolvedValueOnce({ Parts: [{ PartNumber: 2, ETag: '"second-Opaque"', Size: 13 }] }).mockResolvedValueOnce({});
+    await completeMultipartUpload(ctx, 'key', 'upload', [{ part_number: 2, etag: 'second-Opaque' }, { part_number: 1, etag: clientTag }]);
+    expect(send.mock.calls.map(([command]) => command.constructor.name)).toEqual([
+      'ListPartsCommand', 'ListPartsCommand', 'CompleteMultipartUploadCommand',
+    ]);
+    expect(send.mock.calls[2]![0].input).toMatchObject({ MultipartUpload: { Parts: [
+      { PartNumber: 1, ETag: serverTag }, { PartNumber: 2, ETag: '"second-Opaque"' },
+    ] } });
+    ctx.client.destroy();
+  });
+  it.each([
+    ['wrong', 'CaseSensitiveOpaque-1'],
+    ['casesensitiveOpaque-1', 'CaseSensitiveOpaque-1'],
+    [' CaseSensitiveOpaque-1', 'CaseSensitiveOpaque-1'],
+    ['CaseSensitiveOpaque-1 ', 'CaseSensitiveOpaque-1'],
+    ['"CaseSensitiveOpaque-1', 'CaseSensitiveOpaque-1'],
+    ['CaseSensitiveOpaque-1"', 'CaseSensitiveOpaque-1'],
+    ['""nested""', 'nested'],
+    ['""nested""', '"nested"'],
+    ['', ''], ['', '""'], ['""', ''], ['""', '""'],
+  ])('Несовпадающий или пустой ETag %s / %s не вызывает Complete', async (clientTag, serverTag) => {
+    const ctx = context(); const send = mockSend(ctx).mockResolvedValue({ Parts: [{ PartNumber: 1, ETag: serverTag, Size: 1 }] });
+    await expect(completeMultipartUpload(ctx, 'key', 'u', [{ part_number: 1, etag: clientTag }])).rejects.toThrow();
+    expect(send.mock.calls.map(([command]) => command.constructor.name)).toEqual(clientTag ? ['ListPartsCommand'] : []);
+    ctx.client.destroy();
+  });
+  it.each([
+    [[1], [1, 2]], [[1, 2], [1]], [[1], [2]], [[1, 2], [1, 3]],
+  ])('Несовпадающие номера клиента %j и S3 %j не вызывают Complete', async (clientNumbers, serverNumbers) => {
+    const ctx = context(); const send = mockSend(ctx).mockResolvedValue({ Parts: serverNumbers.map((n) => ({ PartNumber: n, ETag: 'a', Size: 1 })) });
+    await expect(completeMultipartUpload(ctx, 'key', 'u', clientNumbers.map((n) => ({ part_number: n, etag: 'a' })))).rejects.toThrow();
+    expect(send.mock.calls.map(([command]) => command.constructor.name)).toEqual(['ListPartsCommand']);
+    ctx.client.destroy();
+  });
+  it.each([[], [2], [1, 3], [0], [1, 1]])('Непригодная последовательность %j отклоняется до S3', async (...numbers) => {
+    const ctx = context(); const send = mockSend(ctx);
+    await expect(completeMultipartUpload(ctx, 'key', 'u', numbers.map((n) => ({ part_number: n, etag: 'a' })))).rejects.toThrow();
+    expect(send).not.toHaveBeenCalled(); ctx.client.destroy();
+  });
+  it.each([undefined, '1'])('Непригодный следующий маркер %s не вызывает Complete', async (next) => {
+    const ctx = context(); const send = mockSend(ctx)
+      .mockResolvedValueOnce({ IsTruncated: true, NextPartNumberMarker: '1', Parts: [{ PartNumber: 1, ETag: 'a', Size: 1 }] })
+      .mockResolvedValueOnce({ IsTruncated: true, NextPartNumberMarker: next, Parts: [] });
+    await expect(completeMultipartUpload(ctx, 'key', 'u', [{ part_number: 1, etag: 'a' }])).rejects.toThrow();
+    expect(send.mock.calls.map(([command]) => command.constructor.name)).toEqual(['ListPartsCommand', 'ListPartsCommand']);
+    ctx.client.destroy();
+  });
   it('HEAD без размера не становится нулём, GET ограничен Range, ошибки abort видны', async () => {
     const ctx = context(); const send = mockSend(ctx).mockResolvedValueOnce({});
     await expect(headObject(ctx, 'key')).rejects.toThrow();

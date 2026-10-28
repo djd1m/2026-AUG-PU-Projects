@@ -1,0 +1,14 @@
+{
+  "results": [
+    {
+      "command": "/tmp/n5-acquisition-node22/node-v22.22.3-linux-x64/bin/node",
+      "args": [
+        "scripts/test.mjs",
+        "tests/support-email.integration.test.ts"
+      ],
+      "exit": 1,
+      "log": "/tmp/n5-support-backend-checks-20261028/stage-fix-01/green-check-0.log",
+      "logSha256": "00f954d024bd8bc6e1555217c0841f09d22b75b1fd05e8723fb2dae7a7eb5cad"
+    }
+  ]
+}

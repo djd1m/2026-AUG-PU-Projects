@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-10-26T20:37:42.568324+00:00",
+  "owner_scope_exception": "explicit owner approval 2026-10-26; same unchangedchecker onlyselectedcontour",
+  "scope": [
+    "cloudru-provider-foundation"
+  ],
+  "aggregate_project_result": "exit1 retained separately; not claimedpass",
+  "checker": "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+  "checker_sha256": "06e3dae22c533a81732b9870ae42d6b80b6e8419b3c90e11e1910e2a46888be8",
+  "source_head": "9ba7a6fa19a3e8abee24eb4b10cbff4b8dea71e5",
+  "source_files_sha256": {
+    "03_architecture.md": "95c32557f4920b0e0d43470f0998e2ad8203097e0a6d3301d215dcf227f9ce29",
+    "05_completion.md": "e267c9eff4537a589c7676a401ae5e651588294c3c8a287460c5ba5eb5c33f01",
+    "01_specification.md": "4a7c7594632d791d694fb632c3f1dabd0f2363f3490ecb96a4ac38f643fe5459",
+    "research.md": "55305080b88a202b8fecdcebc5c5727d06bd2c82969839ed602e642acee78399",
+    "04_refinement.md": "cf3e0e8041fa8a7dd97c578ac1ffcac02c5ebe62948f834e9e4ccc2cc153e5ff",
+    "02_pseudocode.md": "de573ae4cace1ec4bf665d458be876193d52aae13a3d5195634f40fffeac2604"
+  },
+  "snapshot_matches_before_after": true,
+  "command": [
+    "bash",
+    "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+    "/tmp/n5-scoped-gates-20261026/phase1-foundation/snapshot",
+    "--traceability",
+    "--role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/commands/feature.md",
+    "--project-role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/skills/sparc-prd-mini/SKILL.md"
+  ],
+  "exit_code": 0
+}

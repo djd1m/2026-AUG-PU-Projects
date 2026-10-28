@@ -1,0 +1,233 @@
+[
+  {
+    "session_uuid": {
+      "uuid": "12b20ab8-be4ff4de-48ae31b8-5f0b24cf",
+      "user_request_id": "undefined"
+    },
+    "audio_cursors": {
+      "received_data_ms": "0",
+      "reset_time_ms": "0",
+      "partial_time_ms": "0",
+      "final_time_ms": "0",
+      "final_index": "0",
+      "eou_time_ms": "0"
+    },
+    "response_wall_time_ms": "0",
+    "channel_tag": "",
+    "status_code": {
+      "code_type": "WORKING",
+      "message": ""
+    },
+    "Event": "status_code"
+  },
+  {
+    "session_uuid": {
+      "uuid": "12b20ab8-be4ff4de-48ae31b8-5f0b24cf",
+      "user_request_id": "undefined"
+    },
+    "audio_cursors": {
+      "received_data_ms": "0",
+      "reset_time_ms": "0",
+      "partial_time_ms": "0",
+      "final_time_ms": "0",
+      "final_index": "0",
+      "eou_time_ms": "0"
+    },
+    "response_wall_time_ms": "0",
+    "channel_tag": "0",
+    "status_code": {
+      "code_type": "WORKING",
+      "message": ""
+    },
+    "Event": "status_code"
+  },
+  {
+    "session_uuid": {
+      "uuid": "12b20ab8-be4ff4de-48ae31b8-5f0b24cf",
+      "user_request_id": "undefined"
+    },
+    "audio_cursors": {
+      "received_data_ms": "5000",
+      "reset_time_ms": "0",
+      "partial_time_ms": "919",
+      "final_time_ms": "919",
+      "final_index": "0",
+      "eou_time_ms": "0"
+    },
+    "response_wall_time_ms": "137",
+    "channel_tag": "0",
+    "final": {
+      "alternatives": [
+        {
+          "words": [
+            {
+              "text": "америка",
+              "start_time_ms": "380",
+              "end_time_ms": "520"
+            },
+            {
+              "text": "распознавание",
+              "start_time_ms": "659",
+              "end_time_ms": "919"
+            }
+          ],
+          "languages": [],
+          "text": "америка распознавание",
+          "start_time_ms": "0",
+          "end_time_ms": "919",
+          "confidence": 0
+        }
+      ],
+      "channel_tag": "0"
+    },
+    "Event": "final"
+  },
+  {
+    "session_uuid": {
+      "uuid": "12b20ab8-be4ff4de-48ae31b8-5f0b24cf",
+      "user_request_id": "undefined"
+    },
+    "audio_cursors": {
+      "received_data_ms": "5000",
+      "reset_time_ms": "0",
+      "partial_time_ms": "919",
+      "final_time_ms": "919",
+      "final_index": "0",
+      "eou_time_ms": "919"
+    },
+    "response_wall_time_ms": "138",
+    "channel_tag": "0",
+    "eou_update": {
+      "time_ms": "919"
+    },
+    "Event": "eou_update"
+  },
+  {
+    "session_uuid": {
+      "uuid": "12b20ab8-be4ff4de-48ae31b8-5f0b24cf",
+      "user_request_id": "undefined"
+    },
+    "audio_cursors": {
+      "received_data_ms": "5000",
+      "reset_time_ms": "0",
+      "partial_time_ms": "5000",
+      "final_time_ms": "4560",
+      "final_index": "1",
+      "eou_time_ms": "919"
+    },
+    "response_wall_time_ms": "138",
+    "channel_tag": "0",
+    "final": {
+      "alternatives": [
+        {
+          "words": [
+            {
+              "text": "речи",
+              "start_time_ms": "3280",
+              "end_time_ms": "3360"
+            },
+            {
+              "text": "встреча",
+              "start_time_ms": "3560",
+              "end_time_ms": "3740"
+            },
+            {
+              "text": "начнется",
+              "start_time_ms": "3760",
+              "end_time_ms": "3919"
+            },
+            {
+              "text": "с",
+              "start_time_ms": "3939",
+              "end_time_ms": "3959"
+            },
+            {
+              "text": "мастером",
+              "start_time_ms": "3980",
+              "end_time_ms": "4200"
+            },
+            {
+              "text": "в",
+              "start_time_ms": "4240",
+              "end_time_ms": "4259"
+            },
+            {
+              "text": "девять",
+              "start_time_ms": "4279",
+              "end_time_ms": "4400"
+            },
+            {
+              "text": "часов",
+              "start_time_ms": "4420",
+              "end_time_ms": "4560"
+            }
+          ],
+          "languages": [],
+          "text": "речи встреча начнется с мастером в девять часов",
+          "start_time_ms": "919",
+          "end_time_ms": "4560",
+          "confidence": 0
+        }
+      ],
+      "channel_tag": "0"
+    },
+    "Event": "final"
+  },
+  {
+    "session_uuid": {
+      "uuid": "12b20ab8-be4ff4de-48ae31b8-5f0b24cf",
+      "user_request_id": "undefined"
+    },
+    "audio_cursors": {
+      "received_data_ms": "5000",
+      "reset_time_ms": "0",
+      "partial_time_ms": "5000",
+      "final_time_ms": "4560",
+      "final_index": "1",
+      "eou_time_ms": "4560"
+    },
+    "response_wall_time_ms": "138",
+    "channel_tag": "0",
+    "eou_update": {
+      "time_ms": "4560"
+    },
+    "Event": "eou_update"
+  },
+  {
+    "session_uuid": {
+      "uuid": "12b20ab8-be4ff4de-48ae31b8-5f0b24cf",
+      "user_request_id": "undefined"
+    },
+    "audio_cursors": {
+      "received_data_ms": "5000",
+      "reset_time_ms": "0",
+      "partial_time_ms": "5000",
+      "final_time_ms": "4560",
+      "final_index": "2",
+      "eou_time_ms": "4560"
+    },
+    "response_wall_time_ms": "138",
+    "channel_tag": "0",
+    "status_code": {
+      "code_type": "CLOSED",
+      "message": ""
+    },
+    "Event": "status_code"
+  },
+  {
+    "session_uuid": {
+      "uuid": "12b20ab8-be4ff4de-48ae31b8-5f0b24cf",
+      "user_request_id": "undefined"
+    },
+    "audio_cursors": {
+      "received_data_ms": "0",
+      "reset_time_ms": "0",
+      "partial_time_ms": "0",
+      "final_time_ms": "0",
+      "final_index": "0",
+      "eou_time_ms": "0"
+    },
+    "response_wall_time_ms": "148",
+    "channel_tag": ""
+  }
+]

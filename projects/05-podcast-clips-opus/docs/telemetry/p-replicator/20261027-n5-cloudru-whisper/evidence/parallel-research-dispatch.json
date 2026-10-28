@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-27T22:08:00.301363+00:00",
+  "launches": [
+    {
+      "unit": "cloud-word-doc-audit",
+      "launch": "/tmp/n5-cloud-word-doc-audit-launch-20261027.json",
+      "trace": "/tmp/n5-cloud-word-doc-audit-trace-20261027.md",
+      "sha256": "55b9eb61a5dc93d356bb58faca7efe775bcb68c329c8a2f9527b6e8c8bcc64d5"
+    },
+    {
+      "unit": "cloud-word-wire-audit",
+      "launch": "/tmp/n5-cloud-word-wire-audit-launch-20261027.json",
+      "trace": "/tmp/n5-cloud-word-wire-audit-trace-20261027.md",
+      "sha256": "06e6cdaf7155f66f32af088b75293579128105cf5299972937b7a47439fceab2"
+    },
+    {
+      "unit": "rf-stt-alternatives",
+      "launch": "/tmp/n5-rf-stt-alternatives-launch-20261027.json",
+      "trace": "/tmp/n5-rf-stt-alternatives-trace-20261027.md",
+      "sha256": "59ec69d66f7d5df052b74ec3ea1735a9e9f5180a0370f907dbab114b6466f6d3"
+    }
+  ]
+}

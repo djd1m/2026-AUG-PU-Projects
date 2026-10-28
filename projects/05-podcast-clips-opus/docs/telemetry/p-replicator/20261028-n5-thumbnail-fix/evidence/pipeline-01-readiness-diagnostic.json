@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-28T05:13:54.102138+00:00",
+  "attempt": "pipeline-01",
+  "status": "inconclusive",
+  "source_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+  "reason": "coordinator expected standalone dist/render/compaction.js; actual worker build uses another output path/bundles",
+  "mutation_started": false,
+  "private_web_http": 200,
+  "fresh_browsers_preprobe": "launched successfully before metadata path failure",
+  "next": "bind actual worker entry build hash in fresh pipeline-02 preflight; unchanged product"
+}

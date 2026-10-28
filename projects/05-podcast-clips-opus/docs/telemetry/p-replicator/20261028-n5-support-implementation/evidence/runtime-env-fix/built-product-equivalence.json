@@ -1,0 +1,14 @@
+{
+  "built_source": "420affeb425eb0b5ddac5ee3d910d9eda4dcaf94",
+  "current_head": "b7557e829e9216cd29e1619a7209365a19c7b322",
+  "product_paths_identical": [
+    "apps",
+    "packages",
+    "docker-compose.yml",
+    "package.json",
+    "package-lock.json"
+  ],
+  "delta": "test-only bundle regression; live build not mutated",
+  "actual_built_negative_production_guard": "passed",
+  "actual_docker_https_test_SSR": 200
+}

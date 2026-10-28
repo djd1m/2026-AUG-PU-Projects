@@ -76,3 +76,30 @@ describe('PE-001: публичный адрес подписи и внутрен
     finally { client.destroy(); }
   });
 });
+
+
+it.each(['true', 'false'])('signs Cloud.ru configuration offline with compound credentials', async style => {
+  const env = { ...environment(), S3_ENDPOINT: 'https://s3.cloud.ru', S3_PUBLIC_ENDPOINT: 'https://s3.cloud.ru',
+    S3_REGION: 'ru-central-1', S3_ACCESS_KEY: 'synthetic-tenant:synthetic-key', S3_SECRET_KEY: 'synthetic-s3-secret',
+    S3_FORCE_PATH_STYLE: style };
+  const client = createS3Client(loadWebConfig(env).s3), ctx = { client, bucket: 'n5-test' };
+  let requests = 0;
+  const handler = { handle: async () => { requests++; throw new Error('Signing must not dispatch'); } };
+  client.config.requestHandler = handler; client.signingClient!.config.requestHandler = handler;
+  try {
+    const parts = await signParts(ctx, 'videos/a/source.mp4', 'synthetic-upload', [1, 3], new Date('2026-10-26T00:00:00Z'));
+    const download = await generateDownloadUrl(ctx, 'clips/a.mp4', 'Мой клип.mp4');
+    for (const [method, signed] of [...parts.map(part => ['PUT', part.url]), ['GET', download]]) {
+      const url = new URL(signed!);
+      expect(url.origin).toBe(style === 'true' ? 'https://s3.cloud.ru' : 'https://n5-test.s3.cloud.ru');
+      expect(url.pathname.startsWith('/n5-test/')).toBe(style === 'true');
+      expect(url.searchParams.get('X-Amz-Credential')).toMatch(/^synthetic-tenant:synthetic-key\/\d{8}\/ru-central-1\/s3\/aws4_request$/);
+      expect(url.searchParams.get('X-Amz-Expires')).toBe('900');
+      expect(signature(url, method!, env.S3_SECRET_KEY)).toBe(url.searchParams.get('X-Amz-Signature'));
+      if (method === 'GET') expect(url.searchParams.get('response-content-disposition'))
+        .toBe(`attachment; filename="clip.mp4"; filename*=UTF-8''${encodeURIComponent('Мой клип.mp4')}`);
+      else { expect(url.searchParams.get('uploadId')).toBe('synthetic-upload'); expect(['1', '3']).toContain(url.searchParams.get('partNumber')); }
+    }
+    expect(requests).toBe(0);
+  } finally { client.destroy(); }
+});

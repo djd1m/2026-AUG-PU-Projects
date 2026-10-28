@@ -1,0 +1,34 @@
+{
+  "checks": [
+    {
+      "command": [
+        "node",
+        ".claude/hooks/check-source-version.cjs",
+        "projects/05-podcast-clips-opus"
+      ],
+      "exit_code": 0,
+      "output": "✅ 1 объявлени(й) сверено с диском: 0 правк(и), 1 вывод(ов) — каждый источник на месте и не изменился с момента чтения\n   Ограничение: совпавший хеш доказывает, что почва НЕ СДВИНУЛАСЬ, — но не то, что вывод из неё следует и не то, что кто-то действительно перечитал файл. Это остаётся слоем 3.\n"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/check-rebuild-docs.mjs",
+        "projects/05-podcast-clips-opus"
+      ],
+      "exit_code": 0,
+      "output": "✅ projects/05-podcast-clips-opus: R1–R5 пройдены (фич в индексе: 34)\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": ""
+    }
+  ],
+  "ownership_gate": "not_applicable single product coder/no fanout: native check exit2 retained as notperformed, exactallowlist enforced by coordinator",
+  "scope": "three assigned implementation paths only; docs/telemetry within N5",
+  "tier": "M conservative over mechanicalS"
+}

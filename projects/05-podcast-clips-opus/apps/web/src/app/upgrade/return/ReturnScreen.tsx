@@ -3,6 +3,7 @@
 // AC-10): тексты N5, один тариф. Состояния — decideReturnState (lib/payment-return.ts): выполняется, успех,
 // оплачено-но-не-действует, отказ, не подтверждено за отведённое время, не найдено — у каждого СВОЙ блок с data-state
 // (long-running-job: два неразличимых на экране состояния — одно состояние). Опрос — GET /api/checkout/{intent_id}.
+import { observePayment } from '../../../lib/acquisition-analytics';
 import { useEffect, useState } from 'react';
 import { RETURN_FETCH_TIMEOUT_MS, RETURN_MAX_ATTEMPTS, RETURN_POLL_INTERVAL_MS, decideReturnState, type CheckoutSnapshot, type ReturnState } from '../../../lib/payment-return';
 
@@ -10,6 +11,10 @@ const date = (iso: string) => new Date(iso).toLocaleDateString('ru-RU', { day: '
 
 export function ReturnView({ state }: { state: ReturnState }) {
   switch (state.kind) {
+    case 'package': return <div data-state="package"><h1>Пакет {state.title} оплачен</h1>
+      <p role="status" className="notice">{state.credits} кредитов · {(state.credits/60).toLocaleString('ru-RU')} ч обычной записи.
+      {' '}{state.scheduled?'Начнётся':'Период'} {date(state.start)} — {date(state.end)}. {state.scheduled?'До начала периода эти кредиты недоступны.':'Платные функции действуют до конца этого окна.'}</p>
+      <a className="button" href="/dashboard">В кабинет</a></div>;
     case 'waiting': return <div data-state="waiting" aria-busy="true">
       <h1>Ждём подтверждения оплаты</h1>
       <p role="status">Банк подтверждает платёж. Обычно это несколько секунд. Проверка {Math.min(state.attempts + 1, RETURN_MAX_ATTEMPTS)} из {RETURN_MAX_ATTEMPTS}.</p>
@@ -53,7 +58,11 @@ export function ReturnScreen({ intentId }: { intentId: string }) {
       try {
         const response = await fetch(`/api/checkout/${encodeURIComponent(intentId)}`, { cache: 'no-store', signal: AbortSignal.timeout(RETURN_FETCH_TIMEOUT_MS) });
         if (response.status === 404) snapshot = 'not_found';
-        else if (response.ok) snapshot = ((await response.json()) as { data?: CheckoutSnapshot }).data ?? null;
+        else if (response.ok) {
+          const raw = (await response.json()) as { data?: unknown };
+          if (!stopped) observePayment(intentId, raw.data);
+          snapshot = (raw.data as CheckoutSnapshot | undefined) ?? null;
+        }
       } catch { snapshot = null; /* сбой опроса — не отказ оплаты */ }
       if (stopped) return;
       attempts += 1;

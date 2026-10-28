@@ -1,0 +1,32 @@
+{
+  "status": "completed",
+  "checked_at": "2026-10-26T17:58:03Z",
+  "scope": "Public acquisition evidence only; no repository or runtime changes",
+  "model": {"requested": "gpt-6.1-sol", "requested_reasoning": "high", "actual": null, "usage": null, "cost": null, "limitation": "Actual execution model and usage unavailable in tool metadata"},
+  "main_channel": null,
+  "first_channel_recommendation": {"channel": "organic Telegram communities for Russian-language podcast creators", "classification": "N5 pilot hypothesis", "paid_campaigns": false, "basis": "Competitor founder reports demonstrate content and demand-reply mechanics; Telegram selection is an inference, not proven competitor attribution"},
+  "sources": [
+    {"id":"mr-home","url":"https://mnogo-reels.ru/","kind":"official_product_site","observed":"Product Radar link, blog links, Telegram support link, feature landing pages","published_at":null,"limits":"No channel traffic or conversion data"},
+    {"id":"mr-webinar","url":"https://mnogo-reels.ru/blogs/nariezka-viebinara-na-korotkiie-klipy/","kind":"official_search_landing","published_at":"2026-04-16","observed":"Webinar-to-clips article, registration CTA; content returned by web search","limits":"Direct open later failed cache miss; no ranking, sessions, or conversions"},
+    {"id":"mr-shorts","url":"https://mnogo-reels.ru/blogs/kak-sdielat-youtube-shorts-iz-dlinnogho-vidieo/","kind":"official_search_landing","published_at":null,"observed":"How-to article targeting Shorts creation from long video","limits":"Search engine discovery proves no traffic volume"},
+    {"id":"mr-opus","url":"https://mnogo-reels.ru/blogs/razbiraiem-opus-clip-funktsii-tsieny-i-pochiemu-russkoiazychnyie-bloghiery-ishchut-altiernativu/","kind":"official_comparison_content","published_at":"2026-06-11","observed":"Russian-language Opus Clip alternative/comparison content","limits":"Competitor feature and quality claims not independently verified or adopted"},
+    {"id":"founder-feed","url":"https://t.me/s/datafeeling?after=1769","kind":"founder_owned_public_channel","published_at":null,"observed":"Bio identifies creator of mnogo-reels.ru; posts describe content experiments, payments and demand replies","limits":"Exact calendar post dates not extracted; original external social network unspecified; results self-reported"},
+    {"id":"founder-post-1774","url":"https://t.me/datafeeling/1774","readable_context":"https://t.me/s/datafeeling?after=1769","kind":"founder_self_report","published_at":null,"observed":"Founder reports 6 payments following one successful post from 6 posts","limits":"No independent attribution; not Telegram-only revenue proof"},
+    {"id":"founder-post-1775","url":"https://t.me/datafeeling/1775","readable_context":"https://t.me/s/datafeeling?after=1769","kind":"founder_self_report","published_at":null,"observed":"Follow-up reports 2 subscription payments after case post","limits":"Self-report, no denominator or spend"},
+    {"id":"founder-post-1783","url":"https://t.me/datafeeling/1783","readable_context":"https://t.me/s/datafeeling?after=1769","kind":"founder_self_report","published_at":null,"observed":"Further 2 payments reported; describes replies to people asking for video cutting services","limits":"Permalink fetch cache miss; text available in channel context"},
+    {"id":"founder-post-1788","url":"https://t.me/datafeeling/1788","readable_context":"https://t.me/s/datafeeling?after=1769","kind":"founder_self_report","published_at":null,"observed":"Lists marketing experiments and algorithm-based audience targeting","limits":"Does not establish paid ads; permalink fetch cache miss, text available in context"},
+    {"id":"mr-launch","url":"https://productradar.ru/product/mnogoreels/","kind":"founder_product_listing","published_at":null,"observed":"Founder identified, launch awards, comments, link to service, invitation to sell founder YouTube/SEO integrations","limits":"Intent to buy integrations is not proof of purchases; launch traffic unknown"},
+    {"id":"mr-support","url":"https://t.me/viral_clips_bro","kind":"official_support_contact","published_at":null,"observed":"Linked as support center from official home","limits":"Not evidence of active broadcast marketing"},
+    {"id":"sc-home","url":"https://shortscut.ru/","kind":"official_product_site","published_at":null,"observed":"Linked landing-page groups by platform, format, audience and comparison","limits":"No measured organic traffic"},
+    {"id":"sc-podcast","url":"https://shortscut.ru/podcast-to-shorts","kind":"official_search_landing","published_at":null,"observed":"Podcast-specific landing with sample and CTA","limits":"No acquisition volume"},
+    {"id":"sc-opus","url":"https://shortscut.ru/opus-clip-alternative","kind":"official_search_landing","published_at":null,"observed":"Alternative-to-Opus landing","limits":"No independent competitive testing inferred"},
+    {"id":"sc-guide","url":"https://shortscut.ru/blog/how-to-turn-podcast-into-shorts","kind":"official_blog","updated_at":"2026-09-25","observed":"Podcast fragment-selection guide linking into product","limits":"No ranking or conversion data"},
+    {"id":"narezchik-home","url":"https://narezchik.ru/","kind":"official_product_site","published_at":null,"observed":"Audience-specific landing, clip examples, trial CTA","limits":"External acquisition sources not established"}
+  ],
+  "failed_checks": [
+    {"url":"https://mnogo-reels.ru/sitemap.xml","result":"Web tool unsupported XML content type"},
+    {"url":"https://mnogo-reels.ru/robots.txt","result":"Not accessible via web tool"},
+    {"operation":"Optional shell fetch","result":"Sandbox failed before command execution: bwrap cannot mkdir repository .codex"}
+  ],
+  "unknowns":["channel traffic shares","primary funnel","advertising spend","contextual advertising activity","CAC","cohort conversions","sitemap URL count","exact dates for founder posts"]
+}

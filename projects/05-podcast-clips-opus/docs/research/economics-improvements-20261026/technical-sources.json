@@ -1,0 +1,22 @@
+{
+  "as_of":"2026-10-26",
+  "source_revision":"732df4cccca8cd03bdaa51eaafe49adac23f01ee",
+  "requested_model":"gpt-6.1-sol",
+  "requested_reasoning":"high",
+  "actual_model":null,
+  "usage":null,
+  "cost":null,
+  "measurement_gap":"Execution tool does not expose agent model, token counters, or cost. No benchmark or billable model call performed.",
+  "sources":[
+    {"url":"https://cloud.ru/documents/tariffs/evolution/foundation-models","publisher":"Cloud.ru","version":"261023","effective":"2026-10-23","claims":["Whisper0.0061RUB/s inclVAT","current tariff version"]},
+    {"url":"https://cdn.cloud.ru/docs/legal/tariffs/evolution/current-version/foundation-models.pdf","publisher":"Cloud.ru","version":"261023","pages_zero_indexed":[0,7,13],"claims":["localDeepSeekV4Pro183/732RUB/M","gpt-oss-120b15.86/61RUB/M","partnerV4.1Flash64.9406/194.8096RUB/M","nightPro122/292.8RUB/M"],"limitations":["price and catalogue do not prove API schema compatibility or RF processing residency"]},
+    {"url":"https://cloud.ru/documents/promotions/active/night-tariff-foundation-models","publisher":"Cloud.ru","claims":["2026-10-01..2026-12-31","22:00..07:00Moscow","RFregisteredparticipants","contract/no-debt","nightmarkedservicesonly","revocable/changeable"]},
+    {"url":"https://github.com/SYSTRAN/faster-whisper","publisher":"SYSTRAN project","claims":["CPUINT8","wordtimestamps","VAD","smallCPUbenchmark13mininput8threadsIntel12700KINT8102s1477MBbatch8INT851s3608MB","lazysegmentsgenerator"],"limitations":["not Cloud.ru VM benchmark","not large-v3 benchmark","not Russian quality validation"]},
+    {"url":"https://github.com/SYSTRAN/faster-whisper/blob/master/faster_whisper/vad.py","publisher":"SYSTRAN project","claims":["SpeechTimestampsMap maps compressed speech time to original time"]},
+    {"url":"https://cloud.ru/docs/s3e/ug/topics/concepts__lifecycle","publisher":"Cloud.ru","claims":["EvolutionObjectStorageLifecycle docs"]},
+    {"url":"https://cloud.ru/docs/s3e/ug/topics/concepts__lifecycle__action?source-platform=Evolution","publisher":"Cloud.ru","claims":["Lifecycleactions docs"],"limitations":["no runtime lifecycle configuration inspected"]}
+  ],
+  "local_evidence":["apps/worker/src/stt/chunker.ts","apps/worker/src/stt/extract.ts","apps/worker/src/llm/provider.ts","apps/worker/src/llm/prompts/selection.ts","apps/worker/src/llm/spend.ts","apps/worker/src/workers/stt.ts","apps/worker/src/workers/select.ts","apps/worker/src/workers/render.ts","apps/worker/src/media/download.ts","apps/worker/src/render/storage.ts","packages/db/src/transcription.ts","packages/db/src/render.ts","packages/db/src/plan.ts","packages/shared/src/tariff.ts","packages/shared/src/config.ts","packages/shared/src/transcript.ts","packages/shared/src/fragments.ts"],
+  "local_paths_relative_to":"projects/05-podcast-clips-opus",
+  "checks":{"code_changes":false,"tests":"not_applicable_read_only_research","paid_calls":false,"user_content_access":false,"secrets_access":false,"runtime_writes":false}
+}

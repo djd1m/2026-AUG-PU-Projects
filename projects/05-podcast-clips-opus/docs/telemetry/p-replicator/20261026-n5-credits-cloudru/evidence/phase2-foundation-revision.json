@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-10-26T20:42:14.258106+00:00",
+  "owner_scope_exception": "explicitly approved 2026-10-26; unchanged checker on hash-bound selected scopes",
+  "scope": [
+    "cloudru-provider-foundation"
+  ],
+  "mode": "--report-revision",
+  "aggregate_project_result": "historical exit1 retained separately, not pass",
+  "checker": "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+  "checker_sha256": "06e3dae22c533a81732b9870ae42d6b80b6e8419b3c90e11e1910e2a46888be8",
+  "source_head": "9ba7a6fa19a3e8abee24eb4b10cbff4b8dea71e5",
+  "source_files_sha256": {
+    "docs/features/cloudru-provider-foundation/03_architecture.md": "95c32557f4920b0e0d43470f0998e2ad8203097e0a6d3301d215dcf227f9ce29",
+    "docs/features/cloudru-provider-foundation/05_completion.md": "e267c9eff4537a589c7676a401ae5e651588294c3c8a287460c5ba5eb5c33f01",
+    "docs/features/cloudru-provider-foundation/01_specification.md": "4a7c7594632d791d694fb632c3f1dabd0f2363f3490ecb96a4ac38f643fe5459",
+    "docs/features/cloudru-provider-foundation/research.md": "55305080b88a202b8fecdcebc5c5727d06bd2c82969839ed602e642acee78399",
+    "docs/features/cloudru-provider-foundation/04_refinement.md": "cf3e0e8041fa8a7dd97c578ac1ffcac02c5ebe62948f834e9e4ccc2cc153e5ff",
+    "docs/features/cloudru-provider-foundation/validation-report.md": "834333e69611465bd3e566ee2a303be2f9473c06735a66a9e0e9069bb3aeb120",
+    "docs/features/cloudru-provider-foundation/02_pseudocode.md": "de573ae4cace1ec4bf665d458be876193d52aae13a3d5195634f40fffeac2604"
+  },
+  "snapshot_matches_before_after": true,
+  "command": [
+    "bash",
+    "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+    "/tmp/n5-scoped-gates-20261026/phase2-foundation-revision/snapshot",
+    "--report-revision",
+    "--role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/commands/feature.md",
+    "--project-role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/skills/sparc-prd-mini/SKILL.md"
+  ],
+  "exit_code": 0
+}

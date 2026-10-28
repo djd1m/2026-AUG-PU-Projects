@@ -1,0 +1,14 @@
+{
+  "run_id": "20261028-n5-cloudru-s3-live",
+  "work_unit_id": "s3-deployment-plan",
+  "created_at": "2026-10-28T06:40:39.625055+00:00",
+  "source_revision": "cc6e66e57bd47e7a403612a4964dae059da66195",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning": "high",
+  "actual_model": null,
+  "trace_path": "/tmp/n5-s3-deploy-plan-20261028-trace.md",
+  "plan_path": "/tmp/n5-s3-deploy-plan-20261028.md",
+  "fresh_paths_absent": true,
+  "timebox_minutes": 8,
+  "scope": "read-only existing storage/config/deployment plan; no secrets, networkwrites, accounts, containers or production mutation"
+}

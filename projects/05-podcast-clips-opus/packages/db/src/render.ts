@@ -1,3 +1,4 @@
+import { lockCreditAccountForVideo, finalizeVideoCreditsTx } from './credits.js';
 import type { Pool, PoolClient } from 'pg';
 import { transaction } from './quota.js';
 import { effectivePlanSql } from './plan.js';
@@ -11,6 +12,7 @@ export interface RenderInput {
 }
 // Lock video first, as retry/watchdog do. Never compare the video fence for sibling clips.
 export async function lockRender(tx: PoolClient, attempt: Attempt): Promise<boolean> {
+  await lockCreditAccountForVideo(tx, attempt.video_id);
   const video = await tx.query(`SELECT v.id FROM video v JOIN account a ON a.id=v.account_id
     WHERE v.id=$1 AND ($2::boolean OR v.status='rendering') AND v.deleted_at IS NULL AND a.status='active' FOR UPDATE OF v`, [attempt.video_id, !!attempt.rerender]);
   if (!video.rowCount) return false;
@@ -23,7 +25,7 @@ export async function lockRender(tx: PoolClient, attempt: Attempt): Promise<bool
 export async function getRenderInput(pool: Pool, attempt: Attempt) {
   return transaction(pool, async tx => {
     if (!await lockRender(tx, attempt)) { auditAttempt('stale_attempt_result', attempt); return null; }
-    const result = await tx.query<RenderInput>(`SELECT c.music_track_id,c.render_version,v.object_key,v.actual_bytes,v.duration_seconds,v.music,v.teaser,v.cta_kind,v.compact,v.loudness_median_db,c.cut_plan,c.title,${effectivePlanSql('a')} AS plan,
+    const result = await tx.query<RenderInput>(`SELECT c.music_track_id,c.render_version,v.object_key,v.actual_bytes,v.duration_seconds,v.music,v.teaser,v.cta_kind,v.compact,v.loudness_median_db,c.cut_plan,c.title,CASE WHEN EXISTS (SELECT 1 FROM video_credit_charge cc WHERE cc.video_id=v.id AND cc.state IN ('reserved','settled') AND cc.paid_render) THEN 'paid' ELSE ${effectivePlanSql('a')} END AS plan,
       c.index,c.start_seconds,c.end_seconds,l.code,t.words,t.language,t.segments FROM clip c
       JOIN video v ON v.id=c.video_id JOIN account a ON a.id=v.account_id
       JOIN clip_link l ON l.clip_id=c.id JOIN transcript t ON t.video_id=v.id WHERE c.id=$1`, [attempt.clip_id]);
@@ -52,6 +54,7 @@ export async function updateRenderProgress(tx: PoolClient, videoId: string) {
     failure_reason=CASE WHEN $4 AND $2=0 THEN 'render_failed' ELSE NULL END,
     finished_at=CASE WHEN $4 THEN now() ELSE NULL END WHERE id=$1`,
   [videoId, counts.done, Math.floor(100 * counts.terminal / Math.max(1, counts.total)), terminal]);
+  await finalizeVideoCreditsTx(tx,videoId);
   if (terminal && counts.done > 0) await tx.query(`UPDATE attribution SET status='activated',activated_at=now()
     WHERE account_id=(SELECT account_id FROM video WHERE id=$1) AND status='pending'`, [videoId]);
 }

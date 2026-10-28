@@ -1,0 +1,17 @@
+{
+  "check": "final-bundle-types-01",
+  "command": [
+    "npm",
+    "run",
+    "typecheck"
+  ],
+  "source_revision": "4c386745a248215a7c50b718533765400f1d515d",
+  "started_at": "2026-10-28T14:08:41.746917+00:00",
+  "elapsed_seconds": 43.022,
+  "exit_code": 0,
+  "stopped_reason": null,
+  "node": "22.22.3",
+  "environment": "isolated *_test DB, Redis15/testMinIO, fake models, payments off",
+  "log": "/tmp/n5-thumbnail-checks-20261028/final-bundle-types-01.log",
+  "free_disk_gib": 2.544
+}

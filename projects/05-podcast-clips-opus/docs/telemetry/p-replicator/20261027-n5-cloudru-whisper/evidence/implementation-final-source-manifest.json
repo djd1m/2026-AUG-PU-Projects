@@ -1,0 +1,29 @@
+{
+  "created_at": "2026-10-27T23:15:04.614033+00:00",
+  "baseline": "3c51e71e9cffd2f636864fb6513058907984c1c4",
+  "spec_sha256": "e1afae2ceaddef35d421700ad75b7e256f407e40bebeea0782b997d10690c16e",
+  "files": {
+    "projects/05-podcast-clips-opus/.env.example": "e1017a2a756e058fdc2fe124452a4629e32881a1b078dacc7412bed2b00c81c8",
+    "projects/05-podcast-clips-opus/apps/worker/package.json": "541993e5d258455cfcec2e7ccd0d1ca2c214e00f753200047849c7bd3907df0a",
+    "projects/05-podcast-clips-opus/apps/worker/src/runtime.ts": "b826885f3f8b328926a90c480b7cab3629972c6b25477e85464bc6aacf79d21b",
+    "projects/05-podcast-clips-opus/apps/worker/src/stt/client.ts": "7d806b7d5ae62e2fbb78940ecd73970e2b6108475255da0baad8d7756a691268",
+    "projects/05-podcast-clips-opus/apps/worker/src/stt/spend.ts": "007544fc8e270dbc2108b1823c1a18a5efc63846f54295c46340302326b210c2",
+    "projects/05-podcast-clips-opus/apps/worker/src/stt/yandex-protocol.ts": "136b27cc9958bde6ba7c0ea0d60e1b4b3680a9c704a60b7f406d35275a94dac8",
+    "projects/05-podcast-clips-opus/apps/worker/src/stt/yandex.ts": "effca021bb121d7e0509043025fe98f34fb04170e34ff2b5d673be51c9e69fa2",
+    "projects/05-podcast-clips-opus/apps/worker/src/workers/stt.ts": "1550d1e95b182dcdd0db81b0c21f1a0f2741163ea72787d2ea5952116d94d2df",
+    "projects/05-podcast-clips-opus/apps/worker/workers/stt.ts": "6dac10410d7f12f4778e30c513cecb89706c1eaa76fbe5815e7aa3009dbaa733",
+    "projects/05-podcast-clips-opus/docker-compose.yml": "5632e692c2e58aa13d0e6bdf31a591ca76d68871a48318b97944e617557a3838",
+    "projects/05-podcast-clips-opus/package-lock.json": "5ea8dbeb11c879d8bb778e3798141e474dea24a2f52cfb5ab045bbc17e69e064",
+    "projects/05-podcast-clips-opus/packages/db/src/transcription.ts": "e2469ce0a09a6b2df38fcb96eaddb8dc37a8679b8d225e3f2ff0de9a09e5519a",
+    "projects/05-podcast-clips-opus/packages/shared/src/config.ts": "e2cc9a0e8b49e8018f680f61d395859c2d41580c5ac25cc5ec4f162bf69b560a",
+    "projects/05-podcast-clips-opus/tests/cloudru-provider.test.ts": "b66ff425b9160ece6e1457a0c9d40f34625d79f4603b3b1ed34b8764c2af5c96",
+    "projects/05-podcast-clips-opus/tests/fixtures/environment.ts": "78c5ab5155b088e28a4e948cdce0f09caa6f8bcbccae613f957319eb14d871a2",
+    "projects/05-podcast-clips-opus/tests/fixtures/yandex-official-golden.json": "8d7a2f539e0eff0fc881b516f25deb78cc9ea971aa84313094b21c99f1005314",
+    "projects/05-podcast-clips-opus/tests/fixtures/yandex-synthetic-ru.mp3": "4970a2d1ac36b3e304ff392a8e77786011a6ea3376ea6c748544c396d59f7c4f",
+    "projects/05-podcast-clips-opus/tests/fixtures/yandex-synthetic-source.json": "0d70c61e52834612c00dfda7a6b7317d9d02b09ddf2c50257d29a2b4382e19fa",
+    "projects/05-podcast-clips-opus/tests/transcription.integration.test.ts": "16c1452506df5041f5f9c2bf8788a689565494115ca4a4ae03b093f3bed974f6",
+    "projects/05-podcast-clips-opus/tests/yandex-input.test.ts": "59adac1d6ee69852f058a859aba8b40bb2c8ad782600434008fa7dcb77b3cd83",
+    "projects/05-podcast-clips-opus/tests/yandex-pipeline.test.ts": "186a0d3d5d1f1552bd3f0199a5f0c3896625e5132234e84c6623760ff0831ca1",
+    "projects/05-podcast-clips-opus/tests/yandex-stt.test.ts": "5c5ea3c6bdb0810cc11f39345570b225a79822e9d0eaf266fcfac24bd02bed43"
+  }
+}

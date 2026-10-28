@@ -1,0 +1,44 @@
+{
+  "timestamp": "2026-10-26T23:03:02.513357+00:00",
+  "owned_host_ports_free": {
+    "38811": true,
+    "38812": true,
+    "38813": true,
+    "9444": true
+  },
+  "owned_browser_loopback_ports_free": {
+    "9443": true,
+    "9444": true
+  },
+  "existing_browser_container_running": true,
+  "existing_test_infra_stopped": false,
+  "source_changes": [],
+  "source": "5b306f1646efb75494b67da1e0f234c3c94e2790",
+  "production_build_unchanged": "uLxK8pbNbskoqHNaI5loo",
+  "frozen_artifacts_unchanged": true,
+  "exact_owned_stale_job_cleanup": {
+    "status": "completed",
+    "only_exact_owned_job": true,
+    "job_id_sha256": "140b9bbaddebcd16d83760ccdc33c9c46e3485df31c4cabe41399ee8e524ebcd",
+    "prior_state": "waiting",
+    "removed": true,
+    "queue_wide_operation": false,
+    "sql_financial_change": false,
+    "at": "2026-10-26T22:59:21.984Z"
+  },
+  "retained_private_resources": {
+    "owner": "root",
+    "purpose": "final evidence review/reproduction and owner cleanup after acceptance",
+    "database": "n5_credit_ui_20261026_test",
+    "bucket": "n5-credit-ui-20261026",
+    "layout_objects": 6,
+    "shortage_input_object": 1,
+    "paths": [
+      "/tmp/n5-credit-ui-harness-20261026",
+      "/tmp/n5-credit-shortage-harness-20261026",
+      "/tmp/n5-credit-ui-source-20261026"
+    ]
+  },
+  "background_application_work": "stopped; no app/proxy/bridge remains running",
+  "disk_free_bytes": 2437296128
+}

@@ -1,0 +1,18 @@
+{
+  "observed_at": "2026-10-28T00:22:38.700270+00:00",
+  "command": [
+    "bash",
+    "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+    "/tmp/n5-acquisition-analytics-20261026/projects/05-podcast-clips-opus",
+    "--traceability",
+    "--role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/commands/feature.md",
+    "--project-role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/skills/sparc-prd-mini/SKILL.md"
+  ],
+  "exit_code": 1,
+  "source_head": "733fcf049290a2ed388a713dbf3e92e5df660039",
+  "spec_sha256": "ef2525b933e75661ae3ee0965741933555b4387da321a7b40547e184f4f41edf",
+  "log_sha256": "75646999d52ef656276d30707248c16514ff0bcf0587e1bef46f3346254ca9b8",
+  "meaning": "aggregate gate result preserved; nonzero is not advancement"
+}

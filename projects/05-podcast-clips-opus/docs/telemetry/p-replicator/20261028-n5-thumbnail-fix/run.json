@@ -1,0 +1,184 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "run_id": "20261028-n5-thumbnail-fix",
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "thumbnail-ffmpeg-fix",
+  "profile": "model-routing-econom",
+  "started_at": "2026-10-28T04:50:18+00:00",
+  "record_created_at": "2026-10-28T04:54:22.128834+00:00",
+  "initial_observation": "first observed UTC from initial read-only instruction/disk check; passport created before cleanup/code mutations",
+  "status": "completed",
+  "stage": "DONE_ACCEPTED_LOCAL_SCOPE_DELIVERED",
+  "baseline_revision": "394197e00535c0bd359af76dd5e1a18c52ed529a",
+  "responsible": "root",
+  "scope": [
+    "free safe completed redundant local artifacts first",
+    "reproduce and fix failed JPEG preview in existing N5 render pipeline",
+    "real media regression, required project checks, independent planner-context-only review",
+    "commit/push authorized existing feature branch"
+  ],
+  "exclusions": [
+    "no production deployment",
+    "no databases, user media or live dependency deletion",
+    "no paid model/API requests or new containers/images",
+    "no main merge or release"
+  ],
+  "requested_models": {
+    "plan": "gpt-6.1-sol high",
+    "code": "gpt-6.1-sol medium",
+    "review": "gpt-6.1-sol high fresh planner context only"
+  },
+  "actual_model": null,
+  "metrics": {
+    "input_tokens": null,
+    "cached_tokens": null,
+    "output_tokens": null,
+    "cost_usd": null,
+    "elapsed_wall_seconds": 2940.791
+  },
+  "missing_data": [
+    "host actual model/usage/cost unavailable"
+  ],
+  "constraints": {
+    "minimum_free_disk_gib": 2,
+    "free_disk_gib": 3.013,
+    "browser_container": "codex-ui-playwright"
+  },
+  "readiness": {
+    "status": "not_applicable",
+    "reason": "cleanup/source investigation; E2E not yet started"
+  },
+  "next_step": "owner target deployment plan; no pending accepted bugfix work",
+  "route": {
+    "mechanical_tier": "M",
+    "exit_code": 0,
+    "substantive_tier": "M",
+    "reason": "existing worker preview correctness; bounded ffmpeg process and artifact publication; no schema/public route/model changes"
+  },
+  "cleanup": {
+    "observed_freed_mib": 505.5,
+    "completed_duplicate_worktrees_removed": 4,
+    "completed_source_snapshot_removed": 1,
+    "evidence": [
+      "safe-cleanup-01.json",
+      "safe-cleanup-02-planner.json",
+      "safe-cleanup-03-snapshot.json"
+    ]
+  },
+  "updated_at": "2026-10-28T05:39:18.791307+00:00",
+  "plan": {
+    "sha256": "7bf903e562290852581a9e1053bf9d17d690de5c5dbbe62ff4889afb47b7584e",
+    "receipt_sha256": "affda172b2042179e53d3b6b89991ff2170e620518210aab7dfe6c37c37264fc",
+    "diagnosis": "low FPS trim before normalization truncates video while audio/formatduration hidesloss",
+    "route": {
+      "mechanical_final": "S exit0",
+      "substantive": "M existing timeline correctness; keep full regression/mutation/review; no sharedstatechange"
+    },
+    "concurrency": "not_applicable: per-process puregraph only, existing sharedguards retained"
+  },
+  "source_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+  "review": {
+    "verdict": "source_clear",
+    "source_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+    "report_sha256": "78593a8cacd84161a37cafa388d4fcfd32867a751d3462086224ff535fde445e",
+    "context": "planner and immutable source only; no coder history/logs",
+    "actual_model": null
+  },
+  "checks": {
+    "full_tests": 1259,
+    "test_files": 131,
+    "skipped": 0,
+    "build_exit": 0,
+    "types_exit": 0,
+    "lint_exit": 0,
+    "pipeline03_exit": 0,
+    "actual_sql_statuses": [
+      "done",
+      "done",
+      "done"
+    ],
+    "stored_durations": [
+      21.56,
+      21.44,
+      21.52
+    ],
+    "browser_media": "passed",
+    "browser_checks": 91,
+    "browser_errors": 0,
+    "browser_screenshots": 8,
+    "actual_video_audio_seconds": [
+      [
+        21.56,
+        21.56
+      ],
+      [
+        21.44,
+        21.44
+      ],
+      [
+        21.52,
+        21.52
+      ]
+    ],
+    "actual_JPEGs_decoded": 3,
+    "actual_download_byte_match": true,
+    "all5AC": "acceptedlocal",
+    "documentation_exits": [
+      0,
+      0,
+      0
+    ]
+  },
+  "diagnostics": [
+    {
+      "attempt": "pipeline01",
+      "result": "preflight metadata path not found; no upload",
+      "correction": "dist/src correct path"
+    },
+    {
+      "attempt": "pipeline02",
+      "result": "existing synthetic account upload quota429; no bypass",
+      "correction": "new account via normal registration, pipeline03success"
+    },
+    {
+      "attempt": "browser01",
+      "result": "Chromiumcomplete; WebKit secondvideo didnot satisfy fixed250ms advancement"
+    },
+    {
+      "attempt": "browser02",
+      "result": "Chromiumplaybackcomplete; extra download step Error, diagnosticlimited"
+    },
+    {
+      "attempt": "browser03",
+      "result": "all91passed withvisiblevideo andobservableadvancement, no productchange"
+    }
+  ],
+  "active_agents": [],
+  "active_checks": [],
+  "runtime_fixture": "stopped_after_acceptance",
+  "memory": {
+    "teach_id": "teach:203a2a1f07610133",
+    "store": "original project/.dz",
+    "backend": "@dzhechkov/memory",
+    "semantic_mirror": false
+  },
+  "local_acceptance_finished_at": "2026-10-28T05:37:48.072099+00:00",
+  "delivery": {
+    "state": "pushed_verified",
+    "branch": "feature/n5-credits-cloudru-20261026",
+    "code_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+    "code_already_pushed": true,
+    "uri": "https://github.com/djd1m/2026-AUG-PU-Projects/tree/feature/n5-credits-cloudru-20261026/projects/05-podcast-clips-opus",
+    "pending_accepted_scope": [],
+    "out_of_scope": [
+      "production deployment",
+      "real provider/targetVM acceptance",
+      "automatic historical media regeneration"
+    ],
+    "documentation_revision": "4778a9f0ff1151b11c1a91986776ddc4d7083491",
+    "last_verified_remote_revision": "4778a9f0ff1151b11c1a91986776ddc4d7083491",
+    "verified_at": "2026-10-28T05:39:18.791307+00:00",
+    "closure_note": "metadata-only closure commit follows verified code and documentation delivery"
+  },
+  "finished_at": "2026-10-28T05:39:18.791307+00:00"
+}

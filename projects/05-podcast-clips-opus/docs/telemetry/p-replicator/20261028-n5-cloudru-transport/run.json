@@ -1,0 +1,70 @@
+{
+  "run_id": "20261028-n5-cloudru-transport",
+  "started_at": "2026-10-28T15:05:08.100384+00:00",
+  "source_revision": "3f76ddd24298b8bfe5d4f536f29e40044e932518",
+  "stage": "accepted_delivery_documentation_and_git_sync",
+  "status": "accepted",
+  "responsible": "root",
+  "profile": "model-routing-econom",
+  "requested_models": {
+    "plan": "gpt-6.1-sol high",
+    "code": "gpt-6.1-sol medium",
+    "review": "gpt-6.1-sol high freshplannercontext"
+  },
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "risk": "M existingprovidertransportbounds and failurediagnostics; no newAPI/provider/money/schema",
+  "route_exit": 0,
+  "scope": [
+    "local realnativefetch delayedresponse reproduction",
+    "minimal supported perrequestCloudtransport ifconfirmed necessary",
+    "safe providerfailurediagnostics",
+    "update stalebacklog facts"
+  ],
+  "exclusions": [
+    "liveResend",
+    "newpaidLLMcalls or quota resets",
+    "newmodels/providerfallbacks",
+    "auth/payment/schema changes"
+  ],
+  "checks_required": [
+    "meaningful localrealtransport tests",
+    "guardmutants",
+    "fullproject regression",
+    "build/type/lint",
+    "coldreview",
+    "sourceboundworker-onlyrollout if allrequiredgatespass"
+  ],
+  "e2e_preflight": {
+    "status": "not_applicable",
+    "reason": "localdiagnostic/implementation; no liveprovider E2E yet"
+  },
+  "updated_at": "2026-10-28T17:07:21.063614+00:00",
+  "planner": {
+    "requested": "gpt-6.1-sol high",
+    "actual": null,
+    "repro": "sixlocalloopbackcases PASS;7.30.1nativefetchcompatible;8.12.3rejected",
+    "time_budget_minutes": 3,
+    "reported_elapsed_minutes": 4,
+    "overrun_reason": "cleanextractforauthoritative7reproduction"
+  },
+  "code": {
+    "requested": "gpt-6.1-sol medium",
+    "actual": null,
+    "focused": "24passed; finalassertiontypefixnew3passed",
+    "mutants_killed": 3
+  },
+  "implementation_route": {
+    "risk": "M",
+    "rationale": "existing Cloud transport/cancellation behavior, no newendpoint/role/payment/schema; mandatoryfullregression retained",
+    "before_implementation": "same approved scope as frozenplan"
+  },
+  "historical_failed_attempts": "build-01/full-01 stoppedbydiskguard; not softwarefailure/pass",
+  "disk_floor_gib": 2,
+  "app_source_revision": "009b4799899f4a5ab9df70c32107a4f0d209f081",
+  "real_control_result": "PASS;singleauthorizedselect599.565s;4clipsselectedandrendered;noSTTretry",
+  "owner_global_product_limits": "separateauditedfeature;autonomousagentstillonecontrolcall",
+  "finished_at": "2026-10-28T17:11:37.106600+00:00",
+  "elapsed_seconds": 7589.0
+}

@@ -1,0 +1,253 @@
+{
+  "candidate_code": "325f1f53ed090ad3325230fe29ad4156b636a9d0",
+  "final_docs_candidate": "74742a64e6e6c36313bcff5ed23fb044b3a21e67",
+  "integrated_files_byte_equal": true,
+  "checks": [
+    {
+      "check": "cloud-build-1",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 56.986,
+      "log": "cloud-build-1.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "90aafe3c6758026342797d53cb71b3294292eafaead229ef54a73a99d42418d9"
+    },
+    {
+      "check": "cloud-fixture-regression-1",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "tests/clip-music-choice.test.ts",
+        "tests/cloudru-provider.test.ts",
+        "tests/config.test.ts"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 14.186,
+      "log": "cloud-fixture-regression-1.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "f0f92786882668048d491c6e31195faa87447cb06e19ade5ad4641c7c26def8c"
+    },
+    {
+      "check": "cloud-focused-1",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "tests/cloudru-provider.test.ts",
+        "tests/selection.test.ts",
+        "tests/selection-order.test.ts",
+        "tests/config.test.ts",
+        "tests/model-spend.test.ts",
+        "tests/selection.integration.test.ts",
+        "tests/s3-public-endpoint.test.ts"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 16.328,
+      "log": "cloud-focused-1.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "57d8f06f7d3454df2714856360e1bb66f73b5e74d305cb47a71cbd0b664490ce"
+    },
+    {
+      "check": "cloud-focused-2",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "tests/cloudru-provider.test.ts",
+        "tests/selection-order.test.ts",
+        "tests/model-spend.test.ts",
+        "tests/selection.integration.test.ts",
+        "tests/s3-public-endpoint.test.ts"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 14.353,
+      "log": "cloud-focused-2.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "ff2b7934ec4b0ffaa0793c4c21d4d8f9c1f1ed8d6c8fcfb79234ae7c8eadc16f"
+    },
+    {
+      "check": "cloud-focused-3",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "tests/cloudru-provider.test.ts",
+        "tests/selection.integration.test.ts",
+        "tests/s3-public-endpoint.test.ts"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 14.633,
+      "log": "cloud-focused-3.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "1a75f41522d2e4f8f5213ad573993a8380f08005b1feee3f84ecdb5fbbae7303"
+    },
+    {
+      "check": "cloud-full-suite-1",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "exit_code": -15,
+      "elapsed_seconds": 330.134,
+      "log": "cloud-full-suite-1.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "e3e3db9d97f8e784a40383390d18045858651e85c32ff1948918c8cb09d796d4"
+    },
+    {
+      "check": "cloud-full-suite-2",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 430.775,
+      "log": "cloud-full-suite-2.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "0105f0569ce5ac165ab5b8d57f0fe24d0602fb4dd23d0c544ce9dcdaf07da2bb"
+    },
+    {
+      "check": "cloud-lint-1",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.066,
+      "log": "cloud-lint-1.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "03d26c6ef0841b6eac1a8fb620e782e15d97a1f4467dc4566747082c86361443"
+    },
+    {
+      "check": "cloud-lint-2",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.795,
+      "log": "cloud-lint-2.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "03d26c6ef0841b6eac1a8fb620e782e15d97a1f4467dc4566747082c86361443"
+    },
+    {
+      "check": "cloud-model-cost-1",
+      "command": [
+        "node",
+        "../../.claude/hooks/check-model-cost.cjs",
+        "."
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.097,
+      "log": "cloud-model-cost-1.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "98ef06406ba6d255449147f544a4a6dc98038fe62d6bfd62f27bd4343450f47d"
+    },
+    {
+      "check": "cloud-mutations-1",
+      "command": [
+        "node",
+        "scripts/test-selection-mutations.mjs"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 113.753,
+      "log": "cloud-mutations-1.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "b17e11e7ae1884cd49dc3c87034d5b9caf6e0cb2d86e36d9330c0b6d209597d8"
+    },
+    {
+      "check": "cloud-mutations-2",
+      "command": [
+        "node",
+        "scripts/test-selection-mutations.mjs",
+        "/tmp/n5-acquisition-analytics-20261026-plan/checks/cloud-mutations-2-artifacts"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 117.993,
+      "log": "cloud-mutations-2.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "d9d82849b8d44feafe7df1eda6a5aeddaa975602b810ed8f4ac415271d2f666d"
+    },
+    {
+      "check": "cloud-mutations-3",
+      "command": [
+        "node",
+        "scripts/test-selection-mutations.mjs",
+        "/tmp/n5-acquisition-analytics-20261026-plan/checks/cloud-mutations-3-artifacts"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 116.976,
+      "log": "cloud-mutations-3.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "d9d82849b8d44feafe7df1eda6a5aeddaa975602b810ed8f4ac415271d2f666d"
+    },
+    {
+      "check": "cloud-typecheck-1",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 2,
+      "elapsed_seconds": 18.78,
+      "log": "cloud-typecheck-1.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "e93011279237705e572a7d455cf025bb022f57a6077c5261d154a8b922e01f4e"
+    },
+    {
+      "check": "cloud-typecheck-2",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 36.788,
+      "log": "cloud-typecheck-2.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "1b4b658aae5b9ff1fab2830785a99fb6149f6727dcfc8485f493c745a36ffc13"
+    },
+    {
+      "check": "cloud-typecheck-3",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 31.481,
+      "log": "cloud-typecheck-3.log",
+      "node": "22.22.3",
+      "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off",
+      "log_sha256": "1b4b658aae5b9ff1fab2830785a99fb6149f6727dcfc8485f493c745a36ffc13"
+    }
+  ],
+  "full_suite": {
+    "files": 116,
+    "passed": 1092,
+    "skipped": 0
+  },
+  "native_scope_exception": "owner approved; original aggregatefailure retained",
+  "live_provider_acceptance": "not claimed"
+}

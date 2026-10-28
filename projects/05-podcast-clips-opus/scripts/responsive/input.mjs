@@ -23,7 +23,9 @@ export function validateFixture(f, base) {
   let guest;
   try { guest = new URL(f.screens?.guest, base); } catch { throw new Error('Фикстура непригодна: гостевая ссылка'); }
   if ((f.origin && f.origin !== base) || guest.origin !== base || !/^\/g\/[\w-]+$/.test(guest.pathname) || guest.search || guest.hash || guest.username || guest.password) throw new Error('Фикстура непригодна: origin или гостевой маршрут');
-  return { email: f.email, password: f.password, routes: ['/', `/c/${f.short_code}`, guest.pathname, '/dashboard', `/dashboard/videos/${f.video_id}`] };
+  const extra = f.supportScreens ?? [];
+  if (!Array.isArray(extra) || extra.some(route => !['/support', '/verify-email', '/forgot', '/reset', '/admin/support/accounts'].includes(route))) throw new Error('Фикстура непригодна: supportScreens');
+  return { email: f.email, password: f.password, routes: ['/', `/c/${f.short_code}`, guest.pathname, '/dashboard', `/dashboard/videos/${f.video_id}`, ...extra] };
 }
 export async function loadFixture(file, base) {
   let f;

@@ -1,0 +1,16 @@
+{
+  "check": "integrated-full-test-02",
+  "command": [
+    "npm",
+    "test"
+  ],
+  "source_revision": "ea3c260863c58f068159824bb90a9cb49ad02803",
+  "started_at": "2026-10-28T01:24:53.272523+00:00",
+  "elapsed_seconds": 445.203,
+  "exit_code": 1,
+  "stopped_reason": null,
+  "node": "22.22.3",
+  "environment": "isolated *_test DB, Redis15/testMinIO, fake models, payments off",
+  "log": "/tmp/n5-support-integration-checks-20261028/integrated-full-test-02.log",
+  "free_disk_gib": 2.728
+}

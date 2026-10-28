@@ -1,0 +1,31 @@
+{
+  "results": [
+    {
+      "command": "/tmp/n5-acquisition-node22/node-v22.22.3-linux-x64/bin/node",
+      "args": [
+        "scripts/test.mjs",
+        "tests/yandex-stt.test.ts",
+        "tests/support-fake-pipeline.test.ts"
+      ],
+      "exit": 0
+    },
+    {
+      "command": "npm",
+      "args": [
+        "run",
+        "lint"
+      ],
+      "exit": 0
+    },
+    {
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "exit": 0
+    }
+  ],
+  "log": "/tmp/n5-support-backend-checks-20261028/fake-contract-checks-01.log",
+  "logSha256": "5727c12dc6b66ad3032b8df0c306432f438f7454e8da9b1fe8a2b8228bb301a9"
+}

@@ -1,0 +1,43 @@
+{
+  "run_id": "20261028-n5-launch-report",
+  "started_at": "2026-10-28T16:00:58.960028+00:00",
+  "stage": "DELIVERED",
+  "status": "accepted",
+  "profile": "model-routing-econom",
+  "requested_models": {
+    "research_plan": "gpt-6.1-sol high",
+    "html_code": "gpt-6.1-sol medium",
+    "review": "gpt-6.1-sol high freshplannercontext"
+  },
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "owner_authorization": "отдельныйрой; анализпоследних2днейN5диалогов; интерактивныйHTMLдоклад Что мыдобавляемдлязапускапроекта; pushGitHub; актуальныйнетиповойUIреференсaicoding.spaceGitHubtrends",
+  "scope": [
+    "launchbusiness/infra/legal/admin/support/pricing changes",
+    "oneRFVMlocalproviders vsRF+foreign2VM",
+    "1channel1tariff1feature1segment; minimumtestofbusinesshypothesis",
+    "source-backedcurrentstatus andinteractiveHTML"
+  ],
+  "sensitive_exclusions": [
+    "keys/account/ticket/recording contents",
+    "rawchatdumps/privatetranscripts",
+    "unsupportedverifiedclaims"
+  ],
+  "updated_at": "2026-10-28T17:07:21.063614+00:00",
+  "responsible": "root",
+  "app_source_revision": "009b4799899f4a5ab9df70c32107a4f0d209f081",
+  "dialogue_coverage": "partiallocal26–28Oct;184uniqueuserfragments;notallhistoryclaim",
+  "html_review": "independentcontent+152browserchecksPASS beforestatus-onlyupdate",
+  "pending": "Owner elected to create PR manually from prepared comparison link",
+  "finished_at": "2026-10-28T17:11:37.106600+00:00",
+  "html_sha256": "a4d984050831138f367a50fdfa7db1e31da2174b2f2b9f4f08078082f168b9ca",
+  "browser_checks": {
+    "original": 152,
+    "status_rebound": 88,
+    "final_wording": 4
+  },
+  "requested_delivery": "GitHub HTML artifact; sourceview is not livehosting",
+  "git_delivery_uri": "https://github.com/djd1m/2026-AUG-PU-Projects/tree/feature/n5-credits-cloudru-20261026",
+  "delivery_updated_at": "2026-10-28T17:14:58.583635+00:00"
+}

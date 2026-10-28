@@ -8,7 +8,8 @@
     "docs/ADR.md",
     "docs/canon.md",
     "docs/Refinement.md",
-    "docs/Completion.md"
+    "docs/Completion.md",
+    "docs/features/support-access/01_specification.md"
   ],
   "notes": {
     "state": "Реализация не начиналась: монорепо, миграций, package.json и тестов не существует. Написаны только скаффолды координатором (docker-compose.yml, Dockerfile, .dockerignore, .env.example, .gitignore, proxy/Caddyfile). Ни одна фича не done.",
@@ -938,6 +939,59 @@
         "apps/web/src/app/api/webhooks/yookassa/route.ts",
         "apps/web/src/app/upgrade/page.tsx"
       ]
+    },
+    {
+      "id": "support-access",
+      "number": 31,
+      "title": "Подтверждение почты, восстановление и поддержка пользователей",
+      "description": "N1/N3 token reuse, N6b/N4 read-only operator access, official Libredesk bridge. Local synthetic acceptance only; real SMTP/vendor pilot/RF deployment remain separate. Current production untouched.",
+      "priority": "post-mvp",
+      "status": "done",
+      "complexity": "complex",
+      "depends_on": [
+        "foundation",
+        "retention-and-erasure"
+      ],
+      "blockers": [],
+      "fr_ids": [
+        "FR-support-access-1",
+        "FR-support-access-2",
+        "FR-support-access-3",
+        "FR-support-access-4",
+        "FR-support-access-5",
+        "FR-support-access-6",
+        "FR-support-access-7",
+        "FR-support-access-8",
+        "FR-support-access-9",
+        "FR-support-access-10",
+        "FR-support-access-11"
+      ],
+      "sc_ids": [
+        "SC-US-001-1",
+        "SC-US-001-2",
+        "SC-US-001-3",
+        "SC-US-001-4",
+        "SC-US-001-5",
+        "SC-US-002-1",
+        "SC-US-002-2",
+        "SC-US-003-1",
+        "SC-US-003-2",
+        "SC-US-003-3",
+        "SC-US-004-1"
+      ],
+      "adr_ids": [],
+      "expected_files": [
+        "packages/db/migrations/023_support_access.sql",
+        "packages/db/src/support-email.ts",
+        "packages/db/src/support-admin.ts",
+        "packages/db/src/ops-support-operator.ts",
+        "apps/web/src/server/support/routes.ts",
+        "apps/web/src/app/support/SupportPanel.tsx",
+        "apps/web/src/app/admin/support/accounts/Accounts.tsx",
+        "scripts/check-support.mjs"
+      ],
+      "local_acceptance_source_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+      "completion": "docs/features/support-access/05_completion.md"
     }
   ]
 }

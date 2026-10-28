@@ -1,0 +1,35 @@
+# Independent cold source review — N5 blogger referrals
+
+Verdict: CHANGES REQUIRED — one bounded concurrency finding (H1). Financial joins, assignment cutoff, public entry, UI/RPC contract and additive migration otherwise match the reviewed six AC. This is a static source review, not a build/test/E2E pass.
+
+Immutable candidate: `11510d283d8c16b528b83d8017ae984d3c486a30`.
+Baseline: `3b48d0ff4697d96f6b7e2de8f89a16f61ea1fbc1`.
+Repository: `/tmp/n5-acquisition-analytics-20261026`.
+Project: `projects/05-podcast-clips-opus`.
+Plan v2 SHA256 verified: `dbaba0f7109601b56a86cab13609a3895f187c110d8e1c391b570cc0d54605f1`, plus normative clock_timestamp detail from `/tmp/n5-referral-validation-v2-20261028.md`.
+Reviewed immutable git show/diff only, including all 13 changed files and relevant baseline auth/schema/migration donors. No coder logs, test receipts, trace narrative or root's mutable telemetry was used to infer correctness.
+
+## H1 — blocked-owner creation guard races antifraud block
+
+Location: `apps/web/src/server/partner-code.ts:23–29`, especially line26.
+
+The account/partner lock serializes campaign creators with one another, but code.apply locks the referred account and target code; it does not lock the partner owner's account/partner row. The blocked-code check is an unlocked `SELECT ... WHERE status='blocked'`. While the 50th application holds an existing code row and marks it blocked without committing yet, createOwnedPartnerCode sees its previous active version, sees no blocked rows and can insert/commit a fresh active campaign. Likewise block may commit between the check and INSERT. Sequential blocked-code tests pass while this bypass remains possible under concurrent requests. The existing comment claiming account-lock serialization with attribution does not cover attribution by another account.
+
+Minimal correction: before the blocked decision for a new campaign, acquire row locks on ALL owned code rows (including currently active ones) in stable ID order, e.g. `SELECT id,code,status FROM partner_code WHERE partner_id=$1 ORDER BY id FOR NO KEY UPDATE`, then decide from the locked rows whether to return the existing same-owned code or reject new creation. Locking only rows already matching status='blocked' does not solve the invisible/uncommitted transition. Keep existing session/account/partner ownership serialization and foreign collision handling; no new engine/schema is needed.
+
+Deterministic regression: transaction A locks an existing owned code and sets it blocked without committing; start creation of a different campaign in B; prove B cannot complete before A, commit A, then require B's 409 and zero new active code. Retain same-code blocked idempotency and concurrent same-owned creation tests. Record red before fix and green after; rerun affected integration/type checks and required gates through root.
+
+## Six-AC source assessment
+
+1. Strict code regex and strict tRPC object reject owner injection. Owner is ctx.account; helper rechecks active account, global UNIQUE handles collisions generically, own repeat returns existing status. Sequential blocked-owner refusal is correct; H1 prevents accepting its concurrent guarantee yet. Existing GuestPack helper is unchanged.
+2. Dashboard passes trusted config.publicOrigin from server, renders complete /r/code URLs, explicit copy status/error, selected-code filter and all-code totals, creation/empty/error/loading states with labels. rpc method literal includes partner.createCode and backend return shape supplies purchases/revenue_minor. No payment/customer PII is returned. Browser/mobile qualification remains external to this review.
+3. Public route wiring instantiates the proper service/runtime. Handler authenticates/rate-limits before lookup/write; find validates exact charset/length and active owner/code; direct view excludes owner; fixed Location '/' and no-store protect redirect/cache contract. Existing HMAC cookie function, guest priority, first-touch and secure TTL remain unchanged. New partial index provides code/prefix/Moscow-day dedup; insertion rechecks current active state and does not modify real clip/guest indexes.
+4. Replacement matrix, self rejection and antifraud threshold logic are unchanged. assigned_at is clock_timestamp on new row default; UPDATE advances only when partner_code_id differs, preserving same-code source promotion. Original created_at is retained. Attribution UNIQUE account and independent aggregation preserve registration counting.
+5. Financial aggregate reads each payment once, joins only unique intent and attribution rows with intent/account/provider-payment identity and amount equality, filters real-provider accepted/no-review payments, succeeded/fulfilled package intents and pending/activated attribution. Both intent.created_at and paid_at compare to assigned_at. It excludes old intents, fake/refund/review/unknown/unfulfilled/mismatch/duplicate-identity cases and grants without accepted payments; SUM uses gross minor amounts. No video/clip/growth join can multiply money. Refund filters reflect existing entire-payment refund policy. Migration intentionally starts old attribution rows at migration-time conservative cutoff, so pre-migration historical money is excluded; disclose that behavior in delivery.
+6. Added tests cover basic ownership/collision/concurrent creation, sequential blocking, direct-view concurrency/day/prefix/self, financial statuses/amount/identity/old timestamps, real package sizes, code reassignment and same-code promotion. H1's ordered block-vs-create scenario is absent. Existing separate payment integration suites remain required for duplicate webhook/refund-before-success behavior. Static review does not establish full regression, mutation proof, browser or actual provider E2E completion.
+
+Migration024 creates the actual UNIQUE index directly (fails instead of silently deleting duplicates), then adds assigned_at DEFAULT clock_timestamp(). Migration runner is transactional and hash-checks files. No duplicate cleanup, schema rewrite, bill/credit fulfillment or provider behavior changes were introduced. Root must still perform/report any required duplicate preflight before production migration. Test-shop money must remain in isolated DB because payment has no persisted test/live discriminator.
+
+Checks executed: immutable diff/source/schema review; `git diff --check <baseline> <candidate>` exit0; plan hash matched. No tests run by reviewer; root owns independent regression/build/browser receipts. No DB/provider calls, secrets, installs, source/git/production writes were performed. Only requested /tmp review artifacts written. Initial source pathname guess for a growth migration was corrected by immutable tree listing; correct 002_growth_event_prefix.sql was inspected.
+
+Profile: model-routing-econom; requested review/high. Actual model/effort/usage/cost: null (execution metadata unavailable). No invented counters. Read-only E2E preflight: not_applicable. Root owns H1 correction, exact revised-source handoff and completion of all authorized accepted-scope work.

@@ -1,0 +1,76 @@
+{
+  "results": [
+    {
+      "label": "old-admin-red-final",
+      "command": "/tmp/n5-acquisition-node22/node-v22.22.3-linux-x64/bin/node",
+      "args": [
+        "scripts/test.mjs",
+        "tests/support-email.integration.test.ts"
+      ],
+      "exit": 1,
+      "log": "/tmp/n5-support-backend-checks-20261028/stage-fix-01/old-admin-red-final.log",
+      "logSha256": "cfd20f51b61da03264579d5c4b8deb348aa4bd1c75b55fd203e4f2f6c2b0db02"
+    },
+    {
+      "label": "fixed-admin-green-final",
+      "command": "/tmp/n5-acquisition-node22/node-v22.22.3-linux-x64/bin/node",
+      "args": [
+        "scripts/test.mjs",
+        "tests/support-email.integration.test.ts"
+      ],
+      "exit": 0,
+      "log": "/tmp/n5-support-backend-checks-20261028/stage-fix-01/fixed-admin-green-final.log",
+      "logSha256": "91adc064d3f2ae3472f888f56d8d4ab2cfcd2dfebf5cf2bc940a0f1ad842e0c2"
+    },
+    {
+      "label": "db-build-final",
+      "command": "npm",
+      "args": [
+        "run",
+        "build",
+        "--workspace",
+        "packages/db"
+      ],
+      "exit": 0,
+      "log": "/tmp/n5-support-backend-checks-20261028/stage-fix-01/db-build-final.log",
+      "logSha256": "b6cd0e886c8b67fa4867b7bda87be7f3610fb61a49915369fbf74d02838f46c8"
+    },
+    {
+      "label": "web-types-final",
+      "command": "npm",
+      "args": [
+        "run",
+        "typecheck",
+        "--workspace",
+        "apps/web"
+      ],
+      "exit": 0,
+      "log": "/tmp/n5-support-backend-checks-20261028/stage-fix-01/web-types-final.log",
+      "logSha256": "21816b8bb0da431db3d8625137867318323f36f496a7258c4bb734a5d5266882"
+    },
+    {
+      "label": "lint-final",
+      "command": "npm",
+      "args": [
+        "run",
+        "lint"
+      ],
+      "exit": 0,
+      "log": "/tmp/n5-support-backend-checks-20261028/stage-fix-01/lint-final.log",
+      "logSha256": "03d26c6ef0841b6eac1a8fb620e782e15d97a1f4467dc4566747082c86361443"
+    },
+    {
+      "label": "diff-final",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "/tmp/n5-support-backend-checks-20261028/stage-fix-01/diff-final.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "sourceSha256": "a9fc1743a33dc553e1685d8822cdf785215b5f7d8527a88eef09089fd6905841",
+  "testSha256": "55947e5484a03a958d6bdfbf277e0e0ae60d3387fd28ae0935c4744d8c62421a"
+}

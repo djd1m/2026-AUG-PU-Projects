@@ -1,0 +1,17 @@
+{
+  "check": "owner-pricing-combined-types-03",
+  "command": [
+    "npm",
+    "run",
+    "typecheck"
+  ],
+  "source_revision": "009b4799899f4a5ab9df70c32107a4f0d209f081",
+  "started_at": "2026-10-28T16:44:55.661213+00:00",
+  "elapsed_seconds": 52.033,
+  "exit_code": 0,
+  "stopped_reason": null,
+  "node": "22.22.3",
+  "environment": "isolated *_test DB, Redis15/testMinIO, fake models, payments off",
+  "log": "/tmp/n5-thumbnail-checks-20261028/owner-pricing-combined-types-03.log",
+  "free_disk_gib": 2.812
+}

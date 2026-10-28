@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-10-26T19:17:24.036606+00:00",
+  "browser": "Existing Docker Playwright1.63 Chromium",
+  "origin": "https://localhost",
+  "fixture": "Empty sandbox allow-scripts iframe; no SDK script or app code in frame",
+  "result": [
+    {
+      "serviceWorkers": "block",
+      "pageerror": "SecurityError reading Navigator.serviceWorker in opaque sandbox"
+    },
+    {
+      "serviceWorkers": "allow",
+      "pageerror": null
+    }
+  ],
+  "interpretation": "Playwright block injection accesses forbidden child property. Remove only harness block injection; assert no registered service workers and native sandbox denial, retain full request guards."
+}

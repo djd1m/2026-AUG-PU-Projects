@@ -1,0 +1,17 @@
+{
+  "check": "yandex-timing-correction",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "tests/yandex-stt.test.ts",
+    "tests/yandex-input.test.ts",
+    "tests/transcription.test.ts",
+    "tests/yandex-pipeline.test.ts"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 63.347,
+  "log": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-timing-correction.log",
+  "node": "22.22.3",
+  "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off"
+}

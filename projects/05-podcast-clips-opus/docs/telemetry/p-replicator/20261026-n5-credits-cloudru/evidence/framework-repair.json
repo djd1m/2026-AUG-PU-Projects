@@ -1,0 +1,24 @@
+{
+  "package": "@dzhechkov/p-replicator",
+  "installed_version": "1.13.4",
+  "restored_file": ".claude/hooks/check-dangling-refs.cjs",
+  "source": "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/templates/.claude/hooks/check-dangling-refs.cjs",
+  "sha256": "8f012876b1af110a1093319d36a2f84208a15780dbb8abb5a43eb4aeb8f76865",
+  "byte_identical": true,
+  "verify_exit_code": 0,
+  "scope": "One missing pre-shipped file restored locally; no init --force or global configuration changes",
+  "log_formatting": [
+    {
+      "file": "p-replicator-verify-initial.log",
+      "original_sha256": "ce25b34dc0ea9d3ba12741386a19e8688036184202735a9d0b8b6148c5434493",
+      "original_exact_bytes_in_git_commit": "7625d425",
+      "formatting": "Removed trailing empty output line only; diagnostics/status unchanged"
+    },
+    {
+      "file": "p-replicator-verify-restored.log",
+      "original_sha256": "977a3e2ffa67385300724c18f50c9ba88d7a50322ec431c84309ebbd5ae4de78",
+      "original_exact_bytes_in_git_commit": "7625d425",
+      "formatting": "Removed trailing empty output line only; diagnostics/status unchanged"
+    }
+  ]
+}

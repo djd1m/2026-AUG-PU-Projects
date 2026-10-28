@@ -1,0 +1,371 @@
+{
+  "preflight": {
+    "state": "ready",
+    "source_sha256": "ceb741bfbe1d8e98f5149441037872c1d99fbbf0249552e3631da9371f7c13a4",
+    "source_revision": "34545fd5bb572b9ecf3fa8519f4afdc3a23a8e88",
+    "time": "2026-10-28T17:06:39.581074+00:00",
+    "CSS_byte_identical": true,
+    "functions_byte_identical": true,
+    "effects": "own fresh /tmp file copy, browser reports only; no app/API",
+    "mode": "affected status rebind after accepted 152 checks"
+  },
+  "checks": [
+    {
+      "name": "chromium/360/dark overflow",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/dark final status",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/dark production catalog",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/dark pricing",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/dark journey 1",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/dark journey overflow 1",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/dark journey 3",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/dark journey overflow 3",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/dark journey 5",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/dark journey overflow 5",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/light overflow",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/light final status",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/light production catalog",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/light pricing",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/light journey 1",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/light journey overflow 1",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/light journey 3",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/light journey overflow 3",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/light journey 5",
+      "pass": true
+    },
+    {
+      "name": "chromium/360/light journey overflow 5",
+      "pass": true
+    },
+    {
+      "name": "chromium/360 runtime",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "chromium/360 standalone",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/dark overflow",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/dark final status",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/dark production catalog",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/dark pricing",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/dark journey 1",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/dark journey overflow 1",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/dark journey 3",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/dark journey overflow 3",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/dark journey 5",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/dark journey overflow 5",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/light overflow",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/light final status",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/light production catalog",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/light pricing",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/light journey 1",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/light journey overflow 1",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/light journey 3",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/light journey overflow 3",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/light journey 5",
+      "pass": true
+    },
+    {
+      "name": "chromium/900/light journey overflow 5",
+      "pass": true
+    },
+    {
+      "name": "chromium/900 runtime",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "chromium/900 standalone",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/dark overflow",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/dark final status",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/dark production catalog",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/dark pricing",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/dark journey 1",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/dark journey overflow 1",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/dark journey 3",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/dark journey overflow 3",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/dark journey 5",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/dark journey overflow 5",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/light overflow",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/light final status",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/light production catalog",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/light pricing",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/light journey 1",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/light journey overflow 1",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/light journey 3",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/light journey overflow 3",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/light journey 5",
+      "pass": true
+    },
+    {
+      "name": "webkit/360/light journey overflow 5",
+      "pass": true
+    },
+    {
+      "name": "webkit/360 runtime",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "webkit/360 standalone",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/dark overflow",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/dark final status",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/dark production catalog",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/dark pricing",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/dark journey 1",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/dark journey overflow 1",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/dark journey 3",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/dark journey overflow 3",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/dark journey 5",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/dark journey overflow 5",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/light overflow",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/light final status",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/light production catalog",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/light pricing",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/light journey 1",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/light journey overflow 1",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/light journey 3",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/light journey overflow 3",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/light journey 5",
+      "pass": true
+    },
+    {
+      "name": "webkit/900/light journey overflow 5",
+      "pass": true
+    },
+    {
+      "name": "webkit/900 runtime",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "webkit/900 standalone",
+      "pass": true
+    }
+  ],
+  "failures": []
+}

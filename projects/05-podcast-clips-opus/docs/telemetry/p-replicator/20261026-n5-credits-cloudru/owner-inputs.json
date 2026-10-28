@@ -1,0 +1,36 @@
+{
+  "observed_at": "2026-10-26T20:09:02.378283+00:00",
+  "credit_rate": {
+    "status": "approved",
+    "credits": 1,
+    "seconds": 60,
+    "whole_minute_rounding": false,
+    "owner_answer": "Посекундно:1кредит=60секунд,безокруглениядоцелойминуты"
+  },
+  "addon": {
+    "status": "approved",
+    "credits": 600,
+    "hours": 10,
+    "price_rub": 1490,
+    "valid_days_from_purchase": 30,
+    "paid_features_throughout_window": true,
+    "independent_of_base_expiry": true
+  },
+  "upgrade": {
+    "status": "awaiting_answer",
+    "choices": [
+      "immediate with current-period purchase credit",
+      "next-period only"
+    ]
+  },
+  "workflow_scope_exception": {
+    "status": "approved",
+    "observed_at": "2026-10-26T20:35:27.248981+00:00",
+    "owner_answer": "да, давай, работай в автономном режиме - я спать на7часов"
+  },
+  "autonomy": {
+    "status": "approved",
+    "preserve_existing_rights": true,
+    "direct_upgrade_answer": null
+  }
+}

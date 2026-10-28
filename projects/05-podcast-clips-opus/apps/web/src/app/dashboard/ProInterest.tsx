@@ -6,8 +6,9 @@ import { rpc } from '../../lib/rpc';
 
 // Фича 30 payments (ADR-019): при включённой оплате (N5_PAYMENTS_MODE fake|live) — ссылка на /upgrade с экраном оплаты;
 // при выключенной (не задан или off) — экран интереса РОВНО как раньше (ADR-005 для режима off, AC-1).
-export function ProInterest({ source, paymentsOn = false }: { source: SourceScreen; paymentsOn?: boolean }) {
+export function ProInterest({ source, paymentsOn = false, creditMode=false }: { source: SourceScreen; paymentsOn?: boolean; creditMode?: boolean }) {
   const [busy, setBusy] = useState(false), [saved, setSaved] = useState(false), [error, setError] = useState('');
+  if (creditMode) return <section aria-label="Пакеты кредитов"><p>Старт: 300 кредитов / 5 ч за 990 ₽. Про: 1800 кредитов / 30 ч за 3990 ₽. Дополнительный пакет: 600 кредитов / 10 ч за 1490 ₽.</p><a className="button secondary" href={`/upgrade?from=${source}`}>Выбрать пакет</a></section>;
   if (paymentsOn) {
     return <section aria-label="Тариф Pro" data-state="pro-offer"><p>Новые клипы без метки, хранение без срока и больше минут
       в день — тариф {PAID_PLAN_TITLE}, {formatRubles(PAID_PRICE_MINOR)} за {PAID_PLAN_DAYS} дней.</p>

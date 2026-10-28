@@ -1,0 +1,211 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "model-routing-econom",
+  "run_id": "20261026-n5-acquisition-analytics",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "acquisition-research-and-funnel-analytics",
+  "pipeline": "parallel-research-plan-implement-review-e2e",
+  "tier": "L",
+  "risk_flags": [
+    "external_analytics",
+    "attribution",
+    "noPaidTrafficOrModelCalls",
+    "existing_payment_confirmation_only"
+  ],
+  "profile": "model-routing-econom",
+  "profile_overrides": [],
+  "comparison_id": null,
+  "baseline_revision": "4d5b0e26b45ef8cfc15103f2e6fe00a3fb39e880",
+  "final_revision": "0394ff992449b242c1b08c8bc6b2c48a407c2baa",
+  "spec_sha256": "4a165ff3a587cb39e6d0a506e2bed291031bb27035bfc738febf62faed5e31c0",
+  "policy_sha256": "4622c96c879baa08d548f99b4f48ec19e7f59bb0eb91b2a58de46db4a079ee09",
+  "policy_source": "/home/dz-projects-2026/2026-AUG-PU-Projects/2026-AUG-PU-Projects/docs/development/model-routing-econom.md",
+  "host": "Codex",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-10-26T17:56:30.585751+00:00",
+  "ended_at": "2026-10-26T19:29:19.433002+00:00",
+  "status": "accepted",
+  "acceptance_evidence": [
+    "docs/research/acquisition-20261026/README.md",
+    "docs/features/acquisition-analytics/05_completion.md",
+    "docs/telemetry/p-replicator/20261026-n5-acquisition-analytics/evidence/checks.json",
+    "docs/telemetry/p-replicator/20261026-n5-acquisition-analytics/evidence/browser/result-on.json",
+    "docs/telemetry/p-replicator/20261026-n5-acquisition-analytics/evidence/responsive/attempt2-receipt.md"
+  ],
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 4,
+    "ac_total": 4,
+    "known_defects_missed": null,
+    "followup_status": "pending_Cloudru_live_analytics_and_separate_tariff_FM_migration",
+    "disclosed_limits": [
+      "One-clip fixture first-screen R9 remains outside new analytics scope",
+      "646 stock responsive warnings retained; zero exit is not full accessibility certification",
+      "No media playback or live payment/analytics/model inference claimed"
+    ]
+  },
+  "metrics": {
+    "input_tokens_total": null,
+    "cached_input_tokens": null,
+    "output_tokens_total": null,
+    "reasoning_tokens": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "actual model metadata and usage/cost not exposed",
+    "Initial read/preparation time before passport creation not fully measured",
+    "Implementation/delegation stage boundaries before 18:56 were recorded retrospectively; precise launch timestamps unavailable"
+  ],
+  "ac": [
+    "Source-bound analogue acquisition channel research; unknown traffic shares are unknown",
+    "One-line unit economics with measured versus hypothesized CAC/conversion/retention",
+    "One chosen channel/tariff/feature/segment and event funnel",
+    "Owner-adjusted scope: prepare optional consented code and synthetic funnel evidence; real counter enablement/reception explicitly planned for Cloud.ru RF"
+  ],
+  "constraints": [
+    "No paid traffic,real payments,model inference,user-content export,global configuration changes",
+    "Only existing or owner-provided analytics destination; no fabricated counter/property",
+    "Browser E2E in existing codex-ui-playwright Docker container",
+    "N5 credit tariff documentation is accepted target; runtime tariff/credit migration is separate scope"
+  ],
+  "worktree": "/tmp/n5-acquisition-analytics-20261026",
+  "branch": "feature/n5-acquisition-analytics-20261026",
+  "stages": [
+    {
+      "stage": "acquisition_research",
+      "agent": "n5_acquisition_channels",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "actual_model": null,
+      "status": "completed",
+      "receipt": "acquisition.md"
+    },
+    {
+      "stage": "economics_research",
+      "agent": "n5_acquisition_economics",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "actual_model": null,
+      "status": "completed",
+      "receipt": "economics.md"
+    },
+    {
+      "stage": "analytics_plan",
+      "agent": "n5_analytics_planner",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "actual_model": null,
+      "status": "completed"
+    },
+    {
+      "stage": "plan_validation",
+      "agent": "n5_acquisition_plan_validation",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "actual_model": null,
+      "status": "completed_with_caveats",
+      "receipt": "docs/features/acquisition-analytics/validation-report.md"
+    },
+    {
+      "stage": "IMPLEMENT",
+      "agent": "n5_analytics_coder",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "medium",
+      "actual_model": null,
+      "status": "correction_in_progress",
+      "source_revision": "77dc69c7",
+      "receipt": "docs/features/acquisition-analytics/implementation-review.md"
+    },
+    {
+      "stage": "REVIEW",
+      "agent": "n5_acquisition_plan_validation",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "actual_model": null,
+      "status": "R1_R2_closed_browser_checks_pending",
+      "receipt": "docs/features/acquisition-analytics/implementation-review-fixes.md"
+    },
+    {
+      "stage": "SDK_PRIVACY_CORRECTIONS",
+      "agent": "n5_analytics_coder",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "medium",
+      "actual_model": null,
+      "status": "completed",
+      "source_revision": "0394ff992449b242c1b08c8bc6b2c48a407c2baa"
+    },
+    {
+      "stage": "INDEPENDENT_REVIEW",
+      "agent": "n5_acquisition_plan_validation",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "actual_model": null,
+      "status": "completed_findings_closed",
+      "receipt": "docs/features/acquisition-analytics/sandbox-review-closure.md"
+    },
+    {
+      "stage": "VERIFY",
+      "agent": "root",
+      "actual_model": null,
+      "status": "completed",
+      "full_tests": 1067,
+      "browser_transport_requests": 40,
+      "responsive_pages": 206
+    }
+  ],
+  "route": {
+    "old_worktree_explicit_result": "XL due to scanning complete existing files incl payment configuration; not a mutation diff",
+    "current_root_lower_bound": "M;exit0;observation-onlyallowlist",
+    "substantive_tier": "L:new external analytics integration,PLAN/VALIDATE/IMPLEMENT/REVIEWrequired",
+    "payment_logic_mutation": "excluded"
+  },
+  "external_dependency": {
+    "analytics_counter_id": "not created; planned at Cloud.ru launch",
+    "reception_in_owner_dashboard": "planned_on_CloudRu_not_claimed_pass"
+  },
+  "deployment_context": "Code on current VPS; production launch and owner-counter reception check deferred to Cloud.ru RF by owner clarification",
+  "current_stage": "DELIVERED",
+  "planner_packet": {
+    "path": "docs/features/acquisition-analytics/analytics-plan.md",
+    "sha256": "8ef3b9cf796a21492aee67ec622bfbcbbcff9627a7fdba42fb0e06ab658b975d",
+    "owner_addendum_sha256": "135c6b0253589b4c8d1aafc95fdbf1200bc3291b6471f41bc70bbcd76cd78c3a"
+  },
+  "source_revision": "0394ff992449b242c1b08c8bc6b2c48a407c2baa",
+  "original_exercise_ac": [
+    "Source-bound analogue acquisition channel research; unknown traffic shares are unknown",
+    "One-line unit economics with measured versus hypothesized CAC/conversion/retention",
+    "One chosen channel/tariff/feature/segment and event funnel",
+    "Events received in real analytics; if account/configuration missing report exact external blocker without false success"
+  ],
+  "scope_reconciliation": {
+    "owner_clarification_event": "owner-cloudru-scope",
+    "reason": "Owner chose code preparation on current VPS and launch on Cloud.ru; live owner analytics is outside current delivery scope",
+    "deferred": [
+      "Create owner counter and goals",
+      "Enable on target Cloud.ru runtime",
+      "Verify uninhibited transport and actual goal visibility in owner dashboard"
+    ],
+    "original_exercise_ac_met": 3,
+    "original_exercise_ac_total": 4
+  },
+  "delivery": {
+    "branch": "feature/n5-acquisition-analytics-20261026",
+    "status": "pushed",
+    "production_activation": false,
+    "pull_request": false,
+    "content_revision": "a2c7ac424ae6963ca172eba18a12b4740ab2e6b1",
+    "uri": "https://github.com/djd1m/2026-AUG-PU-Projects/tree/feature/n5-acquisition-analytics-20261026/projects/05-podcast-clips-opus/docs/research/acquisition-20261026",
+    "push_verified": "git push exit0 c6cc0096..a2c7ac42; final telemetry-only commit follows",
+    "test_processes": "Owned test backend and localhost proxy stopped; no production change"
+  },
+  "dz_memory": {
+    "lesson_id": "teach:40c56df55effa00c",
+    "backend": "local .dz memory",
+    "readback": "lexical recall confirmed",
+    "contents": "SDK data boundaries and stable responsive build lesson; no credentials"
+  },
+  "elapsed_seconds_recorded": 5568.847
+}

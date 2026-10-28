@@ -13,7 +13,7 @@ export default async function DetailPage({ params }: { params: Promise<{ videoId
   try {
     const { screen, pool, config } = getScreenRuntime();
     const [video, { clips }, packs, remaining] = await Promise.all([screen.get(account, videoId), screen.clips(account, videoId), new GuestPackService(pool).list(account, videoId), remainingLimits(pool, config.limits, account)]);
-    return <><VideoDetail videoId={videoId} initialVideo={video} initialClips={clips}
+    return <>{video.status === 'failed' && <p><a className="button secondary" href={`/support?videoId=${videoId}`}>Помощь с обработкой записи</a></p>}<VideoDetail creditMode={!!remaining.credits} videoId={videoId} initialVideo={video} initialClips={clips}
       initialPacks={packs.map(pack => ({ ...pack, url: new URL(pack.url, config.publicOrigin).href }))} consentHash={consentHash} paymentsOn={config.payments.mode !== 'off'} /><LimitsPanel remaining={remaining} /></>;
   } catch (cause) { if (cause instanceof UploadError && cause.status === 404) notFound(); throw cause; }
 }

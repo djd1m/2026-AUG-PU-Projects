@@ -1,0 +1,34 @@
+{
+  "timestamp": "2026-10-28T00:36:02.343890+00:00",
+  "owner_scope_exception": "support-access scope only; explicit approval required by adapter precondition; unchanged checker, hash-bound source; aggregate failure retained",
+  "scope": [
+    "support-access"
+  ],
+  "mode": "--report-revision",
+  "aggregate_project_result": "historical exit1 retained separately, not pass",
+  "checker": "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+  "checker_sha256": "06e3dae22c533a81732b9870ae42d6b80b6e8419b3c90e11e1910e2a46888be8",
+  "source_head": "01db46886c9e8b29f0f1fa199f136d8a026f6fd1",
+  "source_files_sha256": {
+    "docs/features/support-access/03_architecture.md": "0ee76c591870305c54e03162b662bbe50c8cd2ab5215c9632242ec24c3a1276c",
+    "docs/features/support-access/05_completion.md": "eca7b0a4fcfa485977e08a98973acb01c2f37f7f82ebfdaf4f112de7cb3f141c",
+    "docs/features/support-access/01_specification.md": "ef2525b933e75661ae3ee0965741933555b4387da321a7b40547e184f4f41edf",
+    "docs/features/support-access/research.md": "8c4b9d20e4589db634a4a1b94c21fb2a7d0c64d9343f7104c88b7c79c1ed438d",
+    "docs/features/support-access/04_refinement.md": "16e9f534616c53b84c5dd99a0ac5b8179cd38219d3ae14333b82ebe2b53aef5e",
+    "docs/features/support-access/validation-report.md": "f33aa3fc19a824d8800d0469b9d89dc84e257c8944a0042d100c4170f8b6b4a2",
+    "docs/features/support-access/02_pseudocode.md": "f7c095b56042ba30e24cf534189edf3bf1504c512c3d0f6a8782b0d287fa1a66"
+  },
+  "snapshot_matches_before_after": true,
+  "command": [
+    "bash",
+    "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+    "/tmp/n5-support-scoped-gates-20261028/phase2-support-ready/snapshot",
+    "--report-revision",
+    "--role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/commands/feature.md",
+    "--project-role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/skills/sparc-prd-mini/SKILL.md",
+    "--criterion-scenarios"
+  ],
+  "exit_code": 0
+}

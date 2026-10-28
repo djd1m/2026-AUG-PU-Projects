@@ -1,0 +1,85 @@
+{
+  "run_id": "n5-pricing-decisions-20261026",
+  "record_started_at": "2026-10-26T17:26:06.680757+00:00",
+  "status": "complete",
+  "profile": "model-routing-econom",
+  "tier": "T",
+  "route_exit_code": 0,
+  "route_reason": "Docs-only consolidation of owner discussion; no tariff code, schema, runtime or billing changes.",
+  "source_revision": "fcea4807aa66173560b59c3c45d6aabaa7e23e99",
+  "technical_reference_revision": "732df4cccca8cd03bdaa51eaafe49adac23f01ee",
+  "scope": [
+    "pricing-decisions.md",
+    "unit-economics-summary.md",
+    "pricing-record.json",
+    "README.md",
+    "../economics-improvements-20261026/README.md"
+  ],
+  "acceptance_criteria": [
+    "Preserve 990RUB/5h and3990RUB/30h;10h addon1490RUB;trial only once at registration; volume20/30/60 still undecided",
+    "Recalculate costs, first-monthtrial and recurringFree break-even with clear denominator and exclusions",
+    "Explain3970RUB/25h vs3990RUB/30h and unresolved upgrade-credit rules",
+    "Distinguish documented proposal from existing production tariffs and historical research",
+    "Check scoped diff, Markdown links, calculations and absence of known secret patterns"
+  ],
+  "authorization": "Owner asked to record these conclusions in Markdown; prior standing authorization covers commits and pushes to GitHub. No application rollout authorized.",
+  "executor": "primary coordinator; small docs task, no new delegation",
+  "actual_model": null,
+  "requested_model": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gaps": [
+    "Runtime model/usage/cost not exposed",
+    "Read/preparation time before record_started_at not fully measured"
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Documentation only; no build/deploy/E2E or paid model calls."
+  },
+  "checks": {
+    "decimal_costs_and_contributions": "pass",
+    "paid_balance_table_cells": 12,
+    "one_time_trial_cases": 4,
+    "archived_recurring_Free_cases": 2,
+    "rounding_edge_6_vs7": "pass",
+    "upgrade_3970_vs3990": "pass",
+    "extra_fixed_costs": "pass",
+    "local_markdown_links": "pass",
+    "known_secret_pattern_matches": 0,
+    "json_parse": "pass",
+    "tracked_diff_check": "pass",
+    "independent_review": "not_required_small_docs_task; no new agent spawned",
+    "application_build": "not_applicable_docs_only",
+    "e2e": "not_applicable_docs_only",
+    "staged_diff_check": "pass",
+    "staged_route_exit_code": 0
+  },
+  "owner_clarifications": [
+    "Free minutes only at registration, never monthly",
+    "Owner asks why60; distinguish one-time policy from trial volume, which remains open"
+  ],
+  "route_rationale": "Only Markdown conclusions and small evidence record; no tariff mutation or product rollout.",
+  "validation_at": "2026-10-26T17:32:59.446191+00:00",
+  "seconds_since_record_start": 453.297647,
+  "current_decisions": {
+    "trial_policy": "once_at_registration_never_monthly",
+    "trial_minutes": null,
+    "trial_minutes_reason": "Owner questions60;20/30/60 comparisons retained, final volume not selected",
+    "start_RUB_per30days": 990,
+    "start_minutes": 300,
+    "pro_RUB_per30days": 3990,
+    "pro_minutes": 1800,
+    "addon_RUB": 1490,
+    "addon_minutes": 600,
+    "application_rollout": "not_performed"
+  },
+  "finished_at": "2026-10-26T17:33:39.978404+00:00",
+  "delivery_branch": "docs/n5-unit-economics-20261026",
+  "pending": [
+    {
+      "scope": "out_of_scope",
+      "item": "Owner selection of trial volume; runtime implementation, upgrade accounting and retention policy",
+      "reason": "Task is recording discussion, not changing live tariffs or deciding the challenged trial amount."
+    }
+  ]
+}

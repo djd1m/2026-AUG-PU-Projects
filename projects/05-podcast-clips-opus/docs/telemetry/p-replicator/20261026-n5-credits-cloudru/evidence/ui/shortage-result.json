@@ -1,0 +1,32 @@
+{
+  "run_id": "20261026-n5-credits-cloudru",
+  "work_unit_id": "credit-ui-shortage-resume-2",
+  "source": "5b306f1646efb75494b67da1e0f234c3c94e2790",
+  "runtime": "ordinary NextdevUI + exactfrozenbuiltworker directownedprobe",
+  "production_build_separate": "uLxK8pbNbskoqHNaI5loo",
+  "status": "passed",
+  "host_exit": 0,
+  "browser_exit": 0,
+  "trusted_billable_seconds": 1801,
+  "preview": {
+    "estimated_credits": 30.02,
+    "estimated_seconds": 1801,
+    "duplicate_upload_posts": 0,
+    "kind": "actual browser metadata estimate; trusted charge is separate"
+  },
+  "available_seconds": 1800,
+  "reserved_seconds": 0,
+  "provider_calls": 0,
+  "provider_http_calls": 0,
+  "spend_records": 0,
+  "source_changes": [],
+  "finished_at": "2026-10-26T22:57:06.291Z",
+  "raw_probe_receipt_sha256": "ccdadd675d679e5d3005b4c4a9341c054429f40e0c4bd588cd39cc8619dd3f0d",
+  "raw_browser_receipt_sha256": "cf0d3e1aea98dc45dc3f7b1a79623599d5edff4bb0e7941293fce2e8be1858fd",
+  "limits": [
+    "directownedprobe, not whole queue/processing proof",
+    "Nextdev test runtime; separate acceptedproductionbuild not exercisedinproductionmode",
+    "fakeonly; no bank/model/cloudprovideracceptance"
+  ],
+  "next_owner": "root finalintegration/doc/gates/publication after ownprocess cleanup"
+}

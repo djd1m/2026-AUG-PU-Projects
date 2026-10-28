@@ -1,9 +1,11 @@
 # N5 «КлипМейкер» — Docker Compose. Канон §6: ровно 7 сервисов в боевом профиле (web, три воркера,
 # db, redis, proxy) + minio и test в профиле `test`. Хранилища НЕ публикуют портов (Правило №0).
-# Хостовые порты — только ${VAR:-default}; секреты и потолки — ${VAR:?…} без значений по умолчанию.
+# Хостовые порты — только ${VAR:-default}; потолки — ${VAR:?…} без дефолтов.
+# Ключи моделей проверяются при старте только выбранного live-поставщика.
 name: ${N5_COMPOSE_PROJECT:-n5-clipmaker}
 
 x-app-env: &app-env
+  N5_BILLING_MODE: ${N5_BILLING_MODE-legacy}
   NODE_ENV: production
   DATABASE_URL: postgresql://n5:${N5_DB_APP_PASSWORD:?пароль приложения к БД не задан}@db:5432/n5
   REDIS_URL: redis://:${REDIS_PASSWORD:?пароль Redis не задан — очередь без пароля не поднимается}@redis:6379
@@ -42,9 +44,26 @@ services:
       UV_THREADPOOL_SIZE: "8"
       N5_TRUSTED_PROXY_HOPS: ${N5_TRUSTED_PROXY_HOPS:-2}
       SESSION_SECRET: ${SESSION_SECRET:?секрет сессий не задан}
+      # Публичный ID Метрики задаётся при запуске в Cloud.ru. Пусто — аналитика выключена.
+      N5_METRIKA_COUNTER_ID: ${N5_METRIKA_COUNTER_ID:-}
       # Оплата ЮKassa (фича 30, ADR-019). Дефис БЕЗ двоеточия: не задана → off (экран интереса); явно ПУСТАЯ строка
       # доезжает до web и валит старт (honest-configuration CFG-I2), а не превращается в off молча.
       N5_PAYMENTS_MODE: ${N5_PAYMENTS_MODE-off}
+      N5_MAIL_MODE: ${N5_MAIL_MODE-disabled}
+      N5_RESEND_API_KEY: ${N5_RESEND_API_KEY-}
+      N5_MAIL_FROM: ${N5_MAIL_FROM-}
+      N5_SMTP_HOST: ${N5_SMTP_HOST-}
+      N5_SMTP_PORT: ${N5_SMTP_PORT-}
+      N5_SMTP_USER: ${N5_SMTP_USER-}
+      N5_SMTP_PASSWORD: ${N5_SMTP_PASSWORD-}
+      N5_SMTP_SECURE: ${N5_SMTP_SECURE-}
+      N5_SUPPORT_MODE: ${N5_SUPPORT_MODE-disabled}
+      N5_SUPPORT_BASE_URL: ${N5_SUPPORT_BASE_URL-}
+      N5_SUPPORT_INBOX_ID: ${N5_SUPPORT_INBOX_ID-}
+      N5_SUPPORT_IDENTIFIED: ${N5_SUPPORT_IDENTIFIED-false}
+      N5_SUPPORT_JWT_SECRET: ${N5_SUPPORT_JWT_SECRET-}
+      N5_SUPPORT_CONTACT_EMAIL: ${N5_SUPPORT_CONTACT_EMAIL-}
+      N5_MAIL_TEST_CAPTURE_FILE: ${N5_MAIL_TEST_CAPTURE_FILE-}
       # Ключи магазина нужны только при live; web сам откажет стартовать, если при live их нет.
       YOOKASSA_SHOP_ID: ${YOOKASSA_SHOP_ID-}
       YOOKASSA_SECRET_KEY: ${YOOKASSA_SECRET_KEY-}
@@ -70,7 +89,9 @@ services:
     command: ["node", "dist/apps/worker/workers/stt.js"]
     environment:
       <<: [*app-env, *quota-env, *s3-env]
-      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?ключ OpenRouter не задан — транскрипция невозможна}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-} # selected-key validation at worker startup
+      YANDEX_SPEECHKIT_API_KEY: ${YANDEX_SPEECHKIT_API_KEY:-}
+      N5_STT_PROVIDER: ${N5_STT_PROVIDER-openrouter}
       N5_PUBLIC_ORIGIN: ${N5_PUBLIC_ORIGIN:?публичный origin не задан — платная обработка не должна начинаться без пригодной метки}
       N5_MODEL_PROVIDER: live
       N5_WORK_DIR: /work
@@ -93,7 +114,9 @@ services:
     command: ["node", "dist/apps/worker/workers/select.js"]
     environment:
       <<: [*app-env, *quota-env]
-      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?ключ OpenRouter не задан — выделение фрагментов невозможно}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-} # required only for selected OpenRouter
+      CLOUDRU_FM_API_KEY: ${CLOUDRU_FM_API_KEY:-}
+      N5_LLM_PROVIDER: ${N5_LLM_PROVIDER-openrouter}
       N5_PUBLIC_ORIGIN: ${N5_PUBLIC_ORIGIN:?публичный origin не задан — платная обработка не должна начинаться без пригодной метки}
       N5_MODEL_PROVIDER: live
       N5_LLM_MODEL: ${N5_LLM_MODEL:?модель выделения не задана}
@@ -199,6 +222,7 @@ services:
     command: ["sh", "-c", "node scripts/test-db.mjs && npm test -- --run"]
     environment:
       <<: [*app-env, *quota-env]
+      N5_BILLING_MODE: ${N5_BILLING_MODE-legacy}
       NODE_ENV: test
       N5_ACCEPTANCE: "1"
       DATABASE_URL: postgresql://n5:${N5_DB_APP_PASSWORD:?пароль БД не задан}@db:5432/n5_test

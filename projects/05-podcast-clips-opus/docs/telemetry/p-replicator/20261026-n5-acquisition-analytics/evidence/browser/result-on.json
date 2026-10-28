@@ -1,0 +1,368 @@
+{
+  "mode": "on",
+  "evidence": "fully intercepted synthetic SDK requests; NOT live goal receipt or report ingestion",
+  "checks": [
+    "visit/login/ready/payment/reload/excluded route/withdrawal",
+    "real registration + protected discard continuation",
+    "dummy register200 + protected401 no signup",
+    "wrong raw intent cannot produce payment goal",
+    "chromium + webkit consent responsive/theme checks"
+  ],
+  "transport": [
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [
+        "n5_visit"
+      ],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [
+        "n5_first_clip_ready"
+      ],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [
+        "n5_payment_confirmed"
+      ],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "signup",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "signup",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "signup",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "signup",
+      "host": "mc.yandex.com",
+      "goals": [
+        "n5_visit"
+      ],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "signup",
+      "host": "mc.yandex.com",
+      "goals": [
+        "n5_signup_success"
+      ],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "duplicate",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "duplicate",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "duplicate",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "duplicate",
+      "host": "mc.yandex.com",
+      "goals": [
+        "n5_visit"
+      ],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "wrong-intent",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "wrong-intent",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "wrong-intent",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "wrong-intent",
+      "host": "mc.yandex.com",
+      "goals": [
+        "n5_visit"
+      ],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "wrong-intent",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "wrong-intent",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "wrong-intent",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    }
+  ],
+  "consoleErrors": [
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "signup",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "signup",
+      "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+    },
+    {
+      "label": "duplicate",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "duplicate",
+      "text": "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+    },
+    {
+      "label": "wrong-intent",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "webkit-ui",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "webkit-ui",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "webkit-ui",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "webkit-ui",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "webkit-ui",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "webkit-ui",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    }
+  ],
+  "screenshots": [
+    "/tmp/n5-acquisition-e2e/on-chromium-dark-360.png",
+    "/tmp/n5-acquisition-e2e/on-chromium-dark-900.png",
+    "/tmp/n5-acquisition-e2e/on-chromium-light-360.png",
+    "/tmp/n5-acquisition-e2e/on-chromium-light-900.png",
+    "/tmp/n5-acquisition-e2e/on-webkit-dark-360.png",
+    "/tmp/n5-acquisition-e2e/on-webkit-dark-900.png",
+    "/tmp/n5-acquisition-e2e/on-webkit-light-360.png",
+    "/tmp/n5-acquisition-e2e/on-webkit-light-900.png"
+  ],
+  "status": "passed"
+}

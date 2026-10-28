@@ -108,9 +108,9 @@ it('passive referral preserves stronger source and ignores self visits', () => {
 });
 it('dashboard renders five counters, blocked explanation and attribution status without identity leakage', () => {
   const html = renderToStaticMarkup(createElement(PartnerSummary, { data: { codes: [{ id: codeId, code: 'CODE123', status: 'blocked', blocked_reason: 'antifraud_ip_burst', unblocked_at: null, unblock_reason: null }],
-    counters: { visits: 10, registrations: 3, uploaded: 2, shared: 1, guests: 1 },
+    counters: { visits: 10, registrations: 3, uploaded: 2, shared: 1, guests: 1, purchases: 1, revenue_minor: 99000 },
     statuses: [{ partner_code_id: codeId, source: 'explicit', status: 'rejected', count: 1 }] } }));
-  expect(html.match(/<dt>/g)).toHaveLength(5); expect(html).toContain('Код заблокирован'); expect(html).toContain('Отклонены');
+  expect(html.match(/<dt>/g)).toHaveLength(7); expect(html).toContain('Код заблокирован'); expect(html).toContain('Отклонены');
   expect(html).not.toContain(account);
 });
 it('RT-001 body source cannot forge provenance, signed evidence alone selects guest_link', async () => {
@@ -180,7 +180,7 @@ it('RT-002 dashboard shows Moscow unblock date and escaped reason only for activ
   const { readFileSync } = await import('node:fs');
   const data = { codes: [{ id: codeId, code: 'CODE123', status: 'active' as 'active' | 'blocked', blocked_reason: null,
     unblocked_at: '2026-09-23T22:30:00.000Z', unblock_reason: '<script>alert(1)</script>' }],
-  counters: { visits: 0, registrations: 0, uploaded: 0, shared: 0, guests: 0 }, statuses: [] };
+  counters: { visits: 0, registrations: 0, uploaded: 0, shared: 0, guests: 0, purchases: 0, revenue_minor: 0 }, statuses: [] };
   const html = renderToStaticMarkup(createElement(PartnerSummary, { data }));
   expect(html).toContain('Код разблокирован 24.09.2026: &lt;script&gt;alert(1)&lt;/script&gt;');
   expect(html).not.toContain('<script>');

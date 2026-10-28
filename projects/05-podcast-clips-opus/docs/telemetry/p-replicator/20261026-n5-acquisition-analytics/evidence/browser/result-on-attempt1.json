@@ -1,0 +1,28 @@
+{
+  "mode": "on",
+  "evidence": "fully intercepted synthetic SDK requests; NOT live goal receipt or report ingestion",
+  "checks": [],
+  "transport": [],
+  "consoleErrors": [
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    }
+  ],
+  "screenshots": [
+    "/tmp/n5-acquisition-e2e/on-chromium-dark-360.png",
+    "/tmp/n5-acquisition-e2e/on-chromium-dark-900.png",
+    "/tmp/n5-acquisition-e2e/on-chromium-light-360.png",
+    "/tmp/n5-acquisition-e2e/on-chromium-light-900.png"
+  ],
+  "status": "failed",
+  "error": "page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/dashboard\" until \"load\"\n============================================================\n    at run (/tmp/n5-acquisition-e2e/browser-check.cjs:96:54)\n    at async /tmp/n5-acquisition-e2e/browser-check.cjs:126:22"
+}

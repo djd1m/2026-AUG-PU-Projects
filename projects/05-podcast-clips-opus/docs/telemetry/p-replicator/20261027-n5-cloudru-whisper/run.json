@@ -1,0 +1,362 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "policy_version": "owner model-routing-econom override",
+  "run_id": "20261027-n5-cloudru-whisper",
+  "batch_id": null,
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "cloudru-whisper-stt",
+  "pipeline": "p-replicator /feature Mode2",
+  "tier": "XL mechanical; substantiveROUTE beforeimplementation",
+  "risk_flags": [
+    "newexternalSTTprovider",
+    "wordtimestamp/outputboundary",
+    "billableattempts existingquota/fence mustremain",
+    "containersecretprojection"
+  ],
+  "profile": "model-routing-econom",
+  "profile_overrides": [
+    "ownerexplicit gpt-6.1-sol high PLAN/REVIEW,medium IMPLEMENT",
+    "reviewer fresh plannercontext, no coder conversations"
+  ],
+  "comparison_id": null,
+  "baseline_revision": "0c42dfb1acd7f5085517ddde57f11d1f04781e66",
+  "final_revision": "4546af003d43e6fd066e04400cb1d3c188993f1d",
+  "spec_sha256": "e1afae2ceaddef35d421700ad75b7e256f407e40bebeea0782b997d10690c16e",
+  "policy_sha256": "0ea43b745e8a5cf29e5484e8a5354f372d85fdfbca1713b5d2b8cfe37b29c7b2",
+  "host": "Codexnativecollaboration",
+  "host_version": null,
+  "billing_mode": "unknown",
+  "started_at": "2026-10-27T21:29:53.859971+00:00",
+  "ended_at": "2026-10-28T00:01:52.899146+00:00",
+  "status": "completed",
+  "current_stage": "BOUNDED_STT_IMPLEMENTATION_DELIVERED_FULL_MIGRATION_INCOMPLETE",
+  "acceptance_evidence": [
+    "evidence/coordinator-final-verification.json",
+    "evidence/fix1-check-receipt-index.json",
+    "evidence/cold-review-final-report.md",
+    "evidence/phase3-final-coordinator.json",
+    "evidence/built-adapter-probe-ready.json",
+    "evidence/built-adapter-probe-result.json"
+  ],
+  "quality": {
+    "required_gates_passed": true,
+    "ac_met": 8,
+    "ac_total": 9,
+    "known_defects_missed": null,
+    "followup_status": "AC9 live qualification partial; no full migration claim",
+    "gate_scope": "owner-approved selected foundation contour only; aggregate historical gate exit1 retained"
+  },
+  "metrics": {
+    "input_tokens": null,
+    "cached_tokens": null,
+    "output_tokens": null,
+    "reasoning_tokens": null,
+    "cost_usd": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Actualmodel/token/cost metadata unavailable",
+    "initialreadonlytool/research started beforepassport; observedclock21:27:43UTC, prepassport intervalnotreconstructed"
+  ],
+  "owner_request": "Confirm Cloud.ru Whisper wordtimestamps and implementadapter; use https://gitverse.ru/dzhechkov/stt-rag-app asreference",
+  "constraints": [
+    "no currentproduction deployment",
+    "no privateenv/key/rawusercontent output",
+    "no fabricatedwordtimes or hiddenproviderfallback",
+    "no new resources/globalconfig",
+    "ownerexistingkeyandboundedshortSTTvalidationauthorized; no newaccount/purchase/productiondeploy"
+  ],
+  "disk_policy": {
+    "minimum_free_gib": 2,
+    "current_free_gib": 3.157855987548828
+  },
+  "responsible": "root",
+  "next_step": "Target-RF rollout plan retains natural-speech quality, live S3/browser, deployment, and real analytics-counter checks; no background executor claimed",
+  "actual_background_implementation": false,
+  "owner_autonomy_hours": 8,
+  "owner_authorization": "explicit STT adapter request + donor +8h autonomousplan27.10.2026",
+  "work_plan": "docs/features/cloudru-whisper-work-plan-20261027.md",
+  "active_research_launch_sha256": "387960fe4734bf8f07a402ba21e9f9d6780c9d652333f7eea26012235dbc7a30",
+  "toolkit_verify": "pre-shipped contractOK with9existingpostreplicatehints",
+  "forecast": {
+    "type": "8hbudgetallocation;notcalibrateddurationforecast",
+    "comparable_run": "20261026-n5-credits-cloudru",
+    "limits": "previouscredits/UIrunisnotmatchedSTTsample; insufficientdata for statisticallygroundedestimate",
+    "cost": null
+  },
+  "active_unit": "root delivery; coding and independent review completed",
+  "provider_capability": "CloudWhispersegmenttimingsconfirmed,wordsnull5cases; independentdocsandwireauditscompleted; GigaChat/GigaASR officialcatalogcandidate",
+  "credential_presence": "ownerprovided; authenticatedcatalogHTTP200; secret0600ignoredfile; no value output",
+  "approval_review_timeout": {
+    "action": "read-only ffmpegflitecapabilitycheck",
+    "result": "automaticreviewtimedout, notunsafejudgment",
+    "permitted_single_retry": "succeeded; flitefilterabsent",
+    "unresolved_permission_block": false
+  },
+  "owner_scope_update": "ownerchose RFwordSTT and addedYANDEX_SPEECHKIT_API_KEY tosameprivatefile; shortrealvalidationauthorized",
+  "live_discovery": {
+    "authenticated_catalog": "HTTP200 whisperpresent",
+    "inference_requests": 5,
+    "input_seconds_each": 5.26175,
+    "all_http_status": 200,
+    "json_top_keys": [
+      "text",
+      "usage"
+    ],
+    "verbose_top_keys": [
+      "duration",
+      "language",
+      "segments",
+      "text",
+      "words"
+    ],
+    "verbose_segments": 1,
+    "verbose_words": null,
+    "conclusion": "segmenttimestampsobserved; wordtimestampsnotreturnedinfivetestedrequestvariants; notglobalproofunsupported",
+    "actual_cost": null,
+    "provider_usage_observed": {
+      "json_seconds": 6
+    },
+    "new_inference": "none duringindependentresearch",
+    "gigaasr": {
+      "http_status": 200,
+      "input_seconds": 5.26175,
+      "text_empty": true,
+      "words": null,
+      "segments": null,
+      "usage_seconds": 5.4,
+      "actual_cost": null,
+      "conclusion": "notqualified; no guessedparameter/codec retries"
+    },
+    "yandex_v3": {
+      "grpc_status": 0,
+      "mode": "FULL_DATA",
+      "input_seconds": 5.26175,
+      "elapsed_seconds": 0.5605391999999999,
+      "word_count": 10,
+      "final_count": 2,
+      "time_unit": "milliseconds int64 strings",
+      "word_capability": "confirmed on ownsyntheticfixture; qualitynotqualified",
+      "actual_cost": null
+    },
+    "yandex_v3_200s": {
+      "status": {
+        "code": 0,
+        "details": ""
+      },
+      "elapsed_seconds": 5.8539199,
+      "input_seconds": 200,
+      "event_count": 75,
+      "final_count": 22,
+      "fully_empty_final_count": 6,
+      "word_count": 83,
+      "first_word_start_seconds": 3.24,
+      "last_word_end_seconds": 184.16,
+      "word_intervals_in_source_duration": true,
+      "status_events": [
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "WORKING",
+          "message": ""
+        },
+        {
+          "code_type": "CLOSED",
+          "message": ""
+        }
+      ],
+      "response_sha256": "17165d951cda5cc5a7e062c27142817034efa201a83d4eb2648840eaeb5f9b15",
+      "purpose": "directprovider200sFULL_DATAsyntheticdurationproof;notN5buildorqualityacceptance",
+      "quality": "unqualified; repeatedespeekspeechrecognitionimperfect",
+      "actual_cost": null,
+      "retries": 0
+    },
+    "yandex_built_adapter_200s": {
+      "source_revision": "c25a290ffc6722175c890fe7958fc5ab8ce9df8c",
+      "provider": "yandex",
+      "model": "general",
+      "success": true,
+      "elapsed_seconds": 5.452730277,
+      "input_seconds": 200,
+      "word_count": 83,
+      "segment_count": 16,
+      "first_word_seconds": 3.24,
+      "last_word_seconds": 184.16,
+      "all_intervals_finite": true,
+      "transcript_sha256": "0abb6a7f0f3492a55bd99c80bdaf835377b1b2a55c8d20861df6030096556ccd",
+      "actual_cost": null,
+      "automatic_retries": 0,
+      "scope": "built-adapter synthetic200s proof, natural quality and full target migration unqualified"
+    }
+  },
+  "updated_at": "2026-10-28T00:01:52.899146+00:00",
+  "owner_economics_request": "updateunitcosts,marginandbreakevenforactualSpeechKitv3mode; agreedproductpricesandoneVMunchanged",
+  "offline_protocol_fixture": {
+    "sha256": "8d7a2f539e0eff0fc881b516f25deb78cc9ea971aa84313094b21c99f1005314",
+    "path": "evidence/official-yandex-protocol-golden.json",
+    "scope": "reencodedwithfullpinnedproviderprotobufnotN5schema; nopaidcalls"
+  },
+  "parent_run_id": "20261026-n5-credits-cloudru",
+  "scope_continuity": "continuedselectedCloudfoundationSTTscopeownerrequestedRFalternative; historicalaggregateexit1retained",
+  "coding_agent": {
+    "name": "/root/n5_yandex_stt_coder",
+    "status": "completed; terminal receipt and source commit verified",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning": "medium",
+    "actual_model": null,
+    "launch_sha256": "5d0b8200106f3f7c2ecdae5486ca8bdc8fcbeb188753bee216baea9ef1fc4472"
+  },
+  "economics": {
+    "status": "coldreviewPASS_WITH_LIMITS",
+    "source_commit": "1333e1b556b6b31ecaa886582c97fd0a10d16c85",
+    "independent_numeric_checks": 2302,
+    "hour_budget_rub": 57,
+    "stress_hour_rub": 62,
+    "trial_one_30min_upload_rub": 29,
+    "actual_invoice": null
+  },
+  "independent_review_initial": {
+    "source": "a826387db43d50f1703a8233f94714a6853dc1a8",
+    "verdict": "CHANGES_REQUESTED",
+    "medium_findings": [
+      "F1input-halfclosecompletion",
+      "F2independentaudioframeandcursorwireguards"
+    ],
+    "report_sha256": "2ea2f6b5caac0ef9a3b7fc768ff5376e39d282a44b32928e06b4a6c682d32089",
+    "trace_sha256": "f11d994c6e0db89cfd2637fc00854d1115bf2c1c051025ed4a33df588e604120"
+  },
+  "independent_review_final": {
+    "source": "c25a290ffc6722175c890fe7958fc5ab8ce9df8c",
+    "verdict": "PASS bounded source corrections",
+    "report_sha256": "9ec0ba36c264764dc5d053a9ede44bf951a6f1004201521b22f8a458e8b3b217",
+    "reviewer_received": "planner sources and frozen code; no coder conversations or execution receipts",
+    "actual_model": null,
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning": "high"
+  },
+  "remaining_scope": {
+    "accepted_bounded_implementation": "complete, Git delivery pending",
+    "natural_speech_quality": "unqualified; synthetic capability is not recognition-quality acceptance",
+    "target_rf_s3_browser": "not executed; excluded from current source-contour acceptance",
+    "current_vps_deployment": "excluded by owner target-RF launch decision",
+    "full_cloudru_migration": "incomplete; remains in cloudru-launch-plan.md"
+  },
+  "delivery": {
+    "revision": "66a263a85d419c8c2845ffce2a7af408763ff293",
+    "remote_head_verified": true,
+    "branch": "refs/heads/feature/n5-credits-cloudru-20261026",
+    "uri": "https://github.com/djd1m/2026-AUG-PU-Projects/tree/feature/n5-credits-cloudru-20261026/projects/05-podcast-clips-opus",
+    "scope": "bounded adapter + research docs; no current production deployment or full migration claim"
+  },
+  "duration_seconds": 9119.039175
+}

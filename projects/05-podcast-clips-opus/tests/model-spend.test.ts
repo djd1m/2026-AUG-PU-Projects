@@ -88,5 +88,6 @@ it('RM-003 runtime STT and LLM attempts reach ONE file through the actual compos
     const rows = (await readFile(join(directory, 'spend/model-spend.jsonl'), 'utf8')).trim().split('\n').map(line => JSON.parse(line));
     expect(rows.filter(row => row.phase === 'attempt').map(row => row.stage).sort()).toEqual(['select', 'stt']);
     expect(rows.filter(row => row.phase === 'outcome')).toHaveLength(2);
+    expect(rows.filter(row => row.stage === 'select').map(row => row.provider)).toEqual(['fake', 'fake']);
   }
 });

@@ -1,4 +1,4 @@
-import { clipAliveSql, transaction, type Pool } from '@clipmaker/db';
+import { creditAccountLock, clipAliveSql, transaction, type Pool } from '@clipmaker/db';
 export interface RetentionStorage { delete(key: string): Promise<void>; erasePrefix(prefix: string): Promise<void>; eraseClipPrefix(prefix: string): Promise<void> }
 export const RETENTION_INTERVAL_MS = 3600_000;
 // One hour lets already-issued part URLs and bounded in-flight storage writes settle.
@@ -12,6 +12,10 @@ export async function eraseAccount(pool: Pool, storage: RetentionStorage, accoun
   await transaction(pool, async tx => {
     const locked = await tx.query("SELECT id FROM account WHERE id=$1 AND status='erasing' FOR UPDATE", [account]);
     if (!locked.rowCount) return;
+    await tx.query('SELECT id FROM video WHERE account_id=$1 ORDER BY id FOR UPDATE',[account]);
+    await creditAccountLock(tx,account);
+    await tx.query('DELETE FROM video_credit_charge WHERE video_id IN (SELECT id FROM video WHERE account_id=$1)',[account]);
+    await tx.query('DELETE FROM credit_grant WHERE account_id=$1',[account]);
     // Preserve aggregates, remove identifying links AND network prefixes, including guest events.
     await tx.query(`UPDATE growth_event SET account_id=NULL,video_id=NULL,clip_id=NULL,clip_link_id=NULL,
       guest_pack_id=NULL,partner_code_id=NULL,ip_prefix=NULL WHERE account_id=$1
@@ -27,7 +31,7 @@ export async function eraseAccount(pool: Pool, storage: RetentionStorage, accoun
     await tx.query('DELETE FROM clip WHERE video_id IN (SELECT id FROM video WHERE account_id=$1)', [account]);
     await tx.query('DELETE FROM transcript WHERE video_id IN (SELECT id FROM video WHERE account_id=$1)', [account]);
     await tx.query('DELETE FROM video WHERE account_id=$1', [account]);
-    for (const table of ['session', 'pro_interest']) await tx.query(`DELETE FROM ${table} WHERE account_id=$1`, [account]);
+    for (const table of ['support_email_token', 'support_operator', 'session', 'pro_interest']) await tx.query(`DELETE FROM ${table} WHERE account_id=$1`, [account]);
     // Фича 30: деньги остаются в учёте (payment), но без связи с человеком; намерения — его данные, стираются.
     await tx.query('UPDATE payment SET account_id=NULL,intent_id=NULL WHERE account_id=$1', [account]);
     await tx.query('UPDATE operator_action SET account_id=NULL WHERE account_id=$1', [account]);
@@ -39,7 +43,7 @@ export async function eraseAccount(pool: Pool, storage: RetentionStorage, accoun
     await tx.query('DELETE FROM partner_code WHERE partner_id IN (SELECT id FROM partner WHERE account_id=$1)', [account]);
     await tx.query('DELETE FROM partner WHERE account_id=$1', [account]);
     await tx.query("DELETE FROM quota_counter WHERE scope_key=$1 AND scope LIKE 'user_%'", [account]);
-    await tx.query(`UPDATE account SET status='deleted',email='deleted:'||id::text,password_hash='',telegram_user_id=NULL,updated_at=$2 WHERE id=$1`, [account, now]);
+    await tx.query(`UPDATE account SET status='deleted',email_verified_at=NULL,email='deleted:'||id::text,password_hash='',telegram_user_id=NULL,updated_at=$2 WHERE id=$1`, [account, now]);
   });
 }
 export async function retentionTick(pool: Pool, storage: RetentionStorage, now = new Date(), batch = 100) {

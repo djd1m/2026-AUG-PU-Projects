@@ -1,0 +1,84 @@
+{
+  "run_id": "20261026-n5-credits-cloudru",
+  "work_unit_id": "cloudru-foundation-impl-1",
+  "source_revision": "74742a64e6e6c36313bcff5ed23fb044b3a21e67",
+  "validated_code_test_revision": "325f1f53ed090ad3325230fe29ad4156b636a9d0",
+  "files": {
+    "projects/05-podcast-clips-opus/.env.example": {
+      "initial_sha256": "aaf48430022a2c64f1ee3f4cbcadde16e6f46157e61f785a7ac974f2cb2a514c",
+      "final_sha256": "af543ee6a76d424a34c94bb1cba4da353d7125e4344b476df9a6b1798902771d"
+    },
+    "projects/05-podcast-clips-opus/apps/worker/src/llm/prompts/selection.ts": {
+      "initial_sha256": "c0c11919a52939ee0fc7a44b670f9f483778feaf022444c8b777fe7ea397d42e",
+      "final_sha256": "195ea5863530deb76683783bdcf49a6088a68d02010d00f38cc5042081f0a4e5"
+    },
+    "projects/05-podcast-clips-opus/apps/worker/src/llm/provider.ts": {
+      "initial_sha256": "f2506d124cce9774d34f55de68a43b6a6721ae40d823a43bc3517ce7d2da5134",
+      "final_sha256": "d49e06f04ba90a3ed05b2ea658deb153cffe8ab15930dc09d4fd1a580e414317"
+    },
+    "projects/05-podcast-clips-opus/apps/worker/src/llm/spend.ts": {
+      "initial_sha256": "5ecfb176c7a2bbd51bd9a69b922c2ca23d8545c4e579ef3950e48a17ef247f71",
+      "final_sha256": "c0182b3e3c917f41618f71dd173160e44aa33c37c3a5c78a50c394241f8c2f3c"
+    },
+    "projects/05-podcast-clips-opus/apps/worker/src/runtime.ts": {
+      "initial_sha256": "e295bd1c064b7196cf4841fb50794adcf34ecaabf5f8174cb76d12172eb26b0d",
+      "final_sha256": "0d2350f0dd6eae1d33635cb8437f27560fdba7236f0c70e50ce20d9e146e9071"
+    },
+    "projects/05-podcast-clips-opus/apps/worker/src/workers/select.ts": {
+      "initial_sha256": "8a0e5f838092c719e7b3ecf6f6e2e5e1f331737fc357ba80bde7e9ee9d490f11",
+      "final_sha256": "18fc4b9cd7ce9b70c179caa20a044f11b8ffec13cb0d4d148b8a574b6aa58d89"
+    },
+    "projects/05-podcast-clips-opus/apps/worker/workers/select.ts": {
+      "initial_sha256": "2fef8c6a1292e06b7c2d6dc82ae2b22de63d1b8c1d9f1f137705f7b36d760bc0",
+      "final_sha256": "5fb7cafe24e3a9af5ac2793889e9c91dfac684779ba73a64ff863304aa0f726e"
+    },
+    "projects/05-podcast-clips-opus/apps/worker/workers/stt.ts": {
+      "initial_sha256": "571a2eeaeee2f6918ce8d972064f0560dad5b026507dcf426af8cef0ce8dd1d1",
+      "final_sha256": "5ca8dc9b1271e3caed45c191afb71525c46192be2d631ea17737ba5ed351ee4b"
+    },
+    "projects/05-podcast-clips-opus/docker-compose.yml": {
+      "initial_sha256": "0b0c079c812841d612c408defe1983abf68888082c15718337ca048a5d7b6c4d",
+      "final_sha256": "431b1dec400e2bb34a6621a69f87d91b8a2bc9a7d10dcf86e067f15e8b7678da"
+    },
+    "projects/05-podcast-clips-opus/docs/features/cloudru-provider-foundation/05_completion.md": {
+      "initial_sha256": "e267c9eff4537a589c7676a401ae5e651588294c3c8a287460c5ba5eb5c33f01",
+      "final_sha256": "9dea3d844e864eefbabb49e22e333b06e067e86187a6488d00568000e03c267c"
+    },
+    "projects/05-podcast-clips-opus/packages/db/src/selection.ts": {
+      "initial_sha256": "f552f6b6adf4495897d1aad727d487c78160e1862ae3d6d2ccf0f55d70f7df66",
+      "final_sha256": "c1e27d0cfac20b6b39d41844684ad812a75cb03f6bb75ee5f83dbe97cc17ce71"
+    },
+    "projects/05-podcast-clips-opus/packages/shared/src/config.ts": {
+      "initial_sha256": "2f40fc0bc0d14526a157c08f07666abbf76655cd7e5d8a08bc32ca17f15ec6d8",
+      "final_sha256": "f6102e91764c2e677a6fa46fe37a6759872c608e5c264794a11563e6f9639b3f"
+    },
+    "projects/05-podcast-clips-opus/scripts/test-selection-mutations.mjs": {
+      "initial_sha256": "867cca4a779c53bf47f3ec0694ff4820651c1f065f728e58994247a0163b0d4a",
+      "final_sha256": "184bb91e1949e1bfa6c86b0ba2967603b3316930eecfff078db3a22026d8eab3"
+    },
+    "projects/05-podcast-clips-opus/tests/cloudru-provider.test.ts": {
+      "initial_sha256": null,
+      "final_sha256": "334d6ae4ada551d8f0d14ed53b692bc44bc2770a6b36d3d589c09a7dff09f4c5"
+    },
+    "projects/05-podcast-clips-opus/tests/fixtures/environment.ts": {
+      "initial_sha256": "a806e194ef5dee8a8c8751f7cd20c1aa6eed3d6b3f3187fffdfa4dbce9bc96b5",
+      "final_sha256": "9729cdbf3eccd7637fa766bb4907520fed66d2e3569a60b73d634c1d4ccea988"
+    },
+    "projects/05-podcast-clips-opus/tests/model-spend.test.ts": {
+      "initial_sha256": "6d6028f9e9c483ff262cbc269f41e568c8423141f28f078f01979b5c8f32eac1",
+      "final_sha256": "ad88e244fe37f902beaa2c256c072aa02b050dd683dc48d35e0b413ff3e8bc92"
+    },
+    "projects/05-podcast-clips-opus/tests/s3-public-endpoint.test.ts": {
+      "initial_sha256": "4a59abe25562cff01911eb9b96358ce40e3f763bea5ae8f1f62bffbeeed48f12",
+      "final_sha256": "06e2f6e602e8a02d5a27bbc3adf7268e921c222e99c189a4e7e01b5b4618db1c"
+    },
+    "projects/05-podcast-clips-opus/tests/selection-order.test.ts": {
+      "initial_sha256": "37ba0ec723f9820e206b3da24cc534f4b230e9719c983d4df124f8295f7ef16c",
+      "final_sha256": "f040047347e88b7917fcc41dd5432cf319d612943640264bbbe5108fbdda11eb"
+    },
+    "projects/05-podcast-clips-opus/tests/selection.integration.test.ts": {
+      "initial_sha256": "5023de1e2e26e7377aa17a566a94d1500863b91dd328d91176eba56f1e1c4931",
+      "final_sha256": "f41729df275b5df22db98cc54fe3ca32d577bd30f848335f59db0cd916ec2d36"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-10-26T20:42:12.212061+00:00",
+  "owner_scope_exception": "explicitly approved 2026-10-26; unchanged checker on hash-bound selected scopes",
+  "scope": [
+    "credit-packages"
+  ],
+  "mode": "--traceability",
+  "aggregate_project_result": "historical exit1 retained separately, not pass",
+  "checker": "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+  "checker_sha256": "06e3dae22c533a81732b9870ae42d6b80b6e8419b3c90e11e1910e2a46888be8",
+  "source_head": "9ba7a6fa19a3e8abee24eb4b10cbff4b8dea71e5",
+  "source_files_sha256": {
+    "docs/features/credit-packages/03_architecture.md": "f2d3c6fd293638e596ca08a76a223e6982931e2c43ae5e3f5d87e8da4c15bb40",
+    "docs/features/credit-packages/05_completion.md": "4199c0fd43285b5d8cc6c7fce3b31000a46e4f7027691056c0a00f4394227071",
+    "docs/features/credit-packages/owner-decisions.md": "833c157000382c2db00c99907e416181c270562d8c178bd99dbd0afe15a409be",
+    "docs/features/credit-packages/01_specification.md": "c6b755b35196bd28e58ac54312e7d1f91e865e8306b9a2aca169d0cabf615608",
+    "docs/features/credit-packages/research.md": "537152fdde40f381c21b1c796d9e5348afccdd3ad5857842b8493bd3dd728346",
+    "docs/features/credit-packages/04_refinement.md": "a2c6d8dfc320fb495dc0a931f55c14e4434b1babc81146cd882e61ccb01b9e2c",
+    "docs/features/credit-packages/02_pseudocode.md": "435f6f0152d992fbfc1487245b54a057130652f1174b5e3cd1477f7eca267e2b"
+  },
+  "snapshot_matches_before_after": true,
+  "command": [
+    "bash",
+    "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+    "/tmp/n5-scoped-gates-20261026/phase1-credit-autonomous/snapshot",
+    "--traceability",
+    "--role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/commands/feature.md",
+    "--project-role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/skills/sparc-prd-mini/SKILL.md"
+  ],
+  "exit_code": 0
+}

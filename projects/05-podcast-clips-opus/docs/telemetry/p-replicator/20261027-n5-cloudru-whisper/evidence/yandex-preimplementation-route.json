@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-27T22:49:05.956719+00:00",
+  "command": [
+    "bash",
+    "scripts/complexity-router.sh",
+    "projects/05-podcast-clips-opus/packages/shared/src/config.ts",
+    "projects/05-podcast-clips-opus/apps/worker/src/stt/client.ts",
+    "projects/05-podcast-clips-opus/apps/worker/src/stt/spend.ts",
+    "projects/05-podcast-clips-opus/apps/worker/src/workers/stt.ts",
+    "projects/05-podcast-clips-opus/apps/worker/src/runtime.ts",
+    "projects/05-podcast-clips-opus/apps/worker/workers/stt.ts",
+    "projects/05-podcast-clips-opus/packages/db/src/transcription.ts",
+    "projects/05-podcast-clips-opus/docker-compose.yml",
+    "projects/05-podcast-clips-opus/.env.example"
+  ],
+  "mechanical_exit_code": 1,
+  "mechanical_output": "── маршрутизатор сложности\n   файлов в работе: 9 · режим: explicit\n   ТИР: XL\n   сработавшие признаки:\n  · деньги: обращение к платёжному провайдеру или его таблицам\n  · новый внешний вызов: обращение к чужому хосту\n  · затронуты кэш, повторы или таймауты (по конструкциям кода)\n   → /feature полным циклом + ОСТАНОВКА на плане до одобрения владельца\n\n   Ограничение: вердикт — НИЖНЯЯ граница. Скрипт видит изменённые файлы, а не замысел;\n   признак «деньги» он замечает, только когда слово уже появилось в коде. Поднять тир\n   можно всегда, опустить — осознанно и строкой в коммите.\n",
+  "substantive_tier": "XL retained",
+  "risk": "newpaidgrpcboundary andexistingfiscalclaims; preserve allgates; nofinancepolicychange",
+  "authorization": "ownerexplicitRFwordSTT +key +8hauton +economicsupdate",
+  "scope": "oneexistingworkeradaptor; no service/schema/GPU/production/fallback/parser/chunker change",
+  "source_revision": "0e37bcb99653bf347950f1f4d04a73c83a9db610",
+  "validation": "READY_AC1_8;nativephase1andphase2selectedscopeexit0;AC9partial",
+  "resource_limit": "existingcontainers; <=2newsmallgrpcdeps; freeSSD>=2GiB"
+}

@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-28T05:17:02.387075+00:00",
+  "run_id": "20261028-n5-thumbnail-fix",
+  "work_unit_id": "full-pipeline-03",
+  "readiness": "ready",
+  "source_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+  "build_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+  "fixture_sha256": "764dc0586b462cf7b8dd6d4fb2fce9e60eaf0cac1211fb1892a884b10fed0862",
+  "synthetic_source_sha256": "2ca072cf7af3641d5e544b39e5c2be911560e0b98daf941a0e9afdee57bb5ebb",
+  "worker_compaction_js_sha256": "1b543ad4fe3a193300128d419d1db6afcc743e501961e591573d7ea1d1b94fda",
+  "fresh_browser_probes": [
+    {
+      "name": "chromium",
+      "version": "153.0.8010.12",
+      "status": 200
+    },
+    {
+      "name": "webkit",
+      "version": "26.6",
+      "status": 200
+    }
+  ],
+  "environment": "same isolated testDB/Redis14/MinIO, fake models/paymentsoff",
+  "expected_effects": "fresh synthetic customer video/credits/jobs/S3 only",
+  "fixture_correction": "previous synthetic customer correctly hit daily upload quota429; fresh normal registration, no guard changes",
+  "command_as_data": [
+    "node",
+    "scripts/seed-ui-fixture.mjs",
+    "/tmp/n5-support-e2e-20261028/synthetic-source-200s.mp4",
+    "/tmp/n5-thumbnail-e2e-20261028/ui-fixture-03-private.json"
+  ],
+  "free_disk_gib": 2.908
+}

@@ -2,6 +2,7 @@
 import { readFile, stat } from 'node:fs/promises';
 import type { SttConfig } from '@clipmaker/shared/config';
 import { parseTranscript, STT_MAX_BYTES, STT_TIMEOUT_MS, type TranscriptResult } from '@clipmaker/shared/transcript';
+import { createYandexTranscriber } from './yandex.js';
 export interface Transcriber { transcribe(path: string, duration: number, signal: AbortSignal): Promise<TranscriptResult> }
 export class ProviderError extends Error {
   constructor(public readonly retryable: boolean, public readonly outcome: 'timeout' | 'provider_error') { super('Поставщик STT не завершил запрос'); }
@@ -9,8 +10,14 @@ export class ProviderError extends Error {
 export function createTranscriber(config: SttConfig, request: typeof fetch = fetch): Transcriber {
   if (config.mode === 'fake') return { async transcribe(_path, duration, signal) {
     signal.throwIfAborted();
-    return { language: 'ru', words: [{ word: 'Проверка', start: 0, end: Math.min(1, duration) }], segments: [] };
+    // Explicit fake mode only: these words/times are synthetic, not recognized speech.
+    if (!Number.isFinite(duration) || duration <= 0) return parseTranscript({}, duration);
+    const words = Array.from({ length: Math.ceil(duration) }, (_, start) => ({
+      word: 'Тест', start, end: Math.min(start + 1, duration),
+    }));
+    return { language: 'ru', words, segments: [{ text: words.map(word => word.word).join(' '), start: 0, end: duration }] };
   } };
+  if (config.provider === 'yandex') return createYandexTranscriber(config.apiKey!);
   return { async transcribe(path, duration, signal) {
     if ((await stat(path)).size > STT_MAX_BYTES) throw new Error('Чанк превышает лимит');
     const data = await readFile(path);

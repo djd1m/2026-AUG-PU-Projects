@@ -1,0 +1,73 @@
+{
+  "at": "2026-10-28T05:26:36.190197+00:00",
+  "source_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+  "input_class": "same protected200s5fps synthetic input; originalcutplans exactlyequal",
+  "actual_S3_delivery_verified": "HTTP video/mp4 and image/jpeg via authenticated web redirects, actual browser download bytes equalAPI",
+  "clips": [
+    {
+      "index": 0,
+      "planned_seconds": 21.56,
+      "video_seconds": 21.56,
+      "audio_seconds": 21.56,
+      "format_seconds": 21.56,
+      "video_frames": 539,
+      "dimensions": [
+        1080,
+        1920
+      ],
+      "near_end_video_frame_decoded": true,
+      "JPEG_MIME": "image/jpeg",
+      "JPEG_dimensions": [
+        360,
+        640
+      ],
+      "JPEG_fully_decoded": true,
+      "mp4_sha256": "475dd7eea43cda7a40a30f4af1a3a3b698aa070074315ecd1b860e53660188a5",
+      "jpeg_sha256": "fd3410e5efdd7a55cb0e9a9d4e16837a34dc3c20127c607bcf19af1bb323469e"
+    },
+    {
+      "index": 1,
+      "planned_seconds": 21.44,
+      "video_seconds": 21.44,
+      "audio_seconds": 21.44,
+      "format_seconds": 21.44,
+      "video_frames": 536,
+      "dimensions": [
+        1080,
+        1920
+      ],
+      "near_end_video_frame_decoded": true,
+      "JPEG_MIME": "image/jpeg",
+      "JPEG_dimensions": [
+        360,
+        640
+      ],
+      "JPEG_fully_decoded": true,
+      "mp4_sha256": "59be92bd4e7a541a9287b0f3fd6504c34b04f57f28a5271353b55ecbcab5152f",
+      "jpeg_sha256": "7553338f7ed5d204ee462e684a8e0425f0d73c6d37480824540a591daa5ab4fa"
+    },
+    {
+      "index": 2,
+      "planned_seconds": 21.52,
+      "video_seconds": 21.52,
+      "audio_seconds": 21.52,
+      "format_seconds": 21.52,
+      "video_frames": 538,
+      "dimensions": [
+        1080,
+        1920
+      ],
+      "near_end_video_frame_decoded": true,
+      "JPEG_MIME": "image/jpeg",
+      "JPEG_dimensions": [
+        360,
+        640
+      ],
+      "JPEG_fully_decoded": true,
+      "mp4_sha256": "39fe9abd042abada19492e5b9bb9cb2c28edbf710ce289ea83e952f57e0c141d",
+      "jpeg_sha256": "1a8d1c70d1051ee838a26c6c1d2b58f366f0822ed714ba1b1e58d698997b2d35"
+    }
+  ],
+  "UI_clicked_download_sha_matches_clip0": true,
+  "exit_code": 0
+}

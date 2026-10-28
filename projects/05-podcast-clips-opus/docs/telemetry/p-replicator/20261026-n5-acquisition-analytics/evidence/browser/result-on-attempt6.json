@@ -1,0 +1,48 @@
+{
+  "mode": "on",
+  "evidence": "fully intercepted synthetic SDK requests; NOT live goal receipt or report ingestion",
+  "checks": [],
+  "transport": [],
+  "consoleErrors": [
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    }
+  ],
+  "screenshots": [
+    "/tmp/n5-acquisition-e2e/on-chromium-dark-360.png",
+    "/tmp/n5-acquisition-e2e/on-chromium-dark-900.png",
+    "/tmp/n5-acquisition-e2e/on-chromium-light-360.png",
+    "/tmp/n5-acquisition-e2e/on-chromium-light-900.png"
+  ],
+  "status": "failed",
+  "error": "AssertionError [ERR_ASSERTION]: Excluded roundtrip payment dedupe\n\n0 !== 1\n\n    at run (/tmp/n5-acquisition-e2e/browser-check.cjs:120:10)\n    at async /tmp/n5-acquisition-e2e/browser-check.cjs:140:22"
+}

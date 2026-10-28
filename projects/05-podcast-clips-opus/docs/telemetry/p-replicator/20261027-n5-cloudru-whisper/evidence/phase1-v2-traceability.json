@@ -1,0 +1,29 @@
+{
+  "time": "2026-10-27T21:51:04.563337+00:00",
+  "scope": "existing owner-approved Cloud.ru feature contour, v2under explicitSTTrequest",
+  "source_head": "125b655d17e36a5c65754f33471cefe8a4e3eeab",
+  "files_sha256": {
+    "docs/features/cloudru-provider-foundation/review-report.md": "322e94879a7e454f2a1e7b4e2158f4ee3d5ac9a4484307c1707873507268f052",
+    "docs/features/cloudru-provider-foundation/03_architecture.md": "9ca9197987fcd3407c357877515ea3cc645d100b992cfa89bd9fe972ba1e76a9",
+    "docs/features/cloudru-provider-foundation/05_completion.md": "b0cd6d4013fa7db349d38bdaa79f98fa0927d5437eb298796478accd9f184604",
+    "docs/features/cloudru-provider-foundation/01_specification.md": "655a22cc5a25e6c599e6fac33f900cccb45fe064bbfcb7f1afcdfae28fc8cdd0",
+    "docs/features/cloudru-provider-foundation/research.md": "55305080b88a202b8fecdcebc5c5727d06bd2c82969839ed602e642acee78399",
+    "docs/features/cloudru-provider-foundation/04_refinement.md": "554f88ece8970f285c212c247ba9fa766fb85dc964e600f93702dde6906dadb1",
+    "docs/features/cloudru-provider-foundation/validation-report.md": "834333e69611465bd3e566ee2a303be2f9473c06735a66a9e0e9069bb3aeb120",
+    "docs/features/cloudru-provider-foundation/02_pseudocode.md": "8c83576fc5e3ebfd5999fe9963b7270bc299060de1917480e5080efceac8fe1f",
+    "docs/features/cloudru-provider-foundation/research-whisper-donor-20261027.md": "eb19f625bc36bb9ed23f98f840685e0cf4449c3347465bfd9b18baa20876af4e"
+  },
+  "checker_sha256": "06e3dae22c533a81732b9870ae42d6b80b6e8419b3c90e11e1910e2a46888be8",
+  "command": [
+    "bash",
+    "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+    "/tmp/n5-whisper-scoped-gates-20261027/phase1/snapshot",
+    "--traceability",
+    "--role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/commands/feature.md",
+    "--project-role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/skills/sparc-prd-mini/SKILL.md"
+  ],
+  "exit_code": 0,
+  "aggregate_legacy_failure": "retained from priorrun, notrelabeledPASS"
+}

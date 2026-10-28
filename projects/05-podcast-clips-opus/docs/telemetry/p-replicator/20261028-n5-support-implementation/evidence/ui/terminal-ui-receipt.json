@@ -1,0 +1,79 @@
+{
+  "run_id": "20261028-n5-support-implementation",
+  "work_unit_id": "support-ui",
+  "source_revision": "64f1b438556e7615e3c4b3400f765eadf98bd9cd",
+  "base_revision": "ba993ac2f7ed69538a65b840eaa7949d873ba5d5",
+  "commits": [
+    "52d85156",
+    "64f1b438"
+  ],
+  "spec_sha256": "ef2525b933e75661ae3ee0965741933555b4387da321a7b40547e184f4f41edf",
+  "canon_sha256": "560c11ea0d182d6078a3ae285b3475bbae97f2643066e83a26026f91b6644f3a",
+  "launch_sha256": "c59953141cfeab8654e5e071bb674aedb3763d1c9077f322c9ca46881a499fde",
+  "finished_at": "2026-10-28T00:51:45.601179+00:00",
+  "elapsed_seconds_since_launch": 731.478769,
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning": "medium",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gap": "Host actual model, token, active-time and billing counters not exposed. Elapsed is wall time since trusted launch created_at.",
+  "restored_password_source_sha256": "105bb81e5e17965af832d69cd9e6022d9bafb051471689dce60a520d804d00ef",
+  "checks": {
+    "focused_and_related": "58/58 PASS",
+    "focused_types": "PASS exit0",
+    "lint": "PASS exit0",
+    "mutation": "72->73 real source mutation exit1, restored14/14 PASS",
+    "adapter_final": "4/4 PASS",
+    "adapter_plumbing": "expected exit2 from incomplete synthetic fixture; container Node/report copy/cleanup worked, no browser/app traffic",
+    "whole_app_types": "UNPASSED expected missing unmerged backend module/workspace aliases; actual exit not captured",
+    "full_build_and_integration": "root owns after merge; not run here",
+    "responsive_and_journey": "root owns integrated HTTPS stand; no PASS claim"
+  },
+  "evidence": [
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/focused-green.log",
+      "sha256": "40882050dfd837205fa07c7f95eb45deed098e68a48258fa273f120a1489456f"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/post-mutation-green.log",
+      "sha256": "3d060bfb4b1072932e8c8b67507277f44baee0b1a385acd27558397a3cf5eb65"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/focused-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/lint.log",
+      "sha256": "f8eca02ed8232ddb53b69d0c6a65f11eccaf2fc4932451829f4edf3b43ad830b"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/password-mutation-red.log",
+      "sha256": "c4c12694af3427fdbb4b585b25ded2b4e5db3b92bcaa570b789332528ca401d1"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/password-mutation.json",
+      "sha256": "b4cc8fd413f60476064283b4461fc46beb27b3041fbef559ca0dee61317d4878"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/adapter-tests-final.log",
+      "sha256": "7085266320b278dacf01c0446fe9f8c2d1deb9a2fd381bdcd46d2a15dad15fde"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/adapter-smoke.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/adapter-smoke/report.json",
+      "sha256": "7c00bcd80c9346deadc2c82e88318fcc7ec44a0dd203755f579044fab35788cb"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/whole-app-types-unpassed.log",
+      "sha256": "e2e482d3cdc1053e80a843766d71c3411b830e502a640629421f639173ca6ada"
+    },
+    {
+      "path": "/tmp/n5-support-ui-checks-20261028/route.log",
+      "sha256": "aa85818086f10fe26fdfe78669ef92b4a69d0325cb6021beda8bac4daadb7aa2"
+    }
+  ]
+}

@@ -23,7 +23,7 @@ it('mapTime clamps and is monotone including both sides of every overlap', () =>
 it('relative trims, normalized VFR and audio-only graph', () => {
   const plan: [number, number][] = [[10, 20], [21, 35]];
   const graph = buildCompactionGraph(plan, 10, 2);
-  expect(graph).toContain('[0:2]trim=0:10,setpts=PTS-STARTPTS,fps=25,format=yuv420p,settb=AVTB');
+  expect(graph).toContain('[0:2]fps=25,trim=0:10,setpts=PTS-STARTPTS,format=yuv420p,settb=AVTB');
   expect(graph).toContain('offset=9.92[vc]'); expect(graph).toContain('acrossfade=d=0.08[ac]');
   const audio = buildCompactionGraph(plan, 10, null);
   expect(audio).not.toContain('xfade='); expect(audio).toContain('[ac]');

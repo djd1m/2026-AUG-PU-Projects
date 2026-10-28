@@ -1,6 +1,6 @@
 import { beforeEach, it, expect, vi } from 'vitest';
 const deps = vi.hoisted(() => ({
-  auth: { authenticate: vi.fn() }, partners: { apply: vi.fn(), dashboard: vi.fn() },
+  auth: { authenticate: vi.fn() }, partners: { apply: vi.fn(), dashboard: vi.fn(), createCode: vi.fn() },
   video: { create: vi.fn() }, publicOrigin: 'https://app.example', trustedProxyHops: 1, allowMutation: vi.fn(),
 }));
 vi.mock('../apps/web/src/server/upload-runtime', () => ({ getUploadRuntime: () => deps }));
@@ -41,4 +41,19 @@ it('dashboard GET preserves authorized session and foreign-code 403', async () =
   deps.partners.dashboard.mockRejectedValue(new UploadError('invalid', 'Нет доступа', 403));
   const req = new Request('https://app.example/api/trpc/partner.dashboard?input=%7B%7D', { headers: request().headers });
   expect((await GET(req)).status).toBe(403); expect(deps.partners.dashboard).toHaveBeenCalledWith('session-account', undefined);
+});
+
+it('createCode uses session owner and rejects owner injection and malformed campaign', async () => {
+  const call = (input: unknown) => POST(new Request('https://app.example/api/trpc/partner.createCode', {
+    method: 'POST', headers: request().headers, body: JSON.stringify(input),
+  }));
+  deps.partners.createCode.mockResolvedValue({ id: 'owned', code: 'BLOGGER1', status: 'active' });
+  expect((await call({ code: 'BLOGGER1' })).status).toBe(202);
+  expect(deps.partners.createCode).toHaveBeenCalledWith('session-account', { code: 'BLOGGER1' });
+  for (const input of [{ code: 'BLOGGER1', account_id: 'foreign' }, { code: 'short' }, { code: ' BADCODE' }]) {
+    expect((await call(input)).status).toBe(422);
+  }
+  expect(deps.partners.createCode).toHaveBeenCalledOnce();
+  deps.auth.authenticate.mockResolvedValue(null);
+  expect((await call({ code: 'BLOGGER1' })).status).toBe(401);
 });

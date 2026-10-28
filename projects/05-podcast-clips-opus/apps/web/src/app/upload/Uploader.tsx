@@ -10,8 +10,9 @@ import { CtaFields, ctaProblem } from '../videos/CtaFields';
 interface Resume { key: string; fingerprint: string; music: boolean; teaser: boolean; compact: boolean; ctaKind: CtaKind; ctaUrl: string | null; videoId?: string; parts?: { part_number: number; etag: string }[] }
 const storageKey = 'n5-upload-resume';
 // Adapted VideoUploader: same file selection, abort, error and resume flow; existing feature-2 transport owns multipart.
-export function VideoUploader() {
+export function VideoUploader({creditMode=false}:{creditMode?:boolean}={}) {
   const router = useRouter();
+  const [estimatedSeconds,setEstimatedSeconds]=useState<number|null>(null);
   const [busy, setBusy] = useState(false), [message, setMessage] = useState(''), [videoId, setVideoId] = useState<string | null>(null);
   const [music, setMusic] = useState(false);
   const [teaser, setTeaser] = useState(true);
@@ -21,6 +22,13 @@ export function VideoUploader() {
   const controller = useRef<AbortController | null>(null), resume = useRef<Resume | null>(null);
   useEffect(() => { try { const value = sessionStorage.getItem(storageKey); if (value) { const saved = JSON.parse(value); resume.current = { ...saved, music: saved.music === true, teaser: saved.teaser === true, compact: saved.compact === true, ctaKind: readCtaKind(saved.ctaKind), ctaUrl: typeof saved.ctaUrl === 'string' ? saved.ctaUrl : null }; } } catch { setMessage('Не удалось восстановить предыдущую загрузку. Выберите файл заново.'); }
     return () => controller.current?.abort(); }, []);
+  useEffect(()=>{
+    setEstimatedSeconds(null);
+    if (!file || !creditMode) return;
+    const media=document.createElement('audio'), url=URL.createObjectURL(file);
+    media.preload='metadata'; media.onloadedmetadata=()=>{ if(Number.isFinite(media.duration))setEstimatedSeconds(Math.ceil(media.duration)); };media.src=url;
+    return ()=>{media.onloadedmetadata=null;media.removeAttribute('src');media.load();URL.revokeObjectURL(url);};
+  },[file,creditMode]);
   function save(value: Resume) { resume.current = value; try { sessionStorage.setItem(storageKey, JSON.stringify(value)); } catch { /* in-memory retry stays available */ } }
   async function upload() {
     if (!file || controller.current) return;
@@ -59,6 +67,7 @@ export function VideoUploader() {
         const previous = selected && resume.current?.fingerprint === `${selected.name}:${selected.size}:${selected.lastModified}` ? resume.current : null;
         if (previous) { setMusic(previous.music); setTeaser(previous.teaser); setCompact(previous.compact); setCtaKind(previous.ctaKind); setCtaUrl(previous.ctaUrl ?? ''); } setMessage(''); }} />
       <p className="muted">MP4, MOV, WebM, M4A, MP3 · 2–90 минут · до 2 ГБ</p>
+      {creditMode && <p className="muted">1 кредит = 60 секунд записи.{estimatedSeconds!==null ? ` Предварительно: ${(estimatedSeconds/60).toLocaleString('ru-RU',{maximumFractionDigits:2})} кредитов (${estimatedSeconds} секунд).` : ''} Точный резерв определим по файлу на сервере до обработки. При техническом отказе без готовых клипов резерв вернётся.</p>}
       <label className="check"><input type="checkbox" checked={music} disabled={busy || !!(file && resume.current?.fingerprint === `${file.name}:${file.size}:${file.lastModified}`)}
         onChange={e => setMusic(e.target.checked)} /> Добавить музыку и финальный акцент</label>
       <small className="muted">Komiku, HoliznaCC0 — музыка CC0 · Kenney — Sci-Fi Sounds, CC0</small>

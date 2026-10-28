@@ -1,0 +1,17 @@
+{
+  "check": "final-bundle-build-01",
+  "command": [
+    "npm",
+    "run",
+    "build"
+  ],
+  "source_revision": "4c386745a248215a7c50b718533765400f1d515d",
+  "started_at": "2026-10-28T14:05:48.267541+00:00",
+  "elapsed_seconds": 68.037,
+  "exit_code": 0,
+  "stopped_reason": null,
+  "node": "22.22.3",
+  "environment": "isolated *_test DB, Redis15/testMinIO, fake models, payments off",
+  "log": "/tmp/n5-thumbnail-checks-20261028/final-bundle-build-01.log",
+  "free_disk_gib": 2.141
+}

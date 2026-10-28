@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-28T03:25:03.806Z",
+  "source_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+  "check": "post-reset actual HTTP and SQL",
+  "exit_code": 0,
+  "active_old_sessions_before_new_login": 0,
+  "old_issuer_status": 401,
+  "old_password_status": 401,
+  "new_password_status": 200,
+  "reset_replay_status": 422,
+  "registration_grants": 1,
+  "registration_grant_seconds": 1800,
+  "existing_email_proof_preserved": true
+}

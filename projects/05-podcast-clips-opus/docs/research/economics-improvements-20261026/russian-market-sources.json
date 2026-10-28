@@ -1,0 +1,82 @@
+{
+  "checked_at": "2026-10-26",
+  "scope": "Public official pages only;no accounts,purchases,APIorpublication",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning": "high",
+  "actual_model": null,
+  "usage": null,
+  "elapsed_seconds": null,
+  "measurement_gaps": "Runtime metadata unavailable;full dispatch-to-completion time not measured",
+  "scenarios_input_minutes_per_30days": {
+    "weekly": 257.14285714285717,
+    "daily": 1800
+  },
+  "sources": [
+    {
+      "id": "narezchik",
+      "url": "https://narezchik.ru/narezka-video-na-shorts/",
+      "observation": "RF name/TIN;Free30 monthly;990/120;2490/600;10cr/min;extra100min490 onmain990otherwise",
+      "status": "confirmed_published_FAQ_not_dropdown_or_registry",
+      "checked_at": "2026-10-26",
+      "evidence_excerpt": "«Основной» стоит 2 490 ₽ и даёт 600 минут",
+      "evidence_location": "FAQ «Сколько это стоит?» on exact source URL, web fresh-open lines150–152; dropdown default not independently verified"
+    },
+    {
+      "id": "shortscut_pricing",
+      "url": "https://shortscut.ru/pricing",
+      "observation": "Fresh Free30credits ONCE~25min;990/75;2490/500;4990/1500 approximate minutes per30days",
+      "status": "confirmed_fresh_differs_search_cache",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "shortscut_about",
+      "url": "https://shortscut.ru/about",
+      "observation": "Direct AI clipping;30day purchases without automatic renewal",
+      "status": "confirmed",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "shortscut_offer",
+      "url": "https://shortscut.ru/offer",
+      "observation": "Kondakov Artem Borisovich,NPD,TIN662350006896;RF law",
+      "status": "confirmed_published_not_registry",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "kutto_pricing",
+      "url": "https://kutto.app/pricing",
+      "observation": "Creator2490/8h;Pro4690/16h;annual23900/44990;inputduration;trial20min;extra price onlyinapp",
+      "status": "confirmed",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "kutto_terms",
+      "url": "https://kutto.app/terms",
+      "observation": "IE Ivan Pimanov302382785Georgia;notRFoperator;no autorenewal",
+      "status": "confirmed_published_not_registry",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "zenuro_ru",
+      "url": "https://zenuro.ai/ru",
+      "observation": "Free30monthly;Starter890/300;Pro2190/1200;annual6990/16990;inputminutes",
+      "status": "confirmed_prices_origin_unknown",
+      "checked_at": "2026-10-26"
+    },
+    {
+      "id": "zenuro_terms",
+      "url": "https://zenuro.ai/terms",
+      "observation": "30day quotas;card autorenewal1/3/12months;no legaloperator/country found",
+      "status": "confirmed_origin_unknown",
+      "checked_at": "2026-10-26"
+    }
+  ],
+  "limits": [
+    "No registry verification",
+    "Published currencies do not establish Russian legal origin",
+    "No logged-in testing",
+    "Search cache inconsistent with fresh ShortsCut pricing",
+    "Extra-hour prices Kutto unavailable without account",
+    "Daily complete price unknown except illustrative Narezchik combination"
+  ]
+}

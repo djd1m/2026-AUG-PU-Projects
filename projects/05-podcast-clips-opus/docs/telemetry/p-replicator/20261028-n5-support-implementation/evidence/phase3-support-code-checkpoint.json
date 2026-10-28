@@ -1,0 +1,39 @@
+{
+  "timestamp": "2026-10-28T02:28:56.469160+00:00",
+  "owner_scope_exception": "support-access scope only; explicit approval required by adapter precondition; unchanged checker, hash-bound source; aggregate failure retained",
+  "scope": [
+    "support-access"
+  ],
+  "mode": "--completion",
+  "aggregate_project_result": "historical exit1 retained separately, not pass",
+  "checker": "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+  "checker_sha256": "06e3dae22c533a81732b9870ae42d6b80b6e8419b3c90e11e1910e2a46888be8",
+  "source_head": "4c012d4f9c74e429537e5e86ea0183c18213190b",
+  "source_files_sha256": {
+    "docs/features/support-access/03_architecture.md": "0ee76c591870305c54e03162b662bbe50c8cd2ab5215c9632242ec24c3a1276c",
+    "docs/features/support-access/05_completion.md": "34929d0fba3c8e09751fd1bdd23572c8267c693fd032241f6c85d7356f62cb5c",
+    "docs/features/support-access/01_specification.md": "ef2525b933e75661ae3ee0965741933555b4387da321a7b40547e184f4f41edf",
+    "docs/features/support-access/research.md": "8c4b9d20e4589db634a4a1b94c21fb2a7d0c64d9343f7104c88b7c79c1ed438d",
+    "docs/features/support-access/04_refinement.md": "16e9f534616c53b84c5dd99a0ac5b8179cd38219d3ae14333b82ebe2b53aef5e",
+    "docs/features/support-access/validation-report.md": "f33aa3fc19a824d8800d0469b9d89dc84e257c8944a0042d100c4170f8b6b4a2",
+    "docs/features/support-access/02_pseudocode.md": "f7c095b56042ba30e24cf534189edf3bf1504c512c3d0f6a8782b0d287fa1a66",
+    "docs/features/support-access/interface-contract.md": "560c11ea0d182d6078a3ae285b3475bbae97f2643066e83a26026f91b6644f3a",
+    "docs/features/support-access/fixture-scope-note.md": "0c3be6d10f87a5d0f79856e026752da24c13382c02f4cdc5aaa8a6b9bcb50ffa",
+    "tests/support-ui.test.ts": "510e5aea272938e320581ced51410061598dba11f936558f3a8eae02043a8adc",
+    "tests/support-mail-tls.test.ts": "a8cabe6c1e061a3c65d9600ca72afd87afc0fee783f847fd5e822207ecd18bfa",
+    "tests/support-email.integration.test.ts": "81ad14f39711bf772033edb45a80347b0f4983023f08529759945ff0e6c2dbcd",
+    "tests/support-widget-ui.test.ts": "14b8f76edeec27138ec38a5a49c7fb5bc705902d256487474245029709fe7122"
+  },
+  "snapshot_matches_before_after": true,
+  "command": [
+    "bash",
+    "/root/.npm-global/lib/node_modules/@dzhechkov/p-replicator/scripts/check-pipeline-gaps.sh",
+    "/tmp/n5-support-scoped-gates-20261028/phase3-support-code-checkpoint/snapshot",
+    "--completion",
+    "--role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/commands/feature.md",
+    "--project-role-map-source",
+    "/tmp/n5-acquisition-analytics-20261026/.claude/skills/sparc-prd-mini/SKILL.md"
+  ],
+  "exit_code": 0
+}

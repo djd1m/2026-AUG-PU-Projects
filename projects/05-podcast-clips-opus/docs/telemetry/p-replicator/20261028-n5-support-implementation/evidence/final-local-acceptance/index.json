@@ -1,0 +1,69 @@
+{
+  "at": "2026-10-28T03:27:23.412244+00:00",
+  "run_id": "20261028-n5-support-implementation",
+  "source_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+  "build_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+  "stage": "local_runtime_accepted_native_delivery_pending",
+  "full_tests": 1258,
+  "full_test_files": 131,
+  "skipped": 0,
+  "responsive_pages": 342,
+  "responsive_errors": 0,
+  "responsive_warnings": 646,
+  "support_journey_checks": 51,
+  "support_journey_screenshots": 24,
+  "support_journey_errors": 0,
+  "support_journey_findings": 0,
+  "actual_browsers": {
+    "chromium": "153.0.8010.12",
+    "webkit": "26.6"
+  },
+  "browser_container": "codex-ui-playwright",
+  "TLS": "local private self-signed exception; no production TLS claim",
+  "synthetic_models_widget": true,
+  "actual_media_fixture": "canonical local200s upload, real SQL/S3/queues/FFmpeg,2done1thumbnailffmpeg_failed; partialstate preserved",
+  "external_out_of_scope": [
+    "real SMTP inbox delivery",
+    "real Libredesk history/replies/revocation/retention/deletion/capacity",
+    "RFtarget deployment,realObjectStorage/payment/analytics acceptance"
+  ],
+  "receipts": {
+    "integrated-build-07": {
+      "path": "docs/telemetry/p-replicator/20261028-n5-support-implementation/evidence/final-local-acceptance/integrated-build-07.json",
+      "sha256": "d93948178ca437512398d0ef9ec463219bc042e8018d1316803c07e7e56475cf"
+    },
+    "integrated-full-test-07": {
+      "path": "docs/telemetry/p-replicator/20261028-n5-support-implementation/evidence/final-local-acceptance/integrated-full-test-07.json",
+      "sha256": "b917763a00a3708a416b926702de295c809844ee80c6ddc63a28fbe00cbbb2f5"
+    },
+    "integrated-typecheck-04": {
+      "path": "docs/telemetry/p-replicator/20261028-n5-support-implementation/evidence/final-local-acceptance/integrated-typecheck-04.json",
+      "sha256": "8d29b1542f1db87aa263f0de804a57e0bb57ed2b2789e37f5a4f7c4311bef5fc"
+    },
+    "integrated-lint-04": {
+      "path": "docs/telemetry/p-replicator/20261028-n5-support-implementation/evidence/final-local-acceptance/integrated-lint-04.json",
+      "sha256": "8f1930b359a31bd4de9e082c959f83906a4fee8cbfe3ebf1f6d9c5aa189e4cef"
+    },
+    "responsive-02": {
+      "path": "docs/telemetry/p-replicator/20261028-n5-support-implementation/evidence/final-local-acceptance/responsive-02-terminal.json",
+      "sha256": "7492f202d2d7515df7eeec540dfbf10e1b86ea883ccd5c363efd1d384f13b9bf"
+    },
+    "support-journey-01": {
+      "path": "docs/telemetry/p-replicator/20261028-n5-support-implementation/evidence/final-local-acceptance/support-journey-01-terminal.json",
+      "sha256": "071f711830b4de7b506d89e5eb25c50b40427ed231f88e7c7de06e58f0bfb2d5"
+    },
+    "support-responsive-02-report": {
+      "path": "docs/telemetry/p-replicator/20261028-n5-support-implementation/evidence/final-local-acceptance/support-responsive-02-report.json.gz",
+      "sha256": "080397e0b24a833007547a1e18ee711cbbc1b2b04bb7f6d6330ba9392e0df122"
+    },
+    "support-journey-01-report": {
+      "path": "docs/telemetry/p-replicator/20261028-n5-support-implementation/evidence/final-local-acceptance/support-journey-01-report.json.gz",
+      "sha256": "914cbb8518cf7bf5f0a032745ed14be97d35f195fd39abfde027d57b0359de31"
+    },
+    "post-reset": {
+      "path": "docs/telemetry/p-replicator/20261028-n5-support-implementation/evidence/final-local-acceptance/post-reset-check.json",
+      "sha256": "8ae9fc421f5ec52554448994602dead5693e739837113c7edc78a01523e8941c"
+    }
+  },
+  "free_disk_gib": 2.558
+}

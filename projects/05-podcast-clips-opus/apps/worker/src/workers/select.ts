@@ -1,19 +1,19 @@
 import { authorizeSelection, acceptSelection, failSelection, type Attempt, type Pool } from '@clipmaker/db';
-import type { Limits } from '@clipmaker/shared/config';
+import type { Limits, ExecutionProvider } from '@clipmaker/shared/config';
 import { validateFragments, FragmentSchemaError } from '@clipmaker/shared/fragments';
 import { SelectionProviderError, type Selector } from '../llm/provider.js';
 import { recordSelectionSpend, type SelectionSpend } from '../llm/spend.js';
 interface Dependencies {
-  pool: Pool; limits: Limits; selector: Selector; model: string; spendPath: string;
+  pool: Pool; limits: Limits; selector: Selector; model: string; provider: ExecutionProvider; spendPath: string;
   enqueue: (attempt: Attempt) => Promise<void>;
   spend?: typeof recordSelectionSpend;
 }
 export async function selectFragments(attempt: Attempt, deps: Dependencies) {
-  const input = await authorizeSelection(deps.pool, attempt, deps.limits, deps.model);
+  const input = await authorizeSelection(deps.pool, attempt, deps.limits, deps.model, undefined, deps.provider);
   if (!input) return;
   const spend = deps.spend ?? recordSelectionSpend;
   const event: SelectionSpend = { video_id: attempt.video_id, fence: attempt.fence, series_no: attempt.series_no,
-    model: deps.model, provider: 'openrouter', stage: 'select', unit: 'calls', quantity: 1, phase: 'attempt', result: 'started' };
+    model: deps.model, provider: deps.provider, stage: 'select', unit: 'calls', quantity: 1, phase: 'attempt', result: 'started' };
   let fragments;
   try {
     await spend(deps.spendPath, event);

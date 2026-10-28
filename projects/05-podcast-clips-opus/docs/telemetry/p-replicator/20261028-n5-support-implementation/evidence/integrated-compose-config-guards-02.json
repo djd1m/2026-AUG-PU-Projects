@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-28T02:25:18.455053+00:00",
+  "scope": "offline docker compose config only, synthetic missing required values, no containerstart",
+  "placeholder_key_names": [
+    "MINIO_ROOT_PASSWORD",
+    "VAR",
+    "MINIO_ROOT_USER",
+    "REDIS_PASSWORD"
+  ],
+  "checks": [
+    {
+      "name": "ports",
+      "exit_code": 0,
+      "log_sha256": "5d89ce4a64ea8fceb3a56ceb065f891130d3921c4b5ad4a14ca091ab6ad4a322"
+    },
+    {
+      "name": "env-wiring",
+      "exit_code": 0,
+      "log_sha256": "73eee6b89931ddffd2e8f78b41de59e099fd8ae70dc3762e3d10d96555e63f35"
+    }
+  ]
+}

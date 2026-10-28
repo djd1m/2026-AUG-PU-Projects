@@ -1,0 +1,37 @@
+{
+  "started_at": "2026-10-26T14:42:07.849536+00:00",
+  "profile": "model-routing-econom",
+  "scope": "N5 unit economics: minimal/optimal VM, Cloud.ru FM Whisper+DeepSeek, S3 and per-inputhour contribution/breakeven",
+  "ac": [
+    "official current gross tariffs with unit/time/version",
+    "measured historical workloads distinguished from VM capacity assumptions",
+    "storage retention and egress explicit",
+    "fixed infra allocation vs marginal processing distinguished",
+    "990RUB/270min plan full utilization, paymentfees/taxes labelled scenarios",
+    "no spend/deployment/inference/usercontent disclosure"
+  ],
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "status": "completed_conditional_planning",
+  "finished_at": "2026-10-26T15:05:19.367724+00:00",
+  "confirmed_user_workload": "one inputhour peruser perweek",
+  "user_architecture": "oneVM, no mandatory secondVM",
+  "resource_revision": "pilot2vCPU4GB60GBSSD is hypothesis;4/8nextstep",
+  "models": "primary localCloudDeepSeekV4Pro+Whisper; partnerFlashalternative",
+  "checks": {
+    "json": "pass",
+    "local_links": "pass",
+    "independent_arithmetic_review": "pass_with_limitations",
+    "capacity_benchmark": "not_run",
+    "live_Cloud_inference": "not_run",
+    "runtime_changes": "none"
+  },
+  "measurement_gaps": [
+    "no measured peakRAM/CPU on candidateVM",
+    "no currentCloudproviderinvoice",
+    "no measuredtokenusageforDeepSeek",
+    "unknownpayerconversion/CAC/taxregime"
+  ],
+  "elapsed_seconds": 1391.518188
+}

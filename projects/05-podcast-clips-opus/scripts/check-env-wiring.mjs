@@ -36,12 +36,18 @@ export function collectEnvironment(entrypoints, projectRoot) {
     if (seen.has(file)) return;
     seen.add(file);
     const tree = ts.createSourceFile(file, fs.readFileSync(file, 'utf8'), ts.ScriptTarget.Latest, true);
-    const isEnv = (node) => ts.isPropertyAccessExpression(node) && node.expression.getText(tree) === 'process' && node.name.text === 'env';
+    const aliases = new Set();
+    const isEnv = (node) => (ts.isPropertyAccessExpression(node) && node.expression.getText(tree) === 'process' && node.name.text === 'env') ||
+      (ts.isIdentifier(node) && aliases.has(node.text));
     const visit = (node) => {
       if (isEnv(node)) {
         const parent = node.parent;
         let name;
-        if (ts.isPropertyAccessExpression(parent) && parent.expression === node) name = parent.name.text;
+        if (ts.isVariableDeclaration(parent) && parent.initializer === node && ts.isIdentifier(parent.name) &&
+          parent.parent.flags & ts.NodeFlags.Const) { aliases.add(parent.name.text); return; }
+        if (ts.isCallExpression(parent) && parent.expression.getText(tree) === 'Reflect.get' &&
+          parent.arguments.length === 2 && parent.arguments[0] === node && ts.isStringLiteral(parent.arguments[1])) name = parent.arguments[1].text;
+        else if (ts.isPropertyAccessExpression(parent) && parent.expression === node) name = parent.name.text;
         else if (ts.isElementAccessExpression(parent) && parent.expression === node && ts.isStringLiteral(parent.argumentExpression)) name = parent.argumentExpression.text;
         else throw new Error(`Динамическое чтение process.env не проверяется: ${path.relative(projectRoot, file)}`);
         if (!/^[A-Z][A-Z0-9_]*$/.test(name)) throw new Error('Непригодное имя переменной');

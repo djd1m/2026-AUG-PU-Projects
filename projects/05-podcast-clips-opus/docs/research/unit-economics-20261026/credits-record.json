@@ -1,0 +1,75 @@
+{
+  "run_id": "n5-credit-pricing-20261026",
+  "record_started_at": "2026-10-26T17:40:03.440549+00:00",
+  "status": "complete",
+  "profile": "model-routing-econom",
+  "tier": "T",
+  "route_exit_code": 0,
+  "source_revision": "ec27c715592b86698ca3f0192f7a3372f6a116f5",
+  "scope": "Docs-only update: credits,30registrationcreditsonce,andvisiblehour-equivalents",
+  "acceptance_criteria": [
+    "Ordinary mode:1credit=1inputminute",
+    "Exactly30freecreditsonceatregistration;no monthlyrenewal",
+    "Keep990RUB/300credits(5h),3990RUB/1800credits(30h),1490RUB/600credits(10h)",
+    "Display hours next to all packages,30min/0.5h next to signupgrant",
+    "Promote30creditcohortcost1750RUBper100newfulltrials;break-even7Startor2Pro underexistingassumptions",
+    "Mark rounding,nonordinarymodepricing,upgradeandexpiryasundecided;no live rollout"
+  ],
+  "executor": "primary coordinator; no new delegation",
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "measurement_gaps": [
+    "Runtime model/usage/cost not exposed",
+    "Preparation before record creation excluded from elapsed record time"
+  ],
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "Documentation only; no application build, billing migration, deployment or paid model call."
+  },
+  "previous_record": "pricing-record.json",
+  "supersedes": [
+    "Previous undecidedtrialvolume;owner now chooses30credits",
+    "Previous packages expressed primarily in inputminutes/hours;nowcreditswithhoursvisible"
+  ],
+  "checks": {
+    "credit_hour_equivalence": "pass",
+    "one_time_30_credit_policy": "pass",
+    "prices_preserved": "pass",
+    "trial_cost_and_break_even": "pass",
+    "upgrade_arithmetic": "pass",
+    "local_Markdown_links": "pass",
+    "json_parse": "pass",
+    "known_secret_pattern_matches": 0,
+    "git_diff_check": "pass",
+    "code_changes": "none",
+    "previous_completed_record": "preserved",
+    "build_and_e2e": "not_applicable_docs_only"
+  },
+  "finished_at": "2026-10-26T17:41:47.616417+00:00",
+  "seconds_since_record_start": 104.175868,
+  "decisions": {
+    "ordinary_credits_per_input_minute": 1,
+    "registration_bonus_credits": 30,
+    "registration_bonus_hours": 0.5,
+    "bonus_frequency": "once_at_registration_never_monthly",
+    "start": {
+      "RUB_per30days": 990,
+      "credits": 300,
+      "ordinary_hours": 5
+    },
+    "pro": {
+      "RUB_per30days": 3990,
+      "credits": 1800,
+      "ordinary_hours": 30
+    },
+    "addon": {
+      "RUB": 1490,
+      "credits": 600,
+      "ordinary_hours": 10
+    },
+    "package_hours_must_be_visible": true,
+    "runtime_implementation": "not_performed"
+  },
+  "delivery_branch": "docs/n5-unit-economics-20261026"
+}

@@ -1,0 +1,58 @@
+{
+  "results": [
+    {
+      "command": "/tmp/n5-acquisition-node22/node-v22.22.3-linux-x64/bin/node",
+      "args": [
+        "scripts/test.mjs",
+        "tests/support-email.integration.test.ts"
+      ],
+      "exit": 0,
+      "log": "/tmp/n5-support-backend-checks-20261028/proof-expiry-01/green-check-0.log",
+      "logSha256": "6f8c6d13b1507532e49b689df77e1458876d4e19e2f7e1d5b9379a0dd8ebf5dd"
+    },
+    {
+      "command": "npm",
+      "args": [
+        "run",
+        "build",
+        "--workspace",
+        "packages/db"
+      ],
+      "exit": 0,
+      "log": "/tmp/n5-support-backend-checks-20261028/proof-expiry-01/green-check-1.log",
+      "logSha256": "b6cd0e886c8b67fa4867b7bda87be7f3610fb61a49915369fbf74d02838f46c8"
+    },
+    {
+      "command": "npm",
+      "args": [
+        "run",
+        "typecheck",
+        "--workspace",
+        "apps/web"
+      ],
+      "exit": 0,
+      "log": "/tmp/n5-support-backend-checks-20261028/proof-expiry-01/green-check-2.log",
+      "logSha256": "21816b8bb0da431db3d8625137867318323f36f496a7258c4bb734a5d5266882"
+    },
+    {
+      "command": "npm",
+      "args": [
+        "run",
+        "lint"
+      ],
+      "exit": 0,
+      "log": "/tmp/n5-support-backend-checks-20261028/proof-expiry-01/green-check-3.log",
+      "logSha256": "03d26c6ef0841b6eac1a8fb620e782e15d97a1f4467dc4566747082c86361443"
+    },
+    {
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "/tmp/n5-support-backend-checks-20261028/proof-expiry-01/green-check-4.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

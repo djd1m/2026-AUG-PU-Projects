@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-10-26T22:13:46.933945+00:00",
+  "integration_revision": "301681ee",
+  "model_cost": {
+    "exit_code": 0,
+    "limit": "declaration check; SQL/mutation receipts prove dispatch ordering"
+  },
+  "webhook_contract": {
+    "exit_code": 2,
+    "reason": "no-provider",
+    "meaning": "live provider replay receipt pending; isolated fake webhook browser replay still required"
+  },
+  "job_contract": {
+    "exit_code": 2,
+    "reason": "not-deployed",
+    "meaning": "target deployed resume receipt pending; local queue/fence races covered by suite"
+  },
+  "rebuild_docs": {
+    "initial_exit": 1,
+    "cause": "two new feature folders absent from index",
+    "after_index_fix_exit": 0
+  },
+  "native_review_contract": {
+    "exit_code": 0,
+    "criteria": 8
+  },
+  "native_completion": {
+    "exit_code": 0,
+    "criteria": 8,
+    "scope": "selected immutable feature snapshot; owner exception"
+  }
+}

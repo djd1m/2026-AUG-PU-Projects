@@ -8,8 +8,9 @@ export const RETURN_MAX_ATTEMPTS = 30;
 export const RETURN_DEADLINE_MS = 60_000;
 export const RETURN_FETCH_TIMEOUT_MS = 5000;
 
-export interface CheckoutSnapshot { status?: unknown; plan_paid_until?: unknown; account_plan?: unknown }
+export interface CheckoutSnapshot { sku?: unknown; package_title?: unknown; grant_seconds?: unknown; period_start?: unknown; period_end?: unknown; status?: unknown; plan_paid_until?: unknown; account_plan?: unknown }
 export type ReturnState =
+  | { kind: 'package'; title:string; credits:number; start:string; end:string; scheduled:boolean }
   | { kind: 'waiting'; attempts: number }
   | { kind: 'succeeded'; until: string | null }
   // Оплата когда-то прошла, но план сейчас НЕ действует (срок истёк или план снят оператором, ревью N6, находка 6):
@@ -23,6 +24,10 @@ export type ReturnState =
 export function decideReturnState(snapshot: CheckoutSnapshot | null | 'not_found', attempts: number, elapsedMs = 0): ReturnState {
   if (snapshot === 'not_found') return { kind: 'not_found' };
   if (snapshot && snapshot.status === 'succeeded') {
+    if (typeof snapshot.package_title==='string' && typeof snapshot.grant_seconds==='number' && snapshot.grant_seconds>0 &&
+      typeof snapshot.period_start==='string' && typeof snapshot.period_end==='string' && Number.isFinite(Date.parse(snapshot.period_start)) && Number.isFinite(Date.parse(snapshot.period_end))) {
+      return {kind:'package',title:snapshot.package_title,credits:snapshot.grant_seconds/60,start:snapshot.period_start,end:snapshot.period_end,scheduled:Date.parse(snapshot.period_start)>Date.now()};
+    }
     // Сравнение НА РАВЕНСТВО (ADR-004): всё, что не ровно 'paid', — план не действует.
     if (snapshot.account_plan !== 'paid') return { kind: 'paid_inactive' };
     return { kind: 'succeeded', until: typeof snapshot.plan_paid_until === 'string' ? snapshot.plan_paid_until : null };

@@ -1,0 +1,284 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "run_id": "20261026-n5-credits-cloudru",
+  "project": "projects/05-podcast-clips-opus",
+  "profile": "model-routing-econom",
+  "tier": "XL",
+  "scope": "Implement accepted credit packages and once30signup bonus plus Cloud.ru FM/ObjectStorage adapters/config; actual Metrika owner-goal reception afterward on Cloud.ru RF",
+  "baseline_revision": "c559673649460fa5d8ef1e5e3c86bf7053ebbb69",
+  "source_revision": "301681ee39531fa652d2930533cbe01df8f3fd9e",
+  "started_at": "2026-10-26T19:54:40.997894+00:00",
+  "ended_at": "2026-10-26T23:09:44.815277+00:00",
+  "status": "code_delivered_external_prerequisites",
+  "current_stage": "LOCAL_CODE_DELIVERED_TARGET_CLOUD_PENDING",
+  "owner_instruction": "Implement credit packages and signup bonus, Cloud.ru FM/ObjectStorage, then real Metrika counter and4goal receipt",
+  "acceptance_scope": "Code and local tests here; deployment/provider capability acceptance and actual analytics on Cloud.ru RF when credentials/account available",
+  "route": {
+    "substantive": "XL: money, quotas, credit ledger and provider replacement; concrete reviewed plan before unspecified financial semantics"
+  },
+  "stages": [
+    {
+      "stage": "credits_plan",
+      "agent": "n5_credits_implementation_plan",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "actual_model": null,
+      "status": "plan_written_aggregate_gate_failed"
+    },
+    {
+      "stage": "cloudru_plan",
+      "agent": "n5_cloudru_integration_plan",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "actual_model": null,
+      "status": "plan_written_aggregate_gate_failed"
+    },
+    {
+      "stage": "process_gate_audit",
+      "agent": "n5_workflow_gate_resolution",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "actual_model": null,
+      "status": "completed",
+      "decision": "No supported local gate invocation; explicit scopeexception required"
+    }
+  ],
+  "metrics": {
+    "input_tokens_total": null,
+    "output_tokens_total": null,
+    "cost": null
+  },
+  "telemetry_status": "partial",
+  "missing_data": [
+    "Actual model/usage metadata unavailable",
+    "Two planning delegates launched shortly before passport write; exact launch timestamps unavailable"
+  ],
+  "constraints": [
+    "No new spend, live payments, real model inference or real usercontent upload without concrete allowed test",
+    "No current production activation or userDB mutation",
+    "Secrets never printed or committed",
+    "One initial VM on targetCloud.ru; no mandatory secondVM",
+    "Review agent receives planner context, never coder context"
+  ],
+  "next_step": "Obtain actualCloudWhisperwordtimestampcontract andtargetRFenv/credentials, then allowedcapability/longinput/S3receipt; afterthat ownerMetrika counter and4goal ingestion. No independentauthorizedlocalcodework remains.",
+  "responsible": "root",
+  "branch": "feature/n5-credits-cloudru-20261026",
+  "plan_result": {
+    "credit_packages": "contour PASS21/21;15SC",
+    "cloudru_provider_foundation": "contour PASS14/14;6SC",
+    "aggregate_traceability_exit_code": 1,
+    "aggregate_features": 33,
+    "gaps": 11,
+    "inconclusive": 30,
+    "cause": "Unchanged historical root and feature documentation; no supported feature-local CLI",
+    "proposal": "docs/features/credits-cloudru-plan-gate.md",
+    "independent_process_audit": "docs/telemetry/p-replicator/20261026-n5-credits-cloudru/evidence/n5-workflow-gate-resolution-20261026.md"
+  },
+  "awaiting": [
+    "Cloud.ru Whisper documentedwordtimestampscontract and allowedcapabilityprobe",
+    "RFtargetserver/environment/keys/bucket and realendtoend provider/S3 acceptance",
+    "OwnerMetrika counter and4goal dashboardreceipts afterpreviousstages"
+  ],
+  "implementation_started": true,
+  "actual_background_implementation": false,
+  "checkpoint_revision": "f9c807a5dab411a9a02d8405df8e252743addd93",
+  "approval_requested_at": "2026-10-26T20:25:17.021649+00:00",
+  "not_a_voluntary_pause": true,
+  "continuation": "Root remains responsible for fullCloud migration; actualexternalprerequisites missing. No fakebackgroundrun, no voluntarypause, no currentproduction change. Resume sameRUN_ID withfreshsourcebound stage whenprerequisites available.",
+  "owner_autonomy_approved_at": "2026-10-26T20:35:27.248981+00:00",
+  "gate_scope_exception": {
+    "status": "approved",
+    "owner_answer": "да, давай, работай в автономном режиме - я спать на7часов",
+    "scope": "Two new feature contours with immutable official checker on hash-bound snapshots; fullruntimegates preserved"
+  },
+  "autonomy_boundary": "Code and isolated tests authorized. No currentproduction update/newspend/liveprovidercontent calls; targetCloudru activation requires credentials and evidence. Unanswered immediate upgrade stays disabled; preserve purchased rights.",
+  "disk_policy": {
+    "min_free_gib": 2,
+    "current_free_gib": 2.471,
+    "action": "Reuse dependencies/browser; clean onlyowned disposable caches before build if needed",
+    "observed_at": "2026-10-26T23:09:44.815277+00:00",
+    "last_cleanup": "175MiB own obsolete analytics generated.next removed; no livecheckout processes",
+    "cleanup": "onlyownobsoletegeneratedbuild,cleancompletedplancheckout,completeddevcheckout; no userdata/container/volume prune"
+  },
+  "implementation_strategy": "sequential isolated coding units; no simultaneous source writers",
+  "scope_gate_status": {
+    "phase1_foundation": 0,
+    "phase2_foundation_revision": 0,
+    "phase2_foundation_scenarios": 0,
+    "phase1_credit": 0,
+    "phase3_credit_completion": 0,
+    "credit_review_contract": 0,
+    "phase3_foundation_completion": 0,
+    "final_traceability": 0,
+    "final_report_revision": 0,
+    "final_criterion_scenarios": 0,
+    "final_completion": 0,
+    "foundation_review_contract": 0,
+    "rebuild_docs": 0
+  },
+  "foundation_validation": {
+    "verdict": "READY",
+    "score": 93.8,
+    "report": "docs/features/cloudru-provider-foundation/validation-report.md"
+  },
+  "active_unit": null,
+  "credit_validation": {
+    "verdict": "READY_WITH_CAVEATS offlineimplementation",
+    "report": "docs/features/credit-packages/validation-report.md",
+    "scoped_phase2_revision_exit": 0,
+    "scoped_phase2_scenarios_exit": 0
+  },
+  "foundation_review": {
+    "verdict": "PASS sourceconformance",
+    "reviewer_context": "planner+immutablecode; no coderchat/receipts",
+    "report_pending_integration": "/tmp/n5-foundation-review-325f1f53-20261026.md"
+  },
+  "publication": {
+    "candidate_push": "automaticreview rejected:private sourceexport to unverifiedremote; no push",
+    "accepted_delivery_branch": "feature/n5-credits-cloudru-20261026",
+    "action": "Accepted code/docs delivered toverifiedexistingbranch; enclosinglaterreceiptcommit recordsresult, no candidate/main/release/currentproduction publish",
+    "accepted_foundation_push": "succeeded to verifiedexistingbranch55f53a41; no candidatebranch export",
+    "accepted_credit_code_and_docs_push": {
+      "sha": "f9c807a5dab411a9a02d8405df8e252743addd93",
+      "remote_verified": "f9c807a5dab411a9a02d8405df8e252743addd93",
+      "timestamp": "2026-10-26T23:09:44.815277+00:00",
+      "destination": "github.com/djd1m/2026-AUG-PU-Projects",
+      "branch": "feature/n5-credits-cloudru-20261026"
+    }
+  },
+  "foundation_result": {
+    "status": "accepted_code_only",
+    "source_code": "325f1f53ed090ad3325230fe29ad4156b636a9d0",
+    "final_candidate": "74742a64e6e6c36313bcff5ed23fb044b3a21e67",
+    "integration_revision": "6f25bfe0",
+    "test_files": 116,
+    "tests": 1092,
+    "skipped": 0,
+    "mutation_pairs": 21,
+    "native_completion_exit": 0,
+    "native_review_exit": 0,
+    "actual_model": null,
+    "requested_model": "gpt-6.1-sol",
+    "requested_effort": "medium",
+    "trace_seconds": 1184.134,
+    "missing_time": "Initialread interval beforetrace not included"
+  },
+  "credit_attempts": [
+    {
+      "unit": "credit-packages-impl-1",
+      "status": "failed_partial",
+      "source": "86a6dded2c30f1c09c3ecbe6afcfed047ed37e41",
+      "remaining": "P2AC7dates+finalchecks",
+      "actualcontinuation": "credit-packages-fix-2 launchedandacknowledged"
+    },
+    {
+      "unit": "credit-packages-fix-2",
+      "status": "completed",
+      "source": "5b306f1646efb75494b67da1e0f234c3c94e2790",
+      "tests": 1116,
+      "files": 118,
+      "skipped": 0,
+      "mutation_pairs": 15,
+      "trace_seconds": 722.401,
+      "actual_model": null
+    }
+  ],
+  "credit_source_review": {
+    "status": "PASSall8ACsourceconformance",
+    "P2AC7": "closed",
+    "runtime_browser_acceptance": "passedqualified; realbank/deployedprovider acceptance notclaimed"
+  },
+  "historical_handoff_before_owner_answer": {
+    "ready_files": [
+      "docs/cloudru-launch-plan.md",
+      "docs/features/credit-packages/01_specification.md",
+      "docs/features/credit-packages/owner-decisions.md",
+      "docs/features/cloudru-provider-foundation/01_specification.md",
+      "docs/features/credits-cloudru-plan-gate.md"
+    ],
+    "owner_approved": [
+      "per-second1credit=60s",
+      "addon30daysfrompurchase withpaidfunctions throughout"
+    ],
+    "owner_pending": [
+      "gate-scope exception",
+      "immediateupgrade vsnextperiod",
+      "financialproposal finalapproval afterPLANVALIDATE"
+    ],
+    "missing_provider_evidence": [
+      "Cloud.ru Whisper actualrequest and wordtimestamps contract"
+    ],
+    "actual_background_implementation": false,
+    "tools": {
+      "node22": "/tmp/n5-acquisition-node22-bin",
+      "ffmpeg": "/tmp/n5-acquisition-ffmpeg-bin",
+      "test_helper": "/tmp/n5-acquisition-private/run-check.py",
+      "testscope": "Separate n5_acq_20261026_test database; Redis15; MinIO; existingcodex-ui-playwright; no currentproduction change"
+    }
+  },
+  "browser_mode": "development-mode AppRouter+actualwebhook+SQL/fakeprovider, productionbuild separatelyverified; no runtimeinjection orsecurityguardchange",
+  "memory": {
+    "cli_version": "0.8.44",
+    "lesson_id": "teach:3b947281e308859d",
+    "store": "originalsourceworktree/.dz",
+    "readback": "dz recall lexical --no-semantic, observed lesson returned",
+    "secret_values": "none"
+  },
+  "credit_runtime_result": {
+    "stock_pages": 206,
+    "stock_exit": 0,
+    "stock_execution_errors": 0,
+    "stock_error_findings": 0,
+    "stock_warnings": 714,
+    "warning_comparison": "non-caption normalizedselectormultisets exactlyunchanged vs646baseline;68additionalvideocaptionwarnings",
+    "billing_views": 34,
+    "real_input_seconds": 1801,
+    "shortage_balance_seconds": 1800,
+    "shortage_reserved_seconds": 0,
+    "provider_dispatches": 0,
+    "shortage_http_put": 200,
+    "shortage_api_complete": 202,
+    "shortage_browser": "passed360x900 actualfilepreview+failure+balance+upgrade/noreset/nooverflow",
+    "duplicate_upload_posts": 0
+  },
+  "credit_result": {
+    "status": "accepted_code_and_local_tests",
+    "candidate": "5b306f1646efb75494b67da1e0f234c3c94e2790",
+    "code_integration_revision": "301681ee39531fa652d2930533cbe01df8f3fd9e",
+    "tests": 1116,
+    "files": 118,
+    "skipped": 0,
+    "mutations": 15,
+    "billing_views": 34,
+    "stock_pages": 206,
+    "stock_warnings": 714,
+    "input_seconds": 1801,
+    "provider_calls_for_shortage": 0,
+    "source_changes_for_harness_fixes": 0
+  },
+  "remaining_external": [
+    "Cloud.ru Whisper documentedwordtimestampscontract and allowedcapabilityprobe",
+    "RFtargetserver/environment/keys/bucket and realendtoend provider/S3 acceptance",
+    "OwnerMetrika counter and4goal dashboardreceipts afterpreviousstages"
+  ],
+  "local_acceptance_completed_at": "2026-10-26T23:07:44.537364+00:00",
+  "current_source_revision": "addd52841e97b0629a8a7233e28ee50f8ae66e1a",
+  "browser_evidence": "docs/telemetry/p-replicator/20261026-n5-credits-cloudru/evidence/ui/manifest.json",
+  "stopped_test_application_processes": true,
+  "real_provider_checks": {
+    "cloudru_stt": "wordtimestampcontractunconfirmed;startuprefused",
+    "cloudru_s3": "offlineSigV4andMinIO only;targetcompatibilitypending",
+    "yookassa_live": "notrun",
+    "webhook_live_contract": "exit2no-provider retained",
+    "deployed_long_job": "exit2not-deployed retained",
+    "metrika_real_counter": "notconfigured, aftertargetCloudstages"
+  },
+  "measured_local_acceptance_wall_seconds": 11583.53947,
+  "measurement_limits": [
+    "Initialplanningdelegatesbeforepassport exactlaunch time unavailable",
+    "Actual host model/token/cost counters unavailable;requestedhigh/mediumroutingonly",
+    "Billing caller-known prelaunchdigest missing, actualsource/build/readiness/HTTP/SQL/browserreceipt retained; not retrofitted"
+  ],
+  "elapsed_wall_seconds_to_code_delivery": 11703.817383,
+  "source_code_and_docs_delivery": "f9c807a5dab411a9a02d8405df8e252743addd93"
+}

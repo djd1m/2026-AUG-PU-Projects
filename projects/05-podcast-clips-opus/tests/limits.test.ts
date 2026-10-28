@@ -11,6 +11,7 @@ import { failureMessages } from '../apps/web/src/lib/screen-contract';
 import { remainingLimits } from '../apps/web/src/server/limits';
 import { InterestService } from '../apps/web/src/server/interest';
 import { LimitsPanel } from '../apps/web/src/app/dashboard/LimitsPanel';
+import { UpgradeScreen } from '../apps/web/src/app/upgrade/UpgradeScreen';
 import { ProInterest } from '../apps/web/src/app/dashboard/ProInterest';
 vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
 const now = new Date('2026-09-23T20:59:59Z');
@@ -40,7 +41,7 @@ it('global refusal hides named global ceilings on both request and progress surf
 it('remaining values use configured limits, never used counts, and clamp to zero', async () => {
   const query = vi.fn().mockResolvedValue({ rows: [{ scope: 'user_uploads', used: 1 }, { scope: 'user_minutes', used: 12 }, { scope: 'user_llm', used: 3 }] });
   const remaining = await remainingLimits({ query } as unknown as Pool, limits, 'session-owner', now);
-  expect(remaining).toEqual({ uploads: 1, minutes: 78, selections: 0, resets_at: '2026-09-23T21:00:00.000Z' });
+  expect(remaining).toEqual({ owner_unlimited: false, uploads: 1, minutes: 78, selections: 0, resets_at: '2026-09-23T21:00:00.000Z' });
   expect(query.mock.calls[0]?.[1]).toEqual(['session-owner', '2026-09-23']);
   const html = renderToStaticMarkup(createElement(LimitsPanel, { remaining }));
   expect(html).toContain('Осталось на сегодня'); expect(html).toContain('78');
@@ -49,7 +50,7 @@ it('remaining values use configured limits, never used counts, and clamp to zero
 it('absent counters start full; midnight changes both query day and reset; storage errors are not full quota', async () => {
   const query = vi.fn().mockResolvedValue({ rows: [] });
   expect(await remainingLimits({ query } as unknown as Pool, { ...limits, N5_LIMIT_USER_MINUTES: 42 }, 'a', new Date('2026-09-23T21:00:00Z')))
-    .toEqual({ uploads: 2, minutes: 42, selections: 2, resets_at: '2026-09-24T21:00:00.000Z' });
+    .toEqual({ owner_unlimited: false, uploads: 2, minutes: 42, selections: 2, resets_at: '2026-09-24T21:00:00.000Z' });
   expect(query.mock.calls[0]?.[1]).toEqual(['a', '2026-09-24']);
   query.mockRejectedValue(new Error('offline'));
   await expect(remainingLimits({ query } as unknown as Pool, limits, 'a', now)).rejects.toThrow('offline');
@@ -86,4 +87,17 @@ it('interest atomically records existing event and rolls back if event storage f
   await expect(new InterestService({ connect } as unknown as Pool, () => now).create('owner', { source_screen: 'clip_card' })).rejects.toThrow('event failed');
   const calls = query.mock.calls.map(c => c[0]);
   expect(calls).toContain('ROLLBACK'); expect(calls).not.toContain('COMMIT'); expect(release).toHaveBeenCalledOnce();
+});
+it('owner unlimited UI precedes zero credit balance without fabricated credits or purchase',()=>{
+  const html=renderToStaticMarkup(createElement(LimitsPanel,{remaining:{owner_unlimited:true,uploads:0,minutes:0,selections:0,resets_at:now.toISOString(),credits:{available_seconds:0,reserved_seconds:0,next_expiry:null}}}));
+  expect(html).toContain('Без лимитов');expect(html).not.toMatch(/Выбрать пакет|Infinity|Доступно кредитов/);
+});
+
+it('owner catalog keeps prices but disables purchases and hides unavailable legacy/date notices',()=>{
+  const html=renderToStaticMarkup(createElement(UpgradeScreen,{ownerUnlimited:true,creditMode:true,catalogOnly:true,salesEnabled:true,
+    title:'Pro',price:'990 ₽',days:30,paidMinutes:270,current:{plan:'paid',plan_source:'none',plan_paid_until:null}}));
+  expect(html).toContain('Доступ владельца: без лимитов, покупать пакет не нужно');
+  for(const price of ['990','3990','1490']) expect(html.replaceAll(' ','')).toContain(price);
+  expect((html.match(/disabled=""/g)??[])).toHaveLength(3);
+  expect(html).not.toMatch(/Не удалось определить даты|Ваши текущие условия сохраняются|Продажа новых пакетов временно/);
 });

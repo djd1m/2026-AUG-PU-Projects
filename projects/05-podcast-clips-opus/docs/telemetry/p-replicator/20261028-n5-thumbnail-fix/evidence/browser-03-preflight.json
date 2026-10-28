@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-28T05:27:26.031887+00:00",
+  "run_id": "20261028-n5-thumbnail-fix",
+  "work_unit_id": "browser-03",
+  "readiness": "ready",
+  "source_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+  "build_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+  "fixture_sha256": "22a166ba5c9558976c8378f865a6daec91b63a117be68786df355bec30490074",
+  "driver_sha256": "2346b9bc7f0e09e52c9eeabea6df4eb16468ad982137afdc6b4f7df4aed3d10c",
+  "browser_container": "codex-ui-playwright",
+  "same_running_environment": true,
+  "expected_effects": "same synthetic login/download only",
+  "TLS": "private self-signed only",
+  "bounded_correction": "scroll video into view before actual playback and preserve all existing conditions; record sanitized download failure if repeated",
+  "previous_attempts_preserved": true
+}

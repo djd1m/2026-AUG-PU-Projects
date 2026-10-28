@@ -1,6 +1,8 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { observeSignup } from '../lib/acquisition-analytics';
+import { clearSupportIdentity } from '../lib/support-client';
 import { rpc } from '../lib/rpc';
 import { safeNextPath } from '../lib/payment-return';
 // Фича 30: после входа — на оформление тарифа, если пришли с /upgrade (только закрытый набор адресов, не открытый редирект).
@@ -9,6 +11,7 @@ export function AuthForm() {
   const [register, setRegister] = useState(false), [busy, setBusy] = useState(false), [error, setError] = useState('');
   const router = useRouter();
   const [signedIn, setSignedIn] = useState(false);
+  const pendingRegistration = useRef(false);
   const email = useRef<HTMLInputElement>(null);
   // Пришли по ссылке …/#auth (кнопка «Попробовать бесплатно» или внешняя ссылка): фокус в поле почты.
   useEffect(() => {
@@ -21,13 +24,16 @@ export function AuthForm() {
     const form = new FormData(e.currentTarget);
     try {
       if (!signedIn) {
+        clearSupportIdentity();
         const response = await fetch(`/api/auth/${register ? 'register' : 'login'}`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: form.get('email'), password: form.get('password') }) });
         const body = await response.json(); if (!response.ok) throw new Error(body.error ?? 'Не удалось войти');
+        pendingRegistration.current = register;
         setSignedIn(true);
       }
       const explicit = String(form.get('partner_code') ?? '').trim();
       await rpc('code.apply', explicit ? { code: explicit } : {}, true);
+      if (pendingRegistration.current) { observeSignup(); pendingRegistration.current = false; }
       router.push(afterLogin()); router.refresh();
     } catch (cause) { setError(cause instanceof Error ? cause.message : 'Нет связи с сервером'); } finally { setBusy(false); }
   }}><h2>{register ? 'Создать аккаунт' : 'Войти в КлипМейкер'}</h2><label>Почта<input ref={email} id="auth-email" name="email" type="email" autoComplete="email" required /></label>
@@ -37,8 +43,9 @@ export function AuthForm() {
     {!signedIn && <button type="button" className="text-button" disabled={busy} onClick={() => { setRegister(!register); setError(''); }}>{register ? 'Уже есть аккаунт? Войти' : 'Нет аккаунта? Зарегистрироваться'}</button>}
     {signedIn && error && <button type="button" disabled={busy} onClick={async () => {
       setBusy(true);
-      try { await rpc('code.apply', { discard_referral: true }, true); router.push(afterLogin()); router.refresh(); }
+      try { await rpc('code.apply', { discard_referral: true }, true); if (pendingRegistration.current) { observeSignup(); pendingRegistration.current = false; } router.push(afterLogin()); router.refresh(); }
       catch { setError('Не удалось продолжить. Повторите позже'); } finally { setBusy(false); }
     }}>Продолжить без применения кода</button>}
+    <nav className="support-links" aria-label="Помощь со входом"><a href="/forgot">Забыли пароль?</a><a href="/support">Поддержка</a></nav>
     {error && <p role="alert">{error}</p>}</form>;
 }

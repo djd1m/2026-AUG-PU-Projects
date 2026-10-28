@@ -1,0 +1,379 @@
+{
+  "terminalStatus": "completed",
+  "workUnitId": "n5_acquisition_economics",
+  "date": "2026-10-26",
+  "scope": "read-only planning, no product changes, launches, publication, paid API calls or spend",
+  "sourceDocuments": [
+    {
+      "path": "/tmp/n5-acquisition-analytics-20261026/projects/05-podcast-clips-opus/docs/research/unit-economics-20261026/pricing-decisions.md",
+      "sha256": "7d9c18e0f0686c6cbf936093d601bfc0c6b8a3b8fcadd94b61f6e995fad2bf4c"
+    },
+    {
+      "path": "/tmp/n5-acquisition-analytics-20261026/projects/05-podcast-clips-opus/docs/research/unit-economics-20261026/unit-economics-summary.md",
+      "sha256": "6fa4855e3213f7097230e21bbaee96db0b1fb92771cdec9877ca11eb63395a99"
+    }
+  ],
+  "actualModel": null,
+  "actualModelReason": "Child runtime model identifier is not exposed to this agent; coordinator requested Sol 6.1 high, request is not execution proof.",
+  "tokens": null,
+  "usageCost": null,
+  "usageReason": "Runtime token and monetary counters not exposed; not estimated.",
+  "profile": "bounded independent economics/1-1-1-1 planning",
+  "inputs": {
+    "price_rub": "990",
+    "paid_hours": "5",
+    "variable_rub_per_input_hour": "35",
+    "payment_fee_scenario": "0.0427",
+    "full_cpu_vm_rub_per_30_days": "3000",
+    "signup_bonus_credits_once": "30",
+    "credit_input_minutes": "1",
+    "trial_hours_assumed_used_per_signup": "0.5",
+    "signups_sensitivity": "200"
+  },
+  "calculated": {
+    "payment_fee_rub": "42.2730",
+    "paid_processing_rub": "175",
+    "contribution_before_acquisition_vm_unknowns_rub": "772.7270",
+    "trial_cost_per_signup_rub": "17.5",
+    "base_first_period_residual_rub": "954.540000",
+    "base_min_conversion_at_fixed_200_signups": "0.093823562525963244457615690923185",
+    "base_max_signup_acquisition_cost_at_conversion_10pct": "44.77270"
+  },
+  "formulas": {
+    "p": "new first-payers within 30 days of signup / all eligible new signups in same fully matured acquisition cohort",
+    "CAC_media": "channel_spend / new_paid",
+    "CAC_paid_with_trials": "(channel_spend + actual_trial_variable_cost_for_entire_cohort) / new_paid",
+    "trial_cost": "sum(actual_trial_input_minutes)/60 * 35; conservative scenario = all_signups*17.50",
+    "first_period_residual": "new_paid*772.727 - channel_spend - cohort_trial_cost - 3000; equivalent new_paid*(772.727-CAC_paid_with_trials)-3000",
+    "first_period_conversion_threshold_fixed_signups": "(signup_acquisition_cost + average_trial_cost_per_signup + 3000/signups + other_costs_per_signup)/772.727"
+  },
+  "baseScenario": {
+    "signup_acquisition_cost_rub": "40",
+    "signup_to_paid_conversion": "0.10",
+    "signups": "200",
+    "paid": "20.00",
+    "channel_spend_rub": "8000",
+    "trial_cost_all_signups_rub": "3500.0",
+    "cac_paid_channel_only_rub": "400",
+    "cac_paid_with_trials_rub": "575",
+    "first_period_residual_rub": "954.540000",
+    "first_period_residual_rounded_rub": "954.54",
+    "first_period_payback_on_listed_costs": true
+  },
+  "sensitivity": [
+    {
+      "signup_acquisition_cost_rub": "20",
+      "signup_to_paid_conversion": "0.05",
+      "signups": "200",
+      "paid": "10.00",
+      "channel_spend_rub": "4000",
+      "trial_cost_all_signups_rub": "3500.0",
+      "cac_paid_channel_only_rub": "400",
+      "cac_paid_with_trials_rub": "750",
+      "first_period_residual_rub": "-2772.730000",
+      "first_period_residual_rounded_rub": "-2772.73",
+      "first_period_payback_on_listed_costs": false
+    },
+    {
+      "signup_acquisition_cost_rub": "20",
+      "signup_to_paid_conversion": "0.10",
+      "signups": "200",
+      "paid": "20.00",
+      "channel_spend_rub": "4000",
+      "trial_cost_all_signups_rub": "3500.0",
+      "cac_paid_channel_only_rub": "200",
+      "cac_paid_with_trials_rub": "375",
+      "first_period_residual_rub": "4954.540000",
+      "first_period_residual_rounded_rub": "4954.54",
+      "first_period_payback_on_listed_costs": true
+    },
+    {
+      "signup_acquisition_cost_rub": "20",
+      "signup_to_paid_conversion": "0.20",
+      "signups": "200",
+      "paid": "40.00",
+      "channel_spend_rub": "4000",
+      "trial_cost_all_signups_rub": "3500.0",
+      "cac_paid_channel_only_rub": "100",
+      "cac_paid_with_trials_rub": "187.5",
+      "first_period_residual_rub": "20409.080000",
+      "first_period_residual_rounded_rub": "20409.08",
+      "first_period_payback_on_listed_costs": true
+    },
+    {
+      "signup_acquisition_cost_rub": "40",
+      "signup_to_paid_conversion": "0.05",
+      "signups": "200",
+      "paid": "10.00",
+      "channel_spend_rub": "8000",
+      "trial_cost_all_signups_rub": "3500.0",
+      "cac_paid_channel_only_rub": "800",
+      "cac_paid_with_trials_rub": "1150",
+      "first_period_residual_rub": "-6772.730000",
+      "first_period_residual_rounded_rub": "-6772.73",
+      "first_period_payback_on_listed_costs": false
+    },
+    {
+      "signup_acquisition_cost_rub": "40",
+      "signup_to_paid_conversion": "0.10",
+      "signups": "200",
+      "paid": "20.00",
+      "channel_spend_rub": "8000",
+      "trial_cost_all_signups_rub": "3500.0",
+      "cac_paid_channel_only_rub": "400",
+      "cac_paid_with_trials_rub": "575",
+      "first_period_residual_rub": "954.540000",
+      "first_period_residual_rounded_rub": "954.54",
+      "first_period_payback_on_listed_costs": true
+    },
+    {
+      "signup_acquisition_cost_rub": "40",
+      "signup_to_paid_conversion": "0.20",
+      "signups": "200",
+      "paid": "40.00",
+      "channel_spend_rub": "8000",
+      "trial_cost_all_signups_rub": "3500.0",
+      "cac_paid_channel_only_rub": "200",
+      "cac_paid_with_trials_rub": "287.5",
+      "first_period_residual_rub": "16409.080000",
+      "first_period_residual_rounded_rub": "16409.08",
+      "first_period_payback_on_listed_costs": true
+    },
+    {
+      "signup_acquisition_cost_rub": "80",
+      "signup_to_paid_conversion": "0.05",
+      "signups": "200",
+      "paid": "10.00",
+      "channel_spend_rub": "16000",
+      "trial_cost_all_signups_rub": "3500.0",
+      "cac_paid_channel_only_rub": "1600",
+      "cac_paid_with_trials_rub": "1950",
+      "first_period_residual_rub": "-14772.730000",
+      "first_period_residual_rounded_rub": "-14772.73",
+      "first_period_payback_on_listed_costs": false
+    },
+    {
+      "signup_acquisition_cost_rub": "80",
+      "signup_to_paid_conversion": "0.10",
+      "signups": "200",
+      "paid": "20.00",
+      "channel_spend_rub": "16000",
+      "trial_cost_all_signups_rub": "3500.0",
+      "cac_paid_channel_only_rub": "800",
+      "cac_paid_with_trials_rub": "975",
+      "first_period_residual_rub": "-7045.460000",
+      "first_period_residual_rounded_rub": "-7045.46",
+      "first_period_payback_on_listed_costs": false
+    },
+    {
+      "signup_acquisition_cost_rub": "80",
+      "signup_to_paid_conversion": "0.20",
+      "signups": "200",
+      "paid": "40.00",
+      "channel_spend_rub": "16000",
+      "trial_cost_all_signups_rub": "3500.0",
+      "cac_paid_channel_only_rub": "400",
+      "cac_paid_with_trials_rub": "487.5",
+      "first_period_residual_rub": "8409.080000",
+      "first_period_residual_rounded_rub": "8409.08",
+      "first_period_payback_on_listed_costs": true
+    }
+  ],
+  "unknowns": [
+    "measured CAC",
+    "conversion",
+    "activation",
+    "retention and repeat payments",
+    "taxes/VAT treatment",
+    "refunds/chargebacks",
+    "support and founder/channel labour",
+    "real provider billing and render capacity",
+    "storage beyond first month",
+    "fraud/duplicate signups",
+    "true incremental infrastructure need"
+  ],
+  "LTV": null,
+  "ltvReason": "No measured retention or lifetime; no assumed subscriber lifetime or LTV/CAC.",
+  "oneOneOneOne": {
+    "segment": "Russian-language independent expert/podcaster, self-edits one 45–60 minute educational conversation per week",
+    "tariff": "Start: 990 RUB/30 days, 300 credits = 5 input hours",
+    "keyFeature": "From one Russian conversation produce 3–8 context-preserving clip candidates with editable Russian captions; gate = author accepts at least 2 for publication",
+    "channel": "One permission-based Telegram community of authors/podcasters; one tagged placement mechanism, no outreach or publication authorized by this plan"
+  },
+  "decisionCriteria": {
+    "economics": "Use actual channel outlay plus all cohort trial costs; first-period residual after full VM and known taxes/support must be nonnegative; unknown costs preclude profit claim. At hypothetical 200 signups and 40 RUB/signup, conversion must exceed 9.382% even before unknown costs.",
+    "quality": "Hypothesis: >=70% activated authors accept >=2 clips for publication without rebuilding the edit; record failures and editing minutes.",
+    "cohort": "Planning sample 200 eligible signups, 30-day outcome window per signup, quality denominator all activated authors. Not a significance or acquisition guarantee.",
+    "failure": "Separate no reach/no activation from accepted quality but no payment and from high acquisition cost. One concrete reason-bounded correction in same segment/channel; do not broaden automatically.",
+    "pivotTrigger": "After valid funnel measurement and correction, Start offer fails observed first-period contribution or quality gate; B2B allowed only as separate unproven hypothesis supported by agency interviews. No B2C failure alone proves B2B.",
+    "b2bFallback": "Separate interviews with 5 small Russian SMM/content agencies already editing >=10 input hours/month; show 1 permissioned demo per agency, measure accepted clips/time saved; seek >=2 concrete paid-pilot commitments at Pro 3990/1800 credits (30h), excluding manual service promises. No live payment/API/spend without separate authorization. Evaluate delivery cost incl support and at least one renewal opportunity; otherwise reject/revise B2B too."
+  },
+  "readiness": {
+    "E2E": "not_applicable: research-only artifacts; no runtime or paid calls",
+    "traffic": "blocked for new-tariff promise until new credits/pricing/quota/trial and provider-cost assumptions are implemented and verified; existing auth/payments do not demonstrate the new tariff live"
+  },
+  "checks": {
+    "decimalArithmetic": true,
+    "jsonParsed": true,
+    "sourceHashesBound": true
+  },
+  "speechkit_v3_addendum_20261027": {
+    "date": "2026-10-27",
+    "source_revision": "081d286051fcf1ae18468b6f71cc785710301f1d",
+    "supersedes": "Historical economics calculations C35/M772.727/trial17.50, base CAC575 and residual954.54 for selected SpeechKit v3 candidate only; old fields below remain historical evidence.",
+    "current_calculation": "../unit-economics-20261026/final-calculations.json#speechkit_v3_addendum_20261027",
+    "C_RUB_per_hour": "57",
+    "M_Start_RUB": "662.7270",
+    "trial_RUB": "29",
+    "F_RUB": "3000",
+    "fee_rate": "0.0427",
+    "tax": "Unknown, remains excluded; not zero",
+    "cases": [
+      {
+        "signup_acquisition_cost_RUB": "20",
+        "signup_to_paid_conversion": "0.05",
+        "signups": 200,
+        "paid": "10.00",
+        "channel_spend_RUB": "4000",
+        "all_signup_trial_RUB": "5800",
+        "CAC_media_RUB": "400",
+        "CAC_with_trial_RUB": "980",
+        "first_period_residual_RUB": "-6172.730000",
+        "first_period_payback": false
+      },
+      {
+        "signup_acquisition_cost_RUB": "20",
+        "signup_to_paid_conversion": "0.10",
+        "signups": 200,
+        "paid": "20.00",
+        "channel_spend_RUB": "4000",
+        "all_signup_trial_RUB": "5800",
+        "CAC_media_RUB": "200",
+        "CAC_with_trial_RUB": "490",
+        "first_period_residual_RUB": "454.540000",
+        "first_period_payback": true
+      },
+      {
+        "signup_acquisition_cost_RUB": "20",
+        "signup_to_paid_conversion": "0.20",
+        "signups": 200,
+        "paid": "40.00",
+        "channel_spend_RUB": "4000",
+        "all_signup_trial_RUB": "5800",
+        "CAC_media_RUB": "100",
+        "CAC_with_trial_RUB": "245",
+        "first_period_residual_RUB": "13709.080000",
+        "first_period_payback": true
+      },
+      {
+        "signup_acquisition_cost_RUB": "40",
+        "signup_to_paid_conversion": "0.05",
+        "signups": 200,
+        "paid": "10.00",
+        "channel_spend_RUB": "8000",
+        "all_signup_trial_RUB": "5800",
+        "CAC_media_RUB": "800",
+        "CAC_with_trial_RUB": "1380",
+        "first_period_residual_RUB": "-10172.730000",
+        "first_period_payback": false
+      },
+      {
+        "signup_acquisition_cost_RUB": "40",
+        "signup_to_paid_conversion": "0.10",
+        "signups": 200,
+        "paid": "20.00",
+        "channel_spend_RUB": "8000",
+        "all_signup_trial_RUB": "5800",
+        "CAC_media_RUB": "400",
+        "CAC_with_trial_RUB": "690",
+        "first_period_residual_RUB": "-3545.460000",
+        "first_period_payback": false
+      },
+      {
+        "signup_acquisition_cost_RUB": "40",
+        "signup_to_paid_conversion": "0.20",
+        "signups": 200,
+        "paid": "40.00",
+        "channel_spend_RUB": "8000",
+        "all_signup_trial_RUB": "5800",
+        "CAC_media_RUB": "200",
+        "CAC_with_trial_RUB": "345",
+        "first_period_residual_RUB": "9709.080000",
+        "first_period_payback": true
+      },
+      {
+        "signup_acquisition_cost_RUB": "80",
+        "signup_to_paid_conversion": "0.05",
+        "signups": 200,
+        "paid": "10.00",
+        "channel_spend_RUB": "16000",
+        "all_signup_trial_RUB": "5800",
+        "CAC_media_RUB": "1600",
+        "CAC_with_trial_RUB": "2180",
+        "first_period_residual_RUB": "-18172.730000",
+        "first_period_payback": false
+      },
+      {
+        "signup_acquisition_cost_RUB": "80",
+        "signup_to_paid_conversion": "0.10",
+        "signups": 200,
+        "paid": "20.00",
+        "channel_spend_RUB": "16000",
+        "all_signup_trial_RUB": "5800",
+        "CAC_media_RUB": "800",
+        "CAC_with_trial_RUB": "1090",
+        "first_period_residual_RUB": "-11545.460000",
+        "first_period_payback": false
+      },
+      {
+        "signup_acquisition_cost_RUB": "80",
+        "signup_to_paid_conversion": "0.20",
+        "signups": 200,
+        "paid": "40.00",
+        "channel_spend_RUB": "16000",
+        "all_signup_trial_RUB": "5800",
+        "CAC_media_RUB": "400",
+        "CAC_with_trial_RUB": "545",
+        "first_period_residual_RUB": "1709.080000",
+        "first_period_payback": true
+      }
+    ],
+    "activation": [
+      {
+        "activation_fraction": "0.25",
+        "full_trial_cost_per_signup_RUB": "7.25",
+        "minimum_signup_to_paid_conversion": "0.09393007980661720436921990503",
+        "minimum_activated_to_paid_conversion": "0.3757203192264688174768796201",
+        "assumption": "Only activated signups redeem full trial; every payer activates. Activation and conversion unmeasured."
+      },
+      {
+        "activation_fraction": "0.5",
+        "full_trial_cost_per_signup_RUB": "14.5",
+        "minimum_signup_to_paid_conversion": "0.1048697276555806538740688096",
+        "minimum_activated_to_paid_conversion": "0.2097394553111613077481376192",
+        "assumption": "Only activated signups redeem full trial; every payer activates. Activation and conversion unmeasured."
+      },
+      {
+        "activation_fraction": "1",
+        "full_trial_cost_per_signup_RUB": "29",
+        "minimum_signup_to_paid_conversion": "0.1267490233535075528837666188",
+        "minimum_activated_to_paid_conversion": "0.1267490233535075528837666188",
+        "assumption": "Only activated signups redeem full trial; every payer activates. Activation and conversion unmeasured."
+      }
+    ],
+    "base_threshold_signup_to_paid": "0.1267490233535075528837666188",
+    "max_signup_cost_at10pct": "22.27270",
+    "stress_C62": {
+      "M_Start_RUB": "637.7270",
+      "full_trial_RUB": "31",
+      "base_CAC_with_trial_RUB": "710",
+      "base_residual_RUB": "-4445.4600",
+      "worst_grid_a80_p5_CAC_RUB": "2220",
+      "worst_grid_a80_p5_residual_RUB": "-18822.7300"
+    },
+    "oneOneOneOne": "Existing segment, Start990/5h, key feature and permission-based single Telegram channel retained; no traffic launched",
+    "LTV": null,
+    "payback_limit": "First-period cash contribution only, no lifetime/churn inference",
+    "checks": "PASS: independent Node calculator, Python Decimal, JSON/CSV agreement, historical preservation, ownership and diff whitespace checks; build/E2E not_applicable docs-only"
+  }
+}

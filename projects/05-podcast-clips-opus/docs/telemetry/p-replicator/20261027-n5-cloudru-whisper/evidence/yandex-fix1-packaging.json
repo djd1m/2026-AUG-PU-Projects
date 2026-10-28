@@ -1,0 +1,12 @@
+{
+  "check": "yandex-fix1-packaging",
+  "command": [
+    "node",
+    "/tmp/n5-yandex-fix1-packaging-smoke.cjs"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 0.534,
+  "log": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-fix1-packaging.log",
+  "node": "22.22.3",
+  "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off"
+}

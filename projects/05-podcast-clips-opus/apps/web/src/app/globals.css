@@ -219,3 +219,43 @@ button,.button { min-width:2.75rem; }
   .clip-preview,.clip-preview video { max-height:32svh; }
 }
 /* progress-ribbon:first-screen:end */
+
+/* Support and recovery share the existing card and theme tokens. */
+.support-card > .support-close { position:fixed; z-index:2147483647; inset-block-start:max(var(--space-3),env(safe-area-inset-top)); inset-inline-end:max(var(--space-3),env(safe-area-inset-right)); width:auto; max-width:calc(100vw - var(--space-8)); min-height:2.75rem; margin:0; }
+.support-shell { max-width:48rem; }
+.support-card { min-width:0; overflow-wrap:anywhere; margin-bottom:var(--space-6); }
+.support-card h1 { font-size:clamp(1.625rem,4vw,2.5rem); letter-spacing:-.04rem; }
+.support-card > button { margin-block:var(--space-3); }
+.support-links { display:flex; flex-wrap:wrap; gap:var(--space-2) var(--space-4); margin-top:var(--space-4); }
+.support-links a,.support-launcher a { display:inline-flex; align-items:center; min-height:2.75rem; }
+.support-launcher { padding:var(--space-4) max(var(--space-4),env(safe-area-inset-left)); border-top:.0625rem solid var(--line); text-align:center; }
+.support-success { padding:var(--space-3); border:.0625rem solid var(--success-line); color:var(--success-fg); background:var(--success-bg); }
+.support-preview { white-space:pre-wrap; overflow-wrap:anywhere; font:inherit; padding:var(--space-3); background:var(--surface-2); border-radius:.5rem; }
+.support-check { display:flex !important; gap:var(--space-3); align-items:center; min-height:2.75rem; padding-block:var(--space-2); }
+.support-check input { flex-shrink:0; width:1.25rem; height:1.25rem; }
+.support-records { display:grid; gap:var(--space-3); padding:0; list-style:none; }
+.support-records li { padding:var(--space-3); background:var(--surface-2); border-radius:.5rem; overflow-wrap:anywhere; }
+.support-records a { display:inline-flex; min-height:2.75rem; align-items:center; }
+.support-diagnostics { display:grid; grid-template-columns:minmax(0,1fr); gap:var(--space-4); }
+@media (max-width:30rem) { .support-card { padding:var(--space-4); } }
+@media (min-width:48rem) { .support-diagnostics { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+
+/* Partial render: keep the notice above the card and usable actions ahead of its full preview. */
+.clip-card > .clip-actions { display:flex; flex-wrap:wrap; gap:var(--space-2); align-items:center; margin:var(--space-4); }
+.clip-card > .clip-actions button { width:auto; flex:1 1 auto; padding-inline:var(--space-3); }
+.clip-card > .clip-actions > :first-child { flex-grow:2; }
+
+.site-legal-footer { max-width:70rem; margin:2rem auto 0; padding:1rem max(1rem,env(safe-area-inset-left)) max(1.5rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-right)); color:var(--ink); overflow-wrap:anywhere; font-size:1rem; line-height:1.6; }
+.site-legal-footer nav { display:flex; flex-wrap:wrap; gap:.25rem 1.25rem; padding:0; margin:0; max-width:none; }
+.site-legal-footer a { display:inline-flex; align-items:center; min-height:2.75rem; color:var(--green); overflow-wrap:anywhere; max-width:100%; }
+.site-legal-footer summary { width:fit-content; max-width:100%; min-height:2.75rem; box-sizing:border-box; padding:.5rem 0; cursor:pointer; color:var(--green); }
+.site-legal-footer summary:focus-visible { outline:2px solid var(--green); outline-offset:2px; border-radius:.25rem; }
+.site-legal-footer .legal-footer-requisites { display:flex; flex-wrap:wrap; align-items:center; gap:.125rem .75rem; padding:.125rem 0; font-size:.8125rem; line-height:1.4; }
+.site-legal-footer .legal-footer-requisites a { min-height:1.5rem; }
+.site-legal-footer p { margin:0; min-width:0; max-width:100%; }
+.legal-document { max-width:55rem; margin-inline:auto; padding:1.5rem max(1rem,env(safe-area-inset-left)) 1.5rem max(1rem,env(safe-area-inset-right)); overflow-wrap:anywhere; }
+.legal-document nav { display:flex; flex-wrap:wrap; gap:.5rem 1.25rem; margin-bottom:1.5rem; }
+.legal-document nav a { display:inline-flex; align-items:center; min-height:2.75rem; }
+.legal-document h1 { font-size:clamp(1.5rem,4vw,2.25rem); line-height:1.3; }
+.legal-document h2 { font-size:1.375rem; margin-top:2rem; }
+.legal-document p { white-space:pre-wrap; line-height:1.7; }

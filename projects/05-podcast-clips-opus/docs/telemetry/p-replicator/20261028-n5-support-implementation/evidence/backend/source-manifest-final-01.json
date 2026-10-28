@@ -1,0 +1,181 @@
+{
+  "runId": "20261028-n5-support-implementation",
+  "workUnitId": "support-backend",
+  "sourceRevision": "be9073a99c86c19364f2feea974e7f0f01b5734d",
+  "baselineRevision": "ba993ac2f7ed69538a65b840eaa7949d873ba5d5",
+  "files": [
+    {
+      "path": "projects/05-podcast-clips-opus/.env.example",
+      "sha256": "d70dca91ea9e3b587e742cf86b2cbc2d988466eab88173c51c5d9ad0ecc58fa1"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/package.json",
+      "sha256": "32801900a7c35a9a512ba8df3701bcb8435cd4d6fc2c7f66735ccba64220557f"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/app/api/admin/support/accounts/[accountId]/route.ts",
+      "sha256": "d9c2d4dfbc0e65528ce375568098c6113742f68ef3a895d41f73adb475f00c3a"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/app/api/admin/support/accounts/route.ts",
+      "sha256": "9fca0bf7497a1265410c0f2712b7f22ca9a73efff3edf4cb7a47985e712e207b"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/app/api/admin/support/search/route.ts",
+      "sha256": "11e8b21cf4312f8d0eedbb7faba05d943d3d6a6f067989abb39614348c963aed"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/app/api/auth/email/confirm/route.ts",
+      "sha256": "b8a933a9840ca7ede73e6359d0a8788a8c87b55fc557bb391213fe78b6bcb1f4"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/app/api/auth/email/send/route.ts",
+      "sha256": "e0db2d9c2cc370cb9b98d08e02df561a5f68d9dab9e5cc4af98761f883a49bb0"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/app/api/auth/forgot/route.ts",
+      "sha256": "febf9947f40c3b55d3e939e776342b56a29787c325becd10c4f025cfa8848473"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/app/api/auth/reset/route.ts",
+      "sha256": "8acb29f0f862b1828c4782f4360a6401244cd68d0a95ba4e38bca4b78e850fbe"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/app/api/support/context/route.ts",
+      "sha256": "b114b08f9b2bcab8e94a486d62fa60888921b619eb5a6a150eb40e14fe1fd986"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/app/api/support/session/route.ts",
+      "sha256": "9bda5131b0a2745edd53cd6ae992f3ad95f10a603c16f88dfbebb697fba26d7a"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/server/environment.ts",
+      "sha256": "435b75a3d4644b543fce91a1b0e57e9af85d61f7b071c3308f3fb29ac9ea6310"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/server/erasure.ts",
+      "sha256": "72d5978883584e85a2d39c04492dc064361a16b4431f01d5728edda59e6b4bd2"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/server/retention.ts",
+      "sha256": "6bb4b884313471fc95937eabded73d188d76803510ed26df48478c4158ab28f8"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/server/support/boundary.ts",
+      "sha256": "239b6ad9f1fea6bf4eae320dc97e37fccc99d70dd9be46b2bc141beccc5ec470"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/server/support/context.ts",
+      "sha256": "e635fa7f121fb56777f94c99c07f00720d5211e3acb1e314fcc74f50da9d393c"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/server/support/email-handler.ts",
+      "sha256": "cbf8817e25ed581049e8beb9b1fa3c468ab0635b2c8e92b3601dfdd718b6a42f"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/server/support/mail.ts",
+      "sha256": "ccaf7a896898409d0ca0d97e6b59f2a155ac2947767cc3e8cbabf465c6d8f611"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/server/support/page-state.ts",
+      "sha256": "b66c66ce900b4a3b3c1e8ae60cbeff30b1fbe5cf986e9d60415096ddf7208145"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/server/support/routes.ts",
+      "sha256": "08f24d7dae010e699836d7d081ca3fdf3bb0794204e0ea49156f372631c403d9"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/apps/web/src/server/support/widget.ts",
+      "sha256": "35ff2a0f953d4976654d2cf3e3c0b456f8ce4140b267fb7877c1ac2728f9994c"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/docker-compose.yml",
+      "sha256": "43579a46f8015270593ea404be0fce5a1be7e54526157d7c4cfa46099c8ab74b"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/package-lock.json",
+      "sha256": "a8f74dbe5391a4ede63cb181188fd3ff37ee81dca39f5dc6045999462a244cfd"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/package.json",
+      "sha256": "c459715cd0afd2845d742a0e55550f5db8767d85f7fb5bf21d868637cd999a0a"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/packages/db/migrations/023_support_access.sql",
+      "sha256": "4292f40619857601116555f87bdd57610c7bdfdc85a556d9894c926d9fcaaaeb"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/packages/db/src/credits.ts",
+      "sha256": "7522d33dbb4d0611fbf7946667008673368c04211fae7764ec9ce0401eaade68"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/packages/db/src/index.ts",
+      "sha256": "62c4a4b529ba996376363a95ed3625e6c45bbf99677157fd8695edf34a27b6c7"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/packages/db/src/ops-support-operator.ts",
+      "sha256": "11367b4ff5b9b9e21e94a11bd03d82e37aa48a28141abc3b23698e8a4eaf57cb"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/packages/db/src/support-admin.ts",
+      "sha256": "837e0214c3fbe443b6d49bf209acd00d935fbfea8a0097fd49a85d614e23aed8"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/packages/db/src/support-email.ts",
+      "sha256": "09de74350eeff9933476ef56e32e70f28e6e8bcba8ac40e83e000c7a32d1088c"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/packages/shared/src/config.ts",
+      "sha256": "435e955546caed2009577498ba91dac5794d6f6267c40b34f35e28eaee2598de"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/packages/shared/src/support-config.ts",
+      "sha256": "6325cb895d3c3fa1e077fd67e99218447ba6081cdd331c6672c628283644db50"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/scripts/check-env-wiring.mjs",
+      "sha256": "46876dc3bb08b730e8b465b4edaee91d381e4ce21905bc8059ac045b8fad802b"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/scripts/test-support-backend-mutations.mjs",
+      "sha256": "0ad220a24135f920d043aae671f7f3a790dc1c10bb7c3b4c3713e99574b22da5"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/tests/database.integration.test.ts",
+      "sha256": "ba5197d155443ae167050b72d3f4eb583d2498119d3f46a6e860712ecfd37586"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/tests/fixtures/environment.ts",
+      "sha256": "6a52c448321eb0adb55686076c7551ea74e5f0944f1fe7c64071d0f5c2333539"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/tests/support-backend-boundary.test.ts",
+      "sha256": "20102b59957a48b87f652f78611803391dd978014f3b8f41bd420ee565b8c42c"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/tests/support-backend-environment.test.ts",
+      "sha256": "852e93fad0535eb7e1178cfc3cf4adeaa7b2d15bd16cac809a4a9903c2103064"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/tests/support-backend-page-state.test.ts",
+      "sha256": "e961618f3c20c07362d02d948657889d4bd739c4eb1f52b12aa3b98adb601aa8"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/tests/support-email-handler.test.ts",
+      "sha256": "d51c19e76653d96656081ba55231caa843c2921078dd2cde84bfdd082bb99da4"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/tests/support-email.integration.test.ts",
+      "sha256": "81ad14f39711bf772033edb45a80347b0f4983023f08529759945ff0e6c2dbcd"
+    },
+    {
+      "path": "projects/05-podcast-clips-opus/tests/support-mail-tls.test.ts",
+      "sha256": "a8cabe6c1e061a3c65d9600ca72afd87afc0fee783f847fd5e822207ecd18bfa"
+    }
+  ],
+  "mutationEvidence": {
+    "path": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/mutations-0b4e847e.json",
+    "sha256": "5186a9530bf444dbcb1be791d15ec74e16b09329809f90ae9bc1b203f9a79107",
+    "sourceAndTestHashesMatchCandidate": true
+  }
+}

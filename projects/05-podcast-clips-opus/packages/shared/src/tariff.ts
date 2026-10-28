@@ -8,6 +8,23 @@ import { isShowcaseClip } from './showcase.js';
 export const PAID_PRICE_MINOR = 99_000;
 export const PAID_PLAN_DAYS = 30;
 export const PAID_PLAN_TITLE = 'Pro';
+export const CREDIT_SECOND_UNITS = 60;
+export const CREDIT_TRIAL_SECONDS = 30 * CREDIT_SECOND_UNITS;
+export const CREDIT_OFFER_VERSION = 'credits_v1_d00';
+export const CREDIT_SKUS = Object.freeze({
+  start_v1: Object.freeze({ title: 'Старт', priceMinor: 99_000, seconds: 18_000, credits: 300, hours: 5, days: 30, kind: 'base' as const }),
+  pro_v1: Object.freeze({ title: 'Про', priceMinor: 399_000, seconds: 108_000, credits: 1800, hours: 30, days: 30, kind: 'base' as const }),
+  addon_v1: Object.freeze({ title: 'Дополнительный пакет', priceMinor: 149_000, seconds: 36_000, credits: 600, hours: 10, days: 30, kind: 'addon' as const }),
+});
+export type CreditSku = keyof typeof CREDIT_SKUS;
+export interface CreditPurchaseWindows {
+  asOf: string; baseStart: string; baseEnd: string; addonStart: string; addonEnd: string; scheduled: boolean;
+}
+export const isCreditSku = (sku: unknown): sku is CreditSku => typeof sku === 'string' && Object.hasOwn(CREDIT_SKUS, sku);
+export function inputCreditSeconds(duration: number): number {
+  if (!Number.isFinite(duration) || duration <= 0 || duration > 5400) throw new Error('Непригодная длительность');
+  return Math.ceil(duration);
+}
 
 /** Копейки → «990 ₽». Только целые рубли показываются без копеек. */
 export function formatRubles(minor: number): string {
@@ -21,7 +38,8 @@ export function formatRubles(minor: number): string {
  * читатель не ждёт, пока сторож поменяет строку. Сравнение НА РАВЕНСТВО (ADR-004): всё, что не ровно `paid`,
  * и любой неизвестный источник — `free`. Зеркало SQL — `effectivePlanSql` в `@clipmaker/db`.
  */
-export function effectivePlan(plan: unknown, source: unknown, paidUntil: Date | string | null | undefined, now: Date): 'free' | 'paid' {
+export function effectivePlan(plan: unknown, source: unknown, paidUntil: Date | string | null | undefined, now: Date, windows: readonly { source: unknown; start: Date|string; end: Date|string }[] = []): 'free' | 'paid' {
+  if (windows.some(w=>w.source==='payment' && Number.isFinite(new Date(w.start).getTime()) && new Date(w.start).getTime()<=now.getTime() && new Date(w.end).getTime()>now.getTime())) return 'paid';
   if (plan !== 'paid') return 'free';
   if (source === 'none' || source === 'operator') return 'paid';
   if (source !== 'payment' || paidUntil === null || paidUntil === undefined) return 'free';

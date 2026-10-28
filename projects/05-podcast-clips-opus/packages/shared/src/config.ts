@@ -1,11 +1,18 @@
 import { assertWatermarkFits } from './watermark.js';
 import { loadPaymentsConfig } from './tariff.js';
+import { loadSupportConfig, loadMailConfig } from './support-config.js';
 export const LIMIT_NAMES = [
   'N5_LIMIT_USER_MINUTES', 'N5_LIMIT_PAID_USER_MINUTES', 'N5_LIMIT_USER_UPLOADS', 'N5_LIMIT_USER_UPLOAD_REFUNDS',
   'N5_LIMIT_USER_RERENDERS', 'N5_LIMIT_USER_LLM', 'N5_LIMIT_GLOBAL_MINUTES', 'N5_LIMIT_GLOBAL_LLM',
 ] as const;
 export type LimitName = typeof LIMIT_NAMES[number];
 export type Limits = Readonly<Record<LimitName, number>>;
+export type BillingMode = 'legacy' | 'credits_v1';
+export function loadBillingMode(env: Environment): BillingMode {
+  if (env.N5_BILLING_MODE === undefined) return 'legacy';
+  if (env.N5_BILLING_MODE !== 'legacy' && env.N5_BILLING_MODE !== 'credits_v1') throw new Error('N5_BILLING_MODE: нужно legacy или credits_v1');
+  return env.N5_BILLING_MODE;
+}
 export type Environment = Readonly<Record<string, string | undefined>>;
 export type ServiceRole = 'web' | 'worker-stt' | 'worker-llm' | 'worker-video';
 const consequences: Record<LimitName, string> = {
@@ -85,8 +92,9 @@ export function loadWebConfig(env: Environment) {
   if (Buffer.byteLength(sessionSecret) < 32 || sessionSecret !== sessionSecret.trim()) {
     throw new Error('SESSION_SECRET непригодно: короткий секрет ослабляет защиту сессий; нужно не менее 32 байт без краевых пробелов');
   }
-  return Object.freeze({ ...connections, limits, publicOrigin, sessionSecret,
+  return Object.freeze({ ...connections, limits, publicOrigin, sessionSecret, billingMode: loadBillingMode(env),
     s3: Object.freeze({ ...loadS3Config(env), publicEndpoint: loadS3PublicEndpoint(env) }),
+    support: loadSupportConfig(env), mail: loadMailConfig(env),
     trustedProxyHops: loadTrustedProxyHops(env), payments: loadPaymentsConfig(env) });
 }
 export type WebConfig = ReturnType<typeof loadWebConfig>;
@@ -95,8 +103,8 @@ export function loadWorkerConfig(role: Exclude<ServiceRole, 'web'>, env: Environ
   const connections = loadConnectionConfig(env);
   const publicOrigin = loadRenderOrigin(env);
   return role === 'worker-video'
-    ? Object.freeze({ ...connections, publicOrigin, role })
-    : Object.freeze({ ...connections, limits: loadLimits(env), publicOrigin, role });
+    ? Object.freeze({ ...connections, publicOrigin, role, billingMode: loadBillingMode(env) })
+    : Object.freeze({ ...connections, limits: loadLimits(env), publicOrigin, role, billingMode: loadBillingMode(env) });
 }
 
 export function loadS3Config(env: Environment) {
@@ -129,21 +137,37 @@ export function loadS3PublicEndpoint(env: Environment): string {
   return endpoint;
 }
 
+export type ModelBackend = 'openrouter' | 'cloudru';
+export type ExecutionProvider = ModelBackend | 'fake';
+export type SttExecutionProvider = 'openrouter' | 'yandex' | 'fake';
+function loadBackend(env: Environment, name: 'N5_STT_PROVIDER' | 'N5_LLM_PROVIDER'): ModelBackend {
+  const backend = env[name] === undefined ? 'openrouter' : env[name];
+  if (backend !== 'openrouter' && backend !== 'cloudru') throw new Error(`${name}: нужно openrouter или cloudru`);
+  return backend;
+}
 export function loadSttConfig(env: Environment) {
+  const provider = env.N5_STT_PROVIDER === undefined ? 'openrouter' : env.N5_STT_PROVIDER;
+  if (provider !== 'openrouter' && provider !== 'cloudru' && provider !== 'yandex') throw new Error('N5_STT_PROVIDER: нужно openrouter или yandex');
+  if (provider === 'cloudru') throw new Error('Cloud.ru STT не поддерживается: контракт таймкодов слов не подтверждён');
   const mode = required(env, 'N5_MODEL_PROVIDER', 'режим поставщика STT не определён');
   if (mode !== 'live' && mode !== 'fake') throw new Error('N5_MODEL_PROVIDER: нужно live или fake');
   if (mode === 'fake' && env.NODE_ENV !== 'test') throw new Error('Фейк STT разрешён только в тестах');
-  return Object.freeze({ mode, baseUrl: 'https://openrouter.ai/api/v1', model: 'openai/whisper-large-v3',
-    apiKey: mode === 'live' ? required(env, 'OPENROUTER_API_KEY', 'транскрипция невозможна') : null });
+  return Object.freeze({ mode, provider, baseUrl: 'https://openrouter.ai/api/v1', model: provider === 'yandex' ? 'general' : 'openai/whisper-large-v3',
+    apiKey: mode === 'live' ? required(env, provider === 'yandex' ? 'YANDEX_SPEECHKIT_API_KEY' : 'OPENROUTER_API_KEY', 'транскрипция невозможна') : null });
 }
 export type SttConfig = ReturnType<typeof loadSttConfig>;
 
 export function loadLlmConfig(env: Environment) {
+  const provider = loadBackend(env, 'N5_LLM_PROVIDER');
   const mode = required(env, 'N5_MODEL_PROVIDER', 'режим поставщика LLM не определён');
   if (mode !== 'live' && mode !== 'fake') throw new Error('N5_MODEL_PROVIDER: нужно live или fake');
   if (mode === 'fake' && env.NODE_ENV !== 'test') throw new Error('Фейк LLM разрешён только в тестах');
   const model = required(env, 'N5_LLM_MODEL', 'модель выделения не определена');
-  if (model !== 'anthropic/claude-sonnet-5' && model !== 'google/gemini-3.8-flash') throw new Error('N5_LLM_MODEL: неподдерживаемая модель');
-  return Object.freeze({ mode, model, apiKey: mode === 'live' ? required(env, 'OPENROUTER_API_KEY', 'выделение невозможно') : null });
+  if (provider === 'cloudru' ? model !== 'deepseek-ai/DeepSeek-V4-Pro' :
+    model !== 'anthropic/claude-sonnet-5' && model !== 'google/gemini-3.8-flash') {
+    throw new Error('N5_LLM_MODEL: неподдерживаемая модель выбранного поставщика');
+  }
+  const keyName = provider === 'cloudru' ? 'CLOUDRU_FM_API_KEY' : 'OPENROUTER_API_KEY';
+  return Object.freeze({ mode, provider, model, apiKey: mode === 'live' ? required(env, keyName, 'выделение невозможно') : null });
 }
 export type LlmConfig = ReturnType<typeof loadLlmConfig>;

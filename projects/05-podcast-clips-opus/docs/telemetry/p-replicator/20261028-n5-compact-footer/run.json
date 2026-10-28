@@ -1,0 +1,46 @@
+{
+  "run_id": "20261028-n5-compact-footer",
+  "started_at": "2026-10-28T14:25:32.832213+00:00",
+  "source_revision": "31913b552a94a70dbb5258092ed9a241e3cec38a",
+  "stage": "delivered",
+  "profile": "model-routing-econom",
+  "risk": "S",
+  "route_exit_code": 0,
+  "requested_models": {
+    "code": "gpt-6.1-sol medium",
+    "review": "gpt-6.1-sol high"
+  },
+  "actual_model": null,
+  "usage": null,
+  "cost": null,
+  "preflight": {
+    "status": "not_applicable",
+    "reason": "implementation not yet browser E2E"
+  },
+  "remaining": [],
+  "implementation_revision": "7f0f9d12387ef3c76355543fa1811148e3b35543",
+  "updated_at": "2026-10-28T14:28:16.308792+00:00",
+  "focused_tests": {
+    "passed": 45,
+    "failed": 0,
+    "mutant": "details open: 2 guard failures; exact source restored"
+  },
+  "status": "accepted",
+  "finished_at": "2026-10-28T14:36:24.575680+00:00",
+  "image": "sha256:f3255877c5eba0147bc4f58f0bf990b676e4914c6ba75449de3a1d6a3022c888",
+  "delivery_uri": "https://clipmkr.ru",
+  "checks": {
+    "focused_tests": 45,
+    "mutation": "details open:2guardfailures; restored exactsource",
+    "build": "PASS Node22",
+    "independent_review": "PASS freshplannercontext",
+    "browser": "192PASS; Chrome/WebKit;360/900;dark/light;click/keyboard",
+    "diff_check": "PASS"
+  },
+  "compactness": {
+    "expanded_added_px_360": 124.9375,
+    "expanded_added_px_900": 48.1875
+  },
+  "elapsed_seconds": 651.7,
+  "active_seconds": null
+}

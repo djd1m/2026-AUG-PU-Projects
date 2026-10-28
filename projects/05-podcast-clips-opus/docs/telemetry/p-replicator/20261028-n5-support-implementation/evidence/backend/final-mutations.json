@@ -1,0 +1,325 @@
+{
+  "sourceRevision": "714022163e37d48fc696510719709de03988bfea",
+  "receipts": [
+    {
+      "name": "test-isolation",
+      "file": "packages/shared/src/support-config.ts",
+      "test": "tests/support-backend-environment.test.ts",
+      "testSha256": "852e93fad0535eb7e1178cfc3cf4adeaa7b2d15bd16cac809a4a9903c2103064",
+      "sourceSha256": "6325cb895d3c3fa1e077fd67e99218447ba6081cdd331c6672c628283644db50",
+      "red": {
+        "exit": 1,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/test-isolation-red-22e51aef.log",
+        "sha256": "cb52c153502c0954b88b9601382d72bb2d24873c4b22686a55b835f13b9eec9f"
+      },
+      "green": {
+        "exit": 0,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/test-isolation-green-214b6c80.log",
+        "sha256": "b2864bc130c5b79ea465586553482d585d1a55ed5e736f22054f0f342f2dbda4"
+      },
+      "restored": true
+    },
+    {
+      "name": "synthetic-capture",
+      "file": "apps/web/src/server/support/mail.ts",
+      "test": "tests/support-backend-boundary.test.ts",
+      "testSha256": "20102b59957a48b87f652f78611803391dd978014f3b8f41bd420ee565b8c42c",
+      "sourceSha256": "ccaf7a896898409d0ca0d97e6b59f2a155ac2947767cc3e8cbabf465c6d8f611",
+      "red": {
+        "exit": 1,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/synthetic-capture-red-b546c10f.log",
+        "sha256": "f2652657d79b406896ab066b4163c2d1fb654b718b7dd06f415aceec939350c5"
+      },
+      "green": {
+        "exit": 0,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/synthetic-capture-green-49f92bc1.log",
+        "sha256": "bdf4df4720fa273bc3b4f050fda79899a8c95981fa2972b2f9d3272ce0695192"
+      },
+      "restored": true
+    },
+    {
+      "name": "runtime-env-wiring",
+      "file": "scripts/check-env-wiring.mjs",
+      "test": "tests/support-backend-environment.test.ts",
+      "testSha256": "852e93fad0535eb7e1178cfc3cf4adeaa7b2d15bd16cac809a4a9903c2103064",
+      "sourceSha256": "46876dc3bb08b730e8b465b4edaee91d381e4ce21905bc8059ac045b8fad802b",
+      "red": {
+        "exit": 1,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/runtime-env-wiring-red-9f77ca23.log",
+        "sha256": "39c60d4cff588aead5f18884312afad700e2577287ccec811503f65bbcbd733a"
+      },
+      "green": {
+        "exit": 0,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/runtime-env-wiring-green-4d85fd2f.log",
+        "sha256": "e3df81de8785c6ab9821843820372e5e9f84cf45cd2b820dc519fe8f796e9284"
+      },
+      "restored": true
+    },
+    {
+      "name": "storage-cap",
+      "file": "packages/db/src/support-email.ts",
+      "test": "tests/support-email.integration.test.ts",
+      "testSha256": "81ad14f39711bf772033edb45a80347b0f4983023f08529759945ff0e6c2dbcd",
+      "sourceSha256": "09de74350eeff9933476ef56e32e70f28e6e8bcba8ac40e83e000c7a32d1088c",
+      "red": {
+        "exit": 1,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/storage-cap-red-d2cfab89.log",
+        "sha256": "baf478294448907f831f58a28ae728370043f95f9260211c81492c72ebd5b91b"
+      },
+      "green": {
+        "exit": 0,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/storage-cap-green-701ab22f.log",
+        "sha256": "adffaa79f7d8b77ea1459ff9bc8566675f60bed987763a1f5394fd632ffd8406"
+      },
+      "restored": true
+    },
+    {
+      "name": "bounded-pruning",
+      "file": "packages/db/src/support-email.ts",
+      "test": "tests/support-email.integration.test.ts",
+      "testSha256": "81ad14f39711bf772033edb45a80347b0f4983023f08529759945ff0e6c2dbcd",
+      "sourceSha256": "09de74350eeff9933476ef56e32e70f28e6e8bcba8ac40e83e000c7a32d1088c",
+      "red": {
+        "exit": 1,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/bounded-pruning-red-9f3fda65.log",
+        "sha256": "c507dd2f7f8fc54868372af821a98413456846bdf498616dd2bb112ab546321d"
+      },
+      "green": {
+        "exit": 0,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/bounded-pruning-green-7ba6c4ef.log",
+        "sha256": "37bbea35922c770f68d8bc98f0930b0c7cac4483856895334f166c7169768f9e"
+      },
+      "restored": true
+    },
+    {
+      "name": "erasure-proof",
+      "file": "apps/web/src/server/erasure.ts",
+      "test": "tests/support-email.integration.test.ts",
+      "testSha256": "81ad14f39711bf772033edb45a80347b0f4983023f08529759945ff0e6c2dbcd",
+      "sourceSha256": "72d5978883584e85a2d39c04492dc064361a16b4431f01d5728edda59e6b4bd2",
+      "red": {
+        "exit": 1,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/erasure-proof-red-cd0f3af0.log",
+        "sha256": "beddbba945d676d49412af06bcbd6be5cf41c9a9daa057c12694c46ae0bd7c83"
+      },
+      "green": {
+        "exit": 0,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/erasure-proof-green-d37a2936.log",
+        "sha256": "47d9071ab0ebe87120e646b7ee108177d46643fa1e9609eec3df688c8533dd92"
+      },
+      "restored": true
+    },
+    {
+      "name": "origin",
+      "file": "apps/web/src/server/support/boundary.ts",
+      "test": "tests/support-backend-boundary.test.ts",
+      "testSha256": "20102b59957a48b87f652f78611803391dd978014f3b8f41bd420ee565b8c42c",
+      "sourceSha256": "239b6ad9f1fea6bf4eae320dc97e37fccc99d70dd9be46b2bc141beccc5ec470",
+      "red": {
+        "exit": 1,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/origin-red-513a9c7c.log",
+        "sha256": "7e72430f53ef0f734803742aabf86adc3e4ff77e3a6a3f64b78de6888c1f522d"
+      },
+      "green": {
+        "exit": 0,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/origin-green-3fec3f0b.log",
+        "sha256": "e9d3f75ac1fdc62620ac29fc17bd9b3d52f8983b5159871c04eadecb5703164c"
+      },
+      "restored": true
+    },
+    {
+      "name": "body-limit",
+      "file": "apps/web/src/server/support/boundary.ts",
+      "test": "tests/support-backend-boundary.test.ts",
+      "testSha256": "20102b59957a48b87f652f78611803391dd978014f3b8f41bd420ee565b8c42c",
+      "sourceSha256": "239b6ad9f1fea6bf4eae320dc97e37fccc99d70dd9be46b2bc141beccc5ec470",
+      "red": {
+        "exit": 1,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/body-limit-red-55d84604.log",
+        "sha256": "4d4b1ecbec31d7102f205d7278236e18241be0f9d5f7f5002bca2b7e0546e6cf"
+      },
+      "green": {
+        "exit": 0,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/body-limit-green-b0d044f1.log",
+        "sha256": "15acd30e7e60cb7e4dfa6bef6b8c3dc23301bb93159bc8c051df710eb76c7119"
+      },
+      "restored": true
+    },
+    {
+      "name": "ip-quota",
+      "file": "packages/db/src/support-email.ts",
+      "test": "tests/support-email.integration.test.ts",
+      "testSha256": "81ad14f39711bf772033edb45a80347b0f4983023f08529759945ff0e6c2dbcd",
+      "sourceSha256": "09de74350eeff9933476ef56e32e70f28e6e8bcba8ac40e83e000c7a32d1088c",
+      "red": {
+        "exit": 1,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/ip-quota-red-4783e905.log",
+        "sha256": "8d6004b34cb56f9660531a29b4616c9989e36846c9ef311ca210d3bc73f75ef5"
+      },
+      "green": {
+        "exit": 0,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/ip-quota-green-12fd3a92.log",
+        "sha256": "bdfc8e8efd6fcb3870c9c203bd394fd6fafb1418910037b8cbf84bfcc2717929"
+      },
+      "restored": true
+    },
+    {
+      "name": "one-use",
+      "file": "packages/db/src/support-email.ts",
+      "test": "tests/support-email.integration.test.ts",
+      "testSha256": "81ad14f39711bf772033edb45a80347b0f4983023f08529759945ff0e6c2dbcd",
+      "sourceSha256": "09de74350eeff9933476ef56e32e70f28e6e8bcba8ac40e83e000c7a32d1088c",
+      "red": {
+        "exit": 1,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/one-use-red-2ed53ec9.log",
+        "sha256": "d73d0bd8e266646c3a0a55eeddfe79a2cefcd5086deec110dc8b76d40c71ed8e"
+      },
+      "green": {
+        "exit": 0,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/one-use-green-d15bfd0b.log",
+        "sha256": "f2a1513c53273ac0ace4f8b1b247f9264e12915ba1fc371065e235c032a7da49"
+      },
+      "restored": true
+    },
+    {
+      "name": "wall-clock",
+      "file": "packages/db/src/support-email.ts",
+      "test": "tests/support-email.integration.test.ts",
+      "testSha256": "81ad14f39711bf772033edb45a80347b0f4983023f08529759945ff0e6c2dbcd",
+      "sourceSha256": "09de74350eeff9933476ef56e32e70f28e6e8bcba8ac40e83e000c7a32d1088c",
+      "red": {
+        "exit": 1,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/wall-clock-red-7ec99261.log",
+        "sha256": "fe1b9103575fe5a6fccedfe0930a919e48f6446387e30f0e5d0e7cd1cfc6ae59"
+      },
+      "green": {
+        "exit": 0,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/wall-clock-green-3cc5f433.log",
+        "sha256": "a9af47bfcbef21f748a5e72745c240e129305207bdc326f2051043cbe7b26a42"
+      },
+      "restored": true
+    },
+    {
+      "name": "staff-revocation",
+      "file": "packages/db/src/support-admin.ts",
+      "test": "tests/support-email.integration.test.ts",
+      "testSha256": "81ad14f39711bf772033edb45a80347b0f4983023f08529759945ff0e6c2dbcd",
+      "sourceSha256": "837e0214c3fbe443b6d49bf209acd00d935fbfea8a0097fd49a85d614e23aed8",
+      "red": {
+        "exit": 1,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/staff-revocation-red-3d87089f.log",
+        "sha256": "41d07ae1aefc2cdfa6f19581a623d038d51880fbc99327e6cbf6afcfe64962d4"
+      },
+      "green": {
+        "exit": 0,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/staff-revocation-green-73135b0b.log",
+        "sha256": "8e94b39d48f96e65f5cb78c69335671418937f3f92f9bebcfddec0437e96b24f"
+      },
+      "restored": true
+    },
+    {
+      "name": "widget-identity",
+      "file": "apps/web/src/server/support/widget.ts",
+      "test": "tests/support-email.integration.test.ts",
+      "testSha256": "81ad14f39711bf772033edb45a80347b0f4983023f08529759945ff0e6c2dbcd",
+      "sourceSha256": "35ff2a0f953d4976654d2cf3e3c0b456f8ce4140b267fb7877c1ac2728f9994c",
+      "red": {
+        "exit": 1,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/widget-identity-red-4c6ade97.log",
+        "sha256": "d2964cebf0fc07e0864cc3b04ddb503ce66ffca4626ca6986d73d5a8d0deb04d"
+      },
+      "green": {
+        "exit": 0,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/widget-identity-green-8c06daa5.log",
+        "sha256": "c5685073a8b3699067a4640475fbf87bdbdb5d24d5a595fb27fc1d7a20f5941f"
+      },
+      "restored": true
+    },
+    {
+      "name": "smtp-cap",
+      "file": "apps/web/src/server/support/mail.ts",
+      "test": "tests/support-mail-tls.test.ts",
+      "testSha256": "a8cabe6c1e061a3c65d9600ca72afd87afc0fee783f847fd5e822207ecd18bfa",
+      "sourceSha256": "ccaf7a896898409d0ca0d97e6b59f2a155ac2947767cc3e8cbabf465c6d8f611",
+      "red": {
+        "exit": 1,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/smtp-cap-red-86f03ef4.log",
+        "sha256": "ddc12e0b55ba0e8b5e49b3aa4c97c5fd2541652624ebdd2d206ba53714d5b0e1"
+      },
+      "green": {
+        "exit": 0,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/smtp-cap-green-cc164f52.log",
+        "sha256": "0f1bbf94da6706629638560029bfcabe70a5ae46f978ee54ad8c9c343cc91ded"
+      },
+      "restored": true
+    },
+    {
+      "name": "smtp-total-deadline",
+      "file": "apps/web/src/server/support/mail.ts",
+      "test": "tests/support-mail-tls.test.ts",
+      "testSha256": "a8cabe6c1e061a3c65d9600ca72afd87afc0fee783f847fd5e822207ecd18bfa",
+      "sourceSha256": "ccaf7a896898409d0ca0d97e6b59f2a155ac2947767cc3e8cbabf465c6d8f611",
+      "red": {
+        "exit": 1,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/smtp-total-deadline-red-1e35cb78.log",
+        "sha256": "dd16bdc62d728ada0fb78c1e2477271f58c2ba5238df81d84399e5ce9ebc2069"
+      },
+      "green": {
+        "exit": 0,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/smtp-total-deadline-green-65573598.log",
+        "sha256": "5b588dc1583549c7062403b8980af7272cb121336bf5e5dceda9dd7d491f373c"
+      },
+      "restored": true
+    },
+    {
+      "name": "smtp-tls-verification",
+      "file": "apps/web/src/server/support/mail.ts",
+      "test": "tests/support-mail-tls.test.ts",
+      "testSha256": "a8cabe6c1e061a3c65d9600ca72afd87afc0fee783f847fd5e822207ecd18bfa",
+      "sourceSha256": "ccaf7a896898409d0ca0d97e6b59f2a155ac2947767cc3e8cbabf465c6d8f611",
+      "red": {
+        "exit": 1,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/smtp-tls-verification-red-652b7665.log",
+        "sha256": "46c48e41cc2db3d629938cd8b1b09e0b76e20679c06c77b42af67237e8714b2b"
+      },
+      "green": {
+        "exit": 0,
+        "signal": null,
+        "log": "/tmp/n5-support-backend-checks-20261028/mutations-final-01/smtp-tls-verification-green-10a5c45d.log",
+        "sha256": "bae17199ea0f7f3ccebc36fc603170b5c3511406bc46815e80b1d73c07bf35f4"
+      },
+      "restored": true
+    }
+  ]
+}

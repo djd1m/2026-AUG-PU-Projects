@@ -1,0 +1,994 @@
+{
+  "started_at": "2026-10-28T14:35:38.809Z",
+  "source_revision": "31913b552a94a70dbb5258092ed9a241e3cec38a",
+  "checks": [
+    {
+      "name": "chromium///360/dark/http200",
+      "pass": true
+    },
+    {
+      "name": "chromium///360/dark/closed",
+      "pass": true
+    },
+    {
+      "name": "chromium///360/dark/summary",
+      "pass": true
+    },
+    {
+      "name": "chromium///360/dark/links",
+      "pass": true
+    },
+    {
+      "name": "chromium///360/dark/click_opens",
+      "pass": true
+    },
+    {
+      "name": "chromium///360/dark/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "chromium///360/dark/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium///360/dark/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/360/dark/http200",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/360/dark/closed",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/360/dark/summary",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/360/dark/links",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/360/dark/click_opens",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/360/dark/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/360/dark/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/360/dark/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/360/dark/http200",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/360/dark/closed",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/360/dark/summary",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/360/dark/links",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/360/dark/click_opens",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/360/dark/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/360/dark/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/360/dark/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "chromium///360/light/http200",
+      "pass": true
+    },
+    {
+      "name": "chromium///360/light/closed",
+      "pass": true
+    },
+    {
+      "name": "chromium///360/light/summary",
+      "pass": true
+    },
+    {
+      "name": "chromium///360/light/links",
+      "pass": true
+    },
+    {
+      "name": "chromium///360/light/click_opens",
+      "pass": true
+    },
+    {
+      "name": "chromium///360/light/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "chromium///360/light/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium///360/light/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/360/light/http200",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/360/light/closed",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/360/light/summary",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/360/light/links",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/360/light/click_opens",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/360/light/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/360/light/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/360/light/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/360/light/http200",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/360/light/closed",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/360/light/summary",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/360/light/links",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/360/light/click_opens",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/360/light/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/360/light/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/360/light/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "chromium///900/dark/http200",
+      "pass": true
+    },
+    {
+      "name": "chromium///900/dark/closed",
+      "pass": true
+    },
+    {
+      "name": "chromium///900/dark/summary",
+      "pass": true
+    },
+    {
+      "name": "chromium///900/dark/links",
+      "pass": true
+    },
+    {
+      "name": "chromium///900/dark/click_opens",
+      "pass": true
+    },
+    {
+      "name": "chromium///900/dark/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "chromium///900/dark/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium///900/dark/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/900/dark/http200",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/900/dark/closed",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/900/dark/summary",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/900/dark/links",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/900/dark/click_opens",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/900/dark/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/900/dark/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/900/dark/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/900/dark/http200",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/900/dark/closed",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/900/dark/summary",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/900/dark/links",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/900/dark/click_opens",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/900/dark/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/900/dark/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/900/dark/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "chromium///900/light/http200",
+      "pass": true
+    },
+    {
+      "name": "chromium///900/light/closed",
+      "pass": true
+    },
+    {
+      "name": "chromium///900/light/summary",
+      "pass": true
+    },
+    {
+      "name": "chromium///900/light/links",
+      "pass": true
+    },
+    {
+      "name": "chromium///900/light/click_opens",
+      "pass": true
+    },
+    {
+      "name": "chromium///900/light/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "chromium///900/light/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium///900/light/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/900/light/http200",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/900/light/closed",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/900/light/summary",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/900/light/links",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/900/light/click_opens",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/900/light/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/900/light/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium//legal/privacy/900/light/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/900/light/http200",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/900/light/closed",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/900/light/summary",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/900/light/links",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/900/light/click_opens",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/900/light/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/900/light/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "chromium//support/900/light/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "webkit///360/dark/http200",
+      "pass": true
+    },
+    {
+      "name": "webkit///360/dark/closed",
+      "pass": true
+    },
+    {
+      "name": "webkit///360/dark/summary",
+      "pass": true
+    },
+    {
+      "name": "webkit///360/dark/links",
+      "pass": true
+    },
+    {
+      "name": "webkit///360/dark/click_opens",
+      "pass": true
+    },
+    {
+      "name": "webkit///360/dark/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "webkit///360/dark/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit///360/dark/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/360/dark/http200",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/360/dark/closed",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/360/dark/summary",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/360/dark/links",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/360/dark/click_opens",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/360/dark/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/360/dark/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/360/dark/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/360/dark/http200",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/360/dark/closed",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/360/dark/summary",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/360/dark/links",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/360/dark/click_opens",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/360/dark/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/360/dark/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/360/dark/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "webkit///360/light/http200",
+      "pass": true
+    },
+    {
+      "name": "webkit///360/light/closed",
+      "pass": true
+    },
+    {
+      "name": "webkit///360/light/summary",
+      "pass": true
+    },
+    {
+      "name": "webkit///360/light/links",
+      "pass": true
+    },
+    {
+      "name": "webkit///360/light/click_opens",
+      "pass": true
+    },
+    {
+      "name": "webkit///360/light/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "webkit///360/light/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit///360/light/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/360/light/http200",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/360/light/closed",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/360/light/summary",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/360/light/links",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/360/light/click_opens",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/360/light/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/360/light/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/360/light/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/360/light/http200",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/360/light/closed",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/360/light/summary",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/360/light/links",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/360/light/click_opens",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/360/light/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/360/light/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/360/light/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "webkit///900/dark/http200",
+      "pass": true
+    },
+    {
+      "name": "webkit///900/dark/closed",
+      "pass": true
+    },
+    {
+      "name": "webkit///900/dark/summary",
+      "pass": true
+    },
+    {
+      "name": "webkit///900/dark/links",
+      "pass": true
+    },
+    {
+      "name": "webkit///900/dark/click_opens",
+      "pass": true
+    },
+    {
+      "name": "webkit///900/dark/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "webkit///900/dark/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit///900/dark/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/900/dark/http200",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/900/dark/closed",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/900/dark/summary",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/900/dark/links",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/900/dark/click_opens",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/900/dark/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/900/dark/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/900/dark/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/900/dark/http200",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/900/dark/closed",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/900/dark/summary",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/900/dark/links",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/900/dark/click_opens",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/900/dark/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/900/dark/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/900/dark/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "webkit///900/light/http200",
+      "pass": true
+    },
+    {
+      "name": "webkit///900/light/closed",
+      "pass": true
+    },
+    {
+      "name": "webkit///900/light/summary",
+      "pass": true
+    },
+    {
+      "name": "webkit///900/light/links",
+      "pass": true
+    },
+    {
+      "name": "webkit///900/light/click_opens",
+      "pass": true
+    },
+    {
+      "name": "webkit///900/light/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "webkit///900/light/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit///900/light/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/900/light/http200",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/900/light/closed",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/900/light/summary",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/900/light/links",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/900/light/click_opens",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/900/light/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/900/light/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit//legal/privacy/900/light/keyboard_closes",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/900/light/http200",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/900/light/closed",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/900/light/summary",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/900/light/links",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/900/light/click_opens",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/900/light/all_requisites",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/900/light/nooverflow",
+      "pass": true
+    },
+    {
+      "name": "webkit//support/900/light/keyboard_closes",
+      "pass": true
+    }
+  ],
+  "measurements": [
+    {
+      "engine": "chromium",
+      "path": "/",
+      "width": 360,
+      "theme": "dark",
+      "closed_height": 225,
+      "expanded_height": 349.9375,
+      "added_height": 124.9375
+    },
+    {
+      "engine": "chromium",
+      "path": "/legal/privacy",
+      "width": 360,
+      "theme": "dark",
+      "closed_height": 225,
+      "expanded_height": 349.9375,
+      "added_height": 124.9375
+    },
+    {
+      "engine": "chromium",
+      "path": "/support",
+      "width": 360,
+      "theme": "dark",
+      "closed_height": 225,
+      "expanded_height": 349.9375,
+      "added_height": 124.9375
+    },
+    {
+      "engine": "chromium",
+      "path": "/",
+      "width": 360,
+      "theme": "light",
+      "closed_height": 225,
+      "expanded_height": 349.9375,
+      "added_height": 124.9375
+    },
+    {
+      "engine": "chromium",
+      "path": "/legal/privacy",
+      "width": 360,
+      "theme": "light",
+      "closed_height": 225,
+      "expanded_height": 349.9375,
+      "added_height": 124.9375
+    },
+    {
+      "engine": "chromium",
+      "path": "/support",
+      "width": 360,
+      "theme": "light",
+      "closed_height": 225,
+      "expanded_height": 349.9375,
+      "added_height": 124.9375
+    },
+    {
+      "engine": "chromium",
+      "path": "/",
+      "width": 900,
+      "theme": "dark",
+      "closed_height": 129,
+      "expanded_height": 177.1875,
+      "added_height": 48.1875
+    },
+    {
+      "engine": "chromium",
+      "path": "/legal/privacy",
+      "width": 900,
+      "theme": "dark",
+      "closed_height": 129,
+      "expanded_height": 177.1875,
+      "added_height": 48.1875
+    },
+    {
+      "engine": "chromium",
+      "path": "/support",
+      "width": 900,
+      "theme": "dark",
+      "closed_height": 129,
+      "expanded_height": 177.1875,
+      "added_height": 48.1875
+    },
+    {
+      "engine": "chromium",
+      "path": "/",
+      "width": 900,
+      "theme": "light",
+      "closed_height": 129,
+      "expanded_height": 177.1875,
+      "added_height": 48.1875
+    },
+    {
+      "engine": "chromium",
+      "path": "/legal/privacy",
+      "width": 900,
+      "theme": "light",
+      "closed_height": 129,
+      "expanded_height": 177.1875,
+      "added_height": 48.1875
+    },
+    {
+      "engine": "chromium",
+      "path": "/support",
+      "width": 900,
+      "theme": "light",
+      "closed_height": 129,
+      "expanded_height": 177.1875,
+      "added_height": 48.1875
+    },
+    {
+      "engine": "webkit",
+      "path": "/",
+      "width": 360,
+      "theme": "dark",
+      "closed_height": 225,
+      "expanded_height": 349.9375,
+      "added_height": 124.9375
+    },
+    {
+      "engine": "webkit",
+      "path": "/legal/privacy",
+      "width": 360,
+      "theme": "dark",
+      "closed_height": 225,
+      "expanded_height": 349.9375,
+      "added_height": 124.9375
+    },
+    {
+      "engine": "webkit",
+      "path": "/support",
+      "width": 360,
+      "theme": "dark",
+      "closed_height": 225,
+      "expanded_height": 349.9375,
+      "added_height": 124.9375
+    },
+    {
+      "engine": "webkit",
+      "path": "/",
+      "width": 360,
+      "theme": "light",
+      "closed_height": 225,
+      "expanded_height": 349.9375,
+      "added_height": 124.9375
+    },
+    {
+      "engine": "webkit",
+      "path": "/legal/privacy",
+      "width": 360,
+      "theme": "light",
+      "closed_height": 225,
+      "expanded_height": 349.9375,
+      "added_height": 124.9375
+    },
+    {
+      "engine": "webkit",
+      "path": "/support",
+      "width": 360,
+      "theme": "light",
+      "closed_height": 225,
+      "expanded_height": 349.9375,
+      "added_height": 124.9375
+    },
+    {
+      "engine": "webkit",
+      "path": "/",
+      "width": 900,
+      "theme": "dark",
+      "closed_height": 129,
+      "expanded_height": 177.1875,
+      "added_height": 48.1875
+    },
+    {
+      "engine": "webkit",
+      "path": "/legal/privacy",
+      "width": 900,
+      "theme": "dark",
+      "closed_height": 129,
+      "expanded_height": 177.1875,
+      "added_height": 48.1875
+    },
+    {
+      "engine": "webkit",
+      "path": "/support",
+      "width": 900,
+      "theme": "dark",
+      "closed_height": 129,
+      "expanded_height": 177.1875,
+      "added_height": 48.1875
+    },
+    {
+      "engine": "webkit",
+      "path": "/",
+      "width": 900,
+      "theme": "light",
+      "closed_height": 129,
+      "expanded_height": 177.1875,
+      "added_height": 48.1875
+    },
+    {
+      "engine": "webkit",
+      "path": "/legal/privacy",
+      "width": 900,
+      "theme": "light",
+      "closed_height": 129,
+      "expanded_height": 177.1875,
+      "added_height": 48.1875
+    },
+    {
+      "engine": "webkit",
+      "path": "/support",
+      "width": 900,
+      "theme": "light",
+      "closed_height": 129,
+      "expanded_height": 177.1875,
+      "added_height": 48.1875
+    }
+  ],
+  "finished_at": "2026-10-28T14:35:54.078Z",
+  "exit_code": 0
+}

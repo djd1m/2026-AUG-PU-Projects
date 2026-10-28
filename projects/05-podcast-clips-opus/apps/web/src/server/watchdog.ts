@@ -1,6 +1,6 @@
 import { retentionTick, RETENTION_INTERVAL_MS, type RetentionStorage } from './retention';
 const retentionLastRun = new WeakMap<Pool, number>();
-import { transaction, ensureInitialAttempt, expirePaidPlans, type Attempt, type Pool } from '@clipmaker/db';
+import { lockCreditAccountForVideo, finalizeVideoCreditsTx, transaction, ensureInitialAttempt, expirePaidPlans, type Attempt, type Pool } from '@clipmaker/db';
 import { DEFER_DELAY_MS, STALLED_AFTER_MS, WATCHDOG_INTERVAL_MS } from '@clipmaker/queue';
 // Per-process cursor keeps retained jobs from starving attempts beyond the batch boundary.
 const recoveryCursor = new WeakMap<Pool, string>();
@@ -8,14 +8,19 @@ export async function watchdogTick(pool: Pool, enqueue: (job: Attempt, delay?: n
   let step = 'закрытие зависших задач';
   try {
   const failed = await transaction(pool, async tx => {
+    const candidates=await tx.query<{id:string}>(`SELECT id FROM video WHERE billing_policy='credits_v1'
+      AND status IN ('queued','transcribing','selecting','rendering') AND deleted_at IS NULL AND updated_at<$1
+      ORDER BY updated_at LIMIT $2`,[new Date(now.getTime()-STALLED_AFTER_MS),batch]);
+    for (const candidate of candidates.rows) await lockCreditAccountForVideo(tx,candidate.id);
     const stale = await tx.query<{ id: string }>(`SELECT id FROM video
-      WHERE status IN ('queued','transcribing','selecting','rendering') AND deleted_at IS NULL AND updated_at < $1
-      ORDER BY updated_at LIMIT $2 FOR UPDATE SKIP LOCKED`, [new Date(now.getTime() - STALLED_AFTER_MS), batch]);
+      WHERE status IN ('queued','transcribing','selecting','rendering') AND deleted_at IS NULL AND updated_at < $1 AND (billing_policy='legacy_daily_v1' OR id=ANY($3::uuid[]))
+      ORDER BY updated_at LIMIT $2 FOR UPDATE SKIP LOCKED`, [new Date(now.getTime() - STALLED_AFTER_MS), batch,candidates.rows.map(c=>c.id)]);
     for (const { id } of stale.rows) {
       await tx.query("UPDATE video SET status='failed', failure_reason='stalled', finished_at=$2, updated_at=$2 WHERE id=$1", [id, now]);
       await tx.query("UPDATE clip SET status='failed', failure_reason='ffmpeg_timeout' WHERE video_id=$1 AND status <> 'done'", [id]);
       await tx.query(`UPDATE job_attempt SET status='failed', failure_reason='stalled', finished_at=$2
         WHERE video_id=$1 AND NOT rerender AND status IN ('running','deferred')`, [id, now]);
+      await finalizeVideoCreditsTx(tx,id,now);
     }
     return stale.rowCount;
   });

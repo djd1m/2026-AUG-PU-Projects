@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-28T05:23:30.643972+00:00",
+  "run_id": "20261028-n5-thumbnail-fix",
+  "work_unit_id": "browser-02",
+  "readiness": "ready",
+  "source_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+  "build_revision": "d6fee35f52926c6b64fa4c79d238859548c8ddff",
+  "fixture_sha256": "22a166ba5c9558976c8378f865a6daec91b63a117be68786df355bec30490074",
+  "driver_sha256": "4d329d6c5ef654389662c4471330c47c436a9a11b46a5780b28230995eae1d16",
+  "actual_SQL_clip_statuses": [
+    "done",
+    "done",
+    "done"
+  ],
+  "browser_container": "codex-ui-playwright",
+  "environment_unchanged_since_browser01": true,
+  "TLS": "private self-signed only",
+  "expected_effects": "synthetic session/download only",
+  "retry_reason": "browser01 Chromium fully passed; WebKit second play did not satisfy fixed250ms advancement condition. Wait on observable advancement up to5s, preserving dimensions/duration/advance assertion and recording actual metadata. No product changes.",
+  "free_disk_gib": 2.916
+}

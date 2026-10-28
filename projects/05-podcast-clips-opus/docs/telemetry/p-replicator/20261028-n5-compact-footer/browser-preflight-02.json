@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-28T14:35:37.537461+00:00",
+  "status": "ready",
+  "source_revision": "31913b552a94a70dbb5258092ed9a241e3cec38a",
+  "build_image": "sha256:f3255877c5eba0147bc4f58f0bf990b676e4914c6ba75449de3a1d6a3022c888",
+  "environment": "productionclipmkr.ru; existingcodex-ui-playwright",
+  "input": "publicpages only; anonymous; no messages/payments/models",
+  "command": [
+    "node",
+    "/tmp/n5-compact-footer-browser-20261028-02.cjs",
+    "31913b552a94a70dbb5258092ed9a241e3cec38a"
+  ],
+  "expected_effects": "read publicpages; clickfooter disclosure; screenshots contain publicrequisites only",
+  "evidence_destination": "/tmp/n5-compact-footer-browser-20261028-02/report.json",
+  "external_actions_executed": false,
+  "e2e_claim": null
+}

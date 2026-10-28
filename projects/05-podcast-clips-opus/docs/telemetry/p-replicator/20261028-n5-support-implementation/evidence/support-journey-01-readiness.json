@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-28T03:23:15.209118+00:00",
+  "run_id": "20261028-n5-support-implementation",
+  "work_unit_id": "support-journey-01",
+  "readiness": "ready",
+  "source_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+  "build_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+  "build_id_sha256": "503fbdcd3748e3326094d808b2c2cd89b5eba6217c94724560626364a9c246fc",
+  "fixture_sha256": "8d651add64149376e268112b69694b9e37f08d13f8af3ec9cd4cda1d34ea51ed",
+  "fresh_browser_probe": {
+    "engine": "chromium",
+    "version": "153.0.8010.12",
+    "status": 200
+  },
+  "browser_container": "codex-ui-playwright",
+  "base": "https://localhost:4435",
+  "fixture": "synthetic customers A/B and separately verified/granted operator; one-use private tokens",
+  "widget": "synthetic official API-shaped SDK; no actual vendor history claim",
+  "expected_effects": [
+    "synthetic email proof",
+    "synthetic password reset and revoke all A sessions",
+    "synthetic support JWT/context/staff read audit"
+  ],
+  "TLS": "explicit local self-signed only",
+  "command_as_data": [
+    "node",
+    "scripts/check-support.mjs",
+    "--base",
+    "https://localhost:4435",
+    "--fixture",
+    ".responsive-fixture/support-journey-01.json",
+    "--out",
+    ".responsive-artifacts/support-journey-01"
+  ],
+  "free_disk_gib": 2.562
+}

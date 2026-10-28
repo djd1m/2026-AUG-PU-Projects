@@ -1,0 +1,13 @@
+{
+  "check": "fix2_credit_typecheck",
+  "command": [
+    "npm",
+    "run",
+    "typecheck"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 32.756,
+  "log": "/tmp/n5-acquisition-analytics-20261026-plan/checks/fix2_credit_typecheck.log",
+  "node": "22.22.3",
+  "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off"
+}

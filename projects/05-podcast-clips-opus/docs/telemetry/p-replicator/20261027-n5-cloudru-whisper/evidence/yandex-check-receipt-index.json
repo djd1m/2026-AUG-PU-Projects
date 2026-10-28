@@ -1,0 +1,90 @@
+{
+  "source_commit": "a826387db43d50f1703a8233f94714a6853dc1a8",
+  "source_manifest": "/tmp/n5-yandex-source-timing-final-20261027.json",
+  "source_manifest_sha256": "53ec958b1c89403e1aa8c71db219a91f54313396f42da588a7a4012860a6d61f",
+  "checks": [
+    {
+      "name": "yandex-full-timing-final",
+      "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-full-timing-final.json",
+      "receipt_sha256": "8af0100752b67deaba17dc1fcdbd0727db66dd1e48a486161dacd8eb4253bcae",
+      "log_sha256": "494de3c31b47a5aeb7056c8c153a8efd2a81ba47ec3ce5c8d53baa3dbedbbf64",
+      "exit_code": 0,
+      "elapsed_seconds": 407.204
+    },
+    {
+      "name": "yandex-build-timing-final",
+      "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-build-timing-final.json",
+      "receipt_sha256": "7702ef606006364c29210fbd28d3498a4a0abaa9ed7927fb75695f90b7dc8ca9",
+      "log_sha256": "07796427b107dada1ee4a6d945c7422352e62af2756bdb38a294ea9c5c64ee63",
+      "exit_code": 0,
+      "elapsed_seconds": 47.583
+    },
+    {
+      "name": "yandex-typecheck-timing-final",
+      "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-typecheck-timing-final.json",
+      "receipt_sha256": "6b74394abfbbd2a25c3ddd23c248c9973530276056bb6d6ceb0a5d1c3352eddd",
+      "log_sha256": "1b4b658aae5b9ff1fab2830785a99fb6149f6727dcfc8485f493c745a36ffc13",
+      "exit_code": 0,
+      "elapsed_seconds": 33.255
+    },
+    {
+      "name": "yandex-lint-timing-final",
+      "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-lint-timing-final.json",
+      "receipt_sha256": "8ba7f41457bd851b5887b52182e81526f2bf8379e971affb514e212cba1dab9a",
+      "log_sha256": "03d26c6ef0841b6eac1a8fb620e782e15d97a1f4467dc4566747082c86361443",
+      "exit_code": 0,
+      "elapsed_seconds": 2.166
+    },
+    {
+      "name": "yandex-packaging-timing-final",
+      "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-packaging-timing-final.json",
+      "receipt_sha256": "38fdb422ad38f011b64844a6c6d1f2e2b7a511cd9ae4c2c936c14945d979a1ff",
+      "log_sha256": "63c38472bb2c555be2c5553e43df76a3f852c1c32a4ceab28d4e4767e06a2c70",
+      "exit_code": 0,
+      "elapsed_seconds": 0.24
+    },
+    {
+      "name": "yandex-model-cost-1",
+      "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-model-cost-1.json",
+      "receipt_sha256": "bcb932d32fbcc70d2a62c7ee74fcd4b3f03071c66156c2b192a7b4e4e4910307",
+      "log_sha256": "98ef06406ba6d255449147f544a4a6dc98038fe62d6bfd62f27bd4343450f47d",
+      "exit_code": 0,
+      "elapsed_seconds": 0.066
+    },
+    {
+      "name": "yandex-timing-correction",
+      "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-timing-correction.json",
+      "receipt_sha256": "1d79b65328954dd81b94f7e85467b6ad41cb41a0ae107322a6fa1636f053aeb7",
+      "log_sha256": "90844cac4eb8fad835bf04f93e6e38b0f0443d0793b6c267bad5635316c5e7ad",
+      "exit_code": 0,
+      "elapsed_seconds": 63.347
+    }
+  ],
+  "mutation_manifests": [
+    {
+      "path": "/tmp/n5-yandex-guard-mutations-20261027.json",
+      "sha256": "1420d21bd4a9ef6988aebcef63aa12d816ba9a298492ae76d9d8a2e82a521a59",
+      "killed": 17
+    },
+    {
+      "path": "/tmp/n5-yandex-guard-mutations-extra-20261027.json",
+      "sha256": "08cfcee6a9273bb92ffdf84cb98ab532f98217bdc55d57cfa5c0d3fc7ce4a34c",
+      "killed": 9
+    },
+    {
+      "path": "/tmp/n5-yandex-guard-mutations-timing-20261027.json",
+      "sha256": "b86e042c411ffaa8a07727f29fddb0be465c1b4fd4129f690f1e0b6819c0a8a9",
+      "killed": 2
+    }
+  ],
+  "deployment_preflight": {
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-seams-1.json",
+    "overall_exit_code": 1,
+    "passed": [
+      "synthetic env wiring",
+      "all21 mandatory variables",
+      "database port exposure guard"
+    ],
+    "failure": "Existing current stand occupies default edge port4181; no deployment attempted"
+  }
+}

@@ -1,0 +1,323 @@
+{
+  "schema_version": "feature-telemetry-v1",
+  "run_id": "20261028-n5-support-implementation",
+  "project": "projects/05-podcast-clips-opus",
+  "feature": "support-access",
+  "pipeline": "p-replicator /feature Mode2",
+  "profile": "model-routing-econom",
+  "started_at": "2026-10-28T00:10:23.161812+00:00",
+  "updated_at": "2026-10-28T03:34:35.023116+00:00",
+  "status": "completed",
+  "current_stage": "DONE_LOCAL_SCOPE_DELIVERED",
+  "baseline_revision": "1f0befb75bd193c5282b273a6007f3997733cab5",
+  "responsible": "root",
+  "owner_authorization": "explicit continue28.10.2026 after6-10h support implementation estimate; demo in12h; watch SSD",
+  "scope": [
+    "N1/N3 email proof and reset reuse",
+    "N6b/N4 read-only staff admin reuse",
+    "Libredesk bridge and deployment handoff",
+    "independent review, full tests and existing-Docker browser E2E"
+  ],
+  "exclusions": [
+    "no current production deployment",
+    "no new subscription/resources or support messages to third parties",
+    "no generic balance editing or payment state changes",
+    "no wholesale auth replacement"
+  ],
+  "requested_models": {
+    "plan": "gpt-6.1-sol high",
+    "code": "gpt-6.1-sol medium",
+    "review": "gpt-6.1-sol high fresh planner-only context"
+  },
+  "actual_model": null,
+  "metrics": {
+    "input_tokens": null,
+    "cached_tokens": null,
+    "output_tokens": null,
+    "cost_usd": null,
+    "elapsed_wall_seconds": 12251.861
+  },
+  "missing_data": [
+    "actual execution model/usage metadata not exposed"
+  ],
+  "constraints": {
+    "minimum_free_disk_gib": 2,
+    "free_disk_gib": 2.556,
+    "deadline_hours": 12,
+    "browser_container": "codex-ui-playwright"
+  },
+  "next_step": "acceptedlocalwork complete; external runtime items belong to targetlaunchplan",
+  "actual_background_implementation": false,
+  "actual_background_planning": false,
+  "launches": [
+    {
+      "path": "evidence/plan-launch.json",
+      "sha256": "a82925b5ec920f27c4014340208295d856131aa9f7818afc1fb545e12a7a819c"
+    },
+    {
+      "path": "evidence/process-audit-launch.json",
+      "sha256": "34ae93c489085dbf9059915e98f5a4c1320ec94fd20ba6970a16d4ce0e8b0028"
+    },
+    {
+      "path": "evidence/validation-launch.json",
+      "sha256": "bb0071872cd0b5b3b81f9efc85e161d6df9bd649725e487f1748b1958f628b03"
+    },
+    {
+      "path": "evidence/coding-backend-launch.json",
+      "sha256": "f5b949d88177aee59e4140136c97d3b9d8d147d32376fc68975cb9f67c5f6631"
+    },
+    {
+      "path": "evidence/coding-ui-launch.json",
+      "sha256": "c59953141cfeab8654e5e071bb674aedb3763d1c9077f322c9ca46881a499fde"
+    },
+    {
+      "path": "evidence/review-launch.json",
+      "sha256": "1a64753597b22c8c58263174c17d7495aa892af0bbf077fa0c1ad5b61598552e"
+    },
+    {
+      "path": "evidence/review-delta-launch.json",
+      "sha256": "3c410f7d5dfb9e8894a579c108225a581e91be797632139cc55d7309e83a4a82"
+    }
+  ],
+  "browser_readiness": {
+    "container": "codex-ui-playwright",
+    "actual_launch": true,
+    "browser_version": "153.0.8010.12",
+    "title": "N5 browser readiness",
+    "qualification": "browsertoolavailable; notapplicationE2Epass",
+    "webkit_actual_launch": true,
+    "webkit_version": "26.6",
+    "private_network_gateway": "192.168.128.1"
+  },
+  "disk_cleanup": {
+    "removed": "/tmp/n5-yandex-stt-code-20261027/projects/05-podcast-clips-opus/apps/web/.next/cache",
+    "scope": "own completed code attempt cache only; code, build and receipts preserved",
+    "du_before_kib": 172088,
+    "observed_free_after_gib": 3.2150230407714844
+  },
+  "workflow_gate_discovery": {
+    "installed_checker": "1.13.4; officiallatest1.13.5samechecker",
+    "feature_filter": false,
+    "historical_aggregate": "exit1 retained;11rootduplicatekeys and30legacyfeaturefolderslackingmachinekeys",
+    "previous_scope_exception": "explicitlycredit-packages+cloudru-provider-foundation,notnew-support",
+    "next_step": "resolved explicitowner scope; no globalcheckerchanges",
+    "audit_receipt": "evidence/gate-audit-trace.md"
+  },
+  "scope_decision": {
+    "status": "explicitly_approved",
+    "requested_at": "2026-10-28T00:18:15+00:00",
+    "proposal_revision": "733fcf049290a2ed388a713dbf3e92e5df660039",
+    "proposal_path": "docs/features/support-access-gate-scope.md",
+    "proposal_sha256": "b11550013202f7a6c180c1608d2845560a2d88fb7dd68550a2c9cd649deca748",
+    "reason": "native feature command explicitly forbids advancement on aggregate exit1; oldexception is explicitlytwofeatures only",
+    "independent_allowed_work": "planner contract completion and validation-preparation, existing browser and test-resource readiness",
+    "owner_reply": "Да, разрешаю указанную область проверки",
+    "approval_receipt": "evidence/owner-scope-approval.json",
+    "approved_at_observed": "2026-10-28T00:29:05.581603+00:00"
+  },
+  "spec_sha256": "ef2525b933e75661ae3ee0965741933555b4387da321a7b40547e184f4f41edf",
+  "plan_artifacts": {
+    "projects/05-podcast-clips-opus/docs/features/support-access/01_specification.md": "ef2525b933e75661ae3ee0965741933555b4387da321a7b40547e184f4f41edf",
+    "projects/05-podcast-clips-opus/docs/features/support-access/02_pseudocode.md": "f7c095b56042ba30e24cf534189edf3bf1504c512c3d0f6a8782b0d287fa1a66",
+    "projects/05-podcast-clips-opus/docs/features/support-access/03_architecture.md": "0ee76c591870305c54e03162b662bbe50c8cd2ab5215c9632242ec24c3a1276c",
+    "projects/05-podcast-clips-opus/docs/features/support-access/04_refinement.md": "16e9f534616c53b84c5dd99a0ac5b8179cd38219d3ae14333b82ebe2b53aef5e",
+    "projects/05-podcast-clips-opus/docs/features/support-access/05_completion.md": "eca7b0a4fcfa485977e08a98973acb01c2f37f7f82ebfdaf4f112de7cb3f141c",
+    "projects/05-podcast-clips-opus/docs/features/support-access/research.md": "8c4b9d20e4589db634a4a1b94c21fb2a7d0c64d9343f7104c88b7c79c1ed438d"
+  },
+  "plan_checks": {
+    "terminal_receipt_verified": true,
+    "six_source_hashes_verified": true,
+    "native_gates": "approved scopedPLAN/VALIDATE andfinalcompletionPASS; aggregatehistoricalexit1notPASS",
+    "launch_digest_limit": "planner was not supplied manifest digest; actual tool-call assignment, run/work/source/path and source hashes checked, no structural-companion PASS claimed"
+  },
+  "validation": {
+    "verdict": "READY",
+    "score": 95.25,
+    "ac_count": 11,
+    "report_sha256": "f33aa3fc19a824d8800d0469b9d89dc84e257c8944a0042d100c4170f8b6b4a2",
+    "caveats": [
+      "valid forgot persisted quota/cooldown returnsuniform202; pre-body globalIP429distinct",
+      "automatic widget open remains anonymous; identified call only explicitopt-in"
+    ],
+    "actual_model": null
+  },
+  "active_agents": [],
+  "ui": {
+    "source_commits": [
+      "52d85156",
+      "64f1b438",
+      "c0fda1fa"
+    ],
+    "integrated_head": "5ef18d27c243732e84e916f8d41b2e20241b72ea",
+    "receipt_hashes_verified": true,
+    "full_browser_acceptance": true,
+    "responsive_baseline": {
+      "source": "420affeb",
+      "pages": 342,
+      "engines": [
+        "chromium",
+        "webkit"
+      ],
+      "exit_code": 1,
+      "execution_errors": 0,
+      "blockers": "12R9partialclipactionbelowfirstscreen",
+      "warnings": 646
+    }
+  },
+  "active_checks": [],
+  "backend": {
+    "source_commits": [
+      "71402216",
+      "be9073a9"
+    ],
+    "source_hashes_verified": 42,
+    "final_focused_tests": 141,
+    "final_focus_files": 14,
+    "final_guard_mutations_verified": 16,
+    "mutation_binding": "topreceipt sourceRevision is pre-finalcommit base71402216; EACH final sourceSha256/testSha256 verified against integrated18b3b629; no metadata rewrite",
+    "full_feature_acceptance": "accepted local scope; external runtime excluded"
+  },
+  "integration_diagnostics": {
+    "build01": "failed generated Next card GET optionalcontext",
+    "build02": "failed samefactory optionalcontext on accounts GET; batchfix assigned",
+    "fulltest01": "stopped byroot due missingffmpeg inrootrunnerPATH, mediafailures/skips, exit-15 notPASS",
+    "runner_fix": "existingffmpeg8.1.2+ffprobe preflightverified; no installation/no sourceguardweakening",
+    "fulltest05": "1247pass/1fail/zero skips: old incidental fake count in Yandex testcase; test-only correction verified and integrated"
+  },
+  "disk_cleanups": [
+    {
+      "path": "/tmp/n5-acquisition-analytics-20261026/projects/05-podcast-clips-opus/apps/web/.next/cache",
+      "reason": "own completed build cache only; executable .next build preserved",
+      "du_kib": 199348,
+      "observed_free_before_gib": 2.53289794921875,
+      "observed_free_after_gib": 2.723011016845703
+    }
+  ],
+  "accepted_local_checks": {
+    "application_source_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+    "build_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+    "full_tests": 1258,
+    "full_test_files": 131,
+    "full_skip_count": 0,
+    "build_exit": 0,
+    "types_exit": 0,
+    "lint_exit": 0,
+    "responsive_pages": 342,
+    "responsive_exit": 0,
+    "responsive_warnings": 646,
+    "support_journey_checks": 51,
+    "support_journey_exit": 0,
+    "post_reset_http_sql_exit": 0,
+    "native_completion_exit": 0,
+    "review_contract_exit": 0,
+    "source_review": "clear",
+    "limits": "synthetic local runtime only; actualSMTP/vendor/RFdeployment separatelyoutofscope"
+  },
+  "runtime_readiness": {
+    "state": "stopped_after_acceptance",
+    "web_build_source": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+    "candidate_web_input_closure_unchanged": true,
+    "actual_compiled_SSR": 200,
+    "production_refuses_test_mode": true,
+    "private_proxies": "running, no production changes"
+  },
+  "forecasts": [
+    {
+      "created_at": "2026-10-28T00:10:23.161812+00:00",
+      "hours": [
+        6,
+        10
+      ],
+      "scope": "localimplementationchecks; noexternalruntime"
+    },
+    {
+      "created_at": "2026-10-28T01:55:55.868531+00:00",
+      "remaining_hours": [
+        2,
+        4
+      ],
+      "method": "engineeringremainingdecomposition, notcalibratedhistoricalforecast",
+      "basis": "codeintegrated/full1231pass; runtimeenvregression,browserandcoldreviewremain",
+      "external_exclusions": "realmail/Libredeskpilot/RFdeployment keys+runtimepending"
+    }
+  ],
+  "ui_fixture_diagnostic": {
+    "canonical_upload": "actual200ssynthetic,realSQL/S3/queues,explicitfake models",
+    "failure_reason": "no_fragments",
+    "cause": "existingfakeSTTonlyone1sword disagreeswithvalidFakeSelector25sfragments; productionword-snap rejects correctly",
+    "correction": "fake-only compatible timed words integrated4c012d4f; test-only stale assertion integrated68a2943a",
+    "remaining_scope": "AC11 reproduciblelocaldemo, notnaturalSTTquality",
+    "canonical_retry": {
+      "exit_code": 0,
+      "elapsed_seconds": 50.871,
+      "clips": 3,
+      "models": "explicit fake; real FFmpeg, SQL, S3 and queue path"
+    }
+  },
+  "source_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+  "review": {
+    "initial_source": "68a2943a",
+    "verdict": "changes_required",
+    "confirmed_findings": 6,
+    "integrated_fixes": [
+      "anonymouschatcleanup",
+      "contextprojection",
+      "proofposttokenlockexpiry",
+      "jobstage",
+      "cursorprecision",
+      "debitledger"
+    ],
+    "pending_fixes": [],
+    "fresh_delta_review": "source_review_clear",
+    "delta_source_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+    "runtime_qualification": "independent source verdict only; root full tests/browser still separate"
+  },
+  "memory": {
+    "teach_id": "teach:74dc974e32a1a793",
+    "store": "originalproject/.dz",
+    "backend": "@dzhechkov/memory",
+    "recall": "SQLiteFTS5 lexical hit confirmed; no semantic call",
+    "lesson": "PostgreSQL exact timestamp keyset precision"
+  },
+  "permission_review_retry": {
+    "count": 1,
+    "action": "read-only config/receipt inspection",
+    "first": "automatic permission review timed out; command not executed",
+    "retry": "allowed once and completed; no unresolvedapprovalblock"
+  },
+  "local_acceptance_finished_at": "2026-10-28T03:32:10.513353+00:00",
+  "local_acceptance_elapsed_seconds": 12107.352,
+  "delivery": {
+    "state": "pushed_verified",
+    "authorized_branch": "feature/n5-credits-cloudru-20261026",
+    "application_revision": "37e822f2cee45c2a284930ee46a90aa956ce1cb7",
+    "uri": "https://github.com/djd1m/2026-AUG-PU-Projects/tree/feature/n5-credits-cloudru-20261026/projects/05-podcast-clips-opus",
+    "pending_out_of_scope": [
+      "realSMTPinboxdelivery",
+      "realLibredeskpilot/history/replies/retention/revocation/deletion",
+      "RFtargetdeploy andrealstorage/payment/analyticsacceptance"
+    ],
+    "documentation_revision": "c4e962fe0a9d0df6b7adaf2f8a1e8a6b3def41b1",
+    "last_verified_remote_revision": "c4e962fe0a9d0df6b7adaf2f8a1e8a6b3def41b1",
+    "verified_at": "2026-10-28T03:34:35.023116+00:00",
+    "closure": "this metadata-only closure commit follows verified application/docs delivery",
+    "pending": [
+      {
+        "item": "real SMTP delivery",
+        "scope": "out_of_scope",
+        "reason": "requires authorized target sender/domain and actual receipt in mailbox"
+      },
+      {
+        "item": "real Libredesk pilot, history/replies/revocation/retention/deletion",
+        "scope": "out_of_scope",
+        "reason": "local SDK fixture proves adapter boundary only; real tenant/operator policy not configured"
+      },
+      {
+        "item": "Russian target deployment and live storage/payment/analytics acceptance",
+        "scope": "out_of_scope",
+        "reason": "owner scope is local code/preparation; target environment and real integrations separate"
+      }
+    ]
+  },
+  "finished_at": "2026-10-28T03:34:35.023116+00:00"
+}

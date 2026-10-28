@@ -2,7 +2,10 @@ import type { Pool } from '@clipmaker/db';
 import { z } from 'zod';
 import { moscowDay } from '@clipmaker/shared/upload';
 import { readReferral } from '../lib/partner-referral';
+import { createOwnedPartnerCode } from './partner-code';
 import { UploadError } from './upload-contract';
+
+export const createPartnerCodeSchema = z.object({ code: z.string().regex(/^[A-Za-z0-9_-]{6,12}$/) }).strict();
 
 export const applyCodeSchema = z.union([
   z.object({ code: z.string().trim().regex(/^[A-Za-z0-9_-]{6,12}$/).optional() }).strict(),
@@ -31,6 +34,18 @@ export function replacementAllowed(existing: Attribution, source: AttributionSou
 
 export class PartnerService {
   constructor(private readonly pool: Pool, private readonly referralSecret: string, private readonly clock = () => new Date()) {}
+  async createCode(account: string, raw: unknown) {
+    const parsed = createPartnerCodeSchema.safeParse(raw);
+    if (!parsed.success) throw invalid();
+    const tx = await this.pool.connect();
+    try {
+      await tx.query('BEGIN');
+      const result = await createOwnedPartnerCode(tx, account, parsed.data.code);
+      await tx.query('COMMIT');
+      return result;
+    } catch (error) { await tx.query('ROLLBACK'); throw error; }
+    finally { tx.release(); }
+  }
   async apply(account: string, raw: unknown, prefix: string, cookieHeader = ''): Promise<Attribution | null> {
     const parsed = applyCodeSchema.safeParse(raw);
     if (!parsed.success) throw invalid(); // Invalid explicit input never falls back to a cookie.
@@ -62,7 +77,8 @@ export class PartnerService {
       const inserted = await tx.query<Attribution>(`INSERT INTO attribution(account_id,partner_code_id,source,status,reject_reason)
         VALUES($1,$2,$3,$4,$5) ON CONFLICT(account_id) DO NOTHING RETURNING *`, values);
       const updated = inserted.rows[0] ? inserted : await tx.query<Attribution>(`UPDATE attribution
-        SET partner_code_id=$2,replaced_source=source,source=$3,status=$4,reject_reason=$5,activated_at=NULL
+        SET assigned_at=CASE WHEN partner_code_id IS DISTINCT FROM $2::uuid THEN clock_timestamp() ELSE assigned_at END,
+          partner_code_id=$2,replaced_source=source,source=$3,status=$4,reject_reason=$5,activated_at=NULL
         WHERE account_id=$1 AND status NOT IN ('rejected','partner_deleted') AND
           (($3='explicit' AND source IN ('cookie','guest_link')) OR ($3='guest_link' AND source='cookie')) RETURNING *`, values);
       const result = updated.rows[0];
@@ -110,6 +126,17 @@ export class PartnerService {
     const statuses = (await this.pool.query<{ partner_code_id: string; source: AttributionSource; status: Attribution['status']; count: string }>(
       `SELECT partner_code_id,source,status,count(*) FROM attribution WHERE partner_code_id=ANY($1::uuid[])
        GROUP BY partner_code_id,source,status ORDER BY partner_code_id,source,status`, [ids])).rows.map(r => ({ ...r, count: Number(r.count) }));
-    return { codes: codes.filter(c => !codeId || c.id === codeId), counters: { visits, registrations, uploaded, shared, guests }, statuses };
+    const financial = (await this.pool.query<{ purchases: string; revenue_minor: string }>(`SELECT count(*) AS purchases,
+      COALESCE(sum(p.amount_minor),0) AS revenue_minor FROM payment p
+      JOIN payment_intent i ON i.id=p.intent_id AND i.account_id=p.account_id
+        AND i.provider_payment_id=p.provider_payment_id AND i.price_minor=p.amount_minor
+      JOIN attribution a ON a.account_id=p.account_id
+      WHERE a.partner_code_id=ANY($1::uuid[]) AND a.status IN ('pending','activated')
+        AND p.provider='yookassa' AND p.status='succeeded' AND p.needs_review=false
+        AND i.status='succeeded' AND i.fulfilled_at IS NOT NULL
+        AND i.sku IN ('start_v1','pro_v1','addon_v1')
+        AND i.created_at >= a.assigned_at AND p.paid_at >= a.assigned_at`, [ids])).rows[0]!;
+    const purchases = Number(financial.purchases), revenue_minor = Number(financial.revenue_minor);
+    return { codes: codes.filter(c => !codeId || c.id === codeId), counters: { visits, registrations, uploaded, shared, guests, purchases, revenue_minor }, statuses };
   }
 }

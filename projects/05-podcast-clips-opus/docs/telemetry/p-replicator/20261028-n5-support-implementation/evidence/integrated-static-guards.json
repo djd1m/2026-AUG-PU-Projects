@@ -1,0 +1,35 @@
+{
+  "at": "2026-10-28T02:23:30.421440+00:00",
+  "source_revision": "4c012d4f9c74e429537e5e86ea0183c18213190b",
+  "checks": [
+    {
+      "name": "ports",
+      "command": [
+        "node",
+        "/tmp/n5-acquisition-analytics-20261026/.claude/hooks/check-ports.cjs",
+        "/tmp/n5-acquisition-analytics-20261026/projects/05-podcast-clips-opus"
+      ],
+      "exit_code": 2,
+      "log_sha256": "a8751982270e6ae22dc175b0642b8759d968b46669c7a2b5a49b6bd1c4a11f4e"
+    },
+    {
+      "name": "env-wiring",
+      "command": [
+        "bash",
+        "scripts/check-env-wiring.sh"
+      ],
+      "exit_code": 2,
+      "log_sha256": "df685f3969e5775214b00003b157e4395d23e2a3c2c6ab5750f28f765056c909"
+    },
+    {
+      "name": "model-cost",
+      "command": [
+        "node",
+        "/tmp/n5-acquisition-analytics-20261026/.claude/hooks/check-model-cost.cjs",
+        "/tmp/n5-acquisition-analytics-20261026/projects/05-podcast-clips-opus"
+      ],
+      "exit_code": 0,
+      "log_sha256": "98ef06406ba6d255449147f544a4a6dc98038fe62d6bfd62f27bd4343450f47d"
+    }
+  ]
+}

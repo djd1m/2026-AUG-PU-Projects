@@ -1,0 +1,138 @@
+[
+  {
+    "name": "wire-mp3",
+    "file": "apps/worker/src/stt/yandex-protocol.ts",
+    "original_sha256": "136b27cc9958bde6ba7c0ea0d60e1b4b3680a9c704a60b7f406d35275a94dac8",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-wire-mp3.json"
+  },
+  {
+    "name": "fixed-host",
+    "file": "apps/worker/src/stt/yandex-protocol.ts",
+    "original_sha256": "136b27cc9958bde6ba7c0ea0d60e1b4b3680a9c704a60b7f406d35275a94dac8",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-fixed-host.json"
+  },
+  {
+    "name": "milliseconds",
+    "file": "apps/worker/src/stt/yandex.ts",
+    "original_sha256": "bb79cde61a656c234eccb387e30132f740755539b0e713b66f1990a58b31ec29",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-milliseconds.json"
+  },
+  {
+    "name": "zero-index",
+    "file": "apps/worker/src/stt/yandex.ts",
+    "original_sha256": "bb79cde61a656c234eccb387e30132f740755539b0e713b66f1990a58b31ec29",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-zero-index.json"
+  },
+  {
+    "name": "conflicting-final",
+    "file": "apps/worker/src/stt/yandex.ts",
+    "original_sha256": "bb79cde61a656c234eccb387e30132f740755539b0e713b66f1990a58b31ec29",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-conflicting-final.json"
+  },
+  {
+    "name": "deduplicate",
+    "file": "apps/worker/src/stt/yandex.ts",
+    "original_sha256": "bb79cde61a656c234eccb387e30132f740755539b0e713b66f1990a58b31ec29",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-deduplicate.json"
+  },
+  {
+    "name": "stat-limit",
+    "file": "apps/worker/src/stt/yandex.ts",
+    "original_sha256": "bb79cde61a656c234eccb387e30132f740755539b0e713b66f1990a58b31ec29",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-stat-limit.json"
+  },
+  {
+    "name": "read-limit",
+    "file": "apps/worker/src/stt/yandex.ts",
+    "original_sha256": "bb79cde61a656c234eccb387e30132f740755539b0e713b66f1990a58b31ec29",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-read-limit.json"
+  },
+  {
+    "name": "duration-limit",
+    "file": "apps/worker/src/stt/yandex.ts",
+    "original_sha256": "bb79cde61a656c234eccb387e30132f740755539b0e713b66f1990a58b31ec29",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-duration-limit.json"
+  },
+  {
+    "name": "full-status",
+    "file": "apps/worker/src/stt/yandex.ts",
+    "original_sha256": "bb79cde61a656c234eccb387e30132f740755539b0e713b66f1990a58b31ec29",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-full-status.json"
+  },
+  {
+    "name": "deadline",
+    "file": "apps/worker/src/stt/yandex.ts",
+    "original_sha256": "bb79cde61a656c234eccb387e30132f740755539b0e713b66f1990a58b31ec29",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-deadline.json"
+  },
+  {
+    "name": "timer",
+    "file": "apps/worker/src/stt/yandex.ts",
+    "original_sha256": "bb79cde61a656c234eccb387e30132f740755539b0e713b66f1990a58b31ec29",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-timer.json"
+  },
+  {
+    "name": "backpressure",
+    "file": "apps/worker/src/stt/yandex.ts",
+    "original_sha256": "bb79cde61a656c234eccb387e30132f740755539b0e713b66f1990a58b31ec29",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-backpressure.json"
+  },
+  {
+    "name": "transparent-retry",
+    "file": "apps/worker/src/stt/yandex.ts",
+    "original_sha256": "bb79cde61a656c234eccb387e30132f740755539b0e713b66f1990a58b31ec29",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-transparent-retry.json"
+  },
+  {
+    "name": "retry-auth",
+    "file": "apps/worker/src/stt/yandex.ts",
+    "original_sha256": "bb79cde61a656c234eccb387e30132f740755539b0e713b66f1990a58b31ec29",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-retry-auth.json"
+  },
+  {
+    "name": "db-attribution",
+    "file": "packages/db/src/transcription.ts",
+    "original_sha256": "e2469ce0a09a6b2df38fcb96eaddb8dc37a8679b8d225e3f2ff0de9a09e5519a",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-db-attribution.json"
+  },
+  {
+    "name": "spend-before-rpc",
+    "file": "apps/worker/src/workers/stt.ts",
+    "original_sha256": "1550d1e95b182dcdd0db81b0c21f1a0f2741163ea72787d2ea5952116d94d2df",
+    "exit_code": 1,
+    "killed": true,
+    "receipt": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-spend-before-rpc.json"
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "check": "yandex-mutant-fix1-final-index",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "tests/yandex-stt.test.ts",
+    "-t",
+    "interoperates with independently"
+  ],
+  "exit_code": 1,
+  "elapsed_seconds": 1.926,
+  "log": "/tmp/n5-acquisition-analytics-20261026-plan/checks/yandex-mutant-fix1-final-index.log",
+  "node": "22.22.3",
+  "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off"
+}

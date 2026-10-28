@@ -3,9 +3,9 @@ import type { Attempt } from '../packages/db/src/attempts';
 import type { Pool } from 'pg';
 import { loadLimits } from '../packages/shared/src/config';
 import { selectFragments } from '../apps/worker/src/workers/select';
-import { createFakeSelector, type FakeCase } from '../apps/worker/src/llm/fake';
+import { createFakeSelector, fakeFragment, type FakeCase } from '../apps/worker/src/llm/fake';
 import { environment } from './fixtures/environment';
-import { failSelection } from '@clipmaker/db';
+import { authorizeSelection, acceptSelection, failSelection } from '@clipmaker/db';
 const state = vi.hoisted(() => ({ trace: [] as string[], failure: '', refused: false }));
 vi.mock('@clipmaker/db', () => ({
   authorizeSelection: vi.fn(async () => { state.trace.push('quota'); return state.refused ? null : {
@@ -17,7 +17,7 @@ vi.mock('@clipmaker/db', () => ({
 const attempt: Attempt = { video_id: 'video', stage: 'select', clip_id: null, series_no: 1, fence: 1, attempt_no: 1, status: 'running' };
 function fixture(scenario: FakeCase = 'valid') {
   const fake = createFakeSelector(scenario);
-  return { pool: {} as Pool, limits: loadLimits(environment()), model: 'anthropic/claude-sonnet-5', spendPath: '/unused',
+  return { pool: {} as Pool, limits: loadLimits(environment()), provider: 'fake' as const, model: 'anthropic/claude-sonnet-5', spendPath: '/unused',
     selector: { select: vi.fn(async (...args: Parameters<typeof fake.select>) => { state.trace.push('call'); return fake.select(...args); }) },
     spend: vi.fn(async (_path, event) => { state.trace.push(event.phase); }),
     enqueue: vi.fn(async () => { state.trace.push('enqueue'); }),
@@ -29,6 +29,19 @@ describe('SelectFragments order and attempt accounting', () => {
     const deps = fixture(); await selectFragments(attempt, deps);
     expect(state.trace).toEqual(['quota', 'attempt', 'call', 'outcome', 'commit', 'enqueue']);
     expect(deps.selector.select).toHaveBeenCalledTimes(1);
+  });
+  it.each(['cloudru', 'openrouter', 'fake'] as const)('actual provider %s reaches authorization and both ledger phases', async provider => {
+    const deps = { ...fixture(), provider }; await selectFragments(attempt, deps);
+    expect(authorizeSelection).toHaveBeenCalledWith(deps.pool, attempt, deps.limits, deps.model, undefined, provider);
+    expect(deps.spend.mock.calls.map(call => call[1])).toEqual([
+      expect.objectContaining({ provider, model: deps.model, phase: 'attempt' }),
+      expect.objectContaining({ provider, model: deps.model, phase: 'outcome' }),
+    ]);
+  });
+  it('invalid closed shape cannot reach persistence or cause another dispatch', async () => {
+    const deps = fixture(); deps.selector.select.mockResolvedValueOnce({ fragments: [fakeFragment()], extra: true });
+    await expect(selectFragments(attempt, deps)).rejects.toThrow();
+    expect(acceptSelection).not.toHaveBeenCalled(); expect(deps.selector.select).toHaveBeenCalledOnce();
   });
   it('refusal makes no paid attempt', async () => {
     state.refused = true; const deps = fixture(); await selectFragments(attempt, deps);

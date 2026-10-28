@@ -1,0 +1,38 @@
+{
+  "status": "ready",
+  "timestamp": "2026-10-26T22:55:12.459Z",
+  "run_id": "20261026-n5-credits-cloudru",
+  "work_unit_id": "credit-ui-shortage-resume-2",
+  "launch_sha256": "8d31bac3328b08cbe97cd5cc6c9109bd7b2055e97ad1fd8e55f2e37805cf19f0",
+  "source": "5b306f1646efb75494b67da1e0f234c3c94e2790",
+  "runtime": "ordinaryNextdevUI+exactbuiltworkeroneownedprobe",
+  "production_build_separate": "uLxK8pbNbskoqHNaI5loo",
+  "node": "v22.22.3",
+  "ffprobe": "ffprobe version 8.1.2 Copyright (c) 2007-2026 the FFmpeg developers",
+  "stt_consumers": 0,
+  "inputs": "existing1801srealMP3/SAME30creditaccount/video/idempotency; actualAPI/multipart/MinIO/ownedSQLattempt",
+  "commands_as_data": [
+    "resume-owned-input.mjs --execute-after-root-preflight --no-stt-consumer-confirmed",
+    "verify-mobile.mjs --execute-after-root-preflight SHA"
+  ],
+  "expected_effects": [
+    "onlynewowntestaccount/video/multipartobject/currentprobe/normalqueuejob",
+    "actualtrustedcreditrefusal beforeSTTdispatch",
+    "mobile360x900actualfailedscreen/screenshot"
+  ],
+  "artifact_manifest_sha256": "a0fe2208540e6fd7a3c7b3630aef56d31cf3c2eb33549e23282f4cba9bb15d55",
+  "helper_sha256": "1c510dcabba93a41a4e733bfa5768fcafd0bccc8993024bb84d72142e37c5cfb",
+  "external_actions_executed": false,
+  "e2e_claim": null,
+  "limitations": [
+    "directownedprobe notglobalqueuedelivery",
+    "fakeonly,no model/bank/cloudproviderproof"
+  ],
+  "source_verified": true,
+  "dev_source_changes": [],
+  "app_https_health": 200,
+  "disk_free_bytes": 2461638656,
+  "input_sha256": "16c443ecba079ec689a2a02c442e7b72a308ca9ace3bb23f1e24dc90bb989476",
+  "fixture_before_sha256": "7e2511760a0c926d39ce49c68108e6846ab4099f34fae4d727c8105306e7ead3",
+  "refreshed_at": "2026-10-26T22:55:13.872679+00:00"
+}

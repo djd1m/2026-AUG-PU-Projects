@@ -1,0 +1,95 @@
+{
+  "mode": "on",
+  "evidence": "fully intercepted synthetic SDK requests; NOT live goal receipt or report ingestion",
+  "checks": [
+    "visit/login/ready/payment/reload/excluded route/withdrawal"
+  ],
+  "transport": [
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [
+        "n5_visit"
+      ],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    },
+    {
+      "label": "main",
+      "host": "mc.yandex.com",
+      "goals": [],
+      "interceptedHttpStatus": 200
+    }
+  ],
+  "consoleErrors": [
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "label": "main",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    }
+  ],
+  "screenshots": [
+    "/tmp/n5-acquisition-e2e/on-chromium-dark-360.png",
+    "/tmp/n5-acquisition-e2e/on-chromium-dark-900.png",
+    "/tmp/n5-acquisition-e2e/on-chromium-light-360.png",
+    "/tmp/n5-acquisition-e2e/on-chromium-light-900.png"
+  ],
+  "status": "failed",
+  "error": "AssertionError [ERR_ASSERTION]: Unsanitized SDK page-url (main)\n    at privacy (/tmp/n5-acquisition-e2e/browser-check.cjs:63:216)\n    at Object.close (/tmp/n5-acquisition-e2e/browser-check.cjs:68:136)\n    at run (/tmp/n5-acquisition-e2e/browser-check.cjs:113:191)\n    at async /tmp/n5-acquisition-e2e/browser-check.cjs:129:22"
+}

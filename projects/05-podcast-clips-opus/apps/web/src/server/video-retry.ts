@@ -1,4 +1,4 @@
-import { transaction, leaseAttemptTx, checkAndConsumeQuota, FILE_FAILURES, type Attempt, type Pool } from '@clipmaker/db';
+import { lockCreditAccountForVideo, reserveVideoCreditsTx, transaction, leaseAttemptTx, checkAndConsumeQuota, FILE_FAILURES, type Attempt, type Pool } from '@clipmaker/db';
 import type { Limits } from '@clipmaker/shared/config';
 import type { VideoFailureReason } from '@clipmaker/shared/enums';
 import { UploadError, quotaError } from './upload-contract';
@@ -14,6 +14,7 @@ export class VideoRetryService {
     private readonly enqueue: (attempt: Attempt) => Promise<void>, private readonly clock = () => new Date()) {}
   async retry(account: string, videoId: string): Promise<{ video_id: string; status: string }> {
     const result = await transaction(this.pool, async tx => {
+      await lockCreditAccountForVideo(tx,videoId);
       const video = await tx.query(`SELECT v.* FROM video v JOIN account a ON a.id=v.account_id
         WHERE v.id=$1 AND v.account_id=$2 AND v.deleted_at IS NULL AND a.status='active' FOR UPDATE OF v`, [videoId, account]);
       if (!video.rowCount) throw new UploadError('not_found', 'Запись не найдена', 404);
@@ -24,9 +25,14 @@ export class VideoRetryService {
       const pending = clips.rows.filter(c => c.status !== 'done');
       if (stage === 'render' && !pending.length) throw new UploadError('conflict', 'Все клипы уже готовы', 409);
       const now = this.clock();
+      await tx.query('SAVEPOINT retry_credits');
+      if (stage!=='stt' && await reserveVideoCreditsTx(tx,videoId,Number(video.rows[0].duration_seconds),now)==='shortage') {
+        throw new UploadError('refused','Недостаточно кредитов для этой записи. Выберите пакет.',429,{scope:'credit_balance'});
+      }
       if (stage === 'select') {
         const quota = await checkAndConsumeQuota(tx, this.limits, account, 'llm', 1, now);
         if (!quota.granted) {
+          await tx.query('ROLLBACK TO SAVEPOINT retry_credits');
           await tx.query('UPDATE video SET failure_reason=$2, updated_at=$3 WHERE id=$1',
             [videoId, quota.scope === 'user_llm' ? 'refused_user_llm' : 'refused_global_llm', now]);
           return { refused: quota.scope, refusedAt: now, status: 'failed', jobs: [] };

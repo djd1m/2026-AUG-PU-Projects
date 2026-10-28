@@ -1,0 +1,17 @@
+{
+  "check": "integrated-build-01",
+  "command": [
+    "npm",
+    "run",
+    "build"
+  ],
+  "source_revision": "18b3b629eb589645eaf5153402a98c749be126e9",
+  "started_at": "2026-10-28T01:11:12.037248+00:00",
+  "elapsed_seconds": 50.019,
+  "exit_code": 1,
+  "stopped_reason": null,
+  "node": "22.22.3",
+  "environment": "isolated *_test DB, Redis15/testMinIO, fake models, payments off",
+  "log": "/tmp/n5-support-integration-checks-20261028/integrated-build-01.log",
+  "free_disk_gib": 2.578
+}

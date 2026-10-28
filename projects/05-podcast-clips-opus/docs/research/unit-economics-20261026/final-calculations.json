@@ -1,0 +1,321 @@
+{
+  "supersedes": "Earlier twoVM and4.5h/month examples; owner selectedoneVM, weekly1h/user, growth100to1000over2months",
+  "date": "2026-10-26",
+  "source_calculation": "calculate.py and preliminary calculations.json retained as initial audit; final conclusions use these parameters",
+  "input_hours_per_user_per30days": 4.285714285714286,
+  "revenue_per_used_hour_if_all_pay_RUB": 231.0,
+  "single_vm_fixed_RUB_per30days": {
+    "pilot_2vCPU_4GB_60GB": 2973.384,
+    "next_4vCPU_8GB_80GB": 5340.672,
+    "growth_8vCPU_16GB_120GB": 10075.248
+  },
+  "sizing_evidence": "Allconfigurations engineeringhypotheses;2/4pilotneedsmeasuredmemoryandqueueacceptance. No100or1000usercapacitybenchmark",
+  "primary_model": "Cloud.ru localDeepSeekV4Pro day +Whisper; avoid partnerFlashRFresidencyassumption",
+  "variable_primary_RUB_exact": 34.106865,
+  "variable_planning_primary_RUB": 35,
+  "variable_flash_alternative_RUB_exact": 29.02908592,
+  "storage": "1GBoriginal +0.1GBoutputs for30days. Currentoriginalretentionnotlimited, renewedpaidclipretentionindefinite. Notlifetimecost.",
+  "rows": [
+    {
+      "active_users": 10,
+      "input_hours_per_30days": 42.857142857142854,
+      "all_pay_revenue_RUB": 9900,
+      "payment_fees_RUB": 422.73,
+      "scenario_balance_before_tax_CAC_wages_and_free_users": {
+        "pilot_2vCPU_4GB_60GB": 5003.886,
+        "next_4vCPU_8GB_80GB": 2636.598,
+        "growth_8vCPU_16GB_120GB": -2097.978
+      },
+      "full_cost_per_input_hour_35unit": {
+        "pilot_2vCPU_4GB_60GB": 104.37896,
+        "next_4vCPU_8GB_80GB": 159.61568,
+        "growth_8vCPU_16GB_120GB": 270.08912
+      }
+    },
+    {
+      "active_users": 25,
+      "input_hours_per_30days": 107.14285714285714,
+      "all_pay_revenue_RUB": 24750,
+      "payment_fees_RUB": 1056.825,
+      "scenario_balance_before_tax_CAC_wages_and_free_users": {
+        "pilot_2vCPU_4GB_60GB": 16969.791,
+        "next_4vCPU_8GB_80GB": 14602.503,
+        "growth_8vCPU_16GB_120GB": 9867.927
+      },
+      "full_cost_per_input_hour_35unit": {
+        "pilot_2vCPU_4GB_60GB": 62.751584,
+        "next_4vCPU_8GB_80GB": 84.846272,
+        "growth_8vCPU_16GB_120GB": 129.035648
+      }
+    },
+    {
+      "active_users": 100,
+      "input_hours_per_30days": 428.57142857142856,
+      "all_pay_revenue_RUB": 99000,
+      "payment_fees_RUB": 4227.3,
+      "scenario_balance_before_tax_CAC_wages_and_free_users": {
+        "pilot_2vCPU_4GB_60GB": 76799.316,
+        "next_4vCPU_8GB_80GB": 74432.028,
+        "growth_8vCPU_16GB_120GB": 69697.452
+      },
+      "full_cost_per_input_hour_35unit": {
+        "pilot_2vCPU_4GB_60GB": 41.937896,
+        "next_4vCPU_8GB_80GB": 47.461568,
+        "growth_8vCPU_16GB_120GB": 58.508912
+      }
+    },
+    {
+      "active_users": 1000,
+      "input_hours_per_30days": 4285.714285714285,
+      "all_pay_revenue_RUB": 990000,
+      "payment_fees_RUB": 42273.0,
+      "scenario_balance_before_tax_CAC_wages_and_free_users": {
+        "pilot_2vCPU_4GB_60GB": 794753.616,
+        "next_4vCPU_8GB_80GB": 792386.328,
+        "growth_8vCPU_16GB_120GB": 787651.752
+      },
+      "full_cost_per_input_hour_35unit": {
+        "pilot_2vCPU_4GB_60GB": 35.6937896,
+        "next_4vCPU_8GB_80GB": 36.2461568,
+        "growth_8vCPU_16GB_120GB": 37.3508912
+      }
+    }
+  ],
+  "fee_assumption": {
+    "rate": 0.0427,
+    "basis": "YooKassapublicbase3.5pctplusVAT22oncommission; actualcontractandmethodunknown"
+  },
+  "income_tax": "excluded, unknownregime; optional6pctrevenueillustrationnotrecommendation",
+  "excluded": [
+    "CAC/support/wages",
+    "newfree-userprocessing",
+    "backupcomputeandS3beyondassumedcapacity",
+    "egressifbilled",
+    "retentionbeyond30days",
+    "reasoningtokensabove2koutputscenario",
+    "rerenders/retriesbeyond10pctreserve"
+  ],
+  "queue_quotas": "Current20globalLLMcalls/day and2000globalminutes/day insufficientfor1000weeklyusers(~143calls/day8571min/dayaverage) andmayblock100-userweeklybursts; changesmusthaveapprovedcostcaps",
+  "privacy": "CloudpartnerrouteisnotprovedRFresidency; maincaseuseslocalPropricebutcontractstillrequiresvalidation",
+  "real_payments": "off inobservedruntime; thesearehypotheticalfuturerevenue scenarios",
+  "primary_freemium_100_active": [
+    {
+      "active_paying": 10,
+      "active_free": 90,
+      "hours_per_all_active_user_per30days": 4.285714285714286,
+      "revenue_RUB": 9900.0,
+      "cloud_RUB": 17973.384,
+      "payment_fee_scenario_RUB": 422.73,
+      "balance_before_tax_CAC_support_RUB": -8496.114
+    },
+    {
+      "active_paying": 19,
+      "active_free": 81,
+      "hours_per_all_active_user_per30days": 4.285714285714286,
+      "revenue_RUB": 18810.0,
+      "cloud_RUB": 17973.384,
+      "payment_fee_scenario_RUB": 803.187,
+      "balance_before_tax_CAC_support_RUB": 33.429
+    },
+    {
+      "active_paying": 20,
+      "active_free": 80,
+      "hours_per_all_active_user_per30days": 4.285714285714286,
+      "revenue_RUB": 19800.0,
+      "cloud_RUB": 17973.384,
+      "payment_fee_scenario_RUB": 845.46,
+      "balance_before_tax_CAC_support_RUB": 981.156
+    },
+    {
+      "active_paying": 25,
+      "active_free": 75,
+      "hours_per_all_active_user_per30days": 4.285714285714286,
+      "revenue_RUB": 24750.0,
+      "cloud_RUB": 17973.384,
+      "payment_fee_scenario_RUB": 1056.825,
+      "balance_before_tax_CAC_support_RUB": 5719.791
+    },
+    {
+      "active_paying": 50,
+      "active_free": 50,
+      "hours_per_all_active_user_per30days": 4.285714285714286,
+      "revenue_RUB": 49500.0,
+      "cloud_RUB": 17973.384,
+      "payment_fee_scenario_RUB": 2113.65,
+      "balance_before_tax_CAC_support_RUB": 29412.966
+    },
+    {
+      "active_paying": 100,
+      "active_free": 0,
+      "hours_per_all_active_user_per30days": 4.285714285714286,
+      "revenue_RUB": 99000.0,
+      "cloud_RUB": 17973.384,
+      "payment_fee_scenario_RUB": 4227.3,
+      "balance_before_tax_CAC_support_RUB": 76799.316
+    }
+  ],
+  "freemium_warning": "User clarified free tier mustbeincluded: mainallpayingfigures areupperillustration, notforecast. Conversionandfreeusagedistributionunmeasured.",
+  "speechkit_v3_addendum_20261027": {
+    "date": "2026-10-27",
+    "status": "conditional_candidate_economics_not_production_adoption",
+    "supersedes": "Historical Cloud.ru Whisper STT baseline and C35/C30/Whisper-only downstream costs for selected SpeechKit v3 streaming candidate. All original fields retained below only as historical20261026 evidence.",
+    "source_revision": "081d286051fcf1ae18468b6f71cc785710301f1d",
+    "source": {
+      "url": "https://aistudio.yandex.ru/ru/docs/speechkit/pricing",
+      "accessed_at": "2026-10-27",
+      "method": "Built-in web open: official pricing sections streaming/synchronous API v2/v3; RUB including VAT",
+      "raw_source_sha256": null,
+      "raw_source_sha256_reason": "Separate curl GET returned CAPTCHA HTML, not pricing; that hash is not used as tariff evidence. Built-in browser text has no downloadable raw snapshot.",
+      "stream_RUB_per_15seconds": "0.1626",
+      "billing": "Each mono request ceil(seconds/15), minimum one unit once config sent. Server internal errors not billed per official page; other retry outcomes not presumed free.",
+      "not_selected": {
+        "async_RUB_per_15seconds": "0.1515",
+        "async_note": "Different API mode, per-second billing from16s; not applicable to selected streaming request.",
+        "deferred_RUB_per_15seconds": "0.0381"
+      }
+    },
+    "selected_route": "Yandex SpeechKit APIv3 gRPC RecognizeStreaming FULL_DATA/general/ru-RU monoMP3; DeepSeek via Cloud.ru FM and Cloud.ru S3 retained",
+    "proof_limit": "Only synthetic5s input with10 words and millisecond word times confirmed by coordinator; no real-hour quality/cost/billing/load acceptance. This work performs no API calls.",
+    "planner": {
+      "path": "apps/worker/src/stt/chunker.ts",
+      "sha256": "cbb6fe7e7d06a6018a30d438ca17fff2c15abc4ecd52f12f81ed277d1af53dbb",
+      "target_seconds": 180,
+      "overlap_seconds": 2,
+      "offset_rule": "next_offset=end-2",
+      "pause_boundary_window_seconds": 20,
+      "nonfinal_chunk_range_seconds": [
+        160,
+        200
+      ],
+      "no_pause_3600_chunk_durations_seconds": [
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        40
+      ],
+      "no_pause_sent_seconds": 3640,
+      "no_pause_billed_seconds": 3645,
+      "no_pause_units": 243,
+      "raw_unchunked_hour_RUB": "39.024",
+      "nominal_30minute_trial_STT_RUB": "19.8372",
+      "nominal_30minute_trial_units": 122,
+      "padding15_30minute_trial_units": 133,
+      "padding15_30minute_trial_STT_RUB": "21.6258",
+      "padding15_30minute_trial_C_at10pct_RUB": "28.6296125",
+      "nominal_30minute_trial_C_at10pct_RUB": "26.6621525",
+      "pause_padding15_trial_safe_bound_units": 145,
+      "pause_padding15_trial_safe_bound_C_RUB": "30.7759325",
+      "MP3_padding_scenario": "Assume provider-billed encoded duration exceeds planned duration by0<delta<=15 seconds PER request; unmeasured and not a provider guarantee. No-pause hour264 units=3960s. If delta exceeds15 this conditional bound does not hold.",
+      "pause_safe_bound": "For1h N<=ceil((3600-2)/158)=23. sum planned<=3644. With delta<=15 per request, sum billed<3644+30*23=4334, hence <=4320s (288 units). Loose safe bound, not observed maximum.",
+      "config_only_request_min_RUB": "0.1626"
+    },
+    "retained_other_inputs": {
+      "DeepSeek_RUB_per_input_hour": "6.954",
+      "DeepSeek_tokens": "30000input+2000all billed output including reasoning assumed; actual unknown",
+      "S3_first30days_RUB_per_input_hour": "2.023065",
+      "S3_operations_RUB_per_input_hour": "0.01",
+      "egress_RUB": "0 conditional on original Cloud.ru locality/FreeTier assumptions; billed egress and client downloads excluded, not guaranteed free",
+      "payment_fee_rate": "0.0427",
+      "tax": "Unknown regime remains excluded; optional6pct gross scenario separately labelled",
+      "F_budget_RUB_per30days": "3000",
+      "F_exact_previous_pilot_RUB": "2973.384",
+      "one_VM": "Initial100 then1000 about2months is owner direction; resize only after capacity measurements. No second VM or local GPU assumed.",
+      "retention": "Only first30days modelled, not TTL promise or lifetime cost"
+    },
+    "formula": "C=(STT+6.954)*(1+r)+2.023065+0.01; r=0/5/10% is additional billed model-cost share, not measured failure probability and not recursively retried request count.",
+    "scenarios": [
+      {"case":"nominal_no_pauses","STT_units_15s":243,"STT_RUB_per_input_hour":"39.5118","retry_cost_fraction_assumed":"0","C_RUB_per_input_hour":"48.498865","ceil_C_RUB":49,"conditional_padding_bound":false},
+      {"case":"nominal_no_pauses","STT_units_15s":243,"STT_RUB_per_input_hour":"39.5118","retry_cost_fraction_assumed":"0.05","C_RUB_per_input_hour":"50.822155","ceil_C_RUB":51,"conditional_padding_bound":false},
+      {"case":"nominal_no_pauses","STT_units_15s":243,"STT_RUB_per_input_hour":"39.5118","retry_cost_fraction_assumed":"0.1","C_RUB_per_input_hour":"53.145445","ceil_C_RUB":54,"conditional_padding_bound":false},
+      {"case":"padding15_no_pauses","STT_units_15s":264,"STT_RUB_per_input_hour":"42.9264","retry_cost_fraction_assumed":"0","C_RUB_per_input_hour":"51.913465","ceil_C_RUB":52,"conditional_padding_bound":true},
+      {"case":"padding15_no_pauses","STT_units_15s":264,"STT_RUB_per_input_hour":"42.9264","retry_cost_fraction_assumed":"0.05","C_RUB_per_input_hour":"54.407485","ceil_C_RUB":55,"conditional_padding_bound":true},
+      {"case":"padding15_no_pauses","STT_units_15s":264,"STT_RUB_per_input_hour":"42.9264","retry_cost_fraction_assumed":"0.1","C_RUB_per_input_hour":"56.901505","ceil_C_RUB":57,"conditional_padding_bound":true},
+      {"case":"pause_padding15_safe_bound","STT_units_15s":288,"STT_RUB_per_input_hour":"46.8288","retry_cost_fraction_assumed":"0","C_RUB_per_input_hour":"55.815865","ceil_C_RUB":56,"conditional_padding_bound":true},
+      {"case":"pause_padding15_safe_bound","STT_units_15s":288,"STT_RUB_per_input_hour":"46.8288","retry_cost_fraction_assumed":"0.05","C_RUB_per_input_hour":"58.505005","ceil_C_RUB":59,"conditional_padding_bound":true},
+      {"case":"pause_padding15_safe_bound","STT_units_15s":288,"STT_RUB_per_input_hour":"46.8288","retry_cost_fraction_assumed":"0.1","C_RUB_per_input_hour":"61.194145","ceil_C_RUB":62,"conditional_padding_bound":true}
+    ],
+    "planning_C_RUB_per_input_hour": "57",
+    "planning_selection": "ceil56.901505 under no-pause, delta<=15/request,10% additional model cost; retained rounding cushion. General pause/padding stress ceil61.194145=62; neither is measured bill or universal cost cap.",
+    "packages": [
+      {"package":"Старт","gross_RUB":"990","input_hours":"5","processing_RUB":"285","fee_RUB":"42.2730","contribution_before_unknown_tax_fixed_CAC_RUB":"662.7270","contribution_pct_of_gross":"66.94212121212121212121212121","break_even_purchases_for_F3000":5,"contribution_optional_6pct_gross_tax_RUB":"603.3270","break_even_with_optional_6pct_tax":5,"break_even_with_100_full_new_trials":9,"break_even_with_1000_full_new_trials":49},
+      {"package":"Про","gross_RUB":"3990","input_hours":"30","processing_RUB":"1710","fee_RUB":"170.3730","contribution_before_unknown_tax_fixed_CAC_RUB":"2109.6270","contribution_pct_of_gross":"52.87285714285714285714285714","break_even_purchases_for_F3000":2,"contribution_optional_6pct_gross_tax_RUB":"1870.2270","break_even_with_optional_6pct_tax":2,"break_even_with_100_full_new_trials":3,"break_even_with_1000_full_new_trials":16},
+      {"package":"Доппакет","gross_RUB":"1490","input_hours":"10","processing_RUB":"570","fee_RUB":"63.6230","contribution_before_unknown_tax_fixed_CAC_RUB":"856.3770","contribution_pct_of_gross":"57.47496644295302013422818792","break_even_purchases_for_F3000":4,"contribution_optional_6pct_gross_tax_RUB":"766.9770","break_even_with_optional_6pct_tax":4,"break_even_with_100_full_new_trials":7,"break_even_with_1000_full_new_trials":38}
+    ],
+    "monthly_convention": "30days;weekly1h=30/7h;daily1h=30h",
+    "recurring_paid_cases": [
+      {"users":100,"usage":"weekly_1h_Start","hours_per_user_per30days":"4.285714285714285714285714286","total_hours_per30days":"428.5714285714285714285714286","variable_RUB":"24428.57142857142857142857143","conditional_F3000_distributed_RUB_per_hour":"64.00000000000000000000000000","all_paid_balance_before_unknown_tax_and_acquisition_RUB":"67344.12857142857142857142857","new_trial_cost_not_in_this_recurring_row":true,"capacity_proven":false},
+      {"users":100,"usage":"daily_1h_Pro","hours_per_user_per30days":"30","total_hours_per30days":"3000","variable_RUB":"171000","conditional_F3000_distributed_RUB_per_hour":"58","all_paid_balance_before_unknown_tax_and_acquisition_RUB":"207962.7000","new_trial_cost_not_in_this_recurring_row":true,"capacity_proven":false},
+      {"users":1000,"usage":"weekly_1h_Start","hours_per_user_per30days":"4.285714285714285714285714286","total_hours_per30days":"4285.714285714285714285714286","variable_RUB":"244285.7142857142857142857143","conditional_F3000_distributed_RUB_per_hour":"57.70000000000000000000000000","all_paid_balance_before_unknown_tax_and_acquisition_RUB":"700441.2857142857142857142857","new_trial_cost_not_in_this_recurring_row":true,"capacity_proven":false},
+      {"users":1000,"usage":"daily_1h_Pro","hours_per_user_per30days":"30","total_hours_per30days":"30000","variable_RUB":"1710000","conditional_F3000_distributed_RUB_per_hour":"57.1","all_paid_balance_before_unknown_tax_and_acquisition_RUB":"2106627.0000","new_trial_cost_not_in_this_recurring_row":true,"capacity_proven":false}
+    ],
+    "trial": {
+      "credits": 30,
+      "hours": "0.5",
+      "frequency": "once_at_signup_never_monthly",
+      "expiry": "none",
+      "credit_seconds": 60,
+      "debit": "per_second",
+      "C57_cost_per_full_trial_RUB": "29",
+      "C57_100_full_trials_RUB": "2900",
+      "C57_1000_full_trials_RUB": "29000",
+      "C62_stress_cost_per_full_trial_RUB": "31",
+      "assumption": "One30min no-pause MP3 padding<=15s/request:133units, STT21.6258; retained linear LLM3.477 and S3ops1.0165325,10%reserve total28.6296125 roundedUP29. Additional to fully used paid package. Different short-file mixes, fixed LLM cost per job, tokens, delayed redemption/storage and extra config-only or retry calls can cost more; no universal trial bound claimed."
+    },
+    "acquisition_200_signup_cases": [
+      {"signup_acquisition_cost_RUB":"20","signup_to_paid_conversion":"0.05","signups":200,"paid":"10.00","channel_spend_RUB":"4000","all_signup_trial_RUB":"5800","CAC_media_RUB":"400","CAC_with_trial_RUB":"980","first_period_residual_RUB":"-6172.730000","first_period_payback":false},
+      {"signup_acquisition_cost_RUB":"20","signup_to_paid_conversion":"0.10","signups":200,"paid":"20.00","channel_spend_RUB":"4000","all_signup_trial_RUB":"5800","CAC_media_RUB":"200","CAC_with_trial_RUB":"490","first_period_residual_RUB":"454.540000","first_period_payback":true},
+      {"signup_acquisition_cost_RUB":"20","signup_to_paid_conversion":"0.20","signups":200,"paid":"40.00","channel_spend_RUB":"4000","all_signup_trial_RUB":"5800","CAC_media_RUB":"100","CAC_with_trial_RUB":"245","first_period_residual_RUB":"13709.080000","first_period_payback":true},
+      {"signup_acquisition_cost_RUB":"40","signup_to_paid_conversion":"0.05","signups":200,"paid":"10.00","channel_spend_RUB":"8000","all_signup_trial_RUB":"5800","CAC_media_RUB":"800","CAC_with_trial_RUB":"1380","first_period_residual_RUB":"-10172.730000","first_period_payback":false},
+      {"signup_acquisition_cost_RUB":"40","signup_to_paid_conversion":"0.10","signups":200,"paid":"20.00","channel_spend_RUB":"8000","all_signup_trial_RUB":"5800","CAC_media_RUB":"400","CAC_with_trial_RUB":"690","first_period_residual_RUB":"-3545.460000","first_period_payback":false},
+      {"signup_acquisition_cost_RUB":"40","signup_to_paid_conversion":"0.20","signups":200,"paid":"40.00","channel_spend_RUB":"8000","all_signup_trial_RUB":"5800","CAC_media_RUB":"200","CAC_with_trial_RUB":"345","first_period_residual_RUB":"9709.080000","first_period_payback":true},
+      {"signup_acquisition_cost_RUB":"80","signup_to_paid_conversion":"0.05","signups":200,"paid":"10.00","channel_spend_RUB":"16000","all_signup_trial_RUB":"5800","CAC_media_RUB":"1600","CAC_with_trial_RUB":"2180","first_period_residual_RUB":"-18172.730000","first_period_payback":false},
+      {"signup_acquisition_cost_RUB":"80","signup_to_paid_conversion":"0.10","signups":200,"paid":"20.00","channel_spend_RUB":"16000","all_signup_trial_RUB":"5800","CAC_media_RUB":"800","CAC_with_trial_RUB":"1090","first_period_residual_RUB":"-11545.460000","first_period_payback":false},
+      {"signup_acquisition_cost_RUB":"80","signup_to_paid_conversion":"0.20","signups":200,"paid":"40.00","channel_spend_RUB":"16000","all_signup_trial_RUB":"5800","CAC_media_RUB":"400","CAC_with_trial_RUB":"545","first_period_residual_RUB":"1709.080000","first_period_payback":true}
+    ],
+    "activation_sensitivity": [
+      {"activation_fraction":"0.25","full_trial_cost_per_signup_RUB":"7.25","minimum_signup_to_paid_conversion":"0.09393007980661720436921990503","minimum_activated_to_paid_conversion":"0.3757203192264688174768796201","assumption":"Only activated signups redeem full trial; every payer activates. Activation and conversion unmeasured."},
+      {"activation_fraction":"0.5","full_trial_cost_per_signup_RUB":"14.5","minimum_signup_to_paid_conversion":"0.1048697276555806538740688096","minimum_activated_to_paid_conversion":"0.2097394553111613077481376192","assumption":"Only activated signups redeem full trial; every payer activates. Activation and conversion unmeasured."},
+      {"activation_fraction":"1","full_trial_cost_per_signup_RUB":"29","minimum_signup_to_paid_conversion":"0.1267490233535075528837666188","minimum_activated_to_paid_conversion":"0.1267490233535075528837666188","assumption":"Only activated signups redeem full trial; every payer activates. Activation and conversion unmeasured."}
+    ],
+    "acquisition_base_threshold_signup_to_paid": "0.1267490233535075528837666188",
+    "acquisition_max_signup_cost_at10pct": "22.27270",
+    "acquisition_C62_stress": {
+      "M_Start_RUB": "637.7270",
+      "full_trial_RUB": "31",
+      "base_CAC_with_trial_RUB": "710",
+      "base_residual_RUB": "-4445.4600",
+      "worst_grid_a80_p5_CAC_RUB": "2220",
+      "worst_grid_a80_p5_residual_RUB": "-18822.7300"
+    },
+    "actual_model": null,
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning": "high",
+    "usage": null,
+    "cost": null,
+    "measurement_gaps": "Runtime actual model/usage/cost unavailable; no measured hourly provider bill, quality, capacity, retention or CAC.",
+    "checks": {
+      "calculator": "PASS: independent Node integer micro-RUB plus Python Decimal;9 hourly scenarios,3 exact trials,3packages,9acquisition,3activation,72sensitivity rows",
+      "historical_records": "PASS: original JSON members,144 CSV rows and Markdown body preserved; pricing/credits/run/review records unchanged",
+      "scope": "PASS:11explicitly owned documentation files; no code, secrets, APIinference, runtime/price changes or push",
+      "model_cost_declaration": "PASS:3declared calls; declaration only, not runtime enforcement or currentquota proof",
+      "build_and_E2E": "not_applicable_docs_only"
+    }
+  }
+}

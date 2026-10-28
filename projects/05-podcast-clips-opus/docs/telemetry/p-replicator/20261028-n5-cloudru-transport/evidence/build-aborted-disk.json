@@ -1,0 +1,17 @@
+{
+  "check": "transport-chat-combined-build-01",
+  "command": [
+    "npm",
+    "run",
+    "build"
+  ],
+  "source_revision": "cdb11a471551259286982a2a9a5cbfc6996fb2df",
+  "started_at": "2026-10-28T15:17:15.350156+00:00",
+  "elapsed_seconds": 39.033,
+  "exit_code": -15,
+  "stopped_reason": "disk_floor",
+  "node": "22.22.3",
+  "environment": "isolated *_test DB, Redis15/testMinIO, fake models, payments off",
+  "log": "/tmp/n5-thumbnail-checks-20261028/transport-chat-combined-build-01.log",
+  "free_disk_gib": 2.006
+}

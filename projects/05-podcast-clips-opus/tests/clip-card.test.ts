@@ -5,9 +5,13 @@ import { readFileSync } from 'node:fs';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { presentClip, type ClipRow } from '../apps/web/src/server/screen';
+import { VideoDetail } from '../apps/web/src/app/videos/[videoId]/VideoDetail';
+import type { VideoScreen } from '../apps/web/src/lib/screen-contract';
 import { ClipCard } from '../apps/web/src/app/clips/ClipCard';
 import { revealGuestForm } from '../apps/web/src/app/clips/GuestPacks';
 import { addGuestPreselect } from '../apps/web/src/lib/guest-contract';
+
+vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
 
 const now = new Date('2026-09-22T12:00:00Z');
 const id = '00000000-0000-4000-8000-000000000001', other = '00000000-0000-4000-8000-000000000002';
@@ -98,6 +102,20 @@ describe('ClipCard markup', () => {
     expect(html).not.toMatch(/<details class="score-why" open/);
     expect(details).toContain('<summary>Почему такая оценка</summary>');
     for (const text of ['Вопрос с первых слов', 'Есть законченный ответ', 'Нет лишних слов', 'Цепкость · 29/33']) expect(details).toContain(text);
+  });
+  it('partial render keeps its warning and puts available actions before preview', () => {
+    const video: VideoScreen = { video_id: id, status: 'done', created_at: now.toISOString(), updated_at: now.toISOString(), duration_seconds: 300,
+      user_state: 'успех', stage_label: 'Готово', stage_progress: 100, clips_done: 2, clips_total: 3, no_response: false,
+      failure_reason: null, next_action: null, retry_after: null, poll_after_seconds: 5, cta_kind: 'none', cta_url: null, failed_stage: null };
+    const html = renderToStaticMarkup(createElement(VideoDetail, { videoId: id, initialVideo: video, initialClips: [ready], consentHash: 'synthetic-consent' }));
+    const warning = html.indexOf('Часть клипов не удалось собрать. Готовые клипы доступны для скачивания.');
+    const actions = html.indexOf('class="clip-actions"'), preview = html.indexOf('class="clip-preview"');
+    expect(warning).toBeGreaterThanOrEqual(0); expect(actions).toBeGreaterThan(warning); expect(preview).toBeGreaterThan(actions);
+    expect(button(html, 'Скачать клип')).not.toContain('disabled');
+    expect((html.match(/aria-label="Скачать клип"/g) ?? []).length).toBe(1);
+    const complete = renderToStaticMarkup(createElement(VideoDetail, { videoId: id, initialVideo: { ...video, clips_done: 3 }, initialClips: [ready] }));
+    expect(complete.indexOf('class="clip-preview"')).toBeLessThan(complete.indexOf('class="clip-actions"'));
+    expect(complete).not.toContain('Часть клипов не удалось собрать.');
   });
   it('order: frame → actions → title → score → retention/music → Pro', () => {
     const html = card({ onSendToGuest: vi.fn() });

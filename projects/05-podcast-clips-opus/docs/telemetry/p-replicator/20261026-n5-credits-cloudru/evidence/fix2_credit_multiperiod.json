@@ -1,0 +1,16 @@
+{
+  "check": "fix2_credit_multiperiod",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "tests/credit-packages.integration.test.ts",
+    "tests/credit-packages-ui.test.ts",
+    "tests/billing.integration.test.ts"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 14.4,
+  "log": "/tmp/n5-acquisition-analytics-20261026-plan/checks/fix2_credit_multiperiod.log",
+  "node": "22.22.3",
+  "environment": "N5 test containers; separate *_test DB; Redis DB15; fake models; payments off"
+}

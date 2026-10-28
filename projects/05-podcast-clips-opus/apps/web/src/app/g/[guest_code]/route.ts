@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: Request, { params }: { params: Promise<{ guest_code: string }> }) {
   const { config, pool, auth, redis } = getRuntime();
   return createGuestPageHandler({ guests: new GuestPackService(pool), auth,
-    trustedProxyHops: config.trustedProxyHops, referralSecret: config.sessionSecret, paymentsOn: config.payments.mode !== 'off',
+    trustedProxyHops: config.trustedProxyHops, referralSecret: config.sessionSecret, paymentsOn: config.payments.mode !== 'off',creditMode:config.billingMode==='credits_v1',
     allowRead: (ip, account) => allowRead(redis, ip, config.sessionSecret, account),
   })(request, (await params).guest_code);
 }

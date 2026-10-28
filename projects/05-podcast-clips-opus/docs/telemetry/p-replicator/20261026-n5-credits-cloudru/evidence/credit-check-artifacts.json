@@ -1,0 +1,71 @@
+{
+  "candidate": "5b306f1646efb75494b67da1e0f234c3c94e2790",
+  "test_environment": "real isolated PostgreSQL/Redis15/MinIO and localFFmpeg; remote model/payment fake in relevant fixtures",
+  "helper_metadata_caveat": "legacy generic helper environment label is not exhaustive; executed test fixture contracts and trace state fake payment coverage",
+  "files": {
+    "fix2_credit_fullsuite.json": {
+      "source_sha256": "2a07bc31db66c7209db5610742e8d12ca860b56bea8a93121dd4d6f4f025f3c3",
+      "stored_sha256": "2a07bc31db66c7209db5610742e8d12ca860b56bea8a93121dd4d6f4f025f3c3",
+      "bytes": 337,
+      "format": "JSON"
+    },
+    "fix2_credit_fullsuite.log.gz": {
+      "source_sha256": "c230d4238f18c7373aad655fa79497e1fb8593ed46af43f1cd619a723004f00e",
+      "stored_sha256": "27a5de01c2059d3ecf92b508058f4879a69b507082dfda6fc9efde3d74e4257e",
+      "bytes": 108921,
+      "format": "gzip original bytes"
+    },
+    "fix2_credit_build.json": {
+      "source_sha256": "4b204066f8a3d548e3654a9accc0100bc2c0d9207340f605875848f3baeb03ed",
+      "stored_sha256": "4b204066f8a3d548e3654a9accc0100bc2c0d9207340f605875848f3baeb03ed",
+      "bytes": 340,
+      "format": "JSON"
+    },
+    "fix2_credit_build.log.gz": {
+      "source_sha256": "be5ac67545d329fff12233cfad19bd03c73193b9c5b39a3a97cae62d1cab8453",
+      "stored_sha256": "981492b3e92c5e766796022db8334ede07fae432a00a9b5e790b1d3231554e71",
+      "bytes": 4636,
+      "format": "gzip original bytes"
+    },
+    "fix2_credit_typecheck.json": {
+      "source_sha256": "921f7a72345bd8a30aab09e0aeff78c5f2c0db1c2d562a81382348d1f73bb526",
+      "stored_sha256": "921f7a72345bd8a30aab09e0aeff78c5f2c0db1c2d562a81382348d1f73bb526",
+      "bytes": 352,
+      "format": "JSON"
+    },
+    "fix2_credit_typecheck.log.gz": {
+      "source_sha256": "1b4b658aae5b9ff1fab2830785a99fb6149f6727dcfc8485f493c745a36ffc13",
+      "stored_sha256": "52b4778f8003c31d4f7958d26ff1bf6729159eb76e8797bfde4d6fea9042e2c2",
+      "bytes": 509,
+      "format": "gzip original bytes"
+    },
+    "fix2_credit_mutations.json": {
+      "source_sha256": "d6b4649f736e9b1536a1d3d4e591de695cbb28bce7479254277ad3dd219b7812",
+      "stored_sha256": "d6b4649f736e9b1536a1d3d4e591de695cbb28bce7479254277ad3dd219b7812",
+      "bytes": 404,
+      "format": "JSON"
+    },
+    "fix2_credit_mutations.log.gz": {
+      "source_sha256": "dea912ff78dc6f34db59e75fb32465096e50adceaa0679456938fa6aec20b664",
+      "stored_sha256": "663b10805c7a9bdc3ca83f610dab5bef999492f1edb795571143a8138c08bc63",
+      "bytes": 505,
+      "format": "gzip original bytes"
+    },
+    "fix2_credit_multiperiod.json": {
+      "source_sha256": "ad1d54c076531eed9245ff9a5159a5db633457ee2f8e1a87c82725fa108f2ba2",
+      "stored_sha256": "ad1d54c076531eed9245ff9a5159a5db633457ee2f8e1a87c82725fa108f2ba2",
+      "bytes": 478,
+      "format": "JSON"
+    },
+    "fix2_credit_multiperiod.log.gz": {
+      "source_sha256": "00ac7a463324b2e401ca8e207813ad7e2552a4befd101c52b2f19f8f43076044",
+      "stored_sha256": "e6a4372e09e03e32f9cc2bbe9ad0b263e1e38e432941166d81fd722185a2458b",
+      "bytes": 3145,
+      "format": "gzip original bytes"
+    },
+    "credit-mutation-results.json": {
+      "sha256": "3ff6818c421e8d8961e607f23e22b645e6248fe929b26746ffd122bda2420487"
+    }
+  },
+  "known_private_matches": 0
+}

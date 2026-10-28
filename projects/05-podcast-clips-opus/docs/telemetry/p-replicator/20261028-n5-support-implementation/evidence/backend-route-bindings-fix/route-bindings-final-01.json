@@ -1,0 +1,118 @@
+{
+  "sourceRevision": "52f046340862c8e5e5725fcf39f90d3ebc2467aa",
+  "bindings": [
+    {
+      "file": "apps/web/src/app/api/admin/support/accounts/route.ts",
+      "export": "GET",
+      "params": [
+        {
+          "name": "request",
+          "optional": false,
+          "type": "Request"
+        }
+      ],
+      "sha256": "92f519318c8918e6dc81cef5f2314bd8a8627845be2dd40bc932b36679c4e2ad"
+    },
+    {
+      "file": "apps/web/src/app/api/admin/support/search/route.ts",
+      "export": "POST",
+      "params": [
+        {
+          "name": "request",
+          "optional": false,
+          "type": "Request"
+        }
+      ],
+      "sha256": "9ee11246cde507192fdfe8013ac15073fbfac35c04da5a666a44add5ca21bfb8"
+    },
+    {
+      "file": "apps/web/src/app/api/support/session/route.ts",
+      "export": "POST",
+      "params": [
+        {
+          "name": "request",
+          "optional": false,
+          "type": "Request"
+        }
+      ],
+      "sha256": "0f9c7bf381d3c83f766b4f9ea89b3898964b863b88ef0d3ee116adb8ec3c57a0"
+    },
+    {
+      "file": "apps/web/src/app/api/support/context/route.ts",
+      "export": "POST",
+      "params": [
+        {
+          "name": "request",
+          "optional": false,
+          "type": "Request"
+        }
+      ],
+      "sha256": "41c05f4a2a255302c8027fe1f6bb0475ccef6fbbbf8379c7ca4f518064b559a9"
+    },
+    {
+      "file": "apps/web/src/app/api/auth/email/send/route.ts",
+      "export": "POST",
+      "params": [
+        {
+          "name": "request",
+          "optional": false,
+          "type": "Request"
+        }
+      ],
+      "sha256": "e844325b2e91a2a368e20de9f61fde21abad9216e492f35ff69dcf5a6dfddddb"
+    },
+    {
+      "file": "apps/web/src/app/api/auth/email/confirm/route.ts",
+      "export": "POST",
+      "params": [
+        {
+          "name": "request",
+          "optional": false,
+          "type": "Request"
+        }
+      ],
+      "sha256": "4446d981f2be806a317f0c928b4e81a1313532dedc5a691d4f6b7d9df1a176d7"
+    },
+    {
+      "file": "apps/web/src/app/api/auth/forgot/route.ts",
+      "export": "POST",
+      "params": [
+        {
+          "name": "request",
+          "optional": false,
+          "type": "Request"
+        }
+      ],
+      "sha256": "6c95ec4a1689efabf80a4e6ab430e197cf35e09de349172bfccf3bd8ba4d303e"
+    },
+    {
+      "file": "apps/web/src/app/api/auth/reset/route.ts",
+      "export": "POST",
+      "params": [
+        {
+          "name": "request",
+          "optional": false,
+          "type": "Request"
+        }
+      ],
+      "sha256": "17e802f16815d8b56d5974f3b05c3877e7cba2da67571142445534cd5272a253"
+    },
+    {
+      "file": "apps/web/src/app/api/admin/support/accounts/[accountId]/route.ts",
+      "export": "GET",
+      "params": [
+        {
+          "name": "request",
+          "optional": false,
+          "type": "Request"
+        },
+        {
+          "name": "context",
+          "optional": false,
+          "type": "{ params: Promise<{ accountId: string; }>; }"
+        }
+      ],
+      "sha256": "9a3bc1147bc102f443f7c491fc6335bfc960f5e6bb9544ac587a7fbac3c2a158"
+    }
+  ]
+}
