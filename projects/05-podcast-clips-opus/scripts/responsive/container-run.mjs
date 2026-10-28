@@ -21,7 +21,7 @@ async function rejectSymlinks(path) {
   }
 }
 export async function runContainer(kind, args) {
-  let host, remote;
+  let host, remote, stage = 'arguments';
   const container = process.env.N5_PLAYWRIGHT_CONTAINER ?? '';
   try {
     if (!['responsive', 'support'].includes(kind) || !/^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,127}$/.test(container)) throw new Error('Invalid container');
@@ -37,10 +37,12 @@ export async function runContainer(kind, args) {
     if (fixture.synthetic !== true) throw new Error('Only synthetic fixture allowed');
     const ignoreHTTPSErrors = process.env.N5_LOCAL_FIXTURE_TLS === '1';
     if (ignoreHTTPSErrors && !privateFixtureOrigin(values['--base'])) throw new Error('TLS exception requires private HTTPS fixture');
+    stage = 'container';
     if (docker(['inspect', '-f', '{{.State.Running}}', container]) !== 'true') throw new Error('Container not running');
     host = await mkdtemp(join(tmpdir(), 'n5-browser-copy-'));
     remote = docker(['exec', container, 'mktemp', '-d', '/tmp/n5-support-browser-XXXXXXXX']);
     if (!/^\/tmp\/n5-support-browser-[a-zA-Z0-9]+$/.test(remote)) throw new Error('Invalid private path');
+    stage = 'source-copy';
     const root = await realpath('.');
     const files = ['scripts/check-responsive.mjs', 'scripts/check-support.mjs', 'scripts/responsive/input.mjs', 'scripts/responsive/rules.mjs', 'scripts/responsive/container-run.mjs',
       'apps/web/src/app/globals.css', 'apps/web/src/server/guest-page.ts', 'apps/web/src/server/short-link-handler.ts'];
@@ -50,18 +52,27 @@ export async function runContainer(kind, args) {
     }
     await writeFile(join(host, 'fixture.json'), JSON.stringify(fixture), { mode: 0o600 });
     await mkdir(join(host, 'node_modules/@axe-core'), { recursive: true });
+    stage = 'dependencies';
     await cp('node_modules/axe-core', join(host, 'node_modules/axe-core'), { recursive: true, dereference: true });
     await cp('node_modules/@axe-core/playwright', join(host, 'node_modules/@axe-core/playwright'), { recursive: true, dereference: true });
     await writeFile(join(host, 'runner.mjs'), `import { main } from './scripts/check-${kind}.mjs';\nprocess.exitCode = await main(${JSON.stringify(args.map((arg, i) => args[i - 1] === '--fixture' ? 'fixture.json' : args[i - 1] === '--out' ? 'out' : arg))}, { contextOptions: { ignoreHTTPSErrors: ${ignoreHTTPSErrors} } });\n`);
+    stage = 'container-copy';
     docker(['cp', host + '/.', container + ':' + remote]);
+    const uid = docker(['exec', container, 'id', '-u']), gid = docker(['exec', container, 'id', '-g']);
+    if (!/^\d+$/.test(uid) || !/^\d+$/.test(gid)) throw new Error('Invalid container uid');
+    docker(['exec', '--user', '0', container, 'chown', '-R', `${uid}:${gid}`, remote]);
+    stage = 'link-playwright';
     docker(['exec', container, 'ln', '-s', '/opt/browser/node_modules/playwright', remote + '/node_modules/playwright']);
+    stage = 'link-playwright-core';
     docker(['exec', container, 'ln', '-s', '/opt/browser/node_modules/playwright-core', remote + '/node_modules/playwright-core']);
+    stage = 'execute';
     const run = spawnSync('docker', ['exec', '-w', remote, container, 'node', 'runner.mjs'], { stdio: 'inherit' });
     if (run.error || run.status === null || run.status > 2) throw new Error('Browser execution failed');
+    stage = 'collect';
     await mkdir(output, { recursive: true });
     docker(['cp', container + ':' + remote + '/out/.', output]);
     return run.status;
-  } catch { console.error('НЕ ВЫПОЛНЕНО: проверка контейнера/аргументов/зависимостей/копирования'); return 2; }
-  finally { if (remote && /^\/tmp\/n5-support-browser-[a-zA-Z0-9]+$/.test(remote)) { try { docker(['exec', container, 'rm', '-rf', remote]); } catch {} } if (host) await rm(host, { recursive: true, force: true }); }
+  } catch { console.error(`НЕ ВЫПОЛНЕНО: проверка контейнера/аргументов/зависимостей/копирования (${stage})`); return 2; }
+  finally { if (remote && /^\/tmp\/n5-support-browser-[a-zA-Z0-9]+$/.test(remote)) { try { docker(['exec', '--user', '0', container, 'rm', '-rf', remote]); } catch {} } if (host) await rm(host, { recursive: true, force: true }); }
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) process.exitCode = await runContainer(process.argv[2], process.argv.slice(3));
