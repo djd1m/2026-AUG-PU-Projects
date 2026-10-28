@@ -24,7 +24,13 @@ export class SupportMailer {
     private readonly factory:(options:object)=>MailTransport=createSMTPTransport) {}
   async send(message:SupportMessage):Promise<'accepted'|'failed'|'unknown'> {
     if(this.config.mode==='disabled'||this.budget.active>=4) return 'failed';
-    if(this.config.mode==='test') {if(!this.capture) return 'failed';await this.capture(message);return 'accepted';}
+    if(this.config.mode==='test') {
+      const domain=message.to.split('@')[1]?.toLowerCase();
+      const synthetic=domain && (domain.endsWith('.test')||domain.endsWith('.invalid')||
+        ['example.com','example.net','example.org'].some(reserved=>domain===reserved||domain.endsWith('.'+reserved)));
+      if(!synthetic||!this.capture)return 'failed';
+      await this.capture(message);return 'accepted';
+    }
     this.budget.active++;
     let timer:ReturnType<typeof setTimeout>|undefined;
     let transport:MailTransport|undefined;

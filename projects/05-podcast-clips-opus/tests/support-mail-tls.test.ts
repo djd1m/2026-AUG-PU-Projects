@@ -20,13 +20,15 @@ async function fixture(mode:'accept'|'auth-fail'|'stall'|'trickle') {
   sockets.add(socket);connections++;maximum=Math.max(maximum,sockets.size);
   socket.on('error',()=>{});socket.on('close',()=>sockets.delete(socket));
   if(mode==='stall')return;
-  if(mode==='trickle') {const timer=setInterval(()=>socket.write('220-synthetic still waiting\r\n'),500);intervals.add(timer);socket.on('close',()=>{clearInterval(timer);intervals.delete(timer);});return;}
   socket.write('220 localhost synthetic\r\n');let buffer='',data=false;
   socket.on('data',chunk=>{
    buffer+=chunk.toString();let next:number;
    while((next=buffer.indexOf('\r\n'))>=0) {
     const line=buffer.slice(0,next);buffer=buffer.slice(next+2);
-    if(data){if(line==='.'){data=false;accepted++;socket.write('250 accepted synthetic\r\n');}continue;}
+    if(data){if(line==='.'){data=false;
+      if(mode==='trickle') {const timer=setInterval(()=>socket.write('250-synthetic still waiting\r\n'),500);intervals.add(timer);socket.on('close',()=>{clearInterval(timer);intervals.delete(timer);});}
+      else {accepted++;socket.write('250 accepted synthetic\r\n');}
+    }continue;}
     if(line.startsWith('EHLO'))socket.write('250-localhost\r\n250 AUTH PLAIN\r\n');
     else if(line.startsWith('AUTH PLAIN ')) {
       if(mode==='auth-fail'||Buffer.from(line.slice(11),'base64').toString()!=='\0synthetic\0synthetic-password')socket.write('535 rejected\r\n');

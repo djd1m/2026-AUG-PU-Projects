@@ -1,11 +1,16 @@
 import type { Environment } from './config.js';
+function requireIsolatedTest(env:Environment) {
+  let isolated=false;
+  try {isolated=new URL(env.DATABASE_URL??'').pathname.endsWith('_test');}catch{/* Invalid URLs fail closed. */}
+  if(env.NODE_ENV!=='test'||!isolated)throw new Error('Support/mail test mode requires NODE_ENV=test and isolated *_test database');
+}
 export function loadSupportConfig(env: Environment) {
   const mode = env.N5_SUPPORT_MODE ?? 'disabled';
   if (!['disabled', 'test', 'libredesk'].includes(mode)) throw new Error('N5_SUPPORT_MODE: invalid mode');
   const contactEmail = env.N5_SUPPORT_CONTACT_EMAIL || null;
   if (contactEmail !== null && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail)) throw new Error('N5_SUPPORT_CONTACT_EMAIL: invalid email');
   if (mode === 'disabled') return { mode: 'disabled' as const, baseURL: null, inboxID: null, identifiedEnabled: false, contactEmail, synthetic: false, secret: null };
-  if (mode === 'test' && env.NODE_ENV !== 'test') throw new Error('Support test mode requires NODE_ENV=test');
+  if (mode === 'test') requireIsolatedTest(env);
   const baseURL = env.N5_SUPPORT_BASE_URL;
   const inboxID = env.N5_SUPPORT_INBOX_ID;
   if (!baseURL || !inboxID || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(inboxID)) throw new Error('Support widget settings missing');
@@ -23,7 +28,7 @@ export function loadMailConfig(env: Environment) {
   if (!['disabled','test','smtp'].includes(mode)) throw new Error('N5_MAIL_MODE: invalid mode');
   if (mode === 'disabled') return { mode: 'disabled' as const };
   if (mode === 'test') {
-    if (env.NODE_ENV !== 'test') throw new Error('Mail test mode requires NODE_ENV=test');
+    requireIsolatedTest(env);
     return { mode: 'test' as const };
   }
   const host = env.N5_SMTP_HOST, user = env.N5_SMTP_USER, password = env.N5_SMTP_PASSWORD, from = env.N5_MAIL_FROM;

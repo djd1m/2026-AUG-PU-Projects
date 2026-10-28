@@ -43,7 +43,7 @@ export async function eraseAccount(pool: Pool, storage: RetentionStorage, accoun
     await tx.query('DELETE FROM partner_code WHERE partner_id IN (SELECT id FROM partner WHERE account_id=$1)', [account]);
     await tx.query('DELETE FROM partner WHERE account_id=$1', [account]);
     await tx.query("DELETE FROM quota_counter WHERE scope_key=$1 AND scope LIKE 'user_%'", [account]);
-    await tx.query(`UPDATE account SET email_verified_at=NULL,status='deleted',email='deleted:'||id::text,password_hash='',telegram_user_id=NULL,updated_at=$2 WHERE id=$1`, [account, now]);
+    await tx.query(`UPDATE account SET status='deleted',email_verified_at=NULL,email='deleted:'||id::text,password_hash='',telegram_user_id=NULL,updated_at=$2 WHERE id=$1`, [account, now]);
   });
 }
 export async function retentionTick(pool: Pool, storage: RetentionStorage, now = new Date(), batch = 100) {

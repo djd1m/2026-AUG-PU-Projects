@@ -24,5 +24,6 @@ describe('support boundary',()=>{
   const capture=vi.fn(async()=>{}),factory=vi.fn();const message={to:'x@example.test',url:'https://test.invalid/reset#token=private',purpose:'reset' as const};
   expect(await new SupportMailer({mode:'disabled'},capture,factory).send(message)).toBe('failed');expect(capture).not.toHaveBeenCalled();expect(factory).not.toHaveBeenCalled();
   expect(await new SupportMailer({mode:'test'},capture,factory).send(message)).toBe('accepted');expect(capture).toHaveBeenCalledOnce();
+  expect(await new SupportMailer({mode:'test'},capture,factory).send({...message,to:'real@customer.ru'})).toBe('failed');expect(capture).toHaveBeenCalledOnce();
  });
 });

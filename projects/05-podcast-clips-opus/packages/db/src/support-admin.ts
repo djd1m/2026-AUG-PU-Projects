@@ -1,5 +1,6 @@
 import { transaction, type Pool, type PoolClient } from './index.js';
 import { effectivePlanSql } from './plan.js';
+import { readCreditBalance } from './credits.js';
 export const SUPPORT_UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export class StaffNotFound extends Error {}
 export async function supportOperator(tx:PoolClient,hash:string) {
@@ -42,9 +43,8 @@ export class SupportAdminStore {
       const actor=await supportOperator(tx,hash);
       const account=(await tx.query(`SELECT ${projection},a.created_at,a.billing_policy FROM account a WHERE a.id=$1`,[id])).rows[0];
       if(!account)throw new StaffNotFound();
-      const credits=(await tx.query(`SELECT COALESCE(sum(remaining_seconds) FILTER(WHERE available_at<=clock_timestamp() AND
-        (expires_at IS NULL OR expires_at>clock_timestamp())),0)::int AS available_seconds,COALESCE(sum(reserved_seconds),0)::int AS reserved_seconds
-        FROM credit_grant WHERE account_id=$1`,[id])).rows[0];
+      const now=(await tx.query<{now:Date}>('SELECT clock_timestamp() AS now')).rows[0]!.now;
+      const credits=await readCreditBalance(tx,id,now);
       const ledger=(await tx.query(`SELECT id,source,total_seconds,remaining_seconds,reserved_seconds,created_at,expires_at
         FROM credit_grant WHERE account_id=$1 ORDER BY created_at DESC,id DESC LIMIT 20`,[id])).rows;
       const payments=(await tx.query('SELECT id,status,amount_minor FROM payment WHERE account_id=$1 ORDER BY created_at DESC,id DESC LIMIT 20',[id])).rows;

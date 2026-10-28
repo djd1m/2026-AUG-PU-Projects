@@ -15,6 +15,9 @@ export class SupportEmailStore {
     return (await tx.query(`SELECT 1 FROM session WHERE account_id=$1 AND cookie_token_hash=ANY($2::text[])
       AND (revoked_at IS NOT NULL OR expires_at<=clock_timestamp())`,[account,hashes])).rowCount === 0;
   }
+  async currentEmail(accountId:string) {
+    return (await this.pool.query<{email:string}>("SELECT email FROM account WHERE id=$1 AND status='active'",[accountId])).rows[0]?.email??null;
+  }
   async issue(purpose: MailPurpose, email: string, ipHash: string, emailHash: string, authority?: EmailAuthority) {
     // Cleanup commits before taking an account lock: reset/erase lock account before tokens.
     await transaction(this.pool,async tx => {
@@ -41,7 +44,7 @@ export class SupportEmailStore {
       const candidate = authority ? {id:authority.accountId} : (await tx.query<{id:string}>('SELECT id FROM account WHERE email=$1',[email])).rows[0];
       if (!candidate) return null;
       const account=await this.account(tx,candidate.id);
-      if (!account || account.status!=='active' || (purpose==='reset' && account.email!==email)) return null;
+      if (!account || account.status!=='active' || account.email!==email) return null;
       if (purpose==='verify' && (!authority || !await this.sessions(tx,account.id,[authority.sessionHash]))) return null;
       await tx.query('UPDATE support_email_token SET used_at=clock_timestamp() WHERE account_id=$1 AND purpose=$2 AND used_at IS NULL',[account.id,purpose]);
       const token=randomBytes(32).toString('base64url');

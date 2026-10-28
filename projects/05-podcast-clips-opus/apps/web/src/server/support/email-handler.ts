@@ -35,8 +35,10 @@ export function createEmailHandler(action:keyof typeof schemas,deps:EmailDeps) {
         return supportJSON({ok:true,loginRequired:true});
       }
       const hash=(value:string)=>createHmac('sha256',deps.secret).update(value).digest('hex');
+      const destination=action==='send'?await deps.store.currentEmail(authority!.accountId):body.email;
+      if(!destination)throw new SupportError('unauthorized',401,'Войдите в аккаунт');
       let issued:Awaited<ReturnType<SupportEmailStore['issue']>>=null;
-      try {issued=await deps.store.issue(action==='send'?'verify':'reset',body.email??'',hash(ipPrefix(ip)),hash(body.email??authority!.accountId),action==='send'?authority:undefined);}
+      try {issued=await deps.store.issue(action==='send'?'verify':'reset',destination,hash(ipPrefix(ip)),hash(destination),action==='send'?authority:undefined);}
       catch {if(action!=='forgot')throw new SupportError('unavailable',503);}
       const deliver=async()=>{
         if(!issued)return;
@@ -50,7 +52,7 @@ export function createEmailHandler(action:keyof typeof schemas,deps:EmailDeps) {
         return supportJSON({ok:true,message:'Если адрес зарегистрирован, инструкция будет отправлена. Доставка не гарантирована.'},202);
       }
       if(!issued)throw new SupportError('unavailable',503,'Письмо пока не отправлено. Повторите позже');
-      if(await deliver()!=='accepted')throw new SupportError('unavailable',503,'Письмо пока не отправлено. Повторите позже');
+      if(await deliver()!=='accepted')throw new SupportError('unavailable',503,'Отправку не удалось подтвердить. Проверьте почту или повторите позже');
       return supportJSON({ok:true},202);
     } catch(error){return supportFailure(error);}
   };

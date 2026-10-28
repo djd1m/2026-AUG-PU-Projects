@@ -1,5 +1,7 @@
 // Явное чтение делает проброс окружения проверяемым по графу импортов сервиса.
 export function readEnvironment() {
+  // Alias avoids Next replacing the runtime test value during production bundling.
+  const runtimeEnvironment = process.env;
   return {
     S3_ENDPOINT: process.env.S3_ENDPOINT,
     S3_PUBLIC_ENDPOINT: process.env.S3_PUBLIC_ENDPOINT,
@@ -8,7 +10,7 @@ export function readEnvironment() {
     S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,
     S3_SECRET_KEY: process.env.S3_SECRET_KEY,
     S3_FORCE_PATH_STYLE: process.env.S3_FORCE_PATH_STYLE,
-    NODE_ENV: process.env.NODE_ENV,
+    NODE_ENV: runtimeEnvironment.NODE_ENV,
     N5_MAIL_TEST_CAPTURE_FILE: process.env.N5_MAIL_TEST_CAPTURE_FILE,
     N5_MAIL_MODE: process.env.N5_MAIL_MODE,
     N5_MAIL_FROM: process.env.N5_MAIL_FROM,

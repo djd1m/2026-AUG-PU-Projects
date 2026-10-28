@@ -36,7 +36,7 @@ export async function optInCredits(pool: Pool, input: { accountId: string; mode:
   });
 }
 export interface CreditBalance { available_seconds: number; reserved_seconds: number; recovery_seconds?: number; next_expiry: Date | null }
-export async function readCreditBalance(pool: Pool, accountId: string, now = new Date()): Promise<CreditBalance | null> {
+export async function readCreditBalance(pool: Pick<Pool, 'query'>, accountId: string, now = new Date()): Promise<CreditBalance | null> {
   const result = await pool.query<CreditBalance>(`SELECT COALESCE(sum(g.remaining_seconds) FILTER
     (WHERE g.recovery_video_id IS NULL AND g.available_at<=$2 AND (g.expires_at IS NULL OR g.expires_at>$2)),0)::int available_seconds,
     COALESCE(sum(g.remaining_seconds) FILTER (WHERE g.recovery_video_id IS NOT NULL AND g.available_at<=$2 AND g.expires_at>$2),0)::int recovery_seconds,
