@@ -12,6 +12,7 @@ export function readEnvironment() {
     NODE_ENV: Reflect.get(process.env, 'NODE_ENV') as string | undefined,
     N5_MAIL_TEST_CAPTURE_FILE: process.env.N5_MAIL_TEST_CAPTURE_FILE,
     N5_MAIL_MODE: process.env.N5_MAIL_MODE,
+    N5_RESEND_API_KEY: process.env.N5_RESEND_API_KEY,
     N5_MAIL_FROM: process.env.N5_MAIL_FROM,
     N5_SMTP_HOST: process.env.N5_SMTP_HOST,
     N5_SMTP_PORT: process.env.N5_SMTP_PORT,

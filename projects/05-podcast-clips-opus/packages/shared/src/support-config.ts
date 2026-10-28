@@ -25,11 +25,21 @@ export function loadSupportConfig(env: Environment) {
 }
 export function loadMailConfig(env: Environment) {
   const mode = env.N5_MAIL_MODE ?? 'disabled';
-  if (!['disabled','test','smtp'].includes(mode)) throw new Error('N5_MAIL_MODE: invalid mode');
+  if (!['disabled','test','smtp','resend'].includes(mode)) throw new Error('N5_MAIL_MODE: invalid mode');
   if (mode === 'disabled') return { mode: 'disabled' as const };
   if (mode === 'test') {
     requireIsolatedTest(env);
     return { mode: 'test' as const };
+  }
+  if (mode === 'resend') {
+    const apiKey=env.N5_RESEND_API_KEY, from=env.N5_MAIL_FROM;
+    const email=(value:string)=>/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(value);
+    const named=from && /^[^<>]+ <([^<>]+)>$/.exec(from);
+    if (!apiKey || !apiKey.trim() || apiKey.length>4096 || /[\x00-\x20\x7f]/.test(apiKey) ||
+      !from || from.length>320 || /[\x00-\x1f\x7f]/.test(from) || !(email(from)||(named&&email(named[1]!)))) {
+      throw new Error('Resend configuration incomplete');
+    }
+    return {mode:'resend' as const,apiKey,from};
   }
   const host = env.N5_SMTP_HOST, user = env.N5_SMTP_USER, password = env.N5_SMTP_PASSWORD, from = env.N5_MAIL_FROM;
   const port = Number(env.N5_SMTP_PORT);

@@ -5,9 +5,25 @@ import {createRequire} from 'node:module';
 import {spawnSync} from 'node:child_process';
 import ts from 'typescript';
 import {tmpdir} from 'node:os';
+import {readEnvironment} from '../apps/web/src/server/environment';
 import {collectEnvironment} from '../scripts/check-env-wiring.mjs';
 import {loadMailConfig,loadSupportConfig} from '../packages/shared/src/support-config';
 describe('support runtime isolation and wiring',()=>{
+ it('Resend requires only selected key and sender, with no implicit enablement',()=>{
+  const valid={N5_MAIL_MODE:'resend',N5_RESEND_API_KEY:'synthetic-key',N5_MAIL_FROM:'Sender <sender@example.test>'};
+  expect(loadMailConfig(valid)).toMatchObject({mode:'resend',apiKey:'synthetic-key',from:valid.N5_MAIL_FROM});
+  expect(loadMailConfig({N5_RESEND_API_KEY:'synthetic-key'}).mode).toBe('disabled');
+  for(const value of [undefined,'',' ','key\nsecret','key secret'])expect(()=>loadMailConfig({...valid,N5_RESEND_API_KEY:value})).toThrow();
+  for(const value of [undefined,'','sender','sender@example.test\r\nBcc: victim@example.test'])expect(()=>loadMailConfig({...valid,N5_MAIL_FROM:value})).toThrow();
+ });
+ it('Resend key is explicitly server-read and wired only to web',async()=>{
+  expect(collectEnvironment(['apps/web/src/server/environment.ts'],process.cwd()).has('N5_RESEND_API_KEY')).toBe(true);
+  expect(Object.hasOwn(readEnvironment(),'N5_RESEND_API_KEY')).toBe(true);
+  const compose=await readFile('docker-compose.yml','utf8');
+  expect(compose.match(/N5_RESEND_API_KEY/g)).toHaveLength(2);
+  const web=compose.slice(compose.indexOf('  web:'),compose.indexOf('  worker-stt:'));
+  expect(web).toContain('N5_RESEND_API_KEY: ${N5_RESEND_API_KEY-}');
+ });
  it('test mail/support require runtime test plus *_test database',()=>{
   for(const database of [undefined,'postgresql://synthetic@localhost/n5_live']) {
    expect(()=>loadMailConfig({NODE_ENV:'test',DATABASE_URL:database,N5_MAIL_MODE:'test'})).toThrow();

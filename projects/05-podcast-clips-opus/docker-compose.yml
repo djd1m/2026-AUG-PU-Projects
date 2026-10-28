@@ -50,6 +50,7 @@ services:
       # доезжает до web и валит старт (honest-configuration CFG-I2), а не превращается в off молча.
       N5_PAYMENTS_MODE: ${N5_PAYMENTS_MODE-off}
       N5_MAIL_MODE: ${N5_MAIL_MODE-disabled}
+      N5_RESEND_API_KEY: ${N5_RESEND_API_KEY-}
       N5_MAIL_FROM: ${N5_MAIL_FROM-}
       N5_SMTP_HOST: ${N5_SMTP_HOST-}
       N5_SMTP_PORT: ${N5_SMTP_PORT-}
