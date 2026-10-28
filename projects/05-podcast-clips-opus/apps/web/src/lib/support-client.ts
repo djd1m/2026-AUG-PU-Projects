@@ -1,7 +1,7 @@
 export type PublicSupport = { mode: 'disabled' | 'test' | 'libredesk'; baseURL: string | null; inboxID: string | null; identifiedEnabled: boolean; contactEmail: string | null; synthetic: boolean };
 export type SupportAccount = { id: string; email: string; verified: boolean } | null;
 export type SafeContext = { accountId?: string; videoId?: string; status?: string; failureCode?: string; at: string };
-export type WidgetAPI = { show(): void; setUser(jwt: string): void; logout(): void; destroy?(): void };
+export type WidgetAPI = { show(): void; hide?(): void; setUser(jwt: string): void; logout(): void; destroy?(): void };
 declare global { interface Window { Libredesk?: WidgetAPI; n5SupportUnavailable?: boolean; LibredeskSettings?: { baseURL: string; inboxID: string; hideLauncher: boolean }; } }
 export class SupportError extends Error {
   constructor(public status: number, public code: string, message: string) { super(message); }
@@ -92,4 +92,12 @@ export async function openAnonymousSupport(settings: PublicSupport, epoch: { cur
   if (epoch.current !== version) return false;
   widget.show();
   return true;
+}
+
+// Hide only: the vendor retains the current conversation and unsent draft.
+export function closeSupportWidget(opener: Pick<HTMLElement, 'focus'> | null): void {
+  const widget = window.Libredesk;
+  if (!widget?.hide) throw new Error('Не удалось закрыть чат. Повторите действие.');
+  widget.hide();
+  opener?.focus();
 }

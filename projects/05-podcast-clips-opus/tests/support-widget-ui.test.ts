@@ -1,7 +1,8 @@
+import { readFileSync } from 'node:fs';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { clearSupportIdentity, openAnonymousSupport, loadSupportWidget, type PublicSupport, type WidgetAPI } from '../apps/web/src/lib/support-client';
+import { closeSupportWidget, clearSupportIdentity, openAnonymousSupport, loadSupportWidget, type PublicSupport, type WidgetAPI } from '../apps/web/src/lib/support-client';
 import { SupportPanel } from '../apps/web/src/app/support/SupportPanel';
 vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
 type FakeBrowser = { Libredesk?: WidgetAPI; LibredeskSettings?: object; dispatchEvent?: ReturnType<typeof vi.fn> };
@@ -129,4 +130,28 @@ describe('asynchronous vendor iframe readiness', () => {
     dom.insert(); expect(api.show).not.toHaveBeenCalled();
     if (!cached) { expect(script.remove).toHaveBeenCalledTimes(1); expect(script.onload).toBeNull(); expect(script.onerror).toBeNull(); }
   });
+});
+
+describe('chat close preserves the vendor session', () => {
+  it('hides and returns focus without resetting identity or history; the same API can reopen', () => {
+    const api = { hide: vi.fn(), show: vi.fn(), setUser: vi.fn(), logout: vi.fn(), destroy: vi.fn() };
+    const focus = vi.fn(); vi.stubGlobal('window', { Libredesk: api });
+    closeSupportWidget({ focus });
+    expect(api.hide).toHaveBeenCalledTimes(1); expect(focus).toHaveBeenCalledTimes(1);
+    api.show(); expect(api.show).toHaveBeenCalledTimes(1);
+    expect(api.logout).not.toHaveBeenCalled(); expect(api.destroy).not.toHaveBeenCalled(); expect(api.setUser).not.toHaveBeenCalled();
+  });
+  it('describes human support and anonymous privacy even for a logged in account', () => {
+    const html = renderToStaticMarkup(createElement(SupportPanel, { support: { ...settings, identifiedEnabled: false }, account: { id: 'A', email: 'private@example.test', verified: true } }));
+    expect(html).toContain('Открыть чат поддержки'); expect(html).toContain('отвечает человек');
+    expect(html).toContain('не передаёт туда почту'); expect(html).not.toContain('private@example.test');
+    expect(html).not.toContain('Открыть анонимный чат');
+  });
+});
+
+it('keeps the parent close control visible while the widget is open', () => {
+  const source = readFileSync('apps/web/src/app/support/SupportPanel.tsx', 'utf8');
+  expect(source).toMatch(/opened && <button[^>]*className="support-close"[^>]*onClick=\{close\}[^>]*aria-label="Закрыть чат поддержки"/);
+  const css = readFileSync('apps/web/src/app/globals.css', 'utf8');
+  expect(css).toMatch(/\.support-card > \.support-close \{[^}]*position:fixed;[^}]*z-index:2147483647;/);
 });

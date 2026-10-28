@@ -221,6 +221,7 @@ button,.button { min-width:2.75rem; }
 /* progress-ribbon:first-screen:end */
 
 /* Support and recovery share the existing card and theme tokens. */
+.support-card > .support-close { position:fixed; z-index:2147483647; inset-block-start:max(var(--space-3),env(safe-area-inset-top)); inset-inline-end:max(var(--space-3),env(safe-area-inset-right)); width:auto; max-width:calc(100vw - var(--space-8)); min-height:2.75rem; margin:0; }
 .support-shell { max-width:48rem; }
 .support-card { min-width:0; overflow-wrap:anywhere; margin-bottom:var(--space-6); }
 .support-card h1 { font-size:clamp(1.625rem,4vw,2.5rem); letter-spacing:-.04rem; }
